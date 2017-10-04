@@ -1,4 +1,4 @@
-package com.example.mike.mp3player;
+package com.example.mike.mp3player.client;
 
 import android.content.ComponentName;
 import android.os.Bundle;
