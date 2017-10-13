@@ -7,8 +7,6 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
 
-import com.example.mike.mp3player.MediaSessionCallback;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,10 +39,11 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
                 .setActions(
                         PlaybackStateCompat.ACTION_PLAY |
                                 PlaybackStateCompat.ACTION_PLAY_PAUSE);
+        this.onStart();
         mMediaSession.setPlaybackState(mStateBuilder.build());
 
         // MySessionCallback() has methods that handle callbacks from a media controller
-        mMediaSession.setCallback(new MediaSessionCallback());
+        mMediaSession.setCallback(new MediaSessionCallback(getApplicationContext()));
 
         // Set the session's token so that client activities can communicate with it.
         setSessionToken(mMediaSession.getSessionToken());
