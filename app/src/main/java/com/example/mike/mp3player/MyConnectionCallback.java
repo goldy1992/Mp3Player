@@ -14,9 +14,15 @@ import com.example.mike.mp3player.client.MediaPlayerActivity;
  */
 
 public class MyConnectionCallback extends MediaBrowser.ConnectionCallback {
+
     private MediaBrowserCompat mMediaBrowser;
     private Context context;
     private MediaPlayerActivity mediaPlayerActivity;
+
+    public MyConnectionCallback() {
+        super();
+    }
+
     @Override
     public void onConnected() {
 

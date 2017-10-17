@@ -39,7 +39,6 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
                 .setActions(
                         PlaybackStateCompat.ACTION_PLAY |
                                 PlaybackStateCompat.ACTION_PLAY_PAUSE);
-        this.onStart();
         mMediaSession.setPlaybackState(mStateBuilder.build());
 
         // MySessionCallback() has methods that handle callbacks from a media controller

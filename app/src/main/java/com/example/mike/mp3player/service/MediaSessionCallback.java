@@ -44,7 +44,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
             // Register BECOME_NOISY BroadcastReceiver
             //registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
             // Put the service in the foreground, post notification
-            service.startForeground(myPlayerNotification);
+            //service.startForeground(myPlayerNotification);
         }
     }
 

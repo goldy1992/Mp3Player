@@ -3,9 +3,11 @@ package com.example.mike.mp3player.client;
 import android.content.ComponentName;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
+
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.mike.mp3player.MyConnectionCallback;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 
 /**
@@ -15,12 +17,17 @@ import com.example.mike.mp3player.service.MediaPlaybackService;
 public class MediaPlayerActivity extends AppCompatActivity {
     private MediaBrowserCompat mMediaBrowser;
 
+    private final MediaBrowserCompat.ConnectionCallback mConnectionCallbacks;
+    public MediaPlayerActivity() {
+        super();
+       mConnectionCallbacks = new MediaBrowserConnectionCallback();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // ...
         // Create MediaBrowserServiceCompat
-        mMediaBrowser = new MediaBrowserCompat(this,
+        mMediaBrowser = new MediaBrowserCompat(this.getBaseContext(),
                 new ComponentName(this, MediaPlaybackService.class),
                 mConnectionCallbacks,
                 null); // optional Bundle
@@ -40,6 +47,13 @@ public class MediaPlayerActivity extends AppCompatActivity {
             MediaControllerCompat.getMediaController(MediaPlayerActivity.this).unregisterCallback(controllerCallback);
         }
         mMediaBrowser.disconnect();
+
+    }
+
+
+
+
+    public class MediaBrowserConnectionCallback extends MediaBrowserCompat.ConnectionCallback {
 
     }
 }
