@@ -12,7 +12,7 @@ import android.support.v7.app.AppCompatActivity;
  */
 
 public class MediaPlayerActivity extends AppCompatActivity {
-    private MediaBrowserCompat mMediaBrowser;
+
     private MediaBrowserAdapter mMediaBrowserAdapter;
     public MediaPlayerActivity() {
         super();
@@ -23,29 +23,18 @@ public class MediaPlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mMediaBrowserAdapter = new MediaBrowserAdapter(this);
         mMediaBrowserAdapter.addListener(new MediaBrowserListener());
-        // ...
-        // Create MediaBrowserServiceCompat
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mMediaBrowser.connect();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        // (see "stay in sync with the MediaSession")
-//        if (MediaControllerCompat.getMediaController(MediaPlayerActivity.this) != null) {
-//            MediaControllerCompat.getMediaController(MediaPlayerActivity.this).unregisterCallback(controllerCallback);
-//        }
-        mMediaBrowser.disconnect();
-
+        mMediaBrowserAdapter.onStop();
     }
-
-
-
 
     private class MediaBrowserListener extends MediaBrowserAdapter.MediaBrowserChangeListener {
 
