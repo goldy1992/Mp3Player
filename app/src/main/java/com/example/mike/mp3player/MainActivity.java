@@ -69,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
             Uri uri = null;
             if (resultData != null) {
                 uri = resultData.getData();
-            }
+                // start m
+            } // if
         }
 
     }
