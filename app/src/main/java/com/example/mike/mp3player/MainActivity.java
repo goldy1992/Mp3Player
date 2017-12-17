@@ -5,12 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.example.mike.mp3player.client.MediaPlayerActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,8 +26,10 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+              //  Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                //        .setAction("Action", null).show();
+                Intent intent = new Intent(view.getContext(), MediaPlayerActivity.class);
+
             }
         });
     }
@@ -60,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("audio/*");
         startActivityForResult(intent, READ_REQUEST_CODE);
+
+
     }
 
     @Override
@@ -69,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
             Uri uri = null;
             if (resultData != null) {
                 uri = resultData.getData();
+                Intent intent = new Intent(getApplicationContext(), MediaPlayerActivity.class);
+                intent.putExtra("uri", uri);
+                startActivityForResult(intent, READ_REQUEST_CODE);
             }
         }
 

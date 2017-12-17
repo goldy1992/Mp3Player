@@ -2,8 +2,9 @@ package com.example.mike.mp3player;
 
 import android.content.Context;
 import android.media.AudioManager;
-import android.service.media.MediaBrowserService;
 import android.support.v4.media.session.MediaSessionCompat;
+
+import com.example.mike.mp3player.service.MediaPlaybackService;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -12,12 +13,21 @@ import android.support.v4.media.session.MediaSessionCompat;
 public class MediaSessionCallback extends MediaSessionCompat.Callback {
     private AudioManager.OnAudioFocusChangeListener afChangeListener;
     private MediaSessionCompat mediaSession;
-    private MediaBrowserService service;
+    private MediaPlaybackService service;
+    private Context mContext;
 
+    public MediaSessionCallback(Context context) {
+        this.mContext = context;
+        this.afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+            @Override
+            public void onAudioFocusChange(int i) {
+            }
+        };
+    }
 
     @Override
     public void onPlay() {
-        AudioManager am = mContext.getSystemService(Context.AUDIO_SERVICE);
+        AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         // Request audio focus for playback, this registers the afChangeListener
         int result = am.requestAudioFocus(afChangeListener,
                 // Use the music stream.
@@ -27,42 +37,42 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
 
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             // Start the service
-            service.start();
+            //service.startService(service)
             // Set the session active  (and update metadata and state)
             mediaSession.setActive(true);
             // start the player (custom call)
-            player.start();
-            // Register BECOME_NOISY BroadcastReceiver
-            registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
-            // Put the service in the foreground, post notification
-            service.startForeground(myPlayerNotification);
+//            player.start();
+//            // Register BECOME_NOISY BroadcastReceiver
+//            registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
+//            // Put the service in the foreground, post notification
+//            service.startForeground(myPlayerNotification);
         }
     }
 
     @Override
     public void onStop() {
-        AudioManager am = mContext.getSystemService(Context.AUDIO_SERVICE);
+        AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         // Abandon audio focus
         am.abandonAudioFocus(afChangeListener);
-        unregisterReceiver(myNoisyAudioStreamReceiver);
+//        unregisterReceiver(myNoisyAudioStreamReceiver);
         // Start the service
-        service.stop(self);
+        service.stopSelf();
         // Set the session inactive  (and update metadata and state)
         mediaSession.setActive(false);
         // stop the player (custom call)
-        player.stop();
+//        player.stop();
         // Take the service out of the foreground
         service.stopForeground(false);
     }
 
     @Override
     public void onPause() {
-        AudioManager am = mContext.getSystemService(Context.AUDIO_SERVICE);
+        AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         // Update metadata and state
         // pause the player (custom call)
-        player.pause();
+//        player.pause();
         // unregister BECOME_NOISY BroadcastReceiver
-        unregisterReceiver(myNoisyAudioStreamReceiver, intentFilter);
+//        unregisterReceiver(myNoisyAudioStreamReceiver, intentFilter);
         // Take the service out of the foreground, retain the notification
         service.stopForeground(false);
     }
