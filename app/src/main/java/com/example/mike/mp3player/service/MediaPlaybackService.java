@@ -44,7 +44,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         mMediaSession.setPlaybackState(mStateBuilder.build());
 
         // MySessionCallback() has methods that handle callbacks from a media controller
-        mMediaSession.setCallback(new MediaSessionCallback(getApplicationContext()));
+        mMediaSession.setCallback(new MediaSessionCallback(getApplicationContext(), mMediaSession));
 
         // Set the session's token so that client activities can communicate with it.
         setSessionToken(mMediaSession.getSessionToken());

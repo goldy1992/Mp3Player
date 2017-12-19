@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, READ_REQUEST_CODE);
             }
         }
-
     }
 }
 

@@ -16,8 +16,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     private MediaPlaybackService service;
     private Context mContext;
 
-    public MediaSessionCallback(Context context) {
+    public MediaSessionCallback(Context context, MediaSessionCompat mediaSession) {
         this.mContext = context;
+        this.mediaSession = mediaSession;
         this.afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int i) {

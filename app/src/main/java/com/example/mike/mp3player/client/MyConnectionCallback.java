@@ -96,4 +96,8 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
             mediaController.registerCallback(controllerCallback);
         }
 
-    }
+        public void setmMediaBrowser(MediaBrowserCompat mMediaBrowser)
+        {
+            this.mMediaBrowser = mMediaBrowser;
+        }
+}
