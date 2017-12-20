@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.service;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserServiceCompat;
@@ -16,6 +17,7 @@ import java.util.List;
  * Created by Mike on 24/09/2017.
  */
 public class MediaPlaybackService extends MediaBrowserServiceCompat {
+
     private static final String MY_MEDIA_ROOT_ID = "media_root_id";
     private static final String MY_EMPTY_MEDIA_ROOT_ID = "empty_root_id";
 
@@ -30,6 +32,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
 
         // Create a MediaSessionCompat
         mMediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);
+        // MySessionCallback() has methods that handle callbacks from a media controller
+        mMediaSession.setCallback(new MediaSessionCallback(getApplicationContext(), mMediaSession, this));
 
         // Enable callbacks from MediaButtons and TransportControls
         mMediaSession.setFlags(
@@ -40,11 +44,10 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         mStateBuilder = new PlaybackStateCompat.Builder()
                 .setActions(
                         PlaybackStateCompat.ACTION_PLAY |
-                                PlaybackStateCompat.ACTION_PLAY_PAUSE);
+                                PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_STOP);
         mMediaSession.setPlaybackState(mStateBuilder.build());
 
-        // MySessionCallback() has methods that handle callbacks from a media controller
-        mMediaSession.setCallback(new MediaSessionCallback(getApplicationContext(), mMediaSession));
+
 
         // Set the session's token so that client activities can communicate with it.
         setSessionToken(mMediaSession.getSessionToken());

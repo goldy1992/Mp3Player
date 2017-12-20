@@ -10,12 +10,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Stop" />
+        android:text="Stop"
+        android:onClick="stop"/>
 
     <Button
         android:id="@+id/playPauseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Play" />
+        android:text="Play"
+        android:onClick="playPause"/>
 </LinearLayout>

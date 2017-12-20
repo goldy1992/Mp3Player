@@ -1,11 +1,14 @@
 package com.example.mike.mp3player.client;
 
 import android.content.ComponentName;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.service.MediaPlaybackService;
@@ -15,30 +18,32 @@ import com.example.mike.mp3player.service.MediaPlaybackService;
  */
 
 public class MediaPlayerActivity extends AppCompatActivity {
-    private View playPauseButton;
+    private Button playPauseButton;
     private MediaBrowserCompat mMediaBrowser;
     private MyConnectionCallback mConnectionCallbacks;
-    private MyControllerCallback myControllerCallback;
+    private MyControllerCallback myControllerCallback = new MyControllerCallback();
+    private MediaControllerCompat mediaController;
+    private Uri selectedUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myControllerCallback = new MyControllerCallback();
-        mConnectionCallbacks = new MyConnectionCallback(mMediaBrowser, this, myControllerCallback);
+        this.selectedUri = (Uri)  getIntent().getExtras().get("uri");
+        mConnectionCallbacks = new MyConnectionCallback(this, myControllerCallback);
         // ...
         // Create MediaBrowserServiceCompat
-        mMediaBrowser = new MediaBrowserCompat(this,
+        setmMediaBrowser(new MediaBrowserCompat(this,
                 new ComponentName(this, MediaPlaybackService.class),
                 mConnectionCallbacks,
-                null); // optional Bundle
-        mConnectionCallbacks.setmMediaBrowser(mMediaBrowser);
+                null)); // optional Bundle
+
         setContentView(R.layout.activity_media_player);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mMediaBrowser.connect();
+        getmMediaBrowser().connect();
     }
 
     @Override
@@ -48,15 +53,55 @@ public class MediaPlayerActivity extends AppCompatActivity {
         if (MediaControllerCompat.getMediaController(MediaPlayerActivity.this) != null) {
             MediaControllerCompat.getMediaController(MediaPlayerActivity.this).unregisterCallback(myControllerCallback);
         }
-        mMediaBrowser.disconnect();
+        getmMediaBrowser().disconnect();
 
     }
 
-    public View getPlayPauseButton() {
+    public Button getPlayPauseButton() {
         return playPauseButton;
     }
 
-    public void setPlayPauseButton(View playPauseButton) {
+    public void setPlayPauseButton(Button playPauseButton) {
         this.playPauseButton = playPauseButton;
+    }
+
+    public void playPause(View view)
+    {
+        int pbState = getPlaybackState();
+        if (pbState == PlaybackStateCompat.STATE_PLAYING) {
+            MediaControllerCompat.getMediaController(this).getTransportControls().pause();
+            playPauseButton.setText("Play");
+        } else if (pbState == PlaybackStateCompat.STATE_NONE || pbState == PlaybackStateCompat.STATE_STOPPED
+                ) {
+            MediaControllerCompat.getMediaController(this).getTransportControls().playFromUri(selectedUri, null);
+            playPauseButton.setText("Pause");
+        } else {
+            MediaControllerCompat.getMediaController(this).getTransportControls().play();
+            playPauseButton.setText("Pause");
+        }
+
+    }
+
+    public void stop(View view)
+    {
+        int pbState = getPlaybackState();
+        if (pbState == PlaybackStateCompat.STATE_PLAYING ||
+                pbState == PlaybackStateCompat.STATE_STOPPED )
+        {
+            MediaControllerCompat.getMediaController(this).getTransportControls().stop();
+        } // if
+    }
+
+    private int getPlaybackState()
+    {
+        return MediaControllerCompat.getMediaController(MediaPlayerActivity.this).getPlaybackState().getState();
+    }
+
+    public MediaBrowserCompat getmMediaBrowser() {
+        return mMediaBrowser;
+    }
+
+    public void setmMediaBrowser(MediaBrowserCompat mMediaBrowser) {
+        this.mMediaBrowser = mMediaBrowser;
     }
 }

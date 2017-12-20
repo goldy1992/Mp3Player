@@ -2,9 +2,14 @@ package com.example.mike.mp3player;
 
 import android.content.Context;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.service.MediaPlaybackService;
+
+import java.io.IOException;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -13,12 +18,15 @@ import com.example.mike.mp3player.service.MediaPlaybackService;
 public class MediaSessionCallback extends MediaSessionCompat.Callback {
     private AudioManager.OnAudioFocusChangeListener afChangeListener;
     private MediaSessionCompat mediaSession;
-    private MediaPlaybackService service;
     private Context mContext;
+    private MediaPlaybackService service;
+    private MediaPlayer mediaPlayer;
 
-    public MediaSessionCallback(Context context, MediaSessionCompat mediaSession) {
+    public MediaSessionCallback(Context context, MediaSessionCompat mediaSession, MediaPlaybackService service) {
         this.mContext = context;
+        this.service = service;
         this.mediaSession = mediaSession;
+        this.mediaPlayer = new MediaPlayer();
         this.afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int i) {
@@ -38,8 +46,40 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
 
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             // Start the service
-            //service.startService(service)
+           // service.start
             // Set the session active  (and update metadata and state)
+            mediaSession.setActive(true);
+            // start the player (custom call)
+//            player.start();
+//            // Register BECOME_NOISY BroadcastReceiver
+//            registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
+//            // Put the service in the foreground, post notification
+//            service.startForeground(myPlayerNotification);
+        }
+    }
+
+    @Override
+    public void onPlayFromUri(Uri uri, Bundle extras)
+    {
+        AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        // Request audio focus for playback, this registers the afChangeListener
+        int result = am.requestAudioFocus(afChangeListener,
+                // Use the music stream.
+                AudioManager.STREAM_MUSIC,
+                // Request permanent focus.
+                AudioManager.AUDIOFOCUS_GAIN);
+
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            // Start the service
+            // service.start
+            // Set the session active  (and update metadata and state)
+            try {
+                mediaPlayer.setDataSource(mContext, uri);
+                mediaPlayer.prepare();
+            } catch (IOException ex) {
+            }
+
+            mediaPlayer.start();
             mediaSession.setActive(true);
             // start the player (custom call)
 //            player.start();
@@ -70,6 +110,13 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     public void onPause() {
         AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         // Update metadata and state
+        try {
+            mediaPlayer.prepare();
+            mediaPlayer.pause();
+        }
+        catch (IOException ex) {
+
+        }
         // pause the player (custom call)
 //        player.pause();
         // unregister BECOME_NOISY BroadcastReceiver
