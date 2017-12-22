@@ -1,18 +1,10 @@
 package com.example.mike.mp3player.client;
 
 import android.content.Context;
-import android.support.v4.media.MediaBrowserCompat.ConnectionCallback;
 import android.os.RemoteException;
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
-import android.view.View;
-import android.widget.ImageView;
-
-import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaPlayerActivity;
 
 /**
  * Created by Mike on 04/10/2017.

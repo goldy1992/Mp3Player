@@ -18,11 +18,10 @@ import com.example.mike.mp3player.service.MediaPlaybackService;
  */
 
 public class MediaPlayerActivity extends AppCompatActivity {
-    private Button playPauseButton;
+
     private MediaBrowserCompat mMediaBrowser;
     private MyConnectionCallback mConnectionCallbacks;
     private MyControllerCallback myControllerCallback = new MyControllerCallback();
-    private MediaControllerCompat mediaController;
     private Uri selectedUri;
 
     @Override
@@ -57,16 +56,10 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     }
 
-    public Button getPlayPauseButton() {
-        return playPauseButton;
-    }
-
-    public void setPlayPauseButton(Button playPauseButton) {
-        this.playPauseButton = playPauseButton;
-    }
 
     public void playPause(View view)
     {
+        Button playPauseButton = view.findViewById(R.id.playPauseButton);
         int pbState = getPlaybackState();
         if (pbState == PlaybackStateCompat.STATE_PLAYING) {
             MediaControllerCompat.getMediaController(this).getTransportControls().pause();

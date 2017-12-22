@@ -8,6 +8,7 @@ package com.example.mike.mp3player.service;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.SystemClock;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -72,6 +73,48 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
         mCurrentMedia = metadata;
         final String mediaId = metadata.getDescription().getMediaId();
         playFile(MusicLibrary.getMusicFilename(mediaId));
+    }
+
+    @Override
+    public void playFromUri(Uri uri) {
+        // boolean mediaChanged = (mFilename == null || !filename.equals(mFilename));
+        boolean mediaChanged = true;
+        if (mCurrentMediaPlayedToCompletion) {
+            // Last audio file was played to completion, the resourceId hasn't changed, but the
+            // player was released, so force a reload of the media file for playback.
+            mediaChanged = true;
+            mCurrentMediaPlayedToCompletion = false;
+        }
+        if (!mediaChanged) {
+            if (!isPlaying()) {
+                play();
+            }
+            return;
+        } else {
+            release();
+        }
+
+        // mFilename = filename;
+
+        initializeMediaPlayer();
+
+        try {
+            //AssetFileDescriptor assetFileDescriptor = mContext.getAssets().openFd(mFilename);
+            //mMediaPlayer.setDataSource(
+              //      assetFileDescriptor.getFileDescriptor(),
+                //    assetFileDescriptor.getStartOffset(),
+                  //  assetFileDescriptor.getLength());
+            mMediaPlayer.setDataSource(mContext, uri);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to open file: " + mFilename, e);
+        }
+
+        try {
+            mMediaPlayer.prepare();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to open file: " + mFilename, e);
+        }
+        play();
     }
 
     @Override

@@ -9,9 +9,13 @@ import android.support.v4.media.session.PlaybackStateCompat;
  */
 
 public class MyControllerCallback extends MediaControllerCompat.Callback {
+
     @Override
     public void onMetadataChanged(MediaMetadataCompat metadata) {}
 
     @Override
-    public void onPlaybackStateChanged(PlaybackStateCompat state) {}
+    public void onPlaybackStateChanged(PlaybackStateCompat state) {
+
+        System.out.print("das");
+    }
 }

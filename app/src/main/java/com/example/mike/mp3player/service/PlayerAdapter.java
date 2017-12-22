@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.v4.media.MediaMetadataCompat;
@@ -52,6 +53,8 @@ public abstract class PlayerAdapter {
     }
 
     public abstract void playFromMedia(MediaMetadataCompat metadata);
+
+    public abstract void playFromUri(Uri uri);
 
     public abstract MediaMetadataCompat getCurrentMedia();
 
