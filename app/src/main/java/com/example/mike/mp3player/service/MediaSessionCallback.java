@@ -3,6 +3,8 @@ package com.example.mike.mp3player.service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.media.MediaMetadata;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
@@ -22,6 +24,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     private MediaPlayerAdapter mediaPlayerAdapter;
     private MediaPlayerListener mediaPlayerListener;
     private MediaNotificationManager mMediaNotificationManager;
+    private MediaMetadataCompat mPreparedMedia;
 
     public MediaSessionCallback(Context context, MediaSessionCompat mediaSession, MediaPlaybackService service) {
         this.mContext = context;
@@ -105,11 +108,22 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
             startService();
 
             if (null != uri) {
+                MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+                mmr.setDataSource(mContext, uri);
+
+                MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
+                MediaMetadataCompat uriMetdata = builder.putText(MediaMetadataCompat.METADATA_KEY_ARTIST, mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST))
+                        .putString(MediaMetadataCompat.METADATA_KEY_TITLE, mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE))
+                        .build();
+
+                mPreparedMedia = uriMetdata;
+                onPrepare();
+                mediaPlayerAdapter.playFromMedia(mPreparedMedia);
                 mediaPlayerAdapter.playFromUri(uri);
             }
 
             // start the player (custom call)
-            mediaPlayerAdapter.onPlay();
+ //           mediaPlayerAdapter.onPlay();
             getMediaSession().setActive(true);
 //            // Register BECOME_NOISY BroadcastReceiver
 //            registerReceiver(myNoisyAudioStreamReceiver, intentFilter);

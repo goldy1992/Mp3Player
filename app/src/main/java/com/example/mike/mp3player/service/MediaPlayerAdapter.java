@@ -7,6 +7,7 @@ package com.example.mike.mp3player.service;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.SystemClock;
@@ -15,6 +16,8 @@ import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.MainActivity;
 import com.example.mike.mp3player.client.MediaPlayerActivity;
+
+import java.io.IOException;
 
 
 /**
@@ -25,6 +28,7 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
 
     private final Context mContext;
     private MediaPlayer mMediaPlayer;
+    private Uri file;
     private String mFilename;
     private PlaybackInfoListener mPlaybackInfoListener;
     private MediaMetadataCompat mCurrentMedia;
@@ -72,11 +76,16 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
     public void playFromMedia(MediaMetadataCompat metadata) {
         mCurrentMedia = metadata;
         final String mediaId = metadata.getDescription().getMediaId();
-        playFile(MusicLibrary.getMusicFilename(mediaId));
+//        playFile(MusicLibrary.getMusicFilename(mediaId));
     }
 
     @Override
     public void playFromUri(Uri uri) {
+
+        if (null != uri)
+        {
+
+        }
         // boolean mediaChanged = (mFilename == null || !filename.equals(mFilename));
         boolean mediaChanged = true;
         if (mCurrentMediaPlayedToCompletion) {
@@ -85,6 +94,7 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
             mediaChanged = true;
             mCurrentMediaPlayedToCompletion = false;
         }
+
         if (!mediaChanged) {
             if (!isPlaying()) {
                 play();
@@ -93,10 +103,11 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
         } else {
             release();
         }
+        initializeMediaPlayer();
+
+
 
         // mFilename = filename;
-
-        initializeMediaPlayer();
 
         try {
             //AssetFileDescriptor assetFileDescriptor = mContext.getAssets().openFd(mFilename);
@@ -105,12 +116,6 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
                 //    assetFileDescriptor.getStartOffset(),
                   //  assetFileDescriptor.getLength());
             mMediaPlayer.setDataSource(mContext, uri);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to open file: " + mFilename, e);
-        }
-
-        try {
-            mMediaPlayer.prepare();
         } catch (Exception e) {
             throw new RuntimeException("Failed to open file: " + mFilename, e);
         }
@@ -185,6 +190,11 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
     @Override
     protected void onPlay() {
         if (mMediaPlayer != null && !mMediaPlayer.isPlaying()) {
+            try {
+                mMediaPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             mMediaPlayer.start();
             setNewState(PlaybackStateCompat.STATE_PLAYING);
         }
