@@ -95,15 +95,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     }
 
     private void playMedia(Uri uri) {
-        AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-        // Request audio focus for playback, this registers the afChangeListener
-        int result = am.requestAudioFocus(afChangeListener,
-                // Use the music stream.
-                AudioManager.STREAM_MUSIC,
-                // Request permanent focus.
-                AudioManager.AUDIOFOCUS_GAIN);
-
-        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             // Start the service
             startService();
 
@@ -120,7 +111,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
                 onPrepare();
                 mediaPlayerAdapter.playFromMedia(mPreparedMedia);
                 mediaPlayerAdapter.playFromUri(uri);
-            }
 
             // start the player (custom call)
  //           mediaPlayerAdapter.onPlay();

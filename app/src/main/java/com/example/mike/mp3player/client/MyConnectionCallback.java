@@ -13,11 +13,11 @@ import android.support.v4.media.session.MediaSessionCompat;
 public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback {
     private Context context;
     private MediaPlayerActivity mediaPlayerActivity;
-    private MyControllerCallback controllerCallback;
+    private MyMediaControllerCallback controllerCallback;
 
     public MyConnectionCallback(
                                 MediaPlayerActivity mediaPlayerActivity,
-                                MyControllerCallback controllerCallback)
+                                MyMediaControllerCallback controllerCallback)
     {
         super();
         this.mediaPlayerActivity = mediaPlayerActivity;
@@ -32,11 +32,9 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
         MediaSessionCompat.Token token = mediaPlayerActivity.getmMediaBrowser().getSessionToken();
 
         // Create a MediaControllerCompat
-        MediaControllerCompat mediaController =
-                null;
+        MediaControllerCompat mediaController =  null;
         try {
-            mediaController = new MediaControllerCompat(context, // Context
-                    token);
+            mediaController = new MediaControllerCompat(context, token);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

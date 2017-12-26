@@ -8,7 +8,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
  * Created by Mike on 04/10/2017.
  */
 
-public class MyControllerCallback extends MediaControllerCompat.Callback {
+public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
 
     @Override
     public void onMetadataChanged(MediaMetadataCompat metadata) {}
@@ -16,6 +16,10 @@ public class MyControllerCallback extends MediaControllerCompat.Callback {
     @Override
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
 
-        System.out.print("das");
+        switch (state.getState()) {
+            case PlaybackStateCompat.STATE_PLAYING: break;
+            case PlaybackStateCompat.STATE_PAUSED: break;
+            case PlaybackStateCompat.STATE_STOPPED: break;
+        } // switch
     }
 }
