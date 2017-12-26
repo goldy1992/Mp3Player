@@ -43,12 +43,15 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
 
     @Override
     public void onPlay() {
-        playMedia(null);
+        if (mPreparedMedia != null) {
+            onPrepare();
+            mediaPlayerAdapter.playFromMedia(mPreparedMedia);
+            mediaPlayerAdapter.play();
+        } // if
     }
 
     @Override
-    public void onPlayFromUri(Uri uri, Bundle extras)
-    {
+    public void onPlayFromUri(Uri uri, Bundle extras) {
         // super.onPlayFromUri(uri, extras);
         playMedia(uri);
     }
@@ -118,6 +121,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
 //            // Register BECOME_NOISY BroadcastReceiver
 //            registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
         }
+
     }
 
     public MediaSessionCompat getMediaSession() {

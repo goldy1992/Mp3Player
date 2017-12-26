@@ -21,14 +21,14 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     private MediaBrowserCompat mMediaBrowser;
     private MyConnectionCallback mConnectionCallbacks;
-    private MyControllerCallback myControllerCallback = new MyControllerCallback();
+    private MyMediaControllerCallback myMediaControllerCallback = new MyMediaControllerCallback();
     private Uri selectedUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.selectedUri = (Uri)  getIntent().getExtras().get("uri");
-        mConnectionCallbacks = new MyConnectionCallback(this, myControllerCallback);
+        mConnectionCallbacks = new MyConnectionCallback(this, myMediaControllerCallback);
         // ...
         // Create MediaBrowserServiceCompat
         setmMediaBrowser(new MediaBrowserCompat(this,
@@ -50,7 +50,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         super.onStop();
         // (see "stay in sync with the MediaSession")
         if (MediaControllerCompat.getMediaController(MediaPlayerActivity.this) != null) {
-            MediaControllerCompat.getMediaController(MediaPlayerActivity.this).unregisterCallback(myControllerCallback);
+            MediaControllerCompat.getMediaController(MediaPlayerActivity.this).unregisterCallback(myMediaControllerCallback);
         }
         getmMediaBrowser().disconnect();
 
@@ -69,7 +69,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
             MediaControllerCompat.getMediaController(this).getTransportControls().playFromUri(selectedUri, null);
             playPauseButton.setText("Pause");
         } else {
-            MediaControllerCompat.getMediaController(this).getTransportControls().play();
+            MediaControllerCompat.getMediaController(this).getTransportControls().playFromUri(selectedUri, null);
             playPauseButton.setText("Pause");
         }
 

@@ -28,7 +28,7 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
 
     private final Context mContext;
     private MediaPlayer mMediaPlayer;
-    private String mFilename;
+    private Uri mUri;
     private PlaybackInfoListener mPlaybackInfoListener;
     private MediaMetadataCompat mCurrentMedia;
     private int mState;
@@ -81,89 +81,39 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
     @Override
     public void playFromUri(Uri uri) {
 
-        if (null != uri)
-        {
-
-        }
-        // boolean mediaChanged = (mFilename == null || !filename.equals(mFilename));
-        boolean mediaChanged = true;
-        if (mCurrentMediaPlayedToCompletion) {
-            // Last audio file was played to completion, the resourceId hasn't changed, but the
-            // player was released, so force a reload of the media file for playback.
-            mediaChanged = true;
-            mCurrentMediaPlayedToCompletion = false;
-        }
-
-        if (!mediaChanged) {
-            if (!isPlaying()) {
-                play();
+        if (null != uri) {
+             boolean mediaChanged = (uri == null || !uri.equals(mUri));
+            if (mCurrentMediaPlayedToCompletion) {
+                // Last audio file was played to completion, the resourceId hasn't changed, but the
+                // player was released, so force a reload of the media file for playback.
+                mediaChanged = true;
+                mCurrentMediaPlayedToCompletion = false;
             }
-            return;
-        } else {
-            release();
+
+            if (!mediaChanged) {
+                if (!isPlaying()) {
+                    play();
+                }
+                return;
+            } else {
+                release();
+            }
+            initializeMediaPlayer();
+
+
+            try {
+                mMediaPlayer.setDataSource(mContext, uri);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to open file: " + uri, e);
+            }
+            play();
+            mUri = uri;
         }
-        initializeMediaPlayer();
-
-
-
-        // mFilename = filename;
-
-        try {
-            //AssetFileDescriptor assetFileDescriptor = mContext.getAssets().openFd(mFilename);
-            //mMediaPlayer.setDataSource(
-              //      assetFileDescriptor.getFileDescriptor(),
-                //    assetFileDescriptor.getStartOffset(),
-                  //  assetFileDescriptor.getLength());
-            mMediaPlayer.setDataSource(mContext, uri);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to open file: " + mFilename, e);
-        }
-        play();
-    }
+    } // OnPlay
 
     @Override
     public MediaMetadataCompat getCurrentMedia() {
         return mCurrentMedia;
-    }
-
-    private void playFile(String filename) {
-        boolean mediaChanged = (mFilename == null || !filename.equals(mFilename));
-        if (mCurrentMediaPlayedToCompletion) {
-            // Last audio file was played to completion, the resourceId hasn't changed, but the
-            // player was released, so force a reload of the media file for playback.
-            mediaChanged = true;
-            mCurrentMediaPlayedToCompletion = false;
-        }
-        if (!mediaChanged) {
-            if (!isPlaying()) {
-                play();
-            }
-            return;
-        } else {
-            release();
-        }
-
-        mFilename = filename;
-
-        initializeMediaPlayer();
-
-        try {
-            AssetFileDescriptor assetFileDescriptor = mContext.getAssets().openFd(mFilename);
-            mMediaPlayer.setDataSource(
-                    assetFileDescriptor.getFileDescriptor(),
-                    assetFileDescriptor.getStartOffset(),
-                    assetFileDescriptor.getLength());
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to open file: " + mFilename, e);
-        }
-
-        try {
-            mMediaPlayer.prepare();
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to open file: " + mFilename, e);
-        }
-
-        play();
     }
 
     @Override
@@ -190,7 +140,9 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
     protected void onPlay() {
         if (mMediaPlayer != null && !mMediaPlayer.isPlaying()) {
             try {
-                mMediaPlayer.prepare();
+                if (mUri == null) {
+                    mMediaPlayer.prepare();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
