@@ -22,4 +22,5 @@ public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
             case PlaybackStateCompat.STATE_STOPPED: break;
         } // switch
     }
+
 }

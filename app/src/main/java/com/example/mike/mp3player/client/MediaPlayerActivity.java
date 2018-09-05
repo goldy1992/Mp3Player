@@ -35,7 +35,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 new ComponentName(this, MediaPlaybackService.class),
                 mConnectionCallbacks,
                 null)); // optional Bundle
-
         setContentView(R.layout.activity_media_player);
     }
 
