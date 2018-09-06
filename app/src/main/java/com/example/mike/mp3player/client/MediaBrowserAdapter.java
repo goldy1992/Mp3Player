@@ -185,7 +185,7 @@ public class MediaBrowserAdapter {
 
             // Queue up all media items for this simple sample.
             for (final MediaBrowserCompat.MediaItem mediaItem : children) {
-                mMediaController.addQueueItem(mediaItem.getDescription());
+             //   mMediaController.addQueueItem(mediaItem.getDescription());
             }
 
             // Call "playFromMedia" so the UI is updated.

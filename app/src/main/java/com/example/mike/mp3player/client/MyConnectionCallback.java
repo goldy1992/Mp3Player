@@ -21,6 +21,7 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
     private Context context;
     private MediaPlayerActivity mediaPlayerActivity;
     private MyMediaControllerCallback controllerCallback;
+    private MediaControllerCompat mediaControllerCompat;
 
     public MyConnectionCallback(
                                 MediaPlayerActivity mediaPlayerActivity,
@@ -38,16 +39,14 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
         // Get the token for the MediaSession
         MediaSessionCompat.Token token = mediaPlayerActivity.getmMediaBrowser().getSessionToken();
 
-        // Create a MediaControllerCompat
-        MediaControllerCompat mediaController =  null;
+
         try {
-            mediaController = new MediaControllerCompat(context, token);
-        } catch (RemoteException e) {
+            mediaControllerCompat = new MediaControllerCompat(context, token);
+            mediaPlayerActivity.setMediaControllerCompat(mediaControllerCompat);
+        }
+        catch (RemoteException e) {
             e.printStackTrace();
         }
-
-        // Save the controller
-        MediaControllerCompat.setMediaController(mediaPlayerActivity, mediaController);
 
         // Finish building the UI
         buildTransportControls();
@@ -66,7 +65,7 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
     void buildTransportControls()
     {
         // Grab the view for the play/pause button
-        View mPlayPause = (ImageView) mediaPlayerActivity.findViewById(R.id.playPauseButton);
+        View mPlayPause = mediaPlayerActivity.findViewById(R.id.playPauseButton);
 
         // Attach a listener to the button
         mPlayPause.setOnClickListener(new View.OnClickListener() {
@@ -75,23 +74,22 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
                 // Since this is a play/pause button, you'll need to test the current state
                 // and choose the action accordingly
 
-                int pbState = MediaControllerCompat.getMediaController(mediaPlayerActivity).getPlaybackState().getState();
+                int pbState = mediaControllerCompat.getPlaybackState().getState();
                 if (pbState == PlaybackStateCompat.STATE_PLAYING) {
-                    MediaControllerCompat.getMediaController(mediaPlayerActivity).getTransportControls().pause();
+                    mediaControllerCompat.getTransportControls().pause();
                 } else {
-                    MediaControllerCompat.getMediaController(mediaPlayerActivity).getTransportControls().play();
+                    mediaControllerCompat.getTransportControls().play();
                 }
             }
         });
 
-            MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(mediaPlayerActivity);
 
             // Display the initial state
-            MediaMetadataCompat metadata = mediaController.getMetadata();
-            PlaybackStateCompat pbState = mediaController.getPlaybackState();
+           mediaControllerCompat.getMetadata();
+            mediaControllerCompat.getPlaybackState();
 
             // Register a Callback to stay in sync
-        mediaController.registerCallback(controllerCallback);
+        mediaControllerCompat.registerCallback(controllerCallback);
     }
 
 }

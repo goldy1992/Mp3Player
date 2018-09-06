@@ -22,6 +22,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
     private MediaBrowserCompat mMediaBrowser;
     private MyConnectionCallback mConnectionCallbacks;
     private MyMediaControllerCallback myMediaControllerCallback = new MyMediaControllerCallback();
+    private MediaControllerCompat mediaControllerCompat;
     private Uri selectedUri;
 
     @Override
@@ -29,12 +30,13 @@ public class MediaPlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.selectedUri = (Uri)  getIntent().getExtras().get("uri");
         mConnectionCallbacks = new MyConnectionCallback(this, myMediaControllerCallback);
+
         // ...
         // Create MediaBrowserServiceCompat
-        setmMediaBrowser(new MediaBrowserCompat(this,
+        mMediaBrowser = new MediaBrowserCompat(this,
                 new ComponentName(this, MediaPlaybackService.class),
                 mConnectionCallbacks,
-                null)); // optional Bundle
+                null);
         setContentView(R.layout.activity_media_player);
     }
 
@@ -42,14 +44,16 @@ public class MediaPlayerActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         getmMediaBrowser().connect();
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
         // (see "stay in sync with the MediaSession")
-        if (MediaControllerCompat.getMediaController(MediaPlayerActivity.this) != null) {
-            MediaControllerCompat.getMediaController(MediaPlayerActivity.this).unregisterCallback(myMediaControllerCallback);
+        getmMediaBrowser().disconnect();
+        if (getMediaControllerCompat() != null) {
+            getMediaControllerCompat().unregisterCallback(myMediaControllerCallback);
         }
         getmMediaBrowser().disconnect();
 
@@ -58,17 +62,17 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     public void playPause(View view)
     {
-        Button playPauseButton = view.findViewById(R.id.playPauseButton);
+        Button playPauseButton = (Button)view.findViewById(R.id.playPauseButton);
         int pbState = getPlaybackState();
         if (pbState == PlaybackStateCompat.STATE_PLAYING) {
-            MediaControllerCompat.getMediaController(this).getTransportControls().pause();
+            getMediaControllerCompat().getTransportControls().pause();
             playPauseButton.setText("Play");
         } else if (pbState == PlaybackStateCompat.STATE_NONE || pbState == PlaybackStateCompat.STATE_STOPPED
                 ) {
-            MediaControllerCompat.getMediaController(this).getTransportControls().playFromUri(selectedUri, null);
+            getMediaControllerCompat().getTransportControls().playFromUri(selectedUri, null);
             playPauseButton.setText("Pause");
         } else {
-            MediaControllerCompat.getMediaController(this).getTransportControls().playFromUri(selectedUri, null);
+            getMediaControllerCompat().getTransportControls().playFromUri(selectedUri, null);
             playPauseButton.setText("Pause");
         }
 
@@ -80,13 +84,13 @@ public class MediaPlayerActivity extends AppCompatActivity {
         if (pbState == PlaybackStateCompat.STATE_PLAYING ||
                 pbState == PlaybackStateCompat.STATE_STOPPED )
         {
-            MediaControllerCompat.getMediaController(this).getTransportControls().stop();
+            getMediaControllerCompat().getTransportControls().stop();
         } // if
     }
 
     private int getPlaybackState()
     {
-        return MediaControllerCompat.getMediaController(MediaPlayerActivity.this).getPlaybackState().getState();
+        return mediaControllerCompat.getPlaybackState().getState();
     }
 
     public MediaBrowserCompat getmMediaBrowser() {
@@ -95,5 +99,13 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     public void setmMediaBrowser(MediaBrowserCompat mMediaBrowser) {
         this.mMediaBrowser = mMediaBrowser;
+    }
+
+    public MediaControllerCompat getMediaControllerCompat() {
+        return mediaControllerCompat;
+    }
+
+    public void setMediaControllerCompat(MediaControllerCompat mediaControllerCompat) {
+        this.mediaControllerCompat = mediaControllerCompat;
     }
 }
