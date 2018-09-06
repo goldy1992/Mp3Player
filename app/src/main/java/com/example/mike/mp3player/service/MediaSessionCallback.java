@@ -3,8 +3,8 @@ package com.example.mike.mp3player.service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
-import android.media.MediaMetadata;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
@@ -25,15 +25,16 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     private MediaPlayerListener mediaPlayerListener;
     private MediaNotificationManager mMediaNotificationManager;
     private MediaMetadataCompat mPreparedMedia;
+    private MediaPlayer mediaPlayer;
 
     public MediaSessionCallback(Context context, MediaSessionCompat mediaSession, MediaPlaybackService service) {
         this.mContext = context;
         this.service = service;
         this.mediaSession = mediaSession;
-        this.mMediaNotificationManager = service.getmMediaNotificationManager();
         this.mediaPlayerListener = new MediaPlayerListener(mediaSession);
         this.mediaPlayerAdapter = new MediaPlayerAdapter(mContext, mediaPlayerListener);
         this.mediaPlayerListener.getmServiceManager().initServiceManager(this);
+        this.mediaPlayer = service.getMediaPlayer();
         this.afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int i) {
@@ -43,17 +44,64 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
 
     @Override
     public void onPlay() {
+        AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        // Request audio focus for playback, this registers the afChangeListener
+        int result = am.requestAudioFocus(afChangeListener,
+                // Use the music stream.
+                AudioManager.STREAM_MUSIC,
+                // Request permanent focus.
+                AudioManager.AUDIOFOCUS_GAIN);
+
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            // Start the service
+            Intent intent = new Intent();
+            service.startService(intent);
+            // Set the session active  (and update metadata and state)
+            mediaSession.setActive(true);
+            // start the player (custom call)
+            mediaPlayer.start();
+//            // Register BECOME_NOISY BroadcastReceiver
+//            registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
+//            // Put the service in the foreground, post notification
+//            service.startForeground(myPlayerNotification);
         if (mPreparedMedia != null) {
             onPrepare();
             mediaPlayerAdapter.playFromMedia(mPreparedMedia);
             mediaPlayerAdapter.play();
         } // if
     }
+    }
+
 
     @Override
-    public void onPlayFromUri(Uri uri, Bundle extras) {
-        // super.onPlayFromUri(uri, extras);
-        playMedia(uri);
+    public void onPlayFromUri(Uri uri, Bundle bundle) {
+        super.onPlayFromUri(uri, bundle);
+        AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        // Request audio focus for playback, this registers the afChangeListener
+        int result = am.requestAudioFocus(afChangeListener,
+                // Use the music stream.
+                AudioManager.STREAM_MUSIC,
+                // Request permanent focus.
+                AudioManager.AUDIOFOCUS_GAIN);
+
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            // Start the service
+            Intent intent = new Intent(service, MediaPlaybackService.class);
+            service.startService(intent);
+            // Set the session active  (and update metadata and state)
+            mediaSession.setActive(true);
+            // start the player (custom call)
+            try {
+                mediaPlayer.setDataSource(mContext, uri);
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+            }
+            catch (IOException ex)
+            {
+                System.out.println(ex);
+            }
+
+        }
     }
 
     @Override

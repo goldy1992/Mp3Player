@@ -28,7 +28,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.selectedUri = (Uri)  getIntent().getExtras().get("uri");
+        this.setSelectedUri((Uri)  getIntent().getExtras().get("uri"));
         mConnectionCallbacks = new MyConnectionCallback(this, myMediaControllerCallback);
 
         // ...
@@ -69,10 +69,10 @@ public class MediaPlayerActivity extends AppCompatActivity {
             playPauseButton.setText("Play");
         } else if (pbState == PlaybackStateCompat.STATE_NONE || pbState == PlaybackStateCompat.STATE_STOPPED
                 ) {
-            getMediaControllerCompat().getTransportControls().playFromUri(selectedUri, null);
+            getMediaControllerCompat().getTransportControls().playFromUri(getSelectedUri(), null);
             playPauseButton.setText("Pause");
         } else {
-            getMediaControllerCompat().getTransportControls().playFromUri(selectedUri, null);
+            getMediaControllerCompat().getTransportControls().playFromUri(getSelectedUri(), null);
             playPauseButton.setText("Pause");
         }
 
@@ -107,5 +107,13 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     public void setMediaControllerCompat(MediaControllerCompat mediaControllerCompat) {
         this.mediaControllerCompat = mediaControllerCompat;
+    }
+
+    public Uri getSelectedUri() {
+        return selectedUri;
+    }
+
+    public void setSelectedUri(Uri selectedUri) {
+        this.selectedUri = selectedUri;
     }
 }

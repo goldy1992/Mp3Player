@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.service;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserServiceCompat;
@@ -19,24 +20,21 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
 
     private static final String MY_MEDIA_ROOT_ID = "media_root_id";
     private static final String MY_EMPTY_MEDIA_ROOT_ID = "empty_root_id";
+    private MediaPlayer mediaPlayer;
 
     private MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
 
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
 
-    private MediaNotificationManager mMediaNotificationManager;
-
 
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mMediaNotificationManager = new MediaNotificationManager(this, getApplicationContext());
+        mediaPlayer = new MediaPlayer();
         // Create a MediaSessionCompat
         mMediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);
-        // MySessionCallback() has methods that handle callbacks from a media controller
-        mMediaSession.setCallback(new MediaSessionCallback(getApplicationContext(), mMediaSession, this));
 
         // Enable callbacks from MediaButtons and TransportControls
         mMediaSession.setFlags(
@@ -50,7 +48,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
                                 PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_STOP);
         mMediaSession.setPlaybackState(mStateBuilder.build());
 
-
+        // MySessionCallback() has methods that handle callbacks from a media controller
+        mMediaSession.setCallback(new MediaSessionCallback(getApplicationContext(), mMediaSession, this));
         // Set the session's token so that client activities can communicate with it.
         setSessionToken(mMediaSession.getSessionToken());
     }
@@ -97,7 +96,11 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         result.sendResult(mediaItems);
     }
 
-    public MediaNotificationManager getmMediaNotificationManager() {
-        return mMediaNotificationManager;
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
+
+    public void setMediaPlayer(MediaPlayer mediaPlayer) {
+        this.mediaPlayer = mediaPlayer;
     }
 }

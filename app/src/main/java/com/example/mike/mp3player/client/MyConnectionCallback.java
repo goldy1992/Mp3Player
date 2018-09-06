@@ -78,7 +78,7 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
                 if (pbState == PlaybackStateCompat.STATE_PLAYING) {
                     mediaControllerCompat.getTransportControls().pause();
                 } else {
-                    mediaControllerCompat.getTransportControls().play();
+                    mediaControllerCompat.getTransportControls().playFromUri(mediaPlayerActivity.getSelectedUri(), null);
                 }
             }
         });
