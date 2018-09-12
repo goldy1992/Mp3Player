@@ -42,7 +42,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 mConnectionCallbacks,
                 null);
         setContentView(R.layout.activity_media_player);
-        this.playPauseButton =  (PlayPauseButton) this.findViewById(R.id.playPauseButton);
+        this.playPauseButton = (PlayPauseButton) this.findViewById(R.id.playPauseButton);
     }
 
     @Override
@@ -68,12 +68,16 @@ public class MediaPlayerActivity extends AppCompatActivity {
         int pbState = getPlaybackState();
         if (pbState == PlaybackStateCompat.STATE_PLAYING) {
             getMediaControllerCompat().getTransportControls().pause();
-            getPlayPauseButton().setTextPause();
-        } else {
-            getMediaControllerCompat().getTransportControls().playFromUri(getSelectedUri(), null);
             getPlayPauseButton().setTextPlay();
+        } else if (pbState == PlaybackStateCompat.STATE_PAUSED)
+        {
+            getMediaControllerCompat().getTransportControls().play();
+            getPlayPauseButton().setTextPause();
         }
-
+        else {
+            getMediaControllerCompat().getTransportControls().playFromUri(getSelectedUri(), null);
+            getPlayPauseButton().setTextPause();
+        }
     }
 
     public void stop(View view)

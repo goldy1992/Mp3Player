@@ -62,25 +62,6 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
     }
 
     void buildTransportControls() {
-        // Grab the view for the play/pause button
-        View mPlayPause = mediaPlayerActivity.findViewById(R.id.playPauseButton);
-
-        // Attach a listener to the button
-        mPlayPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Since this is a play/pause button, you'll need to test the current state
-                // and choose the action accordingly
-
-                int pbState = mediaControllerCompat.getPlaybackState().getState();
-                if (pbState == PlaybackStateCompat.STATE_PLAYING) {
-                    mediaControllerCompat.getTransportControls().pause();
-                } else {
-                    mediaControllerCompat.getTransportControls().playFromUri(mediaPlayerActivity.getSelectedUri(), null);
-                }
-            }
-        });
-
         // Display the initial state
         mediaControllerCompat.getMetadata();
         mediaControllerCompat.getPlaybackState();
