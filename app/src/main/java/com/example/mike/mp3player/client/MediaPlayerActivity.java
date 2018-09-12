@@ -8,9 +8,8 @@ import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
-
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.view.PlayPauseButton;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 
 /**
@@ -19,16 +18,21 @@ import com.example.mike.mp3player.service.MediaPlaybackService;
 
 public class MediaPlayerActivity extends AppCompatActivity {
 
+
+    private final String STOP = "Stop";
+
     private MediaBrowserCompat mMediaBrowser;
     private MyConnectionCallback mConnectionCallbacks;
-    private MyMediaControllerCallback myMediaControllerCallback = new MyMediaControllerCallback();
+    private MyMediaControllerCallback myMediaControllerCallback;
     private MediaControllerCompat mediaControllerCompat;
     private Uri selectedUri;
+    private PlayPauseButton playPauseButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setSelectedUri((Uri)  getIntent().getExtras().get("uri"));
+        myMediaControllerCallback = new MyMediaControllerCallback(this);
         mConnectionCallbacks = new MyConnectionCallback(this, myMediaControllerCallback);
 
         // ...
@@ -38,13 +42,13 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 mConnectionCallbacks,
                 null);
         setContentView(R.layout.activity_media_player);
+        this.playPauseButton =  (PlayPauseButton) this.findViewById(R.id.playPauseButton);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         getmMediaBrowser().connect();
-
     }
 
     @Override
@@ -56,24 +60,18 @@ public class MediaPlayerActivity extends AppCompatActivity {
             getMediaControllerCompat().unregisterCallback(myMediaControllerCallback);
         }
         getmMediaBrowser().disconnect();
-
     }
 
 
     public void playPause(View view)
     {
-        Button playPauseButton = (Button)view.findViewById(R.id.playPauseButton);
         int pbState = getPlaybackState();
         if (pbState == PlaybackStateCompat.STATE_PLAYING) {
             getMediaControllerCompat().getTransportControls().pause();
-            playPauseButton.setText("Play");
-        } else if (pbState == PlaybackStateCompat.STATE_NONE || pbState == PlaybackStateCompat.STATE_STOPPED
-                ) {
-            getMediaControllerCompat().getTransportControls().playFromUri(getSelectedUri(), null);
-            playPauseButton.setText("Pause");
+            getPlayPauseButton().setTextPause();
         } else {
             getMediaControllerCompat().getTransportControls().playFromUri(getSelectedUri(), null);
-            playPauseButton.setText("Pause");
+            getPlayPauseButton().setTextPlay();
         }
 
     }
@@ -115,5 +113,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     public void setSelectedUri(Uri selectedUri) {
         this.selectedUri = selectedUri;
+    }
+
+    public PlayPauseButton getPlayPauseButton() {
+        return playPauseButton;
     }
 }

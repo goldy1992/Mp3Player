@@ -24,8 +24,8 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
     private MediaControllerCompat mediaControllerCompat;
 
     public MyConnectionCallback(
-                                MediaPlayerActivity mediaPlayerActivity,
-                                MyMediaControllerCallback controllerCallback)
+            MediaPlayerActivity mediaPlayerActivity,
+            MyMediaControllerCallback controllerCallback)
     {
         super();
         this.mediaPlayerActivity = mediaPlayerActivity;
@@ -38,7 +38,6 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
 
         // Get the token for the MediaSession
         MediaSessionCompat.Token token = mediaPlayerActivity.getmMediaBrowser().getSessionToken();
-
 
         try {
             mediaControllerCompat = new MediaControllerCompat(context, token);
@@ -62,8 +61,7 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
         // The Service has refused our connection
     }
 
-    void buildTransportControls()
-    {
+    void buildTransportControls() {
         // Grab the view for the play/pause button
         View mPlayPause = mediaPlayerActivity.findViewById(R.id.playPauseButton);
 
@@ -83,12 +81,11 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
             }
         });
 
+        // Display the initial state
+        mediaControllerCompat.getMetadata();
+        mediaControllerCompat.getPlaybackState();
 
-            // Display the initial state
-           mediaControllerCompat.getMetadata();
-            mediaControllerCompat.getPlaybackState();
-
-            // Register a Callback to stay in sync
+        // Register a Callback to stay in sync
         mediaControllerCompat.registerCallback(controllerCallback);
     }
 
