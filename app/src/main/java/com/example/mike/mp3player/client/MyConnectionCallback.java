@@ -41,14 +41,16 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
 
         try {
             mediaControllerCompat = new MediaControllerCompat(context, token);
+            mediaControllerCompat.registerCallback(controllerCallback);
+
             mediaPlayerActivity.setMediaControllerCompat(mediaControllerCompat);
+            // Display the initial state
+            mediaControllerCompat.getMetadata();
+            mediaControllerCompat.getPlaybackState();
         }
         catch (RemoteException e) {
             e.printStackTrace();
         }
-
-        // Finish building the UI
-        buildTransportControls();
     }
 
     @Override
@@ -60,14 +62,4 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
     public void onConnectionFailed() {
         // The Service has refused our connection
     }
-
-    void buildTransportControls() {
-        // Display the initial state
-        mediaControllerCompat.getMetadata();
-        mediaControllerCompat.getPlaybackState();
-
-        // Register a Callback to stay in sync
-        mediaControllerCompat.registerCallback(controllerCallback);
-    }
-
 }

@@ -28,7 +28,7 @@ public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
         switch (state.getState()) {
             case PlaybackStateCompat.STATE_PLAYING: button.setTextPause(); break;
             case PlaybackStateCompat.STATE_PAUSED: button.setTextPlay(); break;
-            case PlaybackStateCompat.STATE_STOPPED: break;
+            case PlaybackStateCompat.STATE_STOPPED: button.setTextPlay(); break;
         } // switch
     }
 

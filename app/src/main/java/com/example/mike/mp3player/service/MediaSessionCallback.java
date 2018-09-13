@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 
 import java.io.IOException;
 
@@ -26,6 +28,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     private MediaNotificationManager mMediaNotificationManager;
     private MediaMetadataCompat mPreparedMedia;
     private MediaPlayer mediaPlayer;
+    private PlaybackStateCompat.Builder stateBuilder;
 
     public MediaSessionCallback(Context context, MediaSessionCompat mediaSession, MediaPlaybackService service) {
         this.mContext = context;
@@ -54,22 +57,19 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
 
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             // Start the service
-            Intent intent = new Intent();
-            service.startService(intent);
+            startService();
             // Set the session active  (and update metadata and state)
             mediaSession.setActive(true);
             // start the player (custom call)
             mediaPlayer.start();
+            stateBuilder = new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING, 0L, 0f);
+            getMediaSession().setPlaybackState(stateBuilder.build());
 //            // Register BECOME_NOISY BroadcastReceiver
 //            registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
 //            // Put the service in the foreground, post notification
 //            service.startForeground(myPlayerNotification);
-        if (mPreparedMedia != null) {
-            onPrepare();
-            mediaPlayerAdapter.playFromMedia(mPreparedMedia);
-            mediaPlayerAdapter.play();
-        } // if
-    }
+
+        }
     }
 
 
@@ -86,8 +86,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
 
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             // Start the service
-            Intent intent = new Intent(service, MediaPlaybackService.class);
-            service.startService(intent);
+            startService();
             // Set the session active  (and update metadata and state)
             mediaSession.setActive(true);
             // start the player (custom call)
@@ -95,11 +94,14 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
                 mediaPlayer.setDataSource(mContext, uri);
                 mediaPlayer.prepare();
                 mediaPlayer.start();
+                stateBuilder = new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING, 0L, 0f);
+                getMediaSession().setPlaybackState(stateBuilder.build());
             }
             catch (IOException ex)
             {
-                System.out.println(ex);
+                System.err.println(ex);
             }
+
 
         }
     }
@@ -108,7 +110,10 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     public void onStop() {
 //        unregisterReceiver(myNoisyAudioStreamReceiver);
         // Start the service
-        mediaPlayerAdapter.onStop();
+        mediaPlayer.stop();
+        mediaPlayer.reset();
+        stateBuilder = new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_STOPPED, 0L, 0f);
+        getMediaSession().setPlaybackState(stateBuilder.build());
         service.stopSelf();
         // Set the session inactive  (and update metadata and state)
         getMediaSession().setActive(false);
@@ -121,7 +126,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     @Override
     public void onPause() {
         // Update metadata and state
-        mediaPlayerAdapter.pause();
+        mediaPlayer.pause();
+        stateBuilder = new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PAUSED, 0L, 0f);
+        getMediaSession().setPlaybackState(stateBuilder.build());
 
         // pause the player (custom call)
 //        player.pause();
