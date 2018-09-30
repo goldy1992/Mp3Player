@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.service;
+package com.example.mike.mp3player.unusedClasses;
 
 /**
  * Created by Mike on 21/12/2017.
@@ -34,6 +34,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
 import com.example.mike.mp3player.client.MediaPlayerActivity;
+import com.example.mike.mp3player.service.MediaPlaybackService;
 
 public class MediaNotificationManager {
 

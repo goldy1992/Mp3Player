@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.service;
+package com.example.mike.mp3player.unusedClasses;
 
 import android.content.ContentResolver;
 import android.content.Context;

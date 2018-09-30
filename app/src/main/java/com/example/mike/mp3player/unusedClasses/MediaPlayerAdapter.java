@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.service;
+package com.example.mike.mp3player.unusedClasses;
 
 /**
  * Created by michael.goldsmith on 18/10/2017.
@@ -6,8 +6,6 @@ package com.example.mike.mp3player.service;
 
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.SystemClock;

@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
-import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+
+import com.example.mike.mp3player.unusedClasses.MediaNotificationManager;
+import com.example.mike.mp3player.unusedClasses.MediaPlayerAdapter;
+import com.example.mike.mp3player.unusedClasses.MediaPlayerListener;
 
 import java.io.IOException;
 

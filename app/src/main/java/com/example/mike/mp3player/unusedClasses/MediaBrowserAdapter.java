@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client;
+package com.example.mike.mp3player.unusedClasses;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -88,7 +88,7 @@ public class MediaBrowserAdapter {
 
     /**
      * The internal state of the app needs to revert to what it looks like when it started before
-     * any connections to the {@link MusicService} happens via the {@link MediaSessionCompat}.
+     * any connections to the {@link MediaPlaybackService} happens via the {@link android.support.v4.media.session.MediaSessionCompat}.
      */
     private void resetState() {
         mState.reset();

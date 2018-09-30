@@ -1,8 +1,11 @@
-package com.example.mike.mp3player.service;
+package com.example.mike.mp3player.unusedClasses;
 
 import android.app.Notification;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+
+import com.example.mike.mp3player.service.MediaPlaybackService;
+import com.example.mike.mp3player.service.MediaSessionCallback;
 
 /**
  * Created by Mike on 21/12/2017.
