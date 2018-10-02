@@ -31,7 +31,13 @@ dependencies {
     implementation 'com.android.support:design:24.2.1'
     implementation 'com.android.support:gridlayout-v7:24.2.1'
     implementation 'com.android.support:appcompat-v7:24.2.1'
+
     testImplementation 'junit:junit:4.12'
-// https://mvnrepository.com/artifact/org.mockito/mockito-core
+    // https://mvnrepository.com/artifact/org.mockito/mockito-core
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.22.0'
+    testImplementation 'org.powermock:powermock-core:2.0.0-beta.5'
+    // https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4
+    testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: '2.0.0-beta.5'
+    testImplementation 'org.powermock:powermock-api-mockito2:2.0.0-beta.5'
+    testImplementation "org.robolectric:robolectric:3.8"
 }

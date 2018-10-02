@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.mike.mp3player.client.MediaPlayerActivity">
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="8"
+        android:orientation="horizontal"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context="com.example.mike.mp3player.client.MediaPlayerActivity">
     <Button
         android:id="@+id/stopButton"
         android:layout_width="wrap_content"
@@ -13,6 +21,7 @@
         android:text="Stop"
         android:onClick="stop"/>
 
+
     <com.example.mike.mp3player.client.view.PlayPauseButton
         android:id="@+id/playPauseButton"
         android:layout_width="wrap_content"
@@ -20,4 +29,25 @@
         android:layout_weight="1"
         android:text="Play"
         android:onClick="playPause"/>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        tools:context="com.example.mike.mp3player.client.MediaPlayerActivity">
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/default_gap"
+            />
+
+    </LinearLayout>
+
 </LinearLayout>

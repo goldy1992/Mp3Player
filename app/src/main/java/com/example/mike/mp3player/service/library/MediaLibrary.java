@@ -1,41 +1,60 @@
 package com.example.mike.mp3player.service.library;
 
-import android.os.Environment;
 
 import com.example.mike.mp3player.service.library.utils.IsDirectoryFilter;
+import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
+import com.example.mike.mp3player.service.library.utils.MusicFileFilter;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MediaLibrary {
 
     private boolean playlistRecursInSubDirectory = false;
-    private Collection<String> library;
+    private Map<File, List<File>> library;
+    private MusicFileFilter musicFileFilter = new MusicFileFilter();
     private IsDirectoryFilter isDirectoryFilter = new IsDirectoryFilter();
 
+    public void init() {
+        library = new HashMap<>();
+    }
+
     public void buildMediaLibrary(){
-        File rootDirectory = Environment.getRootDirectory();
-        String path = rootDirectory.getPath();
+        File rootDirectory = MediaLibraryUtils.getRootDirectory();
+        buildDirectoryPlaylist(rootDirectory);
+    }
 
-        File currentDirectory = rootDirectory;
-
+    private void buildDirectoryPlaylist(File directory)
+    {
         List<File> directories = new ArrayList<>();
         List<File> files = new ArrayList<>();
 
-        for (String currentFileString : currentDirectory.list()) {
-            if(isDirectoryFilter.accept(currentDirectory, currentFileString)) {
-                directories.add(new File(currentDirectory, currentFileString));
-            }
-            else {
-                files.add(new File(currentDirectory, currentFileString));
+        if (directory.list() != null) {
+            for (String currentFileString : directory.list()) {
+                if (isDirectoryFilter.accept(directory, currentFileString)) {
+                    directories.add(new File(directory, currentFileString));
+                } else if (musicFileFilter.accept(directory, currentFileString)) {
+                    files.add(new File(directory, currentFileString));
+                }
+            } // for
+        }
+
+        if (!files.isEmpty()) {
+            getLibrary().put(directory, files);
+        }
+
+        if (!directories.isEmpty())
+        {
+            for (File directoryToBrowse : directories) {
+                buildDirectoryPlaylist(directoryToBrowse);
             }
         }
     }
 
-    public void buildDirectoryPlaylist(File directory)
-    {
-      //  directory.
+    public Map<File, List<File>> getLibrary() {
+        return library;
     }
 }
