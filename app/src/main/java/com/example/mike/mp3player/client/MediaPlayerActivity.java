@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.view.PlayPauseButton;
+import com.example.mike.mp3player.client.view.SeekerBar;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 
 /**
@@ -24,16 +25,25 @@ public class MediaPlayerActivity extends AppCompatActivity {
     private MediaBrowserCompat mMediaBrowser;
     private MyConnectionCallback mConnectionCallbacks;
     private MyMediaControllerCallback myMediaControllerCallback;
+    private MySeekerMediaControllerCallback mySeekerMediaControllerCallback;
     private MediaControllerCompat mediaControllerCompat;
     private Uri selectedUri;
     private PlayPauseButton playPauseButton;
+    private SeekerBar seekerBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setSelectedUri((Uri)  getIntent().getExtras().get("uri"));
+        setContentView(R.layout.activity_media_player);
+        this.playPauseButton = (PlayPauseButton) this.findViewById(R.id.playPauseButton);
+        this.seekerBar = (SeekerBar) this.findViewById(R.id.seekBar);
+
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            this.setSelectedUri((Uri) getIntent().getExtras().get("uri"));
+        }
         myMediaControllerCallback = new MyMediaControllerCallback(this);
-        mConnectionCallbacks = new MyConnectionCallback(this, myMediaControllerCallback);
+        mySeekerMediaControllerCallback = new MySeekerMediaControllerCallback(seekerBar);
+        mConnectionCallbacks = new MyConnectionCallback(this, seekerBar, myMediaControllerCallback, mySeekerMediaControllerCallback);
 
         // ...
         // Create MediaBrowserServiceCompat
@@ -41,8 +51,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 new ComponentName(this, MediaPlaybackService.class),
                 mConnectionCallbacks,
                 null);
-        setContentView(R.layout.activity_media_player);
-        this.playPauseButton = (PlayPauseButton) this.findViewById(R.id.playPauseButton);
+
     }
 
     @Override

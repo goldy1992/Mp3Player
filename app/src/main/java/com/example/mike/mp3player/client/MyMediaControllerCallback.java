@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client;
 
+import android.animation.ValueAnimator;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -11,11 +12,11 @@ import com.example.mike.mp3player.client.view.PlayPauseButton;
  * Created by Mike on 04/10/2017.
  */
 
-public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
+public class MyMediaControllerCallback extends MediaControllerCompat.Callback implements ValueAnimator.AnimatorUpdateListener{
 
     private final MediaPlayerActivity activity;
 
-    public MyMediaControllerCallback(MediaPlayerActivity activity) {
+    MyMediaControllerCallback(MediaPlayerActivity activity) {
         this.activity = activity;
     }
 
@@ -32,4 +33,8 @@ public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
         } // switch
     }
 
+    @Override
+    public void onAnimationUpdate(ValueAnimator animation) {
+
+    }
 }

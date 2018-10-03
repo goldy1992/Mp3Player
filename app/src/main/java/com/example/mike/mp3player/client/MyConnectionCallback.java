@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.view.SeekerBar;
 
 /**
  * Created by Mike on 04/10/2017.
@@ -20,17 +21,26 @@ import com.example.mike.mp3player.R;
 public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback {
     private Context context;
     private MediaPlayerActivity mediaPlayerActivity;
+    private SeekerBar seekerBar;
+
     private MyMediaControllerCallback controllerCallback;
+    private MySeekerMediaControllerCallback seekerMediaControllerCallback;
+
     private MediaControllerCompat mediaControllerCompat;
 
-    public MyConnectionCallback(
+    MyConnectionCallback(
             MediaPlayerActivity mediaPlayerActivity,
-            MyMediaControllerCallback controllerCallback)
+            SeekerBar seekerBar,
+            MyMediaControllerCallback controllerCallback,
+            MySeekerMediaControllerCallback seekerMediaControllerCallback)
     {
         super();
         this.mediaPlayerActivity = mediaPlayerActivity;
+        this.seekerBar = seekerBar;
+
         this.context = mediaPlayerActivity.getApplicationContext();
         this.controllerCallback = controllerCallback;
+        this.seekerMediaControllerCallback = seekerMediaControllerCallback;
     }
 
     @Override
@@ -42,8 +52,10 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
         try {
             mediaControllerCompat = new MediaControllerCompat(context, token);
             mediaControllerCompat.registerCallback(controllerCallback);
+            mediaControllerCompat.registerCallback(seekerMediaControllerCallback);
 
             mediaPlayerActivity.setMediaControllerCompat(mediaControllerCompat);
+            seekerBar.setMediaController(mediaControllerCompat);
             // Display the initial state
             mediaControllerCompat.getMetadata();
             mediaControllerCompat.getPlaybackState();
