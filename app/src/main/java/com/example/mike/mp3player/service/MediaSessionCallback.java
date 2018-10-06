@@ -3,6 +3,7 @@ package com.example.mike.mp3player.service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.media.MediaMetadata;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -97,8 +98,11 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
                 mediaPlayer.setDataSource(mContext, uri);
                 mediaPlayer.prepare();
                 mediaPlayer.start();
-                stateBuilder = new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING, 0L, 0f);
+                stateBuilder = new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING, 0L, mediaPlayer.getPlaybackParams().getSpeed());
+                MediaMetadataCompat.Builder mediaMetadataCompatBuilder = new MediaMetadataCompat.Builder().putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
+                getMediaSession().setMetadata(mediaMetadataCompatBuilder.build());
                 getMediaSession().setPlaybackState(stateBuilder.build());
+
             }
             catch (IOException ex)
             {
@@ -130,7 +134,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     public void onPause() {
         // Update metadata and state
         mediaPlayer.pause();
-        stateBuilder = new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PAUSED, 0L, 0f);
+        stateBuilder = new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PAUSED, mediaPlayer.getCurrentPosition(), mediaPlayer.getPlaybackParams().getSpeed());
         getMediaSession().setPlaybackState(stateBuilder.build());
 
         // pause the player (custom call)
