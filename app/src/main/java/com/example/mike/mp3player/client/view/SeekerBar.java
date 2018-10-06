@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v7.widget.AppCompatSeekBar;
+import android.util.AttributeSet;
 
 import com.example.mike.mp3player.client.MySeekerMediaControllerCallback;
 import com.example.mike.mp3player.client.SeekerBarChangerListener;
@@ -21,10 +22,19 @@ public class SeekerBar extends AppCompatSeekBar {
 
     }
 
+    public SeekerBar(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        super.setOnSeekBarChangeListener(new SeekerBarChangerListener());
+    }
+
+    public SeekerBar(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        super.setOnSeekBarChangeListener(new SeekerBarChangerListener());
+    }
+
     @Override
     public final void setOnSeekBarChangeListener(OnSeekBarChangeListener l) {
-        // Prohibit adding seek listeners to this subclass.
-        throw new UnsupportedOperationException("Cannot add listeners to a MediaSeekBar");
+        super.setOnSeekBarChangeListener(l);
     }
 
     public void setMediaController(final MediaControllerCompat mediaController) {
