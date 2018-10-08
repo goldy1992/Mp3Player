@@ -66,7 +66,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
             mediaSession.setActive(true);
             // start the player (custom call)
             mediaPlayer.start();
-            stateBuilder = new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING, 0L, 0f);
+            stateBuilder = new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING, mediaPlayer.getCurrentPosition(), 1f);
             getMediaSession().setPlaybackState(stateBuilder.build());
 //            // Register BECOME_NOISY BroadcastReceiver
 //            registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
@@ -102,14 +102,11 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
                 MediaMetadataCompat.Builder mediaMetadataCompatBuilder = new MediaMetadataCompat.Builder().putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
                 getMediaSession().setMetadata(mediaMetadataCompatBuilder.build());
                 getMediaSession().setPlaybackState(stateBuilder.build());
-
             }
             catch (IOException ex)
             {
                 System.err.println(ex);
             }
-
-
         }
     }
 

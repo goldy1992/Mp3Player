@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.view.animation.LinearInterpolator;
 
 import com.example.mike.mp3player.client.view.SeekerBar;
@@ -12,6 +13,7 @@ import com.example.mike.mp3player.client.view.SeekerBar;
 public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callback implements ValueAnimator.AnimatorUpdateListener {
 
     private final SeekerBar seekerBar;
+    private final int NO_PROGRESS = 0;
 
     public MySeekerMediaControllerCallback(SeekerBar seekerBar) {
         this.seekerBar = seekerBar;
@@ -31,9 +33,7 @@ public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callb
             seekerBar.setValueAnimator(null);
         }
 
-        final int progress = state != null
-                ? (int) state.getPosition()
-                : 0;
+        final int progress = state != null ? (int) state.getPosition() : NO_PROGRESS;
         seekerBar.setProgress(progress);
 
         // If the media is playing then the seekbar should follow it, and the easiest
@@ -57,7 +57,7 @@ public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callb
         final int max = metadata != null
                 ? (int) metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
                 : 0;
-        seekerBar.setProgress(0);
+        seekerBar.setProgress(NO_PROGRESS);
         seekerBar.setMax(max);
     }
 
