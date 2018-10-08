@@ -27,6 +27,7 @@ public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callb
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
         super.onPlaybackStateChanged(state);
 
+        Log.d("PlaybackStatusCompat", "" + state);
         // If there's an ongoing animation, stop it now.
         if (seekerBar.getValueAnimator() != null) {
             seekerBar.getValueAnimator().cancel();

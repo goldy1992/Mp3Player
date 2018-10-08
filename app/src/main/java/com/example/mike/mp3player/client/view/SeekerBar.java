@@ -18,18 +18,14 @@ public class SeekerBar extends AppCompatSeekBar {
 
     public SeekerBar(Context context) {
         super(context);
-        super.setOnSeekBarChangeListener(new SeekerBarChangerListener());
-
     }
 
     public SeekerBar(Context context, AttributeSet attrs) {
         super(context, attrs);
-        super.setOnSeekBarChangeListener(new SeekerBarChangerListener());
     }
 
     public SeekerBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        super.setOnSeekBarChangeListener(new SeekerBarChangerListener());
     }
 
     @Override
@@ -40,7 +36,8 @@ public class SeekerBar extends AppCompatSeekBar {
     public void setMediaController(final MediaControllerCompat mediaController) {
         if (mediaController != null) {
             mControllerCallback = new MySeekerMediaControllerCallback(this);
-            mediaController.registerCallback(mControllerCallback);
+            SeekerBarChangerListener seekerBarChangerListener = new SeekerBarChangerListener(mediaController);
+            super.setOnSeekBarChangeListener(seekerBarChangerListener);
         } else if (mMediaController != null) {
             mMediaController.unregisterCallback(mControllerCallback);
             mControllerCallback = null;

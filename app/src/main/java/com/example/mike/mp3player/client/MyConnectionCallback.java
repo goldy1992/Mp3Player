@@ -19,6 +19,7 @@ import com.example.mike.mp3player.client.view.SeekerBar;
  */
 
 public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback {
+
     private Context context;
     private MediaPlayerActivity mediaPlayerActivity;
     private SeekerBar seekerBar;
@@ -59,6 +60,7 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
             // Display the initial state
             mediaControllerCompat.getMetadata();
             mediaControllerCompat.getPlaybackState();
+            mediaControllerCompat.getTransportControls().prepareFromUri(mediaPlayerActivity.getSelectedUri(), null);
         }
         catch (RemoteException e) {
             e.printStackTrace();

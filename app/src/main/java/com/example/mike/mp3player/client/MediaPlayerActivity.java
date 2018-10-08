@@ -51,7 +51,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 new ComponentName(this, MediaPlaybackService.class),
                 mConnectionCallbacks,
                 null);
-
     }
 
     @Override
@@ -78,13 +77,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
         if (pbState == PlaybackStateCompat.STATE_PLAYING) {
             getMediaControllerCompat().getTransportControls().pause();
             getPlayPauseButton().setTextPlay();
-        } else if (pbState == PlaybackStateCompat.STATE_PAUSED)
+        } else
         {
             getMediaControllerCompat().getTransportControls().play();
-            getPlayPauseButton().setTextPause();
-        }
-        else {
-            getMediaControllerCompat().getTransportControls().playFromUri(getSelectedUri(), null);
             getPlayPauseButton().setTextPause();
         }
     }
