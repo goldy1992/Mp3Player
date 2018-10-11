@@ -96,11 +96,5 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         result.sendResult(mediaItems);
     }
 
-    public MediaPlayer getMediaPlayer() {
-        return mediaPlayer;
-    }
 
-    public void setMediaPlayer(MediaPlayer mediaPlayer) {
-        this.mediaPlayer = mediaPlayer;
-    }
 }
