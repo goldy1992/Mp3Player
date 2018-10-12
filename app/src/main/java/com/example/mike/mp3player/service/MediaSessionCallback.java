@@ -1,15 +1,9 @@
 package com.example.mike.mp3player.service;
 
 import android.content.Context;
-import android.content.Intent;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-
-import com.example.mike.mp3player.unusedClasses.MediaNotificationManager;
-
 /**
  * Created by Mike on 24/09/2017.
  */
@@ -17,17 +11,12 @@ import com.example.mike.mp3player.unusedClasses.MediaNotificationManager;
 public class MediaSessionCallback extends MediaSessionCompat.Callback {
 
     private MediaSessionCompat mediaSession;
-    private Context mContext;
-    private MediaPlaybackService service;
+    private ServiceManager serviceManager;
     private MyMediaPlayerAdapter myMediaPlayerAdapter;
-    private MediaNotificationManager mMediaNotificationManager;
-    private MediaMetadataCompat mPreparedMedia;
-    private MediaPlayer mediaPlayer;
 
 
-    public MediaSessionCallback(Context context, MediaSessionCompat mediaSession, MediaPlaybackService service) {
-        this.mContext = context;
-        this.service = service;
+    public MediaSessionCallback(Context context, MediaSessionCompat mediaSession, ServiceManager serviceManager) {
+        this.serviceManager = serviceManager;
         this.mediaSession = mediaSession;
         this.myMediaPlayerAdapter = new MyMediaPlayerAdapter(context, mediaSession);
         this.myMediaPlayerAdapter.init();
@@ -35,8 +24,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
 
     @Override
     public void onPlay() {
-        startService();
         myMediaPlayerAdapter.play();
+        serviceManager.startService();
+        mediaSession.setActive(true);
     }
 
     @Override
@@ -49,14 +39,15 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     @Override
     public void onPlayFromUri(Uri uri, Bundle bundle) {
         super.onPlayFromUri(uri, bundle);
-        myMediaPlayerAdapter.playFromuri(uri);
+        myMediaPlayerAdapter.playFromUri(uri);
     }
 
     @Override
     public void onStop() {
-        service.stopSelf();
+        serviceManager.stopService();
         myMediaPlayerAdapter.stop();
-        service.stopForeground(false);
+        // Set the session inactive  (and update metadata and state)
+        mediaSession.setActive(false);
     }
 
     @Override
@@ -64,8 +55,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
         myMediaPlayerAdapter.pause();
         // unregister BECOME_NOISY BroadcastReceiver
 //        unregisterReceiver(myNoisyAudioStreamReceiver, intentFilter);
-        // Take the service out of the foreground, retain the notification
-        service.stopForeground(false);
+        // Take the serviceManager out of the foreground, retain the notification
+        serviceManager.pauseService();
     }
 
     @Override
@@ -81,24 +72,11 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
         myMediaPlayerAdapter.seekTo(position);
     }
 
-    private void startService()
-    {
-        Intent startServiceIntent = new Intent(mContext, MediaPlaybackService.class);
-        startServiceIntent.setAction("com.example.mike.mp3player.service.MediaPlaybackService");
-        service.startService(startServiceIntent);
-    }
-
-
     public MediaSessionCompat getMediaSession() {
         return mediaSession;
     }
 
-
-    public MediaNotificationManager getmMediaNotificationManager() {
-        return mMediaNotificationManager;
-    }
-
-    public MediaPlaybackService getService() {
-        return service;
+    public ServiceManager getServiceManager() {
+        return serviceManager;
     }
 }

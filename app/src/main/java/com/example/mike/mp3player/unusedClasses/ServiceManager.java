@@ -26,7 +26,7 @@ public class ServiceManager {
         this.mMediaNotificationManager = mediaSessionCallback.getmMediaNotificationManager();
         this.mPlayback = mediaSessionCallback.getMediaPlayerAdapter();
         this.mSession = mediaSessionCallback.getMediaSession();
-        this.service = mediaSessionCallback.getService();
+        this.service = mediaSessionCallback.getServiceManager();
     }
 
     public void moveServiceToStartedState(PlaybackStateCompat state) {
@@ -52,7 +52,7 @@ public class ServiceManager {
     }
 
     public void moveServiceOutOfStartedState(PlaybackStateCompat state) {
-        MediaPlaybackService service = mediaSessionCallback.getService();
+        MediaPlaybackService service = mediaSessionCallback.getServiceManager();
         service.stopForeground(true);
         service.stopSelf();
         mServiceInStartedState = false;

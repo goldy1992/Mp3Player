@@ -3,6 +3,7 @@ package com.example.mike.mp3player.service;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.PlaybackParams;
 import android.net.Uri;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -20,17 +21,19 @@ public class MyMediaPlayerAdapter {
     private PlaybackStateCompat.Builder stateBuilder;
     private MediaSessionCompat mediaSession;
     private int currentState;
+    private PlayBackNotifier playBackNotifier;
 
-    public MyMediaPlayerAdapter(Context context, MediaSessionCompat mediaSession)
-    {
+    public MyMediaPlayerAdapter(Context context, MediaSessionCompat mediaSession, PlayBackNotifier playBackNotifier) {
         this.context = context;
         this.mediaSession = mediaSession;
+        this.playBackNotifier = playBackNotifier;
     }
 
     public void init()
     {
         if (mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
+            mediaPlayer.setPlaybackParams(new PlaybackParams());
         }
         this.afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
             @Override
@@ -43,13 +46,11 @@ public class MyMediaPlayerAdapter {
         if (requestAudioFocus()) {
             try {
                 // Set the session active  (and update metadata and state)
-
                 currentState = PlaybackStateCompat.STATE_PLAYING;
                 // start the player (custom call)
                 mediaPlayer.start();
-                stateBuilder = new PlaybackStateCompat.Builder().setState(currentState, mediaPlayer.getCurrentPosition(), 1f);
+                playBackNotifier.notifyPlay(mediaPlayer.getCurrentPosition(), mediaPlayer.getPlaybackParams().getSpeed());
                 mediaSession.setPlaybackState(stateBuilder.build());
-                mediaSession.setActive(true);
                 //            // Register BECOME_NOISY BroadcastReceiver
 //            registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
 //            // Put the service in the foreground, post notification
@@ -60,7 +61,7 @@ public class MyMediaPlayerAdapter {
         }
     }
 
-    public void playFromuri(Uri uri) {
+    public void playFromUri(Uri uri) {
         if (requestAudioFocus()) {
                      // Set the session active  (and update metadata and state)
             mediaSession.setActive(true);
@@ -69,11 +70,10 @@ public class MyMediaPlayerAdapter {
                 mediaPlayer.setDataSource(context, uri);
                 mediaPlayer.prepare();
                 mediaPlayer.start();
-                currentState = PlaybackStateCompat.STATE_PLAYING;
-                stateBuilder = new PlaybackStateCompat.Builder().setState(currentState, 0L, mediaPlayer.getPlaybackParams().getSpeed());
+                this.currentUri = uri;
+                playBackNotifier.notifyPlay(0L, mediaPlayer.getPlaybackParams().getSpeed());
                 MediaMetadataCompat.Builder mediaMetadataCompatBuilder = new MediaMetadataCompat.Builder().putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
                 mediaSession.setMetadata(mediaMetadataCompatBuilder.build());
-                mediaSession.setPlaybackState(stateBuilder.build());
             } catch (IOException ex) {
                 Log.e("MediaSessionCallback", "" + ex);
             }
@@ -104,9 +104,6 @@ public class MyMediaPlayerAdapter {
         mediaPlayer.reset();
         stateBuilder = new PlaybackStateCompat.Builder().setState(currentState, 0L, 0f);
         mediaSession.setPlaybackState(stateBuilder.build());
-
-        // Set the session inactive  (and update metadata and state)
-        mediaSession.setActive(false);
         // Take the service out of the foreground
     }
 
