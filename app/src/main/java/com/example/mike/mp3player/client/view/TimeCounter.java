@@ -1,22 +1,23 @@
 package com.example.mike.mp3player.client.view;
 
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.widget.TextView;
-import com.example.mike.mp3player.client.TimerUtils;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import static com.example.mike.mp3player.client.TimerUtils.ONE_THOUSAND;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import static com.example.mike.mp3player.client.TimerUtils.ONE_SECOND;
 import static com.example.mike.mp3player.client.TimerUtils.formatTime;
 
 public class TimeCounter {
     private TextView view;
     private long duration;
     private long currentTime;
-    private Timer timer = new Timer();
+    private ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
     private boolean isRunning = false;
-    private static final String LOG_TAG = "TimeCounter";
+    public static final String LOG_TAG = "TimeCounter";
 
     public TimeCounter(TextView view) {
         this.view = view;
@@ -35,20 +36,18 @@ public class TimeCounter {
     }
 
     private void work(long startTime) {
-        cancelTimer();
         currentTime = startTime;
-        Log.d(LOG_TAG, "duration " + duration + " - currentTime " + currentTime + " = " + (duration-currentTime));
         view.setText(formatTime(startTime));
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                currentTime += ONE_THOUSAND;
-                Log.d(LOG_TAG, "current time: " + currentTime);
+                currentTime += ONE_SECOND;
                 view.setText(formatTime(currentTime));
             }
         };
-        timer.scheduleAtFixedRate(timerTask,0L, ONE_THOUSAND);
-        timerTask.run();
+        cancelTimer();
+        timer.scheduleAtFixedRate(timerTask,0L, ONE_SECOND, TimeUnit.MILLISECONDS);
+        isRunning = true;
     }
 
     private void haltTimer(long currentTime) {
@@ -65,7 +64,9 @@ public class TimeCounter {
 
     private void cancelTimer() {
         if (isRunning) {
-            timer.cancel();
+            // cancel timer and make new one
+            timer.shutdown();
+            timer = Executors.newSingleThreadScheduledExecutor();
         }
         isRunning = false;
 

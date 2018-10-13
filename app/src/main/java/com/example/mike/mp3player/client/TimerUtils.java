@@ -5,10 +5,10 @@ import java.util.Date;
 
 public final class TimerUtils {
 
-    public static final int ONE_THOUSAND = 1000;
+    public static final int ONE_SECOND = 1000;
 
     public static int convertToSeconds(long milliseconds) {
-        return (int) (milliseconds / ONE_THOUSAND);
+        return (int) (milliseconds / ONE_SECOND);
     }
 
     public static String formatTime(long miliseconds) {
