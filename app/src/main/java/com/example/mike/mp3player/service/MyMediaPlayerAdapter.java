@@ -14,6 +14,7 @@ import java.io.IOException;
 
 public class MyMediaPlayerAdapter {
 
+    private static final String LOG_TAG = "MEDIA_PLAYER_ADAPTER";
     private MediaPlayer mediaPlayer;
     private AudioManager.OnAudioFocusChangeListener afChangeListener;
     private Uri currentUri;
@@ -22,11 +23,13 @@ public class MyMediaPlayerAdapter {
     private MediaSessionCompat mediaSession;
     private int currentState;
     private PlayBackNotifier playBackNotifier;
+    private MetaDataNotifier metaDataNotifier;
 
-    public MyMediaPlayerAdapter(Context context, MediaSessionCompat mediaSession, PlayBackNotifier playBackNotifier) {
+    public MyMediaPlayerAdapter(Context context, MediaSessionCompat mediaSession, PlayBackNotifier playBackNotifier, MetaDataNotifier metaDataNotifier) {
         this.context = context;
         this.mediaSession = mediaSession;
         this.playBackNotifier = playBackNotifier;
+        this.metaDataNotifier = metaDataNotifier;
     }
 
     public void init()
@@ -50,7 +53,6 @@ public class MyMediaPlayerAdapter {
                 // start the player (custom call)
                 mediaPlayer.start();
                 playBackNotifier.notifyPlay(mediaPlayer.getCurrentPosition(), mediaPlayer.getPlaybackParams().getSpeed());
-                mediaSession.setPlaybackState(stateBuilder.build());
                 //            // Register BECOME_NOISY BroadcastReceiver
 //            registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
 //            // Put the service in the foreground, post notification
@@ -67,13 +69,11 @@ public class MyMediaPlayerAdapter {
             mediaSession.setActive(true);
             // start the player (custom call)
             try {
-                mediaPlayer.setDataSource(context, uri);
+                setCurrentUri(uri);
                 mediaPlayer.prepare();
                 mediaPlayer.start();
-                this.currentUri = uri;
                 playBackNotifier.notifyPlay(0L, mediaPlayer.getPlaybackParams().getSpeed());
-                MediaMetadataCompat.Builder mediaMetadataCompatBuilder = new MediaMetadataCompat.Builder().putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
-                mediaSession.setMetadata(mediaMetadataCompatBuilder.build());
+                metaDataNotifier.notifyMetaDataChange(mediaPlayer);
             } catch (IOException ex) {
                 Log.e("MediaSessionCallback", "" + ex);
             }
@@ -81,24 +81,14 @@ public class MyMediaPlayerAdapter {
     }
 
     public void prepareFromUri(Uri uri) {
-        try
-        {
-            mediaPlayer.reset();
-            mediaPlayer.setDataSource(context, uri);
-            this.currentUri = uri;
-            currentState = PlaybackStateCompat.STATE_STOPPED;
-            stateBuilder = new PlaybackStateCompat.Builder().setState(currentState, 0L, 0f);
-            MediaMetadataCompat.Builder mediaMetadataCompatBuilder = new MediaMetadataCompat.Builder().putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
-            mediaSession.setMetadata(mediaMetadataCompatBuilder.build());
-            mediaSession.setPlaybackState(stateBuilder.build());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+        mediaPlayer.reset();
+        setCurrentUri(uri);
+        currentState = PlaybackStateCompat.STATE_PAUSED;
+        playBackNotifier.notifyPause(0L);
+        metaDataNotifier.notifyMetaDataChange(mediaPlayer);    }
 
     public void stop() {
         // unregisterReceiver(myNoisyAudioStreamReceiver);
-
         currentState= PlaybackStateCompat.STATE_STOPPED;
         mediaPlayer.stop();
         mediaPlayer.reset();
@@ -111,14 +101,13 @@ public class MyMediaPlayerAdapter {
         // Update metadata and state
         mediaPlayer.pause();
         currentState = PlaybackStateCompat.STATE_PAUSED;
-        stateBuilder = new PlaybackStateCompat.Builder().setState(currentState, mediaPlayer.getCurrentPosition(), mediaPlayer.getPlaybackParams().getSpeed());
-        mediaSession.setPlaybackState(stateBuilder.build());
+        playBackNotifier.notifyPause(mediaPlayer.getCurrentPosition());
     }
 
 
     public void seekTo(long position) {
         mediaPlayer.seekTo((int)position);
-        stateBuilder = new PlaybackStateCompat.Builder().setState(currentState, mediaPlayer.getCurrentPosition(), mediaPlayer.getPlaybackParams().getSpeed());
+        playBackNotifier.notifySeekTo(currentState, position, mediaPlayer.getPlaybackParams().getSpeed());
         mediaSession.setPlaybackState(stateBuilder.build());
     }
 
@@ -131,5 +120,15 @@ public class MyMediaPlayerAdapter {
                 AudioManager.STREAM_MUSIC,
                 // Request permanent focus.
                 AudioManager.AUDIOFOCUS_GAIN);
+    }
+
+    public void setCurrentUri(Uri uri){
+        try {
+            mediaPlayer.setDataSource(context, uri);
+            this.currentUri = uri;
+
+        } catch (IOException ex) {
+            Log.e(LOG_TAG, ex.getMessage());
+        }
     }
 }

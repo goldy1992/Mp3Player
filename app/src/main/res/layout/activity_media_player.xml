@@ -13,13 +13,15 @@
         android:orientation="horizontal"
         xmlns:tools="http://schemas.android.com/tools"
         tools:context="com.example.mike.mp3player.client.MediaPlayerActivity">
-    <Button
-        android:id="@+id/stopButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Stop"
-        android:onClick="stop"/>
+
+        <Button
+            android:id="@+id/stopButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="stop"
+            android:text="Stop"
+            tools:clickable="false" />
 
 
     <com.example.mike.mp3player.client.view.PlayPauseButton
@@ -28,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Play"
+        android:clickable="false"
         android:onClick="playPause"/>
     </LinearLayout>
 
@@ -39,6 +42,13 @@
         android:layout_weight="1"
         android:orientation="vertical"
         tools:context="com.example.mike.mp3player.client.MediaPlayerActivity">
+
+        <TextView
+            android:id="@+id/timer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="textEnd"
+            android:text="00:00"/>
 
         <com.example.mike.mp3player.client.view.SeekerBar
             android:id="@+id/seekBar"

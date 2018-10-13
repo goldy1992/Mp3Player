@@ -18,7 +18,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     public MediaSessionCallback(Context context, MediaSessionCompat mediaSession, ServiceManager serviceManager) {
         this.serviceManager = serviceManager;
         this.mediaSession = mediaSession;
-        this.myMediaPlayerAdapter = new MyMediaPlayerAdapter(context, mediaSession);
+        PlayBackNotifier playBackNotifier = new PlayBackNotifier(mediaSession);
+        MetaDataNotifier metaDataNotifier = new MetaDataNotifier(mediaSession);
+        this.myMediaPlayerAdapter = new MyMediaPlayerAdapter(context, mediaSession, playBackNotifier, metaDataNotifier);
         this.myMediaPlayerAdapter.init();
     }
 

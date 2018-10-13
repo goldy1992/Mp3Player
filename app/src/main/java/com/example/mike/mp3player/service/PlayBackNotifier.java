@@ -29,6 +29,15 @@ public class PlayBackNotifier {
         sendPlaybackState(playBackStateBuilder.build());
     }
 
+    public void notifyPause(long position) {
+        playBackStateBuilder = new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PAUSED, position, 0f);
+        sendPlaybackState(playBackStateBuilder.build());
+    }
+
+    public void notifySeekTo(int state, long position, float playbackSpeed) {
+        playBackStateBuilder = new PlaybackStateCompat.Builder().setState(state, position, playbackSpeed);
+        sendPlaybackState(playBackStateBuilder.build());
+    }
     private void sendPlaybackState(PlaybackStateCompat state) {
         mediaSession.setPlaybackState(state);
     }
