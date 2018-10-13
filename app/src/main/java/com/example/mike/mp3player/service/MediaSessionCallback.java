@@ -10,17 +10,13 @@ import android.support.v4.media.session.MediaSessionCompat;
 
 public class MediaSessionCallback extends MediaSessionCompat.Callback {
 
-    private MediaSessionCompat mediaSession;
     private ServiceManager serviceManager;
     private MyMediaPlayerAdapter myMediaPlayerAdapter;
 
 
-    public MediaSessionCallback(Context context, MediaSessionCompat mediaSession, ServiceManager serviceManager) {
+    public MediaSessionCallback(Context context, PlayBackNotifier playBackNotifier, MetaDataNotifier metaDataNotifier, ServiceManager serviceManager) {
         this.serviceManager = serviceManager;
-        this.mediaSession = mediaSession;
-        PlayBackNotifier playBackNotifier = new PlayBackNotifier(mediaSession);
-        MetaDataNotifier metaDataNotifier = new MetaDataNotifier(mediaSession);
-        this.myMediaPlayerAdapter = new MyMediaPlayerAdapter(context, mediaSession, playBackNotifier, metaDataNotifier);
+        this.myMediaPlayerAdapter = new MyMediaPlayerAdapter(context, playBackNotifier, metaDataNotifier);
         this.myMediaPlayerAdapter.init();
     }
 
@@ -28,12 +24,10 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     public void onPlay() {
         myMediaPlayerAdapter.play();
         serviceManager.startService();
-        mediaSession.setActive(true);
     }
 
     @Override
-    public void onPrepareFromUri(Uri uri, Bundle bundle)
-    {
+    public void onPrepareFromUri(Uri uri, Bundle bundle) {
         super.onPrepareFromUri(uri, bundle);
         myMediaPlayerAdapter.prepareFromUri(uri);
     }
@@ -42,14 +36,13 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     public void onPlayFromUri(Uri uri, Bundle bundle) {
         super.onPlayFromUri(uri, bundle);
         myMediaPlayerAdapter.playFromUri(uri);
+        serviceManager.startMediaSession();
     }
 
     @Override
     public void onStop() {
         serviceManager.stopService();
         myMediaPlayerAdapter.stop();
-        // Set the session inactive  (and update metadata and state)
-        mediaSession.setActive(false);
     }
 
     @Override
@@ -63,22 +56,13 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
 
     @Override
     public void onPrepare() {
-        if (!mediaSession.isActive()) {
-            mediaSession.setActive(true);
-        } // if session active
+//        if (!mediaSession.isActive()) {
+//            mediaSession.setActive(true);
+//        } // if session active
     } // onPrepare
 
     @Override
-    public void onSeekTo(long position )
-    {
+    public void onSeekTo(long position ) {
         myMediaPlayerAdapter.seekTo(position);
-    }
-
-    public MediaSessionCompat getMediaSession() {
-        return mediaSession;
-    }
-
-    public ServiceManager getServiceManager() {
-        return serviceManager;
     }
 }

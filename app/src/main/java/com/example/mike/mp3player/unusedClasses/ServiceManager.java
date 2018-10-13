@@ -23,10 +23,10 @@ public class ServiceManager {
 
     public void initServiceManager(MediaSessionCallback mediaSessionCallback) {
         this.mediaSessionCallback = mediaSessionCallback;
-        this.mMediaNotificationManager = mediaSessionCallback.getmMediaNotificationManager();
-        this.mPlayback = mediaSessionCallback.getMediaPlayerAdapter();
-        this.mSession = mediaSessionCallback.getMediaSession();
-        this.service = mediaSessionCallback.getServiceManager();
+//        this.mMediaNotificationManager = mediaSessionCallback.getmMediaNotificationManager();
+  //      this.mPlayback = mediaSessionCallback.getMediaPlayerAdapter();
+    //    this.mSession = mediaSessionCallback.getMediaSession();
+      //  this.service = mediaSessionCallback.getServiceManager();
     }
 
     public void moveServiceToStartedState(PlaybackStateCompat state) {
@@ -52,10 +52,10 @@ public class ServiceManager {
     }
 
     public void moveServiceOutOfStartedState(PlaybackStateCompat state) {
-        MediaPlaybackService service = mediaSessionCallback.getServiceManager();
-        service.stopForeground(true);
+        /*MediaPlaybackService service = mediaSessionCallback.getServiceManager();
+        srvice.stopForeground(true);
         service.stopSelf();
-        mServiceInStartedState = false;
+        mServiceInStartedState = false;*/
     }
 
 }

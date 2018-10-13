@@ -19,15 +19,14 @@ public class MyMediaPlayerAdapter {
     private AudioManager.OnAudioFocusChangeListener afChangeListener;
     private Uri currentUri;
     private Context context;
-    private PlaybackStateCompat.Builder stateBuilder;
     private MediaSessionCompat mediaSession;
     private int currentState;
     private PlayBackNotifier playBackNotifier;
     private MetaDataNotifier metaDataNotifier;
+    private boolean isPrepared = false;
 
-    public MyMediaPlayerAdapter(Context context, MediaSessionCompat mediaSession, PlayBackNotifier playBackNotifier, MetaDataNotifier metaDataNotifier) {
+    public MyMediaPlayerAdapter(Context context, PlayBackNotifier playBackNotifier, MetaDataNotifier metaDataNotifier) {
         this.context = context;
-        this.mediaSession = mediaSession;
         this.playBackNotifier = playBackNotifier;
         this.metaDataNotifier = metaDataNotifier;
     }
@@ -36,7 +35,7 @@ public class MyMediaPlayerAdapter {
     {
         if (mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
-            mediaPlayer.setPlaybackParams(new PlaybackParams());
+           // mediaPlayer.setPlaybackParams(new PlaybackParams());
         }
         this.afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
             @Override
@@ -66,16 +65,12 @@ public class MyMediaPlayerAdapter {
     public void playFromUri(Uri uri) {
         if (requestAudioFocus()) {
                      // Set the session active  (and update metadata and state)
-            mediaSession.setActive(true);
             // start the player (custom call)
-            try {
-                setCurrentUri(uri);
-                mediaPlayer.prepare();
+            setCurrentUri(uri);
+            if(prepare()) {
                 mediaPlayer.start();
                 playBackNotifier.notifyPlay(0L, mediaPlayer.getPlaybackParams().getSpeed());
                 metaDataNotifier.notifyMetaDataChange(mediaPlayer);
-            } catch (IOException ex) {
-                Log.e("MediaSessionCallback", "" + ex);
             }
         }
     }
@@ -83,17 +78,20 @@ public class MyMediaPlayerAdapter {
     public void prepareFromUri(Uri uri) {
         mediaPlayer.reset();
         setCurrentUri(uri);
-        currentState = PlaybackStateCompat.STATE_PAUSED;
-        playBackNotifier.notifyPause(0L);
-        metaDataNotifier.notifyMetaDataChange(mediaPlayer);    }
+        if (prepare()) {
+            currentState = PlaybackStateCompat.STATE_PAUSED;
+            playBackNotifier.notifyPause(0L);
+            metaDataNotifier.notifyMetaDataChange(mediaPlayer);
+        }
+    }
 
     public void stop() {
         // unregisterReceiver(myNoisyAudioStreamReceiver);
         currentState= PlaybackStateCompat.STATE_STOPPED;
+        isPrepared = false;
         mediaPlayer.stop();
         mediaPlayer.reset();
-        stateBuilder = new PlaybackStateCompat.Builder().setState(currentState, 0L, 0f);
-        mediaSession.setPlaybackState(stateBuilder.build());
+        playBackNotifier.notifyStop();
         // Take the service out of the foreground
     }
 
@@ -108,7 +106,6 @@ public class MyMediaPlayerAdapter {
     public void seekTo(long position) {
         mediaPlayer.seekTo((int)position);
         playBackNotifier.notifySeekTo(currentState, position, mediaPlayer.getPlaybackParams().getSpeed());
-        mediaSession.setPlaybackState(stateBuilder.build());
     }
 
     private boolean requestAudioFocus()
@@ -122,13 +119,26 @@ public class MyMediaPlayerAdapter {
                 AudioManager.AUDIOFOCUS_GAIN);
     }
 
-    public void setCurrentUri(Uri uri){
+    private void setCurrentUri(Uri uri){
         try {
             mediaPlayer.setDataSource(context, uri);
             this.currentUri = uri;
-
         } catch (IOException ex) {
             Log.e(LOG_TAG, ex.getMessage());
         }
+    }
+
+    private boolean prepare() {
+        if (!isPrepared) {
+            try {
+                mediaPlayer.prepare();
+                isPrepared = true;
+            } catch (IOException ex) {
+                Log.e(LOG_TAG, ex.getMessage());
+            }
+        }
+
+        return isPrepared;
+
     }
 }

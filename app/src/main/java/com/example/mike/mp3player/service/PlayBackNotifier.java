@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.service;
 
-import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
@@ -38,6 +37,12 @@ public class PlayBackNotifier {
         playBackStateBuilder = new PlaybackStateCompat.Builder().setState(state, position, playbackSpeed);
         sendPlaybackState(playBackStateBuilder.build());
     }
+
+    public void notifyStop() {
+        playBackStateBuilder = new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_STOPPED, 0L, 0f);
+        mediaSession.setPlaybackState(playBackStateBuilder.build());
+    }
+
     private void sendPlaybackState(PlaybackStateCompat state) {
         mediaSession.setPlaybackState(state);
     }

@@ -23,8 +23,6 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
 
     private MediaSessionCompat mMediaSession;
     private MediaSessionCallback mediaSessionCallback;
-    private PlayBackNotifier playBackNotifier;
-    private PlaybackStateCompat.Builder mStateBuilder;
     private ServiceManager serviceManager;
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
 
@@ -32,9 +30,10 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     public void onCreate() {
         super.onCreate();
         mMediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);
-        serviceManager = new ServiceManager(this, getApplicationContext());
-        mediaSessionCallback = new MediaSessionCallback(getApplicationContext(), mMediaSession, serviceManager);
-        playBackNotifier = new PlayBackNotifier(mMediaSession);
+        serviceManager = new ServiceManager(this, getApplicationContext(), mMediaSession);
+        PlayBackNotifier playBackNotifier = new PlayBackNotifier(mMediaSession);
+        MetaDataNotifier metaDataNotifier = new MetaDataNotifier(mMediaSession);
+        mediaSessionCallback = new MediaSessionCallback(getApplicationContext(), playBackNotifier, metaDataNotifier, serviceManager);
         // MySessionCallback() has methods that handle callbacks from a media controller
         mMediaSession.setCallback(mediaSessionCallback);
         // Set the session's token so that client activities can communicate with it.
