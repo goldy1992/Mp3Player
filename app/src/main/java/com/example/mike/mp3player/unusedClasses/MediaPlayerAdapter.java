@@ -12,7 +12,7 @@ import android.os.SystemClock;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
-import com.example.mike.mp3player.MainActivity;
+import com.example.mike.mp3player.client.MainActivity;
 import com.example.mike.mp3player.client.MediaPlayerActivity;
 
 import java.io.IOException;

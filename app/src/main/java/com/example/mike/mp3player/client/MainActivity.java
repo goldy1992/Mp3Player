@@ -1,4 +1,4 @@
-package com.example.mike.mp3player;
+package com.example.mike.mp3player.client;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaPlayerActivity;
 
 public class MainActivity extends AppCompatActivity {
