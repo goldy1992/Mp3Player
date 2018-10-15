@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class MusicFileFilter implements FilenameFilter {
     IsDirectoryFilter isDirectoryFilter = new IsDirectoryFilter();
@@ -22,9 +23,10 @@ public class MusicFileFilter implements FilenameFilter {
 
     @Override
     public boolean accept(File dir, String name) {
+        name = name.toLowerCase(Locale.getDefault());
         if (!isDirectoryFilter.accept(dir, name)){
             for (String ext: MUSIC_EXTENSIONS) {
-                if (name.toLowerCase().endsWith(ext)) {
+                if (name.endsWith(ext)) {
                     return true;
                 }
             }
