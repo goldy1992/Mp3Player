@@ -1,10 +1,8 @@
 <resources>
     <string name="app_name">Mp3Player</string>
     <string name="action_settings">Settings</string>
-    <string name="label_stop">Stop</string>
-    <string name="label_pause">Pause</string>
-    <string name="label_play">Play</string>
-    <string name="label_play_pause">Play and pause toggle</string>
-    <string name="label_previous">Previous track</string>
-    <string name="label_next">Next track</string>
+    <string name="SELECT_MP3">Select MP3</string>
+    <string name="STOP">Stop</string>
+    <string name="PLAY">Play</string>
+    <string name="DEFAULT_TIME">00:00</string>
 </resources>

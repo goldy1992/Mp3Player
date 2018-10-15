@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.mike.mp3player.client.MediaPlayerActivity">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="8"
-        android:orientation="horizontal"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:context="com.example.mike.mp3player.client.MediaPlayerActivity">
-
         <Button
             android:id="@+id/stopButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:onClick="stop"
-            android:text="Stop"
+            android:text="@string/STOP"
             android:clickable="false"
             tools:clickable="false" />
 
@@ -29,35 +20,26 @@
         android:id="@+id/playPauseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Play"
-        android:onClick="playPause"/>
-    </LinearLayout>
+        android:layout_toEndOf="@+id/stopButton"
+        android:onClick="playPause"
+        android:text="@string/PLAY" />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <TextView
+        android:id="@+id/timer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        tools:context="com.example.mike.mp3player.client.MediaPlayerActivity">
+        android:layout_above="@+id/seekBar"
+        android:layout_alignParentStart="true"
+        android:text="@string/DEFAULT_TIME"
+        android:textAlignment="textEnd" />
 
-        <TextView
-            android:id="@+id/timer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="textEnd"
-            android:text="00:00"/>
+    <com.example.mike.mp3player.client.view.SeekerBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="bottom" />
 
-        <com.example.mike.mp3player.client.view.SeekerBar
-            android:id="@+id/seekBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="@dimen/default_gap"
-            />
 
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

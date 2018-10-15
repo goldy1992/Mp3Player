@@ -28,6 +28,7 @@ android {
     }
 
     lintOptions {
+        disable 'GoogleAppIndexingWarning'
         disable 'PrivateResource'
     }
 }
