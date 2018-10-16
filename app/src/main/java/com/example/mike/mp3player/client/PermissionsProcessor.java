@@ -10,12 +10,14 @@ import android.support.v4.content.ContextCompat;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 public class PermissionsProcessor implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final Map<String, Integer> PERMISSION_RQ_CODE_MAP = new HashMap<>();
 
     {
-        PERMISSION_RQ_CODE_MAP.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, 0);
+        PERMISSION_RQ_CODE_MAP.put(WRITE_EXTERNAL_STORAGE, 0);
     }
 
     Activity parentActivity;
@@ -41,22 +43,38 @@ public class PermissionsProcessor implements ActivityCompat.OnRequestPermissions
                 // No explanation needed; request the permission
                 ActivityCompat.requestPermissions(parentActivity,
                         new String[]{permission},PERMISSION_RQ_CODE_MAP.get(permission));
-                );
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
         } else {
             // Permission has already been granted
-            ((MediaPlayerActivity)parentActivity).buildMediaLibrary();
+            ((MainActivity)parentActivity).buildMediaLibrary();
         }
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        // BEGIN_INCLUDE(onRequestPermissionsResult)
+        String permission = getPermissionFromRequestCode(requestCode);
+
+        if (null != permission) {
+            if (permission.equals(WRITE_EXTERNAL_STORAGE)) {
+                // Request for camera permission.
+                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission has been granted. Start camera preview Activity.
+                    ((MainActivity) parentActivity).buildMediaLibrary();
+                }
+                // END_INCLUDE(onRequestPermissionsResult)
+            }
+        }
     }
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
+    private String getPermissionFromRequestCode(int requestCode)
+    {
+        for (String permission : PERMISSION_RQ_CODE_MAP.keySet())
+        {
+            if (PERMISSION_RQ_CODE_MAP.get(permission) == requestCode) {
+                return permission;
+            }
+        }
+        return null;
     }
 }

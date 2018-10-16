@@ -1,15 +1,10 @@
 package com.example.mike.mp3player.client;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -19,11 +14,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaPlayerActivity;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -56,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         permissionsProcessor.requestPermission(WRITE_EXTERNAL_STORAGE);
     }
 
-    private void buildMediaLibrary() {
+    public void buildMediaLibrary() {
         ArrayList<String> arrayList = new ArrayList<>();
         ListView listView = (ListView) findViewById(R.id.list);
         // Adapter: You need three parameters 'the context, id of the layout (it will be where the data is shown),
@@ -74,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
                 arrayList.add(f.getName());
             }
             adapter.notifyDataSetChanged();
-
     }
 
     @Override
@@ -123,25 +115,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        // BEGIN_INCLUDE(onRequestPermissionsResult)
-        if (requestCode == PERMISSION_REQUEST_WRITE_STORAGE) {
-            // Request for camera permission.
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission has been granted. Start camera preview Activity.
-                permissionGranted = true;
-                buildMediaLibrary();
-            } else {
-                permissionGranted = false;
-            }
-            // END_INCLUDE(onRequestPermissionsResult)
-        }
-    }
-
 }
 
