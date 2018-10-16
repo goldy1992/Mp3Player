@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.mike.mp3player.BuildConfig;
 
@@ -24,10 +25,16 @@ import static org.mockito.Mockito.when;
 @Config(constants = BuildConfig.class)
 public class MediaPlayerActivityTest {
 
+    @Mock
+    Uri uri;
+
     MediaPlayerActivity mediaPlayerActivity;
 
-    @BeforeClass
-    public static void setup() {
+    @Before
+    public void setup() {
+        Intent intent = new Intent(RuntimeEnvironment.application.getApplicationContext(), MediaPlayerActivity.class);
+        intent.putExtra("uri", uri);
+        mediaPlayerActivity = Robolectric.buildActivity(MediaPlayerActivity.class, intent).create().get();
     }
 
     /**
@@ -37,21 +44,6 @@ public class MediaPlayerActivityTest {
      */
     @Test
     public void onCreateSetUriTest() {
-        // GIVEN
-        Uri uri = mock(Uri.class);
-        Intent intent = new Intent(RuntimeEnvironment.application.getApplicationContext(), MediaPlayerActivity.class);
-        intent.putExtra("uri", uri);
-        // WHEN
-        mediaPlayerActivity = Robolectric.buildActivity(MediaPlayerActivity.class, intent).create().get();
-        //THEN:
         assertEquals(uri, mediaPlayerActivity.getSelectedUri());
-    }
-
-    @Test
-    public void onStartTest() {
-    }
-
-    @Test
-    public void onStopTest() {
     }
 }

@@ -23,8 +23,7 @@ public class TimerUtilsTest {
     }
 
     @Test
-    public void testFormatTimeOneSecond()
-    {
+    public void testFormatTimeOneSecond() {
         long milliseconds = 1000;
         String result = TimerUtils.formatTime(milliseconds);
         String expect = "00:01";
@@ -32,8 +31,7 @@ public class TimerUtilsTest {
 
     }
     @Test
-    public void testFormatTimeRoundableTime()
-    {
+    public void testFormatTimeRoundableTime() {
         long milliseconds = 78756;
         String result = TimerUtils.formatTime(milliseconds);
         String expect = "01:18";

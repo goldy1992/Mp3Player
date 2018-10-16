@@ -107,10 +107,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
         return mMediaBrowser;
     }
 
-    public void setmMediaBrowser(MediaBrowserCompat mMediaBrowser) {
-        this.mMediaBrowser = mMediaBrowser;
-    }
-
     public MediaControllerCompat getMediaControllerCompat() {
         return mediaControllerCompat;
     }
