@@ -1,6 +1,8 @@
 package com.example.mike.mp3player.service.library;
 
 
+import android.os.Environment;
+
 import com.example.mike.mp3player.service.library.utils.IsDirectoryFilter;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.library.utils.MusicFileFilter;
@@ -23,8 +25,8 @@ public class MediaLibrary {
     }
 
     public void buildMediaLibrary(){
-        File rootDirectory = MediaLibraryUtils.getRootDirectory();
-        buildDirectoryPlaylist(rootDirectory);
+        File externalStorageDirectory = Environment.getExternalStorageDirectory();
+        buildDirectoryPlaylist(externalStorageDirectory);
     }
 
     private void buildDirectoryPlaylist(File directory)
