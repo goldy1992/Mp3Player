@@ -26,14 +26,18 @@ import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+public class MainActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST_WRITE_STORAGE = 0;
-    private boolean permissionGranted = false;
+
+    private PermissionsProcessor permissionsProcessor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        permissionsProcessor = new PermissionsProcessor(this);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         });
 
-        grantPermission();
+        permissionsProcessor.requestPermission(WRITE_EXTERNAL_STORAGE);
     }
 
     private void buildMediaLibrary() {
@@ -62,8 +66,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // Here, you set the data in your ListView
         listView.setAdapter(adapter);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
             MediaLibrary mediaLibrary = new MediaLibrary();
             mediaLibrary.init();
             mediaLibrary.buildMediaLibrary();
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 arrayList.add(f.getName());
             }
             adapter.notifyDataSetChanged();
-        }
+
     }
 
     @Override
@@ -122,35 +124,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    private void grantPermission()
-    {
-        // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
 
-            // Permission is not granted
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-            } else {
-                // No explanation needed; request the permission
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},PERMISSION_REQUEST_WRITE_STORAGE
-                        );
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        } else {
-            // Permission has already been granted
-            buildMediaLibrary();
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
