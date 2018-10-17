@@ -3,10 +3,7 @@ package com.example.mike.mp3player.service;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.PlaybackParams;
 import android.net.Uri;
-import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
@@ -19,7 +16,6 @@ public class MyMediaPlayerAdapter {
     private AudioManager.OnAudioFocusChangeListener afChangeListener;
     private Uri currentUri;
     private Context context;
-    private MediaSessionCompat mediaSession;
     private int currentState;
     private PlayBackNotifier playBackNotifier;
     private MetaDataNotifier metaDataNotifier;
@@ -33,8 +29,8 @@ public class MyMediaPlayerAdapter {
 
     public void init()
     {
-        if (mediaPlayer == null) {
-            mediaPlayer = new MediaPlayer();
+        if (getMediaPlayer() == null) {
+            setMediaPlayer(new MediaPlayer());
            // mediaPlayer.setPlaybackParams(new PlaybackParams());
         }
         this.afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
@@ -50,8 +46,8 @@ public class MyMediaPlayerAdapter {
                 // Set the session active  (and update metadata and state)
                 currentState = PlaybackStateCompat.STATE_PLAYING;
                 // start the player (custom call)
-                mediaPlayer.start();
-                playBackNotifier.notifyPlay(mediaPlayer.getCurrentPosition(), mediaPlayer.getPlaybackParams().getSpeed());
+                getMediaPlayer().start();
+                playBackNotifier.notifyPlay(getMediaPlayer().getCurrentPosition(), getMediaPlayer().getPlaybackParams().getSpeed());
                 //            // Register BECOME_NOISY BroadcastReceiver
 //            registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
 //            // Put the service in the foreground, post notification
@@ -68,20 +64,20 @@ public class MyMediaPlayerAdapter {
             // start the player (custom call)
             setCurrentUri(uri);
             if(prepare()) {
-                mediaPlayer.start();
-                playBackNotifier.notifyPlay(0L, mediaPlayer.getPlaybackParams().getSpeed());
-                metaDataNotifier.notifyMetaDataChange(mediaPlayer);
+                getMediaPlayer().start();
+                playBackNotifier.notifyPlay(0L, getMediaPlayer().getPlaybackParams().getSpeed());
+                metaDataNotifier.notifyMetaDataChange(getMediaPlayer());
             }
         }
     }
 
     public void prepareFromUri(Uri uri) {
-        mediaPlayer.reset();
+        getMediaPlayer().reset();
         setCurrentUri(uri);
         if (prepare()) {
             currentState = PlaybackStateCompat.STATE_PAUSED;
             playBackNotifier.notifyPause(0L);
-            metaDataNotifier.notifyMetaDataChange(mediaPlayer);
+            metaDataNotifier.notifyMetaDataChange(getMediaPlayer());
         }
     }
 
@@ -89,23 +85,23 @@ public class MyMediaPlayerAdapter {
         // unregisterReceiver(myNoisyAudioStreamReceiver);
         currentState= PlaybackStateCompat.STATE_STOPPED;
         isPrepared = false;
-        mediaPlayer.stop();
-        mediaPlayer.reset();
+        getMediaPlayer().stop();
+        getMediaPlayer().reset();
         playBackNotifier.notifyStop();
         // Take the service out of the foreground
     }
 
     public void pause() {
         // Update metadata and state
-        mediaPlayer.pause();
+        getMediaPlayer().pause();
         currentState = PlaybackStateCompat.STATE_PAUSED;
-        playBackNotifier.notifyPause(mediaPlayer.getCurrentPosition());
+        playBackNotifier.notifyPause(getMediaPlayer().getCurrentPosition());
     }
 
 
     public void seekTo(long position) {
-        mediaPlayer.seekTo((int)position);
-        playBackNotifier.notifySeekTo(currentState, position, mediaPlayer.getPlaybackParams().getSpeed());
+        getMediaPlayer().seekTo((int)position);
+        playBackNotifier.notifySeekTo(currentState, position, getMediaPlayer().getPlaybackParams().getSpeed());
     }
 
     private boolean requestAudioFocus()
@@ -121,7 +117,7 @@ public class MyMediaPlayerAdapter {
 
     private void setCurrentUri(Uri uri){
         try {
-            mediaPlayer.setDataSource(context, uri);
+            getMediaPlayer().setDataSource(context, uri);
             this.currentUri = uri;
         } catch (IOException ex) {
             Log.e(LOG_TAG, ex.getMessage());
@@ -131,14 +127,20 @@ public class MyMediaPlayerAdapter {
     private boolean prepare() {
         if (!isPrepared) {
             try {
-                mediaPlayer.prepare();
+                getMediaPlayer().prepare();
                 isPrepared = true;
             } catch (IOException ex) {
                 Log.e(LOG_TAG, ex.getMessage());
             }
         }
-
         return isPrepared;
+    }
 
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
+
+    public void setMediaPlayer(MediaPlayer mediaPlayer) {
+        this.mediaPlayer = mediaPlayer;
     }
 }

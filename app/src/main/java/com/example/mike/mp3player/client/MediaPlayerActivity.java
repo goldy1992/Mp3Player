@@ -7,6 +7,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,6 +16,14 @@ import com.example.mike.mp3player.client.view.PlayPauseButton;
 import com.example.mike.mp3player.client.view.SeekerBar;
 import com.example.mike.mp3player.client.view.TimeCounter;
 import com.example.mike.mp3player.service.MediaPlaybackService;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -34,6 +43,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
     private PlayPauseButton playPauseButton;
     private SeekerBar seekerBar;
     private TimeCounter counter;
+    private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +65,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 new ComponentName(this, MediaPlaybackService.class),
                 mConnectionCallbacks,
                 null);
+        saveState();
     }
 
     @Override
@@ -74,6 +85,30 @@ public class MediaPlayerActivity extends AppCompatActivity {
         getmMediaBrowser().disconnect();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        saveState();
+
+        //   onSaveInstanceState();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        retrieveState();
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState)
+    {
+
+    }
 
     public void playPause(View view)
     {
@@ -116,7 +151,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
     }
 
     public Uri getSelectedUri() {
-        return selectedUri;
+        return this.selectedUri;
     }
 
     public void setSelectedUri(Uri selectedUri) {
@@ -129,5 +164,41 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     public TimeCounter getCounter() {
         return counter;
+    }
+
+    private void saveState()
+    {
+        try {
+            File fileToCache = new File(getApplicationContext().getCacheDir(), "mediaPlayerState");
+            if (fileToCache.exists())
+            {
+                fileToCache.delete();
+            }
+            fileToCache.createNewFile();
+            FileOutputStream fileOut = new FileOutputStream(fileToCache);
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            objectOut.writeObject(this.selectedUri);
+            objectOut.close();
+            fileOut.close();
+
+        } catch (IOException e) {
+            Log.e(LOG_TAG, e.getMessage());
+        }
+    }
+
+    private void retrieveState() {
+        try {
+            File f = new File(getApplicationContext().getCacheDir(), "mediaPlayerState");
+            FileInputStream fileInputStream = new FileInputStream(f);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            this.selectedUri = (Uri) objectInputStream.readObject();
+            getApplicationContext().deleteFile("mediaPlayerState");
+        } catch (FileNotFoundException e) {
+            Log.e(LOG_TAG, e.getMessage());
+        } catch (IOException e) {
+            Log.e(LOG_TAG, e.getMessage());
+        } catch (ClassNotFoundException e) {
+            Log.e(LOG_TAG, e.getMessage());
+        }
     }
 }

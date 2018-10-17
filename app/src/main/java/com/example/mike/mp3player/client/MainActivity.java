@@ -64,7 +64,9 @@ public class MainActivity extends AppCompatActivity {
             mediaLibrary.buildMediaLibrary();
 
             for (File f : mediaLibrary.getLibrary().keySet()) {
-                arrayList.add(f.getName());
+                for (File track : mediaLibrary.getLibrary().get(f)) {
+                    arrayList.add(track.getName());
+                }
             }
             adapter.notifyDataSetChanged();
     }
