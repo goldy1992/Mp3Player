@@ -20,6 +20,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class MediaPlayerIntegrationTest {
@@ -47,12 +48,14 @@ public class MediaPlayerIntegrationTest {
     }
 
     @Test
-    public void testPlay()
-    {
+    public void testPlay() throws InterruptedException {
         MediaPlayerActivity mediaPlayerActivity = (MediaPlayerActivity) activityTestRule.getActivity();
         assertNotNull(mediaPlayerActivity);
-
+        assertTrue(mediaPlayerActivity.getCounter().getView().getText().equals("00:00"));
         onView(withId(R.id.playPauseButton)).perform(click());
+        Thread.sleep(2000);
+        assertTrue(mediaPlayerActivity.getCounter().getCurrentTime() >= 0);
+
         onView(withId(R.id.playPauseButton)).check(matches(withText("Pause")));
     }
 
