@@ -31,26 +31,31 @@ android {
         disable 'GoogleAppIndexingWarning'
         disable 'PrivateResource'
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
- //   compile 'com.android.support:appcompat-v7:27.1.1'
+    //   compile 'com.android.support:appcompat-v7:27.1.1'
     //compile group: 'com.android.support.constraint', name: 'constraint-layout', version: '1.1.3'
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support:gridlayout-v7:26.1.0'
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:support-annotations:28.0.0'
-
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.22.0'
-    testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: '2.0.0-beta.5'
+    testImplementation 'org.mockito:mockito-core:2.22.0'
+    testImplementation 'org.powermock:powermock-module-junit4:2.0.0-beta.5'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.powermock:powermock-core:2.0.0-beta.5'
     testImplementation 'org.powermock:powermock-api-mockito2:2.0.0-beta.5'
-    testImplementation "org.robolectric:robolectric:3.8"
+    testImplementation 'org.robolectric:robolectric:3.8'
     androidTestImplementation 'com.android.support:support-annotations:28.0.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
-    androidTestImplementation ('com.android.support.test.espresso:espresso-core:3.0.2'){exclude module: 'support-annotations'}
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2') {
+        exclude module: 'support-annotations'
+    }
 }
