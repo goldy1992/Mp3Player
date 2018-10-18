@@ -1,14 +1,10 @@
 package com.example.mike.mp3player.service;
 
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserServiceCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
-
-import com.example.mike.mp3player.service.MediaSessionCallback;
 
 import java.util.ArrayList;
 import java.util.List;

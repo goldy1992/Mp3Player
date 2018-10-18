@@ -49,9 +49,11 @@ public class MediaPlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_player);
-        this.playPauseButton = (PlayPauseButton) this.findViewById(R.id.playPauseButton);
-        this.seekerBar = (SeekerBar) this.findViewById(R.id.seekBar);
-        this.counter = new TimeCounter((TextView)this.findViewById(R.id.timer));
+        this.playPauseButton = this.findViewById(R.id.playPauseButton);
+        TextView counterView = this.findViewById(R.id.timer);
+        this.counter = new TimeCounter(counterView);
+        this.seekerBar = this.findViewById(R.id.seekBar);
+        this.seekerBar.setTimeCounter(counter);
         if (getIntent() != null && getIntent().getExtras() != null) {
             this.setSelectedUri((Uri) getIntent().getExtras().get("uri"));
         }
@@ -101,13 +103,13 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState)
     {
-
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     public void playPause(View view)

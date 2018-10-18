@@ -16,7 +16,7 @@ public class TimeCounterTimerTask extends TimerTask {
 
     @Override
     public void run() {
-        while (timeCounter.getCurrentTime() < timeCounter.getDuration()) {
+        if (timeCounter.getCurrentTime() < timeCounter.getDuration()) {
             timeCounter.setCurrentTime(timeCounter.getCurrentTime() + ONE_SECOND);
             timeCounter.getView().setText(formatTime(timeCounter.getCurrentTime()));
         }

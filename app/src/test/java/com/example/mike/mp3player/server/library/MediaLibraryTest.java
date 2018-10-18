@@ -42,7 +42,7 @@ public class MediaLibraryTest {
         rootDir.mkdir();
 
         PowerMockito.mockStatic(MediaLibraryUtils.class);
-        when(MediaLibraryUtils.getRootDirectory()).thenReturn(rootDir);
+        when(MediaLibraryUtils.getExternalStorageDirectory()).thenReturn(rootDir);
 
         File mp3_1 = createFile(rootDir, "test1.mp3");
         File mp3_2 = createFile(rootDir, "test2.mp3");

@@ -36,4 +36,8 @@ public class ServiceManager {
     public void pauseService(){
         service.stopForeground(false);
     }
+
+    public MediaPlaybackService getService() {
+        return service;
+    }
 }

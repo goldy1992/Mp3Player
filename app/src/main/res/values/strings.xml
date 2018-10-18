@@ -4,5 +4,6 @@
     <string name="SELECT_MP3">Select MP3</string>
     <string name="STOP">Stop</string>
     <string name="PLAY">Play</string>
+    <string name="PAUSE">Pause</string>
     <string name="DEFAULT_TIME">00:00</string>
 </resources>

@@ -16,6 +16,8 @@ public class TimeCounter {
     private TextView view;
     private long duration;
     private long currentTime;
+    private int currentState;
+    private float currentSpeed;
     private ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
     private boolean isRunning = false;
     public static final String LOG_TAG = "TimeCounter";
@@ -29,7 +31,10 @@ public class TimeCounter {
     }
 
     public void updateState(PlaybackStateCompat state) {
-        switch (state.getState()) {
+        this.currentState = state.getState();
+        this.currentSpeed = state.getPlaybackSpeed();
+
+        switch (getCurrentState()) {
             case PlaybackStateCompat.STATE_PLAYING: work(state.getPosition()); break;
             case PlaybackStateCompat.STATE_PAUSED: haltTimer(state.getPosition()); break;
             default: resetTimer(); break;
@@ -93,6 +98,14 @@ public class TimeCounter {
 
     public void setDuration(long duration) {
         this.duration = duration;
+    }
+
+    public int getCurrentState() {
+        return currentState;
+    }
+
+    public float getCurrentSpeed() {
+        return currentSpeed;
     }
 }
 

@@ -17,4 +17,8 @@ public final class MediaLibraryUtils {
     public static File getRootDirectory(){
         return Environment.getRootDirectory();
     }
+
+    public static File getExternalStorageDirectory(){
+        return Environment.getExternalStorageDirectory();
+    }
 }

@@ -2,7 +2,9 @@ package com.example.mike.mp3player.client.view;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
 
@@ -15,6 +17,9 @@ public class SeekerBar extends AppCompatSeekBar {
     private MySeekerMediaControllerCallback mControllerCallback;
     private ValueAnimator valueAnimator;
     private boolean isTracking = false;
+    private TimeCounter timeCounter;
+
+    public OnSeekBarChangeListener seekBarChangeListener;
 
     public SeekerBar(Context context) {
         super(context);
@@ -37,6 +42,7 @@ public class SeekerBar extends AppCompatSeekBar {
         if (mediaController != null) {
             mControllerCallback = new MySeekerMediaControllerCallback(this);
             SeekerBarChangerListener seekerBarChangerListener = new SeekerBarChangerListener(mediaController);
+            this.seekBarChangeListener = seekerBarChangerListener;
             super.setOnSeekBarChangeListener(seekerBarChangerListener);
         } else if (mMediaController != null) {
             mMediaController.unregisterCallback(mControllerCallback);
@@ -67,5 +73,17 @@ public class SeekerBar extends AppCompatSeekBar {
 
     public void setTracking(boolean tracking) {
         isTracking = tracking;
+    }
+
+    public OnSeekBarChangeListener getOnSeekBarChangeListener(){
+        return seekBarChangeListener;
+    }
+
+    public void setTimeCounter(TimeCounter timeCounter) {
+        this.timeCounter = timeCounter;
+    }
+
+    public TimeCounter getTimeCounter() {
+        return timeCounter;
     }
 }
