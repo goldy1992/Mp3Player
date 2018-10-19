@@ -2,11 +2,11 @@ package com.example.mike.mp3player.service;
 
 import android.app.Notification;
 import android.content.Context;
-import android.media.session.MediaSession;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -18,6 +18,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     private MyMediaPlayerAdapter myMediaPlayerAdapter;
     private MediaSessionCompat mediaSession;
     private MyNotificationManager myNotificationManager;
+    private static final String LOG_TAG = "MEDIA_SESSION_CALLBACK";
 
     public MediaSessionCallback(Context context, MyNotificationManager myNotificationManager, ServiceManager serviceManager, MediaSessionCompat mediaSession) {
         this.serviceManager = serviceManager;
@@ -34,6 +35,13 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
         mediaSession.setMetadata(myMediaPlayerAdapter.getCurrentMetaData());
 
         serviceManager.startService(prepareNotification());
+    }
+
+    @Override
+    public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
+        Log.d(LOG_TAG, "hit media event");
+        //TODO: work out how to control events from here
+        return true;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.service;
 
+import android.content.Intent;
 import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
@@ -35,8 +36,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         mediaSessionCallback = new MediaSessionCallback(getApplicationContext(), notificationManager, serviceManager, mMediaSession);
         // MySessionCallback() has methods that handle callbacks from a media controller
         mMediaSession.setCallback(mediaSessionCallback);
-        mMediaSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS |
-                        MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
+                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS );
         // Set the session's token so that client activities can communicate with it.
 
 

@@ -42,10 +42,13 @@ public class MyNotificationManager {
 
         playAction = new NotificationCompat.Action(
                 android.R.drawable.ic_media_play, service.getString(R.string.PLAY),
-                MediaButtonReceiver.buildMediaButtonPendingIntent(service, PlaybackStateCompat.STATE_PLAYING));
+                MediaButtonReceiver.buildMediaButtonPendingIntent(service, PlaybackStateCompat.ACTION_PLAY));
 
+//        PendingIntent.getActivities(service, PlaybackStateCompat.ACTION_PAUSE, )
+        Intent pauseIntent = new Intent(service, MediaPlaybackService.class);
+       // pauseIntent.setAction(PlaybackStateCompat.ACTION_PAUSE);
         pauseAction = new NotificationCompat.Action(android.R.drawable.ic_media_pause, service.getString(R.string.PAUSE),
-                    MediaButtonReceiver.buildMediaButtonPendingIntent(service, PlaybackStateCompat.STATE_PAUSED));
+                    MediaButtonReceiver.buildMediaButtonPendingIntent(service.getBaseContext(), PlaybackStateCompat.ACTION_PAUSE));
 
         // Cancel all notifications to handle the case where the Service was killed and
         // restarted by the system.
