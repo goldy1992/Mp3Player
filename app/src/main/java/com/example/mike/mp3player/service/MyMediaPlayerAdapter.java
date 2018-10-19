@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
@@ -17,14 +18,11 @@ public class MyMediaPlayerAdapter {
     private Uri currentUri;
     private Context context;
     private int currentState;
-    private PlayBackNotifier playBackNotifier;
-    private MetaDataNotifier metaDataNotifier;
     private boolean isPrepared = false;
 
-    public MyMediaPlayerAdapter(Context context, PlayBackNotifier playBackNotifier, MetaDataNotifier metaDataNotifier) {
+    public MyMediaPlayerAdapter(Context context) {
         this.context = context;
-        this.playBackNotifier = playBackNotifier;
-        this.metaDataNotifier = metaDataNotifier;
+
     }
 
     public void init()
@@ -47,7 +45,6 @@ public class MyMediaPlayerAdapter {
                 currentState = PlaybackStateCompat.STATE_PLAYING;
                 // start the player (custom call)
                 getMediaPlayer().start();
-                playBackNotifier.notifyPlay(getMediaPlayer().getCurrentPosition(), getMediaPlayer().getPlaybackParams().getSpeed());
                 //            // Register BECOME_NOISY BroadcastReceiver
 //            registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
 //            // Put the service in the foreground, post notification
@@ -65,8 +62,7 @@ public class MyMediaPlayerAdapter {
             setCurrentUri(uri);
             if(prepare()) {
                 getMediaPlayer().start();
-                playBackNotifier.notifyPlay(0L, getMediaPlayer().getPlaybackParams().getSpeed());
-                metaDataNotifier.notifyMetaDataChange(getMediaPlayer());
+                currentState = PlaybackStateCompat.STATE_PLAYING;
             }
         }
     }
@@ -76,8 +72,6 @@ public class MyMediaPlayerAdapter {
         setCurrentUri(uri);
         if (prepare()) {
             currentState = PlaybackStateCompat.STATE_PAUSED;
-            playBackNotifier.notifyPause(0L);
-            metaDataNotifier.notifyMetaDataChange(getMediaPlayer());
         }
     }
 
@@ -87,7 +81,6 @@ public class MyMediaPlayerAdapter {
         isPrepared = false;
         getMediaPlayer().stop();
         getMediaPlayer().reset();
-        playBackNotifier.notifyStop();
         // Take the service out of the foreground
     }
 
@@ -95,13 +88,11 @@ public class MyMediaPlayerAdapter {
         // Update metadata and state
         getMediaPlayer().pause();
         currentState = PlaybackStateCompat.STATE_PAUSED;
-        playBackNotifier.notifyPause(getMediaPlayer().getCurrentPosition());
     }
 
 
     public void seekTo(long position) {
         getMediaPlayer().seekTo((int)position);
-        playBackNotifier.notifySeekTo(currentState, position, getMediaPlayer().getPlaybackParams().getSpeed());
     }
 
     private boolean requestAudioFocus()
@@ -142,5 +133,20 @@ public class MyMediaPlayerAdapter {
 
     public void setMediaPlayer(MediaPlayer mediaPlayer) {
         this.mediaPlayer = mediaPlayer;
+    }
+
+    public PlaybackStateCompat getMediaPlayerState() {
+        return new PlaybackStateCompat.Builder()
+                .setState(currentState,
+                        mediaPlayer.getCurrentPosition(),
+                        mediaPlayer.getPlaybackParams().getSpeed(),
+                        System.currentTimeMillis())
+                .build();
+    }
+
+    public MediaMetadataCompat getCurrentMetaData() {
+        return  new MediaMetadataCompat.Builder()
+                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration())
+                .build();
     }
 }

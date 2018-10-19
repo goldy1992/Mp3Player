@@ -18,22 +18,25 @@ public class SeekerBarChangerListener implements SeekBar.OnSeekBarChangeListener
     }
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        SeekerBar seekerBar = (SeekerBar) seekBar;
+        if (seekerBar.isTracking())
+        {
+            updateTimeCounter(seekerBar);
+        }
     }
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
+        SeekerBar seekerBar = (SeekerBar) seekBar;
+        seekerBar.getTimeCounter().cancelTimerDuringTracking();
         setTracking(seekBar, true);
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         setTracking(seekBar, false);
-     SeekerBar seekerBar = (SeekerBar) seekBar;
-     TimeCounter timeCounter = seekerBar.getTimeCounter();
-     PlaybackStateCompat newState = new PlaybackStateCompat.Builder()
-             .setState(timeCounter.getCurrentState(), (long)timeCounter.getCurrentSpeed(), seekerBar.getProgress())
-             .build();
-    seekerBar.getTimeCounter().updateState(newState);
+        SeekerBar seekerBar = (SeekerBar) seekBar;
+        updateTimeCounter(seekerBar);
         mMediaController.getTransportControls().seekTo(seekBar.getProgress());
     }
 
@@ -42,5 +45,13 @@ public class SeekerBarChangerListener implements SeekBar.OnSeekBarChangeListener
             SeekerBar seekerBar = (SeekerBar) seekBar;
             seekerBar.setTracking(tracking);
         }
+    }
+
+    private void updateTimeCounter(SeekerBar seekerBar) {
+        TimeCounter timeCounter = seekerBar.getTimeCounter();
+        PlaybackStateCompat newState = new PlaybackStateCompat.Builder()
+                .setState(timeCounter.getCurrentState(), (long)timeCounter.getCurrentSpeed(), seekerBar.getProgress())
+                .build();
+        seekerBar.getTimeCounter().updateState(newState);
     }
 }

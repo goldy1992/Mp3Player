@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.service;
 
+import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserServiceCompat;
@@ -9,6 +10,8 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.support.v4.media.session.MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS;
+
 /**
  * Created by Mike on 24/09/2017.
  */
@@ -16,7 +19,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
 
     private static final String MY_MEDIA_ROOT_ID = "media_root_id";
     private static final String MY_EMPTY_MEDIA_ROOT_ID = "empty_root_id";
-
+    private MyNotificationManager notificationManager;
     private MediaSessionCompat mMediaSession;
     private MediaSessionCallback mediaSessionCallback;
     private ServiceManager serviceManager;
@@ -26,14 +29,17 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     public void onCreate() {
         super.onCreate();
         mMediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);
-        serviceManager = new ServiceManager(this, getApplicationContext(), mMediaSession);
-        PlayBackNotifier playBackNotifier = new PlayBackNotifier(mMediaSession);
-        MetaDataNotifier metaDataNotifier = new MetaDataNotifier(mMediaSession);
-        mediaSessionCallback = new MediaSessionCallback(getApplicationContext(), playBackNotifier, metaDataNotifier, serviceManager);
+        setSessionToken(mMediaSession.getSessionToken());
+        notificationManager = new MyNotificationManager(this);
+        serviceManager = new ServiceManager(this, getApplicationContext(), mMediaSession, notificationManager);
+        mediaSessionCallback = new MediaSessionCallback(getApplicationContext(), notificationManager, serviceManager, mMediaSession);
         // MySessionCallback() has methods that handle callbacks from a media controller
         mMediaSession.setCallback(mediaSessionCallback);
+        mMediaSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS |
+                        MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
         // Set the session's token so that client activities can communicate with it.
-        setSessionToken(mMediaSession.getSessionToken());
+
+
     }
 
     @Override
@@ -78,5 +84,11 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         result.sendResult(mediaItems);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        notificationManager.onDestroy();
+        mMediaSession.release();
+    }
 
 }

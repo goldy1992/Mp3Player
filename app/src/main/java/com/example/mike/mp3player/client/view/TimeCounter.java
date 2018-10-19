@@ -30,6 +30,9 @@ public class TimeCounter {
         this.duration = duration;
     }
 
+    public void cancelTimerDuringTracking() {
+        cancelTimer();
+    }
     public void updateState(PlaybackStateCompat state) {
         this.currentState = state.getState();
         this.currentSpeed = state.getPlaybackSpeed();

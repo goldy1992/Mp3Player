@@ -15,12 +15,8 @@ public class MyMediaPlayerAdapterTest {
 
     @Mock
     Context context;
-    @Mock
-    PlayBackNotifier playBackNotifier;
-    @Mock
-    MetaDataNotifier metaDataNotifier;
 
-    MyMediaPlayerAdapter mediaPlayerAdapter;
+    private MyMediaPlayerAdapter mediaPlayerAdapter;
 
     @Before
     public void setup()
@@ -36,7 +32,7 @@ public class MyMediaPlayerAdapterTest {
     }
 
     private MyMediaPlayerAdapter createMediaPlayerAdapter() {
-        return new MyMediaPlayerAdapter(context, playBackNotifier, metaDataNotifier);
+        return new MyMediaPlayerAdapter(context);
     }
 
 }

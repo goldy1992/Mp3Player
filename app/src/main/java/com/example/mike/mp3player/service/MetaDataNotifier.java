@@ -15,8 +15,6 @@ public class MetaDataNotifier {
     }
 
     public void notifyMetaDataChange(MediaPlayer mediaPlayer) {
-        mediaMetadataCompatBuilder = new MediaMetadataCompat.Builder()
-                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
-        mediaSession.setMetadata(mediaMetadataCompatBuilder.build());
+     //   mediaMetadataCompatBuilder =
     }
 }
