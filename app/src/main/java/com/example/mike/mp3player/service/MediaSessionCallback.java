@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -39,7 +40,20 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
 
     @Override
     public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
-        Log.d(LOG_TAG, "hit media event");
+        if (mediaButtonEvent != null && mediaButtonEvent.getExtras() != null
+                && mediaButtonEvent.getExtras().getParcelable(Intent.EXTRA_KEY_EVENT) != null) {
+            KeyEvent keyEvent = mediaButtonEvent.getExtras().getParcelable(Intent.EXTRA_KEY_EVENT);
+            int keyEventCode = keyEvent.getKeyCode();
+
+            switch (keyEventCode) {
+                case KeyEvent.KEYCODE_MEDIA_PLAY: onPlay(); break;
+                case KeyEvent.KEYCODE_MEDIA_PAUSE: onPause(); break;
+                default: break;
+            }
+        }
+        //mediaButtonEvent.describeContents();
+        Log.d(LOG_TAG, "intent: contents: " + mediaButtonEvent.describeContents() + " -- flags: " + mediaButtonEvent.getFlags()
+        + " -- action: " + mediaButtonEvent.getAction() + " -- datastring: " + mediaButtonEvent.getDataString());
         //TODO: work out how to control events from here
         return true;
     }
