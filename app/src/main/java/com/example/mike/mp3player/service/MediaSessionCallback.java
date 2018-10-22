@@ -50,12 +50,10 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
                 case KeyEvent.KEYCODE_MEDIA_PAUSE: onPause(); break;
                 default: break;
             }
+            return true;
         }
-        //mediaButtonEvent.describeContents();
-        Log.d(LOG_TAG, "intent: contents: " + mediaButtonEvent.describeContents() + " -- flags: " + mediaButtonEvent.getFlags()
-        + " -- action: " + mediaButtonEvent.getAction() + " -- datastring: " + mediaButtonEvent.getDataString());
-        //TODO: work out how to control events from here
-        return true;
+        return false;
+
     }
 
     @Override
