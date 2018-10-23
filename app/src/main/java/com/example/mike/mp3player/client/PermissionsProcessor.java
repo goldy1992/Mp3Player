@@ -46,7 +46,7 @@ public class PermissionsProcessor implements ActivityCompat.OnRequestPermissions
             }
         } else {
             // Permission has already been granted
-            ((MainActivity)parentActivity).buildMediaLibrary();
+            ((MainActivity) parentActivity).init();
         }
     }
     @Override
@@ -60,10 +60,12 @@ public class PermissionsProcessor implements ActivityCompat.OnRequestPermissions
                 // Request for camera permission.
                 if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission has been granted. Start camera preview Activity.
-                    ((MainActivity) parentActivity).buildMediaLibrary();
+                    ((MainActivity) parentActivity).init();
                 }
-                // END_INCLUDE(onRequestPermissionsResult)
             }
+        }
+        else {
+            parentActivity.finish();
         }
     }
 

@@ -1,17 +1,15 @@
 package com.example.mike.mp3player.service;
 
-import android.content.Intent;
-import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserServiceCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
 
+import com.example.mike.mp3player.service.library.MediaLibrary;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.support.v4.media.session.MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -25,6 +23,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     private MediaSessionCallback mediaSessionCallback;
     private ServiceManager serviceManager;
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
+    private MediaLibrary mediaLibrary;
 
     @Override
     public void onCreate() {
@@ -38,6 +37,9 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         mMediaSession.setCallback(mediaSessionCallback);
         mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
                         MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS );
+        mediaLibrary = new MediaLibrary(getBaseContext());
+        mediaLibrary.init();
+        //    mediaLibrary.buildMediaLibrary();
         // Set the session's token so that client activities can communicate with it.
 
 

@@ -10,14 +10,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.service.library.MediaLibrary;
-
-import java.io.File;
-import java.util.ArrayList;
+import com.example.mike.mp3player.client.PermissionsProcessor;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -30,7 +25,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        permissionsProcessor = new PermissionsProcessor(this);
+
+        permissionsProcessor= new PermissionsProcessor(this);
+        permissionsProcessor.requestPermission(WRITE_EXTERNAL_STORAGE);
+    }
+
+    public void init() {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -45,30 +45,28 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        permissionsProcessor.requestPermission(WRITE_EXTERNAL_STORAGE);
     }
 
     public void buildMediaLibrary() {
-        ArrayList<String> arrayList = new ArrayList<>();
-        ListView listView = (ListView) findViewById(R.id.list);
-        // Adapter: You need three parameters 'the context, id of the layout (it will be where the data is shown),
-        // and the array that contains the data
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
-
-        // Here, you set the data in your ListView
-        listView.setAdapter(adapter);
-
-            MediaLibrary mediaLibrary = new MediaLibrary();
-            mediaLibrary.init();
-            mediaLibrary.buildMediaLibrary();
-
-            for (File f : mediaLibrary.getLibrary().keySet()) {
-                for (File track : mediaLibrary.getLibrary().get(f)) {
-                    arrayList.add(track.getName());
-                }
-            }
-            adapter.notifyDataSetChanged();
+//        ArrayList<MediaBrowserCompat.MediaItem> arrayList = new ArrayList<>();
+//        ListView listView = (ListView) findViewById(R.id.list);
+//        // Adapter: You need three parameters 'the context, id of the layout (it will be where the data is shown),
+//        // and the array that contains the data
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
+//
+//        // Here, you set the data in your ListView
+//        listView.setAdapter(adapter);
+//
+//            MediaLibrary mediaLibrary = new MediaLibrary();
+//            mediaLibrary.init();
+//            mediaLibrary.buildMediaLibrary();
+//
+//            for (File f : mediaLibrary.getLibrary().keySet()) {
+//                for (MediaBrowserCompat.MediaItem track : mediaLibrary.getLibrary().get(f)) {
+//                    arrayList.add(track.getName());
+//                }
+//            }
+//            adapter.notifyDataSetChanged();
     }
 
     @Override
