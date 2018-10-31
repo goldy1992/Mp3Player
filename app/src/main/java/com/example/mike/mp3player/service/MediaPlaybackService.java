@@ -74,17 +74,18 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
 
         // Assume for example that the music catalog is already loaded/cached.
 
-        List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
+        List<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getLibrary();
 
         // Check if this is the root menu:
         if (MY_MEDIA_ROOT_ID.equals(parentMediaId)) {
             // Build the MediaItem objects for the top level,
             // and put them in the mediaItems list...
+            result.sendResult(mediaItems);
         } else {
             // Examine the passed parentMediaId to see which submenu we're at,
             // and put the children of that menu in the mediaItems list...
         }
-        result.sendResult(mediaItems);
+        //result.sendResult(mediaItems);
     }
 
     @Override

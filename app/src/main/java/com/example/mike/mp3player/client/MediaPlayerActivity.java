@@ -3,8 +3,10 @@ package com.example.mike.mp3player.client;
 import android.content.ComponentName;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -44,10 +46,12 @@ public class MediaPlayerActivity extends AppCompatActivity {
     private SeekerBar seekerBar;
     private TimeCounter counter;
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
+    private MySubscriptionCallback mySubscriptionCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.mySubscriptionCallback = new MySubscriptionCallback(this);
         setContentView(R.layout.activity_media_player);
         this.playPauseButton = this.findViewById(R.id.playPauseButton);
         TextView counterView = this.findViewById(R.id.timer);
@@ -59,7 +63,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         }
         myMediaControllerCallback = new MyMediaControllerCallback(this);
         mySeekerMediaControllerCallback = new MySeekerMediaControllerCallback(seekerBar);
-        mConnectionCallbacks = new MyConnectionCallback(this, seekerBar, myMediaControllerCallback, mySeekerMediaControllerCallback);
+        mConnectionCallbacks = new MyConnectionCallback(this);
 
         // ...
         // Create MediaBrowserServiceCompat
@@ -166,6 +170,25 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     public TimeCounter getCounter() {
         return counter;
+    }
+
+    public void onConnected() {
+        try {
+            MediaSessionCompat.Token token = mMediaBrowser.getSessionToken();
+            mediaControllerCompat = new MediaControllerCompat(getApplicationContext(), token);
+            mediaControllerCompat.registerCallback(myMediaControllerCallback);
+            mediaControllerCompat.registerCallback(mySeekerMediaControllerCallback);
+
+            setMediaControllerCompat(mediaControllerCompat);
+            seekerBar.setMediaController(mediaControllerCompat);
+            // Display the initial state
+            mediaControllerCompat.getMetadata();
+            mediaControllerCompat.getPlaybackState();
+            mediaControllerCompat.getTransportControls().prepareFromUri(getSelectedUri(), null);
+            mMediaBrowser.subscribe(mMediaBrowser.getRoot(), mySubscriptionCallback);
+        }  catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     private void saveState()

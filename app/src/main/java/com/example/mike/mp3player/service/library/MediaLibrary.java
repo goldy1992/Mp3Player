@@ -24,8 +24,10 @@ import static android.media.MediaMetadataRetriever.METADATA_KEY_TITLE;
 
 public class MediaLibrary {
 
+    public static final String META_DATA_KEY_PARENT_PATH = "META_DATA_KEY_PARENT_PATH";
+
     private boolean playlistRecursInSubDirectory = false;
-    private Map<File, List<MediaBrowserCompat.MediaItem>> library;
+    private List<MediaBrowserCompat.MediaItem> library;
     private MusicFileFilter musicFileFilter = new MusicFileFilter();
     private IsDirectoryFilter isDirectoryFilter = new IsDirectoryFilter();
     private Context context;
@@ -35,7 +37,7 @@ public class MediaLibrary {
         this.context = context;
     }
     public void init() {
-        library = new HashMap<>();
+        library = new ArrayList<>();
         buildMediaLibrary();
     }
 
@@ -47,36 +49,34 @@ public class MediaLibrary {
     private void buildDirectoryPlaylist(File directory)
     {
         List<File> directories = new ArrayList<>();
-        List<MediaBrowserCompat.MediaItem> files = new ArrayList<>();
+        List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
 
         if (directory.list() != null) {
             for (String currentFileString : directory.list()) {
                 if (isDirectoryFilter.accept(directory, currentFileString)) {
                     directories.add(new File(directory, currentFileString));
                 } else if (musicFileFilter.accept(directory, currentFileString)) {
-                    files.add(createMediaItemFromFile(new File(directory, currentFileString)));
+                    mediaItems.add(createMediaItemFromFile(new File(directory, currentFileString)));
                 }
             } // for
         }
 
-        if (!files.isEmpty()) {
-            getLibrary().put(directory, files);
-        }
-
-        if (!directories.isEmpty())
-        {
+        if (!directories.isEmpty()) {
             for (File directoryToBrowse : directories) {
                 buildDirectoryPlaylist(directoryToBrowse);
             }
         }
+
+        library.addAll(mediaItems);
     }
 
-    public Map<File, List<MediaBrowserCompat.MediaItem>> getLibrary() {
+    public List<MediaBrowserCompat.MediaItem> getLibrary() {
         return library;
     }
 
     private MediaBrowserCompat.MediaItem createMediaItemFromFile(File file) {
         Uri uri = Uri.fromFile(file);
+        String parentPath = file.getParentFile().getAbsolutePath();
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(context, uri);
 
@@ -85,7 +85,8 @@ public class MediaLibrary {
         extras.putString(String.valueOf(METADATA_KEY_ARTIST), mmr.extractMetadata(METADATA_KEY_ARTIST));
         extras.putString(String.valueOf(METADATA_KEY_ALBUMARTIST), mmr.extractMetadata(METADATA_KEY_ALBUMARTIST));
         extras.putString(String.valueOf(METADATA_KEY_DURATION), mmr.extractMetadata(METADATA_KEY_DURATION));
-        // TODO: add more items, including link to parent directory in order to organise tracks by folder.
+        extras.putString(META_DATA_KEY_PARENT_PATH, parentPath);
+
         // TODO: add code to fetch album art also
         MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder()
                 .setMediaId(String.valueOf(uri.getPath().hashCode()))

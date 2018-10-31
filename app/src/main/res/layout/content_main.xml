@@ -2,12 +2,13 @@
 
 
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:context="com.example.mike.mp3player.client.MainActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.mike.mp3player.client.MainActivity">
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,13 +16,6 @@
         android:layout_centerInParent="true"
         android:onClick="sendMessage"
         android:id="@+id/selectMp3Button"
-         />
-
-        <ListView
-            android:layout_above="@+id/selectMp3Button"
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+        />
 
 </RelativeLayout>
