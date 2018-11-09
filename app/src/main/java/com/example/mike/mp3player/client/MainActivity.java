@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private PermissionsProcessor permissionsProcessor;
     private DrawerLayout drawerLayout;
-
+    private static final String LOG_TAG = "MAIN_ACTIVITY";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,33 +35,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void init() {
-        setContentView(R.layout.menu_drawer);
+        setContentView(R.layout.activity_main);
         this.drawerLayout = findViewById(R.id.drawer_layout);
 
-        drawerLayout.addDrawerListener(
-                new DrawerLayout.DrawerListener() {
-                    @Override
-                    public void onDrawerSlide(View drawerView, float slideOffset) {
-                        // Respond when the drawer's position changes
-                    }
+        MyDrawerListener myDrawerListener = new MyDrawerListener();
+        drawerLayout.addDrawerListener(myDrawerListener);
 
-                    @Override
-                    public void onDrawerOpened(View drawerView) {
-                        // Respond when the drawer is opened
-                    }
 
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
-                    public void onDrawerClosed(View drawerView) {
-                        // Respond when the drawer is closed
-                    }
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
+                        // close drawer when item is tapped
+                        drawerLayout.closeDrawers();
 
-                    @Override
-                    public void onDrawerStateChanged(int newState) {
-                        // Respond when the drawer motion state changes
+                        // Add code here to update the UI based on the item selected
+                        // For example, swap UI fragments here
+
+                        return true;
                     }
-                }
-        );
-        setContentView(R.layout.activity_main);
+                });
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -78,27 +77,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void buildMediaLibrary() {
-//        ArrayList<MediaBrowserCompat.MediaItem> arrayList = new ArrayList<>();
-//        ListView listView = (ListView) findViewById(R.id.list);
-//        // Adapter: You need three parameters 'the context, id of the layout (it will be where the data is shown),
-//        // and the array that contains the data
-//        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
-//
-//        // Here, you set the data in your ListView
-//        listView.setAdapter(adapter);
-//
-//            MediaLibrary mediaLibrary = new MediaLibrary();
-//            mediaLibrary.init();
-//            mediaLibrary.buildMediaLibrary();
-//
-//            for (File f : mediaLibrary.getLibrary().keySet()) {
-//                for (MediaBrowserCompat.MediaItem track : mediaLibrary.getLibrary().get(f)) {
-//                    arrayList.add(track.getName());
-//                }
-//            }
-//            adapter.notifyDataSetChanged();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

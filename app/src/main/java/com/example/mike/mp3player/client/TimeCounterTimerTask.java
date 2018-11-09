@@ -4,8 +4,8 @@ import com.example.mike.mp3player.client.view.TimeCounter;
 
 import java.util.TimerTask;
 
-import static com.example.mike.mp3player.client.TimerUtils.ONE_SECOND;
-import static com.example.mike.mp3player.client.TimerUtils.formatTime;
+import static com.example.mike.mp3player.client.utils.TimerUtils.ONE_SECOND;
+import static com.example.mike.mp3player.client.utils.TimerUtils.formatTime;
 
 public class TimeCounterTimerTask extends TimerTask {
     private TimeCounter timeCounter;

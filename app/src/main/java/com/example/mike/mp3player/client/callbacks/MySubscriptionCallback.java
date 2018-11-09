@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client;
+package com.example.mike.mp3player.client.callbacks;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

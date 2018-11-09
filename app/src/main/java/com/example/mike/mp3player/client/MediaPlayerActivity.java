@@ -14,6 +14,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
+import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
+import com.example.mike.mp3player.client.callbacks.MySeekerMediaControllerCallback;
+import com.example.mike.mp3player.client.callbacks.MySubscriptionCallback;
 import com.example.mike.mp3player.client.view.PlayPauseButton;
 import com.example.mike.mp3player.client.view.SeekerBar;
 import com.example.mike.mp3player.client.view.TimeCounter;

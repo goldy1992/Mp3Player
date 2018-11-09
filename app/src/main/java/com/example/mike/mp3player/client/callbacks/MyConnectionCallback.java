@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client;
+package com.example.mike.mp3player.client.callbacks;
 
 import android.content.Context;
 import android.media.browse.MediaBrowser;
@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaPlayerActivity;
 import com.example.mike.mp3player.client.view.SeekerBar;
 
 /**

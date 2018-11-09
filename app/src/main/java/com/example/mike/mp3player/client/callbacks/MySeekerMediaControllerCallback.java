@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client;
+package com.example.mike.mp3player.client.callbacks;
 
 import android.animation.ValueAnimator;
 import android.support.v4.media.MediaMetadataCompat;

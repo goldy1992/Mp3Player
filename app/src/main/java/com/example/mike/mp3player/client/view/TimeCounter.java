@@ -9,8 +9,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static com.example.mike.mp3player.client.TimerUtils.ONE_SECOND;
-import static com.example.mike.mp3player.client.TimerUtils.formatTime;
+import static com.example.mike.mp3player.client.utils.TimerUtils.ONE_SECOND;
+import static com.example.mike.mp3player.client.utils.TimerUtils.formatTime;
 
 public class TimeCounter {
     private TextView view;

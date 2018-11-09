@@ -2,13 +2,11 @@ package com.example.mike.mp3player.client.view;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.support.annotation.VisibleForTesting;
 import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
 
-import com.example.mike.mp3player.client.MySeekerMediaControllerCallback;
+import com.example.mike.mp3player.client.callbacks.MySeekerMediaControllerCallback;
 import com.example.mike.mp3player.client.SeekerBarChangerListener;
 
 public class SeekerBar extends AppCompatSeekBar {

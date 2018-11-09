@@ -1,5 +1,7 @@
 package com.example.mike.mp3player.client;
 
+import com.example.mike.mp3player.client.utils.TimerUtils;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;

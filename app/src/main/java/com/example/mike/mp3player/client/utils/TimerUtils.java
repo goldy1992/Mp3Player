@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client;
+package com.example.mike.mp3player.client.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
