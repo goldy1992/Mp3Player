@@ -24,7 +24,7 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
 
     private MediaPlayerActivity mediaPlayerActivity;
 
-    MyConnectionCallback(MediaPlayerActivity mediaPlayerActivity) {
+    public MyConnectionCallback(MediaPlayerActivity mediaPlayerActivity) {
         super();
         this.mediaPlayerActivity = mediaPlayerActivity;
     }

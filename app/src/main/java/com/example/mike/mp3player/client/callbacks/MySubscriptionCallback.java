@@ -6,6 +6,8 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback;
 import android.util.Log;
 
+import com.example.mike.mp3player.client.MediaPlayerActivity;
+
 import java.util.List;
 
 public class MySubscriptionCallback extends SubscriptionCallback {

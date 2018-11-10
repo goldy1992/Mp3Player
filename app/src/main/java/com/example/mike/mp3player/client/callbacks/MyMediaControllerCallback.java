@@ -15,7 +15,7 @@ public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
 
     private final MediaPlayerActivity activity;
 
-    MyMediaControllerCallback(MediaPlayerActivity activity) {
+    public MyMediaControllerCallback(MediaPlayerActivity activity) {
         this.activity = activity;
     }
 
