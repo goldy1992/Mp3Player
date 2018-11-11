@@ -6,17 +6,19 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback;
 import android.util.Log;
 
+import com.example.mike.mp3player.client.MainActivity;
 import com.example.mike.mp3player.client.MediaPlayerActivity;
+import com.example.mike.mp3player.client.MyViewAdapter;
 
 import java.util.List;
 
 public class MySubscriptionCallback extends SubscriptionCallback {
 
-    private MediaPlayerActivity mediaPlayerActivity;
+    private MainActivity mainActivity;
     private static final String LOG_TAG = "MY_SUBSCRIPTION_CALLBACK";
-    public MySubscriptionCallback(MediaPlayerActivity mediaPlayerActivity) {
+    public MySubscriptionCallback(MainActivity mainActivity) {
         super();
-        this.mediaPlayerActivity = mediaPlayerActivity;
+        this.mainActivity = mainActivity;
     }
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children) {
@@ -27,6 +29,7 @@ public class MySubscriptionCallback extends SubscriptionCallback {
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children,
                                  @NonNull Bundle options) {
         super.onChildrenLoaded(parentId, children, options);
-        Log.d(LOG_TAG, children.toString());
+
+       Log.d(LOG_TAG, children.toString());
     }
 }

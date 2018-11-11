@@ -10,11 +10,14 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.example.mike.mp3player.R;
 
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private PermissionsProcessor permissionsProcessor;
     private DrawerLayout drawerLayout;
+    private RecyclerView recyclerView;
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,18 +69,13 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              //  Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //        .setAction("Action", null).show();
-                Intent intent = new Intent(view.getContext(), MediaPlayerActivity.class);
 
-            }
-        });
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.myRecyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        MyViewAdapter myViewAdapter = new MyViewAdapter();
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(myViewAdapter);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,5 +117,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
     }
 }
