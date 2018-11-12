@@ -1,20 +1,9 @@
 package com.example.mike.mp3player.client.callbacks;
 
-import android.content.Context;
-import android.media.browse.MediaBrowser;
-import android.os.RemoteException;
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 
-import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaPlayerActivity;
-import com.example.mike.mp3player.client.view.SeekerBar;
+import com.example.mike.mp3player.client.MainActivity;
+import com.example.mike.mp3player.client.MediaBrowserConnector;
 
 /**
  * Created by Mike on 04/10/2017.
@@ -22,16 +11,16 @@ import com.example.mike.mp3player.client.view.SeekerBar;
 
 public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback {
 
-    private MediaPlayerActivity mediaPlayerActivity;
+    private MediaBrowserConnector mediaBrowserConnector;
 
-    public MyConnectionCallback(MediaPlayerActivity mediaPlayerActivity) {
+    public MyConnectionCallback(MediaBrowserConnector mediaBrowserConnector) {
         super();
-        this.mediaPlayerActivity = mediaPlayerActivity;
+        this.mediaBrowserConnector = mediaBrowserConnector;
     }
 
     @Override
     public void onConnected() {
-            mediaPlayerActivity.onConnected();
+        mediaBrowserConnector.onConnected();
    }
 
     @Override

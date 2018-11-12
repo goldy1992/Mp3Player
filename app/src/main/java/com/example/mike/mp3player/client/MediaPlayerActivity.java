@@ -1,12 +1,8 @@
 package com.example.mike.mp3player.client;
 
-import android.content.ComponentName;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.RemoteException;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,22 +10,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 import com.example.mike.mp3player.client.callbacks.MySeekerMediaControllerCallback;
-import com.example.mike.mp3player.client.callbacks.MySubscriptionCallback;
 import com.example.mike.mp3player.client.view.PlayPauseButton;
 import com.example.mike.mp3player.client.view.SeekerBar;
 import com.example.mike.mp3player.client.view.TimeCounter;
-import com.example.mike.mp3player.service.MediaPlaybackService;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -39,23 +30,19 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
 
     private final String STOP = "Stop";
-
-    private MediaBrowserCompat mMediaBrowser;
-    private MyConnectionCallback mConnectionCallbacks;
     private MyMediaControllerCallback myMediaControllerCallback;
     private MySeekerMediaControllerCallback mySeekerMediaControllerCallback;
     private MediaControllerCompat mediaControllerCompat;
+
     private Uri selectedUri;
     private PlayPauseButton playPauseButton;
     private SeekerBar seekerBar;
     private TimeCounter counter;
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
-    private MySubscriptionCallback mySubscriptionCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mySubscriptionCallback = new MySubscriptionCallback(this);
         setContentView(R.layout.activity_media_player);
         this.playPauseButton = this.findViewById(R.id.playPauseButton);
         TextView counterView = this.findViewById(R.id.timer);
@@ -67,38 +54,35 @@ public class MediaPlayerActivity extends AppCompatActivity {
         }
         myMediaControllerCallback = new MyMediaControllerCallback(this);
         mySeekerMediaControllerCallback = new MySeekerMediaControllerCallback(seekerBar);
-        mConnectionCallbacks = new MyConnectionCallback(this);
+        mediaControllerCompat.registerCallback(myMediaControllerCallback);
+        mediaControllerCompat.registerCallback(mySeekerMediaControllerCallback);
 
-        // ...
-        // Create MediaBrowserServiceCompat
-        mMediaBrowser = new MediaBrowserCompat(this,
-                new ComponentName(this, MediaPlaybackService.class),
-                mConnectionCallbacks,
-                null);
-        saveState();
+        setMediaControllerCompat(mediaControllerCompat);
+        seekerBar.setMediaController(mediaControllerCompat);
+        // Display the initial state
+        mediaControllerCompat.getMetadata();
+        mediaControllerCompat.getPlaybackState();
+        mediaControllerCompat.getTransportControls().prepareFromUri(getSelectedUri(), null);
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        getmMediaBrowser().connect();
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
         // (see "stay in sync with the MediaSession")
-        getmMediaBrowser().disconnect();
-        if (getMediaControllerCompat() != null) {
-            getMediaControllerCompat().unregisterCallback(myMediaControllerCallback);
-        }
-        getmMediaBrowser().disconnect();
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        saveState();
+        //saveState();
 
         //   onSaveInstanceState();
     }
@@ -148,9 +132,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         return mediaControllerCompat.getPlaybackState().getState();
     }
 
-    public MediaBrowserCompat getmMediaBrowser() {
-        return mMediaBrowser;
-    }
+
 
     public MediaControllerCompat getMediaControllerCompat() {
         return mediaControllerCompat;
@@ -177,43 +159,8 @@ public class MediaPlayerActivity extends AppCompatActivity {
     }
 
     public void onConnected() {
-        try {
-            MediaSessionCompat.Token token = mMediaBrowser.getSessionToken();
-            mediaControllerCompat = new MediaControllerCompat(getApplicationContext(), token);
-            mediaControllerCompat.registerCallback(myMediaControllerCallback);
-            mediaControllerCompat.registerCallback(mySeekerMediaControllerCallback);
-
-            setMediaControllerCompat(mediaControllerCompat);
-            seekerBar.setMediaController(mediaControllerCompat);
-            // Display the initial state
-            mediaControllerCompat.getMetadata();
-            mediaControllerCompat.getPlaybackState();
-            mediaControllerCompat.getTransportControls().prepareFromUri(getSelectedUri(), null);
-            mMediaBrowser.subscribe(mMediaBrowser.getRoot(), mySubscriptionCallback);
-        }  catch (RemoteException e) {
-            e.printStackTrace();
-        }
     }
 
-    private void saveState()
-    {
-        try {
-            File fileToCache = new File(getApplicationContext().getCacheDir(), "mediaPlayerState");
-            if (fileToCache.exists())
-            {
-                fileToCache.delete();
-            }
-            fileToCache.createNewFile();
-            FileOutputStream fileOut = new FileOutputStream(fileToCache);
-            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-            objectOut.writeObject(this.selectedUri);
-            objectOut.close();
-            fileOut.close();
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, e.getMessage());
-        }
-    }
 
     private void retrieveState() {
         try {

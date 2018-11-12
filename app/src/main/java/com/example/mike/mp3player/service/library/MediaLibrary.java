@@ -21,10 +21,11 @@ import static android.media.MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST;
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ARTIST;
 import static android.media.MediaMetadataRetriever.METADATA_KEY_DURATION;
 import static android.media.MediaMetadataRetriever.METADATA_KEY_TITLE;
+import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
+import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
 
 public class MediaLibrary {
 
-    public static final String META_DATA_KEY_PARENT_PATH = "META_DATA_KEY_PARENT_PATH";
 
     private boolean playlistRecursInSubDirectory = false;
     private List<MediaBrowserCompat.MediaItem> library;
@@ -77,6 +78,7 @@ public class MediaLibrary {
     private MediaBrowserCompat.MediaItem createMediaItemFromFile(File file) {
         Uri uri = Uri.fromFile(file);
         String parentPath = file.getParentFile().getAbsolutePath();
+        String fileName = file.getName();
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(context, uri);
 
@@ -86,11 +88,12 @@ public class MediaLibrary {
         extras.putString(String.valueOf(METADATA_KEY_ALBUMARTIST), mmr.extractMetadata(METADATA_KEY_ALBUMARTIST));
         extras.putString(String.valueOf(METADATA_KEY_DURATION), mmr.extractMetadata(METADATA_KEY_DURATION));
         extras.putString(META_DATA_KEY_PARENT_PATH, parentPath);
+        extras.putString(META_DATA_KEY_FILE_NAME, fileName);
 
         // TODO: add code to fetch album art also
         MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder()
                 .setMediaId(String.valueOf(uri.getPath().hashCode()))
-                .setTitle(mmr.extractMetadata(METADATA_KEY_DURATION))
+                .setTitle(mmr.extractMetadata(METADATA_KEY_TITLE))
                 .setExtras(extras)
                 .build();
         MediaBrowserCompat.MediaItem mediaItem = new MediaBrowserCompat.MediaItem(mediaDescriptionCompat, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);

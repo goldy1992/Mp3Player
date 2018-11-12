@@ -6,12 +6,13 @@
     android:id="@+id/drawer_layout"
     android:fitsSystemWindows="true">
 
-    <android.support.design.widget.CoordinatorLayout
+    <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context="com.example.mike.mp3player.client.MainActivity">
 
         <android.support.design.widget.AppBarLayout
@@ -31,7 +32,7 @@
 
         <include layout="@layout/content_main" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </LinearLayout>
 
     <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
     <android.support.design.widget.NavigationView

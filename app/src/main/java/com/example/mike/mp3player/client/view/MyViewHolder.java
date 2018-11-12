@@ -1,19 +1,21 @@
 package com.example.mike.mp3player.client.view;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.TextView;
+
+import com.example.mike.mp3player.R;
 
 public class MyViewHolder extends RecyclerView.ViewHolder {
 
-    private TextView textView;
+    private TextView title;
 
-    public MyViewHolder(TextView textView) {
-        super(textView);
-        this.textView = textView;
+    public MyViewHolder(View view) {
+        super(view);
+        this.title = view.findViewById(R.id.title);
     }
 
-
     public TextView getTextView() {
-        return textView;
+        return title;
     }
 }

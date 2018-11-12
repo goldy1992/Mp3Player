@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.view.MyViewHolder;
+import com.example.mike.mp3player.commons.MetaDataKeys;
 
 import java.util.List;
 
@@ -21,11 +22,13 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
         this.songs = songs;
     }
     public void setData(List<MediaBrowserCompat.MediaItem> items) {
-        this.songs = items;
+        if (songs == null) {
+            this.songs = items;
+        } else {
+            songs.addAll(items);
+        }
     }
-
-
-    @Override
+        @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         // create a new view
@@ -38,13 +41,26 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
+        MediaBrowserCompat.MediaItem song = songs.get(position);
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.getTextView().setText(songs.get(position).toString());
+        CharSequence titleCharSequence = song.getDescription().getTitle();
+        String title = null;
+        if (null == titleCharSequence) {
+            String fileName = (String) song.getDescription().getExtras().get(MetaDataKeys.META_DATA_KEY_FILE_NAME);
+            if (fileName != null) {
+                title = fileName;
+            }
+        } else {
+            title = titleCharSequence.toString();
+        }
+        if (null != title) {
+            holder.getTextView().setText(title.toString());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return songs != null ? 0: songs.size();
+        return songs == null ? 0: songs.size();
     }
 }
