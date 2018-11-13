@@ -2,20 +2,22 @@ package com.example.mike.mp3player.client.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.GridLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
 
 public class MyViewHolder extends RecyclerView.ViewHolder {
 
-    private TextView title;
+    private GridLayout menuItem;
 
     public MyViewHolder(View view) {
         super(view);
-        this.title = view.findViewById(R.id.title);
+        this.menuItem = view.findViewById(R.id.menu_item);
     }
 
-    public TextView getTextView() {
-        return title;
+    public GridLayout getView() {
+        return menuItem;
     }
 }

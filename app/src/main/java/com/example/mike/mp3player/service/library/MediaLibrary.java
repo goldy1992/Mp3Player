@@ -23,6 +23,9 @@ import static android.media.MediaMetadataRetriever.METADATA_KEY_DURATION;
 import static android.media.MediaMetadataRetriever.METADATA_KEY_TITLE;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
+import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ALBUM_ARTIST;
+import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
+import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_DURATION;
 
 public class MediaLibrary {
 
@@ -83,10 +86,9 @@ public class MediaLibrary {
         mmr.setDataSource(context, uri);
 
         Bundle extras = new Bundle();
-        extras.putString(String.valueOf(METADATA_KEY_DURATION), mmr.extractMetadata(METADATA_KEY_DURATION));
-        extras.putString(String.valueOf(METADATA_KEY_ARTIST), mmr.extractMetadata(METADATA_KEY_ARTIST));
-        extras.putString(String.valueOf(METADATA_KEY_ALBUMARTIST), mmr.extractMetadata(METADATA_KEY_ALBUMARTIST));
-        extras.putString(String.valueOf(METADATA_KEY_DURATION), mmr.extractMetadata(METADATA_KEY_DURATION));
+        extras.putString(STRING_METADATA_KEY_DURATION, mmr.extractMetadata(METADATA_KEY_DURATION));
+        extras.putString(STRING_METADATA_KEY_ARTIST, mmr.extractMetadata(METADATA_KEY_ARTIST));
+        extras.putString(STRING_METADATA_KEY_ALBUM_ARTIST, mmr.extractMetadata(METADATA_KEY_ALBUMARTIST));
         extras.putString(META_DATA_KEY_PARENT_PATH, parentPath);
         extras.putString(META_DATA_KEY_FILE_NAME, fileName);
 
