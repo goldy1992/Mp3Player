@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
 import com.example.mike.mp3player.client.callbacks.MySubscriptionCallback;
+import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 
 import java.io.File;
@@ -38,6 +39,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -100,20 +103,12 @@ public class MainActivity extends AppCompatActivity {
         MyViewAdapter myViewAdapter = new MyViewAdapter(songs);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(myViewAdapter);
+        recyclerView.addOnItemTouchListener(new MyItemTouchListener(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         myViewAdapter.notifyDataSetChanged();
     }
 
     private static final int READ_REQUEST_CODE = 42;
-
-    public void sendMessage(View view) {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("audio/*");
-        startActivityForResult(intent, READ_REQUEST_CODE);
-
-
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode,
@@ -127,6 +122,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, READ_REQUEST_CODE);
             }
         }
+    }
+
+    public void callPlayerView(String songId) {
+        Intent intent = new Intent(getApplicationContext(), MediaPlayerActivity.class);
+        intent.putExtra(MEDIA_ID, songId);
+        intent.putExtra(MEDIA_SESSION, mediaBrowserConnector.getMediaSessionToken());
+        startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client;
 
 import android.content.ComponentName;
+import android.media.session.MediaSession;
 import android.os.RemoteException;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -17,6 +18,7 @@ public class MediaBrowserConnector {
     private MySubscriptionCallback mySubscriptionCallback;
     private MediaControllerCompat mediaControllerCompat;
     private final MainActivity activity;
+    private MediaSessionCompat.Token mediaSessionToken;
 
     public MediaBrowserConnector(MainActivity activity) {
         this.activity = activity;
@@ -37,6 +39,7 @@ public class MediaBrowserConnector {
     public void onConnected() {
         try {
             MediaSessionCompat.Token token = mMediaBrowser.getSessionToken();
+            this.mediaSessionToken = token;
             mediaControllerCompat = new MediaControllerCompat(activity.getApplicationContext(), token);
             mMediaBrowser.subscribe(mMediaBrowser.getRoot(), mySubscriptionCallback);
         } catch (RemoteException e) {
@@ -58,4 +61,7 @@ public class MediaBrowserConnector {
         getmMediaBrowser().disconnect();
     }
 
+    public MediaSessionCompat.Token getMediaSessionToken() {
+        return mediaSessionToken;
+    }
 }

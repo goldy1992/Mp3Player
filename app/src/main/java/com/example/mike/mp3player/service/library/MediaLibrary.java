@@ -35,6 +35,7 @@ public class MediaLibrary {
     private MusicFileFilter musicFileFilter = new MusicFileFilter();
     private IsDirectoryFilter isDirectoryFilter = new IsDirectoryFilter();
     private Context context;
+    private Map<String, Uri> mediaIdToUriMap;
 
     public MediaLibrary(Context context)
     {
@@ -42,6 +43,7 @@ public class MediaLibrary {
     }
     public void init() {
         library = new ArrayList<>();
+        mediaIdToUriMap = new HashMap<>();
         buildMediaLibrary();
     }
 
@@ -80,6 +82,7 @@ public class MediaLibrary {
 
     private MediaBrowserCompat.MediaItem createMediaItemFromFile(File file) {
         Uri uri = Uri.fromFile(file);
+        String mediaId = String.valueOf(uri.getPath().hashCode());
         String parentPath = file.getParentFile().getAbsolutePath();
         String fileName = file.getName();
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
@@ -94,11 +97,16 @@ public class MediaLibrary {
 
         // TODO: add code to fetch album art also
         MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder()
-                .setMediaId(String.valueOf(uri.getPath().hashCode()))
+                .setMediaId(mediaId)
                 .setTitle(mmr.extractMetadata(METADATA_KEY_TITLE))
                 .setExtras(extras)
                 .build();
         MediaBrowserCompat.MediaItem mediaItem = new MediaBrowserCompat.MediaItem(mediaDescriptionCompat, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
+        mediaIdToUriMap.put(mediaId, uri);
         return mediaItem;
+    }
+
+    public Uri getMediaUri(String id) {
+        return mediaIdToUriMap.get(id);
     }
 }

@@ -18,7 +18,6 @@ import java.util.List;
 
 public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private List<MediaBrowserCompat.MediaItem> songs;
-    private MyViewHolder myViewHolder;
 
 
     public MyViewAdapter(List<MediaBrowserCompat.MediaItem> songs) {
@@ -26,10 +25,10 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
         this.songs = songs;
     }
     public void setData(List<MediaBrowserCompat.MediaItem> items) {
-        if (songs == null) {
+        if (getSongs() == null) {
             this.songs = items;
         } else {
-            songs.addAll(items);
+            getSongs().addAll(items);
         }
     }
         @Override
@@ -45,9 +44,10 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        MediaBrowserCompat.MediaItem song = songs.get(position);
+        MediaBrowserCompat.MediaItem song = getSongs().get(position);
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
+        song.getMediaId();
         String title = extractTitle(song);
         String artist = extractArtist(song);
         String duration = extractDuration(song);
@@ -64,7 +64,7 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public int getItemCount() {
-        return songs == null ? 0: songs.size();
+        return getSongs() == null ? 0: getSongs().size();
     }
 
     private String extractTitle(MediaBrowserCompat.MediaItem song) {
@@ -94,4 +94,7 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
         return TimerUtils.formatTime(duration);
     }
 
+    public List<MediaBrowserCompat.MediaItem> getSongs() {
+        return songs;
+    }
 }

@@ -2,7 +2,9 @@ package com.example.mike.mp3player.client;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,6 +17,7 @@ import com.example.mike.mp3player.client.callbacks.MySeekerMediaControllerCallba
 import com.example.mike.mp3player.client.view.PlayPauseButton;
 import com.example.mike.mp3player.client.view.SeekerBar;
 import com.example.mike.mp3player.client.view.TimeCounter;
+import com.example.mike.mp3player.commons.Constants;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,10 +38,12 @@ public class MediaPlayerActivity extends AppCompatActivity {
     private MediaControllerCompat mediaControllerCompat;
 
     private Uri selectedUri;
+    private String mediaId;
     private PlayPauseButton playPauseButton;
     private SeekerBar seekerBar;
     private TimeCounter counter;
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,20 +54,32 @@ public class MediaPlayerActivity extends AppCompatActivity {
         this.counter = new TimeCounter(counterView);
         this.seekerBar = this.findViewById(R.id.seekBar);
         this.seekerBar.setTimeCounter(counter);
+        MediaSessionCompat.Token token = null;
         if (getIntent() != null && getIntent().getExtras() != null) {
-            this.setSelectedUri((Uri) getIntent().getExtras().get("uri"));
+            token = (MediaSessionCompat.Token) getIntent().getExtras().get(Constants.MEDIA_SESSION);
+            mediaId = (String) getIntent().getExtras().get(Constants.MEDIA_ID);
         }
-        myMediaControllerCallback = new MyMediaControllerCallback(this);
-        mySeekerMediaControllerCallback = new MySeekerMediaControllerCallback(seekerBar);
-        mediaControllerCompat.registerCallback(myMediaControllerCallback);
-        mediaControllerCompat.registerCallback(mySeekerMediaControllerCallback);
+        if (token != null) {
+            try {
+                mediaControllerCompat = new MediaControllerCompat(getApplicationContext(), token);
+                myMediaControllerCallback = new MyMediaControllerCallback(this);
+                mySeekerMediaControllerCallback = new MySeekerMediaControllerCallback(seekerBar);
 
-        setMediaControllerCompat(mediaControllerCompat);
-        seekerBar.setMediaController(mediaControllerCompat);
-        // Display the initial state
-        mediaControllerCompat.getMetadata();
-        mediaControllerCompat.getPlaybackState();
-        mediaControllerCompat.getTransportControls().prepareFromUri(getSelectedUri(), null);
+                mediaControllerCompat.registerCallback(myMediaControllerCallback);
+                mediaControllerCompat.registerCallback(mySeekerMediaControllerCallback);
+
+                setMediaControllerCompat(mediaControllerCompat);
+                seekerBar.setMediaController(mediaControllerCompat);
+                // Display the initial state
+                mediaControllerCompat.getMetadata();
+                mediaControllerCompat.getPlaybackState();
+                mediaControllerCompat.getTransportControls().prepareFromMediaId(mediaId, null);
+
+            } catch (RemoteException e) {
+
+            }
+
+        }
 
     }
 
@@ -158,9 +175,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
         return counter;
     }
 
-    public void onConnected() {
-    }
-
 
     private void retrieveState() {
         try {
@@ -177,4 +191,5 @@ public class MediaPlayerActivity extends AppCompatActivity {
             Log.e(LOG_TAG, e.getMessage());
         }
     }
+
 }

@@ -9,6 +9,8 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 
+import com.example.mike.mp3player.service.library.MediaLibrary;
+
 /**
  * Created by Mike on 24/09/2017.
  */
@@ -19,11 +21,13 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     private MyMediaPlayerAdapter myMediaPlayerAdapter;
     private MediaSessionCompat mediaSession;
     private MyNotificationManager myNotificationManager;
+    private MediaLibrary mediaLibrary;
     private static final String LOG_TAG = "MEDIA_SESSION_CALLBACK";
 
-    public MediaSessionCallback(Context context, MyNotificationManager myNotificationManager, ServiceManager serviceManager, MediaSessionCompat mediaSession) {
+    public MediaSessionCallback(Context context, MyNotificationManager myNotificationManager, ServiceManager serviceManager, MediaSessionCompat mediaSession, MediaLibrary mediaLibrary) {
         this.serviceManager = serviceManager;
         this.mediaSession = mediaSession;
+        this.mediaLibrary = mediaLibrary;
         this.myNotificationManager = myNotificationManager;
         this.myMediaPlayerAdapter = new MyMediaPlayerAdapter(context);
         this.myMediaPlayerAdapter.init();
@@ -59,6 +63,15 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     @Override
     public void onPrepareFromUri(Uri uri, Bundle bundle) {
         super.onPrepareFromUri(uri, bundle);
+        myMediaPlayerAdapter.prepareFromUri(uri);
+        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
+        mediaSession.setMetadata(myMediaPlayerAdapter.getCurrentMetaData());
+    }
+
+    @Override
+    public void onPrepareFromMediaId(String mediaId, Bundle bundle) {
+        super.onPrepareFromMediaId(mediaId, bundle);
+        Uri uri = mediaLibrary.getMediaUri(mediaId);
         myMediaPlayerAdapter.prepareFromUri(uri);
         mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
         mediaSession.setMetadata(myMediaPlayerAdapter.getCurrentMetaData());

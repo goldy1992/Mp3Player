@@ -24,7 +24,6 @@ public class ServiceManager {
     }
 
     public void startService(Notification notification) {
-
         if (!serviceStarted) {
             Intent startServiceIntent = new Intent(context, MediaPlaybackService.class);
             startServiceIntent.setAction("com.example.mike.mp3player.service.MediaPlaybackService");

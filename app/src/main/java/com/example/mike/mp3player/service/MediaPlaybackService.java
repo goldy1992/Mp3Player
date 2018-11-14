@@ -28,17 +28,19 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onCreate() {
         super.onCreate();
+        mediaLibrary = new MediaLibrary(getBaseContext());
+        mediaLibrary.init();
         mMediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);
         setSessionToken(mMediaSession.getSessionToken());
         notificationManager = new MyNotificationManager(this);
         serviceManager = new ServiceManager(this, getApplicationContext(), mMediaSession, notificationManager);
-        mediaSessionCallback = new MediaSessionCallback(getApplicationContext(), notificationManager, serviceManager, mMediaSession);
+        mediaSessionCallback = new MediaSessionCallback(getApplicationContext(), notificationManager, serviceManager, mMediaSession, mediaLibrary);
         // MySessionCallback() has methods that handle callbacks from a media controller
         mMediaSession.setCallback(mediaSessionCallback);
         mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
                         MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS );
-        mediaLibrary = new MediaLibrary(getBaseContext());
-        mediaLibrary.init();
+
+
         //    mediaLibrary.buildMediaLibrary();
         // Set the session's token so that client activities can communicate with it.
 

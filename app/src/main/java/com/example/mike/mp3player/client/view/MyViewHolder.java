@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.view;
 
+import android.support.v4.media.MediaBrowserCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.GridLayout;
@@ -16,6 +17,7 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
         super(view);
         this.menuItem = view.findViewById(R.id.menu_item);
     }
+
 
     public GridLayout getView() {
         return menuItem;
