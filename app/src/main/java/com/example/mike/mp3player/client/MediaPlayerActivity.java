@@ -31,12 +31,10 @@ import java.io.ObjectInputStream;
 
 public class MediaPlayerActivity extends AppCompatActivity {
 
-
     private final String STOP = "Stop";
     private MyMediaControllerCallback myMediaControllerCallback;
     private MySeekerMediaControllerCallback mySeekerMediaControllerCallback;
     private MediaControllerCompat mediaControllerCompat;
-
     private Uri selectedUri;
     private String mediaId;
     private PlayPauseButton playPauseButton;
@@ -78,9 +76,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
             } catch (RemoteException e) {
 
             }
-
         }
-
     }
 
     @Override
@@ -144,12 +140,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
         } // if
     }
 
-    private int getPlaybackState()
-    {
+    private int getPlaybackState() {
         return mediaControllerCompat.getPlaybackState().getState();
     }
-
-
 
     public MediaControllerCompat getMediaControllerCompat() {
         return mediaControllerCompat;
@@ -179,6 +172,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
     private void retrieveState() {
         try {
             File f = new File(getApplicationContext().getCacheDir(), "mediaPlayerState");
+            if (null != f) {
+                return;
+            }
             FileInputStream fileInputStream = new FileInputStream(f);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             this.selectedUri = (Uri) objectInputStream.readObject();

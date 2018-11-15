@@ -24,17 +24,20 @@ public class ServiceManager {
     }
 
     public void startService(Notification notification) {
+        createServiceIfNotStarted();
+        service.startForeground(MyNotificationManager.NOTIFICATION_ID, notification);
+        mediaSession.setActive(true);
+        notificationManager.getNotificationManager().notify(MyNotificationManager.NOTIFICATION_ID, notification);
+        //mediaSession.setPlaybackState();
+    }
+
+    private void createServiceIfNotStarted() {
         if (!serviceStarted) {
             Intent startServiceIntent = new Intent(context, MediaPlaybackService.class);
             startServiceIntent.setAction("com.example.mike.mp3player.service.MediaPlaybackService");
             service.startService(startServiceIntent);
-            mediaSession.setActive(true);
             serviceStarted = true;
         }
-
-        service.startForeground(MyNotificationManager.NOTIFICATION_ID, notification);
-        notificationManager.getNotificationManager().notify(MyNotificationManager.NOTIFICATION_ID, notification);
-        //mediaSession.setPlaybackState();
     }
 
     public void stopService() {
@@ -48,7 +51,12 @@ public class ServiceManager {
         mediaSession.setActive(true);
     }
 
+    public void stopMediaSession() {
+        mediaSession.setActive(false);
+    }
+
     public void pauseService(Notification notification){
+        createServiceIfNotStarted();
         service.stopForeground(false);
         service.stopSelf();
         notificationManager.getNotificationManager().notify(MyNotificationManager.NOTIFICATION_ID, notification);

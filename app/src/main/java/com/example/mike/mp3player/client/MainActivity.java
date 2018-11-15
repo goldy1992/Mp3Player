@@ -99,10 +99,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs) {
         this.recyclerView = (RecyclerView) findViewById(R.id.myRecyclerView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         MyViewAdapter myViewAdapter = new MyViewAdapter(songs);
-        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(myViewAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addOnItemTouchListener(new MyItemTouchListener(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         myViewAdapter.notifyDataSetChanged();

@@ -2,7 +2,6 @@ package com.example.mike.mp3player.service;
 
 import android.content.Context;
 import android.media.AudioManager;
-import android.media.MediaDataSource;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v4.media.MediaMetadataCompat;
@@ -11,7 +10,7 @@ import android.util.Log;
 
 import java.io.IOException;
 
-public class MyMediaPlayerAdapter {
+public class MyMediaPlayerAdapter implements MediaPlayer.OnPreparedListener {
 
     private static final String LOG_TAG = "MEDIA_PLAYER_ADAPTER";
     private MediaPlayer mediaPlayer;
@@ -20,16 +19,16 @@ public class MyMediaPlayerAdapter {
     private Context context;
     private int currentState;
     private boolean isPrepared = false;
+    private int stateOnPrepared;
 
     public MyMediaPlayerAdapter(Context context) {
         this.context = context;
-
     }
 
-    public void init()
-    {
+    public void init() {
         if (getMediaPlayer() == null) {
             setMediaPlayer(new MediaPlayer());
+            this.getMediaPlayer().setOnPreparedListener(this);
            // mediaPlayer.setPlaybackParams(new PlaybackParams());
         }
         this.afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
@@ -40,6 +39,10 @@ public class MyMediaPlayerAdapter {
     }
 
     public void play() {
+        if (!prepare()) {
+            return;
+        }
+
         if (requestAudioFocus()) {
             try {
                 // Set the session active  (and update metadata and state)
@@ -71,12 +74,14 @@ public class MyMediaPlayerAdapter {
     public void prepareFromUri(Uri uri) {
         getMediaPlayer().reset();
         setCurrentUri(uri);
-        if (prepare()) {
-            currentState = PlaybackStateCompat.STATE_PAUSED;
-        }
+        stateOnPrepared = PlaybackStateCompat.STATE_PAUSED;
+        prepare();
     }
 
     public void stop() {
+        if (!isPrepared) {
+            return;
+        }
         // unregisterReceiver(myNoisyAudioStreamReceiver);
         currentState= PlaybackStateCompat.STATE_STOPPED;
         isPrepared = false;
@@ -86,6 +91,9 @@ public class MyMediaPlayerAdapter {
     }
 
     public void pause() {
+        if (!isPrepared) {
+            return;
+        }
         // Update metadata and state
         getMediaPlayer().pause();
         currentState = PlaybackStateCompat.STATE_PAUSED;
@@ -93,11 +101,13 @@ public class MyMediaPlayerAdapter {
 
 
     public void seekTo(long position) {
+        if (!prepare()) {
+            return;
+        }
         getMediaPlayer().seekTo((int)position);
     }
 
-    private boolean requestAudioFocus()
-    {
+    private boolean requestAudioFocus() {
         AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         // Request audio focus for playback, this registers the afChangeListener
         return AudioManager.AUDIOFOCUS_REQUEST_GRANTED == am.requestAudioFocus(afChangeListener,
@@ -107,12 +117,12 @@ public class MyMediaPlayerAdapter {
                 AudioManager.AUDIOFOCUS_GAIN);
     }
 
-    private void setCurrentUri(Uri uri){
+    private void setCurrentUri(Uri uri) {
         try {
             getMediaPlayer().setDataSource(context, uri);
             this.currentUri = uri;
         } catch (IOException ex) {
-            Log.e(LOG_TAG, ex.getMessage());
+            Log.e(LOG_TAG, ex.getStackTrace().toString());
         }
     }
 
@@ -138,7 +148,7 @@ public class MyMediaPlayerAdapter {
 
     public PlaybackStateCompat getMediaPlayerState() {
         return new PlaybackStateCompat.Builder()
-                .setState(currentState,
+                .setState(getCurrentState(),
                         mediaPlayer.getCurrentPosition(),
                         mediaPlayer.getPlaybackParams().getSpeed(),
                         System.currentTimeMillis())
@@ -149,5 +159,22 @@ public class MyMediaPlayerAdapter {
         return  new MediaMetadataCompat.Builder()
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration())
                 .build();
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mediaPlayer) {
+        isPrepared = true;
+        switch (stateOnPrepared) {
+            case PlaybackStateCompat.STATE_PLAYING:
+                getMediaPlayer().start();
+                currentState = PlaybackStateCompat.STATE_PLAYING;
+                break;
+            case PlaybackStateCompat.STATE_PAUSED:
+                currentState = PlaybackStateCompat.STATE_PAUSED;
+        }
+    }
+
+    public int getCurrentState() {
+        return currentState;
     }
 }
