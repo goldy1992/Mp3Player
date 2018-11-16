@@ -110,18 +110,24 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int READ_REQUEST_CODE = 42;
 
+    /**
+     * Called when
+     * @param requestCode
+     * @param resultCode
+     * @param resultData
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode,
                                  Intent resultData) {
-        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            Uri uri = null;
-            if (resultData != null) {
-                uri = resultData.getData();
-                Intent intent = new Intent(getApplicationContext(), MediaPlayerActivity.class);
-                intent.putExtra("uri", uri);
-                startActivityForResult(intent, READ_REQUEST_CODE);
-            }
-        }
+//        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+//            Uri uri = null;
+//            if (resultData != null) {
+//                uri = resultData.getData();
+//                Intent intent = new Intent(getApplicationContext(), MediaPlayerActivity.class);
+//                intent.putExtra("uri", uri);
+//                startActivityForResult(intent, READ_REQUEST_CODE);
+//            }
+//        }
     }
 
     public void callPlayerView(String songId) {

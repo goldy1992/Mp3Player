@@ -41,6 +41,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
     private SeekerBar seekerBar;
     private TimeCounter counter;
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
+    private MediaSessionCompat.Token token;
 
 
     @Override
@@ -52,7 +53,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
         this.counter = new TimeCounter(counterView);
         this.seekerBar = this.findViewById(R.id.seekBar);
         this.seekerBar.setTimeCounter(counter);
-        MediaSessionCompat.Token token = null;
         if (getIntent() != null && getIntent().getExtras() != null) {
             token = (MediaSessionCompat.Token) getIntent().getExtras().get(Constants.MEDIA_SESSION);
             mediaId = (String) getIntent().getExtras().get(Constants.MEDIA_ID);
@@ -82,21 +82,23 @@ public class MediaPlayerActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            token = (MediaSessionCompat.Token) getIntent().getExtras().get(Constants.MEDIA_SESSION);
+            mediaId = (String) getIntent().getExtras().get(Constants.MEDIA_ID);
+            mediaControllerCompat.getTransportControls().prepareFromMediaId(mediaId, null);
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
         // (see "stay in sync with the MediaSession")
-
     }
 
     @Override
     public void onPause() {
         super.onPause();
         //saveState();
-
         //   onSaveInstanceState();
     }
 
@@ -123,19 +125,16 @@ public class MediaPlayerActivity extends AppCompatActivity {
         if (pbState == PlaybackStateCompat.STATE_PLAYING) {
             getMediaControllerCompat().getTransportControls().pause();
             getPlayPauseButton().setTextPlay();
-        } else
-        {
+        } else {
             getMediaControllerCompat().getTransportControls().play();
             getPlayPauseButton().setTextPause();
         }
     }
 
-    public void stop(View view)
-    {
+    public void stop(View view) {
         int pbState = getPlaybackState();
         if (pbState == PlaybackStateCompat.STATE_PLAYING ||
-                pbState == PlaybackStateCompat.STATE_STOPPED )
-        {
+                pbState == PlaybackStateCompat.STATE_STOPPED ) {
             getMediaControllerCompat().getTransportControls().stop();
         } // if
     }
@@ -168,7 +167,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
         return counter;
     }
 
-
     private void retrieveState() {
         try {
             File f = new File(getApplicationContext().getCacheDir(), "mediaPlayerState");
@@ -187,5 +185,4 @@ public class MediaPlayerActivity extends AppCompatActivity {
             Log.e(LOG_TAG, e.getMessage());
         }
     }
-
 }

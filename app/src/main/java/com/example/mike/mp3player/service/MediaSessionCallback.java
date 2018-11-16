@@ -79,7 +79,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
     @Override
     public void onPlayFromUri(Uri uri, Bundle bundle) {
         super.onPlayFromUri(uri, bundle);
-        myMediaPlayerAdapter.playFromUri(uri);
+        myMediaPlayerAdapter.prepareFromUri(uri);
+        myMediaPlayerAdapter.play();
         serviceManager.startMediaSession();
     }
 
@@ -95,6 +96,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
         // unregister BECOME_NOISY BroadcastReceiver
 //        unregisterReceiver(myNoisyAudioStreamReceiver, intentFilter);
         // Take the serviceManager out of the foreground, retain the notification
+        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
         serviceManager.pauseService(prepareNotification());
     }
 

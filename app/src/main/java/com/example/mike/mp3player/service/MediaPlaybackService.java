@@ -39,12 +39,6 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         mMediaSession.setCallback(mediaSessionCallback);
         mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
                         MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS );
-
-
-        //    mediaLibrary.buildMediaLibrary();
-        // Set the session's token so that client activities can communicate with it.
-
-
     }
 
     @Override
@@ -73,9 +67,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             result.sendResult(null);
             return;
         }
-
         // Assume for example that the music catalog is already loaded/cached.
-
         List<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getLibrary();
 
         // Check if this is the root menu:

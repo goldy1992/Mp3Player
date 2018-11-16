@@ -59,23 +59,16 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnPreparedListener {
         }
     }
 
-    public void playFromUri(Uri uri) {
-        if (requestAudioFocus()) {
-                     // Set the session active  (and update metadata and state)
-            // start the player (custom call)
-            setCurrentUri(uri);
-            if(prepare()) {
-                getMediaPlayer().start();
-                currentState = PlaybackStateCompat.STATE_PLAYING;
-            }
-        }
-    }
-
     public void prepareFromUri(Uri uri) {
-        getMediaPlayer().reset();
+        resetPlayer();
         setCurrentUri(uri);
         stateOnPrepared = PlaybackStateCompat.STATE_PAUSED;
         prepare();
+    }
+
+    private void resetPlayer() {
+        getMediaPlayer().reset();
+        this.isPrepared = false;
     }
 
     public void stop() {
@@ -86,7 +79,7 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnPreparedListener {
         currentState= PlaybackStateCompat.STATE_STOPPED;
         isPrepared = false;
         getMediaPlayer().stop();
-        getMediaPlayer().reset();
+        resetPlayer();
         // Take the service out of the foreground
     }
 
