@@ -69,9 +69,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 setMediaControllerCompat(mediaControllerCompat);
                 seekerBar.setMediaController(mediaControllerCompat);
                 // Display the initial state
-                mediaControllerCompat.getMetadata();
-                mediaControllerCompat.getPlaybackState();
-                mediaControllerCompat.getTransportControls().prepareFromMediaId(mediaId, null);
+                //mediaControllerCompat.getTransportControls().prepareFromMediaId(mediaId, null);
 
             } catch (RemoteException e) {
 

@@ -6,6 +6,8 @@ import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import com.example.mike.mp3player.commons.Constants;
+
 public class PlayPauseButton extends AppCompatButton {
 
     private final String PLAY = "Play";
@@ -25,7 +27,7 @@ public class PlayPauseButton extends AppCompatButton {
     }
 
     public void updateState(PlaybackStateCompat state) {
-        Log.d(LOG_TAG, "" + state.getPlaybackState());
+        Log.d(LOG_TAG, Constants.playbackStateDebugMap.get(state.getState()) + ", " + state.getPlaybackState());
         switch (state.getState()) {
             case PlaybackStateCompat.STATE_PLAYING: setTextPause(); break;
             default: setTextPlay(); break;

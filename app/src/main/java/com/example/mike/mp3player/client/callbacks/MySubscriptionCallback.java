@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.client.callbacks;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.media.MediaBrowserCompat;
