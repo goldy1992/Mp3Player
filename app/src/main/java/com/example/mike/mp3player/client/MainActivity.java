@@ -1,15 +1,9 @@
 package com.example.mike.mp3player.client;
 
-import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.RemoteException;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -21,21 +15,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
-import com.example.mike.mp3player.client.callbacks.MySubscriptionCallback;
-import com.example.mike.mp3player.commons.Constants;
-import com.example.mike.mp3player.service.MediaPlaybackService;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -110,30 +96,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int READ_REQUEST_CODE = 42;
 
-    /**
-     * Called when
-     * @param requestCode
-     * @param resultCode
-     * @param resultData
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode,
-                                 Intent resultData) {
-//        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-//            Uri uri = null;
-//            if (resultData != null) {
-//                uri = resultData.getData();
-//                Intent intent = new Intent(getApplicationContext(), MediaPlayerActivity.class);
-//                intent.putExtra("uri", uri);
-//                startActivityForResult(intent, READ_REQUEST_CODE);
-//            }
-//        }
-    }
-
     public void callPlayerView(String songId) {
         Intent intent = new Intent(getApplicationContext(), MediaPlayerActivity.class);
         intent.putExtra(MEDIA_ID, songId);
         intent.putExtra(MEDIA_SESSION, mediaBrowserConnector.getMediaSessionToken());
+        mediaBrowserConnector.getMediaControllerCompat().getTransportControls().prepareFromMediaId(songId, null);
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 

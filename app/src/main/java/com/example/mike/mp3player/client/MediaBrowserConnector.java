@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client;
 
 import android.content.ComponentName;
-import android.media.session.MediaSession;
 import android.os.RemoteException;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -53,7 +52,7 @@ public class MediaBrowserConnector {
 
     public void disconnect() {
         getmMediaBrowser().disconnect();
-        if (mediaControllerCompat != null) {
+        if (getMediaControllerCompat() != null) {
             // find a way to disconnect all callbacks
 //            mediaControllerCompat.
 //            getMediaControllerCompat().unregisterCallback(myMediaControllerCallback);
@@ -63,5 +62,9 @@ public class MediaBrowserConnector {
 
     public MediaSessionCompat.Token getMediaSessionToken() {
         return mediaSessionToken;
+    }
+
+    public MediaControllerCompat getMediaControllerCompat() {
+        return mediaControllerCompat;
     }
 }

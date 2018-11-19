@@ -10,7 +10,7 @@ import android.util.Log;
 
 import java.io.IOException;
 
-public class MyMediaPlayerAdapter implements MediaPlayer.OnPreparedListener {
+public class MyMediaPlayerAdapter {
 
     private static final String LOG_TAG = "MEDIA_PLAYER_ADAPTER";
     private MediaPlayer mediaPlayer;
@@ -28,7 +28,6 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnPreparedListener {
     public void init() {
         if (getMediaPlayer() == null) {
             setMediaPlayer(new MediaPlayer());
-            this.getMediaPlayer().setOnPreparedListener(this);
            // mediaPlayer.setPlaybackParams(new PlaybackParams());
         }
         this.afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
@@ -62,7 +61,6 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnPreparedListener {
     public void prepareFromUri(Uri uri) {
         resetPlayer();
         setCurrentUri(uri);
-        stateOnPrepared = PlaybackStateCompat.STATE_PAUSED;
         prepare();
     }
 
@@ -123,6 +121,8 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnPreparedListener {
         if (!isPrepared) {
             try {
                 getMediaPlayer().prepare();
+                stateOnPrepared = PlaybackStateCompat.STATE_PAUSED;
+                currentState = PlaybackStateCompat.STATE_PAUSED;
                 isPrepared = true;
             } catch (IOException ex) {
                 Log.e(LOG_TAG, ex.getMessage());
@@ -152,19 +152,6 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnPreparedListener {
         return  new MediaMetadataCompat.Builder()
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration())
                 .build();
-    }
-
-    @Override
-    public void onPrepared(MediaPlayer mediaPlayer) {
-        isPrepared = true;
-        switch (stateOnPrepared) {
-            case PlaybackStateCompat.STATE_PLAYING:
-                getMediaPlayer().start();
-                currentState = PlaybackStateCompat.STATE_PLAYING;
-                break;
-            case PlaybackStateCompat.STATE_PAUSED:
-                currentState = PlaybackStateCompat.STATE_PAUSED;
-        }
     }
 
     public int getCurrentState() {

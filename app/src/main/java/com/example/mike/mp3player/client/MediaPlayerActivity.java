@@ -83,7 +83,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         if (getIntent() != null && getIntent().getExtras() != null) {
             token = (MediaSessionCompat.Token) getIntent().getExtras().get(Constants.MEDIA_SESSION);
             mediaId = (String) getIntent().getExtras().get(Constants.MEDIA_ID);
-            mediaControllerCompat.getTransportControls().prepareFromMediaId(mediaId, null);
+            //mediaControllerCompat.getTransportControls().prepareFromMediaId(mediaId, null);
         }
     }
 
