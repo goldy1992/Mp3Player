@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.service;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserServiceCompat;
@@ -87,6 +88,12 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         super.onDestroy();
         notificationManager.onDestroy();
         mMediaSession.release();
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        stopSelf();
     }
 
 }

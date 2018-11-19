@@ -3,19 +3,26 @@ package com.example.mike.mp3player.service;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.view.KeyEvent;
 
 import com.example.mike.mp3player.service.library.MediaLibrary;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Mike on 24/09/2017.
  */
 
-public class MediaSessionCallback extends MediaSessionCompat.Callback {
+public class MediaSessionCallback extends MediaSessionCompat.Callback implements MediaPlayer.OnCompletionListener {
 
+    private final List<MediaSessionCompat.QueueItem> playlist = new ArrayList<>();
+    private int queueIndex = -1;
     private ServiceManager serviceManager;
     private MyMediaPlayerAdapter myMediaPlayerAdapter;
     private MediaSessionCompat mediaSession;
@@ -112,9 +119,28 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
         myMediaPlayerAdapter.seekTo(position);
     }
 
+    @Override
+    public void onAddQueueItem(MediaDescriptionCompat description) {
+        playlist.add(new MediaSessionCompat.QueueItem(description, description.hashCode()));
+        queueIndex = (queueIndex == -1) ? 0 : queueIndex;
+        mediaSession.setQueue(playlist);
+    }
+
+    @Override
+    public void onRemoveQueueItem(MediaDescriptionCompat description) {
+        playlist.remove(new MediaSessionCompat.QueueItem(description, description.hashCode()));
+        queueIndex = (playlist.isEmpty()) ? -1 : queueIndex;
+        mediaSession.setQueue(playlist);
+    }
+
     private Notification prepareNotification() {
         return myNotificationManager.getNotification(myMediaPlayerAdapter.getCurrentMetaData(),
                 myMediaPlayerAdapter.getMediaPlayerState(),
                 mediaSession.getSessionToken());
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+
     }
 }

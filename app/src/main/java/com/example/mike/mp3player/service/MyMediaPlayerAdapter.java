@@ -15,11 +15,9 @@ public class MyMediaPlayerAdapter {
     private static final String LOG_TAG = "MEDIA_PLAYER_ADAPTER";
     private MediaPlayer mediaPlayer;
     private AudioManager.OnAudioFocusChangeListener afChangeListener;
-    private Uri currentUri;
     private Context context;
     private int currentState;
     private boolean isPrepared = false;
-    private int stateOnPrepared;
 
     public MyMediaPlayerAdapter(Context context) {
         this.context = context;
@@ -111,7 +109,6 @@ public class MyMediaPlayerAdapter {
     private void setCurrentUri(Uri uri) {
         try {
             getMediaPlayer().setDataSource(context, uri);
-            this.currentUri = uri;
         } catch (IOException ex) {
             Log.e(LOG_TAG, ex.getStackTrace().toString());
         }
@@ -121,7 +118,6 @@ public class MyMediaPlayerAdapter {
         if (!isPrepared) {
             try {
                 getMediaPlayer().prepare();
-                stateOnPrepared = PlaybackStateCompat.STATE_PAUSED;
                 currentState = PlaybackStateCompat.STATE_PAUSED;
                 isPrepared = true;
             } catch (IOException ex) {
