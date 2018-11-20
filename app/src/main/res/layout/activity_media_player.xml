@@ -1,28 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.mike.mp3player.client.MediaPlayerActivity">
 
-        <Button
-            android:id="@+id/stopButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="stop"
-            android:text="@string/STOP"
-            android:clickable="false"
-            tools:clickable="false" />
-
-
-    <com.example.mike.mp3player.client.view.PlayPauseButton
-        android:id="@+id/playPauseButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/stopButton"
-        android:onClick="playPause"
-        android:text="@string/PLAY" />
 
     <TextView
         android:id="@+id/timer"
@@ -37,9 +21,61 @@
         android:id="@+id/seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/toolbar2" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_gravity="bottom" />
+        android:layout_gravity="bottom"
+        android:layout_marginTop="5dp"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:saveEnabled="true"
+                android:scaleType="center"
+                android:scaleX="2"
+                android:scaleY="2"
+                app:srcCompat="@drawable/ic_baseline_skip_previous_24px" />
+
+            <com.example.mike.mp3player.client.view.PlayPauseButton
+                android:id="@+id/playPauseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:onClick="playPause"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp"
+                android:scaleType="center"
+                android:scaleX="2"
+                android:scaleY="2"
+                app:srcCompat="@drawable/ic_baseline_play_arrow_24px" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:saveEnabled="true"
+                android:scaleType="center"
+                android:scaleX="2"
+                android:scaleY="2"
+                app:srcCompat="@drawable/ic_baseline_skip_next_24px" />
+
+
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
 
 
 </RelativeLayout>

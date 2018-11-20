@@ -122,10 +122,10 @@ public class MediaPlayerActivity extends AppCompatActivity {
         int pbState = getPlaybackState();
         if (pbState == PlaybackStateCompat.STATE_PLAYING) {
             getMediaControllerCompat().getTransportControls().pause();
-            getPlayPauseButton().setTextPlay();
+            getPlayPauseButton().setPlayIcon();
         } else {
             getMediaControllerCompat().getTransportControls().play();
-            getPlayPauseButton().setTextPause();
+            getPlayPauseButton().setPauseIcon();
         }
     }
 
