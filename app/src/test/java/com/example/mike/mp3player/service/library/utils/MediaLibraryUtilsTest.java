@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.server.library.utils;
+package com.example.mike.mp3player.service.library.utils;
 
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
