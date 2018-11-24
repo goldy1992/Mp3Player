@@ -48,7 +48,10 @@
                 android:scaleType="center"
                 android:scaleX="2"
                 android:scaleY="2"
-                app:srcCompat="@drawable/ic_baseline_skip_previous_24px" />
+                android:onClick="skipToPrevious"
+                android:contentDescription="skip to previous button"
+                app:srcCompat="@drawable/ic_baseline_skip_previous_24px"
+                android:id="@+id/skip_to_previous"/>
 
             <com.example.mike.mp3player.client.view.PlayPauseButton
                 android:id="@+id/playPauseButton"
@@ -71,7 +74,10 @@
                 android:scaleType="center"
                 android:scaleX="2"
                 android:scaleY="2"
-                app:srcCompat="@drawable/ic_baseline_skip_next_24px" />
+                android:onClick="skipToNext"
+                android:contentDescription="skip to next button"
+                app:srcCompat="@drawable/ic_baseline_skip_next_24px"
+                android:id="@+id/skip_to_next"/>
 
 
         </LinearLayout>

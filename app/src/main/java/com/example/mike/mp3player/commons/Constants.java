@@ -10,6 +10,9 @@ public final class Constants {
     public static final String MEDIA_SESSION = "mediaSession";
     public static final String MEDIA_ID = "mediaId";
 
+    public static final String PLAYLIST = "PLAYLiST";
+    public static final String PLAY_ALL = "PLAY_ALL";
+
     public static final Map<Integer, String> playbackStateDebugMap = new HashMap<>();
     static {
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_NONE, "STATE_NONE"); // 0

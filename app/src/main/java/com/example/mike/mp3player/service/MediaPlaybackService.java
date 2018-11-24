@@ -9,7 +9,6 @@ import android.text.TextUtils;
 
 import com.example.mike.mp3player.service.library.MediaLibrary;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -129,6 +129,14 @@ public class MediaPlayerActivity extends AppCompatActivity {
         }
     }
 
+    public void skipToNext(View wie) {
+        getMediaControllerCompat().getTransportControls().skipToNext();
+    }
+
+    public void skipToPrevious(View view) {
+        getMediaControllerCompat().getTransportControls().skipToPrevious();
+    }
+
     public void stop(View view) {
         int pbState = getPlaybackState();
         if (pbState == PlaybackStateCompat.STATE_PLAYING ||

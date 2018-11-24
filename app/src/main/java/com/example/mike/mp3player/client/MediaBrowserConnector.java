@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client;
 
 import android.content.ComponentName;
+import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -59,6 +60,11 @@ public class MediaBrowserConnector {
         }
         getmMediaBrowser().disconnect();
     }
+
+    public void prepareFromMediaId(String mediaId, Bundle extras) {
+        getMediaControllerCompat().getTransportControls().prepareFromMediaId(mediaId, extras);
+    }
+
 
     public MediaSessionCompat.Token getMediaSessionToken() {
         return mediaSessionToken;

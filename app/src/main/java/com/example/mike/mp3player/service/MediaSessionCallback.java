@@ -8,12 +8,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.KeyEvent;
 
 import com.example.mike.mp3player.service.library.MediaLibrary;
+import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
+import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -22,6 +27,7 @@ import java.util.List;
 public class MediaSessionCallback extends MediaSessionCompat.Callback implements MediaPlayer.OnCompletionListener {
 
     private final List<MediaSessionCompat.QueueItem> playlist = new ArrayList<>();
+    private int repeatMode = PlaybackStateCompat.REPEAT_MODE_ALL;
     private int queueIndex = -1;
     private ServiceManager serviceManager;
     private MyMediaPlayerAdapter myMediaPlayerAdapter;
@@ -48,6 +54,29 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         serviceManager.startService(prepareNotification());
     }
 
+    @Override
+    public void onSkipToNext() {
+        int currentState = myMediaPlayerAdapter.getCurrentState();
+        int newQueueIndex = queueIndex + 1;
+        if (newQueueIndex >= playlist.size() || newQueueIndex < 0) {
+            return;
+        } else {
+            queueIndex = newQueueIndex;
+            String newMediaId = playlist.get(queueIndex).getDescription().getMediaId();
+            Uri newUri = mediaLibrary.getMediaUri(newMediaId);
+            myMediaPlayerAdapter.prepareFromUri(newUri);
+
+            if (currentState == PlaybackStateCompat.STATE_PLAYING) {
+                myMediaPlayerAdapter.play();
+            }
+        }
+
+    }
+
+    @Override
+    public void onSkipToPrevious() {
+
+    }
     @Override
     public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
         if (mediaButtonEvent != null && mediaButtonEvent.getExtras() != null
@@ -77,6 +106,19 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     @Override
     public void onPrepareFromMediaId(String mediaId, Bundle bundle) {
         super.onPrepareFromMediaId(mediaId, bundle);
+
+        if (bundle.containsKey(PLAYLIST)) {
+              if (bundle.getString(PLAYLIST).equals(PLAY_ALL)) {
+                  playlist.clear();;
+                  playlist.addAll(MediaLibraryUtils.convertMediaItemsToQueueItem(mediaLibrary.getLibrary()));
+              }
+              Integer integerQueueIndex = MediaLibraryUtils.findIndexOfTrackInPlaylist(playlist, mediaId);
+              if (integerQueueIndex == null) {
+                  queueIndex = -1;
+              } else {
+                  queueIndex = integerQueueIndex;
+              }
+        }
         Uri uri = mediaLibrary.getMediaUri(mediaId);
         myMediaPlayerAdapter.prepareFromUri(uri);
         mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
@@ -108,13 +150,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     @Override
-    public void onPrepare() {
-//        if (!mediaSession.isActive()) {
-//            mediaSession.setActive(true);
-//        } // if session active
-    } // onPrepare
-
-    @Override
     public void onSeekTo(long position ) {
         myMediaPlayerAdapter.seekTo(position);
     }
@@ -141,6 +176,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-
+        queueIndex++;
+        if (!playlist.isEmpty() && queueIndex < playlist.size()) {
+            playlist.get(queueIndex);
+        }
     }
 }
