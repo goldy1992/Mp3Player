@@ -52,7 +52,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center">
+            android:gravity="center"
+            android:id="@+id/playBarLayout">
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -62,7 +63,8 @@
                 android:scaleType="center"
                 android:scaleX="2"
                 android:scaleY="2"
-                android:onClick="skipToPrevious"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp"
                 android:contentDescription="skip to previous button"
                 app:srcCompat="@drawable/ic_baseline_skip_previous_24px"
                 android:id="@+id/skip_to_previous"/>
@@ -72,7 +74,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:onClick="playPause"
                 android:paddingLeft="40dp"
                 android:paddingRight="40dp"
                 android:scaleType="center"
@@ -86,9 +87,10 @@
                 android:background="@android:color/transparent"
                 android:saveEnabled="true"
                 android:scaleType="center"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp"
                 android:scaleX="2"
                 android:scaleY="2"
-                android:onClick="skipToNext"
                 android:contentDescription="skip to next button"
                 app:srcCompat="@drawable/ic_baseline_skip_next_24px"
                 android:id="@+id/skip_to_next"/>

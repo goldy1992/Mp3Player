@@ -14,12 +14,15 @@ import android.view.KeyEvent;
 
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
+import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
 import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
 import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
+import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
 
 /**
@@ -57,26 +60,17 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public void onSkipToNext() {
-        int currentState = myMediaPlayerAdapter.getCurrentState();
-        int newQueueIndex = queueIndex + 1;
-        if (newQueueIndex >= playlist.size() || newQueueIndex < 0) {
-            return;
-        } else {
-            queueIndex = newQueueIndex;
-            String newMediaId = playlist.get(queueIndex).getDescription().getMediaId();
-            Uri newUri = mediaLibrary.getMediaUri(newMediaId);
-            myMediaPlayerAdapter.prepareFromUri(newUri);
-
-            if (currentState == PlaybackStateCompat.STATE_PLAYING) {
-                myMediaPlayerAdapter.play();
-            }
-            mediaSession.setMetadata(getCurrentMetaData());
-        }
-
+        setNewPlaylistItem(queueIndex + 1);
+        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
+        mediaSession.setMetadata(getCurrentMetaData());
     }
 
     @Override
     public void onSkipToPrevious() {
+        int position = myMediaPlayerAdapter.getCurrentTrackPosition();
+        int newQueueIndex = position > ONE_SECOND ? queueIndex : queueIndex - 1;
+        setNewPlaylistItem(newQueueIndex);
+        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
         mediaSession.setMetadata(getCurrentMetaData());
     }
     @Override
@@ -132,7 +126,10 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         super.onPlayFromUri(uri, bundle);
         myMediaPlayerAdapter.prepareFromUri(uri);
         myMediaPlayerAdapter.play();
+
         serviceManager.startMediaSession();
+        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
+        mediaSession.setMetadata(getCurrentMetaData());
     }
 
     @Override
@@ -148,6 +145,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 //        unregisterReceiver(myNoisyAudioStreamReceiver, intentFilter);
         // Take the serviceManager out of the foreground, retain the notification
         mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
+        mediaSession.setMetadata(getCurrentMetaData());
         serviceManager.pauseService(prepareNotification());
     }
 
@@ -187,8 +185,36 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private MediaMetadataCompat getCurrentMetaData() {
         MediaMetadataCompat.Builder builder = myMediaPlayerAdapter.getCurrentMetaData();
         MediaSessionCompat.QueueItem currentItem = this.playlist.get(queueIndex);
-        builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE,currentItem.getDescription().getTitle().toString())
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, currentItem.getDescription().getExtras().getString(STRING_METADATA_KEY_ARTIST));
+        if (ValidMetaDataUtil.validTitle(currentItem)) {
+            builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, currentItem.getDescription().getTitle().toString());
+        } else {
+            builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, UNKNOWN);
+        }
+
+        if (ValidMetaDataUtil.validArtist(currentItem)) {
+            builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, currentItem.getDescription().getExtras().getString(STRING_METADATA_KEY_ARTIST));
+        } else {
+            builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, UNKNOWN);
+        }
         return builder.build();
     }
+
+    private boolean validQueueIndex(int newQueueIndex) {
+        return newQueueIndex < playlist.size() || newQueueIndex >= 0;
+    }
+
+    private void setNewPlaylistItem(int index) {
+        if (validQueueIndex(index)) {
+            queueIndex = index;
+            int currentState = myMediaPlayerAdapter.getCurrentState();
+            String newMediaId = playlist.get(index).getDescription().getMediaId();
+            Uri newUri = mediaLibrary.getMediaUri(newMediaId);
+            myMediaPlayerAdapter.prepareFromUri(newUri);
+
+            if (currentState == PlaybackStateCompat.STATE_PLAYING) {
+                myMediaPlayerAdapter.play();
+            }
+        }
+    }
+
 }

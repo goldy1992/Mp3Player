@@ -12,6 +12,8 @@ public final class Constants {
 
     public static final String PLAYLIST = "PLAYLiST";
     public static final String PLAY_ALL = "PLAY_ALL";
+    public static final long ONE_SECOND = 1000L;
+    public static final String UNKNOWN = "Uknown";
 
     public static final Map<Integer, String> playbackStateDebugMap = new HashMap<>();
     static {

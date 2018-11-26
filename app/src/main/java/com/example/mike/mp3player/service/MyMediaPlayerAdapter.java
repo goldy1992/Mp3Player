@@ -149,6 +149,10 @@ public class MyMediaPlayerAdapter {
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
     }
 
+    public int getCurrentTrackPosition() {
+        return mediaPlayer.getCurrentPosition();
+    }
+
     public int getCurrentState() {
         return currentState;
     }

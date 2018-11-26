@@ -9,6 +9,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
@@ -60,6 +61,27 @@ public class MediaPlayerActivity extends AppCompatActivity {
         this.artist = this.findViewById(R.id.artistName);
         this.track = this.findViewById(R.id.trackName);
         this.seekerBar.setTimeCounter(counter);
+        LinearLayout linearLayout =  this.findViewById(R.id.playBarLayout);
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.playPauseButton:
+                        playPause(view);
+                        Log.d(LOG_TAG, "Hit PLAY_PAUSE");
+                        break;
+                    case R.id.skip_to_previous:
+                        skipToPrevious(view);
+                        Log.d(LOG_TAG, "Hit SKIP_TO_PREVIOUS");
+                        break;
+                    case R.id.skip_to_next:
+                        skipToNext(view);
+                        Log.d(LOG_TAG, "Hit SKIP_TO_NEXT");
+                        break;
+                    default: Log.d(LOG_TAG, "Hit nothing");
+                }
+            }
+        });
         if (getIntent() != null && getIntent().getExtras() != null) {
             token = (MediaSessionCompat.Token) getIntent().getExtras().get(Constants.MEDIA_SESSION);
             mediaId = (String) getIntent().getExtras().get(Constants.MEDIA_ID);
@@ -138,7 +160,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         }
     }
 
-    public void skipToNext(View wie) {
+    public void skipToNext(View view) {
         getMediaControllerCompat().getTransportControls().skipToNext();
     }
 
