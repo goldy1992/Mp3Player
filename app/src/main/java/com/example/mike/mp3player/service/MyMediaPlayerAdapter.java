@@ -144,10 +144,9 @@ public class MyMediaPlayerAdapter {
                 .build();
     }
 
-    public MediaMetadataCompat getCurrentMetaData() {
+    public MediaMetadataCompat.Builder getCurrentMetaData() {
         return  new MediaMetadataCompat.Builder()
-                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration())
-                .build();
+                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
     }
 
     public int getCurrentState() {

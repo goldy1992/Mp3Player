@@ -27,8 +27,6 @@ import java.util.List;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
-import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
-import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -102,9 +100,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), MediaPlayerActivity.class);
         intent.putExtra(MEDIA_ID, songId);
         intent.putExtra(MEDIA_SESSION, mediaBrowserConnector.getMediaSessionToken());
-        Bundle extras = new Bundle();
-        extras.putString(PLAYLIST, PLAY_ALL);
-        mediaBrowserConnector.prepareFromMediaId(songId, extras);
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 

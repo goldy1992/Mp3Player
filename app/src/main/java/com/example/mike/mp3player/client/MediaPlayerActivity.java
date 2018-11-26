@@ -25,6 +25,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
+import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
+import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
+
 /**
  * Created by Mike on 24/09/2017.
  */
@@ -37,6 +40,8 @@ public class MediaPlayerActivity extends AppCompatActivity {
     private MediaControllerCompat mediaControllerCompat;
     private Uri selectedUri;
     private String mediaId;
+    private TextView artist;
+    private TextView track;
     private PlayPauseButton playPauseButton;
     private SeekerBar seekerBar;
     private TimeCounter counter;
@@ -52,6 +57,8 @@ public class MediaPlayerActivity extends AppCompatActivity {
         TextView counterView = this.findViewById(R.id.timer);
         this.counter = new TimeCounter(counterView);
         this.seekerBar = this.findViewById(R.id.seekBar);
+        this.artist = this.findViewById(R.id.artistName);
+        this.track = this.findViewById(R.id.trackName);
         this.seekerBar.setTimeCounter(counter);
         if (getIntent() != null && getIntent().getExtras() != null) {
             token = (MediaSessionCompat.Token) getIntent().getExtras().get(Constants.MEDIA_SESSION);
@@ -69,7 +76,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 setMediaControllerCompat(mediaControllerCompat);
                 seekerBar.setMediaController(mediaControllerCompat);
                 // Display the initial state
-                //mediaControllerCompat.getTransportControls().prepareFromMediaId(mediaId, null);
+                Bundle extras = new Bundle();
+                extras.putString(PLAYLIST, PLAY_ALL);
+                mediaControllerCompat.getTransportControls().prepareFromMediaId(mediaId, extras);
 
             } catch (RemoteException e) {
 
@@ -190,5 +199,22 @@ public class MediaPlayerActivity extends AppCompatActivity {
         } catch (ClassNotFoundException e) {
             Log.e(LOG_TAG, e.getMessage());
         }
+    }
+
+    public TextView getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+
+        this.artist.setText(getString(R.string.ARTIST_NAME) + artist);
+    }
+
+    public TextView getTrack() {
+        return track;
+    }
+
+    public void setTrack(String track) {
+        this.track.setText(getString(R.string.TRACK_NAME) + track);
     }
 }

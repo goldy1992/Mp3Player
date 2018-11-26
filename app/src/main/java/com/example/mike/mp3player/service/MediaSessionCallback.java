@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompat;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.KeyEvent;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
 import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
+import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -49,8 +51,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     public void onPlay() {
         myMediaPlayerAdapter.play();
         mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
-        mediaSession.setMetadata(myMediaPlayerAdapter.getCurrentMetaData());
-
+        mediaSession.setMetadata(getCurrentMetaData());
         serviceManager.startService(prepareNotification());
     }
 
@@ -69,13 +70,14 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             if (currentState == PlaybackStateCompat.STATE_PLAYING) {
                 myMediaPlayerAdapter.play();
             }
+            mediaSession.setMetadata(getCurrentMetaData());
         }
 
     }
 
     @Override
     public void onSkipToPrevious() {
-
+        mediaSession.setMetadata(getCurrentMetaData());
     }
     @Override
     public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
@@ -100,7 +102,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         super.onPrepareFromUri(uri, bundle);
         myMediaPlayerAdapter.prepareFromUri(uri);
         mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
-        mediaSession.setMetadata(myMediaPlayerAdapter.getCurrentMetaData());
+        mediaSession.setMetadata(getCurrentMetaData());
     }
 
     @Override
@@ -122,7 +124,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         Uri uri = mediaLibrary.getMediaUri(mediaId);
         myMediaPlayerAdapter.prepareFromUri(uri);
         mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
-        mediaSession.setMetadata(myMediaPlayerAdapter.getCurrentMetaData());
+        mediaSession.setMetadata(getCurrentMetaData());
     }
 
     @Override
@@ -169,7 +171,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private Notification prepareNotification() {
-        return myNotificationManager.getNotification(myMediaPlayerAdapter.getCurrentMetaData(),
+        return myNotificationManager.getNotification(getCurrentMetaData(),
                 myMediaPlayerAdapter.getMediaPlayerState(),
                 mediaSession.getSessionToken());
     }
@@ -180,5 +182,13 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         if (!playlist.isEmpty() && queueIndex < playlist.size()) {
             playlist.get(queueIndex);
         }
+    }
+
+    private MediaMetadataCompat getCurrentMetaData() {
+        MediaMetadataCompat.Builder builder = myMediaPlayerAdapter.getCurrentMetaData();
+        MediaSessionCompat.QueueItem currentItem = this.playlist.get(queueIndex);
+        builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE,currentItem.getDescription().getTitle().toString())
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, currentItem.getDescription().getExtras().getString(STRING_METADATA_KEY_ARTIST));
+        return builder.build();
     }
 }
