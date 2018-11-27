@@ -200,7 +200,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private boolean validQueueIndex(int newQueueIndex) {
-        return newQueueIndex < playlist.size() || newQueueIndex >= 0;
+        return newQueueIndex < playlist.size() && newQueueIndex >= 0;
     }
 
     private void setNewPlaylistItem(int index) {
