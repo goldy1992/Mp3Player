@@ -28,10 +28,15 @@ public class PlayPauseButton extends AppCompatImageButton {
 
     public void updateState(PlaybackStateCompat state) {
         Log.d(LOG_TAG, Constants.playbackStateDebugMap.get(state.getState()) + ", " + state.getPlaybackState());
-        switch (state.getState()) {
+        updateState(state.getState());
+    }
+
+    public void updateState(int state) {
+        switch (state) {
             case PlaybackStateCompat.STATE_PLAYING: setPauseIcon();   break;
             default: setPlayIcon(); break;
         } // switch
+
     }
 
     public void setPlayIcon() {

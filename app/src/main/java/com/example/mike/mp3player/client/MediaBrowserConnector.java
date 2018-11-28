@@ -65,6 +65,20 @@ public class MediaBrowserConnector {
         getMediaControllerCompat().getTransportControls().prepareFromMediaId(mediaId, extras);
     }
 
+    public void play() {
+        getMediaControllerCompat().getTransportControls().play();
+    }
+
+    public void pause() {
+        getMediaControllerCompat().getTransportControls().pause();
+    }
+
+    public int getPlaybackState() {
+        if (mediaControllerCompat != null && mediaControllerCompat.getPlaybackState() != null) {
+            return mediaControllerCompat.getPlaybackState().getState();
+        }
+        return 0;
+    }
 
     public MediaSessionCompat.Token getMediaSessionToken() {
         return mediaSessionToken;

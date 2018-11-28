@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -15,8 +16,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.view.PlayPauseButton;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private PermissionsProcessor permissionsProcessor;
     private DrawerLayout drawerLayout;
     private RecyclerView recyclerView;
+    private PlayPauseButton playPauseButton;
+
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +48,24 @@ public class MainActivity extends AppCompatActivity {
         permissionsProcessor.requestPermission(WRITE_EXTERNAL_STORAGE);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (null != playPauseButton && mediaBrowserConnector != null) {
+            playPauseButton.updateState(mediaBrowserConnector.getPlaybackState());
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveState();
+    }
+
     public void init() {
         initMediaBrowserService();
         setContentView(R.layout.activity_main);
+        playPauseButton = findViewById(R.id.mainActivityPlayPauseButton);
         this.drawerLayout = findViewById(R.id.drawer_layout);
 
         MyDrawerListener myDrawerListener = new MyDrawerListener();
@@ -96,10 +116,9 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int READ_REQUEST_CODE = 42;
 
-    public void callPlayerView(String songId) {
-        Intent intent = new Intent(getApplicationContext(), MediaPlayerActivity.class);
+    public void playSelectedSong(String songId) {
+        Intent intent = createMediaPlayerActivityIntent();
         intent.putExtra(MEDIA_ID, songId);
-        intent.putExtra(MEDIA_SESSION, mediaBrowserConnector.getMediaSessionToken());
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
@@ -121,6 +140,28 @@ public class MainActivity extends AppCompatActivity {
         mediaBrowserConnector = new MediaBrowserConnector(this);
         mediaBrowserConnector.init();
         saveState();
+    }
+
+    private Intent createMediaPlayerActivityIntent() {
+        Intent intent = new Intent(getApplicationContext(), MediaPlayerActivity.class);
+        intent.putExtra(MEDIA_SESSION, mediaBrowserConnector.getMediaSessionToken());
+        return intent;
+    }
+
+    public void goToMediaPlayerActivity(View view) {
+        Intent intent = createMediaPlayerActivityIntent();
+        startActivityForResult(intent, READ_REQUEST_CODE);
+    }
+
+    public void playPause(View view) {
+        int pbState = mediaBrowserConnector.getPlaybackState();
+        if (pbState == PlaybackStateCompat.STATE_PLAYING) {
+            mediaBrowserConnector.pause();
+            getPlayPauseButton().setPlayIcon();
+        } else {
+            mediaBrowserConnector.play();
+            getPlayPauseButton().setPauseIcon();
+        }
     }
 
     private void saveState()
@@ -145,5 +186,13 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             Log.e(LOG_TAG, e.getMessage());
         }
+    }
+
+    public PlayPauseButton getPlayPauseButton() {
+        return playPauseButton;
+    }
+
+    public void setPlayPauseButton(PlayPauseButton playPauseButton) {
+        this.playPauseButton = playPauseButton;
     }
 }
