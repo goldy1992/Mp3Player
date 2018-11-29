@@ -7,6 +7,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.animation.LinearInterpolator;
 
+import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.view.SeekerBar;
 
 
@@ -34,7 +35,8 @@ public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callb
             seekerBar.setValueAnimator(null);
         }
 
-        final int progress = state != null ? (int) state.getPosition() : NO_PROGRESS;
+        long latestPosition = TimerUtils.calculateStartTime(state);
+        final int progress = state != null ? (int) latestPosition : NO_PROGRESS;
         seekerBar.setProgress(progress);
 
         // If the media is playing then the seekbar should follow it, and the easiest

@@ -42,19 +42,13 @@ public class SeekerBar extends AppCompatSeekBar {
             SeekerBarChangerListener seekerBarChangerListener = new SeekerBarChangerListener(mediaController);
             this.seekBarChangeListener = seekerBarChangerListener;
             super.setOnSeekBarChangeListener(seekerBarChangerListener);
-        } else if (mMediaController != null) {
-            mMediaController.unregisterCallback(mControllerCallback);
-            mControllerCallback = null;
         }
         mMediaController = mediaController;
     }
 
     public void disconnectController() {
-        if (mMediaController != null) {
-            mMediaController.unregisterCallback(mControllerCallback);
-            mControllerCallback = null;
-            mMediaController = null;
-        }
+        mControllerCallback = null;
+        mMediaController = null;
     }
 
     public ValueAnimator getValueAnimator() {

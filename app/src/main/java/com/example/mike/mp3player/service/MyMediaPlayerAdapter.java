@@ -4,11 +4,14 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
 import java.io.IOException;
+
+import static com.example.mike.mp3player.commons.Constants.TIMESTAMP;
 
 public class MyMediaPlayerAdapter {
 
@@ -136,11 +139,13 @@ public class MyMediaPlayerAdapter {
     }
 
     public PlaybackStateCompat getMediaPlayerState() {
+        Bundle extras = new Bundle();
+        extras.putLong(TIMESTAMP, System.currentTimeMillis());
         return new PlaybackStateCompat.Builder()
                 .setState(getCurrentState(),
                         mediaPlayer.getCurrentPosition(),
                         mediaPlayer.getPlaybackParams().getSpeed(),
-                        System.currentTimeMillis())
+                        System.currentTimeMillis()).setExtras(extras)
                 .build();
     }
 

@@ -4,6 +4,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.client.TimeCounterTimerTask;
+import com.example.mike.mp3player.client.utils.TimerUtils;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -36,10 +37,11 @@ public class TimeCounter {
     public void updateState(PlaybackStateCompat state) {
         this.currentState = state.getState();
         this.currentSpeed = state.getPlaybackSpeed();
+        long latestPosition = TimerUtils.calculateStartTime(state);
 
         switch (getCurrentState()) {
-            case PlaybackStateCompat.STATE_PLAYING: work(state.getPosition()); break;
-            case PlaybackStateCompat.STATE_PAUSED: haltTimer(state.getPosition()); break;
+            case PlaybackStateCompat.STATE_PLAYING: work(latestPosition); break;
+            case PlaybackStateCompat.STATE_PAUSED: haltTimer(latestPosition); break;
             default: resetTimer(); break;
         }
     }

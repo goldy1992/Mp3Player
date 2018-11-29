@@ -1,15 +1,16 @@
 package com.example.mike.mp3player.client;
 
+import android.media.MediaMetadata;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
@@ -71,9 +72,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 mediaControllerCompat = new MediaControllerCompat(getApplicationContext(), token);
                 myMediaControllerCallback = new MyMediaControllerCallback(this);
                 mySeekerMediaControllerCallback = new MySeekerMediaControllerCallback(seekerBar);
-
                 mediaControllerCompat.registerCallback(myMediaControllerCallback);
-                mediaControllerCompat.registerCallback(mySeekerMediaControllerCallback);
 
                 setMediaControllerCompat(mediaControllerCompat);
                 seekerBar.setMediaController(mediaControllerCompat);
@@ -82,6 +81,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
                     Bundle extras = new Bundle();
                     extras.putString(PLAYLIST, PLAY_ALL);
                     mediaControllerCompat.getTransportControls().prepareFromMediaId(mediaId, extras);
+                } else {
+                    setPlaybackState(mediaControllerCompat.getPlaybackState());
+                    setMetaData(mediaControllerCompat.getMetadata());
                 }
             } catch (RemoteException e) {
 
@@ -95,7 +97,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
         if (getIntent() != null && getIntent().getExtras() != null) {
             token = (MediaSessionCompat.Token) getIntent().getExtras().get(Constants.MEDIA_SESSION);
             mediaId = (String) getIntent().getExtras().get(Constants.MEDIA_ID);
-            //mediaControllerCompat.getTransportControls().prepareFromMediaId(mediaId, null);
         }
     }
 
@@ -103,6 +104,15 @@ public class MediaPlayerActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         // (see "stay in sync with the MediaSession")
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mediaControllerCompat != null) {
+            mediaControllerCompat.unregisterCallback(myMediaControllerCallback);
+            mediaControllerCompat = null;
+        }
     }
 
     @Override
@@ -124,8 +134,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState)
-    {
+    public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -219,5 +228,18 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     public void setTrack(String track) {
         this.track.setText(getString(R.string.TRACK_NAME) + track);
+    }
+
+    public void setMetaData(MediaMetadataCompat metaData) {
+        getCounter().setDuration(metaData.getLong(MediaMetadata.METADATA_KEY_DURATION));
+        setArtist(metaData.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
+        setTrack(metaData.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
+        mySeekerMediaControllerCallback.onMetadataChanged(metaData);
+    }
+
+    public void setPlaybackState(PlaybackStateCompat playbackState) {
+        getPlayPauseButton().updateState(playbackState);
+        getCounter().updateState(playbackState);
+        mySeekerMediaControllerCallback.onPlaybackStateChanged(playbackState);
     }
 }

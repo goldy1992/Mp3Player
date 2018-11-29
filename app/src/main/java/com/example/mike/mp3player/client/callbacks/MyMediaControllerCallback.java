@@ -21,14 +21,11 @@ public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
 
     @Override
     public void onMetadataChanged(MediaMetadataCompat metadata) {
-        activity.getCounter().setDuration(metadata.getLong(MediaMetadata.METADATA_KEY_DURATION));
-        activity.setArtist(metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
-        activity.setTrack(metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
+        activity.setMetaData(metadata);
     }
 
     @Override
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
-        activity.getPlayPauseButton().updateState(state);
-        activity.getCounter().updateState(state);
+        activity.setPlaybackState(state);
     }
 }
