@@ -139,13 +139,10 @@ public class MyMediaPlayerAdapter {
     }
 
     public PlaybackStateCompat getMediaPlayerState() {
-        Bundle extras = new Bundle();
-        extras.putLong(TIMESTAMP, System.currentTimeMillis());
         return new PlaybackStateCompat.Builder()
                 .setState(getCurrentState(),
                         mediaPlayer.getCurrentPosition(),
-                        mediaPlayer.getPlaybackParams().getSpeed(),
-                        System.currentTimeMillis()).setExtras(extras)
+                        mediaPlayer.getPlaybackParams().getSpeed())
                 .build();
     }
 

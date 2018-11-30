@@ -29,6 +29,7 @@ import java.io.ObjectInputStream;
 
 import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
 import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
+import static com.example.mike.mp3player.commons.Constants.TIMESTAMP;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -238,6 +239,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
     }
 
     public void setPlaybackState(PlaybackStateCompat playbackState) {
+        this.getMediaController().getExtras().putLong(TIMESTAMP, System.currentTimeMillis());
         getPlayPauseButton().updateState(playbackState);
         getCounter().updateState(playbackState);
         mySeekerMediaControllerCallback.onPlaybackStateChanged(playbackState);
