@@ -20,7 +20,7 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
 
     @Override
     public void onConnected() {
-        mediaBrowserConnector.onConnected();
+        mediaBrowserConnector.onConnected(null);
    }
 
     @Override

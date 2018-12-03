@@ -3,7 +3,6 @@ package com.example.mike.mp3player.client;
 import android.media.MediaMetadata;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -26,6 +25,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
 import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
@@ -38,9 +39,9 @@ import static com.example.mike.mp3player.commons.Constants.TIMESTAMP;
 public class MediaPlayerActivity extends AppCompatActivity {
 
     private final String STOP = "Stop";
+    private MediaControllerWrapper<MediaPlayerActivity> mediaControllerWrapper;
     private MyMediaControllerCallback myMediaControllerCallback;
     private MySeekerMediaControllerCallback mySeekerMediaControllerCallback;
-    private MediaControllerCompat mediaControllerCompat;
     private Uri selectedUri;
     private String mediaId;
     private TextView artist;
@@ -69,25 +70,20 @@ public class MediaPlayerActivity extends AppCompatActivity {
             mediaId = (String) getIntent().getExtras().get(Constants.MEDIA_ID);
         }
         if (token != null) {
-            try {
-                mediaControllerCompat = new MediaControllerCompat(getApplicationContext(), token);
-                myMediaControllerCallback = new MyMediaControllerCallback(this);
-                mySeekerMediaControllerCallback = new MySeekerMediaControllerCallback(seekerBar);
-                mediaControllerCompat.registerCallback(myMediaControllerCallback);
-
-                setMediaControllerCompat(mediaControllerCompat);
-                seekerBar.setMediaController(mediaControllerCompat);
-                if (null != mediaId) {
-                    // Display the initial state
-                    Bundle extras = new Bundle();
-                    extras.putString(PLAYLIST, PLAY_ALL);
-                    mediaControllerCompat.getTransportControls().prepareFromMediaId(mediaId, extras);
-                } else {
-                    setPlaybackState(mediaControllerCompat.getPlaybackState());
-                    setMetaData(mediaControllerCompat.getMetadata());
-                }
-            } catch (RemoteException e) {
-
+            this.mediaControllerWrapper = new MediaControllerWrapper<MediaPlayerActivity>(this, token);
+            mediaControllerWrapper.init();
+            this.myMediaControllerCallback = new MyMediaControllerCallback(this);
+            this.mySeekerMediaControllerCallback = new MySeekerMediaControllerCallback(seekerBar);
+            mediaControllerWrapper.registerCallback(myMediaControllerCallback);
+            seekerBar.setMediaController(mediaControllerWrapper.getMediaControllerCompat());
+            if (null != mediaId) {
+                // Display the initial state
+                Bundle extras = new Bundle();
+                extras.putString(PLAYLIST, PLAY_ALL);
+                mediaControllerWrapper.prepareFromMediaId(mediaId, extras);
+            } else {
+                setPlaybackState(mediaControllerWrapper.getPlaybackStateAsCompat());
+                setMetaData(mediaControllerWrapper.getMetaData());
             }
         }
     }
@@ -110,10 +106,10 @@ public class MediaPlayerActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mediaControllerCompat != null) {
-            mediaControllerCompat.unregisterCallback(myMediaControllerCallback);
-            mediaControllerCompat = null;
-        }
+        List<MediaControllerCompat.Callback> callbacks = new ArrayList<>();
+        callbacks.add(myMediaControllerCallback);
+        callbacks.add(mySeekerMediaControllerCallback);
+        mediaControllerWrapper.disconnect(callbacks);
     }
 
     @Override
@@ -141,43 +137,32 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     public void playPause(View view)
     {
-        int pbState = getPlaybackState();
+        int pbState = mediaControllerWrapper.getPlaybackState();
         if (pbState == PlaybackStateCompat.STATE_PLAYING) {
-            getMediaControllerCompat().getTransportControls().pause();
+            mediaControllerWrapper.pause();
             getPlayPauseButton().setPlayIcon();
         } else {
-            getMediaControllerCompat().getTransportControls().play();
+            mediaControllerWrapper.play();
             getPlayPauseButton().setPauseIcon();
         }
     }
 
     public void skipToNext(View view) {
-        getMediaControllerCompat().getTransportControls().skipToNext();
+        mediaControllerWrapper.skipToNext();
     }
 
     public void skipToPrevious(View view) {
-        getMediaControllerCompat().getTransportControls().skipToPrevious();
+        mediaControllerWrapper.skipToPrevious();
     }
 
     public void stop(View view) {
-        int pbState = getPlaybackState();
+        int pbState = mediaControllerWrapper.getPlaybackState();
         if (pbState == PlaybackStateCompat.STATE_PLAYING ||
                 pbState == PlaybackStateCompat.STATE_STOPPED ) {
-            getMediaControllerCompat().getTransportControls().stop();
+            mediaControllerWrapper.stop();
         } // if
     }
 
-    private int getPlaybackState() {
-        return mediaControllerCompat.getPlaybackState().getState();
-    }
-
-    public MediaControllerCompat getMediaControllerCompat() {
-        return mediaControllerCompat;
-    }
-
-    public void setMediaControllerCompat(MediaControllerCompat mediaControllerCompat) {
-        this.mediaControllerCompat = mediaControllerCompat;
-    }
 
     public Uri getSelectedUri() {
         return this.selectedUri;
@@ -239,7 +224,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
     }
 
     public void setPlaybackState(PlaybackStateCompat playbackState) {
-        this.getMediaController().getExtras().putLong(TIMESTAMP, System.currentTimeMillis());
         getPlayPauseButton().updateState(playbackState);
         getCounter().updateState(playbackState);
         mySeekerMediaControllerCallback.onPlaybackStateChanged(playbackState);

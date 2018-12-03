@@ -1,9 +1,11 @@
 package com.example.mike.mp3player.client;
 
 import android.content.Intent;
+import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST_WRITE_STORAGE = 0;
     private MediaBrowserConnector mediaBrowserConnector;
+    private MediaControllerWrapper<MainActivity> mediaControllerWrapper;
     private PermissionsProcessor permissionsProcessor;
     private DrawerLayout drawerLayout;
     private RecyclerView recyclerView;
@@ -51,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (null != playPauseButton && mediaBrowserConnector != null) {
-            playPauseButton.updateState(mediaBrowserConnector.getPlaybackState());
+        if (null != playPauseButton && mediaControllerWrapper != null) {
+            playPauseButton.updateState(mediaControllerWrapper.getPlaybackState());
         }
     }
 
@@ -96,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
     }
 
+    public void onMediaBrowserServiceConnected(MediaSessionCompat.Token token) {
+        this.mediaControllerWrapper = new MediaControllerWrapper(this, token);
+        this.mediaControllerWrapper.init();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -137,8 +145,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initMediaBrowserService() {
-        mediaBrowserConnector = new MediaBrowserConnector(this);
-        mediaBrowserConnector.init();
+        mediaBrowserConnector = new MediaBrowserConnector(getApplicationContext(), this);
+        mediaBrowserConnector.init(null);
         saveState();
     }
 
@@ -154,12 +162,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void playPause(View view) {
-        int pbState = mediaBrowserConnector.getPlaybackState();
+        int pbState = mediaControllerWrapper.getPlaybackState();
         if (pbState == PlaybackStateCompat.STATE_PLAYING) {
-            mediaBrowserConnector.pause();
+            mediaControllerWrapper.pause();
             getPlayPauseButton().setPlayIcon();
         } else {
-            mediaBrowserConnector.play();
+            mediaControllerWrapper.play();
             getPlayPauseButton().setPauseIcon();
         }
     }

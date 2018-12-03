@@ -1,51 +1,56 @@
 package com.example.mike.mp3player.client;
 
 import android.content.ComponentName;
-import android.os.Bundle;
-import android.os.RemoteException;
+import android.content.Context;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v7.app.AppCompatActivity;
 
 import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
 import com.example.mike.mp3player.client.callbacks.MySubscriptionCallback;
 import com.example.mike.mp3player.service.MediaPlaybackService;
+
+import java.util.List;
 
 public class MediaBrowserConnector {
 
     private MediaBrowserCompat mMediaBrowser;
     private MyConnectionCallback mConnectionCallbacks;
     private MySubscriptionCallback mySubscriptionCallback;
-    private MediaControllerCompat mediaControllerCompat;
+    private Context context;
     private final MainActivity activity;
     private MediaSessionCompat.Token mediaSessionToken;
 
-    public MediaBrowserConnector(MainActivity activity) {
+    public MediaBrowserConnector(Context context, MainActivity activity) {
+        this.context = context;
         this.activity = activity;
     }
 
-    public void init() {
-        mConnectionCallbacks = new MyConnectionCallback(this);
-        // Create MediaBrowserServiceCompat
-        mMediaBrowser = new MediaBrowserCompat(activity.getApplicationContext(),
-                new ComponentName(activity, MediaPlaybackService.class),
-                mConnectionCallbacks,
-                null);
+    public void init(MediaSessionCompat.Token token) {
+            mConnectionCallbacks = new MyConnectionCallback(this);
+            // Create MediaBrowserServiceCompat
+            mMediaBrowser = new MediaBrowserCompat(activity.getApplicationContext(),
+                    new ComponentName(activity, MediaPlaybackService.class),
+                    mConnectionCallbacks,
+                    null);
 
-        this.mySubscriptionCallback = new MySubscriptionCallback(activity);
-        getmMediaBrowser().connect();
+        this.mySubscriptionCallback = activity instanceof MainActivity ?
+                new MySubscriptionCallback((MainActivity) activity) : null;
+        if (token == null ) {
+            getmMediaBrowser().connect();
+        } else{
+            onConnected(token);
+        }
     }
 
-    public void onConnected() {
-        try {
-            MediaSessionCompat.Token token = mMediaBrowser.getSessionToken();
-            this.mediaSessionToken = token;
-            mediaControllerCompat = new MediaControllerCompat(activity.getApplicationContext(), token);
-            mMediaBrowser.subscribe(mMediaBrowser.getRoot(), mySubscriptionCallback);
-        } catch (RemoteException e) {
-            e.printStackTrace();
+    public void onConnected(MediaSessionCompat.Token token) {
+        if (token == null) {
+            token = mMediaBrowser.getSessionToken();
         }
+        this.mediaSessionToken = token;
+        mMediaBrowser.subscribe(mMediaBrowser.getRoot(), mySubscriptionCallback);
+        activity.onMediaBrowserServiceConnected(token);
     }
 
     public MediaBrowserCompat getmMediaBrowser() {
@@ -54,38 +59,11 @@ public class MediaBrowserConnector {
 
     public void disconnect() {
         getmMediaBrowser().disconnect();
-        if (getMediaControllerCompat() != null) {
-            // find a way to disconnect all callbacks
-//            mediaControllerCompat.
-//            getMediaControllerCompat().unregisterCallback(myMediaControllerCallback);
-        }
-        getmMediaBrowser().disconnect();
-    }
-
-    public void prepareFromMediaId(String mediaId, Bundle extras) {
-        getMediaControllerCompat().getTransportControls().prepareFromMediaId(mediaId, extras);
-    }
-
-    public void play() {
-        getMediaControllerCompat().getTransportControls().play();
-    }
-
-    public void pause() {
-        getMediaControllerCompat().getTransportControls().pause();
-    }
-
-    public int getPlaybackState() {
-        if (mediaControllerCompat != null && mediaControllerCompat.getPlaybackState() != null) {
-            return mediaControllerCompat.getPlaybackState().getState();
-        }
-        return 0;
     }
 
     public MediaSessionCompat.Token getMediaSessionToken() {
         return mediaSessionToken;
     }
 
-    public MediaControllerCompat getMediaControllerCompat() {
-        return mediaControllerCompat;
-    }
+
 }
