@@ -7,11 +7,15 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.media.session.MediaControllerCompat;
 
+import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
+
 import java.util.List;
 
-public class MediaControllerWrapper< A extends AppCompatActivity>  {
+public class MediaControllerWrapper< A extends MediaActivityCompat>  {
 
     private MediaControllerCompat mediaControllerCompat;
+    private MyMediaControllerCallback<A> myMediaControllerCallback;
+    private PlaybackStateWrapper currentPlaybackState;
     private A activity;
     private MediaSessionCompat.Token token;
     private boolean isInitialized = false;
@@ -24,6 +28,7 @@ public class MediaControllerWrapper< A extends AppCompatActivity>  {
     public boolean init() {
         try {
             this.mediaControllerCompat = new MediaControllerCompat(activity.getApplicationContext(), token);
+            this.myMediaControllerCallback = new MyMediaControllerCallback<>(activity, this);
         } catch (RemoteException ex) {
             this.isInitialized = false;
             return false;
@@ -84,13 +89,23 @@ public class MediaControllerWrapper< A extends AppCompatActivity>  {
         return mediaControllerCompat.getMetadata();
     }
 
-    public void disconnect(List<MediaControllerCompat.Callback> callbacks) {
-        if (getMediaControllerCompat() != null) {
-            // find a way to disconnect all callbacks
-            for (MediaControllerCompat.Callback callback : callbacks) {
-                getMediaControllerCompat().unregisterCallback(callback);
+    public void disconnect() {
+        if (getMediaControllerCompat() != null && myMediaControllerCallback != null) {
+            if (!myMediaControllerCallback.getChildCallbacks().isEmpty()) {
+                // find a way to disconnect all callbacks
+                for (MediaControllerCompat.Callback callback : myMediaControllerCallback.getChildCallbacks()) {
+                    getMediaControllerCompat().unregisterCallback(callback);
+                }
             }
+            getMediaControllerCompat().unregisterCallback(myMediaControllerCallback);
         }
     }
 
+    public PlaybackStateWrapper getCurrentPlaybackState() {
+        return currentPlaybackState;
+    }
+
+    public void setCurrentPlaybackState(PlaybackStateWrapper currentPlaybackState) {
+        this.currentPlaybackState = currentPlaybackState;
+    }
 }

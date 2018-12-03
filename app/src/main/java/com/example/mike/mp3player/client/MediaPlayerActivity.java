@@ -7,7 +7,6 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -30,17 +29,15 @@ import java.util.List;
 
 import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
 import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
-import static com.example.mike.mp3player.commons.Constants.TIMESTAMP;
 
 /**
  * Created by Mike on 24/09/2017.
  */
 
-public class MediaPlayerActivity extends AppCompatActivity {
+public class MediaPlayerActivity extends MediaActivityCompat {
 
     private final String STOP = "Stop";
     private MediaControllerWrapper<MediaPlayerActivity> mediaControllerWrapper;
-    private MyMediaControllerCallback myMediaControllerCallback;
     private MySeekerMediaControllerCallback mySeekerMediaControllerCallback;
     private Uri selectedUri;
     private String mediaId;
@@ -72,9 +69,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         if (token != null) {
             this.mediaControllerWrapper = new MediaControllerWrapper<MediaPlayerActivity>(this, token);
             mediaControllerWrapper.init();
-            this.myMediaControllerCallback = new MyMediaControllerCallback(this);
             this.mySeekerMediaControllerCallback = new MySeekerMediaControllerCallback(seekerBar);
-            mediaControllerWrapper.registerCallback(myMediaControllerCallback);
             seekerBar.setMediaController(mediaControllerWrapper.getMediaControllerCompat());
             if (null != mediaId) {
                 // Display the initial state
@@ -106,10 +101,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        List<MediaControllerCompat.Callback> callbacks = new ArrayList<>();
-        callbacks.add(myMediaControllerCallback);
-        callbacks.add(mySeekerMediaControllerCallback);
-        mediaControllerWrapper.disconnect(callbacks);
+        mediaControllerWrapper.disconnect();
     }
 
     @Override
@@ -216,6 +208,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         this.track.setText(getString(R.string.TRACK_NAME) + track);
     }
 
+    @Override
     public void setMetaData(MediaMetadataCompat metaData) {
         getCounter().setDuration(metaData.getLong(MediaMetadata.METADATA_KEY_DURATION));
         setArtist(metaData.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
@@ -223,6 +216,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         mySeekerMediaControllerCallback.onMetadataChanged(metaData);
     }
 
+    @Override
     public void setPlaybackState(PlaybackStateCompat playbackState) {
         getPlayPauseButton().updateState(playbackState);
         getCounter().updateState(playbackState);

@@ -5,6 +5,7 @@ import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.view.GravityCompat;
@@ -33,7 +34,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MediaActivityCompat {
 
     private static final int PERMISSION_REQUEST_WRITE_STORAGE = 0;
     private MediaBrowserConnector mediaBrowserConnector;
@@ -202,5 +203,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void setPlayPauseButton(PlayPauseButton playPauseButton) {
         this.playPauseButton = playPauseButton;
+    }
+
+    @Override
+    public void setMetaData(MediaMetadataCompat metadata) {
+
+    }
+
+    @Override
+    public void setPlaybackState(PlaybackStateCompat state) {
+
     }
 }
