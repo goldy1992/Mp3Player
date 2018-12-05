@@ -33,6 +33,7 @@ import java.util.List;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
+import static com.example.mike.mp3player.commons.Constants.PLAYBACK_STATE;
 
 public class MainActivity extends MediaActivityCompat {
 
@@ -154,6 +155,7 @@ public class MainActivity extends MediaActivityCompat {
     private Intent createMediaPlayerActivityIntent() {
         Intent intent = new Intent(getApplicationContext(), MediaPlayerActivity.class);
         intent.putExtra(MEDIA_SESSION, mediaBrowserConnector.getMediaSessionToken());
+        intent.putExtra(PLAYBACK_STATE, mediaControllerWrapper.getCurrentPlaybackState());
         return intent;
     }
 
@@ -211,7 +213,7 @@ public class MainActivity extends MediaActivityCompat {
     }
 
     @Override
-    public void setPlaybackState(PlaybackStateCompat state) {
+    public void setPlaybackState(PlaybackStateWrapper state) {
 
     }
 

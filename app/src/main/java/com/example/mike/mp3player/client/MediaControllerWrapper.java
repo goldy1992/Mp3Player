@@ -29,7 +29,7 @@ public class MediaControllerWrapper< A extends MediaActivityCompat>  {
         try {
             this.mediaControllerCompat = new MediaControllerCompat(activity.getApplicationContext(), token);
             this.myMediaControllerCallback = new MyMediaControllerCallback<>(activity, this);
-            this.registerCallback(myMediaControllerCallback);
+            this.mediaControllerCompat.registerCallback(myMediaControllerCallback);
         } catch (RemoteException ex) {
             this.isInitialized = false;
             return false;

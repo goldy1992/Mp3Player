@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client.view;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.TextView;
 
+import com.example.mike.mp3player.client.PlaybackStateWrapper;
 import com.example.mike.mp3player.client.TimeCounterTimerTask;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 
@@ -34,9 +35,9 @@ public class TimeCounter {
     public void cancelTimerDuringTracking() {
         cancelTimer();
     }
-    public void updateState(PlaybackStateCompat state) {
-        this.currentState = state.getState();
-        this.currentSpeed = state.getPlaybackSpeed();
+    public void updateState(PlaybackStateWrapper state) {
+        this.currentState = state.getPlaybackState().getState();
+        this.currentSpeed = state.getPlaybackState().getPlaybackSpeed();
         long latestPosition = TimerUtils.calculateStartTime(state);
 
         switch (getCurrentState()) {

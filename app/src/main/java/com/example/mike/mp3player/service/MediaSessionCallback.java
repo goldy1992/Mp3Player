@@ -154,6 +154,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     @Override
     public void onSeekTo(long position ) {
         myMediaPlayerAdapter.seekTo(position);
+        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.PlaybackStateWrapper;
 import com.example.mike.mp3player.commons.Constants;
 
 public class PlayPauseButton extends AppCompatImageButton {
@@ -26,9 +27,9 @@ public class PlayPauseButton extends AppCompatImageButton {
         super(context, attrs, defStyleAttr);
     }
 
-    public void updateState(PlaybackStateCompat state) {
-        Log.d(LOG_TAG, Constants.playbackStateDebugMap.get(state.getState()) + ", " + state.getPlaybackState());
-        updateState(state.getState());
+    public void updateState(PlaybackStateWrapper state) {
+        Log.d(LOG_TAG, Constants.playbackStateDebugMap.get(state.getPlaybackState().getState()) + ", " + state.getPlaybackState());
+        updateState(state.getPlaybackState().getState());
     }
 
     public void updateState(int state) {

@@ -47,6 +47,7 @@ public class SeekerBarChangerListener implements SeekBar.OnSeekBarChangeListener
         PlaybackStateCompat newState = new PlaybackStateCompat.Builder()
                 .setState(timeCounter.getCurrentState(), (long)timeCounter.getCurrentSpeed(), seekerBar.getProgress())
                 .build();
-        seekerBar.getTimeCounter().updateState(newState);
+
+        seekerBar.getTimeCounter().updateState(new PlaybackStateWrapper(newState));
     }
 }

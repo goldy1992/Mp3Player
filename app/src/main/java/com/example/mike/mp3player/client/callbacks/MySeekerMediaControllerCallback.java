@@ -7,6 +7,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.animation.LinearInterpolator;
 
+import com.example.mike.mp3player.client.PlaybackStateWrapper;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.view.SeekerBar;
 
@@ -19,14 +20,14 @@ public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callb
     public MySeekerMediaControllerCallback(SeekerBar seekerBar) {
         this.seekerBar = seekerBar;
     }
+
     @Override
     public void onSessionDestroyed() {
         super.onSessionDestroyed();
     }
 
-    @Override
-    public void onPlaybackStateChanged(PlaybackStateCompat state) {
-        super.onPlaybackStateChanged(state);
+    public void onPlaybackStateChanged(PlaybackStateWrapper playbackStateWrapper) {
+        PlaybackStateCompat state = playbackStateWrapper.getPlaybackState();
 
         Log.d("PlaybackStatusCompat", "" + state);
         // If there's an ongoing animation, stop it now.
@@ -35,7 +36,7 @@ public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callb
             seekerBar.setValueAnimator(null);
         }
 
-        long latestPosition = TimerUtils.calculateStartTime(state);
+        long latestPosition = TimerUtils.calculateStartTime(playbackStateWrapper);
         final int progress = state != null ? (int) latestPosition : NO_PROGRESS;
         seekerBar.setProgress(progress);
 
@@ -45,8 +46,13 @@ public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callb
         if (state != null && state.getState() == PlaybackStateCompat.STATE_PLAYING) {
             final int timeToEnd = (int) ((seekerBar.getMax() - progress) / state.getPlaybackSpeed());
 
+            try {
             seekerBar.setValueAnimator(ValueAnimator.ofInt(progress, seekerBar.getMax())
-                    .setDuration(timeToEnd));
+                    .setDuration(timeToEnd)); }
+                    catch (IllegalArgumentException ex) {
+                Log.e(getClass().getName(), "progress: " + progress + ", seekerbarMax: " + seekerBar.getMax());
+                throw new IllegalArgumentException(ex);
+                    }
             seekerBar.getValueAnimator().setInterpolator(new LinearInterpolator());
             seekerBar.getValueAnimator().addUpdateListener(this);
             seekerBar.getValueAnimator().start();
@@ -62,6 +68,11 @@ public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callb
                 : 0;
         seekerBar.setProgress(NO_PROGRESS);
         seekerBar.setMax(max);
+    }
+
+    @Override
+    public void onPlaybackStateChanged(PlaybackStateCompat state) {
+        super.onPlaybackStateChanged(state);
     }
 
     @Override

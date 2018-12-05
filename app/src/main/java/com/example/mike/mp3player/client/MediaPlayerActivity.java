@@ -61,8 +61,8 @@ public class MediaPlayerActivity extends MediaActivityCompat {
                 extras.putString(PLAYLIST, PLAY_ALL);
                 mediaControllerWrapper.prepareFromMediaId(mediaId, extras);
             } else {
-                setPlaybackState(mediaControllerWrapper.getPlaybackStateAsCompat());
                 setMetaData(mediaControllerWrapper.getMetaData());
+                setPlaybackState(mediaControllerWrapper.getCurrentPlaybackState());
             }
         }
     }
@@ -221,7 +221,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     }
 
     @Override
-    public void setPlaybackState(PlaybackStateCompat playbackState) {
+    public void setPlaybackState(PlaybackStateWrapper playbackState) {
         getPlayPauseButton().updateState(playbackState);
         getCounter().updateState(playbackState);
         seekerBar.getMySeekerMediaControllerCallback().onPlaybackStateChanged(playbackState);
