@@ -2,21 +2,21 @@ package com.example.mike.mp3player.client.view;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
 
-import com.example.mike.mp3player.client.callbacks.MySeekerMediaControllerCallback;
+import com.example.mike.mp3player.client.MediaActivityCompat;
 import com.example.mike.mp3player.client.SeekerBarChangerListener;
+import com.example.mike.mp3player.client.callbacks.MySeekerMediaControllerCallback;
 
 public class SeekerBar extends AppCompatSeekBar {
 
-    private MediaControllerCompat mMediaController;
-    private MySeekerMediaControllerCallback mControllerCallback;
     private ValueAnimator valueAnimator;
+    private MediaActivityCompat parentActivity;
     private boolean isTracking = false;
     private TimeCounter timeCounter;
 
+    private MySeekerMediaControllerCallback mySeekerMediaControllerCallback;
     public OnSeekBarChangeListener seekBarChangeListener;
 
     public SeekerBar(Context context) {
@@ -31,24 +31,15 @@ public class SeekerBar extends AppCompatSeekBar {
         super(context, attrs, defStyleAttr);
     }
 
+    public void init() {
+        this.mySeekerMediaControllerCallback = new MySeekerMediaControllerCallback(this);
+        this.seekBarChangeListener = new SeekerBarChangerListener();
+        super.setOnSeekBarChangeListener(seekBarChangeListener);
+    }
+
     @Override
     public final void setOnSeekBarChangeListener(OnSeekBarChangeListener l) {
         super.setOnSeekBarChangeListener(l);
-    }
-
-    public void setMediaController(final MediaControllerCompat mediaController) {
-        if (mediaController != null) {
-            mControllerCallback = new MySeekerMediaControllerCallback(this);
-            SeekerBarChangerListener seekerBarChangerListener = new SeekerBarChangerListener(mediaController);
-            this.seekBarChangeListener = seekerBarChangerListener;
-            super.setOnSeekBarChangeListener(seekerBarChangerListener);
-        }
-        mMediaController = mediaController;
-    }
-
-    public void disconnectController() {
-        mControllerCallback = null;
-        mMediaController = null;
     }
 
     public ValueAnimator getValueAnimator() {
@@ -77,5 +68,17 @@ public class SeekerBar extends AppCompatSeekBar {
 
     public TimeCounter getTimeCounter() {
         return timeCounter;
+    }
+
+    public MediaActivityCompat getParentActivity() {
+        return parentActivity;
+    }
+
+    public void setParentActivity(MediaActivityCompat parentActivity) {
+        this.parentActivity = parentActivity;
+    }
+
+    public MySeekerMediaControllerCallback getMySeekerMediaControllerCallback() {
+        return mySeekerMediaControllerCallback;
     }
 }

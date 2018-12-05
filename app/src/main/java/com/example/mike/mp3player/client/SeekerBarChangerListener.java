@@ -9,13 +9,8 @@ import com.example.mike.mp3player.client.view.TimeCounter;
 
 public class SeekerBarChangerListener implements SeekBar.OnSeekBarChangeListener {
 
-    private MediaControllerCompat mMediaController;
     private TimeCounter timeCounter;
 
-    public SeekerBarChangerListener(MediaControllerCompat mMediaController){
-        this.mMediaController = mMediaController;
-
-    }
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         SeekerBar seekerBar = (SeekerBar) seekBar;
@@ -37,7 +32,7 @@ public class SeekerBarChangerListener implements SeekBar.OnSeekBarChangeListener
         setTracking(seekBar, false);
         SeekerBar seekerBar = (SeekerBar) seekBar;
         updateTimeCounter(seekerBar);
-        mMediaController.getTransportControls().seekTo(seekBar.getProgress());
+        seekerBar.getParentActivity().getMediaControllerWrapper().seekTo(seekBar.getProgress());
     }
 
     private void setTracking(SeekBar seekBar, boolean tracking) {

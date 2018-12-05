@@ -6,7 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 
 public abstract class MediaActivityCompat extends AppCompatActivity {
 
+    private MediaControllerWrapper mediaControllerWrapper;
+
     public abstract void setMetaData(MediaMetadataCompat metadata);
 
     public abstract void setPlaybackState(PlaybackStateCompat state);
+
+    public abstract MediaControllerWrapper getMediaControllerWrapper();
 }

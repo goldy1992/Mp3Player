@@ -214,4 +214,9 @@ public class MainActivity extends MediaActivityCompat {
     public void setPlaybackState(PlaybackStateCompat state) {
 
     }
+
+    @Override
+    public MediaControllerWrapper getMediaControllerWrapper() {
+        return mediaControllerWrapper;
+    }
 }

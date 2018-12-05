@@ -1,10 +1,10 @@
 package com.example.mike.mp3player.client;
 
+import android.content.Intent;
 import android.media.MediaMetadata;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -12,8 +12,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
-import com.example.mike.mp3player.client.callbacks.MySeekerMediaControllerCallback;
 import com.example.mike.mp3player.client.view.PlayPauseButton;
 import com.example.mike.mp3player.client.view.SeekerBar;
 import com.example.mike.mp3player.client.view.TimeCounter;
@@ -24,8 +22,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
 import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
@@ -38,7 +34,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
     private final String STOP = "Stop";
     private MediaControllerWrapper<MediaPlayerActivity> mediaControllerWrapper;
-    private MySeekerMediaControllerCallback mySeekerMediaControllerCallback;
     private Uri selectedUri;
     private String mediaId;
     private TextView artist;
@@ -53,25 +48,14 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_media_player);
-        this.playPauseButton = this.findViewById(R.id.playPauseButton);
-        TextView counterView = this.findViewById(R.id.timer);
-        this.counter = new TimeCounter(counterView);
-        this.seekerBar = this.findViewById(R.id.seekBar);
-        this.artist = this.findViewById(R.id.artistName);
-        this.track = this.findViewById(R.id.trackName);
-        this.seekerBar.setTimeCounter(counter);
+        initView();
+        retrieveIntentInfo(getIntent());
 
-        if (getIntent() != null && getIntent().getExtras() != null) {
-            token = (MediaSessionCompat.Token) getIntent().getExtras().get(Constants.MEDIA_SESSION);
-            mediaId = (String) getIntent().getExtras().get(Constants.MEDIA_ID);
-        }
         if (token != null) {
             this.mediaControllerWrapper = new MediaControllerWrapper<MediaPlayerActivity>(this, token);
             mediaControllerWrapper.init();
-            this.mySeekerMediaControllerCallback = new MySeekerMediaControllerCallback(seekerBar);
-            seekerBar.setMediaController(mediaControllerWrapper.getMediaControllerCompat());
-            if (null != mediaId) {
+
+            if (playNewSong()) {
                 // Display the initial state
                 Bundle extras = new Bundle();
                 extras.putString(PLAYLIST, PLAY_ALL);
@@ -208,18 +192,47 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         this.track.setText(getString(R.string.TRACK_NAME) + track);
     }
 
+    private void initView() {
+        setContentView(R.layout.activity_media_player);
+        this.playPauseButton = this.findViewById(R.id.playPauseButton);
+        TextView counterView = this.findViewById(R.id.timer);
+        this.counter = new TimeCounter(counterView);
+        this.seekerBar = this.findViewById(R.id.seekBar);
+        this.seekerBar.init();
+        this.seekerBar.setTimeCounter(counter);
+        this.seekerBar.setParentActivity(this);
+        this.artist = this.findViewById(R.id.artistName);
+        this.track = this.findViewById(R.id.trackName);
+    }
+
+    private void retrieveIntentInfo(Intent intent) {
+        if (intent != null && intent.getExtras() != null) {
+            token = (MediaSessionCompat.Token) getIntent().getExtras().get(Constants.MEDIA_SESSION);
+            mediaId = (String) getIntent().getExtras().get(Constants.MEDIA_ID);
+        }
+    }
+
     @Override
     public void setMetaData(MediaMetadataCompat metaData) {
         getCounter().setDuration(metaData.getLong(MediaMetadata.METADATA_KEY_DURATION));
         setArtist(metaData.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
         setTrack(metaData.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
-        mySeekerMediaControllerCallback.onMetadataChanged(metaData);
+        seekerBar.getMySeekerMediaControllerCallback().onMetadataChanged(metaData);
     }
 
     @Override
     public void setPlaybackState(PlaybackStateCompat playbackState) {
         getPlayPauseButton().updateState(playbackState);
         getCounter().updateState(playbackState);
-        mySeekerMediaControllerCallback.onPlaybackStateChanged(playbackState);
+        seekerBar.getMySeekerMediaControllerCallback().onPlaybackStateChanged(playbackState);
+    }
+
+    @Override
+    public MediaControllerWrapper getMediaControllerWrapper() {
+       return mediaControllerWrapper;
+    }
+
+    private boolean playNewSong() {
+        return null != mediaId;
     }
 }
