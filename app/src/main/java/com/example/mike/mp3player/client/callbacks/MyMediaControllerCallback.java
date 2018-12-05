@@ -41,8 +41,9 @@ public class MyMediaControllerCallback< A extends MediaActivityCompat> extends M
 
     @Override
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
-        mediaControllerWrapper.setCurrentPlaybackState(new PlaybackStateWrapper(state));
-        activity.setPlaybackState(state);
+        PlaybackStateWrapper playbackStateWrapper = new PlaybackStateWrapper(state);
+        mediaControllerWrapper.setCurrentPlaybackState(playbackStateWrapper);
+        activity.setPlaybackState(playbackStateWrapper);
         if (!childCallbacks.isEmpty()) {
             for (MediaControllerCompat.Callback callback : childCallbacks) {
                 callback.onPlaybackStateChanged(state);

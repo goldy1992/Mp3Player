@@ -27,6 +27,7 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.mike.mp3player.commons.Constants.PLAYBACK_STATE;
 import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
 import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
 
@@ -69,6 +70,11 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         if (token != null) {
             this.mediaControllerWrapper = new MediaControllerWrapper<MediaPlayerActivity>(this, token);
             mediaControllerWrapper.init();
+            if (getIntent() != null && getIntent().getExtras() != null) {
+                PlaybackStateWrapper currentPlaybackState = (PlaybackStateWrapper) getIntent().getExtras().get(PLAYBACK_STATE);
+                mediaControllerWrapper.setCurrentPlaybackState(currentPlaybackState);
+            }
+
             this.mySeekerMediaControllerCallback = new MySeekerMediaControllerCallback(seekerBar);
             seekerBar.setMediaController(mediaControllerWrapper.getMediaControllerCompat());
             if (null != mediaId) {
@@ -77,7 +83,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
                 extras.putString(PLAYLIST, PLAY_ALL);
                 mediaControllerWrapper.prepareFromMediaId(mediaId, extras);
             } else {
-                setPlaybackState(mediaControllerWrapper.getPlaybackStateAsCompat());
+                setPlaybackState(mediaControllerWrapper.getCurrentPlaybackState());
                 setMetaData(mediaControllerWrapper.getMetaData());
             }
         }
@@ -217,7 +223,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     }
 
     @Override
-    public void setPlaybackState(PlaybackStateCompat playbackState) {
+    public void setPlaybackState(PlaybackStateWrapper playbackState) {
         getPlayPauseButton().updateState(playbackState);
         getCounter().updateState(playbackState);
         mySeekerMediaControllerCallback.onPlaybackStateChanged(playbackState);

@@ -1,13 +1,12 @@
 package com.example.mike.mp3player.client.utils;
 
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
+
+import com.example.mike.mp3player.client.PlaybackStateWrapper;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import static com.example.mike.mp3player.commons.Constants.TIMESTAMP;
 
 public final class TimerUtils {
 
@@ -23,20 +22,23 @@ public final class TimerUtils {
         return timerFormat.format(date);
     }
 
-    public static long calculateStartTime(PlaybackStateCompat state) {
-        if (state == null || state.getExtras() == null)
-        {
-            return 0L;
-        }
-        Long timestamp = state.getExtras().getLong(TIMESTAMP);
+    public static long calculateStartTime(PlaybackStateWrapper playbackStateWrapper) {
+        if (playbackStateWrapper != null) {
+            PlaybackStateCompat state = playbackStateWrapper.getPlaybackState();
+            if (state == null || state.getExtras() == null) {
+                return 0L;
+            }
+            Long timestamp = playbackStateWrapper.getTimestanp();
 
-        if (timestamp == null) {
-            return 0L;
-        }
-        long currentTime= System.currentTimeMillis();
-        //Log.d("", currentTime)
-        long timeDiff =  - timestamp;
-        return state.getPosition() + timeDiff;
+            if (timestamp == null) {
+                return 0L;
+            }
+            long currentTime = System.currentTimeMillis();
+            //Log.d("", currentTime)
+            long timeDiff = currentTime - timestamp;
+            return state.getPosition() + timeDiff;
 
+        }
+        return 0L;
     }
 }
