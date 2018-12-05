@@ -49,11 +49,13 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
-        retrieveIntentInfo(getIntent());
+        token = (MediaSessionCompat.Token) retrieveIntentInfo(Constants.MEDIA_SESSION);
+        mediaId = (String) retrieveIntentInfo(Constants.MEDIA_ID);
+        PlaybackStateWrapper playbackStateWrapper = (PlaybackStateWrapper) retrieveIntentInfo(Constants.PLAYBACK_STATE);
 
         if (token != null) {
             this.mediaControllerWrapper = new MediaControllerWrapper<MediaPlayerActivity>(this, token);
-            mediaControllerWrapper.init();
+            mediaControllerWrapper.init(playbackStateWrapper);
 
             if (playNewSong()) {
                 // Display the initial state
@@ -205,11 +207,12 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         this.track = this.findViewById(R.id.trackName);
     }
 
-    private void retrieveIntentInfo(Intent intent) {
+    private Object retrieveIntentInfo(String key) {
+        Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null) {
-            token = (MediaSessionCompat.Token) getIntent().getExtras().get(Constants.MEDIA_SESSION);
-            mediaId = (String) getIntent().getExtras().get(Constants.MEDIA_ID);
+            return getIntent().getExtras().get(key);
         }
+        return null;
     }
 
     @Override

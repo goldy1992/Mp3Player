@@ -25,11 +25,12 @@ public class MediaControllerWrapper< A extends MediaActivityCompat>  {
         this.token = token;
     }
 
-    public boolean init() {
+    public boolean init(PlaybackStateWrapper currentPlaybackState) {
         try {
             this.mediaControllerCompat = new MediaControllerCompat(activity.getApplicationContext(), token);
             this.myMediaControllerCallback = new MyMediaControllerCallback<>(activity, this);
             this.mediaControllerCompat.registerCallback(myMediaControllerCallback);
+            this.currentPlaybackState = currentPlaybackState;
         } catch (RemoteException ex) {
             this.isInitialized = false;
             return false;

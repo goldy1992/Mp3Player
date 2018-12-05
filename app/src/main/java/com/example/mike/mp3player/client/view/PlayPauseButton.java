@@ -28,7 +28,7 @@ public class PlayPauseButton extends AppCompatImageButton {
     }
 
     public void updateState(PlaybackStateWrapper state) {
-        Log.d(LOG_TAG, Constants.playbackStateDebugMap.get(state.getPlaybackState().getState()) + ", " + state.getPlaybackState());
+//        Log.d(LOG_TAG, Constants.playbackStateDebugMap.get(state.getPlaybackState().getState()) + ", " + state.getPlaybackState());
         updateState(state.getPlaybackState().getState());
     }
 

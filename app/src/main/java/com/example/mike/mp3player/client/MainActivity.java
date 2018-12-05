@@ -103,7 +103,7 @@ public class MainActivity extends MediaActivityCompat {
 
     public void onMediaBrowserServiceConnected(MediaSessionCompat.Token token) {
         this.mediaControllerWrapper = new MediaControllerWrapper(this, token);
-        this.mediaControllerWrapper.init();
+        this.mediaControllerWrapper.init(null);
     }
 
     @Override
