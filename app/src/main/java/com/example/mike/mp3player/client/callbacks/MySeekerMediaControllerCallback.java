@@ -20,15 +20,13 @@ public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callb
     public MySeekerMediaControllerCallback(SeekerBar seekerBar) {
         this.seekerBar = seekerBar;
     }
+
     @Override
     public void onSessionDestroyed() {
         super.onSessionDestroyed();
     }
 
     public void onPlaybackStateChanged(PlaybackStateWrapper playbackStateWrapper) {
-
-
-
         PlaybackStateCompat state = playbackStateWrapper.getPlaybackState();
 
         Log.d("PlaybackStatusCompat", "" + state);
@@ -48,8 +46,13 @@ public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callb
         if (state != null && state.getState() == PlaybackStateCompat.STATE_PLAYING) {
             final int timeToEnd = (int) ((seekerBar.getMax() - progress) / state.getPlaybackSpeed());
 
+            try {
             seekerBar.setValueAnimator(ValueAnimator.ofInt(progress, seekerBar.getMax())
-                    .setDuration(timeToEnd));
+                    .setDuration(timeToEnd)); }
+                    catch (IllegalArgumentException ex) {
+                Log.e(getClass().getName(), "progress: " + progress + ", seekerbarMax: " + seekerBar.getMax());
+                throw new IllegalArgumentException(ex);
+                    }
             seekerBar.getValueAnimator().setInterpolator(new LinearInterpolator());
             seekerBar.getValueAnimator().addUpdateListener(this);
             seekerBar.getValueAnimator().start();

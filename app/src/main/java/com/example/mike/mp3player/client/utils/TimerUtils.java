@@ -25,7 +25,7 @@ public final class TimerUtils {
     public static long calculateStartTime(PlaybackStateWrapper playbackStateWrapper) {
         if (playbackStateWrapper != null) {
             PlaybackStateCompat state = playbackStateWrapper.getPlaybackState();
-            if (state == null || state.getExtras() == null) {
+            if (state == null) {
                 return 0L;
             }
             Long timestamp = playbackStateWrapper.getTimestanp();

@@ -83,8 +83,8 @@ public class MediaPlayerActivity extends MediaActivityCompat {
                 extras.putString(PLAYLIST, PLAY_ALL);
                 mediaControllerWrapper.prepareFromMediaId(mediaId, extras);
             } else {
-                setPlaybackState(mediaControllerWrapper.getCurrentPlaybackState());
                 setMetaData(mediaControllerWrapper.getMetaData());
+                setPlaybackState(mediaControllerWrapper.getCurrentPlaybackState());
             }
         }
     }
