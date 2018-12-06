@@ -50,6 +50,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.myNotificationManager = myNotificationManager;
         this.myMediaPlayerAdapter = new MyMediaPlayerAdapter(context);
         this.myMediaPlayerAdapter.init();
+        this.myMediaPlayerAdapter.getMediaPlayer().setOnCompletionListener(this);
     }
 
     @Override
@@ -181,7 +182,13 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     public void onCompletion(MediaPlayer mediaPlayer) {
         queueIndex++;
         if (!playlist.isEmpty() && queueIndex < playlist.size()) {
-            playlist.get(queueIndex);
+            MediaSessionCompat.QueueItem nextItem = playlist.get(queueIndex);
+            String nextItemMediaId = nextItem.getDescription().getMediaId();
+            Uri nextItemUri = mediaLibrary.getMediaUri(nextItemMediaId);
+            myMediaPlayerAdapter.prepareFromUri(nextItemUri);
+            myMediaPlayerAdapter.play();
+            mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
+            mediaSession.setMetadata(getCurrentMetaData());
         }
     }
 
