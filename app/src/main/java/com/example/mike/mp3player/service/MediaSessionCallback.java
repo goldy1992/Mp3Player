@@ -4,10 +4,8 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.media.session.MediaSession;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -34,9 +32,9 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KE
 public class MediaSessionCallback extends MediaSessionCompat.Callback implements MediaPlayer.OnCompletionListener {
 
     private final List<MediaSessionCompat.QueueItem> playlist = new ArrayList<>();
-    private int repeatMode = PlaybackStateCompat.REPEAT_MODE_ALL;
     private int queueIndex = -1;
     private ServiceManager serviceManager;
+    private PlaybackManager playbackManager;
     private MyMediaPlayerAdapter myMediaPlayerAdapter;
     private MediaSessionCompat mediaSession;
     private MyNotificationManager myNotificationManager;
@@ -51,6 +49,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.myMediaPlayerAdapter = new MyMediaPlayerAdapter(context);
         this.myMediaPlayerAdapter.init();
         this.myMediaPlayerAdapter.getMediaPlayer().setOnCompletionListener(this);
+        this.playbackManager = new PlaybackManager();
     }
 
     @Override
@@ -63,18 +62,15 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public void onSkipToNext() {
-        setNewPlaylistItem(queueIndex + 1);
-        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
-        mediaSession.setMetadata(getCurrentMetaData());
+        String newMediaId = playbackManager.skipToNext();
+        skipToNewMedia(newMediaId);
     }
 
     @Override
     public void onSkipToPrevious() {
         int position = myMediaPlayerAdapter.getCurrentTrackPosition();
-        int newQueueIndex = position > ONE_SECOND ? queueIndex : queueIndex - 1;
-        setNewPlaylistItem(newQueueIndex);
-        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
-        mediaSession.setMetadata(getCurrentMetaData());
+        String newMediaId = position > ONE_SECOND ? playbackManager.getCurrentMediaId() :  playbackManager.skipToPrevious();;
+        skipToNewMedia(newMediaId);
     }
     @Override
     public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
@@ -159,16 +155,14 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public void onAddQueueItem(MediaDescriptionCompat description) {
-        playlist.add(new MediaSessionCompat.QueueItem(description, description.hashCode()));
-        queueIndex = (queueIndex == -1) ? 0 : queueIndex;
-        mediaSession.setQueue(playlist);
+        MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
+        mediaSession.setQueue(playbackManager.onAddQueueItem(item));
     }
 
     @Override
     public void onRemoveQueueItem(MediaDescriptionCompat description) {
-        playlist.remove(new MediaSessionCompat.QueueItem(description, description.hashCode()));
-        queueIndex = (playlist.isEmpty()) ? -1 : queueIndex;
-        mediaSession.setQueue(playlist);
+        MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
+        mediaSession.setQueue(playbackManager.onRemoveQueueItem(item));
     }
 
     private Notification prepareNotification() {
@@ -179,16 +173,11 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        queueIndex++;
-        if (!playlist.isEmpty() && queueIndex < playlist.size()) {
-            MediaSessionCompat.QueueItem nextItem = playlist.get(queueIndex);
-            String nextItemMediaId = nextItem.getDescription().getMediaId();
-            Uri nextItemUri = mediaLibrary.getMediaUri(nextItemMediaId);
+            Uri nextItemUri = mediaLibrary.getMediaUri(playbackManager.playbackComplete());
             myMediaPlayerAdapter.prepareFromUri(nextItemUri);
             myMediaPlayerAdapter.play();
             mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
             mediaSession.setMetadata(getCurrentMetaData());
-        }
     }
 
     private MediaMetadataCompat getCurrentMetaData() {
@@ -208,22 +197,13 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         return builder.build();
     }
 
-    private boolean validQueueIndex(int newQueueIndex) {
-        return newQueueIndex < playlist.size() && newQueueIndex >= 0;
-    }
-
-    private void setNewPlaylistItem(int index) {
-        if (validQueueIndex(index)) {
-            queueIndex = index;
-            int currentState = myMediaPlayerAdapter.getCurrentState();
-            String newMediaId = playlist.get(index).getDescription().getMediaId();
-            Uri newUri = mediaLibrary.getMediaUri(newMediaId);
-            myMediaPlayerAdapter.prepareFromUri(newUri);
-
-            if (currentState == PlaybackStateCompat.STATE_PLAYING) {
-                myMediaPlayerAdapter.play();
-            }
+    private void skipToNewMedia(String newMediaId) {
+        Uri newUri = mediaLibrary.getMediaUri(newMediaId);
+        myMediaPlayerAdapter.prepareFromUri(newUri);
+        if (myMediaPlayerAdapter.getCurrentState() == PlaybackStateCompat.STATE_PLAYING) {
+            myMediaPlayerAdapter.play();
         }
+        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
+        mediaSession.setMetadata(getCurrentMetaData());
     }
-
 }
