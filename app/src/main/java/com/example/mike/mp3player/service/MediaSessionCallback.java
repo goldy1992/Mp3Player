@@ -148,7 +148,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 //        unregisterReceiver(myNoisyAudioStreamReceiver, intentFilter);
         // Take the serviceManager out of the foreground, retain the notification
         mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
-        mediaSession.setMetadata(getCurrentMetaData());
         serviceManager.pauseService(prepareNotification());
     }
 
