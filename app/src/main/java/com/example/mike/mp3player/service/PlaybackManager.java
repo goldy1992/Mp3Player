@@ -3,6 +3,8 @@ package com.example.mike.mp3player.service;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
+import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,4 +79,23 @@ public class PlaybackManager {
 //            }
 //        }
 //    }
+
+    public boolean createNewPlaylist(List<MediaSessionCompat.QueueItem> newList) {
+        playlist.clear();;
+        return playlist.addAll(newList);
+    }
+
+    public void setQueueIndex(String mediaId) {
+        Integer integerQueueIndex = MediaLibraryUtils.findIndexOfTrackInPlaylist(playlist, mediaId);
+        if (integerQueueIndex == null) {
+            queueIndex = -1;
+        } else {
+            queueIndex = integerQueueIndex;
+        }
+
+    }
+
+    public MediaSessionCompat.QueueItem getCurrentItem() {
+        return playlist.get(queueIndex);
+    }
 }

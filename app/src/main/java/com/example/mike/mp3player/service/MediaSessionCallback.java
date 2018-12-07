@@ -31,8 +31,6 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KE
 
 public class MediaSessionCallback extends MediaSessionCompat.Callback implements MediaPlayer.OnCompletionListener {
 
-    private final List<MediaSessionCompat.QueueItem> playlist = new ArrayList<>();
-    private int queueIndex = -1;
     private ServiceManager serviceManager;
     private PlaybackManager playbackManager;
     private MyMediaPlayerAdapter myMediaPlayerAdapter;
@@ -104,18 +102,12 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
         if (bundle.containsKey(PLAYLIST)) {
               if (bundle.getString(PLAYLIST).equals(PLAY_ALL)) {
-                  playlist.clear();;
-                  playlist.addAll(MediaLibraryUtils.convertMediaItemsToQueueItem(mediaLibrary.getLibrary()));
-              }
-              Integer integerQueueIndex = MediaLibraryUtils.findIndexOfTrackInPlaylist(playlist, mediaId);
-              if (integerQueueIndex == null) {
-                  queueIndex = -1;
-              } else {
-                  queueIndex = integerQueueIndex;
+                  playbackManager.createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(mediaLibrary.getLibrary()));
               }
         }
         Uri uri = mediaLibrary.getMediaUri(mediaId);
         myMediaPlayerAdapter.prepareFromUri(uri);
+        playbackManager.setQueueIndex(mediaId);
         mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
         mediaSession.setMetadata(getCurrentMetaData());
     }
@@ -182,7 +174,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     private MediaMetadataCompat getCurrentMetaData() {
         MediaMetadataCompat.Builder builder = myMediaPlayerAdapter.getCurrentMetaData();
-        MediaSessionCompat.QueueItem currentItem = this.playlist.get(queueIndex);
+        MediaSessionCompat.QueueItem currentItem = playbackManager.getCurrentItem();
         if (ValidMetaDataUtil.validTitle(currentItem)) {
             builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, currentItem.getDescription().getTitle().toString());
         } else {
@@ -199,8 +191,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     private void skipToNewMedia(String newMediaId) {
         Uri newUri = mediaLibrary.getMediaUri(newMediaId);
+        PlaybackStateCompat currentState = myMediaPlayerAdapter.getMediaPlayerState();
         myMediaPlayerAdapter.prepareFromUri(newUri);
-        if (myMediaPlayerAdapter.getCurrentState() == PlaybackStateCompat.STATE_PLAYING) {
+        if (currentState.getState() == PlaybackStateCompat.STATE_PLAYING) {
             myMediaPlayerAdapter.play();
         }
         mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
