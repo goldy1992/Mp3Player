@@ -38,7 +38,7 @@ public class TimeCounter {
     public void updateState(PlaybackStateWrapper state) {
         this.currentState = state.getPlaybackState().getState();
         this.currentSpeed = state.getPlaybackState().getPlaybackSpeed();
-        long latestPosition = TimerUtils.calculateStartTime(state);
+        long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(state);
 
         switch (getCurrentState()) {
             case PlaybackStateCompat.STATE_PLAYING: work(latestPosition); break;

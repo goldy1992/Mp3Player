@@ -1,8 +1,7 @@
 package com.example.mike.mp3player.service;
 
 import android.content.Context;
-
-import com.example.mike.mp3player.unusedClasses.MediaPlayerAdapter;
+;
 
 import org.junit.Before;
 import org.junit.Test;

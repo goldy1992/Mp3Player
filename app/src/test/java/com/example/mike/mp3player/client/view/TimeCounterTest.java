@@ -3,6 +3,8 @@ package com.example.mike.mp3player.client.view;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.TextView;
 
+import com.example.mike.mp3player.client.PlaybackStateWrapper;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -31,7 +33,7 @@ public class TimeCounterTest {
 
     @Test
     public void updateStateResetTimerTest() {
-        PlaybackStateCompat state = createState(STATE_STOPPED, POSITION);
+        PlaybackStateWrapper state = createState(STATE_STOPPED, POSITION);
         timeCounter.setRunning(true);
         timeCounter.updateState(state);
 
@@ -41,7 +43,7 @@ public class TimeCounterTest {
 
     @Test
     public void updateStateHaltTimerTest() {
-        PlaybackStateCompat state = createState(STATE_PAUSED, POSITION);
+        PlaybackStateWrapper state = createState(STATE_PAUSED, POSITION);
         timeCounter.updateState(state);
 
         assertFalse("TimerCounter should not be running", timeCounter.isRunning());
@@ -50,13 +52,14 @@ public class TimeCounterTest {
 
     @Test
     public void updateStateWorkTest() {
-        PlaybackStateCompat state = createState(STATE_PLAYING, POSITION);
+        PlaybackStateWrapper state = createState(STATE_PLAYING, POSITION);
         timeCounter.updateState(state);
 
         assertTrue("TimerCounter should be running", timeCounter.isRunning());
     }
 
-    private PlaybackStateCompat createState(int state, long position) {
-       return new Builder().setState(state, position, 0f, 0L).build();
+    private PlaybackStateWrapper createState(int state, long position) {
+        PlaybackStateCompat playbackStateCompat = new Builder().setState(state, position, 0f, 0L).build();
+       return new PlaybackStateWrapper(playbackStateCompat);
     }
 }

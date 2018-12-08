@@ -22,7 +22,7 @@ public final class TimerUtils {
         return timerFormat.format(date);
     }
 
-    public static long calculateStartTime(PlaybackStateWrapper playbackStateWrapper) {
+    public static long calculateCurrentPlaybackPosition(PlaybackStateWrapper playbackStateWrapper) {
         if (playbackStateWrapper != null) {
             PlaybackStateCompat state = playbackStateWrapper.getPlaybackState();
             if (state == null) {

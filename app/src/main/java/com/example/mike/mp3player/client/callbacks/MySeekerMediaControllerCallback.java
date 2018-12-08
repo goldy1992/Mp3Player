@@ -36,7 +36,7 @@ public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callb
             seekerBar.setValueAnimator(null);
         }
 
-        long latestPosition = TimerUtils.calculateStartTime(playbackStateWrapper);
+        long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(playbackStateWrapper);
         final int progress = state != null ? (int) latestPosition : NO_PROGRESS;
         seekerBar.setProgress(progress);
 
