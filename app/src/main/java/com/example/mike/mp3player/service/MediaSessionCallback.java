@@ -62,6 +62,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     public void onSkipToNext() {
         String newMediaId = playbackManager.skipToNext();
         skipToNewMedia(newMediaId);
+        serviceManager.notify(prepareNotification());
     }
 
     @Override
@@ -69,6 +70,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         int position = myMediaPlayerAdapter.getCurrentTrackPosition();
         String newMediaId = position > ONE_SECOND ? playbackManager.getCurrentMediaId() :  playbackManager.skipToPrevious();;
         skipToNewMedia(newMediaId);
+        serviceManager.notify(prepareNotification());
     }
     @Override
     public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
@@ -80,6 +82,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             switch (keyEventCode) {
                 case KeyEvent.KEYCODE_MEDIA_PLAY: onPlay(); break;
                 case KeyEvent.KEYCODE_MEDIA_PAUSE: onPause(); break;
+                case KeyEvent.KEYCODE_MEDIA_NEXT: onSkipToNext(); break;
+                case KeyEvent.KEYCODE_MEDIA_PREVIOUS: onSkipToNext(); break;
                 default: break;
             }
             return true;

@@ -59,8 +59,12 @@ public class ServiceManager {
         createServiceIfNotStarted();
         service.stopForeground(false);
         service.stopSelf();
-        notificationManager.getNotificationManager().notify(MyNotificationManager.NOTIFICATION_ID, notification);
+        notify(notification);
         serviceStarted = false;
+    }
+
+    public void notify(Notification notification) {
+        notificationManager.getNotificationManager().notify(MyNotificationManager.NOTIFICATION_ID, notification);
     }
 
     public MediaPlaybackService getService() {
