@@ -3,6 +3,7 @@ package com.example.mike.mp3player.service;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
 public class ServiceManager {
@@ -25,7 +26,6 @@ public class ServiceManager {
 
     public void startService(Notification notification) {
         createServiceIfNotStarted();
-        service.startForeground(MyNotificationManager.NOTIFICATION_ID, notification);
         mediaSession.setActive(true);
         notificationManager.getNotificationManager().notify(MyNotificationManager.NOTIFICATION_ID, notification);
         //mediaSession.setPlaybackState();
@@ -35,6 +35,7 @@ public class ServiceManager {
         if (!serviceStarted) {
             Intent startServiceIntent = new Intent(context, MediaPlaybackService.class);
             startServiceIntent.setAction("com.example.mike.mp3player.service.MediaPlaybackService");
+            ContextCompat.startForegroundService(context, startServiceIntent);
             service.startService(startServiceIntent);
             serviceStarted = true;
         }

@@ -10,17 +10,15 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationBuilderWithBuilderAccessor;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
-import android.widget.RemoteViews;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaPlayerActivity;
@@ -63,14 +61,14 @@ public class MyNotificationManager {
         return notificationManager;
     }
 
-    public Notification getNotification(MediaMetadataCompat metadata,
-                                        @NonNull PlaybackStateCompat state,
-                                        MediaSessionCompat.Token token) {
+    public NotificationCompat.Builder getNotification(MediaMetadataCompat metadata,
+                                                      @NonNull PlaybackStateCompat state,
+                                                      MediaSessionCompat.Token token) {
         boolean isPlaying = state.getState() == PlaybackStateCompat.STATE_PLAYING;
         MediaDescriptionCompat description = metadata.getDescription();
         NotificationCompat.Builder builder =
                 buildNotification(state, token, isPlaying, description);
-        return builder.build();
+        return builder;
     }
 
     private NotificationCompat.Builder buildNotification(@NonNull PlaybackStateCompat state,
@@ -82,8 +80,6 @@ public class MyNotificationManager {
         if (isAndroidOreoOrHigher()) {
             createChannel();
         }
-
-
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(service.getApplicationContext(), CHANNEL_ID);
 
@@ -141,7 +137,7 @@ public class MyNotificationManager {
             CharSequence name = "MediaSession";
             // The user-visible description of the channel.
             String description = "MediaSession and MediaPlayer";
-            int importance = NotificationManager.IMPORTANCE_LOW;
+            int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
             // Configure the notification channel.
             mChannel.setDescription(description);
@@ -149,9 +145,11 @@ public class MyNotificationManager {
             // Sets the notification light color for notifications posted to this
             // channel, if the device supports this feature.
             mChannel.setLightColor(Color.RED);
+            mChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
             mChannel.enableVibration(true);
             mChannel.setVibrationPattern(
                     new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+
             notificationManager.createNotificationChannel(mChannel);
             Log.d(TAG, "createChannel: New channel created");
         } else {
