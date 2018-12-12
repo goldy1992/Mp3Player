@@ -26,6 +26,10 @@ public class MyMediaPlayerAdapter {
         this.context = context;
     }
 
+    /**
+     * TODO: Provide a track that is prepared for when the service starts, to stop the Activities from
+     * crashing
+     */
     public void init() {
         if (getMediaPlayer() == null) {
             setMediaPlayer(new MediaPlayer());

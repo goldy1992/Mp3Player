@@ -66,6 +66,10 @@ public class MediaPlayerActivity extends MediaActivityCompat {
                 setMetaData(mediaControllerWrapper.getMetaData());
                 setPlaybackState(mediaControllerWrapper.getCurrentPlaybackState());
             }
+        } else {
+            /** TODO: Add functionality for when the playback bar is touched in the MainActivity and no
+             * token is passed or when no track info is specified, a track must be sent to the mediacontrollerwrapper
+             */
         }
     }
 
