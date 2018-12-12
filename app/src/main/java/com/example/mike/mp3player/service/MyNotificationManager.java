@@ -46,6 +46,9 @@ public class MyNotificationManager {
     }
 
     public void onDestroy() {
+        if (isAndroidOreoOrHigher()) {
+            notificationManager.deleteNotificationChannel(CHANNEL_ID);
+        }
         Log.d(TAG, "onDestroy: ");
     }
 
@@ -70,7 +73,7 @@ public class MyNotificationManager {
     private Notification.Builder buildOreoNotification(MediaSessionCompat.Token token,
                                                         boolean isPlaying,
                                                         MediaDescriptionCompat description) {
-        // createChannel();
+        createChannel();
         Context context = service.getApplicationContext();
         Notification.Action playPauseAction = null;
 

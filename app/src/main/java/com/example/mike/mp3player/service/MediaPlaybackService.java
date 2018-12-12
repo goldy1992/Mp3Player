@@ -92,6 +92,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
+        notificationManager.onDestroy();
+        mMediaSession.release();
         stopSelf();
     }
 
