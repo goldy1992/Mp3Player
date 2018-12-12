@@ -1,10 +1,10 @@
 package com.example.mike.mp3player.service;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -51,14 +51,14 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         myMediaPlayerAdapter.play();
         mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
         mediaSession.setMetadata(getCurrentMetaData());
-        serviceManager.startService(prepareNotification().build());
+        serviceManager.startService(prepareNotification());
     }
 
     @Override
     public void onSkipToNext() {
         String newMediaId = playbackManager.skipToNext();
         skipToNewMedia(newMediaId);
-        serviceManager.notify(prepareNotification().build());
+        serviceManager.notify(prepareNotification());
     }
 
     @Override
@@ -66,7 +66,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         int position = myMediaPlayerAdapter.getCurrentTrackPosition();
         String newMediaId = position > ONE_SECOND ? playbackManager.getCurrentMediaId() :  playbackManager.skipToPrevious();;
         skipToNewMedia(newMediaId);
-        serviceManager.notify(prepareNotification().build());
+        serviceManager.notify(prepareNotification());
     }
     @Override
     public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
@@ -136,7 +136,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 //        unregisterReceiver(myNoisyAudioStreamReceiver, intentFilter);
         // Take the serviceManager out of the foreground, retain the notification
         mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
-        serviceManager.pauseService(prepareNotification().build());
+        serviceManager.pauseService(prepareNotification());
     }
 
     @Override
@@ -157,7 +157,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         mediaSession.setQueue(playbackManager.onRemoveQueueItem(item));
     }
 
-    private NotificationCompat.Builder prepareNotification() {
+    private Notification prepareNotification() {
         return myNotificationManager.getNotification(getCurrentMetaData(),
                 myMediaPlayerAdapter.getMediaPlayerState(),
                 mediaSession.getSessionToken());
