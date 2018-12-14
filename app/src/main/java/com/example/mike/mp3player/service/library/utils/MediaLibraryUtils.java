@@ -1,12 +1,17 @@
 package com.example.mike.mp3player.service.library.utils;
 
+import android.media.MediaMetadataRetriever;
 import android.os.Environment;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.media.MediaMetadataRetriever.METADATA_KEY_TITLE;
 
 public final class MediaLibraryUtils {
 
@@ -51,6 +56,17 @@ public final class MediaLibraryUtils {
             }
         }
 
+        return null;
+    }
+
+    public static String getSongTitle(MediaMetadataRetriever mmr, String fileName) {
+        if (mmr != null) {
+            String title = mmr.extractMetadata(METADATA_KEY_TITLE);
+            if (StringUtils.isBlank(title)) {
+                return fileName.trim();
+            }
+            return title;
+        }
         return null;
     }
 }

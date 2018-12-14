@@ -15,6 +15,8 @@ import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
 
+import java.util.List;
+
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
 import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
 import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
@@ -35,22 +37,31 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private MediaLibrary mediaLibrary;
     private static final String LOG_TAG = "MEDIA_SESSION_CALLBACK";
 
-    public MediaSessionCallback(Context context, MyNotificationManager myNotificationManager, ServiceManager serviceManager, MediaSessionCompat mediaSession, MediaLibrary mediaLibrary) {
+    public MediaSessionCallback(Context context, MyNotificationManager myNotificationManager,
+                                ServiceManager serviceManager, MediaSessionCompat mediaSession,
+                                MediaLibrary mediaLibrary) {
         this.serviceManager = serviceManager;
         this.mediaSession = mediaSession;
         this.mediaLibrary = mediaLibrary;
         this.myNotificationManager = myNotificationManager;
-        this.myMediaPlayerAdapter = new MyMediaPlayerAdapter(context);
-        this.myMediaPlayerAdapter.init();
-        this.myMediaPlayerAdapter.getMediaPlayer().setOnCompletionListener(this);
         this.playbackManager = new PlaybackManager();
+        this.myMediaPlayerAdapter = new MyMediaPlayerAdapter(context);
+    }
+
+    public void init() {
+        List<MediaSessionCompat.QueueItem> queueItems =  MediaLibraryUtils.convertMediaItemsToQueueItem(this.mediaLibrary.getLibrary());
+        this.playbackManager.init(queueItems);
+
+        Uri firstSongUri = this.mediaLibrary.getMediaUri(playbackManager.selectFirstItem());
+        this.myMediaPlayerAdapter.init(firstSongUri);
+        this.myMediaPlayerAdapter.getMediaPlayer().setOnCompletionListener(this);
+        updateMediaSession();
     }
 
     @Override
     public void onPlay() {
         myMediaPlayerAdapter.play();
-        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
-        mediaSession.setMetadata(getCurrentMetaData());
+        updateMediaSession();
         serviceManager.startService(prepareNotification());
     }
 
@@ -92,8 +103,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     public void onPrepareFromUri(Uri uri, Bundle bundle) {
         super.onPrepareFromUri(uri, bundle);
         myMediaPlayerAdapter.prepareFromUri(uri);
-        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
-        mediaSession.setMetadata(getCurrentMetaData());
+        updateMediaSession();
     }
 
     @Override
@@ -108,6 +118,10 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         Uri uri = mediaLibrary.getMediaUri(mediaId);
         myMediaPlayerAdapter.prepareFromUri(uri);
         playbackManager.setQueueIndex(mediaId);
+        updateMediaSession();
+    }
+
+    private void updateMediaSession() {
         mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
         mediaSession.setMetadata(getCurrentMetaData());
     }
@@ -119,8 +133,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         myMediaPlayerAdapter.play();
 
         serviceManager.startMediaSession();
-        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
-        mediaSession.setMetadata(getCurrentMetaData());
+        updateMediaSession();
     }
 
     @Override
@@ -168,8 +181,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             Uri nextItemUri = mediaLibrary.getMediaUri(playbackManager.playbackComplete());
             myMediaPlayerAdapter.prepareFromUri(nextItemUri);
             myMediaPlayerAdapter.play();
-            mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
-            mediaSession.setMetadata(getCurrentMetaData());
+        updateMediaSession();
     }
 
     private MediaMetadataCompat getCurrentMetaData() {
@@ -196,7 +208,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         if (currentState.getState() == PlaybackStateCompat.STATE_PLAYING) {
             myMediaPlayerAdapter.play();
         }
-        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
-        mediaSession.setMetadata(getCurrentMetaData());
+        updateMediaSession();
     }
 }

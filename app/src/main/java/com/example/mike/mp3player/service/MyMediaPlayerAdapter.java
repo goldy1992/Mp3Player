@@ -30,11 +30,10 @@ public class MyMediaPlayerAdapter {
      * TODO: Provide a track that is prepared for when the service starts, to stop the Activities from
      * crashing
      */
-    public void init() {
-        if (getMediaPlayer() == null) {
-            setMediaPlayer(new MediaPlayer());
-           // mediaPlayer.setPlaybackParams(new PlaybackParams());
-        }
+    public void init(Uri uri) {
+        resetPlayer();
+        prepareFromUri(uri);
+
         this.afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int i) {
@@ -63,14 +62,28 @@ public class MyMediaPlayerAdapter {
         }
     }
 
-    public void prepareFromUri(Uri uri) {
-        resetPlayer();
-        setCurrentUri(uri);
-        prepare();
+    public boolean prepareFromUri(Uri uri) {
+        if (null != uri)
+        {
+            try {
+                resetPlayer();
+                setCurrentUri(uri);
+                prepare();
+                return true;
+            } catch (Exception ex) {
+                Log.e(LOG_TAG, ex.getMessage());
+                return false;
+            }
+        }
+        return false;
     }
 
     private void resetPlayer() {
-        getMediaPlayer().reset();
+        if (null != getMediaPlayer()) {
+            getMediaPlayer().reset();
+        } else {
+            this.mediaPlayer = new MediaPlayer();
+        }
         this.isPrepared = false;
     }
 

@@ -13,6 +13,8 @@ import com.example.mike.mp3player.service.library.utils.MusicFileFilter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +30,6 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KE
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_DURATION;
 
 public class MediaLibrary {
-
-
     private boolean playlistRecursInSubDirectory = false;
     private List<MediaBrowserCompat.MediaItem> library;
     private MusicFileFilter musicFileFilter = new MusicFileFilter();
@@ -50,6 +50,7 @@ public class MediaLibrary {
     public void buildMediaLibrary(){
         File externalStorageDirectory = MediaLibraryUtils.getExternalStorageDirectory();
         buildDirectoryPlaylist(externalStorageDirectory);
+        Collections.sort(library, new MediaItemComparator());
     }
 
     private void buildDirectoryPlaylist(File directory)
@@ -96,17 +97,26 @@ public class MediaLibrary {
         extras.putString(META_DATA_KEY_FILE_NAME, fileName);
 
         // TODO: add code to fetch album art also
-        MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder()
+        MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()
                 .setMediaId(mediaId)
-                .setTitle(mmr.extractMetadata(METADATA_KEY_TITLE))
-                .setExtras(extras)
-                .build();
-        MediaBrowserCompat.MediaItem mediaItem = new MediaBrowserCompat.MediaItem(mediaDescriptionCompat, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
+                .setTitle(MediaLibraryUtils.getSongTitle(mmr, fileName))
+                .setExtras(extras);
+
+        MediaBrowserCompat.MediaItem mediaItem = new MediaBrowserCompat.MediaItem(mediaDescriptionCompatBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
         mediaIdToUriMap.put(mediaId, uri);
         return mediaItem;
     }
 
     public Uri getMediaUri(String id) {
         return mediaIdToUriMap.get(id);
+    }
+
+    private class MediaItemComparator implements Comparator<MediaBrowserCompat.MediaItem> {
+        @Override
+        public int compare(MediaBrowserCompat.MediaItem o1, MediaBrowserCompat.MediaItem o2) {
+            String s1 = o1.getDescription().getTitle().toString().toUpperCase();
+            String s2 = o2.getDescription().getTitle().toString().toUpperCase();
+            return s1.compareTo(s2);
+        }
     }
 }

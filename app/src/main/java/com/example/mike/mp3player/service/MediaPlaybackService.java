@@ -35,6 +35,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         notificationManager = new MyNotificationManager(this);
         serviceManager = new ServiceManager(this, getApplicationContext(), mMediaSession, notificationManager);
         mediaSessionCallback = new MediaSessionCallback(getApplicationContext(), notificationManager, serviceManager, mMediaSession, mediaLibrary);
+        mediaSessionCallback.init();
         // MySessionCallback() has methods that handle callbacks from a media controller
         mMediaSession.setCallback(mediaSessionCallback);
         mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |

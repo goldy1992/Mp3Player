@@ -44,7 +44,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
     private MediaSessionCompat.Token token;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +51,10 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         token = (MediaSessionCompat.Token) retrieveIntentInfo(Constants.MEDIA_SESSION);
         mediaId = (String) retrieveIntentInfo(Constants.MEDIA_ID);
         PlaybackStateWrapper playbackStateWrapper = (PlaybackStateWrapper) retrieveIntentInfo(Constants.PLAYBACK_STATE);
+        if (playbackStateWrapper == null) {
+            PlaybackStateCompat.Builder playbackStateCompat = new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PAUSED, 0L, 0F);
+            playbackStateWrapper = new PlaybackStateWrapper(playbackStateCompat.build());
+        }
 
         if (token != null) {
             this.mediaControllerWrapper = new MediaControllerWrapper<MediaPlayerActivity>(this, token);
