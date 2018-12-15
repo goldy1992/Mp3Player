@@ -1,9 +1,11 @@
 package com.example.mike.mp3player.client;
 
 import android.content.Intent;
-import android.media.session.MediaSession;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -11,7 +13,6 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +36,7 @@ import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 import static com.example.mike.mp3player.commons.Constants.PLAYBACK_STATE;
 
-public class MainActivity extends MediaActivityCompat {
+public class MainActivity extends MediaActivityCompat implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final int PERMISSION_REQUEST_WRITE_STORAGE = 0;
     private MediaBrowserConnector mediaBrowserConnector;
@@ -220,5 +221,25 @@ public class MainActivity extends MediaActivityCompat {
     @Override
     public MediaControllerWrapper getMediaControllerWrapper() {
         return mediaControllerWrapper;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        // BEGIN_INCLUDE(onRequestPermissionsResult)
+        String permission = permissionsProcessor.getPermissionFromRequestCode(requestCode);
+
+        if (null != permission) {
+            if (permission.equals(WRITE_EXTERNAL_STORAGE)) {
+                // Request for camera permission.
+                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission has been granted. Start camera preview Activity.
+                    init();
+                }
+            }
+        }
+        else {
+            finish();
+        }
     }
 }
