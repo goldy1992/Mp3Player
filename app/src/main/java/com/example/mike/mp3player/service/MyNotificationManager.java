@@ -149,6 +149,7 @@ public class MyNotificationManager {
             .setColor(ContextCompat.getColor(service, R.color.colorPrimary))
             .setSmallIcon(getSmallIcon(isPlaying))
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
             .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(service, PlaybackStateCompat.ACTION_STOP))
             .setContentIntent(createContentIntent())
             .addAction(skipToPreviousAction)
@@ -166,19 +167,17 @@ public class MyNotificationManager {
             CharSequence name = "MediaSession";
             // The user-visible description of the channel.
             String description = "MediaSession and MediaPlayer";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
+            int importance = NotificationManager.IMPORTANCE_LOW;
             NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
             // Configure the notification channel.
             mChannel.setDescription(description);
             mChannel.enableLights(true);
-            // Sets the notification light color for notifications posted to this
-            // channel, if the device supports this feature.
-            mChannel.setLightColor(Color.RED);
+            /* Sets the notification light color for notifications posted to this
+               channel, if the device supports this feature. WIll possibly implement in the future
+               mChannel.setLightColor(Color.RED);
+            */
             mChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-            mChannel.enableVibration(true);
-            mChannel.setVibrationPattern(
-                    new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-                        notificationManager.createNotificationChannel(mChannel);
+            notificationManager.createNotificationChannel(mChannel);
             Log.d(TAG, "createChannel: New channel created");
         } else {
             Log.d(TAG, "createChannel: Existing channel reused");
