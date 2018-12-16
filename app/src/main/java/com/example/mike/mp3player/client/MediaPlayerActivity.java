@@ -23,6 +23,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
+import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
+import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
 import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
 
@@ -38,6 +40,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     private String mediaId;
     private TextView artist;
     private TextView track;
+    private TextView playbackSpeed;
     private PlayPauseButton playPauseButton;
     private SeekerBar seekerBar;
     private TimeCounter counter;
@@ -140,6 +143,18 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         mediaControllerWrapper.skipToPrevious();
     }
 
+    public void increasePlaybackSpeed(View view) {
+        Bundle extras = new Bundle();
+        mediaControllerWrapper.getMediaControllerCompat().getTransportControls()
+                .sendCustomAction(INCREASE_PLAYBACK_SPEED, extras);
+    }
+
+    public void decreasePlaybackSpeed(View view) {
+        Bundle extras = new Bundle();
+        mediaControllerWrapper.getMediaControllerCompat().getTransportControls()
+                .sendCustomAction(DECREASE_PLAYBACK_SPEED, extras);
+    }
+
     public void stop(View view) {
         int pbState = mediaControllerWrapper.getPlaybackState();
         if (pbState == PlaybackStateCompat.STATE_PLAYING ||
@@ -147,7 +162,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
             mediaControllerWrapper.stop();
         } // if
     }
-
 
     public Uri getSelectedUri() {
         return this.selectedUri;
@@ -212,6 +226,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         this.seekerBar.setParentActivity(this);
         this.artist = this.findViewById(R.id.artistName);
         this.track = this.findViewById(R.id.trackName);
+        this.playbackSpeed = this.findViewById(R.id.playbackSpeedValue);
     }
 
     private Object retrieveIntentInfo(String key) {
@@ -234,6 +249,11 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     public void setPlaybackState(PlaybackStateWrapper playbackState) {
         getPlayPauseButton().updateState(playbackState);
         getCounter().updateState(playbackState);
+        float speed = playbackState.getPlaybackState().getPlaybackSpeed();
+        if (speed > 0) {
+            String speedString = String.format("%.2f", speed);
+            playbackSpeed.setText(speedString + "x");
+        }
         seekerBar.getMySeekerMediaControllerCallback().onPlaybackStateChanged(playbackState);
     }
 

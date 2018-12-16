@@ -16,7 +16,7 @@ public class SeekerBarChangerListener implements SeekBar.OnSeekBarChangeListener
         SeekerBar seekerBar = (SeekerBar) seekBar;
         if (seekerBar.isTracking())
         {
-            updateTimeCounter(seekerBar);
+           // updateTimeCounter(seekerBar);
         }
     }
 
@@ -31,7 +31,7 @@ public class SeekerBarChangerListener implements SeekBar.OnSeekBarChangeListener
     public void onStopTrackingTouch(SeekBar seekBar) {
         setTracking(seekBar, false);
         SeekerBar seekerBar = (SeekerBar) seekBar;
-        updateTimeCounter(seekerBar);
+//        updateTimeCounter(seekerBar);
         seekerBar.getParentActivity().getMediaControllerWrapper().seekTo(seekBar.getProgress());
     }
 

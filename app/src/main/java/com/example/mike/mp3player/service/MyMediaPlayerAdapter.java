@@ -3,6 +3,7 @@ package com.example.mike.mp3player.service;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
@@ -108,6 +109,26 @@ public class MyMediaPlayerAdapter {
         currentState = PlaybackStateCompat.STATE_PAUSED;
     }
 
+    public void increaseSpeed( float by) {
+        float currentSpeed = getMediaPlayer().getPlaybackParams().getSpeed();
+        float newSpeed = currentSpeed + by;
+        if (newSpeed <= 2f) {
+            PlaybackParams newParams = getMediaPlayer().getPlaybackParams();
+            newParams.setSpeed(newSpeed);
+            getMediaPlayer().setPlaybackParams(newParams);
+        }
+    }
+
+    public void decreaseSpeed( float by) {
+        float currentSpeed = getMediaPlayer().getPlaybackParams().getSpeed();
+        float newSpeed = currentSpeed - by;
+        if (newSpeed >= 0.25f) {
+            PlaybackParams newParams = getMediaPlayer().getPlaybackParams();
+            newParams.setSpeed(newSpeed);
+            getMediaPlayer().setPlaybackParams(newParams);
+        }
+    }
+
 
     public void seekTo(long position) {
         if (!prepare()) {
@@ -149,10 +170,6 @@ public class MyMediaPlayerAdapter {
 
     public MediaPlayer getMediaPlayer() {
         return mediaPlayer;
-    }
-
-    public void setMediaPlayer(MediaPlayer mediaPlayer) {
-        this.mediaPlayer = mediaPlayer;
     }
 
     public PlaybackStateCompat getMediaPlayerState() {

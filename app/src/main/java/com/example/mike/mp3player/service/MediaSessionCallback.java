@@ -3,6 +3,7 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompat;
@@ -17,6 +18,8 @@ import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
 
 import java.util.List;
 
+import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
+import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
 import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
 import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
@@ -148,7 +151,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         // unregister BECOME_NOISY BroadcastReceiver
 //        unregisterReceiver(myNoisyAudioStreamReceiver, intentFilter);
         // Take the serviceManager out of the foreground, retain the notification
-        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
+        updateMediaSession();
         serviceManager.pauseService(prepareNotification());
     }
 
@@ -178,9 +181,22 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-            Uri nextItemUri = mediaLibrary.getMediaUri(playbackManager.playbackComplete());
-            myMediaPlayerAdapter.prepareFromUri(nextItemUri);
-            myMediaPlayerAdapter.play();
+        Uri nextItemUri = mediaLibrary.getMediaUri(playbackManager.playbackComplete());
+        myMediaPlayerAdapter.prepareFromUri(nextItemUri);
+        myMediaPlayerAdapter.play();
+        updateMediaSession();
+    }
+
+    @Override
+    public void onCustomAction(String customAction, Bundle extras) {
+        super.onCustomAction(customAction, extras);
+        switch (customAction) {
+            case INCREASE_PLAYBACK_SPEED: myMediaPlayerAdapter.increaseSpeed(0.05f);
+            break;
+            case DECREASE_PLAYBACK_SPEED: myMediaPlayerAdapter.decreaseSpeed(0.05f);
+            break;
+            default: break;
+        }
         updateMediaSession();
     }
 
