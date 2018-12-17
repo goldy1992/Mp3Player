@@ -4,12 +4,10 @@ import android.os.RemoteException;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.support.v4.media.session.MediaControllerCompat;
 
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
-
-import java.util.List;
 
 public class MediaControllerWrapper< A extends MediaActivityCompat>  {
 
