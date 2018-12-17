@@ -3,7 +3,7 @@ package com.example.mike.mp3player.service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.MediaBrowserServiceCompat;
+import androidx.media.MediaBrowserServiceCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
 
@@ -38,8 +38,6 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         mediaSessionCallback.init();
         // MySessionCallback() has methods that handle callbacks from a media controller
         mMediaSession.setCallback(mediaSessionCallback);
-        mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS );
     }
 
     @Override

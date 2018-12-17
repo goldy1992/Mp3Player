@@ -3,15 +3,12 @@ package com.example.mike.mp3player.client;
 import android.content.ComponentName;
 import android.content.Context;
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
 import com.example.mike.mp3player.client.callbacks.MySubscriptionCallback;
 import com.example.mike.mp3player.service.MediaPlaybackService;
-
-import java.util.List;
 
 public class MediaBrowserConnector {
 

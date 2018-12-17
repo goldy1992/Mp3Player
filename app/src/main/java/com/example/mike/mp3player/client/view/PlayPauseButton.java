@@ -2,14 +2,12 @@ package com.example.mike.mp3player.client.view;
 
 import android.content.Context;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatImageButton;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageButton;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.PlaybackStateWrapper;
-import com.example.mike.mp3player.commons.Constants;
 
 public class PlayPauseButton extends AppCompatImageButton {
 

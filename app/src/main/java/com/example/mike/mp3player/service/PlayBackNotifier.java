@@ -11,10 +11,6 @@ public class PlayBackNotifier {
     public PlayBackNotifier(MediaSessionCompat mediaSession) {
         this.mediaSession = mediaSession;
 
-        mediaSession.setFlags(
-                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-
         // Set an initial PlaybackState with ACTION_PLAY, so media buttons can start the player
         playBackStateBuilder = new PlaybackStateCompat.Builder()
                 .setActions(

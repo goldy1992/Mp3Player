@@ -10,7 +10,7 @@ android {
         targetSdkVersion OREO
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -39,11 +39,11 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION"
-    implementation "com.android.support:design:$DESIGN_VERSION"
-    implementation "com.android.support:gridlayout-v7:$GRID_LAYOUT_VERSION"
-    implementation "com.android.support:support-media-compat:$MEDIA_COMPAT_VERSION"
-    implementation "com.android.support:support-annotations:$SUPPORT_ANNOTATIONS_VERSION"
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'com.google.android.material:material:1.1.0-alpha02'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'androidx.media:media:1.1.0-alpha01'
+    implementation 'androidx.annotation:annotation:1.0.1'
 // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation group: 'commons-io', name: 'commons-io', version: COMMONS_IO_VERSION
     implementation group: 'commons-lang', name: 'commons-lang', version: COMMONS_LANG_VERSION
@@ -55,18 +55,17 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api:$JUNIT_VERSION"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$JUNIT_VERSION"
     testImplementation "org.junit.jupiter:junit-jupiter-engine:$JUNIT_VERSION"
-
-    testImplementation "org.jmockit:jmockit:1.44"
+    testImplementation "org.powermock:powermock-core:$POWERMOCKITO_CORE_VERSION"
+    testImplementation "org.powermock:powermock-api-mockito2:$POWERMOCKITO_API_VERSION"
     testImplementation "org.robolectric:robolectric:$ROBOELECTRIC_VERSION"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$JUNIT_VERSION"
-    androidTestImplementation "androidx.annotation:annotation:1.0.0"
-    androidTestImplementation "androidx.test:runner:1.1.0"
-    androidTestImplementation "androidx.test:rules:1.1.0"
+    androidTestImplementation 'androidx.annotation:annotation:1.0.1'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test:rules:1.1.1'
     androidTestImplementation "org.junit.jupiter:junit-jupiter-api:$JUNIT_VERSION"
     androidTestImplementation "org.junit.jupiter:junit-jupiter-params:$JUNIT_VERSION"
     androidTestImplementation "org.junit.jupiter:junit-jupiter-engine:$JUNIT_VERSION"
-
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.1.0") {
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.1') {
         exclude module: 'support-annotations'
     }
 }
