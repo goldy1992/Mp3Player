@@ -3,7 +3,7 @@ package com.example.mike.mp3player.service;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
 public class ServiceManager {

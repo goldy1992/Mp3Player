@@ -33,12 +33,12 @@
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
             android:text="@string/PLAYBACK_SPEED" />
-        <android.support.v7.widget.AppCompatImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="decreasePlaybackSpeed"
             app:srcCompat="@drawable/ic_baseline_remove_circle_24px" />
-        <android.support.v7.widget.AppCompatImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="increasePlaybackSpeed"
@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/toolbar2" />
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -142,7 +142,7 @@
 
 
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
 
 </RelativeLayout>

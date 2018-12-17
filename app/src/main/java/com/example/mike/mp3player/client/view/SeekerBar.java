@@ -2,7 +2,7 @@ package com.example.mike.mp3player.client.view;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.support.v7.widget.AppCompatSeekBar;
+import androidx.appcompat.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
 
 import com.example.mike.mp3player.client.MediaActivityCompat;
