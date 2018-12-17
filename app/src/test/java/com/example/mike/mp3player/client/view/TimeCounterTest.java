@@ -5,17 +5,14 @@ import android.widget.TextView;
 
 import com.example.mike.mp3player.client.PlaybackStateWrapper;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import static android.support.v4.media.session.PlaybackStateCompat.*;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
 public class TimeCounterTest {
 
@@ -25,13 +22,13 @@ public class TimeCounterTest {
     private TimeCounter timeCounter;
     final long POSITION = 3424L;
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
         timeCounter = new TimeCounter(view);
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void updateStateResetTimerTest() {
         PlaybackStateWrapper state = createState(STATE_STOPPED, POSITION);
         timeCounter.setRunning(true);
@@ -41,7 +38,7 @@ public class TimeCounterTest {
         assertEquals("currentTime should be reset to 0", 0L, timeCounter.getCurrentTime());
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void updateStateHaltTimerTest() {
         PlaybackStateWrapper state = createState(STATE_PAUSED, POSITION);
         timeCounter.updateState(state);
@@ -50,7 +47,7 @@ public class TimeCounterTest {
         assertEquals("currentTime should be equal to the position parameter", POSITION, timeCounter.getCurrentTime());
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void updateStateWorkTest() {
         PlaybackStateWrapper state = createState(STATE_PLAYING, POSITION);
         timeCounter.updateState(state);

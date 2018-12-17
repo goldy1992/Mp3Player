@@ -1,8 +1,6 @@
 package com.example.mike.mp3player.service.library.utils;
 
-import com.example.mike.mp3player.service.library.utils.IsDirectoryFilter;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 

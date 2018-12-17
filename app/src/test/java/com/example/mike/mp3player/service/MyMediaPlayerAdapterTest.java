@@ -4,8 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 ;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -20,14 +20,14 @@ public class MyMediaPlayerAdapterTest {
 
     private MyMediaPlayerAdapter mediaPlayerAdapter;
 
-    @Before
+    @BeforeEach
     public void setup()
     {
         MockitoAnnotations.initMocks(this);
         mediaPlayerAdapter = createMediaPlayerAdapter();
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void initTest() {
         mediaPlayerAdapter.init(uri);
         assertNotNull("MediaPlayer should not be null after initialisation", mediaPlayerAdapter.getMediaPlayer());

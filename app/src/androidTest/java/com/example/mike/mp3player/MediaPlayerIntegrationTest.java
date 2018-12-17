@@ -4,17 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.ViewAssertion;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
 
 import com.example.mike.mp3player.client.MediaPlayerActivity;
 import com.example.mike.mp3player.client.view.SeekerBar;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -46,12 +44,12 @@ public class MediaPlayerIntegrationTest {
     };
 
 
-    @Before
+    @BeforeEach
     public void setup() {
 
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testPlay() throws InterruptedException {
         MediaPlayerActivity mediaPlayerActivity = (MediaPlayerActivity) activityTestRule.getActivity();
         assertNotNull(mediaPlayerActivity);

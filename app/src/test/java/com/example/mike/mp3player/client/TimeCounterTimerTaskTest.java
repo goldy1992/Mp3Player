@@ -4,16 +4,12 @@ import android.widget.TextView;
 
 import com.example.mike.mp3player.client.view.TimeCounter;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.hamcrest.CoreMatchers.any;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 
 public class TimeCounterTimerTaskTest {
 
@@ -26,7 +22,7 @@ public class TimeCounterTimerTaskTest {
     final long CURRENT_TIME = 4500L;
 
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
         timeCounter = new TimeCounter(view);
@@ -34,7 +30,7 @@ public class TimeCounterTimerTaskTest {
       //  when(timeCounter.getView().setText().then(doNothing());
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void runTest() {
         timeCounter.setDuration(DURATION);
         timeCounter.setCurrentTime(CURRENT_TIME);

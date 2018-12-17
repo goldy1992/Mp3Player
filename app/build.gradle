@@ -51,7 +51,7 @@ dependencies {
 
     testImplementation "org.mockito:mockito-core:$MOCKITO_CORE_VERSION"
     testImplementation "org.powermock:powermock-module-junit4:$POWERMOCK_JUNIT4_VERSION"
-    testImplementation "junit:junit:$JUNIT_VERSION"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$JUNIT_VERSION"
     testImplementation "org.powermock:powermock-core:$POWERMOCKITO_CORE_VERSION"
     testImplementation "org.powermock:powermock-api-mockito2:$POWERMOCKITO_API_VERSION"
     testImplementation "org.robolectric:robolectric:$ROBOELECTRIC_VERSION"

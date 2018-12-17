@@ -5,9 +5,9 @@ import android.net.Uri;
 
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -36,13 +36,13 @@ public class MediaLibraryTest {
 
     MediaLibrary mediaLibrary;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         mediaLibrary = new MediaLibrary(context);
     }
 
-    @After
+    @AfterEach
     public void tearDown () {
 
     }
