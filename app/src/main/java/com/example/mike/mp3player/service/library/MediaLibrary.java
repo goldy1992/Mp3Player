@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST;
@@ -114,8 +115,8 @@ public class MediaLibrary {
     private class MediaItemComparator implements Comparator<MediaBrowserCompat.MediaItem> {
         @Override
         public int compare(MediaBrowserCompat.MediaItem o1, MediaBrowserCompat.MediaItem o2) {
-            String s1 = o1.getDescription().getTitle().toString().toUpperCase();
-            String s2 = o2.getDescription().getTitle().toString().toUpperCase();
+            String s1 = o1.getDescription().getTitle().toString().toUpperCase(Locale.getDefault());
+            String s2 = o2.getDescription().getTitle().toString().toUpperCase(Locale.getDefault());
             return s1.compareTo(s2);
         }
     }

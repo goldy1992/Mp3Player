@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.Locale;
 
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
@@ -256,7 +257,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         getCounter().updateState(playbackState);
         float speed = playbackState.getPlaybackState().getPlaybackSpeed();
         if (speed > 0) {
-            String speedString = String.format("%.2f", speed);
+            String speedString = String.format(Locale.getDefault(), "%.2f", speed);
             playbackSpeed.setText(speedString + "x");
         }
         seekerBar.getMySeekerMediaControllerCallback().onPlaybackStateChanged(playbackState);
