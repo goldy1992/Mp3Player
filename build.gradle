@@ -1,4 +1,28 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+ext{
+    //dependencies
+    OREO = 26
+    MARSHMALLOW = 23
+    BUILD_TOOLS_VERSION = '28.0.3'
+    CONSTRAINT_LAYOUT_VERSION = '1.1.3'
+    DESIGN_VERSION = '26.1.0'
+    GRID_LAYOUT_VERSION = '26.1.0'
+    MEDIA_COMPAT_VERSION = '26.1.0'
+    SUPPORT_ANNOTATIONS_VERSION ='28.0.0'
+    COMMONS_IO_VERSION = '2.6'
+    COMMONS_LANG_VERSION = '2.6'
+    COMMONS_COLLECTIONS4_VERSION = '4.2'
+    MOCKITO_CORE_VERSION = '2.22.0'
+    POWERMOCK_JUNIT4_VERSION = '2.0.0-beta.5'
+    JUNIT_VERSION = '4.12'
+    POWERMOCKITO_CORE_VERSION = '2.0.0-beta.5'
+    POWERMOCKITO_API_VERSION = '2.0.0-beta.5'
+    ROBOELECTRIC_VERSION = '3.8'
+    TEST_RUNNER_VERSION = '1.0.2'
+    TEST_RULES_VERSION = '1.0.2'
+    ESPRESSO_CORE_VERSION = '3.0.2'
+}
+
 
 buildscript {
     repositories {

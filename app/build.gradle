@@ -2,11 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 
 android {
-    compileSdkVersion 26
-	buildToolsVersion '28.0.3'
+    compileSdkVersion OREO
+	buildToolsVersion BUILD_TOOLS_VERSION
     defaultConfig {
         applicationId "com.example.mike.mp3player"
-        minSdkVersion 23
+        minSdkVersion MARSHMALLOW
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -39,28 +39,26 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    //   compile 'com.android.support:appcompat-v7:27.1.1'
-    //compile group: 'com.android.support.constraint', name: 'constraint-layout', version: '1.1.3'
-    implementation 'com.android.support:design:26.1.0'
-    implementation 'com.android.support:gridlayout-v7:26.1.0'
-    implementation 'com.android.support:support-media-compat:26.1.0'
-    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION"
+    implementation "com.android.support:design:$DESIGN_VERSION"
+    implementation "com.android.support:gridlayout-v7:$GRID_LAYOUT_VERSION"
+    implementation "com.android.support:support-media-compat:$MEDIA_COMPAT_VERSION"
+    implementation "com.android.support:support-annotations:$SUPPORT_ANNOTATIONS_VERSION"
 // https://mvnrepository.com/artifact/commons-io/commons-io
-    implementation group: 'commons-io', name: 'commons-io', version: '2.6'
-    implementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
-    implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.2'
+    implementation group: 'commons-io', name: 'commons-io', version: COMMONS_IO_VERSION
+    implementation group: 'commons-lang', name: 'commons-lang', version: COMMONS_LANG_VERSION
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
 
-    testImplementation 'org.mockito:mockito-core:2.22.0'
-    testImplementation 'org.powermock:powermock-module-junit4:2.0.0-beta.5'
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.powermock:powermock-core:2.0.0-beta.5'
-    testImplementation 'org.powermock:powermock-api-mockito2:2.0.0-beta.5'
-    testImplementation 'org.robolectric:robolectric:3.8'
-    androidTestImplementation 'com.android.support:support-annotations:28.0.0'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test:rules:1.0.2'
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2') {
+    testImplementation "org.mockito:mockito-core:$MOCKITO_CORE_VERSION"
+    testImplementation "org.powermock:powermock-module-junit4:$POWERMOCK_JUNIT4_VERSION"
+    testImplementation "junit:junit:$JUNIT_VERSION"
+    testImplementation "org.powermock:powermock-core:$POWERMOCKITO_CORE_VERSION"
+    testImplementation "org.powermock:powermock-api-mockito2:$POWERMOCKITO_API_VERSION"
+    testImplementation "org.robolectric:robolectric:$ROBOELECTRIC_VERSION"
+    androidTestImplementation "com.android.support:support-annotations:$SUPPORT_ANNOTATIONS_VERSION"
+    androidTestImplementation "com.android.support.test:runner:$TEST_RUNNER_VERSION"
+    androidTestImplementation "com.android.support.test:rules:$TEST_RULES_VERSION"
+    androidTestImplementation("com.android.support.test.espresso:espresso-core:$ESPRESSO_CORE_VERSION") {
         exclude module: 'support-annotations'
     }
 }
