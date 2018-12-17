@@ -13,7 +13,7 @@ import java.util.List;
 public class MySubscriptionCallback extends SubscriptionCallback {
 
     private MainActivity mainActivity;
-    private static final String LOG_TAG = "MY_SUBSCRIPTION_CALLBACK";
+    private static final String LOG_TAG = "SUBSCRIPTION_CALLBACK";
     public MySubscriptionCallback(MainActivity mainActivity) {
         super();
         this.mainActivity = mainActivity;
