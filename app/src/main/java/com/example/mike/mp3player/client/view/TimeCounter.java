@@ -84,8 +84,6 @@ public class TimeCounter {
          * e.g. slower playback speed => longer update time
          * 0.95 playbacks speed => 1000ms / 0.95 = 1052
          **/
-        Log.d("", "current speed:" + currentSpeed);
-        Log.d("", "new speed:" + (long)(ONE_SECOND / currentSpeed));
         return (long)(ONE_SECOND / currentSpeed);
     }
 

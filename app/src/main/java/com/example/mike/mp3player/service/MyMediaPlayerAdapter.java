@@ -1,26 +1,35 @@
 package com.example.mike.mp3player.service;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.net.Uri;
-import android.os.Bundle;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
-import java.io.IOException;
+import com.example.mike.mp3player.commons.AndroidUtils;
 
-import static com.example.mike.mp3player.commons.Constants.TIMESTAMP;
+import java.io.IOException;
 
 public class MyMediaPlayerAdapter {
 
+    private static final float PAUSED = 0.0f;
     private static final String LOG_TAG = "MEDIA_PLAYER_ADAPTER";
     private MediaPlayer mediaPlayer;
     private AudioManager.OnAudioFocusChangeListener afChangeListener;
     private Context context;
     private int currentState;
+    /**
+     * init playbackspeed to be paused i.e 0.0f
+     */
+    private float currentPlaybackSpeed = PAUSED;
     private boolean isPrepared = false;
 
     public MyMediaPlayerAdapter(Context context) {
@@ -55,8 +64,6 @@ public class MyMediaPlayerAdapter {
                 getMediaPlayer().start();
                 //            // Register BECOME_NOISY BroadcastReceiver
 //            registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
-//            // Put the service in the foreground, post notification
-//            service.startForeground(myPlayerNotification);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -70,6 +77,7 @@ public class MyMediaPlayerAdapter {
                 resetPlayer();
                 setCurrentUri(uri);
                 prepare();
+                setPlaybackParams();
                 return true;
             } catch (Exception ex) {
                 Log.e(LOG_TAG, ex.getMessage());
@@ -109,26 +117,23 @@ public class MyMediaPlayerAdapter {
         currentState = PlaybackStateCompat.STATE_PAUSED;
     }
 
-    public void increaseSpeed( float by) {
+    public void increaseSpeed(float by) {
         float currentSpeed = getMediaPlayer().getPlaybackParams().getSpeed();
         float newSpeed = currentSpeed + by;
         if (newSpeed <= 2f) {
-            PlaybackParams newParams = getMediaPlayer().getPlaybackParams();
-            newParams.setSpeed(newSpeed);
-            getMediaPlayer().setPlaybackParams(newParams);
+            this.currentPlaybackSpeed = newSpeed;
+            setPlaybackParams();
         }
     }
 
-    public void decreaseSpeed( float by) {
+    public void decreaseSpeed(float by) {
         float currentSpeed = getMediaPlayer().getPlaybackParams().getSpeed();
         float newSpeed = currentSpeed - by;
         if (newSpeed >= 0.25f) {
-            PlaybackParams newParams = getMediaPlayer().getPlaybackParams();
-            newParams.setSpeed(newSpeed);
-            getMediaPlayer().setPlaybackParams(newParams);
+            this.currentPlaybackSpeed = newSpeed;
+            setPlaybackParams();
         }
     }
-
 
     public void seekTo(long position) {
         if (!prepare()) {
@@ -139,12 +144,9 @@ public class MyMediaPlayerAdapter {
 
     private boolean requestAudioFocus() {
         AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        // Request audio focus for playback, this registers the afChangeListener
-        return AudioManager.AUDIOFOCUS_REQUEST_GRANTED == am.requestAudioFocus(afChangeListener,
-                // Use the music stream.
-                AudioManager.STREAM_MUSIC,
-                // Request permanent focus.
-                AudioManager.AUDIOFOCUS_GAIN);
+        return AndroidUtils.isAndroidOreoOrHigher() ?
+                requestAudioFocusOreo(am)  :
+                requestAudioFocusBelowApi26(am);
     }
 
     private void setCurrentUri(Uri uri) {
@@ -166,6 +168,14 @@ public class MyMediaPlayerAdapter {
             }
         }
         return isPrepared;
+    }
+
+    private void setPlaybackParams() {
+        if (getMediaPlayer() != null && getMediaPlayer().getPlaybackParams() != null) {
+            PlaybackParams newParams = getMediaPlayer().getPlaybackParams();
+            newParams.setSpeed(currentPlaybackSpeed);
+            getMediaPlayer().setPlaybackParams(newParams);
+        }
     }
 
     public MediaPlayer getMediaPlayer() {
@@ -191,5 +201,36 @@ public class MyMediaPlayerAdapter {
 
     public int getCurrentState() {
         return currentState;
+    }
+
+    @TargetApi(Build.VERSION_CODES.FROYO)
+    @SuppressWarnings("deprecation")
+    private boolean requestAudioFocusBelowApi26( AudioManager am) {
+
+        // Request audio focus for playback, this registers the afChangeListener
+        return AudioManager.AUDIOFOCUS_REQUEST_GRANTED == am.requestAudioFocus(afChangeListener,
+                // Use the music stream.
+                AudioManager.STREAM_MUSIC,
+                // Request permanent focus.
+                AudioManager.AUDIOFOCUS_GAIN);
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private boolean requestAudioFocusOreo( AudioManager am) {
+
+        AudioAttributes.Builder audioAttributesBuilder = new AudioAttributes.Builder()
+                .setLegacyStreamType(AudioManager.STREAM_MUSIC)
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC);
+        AudioAttributes audioAttributes = audioAttributesBuilder.build();
+        // Request audio focus for playback, this registers the afChangeListener
+        AudioFocusRequest.Builder audioFocusRequestBuilder = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                .setOnAudioFocusChangeListener(afChangeListener)
+                .setAudioAttributes(audioAttributes)
+                .setAcceptsDelayedFocusGain(true)
+                .setWillPauseWhenDucked(false);
+
+        AudioFocusRequest audioFocusRequest = audioFocusRequestBuilder.build();
+        return AudioManager.AUDIOFOCUS_REQUEST_GRANTED == am.requestAudioFocus(audioFocusRequest);
     }
 }

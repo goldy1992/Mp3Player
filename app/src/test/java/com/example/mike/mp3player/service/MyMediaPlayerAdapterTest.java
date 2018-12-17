@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.service;
 
 import android.content.Context;
+import android.net.Uri;
 ;
 
 import org.junit.Before;
@@ -14,6 +15,8 @@ public class MyMediaPlayerAdapterTest {
 
     @Mock
     Context context;
+    @Mock
+    Uri uri;
 
     private MyMediaPlayerAdapter mediaPlayerAdapter;
 
@@ -26,7 +29,7 @@ public class MyMediaPlayerAdapterTest {
 
     @Test
     public void initTest() {
-        mediaPlayerAdapter.init();
+        mediaPlayerAdapter.init(uri);
         assertNotNull("MediaPlayer should not be null after initialisation", mediaPlayerAdapter.getMediaPlayer());
     }
 

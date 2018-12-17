@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.view.PlayPauseButton;
 import com.example.mike.mp3player.client.view.SeekerBar;
 import com.example.mike.mp3player.client.view.TimeCounter;
@@ -41,6 +42,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     private TextView artist;
     private TextView track;
     private TextView playbackSpeed;
+    private TextView duration;
     private PlayPauseButton playPauseButton;
     private SeekerBar seekerBar;
     private TimeCounter counter;
@@ -226,6 +228,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         this.seekerBar.setParentActivity(this);
         this.artist = this.findViewById(R.id.artistName);
         this.track = this.findViewById(R.id.trackName);
+        this.duration = this.findViewById(R.id.duration);
         this.playbackSpeed = this.findViewById(R.id.playbackSpeedValue);
     }
 
@@ -239,7 +242,9 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
     @Override
     public void setMetaData(MediaMetadataCompat metaData) {
-        getCounter().setDuration(metaData.getLong(MediaMetadata.METADATA_KEY_DURATION));
+        long duration = metaData.getLong(MediaMetadata.METADATA_KEY_DURATION);
+        getCounter().setDuration(duration);
+        this.duration.setText(TimerUtils.formatTime(duration));
         setArtist(metaData.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
         setTrack(metaData.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
         seekerBar.getMySeekerMediaControllerCallback().onMetadataChanged(metaData);

@@ -26,6 +26,7 @@ import android.util.Log;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaPlayerActivity;
+import com.example.mike.mp3player.commons.AndroidUtils;
 
 public class MyNotificationManager {
 
@@ -46,7 +47,7 @@ public class MyNotificationManager {
     }
 
     public void onDestroy() {
-        if (isAndroidOreoOrHigher()) {
+        if (AndroidUtils.isAndroidOreoOrHigher()) {
             notificationManager.deleteNotificationChannel(CHANNEL_ID);
         }
         Log.d(TAG, "onDestroy: ");
@@ -62,7 +63,7 @@ public class MyNotificationManager {
         boolean isPlaying = state.getState() == PlaybackStateCompat.STATE_PLAYING;
         MediaDescriptionCompat description = metadata.getDescription();
 
-        if (isAndroidOreoOrHigher()) {
+        if (AndroidUtils.isAndroidOreoOrHigher()) {
             return buildOreoNotification(token, isPlaying, description).build();
         }
         return buildNotification(token, isPlaying, description).build();
@@ -182,10 +183,6 @@ public class MyNotificationManager {
         } else {
             Log.d(TAG, "createChannel: Existing channel reused");
         }
-    }
-
-    private boolean isAndroidOreoOrHigher() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
     }
 
     private PendingIntent createContentIntent() {

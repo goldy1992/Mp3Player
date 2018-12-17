@@ -103,7 +103,9 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     }
 
     public void onMediaBrowserServiceConnected(MediaSessionCompat.Token token) {
-        this.mediaControllerWrapper = new MediaControllerWrapper(this, token);
+        if (this instanceof MainActivity) {
+            this.mediaControllerWrapper = new MediaControllerWrapper<MainActivity>(this, token);
+        }
         this.mediaControllerWrapper.init(null);
     }
 

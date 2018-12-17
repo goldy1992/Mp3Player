@@ -47,10 +47,9 @@ public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callb
             final int timeToEnd = (int) ((seekerBar.getMax() - progress) / state.getPlaybackSpeed());
 
             try {
-                float duration = timeToEnd * state.getPlaybackSpeed();
                 seekerBar.setValueAnimator(ValueAnimator.ofInt(progress, seekerBar.getMax())
-                    .setDuration((long)duration)); }
-                catch (IllegalArgumentException ex) {
+                    .setDuration(timeToEnd));
+                } catch (IllegalArgumentException ex) {
                 Log.e(getClass().getName(), "progress: " + progress + ", seekerbarMax: " + seekerBar.getMax());
                 throw new IllegalArgumentException(ex);
                     }
@@ -67,7 +66,6 @@ public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callb
         final int max = metadata != null
                 ? (int) metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
                 : 0;
-        seekerBar.setProgress(NO_PROGRESS);
         seekerBar.setMax(max);
     }
 
