@@ -3,29 +3,31 @@ package com.example.mike.mp3player;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
 import com.example.mike.mp3player.client.MediaPlayerActivity;
 import com.example.mike.mp3player.client.view.SeekerBar;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.Rule;
-import org.junit.jupiter.api.Test;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.junit.runner.Runner;
+import org.junit.runner.notification.RunNotifier;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
-@RunWith(AndroidJUnit4.class)
-public class MediaPlayerIntegrationTest {
+@RunWith(Runner.class)
+public class MediaPlayerIntegrationTest extends org.junit.runner.Runner {
 
     public static final String PACKAGE_NAME = "com.example.mike.mp3player";
     public static final String ANDROID_RESOURCE = "android.resource";
@@ -35,7 +37,7 @@ public class MediaPlayerIntegrationTest {
     public final ActivityTestRule activityTestRule = new ActivityTestRule(MediaPlayerActivity.class) {
         @Override
         public Intent getActivityIntent() {
-            Context targetContext = InstrumentationRegistry.getTargetContext();
+            Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
             Uri uri = Uri.parse(TEST_MP3_URL);
             Intent intent = new Intent(targetContext, MediaPlayerActivity.class);
             intent.putExtra("uri", uri);
@@ -66,4 +68,13 @@ public class MediaPlayerIntegrationTest {
         assertEquals(mediaPlayerActivity.getCounter().getView().getText().equals("00:00"), false);
     }
 
+    @Override
+    public Description getDescription() {
+        return null;
+    }
+
+    @Override
+    public void run(RunNotifier notifier) {
+
+    }
 }

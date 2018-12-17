@@ -51,14 +51,22 @@ dependencies {
 
     testImplementation "org.mockito:mockito-core:$MOCKITO_CORE_VERSION"
     testImplementation "org.powermock:powermock-module-junit4:$POWERMOCK_JUNIT4_VERSION"
+
     testImplementation "org.junit.jupiter:junit-jupiter-api:$JUNIT_VERSION"
-    testImplementation "org.powermock:powermock-core:$POWERMOCKITO_CORE_VERSION"
-    testImplementation "org.powermock:powermock-api-mockito2:$POWERMOCKITO_API_VERSION"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$JUNIT_VERSION"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:$JUNIT_VERSION"
+
+    testImplementation "org.jmockit:jmockit:1.44"
     testImplementation "org.robolectric:robolectric:$ROBOELECTRIC_VERSION"
-    androidTestImplementation "com.android.support:support-annotations:$SUPPORT_ANNOTATIONS_VERSION"
-    androidTestImplementation "com.android.support.test:runner:$TEST_RUNNER_VERSION"
-    androidTestImplementation "com.android.support.test:rules:$TEST_RULES_VERSION"
-    androidTestImplementation("com.android.support.test.espresso:espresso-core:$ESPRESSO_CORE_VERSION") {
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$JUNIT_VERSION"
+    androidTestImplementation "androidx.annotation:annotation:1.0.0"
+    androidTestImplementation "androidx.test:runner:1.1.0"
+    androidTestImplementation "androidx.test:rules:1.1.0"
+    androidTestImplementation "org.junit.jupiter:junit-jupiter-api:$JUNIT_VERSION"
+    androidTestImplementation "org.junit.jupiter:junit-jupiter-params:$JUNIT_VERSION"
+    androidTestImplementation "org.junit.jupiter:junit-jupiter-engine:$JUNIT_VERSION"
+
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.1.0") {
         exclude module: 'support-annotations'
     }
 }

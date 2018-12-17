@@ -3,19 +3,15 @@ package com.example.mike.mp3player.client;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.client.utils.TimerUtils;
-
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
+
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.assertEquals;
-import static org.powermock.api.mockito.PowerMockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({System.class, PlaybackStateWrapper.class, TimerUtils.class})
+
 public class TimerUtilsTest {
 
     private static final long CURRENT_TIME = 50000L;
@@ -53,13 +49,13 @@ public class TimerUtilsTest {
     }
     @Test
     public void calculateCurrentPlaybackPositionTest() {
-        PowerMockito.mockStatic(System.class);
+     //   PowerMockito.mockStatic(System.class);
         final long timeDiff = 5000L;
-        when(System.currentTimeMillis()).thenReturn(CURRENT_TIME);
+     //   when(System.currentTimeMillis()).thenReturn(CURRENT_TIME);
         PlaybackStateCompat playbackStateCompat =
                 new PlaybackStateCompat.Builder().setState(0, 40000L, 0f, 00).build();
         PlaybackStateWrapper playbackStateWrapper = new PlaybackStateWrapper(playbackStateCompat);
-        when(System.currentTimeMillis()).thenReturn(CURRENT_TIME + timeDiff);
+    //    when(System.currentTimeMillis()).thenReturn(CURRENT_TIME + timeDiff);
         long newPostion = TimerUtils.calculateCurrentPlaybackPosition(playbackStateWrapper);
 
         assertEquals(playbackStateCompat.getPosition() + timeDiff, newPostion);

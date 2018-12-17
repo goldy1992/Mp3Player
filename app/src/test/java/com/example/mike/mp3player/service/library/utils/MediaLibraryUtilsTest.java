@@ -22,7 +22,7 @@ public class MediaLibraryUtilsTest {
     public void tearDown() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void testAppendToPath() {
         assertEquals(EXPECTED_APPENDED_PATH, MediaLibraryUtils.appendToPath(PARENT_DIR, FILE) );
     }
