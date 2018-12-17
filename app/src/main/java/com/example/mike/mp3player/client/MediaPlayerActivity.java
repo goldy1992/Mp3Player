@@ -243,7 +243,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
     @Override
     public void setMetaData(MediaMetadataCompat metaData) {
-        long duration = metaData.getLong(MediaMetadata.METADATA_KEY_DURATION);
+        long duration = metaData.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
         getCounter().setDuration(duration);
         this.duration.setText(TimerUtils.formatTime(duration));
         setArtist(metaData.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));

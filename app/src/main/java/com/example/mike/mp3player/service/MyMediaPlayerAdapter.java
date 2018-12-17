@@ -25,6 +25,7 @@ public class MyMediaPlayerAdapter {
     private MediaPlayer mediaPlayer;
     private AudioManager.OnAudioFocusChangeListener afChangeListener;
     private Context context;
+    @PlaybackStateCompat.State
     private int currentState;
     /**
      * init playbackspeed to be paused i.e 0.0f

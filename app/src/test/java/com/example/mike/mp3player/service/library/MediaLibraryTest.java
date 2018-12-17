@@ -3,33 +3,26 @@ package com.example.mike.mp3player.service.library;
 import android.content.Context;
 import android.net.Uri;
 
-import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.mockito.Mock;
+
 import java.io.File;
 import java.io.IOException;
 
-import mockit.Expectations;
-import mockit.MockUp;
-import mockit.Mocked;
-import mockit.Tested;
-
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 
 public class MediaLibraryTest {
 
     private static final String MOCK_PATH = "PATH";
 
-    @Mocked
+    @Mock
     Context context;
-    @Mocked
+    @Mock
     Uri uri;
 
-    @Tested
     MediaLibrary mediaLibrary;
 
     @BeforeEach
@@ -59,32 +52,6 @@ public class MediaLibraryTest {
         File wav_1 = createFile(childDir, "test4.wav");
         File noneMp3_2 = createFile(childDir, "noExtension");
 
-//        new Expectations(){
-//            mediaLibrarygetMediaUri(String.valueOf(MOCK_PATH.hashCode())).equals(uri));
-//        }
-
-
-        MockUp mediaLibraryUtilsMock = new MockUp<MediaLibraryUtils>() {
-            @mockit.Mock
-            public File getExternalStorageDirectory() {
-                return rootDir;
-            }
-        };
-
-        MockUp uriMock = new MockUp<Uri>() {
-            @mockit.Mock
-            public Uri fromFile(File file)  {
-                return uri;
-            }
-            @mockit.Mock
-            public String getPath() {
-                return  MOCK_PATH;
-                }
-        };
-
-
-
-
         mediaLibrary.init();
         noneMp3_2.delete();
         wav_1.delete();
@@ -93,6 +60,8 @@ public class MediaLibraryTest {
         mp3_2.delete();
         mp3_1.delete();
         rootDir.delete();
+
+        assertEquals(mediaLibrary.getMediaUri(String.valueOf(MOCK_PATH.hashCode())), uri);
     }
 
     private File createFile(File parentDir, String name) throws IOException {
