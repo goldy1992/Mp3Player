@@ -10,6 +10,7 @@
     <string name="DEFAULT_TIME">00:00</string>
     <string name="DRAWER_OPEN">Drawer Open</string>
     <string name="DRAWER_CLOSED">Drawer Closed</string>
-    <string name="ARTIST_NAME">Atrist: </string>
+    <string name="ARTIST_NAME">Artist: </string>
     <string name="TRACK_NAME">Track: </string>
+    <string name="PLAYBACK_SPEED">Playback Speed</string>
 </resources>

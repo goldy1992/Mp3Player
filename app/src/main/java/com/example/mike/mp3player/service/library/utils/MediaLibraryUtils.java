@@ -67,6 +67,6 @@ public final class MediaLibraryUtils {
             }
             return title;
         }
-        return null;
+        return fileName.trim();
     }
 }

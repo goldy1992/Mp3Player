@@ -22,14 +22,56 @@
         android:layout_height="wrap_content"
         android:text="@string/TRACK_NAME" />
 
-    <TextView
-        android:id="@+id/timer"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/trackName"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/playbackSpeedTitle"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:text="@string/PLAYBACK_SPEED" />
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="decreasePlaybackSpeed"
+            app:srcCompat="@drawable/ic_baseline_remove_circle_24px" />
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="increasePlaybackSpeed"
+            app:srcCompat="@drawable/ic_baseline_add_circle_24px" />
+        <TextView
+            android:id="@+id/playbackSpeedValue"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1.00x" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/seekBar"
-        android:layout_alignParentStart="true"
-        android:text="@string/DEFAULT_TIME"
-        android:textAlignment="textEnd" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="@string/DEFAULT_TIME"
+            android:textAlignment="textStart" />
+
+        <TextView
+            android:id="@+id/timer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/DEFAULT_TIME"
+            android:textAlignment="textEnd" />
+    </LinearLayout>
 
     <com.example.mike.mp3player.client.view.SeekerBar
         android:id="@+id/seekBar"
@@ -66,7 +108,7 @@
                 android:scaleX="2"
                 android:scaleY="2"
                 android:onClick="skipToPrevious"
-                android:contentDescription="skip to previous button"
+                android:contentDescription="@string/SKIP_TO_PREVIOUS"
                 app:srcCompat="@drawable/ic_baseline_skip_previous_24px"
                 android:id="@+id/skip_to_previous"/>
 
@@ -95,7 +137,7 @@
                 android:scaleY="2"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:contentDescription="skip to next button"
+                android:contentDescription="@string/SKIP_TO_NEXT"
                 app:srcCompat="@drawable/ic_baseline_skip_next_24px"
                 android:id="@+id/skip_to_next"/>
 

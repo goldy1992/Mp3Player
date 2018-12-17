@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client.view;
 
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.client.PlaybackStateWrapper;
@@ -52,7 +53,7 @@ public class TimeCounter {
         getView().setText(formatTime(startTime));
         TimeCounterTimerTask timerTask = new TimeCounterTimerTask(this);
         cancelTimer();
-        timer.scheduleAtFixedRate(timerTask,0L, ONE_SECOND, TimeUnit.MILLISECONDS);
+        timer.scheduleAtFixedRate(timerTask,0L, getTimerFixedRate(), TimeUnit.MILLISECONDS);
         setRunning(true);
     }
 
@@ -76,6 +77,14 @@ public class TimeCounter {
         }
         setRunning(false);
 
+    }
+
+    private long getTimerFixedRate() {
+        /**
+         * e.g. slower playback speed => longer update time
+         * 0.95 playbacks speed => 1000ms / 0.95 = 1052
+         **/
+        return (long)(ONE_SECOND / currentSpeed);
     }
 
     public boolean isRunning() {

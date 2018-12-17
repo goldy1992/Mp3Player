@@ -60,6 +60,7 @@ public class MediaLibraryTest {
         PowerMockito.mockStatic(MediaLibraryUtils.class);
         PowerMockito.mockStatic(Uri.class);
         when(MediaLibraryUtils.getExternalStorageDirectory()).thenReturn(rootDir);
+        when(MediaLibraryUtils.getSongTitle(any(), any())).thenCallRealMethod();
         when(Uri.fromFile(any())).thenReturn(uri);
         when(uri.getPath()).thenReturn(MOCK_PATH);
 
