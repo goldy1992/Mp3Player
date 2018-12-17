@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 
 android {
-    compileSdkVersion OREO
+    compileSdkVersion PIE
 	buildToolsVersion BUILD_TOOLS_VERSION
     defaultConfig {
         applicationId "com.example.mike.mp3player"
         minSdkVersion MARSHMALLOW
-        targetSdkVersion 26
+        targetSdkVersion OREO
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class MediaLibraryUtilsTest {
 

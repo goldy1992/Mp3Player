@@ -1,6 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 ext{
     //dependencies
+    PIE = 28
     OREO = 26
     MARSHMALLOW = 23
     BUILD_TOOLS_VERSION = '28.0.3'
