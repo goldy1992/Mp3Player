@@ -169,7 +169,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
     public void setArtist(String artist) {
 
-        this.artist.setText(getString(R.string.ARTIST_NAME) + artist);
+        this.artist.setText(getString(R.string.ARTIST_NAME, artist));
     }
 
     public TextView getTrack() {
@@ -177,7 +177,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     }
 
     public void setTrack(String track) {
-        this.track.setText(getString(R.string.TRACK_NAME) + track);
+        this.track.setText(getString(R.string.TRACK_NAME, track));
     }
 
     private void initView() {
@@ -219,8 +219,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         getCounter().updateState(playbackState);
         float speed = playbackState.getPlaybackState().getPlaybackSpeed();
         if (speed > 0) {
-            String speedString = String.format(Locale.getDefault(), "%.2f", speed);
-            playbackSpeed.setText(speedString + "x");
+            playbackSpeed.setText(getString(R.string.PLAYBACK_SPEED_VALUE, speed));
         }
         seekerBar.getMySeekerMediaControllerCallback().onPlaybackStateChanged(playbackState);
     }
