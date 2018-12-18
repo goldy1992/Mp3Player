@@ -3,17 +3,30 @@ package com.example.mike.mp3player.service.library;
 import android.content.Context;
 import android.net.Uri;
 
+import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.powermock.api.mockito.PowerMockito.when;
 
-
+/**
+ * Tests run using JUnit 4!
+ */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({MediaLibraryUtils.class, Uri.class})
 public class MediaLibraryTest {
 
     private static final String MOCK_PATH = "PATH";
@@ -30,6 +43,11 @@ public class MediaLibraryTest {
         mediaLibrary = new MediaLibrary(context);
     }
 
+    @Before
+    public void oldSetup() {
+        setUp();
+    }
+
     @AfterEach
     public void tearDown () {
 
@@ -44,6 +62,12 @@ public class MediaLibraryTest {
     public void rootDirectoryTest() throws IOException {
         File rootDir = new File("rootDir");
         rootDir.mkdir();
+        PowerMockito.mockStatic(MediaLibraryUtils.class);
+        PowerMockito.mockStatic(Uri.class);
+        when(MediaLibraryUtils.getExternalStorageDirectory()).thenReturn(rootDir);
+        when(MediaLibraryUtils.getSongTitle(any(), any())).thenCallRealMethod();
+        when(Uri.fromFile(any())).thenReturn(uri);
+        when(uri.getPath()).thenReturn(MOCK_PATH);
 
         File mp3_1 = createFile(rootDir, "test1.mp3");
         File mp3_2 = createFile(rootDir, "test2.mp3");
@@ -51,6 +75,7 @@ public class MediaLibraryTest {
         File childDir = createDirectory(rootDir, "childDir");
         File wav_1 = createFile(childDir, "test4.wav");
         File noneMp3_2 = createFile(childDir, "noExtension");
+
 
         mediaLibrary.init();
         noneMp3_2.delete();
@@ -61,7 +86,7 @@ public class MediaLibraryTest {
         mp3_1.delete();
         rootDir.delete();
 
-        assertEquals(mediaLibrary.getMediaUri(String.valueOf(MOCK_PATH.hashCode())), uri);
+        assertTrue(mediaLibrary.getMediaUri(String.valueOf(MOCK_PATH.hashCode())).equals(uri));
     }
 
     private File createFile(File parentDir, String name) throws IOException {

@@ -3,13 +3,13 @@ package com.example.mike.mp3player.service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
-import androidx.media.MediaBrowserServiceCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
 
 import com.example.mike.mp3player.service.library.MediaLibrary;
 
 import java.util.List;
+import androidx.media.MediaBrowserServiceCompat;
 
 /**
  * Created by Mike on 24/09/2017.
