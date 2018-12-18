@@ -44,6 +44,10 @@ dependencies {
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.media:media:1.1.0-alpha01'
     implementation 'androidx.annotation:annotation:1.0.1'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    // https://mvnrepository.com/artifact/androidx.drawerlayout/drawerlayout
+    implementation 'androidx.drawerlayout:drawerlayout:1.0.0-alpha1'
+
 // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation group: 'commons-io', name: 'commons-io', version: COMMONS_IO_VERSION
     implementation group: 'commons-lang', name: 'commons-lang', version: COMMONS_LANG_VERSION

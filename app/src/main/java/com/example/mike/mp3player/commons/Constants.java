@@ -1,6 +1,8 @@
 package com.example.mike.mp3player.commons;
 
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.SparseArray;
+import android.util.SparseIntArray;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +21,8 @@ public final class Constants {
     public static final String INCREASE_PLAYBACK_SPEED = "INCREASE_PLAYBACK_SPEED";
     public static final String DECREASE_PLAYBACK_SPEED = "DECREASE_PLAYBACK_SPEED";
 
-    public static final Map<Integer, String> playbackStateDebugMap = new HashMap<>();
+
+    public static final SparseArray<String> playbackStateDebugMap = new SparseArray<>();
     static {
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_NONE, "STATE_NONE"); // 0
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_STOPPED, "STATE_STOPPED"); // 1

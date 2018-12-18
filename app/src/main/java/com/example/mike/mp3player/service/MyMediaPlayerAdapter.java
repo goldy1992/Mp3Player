@@ -98,7 +98,7 @@ public class MyMediaPlayerAdapter {
     }
 
     public void stop() {
-        if (!isPrepared) {
+        if (!isPrepared()) {
             return;
         }
         // unregisterReceiver(myNoisyAudioStreamReceiver);
@@ -110,7 +110,7 @@ public class MyMediaPlayerAdapter {
     }
 
     public void pause() {
-        if (!isPrepared) {
+        if (!isPrepared()) {
             return;
         }
         // Update metadata and state
@@ -159,7 +159,7 @@ public class MyMediaPlayerAdapter {
     }
 
     private boolean prepare() {
-        if (!isPrepared) {
+        if (!isPrepared()) {
             try {
                 getMediaPlayer().prepare();
                 currentState = PlaybackStateCompat.STATE_PAUSED;
@@ -168,7 +168,7 @@ public class MyMediaPlayerAdapter {
                 Log.e(LOG_TAG, ex.getMessage());
             }
         }
-        return isPrepared;
+        return isPrepared();
     }
 
     private void setPlaybackParams() {
@@ -233,5 +233,9 @@ public class MyMediaPlayerAdapter {
 
         AudioFocusRequest audioFocusRequest = audioFocusRequestBuilder.build();
         return AudioManager.AUDIOFOCUS_REQUEST_GRANTED == am.requestAudioFocus(audioFocusRequest);
+    }
+
+    public boolean isPrepared() {
+        return isPrepared;
     }
 }

@@ -4,13 +4,16 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.example.mike.mp3player.BuildConfig;
+import com.example.mike.mp3player.commons.Constants;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -22,16 +25,20 @@ import static org.junit.Assert.*;
 @Config(constants = BuildConfig.class)
 public class MediaPlayerActivityTest {
 
-    @Mock
-    Uri uri;
-
+    private static final String MOCK_MEDIA_ID = "MOCK_MEDIA_ID";
     MediaPlayerActivity mediaPlayerActivity;
 
     @BeforeEach
     public void setup() {
-      //  Intent intent = new Intent(RuntimeEnvironment.application.getApplicationContext(), MediaPlayerActivity.class);
-      //  intent.putExtra("uri", uri);
-       // mediaPlayerActivity = Robolectric.buildActivity(MediaPlayerActivity.class, intent).create().get();
+        MockitoAnnotations.initMocks(this);
+        Intent intent = new Intent(RuntimeEnvironment.application.getApplicationContext(), MediaPlayerActivity.class);
+        intent.putExtra(Constants.MEDIA_ID, MOCK_MEDIA_ID);
+        mediaPlayerActivity = Robolectric.buildActivity(MediaPlayerActivity.class, intent).create().get();
+    }
+
+    @Before
+    public void oldSetup() {
+        setup();
     }
 
     /**
@@ -40,7 +47,7 @@ public class MediaPlayerActivityTest {
      * THEN: i contains u.
      */
     @Test
-    public void onCreateSetUriTest() {
-       // assertEquals(uri, mediaPlayerActivity.getSelectedUri());
+    public void onCreateSetMediaIdTest() {
+       assertEquals(MOCK_MEDIA_ID, mediaPlayerActivity.getMediaId());
     }
 }
