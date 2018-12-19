@@ -197,8 +197,8 @@ public class MyMediaPlayerAdapter {
     }
 
     public MediaMetadataCompat.Builder getCurrentMetaData() {
-        return new MediaMetadataCompat.Builder()
-                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
+        MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
+        return builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
     }
 
     public int getCurrentTrackPosition() {
