@@ -1,4 +1,33 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath "de.mannodermaus.gradle.plugins:android-junit5:1.3.1.1"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+plugins {
+    id "org.jetbrains.intellij" version "0.3.12"
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+}
+
 ext{
     //dependencies
     PIE = 28
@@ -15,7 +44,9 @@ ext{
     COMMONS_COLLECTIONS4_VERSION = '4.2'
     MOCKITO_CORE_VERSION = '2.22.0'
     POWERMOCK_JUNIT4_VERSION = '2.0.0-beta.5'
-    JUNIT_VERSION = '5.3.2'
+    JUNIT_PLATFORM_LAUNCHER_VERSION = '1.3.2'
+    JUNIT4_VERSION = '4.12'
+    JUNIT5_VERSION = '5.3.2'
     POWERMOCKITO_CORE_VERSION = '2.0.0-beta.5'
     POWERMOCKITO_API_VERSION = '2.0.0-beta.5'
     ROBOELECTRIC_VERSION = '3.8'
@@ -25,31 +56,9 @@ ext{
 }
 
 
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        jcenter()
-
-    }
-
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-    }
-}
-
-task clean(type: Delete) {
+task customClean(type: Delete) {
     delete rootProject.buildDir
 }
+
+customClean.dependsOn clean

@@ -10,6 +10,8 @@ import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Build;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.VisibleForTesting;
+
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -27,9 +29,6 @@ public class MyMediaPlayerAdapter {
     private Context context;
     @PlaybackStateCompat.State
     private int currentState;
-    /**
-     * init playbackspeed to be paused i.e 0.0f
-     */
     private float currentPlaybackSpeed = PAUSED;
     private boolean isPrepared = false;
 
@@ -57,7 +56,7 @@ public class MyMediaPlayerAdapter {
             return;
         }
 
-        if (requestAudioFocus()) {
+        if (requestAudioFocus() || isPlaying()) {
             try {
                 // Set the session active  (and update metadata and state)
                 currentState = PlaybackStateCompat.STATE_PLAYING;
@@ -97,6 +96,12 @@ public class MyMediaPlayerAdapter {
         this.isPrepared = false;
     }
 
+    /**
+     * we never want to use stop when calling the player,
+     * because we can just reset the mediaplayer and when a song is
+     * prepared we can put it into the paused state.
+     */
+    @Deprecated
     public void stop() {
         if (!isPrepared()) {
             return;
@@ -110,7 +115,7 @@ public class MyMediaPlayerAdapter {
     }
 
     public void pause() {
-        if (!isPrepared()) {
+        if (!isPrepared() || isPaused()) {
             return;
         }
         // Update metadata and state
@@ -174,7 +179,7 @@ public class MyMediaPlayerAdapter {
     private void setPlaybackParams() {
         if (getMediaPlayer() != null && getMediaPlayer().getPlaybackParams() != null) {
             PlaybackParams newParams = getMediaPlayer().getPlaybackParams();
-            newParams.setSpeed(currentPlaybackSpeed);
+            newParams.setSpeed(getCurrentPlaybackSpeed());
             getMediaPlayer().setPlaybackParams(newParams);
         }
     }
@@ -192,7 +197,7 @@ public class MyMediaPlayerAdapter {
     }
 
     public MediaMetadataCompat.Builder getCurrentMetaData() {
-        return  new MediaMetadataCompat.Builder()
+        return new MediaMetadataCompat.Builder()
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
     }
 
@@ -237,5 +242,25 @@ public class MyMediaPlayerAdapter {
 
     public boolean isPrepared() {
         return isPrepared;
+    }
+
+    public boolean isPlaying() {
+        return currentState == PlaybackStateCompat.STATE_PLAYING;
+    }
+
+    public boolean isPaused() {
+        return currentState == PlaybackStateCompat.STATE_PAUSED;
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    public void setMediaPlayer(MediaPlayer mediaPlayer) {
+        this.mediaPlayer = mediaPlayer;
+    }
+
+    /**
+     * init playbackspeed to be paused i.e 0.0f
+     */
+    public float getCurrentPlaybackSpeed() {
+        return currentPlaybackSpeed;
     }
 }
