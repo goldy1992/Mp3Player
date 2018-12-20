@@ -7,13 +7,12 @@ import android.net.Uri;
 import com.example.mike.mp3player.client.MediaPlayerActivity;
 import com.example.mike.mp3player.client.view.SeekerBar;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.Before;
 import org.junit.Rule;
-import org.junit.runner.Description;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runner.Runner;
-import org.junit.runner.notification.RunNotifier;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
@@ -26,8 +25,8 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
-@RunWith(Runner.class)
-public class MediaPlayerIntegrationTest extends org.junit.runner.Runner {
+@RunWith(AndroidJUnit4.class)
+public class MediaPlayerIntegrationTest {
 
     public static final String PACKAGE_NAME = "com.example.mike.mp3player";
     public static final String ANDROID_RESOURCE = "android.resource";
@@ -46,12 +45,12 @@ public class MediaPlayerIntegrationTest extends org.junit.runner.Runner {
     };
 
 
-    @BeforeEach
+    @Before
     public void setup() {
 
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void testPlay() throws InterruptedException {
         MediaPlayerActivity mediaPlayerActivity = (MediaPlayerActivity) activityTestRule.getActivity();
         assertNotNull(mediaPlayerActivity);
@@ -68,13 +67,4 @@ public class MediaPlayerIntegrationTest extends org.junit.runner.Runner {
         assertEquals(mediaPlayerActivity.getCounter().getView().getText().equals("00:00"), false);
     }
 
-    @Override
-    public Description getDescription() {
-        return null;
-    }
-
-    @Override
-    public void run(RunNotifier notifier) {
-
-    }
 }

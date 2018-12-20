@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.service;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -18,8 +19,6 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.reflect.Whitebox;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
@@ -27,38 +26,17 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
-public class MyMediaPlayerAdapterTest {
-
-    @Mock
-    Context context;
-    @Mock
-    Uri uri;
-    @Mock
-    AudioManager audioManager;
-
-    private MyMediaPlayerAdapter mediaPlayerAdapter;
+public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
 
     @BeforeEach
-    public void setup()
-    {
+    public void setup() {
         MockitoAnnotations.initMocks(this);
-        mediaPlayerAdapter = createMediaPlayerAdapter();
-        mediaPlayerAdapter.init(uri);
-        assertNotNull("MediaPlayer should not be null after initialisation", mediaPlayerAdapter.getMediaPlayer());
-        assertTrue("Didn't initialise MediaPlayerAdapter correctly", mediaPlayerAdapter.isPrepared());
-        assertEquals("Initialised into the incorrect state", PlaybackStateCompat.STATE_PAUSED, mediaPlayerAdapter.getCurrentState());
+        super.setup();
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void testPlayFocusGrantedLowerThanOreo() {
-        when(context.getSystemService(Context.AUDIO_SERVICE)).thenReturn(audioManager);
-        when(audioManager.requestAudioFocus(any(), anyInt(), anyInt())).thenReturn( AudioManager.AUDIOFOCUS_REQUEST_GRANTED );
-        mediaPlayerAdapter.play();
-        assertEquals("playback should be playing but state is" + Constants.playbackStateDebugMap.get(mediaPlayerAdapter.getCurrentState()), PlaybackStateCompat.STATE_PLAYING, mediaPlayerAdapter.getCurrentState());
-    }
-
-    @Test
-    public void testPlayFocusGrantedOreo() {
         when(context.getSystemService(Context.AUDIO_SERVICE)).thenReturn(audioManager);
         when(audioManager.requestAudioFocus(any(), anyInt(), anyInt())).thenReturn( AudioManager.AUDIOFOCUS_REQUEST_GRANTED );
         mediaPlayerAdapter.play();
@@ -137,20 +115,6 @@ public class MyMediaPlayerAdapterTest {
 
     }
 
-    // must try to test this with roboelectric
-//    @Test
-//    public void testGetCurrentMetaData() {
-//        final int EXPECTED_DURATION = 1234;
-//        MediaPlayer mediaPlayer = mock (MediaPlayer.class);
-//        when(mediaPlayer.getDuration()).thenReturn(EXPECTED_DURATION);
-//        mediaPlayerAdapter.setMediaPlayer(mediaPlayer);
-//
-//        MediaMetadataCompat mediaMetadataCompat = mediaPlayerAdapter.getCurrentMetaData().build();
-//        long resultDuration = mediaMetadataCompat.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
-//        assertEquals(EXPECTED_DURATION, resultDuration);
-//
-//    }
-
     private void expectedSpeedChange(float originalSpeed, float changeInSpeed, float expectedNewSpeed) {
         MediaPlayer mediaPlayer = mock(MediaPlayer.class);
 
@@ -169,10 +133,4 @@ public class MyMediaPlayerAdapterTest {
         assertEquals("Incorrect playback speed, expected " + expectedNewSpeed + " but was " + mediaPlayerAdapter.getCurrentPlaybackSpeed(),
                 expectedNewSpeed, actualSpeed, delta);
     }
-
-
-    private MyMediaPlayerAdapter createMediaPlayerAdapter() {
-        return new MyMediaPlayerAdapter(context);
-    }
-
 }

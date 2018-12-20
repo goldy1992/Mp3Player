@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client;
 
+import android.app.Application;
 import android.content.Intent;
 
 import com.example.mike.mp3player.BuildConfig;
@@ -15,10 +16,12 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config()
 public class MediaPlayerActivityTest {
 
     private static final String MOCK_MEDIA_ID = "MOCK_MEDIA_ID";
@@ -27,7 +30,7 @@ public class MediaPlayerActivityTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        Intent intent = new Intent(RuntimeEnvironment.application.getApplicationContext(), MediaPlayerActivity.class);
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MediaPlayerActivity.class);
         intent.putExtra(Constants.MEDIA_ID, MOCK_MEDIA_ID);
         mediaPlayerActivity = Robolectric.buildActivity(MediaPlayerActivity.class, intent).create().get();
     }

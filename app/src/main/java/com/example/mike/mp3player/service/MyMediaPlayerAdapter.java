@@ -157,7 +157,7 @@ public class MyMediaPlayerAdapter {
 
     private void setCurrentUri(Uri uri) {
         try {
-            getMediaPlayer().setDataSource(context, uri);
+            getMediaPlayer().setDataSource(context, uri, null);
         } catch (IOException ex) {
             Log.e(LOG_TAG, ex.getStackTrace().toString());
         }
