@@ -5,12 +5,12 @@ import android.net.Uri;
 
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -22,7 +22,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-
+/**
+ * Tests run using JUnit 4!
+ */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MediaLibraryUtils.class, Uri.class})
 public class MediaLibraryTest {
@@ -38,8 +40,12 @@ public class MediaLibraryTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
         mediaLibrary = new MediaLibrary(context);
+    }
+
+    @Before
+    public void oldSetup() {
+        setUp();
     }
 
     @AfterEach
@@ -54,7 +60,6 @@ public class MediaLibraryTest {
 
     @Test
     public void rootDirectoryTest() throws IOException {
-
         File rootDir = new File("rootDir");
         rootDir.mkdir();
         PowerMockito.mockStatic(MediaLibraryUtils.class);

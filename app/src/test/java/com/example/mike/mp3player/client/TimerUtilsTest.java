@@ -3,10 +3,9 @@ package com.example.mike.mp3player.client;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.client.utils.TimerUtils;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -14,6 +13,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import static org.junit.Assert.assertEquals;
 import static org.powermock.api.mockito.PowerMockito.when;
 
+/**
+ * In order to use Powermockito, used old Test tag so that the class runs with JUnit4.
+ */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({System.class, PlaybackStateWrapper.class, TimerUtils.class})
 public class TimerUtilsTest {

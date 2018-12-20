@@ -30,7 +30,7 @@ public class TimeCounterTimerTaskTest {
       //  when(timeCounter.getView().setText().then(doNothing());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void runTest() {
         timeCounter.setDuration(DURATION);
         timeCounter.setCurrentTime(CURRENT_TIME);

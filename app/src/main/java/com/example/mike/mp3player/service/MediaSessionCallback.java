@@ -141,8 +141,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public void onStop() {
-        myMediaPlayerAdapter.stop();
-        serviceManager.stopService();
+        super.onStop();
     }
 
     @Override

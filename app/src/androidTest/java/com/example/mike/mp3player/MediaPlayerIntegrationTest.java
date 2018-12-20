@@ -3,23 +3,24 @@ package com.example.mike.mp3player;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
 import com.example.mike.mp3player.client.MediaPlayerActivity;
 import com.example.mike.mp3player.client.view.SeekerBar;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.Before;
 import org.junit.Rule;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
@@ -35,7 +36,7 @@ public class MediaPlayerIntegrationTest {
     public final ActivityTestRule activityTestRule = new ActivityTestRule(MediaPlayerActivity.class) {
         @Override
         public Intent getActivityIntent() {
-            Context targetContext = InstrumentationRegistry.getTargetContext();
+            Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
             Uri uri = Uri.parse(TEST_MP3_URL);
             Intent intent = new Intent(targetContext, MediaPlayerActivity.class);
             intent.putExtra("uri", uri);
@@ -44,12 +45,12 @@ public class MediaPlayerIntegrationTest {
     };
 
 
-    @BeforeEach
+    @Before
     public void setup() {
 
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void testPlay() throws InterruptedException {
         MediaPlayerActivity mediaPlayerActivity = (MediaPlayerActivity) activityTestRule.getActivity();
         assertNotNull(mediaPlayerActivity);

@@ -1,13 +1,10 @@
 package com.example.mike.mp3player.client;
 
 import android.content.Intent;
-import android.media.MediaMetadata;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,11 +15,6 @@ import com.example.mike.mp3player.client.view.SeekerBar;
 import com.example.mike.mp3player.client.view.TimeCounter;
 import com.example.mike.mp3player.commons.Constants;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.Locale;
 
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
@@ -38,7 +30,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
     private final String STOP = "Stop";
     private MediaControllerWrapper<MediaPlayerActivity> mediaControllerWrapper;
-    private Uri selectedUri;
     private String mediaId;
     private TextView artist;
     private TextView track;
@@ -55,7 +46,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         super.onCreate(savedInstanceState);
         initView();
         token = (MediaSessionCompat.Token) retrieveIntentInfo(Constants.MEDIA_SESSION);
-        mediaId = (String) retrieveIntentInfo(Constants.MEDIA_ID);
+        setMediaId((String) retrieveIntentInfo(Constants.MEDIA_ID));
         PlaybackStateWrapper playbackStateWrapper = (PlaybackStateWrapper) retrieveIntentInfo(Constants.PLAYBACK_STATE);
         if (playbackStateWrapper == null) {
             PlaybackStateCompat.Builder playbackStateCompat = new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PAUSED, 0L, 0F);
@@ -70,7 +61,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
                 // Display the initial state
                 Bundle extras = new Bundle();
                 extras.putString(PLAYLIST, PLAY_ALL);
-                mediaControllerWrapper.prepareFromMediaId(mediaId, extras);
+                mediaControllerWrapper.prepareFromMediaId(getMediaId(), extras);
             } else {
                 setMetaData(mediaControllerWrapper.getMetaData());
                 setPlaybackState(mediaControllerWrapper.getCurrentPlaybackState());
@@ -87,7 +78,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         super.onStart();
         if (getIntent() != null && getIntent().getExtras() != null) {
             token = (MediaSessionCompat.Token) getIntent().getExtras().get(Constants.MEDIA_SESSION);
-            mediaId = (String) getIntent().getExtras().get(Constants.MEDIA_ID);
+            setMediaId((String) getIntent().getExtras().get(Constants.MEDIA_ID));
         }
     }
 
@@ -106,14 +97,11 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     @Override
     public void onPause() {
         super.onPause();
-        //saveState();
-        //   onSaveInstanceState();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        retrieveState();
     }
 
     @Override
@@ -166,14 +154,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         } // if
     }
 
-    public Uri getSelectedUri() {
-        return this.selectedUri;
-    }
-
-    public void setSelectedUri(Uri selectedUri) {
-        this.selectedUri = selectedUri;
-    }
-
     public PlayPauseButton getPlayPauseButton() {
         return playPauseButton;
     }
@@ -182,24 +162,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         return counter;
     }
 
-    private void retrieveState() {
-        try {
-            File f = new File(getApplicationContext().getCacheDir(), "mediaPlayerState");
-            if (null != f) {
-                return;
-            }
-            FileInputStream fileInputStream = new FileInputStream(f);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            this.selectedUri = (Uri) objectInputStream.readObject();
-            getApplicationContext().deleteFile("mediaPlayerState");
-        } catch (FileNotFoundException e) {
-            Log.e(LOG_TAG, e.getMessage());
-        } catch (IOException e) {
-            Log.e(LOG_TAG, e.getMessage());
-        } catch (ClassNotFoundException e) {
-            Log.e(LOG_TAG, e.getMessage());
-        }
-    }
 
     public TextView getArtist() {
         return artist;
@@ -207,7 +169,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
     public void setArtist(String artist) {
 
-        this.artist.setText(getString(R.string.ARTIST_NAME) + artist);
+        this.artist.setText(getString(R.string.ARTIST_NAME, artist));
     }
 
     public TextView getTrack() {
@@ -215,7 +177,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     }
 
     public void setTrack(String track) {
-        this.track.setText(getString(R.string.TRACK_NAME) + track);
+        this.track.setText(getString(R.string.TRACK_NAME, track));
     }
 
     private void initView() {
@@ -243,7 +205,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
     @Override
     public void setMetaData(MediaMetadataCompat metaData) {
-        long duration = metaData.getLong(MediaMetadata.METADATA_KEY_DURATION);
+        long duration = metaData.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
         getCounter().setDuration(duration);
         this.duration.setText(TimerUtils.formatTime(duration));
         setArtist(metaData.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
@@ -257,8 +219,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         getCounter().updateState(playbackState);
         float speed = playbackState.getPlaybackState().getPlaybackSpeed();
         if (speed > 0) {
-            String speedString = String.format(Locale.getDefault(), "%.2f", speed);
-            playbackSpeed.setText(speedString + "x");
+            playbackSpeed.setText(getString(R.string.PLAYBACK_SPEED_VALUE, speed));
         }
         seekerBar.getMySeekerMediaControllerCallback().onPlaybackStateChanged(playbackState);
     }
@@ -269,6 +230,14 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     }
 
     private boolean playNewSong() {
-        return null != mediaId;
+        return null != getMediaId();
+    }
+
+    public String getMediaId() {
+        return mediaId;
+    }
+
+    public void setMediaId(String mediaId) {
+        this.mediaId = mediaId;
     }
 }
