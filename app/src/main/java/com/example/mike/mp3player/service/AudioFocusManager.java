@@ -3,6 +3,7 @@ package com.example.mike.mp3player.service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 
 import androidx.media.AudioAttributesCompat;
@@ -14,12 +15,15 @@ public class AudioFocusManager extends BroadcastReceiver
 
     public static final float MEDIA_VOLUME_DEFAULT = 1.0f;
     private static final float MEDIA_VOLUME_DUCK = 0.2f;
+    private static final IntentFilter AUDIO_NOISY_INTENT_FILTER =
+            new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 
     MyMediaPlayerAdapter player;
     AudioManager audioManager;
     Context context;
 
     boolean playWhenAudioFocusGained = false;
+    private boolean audioNoisyReceiverRegistered = false;
 
     public AudioFocusManager(Context context, MyMediaPlayerAdapter player) {
         this.context = context;
@@ -102,6 +106,20 @@ public class AudioFocusManager extends BroadcastReceiver
             if (player.isPlaying()) {
                 player.pause();
             }
+        }
+    }
+
+    public void registerAudioNoisyReceiver() {
+        if (!audioNoisyReceiverRegistered) {
+            context.registerReceiver(this, AUDIO_NOISY_INTENT_FILTER);
+            audioNoisyReceiverRegistered = true;
+        }
+    }
+
+    public void unregisterAudioNoisyReceiver() {
+        if (audioNoisyReceiverRegistered) {
+            context.unregisterReceiver(this);
+            audioNoisyReceiverRegistered = false;
         }
     }
 }
