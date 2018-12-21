@@ -15,8 +15,6 @@ import com.example.mike.mp3player.client.view.SeekerBar;
 import com.example.mike.mp3player.client.view.TimeCounter;
 import com.example.mike.mp3player.commons.Constants;
 
-import java.util.Locale;
-
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
@@ -183,6 +181,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     private void initView() {
         setContentView(R.layout.activity_media_player);
         this.playPauseButton = this.findViewById(R.id.playPauseButton);
+        this.playPauseButton.setOnClickListener((View view) -> playPause(view));
         TextView counterView = this.findViewById(R.id.timer);
         this.counter = new TimeCounter(counterView);
         this.seekerBar = this.findViewById(R.id.seekBar);
