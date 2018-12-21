@@ -22,14 +22,19 @@ import java.io.IOException;
 
 public class MyMediaPlayerAdapter {
 
-    private static final float PAUSED = 0.0f;
+    private static final float DEFAULT_SPEED = 1.0f;
+    private static final float MINIMUM_PLAYBACK_SPEED = 0.25f;
+    private static final float MAXIMUM_PLAYBACK_SPEED = 2f;
     private static final String LOG_TAG = "MEDIA_PLAYER_ADAPTER";
     private MediaPlayer mediaPlayer;
     private AudioManager.OnAudioFocusChangeListener afChangeListener;
     private Context context;
+    /**
+     * initialise to paused so the player doesn't start playing immediately
+     */
     @PlaybackStateCompat.State
-    private int currentState;
-    private float currentPlaybackSpeed = PAUSED;
+    private int currentState = PlaybackStateCompat.STATE_PAUSED;;
+    private float currentPlaybackSpeed = DEFAULT_SPEED;
     private boolean isPrepared = false;
 
     public MyMediaPlayerAdapter(Context context) {
@@ -62,6 +67,7 @@ public class MyMediaPlayerAdapter {
                 currentState = PlaybackStateCompat.STATE_PLAYING;
                 // start the player (custom call)
                 getMediaPlayer().start();
+                updatePlaybackParameters();
                 //            // Register BECOME_NOISY BroadcastReceiver
 //            registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
             } catch (Exception e) {
@@ -77,7 +83,7 @@ public class MyMediaPlayerAdapter {
                 resetPlayer();
                 setCurrentUri(uri);
                 prepare();
-                setPlaybackParams();
+                updatePlaybackParameters();
                 return true;
             } catch (Exception ex) {
                 Log.e(LOG_TAG, ex.getMessage());
@@ -126,18 +132,18 @@ public class MyMediaPlayerAdapter {
     public void increaseSpeed(float by) {
         float currentSpeed = getMediaPlayer().getPlaybackParams().getSpeed();
         float newSpeed = currentSpeed + by;
-        if (newSpeed <= 2f) {
+        if (newSpeed <= MAXIMUM_PLAYBACK_SPEED) {
             this.currentPlaybackSpeed = newSpeed;
-            setPlaybackParams();
+            updatePlaybackParameters();
         }
     }
 
     public void decreaseSpeed(float by) {
         float currentSpeed = getMediaPlayer().getPlaybackParams().getSpeed();
         float newSpeed = currentSpeed - by;
-        if (newSpeed >= 0.25f) {
+        if (newSpeed >= MINIMUM_PLAYBACK_SPEED) {
             this.currentPlaybackSpeed = newSpeed;
-            setPlaybackParams();
+            updatePlaybackParameters();
         }
     }
 
@@ -176,11 +182,13 @@ public class MyMediaPlayerAdapter {
         return isPrepared();
     }
 
-    private void setPlaybackParams() {
-        if (getMediaPlayer() != null && getMediaPlayer().getPlaybackParams() != null) {
-            PlaybackParams newParams = getMediaPlayer().getPlaybackParams();
-            newParams.setSpeed(getCurrentPlaybackSpeed());
-            getMediaPlayer().setPlaybackParams(newParams);
+    private void updatePlaybackParameters() {
+        if (currentState == PlaybackStateCompat.STATE_PLAYING) {
+            if (getMediaPlayer() != null && getMediaPlayer().getPlaybackParams() != null) {
+                PlaybackParams newParams = getMediaPlayer().getPlaybackParams();
+                newParams.setSpeed(getCurrentPlaybackSpeed());
+                getMediaPlayer().setPlaybackParams(newParams);
+            }
         }
     }
 
@@ -192,7 +200,7 @@ public class MyMediaPlayerAdapter {
         return new PlaybackStateCompat.Builder()
                 .setState(getCurrentState(),
                         mediaPlayer.getCurrentPosition(),
-                        mediaPlayer.getPlaybackParams().getSpeed())
+                        getCurrentPlaybackSpeed())
                 .build();
     }
 
