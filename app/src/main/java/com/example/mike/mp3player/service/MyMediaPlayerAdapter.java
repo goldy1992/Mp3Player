@@ -23,6 +23,8 @@ import java.io.IOException;
 public class MyMediaPlayerAdapter {
 
     private static final float DEFAULT_SPEED = 1.0f;
+    private static final float MINIMUM_PLAYBACK_SPEED = 0.25f;
+    private static final float MAXIMUM_PLAYBACK_SPEED = 2f;
     private static final String LOG_TAG = "MEDIA_PLAYER_ADAPTER";
     private MediaPlayer mediaPlayer;
     private AudioManager.OnAudioFocusChangeListener afChangeListener;
@@ -130,7 +132,7 @@ public class MyMediaPlayerAdapter {
     public void increaseSpeed(float by) {
         float currentSpeed = getMediaPlayer().getPlaybackParams().getSpeed();
         float newSpeed = currentSpeed + by;
-        if (newSpeed <= 2f) {
+        if (newSpeed <= MAXIMUM_PLAYBACK_SPEED) {
             this.currentPlaybackSpeed = newSpeed;
             updatePlaybackParameters();
         }
@@ -139,7 +141,7 @@ public class MyMediaPlayerAdapter {
     public void decreaseSpeed(float by) {
         float currentSpeed = getMediaPlayer().getPlaybackParams().getSpeed();
         float newSpeed = currentSpeed - by;
-        if (newSpeed >= 0.25f) {
+        if (newSpeed >= MINIMUM_PLAYBACK_SPEED) {
             this.currentPlaybackSpeed = newSpeed;
             updatePlaybackParameters();
         }
