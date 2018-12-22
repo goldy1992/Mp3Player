@@ -185,9 +185,11 @@ public class MyMediaPlayerAdapter {
     private void updatePlaybackParameters() {
         if (currentState == PlaybackStateCompat.STATE_PLAYING) {
             if (getMediaPlayer() != null && getMediaPlayer().getPlaybackParams() != null) {
-                PlaybackParams newParams = getMediaPlayer().getPlaybackParams();
-                newParams.setSpeed(getCurrentPlaybackSpeed());
-                getMediaPlayer().setPlaybackParams(newParams);
+                if (validSpeed(currentPlaybackSpeed)) {
+                    PlaybackParams newparams = mediaPlayer.getPlaybackParams().setSpeed(currentPlaybackSpeed);
+                    mediaPlayer.setPlaybackParams(newparams);
+                    //logPlaybackParams(mediaPlayer.getPlaybackParams());
+                }
             }
         }
     }
@@ -270,5 +272,28 @@ public class MyMediaPlayerAdapter {
      */
     public float getCurrentPlaybackSpeed() {
         return currentPlaybackSpeed;
+    }
+
+    private boolean validSpeed(float speed) {
+        return speed >= MINIMUM_PLAYBACK_SPEED &&
+                speed <= MAXIMUM_PLAYBACK_SPEED;
+    }
+
+    private void logPlaybackParams(PlaybackParams playbackParams) {
+        StringBuilder sb = new StringBuilder();
+
+        String pitch = "pitch: " + playbackParams.getPitch()+ "\n";
+        String audioFallbackMode = "audiofallbackmode: ";
+        switch (playbackParams.getAudioFallbackMode()) {
+            case PlaybackParams.AUDIO_FALLBACK_MODE_DEFAULT: audioFallbackMode +=  "AUDIO_FALLBACK_MODE_DEFAULT"; break;
+            case PlaybackParams.AUDIO_FALLBACK_MODE_FAIL: audioFallbackMode +=  "AUDIO_FALLBACK_MODE_FAIL"; break;
+            case PlaybackParams.AUDIO_FALLBACK_MODE_MUTE: audioFallbackMode +=  "AUDIO_FALLBACK_MODE_MUTE"; break;
+            default: audioFallbackMode = "none";
+        }
+        audioFallbackMode += "\n";
+        String speed = "speed: " + playbackParams.getSpeed() + "\n";
+
+        String log = sb.append(pitch).append(audioFallbackMode).append(speed).toString();
+        Log.d(LOG_TAG, log);
     }
 }

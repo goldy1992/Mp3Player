@@ -72,6 +72,7 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         initMediaBrowserService();
         setContentView(R.layout.activity_main);
         playPauseButton = findViewById(R.id.mainActivityPlayPauseButton);
+        playPauseButton.setOnClickListener((View view) -> playPause(view));
         this.drawerLayout = findViewById(R.id.drawer_layout);
 
         MyDrawerListener myDrawerListener = new MyDrawerListener();
@@ -93,7 +94,7 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
 
                         return true;
                     }
-                });
+                 });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

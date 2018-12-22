@@ -72,7 +72,6 @@
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:scaleType="center"
-                        android:onClick="playPause"
                         android:layout_marginLeft="40dp"
                         android:layout_marginRight="40dp"
                         android:saveEnabled="true"

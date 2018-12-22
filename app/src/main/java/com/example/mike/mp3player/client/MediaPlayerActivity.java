@@ -183,7 +183,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         this.playPauseButton = this.findViewById(R.id.playPauseButton);
         this.playPauseButton.setOnClickListener((View view) -> playPause(view));
         TextView counterView = this.findViewById(R.id.timer);
-        this.counter = new TimeCounter(counterView);
+        this.counter = new TimeCounter(this, counterView);
         this.seekerBar = this.findViewById(R.id.seekBar);
         this.seekerBar.init();
         this.seekerBar.setTimeCounter(counter);
@@ -218,9 +218,14 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         getCounter().updateState(playbackState);
         float speed = playbackState.getPlaybackState().getPlaybackSpeed();
         if (speed > 0) {
-            playbackSpeed.setText(getString(R.string.PLAYBACK_SPEED_VALUE, speed));
+            updatePlaybackspeedText(speed);
         }
         seekerBar.getMySeekerMediaControllerCallback().onPlaybackStateChanged(playbackState);
+    }
+
+    private void updatePlaybackspeedText(float speed) {
+        Runnable r = () ->  playbackSpeed.setText(getString(R.string.PLAYBACK_SPEED_VALUE, speed));
+        runOnUiThread(r);
     }
 
     @Override
