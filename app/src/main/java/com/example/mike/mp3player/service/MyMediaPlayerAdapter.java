@@ -1,22 +1,12 @@
 package com.example.mike.mp3player.service;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.media.AudioAttributes;
-import android.media.AudioFocusRequest;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.net.Uri;
-import android.os.Build;
-import androidx.annotation.RequiresApi;
-import androidx.annotation.VisibleForTesting;
-
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
-
-import com.example.mike.mp3player.commons.AndroidUtils;
 
 import java.io.IOException;
 
@@ -27,7 +17,7 @@ public class MyMediaPlayerAdapter {
     private static final float MAXIMUM_PLAYBACK_SPEED = 2f;
     private static final String LOG_TAG = "MEDIA_PLAYER_ADAPTER";
     private MediaPlayer mediaPlayer;
-    private AudioManager.OnAudioFocusChangeListener afChangeListener;
+    private AudioFocusManager audioFocusManager;
     private Context context;
     /**
      * initialise to paused so the player doesn't start playing immediately
@@ -48,12 +38,8 @@ public class MyMediaPlayerAdapter {
     public void init(Uri uri) {
         resetPlayer();
         prepareFromUri(uri);
-
-        this.afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
-            @Override
-            public void onAudioFocusChange(int i) {
-            }
-        };
+        audioFocusManager = new AudioFocusManager(context, this);
+        audioFocusManager.init();
     }
 
     public void play() {
@@ -61,7 +47,7 @@ public class MyMediaPlayerAdapter {
             return;
         }
 
-        if (requestAudioFocus() || isPlaying()) {
+        if (audioFocusManager.requestAudioFocus() || isPlaying()) {
             try {
                 // Set the session active  (and update metadata and state)
                 currentState = PlaybackStateCompat.STATE_PLAYING;
@@ -112,7 +98,6 @@ public class MyMediaPlayerAdapter {
         if (!isPrepared()) {
             return;
         }
-        // unregisterReceiver(myNoisyAudioStreamReceiver);
         currentState= PlaybackStateCompat.STATE_STOPPED;
         isPrepared = false;
         getMediaPlayer().stop();
@@ -126,6 +111,7 @@ public class MyMediaPlayerAdapter {
         }
         // Update metadata and state
         getMediaPlayer().pause();
+        audioFocusManager.playbackPaused();
         currentState = PlaybackStateCompat.STATE_PAUSED;
     }
 
@@ -152,13 +138,6 @@ public class MyMediaPlayerAdapter {
             return;
         }
         getMediaPlayer().seekTo((int)position);
-    }
-
-    private boolean requestAudioFocus() {
-        AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        return AndroidUtils.isAndroidOreoOrHigher() ?
-                requestAudioFocusOreo(am)  :
-                requestAudioFocusBelowApi26(am);
     }
 
     private void setCurrentUri(Uri uri) {
@@ -217,39 +196,14 @@ public class MyMediaPlayerAdapter {
         return currentState;
     }
 
-    @TargetApi(Build.VERSION_CODES.FROYO)
-    @SuppressWarnings("deprecation")
-    private boolean requestAudioFocusBelowApi26( AudioManager am) {
-
-        // Request audio focus for playback, this registers the afChangeListener
-        return AudioManager.AUDIOFOCUS_REQUEST_GRANTED == am.requestAudioFocus(afChangeListener,
-                // Use the music stream.
-                AudioManager.STREAM_MUSIC,
-                // Request permanent focus.
-                AudioManager.AUDIOFOCUS_GAIN);
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private boolean requestAudioFocusOreo( AudioManager am) {
-
-        AudioAttributes.Builder audioAttributesBuilder = new AudioAttributes.Builder()
-                .setLegacyStreamType(AudioManager.STREAM_MUSIC)
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC);
-        AudioAttributes audioAttributes = audioAttributesBuilder.build();
-        // Request audio focus for playback, this registers the afChangeListener
-        AudioFocusRequest.Builder audioFocusRequestBuilder = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
-                .setOnAudioFocusChangeListener(afChangeListener)
-                .setAudioAttributes(audioAttributes)
-                .setAcceptsDelayedFocusGain(true)
-                .setWillPauseWhenDucked(false);
-
-        AudioFocusRequest audioFocusRequest = audioFocusRequestBuilder.build();
-        return AudioManager.AUDIOFOCUS_REQUEST_GRANTED == am.requestAudioFocus(audioFocusRequest);
-    }
-
     public boolean isPrepared() {
         return isPrepared;
+    }
+
+    public void setVolume(float volume) {
+        if (mediaPlayer != null) {
+            mediaPlayer.setVolume(volume, volume);
+        }
     }
 
     public boolean isPlaying() {
@@ -260,14 +214,6 @@ public class MyMediaPlayerAdapter {
         return currentState == PlaybackStateCompat.STATE_PAUSED;
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    public void setMediaPlayer(MediaPlayer mediaPlayer) {
-        this.mediaPlayer = mediaPlayer;
-    }
-
-    /**
-     * init playbackspeed to be paused i.e 0.0f
-     */
     public float getCurrentPlaybackSpeed() {
         return currentPlaybackSpeed;
     }
