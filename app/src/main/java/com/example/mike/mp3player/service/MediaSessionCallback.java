@@ -1,9 +1,12 @@
 package com.example.mike.mp3player.service;
+
 import android.app.Notification;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompat;
@@ -38,6 +41,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private MediaSessionCompat mediaSession;
     private MyNotificationManager myNotificationManager;
     private MediaLibrary mediaLibrary;
+    private ReceiveBroadcasts broadcastReceiver;
+    private Context context;
     private static final String LOG_TAG = "MEDIA_SESSION_CALLBACK";
 
     public MediaSessionCallback(Context context, MyNotificationManager myNotificationManager,
@@ -49,6 +54,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.myNotificationManager = myNotificationManager;
         this.playbackManager = new PlaybackManager();
         this.myMediaPlayerAdapter = new MyMediaPlayerAdapter(context);
+        this.broadcastReceiver = new ReceiveBroadcasts();
+        this.context = context;
     }
 
     public void init() {
@@ -63,6 +70,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public void onPlay() {
+        broadcastReceiver.registerAudioNoisyReceiver();
         myMediaPlayerAdapter.play();
         updateMediaSession();
         serviceManager.startService(prepareNotification());
@@ -134,6 +142,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         super.onPlayFromUri(uri, bundle);
         myMediaPlayerAdapter.prepareFromUri(uri);
         myMediaPlayerAdapter.play();
+        broadcastReceiver.registerAudioNoisyReceiver();
 
         serviceManager.startMediaSession();
         updateMediaSession();
@@ -146,6 +155,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public void onPause() {
+        broadcastReceiver.unregisterAudioNoisyReceiver();
         myMediaPlayerAdapter.pause();
         // unregister BECOME_NOISY BroadcastReceiver
 //        unregisterReceiver(myNoisyAudioStreamReceiver, intentFilter);
@@ -224,5 +234,36 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             myMediaPlayerAdapter.play();
         }
         updateMediaSession();
+    }
+
+
+    private class ReceiveBroadcasts extends BroadcastReceiver {
+        private boolean audioNoisyReceiverRegistered;
+        private final IntentFilter AUDIO_NOISY_INTENT_FILTER =
+                new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
+                if (myMediaPlayerAdapter.isPlaying()) {
+                    myMediaPlayerAdapter.pause();
+                    updateMediaSession();
+                }
+            }
+        }
+
+        public void registerAudioNoisyReceiver() {
+            if (!audioNoisyReceiverRegistered) {
+                context.registerReceiver(this, AUDIO_NOISY_INTENT_FILTER);
+                audioNoisyReceiverRegistered = true;
+            }
+        }
+
+        public void unregisterAudioNoisyReceiver() {
+            if (audioNoisyReceiverRegistered) {
+                context.unregisterReceiver(this);
+                audioNoisyReceiverRegistered = false;
+            }
+        }
     }
 }

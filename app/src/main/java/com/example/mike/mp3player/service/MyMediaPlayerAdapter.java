@@ -51,7 +51,6 @@ public class MyMediaPlayerAdapter {
             try {
                 // Set the session active  (and update metadata and state)
                 currentState = PlaybackStateCompat.STATE_PLAYING;
-                audioFocusManager.registerAudioNoisyReceiver();
                 // start the player (custom call)
                 getMediaPlayer().start();
                 updatePlaybackParameters();
@@ -101,7 +100,6 @@ public class MyMediaPlayerAdapter {
         }
         currentState= PlaybackStateCompat.STATE_STOPPED;
         isPrepared = false;
-        audioFocusManager.unregisterAudioNoisyReceiver();
         getMediaPlayer().stop();
         resetPlayer();
         // Take the service out of the foreground
@@ -112,7 +110,6 @@ public class MyMediaPlayerAdapter {
             return;
         }
         // Update metadata and state
-        audioFocusManager.unregisterAudioNoisyReceiver();
         getMediaPlayer().pause();
         audioFocusManager.playbackPaused();
         currentState = PlaybackStateCompat.STATE_PAUSED;
