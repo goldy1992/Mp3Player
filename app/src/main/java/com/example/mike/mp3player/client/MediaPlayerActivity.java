@@ -6,6 +6,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
@@ -14,6 +15,9 @@ import com.example.mike.mp3player.client.view.PlayPauseButton;
 import com.example.mike.mp3player.client.view.SeekerBar;
 import com.example.mike.mp3player.client.view.TimeCounter;
 import com.example.mike.mp3player.commons.Constants;
+
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageButton;
 
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
@@ -34,6 +38,10 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     private TextView playbackSpeed;
     private TextView duration;
     private PlayPauseButton playPauseButton;
+    private ImageButton skipToPreviousButton;
+    private ImageButton skipToNextButton;
+    private AppCompatImageButton increasePlaybackSpeedButton;
+    private AppCompatImageButton decreasePlaybackSpeedButton;
     private SeekerBar seekerBar;
     private TimeCounter counter;
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
@@ -182,6 +190,19 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         setContentView(R.layout.activity_media_player);
         this.playPauseButton = this.findViewById(R.id.playPauseButton);
         this.playPauseButton.setOnClickListener((View view) -> playPause(view));
+
+        this.skipToPreviousButton = this.findViewById(R.id.skip_to_previous);
+        this.skipToPreviousButton.setOnClickListener((View view) -> skipToPrevious(view));
+
+        this.skipToNextButton = this.findViewById(R.id.skip_to_next);
+        this.skipToNextButton.setOnClickListener((View view) -> skipToNext(view));
+
+        this.decreasePlaybackSpeedButton = this.findViewById(R.id.decreasePlaybackSpeed);
+        this.decreasePlaybackSpeedButton.setOnClickListener((View view) -> decreasePlaybackSpeed(view));
+
+        this.increasePlaybackSpeedButton = this.findViewById(R.id.increasePlaybackSpeed);
+        this.increasePlaybackSpeedButton.setOnClickListener((View view) -> increasePlaybackSpeed(view));
+
         TextView counterView = this.findViewById(R.id.timer);
         this.counter = new TimeCounter(this, counterView);
         this.seekerBar = this.findViewById(R.id.seekBar);

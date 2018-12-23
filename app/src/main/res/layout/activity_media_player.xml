@@ -34,14 +34,14 @@
             android:layout_height="wrap_content"
             android:text="@string/PLAYBACK_SPEED" />
         <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/decreasePlaybackSpeed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="decreasePlaybackSpeed"
             app:srcCompat="@drawable/ic_baseline_remove_circle_24px" />
         <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/increasePlaybackSpeed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="increasePlaybackSpeed"
             app:srcCompat="@drawable/ic_baseline_add_circle_24px" />
         <TextView
             android:id="@+id/playbackSpeedValue"
@@ -106,7 +106,6 @@
                 android:layout_marginRight="40dp"
                 android:scaleX="2"
                 android:scaleY="2"
-                android:onClick="skipToPrevious"
                 android:contentDescription="@string/SKIP_TO_PREVIOUS"
                 app:srcCompat="@drawable/ic_baseline_skip_previous_24px"
                 android:id="@+id/skip_to_previous"/>
@@ -130,7 +129,6 @@
                 android:background="@android:color/transparent"
                 android:saveEnabled="true"
                 android:scaleType="center"
-                android:onClick="skipToNext"
                 android:scaleX="2"
                 android:scaleY="2"
                 android:layout_marginLeft="40dp"
