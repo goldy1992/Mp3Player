@@ -82,7 +82,7 @@ public class MyMediaPlayerAdapter {
             try {
                 resetPlayer();
                 setCurrentUri(uri);
-                prepare();
+            //    prepare();
                 updatePlaybackParameters();
                 return true;
             } catch (Exception ex) {
@@ -95,10 +95,11 @@ public class MyMediaPlayerAdapter {
 
     private void resetPlayer() {
         if (null != getMediaPlayer()) {
-            getMediaPlayer().reset();
-        } else {
-            this.mediaPlayer = new MediaPlayer();
+            getMediaPlayer().release();
         }
+//        } else {
+//            this.mediaPlayer = new MediaPlayer();
+//        }
         this.isPrepared = false;
     }
 
@@ -162,11 +163,8 @@ public class MyMediaPlayerAdapter {
     }
 
     private void setCurrentUri(Uri uri) {
-        try {
-            getMediaPlayer().setDataSource(context, uri, null);
-        } catch (IOException ex) {
-            Log.e(LOG_TAG, ex.getStackTrace().toString());
-        }
+           this.mediaPlayer = MediaPlayer.create(context, uri);
+           this.isPrepared = true;
     }
 
     private boolean prepare() {

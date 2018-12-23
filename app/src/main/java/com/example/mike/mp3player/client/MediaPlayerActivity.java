@@ -218,12 +218,12 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         getCounter().updateState(playbackState);
         float speed = playbackState.getPlaybackState().getPlaybackSpeed();
         if (speed > 0) {
-            updatePlaybackspeedText(speed);
+            updatePlaybackSpeedText(speed);
         }
         seekerBar.getMySeekerMediaControllerCallback().onPlaybackStateChanged(playbackState);
     }
 
-    private void updatePlaybackspeedText(float speed) {
+    private void updatePlaybackSpeedText(float speed) {
         Runnable r = () ->  playbackSpeed.setText(getString(R.string.PLAYBACK_SPEED_VALUE, speed));
         runOnUiThread(r);
     }
