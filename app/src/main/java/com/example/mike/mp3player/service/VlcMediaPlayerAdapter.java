@@ -216,7 +216,7 @@
 //    public PlaybackStateCompat getMediaPlayerState() {
 //        return new PlaybackStateCompat.Builder()
 //                .setState(getCurrentState(),
-//                        (long)mediaPlayer.getPosition(),
+//                        (long)mediaPlayer.getMediaPlayerPosition(),
 //                        getCurrentPlaybackSpeed())
 //                .build();
 //    }
@@ -227,7 +227,7 @@
 //    }
 //
 //    public int getCurrentTrackPosition() {
-//        return (int)mediaPlayer.getPosition();
+//        return (int)mediaPlayer.getMediaPlayerPosition();
 //    }
 //
 //    public int getCurrentState() {

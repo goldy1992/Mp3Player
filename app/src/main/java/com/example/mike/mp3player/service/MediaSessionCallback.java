@@ -85,7 +85,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public void onSkipToPrevious() {
-        int position = myMediaPlayerAdapter.getCurrentTrackPosition();
+        int position = myMediaPlayerAdapter.getMediaPlayerPosition();
         String newMediaId = position > ONE_SECOND ? playbackManager.getCurrentMediaId() :  playbackManager.skipToPrevious();;
         skipToNewMedia(newMediaId);
         serviceManager.notify(prepareNotification());
@@ -191,8 +191,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         Uri nextItemUri = mediaLibrary.getMediaUri(playbackManager.playbackComplete());
-        myMediaPlayerAdapter.prepareFromUri(nextItemUri);
-        myMediaPlayerAdapter.play();
+        myMediaPlayerAdapter.playFromUri(nextItemUri);
         updateMediaSession();
     }
 

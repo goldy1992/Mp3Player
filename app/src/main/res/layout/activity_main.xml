@@ -51,12 +51,11 @@
             android:layout_weight="1">
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar3"
+                android:id="@+id/playToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="?attr/colorPrimary"
                 android:minHeight="?attr/actionBarSize"
-                android:onClick="goToMediaPlayerActivity"
                 android:theme="?attr/actionBarTheme">
 
                 <LinearLayout

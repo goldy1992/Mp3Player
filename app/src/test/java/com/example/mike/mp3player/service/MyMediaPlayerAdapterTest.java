@@ -31,7 +31,10 @@ public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
     @Test
     public void testPauseWhilePlaying() {
         Whitebox.setInternalState(mediaPlayerAdapter, "currentState", PlaybackStateCompat.STATE_PLAYING);
-       Whitebox.setInternalState(mediaPlayerAdapter, "mediaPlayer", mediaPlayer);
+        Whitebox.setInternalState(mediaPlayerAdapter, "mediaPlayer", mediaPlayer);
+        PlaybackParams mockPlaybackParams = mock(PlaybackParams.class);
+        when(mediaPlayer.getPlaybackParams()).thenReturn(mockPlaybackParams);
+        when (mockPlaybackParams.getSpeed()).thenReturn(1.2f);
         mediaPlayerAdapter.pause();
         assertEquals("playback should be paused but state is" + Constants.playbackStateDebugMap.get(mediaPlayerAdapter.getCurrentState()), PlaybackStateCompat.STATE_PAUSED, mediaPlayerAdapter.getCurrentState());
     }

@@ -45,6 +45,7 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     private DrawerLayout drawerLayout;
     private RecyclerView recyclerView;
     private PlayPauseButton playPauseButton;
+    private Toolbar playToolbar;
 
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     @Override
@@ -73,6 +74,8 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         setContentView(R.layout.activity_main);
         playPauseButton = findViewById(R.id.mainActivityPlayPauseButton);
         playPauseButton.setOnClickListener((View view) -> playPause(view));
+        playToolbar = findViewById(R.id.playToolbar);
+        playToolbar.setOnClickListener((View view) -> goToMediaPlayerActivity(view));
         this.drawerLayout = findViewById(R.id.drawer_layout);
 
         MyDrawerListener myDrawerListener = new MyDrawerListener();

@@ -184,6 +184,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
     public void setTrack(String track) {
         this.track.setText(getString(R.string.TRACK_NAME, track));
+
     }
 
     private void initView() {
