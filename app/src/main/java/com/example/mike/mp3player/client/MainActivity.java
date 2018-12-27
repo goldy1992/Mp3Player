@@ -221,7 +221,10 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
 
     @Override
     public void setPlaybackState(PlaybackStateWrapper state) {
-
+        final int newState = state.getPlaybackState().getState();
+        if (playPauseButton.getState() != newState) {
+            playPauseButton.updateState(newState);
+        }
     }
 
     @Override

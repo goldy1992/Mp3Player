@@ -9,9 +9,14 @@ import android.util.AttributeSet;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.PlaybackStateWrapper;
 
+import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
+import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
+
 public class PlayPauseButton extends AppCompatImageButton {
 
     private static final String LOG_TAG = "PLAY_PAUSE_BUTTON";
+    @PlaybackStateCompat.State
+    private int state = PlaybackStateCompat.STATE_PAUSED;
 
     public PlayPauseButton(Context context) {
         super(context);
@@ -26,14 +31,13 @@ public class PlayPauseButton extends AppCompatImageButton {
     }
 
     public void updateState(PlaybackStateWrapper state) {
-//        Log.d(LOG_TAG, Constants.playbackStateDebugMap.get(state.getPlaybackState().getState()) + ", " + state.getPlaybackState());
         updateState(state.getPlaybackState().getState());
     }
 
     public void updateState(int state) {
         switch (state) {
-            case PlaybackStateCompat.STATE_PLAYING: setPauseIcon();   break;
-            default: setPlayIcon(); break;
+            case STATE_PLAYING: setPauseIcon(); this.state = STATE_PLAYING;   break;
+            default: setPlayIcon(); this.state = STATE_PAUSED; break;
         } // switch
 
     }
@@ -45,5 +49,8 @@ public class PlayPauseButton extends AppCompatImageButton {
         this.setImageResource(R.drawable.ic_baseline_pause_24px);
     }
 
-
+    @PlaybackStateCompat.State
+    public int getState() {
+        return state;
+    }
 }

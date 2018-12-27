@@ -33,6 +33,7 @@ public class MyMediaPlayerAdapter {
     private int position = DEFAULT_POSITION;
     private int bufferedPosition = DEFAULT_POSITION;
     private boolean isPrepared = false;
+    private boolean dataSourceSet = false;
     private boolean useBufferedPosition = false;
 
     public MyMediaPlayerAdapter(Context context) {
@@ -63,7 +64,7 @@ public class MyMediaPlayerAdapter {
             return;
         }
 
-        if (audioFocusManager.requestAudioFocus() || isPlaying()) {
+        if (audioFocusManager.requestAudioFocus()) {
             try {
                 // Set the session active  (and update metadata and state)
                 setPlaybackParamsAndPosition();
@@ -76,8 +77,7 @@ public class MyMediaPlayerAdapter {
     }
 
     public boolean prepareFromUri(Uri uri) {
-        if (null != uri)
-        {
+        if (null != uri) {
             try {
                 resetPlayer();
                 setCurrentUri(uri);
@@ -98,6 +98,8 @@ public class MyMediaPlayerAdapter {
             mediaPlayer = new MediaPlayer();
         }
         this.isPrepared = false;
+        this.currentState = PlaybackStateCompat.STATE_NONE;
+        this.dataSourceSet = false;
     }
 
     /**
@@ -172,6 +174,7 @@ public class MyMediaPlayerAdapter {
        } catch (IOException ex) {
            return false;
        }
+        this.dataSourceSet = true;
         this.position = DEFAULT_POSITION;
         this.currentUri = uri;
         return true;
@@ -180,7 +183,6 @@ public class MyMediaPlayerAdapter {
     private boolean prepare() {
         if (!isPrepared()) {
             try {
-            //    mediaPlayer.reset();
                 getMediaPlayer().prepare();
                 currentState = PlaybackStateCompat.STATE_PAUSED;
                 isPrepared = true;
