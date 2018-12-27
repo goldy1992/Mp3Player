@@ -15,6 +15,8 @@ public class TimeCounterTimerTaskTest {
 
     @Mock
     private TextView view;
+    @Mock
+    private MediaActivityCompat mediaActivityCompat;
 
     private TimeCounter timeCounter;
     private TimeCounterTimerTask timeCounterTimerTask;
@@ -25,7 +27,7 @@ public class TimeCounterTimerTaskTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        timeCounter = new TimeCounter(view);
+        timeCounter = new TimeCounter(mediaActivityCompat, view);
         timeCounterTimerTask = new TimeCounterTimerTask(timeCounter);
       //  when(timeCounter.getView().setText().then(doNothing());
     }
@@ -33,8 +35,8 @@ public class TimeCounterTimerTaskTest {
     @Test
     public void runTest() {
         timeCounter.setDuration(DURATION);
-        timeCounter.setCurrentTime(CURRENT_TIME);
+        timeCounter.setCurrentPosition(CURRENT_TIME);
         timeCounterTimerTask.run();
-        assertTrue("currentTime should be equal to the position parameter", timeCounter.getCurrentTime() > CURRENT_TIME);
+        assertTrue("currentTime should be equal to the position parameter", timeCounter.getCurrentPosition() > CURRENT_TIME);
     }
 }

@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client.view;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.TextView;
 
+import com.example.mike.mp3player.client.MediaActivityCompat;
 import com.example.mike.mp3player.client.PlaybackStateWrapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +22,8 @@ import static org.junit.Assert.assertTrue;
 public class TimeCounterTest {
 
     @Mock
+    private MediaActivityCompat mediaActivityCompat;
+    @Mock
     private TextView view;
 
     private TimeCounter timeCounter;
@@ -29,7 +32,7 @@ public class TimeCounterTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        timeCounter = new TimeCounter(view);
+        timeCounter = new TimeCounter(mediaActivityCompat, view);
     }
 
     @Test
@@ -39,7 +42,7 @@ public class TimeCounterTest {
         timeCounter.updateState(state);
 
         assertFalse("TimerCounter should not be running", timeCounter.isRunning());
-        assertEquals("currentTime should be reset to 0", 0L, timeCounter.getCurrentTime());
+        assertEquals("currentTime should be reset to 0", 0L, timeCounter.getCurrentPosition());
     }
 
     @Test
@@ -48,7 +51,7 @@ public class TimeCounterTest {
         timeCounter.updateState(state);
 
         assertFalse("TimerCounter should not be running", timeCounter.isRunning());
-        assertEquals("currentTime should be equal to the position parameter", POSITION, timeCounter.getCurrentTime());
+        assertEquals("currentTime should be equal to the position parameter", POSITION, timeCounter.getCurrentPosition());
     }
 
     @Test

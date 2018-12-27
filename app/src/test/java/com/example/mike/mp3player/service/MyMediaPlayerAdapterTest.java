@@ -8,6 +8,7 @@ import com.example.mike.mp3player.commons.Constants;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.reflect.Whitebox;
@@ -19,7 +20,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
-
+    @Mock
+    MediaPlayer mediaPlayer;
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -29,6 +31,10 @@ public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
     @Test
     public void testPauseWhilePlaying() {
         Whitebox.setInternalState(mediaPlayerAdapter, "currentState", PlaybackStateCompat.STATE_PLAYING);
+        Whitebox.setInternalState(mediaPlayerAdapter, "mediaPlayer", mediaPlayer);
+        PlaybackParams mockPlaybackParams = mock(PlaybackParams.class);
+        when(mediaPlayer.getPlaybackParams()).thenReturn(mockPlaybackParams);
+        when (mockPlaybackParams.getSpeed()).thenReturn(1.2f);
         mediaPlayerAdapter.pause();
         assertEquals("playback should be paused but state is" + Constants.playbackStateDebugMap.get(mediaPlayerAdapter.getCurrentState()), PlaybackStateCompat.STATE_PAUSED, mediaPlayerAdapter.getCurrentState());
     }

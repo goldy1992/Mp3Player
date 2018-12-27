@@ -57,7 +57,7 @@ public class MediaPlayerIntegrationTest {
         assertTrue(mediaPlayerActivity.getCounter().getView().getText().equals("00:00"));
         onView(withId(R.id.playPauseButton)).perform(click());
         Thread.sleep(2000);
-        assertTrue(mediaPlayerActivity.getCounter().getCurrentTime() >= 0);
+        assertTrue(mediaPlayerActivity.getCounter().getCurrentPosition() >= 0);
 
         onView(withId(R.id.playPauseButton)).check(matches(withText("Pause")));
 

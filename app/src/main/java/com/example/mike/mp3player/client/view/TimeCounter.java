@@ -4,6 +4,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.mike.mp3player.client.MediaActivityCompat;
 import com.example.mike.mp3player.client.PlaybackStateWrapper;
 import com.example.mike.mp3player.client.TimeCounterTimerTask;
 import com.example.mike.mp3player.client.utils.TimerUtils;
@@ -16,16 +17,18 @@ import static com.example.mike.mp3player.client.utils.TimerUtils.ONE_SECOND;
 import static com.example.mike.mp3player.client.utils.TimerUtils.formatTime;
 
 public class TimeCounter {
+    private MediaActivityCompat parentActivity;
     private TextView view;
     private long duration;
-    private long currentTime;
+    private long currentPosition;
     private int currentState;
     private float currentSpeed;
-    private ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledExecutorService timer;
     private boolean isRunning = false;
     public static final String LOG_TAG = "TimeCounter";
 
-    public TimeCounter(TextView view) {
+    public TimeCounter(MediaActivityCompat parentActivity, TextView view) {
+        this.parentActivity = parentActivity;
         this.view = view;
     }
 
@@ -34,9 +37,11 @@ public class TimeCounter {
     }
 
     public void cancelTimerDuringTracking() {
+        //Log.d(LOG_TAG, "cancel timer during tracking");
         cancelTimer();
     }
     public void updateState(PlaybackStateWrapper state) {
+        //Log.d(LOG_TAG, "new state");
         this.currentState = state.getPlaybackState().getState();
         this.currentSpeed = state.getPlaybackState().getPlaybackSpeed();
         long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(state);
@@ -49,34 +54,44 @@ public class TimeCounter {
     }
 
     private void work(long startTime) {
-        setCurrentTime(startTime);
+        //Log.d(LOG_TAG, "work timer");
+        setCurrentPosition(startTime);
         getView().setText(formatTime(startTime));
-        TimeCounterTimerTask timerTask = new TimeCounterTimerTask(this);
-        cancelTimer();
-        timer.scheduleAtFixedRate(timerTask,0L, getTimerFixedRate(), TimeUnit.MILLISECONDS);
+        createTimer();
         setRunning(true);
     }
 
     private void haltTimer(long currentTime) {
+        //Log.d(LOG_TAG, "halt timer");
         cancelTimer();
-        this.setCurrentTime(currentTime);
+        this.setCurrentPosition(currentTime);
         getView().setText(formatTime(currentTime));
     }
 
     private void resetTimer() {
+        //Log.d(LOG_TAG, "reset timer");
         cancelTimer();
-        this.setCurrentTime(0L);
+        this.setCurrentPosition(0L);
         getView().setText(formatTime(0L));
     }
 
     private void cancelTimer() {
-        if (isRunning()) {
+        //Log.d(LOG_TAG, "Cancel timer");
+        if (timer != null && isRunning()) {
             // cancel timer and make new one
             timer.shutdown();
-            timer = Executors.newSingleThreadScheduledExecutor();
+
         }
         setRunning(false);
 
+    }
+
+    private void createTimer() {
+        TimeCounterTimerTask timerTask = new TimeCounterTimerTask(this);
+        cancelTimer();
+        timer = Executors.newSingleThreadScheduledExecutor();
+        timer.scheduleAtFixedRate(timerTask,0L, getTimerFixedRate(), TimeUnit.MILLISECONDS);
+        //Log.d(LOG_TAG, "create timer");
     }
 
     private long getTimerFixedRate() {
@@ -91,12 +106,12 @@ public class TimeCounter {
         return isRunning;
     }
 
-    public long getCurrentTime() {
-        return currentTime;
+    public long getCurrentPosition() {
+        return currentPosition;
     }
 
-    public void setCurrentTime(long currentTime) {
-        this.currentTime = currentTime;
+    public void setCurrentPosition(long currentPosition) {
+        this.currentPosition = currentPosition;
     }
 
     public void setRunning(boolean running) {
@@ -121,6 +136,10 @@ public class TimeCounter {
 
     public float getCurrentSpeed() {
         return currentSpeed;
+    }
+
+    public MediaActivityCompat getParentActivity() {
+        return parentActivity;
     }
 }
 

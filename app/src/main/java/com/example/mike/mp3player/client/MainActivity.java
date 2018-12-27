@@ -45,6 +45,7 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     private DrawerLayout drawerLayout;
     private RecyclerView recyclerView;
     private PlayPauseButton playPauseButton;
+    private Toolbar playToolbar;
 
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     @Override
@@ -72,6 +73,9 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         initMediaBrowserService();
         setContentView(R.layout.activity_main);
         playPauseButton = findViewById(R.id.mainActivityPlayPauseButton);
+        playPauseButton.setOnClickListener((View view) -> playPause(view));
+        playToolbar = findViewById(R.id.playToolbar);
+        playToolbar.setOnClickListener((View view) -> goToMediaPlayerActivity(view));
         this.drawerLayout = findViewById(R.id.drawer_layout);
 
         MyDrawerListener myDrawerListener = new MyDrawerListener();
@@ -93,7 +97,7 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
 
                         return true;
                     }
-                });
+                 });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -217,7 +221,10 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
 
     @Override
     public void setPlaybackState(PlaybackStateWrapper state) {
-
+        final int newState = state.getPlaybackState().getState();
+        if (playPauseButton.getState() != newState) {
+            playPauseButton.updateState(newState);
+        }
     }
 
     @Override
