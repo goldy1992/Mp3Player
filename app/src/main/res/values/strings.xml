@@ -12,4 +12,5 @@
     <string name="PLAYBACK_SPEED">Playback Speed</string>
     <string name="PLAYBACK_SPEED_VALUE">%1$.2fx</string>
     <string name="PLAYBACK_SPEED_DEFAULT_VALUE">1.00x</string>
+    <string name="SEARCH_BUTTON_DESCRIPTION">Search for an audio track</string>
 </resources>

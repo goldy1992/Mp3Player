@@ -1,16 +1,22 @@
 package com.example.mike.mp3player.client;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.navigation.NavigationView;
+
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.MotionEventCompat;
+import androidx.core.view.ViewGroupCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -18,9 +24,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.view.PlayPauseButton;
@@ -45,8 +58,10 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     private DrawerLayout drawerLayout;
     private RecyclerView recyclerView;
     private PlayPauseButton playPauseButton;
+    private ImageButton searchFilterButton;
+    private EditText searchText;
     private Toolbar playToolbar;
-
+    private View searchTextView;
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +91,10 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         playPauseButton.setOnClickListener((View view) -> playPause(view));
         playToolbar = findViewById(R.id.playToolbar);
         playToolbar.setOnClickListener((View view) -> goToMediaPlayerActivity(view));
+        searchFilterButton = findViewById(R.id.searchFilter);
+        searchFilterButton.setOnClickListener((View view) -> onSearchFilterClick(view));
+        searchText = findViewById(R.id.searchText);
+        searchTextView = findViewById(R.id.searchTextLayout);
         this.drawerLayout = findViewById(R.id.drawer_layout);
 
         MyDrawerListener myDrawerListener = new MyDrawerListener();
@@ -99,7 +118,7 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
                     }
                  });
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.titleToolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -116,7 +135,7 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+      //  getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -196,7 +215,6 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
             fileToCache.createNewFile();
             FileOutputStream fileOut = new FileOutputStream(fileToCache);
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-            //objectOut.writeObject(this.selectedUri);
             objectOut.writeObject(null);
             objectOut.close();
             fileOut.close();
@@ -212,6 +230,16 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
 
     public void setPlayPauseButton(PlayPauseButton playPauseButton) {
         this.playPauseButton = playPauseButton;
+    }
+
+    public void onSearchFilterClick(View view) {
+        searchTextView.bringToFront();
+        searchText.setFocusableInTouchMode(true);
+        searchText.requestFocus();
+
+        final InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.showSoftInput(searchText, InputMethodManager.SHOW_IMPLICIT);
     }
 
     @Override
