@@ -3,20 +3,19 @@ package com.example.mike.mp3player.client;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+
+import com.example.mike.mp3player.client.view.KeyImeChangeListener;
+import com.example.mike.mp3player.client.view.EditTextSearchSong;
 import com.google.android.material.navigation.NavigationView;
 
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.MotionEventCompat;
-import androidx.core.view.ViewGroupCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -27,7 +26,6 @@ import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,7 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -55,9 +53,10 @@ import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 import static com.example.mike.mp3player.commons.Constants.PLAYBACK_STATE;
 
-public class MainActivity extends MediaActivityCompat implements ActivityCompat.OnRequestPermissionsResultCallback, TextWatcher {
+public class MainActivity extends MediaActivityCompat implements ActivityCompat.OnRequestPermissionsResultCallback, TextWatcher, KeyImeChangeListener, View.OnClickListener {
 
     private static final int PERMISSION_REQUEST_WRITE_STORAGE = 0;
+    private FrameLayout rootLayout;
     private MediaBrowserConnector mediaBrowserConnector;
     private MediaControllerWrapper<MainActivity> mediaControllerWrapper;
     private PermissionsProcessor permissionsProcessor;
@@ -65,10 +64,12 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     private RecyclerView recyclerView;
     private PlayPauseButton playPauseButton;
     private ImageButton searchFilterButton;
-    private EditText searchText;
+    private EditTextSearchSong searchText;
     private Toolbar playToolbar;
     private LinearLayout scrim;
     private View searchTextView;
+    private boolean inSearchMode = false;
+    private boolean isDrawerLayoutTouchable = true;
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     private InputMethodManager inputMethodManager;
     @Override
@@ -97,6 +98,9 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         inputMethodManager = (InputMethodManager) getApplicationContext()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         setContentView(R.layout.activity_main);
+
+        rootLayout= findViewById(R.id.root_view);
+        rootLayout.setOnClickListener(this);
         playPauseButton = findViewById(R.id.mainActivityPlayPauseButton);
         playPauseButton.setOnClickListener((View view) -> playPause(view));
         playToolbar = findViewById(R.id.playToolbar);
@@ -106,6 +110,7 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         searchText = findViewById(R.id.searchText);
         searchText.addTextChangedListener(this);
         searchText.setOnEditorActionListener((TextView v, int actionId, KeyEvent event) -> onEditorAction(v , actionId, event));
+        searchText.setKeyImeChangeListener(this);
         searchTextView = findViewById(R.id.searchTextLayout);
         this.drawerLayout = findViewById(R.id.drawer_layout);
         this.scrim = findViewById(R.id.mainActivityScrim);
@@ -250,9 +255,9 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         searchTextView.bringToFront();
         searchText.setFocusableInTouchMode(true);
         searchText.requestFocus();
-
-
         inputMethodManager.showSoftInput(searchText, InputMethodManager.SHOW_IMPLICIT);
+        inSearchMode = true;
+       // setClickable(drawerLayout, false);
     }
 
     @Override
@@ -312,11 +317,46 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
 
     private boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if(actionId== EditorInfo.IME_ACTION_DONE||actionId==EditorInfo.IME_ACTION_NEXT) {
-            drawerLayout.bringToFront();
-            scrim.setVisibility(View.INVISIBLE);
-            inputMethodManager.hideSoftInputFromWindow(searchText.getWindowToken(), InputMethodManager.RESULT_HIDDEN);
+            exitSearchMode();
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onKeyIme(int keyCode, KeyEvent event) {
+        if (inSearchMode) {
+            if (KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
+                exitSearchMode();
+            }
+        }
+    }
+
+    private void exitSearchMode() {
+        drawerLayout.bringToFront();
+        scrim.bringToFront();
+        scrim.setVisibility(View.INVISIBLE);
+        inputMethodManager.hideSoftInputFromWindow(searchText.getWindowToken(), InputMethodManager.RESULT_HIDDEN);
+        inSearchMode = false;
+     //   setClickable(drawerLayout, true);
+
+    }
+
+
+    private void setClickable(View view, boolean value) {
+        if (view != null) {
+            view.setEnabled(false);
+            if (view instanceof ViewGroup) {
+                ViewGroup vg = ((ViewGroup) view);
+                for (int i = 0; i < vg.getChildCount(); i++) {
+                    setClickable(vg.getChildAt(i), value);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Log.i(LOG_TAG, "view: " + v.getAccessibilityClassName());
     }
 }

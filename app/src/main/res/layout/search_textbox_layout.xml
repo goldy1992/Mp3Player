@@ -19,7 +19,7 @@
         android:layout_margin="@dimen/default_gap"
        android:weightSum="10">
 
-    <EditText
+    <com.example.mike.mp3player.client.view.EditTextSearchSong
         android:id="@+id/searchText"
         android:background="@android:color/white"
         android:layout_width="0dp"
@@ -32,8 +32,7 @@
         android:layout_gravity="center_vertical"
         android:imeOptions="actionDone"
         android:singleLine="true"
-        android:hint="@string/SEARCH_BUTTON_DESCRIPTION"
-        />
+        android:hint="@string/SEARCH_BUTTON_DESCRIPTION" />
 
     <View
         android:layout_width="0dp"
