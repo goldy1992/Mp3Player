@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:layout_gravity="start"
+    android:layout_margin="@dimen/default_gap"
+    android:id="@+id/searchTextLayout"
+    android:weightSum="10">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:focusableInTouchMode="true"
+        android:layout_gravity="start"
+        android:layout_weight="1.3"
+        android:layout_margin="@dimen/default_gap"
+       android:weightSum="10">
+
+    <EditText
+        android:id="@+id/searchText"
+        android:background="@android:color/white"
+        android:layout_width="0dp"
+        android:layout_weight="8"
+        android:layout_marginTop="@dimen/default_gap"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:layout_margin="@dimen/default_gap"
+        android:layout_gravity="center_vertical"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
+        android:hint="@string/SEARCH_BUTTON_DESCRIPTION"
+        />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:visibility="invisible"
+        />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8.7" />
+
+
+</LinearLayout>

@@ -22,7 +22,7 @@ public class MyItemTouchListener implements RecyclerView.OnItemTouchListener {
                         if (null != childView) {
                             int childPosition = parentView.getChildAdapterPosition(childView);
                             MyViewAdapter myViewAdapter = (MyViewAdapter) parentView.getAdapter();
-                            String mediaId = myViewAdapter.getSongs().get(childPosition).getDescription().getMediaId();
+                            String mediaId = myViewAdapter.getFilteredSongs().get(childPosition).getDescription().getMediaId();
                             parentAtivity.playSelectedSong(mediaId);
                         }
                         return false;

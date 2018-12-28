@@ -23,16 +23,22 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
@@ -49,7 +55,7 @@ import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 import static com.example.mike.mp3player.commons.Constants.PLAYBACK_STATE;
 
-public class MainActivity extends MediaActivityCompat implements ActivityCompat.OnRequestPermissionsResultCallback {
+public class MainActivity extends MediaActivityCompat implements ActivityCompat.OnRequestPermissionsResultCallback, TextWatcher {
 
     private static final int PERMISSION_REQUEST_WRITE_STORAGE = 0;
     private MediaBrowserConnector mediaBrowserConnector;
@@ -61,8 +67,10 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     private ImageButton searchFilterButton;
     private EditText searchText;
     private Toolbar playToolbar;
+    private LinearLayout scrim;
     private View searchTextView;
     private static final String LOG_TAG = "MAIN_ACTIVITY";
+    private InputMethodManager inputMethodManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +94,8 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
 
     public void init() {
         initMediaBrowserService();
+        inputMethodManager = (InputMethodManager) getApplicationContext()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
         setContentView(R.layout.activity_main);
         playPauseButton = findViewById(R.id.mainActivityPlayPauseButton);
         playPauseButton.setOnClickListener((View view) -> playPause(view));
@@ -94,8 +104,11 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         searchFilterButton = findViewById(R.id.searchFilter);
         searchFilterButton.setOnClickListener((View view) -> onSearchFilterClick(view));
         searchText = findViewById(R.id.searchText);
+        searchText.addTextChangedListener(this);
+        searchText.setOnEditorActionListener((TextView v, int actionId, KeyEvent event) -> onEditorAction(v , actionId, event));
         searchTextView = findViewById(R.id.searchTextLayout);
         this.drawerLayout = findViewById(R.id.drawer_layout);
+        this.scrim = findViewById(R.id.mainActivityScrim);
 
         MyDrawerListener myDrawerListener = new MyDrawerListener();
         drawerLayout.addDrawerListener(myDrawerListener);
@@ -233,12 +246,12 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     }
 
     public void onSearchFilterClick(View view) {
+        scrim.setVisibility(View.VISIBLE);
         searchTextView.bringToFront();
         searchText.setFocusableInTouchMode(true);
         searchText.requestFocus();
 
-        final InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
+
         inputMethodManager.showSoftInput(searchText, InputMethodManager.SHOW_IMPLICIT);
     }
 
@@ -278,5 +291,32 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         else {
             finish();
         }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        Log.i(LOG_TAG, "beforetextChanged");
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        Log.i(LOG_TAG, "ontextChanged");
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+       MyViewAdapter adapter = (MyViewAdapter) recyclerView.getAdapter();
+       adapter.getFilter().filter(s.toString());
+    }
+
+
+    private boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if(actionId== EditorInfo.IME_ACTION_DONE||actionId==EditorInfo.IME_ACTION_NEXT) {
+            drawerLayout.bringToFront();
+            scrim.setVisibility(View.INVISIBLE);
+            inputMethodManager.hideSoftInputFromWindow(searchText.getWindowToken(), InputMethodManager.RESULT_HIDDEN);
+            return true;
+        }
+        return false;
     }
 }
