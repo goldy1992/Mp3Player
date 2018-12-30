@@ -4,74 +4,53 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-
-import com.example.mike.mp3player.client.view.KeyImeChangeListener;
-import com.example.mike.mp3player.client.view.EditTextSearchSong;
-import com.google.android.material.navigation.NavigationView;
-
-import androidx.core.app.ActivityCompat;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBar;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.view.MyRecyclerView;
 import com.example.mike.mp3player.client.view.PlayPauseButton;
+import com.example.mike.mp3player.client.view.SearchSongView;
+import com.google.android.material.navigation.NavigationView;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 import static com.example.mike.mp3player.commons.Constants.PLAYBACK_STATE;
 
-public class MainActivity extends MediaActivityCompat implements ActivityCompat.OnRequestPermissionsResultCallback, TextWatcher, KeyImeChangeListener, View.OnClickListener {
+public class MainActivity extends MediaActivityCompat implements ActivityCompat.OnRequestPermissionsResultCallback,
+        SearchSongView.NewSearchFilterListener,
+        SearchSongView.OnSearchExitListener,
+        MyItemTouchListener.MyRecycleViewSelectListener {
 
-    private static final int PERMISSION_REQUEST_WRITE_STORAGE = 0;
-    private FrameLayout rootLayout;
     private MediaBrowserConnector mediaBrowserConnector;
     private MediaControllerWrapper<MainActivity> mediaControllerWrapper;
     private PermissionsProcessor permissionsProcessor;
     private DrawerLayout drawerLayout;
-    private RecyclerView recyclerView;
+    private MyRecyclerView recyclerView;
     private PlayPauseButton playPauseButton;
     private ImageButton searchFilterButton;
-    private EditTextSearchSong searchText;
+    private SearchSongView searchSongView;
     private Toolbar playToolbar;
-    private LinearLayout scrim;
-    private View searchTextView;
-    private boolean inSearchMode = false;
-    private boolean isDrawerLayoutTouchable = true;
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     private InputMethodManager inputMethodManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +69,6 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     @Override
     protected void onPause() {
         super.onPause();
-        saveState();
     }
 
     public void init() {
@@ -99,43 +77,20 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         setContentView(R.layout.activity_main);
 
-        rootLayout= findViewById(R.id.root_view);
-        rootLayout.setOnClickListener(this);
         playPauseButton = findViewById(R.id.mainActivityPlayPauseButton);
         playPauseButton.setOnClickListener((View view) -> playPause(view));
         playToolbar = findViewById(R.id.playToolbar);
         playToolbar.setOnClickListener((View view) -> goToMediaPlayerActivity(view));
         searchFilterButton = findViewById(R.id.searchFilter);
         searchFilterButton.setOnClickListener((View view) -> onSearchFilterClick(view));
-        searchText = findViewById(R.id.searchText);
-        searchText.addTextChangedListener(this);
-        searchText.setOnEditorActionListener((TextView v, int actionId, KeyEvent event) -> onEditorAction(v , actionId, event));
-        searchText.setKeyImeChangeListener(this);
-        searchTextView = findViewById(R.id.searchTextLayout);
+        this.searchSongView = (SearchSongView) getSupportFragmentManager().findFragmentById(R.id.searchSongViewFragment);
         this.drawerLayout = findViewById(R.id.drawer_layout);
-        this.scrim = findViewById(R.id.mainActivityScrim);
-
         MyDrawerListener myDrawerListener = new MyDrawerListener();
         drawerLayout.addDrawerListener(myDrawerListener);
 
 
         NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        // set item as selected to persist highlight
-                        menuItem.setChecked(true);
-                        // close drawer when item is tapped
-                        drawerLayout.closeDrawers();
-
-                        // Add code here to update the UI based on the item selected
-                        // For example, swap UI fragments here
-
-                        return true;
-                    }
-                 });
-
+        navigationView.setNavigationItemSelectedListener((MenuItem menuItem) -> onNavigationItemSelected(menuItem));
         Toolbar toolbar = findViewById(R.id.titleToolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -158,14 +113,8 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     }
 
     public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs) {
-        this.recyclerView = (RecyclerView) findViewById(R.id.myRecyclerView);
-        MyViewAdapter myViewAdapter = new MyViewAdapter(songs);
-        recyclerView.setAdapter(myViewAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addOnItemTouchListener(new MyItemTouchListener(this));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        myViewAdapter.notifyDataSetChanged();
+        this.recyclerView = findViewById(R.id.myRecyclerView);
+        this.recyclerView.initRecyclerView(songs);
     }
 
     private static final int READ_REQUEST_CODE = 42;
@@ -186,14 +135,9 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         return super.onOptionsItemSelected(item);
     }
 
-    public RecyclerView getRecyclerView() {
-        return recyclerView;
-    }
-
     private void initMediaBrowserService() {
         mediaBrowserConnector = new MediaBrowserConnector(getApplicationContext(), this);
         mediaBrowserConnector.init(null);
-        saveState();
     }
 
     private Intent createMediaPlayerActivityIntent() {
@@ -219,29 +163,6 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         }
     }
 
-    private void saveState()
-    {
-        if (0 == 0) {
-            return;
-        }
-        try {
-            File fileToCache = new File(getApplicationContext().getCacheDir(), "mediaPlayerState");
-            if (fileToCache.exists())
-            {
-                fileToCache.delete();
-            }
-            fileToCache.createNewFile();
-            FileOutputStream fileOut = new FileOutputStream(fileToCache);
-            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-            objectOut.writeObject(null);
-            objectOut.close();
-            fileOut.close();
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, e.getMessage());
-        }
-    }
-
     public PlayPauseButton getPlayPauseButton() {
         return playPauseButton;
     }
@@ -251,13 +172,10 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     }
 
     public void onSearchFilterClick(View view) {
-        scrim.setVisibility(View.VISIBLE);
-        searchTextView.bringToFront();
-        searchText.setFocusableInTouchMode(true);
-        searchText.requestFocus();
-        inputMethodManager.showSoftInput(searchText, InputMethodManager.SHOW_IMPLICIT);
-        inSearchMode = true;
-       // setClickable(drawerLayout, false);
+        searchSongView.getView().bringToFront();
+        searchSongView.onSearchStart(inputMethodManager);
+        searchSongView.setActive(true);
+        this.recyclerView.setTouchable(false);
     }
 
     @Override
@@ -299,64 +217,31 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        Log.i(LOG_TAG, "beforetextChanged");
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        Log.i(LOG_TAG, "ontextChanged");
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-       MyViewAdapter adapter = (MyViewAdapter) recyclerView.getAdapter();
-       adapter.getFilter().filter(s.toString());
-    }
-
-
-    private boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if(actionId== EditorInfo.IME_ACTION_DONE||actionId==EditorInfo.IME_ACTION_NEXT) {
-            exitSearchMode();
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void onKeyIme(int keyCode, KeyEvent event) {
-        if (inSearchMode) {
-            if (KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
-                exitSearchMode();
-            }
-        }
-    }
-
-    private void exitSearchMode() {
+    public void onSearchExit() {
         drawerLayout.bringToFront();
-        scrim.bringToFront();
-        scrim.setVisibility(View.INVISIBLE);
-        inputMethodManager.hideSoftInputFromWindow(searchText.getWindowToken(), InputMethodManager.RESULT_HIDDEN);
-        inSearchMode = false;
-     //   setClickable(drawerLayout, true);
-
+        searchSongView.onSearchFinish(inputMethodManager);
+        this.recyclerView.setTouchable(true);
     }
 
+    private boolean onNavigationItemSelected(MenuItem menuItem) {
+        // set item as selected to persist highlight
+        menuItem.setChecked(true);
+        // close drawer when item is tapped
+        drawerLayout.closeDrawers();
 
-    private void setClickable(View view, boolean value) {
-        if (view != null) {
-            view.setEnabled(false);
-            if (view instanceof ViewGroup) {
-                ViewGroup vg = ((ViewGroup) view);
-                for (int i = 0; i < vg.getChildCount(); i++) {
-                    setClickable(vg.getChildAt(i), value);
-                }
-            }
-        }
+        // Add code here to update the UI based on the item selected
+        // For example, swap UI fragments here
+        return true;
     }
 
     @Override
-    public void onClick(View v) {
-        Log.i(LOG_TAG, "view: " + v.getAccessibilityClassName());
+    public void onItemSelected(String id) {
+        playSelectedSong(id);
+    }
+
+    @Override
+    public void onNewSearchFilter(String filter) {
+        MyViewAdapter adapter = (MyViewAdapter) recyclerView.getAdapter();
+        adapter.getFilter().filter(filter.toString());
     }
 }
