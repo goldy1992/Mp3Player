@@ -20,8 +20,6 @@ import com.example.mike.mp3player.client.view.SongSearchActionListener;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -42,6 +40,7 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     private SongFilterFragment songFilterFragment;
 
     private static final String LOG_TAG = "MAIN_ACTIVITY";
+    private static final int READ_REQUEST_CODE = 42;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,14 +72,7 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         this.mainFrameFragment.getTitleBarFragment().setSongSearchActionListener(this);
         this.songFilterFragment = (SongFilterFragment) getSupportFragmentManager().findFragmentById(R.id.searchSongViewFragment);
         this.songFilterFragment.setSongSearchActionListener(this);
-
-        Toolbar titleToolbar = mainFrameFragment.getTitleBarFragment().getTitleToolbar();
-        setSupportActionBar(titleToolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-
-        }
+    }
 
     public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs) {
         mainFrameFragment.initRecyclerView(songs, this);
@@ -92,41 +84,6 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         }
         this.mediaControllerWrapper.init(null);
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//      //  getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-    private static final int READ_REQUEST_CODE = 42;
-
-    @Override
-    public void playSelectedSong(String songId) {
-        Intent intent = createMediaPlayerActivityIntent();
-        intent.putExtra(MEDIA_ID, songId);
-        startActivityForResult(intent, READ_REQUEST_CODE);
-    }
-
-    @Override
-    public void play() {
-        mediaControllerWrapper.play();
-    }
-
-    @Override
-    public void pause() {
-        mediaControllerWrapper.pause();
-    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case android.R.id.home:
-//                drawerLayout.openDrawer(GravityCompat.START);
-//                return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
 
     private void initMediaBrowserService() {
         mediaBrowserConnector = new MediaBrowserConnector(getApplicationContext(), this);
@@ -140,30 +97,47 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         return intent;
     }
 
-    @Override
+
+
+    @Override //MediaPlayerActionListener
+    public void playSelectedSong(String songId) {
+        Intent intent = createMediaPlayerActivityIntent();
+        intent.putExtra(MEDIA_ID, songId);
+        startActivityForResult(intent, READ_REQUEST_CODE);
+    }
+
+    @Override //MediaPlayerActionListener
+    public void play() {
+        mediaControllerWrapper.play();
+    }
+
+    @Override //MediaPlayerActionListener
+    public void pause() {
+        mediaControllerWrapper.pause();
+    }
+
+    @Override //MediaPlayerActionListener
     public void goToMediaPlayerActivity() {
         Intent intent = createMediaPlayerActivityIntent();
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
-    @Override
-    public void setMetaData(MediaMetadataCompat metadata) {
+    @Override // MediaActivityCompat
+    public void setMetaData(MediaMetadataCompat metadata) { /* no need to update meta data in this class */ }
 
-    }
-
-    @Override
+    @Override // MediaActivityCompat
     public void setPlaybackState(PlaybackStateWrapper state) {
         final int newState = state.getPlaybackState().getState();
         PlayPauseButton playPauseButton = mainFrameFragment.getPlayToolBarFragment().getPlayPauseButton();
         playPauseButton.updateState(newState);
     }
 
-    @Override
+    @Override // MediaActivityCompat
     public MediaControllerWrapper getMediaControllerWrapper() {
         return mediaControllerWrapper;
     }
 
-    @Override
+    @Override // ActivityCompat.OnRequestPermissionsResultCallback
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         // BEGIN_INCLUDE(onRequestPermissionsResult)
@@ -183,7 +157,7 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         }
     }
 
-    @Override
+    @Override // SongSearchActionListener
     public void onStartSearch() {
         songFilterFragment.getView().bringToFront();
         songFilterFragment.onSearchStart(inputMethodManager);
@@ -192,7 +166,7 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         recyclerView.setTouchable(false);
     }
 
-    @Override
+    @Override // SongSearchActionListener
     public void onFinishSearch() {
         mainFrameFragment.getView().bringToFront();
         songFilterFragment.onSearchFinish(inputMethodManager);
@@ -200,7 +174,7 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         recyclerView.setTouchable(true);
     }
 
-    @Override
+    @Override // SongSearchActionListener
     public void onNewSearchFilter(String filter) {
         mainFrameFragment.getRecyclerView().filter(filter);
     }

@@ -11,13 +11,14 @@ import android.view.ViewGroup;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MyDrawerListener;
-import com.example.mike.mp3player.client.MyViewAdapter;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -31,6 +32,7 @@ public class MainFrameFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_main_frame, null);
     }
 
@@ -44,6 +46,11 @@ public class MainFrameFragment extends Fragment {
         NavigationView navigationView = view.findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener((MenuItem menuItem) -> onNavigationItemSelected(menuItem));
 
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(titleBarFragment.getTitleToolbar());
+        ActionBar actionBar = activity.getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
     }
 
     public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener) {
