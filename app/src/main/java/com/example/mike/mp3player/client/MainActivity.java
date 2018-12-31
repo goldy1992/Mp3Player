@@ -7,18 +7,15 @@ import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageButton;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.view.MainFrameFragment;
+import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
 import com.example.mike.mp3player.client.view.MyRecyclerView;
 import com.example.mike.mp3player.client.view.PlayPauseButton;
-import com.example.mike.mp3player.client.view.SearchSongView;
-import com.google.android.material.navigation.NavigationView;
+import com.example.mike.mp3player.client.view.SongFilterFragment;
+import com.example.mike.mp3player.client.view.SongSearchActionListener;
 
 import java.util.List;
 
@@ -26,8 +23,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
@@ -35,21 +30,18 @@ import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 import static com.example.mike.mp3player.commons.Constants.PLAYBACK_STATE;
 
 public class MainActivity extends MediaActivityCompat implements ActivityCompat.OnRequestPermissionsResultCallback,
-        SearchSongView.NewSearchFilterListener,
-        SearchSongView.OnSearchExitListener,
-        MyItemTouchListener.MyRecycleViewSelectListener {
+        SongSearchActionListener,
+        MediaPlayerActionListener {
 
     private MediaBrowserConnector mediaBrowserConnector;
     private MediaControllerWrapper<MainActivity> mediaControllerWrapper;
     private PermissionsProcessor permissionsProcessor;
-    private DrawerLayout drawerLayout;
-    private MyRecyclerView recyclerView;
-    private PlayPauseButton playPauseButton;
-    private ImageButton searchFilterButton;
-    private SearchSongView searchSongView;
-    private Toolbar playToolbar;
-    private static final String LOG_TAG = "MAIN_ACTIVITY";
     private InputMethodManager inputMethodManager;
+
+    private MainFrameFragment mainFrameFragment;
+    private SongFilterFragment songFilterFragment;
+
+    private static final String LOG_TAG = "MAIN_ACTIVITY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +53,8 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     @Override
     protected void onStart() {
         super.onStart();
-        if (null != playPauseButton && mediaControllerWrapper != null) {
+        if (mediaControllerWrapper != null) {
+            PlayPauseButton playPauseButton = mainFrameFragment.getPlayToolBarFragment().getPlayPauseButton();
             playPauseButton.updateState(mediaControllerWrapper.getPlaybackState());
         }
     }
@@ -73,29 +66,24 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
 
     public void init() {
         initMediaBrowserService();
-        inputMethodManager = (InputMethodManager) getApplicationContext()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         setContentView(R.layout.activity_main);
+        this.mainFrameFragment = (MainFrameFragment) getSupportFragmentManager().findFragmentById(R.id.mainFrameFragment);
+        this.mainFrameFragment.getPlayToolBarFragment().setMediaPlayerActionListener(this);
+        this.mainFrameFragment.getTitleBarFragment().setSongSearchActionListener(this);
+        this.songFilterFragment = (SongFilterFragment) getSupportFragmentManager().findFragmentById(R.id.searchSongViewFragment);
+        this.songFilterFragment.setSongSearchActionListener(this);
 
-        playPauseButton = findViewById(R.id.mainActivityPlayPauseButton);
-        playPauseButton.setOnClickListener((View view) -> playPause(view));
-        playToolbar = findViewById(R.id.playToolbar);
-        playToolbar.setOnClickListener((View view) -> goToMediaPlayerActivity(view));
-        searchFilterButton = findViewById(R.id.searchFilter);
-        searchFilterButton.setOnClickListener((View view) -> onSearchFilterClick(view));
-        this.searchSongView = (SearchSongView) getSupportFragmentManager().findFragmentById(R.id.searchSongViewFragment);
-        this.drawerLayout = findViewById(R.id.drawer_layout);
-        MyDrawerListener myDrawerListener = new MyDrawerListener();
-        drawerLayout.addDrawerListener(myDrawerListener);
-
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener((MenuItem menuItem) -> onNavigationItemSelected(menuItem));
-        Toolbar toolbar = findViewById(R.id.titleToolbar);
-        setSupportActionBar(toolbar);
+        Toolbar titleToolbar = mainFrameFragment.getTitleBarFragment().getTitleToolbar();
+        setSupportActionBar(titleToolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
+        }
+
+    public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs) {
+        mainFrameFragment.initRecyclerView(songs, this);
     }
 
     public void onMediaBrowserServiceConnected(MediaSessionCompat.Token token) {
@@ -105,20 +93,15 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         this.mediaControllerWrapper.init(null);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-      //  getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs) {
-        this.recyclerView = findViewById(R.id.myRecyclerView);
-        this.recyclerView.initRecyclerView(songs);
-    }
-
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//      //  getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return true;
+//    }
     private static final int READ_REQUEST_CODE = 42;
 
+    @Override
     public void playSelectedSong(String songId) {
         Intent intent = createMediaPlayerActivityIntent();
         intent.putExtra(MEDIA_ID, songId);
@@ -126,14 +109,24 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                drawerLayout.openDrawer(GravityCompat.START);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+    public void play() {
+        mediaControllerWrapper.play();
     }
+
+    @Override
+    public void pause() {
+        mediaControllerWrapper.pause();
+    }
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                drawerLayout.openDrawer(GravityCompat.START);
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     private void initMediaBrowserService() {
         mediaBrowserConnector = new MediaBrowserConnector(getApplicationContext(), this);
@@ -147,35 +140,10 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
         return intent;
     }
 
-    public void goToMediaPlayerActivity(View view) {
+    @Override
+    public void goToMediaPlayerActivity() {
         Intent intent = createMediaPlayerActivityIntent();
         startActivityForResult(intent, READ_REQUEST_CODE);
-    }
-
-    public void playPause(View view) {
-        int pbState = mediaControllerWrapper.getPlaybackState();
-        if (pbState == PlaybackStateCompat.STATE_PLAYING) {
-            mediaControllerWrapper.pause();
-            getPlayPauseButton().setPlayIcon();
-        } else {
-            mediaControllerWrapper.play();
-            getPlayPauseButton().setPauseIcon();
-        }
-    }
-
-    public PlayPauseButton getPlayPauseButton() {
-        return playPauseButton;
-    }
-
-    public void setPlayPauseButton(PlayPauseButton playPauseButton) {
-        this.playPauseButton = playPauseButton;
-    }
-
-    public void onSearchFilterClick(View view) {
-        searchSongView.getView().bringToFront();
-        searchSongView.onSearchStart(inputMethodManager);
-        searchSongView.setActive(true);
-        this.recyclerView.setTouchable(false);
     }
 
     @Override
@@ -186,9 +154,8 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     @Override
     public void setPlaybackState(PlaybackStateWrapper state) {
         final int newState = state.getPlaybackState().getState();
-        if (playPauseButton.getState() != newState) {
-            playPauseButton.updateState(newState);
-        }
+        PlayPauseButton playPauseButton = mainFrameFragment.getPlayToolBarFragment().getPlayPauseButton();
+        playPauseButton.updateState(newState);
     }
 
     @Override
@@ -217,31 +184,24 @@ public class MainActivity extends MediaActivityCompat implements ActivityCompat.
     }
 
     @Override
-    public void onSearchExit() {
-        drawerLayout.bringToFront();
-        searchSongView.onSearchFinish(inputMethodManager);
-        this.recyclerView.setTouchable(true);
-    }
-
-    private boolean onNavigationItemSelected(MenuItem menuItem) {
-        // set item as selected to persist highlight
-        menuItem.setChecked(true);
-        // close drawer when item is tapped
-        drawerLayout.closeDrawers();
-
-        // Add code here to update the UI based on the item selected
-        // For example, swap UI fragments here
-        return true;
+    public void onStartSearch() {
+        songFilterFragment.getView().bringToFront();
+        songFilterFragment.onSearchStart(inputMethodManager);
+        songFilterFragment.setActive(true);
+        MyRecyclerView recyclerView = mainFrameFragment.getRecyclerView();
+        recyclerView.setTouchable(false);
     }
 
     @Override
-    public void onItemSelected(String id) {
-        playSelectedSong(id);
+    public void onFinishSearch() {
+        mainFrameFragment.getView().bringToFront();
+        songFilterFragment.onSearchFinish(inputMethodManager);
+        MyRecyclerView recyclerView = mainFrameFragment.getRecyclerView();
+        recyclerView.setTouchable(true);
     }
 
     @Override
     public void onNewSearchFilter(String filter) {
-        MyViewAdapter adapter = (MyViewAdapter) recyclerView.getAdapter();
-        adapter.getFilter().filter(filter.toString());
+        mainFrameFragment.getRecyclerView().filter(filter);
     }
 }

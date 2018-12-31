@@ -19,21 +19,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class SearchSongView extends Fragment implements TextWatcher, KeyImeChangeListener {
+public class SongFilterFragment extends Fragment implements TextWatcher, KeyImeChangeListener {
 
     private EditTextSearchSong searchText;
     private LinearLayout scrim;
     private boolean isActive;
-    private NewSearchFilterListener newSearchFilterListener;
-    private OnSearchExitListener onSearchExitListener;
+    private SongSearchActionListener songSearchActionListener;
     private static final String LOG_TAG = "SEARCH_SONG_VIEW";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View root = inflater.inflate(R.layout.search_textbox_layout, null);
-        return root;
+        return inflater.inflate(R.layout.fragment_song_filter, null);
     }
 
     @Override
@@ -43,10 +41,9 @@ public class SearchSongView extends Fragment implements TextWatcher, KeyImeChang
         searchText.addTextChangedListener(this);
         searchText.setOnEditorActionListener((TextView v, int actionId, KeyEvent event) -> onEditorAction(v , actionId, event));
         searchText.setKeyImeChangeListener(this);
-
     }
 
-    public SearchSongView() {
+    public SongFilterFragment() {
 
     }
 
@@ -75,21 +72,21 @@ public class SearchSongView extends Fragment implements TextWatcher, KeyImeChang
 
     @Override
     public void afterTextChanged(Editable s) {
-        this.newSearchFilterListener.onNewSearchFilter(s.toString());
+        this.songSearchActionListener.onNewSearchFilter(s.toString());
     }
 
     @Override
     public void onKeyIme(int keyCode, KeyEvent event) {
         if (isActive) {
             if (KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
-              //  exitSearchMode();
+                songSearchActionListener.onFinishSearch();
             }
         }
     }
 
     private boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if(actionId== EditorInfo.IME_ACTION_DONE||actionId==EditorInfo.IME_ACTION_NEXT) {
-            //exitSearchMode();
+            songSearchActionListener.onFinishSearch();
             return true;
         }
         return false;
@@ -103,11 +100,7 @@ public class SearchSongView extends Fragment implements TextWatcher, KeyImeChang
         isActive = active;
     }
 
-    public interface NewSearchFilterListener {
-        void onNewSearchFilter(String filter);
-    }
-
-    public interface OnSearchExitListener {
-        void onSearchExit();
+    public void setSongSearchActionListener(SongSearchActionListener songSearchActionListener) {
+        this.songSearchActionListener = songSearchActionListener;
     }
 }

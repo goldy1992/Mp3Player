@@ -33,15 +33,20 @@ public class MyRecyclerView extends RecyclerView {
         this.context = context;
     }
 
-    public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs) {
+    public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener) {
         this.myViewAdapter = new MyViewAdapter(songs);
         this.setAdapter(myViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         this.setLayoutManager(linearLayoutManager);
         this.myItemTouchListener = new MyItemTouchListener(context);
+        this.myItemTouchListener.setMediaPlayerActionListener(mediaPlayerActionListener);
         this.addOnItemTouchListener(this.getMyItemTouchListener());
         this.setItemAnimator(new DefaultItemAnimator());
         myViewAdapter.notifyDataSetChanged();
+    }
+
+    public void filter(String filterParam) {
+        myViewAdapter.getFilter().filter(filterParam);
     }
 
     public MyItemTouchListener getMyItemTouchListener() {

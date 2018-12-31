@@ -8,6 +8,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
 import com.example.mike.mp3player.client.view.MyRecyclerView;
 
 public class MyItemTouchListener extends GestureDetector.SimpleOnGestureListener implements RecyclerView.OnItemTouchListener {
@@ -16,7 +17,7 @@ public class MyItemTouchListener extends GestureDetector.SimpleOnGestureListener
     private RecyclerView parentView;
     private View childView;
     private MyRecyclerView myRecyclerView;
-    private MyRecycleViewSelectListener myRecycleViewSelectListener = null;
+    private MediaPlayerActionListener mediaPlayerActionListener = null;
     private boolean isTouchable = true;
 
     public MyItemTouchListener(Context context) {
@@ -54,7 +55,7 @@ public class MyItemTouchListener extends GestureDetector.SimpleOnGestureListener
                 int childPosition = parentView.getChildAdapterPosition(childView);
                 MyViewAdapter myViewAdapter = (MyViewAdapter) parentView.getAdapter();
                 String mediaId = myViewAdapter.getFilteredSongs().get(childPosition).getDescription().getMediaId();
-                this.myRecycleViewSelectListener.onItemSelected(mediaId);
+                this.mediaPlayerActionListener.playSelectedSong(mediaId);
             }
         }
         return false;
@@ -75,15 +76,7 @@ public class MyItemTouchListener extends GestureDetector.SimpleOnGestureListener
         isTouchable = touchable;
     }
 
-    public MyRecycleViewSelectListener getMyRecycleViewSelectListener() {
-        return myRecycleViewSelectListener;
-    }
-
-    public void setMyRecycleViewSelectListener(MyRecycleViewSelectListener myRecycleViewSelectListener) {
-        this.myRecycleViewSelectListener = myRecycleViewSelectListener;
-    }
-
-    interface MyRecycleViewSelectListener {
-        void onItemSelected(String id);
+    public void setMediaPlayerActionListener(MediaPlayerActionListener mediaPlayerActionListener) {
+        this.mediaPlayerActionListener = mediaPlayerActionListener;
     }
 }

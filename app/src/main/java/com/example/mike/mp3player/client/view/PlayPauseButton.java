@@ -34,11 +34,19 @@ public class PlayPauseButton extends AppCompatImageButton {
         updateState(state.getPlaybackState().getState());
     }
 
-    public void updateState(int state) {
-        switch (state) {
-            case STATE_PLAYING: setPauseIcon(); this.state = STATE_PLAYING;   break;
-            default: setPlayIcon(); this.state = STATE_PAUSED; break;
-        } // switch
+    public void updateState(int newState) {
+        if (newState != getState()) {
+            switch (newState) {
+                case STATE_PLAYING:
+                    setPauseIcon();
+                    this.state = STATE_PLAYING;
+                    break;
+                default:
+                    setPlayIcon();
+                    this.state = STATE_PAUSED;
+                    break;
+            } // switch
+        }
 
     }
 

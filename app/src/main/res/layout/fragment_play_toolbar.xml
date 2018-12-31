@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/playToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme">
+
+        <LinearLayout
+            android:id="@+id/playBarLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.example.mike.mp3player.client.view.PlayPauseButton
+                android:id="@+id/mainActivityPlayPauseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:scaleType="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:saveEnabled="true"
+                android:scaleX="2"
+                android:scaleY="2"
+                app:srcCompat="@drawable/ic_baseline_play_arrow_24px" />
+
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+</LinearLayout>
