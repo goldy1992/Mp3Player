@@ -45,7 +45,7 @@ public class PermissionsProcessor {
             }
         } else {
             // Permission has already been granted
-            ((MainActivity) parentActivity).init();
+            ((SplashScreenEntryActivity) parentActivity).init();
         }
     }
 

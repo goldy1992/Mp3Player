@@ -2,6 +2,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="match_parent"
     android:layout_width="match_parent">
+
     <LinearLayout
         android:id="@+id/mainActivityScrim"
         android:orientation="vertical"
@@ -9,69 +10,68 @@
         android:layout_height="match_parent"
         android:background="@android:color/black"
         android:alpha="0.5"
-        android:visibility="invisible"
         />
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/searchTextRootLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/searchTextRootLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <View
-        android:id="@+id/searchBoxLeftMargin"
-        android:layout_height="0dp"
-        android:layout_width="0dp"
-        app:layout_constraintWidth_default="percent"
-        app:layout_constraintHeight_default="percent"
-        app:layout_constraintHeight_percent=".2"
-        app:layout_constraintWidth_percent=".1"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="invisible"
-        />
+        <View
+            android:id="@+id/searchBoxLeftMargin"
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent=".2"
+            app:layout_constraintWidth_percent=".1"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="invisible"
+            />
 
-    <LinearLayout
-        android:id="@+id/searchTextLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintStart_toEndOf="@id/searchBoxLeftMargin"
-        app:layout_constraintHeight_percent=".2"
-        app:layout_constraintWidth_percent=".7"
-        app:layout_constraintWidth_default="percent"
-        app:layout_constraintHeight_default="percent"
-        android:gravity="center"
-        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/searchTextLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toEndOf="@id/searchBoxLeftMargin"
+            app:layout_constraintHeight_percent=".2"
+            app:layout_constraintWidth_percent=".7"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintHeight_default="percent"
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <com.example.mike.mp3player.client.view.EditTextSearchSong
-            android:id="@+id/searchText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="@dimen/default_gap"
-            android:layout_marginTop="@dimen/default_gap"
-            android:background="@android:color/white"
-            android:hint="@string/SEARCH_BUTTON_DESCRIPT"
-            android:imeOptions="actionDone"
-            android:inputType="text"
-            android:singleLine="true"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            android:visibility="visible" />
+            <com.example.mike.mp3player.client.view.EditTextSearchSong
+                android:id="@+id/searchText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/default_gap"
+                android:layout_marginTop="@dimen/default_gap"
+                android:background="@android:color/white"
+                android:hint="@string/SEARCH_BUTTON_DESCRIPT"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:singleLine="true"
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                android:visibility="visible" />
 
-    </LinearLayout>
+        </LinearLayout>
 
 
-    <View
-        android:id="@+id/searchBoxRightMargin"
-        android:layout_height="0dp"
-        android:layout_width="0dp"
-        app:layout_constraintWidth_default="percent"
-        app:layout_constraintHeight_default="percent"
-        app:layout_constraintHeight_percent=".2"
-        app:layout_constraintWidth_percent=".2"
-        app:layout_constraintStart_toEndOf="@id/searchTextLayout"
-        android:visibility="invisible"
-        />
+        <View
+            android:id="@+id/searchBoxRightMargin"
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent=".2"
+            app:layout_constraintWidth_percent=".2"
+            app:layout_constraintStart_toEndOf="@id/searchTextLayout"
+            android:visibility="invisible"
+            />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

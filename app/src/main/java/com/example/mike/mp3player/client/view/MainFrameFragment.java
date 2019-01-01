@@ -28,6 +28,8 @@ public class MainFrameFragment extends Fragment {
     private TitleBarFragment titleBarFragment;
     private MyRecyclerView recyclerView;
     private PlayToolBarFragment playToolBarFragment;
+    private boolean enabled = true;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -66,14 +68,16 @@ public class MainFrameFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                drawerLayout.openDrawer(GravityCompat.START);
-                return true;
+        if (enabled) {
+            switch (item.getItemId()) {
+                case android.R.id.home:
+                    drawerLayout.openDrawer(GravityCompat.START);
+                    return true;
+            }
+            return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
-
 
     public PlayToolBarFragment getPlayToolBarFragment() {
         return playToolBarFragment;
@@ -97,5 +101,23 @@ public class MainFrameFragment extends Fragment {
 
     public MyRecyclerView getRecyclerView() {
         return recyclerView;
+    }
+
+    public void enable() {
+        this.enabled = true;
+        recyclerView.enable();
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+    }
+
+    public void disable() {
+        drawerLayout.closeDrawers();
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        recyclerView.disable();
+        this.enabled = false;
+
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }

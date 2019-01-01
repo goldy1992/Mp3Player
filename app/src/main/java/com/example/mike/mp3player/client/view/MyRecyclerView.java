@@ -53,7 +53,10 @@ public class MyRecyclerView extends RecyclerView {
         return myItemTouchListener;
     }
 
-    public void setTouchable(boolean value) {
-        myItemTouchListener.setTouchable(value);
+    public void disable() {
+        myItemTouchListener.setEnabled(false);
+    }
+    public void enable() {
+        myItemTouchListener.setEnabled(true);
     }
 }

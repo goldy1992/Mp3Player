@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,12 +14,13 @@ import com.example.mike.mp3player.client.view.MyRecyclerView;
 
 public class MyItemTouchListener extends GestureDetector.SimpleOnGestureListener implements RecyclerView.OnItemTouchListener {
 
+    private static final String LOG_TAG = "MY_ITEM_TOUCH_LISTENER";
     private GestureDetector gestureDetector;
     private RecyclerView parentView;
     private View childView;
     private MyRecyclerView myRecyclerView;
     private MediaPlayerActionListener mediaPlayerActionListener = null;
-    private boolean isTouchable = true;
+    private boolean enabled = true;
 
     public MyItemTouchListener(Context context) {
         this.gestureDetector = new GestureDetector(context, this);
@@ -26,11 +28,15 @@ public class MyItemTouchListener extends GestureDetector.SimpleOnGestureListener
 
     @Override
     public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
-        parentView = view;
-        childView = view.findChildViewUnder(e.getX(), e.getY());
-        gestureDetector.onTouchEvent(e);
-        // return false in order to keep dispatching event
-        return false;
+        if (enabled) {
+            parentView = view;
+            childView = view.findChildViewUnder(e.getX(), e.getY());
+            gestureDetector.onTouchEvent(e);
+            // return false in order to keep dispatching event
+            return false;
+        }
+        // return true so message is not re-dispatched
+        return true;
 
     }
 
@@ -49,31 +55,27 @@ public class MyItemTouchListener extends GestureDetector.SimpleOnGestureListener
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
-        if (isTouchable) {
-            super.onSingleTapConfirmed(e);
-            if (null != childView) {
-                int childPosition = parentView.getChildAdapterPosition(childView);
-                MyViewAdapter myViewAdapter = (MyViewAdapter) parentView.getAdapter();
-                String mediaId = myViewAdapter.getFilteredSongs().get(childPosition).getDescription().getMediaId();
-                this.mediaPlayerActionListener.playSelectedSong(mediaId);
-            }
+        super.onSingleTapConfirmed(e);
+        if (null != childView) {
+            int childPosition = parentView.getChildAdapterPosition(childView);
+            MyViewAdapter myViewAdapter = (MyViewAdapter) parentView.getAdapter();
+            String mediaId = myViewAdapter.getFilteredSongs().get(childPosition).getDescription().getMediaId();
+            this.mediaPlayerActionListener.playSelectedSong(mediaId);
         }
         return false;
     }
-    public boolean isTouchable() {
-        return isTouchable;
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public boolean onScroll(MotionEvent e1, MotionEvent e2,
                             float distanceX, float distanceY) {
-        if (isTouchable) {
-            super.onScroll(e1, e2, distanceX, distanceY);
-        }
+        super.onScroll(e1, e2, distanceX, distanceY);
         return false;
     }
 
-    public void setTouchable(boolean touchable) {
-        isTouchable = touchable;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public void setMediaPlayerActionListener(MediaPlayerActionListener mediaPlayerActionListener) {

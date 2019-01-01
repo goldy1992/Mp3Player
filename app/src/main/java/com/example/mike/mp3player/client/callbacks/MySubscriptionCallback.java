@@ -27,7 +27,7 @@ public class MySubscriptionCallback extends SubscriptionCallback {
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children,
                                  @NonNull Bundle options) {
         super.onChildrenLoaded(parentId, children, options);
-        mainActivity.initRecyclerView(children);
+        mainActivity.init(children);
         Log.d(LOG_TAG, children.toString());
     }
 }
