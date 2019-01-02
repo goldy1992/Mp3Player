@@ -4,5 +4,5 @@
     android:id="@+id/mainActivityRootFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    class="com.example.mike.mp3player.client.view.MainActivityRootFragment"
+    class="com.example.mike.mp3player.client.view.fragments.MainActivityRootFragment"
     />

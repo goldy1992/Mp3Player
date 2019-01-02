@@ -2,11 +2,13 @@ package com.example.mike.mp3player.client;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -18,10 +20,13 @@ public class PermissionsProcessor {
         PERMISSION_RQ_CODE_MAP.put(WRITE_EXTERNAL_STORAGE, 0);
     }
 
-    Activity parentActivity;
+    private PermissionGranted permissionGranted;
+    private Activity parentActivity;
+    private static final String LOG_TAG = "PERMISSIONS_PROCESSOR";
 
-    public PermissionsProcessor(Activity parentActivity) {
+    public PermissionsProcessor(Activity parentActivity, PermissionGranted permissionGranted) {
         this.parentActivity = parentActivity;
+        this.permissionGranted = permissionGranted;
     }
 
     public void requestPermission(String permission)
@@ -45,7 +50,7 @@ public class PermissionsProcessor {
             }
         } else {
             // Permission has already been granted
-            ((SplashScreenEntryActivity) parentActivity).init();
+            permissionGranted.onPermissionGranted();
         }
     }
 

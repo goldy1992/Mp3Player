@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            class="com.example.mike.mp3player.client.view.TitleBarFragment"
+            class="com.example.mike.mp3player.client.view.fragments.TitleBarFragment"
             tools:layout="@layout/fragment_title_bar"/>
 
 
@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            class="com.example.mike.mp3player.client.view.PlayToolBarFragment"
+            class="com.example.mike.mp3player.client.view.fragments.PlayToolBarFragment"
             tools:layout="@layout/fragment_play_toolbar"/>
 
 

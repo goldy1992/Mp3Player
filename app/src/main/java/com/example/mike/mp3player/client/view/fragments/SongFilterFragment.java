@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.view;
+package com.example.mike.mp3player.client.view.fragments;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,6 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.view.EditTextSearchSong;
+import com.example.mike.mp3player.client.view.KeyImeChangeListener;
+import com.example.mike.mp3player.client.view.SongSearchActionListener;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

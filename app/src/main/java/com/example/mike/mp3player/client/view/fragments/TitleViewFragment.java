@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.view;
+package com.example.mike.mp3player.client.view.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

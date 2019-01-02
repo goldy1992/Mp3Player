@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements Filterable {
     private List<MediaBrowserCompat.MediaItem> songs;
@@ -55,7 +56,7 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Log.i(LOG_TAG, "position: " + position);
+        //Log.i(LOG_TAG, "position: " + position);
         MediaBrowserCompat.MediaItem song = getFilteredSongs().get(holder.getAdapterPosition());
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
@@ -130,8 +131,9 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements
             }
 
             for (MediaBrowserCompat.MediaItem i : songs) {
-                String title = i.getDescription().getTitle().toString();
-                if (title.contains(constraint)) {
+                String title = i.getDescription().getTitle().toString().toUpperCase(Locale.getDefault());
+                String uppercaseConstraint = constraint.toString().toUpperCase(Locale.getDefault());
+                if (title.contains(uppercaseConstraint)) {
                     filteredList.add(i);
                 }
             }

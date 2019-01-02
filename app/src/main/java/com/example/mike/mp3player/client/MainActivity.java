@@ -6,33 +6,37 @@ import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.view.MainActivityRootFragment;
 import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.view.fragments.MainActivityRootFragment;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_SERVICE_DATA;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 import static com.example.mike.mp3player.commons.Constants.PLAYBACK_STATE;
 
-public class MainActivity extends MediaActivityCompat implements MediaPlayerActionListener {
-
-    private MediaBrowserConnector mediaBrowserConnector;
-    private MediaControllerWrapper<MainActivity> mediaControllerWrapper;
-
-    private MainActivityRootFragment rootFragment;
-
-
+public class MainActivity extends MediaActivityCompat implements MediaPlayerActionListener, MediaBrowserConnectorCallback {
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     private static final int READ_REQUEST_CODE = 42;
+    private MediaBrowserConnector mediaBrowserConnector;
+    private MediaControllerWrapper<MainActivity> mediaControllerWrapper;
+    private MainActivityRootFragment rootFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initMediaBrowserService();
+        Bundle extras = getIntent().getExtras();
+        MediaSessionCompat.Token token = (MediaSessionCompat.Token) extras.get(MEDIA_SESSION);
+        initMediaBrowserService(token);
+        List<MediaBrowserCompat.MediaItem> songs = getIntent().getExtras().getParcelableArrayList(MEDIA_SERVICE_DATA);
+        init(songs);
     }
 
     @Override
@@ -40,6 +44,9 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         super.onStart();
         if (mediaControllerWrapper != null) {
             setPlaybackState(mediaControllerWrapper.getCurrentPlaybackState());
+        } else {
+            mediaControllerWrapper = new MediaControllerWrapper<>(this, mediaBrowserConnector.getMediaSessionToken());
+            mediaControllerWrapper.init(null);
         }
     }
 
@@ -64,9 +71,9 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         this.mediaControllerWrapper.init(null);
     }
 
-    private void initMediaBrowserService() {
+    private void initMediaBrowserService(MediaSessionCompat.Token token) {
         mediaBrowserConnector = new MediaBrowserConnector(getApplicationContext(), this);
-        mediaBrowserConnector.init(null);
+        mediaBrowserConnector.init(token);
     }
 
     private Intent createMediaPlayerActivityIntent() {
@@ -75,8 +82,6 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         intent.putExtra(PLAYBACK_STATE, mediaControllerWrapper.getCurrentPlaybackState());
         return intent;
     }
-
-
 
     @Override //MediaPlayerActionListener
     public void playSelectedSong(String songId) {
@@ -115,6 +120,8 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
     }
 
 
-
-
+    @Override
+    public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options) {
+        Log.i(LOG_TAG, "more children loaded");
+    }
 }

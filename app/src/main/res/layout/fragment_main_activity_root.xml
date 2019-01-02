@@ -9,14 +9,14 @@
         android:id="@+id/searchSongViewFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        class="com.example.mike.mp3player.client.view.SongFilterFragment"
+        class="com.example.mike.mp3player.client.view.fragments.SongFilterFragment"
         tools:layout="@layout/fragment_song_filter"/>
 
     <fragment
         android:id="@+id/mainFrameFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        class="com.example.mike.mp3player.client.view.MainFrameFragment"
+        class="com.example.mike.mp3player.client.view.fragments.MainFrameFragment"
         tools:layout="@layout/fragment_main_frame"/>
 
 </FrameLayout>
