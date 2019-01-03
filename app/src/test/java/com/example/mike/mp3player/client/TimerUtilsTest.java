@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client;
 
+import android.os.SystemClock;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.client.utils.TimerUtils;
@@ -17,7 +18,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
  * In order to use Powermockito, used old Test tag so that the class runs with JUnit4.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({System.class, PlaybackStateWrapper.class, TimerUtils.class})
+@PrepareForTest({SystemClock.class, TimerUtils.class})
 public class TimerUtilsTest {
 
     private static final long CURRENT_TIME = 50000L;
@@ -55,14 +56,12 @@ public class TimerUtilsTest {
     }
     @Test
     public void calculateCurrentPlaybackPositionTest() {
-        PowerMockito.mockStatic(System.class);
+        PowerMockito.mockStatic(SystemClock.class);
         final long timeDiff = 5000L;
-        when(System.currentTimeMillis()).thenReturn(CURRENT_TIME);
         PlaybackStateCompat playbackStateCompat =
-                new PlaybackStateCompat.Builder().setState(0, 40000L, 0f, 00).build();
-        PlaybackStateWrapper playbackStateWrapper = new PlaybackStateWrapper(playbackStateCompat);
-        when(System.currentTimeMillis()).thenReturn(CURRENT_TIME + timeDiff);
-        long newPostion = TimerUtils.calculateCurrentPlaybackPosition(playbackStateWrapper);
+                new PlaybackStateCompat.Builder().setState(0, 40000L, 0f, CURRENT_TIME).build();
+        when(SystemClock.elapsedRealtime()).thenReturn(CURRENT_TIME + timeDiff);
+        long newPostion = TimerUtils.calculateCurrentPlaybackPosition(playbackStateCompat);
 
         assertEquals(playbackStateCompat.getPosition() + timeDiff, newPostion);
     }

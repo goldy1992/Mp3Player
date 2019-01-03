@@ -16,7 +16,6 @@ import com.example.mike.mp3player.client.view.SeekerBar;
 import com.example.mike.mp3player.client.view.TimeCounter;
 import com.example.mike.mp3player.commons.Constants;
 
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
 
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
@@ -27,7 +26,6 @@ import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
 /**
  * Created by Mike on 24/09/2017.
  */
-
 public class MediaPlayerActivity extends MediaActivityCompat {
 
     private final String STOP = "Stop";
@@ -52,23 +50,19 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         super.onCreate(savedInstanceState);
         initView();
         token = (MediaSessionCompat.Token) retrieveIntentInfo(Constants.MEDIA_SESSION);
-        setMediaId((String) retrieveIntentInfo(Constants.MEDIA_ID));
-        PlaybackStateWrapper playbackStateWrapper = (PlaybackStateWrapper) retrieveIntentInfo(Constants.PLAYBACK_STATE);
-        if (playbackStateWrapper == null) {
-            PlaybackStateCompat.Builder playbackStateCompat = new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PAUSED, 0L, 0F);
-            playbackStateWrapper = new PlaybackStateWrapper(playbackStateCompat.build());
-        }
 
         if (token != null) {
             this.mediaControllerWrapper = new MediaControllerWrapper<MediaPlayerActivity>(this, token);
-            mediaControllerWrapper.init(playbackStateWrapper);
+            setMediaId((String) retrieveIntentInfo(Constants.MEDIA_ID));
 
+            mediaControllerWrapper.init();
             if (playNewSong()) {
                 // Display the initial state
                 Bundle extras = new Bundle();
                 extras.putString(PLAYLIST, PLAY_ALL);
                 mediaControllerWrapper.prepareFromMediaId(getMediaId(), extras);
-            } else {
+            }
+            else {
                 setMetaData(mediaControllerWrapper.getMetaData());
                 setPlaybackState(mediaControllerWrapper.getCurrentPlaybackState());
             }
@@ -82,10 +76,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     @Override
     public void onStart() {
         super.onStart();
-        if (getIntent() != null && getIntent().getExtras() != null) {
-            token = (MediaSessionCompat.Token) getIntent().getExtras().get(Constants.MEDIA_SESSION);
-            setMediaId((String) getIntent().getExtras().get(Constants.MEDIA_ID));
-        }
+        setMediaId((String) retrieveIntentInfo(Constants.MEDIA_ID));
     }
 
     @Override
@@ -235,10 +226,10 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     }
 
     @Override
-    public void setPlaybackState(PlaybackStateWrapper playbackState) {
+    public void setPlaybackState(PlaybackStateCompat playbackState) {
         getPlayPauseButton().updateState(playbackState);
         getCounter().updateState(playbackState);
-        float speed = playbackState.getPlaybackState().getPlaybackSpeed();
+        float speed = playbackState.getPlaybackSpeed();
         if (speed > 0) {
             updatePlaybackSpeedText(speed);
         }

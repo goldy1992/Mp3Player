@@ -54,12 +54,12 @@ public class MyMediaPlayerAdapter {
         audioFocusManager.init();
     }
 
-    public void playFromUri(Uri uri) {
+    public synchronized void playFromUri(Uri uri) {
         setCurrentUri(uri);
         play();
     }
 
-    public void play() {
+    public synchronized void play() {
         if (!prepare()) {
             return;
         }

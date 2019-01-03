@@ -69,7 +69,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     @Override
-    public void onPlay() {
+    public synchronized void onPlay() {
         broadcastReceiver.registerAudioNoisyReceiver();
         myMediaPlayerAdapter.play();
         updateMediaSession();
@@ -77,21 +77,21 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     @Override
-    public void onSkipToNext() {
+    public synchronized void onSkipToNext() {
         String newMediaId = playbackManager.skipToNext();
         skipToNewMedia(newMediaId);
         serviceManager.notify(prepareNotification());
     }
 
     @Override
-    public void onSkipToPrevious() {
+    public synchronized void onSkipToPrevious() {
         int position = myMediaPlayerAdapter.getMediaPlayerPosition();
         String newMediaId = position > ONE_SECOND ? playbackManager.getCurrentMediaId() :  playbackManager.skipToPrevious();;
         skipToNewMedia(newMediaId);
         serviceManager.notify(prepareNotification());
     }
     @Override
-    public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
+    public synchronized boolean onMediaButtonEvent(Intent mediaButtonEvent) {
         if (mediaButtonEvent != null && mediaButtonEvent.getExtras() != null
                 && mediaButtonEvent.getExtras().getParcelable(Intent.EXTRA_KEY_EVENT) != null) {
             KeyEvent keyEvent = mediaButtonEvent.getExtras().getParcelable(Intent.EXTRA_KEY_EVENT);
@@ -111,14 +111,14 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     @Override
-    public void onPrepareFromUri(Uri uri, Bundle bundle) {
+    public synchronized void onPrepareFromUri(Uri uri, Bundle bundle) {
         super.onPrepareFromUri(uri, bundle);
         myMediaPlayerAdapter.prepareFromUri(uri);
         updateMediaSession();
     }
 
     @Override
-    public void onPrepareFromMediaId(String mediaId, Bundle bundle) {
+    public synchronized void onPrepareFromMediaId(String mediaId, Bundle bundle) {
         super.onPrepareFromMediaId(mediaId, bundle);
 
         if (bundle.containsKey(PLAYLIST)) {
@@ -132,13 +132,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         updateMediaSession();
     }
 
-    private void updateMediaSession() {
-        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
-        mediaSession.setMetadata(getCurrentMetaData());
-    }
-
     @Override
-    public void onPlayFromUri(Uri uri, Bundle bundle) {
+    public synchronized void onPlayFromUri(Uri uri, Bundle bundle) {
         super.onPlayFromUri(uri, bundle);
         myMediaPlayerAdapter.prepareFromUri(uri);
         myMediaPlayerAdapter.play();
@@ -149,12 +144,12 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     @Override
-    public void onStop() {
+    public synchronized void onStop() {
         super.onStop();
     }
 
     @Override
-    public void onPause() {
+    public synchronized void onPause() {
         broadcastReceiver.unregisterAudioNoisyReceiver();
         myMediaPlayerAdapter.pause();
         // unregister BECOME_NOISY BroadcastReceiver
@@ -171,32 +166,25 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     @Override
-    public void onAddQueueItem(MediaDescriptionCompat description) {
+    public synchronized void onAddQueueItem(MediaDescriptionCompat description) {
         MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
         mediaSession.setQueue(playbackManager.onAddQueueItem(item));
     }
 
     @Override
-    public void onRemoveQueueItem(MediaDescriptionCompat description) {
+    public synchronized void onRemoveQueueItem(MediaDescriptionCompat description) {
         MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
         mediaSession.setQueue(playbackManager.onRemoveQueueItem(item));
     }
-
-    private Notification prepareNotification() {
-        return myNotificationManager.getNotification(getCurrentMetaData(),
-                myMediaPlayerAdapter.getMediaPlayerState(),
-                mediaSession.getSessionToken());
-    }
-
     @Override
-    public void onCompletion(MediaPlayer mediaPlayer) {
+    public synchronized void onCompletion(MediaPlayer mediaPlayer) {
         Uri nextItemUri = mediaLibrary.getMediaUri(playbackManager.playbackComplete());
         myMediaPlayerAdapter.playFromUri(nextItemUri);
         updateMediaSession();
     }
 
     @Override
-    public void onCustomAction(String customAction, Bundle extras) {
+    public synchronized void onCustomAction(String customAction, Bundle extras) {
         super.onCustomAction(customAction, extras);
         switch (customAction) {
             case INCREASE_PLAYBACK_SPEED: myMediaPlayerAdapter.increaseSpeed(0.05f);
@@ -206,6 +194,12 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             default: break;
         }
         updateMediaSession();
+    }
+
+    private Notification prepareNotification() {
+        return myNotificationManager.getNotification(getCurrentMetaData(),
+                myMediaPlayerAdapter.getMediaPlayerState(),
+                mediaSession.getSessionToken());
     }
 
     private MediaMetadataCompat getCurrentMetaData() {
@@ -235,6 +229,10 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         updateMediaSession();
     }
 
+    private void updateMediaSession() {
+        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState());
+        mediaSession.setMetadata(getCurrentMetaData());
+    }
 
     private class ReceiveBroadcasts extends BroadcastReceiver {
         private boolean audioNoisyReceiverRegistered;
@@ -242,7 +240,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                 new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public synchronized void onReceive(Context context, Intent intent) {
             if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
                 if (myMediaPlayerAdapter.isPlaying()) {
                     myMediaPlayerAdapter.pause();
@@ -251,18 +249,18 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             }
         }
 
-        public void registerAudioNoisyReceiver() {
+        private void registerAudioNoisyReceiver() {
             if (!audioNoisyReceiverRegistered) {
                 context.registerReceiver(this, AUDIO_NOISY_INTENT_FILTER);
                 audioNoisyReceiverRegistered = true;
             }
         }
 
-        public void unregisterAudioNoisyReceiver() {
+        private void unregisterAudioNoisyReceiver() {
             if (audioNoisyReceiverRegistered) {
                 context.unregisterReceiver(this);
                 audioNoisyReceiverRegistered = false;
             }
         }
-    }
+    } // ReceivesBroadcasts class
 }

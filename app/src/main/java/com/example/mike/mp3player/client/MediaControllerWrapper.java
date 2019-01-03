@@ -2,10 +2,9 @@ package com.example.mike.mp3player.client;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import android.support.v4.media.session.MediaControllerCompat;
 
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 
@@ -13,7 +12,6 @@ public class MediaControllerWrapper< A extends MediaActivityCompat>  {
 
     private MediaControllerCompat mediaControllerCompat;
     private MyMediaControllerCallback<A> myMediaControllerCallback;
-    private PlaybackStateWrapper currentPlaybackState;
     private A activity;
     private MediaSessionCompat.Token token;
     private boolean isInitialized = false;
@@ -23,12 +21,11 @@ public class MediaControllerWrapper< A extends MediaActivityCompat>  {
         this.token = token;
     }
 
-    public boolean init(PlaybackStateWrapper currentPlaybackState) {
+    public boolean init() {
         try {
             this.mediaControllerCompat = new MediaControllerCompat(activity.getApplicationContext(), token);
             this.myMediaControllerCallback = new MyMediaControllerCallback<>(activity, this);
             this.mediaControllerCompat.registerCallback(myMediaControllerCallback);
-            this.currentPlaybackState = currentPlaybackState;
         } catch (RemoteException ex) {
             this.isInitialized = false;
             return false;
@@ -105,11 +102,7 @@ public class MediaControllerWrapper< A extends MediaActivityCompat>  {
         }
     }
 
-    public PlaybackStateWrapper getCurrentPlaybackState() {
-        return currentPlaybackState;
-    }
-
-    public void setCurrentPlaybackState(PlaybackStateWrapper currentPlaybackState) {
-        this.currentPlaybackState = currentPlaybackState;
+    public PlaybackStateCompat getCurrentPlaybackState() {
+        return mediaControllerCompat.getPlaybackState();
     }
 }

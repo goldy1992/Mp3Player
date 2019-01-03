@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
@@ -20,7 +21,6 @@ import androidx.annotation.NonNull;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SERVICE_DATA;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
-import static com.example.mike.mp3player.commons.Constants.PLAYBACK_STATE;
 
 public class MainActivity extends MediaActivityCompat implements MediaPlayerActionListener, MediaBrowserConnectorCallback {
     private static final String LOG_TAG = "MAIN_ACTIVITY";
@@ -46,7 +46,7 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
             setPlaybackState(mediaControllerWrapper.getCurrentPlaybackState());
         } else {
             mediaControllerWrapper = new MediaControllerWrapper<>(this, mediaBrowserConnector.getMediaSessionToken());
-            mediaControllerWrapper.init(null);
+            mediaControllerWrapper.init();
         }
     }
 
@@ -68,7 +68,7 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         if (this instanceof MainActivity) {
             this.mediaControllerWrapper = new MediaControllerWrapper<MainActivity>(this, token);
         }
-        this.mediaControllerWrapper.init(null);
+        this.mediaControllerWrapper.init();
     }
 
     private void initMediaBrowserService(MediaSessionCompat.Token token) {
@@ -79,7 +79,6 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
     private Intent createMediaPlayerActivityIntent() {
         Intent intent = new Intent(getApplicationContext(), MediaPlayerActivity.class);
         intent.putExtra(MEDIA_SESSION, mediaBrowserConnector.getMediaSessionToken());
-        intent.putExtra(PLAYBACK_STATE, mediaControllerWrapper.getCurrentPlaybackState());
         return intent;
     }
 
@@ -109,8 +108,8 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
     @Override // MediaActivityCompat
     public void setMetaData(MediaMetadataCompat metadata) { /* no need to update meta data in this class */ }
 
-    @Override // MediaActivityCompat
-    public void setPlaybackState(PlaybackStateWrapper state) {
+    @Override
+    public void setPlaybackState(PlaybackStateCompat state) {
         rootFragment.setPlaybackState(state);
     }
 

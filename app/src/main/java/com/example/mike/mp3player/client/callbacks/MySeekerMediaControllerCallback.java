@@ -7,7 +7,6 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.animation.LinearInterpolator;
 
-import com.example.mike.mp3player.client.PlaybackStateWrapper;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.view.SeekerBar;
 
@@ -26,9 +25,7 @@ public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callb
         super.onSessionDestroyed();
     }
 
-    public void onPlaybackStateChanged(PlaybackStateWrapper playbackStateWrapper) {
-        PlaybackStateCompat state = playbackStateWrapper.getPlaybackState();
-
+    public void onPlaybackStateChanged(PlaybackStateCompat state) {
 //        Log.d("PlaybackStatusCompat", "" + state);
         // If there's an ongoing animation, stop it now.
         if (seekerBar.getValueAnimator() != null) {
@@ -36,7 +33,7 @@ public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callb
             seekerBar.setValueAnimator(null);
         }
 
-        long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(playbackStateWrapper);
+        long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(state);
         final int progress = state != null ? (int) latestPosition : NO_PROGRESS;
         seekerBar.setProgress(progress);
 
@@ -67,11 +64,6 @@ public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callb
                 ? (int) metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
                 : 0;
         seekerBar.setMax(max);
-    }
-
-    @Override
-    public void onPlaybackStateChanged(PlaybackStateCompat state) {
-        super.onPlaybackStateChanged(state);
     }
 
     @Override

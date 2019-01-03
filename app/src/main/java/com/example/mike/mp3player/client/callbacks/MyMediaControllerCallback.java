@@ -6,7 +6,6 @@ import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.client.MediaActivityCompat;
 import com.example.mike.mp3player.client.MediaControllerWrapper;
-import com.example.mike.mp3player.client.PlaybackStateWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,17 +38,12 @@ public class MyMediaControllerCallback< A extends MediaActivityCompat> extends M
 
     @Override
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
-        onPlaybackStateChanged(new PlaybackStateWrapper(state));
+        activity.setPlaybackState(state);
         if (!childCallbacks.isEmpty()) {
             for (MediaControllerCompat.Callback callback : childCallbacks) {
                 callback.onPlaybackStateChanged(state);
             }
         }
-    }
-
-    public void onPlaybackStateChanged(PlaybackStateWrapper playbackStateWrapper) {
-        mediaControllerWrapper.setCurrentPlaybackState(playbackStateWrapper);
-        activity.setPlaybackState(playbackStateWrapper);
     }
 
     public List<MediaControllerCompat.Callback> getChildCallbacks() {

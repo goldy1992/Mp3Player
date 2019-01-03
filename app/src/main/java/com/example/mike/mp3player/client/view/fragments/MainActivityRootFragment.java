@@ -2,13 +2,13 @@ package com.example.mike.mp3player.client.view.fragments;
 
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.PlaybackStateWrapper;
 import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
 import com.example.mike.mp3player.client.view.PlayPauseButton;
 import com.example.mike.mp3player.client.view.SongSearchActionListener;
@@ -68,9 +68,10 @@ public class MainActivityRootFragment extends Fragment implements SongSearchActi
         mainFrameFragment.initRecyclerView(songs, mediaPlayerActionListener);
     }
 
-    public void setPlaybackState(PlaybackStateWrapper state) {
-        if (state != null && state.getPlaybackState() != null) {
-            final int newState = state.getPlaybackState().getState();
+    public void setPlaybackState(PlaybackStateCompat state) {
+        if (state != null) {
+            @PlaybackStateCompat.State
+            final int newState = state.getState();
             PlayPauseButton playPauseButton = mainFrameFragment.getPlayToolBarFragment().getPlayPauseButton();
             playPauseButton.updateState(newState);
         }
