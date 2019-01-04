@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
+import android.util.Log;
 
 import com.example.mike.mp3player.service.library.utils.IsDirectoryFilter;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
@@ -36,6 +37,7 @@ public class MediaLibrary {
     private MusicFileFilter musicFileFilter = new MusicFileFilter();
     private IsDirectoryFilter isDirectoryFilter = new IsDirectoryFilter();
     private Context context;
+    private final String LOG_TAG = "MEDIA_LIBRARY";
     private Map<String, Uri> mediaIdToUriMap;
 
     public MediaLibrary(Context context)
@@ -64,7 +66,18 @@ public class MediaLibrary {
                 if (isDirectoryFilter.accept(directory, currentFileString)) {
                     directories.add(new File(directory, currentFileString));
                 } else if (musicFileFilter.accept(directory, currentFileString)) {
-                    mediaItems.add(createMediaItemFromFile(new File(directory, currentFileString)));
+                    File fileToRetrieve = null;
+                    try {
+                        fileToRetrieve = new File(directory, currentFileString);
+                        MediaBrowserCompat.MediaItem mediaItem = createMediaItemFromFile(fileToRetrieve);
+                        mediaItems.add(mediaItem);
+                    } catch (Exception ex) {
+                        if (fileToRetrieve != null) {
+                            Log.e(LOG_TAG, "could not add " + fileToRetrieve.getPath() + " to the media library");
+                        } else {
+                            Log.e(LOG_TAG, "file is null");
+                        }
+                    }
                 }
             } // for
         }
@@ -82,7 +95,7 @@ public class MediaLibrary {
         return library;
     }
 
-    private MediaBrowserCompat.MediaItem createMediaItemFromFile(File file) {
+    private MediaBrowserCompat.MediaItem createMediaItemFromFile(File file) throws Exception {
         Uri uri = Uri.fromFile(file);
         String mediaId = String.valueOf(uri.getPath().hashCode());
         String parentPath = file.getParentFile().getAbsolutePath();

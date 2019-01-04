@@ -13,17 +13,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
         <activity
-            android:name=".client.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:name=".client.SplashScreenEntryActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
+            android:name=".client.MainActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
             android:name=".client.MediaPlayerActivity"
             android:label="@string/app_name"
+            android:parentActivityName=".client.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
 

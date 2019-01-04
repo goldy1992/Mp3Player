@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
 import com.example.mike.mp3player.client.callbacks.MySubscriptionCallback;
@@ -16,24 +15,23 @@ public class MediaBrowserConnector {
     private MyConnectionCallback mConnectionCallbacks;
     private MySubscriptionCallback mySubscriptionCallback;
     private Context context;
-    private final MainActivity activity;
+    private final MediaBrowserConnectorCallback mediaBrowserConnectorCallback;
     private MediaSessionCompat.Token mediaSessionToken;
 
-    public MediaBrowserConnector(Context context, MainActivity activity) {
+    public MediaBrowserConnector(Context context, MediaBrowserConnectorCallback mediaBrowserConnectorCallback) {
         this.context = context;
-        this.activity = activity;
+        this.mediaBrowserConnectorCallback = mediaBrowserConnectorCallback;
     }
 
     public void init(MediaSessionCompat.Token token) {
             mConnectionCallbacks = new MyConnectionCallback(this);
             // Create MediaBrowserServiceCompat
-            mMediaBrowser = new MediaBrowserCompat(activity.getApplicationContext(),
-                    new ComponentName(activity, MediaPlaybackService.class),
+            mMediaBrowser = new MediaBrowserCompat(context,
+                    new ComponentName(context, MediaPlaybackService.class),
                     mConnectionCallbacks,
                     null);
 
-        this.mySubscriptionCallback = activity instanceof MainActivity ?
-                new MySubscriptionCallback((MainActivity) activity) : null;
+        this.mySubscriptionCallback = new MySubscriptionCallback(mediaBrowserConnectorCallback);
         if (token == null ) {
             getmMediaBrowser().connect();
         } else{
@@ -44,10 +42,10 @@ public class MediaBrowserConnector {
     public void onConnected(MediaSessionCompat.Token token) {
         if (token == null) {
             token = mMediaBrowser.getSessionToken();
+            mMediaBrowser.subscribe(mMediaBrowser.getRoot(), mySubscriptionCallback);
         }
         this.mediaSessionToken = token;
-        mMediaBrowser.subscribe(mMediaBrowser.getRoot(), mySubscriptionCallback);
-        activity.onMediaBrowserServiceConnected(token);
+
     }
 
     public MediaBrowserCompat getmMediaBrowser() {

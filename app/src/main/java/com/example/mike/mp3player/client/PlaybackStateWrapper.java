@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.media.session.PlaybackStateCompat;
 
+@Deprecated
 public final class PlaybackStateWrapper implements Parcelable {
     private final PlaybackStateCompat playbackState;
     private long timestanp;

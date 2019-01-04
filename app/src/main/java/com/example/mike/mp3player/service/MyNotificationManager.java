@@ -11,14 +11,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Icon;
 import android.media.session.MediaSession;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
-import androidx.media.app.NotificationCompat.MediaStyle;
-import androidx.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -26,6 +20,15 @@ import android.util.Log;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaPlayerActivity;
 import com.example.mike.mp3player.commons.AndroidUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+import androidx.media.app.NotificationCompat.MediaStyle;
+import androidx.media.session.MediaButtonReceiver;
+
+import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 
 public class MyNotificationManager {
 
@@ -52,11 +55,11 @@ public class MyNotificationManager {
         Log.d(TAG, "onDestroy: ");
     }
 
-    public NotificationManager getNotificationManager() {
+    public synchronized NotificationManager getNotificationManager() {
         return notificationManager;
     }
 
-    public Notification getNotification(MediaMetadataCompat metadata,
+    public synchronized Notification getNotification(MediaMetadataCompat metadata,
                                                       @NonNull PlaybackStateCompat state,
                                                       MediaSessionCompat.Token token) {
         boolean isPlaying = state.getState() == PlaybackStateCompat.STATE_PLAYING;
@@ -100,7 +103,7 @@ public class MyNotificationManager {
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
                     service, PlaybackStateCompat.ACTION_STOP))
-            .setContentIntent(createContentIntent())
+            .setContentIntent(createContentIntent(token))
             .addAction(skipToPreviousAction)
             .addAction(playPauseAction)
             .addAction(skipToNextAction);
@@ -151,7 +154,7 @@ public class MyNotificationManager {
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(service, PlaybackStateCompat.ACTION_STOP))
-            .setContentIntent(createContentIntent())
+            .setContentIntent(createContentIntent(token))
             .addAction(skipToPreviousAction)
             .addAction(playPauseAction)
             .addAction(skipToNextAction)
@@ -184,8 +187,9 @@ public class MyNotificationManager {
         }
     }
 
-    private PendingIntent createContentIntent() {
+    private PendingIntent createContentIntent(MediaSessionCompat.Token token) {
         Intent openUI = new Intent(service, MediaPlayerActivity.class);
+        openUI.putExtra(MEDIA_SESSION, token);
         openUI.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return PendingIntent.getActivity(
                 service, REQUEST_CODE, openUI, PendingIntent.FLAG_CANCEL_CURRENT);

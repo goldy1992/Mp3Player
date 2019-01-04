@@ -3,6 +3,7 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:id="@+id/menu_item"
+    android:background="@android:color/white"
 
     android:useDefaultMargins="true"
     android:alignmentMode="alignBounds"

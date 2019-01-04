@@ -2,8 +2,12 @@ package com.example.mike.mp3player.client;
 
 import android.support.v4.media.MediaBrowserCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
@@ -13,16 +17,24 @@ import com.example.mike.mp3player.client.view.MyViewHolder;
 import com.example.mike.mp3player.commons.MetaDataKeys;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
+public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements Filterable {
     private List<MediaBrowserCompat.MediaItem> songs;
+    private List<MediaBrowserCompat.MediaItem> filteredSongs;
+    private MySongFilter filter;
+    private final String LOG_TAG = "MY_VIEW_ADAPTER";
 
 
     public MyViewAdapter(List<MediaBrowserCompat.MediaItem> songs) {
         super();
         this.songs = songs;
+        this.filteredSongs = songs;
+        filter = new MySongFilter();
     }
     public void setData(List<MediaBrowserCompat.MediaItem> items) {
         if (getSongs() == null) {
@@ -44,7 +56,8 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        MediaBrowserCompat.MediaItem song = getSongs().get(position);
+        //Log.i(LOG_TAG, "position: " + position);
+        MediaBrowserCompat.MediaItem song = getFilteredSongs().get(holder.getAdapterPosition());
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         song.getMediaId();
@@ -52,8 +65,8 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
         String artist = extractArtist(song);
         String duration = extractDuration(song);
 
-         TextView artistText = holder.getView().findViewById(R.id.artist);
-         artistText.setText(artist);
+        TextView artistText = holder.getView().findViewById(R.id.artist);
+        artistText.setText(artist);
 
         TextView titleText = holder.getView().findViewById(R.id.title);
         titleText.setText(title);
@@ -64,7 +77,7 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public int getItemCount() {
-        return getSongs() == null ? 0: getSongs().size();
+        return getFilteredSongs() == null ? 0: getFilteredSongs().size();
     }
 
     private String extractTitle(MediaBrowserCompat.MediaItem song) {
@@ -96,5 +109,48 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     public List<MediaBrowserCompat.MediaItem> getSongs() {
         return songs;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    public List<MediaBrowserCompat.MediaItem> getFilteredSongs() {
+        return filteredSongs;
+    }
+
+    private class MySongFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            List<MediaBrowserCompat.MediaItem> filteredList = new ArrayList<>();
+
+            if (StringUtils.isBlank(constraint.toString())) {
+                return results(songs);
+            }
+
+            for (MediaBrowserCompat.MediaItem i : songs) {
+                String title = i.getDescription().getTitle().toString().toUpperCase(Locale.getDefault());
+                String uppercaseConstraint = constraint.toString().toUpperCase(Locale.getDefault());
+                if (title.contains(uppercaseConstraint)) {
+                    filteredList.add(i);
+                }
+            }
+            return results(filteredList);
+        }
+
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredSongs = (List<MediaBrowserCompat.MediaItem>) results.values;
+            notifyDataSetChanged();
+        }
+
+        private FilterResults results(List<MediaBrowserCompat.MediaItem> filteredSongs) {
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = filteredSongs;
+            return filterResults;
+        }
     }
 }
