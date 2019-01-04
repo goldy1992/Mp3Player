@@ -20,7 +20,7 @@ public class MyMediaPlayerAdapterRoboelectricTest extends MediaPlayerAdapterTest
     public void testGetCurrentMetaData() {
         final int EXPECTED_DURATION = 1234;
         mediaPlayerAdapter = createMediaPlayerAdapter();
-        MediaPlayer mediaPlayer = mock (MediaPlayer.class);
+        MediaPlayer mediaPlayer = mock(MediaPlayer.class);
         when(mediaPlayer.getDuration()).thenReturn(EXPECTED_DURATION);
         setMediaPlayer(mediaPlayer);
         MediaMetadataCompat mediaMetadataCompat = mediaPlayerAdapter.getCurrentMetaData().build();
