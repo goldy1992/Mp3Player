@@ -181,6 +181,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         Uri nextItemUri = mediaLibrary.getMediaUri(playbackManager.playbackComplete());
         myMediaPlayerAdapter.playFromUri(nextItemUri);
         updateMediaSession();
+        serviceManager.notify(prepareNotification());
     }
 
     @Override

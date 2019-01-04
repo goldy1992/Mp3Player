@@ -8,6 +8,8 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
+
 import java.io.IOException;
 
 public class MyMediaPlayerAdapter {
@@ -55,6 +57,7 @@ public class MyMediaPlayerAdapter {
     }
 
     public synchronized void playFromUri(Uri uri) {
+        resetPlayer();
         setCurrentUri(uri);
         play();
     }
@@ -172,6 +175,7 @@ public class MyMediaPlayerAdapter {
        try {
            this.mediaPlayer.setDataSource(context, uri);
        } catch (IOException ex) {
+           Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex.fillInStackTrace()));
            return false;
        }
         this.dataSourceSet = true;
