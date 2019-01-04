@@ -6,14 +6,14 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.utils.TimerUtils;
-import com.example.mike.mp3player.client.view.PlayPauseButton;
+import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
 import com.example.mike.mp3player.client.view.SeekerBar;
 import com.example.mike.mp3player.client.view.TimeCounter;
+import com.example.mike.mp3player.client.view.fragments.PlaybackToolbarExtendedFragment;
 import com.example.mike.mp3player.commons.Constants;
 
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -26,7 +26,7 @@ import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
 /**
  * Created by Mike on 24/09/2017.
  */
-public class MediaPlayerActivity extends MediaActivityCompat {
+public class MediaPlayerActivity extends MediaActivityCompat implements MediaPlayerActionListener {
 
     private final String STOP = "Stop";
     private MediaControllerWrapper<MediaPlayerActivity> mediaControllerWrapper;
@@ -35,15 +35,13 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     private TextView track;
     private TextView playbackSpeed;
     private TextView duration;
-    private PlayPauseButton playPauseButton;
-    private ImageButton skipToPreviousButton;
-    private ImageButton skipToNextButton;
     private AppCompatImageButton increasePlaybackSpeedButton;
     private AppCompatImageButton decreasePlaybackSpeedButton;
     private SeekerBar seekerBar;
     private TimeCounter counter;
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
     private MediaSessionCompat.Token token;
+    private PlaybackToolbarExtendedFragment playbackToolbarExtendedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,25 +109,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    public void playPause(View view)
-    {
-        int pbState = mediaControllerWrapper.getPlaybackState();
-        if (pbState == PlaybackStateCompat.STATE_PLAYING) {
-            mediaControllerWrapper.pause();
-            getPlayPauseButton().setPlayIcon();
-        } else {
-            mediaControllerWrapper.play();
-            getPlayPauseButton().setPauseIcon();
-        }
-    }
 
-    public void skipToNext(View view) {
-        mediaControllerWrapper.skipToNext();
-    }
-
-    public void skipToPrevious(View view) {
-        mediaControllerWrapper.skipToPrevious();
-    }
 
     public void increasePlaybackSpeed(View view) {
         Bundle extras = new Bundle();
@@ -149,10 +129,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
                 pbState == PlaybackStateCompat.STATE_STOPPED ) {
             mediaControllerWrapper.stop();
         } // if
-    }
-
-    public PlayPauseButton getPlayPauseButton() {
-        return playPauseButton;
     }
 
     public TimeCounter getCounter() {
@@ -180,14 +156,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
     private void initView() {
         setContentView(R.layout.activity_media_player);
-        this.playPauseButton = this.findViewById(R.id.playPauseButton);
-        this.playPauseButton.setOnClickListener((View view) -> playPause(view));
 
-        this.skipToPreviousButton = this.findViewById(R.id.skip_to_previous);
-        this.skipToPreviousButton.setOnClickListener((View view) -> skipToPrevious(view));
-
-        this.skipToNextButton = this.findViewById(R.id.skip_to_next);
-        this.skipToNextButton.setOnClickListener((View view) -> skipToNext(view));
 
         this.decreasePlaybackSpeedButton = this.findViewById(R.id.decreasePlaybackSpeed);
         this.decreasePlaybackSpeedButton.setOnClickListener((View view) -> decreasePlaybackSpeed(view));
@@ -205,6 +174,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         this.track = this.findViewById(R.id.trackName);
         this.duration = this.findViewById(R.id.duration);
         this.playbackSpeed = this.findViewById(R.id.playbackSpeedValue);
+        this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) getSupportFragmentManager().findFragmentById(R.id.playbackToolbarExtendedFragment);
     }
 
     private Object retrieveIntentInfo(String key) {
@@ -227,7 +197,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
     @Override
     public void setPlaybackState(PlaybackStateCompat playbackState) {
-        getPlayPauseButton().updateState(playbackState);
+     //   getPlayPauseButton().updateState(playbackState);
         getCounter().updateState(playbackState);
         float speed = playbackState.getPlaybackSpeed();
         if (speed > 0) {
@@ -256,5 +226,35 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
     public void setMediaId(String mediaId) {
         this.mediaId = mediaId;
+    }
+
+    @Override
+    public void playSelectedSong(String songId) {
+
+    }
+
+    @Override
+    public void play() {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void goToMediaPlayerActivity() {
+
+    }
+
+    @Override
+    public void skipToNext() {
+
+    }
+
+    @Override
+    public void skipToPrevious() {
+
     }
 }

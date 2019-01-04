@@ -16,9 +16,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 public class PlayToolBarFragment extends Fragment {
-    private MediaPlayerActionListener mediaPlayerActionListener;
-    private PlayPauseButton playPauseButton;
-    private Toolbar toolbar;
+
+    protected MediaPlayerActionListener mediaPlayerActionListener;
+    PlayPauseButton playPauseButton;
+    protected Toolbar toolbar;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -31,10 +32,10 @@ public class PlayToolBarFragment extends Fragment {
         toolbar = view.findViewById(R.id.playToolbar);
         toolbar.setOnClickListener((View v) -> mediaPlayerActionListener.goToMediaPlayerActivity());
         playPauseButton = view.findViewById(R.id.mainActivityPlayPauseButton);
-        playPauseButton.setOnClickListener((View v) -> playPause(v));
+        playPauseButton.setOnClickListener((View v) -> playPause());
     }
 
-    public void playPause(View view) {
+    void playPause() {
         int currentPlaybackState = playPauseButton.getState();
         if (currentPlaybackState == PlaybackStateCompat.STATE_PLAYING) {
             mediaPlayerActionListener.pause();

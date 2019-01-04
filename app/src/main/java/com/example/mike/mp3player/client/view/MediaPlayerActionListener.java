@@ -5,6 +5,6 @@ public interface MediaPlayerActionListener {
     void play();
     void pause();
     void goToMediaPlayerActivity();
-    // void skipToNext();
-    // void skipToPrevious();
+    void skipToNext();
+    void skipToPrevious();
 }
