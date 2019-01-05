@@ -121,6 +121,6 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
 
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options) {
-        Log.i(LOG_TAG, "more children loaded");
+        //Log.i(LOG_TAG, "more children loaded");
     }
 }

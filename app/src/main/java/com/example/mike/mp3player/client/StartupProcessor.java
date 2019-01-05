@@ -72,7 +72,7 @@ public class StartupProcessor extends AsyncTask implements MediaBrowserConnector
 
     @Override
     public synchronized void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options) {
-        Log.i(LOG_TAG, "children loaded");
+        //Log.i(LOG_TAG, "children loaded");
         Intent mainActivityIntent = new Intent(parent.getApplicationContext(), MainActivity.class);
         ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>();
         childrenArrayList.addAll(children);
@@ -105,7 +105,7 @@ public class StartupProcessor extends AsyncTask implements MediaBrowserConnector
 
     @Override
     public void onPermissionGranted() {
-        Log.i(LOG_TAG, "permission granted");
+        //Log.i(LOG_TAG, "permission granted");
         parent.runOnUiThread(() -> initMediaBrowserService());
     }
 }
