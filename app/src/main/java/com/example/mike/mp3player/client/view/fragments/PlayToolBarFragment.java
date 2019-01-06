@@ -5,8 +5,10 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.view.LinearLayoutWithImageView;
 import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
 import com.example.mike.mp3player.client.view.PlayPauseButton;
 
@@ -20,6 +22,7 @@ public class PlayToolBarFragment extends Fragment {
     protected MediaPlayerActionListener mediaPlayerActionListener;
     PlayPauseButton playPauseButton;
     protected Toolbar toolbar;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -29,10 +32,12 @@ public class PlayToolBarFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle bundle) {
+        super.onViewCreated(view, bundle);
         toolbar = view.findViewById(R.id.playToolbar);
         toolbar.setOnClickListener((View v) -> mediaPlayerActionListener.goToMediaPlayerActivity());
         playPauseButton = view.findViewById(R.id.mainActivityPlayPauseButton);
         playPauseButton.setOnClickListener((View v) -> playPause());
+        initButton(playPauseButton);
     }
 
     void playPause() {
@@ -44,6 +49,17 @@ public class PlayToolBarFragment extends Fragment {
             mediaPlayerActionListener.play();
             getPlayPauseButton().setPauseIcon();
         }
+    }
+    
+    void initButton(LinearLayoutWithImageView layout) {
+        layout.setScaleX(2);
+        layout.setScaleY(2);
+        int layoutHeight = layout.getHeight();
+        int imageHeight = layout.getView().getHeight();
+        long exactMarginSize = (layoutHeight - imageHeight) / 2;
+        int marginSize =  (int) exactMarginSize;
+        layout.setPadding(marginSize, 0, marginSize, 0);
+        layout.setBackgroundColor(getContext().getResources().getColor(android.R.color.holo_orange_light, null));
     }
 
     public PlayPauseButton getPlayPauseButton() {

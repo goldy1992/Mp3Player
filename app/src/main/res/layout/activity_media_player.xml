@@ -42,7 +42,8 @@
             android:id="@+id/increasePlaybackSpeed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_baseline_add_circle_24px" />
+            app:srcCompat="@drawable/ic_baseline_add_circle_24px"
+            />
         <TextView
             android:id="@+id/playbackSpeedValue"
             android:layout_gravity="center_vertical"
