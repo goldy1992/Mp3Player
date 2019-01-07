@@ -20,7 +20,7 @@ public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.fragment_playback_toolbar_extended, null);
+        return inflater.inflate(R.layout.playback_toolbar_layout, null);
     }
 
     @Override

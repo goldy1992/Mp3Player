@@ -89,6 +89,6 @@
         android:layout_marginTop="5dp"
         android:minHeight="?attr/actionBarSize"
         class="com.example.mike.mp3player.client.view.fragments.PlaybackToolbarExtendedFragment"
-        tools:layout="@layout/fragment_playback_toolbar_extended" />
+        tools:layout="@layout/playback_toolbar_layout" />
 
 </RelativeLayout>
