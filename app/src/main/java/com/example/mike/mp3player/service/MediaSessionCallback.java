@@ -246,6 +246,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                 if (myMediaPlayerAdapter.isPlaying()) {
                     myMediaPlayerAdapter.pause();
                     updateMediaSession();
+                    serviceManager.notify(prepareNotification());
                 }
             }
         }
