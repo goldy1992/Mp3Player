@@ -5,6 +5,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.view.LinearLayoutWithImageView;
@@ -16,6 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
 public class PlayToolBarFragment extends Fragment {
 
     protected MediaPlayerActionListener mediaPlayerActionListener;
@@ -25,7 +28,10 @@ public class PlayToolBarFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_playback_toolbar, null );
+        LinearLayout root = new LinearLayout(getContext());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
+        root.setLayoutParams(layoutParams);
+        return inflater.inflate(R.layout.fragment_playback_toolbar, root, true );
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.view.MediaPlayerActionListener;

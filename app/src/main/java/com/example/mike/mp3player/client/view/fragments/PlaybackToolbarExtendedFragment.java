@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.view.LinearLayoutWithImageView;
@@ -20,7 +21,8 @@ public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.playback_toolbar_layout, null);
+        LinearLayout root = new LinearLayout(getContext());
+        return inflater.inflate(R.layout.playback_toolbar_layout, root, true);
     }
 
     @Override
