@@ -37,7 +37,7 @@ public class MainFrameFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_main_frame, null);
+        return inflater.inflate(R.layout.fragment_main_frame, container, true);
     }
 
     @Override

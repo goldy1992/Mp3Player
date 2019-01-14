@@ -24,7 +24,7 @@ public class TitleBarFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.fragment_title_bar, null);
+        return inflater.inflate(R.layout.fragment_title_bar, container, true);
     }
 
     @Override

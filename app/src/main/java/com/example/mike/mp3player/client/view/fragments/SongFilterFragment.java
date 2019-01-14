@@ -34,7 +34,7 @@ public class SongFilterFragment extends Fragment implements TextWatcher, KeyImeC
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.fragment_song_filter, null);
+        return inflater.inflate(R.layout.fragment_song_filter, container, true);
     }
 
     @Override

@@ -3,10 +3,12 @@ package com.example.mike.mp3player.client.view.fragments;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.example.mike.mp3player.R;
@@ -20,6 +22,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
 public class MainActivityRootFragment extends Fragment implements SongSearchActionListener {
 
     private MainFrameFragment mainFrameFragment;
@@ -30,7 +34,10 @@ public class MainActivityRootFragment extends Fragment implements SongSearchActi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.fragment_main_activity_root, null);
+        LinearLayout root = new LinearLayout(getContext());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
+        root.setLayoutParams(layoutParams);
+        return inflater.inflate(R.layout.fragment_main_activity_root, root);
     }
 
     @Override

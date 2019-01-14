@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.view.PlayPauseButton;
 import com.example.mike.mp3player.client.view.SeekerBar;
 import com.example.mike.mp3player.client.view.TimeCounter;
 import com.example.mike.mp3player.client.view.fragments.PlaybackToolbarExtendedFragment;
@@ -156,7 +157,8 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
 
     private void initView() {
         setContentView(R.layout.activity_media_player);
-
+        this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) getSupportFragmentManager().findFragmentById(R.id.playbackToolbarExtendedFragment);
+        this.playbackToolbarExtendedFragment.setMediaPlayerActionListener(this);
 
         this.decreasePlaybackSpeedButton = this.findViewById(R.id.decreasePlaybackSpeed);
         this.decreasePlaybackSpeedButton.setOnClickListener((View view) -> decreasePlaybackSpeed(view));
@@ -174,7 +176,7 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
         this.track = this.findViewById(R.id.trackName);
         this.duration = this.findViewById(R.id.duration);
         this.playbackSpeed = this.findViewById(R.id.playbackSpeedValue);
-        this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) getSupportFragmentManager().findFragmentById(R.id.playbackToolbarExtendedFragment);
+
     }
 
     private Object retrieveIntentInfo(String key) {
@@ -196,14 +198,21 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
     }
 
     @Override
-    public void setPlaybackState(PlaybackStateCompat playbackState) {
-     //   getPlayPauseButton().updateState(playbackState);
-        getCounter().updateState(playbackState);
-        float speed = playbackState.getPlaybackSpeed();
+    public void setPlaybackState(PlaybackStateCompat state) {
+
+        if (state != null) {
+            @PlaybackStateCompat.State
+            final int newState = state.getState();
+            PlayPauseButton playPauseButton = playbackToolbarExtendedFragment.getPlayPauseButton();
+            playPauseButton.updateState(newState);
+        }
+
+        getCounter().updateState(state);
+        float speed = state.getPlaybackSpeed();
         if (speed > 0) {
             updatePlaybackSpeedText(speed);
         }
-        seekerBar.getMySeekerMediaControllerCallback().onPlaybackStateChanged(playbackState);
+        seekerBar.getMySeekerMediaControllerCallback().onPlaybackStateChanged(state);
     }
 
     private void updatePlaybackSpeedText(float speed) {
@@ -230,31 +239,31 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
 
     @Override
     public void playSelectedSong(String songId) {
-
+        // no song should be selected in this view
     }
 
     @Override
     public void play() {
-
+        mediaControllerWrapper.play();
     }
 
     @Override
     public void pause() {
-
+        mediaControllerWrapper.pause();
     }
 
     @Override
     public void goToMediaPlayerActivity() {
-
+        // do nothing we're already here
     }
 
     @Override
     public void skipToNext() {
-
+        mediaControllerWrapper.skipToNext();
     }
 
     @Override
     public void skipToPrevious() {
-
+        mediaControllerWrapper.skipToPrevious();
     }
 }
