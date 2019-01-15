@@ -34,10 +34,7 @@ public class MainActivityRootFragment extends Fragment implements SongSearchActi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        LinearLayout root = new LinearLayout(getContext());
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
-        root.setLayoutParams(layoutParams);
-        return inflater.inflate(R.layout.fragment_main_activity_root, root);
+        return inflater.inflate(R.layout.fragment_main_activity_root, container, true);
     }
 
     @Override

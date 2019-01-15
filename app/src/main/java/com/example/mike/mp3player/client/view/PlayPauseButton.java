@@ -27,7 +27,7 @@ public class PlayPauseButton extends LinearLayoutWithImageView {
     public PlayPauseButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
-        }
+    }
 
     public void updateState(PlaybackStateCompat state) {
         updateState(state.getState());
@@ -59,5 +59,11 @@ public class PlayPauseButton extends LinearLayoutWithImageView {
     @PlaybackStateCompat.State
     public int getState() {
         return state;
+    }
+
+    public static PlayPauseButton create(Context context) {
+        PlayPauseButton toReturn = new PlayPauseButton(context);
+        toReturn.updateState(STATE_PAUSED);
+        return toReturn;
     }
 }

@@ -1,4 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge>
-    <include layout="@layout/playback_toolbar_layout" />
-</merge>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/playbackToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="0dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/ic_launcher_background"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+
+        android:layout_gravity="bottom">
+
+        <LinearLayout
+            android:id="@+id/innerPlaybackToolbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/design_default_color_secondary"
+            android:orientation="horizontal" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+</LinearLayout>
+
+    <!--android:background="?attr/colorPrimary"-->

@@ -35,7 +35,8 @@ public class LinearLayoutWithImageView extends LinearLayout {
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_linear_layout_with_image_view, this);
         this.view = this.findViewById(R.id.view);
-        this.view.setImageDrawable(getDrawableResourceFromAttribute(attrs));
+
+        //this.view.setImageDrawable(getDrawableResourceFromAttribute(attrs));
     }
     private Drawable getDrawableResourceFromAttribute(AttributeSet attrs) {
         int resourceToReturn = 0;

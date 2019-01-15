@@ -24,14 +24,17 @@ public class PlayToolBarFragment extends Fragment {
     protected MediaPlayerActionListener mediaPlayerActionListener;
     PlayPauseButton playPauseButton;
     protected Toolbar toolbar;
+    private LinearLayout root;
+    private LinearLayout innerPlaybackToolbarLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        LinearLayout root = new LinearLayout(getContext());
+        super.onCreateView(inflater, container, savedInstanceState);
+        root = new LinearLayout(getContext());
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
         root.setLayoutParams(layoutParams);
-        return inflater.inflate(R.layout.fragment_playback_toolbar, root, true );
+        return inflater.inflate(R.layout.fragment_playback_toolbar, container, true );
     }
 
     @Override
@@ -39,9 +42,12 @@ public class PlayToolBarFragment extends Fragment {
         super.onViewCreated(view, bundle);
         toolbar = view.findViewById(R.id.playbackToolbar);
         toolbar.setOnClickListener((View v) -> mediaPlayerActionListener.goToMediaPlayerActivity());
-        playPauseButton = view.findViewById(R.id.playPauseButton);
-        playPauseButton.setOnClickListener((View v) -> playPause());
+        this.innerPlaybackToolbarLayout = view.findViewById(R.id.innerPlaybackToolbarLayout);
+        this.playPauseButton = PlayPauseButton.create(getContext());
+        this.playPauseButton.setOnClickListener((View v) -> playPause());
         initButton(playPauseButton);
+//        innerPlaybackToolbarLayout.addView(playPauseButton);
+
     }
 
     void playPause() {

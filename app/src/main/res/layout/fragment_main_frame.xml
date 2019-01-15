@@ -34,11 +34,11 @@
 
         <fragment
             android:id="@+id/playToolbarFragment"
+            class="com.example.mike.mp3player.client.view.fragments.PlayToolBarFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            class="com.example.mike.mp3player.client.view.fragments.PlayToolBarFragment"
-            tools:layout="@layout/fragment_playback_toolbar"/>
+            tools:layout="@layout/fragment_playback_toolbar" />
 
 
     </LinearLayout>
