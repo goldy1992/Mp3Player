@@ -13,7 +13,7 @@ public class PlayPauseButton extends LinearLayoutWithImageView {
 
     private static final String LOG_TAG = "PLAY_PAUSE_BUTTON";
     @PlaybackStateCompat.State
-    private int state = PlaybackStateCompat.STATE_PAUSED;
+    private int state = PlaybackStateCompat.STATE_NONE;
     private Context context;
 
     public PlayPauseButton(Context context) {
@@ -46,7 +46,6 @@ public class PlayPauseButton extends LinearLayoutWithImageView {
                     break;
             } // switch
         }
-
     }
 
     public void setPlayIcon() {

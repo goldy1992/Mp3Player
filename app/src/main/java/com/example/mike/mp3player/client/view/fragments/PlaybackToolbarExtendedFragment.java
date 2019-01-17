@@ -22,19 +22,24 @@ public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         LinearLayout root = new LinearLayout(getContext());
-        return inflater.inflate(R.layout.playback_toolbar_layout, root, true);
+        return inflater.inflate(R.layout.fragment_playback_toolbar, root, true);
     }
 
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-        this.skipToPreviousButton = view.findViewById(R.id.skip_to_previous);
+      //  this.skipToPreviousButton = LinearLayoutWithImageView.create(getContext(),);
         this.skipToPreviousButton.setOnClickListener((View v) -> skipToPrevious());
         initButton(skipToPreviousButton);
 
         this.skipToNextButton = view.findViewById(R.id.skip_to_next);
         this.skipToNextButton.setOnClickListener((View v) -> skipToNext());
         initButton(skipToNextButton);
+
+        if (null != innerPlaybackToolbarLayout) {
+            innerPlaybackToolbarLayout.addView(skipToPreviousButton);
+            innerPlaybackToolbarLayout.addView(skipToNextButton);
+        }
     }
 
     public void skipToNext() {

@@ -64,4 +64,8 @@ public class LinearLayoutWithImageView extends LinearLayout {
         Drawable drawable = getContext().getDrawable(resource);
         getView().setImageDrawable(drawable);
     }
+
+    public static LinearLayoutWithImageView create(Context context, int imageResource) {
+        return new LinearLayoutWithImageView(context);
+    }
 }

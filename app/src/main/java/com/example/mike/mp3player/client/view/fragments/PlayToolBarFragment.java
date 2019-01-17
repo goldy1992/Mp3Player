@@ -17,23 +17,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-
 public class PlayToolBarFragment extends Fragment {
 
     protected MediaPlayerActionListener mediaPlayerActionListener;
     PlayPauseButton playPauseButton;
     protected Toolbar toolbar;
-    private LinearLayout root;
-    private LinearLayout innerPlaybackToolbarLayout;
+    LinearLayout innerPlaybackToolbarLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        root = new LinearLayout(getContext());
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
-        root.setLayoutParams(layoutParams);
         return inflater.inflate(R.layout.fragment_playback_toolbar, container, true );
     }
 
@@ -46,8 +40,10 @@ public class PlayToolBarFragment extends Fragment {
         this.playPauseButton = PlayPauseButton.create(getContext());
         this.playPauseButton.setOnClickListener((View v) -> playPause());
         initButton(playPauseButton);
-//        innerPlaybackToolbarLayout.addView(playPauseButton);
 
+        if (null != innerPlaybackToolbarLayout) {
+            innerPlaybackToolbarLayout.addView(playPauseButton);
+        }
     }
 
     void playPause() {
@@ -60,16 +56,16 @@ public class PlayToolBarFragment extends Fragment {
             getPlayPauseButton().setPauseIcon();
         }
     }
-    
+
     void initButton(LinearLayoutWithImageView layout) {
-        layout.setScaleX(2);
-        layout.setScaleY(2);
-        int layoutHeight = layout.getHeight();
-        int imageHeight = layout.getView().getHeight();
-        long exactMarginSize = (layoutHeight - imageHeight) / 2;
+        layout.getView().setScaleX(2);
+        layout.getView().setScaleY(2);
+        int imageHeight = layout.getView().getDrawable().getIntrinsicHeight();
+        long exactMarginSize =  imageHeight / 2;
         int marginSize =  (int) exactMarginSize;
-        layout.setPadding(marginSize, 0, marginSize, 0);
+        layout.setPadding(marginSize, marginSize, marginSize, marginSize);
         layout.setBackgroundColor(getContext().getResources().getColor(android.R.color.holo_orange_light, null));
+
     }
 
     public PlayPauseButton getPlayPauseButton() {
