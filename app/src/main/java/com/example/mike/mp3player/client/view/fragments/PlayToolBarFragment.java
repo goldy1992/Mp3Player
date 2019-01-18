@@ -2,9 +2,11 @@ package com.example.mike.mp3player.client.view.fragments;
 
 import android.os.Bundle;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.mike.mp3player.R;
@@ -16,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class PlayToolBarFragment extends Fragment {
 
@@ -38,12 +42,8 @@ public class PlayToolBarFragment extends Fragment {
         toolbar.setOnClickListener((View v) -> mediaPlayerActionListener.goToMediaPlayerActivity());
         this.innerPlaybackToolbarLayout = view.findViewById(R.id.innerPlaybackToolbarLayout);
         this.playPauseButton = PlayPauseButton.create(getContext());
-        this.playPauseButton.setOnClickListener((View v) -> playPause());
+        this.playPauseButton.getView().setOnClickListener((View v) -> playPause());
         initButton(playPauseButton);
-
-        if (null != innerPlaybackToolbarLayout) {
-            innerPlaybackToolbarLayout.addView(playPauseButton);
-        }
     }
 
     void playPause() {
@@ -58,14 +58,23 @@ public class PlayToolBarFragment extends Fragment {
     }
 
     void initButton(LinearLayoutWithImageView layout) {
-        layout.getView().setScaleX(2);
-        layout.getView().setScaleY(2);
-        int imageHeight = layout.getView().getDrawable().getIntrinsicHeight();
+        ImageView imageView = layout.getView();
+        imageView.setScaleX(2);
+        imageView.setScaleY(2);
+        int imageHeight = imageView.getDrawable().getIntrinsicHeight();
         long exactMarginSize =  imageHeight / 2;
         int marginSize =  (int) exactMarginSize;
-        layout.setPadding(marginSize, marginSize, marginSize, marginSize);
-        layout.setBackgroundColor(getContext().getResources().getColor(android.R.color.holo_orange_light, null));
+        imageView.setPadding(marginSize, marginSize, marginSize, marginSize);
+        layout.setGravity(Gravity.CENTER_HORIZONTAL);
+        //layout.setBackgroundColor(getContext().getResources().getColor(android.R.color.holo_orange_light, null));
 
+    }
+
+    void displayButtons() {
+        if (null != innerPlaybackToolbarLayout) {
+            playPauseButton.setLayoutParams(getLinearLayoutParams(playPauseButton.getLayoutParams()));
+            innerPlaybackToolbarLayout.addView(playPauseButton);
+        }
     }
 
     public PlayPauseButton getPlayPauseButton() {
@@ -78,5 +87,14 @@ public class PlayToolBarFragment extends Fragment {
 
     public void setMediaPlayerActionListener(MediaPlayerActionListener mediaPlayerActionListener) {
         this.mediaPlayerActionListener = mediaPlayerActionListener;
+    }
+
+    LinearLayout.LayoutParams getLinearLayoutParams(ViewGroup.LayoutParams params) {
+        if (params != null) {
+            return new LinearLayout.LayoutParams(params.width,
+                    params.height, 1.0f);
+        }
+        return new LinearLayout.LayoutParams(WRAP_CONTENT,
+                WRAP_CONTENT, 1.0f);
     }
 }

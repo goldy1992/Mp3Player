@@ -7,4 +7,5 @@ public interface MediaPlayerActionListener {
     void goToMediaPlayerActivity();
     void skipToNext();
     void skipToPrevious();
+    void seekTo(int position);
 }

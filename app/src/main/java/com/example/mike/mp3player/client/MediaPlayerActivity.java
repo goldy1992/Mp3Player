@@ -9,12 +9,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
 import com.example.mike.mp3player.client.view.PlayPauseButton;
-import com.example.mike.mp3player.client.view.SeekerBar;
-import com.example.mike.mp3player.client.view.TimeCounter;
 import com.example.mike.mp3player.client.view.fragments.PlaybackToolbarExtendedFragment;
+import com.example.mike.mp3player.client.view.fragments.PlaybackTrackerFragment;
 import com.example.mike.mp3player.commons.Constants;
 
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -35,13 +33,13 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
     private TextView artist;
     private TextView track;
     private TextView playbackSpeed;
-    private TextView duration;
+
     private AppCompatImageButton increasePlaybackSpeedButton;
     private AppCompatImageButton decreasePlaybackSpeedButton;
-    private SeekerBar seekerBar;
-    private TimeCounter counter;
+
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
     private MediaSessionCompat.Token token;
+    private PlaybackTrackerFragment playbackTrackerFragment;
     private PlaybackToolbarExtendedFragment playbackToolbarExtendedFragment;
 
     @Override
@@ -132,11 +130,6 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
         } // if
     }
 
-    public TimeCounter getCounter() {
-        return counter;
-    }
-
-
     public TextView getArtist() {
         return artist;
     }
@@ -157,8 +150,11 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
 
     private void initView() {
         setContentView(R.layout.activity_media_player);
+        this.playbackTrackerFragment = (PlaybackTrackerFragment) getSupportFragmentManager().findFragmentById(R.id.playbackTrackerFragment);
+        this.playbackTrackerFragment.getSeekerBar().setSeekerBarListener(this);
         this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) getSupportFragmentManager().findFragmentById(R.id.playbackToolbarExtendedFragment);
         this.playbackToolbarExtendedFragment.setMediaPlayerActionListener(this);
+        this.playbackToolbarExtendedFragment.displayButtons();
 
         this.decreasePlaybackSpeedButton = this.findViewById(R.id.decreasePlaybackSpeed);
         this.decreasePlaybackSpeedButton.setOnClickListener((View view) -> decreasePlaybackSpeed(view));
@@ -166,15 +162,10 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
         this.increasePlaybackSpeedButton = this.findViewById(R.id.increasePlaybackSpeed);
         this.increasePlaybackSpeedButton.setOnClickListener((View view) -> increasePlaybackSpeed(view));
 
-        TextView counterView = this.findViewById(R.id.timer);
-        this.counter = new TimeCounter(this, counterView);
-        this.seekerBar = this.findViewById(R.id.seekBar);
-        this.seekerBar.init();
-        this.seekerBar.setTimeCounter(counter);
-        this.seekerBar.setParentActivity(this);
+
         this.artist = this.findViewById(R.id.artistName);
         this.track = this.findViewById(R.id.trackName);
-        this.duration = this.findViewById(R.id.duration);
+
         this.playbackSpeed = this.findViewById(R.id.playbackSpeedValue);
 
     }
@@ -189,12 +180,10 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
 
     @Override
     public void setMetaData(MediaMetadataCompat metaData) {
-        long duration = metaData.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
-        getCounter().setDuration(duration);
-        this.duration.setText(TimerUtils.formatTime(duration));
+        playbackTrackerFragment.setMetaData(metaData);
         setArtist(metaData.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
         setTrack(metaData.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
-        seekerBar.getMySeekerMediaControllerCallback().onMetadataChanged(metaData);
+
     }
 
     @Override
@@ -205,14 +194,13 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
             final int newState = state.getState();
             PlayPauseButton playPauseButton = playbackToolbarExtendedFragment.getPlayPauseButton();
             playPauseButton.updateState(newState);
+            playbackTrackerFragment.setPlaybackState(state);
         }
 
-        getCounter().updateState(state);
         float speed = state.getPlaybackSpeed();
         if (speed > 0) {
             updatePlaybackSpeedText(speed);
         }
-        seekerBar.getMySeekerMediaControllerCallback().onPlaybackStateChanged(state);
     }
 
     private void updatePlaybackSpeedText(float speed) {
@@ -265,5 +253,10 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
     @Override
     public void skipToPrevious() {
         mediaControllerWrapper.skipToPrevious();
+    }
+
+    @Override
+    public void seekTo(int position) {
+        mediaControllerWrapper.seekTo(position);
     }
 }

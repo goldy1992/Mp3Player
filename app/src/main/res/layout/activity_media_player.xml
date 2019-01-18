@@ -17,7 +17,7 @@
 
     <TextView
         android:id="@+id/trackName"
-        android:layout_below="@+id/playbackToolbarExtendedFragment"
+        android:layout_below="@+id/artistName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/TRACK_NAME" />
@@ -52,32 +52,13 @@
             android:text="@string/PLAYBACK_SPEED_DEFAULT_VALUE" />
     </LinearLayout>
 
-    <LinearLayout
+    <fragment
+        android:id="@+id/playbackTrackerFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/seekBar"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/DEFAULT_TIME"
-            android:textAlignment="textStart" />
-
-        <TextView
-            android:id="@+id/timer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/DEFAULT_TIME"
-            android:textAlignment="textEnd" />
-    </LinearLayout>
-
-    <com.example.mike.mp3player.client.view.SeekerBar
-        android:id="@+id/seekBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/playbackToolbarExtendedFragment" />
+        android:layout_above="@+id/playbackToolbarExtendedFragment"
+        class="com.example.mike.mp3player.client.view.fragments.PlaybackTrackerFragment"
+        tools:layout="@layout/fragment_playback_tracker"/>
 
     <fragment
         android:id="@+id/playbackToolbarExtendedFragment"

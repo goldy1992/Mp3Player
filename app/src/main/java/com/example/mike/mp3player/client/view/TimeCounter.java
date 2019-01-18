@@ -3,7 +3,6 @@ package com.example.mike.mp3player.client.view;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.TextView;
 
-import com.example.mike.mp3player.client.MediaActivityCompat;
 import com.example.mike.mp3player.client.TimeCounterTimerTask;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 
@@ -15,7 +14,6 @@ import static com.example.mike.mp3player.client.utils.TimerUtils.ONE_SECOND;
 import static com.example.mike.mp3player.client.utils.TimerUtils.formatTime;
 
 public class TimeCounter {
-    private MediaActivityCompat parentActivity;
     private TextView view;
     private long duration;
     private long currentPosition;
@@ -25,8 +23,7 @@ public class TimeCounter {
     private boolean isRunning = false;
     public static final String LOG_TAG = "TimeCounter";
 
-    public TimeCounter(MediaActivityCompat parentActivity, TextView view) {
-        this.parentActivity = parentActivity;
+    public TimeCounter(TextView view) {
         this.view = view;
     }
 
@@ -134,10 +131,6 @@ public class TimeCounter {
 
     public float getCurrentSpeed() {
         return currentSpeed;
-    }
-
-    public MediaActivityCompat getParentActivity() {
-        return parentActivity;
     }
 }
 

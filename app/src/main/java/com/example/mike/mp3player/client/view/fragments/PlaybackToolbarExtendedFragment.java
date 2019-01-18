@@ -28,18 +28,15 @@ public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-      //  this.skipToPreviousButton = LinearLayoutWithImageView.create(getContext(),);
-        this.skipToPreviousButton.setOnClickListener((View v) -> skipToPrevious());
+        this.skipToPreviousButton = LinearLayoutWithImageView.create(getContext(), R.drawable.ic_baseline_skip_previous_24px);
+        this.skipToPreviousButton.getView().setOnClickListener((View v) -> skipToPrevious());
         initButton(skipToPreviousButton);
 
-        this.skipToNextButton = view.findViewById(R.id.skip_to_next);
-        this.skipToNextButton.setOnClickListener((View v) -> skipToNext());
+        this.skipToNextButton = LinearLayoutWithImageView.create(getContext(), R.drawable.ic_baseline_skip_next_24px);
+        this.skipToNextButton.getView().setOnClickListener((View v) -> skipToNext());
         initButton(skipToNextButton);
 
-        if (null != innerPlaybackToolbarLayout) {
-            innerPlaybackToolbarLayout.addView(skipToPreviousButton);
-            innerPlaybackToolbarLayout.addView(skipToNextButton);
-        }
+
     }
 
     public void skipToNext() {
@@ -49,4 +46,30 @@ public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
     public void skipToPrevious() {
         mediaPlayerActionListener.skipToPrevious();
     }
+
+    @Override
+    public void displayButtons() {
+        if (null != innerPlaybackToolbarLayout) {
+
+
+
+            skipToPreviousButton.setLayoutParams(getLinearLayoutParams(skipToPreviousButton.getLayoutParams()));
+            innerPlaybackToolbarLayout.addView(skipToPreviousButton);
+
+            super.displayButtons();
+            skipToNextButton.setLayoutParams(getLinearLayoutParams(skipToNextButton.getLayoutParams()));
+            innerPlaybackToolbarLayout.addView(skipToNextButton);
+        }
+
+    }
+
+    private View getEmptyViewForToolbar(int widthOfDivision, int layoutHeight) {
+        View view = new View(getContext());
+        view.setLayoutParams(new LinearLayout.LayoutParams(widthOfDivision, layoutHeight));
+        view.setBackgroundColor(getResources().getColor(android.R.color.holo_purple, null));
+        view.setVisibility(View.INVISIBLE);
+        return view;
+    }
+
+
 }

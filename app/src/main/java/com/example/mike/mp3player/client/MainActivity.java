@@ -115,6 +115,11 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         mediaControllerWrapper.skipToPrevious();
     }
 
+    @Override
+    public void seekTo(int position) {
+        mediaControllerWrapper.seekTo(position);
+    }
+
     @Override // MediaActivityCompat
     public void setMetaData(MediaMetadataCompat metadata) { /* no need to update meta data in this class */ }
 

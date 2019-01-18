@@ -5,19 +5,16 @@ import android.content.Context;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
 
-import com.example.mike.mp3player.client.MediaActivityCompat;
 import com.example.mike.mp3player.client.SeekerBarChangerListener;
 import com.example.mike.mp3player.client.callbacks.MySeekerMediaControllerCallback;
 
 public class SeekerBar extends AppCompatSeekBar {
 
     private ValueAnimator valueAnimator;
-    private MediaActivityCompat parentActivity;
     private boolean isTracking = false;
-    private TimeCounter timeCounter;
 
     private MySeekerMediaControllerCallback mySeekerMediaControllerCallback;
-    public OnSeekBarChangeListener seekBarChangeListener;
+    public SeekerBarChangerListener seekBarChangeListener;
 
     public SeekerBar(Context context) {
         super(context);
@@ -62,23 +59,11 @@ public class SeekerBar extends AppCompatSeekBar {
         return seekBarChangeListener;
     }
 
-    public void setTimeCounter(TimeCounter timeCounter) {
-        this.timeCounter = timeCounter;
-    }
-
-    public TimeCounter getTimeCounter() {
-        return timeCounter;
-    }
-
-    public MediaActivityCompat getParentActivity() {
-        return parentActivity;
-    }
-
-    public void setParentActivity(MediaActivityCompat parentActivity) {
-        this.parentActivity = parentActivity;
-    }
-
     public MySeekerMediaControllerCallback getMySeekerMediaControllerCallback() {
         return mySeekerMediaControllerCallback;
+    }
+
+    public void setSeekerBarListener(MediaPlayerActionListener listener) {
+        seekBarChangeListener.setListener(listener);
     }
 }

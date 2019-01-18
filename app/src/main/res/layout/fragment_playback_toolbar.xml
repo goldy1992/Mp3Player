@@ -28,7 +28,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:background="@color/design_default_color_secondary"
             android:orientation="horizontal" />
 
     </androidx.appcompat.widget.Toolbar>

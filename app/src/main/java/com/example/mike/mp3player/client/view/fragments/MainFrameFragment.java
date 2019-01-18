@@ -44,6 +44,7 @@ public class MainFrameFragment extends Fragment {
     public void onViewCreated(View view, Bundle bundle) {
         this.drawerLayout = view.findViewById(R.id.drawer_layout);
         this.playToolBarFragment = (PlayToolBarFragment) getChildFragmentManager().findFragmentById(R.id.playToolbarFragment);
+        this.playToolBarFragment.displayButtons();
         this.titleBarFragment = (TitleBarFragment) getChildFragmentManager().findFragmentById(R.id.titleBarFragment);
         MyDrawerListener myDrawerListener = new MyDrawerListener();
         drawerLayout.addDrawerListener(myDrawerListener);

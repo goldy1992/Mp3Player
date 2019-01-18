@@ -66,6 +66,8 @@ public class LinearLayoutWithImageView extends LinearLayout {
     }
 
     public static LinearLayoutWithImageView create(Context context, int imageResource) {
-        return new LinearLayoutWithImageView(context);
+        LinearLayoutWithImageView toReturn = new LinearLayoutWithImageView(context);
+        toReturn.setViewImage(imageResource);
+        return toReturn;
     }
 }
