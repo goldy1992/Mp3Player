@@ -15,6 +15,7 @@ public class SeekerBar extends AppCompatSeekBar {
 
     private MySeekerMediaControllerCallback mySeekerMediaControllerCallback;
     public SeekerBarChangerListener seekBarChangeListener;
+    private TimeCounter timeCounter;
 
     public SeekerBar(Context context) {
         super(context);
@@ -61,6 +62,14 @@ public class SeekerBar extends AppCompatSeekBar {
 
     public MySeekerMediaControllerCallback getMySeekerMediaControllerCallback() {
         return mySeekerMediaControllerCallback;
+    }
+
+    public void setTimeCounter(TimeCounter timeCounter) {
+        this.timeCounter = timeCounter;
+    }
+
+    public TimeCounter getTimeCounter() {
+        return timeCounter;
     }
 
     public void setSeekerBarListener(MediaPlayerActionListener listener) {

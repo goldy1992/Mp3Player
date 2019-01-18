@@ -89,33 +89,33 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
-    @Override //MediaPlayerActionListener
+    @Override // MediaPlayerActionListener
     public void play() {
         mediaControllerWrapper.play();
     }
 
-    @Override //MediaPlayerActionListener
+    @Override // MediaPlayerActionListener
     public void pause() {
         mediaControllerWrapper.pause();
     }
 
-    @Override //MediaPlayerActionListener
+    @Override // MediaPlayerActionListener
     public void goToMediaPlayerActivity() {
         Intent intent = createMediaPlayerActivityIntent();
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
-    @Override
+    @Override // MediaPlayerActionListener
     public void skipToNext() {
         mediaControllerWrapper.skipToNext();
     }
 
-    @Override
+    @Override // MediaPlayerActionListener
     public void skipToPrevious() {
         mediaControllerWrapper.skipToPrevious();
     }
 
-    @Override
+    @Override // MediaPlayerActionListener
     public void seekTo(int position) {
         mediaControllerWrapper.seekTo(position);
     }
@@ -123,7 +123,7 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
     @Override // MediaActivityCompat
     public void setMetaData(MediaMetadataCompat metadata) { /* no need to update meta data in this class */ }
 
-    @Override
+    @Override // MediaActivityCompat
     public void setPlaybackState(PlaybackStateCompat state) {
         rootFragment.setPlaybackState(state);
     }
@@ -133,9 +133,13 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         return mediaControllerWrapper;
     }
 
-
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options) {
         Log.i(LOG_TAG, "more children loaded");
+    }
+
+    @Override // MediaPlayerActionListener
+    public void sendCustomAction(String customAction, Bundle args) {
+        mediaControllerWrapper.getMediaControllerCompat().getTransportControls().sendCustomAction(customAction, args);
     }
 }

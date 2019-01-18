@@ -7,50 +7,23 @@
     android:orientation="vertical"
     tools:context="com.example.mike.mp3player.client.MediaPlayerActivity">
 
-
-    <TextView
-        android:id="@+id/artistName"
-        android:layout_gravity="top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/ARTIST_NAME" />
-
-    <TextView
-        android:id="@+id/trackName"
-        android:layout_below="@+id/artistName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/TRACK_NAME" />
-
-    <LinearLayout
+    <fragment
+        android:id="@+id/trackInfoFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/trackName"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/playbackSpeedTitle"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_height="wrap_content"
-            android:text="@string/PLAYBACK_SPEED" />
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/decreasePlaybackSpeed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_baseline_remove_circle_24px" />
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/increasePlaybackSpeed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_baseline_add_circle_24px"
-            />
-        <TextView
-            android:id="@+id/playbackSpeedValue"
-            android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/PLAYBACK_SPEED_DEFAULT_VALUE" />
-    </LinearLayout>
+        android:layout_gravity="top"
+        class="com.example.mike.mp3player.client.view.fragments.TrackInfoFragment"
+        tools:layout="@layout/fragment_track_info"/>
+
+
+    <fragment
+        android:id="@+id/playbackSpeedControlsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/trackInfoFragment"
+        class="com.example.mike.mp3player.client.view.fragments.PlaybackSpeedControlsFragment"
+        tools:layout="@layout/fragment_playback_speed_controls"/>
+
 
     <fragment
         android:id="@+id/playbackTrackerFragment"

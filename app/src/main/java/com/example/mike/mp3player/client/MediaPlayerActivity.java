@@ -5,20 +5,16 @@ import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.view.View;
-import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
 import com.example.mike.mp3player.client.view.PlayPauseButton;
+import com.example.mike.mp3player.client.view.fragments.PlaybackSpeedControlsFragment;
 import com.example.mike.mp3player.client.view.fragments.PlaybackToolbarExtendedFragment;
 import com.example.mike.mp3player.client.view.fragments.PlaybackTrackerFragment;
+import com.example.mike.mp3player.client.view.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.commons.Constants;
 
-import androidx.appcompat.widget.AppCompatImageButton;
-
-import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
-import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
 import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
 
@@ -30,17 +26,14 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
     private final String STOP = "Stop";
     private MediaControllerWrapper<MediaPlayerActivity> mediaControllerWrapper;
     private String mediaId;
-    private TextView artist;
-    private TextView track;
-    private TextView playbackSpeed;
 
-    private AppCompatImageButton increasePlaybackSpeedButton;
-    private AppCompatImageButton decreasePlaybackSpeedButton;
 
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
     private MediaSessionCompat.Token token;
+    private TrackInfoFragment trackInfoFragment;
     private PlaybackTrackerFragment playbackTrackerFragment;
     private PlaybackToolbarExtendedFragment playbackToolbarExtendedFragment;
+    private PlaybackSpeedControlsFragment playbackSpeedControlsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,66 +101,16 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
         super.onSaveInstanceState(savedInstanceState);
     }
 
-
-
-    public void increasePlaybackSpeed(View view) {
-        Bundle extras = new Bundle();
-        mediaControllerWrapper.getMediaControllerCompat().getTransportControls()
-                .sendCustomAction(INCREASE_PLAYBACK_SPEED, extras);
-    }
-
-    public void decreasePlaybackSpeed(View view) {
-        Bundle extras = new Bundle();
-        mediaControllerWrapper.getMediaControllerCompat().getTransportControls()
-                .sendCustomAction(DECREASE_PLAYBACK_SPEED, extras);
-    }
-
-    public void stop(View view) {
-        int pbState = mediaControllerWrapper.getPlaybackState();
-        if (pbState == PlaybackStateCompat.STATE_PLAYING ||
-                pbState == PlaybackStateCompat.STATE_STOPPED ) {
-            mediaControllerWrapper.stop();
-        } // if
-    }
-
-    public TextView getArtist() {
-        return artist;
-    }
-
-    public void setArtist(String artist) {
-
-        this.artist.setText(getString(R.string.ARTIST_NAME, artist));
-    }
-
-    public TextView getTrack() {
-        return track;
-    }
-
-    public void setTrack(String track) {
-        this.track.setText(getString(R.string.TRACK_NAME, track));
-
-    }
-
     private void initView() {
         setContentView(R.layout.activity_media_player);
+        this.trackInfoFragment = (TrackInfoFragment) getSupportFragmentManager().findFragmentById(R.id.trackInfoFragment);
+        this.playbackSpeedControlsFragment = (PlaybackSpeedControlsFragment) getSupportFragmentManager().findFragmentById(R.id.playbackSpeedControlsFragment);
+        this.playbackSpeedControlsFragment.setMediaPlayerActionListener(this);
         this.playbackTrackerFragment = (PlaybackTrackerFragment) getSupportFragmentManager().findFragmentById(R.id.playbackTrackerFragment);
         this.playbackTrackerFragment.getSeekerBar().setSeekerBarListener(this);
         this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) getSupportFragmentManager().findFragmentById(R.id.playbackToolbarExtendedFragment);
         this.playbackToolbarExtendedFragment.setMediaPlayerActionListener(this);
         this.playbackToolbarExtendedFragment.displayButtons();
-
-        this.decreasePlaybackSpeedButton = this.findViewById(R.id.decreasePlaybackSpeed);
-        this.decreasePlaybackSpeedButton.setOnClickListener((View view) -> decreasePlaybackSpeed(view));
-
-        this.increasePlaybackSpeedButton = this.findViewById(R.id.increasePlaybackSpeed);
-        this.increasePlaybackSpeedButton.setOnClickListener((View view) -> increasePlaybackSpeed(view));
-
-
-        this.artist = this.findViewById(R.id.artistName);
-        this.track = this.findViewById(R.id.trackName);
-
-        this.playbackSpeed = this.findViewById(R.id.playbackSpeedValue);
-
     }
 
     private Object retrieveIntentInfo(String key) {
@@ -181,31 +124,19 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
     @Override
     public void setMetaData(MediaMetadataCompat metaData) {
         playbackTrackerFragment.setMetaData(metaData);
-        setArtist(metaData.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
-        setTrack(metaData.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
-
+        trackInfoFragment.setMetaData(metaData);
     }
 
     @Override
     public void setPlaybackState(PlaybackStateCompat state) {
-
         if (state != null) {
             @PlaybackStateCompat.State
             final int newState = state.getState();
             PlayPauseButton playPauseButton = playbackToolbarExtendedFragment.getPlayPauseButton();
             playPauseButton.updateState(newState);
             playbackTrackerFragment.setPlaybackState(state);
+            playbackSpeedControlsFragment.setPlaybackState(state);
         }
-
-        float speed = state.getPlaybackSpeed();
-        if (speed > 0) {
-            updatePlaybackSpeedText(speed);
-        }
-    }
-
-    private void updatePlaybackSpeedText(float speed) {
-        Runnable r = () ->  playbackSpeed.setText(getString(R.string.PLAYBACK_SPEED_VALUE, speed));
-        runOnUiThread(r);
     }
 
     @Override
@@ -258,5 +189,10 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
     @Override
     public void seekTo(int position) {
         mediaControllerWrapper.seekTo(position);
+    }
+
+    @Override
+    public void sendCustomAction(String customAction, Bundle args) {
+        mediaControllerWrapper.getMediaControllerCompat().getTransportControls().sendCustomAction(customAction, args);
     }
 }
