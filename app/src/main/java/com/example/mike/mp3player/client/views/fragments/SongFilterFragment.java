@@ -65,12 +65,12 @@ public class SongFilterFragment extends Fragment implements TextWatcher, KeyImeC
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        Log.i(LOG_TAG, "beforetextChanged");
+        //Log.i(LOG_TAG, "beforetextChanged");
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        Log.i(LOG_TAG, "ontextChanged");
+        //Log.i(LOG_TAG, "ontextChanged");
     }
 
     @Override

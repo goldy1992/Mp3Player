@@ -12,6 +12,8 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.io.IOException;
 
+import androidx.annotation.IntRange;
+
 public class MyMediaPlayerAdapter {
 
     private static final float DEFAULT_SPEED = 1.0f;
@@ -131,19 +133,19 @@ public class MyMediaPlayerAdapter {
         getMediaPlayer().pause();
         audioFocusManager.playbackPaused();
         currentState = PlaybackStateCompat.STATE_PAUSED;
-        logPlaybackParams(mediaPlayer.getPlaybackParams());
+        //logPlaybackParams(mediaPlayer.getPlaybackParams());
     }
 
     public void increaseSpeed(float by) {
         float newSpeed = currentPlaybackSpeed + by;
         if (newSpeed < MAXIMUM_PLAYBACK_SPEED) {
             this.currentPlaybackSpeed = newSpeed;
-            int originalState = currentState;
-            setBufferedPosition(mediaPlayer.getCurrentPosition());
-            this.isPrepared = false;
-            resetPlayer();
-            setCurrentUri(currentUri);
-            if (originalState == PlaybackStateCompat.STATE_PLAYING) {
+            //Log.i(LOG_TAG, "current speed ¡ " + this.currentPlaybackSpeed);
+            if (currentState == PlaybackStateCompat.STATE_PLAYING) {
+                setBufferedPosition(mediaPlayer.getCurrentPosition());
+                this.isPrepared = false;
+                resetPlayer();
+                setCurrentUri(currentUri);
                 play();
             } else {
                 prepare();
@@ -155,12 +157,12 @@ public class MyMediaPlayerAdapter {
         float newSpeed = currentPlaybackSpeed - by;
         if (newSpeed > MINIMUM_PLAYBACK_SPEED) {
             this.currentPlaybackSpeed = newSpeed;
-            int originalState = currentState;
-            setBufferedPosition(mediaPlayer.getCurrentPosition());
-            this.isPrepared = false;
-            resetPlayer();
-            setCurrentUri(currentUri);
-            if (originalState == PlaybackStateCompat.STATE_PLAYING) {
+            Log.i(LOG_TAG, "current speed ¡ " + this.currentPlaybackSpeed);
+            if (currentState == PlaybackStateCompat.STATE_PLAYING) {
+                setBufferedPosition(mediaPlayer.getCurrentPosition());
+                this.isPrepared = false;
+                resetPlayer();
+                setCurrentUri(currentUri);
                 play();
             } else {
                 prepare();
@@ -274,12 +276,8 @@ public class MyMediaPlayerAdapter {
                 .setPitch(currentPitch)
                 .setSpeed(currentPlaybackSpeed)
                 .setAudioFallbackMode(PlaybackParams.AUDIO_FALLBACK_MODE_DEFAULT);
-        if (useBufferedPosition) {
-            mediaPlayer.seekTo(bufferedPosition);
-            useBufferedPosition = false;
-        } else {
-            mediaPlayer.seekTo(getMediaPlayerPosition());
-        }
+        int currentPlaybackPosition = getCurrentPlaybackPosition();
+        mediaPlayer.seekTo(currentPlaybackPosition);
         mediaPlayer.setPlaybackParams(playbackParams);
     }
 
@@ -288,10 +286,23 @@ public class MyMediaPlayerAdapter {
         this.useBufferedPosition = true;
     }
 
-    public int getMediaPlayerPosition() {
+    public int getCurrentPlaybackPosition() {
+        int playbackPosition = mediaPlayer.getCurrentPosition();
         if (useBufferedPosition) {
-            return bufferedPosition;
+            useBufferedPosition = false;
+            playbackPosition = bufferedPosition;
         }
-        return mediaPlayer.getCurrentPosition();
+
+        /**
+         * This is to resolve a bug on some phones where the playback position is 0 (using <= 0 to
+         * resolve any negative position errors) :- the MediaPlayer JNI throws an IllegalStateException.
+         * To resolve this problem 1 is returned instead of zero (assuming in 99.99% the duration is >= 1)
+         */
+        if (playbackPosition <= 0) {
+            if (mediaPlayer.getDuration() >= 1) {
+                return 1;
+            }
+        }
+        return playbackPosition;
     }
 }

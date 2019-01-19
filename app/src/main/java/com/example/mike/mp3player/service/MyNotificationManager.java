@@ -52,7 +52,7 @@ public class MyNotificationManager {
         if (AndroidUtils.isAndroidOreoOrHigher()) {
             notificationManager.deleteNotificationChannel(CHANNEL_ID);
         }
-        Log.d(TAG, "onDestroy: ");
+        //Log.d(TAG, "onDestroy: ");
     }
 
     public synchronized NotificationManager getNotificationManager() {
@@ -181,9 +181,9 @@ public class MyNotificationManager {
             */
             mChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
             notificationManager.createNotificationChannel(mChannel);
-            Log.d(TAG, "createChannel: New channel created");
+            //Log.d(TAG, "createChannel: New channel created");
         } else {
-            Log.d(TAG, "createChannel: Existing channel reused");
+            //Log.d(TAG, "createChannel: Existing channel reused");
         }
     }
 
