@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.view.fragments;
+package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.utils.TimerUtils;
-import com.example.mike.mp3player.client.view.SeekerBar;
-import com.example.mike.mp3player.client.view.TimeCounter;
+import com.example.mike.mp3player.client.views.SeekerBar;
+import com.example.mike.mp3player.client.views.TimeCounter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

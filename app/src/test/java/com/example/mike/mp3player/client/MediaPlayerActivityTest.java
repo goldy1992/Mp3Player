@@ -1,19 +1,17 @@
 package com.example.mike.mp3player.client;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.support.v4.media.session.MediaSessionCompat;
 
+import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.service.ShadowMediaSessionCompat_Token;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;

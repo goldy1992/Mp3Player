@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.view.fragments;
+package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MyDrawerListener;
-import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
-import com.example.mike.mp3player.client.view.MyRecyclerView;
+import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.views.MyRecyclerView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;

@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.animation.LinearInterpolator;
 
 import com.example.mike.mp3player.client.utils.TimerUtils;
-import com.example.mike.mp3player.client.view.SeekerBar;
+import com.example.mike.mp3player.client.views.SeekerBar;
 
 
 public class MySeekerMediaControllerCallback extends MediaControllerCompat.Callback implements ValueAnimator.AnimatorUpdateListener {

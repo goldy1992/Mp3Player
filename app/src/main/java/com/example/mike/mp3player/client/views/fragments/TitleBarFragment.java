@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.view.fragments;
+package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.view.SongSearchActionListener;
+import com.example.mike.mp3player.client.views.SongSearchActionListener;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

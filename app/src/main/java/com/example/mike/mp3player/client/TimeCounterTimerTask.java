@@ -3,7 +3,7 @@ package com.example.mike.mp3player.client;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.example.mike.mp3player.client.view.TimeCounter;
+import com.example.mike.mp3player.client.views.TimeCounter;
 
 import java.util.TimerTask;
 

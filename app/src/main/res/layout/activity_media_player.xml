@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.mike.mp3player.client.MediaPlayerActivity">
+    tools:context="com.example.mike.mp3player.client.activities.MediaPlayerActivity">
 
     <fragment
         android:id="@+id/trackInfoFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        class="com.example.mike.mp3player.client.view.fragments.TrackInfoFragment"
+        class="com.example.mike.mp3player.client.views.fragments.TrackInfoFragment"
         tools:layout="@layout/fragment_track_info"/>
 
 
@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/trackInfoFragment"
-        class="com.example.mike.mp3player.client.view.fragments.PlaybackSpeedControlsFragment"
+        class="com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment"
         tools:layout="@layout/fragment_playback_speed_controls"/>
 
 
@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/playbackToolbarExtendedFragment"
-        class="com.example.mike.mp3player.client.view.fragments.PlaybackTrackerFragment"
+        class="com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment"
         tools:layout="@layout/fragment_playback_tracker"/>
 
     <fragment
@@ -42,7 +42,7 @@
         android:layout_gravity="bottom"
         android:layout_marginTop="5dp"
         android:minHeight="?attr/actionBarSize"
-        class="com.example.mike.mp3player.client.view.fragments.PlaybackToolbarExtendedFragment"
+        class="com.example.mike.mp3player.client.views.fragments.PlaybackToolbarExtendedFragment"
         tools:layout="@layout/playback_toolbar_layout" />
 
 </RelativeLayout>

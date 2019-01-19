@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.view.fragments;
+package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
@@ -41,13 +41,12 @@ public class TrackInfoFragment extends Fragment {
         return artist;
     }
 
-    public void setArtist(String artist) {
-
-        this.artist.setText(getString(R.string.ARTIST_NAME, artist));
-    }
-
     public TextView getTrack() {
         return track;
+    }
+
+    public void setArtist(String artist) {
+        this.artist.setText(getString(R.string.ARTIST_NAME, artist));
     }
 
     public void setTrack(String track) {

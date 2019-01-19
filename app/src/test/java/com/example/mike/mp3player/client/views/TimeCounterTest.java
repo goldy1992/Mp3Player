@@ -1,9 +1,9 @@
-package com.example.mike.mp3player.client.view;
+package com.example.mike.mp3player.client.views;
 
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.TextView;
 
-import com.example.mike.mp3player.client.MediaActivityCompat;
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

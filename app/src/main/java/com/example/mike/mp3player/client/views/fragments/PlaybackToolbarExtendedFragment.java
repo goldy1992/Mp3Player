@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.view.fragments;
+package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.view.LinearLayoutWithImageView;
+import com.example.mike.mp3player.client.views.LinearLayoutWithImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,9 +50,6 @@ public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
     @Override
     public void displayButtons() {
         if (null != innerPlaybackToolbarLayout) {
-
-
-
             skipToPreviousButton.setLayoutParams(getLinearLayoutParams(skipToPreviousButton.getLayoutParams()));
             innerPlaybackToolbarLayout.addView(skipToPreviousButton);
 
@@ -60,9 +57,9 @@ public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
             skipToNextButton.setLayoutParams(getLinearLayoutParams(skipToNextButton.getLayoutParams()));
             innerPlaybackToolbarLayout.addView(skipToNextButton);
         }
-
     }
 
+    @Deprecated // no need to make empty views in the toolbar anymore
     private View getEmptyViewForToolbar(int widthOfDivision, int layoutHeight) {
         View view = new View(getContext());
         view.setLayoutParams(new LinearLayout.LayoutParams(widthOfDivision, layoutHeight));

@@ -13,14 +13,14 @@
         android:layout_height="match_parent"
         android:weightSum="10"
         android:orientation="vertical"
-        tools:context="com.example.mike.mp3player.client.MainActivity">
+        tools:context="com.example.mike.mp3player.client.activities.MainActivity">
 
         <fragment
             android:id="@+id/titleBarFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            class="com.example.mike.mp3player.client.view.fragments.TitleBarFragment"
+            class="com.example.mike.mp3player.client.views.fragments.TitleBarFragment"
             tools:layout="@layout/fragment_title_bar"/>
 
 
@@ -34,7 +34,7 @@
 
         <fragment
             android:id="@+id/playToolbarFragment"
-            class="com.example.mike.mp3player.client.view.fragments.PlayToolBarFragment"
+            class="com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"

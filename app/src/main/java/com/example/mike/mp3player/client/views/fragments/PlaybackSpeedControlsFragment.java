@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.view.fragments;
+package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,10 +39,8 @@ public class PlaybackSpeedControlsFragment extends Fragment {
         super.onViewCreated(view, bundle);
         this.decreasePlaybackSpeedButton = view.findViewById(R.id.decreasePlaybackSpeed);
         this.decreasePlaybackSpeedButton.setOnClickListener((View v) -> decreasePlaybackSpeed());
-
         this.increasePlaybackSpeedButton = view.findViewById(R.id.increasePlaybackSpeed);
         this.increasePlaybackSpeedButton.setOnClickListener((View v) -> increasePlaybackSpeed());
-
         this.playbackSpeed = view.findViewById(R.id.playbackSpeedValue);
     }
 

@@ -2,9 +2,8 @@ package com.example.mike.mp3player.client;
 
 import android.widget.SeekBar;
 
-import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
-import com.example.mike.mp3player.client.view.SeekerBar;
-import com.example.mike.mp3player.client.view.TimeCounter;
+import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.views.SeekerBar;
 
 public class SeekerBarChangerListener implements SeekBar.OnSeekBarChangeListener {
 

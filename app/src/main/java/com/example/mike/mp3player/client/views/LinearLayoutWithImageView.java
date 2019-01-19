@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.view;
+package com.example.mike.mp3player.client.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -35,7 +35,6 @@ public class LinearLayoutWithImageView extends LinearLayout {
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_linear_layout_with_image_view, this);
         this.view = this.findViewById(R.id.view);
-
         //this.view.setImageDrawable(getDrawableResourceFromAttribute(attrs));
     }
     private Drawable getDrawableResourceFromAttribute(AttributeSet attrs) {

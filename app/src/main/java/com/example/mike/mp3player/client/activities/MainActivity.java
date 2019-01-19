@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client;
+package com.example.mike.mp3player.client.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +11,11 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
-import com.example.mike.mp3player.client.view.fragments.MainActivityRootFragment;
+import com.example.mike.mp3player.client.MediaBrowserConnector;
+import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
+import com.example.mike.mp3player.client.MediaControllerWrapper;
+import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;
 
 import java.util.List;
 

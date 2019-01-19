@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.view;
+package com.example.mike.mp3player.client.views;
 
 import android.os.Bundle;
 

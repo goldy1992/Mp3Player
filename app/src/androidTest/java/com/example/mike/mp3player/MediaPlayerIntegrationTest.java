@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.example.mike.mp3player.client.MediaPlayerActivity;
-import com.example.mike.mp3player.client.view.SeekerBar;
+import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
+import com.example.mike.mp3player.client.views.SeekerBar;
 
 import org.junit.Before;
 import org.junit.Rule;

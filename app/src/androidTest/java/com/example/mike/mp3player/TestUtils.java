@@ -4,7 +4,7 @@ package com.example.mike.mp3player;
 import android.view.View;
 import android.widget.SeekBar;
 
-import com.example.mike.mp3player.client.view.SeekerBar;
+import com.example.mike.mp3player.client.views.SeekerBar;
 
 import org.hamcrest.Matcher;
 
@@ -29,7 +29,7 @@ public class TestUtils {
                 int progressValue = (int)((max / 100) * progress);
                 seekerBar.setProgress(progressValue);
                 seekerBar.getOnSeekBarChangeListener().onStopTrackingTouch(seekerBar);
-                //or ((SeekBar) view).setProgress(progress);
+                //or ((SeekBar) views).setProgress(progress);
             }
 
             @Override

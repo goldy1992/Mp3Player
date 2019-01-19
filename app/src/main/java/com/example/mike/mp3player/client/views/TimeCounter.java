@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.view;
+package com.example.mike.mp3player.client.views;
 
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.TextView;

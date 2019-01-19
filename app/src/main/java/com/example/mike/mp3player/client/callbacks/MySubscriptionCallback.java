@@ -4,9 +4,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback;
-import android.util.Log;
 
-import com.example.mike.mp3player.client.MainActivity;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 
 import java.util.List;

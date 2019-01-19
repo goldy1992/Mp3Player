@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client;
+package com.example.mike.mp3player.client.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,6 +9,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.StartupProcessor;
 
 import java.util.List;
 

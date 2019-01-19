@@ -1,7 +1,9 @@
-package com.example.mike.mp3player.client;
+package com.example.mike.mp3player.client.activities;
 
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+
+import com.example.mike.mp3player.client.MediaControllerWrapper;
 
 import androidx.appcompat.app.AppCompatActivity;
 

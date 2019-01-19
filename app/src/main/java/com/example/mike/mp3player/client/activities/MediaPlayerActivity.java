@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client;
+package com.example.mike.mp3player.client.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,12 +7,13 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
-import com.example.mike.mp3player.client.view.PlayPauseButton;
-import com.example.mike.mp3player.client.view.fragments.PlaybackSpeedControlsFragment;
-import com.example.mike.mp3player.client.view.fragments.PlaybackToolbarExtendedFragment;
-import com.example.mike.mp3player.client.view.fragments.PlaybackTrackerFragment;
-import com.example.mike.mp3player.client.view.fragments.TrackInfoFragment;
+import com.example.mike.mp3player.client.MediaControllerWrapper;
+import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.views.PlayPauseButton;
+import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
+import com.example.mike.mp3player.client.views.fragments.PlaybackToolbarExtendedFragment;
+import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
+import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.commons.Constants;
 
 import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
@@ -158,7 +159,7 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
 
     @Override
     public void playSelectedSong(String songId) {
-        // no song should be selected in this view
+        // no song should be selected in this views
     }
 
     @Override

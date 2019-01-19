@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.view.fragments;
+package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -10,9 +10,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.view.LinearLayoutWithImageView;
-import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
-import com.example.mike.mp3player.client.view.PlayPauseButton;
+import com.example.mike.mp3player.client.views.LinearLayoutWithImageView;
+import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.views.PlayPauseButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

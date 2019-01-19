@@ -4,10 +4,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
+
+import com.example.mike.mp3player.client.activities.MainActivity;
+import com.example.mike.mp3player.client.activities.SplashScreenEntryActivity;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 

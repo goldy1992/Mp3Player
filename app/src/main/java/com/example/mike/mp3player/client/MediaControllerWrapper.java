@@ -6,6 +6,7 @@ import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 
 public class MediaControllerWrapper< A extends MediaActivityCompat>  {
