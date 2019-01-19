@@ -147,6 +147,8 @@ public class MyMediaPlayerAdapter {
                 resetPlayer();
                 setCurrentUri(currentUri);
                 play();
+            } else {
+                prepare();
             }
         }
     }
@@ -162,6 +164,8 @@ public class MyMediaPlayerAdapter {
                 resetPlayer();
                 setCurrentUri(currentUri);
                 play();
+            } else {
+                prepare();
             }
         }
     }

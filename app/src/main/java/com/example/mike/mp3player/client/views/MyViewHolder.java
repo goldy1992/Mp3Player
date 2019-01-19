@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.view;
+package com.example.mike.mp3player.client.views;
 
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;

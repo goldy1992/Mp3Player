@@ -2,7 +2,8 @@ package com.example.mike.mp3player.client;
 
 import android.widget.TextView;
 
-import com.example.mike.mp3player.client.view.TimeCounter;
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
+import com.example.mike.mp3player.client.views.TimeCounter;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;

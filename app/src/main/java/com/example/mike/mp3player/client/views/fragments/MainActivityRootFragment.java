@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.view.fragments;
+package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
-import com.example.mike.mp3player.client.view.PlayPauseButton;
-import com.example.mike.mp3player.client.view.SongSearchActionListener;
+import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.views.PlayPauseButton;
+import com.example.mike.mp3player.client.views.SongSearchActionListener;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class MainActivityRootFragment extends Fragment implements SongSearchActi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.fragment_main_activity_root, null);
+        return inflater.inflate(R.layout.fragment_main_activity_root, container, true);
     }
 
     @Override

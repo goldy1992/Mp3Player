@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.view.fragments;
+package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MyDrawerListener;
-import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
-import com.example.mike.mp3player.client.view.MyRecyclerView;
+import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.views.MyRecyclerView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
@@ -37,13 +37,14 @@ public class MainFrameFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_main_frame, null);
+        return inflater.inflate(R.layout.fragment_main_frame, container, true);
     }
 
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         this.drawerLayout = view.findViewById(R.id.drawer_layout);
         this.playToolBarFragment = (PlayToolBarFragment) getChildFragmentManager().findFragmentById(R.id.playToolbarFragment);
+        this.playToolBarFragment.displayButtons();
         this.titleBarFragment = (TitleBarFragment) getChildFragmentManager().findFragmentById(R.id.titleBarFragment);
         MyDrawerListener myDrawerListener = new MyDrawerListener();
         drawerLayout.addDrawerListener(myDrawerListener);

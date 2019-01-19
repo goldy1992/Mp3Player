@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.mike.mp3player.client.views.PlayPauseButton
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/playPauseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:scaleType="center"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:saveEnabled="true"
+        android:scaleX="2"
+        android:scaleY="2"
+        app:srcCompat="@drawable/ic_baseline_play_arrow_24px"
+ />
+</com.example.mike.mp3player.client.views.PlayPauseButton>

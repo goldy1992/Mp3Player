@@ -28,13 +28,17 @@ public final class TimerUtils {
             if (state == null) {
                 return 0L;
             }
-            Long timestamp = state.getLastPositionUpdateTime();
+            if (state.getState() != PlaybackStateCompat.STATE_PLAYING) {
+                return state.getPosition();
+            } else {
+                Long timestamp = state.getLastPositionUpdateTime();
 
-            if (timestamp == null) {
-                return state.getBufferedPosition();
+                if (timestamp == null) {
+                    return state.getBufferedPosition();
+                }
+                long currentTime = SystemClock.elapsedRealtime();
+                long timeDiff = currentTime - timestamp;
+                return state.getPosition() + timeDiff;
             }
-            long currentTime = SystemClock.elapsedRealtime();
-            long timeDiff = currentTime - timestamp;
-            return state.getPosition() + timeDiff;
     }
 }

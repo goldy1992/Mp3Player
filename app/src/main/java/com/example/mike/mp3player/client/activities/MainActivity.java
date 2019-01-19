@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client;
+package com.example.mike.mp3player.client.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +11,11 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.view.MediaPlayerActionListener;
-import com.example.mike.mp3player.client.view.fragments.MainActivityRootFragment;
+import com.example.mike.mp3player.client.MediaBrowserConnector;
+import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
+import com.example.mike.mp3player.client.MediaControllerWrapper;
+import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;
 
 import java.util.List;
 
@@ -89,26 +92,41 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
-    @Override //MediaPlayerActionListener
+    @Override // MediaPlayerActionListener
     public void play() {
         mediaControllerWrapper.play();
     }
 
-    @Override //MediaPlayerActionListener
+    @Override // MediaPlayerActionListener
     public void pause() {
         mediaControllerWrapper.pause();
     }
 
-    @Override //MediaPlayerActionListener
+    @Override // MediaPlayerActionListener
     public void goToMediaPlayerActivity() {
         Intent intent = createMediaPlayerActivityIntent();
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
+    @Override // MediaPlayerActionListener
+    public void skipToNext() {
+        mediaControllerWrapper.skipToNext();
+    }
+
+    @Override // MediaPlayerActionListener
+    public void skipToPrevious() {
+        mediaControllerWrapper.skipToPrevious();
+    }
+
+    @Override // MediaPlayerActionListener
+    public void seekTo(int position) {
+        mediaControllerWrapper.seekTo(position);
+    }
+
     @Override // MediaActivityCompat
     public void setMetaData(MediaMetadataCompat metadata) { /* no need to update meta data in this class */ }
 
-    @Override
+    @Override // MediaActivityCompat
     public void setPlaybackState(PlaybackStateCompat state) {
         rootFragment.setPlaybackState(state);
     }
@@ -118,9 +136,13 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         return mediaControllerWrapper;
     }
 
-
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options) {
         //Log.i(LOG_TAG, "more children loaded");
+    }
+
+    @Override // MediaPlayerActionListener
+    public void sendCustomAction(String customAction, Bundle args) {
+        mediaControllerWrapper.getMediaControllerCompat().getTransportControls().sendCustomAction(customAction, args);
     }
 }
