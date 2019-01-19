@@ -107,7 +107,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             return true;
         }
         return false;
-
     }
 
     @Override
@@ -152,9 +151,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     public synchronized void onPause() {
         broadcastReceiver.unregisterAudioNoisyReceiver();
         myMediaPlayerAdapter.pause();
-        // unregister BECOME_NOISY BroadcastReceiver
-//        unregisterReceiver(myNoisyAudioStreamReceiver, intentFilter);
-        // Take the serviceManager out of the foreground, retain the notification
         updateMediaSession();
         serviceManager.pauseService(prepareNotification());
     }

@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.view.TimeCounter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

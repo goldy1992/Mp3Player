@@ -145,6 +145,8 @@ public class MyMediaPlayerAdapter {
             setCurrentUri(currentUri);
             if (originalState == PlaybackStateCompat.STATE_PLAYING) {
                 play();
+            } else {
+                prepare();
             }
         }
     }
@@ -160,6 +162,8 @@ public class MyMediaPlayerAdapter {
             setCurrentUri(currentUri);
             if (originalState == PlaybackStateCompat.STATE_PLAYING) {
                 play();
+            } else {
+                prepare();
             }
         }
     }
