@@ -106,12 +106,12 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
         setContentView(R.layout.activity_media_player);
         this.trackInfoFragment = (TrackInfoFragment) getSupportFragmentManager().findFragmentById(R.id.trackInfoFragment);
         this.playbackSpeedControlsFragment = (PlaybackSpeedControlsFragment) getSupportFragmentManager().findFragmentById(R.id.playbackSpeedControlsFragment);
-        this.playbackSpeedControlsFragment.setMediaPlayerActionListener(this);
+        this.getPlaybackSpeedControlsFragment().setMediaPlayerActionListener(this);
         this.playbackTrackerFragment = (PlaybackTrackerFragment) getSupportFragmentManager().findFragmentById(R.id.playbackTrackerFragment);
-        this.playbackTrackerFragment.getSeekerBar().setSeekerBarListener(this);
+        this.getPlaybackTrackerFragment().getSeekerBar().setSeekerBarListener(this);
         this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) getSupportFragmentManager().findFragmentById(R.id.playbackToolbarExtendedFragment);
-        this.playbackToolbarExtendedFragment.setMediaPlayerActionListener(this);
-        this.playbackToolbarExtendedFragment.displayButtons();
+        this.getPlaybackToolbarExtendedFragment().setMediaPlayerActionListener(this);
+        this.getPlaybackToolbarExtendedFragment().displayButtons();
     }
 
     private Object retrieveIntentInfo(String key) {
@@ -124,8 +124,8 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
 
     @Override
     public void setMetaData(MediaMetadataCompat metaData) {
-        playbackTrackerFragment.setMetaData(metaData);
-        trackInfoFragment.setMetaData(metaData);
+        getPlaybackTrackerFragment().setMetaData(metaData);
+        getTrackInfoFragment().setMetaData(metaData);
     }
 
     @Override
@@ -133,10 +133,10 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
         if (state != null) {
             @PlaybackStateCompat.State
             final int newState = state.getState();
-            PlayPauseButton playPauseButton = playbackToolbarExtendedFragment.getPlayPauseButton();
+            PlayPauseButton playPauseButton = getPlaybackToolbarExtendedFragment().getPlayPauseButton();
             playPauseButton.updateState(newState);
-            playbackTrackerFragment.setPlaybackState(state);
-            playbackSpeedControlsFragment.setPlaybackState(state);
+            getPlaybackTrackerFragment().setPlaybackState(state);
+            getPlaybackSpeedControlsFragment().setPlaybackState(state);
         }
     }
 
@@ -195,5 +195,21 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
     @Override
     public void sendCustomAction(String customAction, Bundle args) {
         mediaControllerWrapper.getMediaControllerCompat().getTransportControls().sendCustomAction(customAction, args);
+    }
+
+    public TrackInfoFragment getTrackInfoFragment() {
+        return trackInfoFragment;
+    }
+
+    public PlaybackTrackerFragment getPlaybackTrackerFragment() {
+        return playbackTrackerFragment;
+    }
+
+    public PlaybackToolbarExtendedFragment getPlaybackToolbarExtendedFragment() {
+        return playbackToolbarExtendedFragment;
+    }
+
+    public PlaybackSpeedControlsFragment getPlaybackSpeedControlsFragment() {
+        return playbackSpeedControlsFragment;
     }
 }

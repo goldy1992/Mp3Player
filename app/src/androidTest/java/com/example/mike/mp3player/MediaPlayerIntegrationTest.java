@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.client.views.SeekerBar;
+import com.example.mike.mp3player.client.views.TimeCounter;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -44,27 +45,26 @@ public class MediaPlayerIntegrationTest {
         }
     };
 
-
     @Before
-    public void setup() {
-
-    }
+    public void setup() {    }
 
     @Test
     public void testPlay() throws InterruptedException {
         MediaPlayerActivity mediaPlayerActivity = (MediaPlayerActivity) activityTestRule.getActivity();
         assertNotNull(mediaPlayerActivity);
-        assertTrue(mediaPlayerActivity.getCounter().getView().getText().equals("00:00"));
+        TimeCounter counter = mediaPlayerActivity.getPlaybackTrackerFragment().getCounter();
+        CharSequence counterText = counter.getView().getText();
+        assertTrue(counterText.equals("00:00"));
         onView(withId(R.id.playPauseButton)).perform(click());
         Thread.sleep(2000);
-        assertTrue(mediaPlayerActivity.getCounter().getCurrentPosition() >= 0);
+        assertTrue(counter.getCurrentPosition() >= 0);
 
         onView(withId(R.id.playPauseButton)).check(matches(withText("Pause")));
 
         onView(withId(R.id.seekBar)).perform(TestUtils.setProgress(50));
         SeekerBar seekerBar = (SeekerBar) mediaPlayerActivity.findViewById(R.id.seekBar);
 
-        assertEquals(mediaPlayerActivity.getCounter().getView().getText().equals("00:00"), false);
+        assertEquals(counterText.equals("00:00"), false);
     }
 
 }
