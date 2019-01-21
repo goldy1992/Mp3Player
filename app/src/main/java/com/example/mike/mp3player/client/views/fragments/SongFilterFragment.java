@@ -53,12 +53,14 @@ public class SongFilterFragment extends Fragment implements TextWatcher, KeyImeC
     public void onSearchStart(InputMethodManager inputMethodManager) {
         searchText.setFocusableInTouchMode(true);
         searchText.requestFocus();
+        scrim.setVisibility(View.VISIBLE);
         inputMethodManager.showSoftInput(searchText, InputMethodManager.SHOW_IMPLICIT);
         setActive(true);
     }
 
     public void onSearchFinish(InputMethodManager inputMethodManager) {
         inputMethodManager.hideSoftInputFromWindow(searchText.getWindowToken(), InputMethodManager.RESULT_HIDDEN);
+        scrim.setVisibility(View.INVISIBLE);
         setActive(false);
     }
 

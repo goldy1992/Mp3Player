@@ -8,6 +8,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.mike.mp3player.R;
@@ -65,6 +66,8 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         this.rootFragment.setInputMethodManager(inputMethodManager);
         this.rootFragment.setActionListeners(this);
         this.rootFragment.initRecyclerView(songs, this);
+        rootFragment.getView().setFocusableInTouchMode(true);
+        rootFragment.getView().requestFocus();
     }
 
     public void onMediaBrowserServiceConnected(MediaSessionCompat.Token token) {
