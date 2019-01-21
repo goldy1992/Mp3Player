@@ -1,10 +1,16 @@
 package com.example.mike.mp3player.client.activities;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserConnector;
@@ -30,26 +36,31 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
 
     private PermissionsProcessor permissionsProcessor;
     private volatile boolean splashScreenFinishedDisplaying;
+    private ImageView logo;
+    private LinearLayout root;
     private MediaBrowserConnector mediaBrowserConnector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.splash_screen);
+        root = findViewById(R.id.rootLayout);
+        logo = findViewById(R.id.imageView);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        setContentView(R.layout.splash_screen);
-        permissionsProcessor = new PermissionsProcessor(this, this);
-        permissionsProcessor.requestPermission(WRITE_EXTERNAL_STORAGE);
-        Thread splashScreenWaitThread = new Thread(() -> splashScreenRun());
-        splashScreenWaitThread.start();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        permissionsProcessor = new PermissionsProcessor(this, this);
+        permissionsProcessor.requestPermission(WRITE_EXTERNAL_STORAGE);
+        Thread splashScreenWaitThread = new Thread(() -> splashScreenRun());
+        splashScreenWaitThread.start();
+
     }
 
     @Override
@@ -62,9 +73,10 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
             Thread.sleep(5000L);
         } catch (InterruptedException ex) {
             Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex.fillInStackTrace()));
+        } finally {
+            splashScreenFinishedDisplaying = true;
+            notifyAll();
         }
-        splashScreenFinishedDisplaying = true;
-        notifyAll();
     }
 
     @Override
