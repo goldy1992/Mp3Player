@@ -55,15 +55,27 @@ public class TimerUtilsTest {
         assertEquals(expect, result);
     }
     @Test
-    public void calculateCurrentPlaybackPositionTest() {
+    public void calculateCurrentPlaybackPositionWhenStatePlayingTest() {
         PowerMockito.mockStatic(SystemClock.class);
         final long timeDiff = 5000L;
         PlaybackStateCompat playbackStateCompat =
-                new PlaybackStateCompat.Builder().setState(0, 40000L, 0f, CURRENT_TIME).build();
+                new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING, 40000L, 0f, CURRENT_TIME).build();
         when(SystemClock.elapsedRealtime()).thenReturn(CURRENT_TIME + timeDiff);
         long newPostion = TimerUtils.calculateCurrentPlaybackPosition(playbackStateCompat);
 
         assertEquals(playbackStateCompat.getPosition() + timeDiff, newPostion);
+    }
+
+    @Test
+    public void calculateCurrentPlaybackPositionWhenNotStatePlayingTest() {
+        PowerMockito.mockStatic(SystemClock.class);
+        final long timeDiff = 5000L;
+        PlaybackStateCompat playbackStateCompat =
+                new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PAUSED, 40000L, 0f, CURRENT_TIME).build();
+        when(SystemClock.elapsedRealtime()).thenReturn(CURRENT_TIME + timeDiff);
+        long newPostion = TimerUtils.calculateCurrentPlaybackPosition(playbackStateCompat);
+
+        assertEquals(playbackStateCompat.getPosition(), newPostion);
     }
 
 

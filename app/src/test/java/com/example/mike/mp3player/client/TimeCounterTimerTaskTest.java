@@ -28,7 +28,7 @@ public class TimeCounterTimerTaskTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        timeCounter = new TimeCounter(mediaActivityCompat, view);
+        timeCounter = new TimeCounter(view);
         timeCounterTimerTask = new TimeCounterTimerTask(timeCounter);
       //  when(timeCounter.getView().setText().then(doNothing());
     }

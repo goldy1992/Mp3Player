@@ -31,7 +31,7 @@ public class TimeCounterTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        timeCounter = new TimeCounter(mediaActivityCompat, view);
+        timeCounter = new TimeCounter(view);
     }
 
     @Test
