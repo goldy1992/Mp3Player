@@ -1,14 +1,10 @@
 package com.example.mike.mp3player.client.activities;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -36,31 +32,26 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
 
     private PermissionsProcessor permissionsProcessor;
     private volatile boolean splashScreenFinishedDisplaying;
-    private ImageView logo;
-    private LinearLayout root;
     private MediaBrowserConnector mediaBrowserConnector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.splash_screen);
-        root = findViewById(R.id.rootLayout);
-        logo = findViewById(R.id.imageView);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        setContentView(R.layout.splash_screen);
+      //  Log.i(LOG_TAG, "onStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        permissionsProcessor = new PermissionsProcessor(this, this);
-        permissionsProcessor.requestPermission(WRITE_EXTERNAL_STORAGE);
-        Thread splashScreenWaitThread = new Thread(() -> splashScreenRun());
-        splashScreenWaitThread.start();
-
+       // Log.i(LOG_TAG, "onresume");
+        Thread thread = new Thread(() -> init());
+        thread.start();
     }
 
     @Override
@@ -69,6 +60,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
     }
 
     private synchronized void splashScreenRun() {
+    //    Log.i(LOG_TAG, "splashscreen run");
         try {
             Thread.sleep(5000L);
         } catch (InterruptedException ex) {
@@ -82,6 +74,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+     //   Log.i(LOG_TAG, "permission result");
         String permission = permissionsProcessor.getPermissionFromRequestCode(requestCode);
         if (null != permission) {
             if (permission.equals(WRITE_EXTERNAL_STORAGE)) {
@@ -97,13 +90,14 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
     }
 
     public void initMediaBrowserService() {
+       // Log.i(LOG_TAG, "init media browser service");
         mediaBrowserConnector = new MediaBrowserConnector(getApplicationContext(), this);
         mediaBrowserConnector.init(null);
     }
 
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options) {
-        //Log.i(LOG_TAG, "children loaded");
+       // Log.i(LOG_TAG, "children loaded");
         Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
         ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>();
         childrenArrayList.addAll(children);
@@ -117,6 +111,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
     }
 
     private synchronized void onProcessingComplete(Intent mainActivityIntent) {
+        //Log.i(LOG_TAG, "processing complete");
         while (!splashScreenFinishedDisplaying) {
             try {
                 wait(ONE_SECOND);
@@ -129,12 +124,22 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
     }
 
     private void startMainActivity(Intent mainActivityIntent) {
+       // Log.i(LOG_TAG, "start main activity");
         startActivity(mainActivityIntent);
         finish();
     }
 
     @Override
     public void onPermissionGranted() {
-        initMediaBrowserService();
+        Runnable r = new Thread(() -> initMediaBrowserService());
+        runOnUiThread(r);
     }
+
+    public void init() {
+        //Log.i(LOG_TAG, "init");
+        permissionsProcessor = new PermissionsProcessor(this, this);
+        permissionsProcessor.requestPermission(WRITE_EXTERNAL_STORAGE);
+        Thread splashScreenWaitThread = new Thread(() -> splashScreenRun());
+        splashScreenWaitThread.start();
+}
 }
