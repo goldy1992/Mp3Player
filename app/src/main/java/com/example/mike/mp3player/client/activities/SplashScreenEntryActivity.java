@@ -13,6 +13,7 @@ import com.example.mike.mp3player.client.MediaBrowserConnector;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
+import com.example.mike.mp3player.commons.MetaDataKeys;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
@@ -26,6 +27,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SERVICE_DATA;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
+import static com.example.mike.mp3player.commons.MetaDataKeys.SONGS;
 
 public class SplashScreenEntryActivity extends AppCompatActivity implements MediaBrowserConnectorCallback, PermissionGranted {
     private static final String LOG_TAG = "SPLSH_SCRN_ENTRY_ACTVTY";
@@ -33,10 +35,12 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
     private PermissionsProcessor permissionsProcessor;
     private volatile boolean splashScreenFinishedDisplaying;
     private MediaBrowserConnector mediaBrowserConnector;
+    private Intent mainActivityIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
     }
 
     @Override
@@ -98,16 +102,23 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options) {
        // Log.i(LOG_TAG, "children loaded");
-        Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
         ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>();
-        childrenArrayList.addAll(children);
-        if (null == options) {
-            options = new Bundle();
+        final String ROOT = mediaBrowserConnector.getRootId();
+        if (mediaBrowserConnector.getRootId().equals(parentId)) {
+            childrenArrayList.addAll(children);
+            mediaBrowserConnector.subscribe(SONGS);
+            if (null == options) {
+                options = new Bundle();
+            }
+            options.putParcelableArrayList(MEDIA_SERVICE_DATA, childrenArrayList);
+            options.putParcelable(MEDIA_SESSION, mediaBrowserConnector.getMediaSessionToken());
+            mainActivityIntent.putExtras(options);
+        } else if (SONGS.equals(parentId)) {
+            childrenArrayList.addAll(children);
+            mainActivityIntent.putParcelableArrayListExtra(SONGS, childrenArrayList);
+            onProcessingComplete(mainActivityIntent);
         }
-        options.putParcelableArrayList(MEDIA_SERVICE_DATA, childrenArrayList);
-        options.putParcelable(MEDIA_SESSION, mediaBrowserConnector.getMediaSessionToken());
-        mainActivityIntent.putExtras(options);
-        onProcessingComplete(mainActivityIntent);
+
     }
 
     private synchronized void onProcessingComplete(Intent mainActivityIntent) {

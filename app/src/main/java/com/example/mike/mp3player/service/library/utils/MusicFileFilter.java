@@ -23,11 +23,21 @@ public class MusicFileFilter implements FilenameFilter {
 
     @Override
     public boolean accept(File dir, String name) {
-        name = name.toLowerCase(Locale.getDefault());
-        if (!isDirectoryFilter.accept(dir, name)){
-            for (String ext: MUSIC_EXTENSIONS) {
-                if (name.endsWith(ext)) {
-                    return true;
+        if (name != null ) {
+            name = name.toLowerCase(Locale.getDefault());
+            if (!isDirectoryFilter.accept(dir, name)){
+                for (String ext: MUSIC_EXTENSIONS) {
+                    if (name.endsWith(ext)) {
+                        return true;
+                    }
+                }
+            }
+        } else {
+            for (File f : dir.listFiles()) {
+                for (String ext: MUSIC_EXTENSIONS) {
+                    if (f.getName().endsWith(ext)) {
+                        return true;
+                    }
                 }
             }
         }

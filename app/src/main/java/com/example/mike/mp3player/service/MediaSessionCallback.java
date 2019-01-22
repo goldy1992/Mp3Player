@@ -59,10 +59,10 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     public void init() {
-        List<MediaSessionCompat.QueueItem> queueItems =  MediaLibraryUtils.convertMediaItemsToQueueItem(this.mediaLibrary.getLibrary());
+        List<MediaSessionCompat.QueueItem> queueItems =  MediaLibraryUtils.convertMediaItemsToQueueItem(this.mediaLibrary.getSongs());
         this.playbackManager.init(queueItems);
 
-        Uri firstSongUri = this.mediaLibrary.getMediaUri(playbackManager.selectFirstItem());
+        Uri firstSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.selectFirstItem());
         this.myMediaPlayerAdapter.init(firstSongUri);
         this.myMediaPlayerAdapter.getMediaPlayer().setOnCompletionListener(this);
         updateMediaSession();
@@ -125,7 +125,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                   playbackManager.createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(mediaLibrary.getLibrary()));
               }
         }
-        Uri uri = mediaLibrary.getMediaUri(mediaId);
+        Uri uri = mediaLibrary.getMediaUriFromMediaId(mediaId);
         myMediaPlayerAdapter.prepareFromUri(uri);
         playbackManager.setQueueIndex(mediaId);
         updateMediaSession();
@@ -174,7 +174,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
     @Override
     public synchronized void onCompletion(MediaPlayer mediaPlayer) {
-        Uri nextItemUri = mediaLibrary.getMediaUri(playbackManager.playbackComplete());
+        Uri nextItemUri = mediaLibrary.getMediaUriFromMediaId(playbackManager.playbackComplete());
         myMediaPlayerAdapter.playFromUri(nextItemUri);
         updateMediaSession();
         serviceManager.notify(prepareNotification());
@@ -217,7 +217,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void skipToNewMedia(String newMediaId) {
-        Uri newUri = mediaLibrary.getMediaUri(newMediaId);
+        Uri newUri = mediaLibrary.getMediaUriFromMediaId(newMediaId);
         PlaybackStateCompat currentState = myMediaPlayerAdapter.getMediaPlayerState();
         myMediaPlayerAdapter.prepareFromUri(newUri);
         if (currentState.getState() == PlaybackStateCompat.STATE_PLAYING) {

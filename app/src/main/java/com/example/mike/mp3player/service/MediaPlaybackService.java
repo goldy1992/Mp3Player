@@ -11,6 +11,8 @@ import com.example.mike.mp3player.service.library.MediaLibrary;
 import java.util.List;
 import androidx.media.MediaBrowserServiceCompat;
 
+import static com.example.mike.mp3player.commons.MetaDataKeys.SONGS;
+
 /**
  * Created by Mike on 24/09/2017.
  */
@@ -54,6 +56,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
 //            // Clients can connect, but this BrowserRoot is an empty hierachy
 //            // so onLoadChildren returns nothing. This disables the ability to browse for content.
             return new BrowserRoot(MY_MEDIA_ROOT_ID, null);
+
 //        }
     }
 
@@ -74,10 +77,12 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             // Build the MediaItem objects for the top level,
             // and put them in the mediaItems list...
             result.sendResult(mediaItems);
-        } else {
+        } else if (SONGS.equals(parentMediaId)) {
+            result.sendResult(mediaLibrary.getSongs());
             // Examine the passed parentMediaId to see which submenu we're at,
             // and put the children of that menu in the mediaItems list...
         }
+        return;
         //result.sendResult(mediaItems);
     }
 

@@ -3,6 +3,7 @@ package com.example.mike.mp3player.service.library.utils;
 import android.media.MediaMetadataRetriever;
 import android.os.Environment;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import org.apache.commons.lang.StringUtils;
@@ -10,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static android.media.MediaMetadataRetriever.METADATA_KEY_TITLE;
 
@@ -31,9 +33,9 @@ public final class MediaLibraryUtils {
         return Environment.getExternalStorageDirectory();
     }
 
-    public static List<MediaSessionCompat.QueueItem> convertMediaItemsToQueueItem(List<MediaBrowserCompat.MediaItem> mediaItems) {
+    public static List<MediaSessionCompat.QueueItem> convertMediaItemsToQueueItem(List<MediaItem> mediaItems) {
         List<MediaSessionCompat.QueueItem> queueItemList = new ArrayList<>();
-        for (MediaBrowserCompat.MediaItem  mediaItem : mediaItems) {
+        for (MediaItem  mediaItem : mediaItems) {
             queueItemList.add(
                     new MediaSessionCompat.QueueItem( mediaItem.getDescription(), Long.parseLong(mediaItem.getMediaId() ) )
             );
@@ -68,5 +70,16 @@ public final class MediaLibraryUtils {
             return title;
         }
         return fileName.trim();
+    }
+
+    public static MediaItem getMediaItemFolderFromMap(String directoryName,
+                                           Set<MediaItem> mediaItemSet) {
+        for (MediaItem i : mediaItemSet) {
+            if (i.getDescription().getTitle().equals(directoryName)) {
+                return i;
+            }
+        }
+        return null;
+
     }
 }

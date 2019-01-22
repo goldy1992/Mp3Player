@@ -10,4 +10,7 @@ public final class MetaDataKeys {
     public static final String STRING_METADATA_KEY_ARTIST = String.valueOf(METADATA_KEY_ARTIST);
     public static final String STRING_METADATA_KEY_DURATION = String.valueOf(METADATA_KEY_DURATION);
     public static final String STRING_METADATA_KEY_ALBUM_ARTIST = String.valueOf(METADATA_KEY_ALBUM_ARTIST);
+
+    public static final String FOLDERS = "FOLDERS";
+    public static final String SONGS = "SONGS";
 }

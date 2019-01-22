@@ -56,8 +56,16 @@ public class MediaBrowserConnector {
         getmMediaBrowser().disconnect();
     }
 
+    public void subscribe(String parentId) {
+        getmMediaBrowser().subscribe(parentId, mySubscriptionCallback);
+    }
+
     public MediaSessionCompat.Token getMediaSessionToken() {
         return mediaSessionToken;
+    }
+
+    public String getRootId() {
+        return mMediaBrowser.getRoot();
     }
 
 
