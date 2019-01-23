@@ -7,11 +7,12 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
 
 import com.example.mike.mp3player.service.library.MediaLibrary;
+import com.example.mike.mp3player.service.library.SongCollection;
 
 import java.util.List;
 import androidx.media.MediaBrowserServiceCompat;
 
-import static com.example.mike.mp3player.commons.MetaDataKeys.SONGS;
+import static com.example.mike.mp3player.commons.Constants.CATEGORY_SONGS_ID;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -70,15 +71,15 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             return;
         }
         // Assume for example that the music catalog is already loaded/cached.
-        List<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getLibrary();
+        List<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getSongList();
 
         // Check if this is the root menu:
         if (MY_MEDIA_ROOT_ID.equals(parentMediaId)) {
             // Build the MediaItem objects for the top level,
             // and put them in the mediaItems list...
-            result.sendResult(mediaItems);
-        } else if (SONGS.equals(parentMediaId)) {
-            result.sendResult(mediaLibrary.getSongs());
+            result.sendResult(mediaLibrary.getRoot());
+        } else if (CATEGORY_SONGS_ID.equals(parentMediaId)) {
+            result.sendResult(mediaLibrary.getSongList());
             // Examine the passed parentMediaId to see which submenu we're at,
             // and put the children of that menu in the mediaItems list...
         }

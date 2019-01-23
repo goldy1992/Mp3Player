@@ -141,6 +141,7 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements
 
 
         @Override
+        @SuppressWarnings("unchecked")
         protected void publishResults(CharSequence constraint, FilterResults results) {
             filteredSongs = (List<MediaBrowserCompat.MediaItem>) results.values;
             notifyDataSetChanged();

@@ -36,4 +36,15 @@ public final class Constants {
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_SKIPPING_TO_NEXT, "STATE_SKIPPING_TO_NEXT"); // 10
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_SKIPPING_TO_QUEUE_ITEM, "STATE_SKIPPING_TO_QUEUE_ITEM"); // 11
     };
+
+
+    /* LIBRARY CONSTANTS */
+
+    public static final String CATEGORY_SONGS_TITLE = "Songs";
+    public static final String CATEGORY_SONGS_ID = String.valueOf(CATEGORY_SONGS_TITLE.hashCode());
+    public static final String CATEGORY_SONGS_DESCRIPTION = "A list of all songs in the library";
+
+    public static final String CATEGORY_FOLDERS_TITLE = "Folders";
+    public static final String CATEGORY_FOLDERS_ID = String.valueOf(CATEGORY_FOLDERS_TITLE.hashCode());
+    public static final String CATEGORY_FOLDERS_DESCRIPTION = "A list of all folders with music inside them";;
 }

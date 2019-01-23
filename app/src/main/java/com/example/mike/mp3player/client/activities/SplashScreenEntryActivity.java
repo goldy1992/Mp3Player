@@ -5,15 +5,14 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserConnector;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
-import com.example.mike.mp3player.commons.MetaDataKeys;
+import com.example.mike.mp3player.commons.Constants;
+import com.example.mike.mp3player.service.library.SongCollection;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
@@ -27,7 +26,6 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SERVICE_DATA;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
-import static com.example.mike.mp3player.commons.MetaDataKeys.SONGS;
 
 public class SplashScreenEntryActivity extends AppCompatActivity implements MediaBrowserConnectorCallback, PermissionGranted {
     private static final String LOG_TAG = "SPLSH_SCRN_ENTRY_ACTVTY";
@@ -106,16 +104,16 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
         final String ROOT = mediaBrowserConnector.getRootId();
         if (mediaBrowserConnector.getRootId().equals(parentId)) {
             childrenArrayList.addAll(children);
-            mediaBrowserConnector.subscribe(SONGS);
+            mediaBrowserConnector.subscribe(Constants.CATEGORY_SONGS_ID);
             if (null == options) {
                 options = new Bundle();
             }
             options.putParcelableArrayList(MEDIA_SERVICE_DATA, childrenArrayList);
             options.putParcelable(MEDIA_SESSION, mediaBrowserConnector.getMediaSessionToken());
             mainActivityIntent.putExtras(options);
-        } else if (SONGS.equals(parentId)) {
+        } else if (SongCollection.ID.equals(parentId)) {
             childrenArrayList.addAll(children);
-            mainActivityIntent.putParcelableArrayListExtra(SONGS, childrenArrayList);
+            mainActivityIntent.putParcelableArrayListExtra(SongCollection.ID, childrenArrayList);
             onProcessingComplete(mainActivityIntent);
         }
 

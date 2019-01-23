@@ -59,7 +59,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     public void init() {
-        List<MediaSessionCompat.QueueItem> queueItems =  MediaLibraryUtils.convertMediaItemsToQueueItem(this.mediaLibrary.getSongs());
+        List<MediaSessionCompat.QueueItem> queueItems =  MediaLibraryUtils.convertMediaItemsToQueueItem(this.mediaLibrary.getSongList());
         this.playbackManager.init(queueItems);
 
         Uri firstSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.selectFirstItem());
@@ -122,7 +122,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
         if (bundle.containsKey(PLAYLIST)) {
               if (bundle.getString(PLAYLIST).equals(PLAY_ALL)) {
-                  playbackManager.createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(mediaLibrary.getLibrary()));
+                  playbackManager.createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(mediaLibrary.getSongList()));
               }
         }
         Uri uri = mediaLibrary.getMediaUriFromMediaId(mediaId);

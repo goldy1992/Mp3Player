@@ -17,6 +17,7 @@ import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaControllerWrapper;
 import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
 import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;
+import com.example.mike.mp3player.service.library.SongCollection;
 
 import java.util.List;
 
@@ -25,7 +26,6 @@ import androidx.annotation.NonNull;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SERVICE_DATA;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
-import static com.example.mike.mp3player.commons.MetaDataKeys.SONGS;
 
 public class MainActivity extends MediaActivityCompat implements MediaPlayerActionListener, MediaBrowserConnectorCallback {
     private static final String LOG_TAG = "MAIN_ACTIVITY";
@@ -40,7 +40,7 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         Bundle extras = getIntent().getExtras();
         MediaSessionCompat.Token token = (MediaSessionCompat.Token) extras.get(MEDIA_SESSION);
         initMediaBrowserService(token);
-        List<MediaBrowserCompat.MediaItem> songs = getIntent().getExtras().getParcelableArrayList(SONGS);
+        List<MediaBrowserCompat.MediaItem> songs = getIntent().getExtras().getParcelableArrayList(SongCollection.ID);
         init(songs);
     }
 
