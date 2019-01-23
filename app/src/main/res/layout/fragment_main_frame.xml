@@ -19,14 +19,14 @@
             android:id="@+id/titleBarFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             class="com.example.mike.mp3player.client.views.fragments.TitleBarFragment"
             tools:layout="@layout/fragment_title_bar"/>
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_weight="8"
+            android:layout_weight="7"
             android:layout_height="0dp">
             <include layout="@layout/content_main" />
         </LinearLayout>

@@ -7,8 +7,6 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.mike.mp3player.R;
@@ -23,8 +21,9 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 
+import static com.example.mike.mp3player.commons.Constants.CATEGORY_ROOT_ID;
+import static com.example.mike.mp3player.commons.Constants.CATEGORY_SONGS_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_SERVICE_DATA;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 
 public class MainActivity extends MediaActivityCompat implements MediaPlayerActionListener, MediaBrowserConnectorCallback {
@@ -33,6 +32,7 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
     private MediaBrowserConnector mediaBrowserConnector;
     private MediaControllerWrapper<MainActivity> mediaControllerWrapper;
     private MainActivityRootFragment rootFragment;
+    private List<MediaBrowserCompat.MediaItem> rootItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,8 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         Bundle extras = getIntent().getExtras();
         MediaSessionCompat.Token token = (MediaSessionCompat.Token) extras.get(MEDIA_SESSION);
         initMediaBrowserService(token);
-        List<MediaBrowserCompat.MediaItem> songs = getIntent().getExtras().getParcelableArrayList(SongCollection.ID);
+        List<MediaBrowserCompat.MediaItem> songs = getIntent().getExtras().getParcelableArrayList(CATEGORY_SONGS_ID);
+        rootItems = getIntent().getExtras().getParcelableArrayList(CATEGORY_ROOT_ID);
         init(songs);
     }
 
@@ -67,6 +68,7 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         this.rootFragment.setInputMethodManager(inputMethodManager);
         this.rootFragment.setActionListeners(this);
         this.rootFragment.initRecyclerView(songs, this);
+        this.rootFragment.getMainFrameFragment().getTitleBarFragment().initRootMenu(rootItems);
         rootFragment.getView().setFocusableInTouchMode(true);
         rootFragment.getView().requestFocus();
     }

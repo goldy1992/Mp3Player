@@ -39,6 +39,7 @@ public final class Constants {
 
 
     /* LIBRARY CONSTANTS */
+    public static final String CATEGORY_ROOT_ID = "ROOT_ID";
 
     public static final String CATEGORY_SONGS_TITLE = "Songs";
     public static final String CATEGORY_SONGS_ID = String.valueOf(CATEGORY_SONGS_TITLE.hashCode());
