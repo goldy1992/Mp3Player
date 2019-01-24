@@ -7,7 +7,9 @@ import java.util.Map;
 
 public abstract class LibraryCollection extends LibraryCategory {
 
-    Map<MediaBrowserCompat.MediaItem, List<MediaBrowserCompat.MediaItem>> collection;
+    protected Map<String, List<MediaBrowserCompat.MediaItem>> collection;
+
+    public abstract List<MediaBrowserCompat.MediaItem> getChildren(String id);
 
     public LibraryCollection(String id, String title, String description) {
         super(id, title, description);

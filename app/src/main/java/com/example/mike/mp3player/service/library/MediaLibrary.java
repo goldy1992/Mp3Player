@@ -8,19 +8,15 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.util.Log;
 
-import com.example.mike.mp3player.commons.MetaDataKeys;
 import com.example.mike.mp3player.service.library.utils.IsDirectoryFilter;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.library.utils.MusicFileFilter;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST;
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ARTIST;
@@ -103,6 +99,13 @@ public class MediaLibrary {
     }
     public List<MediaBrowserCompat.MediaItem> getSongList() {
         return songs.getSongs();
+    }
+
+    public List<MediaBrowserCompat.MediaItem> getChildren(String id) {
+        if (id.equals(folders.getRootId())) {
+            return getRoot();
+        }
+        return null;
     }
 
     private MediaBrowserCompat.MediaItem createPlayableMediaItemFromFile(File file, File directory) throws Exception {

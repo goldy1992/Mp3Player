@@ -12,19 +12,17 @@ public class SongCollection extends LibraryCategory {
     public static final String ID = Constants.CATEGORY_SONGS_ID;
     public static final String TITLE = Constants.CATEGORY_SONGS_TITLE;
     public static final String DESCRIPTION = Constants.CATEGORY_SONGS_DESCRIPTION;
-    private List<MediaBrowserCompat.MediaItem> songs;
 
     public SongCollection() {
         super(ID, TITLE, DESCRIPTION);
-        this.songs = new ArrayList<>();
     }
 
     @Override
     public void index(List<MediaBrowserCompat.MediaItem> items) {
-        this.songs = items;
+        this.keys = items;
     }
 
     public List<MediaBrowserCompat.MediaItem> getSongs() {
-        return songs;
+        return keys;
     }
 }
