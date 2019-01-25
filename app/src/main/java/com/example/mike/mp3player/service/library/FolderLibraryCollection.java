@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.service.library;
 
+import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.service.library.utils.MediaItemUtils;
 
@@ -20,7 +21,7 @@ public class FolderLibraryCollection extends LibraryCollection {
     public static final String DESCRIPTION = Constants.CATEGORY_FOLDERS_DESCRIPTION;
 
     public FolderLibraryCollection() {
-        super(ID, TITLE, DESCRIPTION);
+        super(Category.FOLDERS, ID, TITLE, DESCRIPTION);
         this.collection = new HashMap();
     }
 
@@ -52,9 +53,9 @@ public class FolderLibraryCollection extends LibraryCollection {
     @Override
     public List<MediaItem> getChildren(String id) {
         if (getRootId().equals(id)) {
-            return keys;
+            return getKeys();
         }
-        for (MediaItem i : keys) {
+        for (MediaItem i : getKeys()) {
             if (getMediaId(i).equals(id)) {
                 return collection.get(i);
             }

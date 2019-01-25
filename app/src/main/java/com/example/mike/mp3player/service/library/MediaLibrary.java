@@ -8,6 +8,9 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.util.Log;
 
+import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.commons.library.LibraryConstructor;
+import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.utils.IsDirectoryFilter;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.library.utils.MusicFileFilter;
@@ -15,8 +18,10 @@ import com.example.mike.mp3player.service.library.utils.MusicFileFilter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST;
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ARTIST;
@@ -31,31 +36,32 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KE
 
 public class MediaLibrary {
     private boolean playlistRecursInSubDirectory = false;
-    private FolderLibraryCollection folders;
-    private SongCollection songs;
+
     private MusicFileFilter musicFileFilter = new MusicFileFilter();
     private IsDirectoryFilter isDirectoryFilter = new IsDirectoryFilter();
+    private Map<Category, LibraryCollection> categories;
     private Context context;
     private List<MediaBrowserCompat.MediaItem> rootItems = new ArrayList<>();
     private final String LOG_TAG = "MEDIA_LIBRARY";
 
-    public MediaLibrary(Context context)
-    {
+    public MediaLibrary(Context context) {
         this.context = context;
+        categories = new HashMap<>();
     }
     public void init() {
-        songs = new SongCollection();
-        rootItems.add(songs.getRoot());
-        folders = new FolderLibraryCollection();
-        rootItems.add(folders.getRoot());
+        SongCollection songs = new SongCollection();
+        FolderLibraryCollection folders = new FolderLibraryCollection();
+        categories.put(songs.getRootId(), songs);
+        categories.put(folders.getRootId(), folders);
         buildMediaLibrary();
     }
 
     public void buildMediaLibrary(){
         File externalStorageDirectory = MediaLibraryUtils.getExternalStorageDirectory();
         List<MediaBrowserCompat.MediaItem> songList = buildSongList(externalStorageDirectory);
-        songs.index(songList);
-        folders.index(songList);
+        for (Category category : categories.keySet()) {
+            categories.get(category).index(songList);
+        }
     }
 
 
@@ -98,14 +104,21 @@ public class MediaLibrary {
         return rootItems;
     }
     public List<MediaBrowserCompat.MediaItem> getSongList() {
-        return songs.getSongs();
+        return categories.get(Category.SONGS).getKeys();
     }
 
     public List<MediaBrowserCompat.MediaItem> getChildren(String id) {
-        if (id.equals(folders.getRootId())) {
-            return getRoot();
+        LibraryId libraryId = LibraryConstructor.parseId(id);
+
+        if (libraryId == null || libraryId.getCategory() == null) {
+            return null;
         }
-        return null;
+
+        if (libraryId.getId() == null) {
+            return categories.get(libraryId.getCategory()).getKeys();
+        } else {
+            return categories.get(libraryId.getCategory()).getChildren(libraryId.getId());
+        }
     }
 
     private MediaBrowserCompat.MediaItem createPlayableMediaItemFromFile(File file, File directory) throws Exception {
@@ -146,7 +159,7 @@ public class MediaLibrary {
     }
 
     public Uri getMediaUriFromMediaId(String mediaId){
-        for (MediaBrowserCompat.MediaItem i : songs.getSongs()) {
+        for (MediaBrowserCompat.MediaItem i : getSongList()) {
             if (i.getDescription().getMediaId().equals(mediaId)) {
                 return i.getDescription().getMediaUri();
             }
