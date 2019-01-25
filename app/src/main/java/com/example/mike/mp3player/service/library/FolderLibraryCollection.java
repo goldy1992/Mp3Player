@@ -21,8 +21,8 @@ public class FolderLibraryCollection extends LibraryCollection {
     public static final String DESCRIPTION = Constants.CATEGORY_FOLDERS_DESCRIPTION;
 
     public FolderLibraryCollection() {
-        super(Category.FOLDERS, ID, TITLE, DESCRIPTION);
-        this.collection = new HashMap();
+        super(ID, TITLE, DESCRIPTION);
+        this.collection = new HashMap<>();
     }
 
     @Override
@@ -61,5 +61,10 @@ public class FolderLibraryCollection extends LibraryCollection {
             }
         }
         return null;
+    }
+
+    @Override
+    public Category getRootId() {
+        return Category.FOLDERS;
     }
 }

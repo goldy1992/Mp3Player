@@ -12,6 +12,7 @@ import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
 import com.example.mike.mp3player.commons.Constants;
+import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.service.library.SongCollection;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -105,7 +106,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
         final String ROOT = mediaBrowserConnector.getRootId();
         if (mediaBrowserConnector.getRootId().equals(parentId)) {
             childrenArrayList.addAll(children);
-            mediaBrowserConnector.subscribe(Constants.CATEGORY_SONGS_ID);
+            mediaBrowserConnector.subscribe(Category.SONGS);
             if (null == options) {
                 options = new Bundle();
             }

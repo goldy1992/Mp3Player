@@ -62,6 +62,14 @@ public class MediaLibrary {
         for (Category category : categories.keySet()) {
             categories.get(category).index(songList);
         }
+
+        List<MediaBrowserCompat.MediaItem> rootCategoryMediaItems = new ArrayList<>();
+        for (LibraryCollection collection : categories.values()) {
+            rootCategoryMediaItems.add(collection.getRoot());
+        }
+        RootLibraryCollection rootLibraryCollection = new RootLibraryCollection();
+        rootLibraryCollection.index(rootCategoryMediaItems);
+        categories.put(rootLibraryCollection.getRootId(), rootLibraryCollection);
     }
 
 

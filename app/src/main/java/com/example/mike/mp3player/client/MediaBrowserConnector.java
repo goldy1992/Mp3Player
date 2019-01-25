@@ -7,6 +7,8 @@ import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
 import com.example.mike.mp3player.client.callbacks.MySubscriptionCallback;
+import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 
 public class MediaBrowserConnector {
@@ -56,8 +58,13 @@ public class MediaBrowserConnector {
         getmMediaBrowser().disconnect();
     }
 
-    public void subscribe(String parentId) {
-        getmMediaBrowser().subscribe(parentId, mySubscriptionCallback);
+    public void subscribe(Category category) {
+        this.subscribe(category, null);
+    }
+
+    public void subscribe(Category category, String id) {
+        String token = LibraryConstructor.buildId(category, id);
+        getmMediaBrowser().subscribe(token, mySubscriptionCallback);
     }
 
     public MediaSessionCompat.Token getMediaSessionToken() {

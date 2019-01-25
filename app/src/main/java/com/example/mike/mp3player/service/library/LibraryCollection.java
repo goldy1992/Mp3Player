@@ -11,16 +11,14 @@ import java.util.Map;
 
 public abstract class LibraryCollection {
 
-    private final Category id;
     private final MediaBrowserCompat.MediaItem root;
     private List<MediaBrowserCompat.MediaItem> keys;
     protected Map<String, List<MediaBrowserCompat.MediaItem>> collection;
     public abstract List<MediaBrowserCompat.MediaItem> getChildren(String id);
     public abstract void index(List<MediaBrowserCompat.MediaItem> items);
+    public abstract Category getRootId();
 
-
-    public LibraryCollection(Category categoryId, String id, String title, String description) {
-        this.id = categoryId;
+    public LibraryCollection(String id, String title, String description) {
         this.root = createCollectionRootMediaItem(id, title, description);
         this.keys = new ArrayList<>();
     }
@@ -32,10 +30,6 @@ public abstract class LibraryCollection {
                 .setMediaId(id)
                 .build();
         return new MediaBrowserCompat.MediaItem(foldersDescription, MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
-    }
-
-    public Category getRootId() {
-        return Category.ROOT;
     }
 
     public MediaBrowserCompat.MediaItem getRoot() {

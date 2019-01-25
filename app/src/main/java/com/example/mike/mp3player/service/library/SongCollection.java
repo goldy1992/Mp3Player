@@ -14,12 +14,23 @@ public class SongCollection extends LibraryCollection {
     public static final String DESCRIPTION = Constants.CATEGORY_SONGS_DESCRIPTION;
 
     public SongCollection() {
-        super(Category.SONGS, ID, TITLE, DESCRIPTION);
+        super(ID, TITLE, DESCRIPTION);
+    }
+
+    @Override
+    public List<MediaBrowserCompat.MediaItem> getChildren(String id) {
+        // never used for songs collection as a song cannot have a child
+        return null;
     }
 
     @Override
     public void index(List<MediaBrowserCompat.MediaItem> items) {
         this.getKeys().addAll(items);
+    }
+
+    @Override
+    public Category getRootId() {
+        return Category.SONGS;
     }
 
     public List<MediaBrowserCompat.MediaItem> getSongs() {
