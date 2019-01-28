@@ -9,7 +9,7 @@ import java.util.List;
 
 public class SongCollection extends LibraryCollection {
 
-    public static final String ID = Constants.CATEGORY_SONGS_ID;
+    public static final String ID = Category.SONGS.name();
     public static final String TITLE = Constants.CATEGORY_SONGS_TITLE;
     public static final String DESCRIPTION = Constants.CATEGORY_SONGS_DESCRIPTION;
 

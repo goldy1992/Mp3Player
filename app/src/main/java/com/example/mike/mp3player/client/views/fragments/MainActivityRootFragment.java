@@ -61,11 +61,11 @@ public class MainActivityRootFragment extends Fragment implements SongSearchActi
 
     @Override // SongSearchActionListener
     public void onNewSearchFilter(String filter) {
-        mainFrameFragment.getRecyclerView().filter(filter);
+//        mainFrameFragment.getRecyclerView().filter(filter);
     }
 
     public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener) {
-        mainFrameFragment.initRecyclerView(songs, mediaPlayerActionListener);
+  //      mainFrameFragment.initRecyclerView(songs, mediaPlayerActionListener);
     }
 
     public void setPlaybackState(PlaybackStateCompat state) {

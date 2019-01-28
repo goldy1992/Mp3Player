@@ -67,8 +67,9 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         this.rootFragment.setInputMethodManager(inputMethodManager);
         this.rootFragment.setActionListeners(this);
+        this.rootFragment.getMainFrameFragment().getViewPagerFragment().initRootMenu(rootItems);
         this.rootFragment.initRecyclerView(songs, this);
-        this.rootFragment.getMainFrameFragment().getTitleBarFragment().initRootMenu(rootItems);
+
         rootFragment.getView().setFocusableInTouchMode(true);
         rootFragment.getView().requestFocus();
     }
