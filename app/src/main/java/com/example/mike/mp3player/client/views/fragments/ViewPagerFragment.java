@@ -48,6 +48,7 @@ public class ViewPagerFragment extends Fragment {
         for (MediaBrowserCompat.MediaItem i : items) {
             Category category = LibraryConstructor.getCategoryFromMediaItem(i);
             adapter.pagerItems.put(category, new ViewPageFragment());
+            adapter.menuCategories.add(category);
             adapter.notifyDataSetChanged();
         }
     }

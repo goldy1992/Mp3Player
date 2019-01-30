@@ -4,6 +4,8 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 
+import com.example.mike.mp3player.commons.library.Category;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,13 +41,13 @@ public final class Constants {
 
 
     /* LIBRARY CONSTANTS */
-    public static final String CATEGORY_ROOT_ID = "ROOT_ID";
+    public static final String CATEGORY_ROOT_ID = Category.ROOT.name();
 
     public static final String CATEGORY_SONGS_TITLE = "Songs";
-    public static final String CATEGORY_SONGS_ID = String.valueOf(CATEGORY_SONGS_TITLE.hashCode());
+    public static final String CATEGORY_SONGS_ID = Category.SONGS.name();
     public static final String CATEGORY_SONGS_DESCRIPTION = "A list of all songs in the library";
 
     public static final String CATEGORY_FOLDERS_TITLE = "Folders";
-    public static final String CATEGORY_FOLDERS_ID = String.valueOf(CATEGORY_FOLDERS_TITLE.hashCode());
+    public static final String CATEGORY_FOLDERS_ID = Category.FOLDERS.name();
     public static final String CATEGORY_FOLDERS_DESCRIPTION = "A list of all folders with music inside them";;
 }

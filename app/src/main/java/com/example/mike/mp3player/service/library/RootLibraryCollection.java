@@ -9,12 +9,10 @@ import java.util.List;
 
 public class RootLibraryCollection extends LibraryCollection {
 
-    public static final String ID = Constants.CATEGORY_SONGS_ID;
-    public static final String TITLE = Constants.CATEGORY_SONGS_TITLE;
-    public static final String DESCRIPTION = Constants.CATEGORY_SONGS_DESCRIPTION;
+    public static final String ID = Constants.CATEGORY_ROOT_ID;
 
     public RootLibraryCollection() {
-        super(ID, TITLE, DESCRIPTION);
+        super(ID, ID, ID);
     }
 
     @Override

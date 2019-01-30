@@ -25,7 +25,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.CATEGORY_ROOT_ID;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_SERVICE_DATA;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
 
