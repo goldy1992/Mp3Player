@@ -13,6 +13,8 @@ import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.commons.library.LibraryConstructor;
+import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.SongCollection;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -35,6 +37,8 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
     private volatile boolean splashScreenFinishedDisplaying;
     private MediaBrowserConnector mediaBrowserConnector;
     private Intent mainActivityIntent;
+    private int numberOfItemsToSubscribeTo;
+    private int numberOfItemsReceived = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,22 +106,30 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options) {
        // Log.i(LOG_TAG, "children loaded");
         ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>();
-        final String ROOT = mediaBrowserConnector.getRootId();
-        if (mediaBrowserConnector.getRootId().equals(parentId)) {
+        if (isRoot(parentId)) {
             childrenArrayList.addAll(children);
-            mediaBrowserConnector.subscribe(Category.SONGS);
+            numberOfItemsToSubscribeTo = childrenArrayList.size();
+            for (MediaBrowserCompat.MediaItem item : childrenArrayList) {
+                Category c = LibraryConstructor.getCategoryFromMediaItem(item);
+                mediaBrowserConnector.subscribe(c, null);
+            }
             if (null == options) {
                 options = new Bundle();
             }
             options.putParcelableArrayList(CATEGORY_ROOT_ID, childrenArrayList);
             options.putParcelable(MEDIA_SESSION, mediaBrowserConnector.getMediaSessionToken());
             mainActivityIntent.putExtras(options);
-        } else if (SongCollection.ID.equals(parentId)) {
+            return;
+        }
+        LibraryId libraryId = LibraryConstructor.parseId(parentId);
+        if (libraryId.getCategory() != null) {
             childrenArrayList.addAll(children);
-            mainActivityIntent.putParcelableArrayListExtra(Constants.CATEGORY_SONGS_ID, childrenArrayList);
+            mainActivityIntent.putParcelableArrayListExtra(libraryId.getCategory().name(), childrenArrayList);
+            numberOfItemsReceived++;
+        }
+        if (numberOfItemsReceived >= numberOfItemsToSubscribeTo) {
             onProcessingComplete(mainActivityIntent);
         }
-
     }
 
     private synchronized void onProcessingComplete(Intent mainActivityIntent) {
@@ -151,5 +163,9 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
         permissionsProcessor.requestPermission(WRITE_EXTERNAL_STORAGE);
         Thread splashScreenWaitThread = new Thread(() -> splashScreenRun());
         splashScreenWaitThread.start();
-}
+    }
+
+    private boolean isRoot(String id) {
+        return mediaBrowserConnector.getRootId().equals(id);
+    }
 }

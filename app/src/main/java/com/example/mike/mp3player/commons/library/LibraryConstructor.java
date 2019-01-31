@@ -56,7 +56,7 @@ public class LibraryConstructor {
         MediaDescriptionCompat description = mediaItem.getDescription();
         String id = description.getMediaId();
         String[] tokens = splitMediaId(id);
-        return tokens == null || tokens.length < 1 || tokens[0] != null ?
+        return tokens == null || tokens.length < 1 || tokens[0] == null ?
                 null : Category.valueOf(tokens[0]);
     }
 

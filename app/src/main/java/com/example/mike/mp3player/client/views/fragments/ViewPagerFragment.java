@@ -1,12 +1,13 @@
 package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
-import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
 
@@ -44,11 +45,13 @@ public class ViewPagerFragment extends Fragment {
         rootMenuItemsPager.setAdapter(adapter);
     }
 
-    public void initRootMenu(List<MediaBrowserCompat.MediaItem> items) {
-        for (MediaBrowserCompat.MediaItem i : items) {
+    public void initRootMenu(Map<MediaItem, List<MediaItem>> items, MediaPlayerActionListener listener) {
+        for (MediaItem i : items.keySet()) {
             Category category = LibraryConstructor.getCategoryFromMediaItem(i);
-            adapter.pagerItems.put(category, new ViewPageFragment());
-            adapter.menuCategories.add(category);
+            ViewPageFragment viewPageFragment = new ViewPageFragment();
+            viewPageFragment.initRecyclerView(items.get(i), listener);
+            adapter.pagerItems.put(category, viewPageFragment);
+            adapter.menuCategories.put(category, i);
             adapter.notifyDataSetChanged();
         }
     }
@@ -56,10 +59,20 @@ public class ViewPagerFragment extends Fragment {
     public void enable() {}
     public void disable() {}
 
+    public void initRecyclerView(List<MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener) {
+        // for now hardcode to init songs, in future call mediaservice to get items
+        //getViewPagerFragment().initRecyclerView(songs, mediaPlayerActionListener);
+        Category c = Category.SONGS;
+        ViewPageFragment f = (ViewPageFragment) adapter.pagerItems.get(c);
+        f.initRecyclerView(songs, mediaPlayerActionListener);
+        f.setCategory(c);
+
+    }
+
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
 
-        List<Category> menuCategories = new ArrayList<>();
+        Map<Category, MediaItem> menuCategories = new HashMap<>();
         Map<Category, Fragment> pagerItems = new HashMap<>();
 
         public MyPagerAdapter(FragmentManager fm) {
@@ -73,33 +86,24 @@ public class ViewPagerFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            return pagerItems.get(menuCategories.get(position));
-        }
-
-        @Override
-        public Object instantiateItem (ViewGroup container,
-                                       int position) {
-            return null;
-        }
-
-        @Override
-        public void destroyItem (ViewGroup container,
-                                 int position,
-                                 Object object) {
-            return;
+            ArrayList<Category> categoryArrayList = new ArrayList<>(menuCategories.keySet());
+            Category category = categoryArrayList.get(position);
+            return pagerItems.get(category);
         }
 
         @Override
         public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-            return view == object;
+            ViewPageFragment v = (ViewPageFragment) object;
+            return v.getView() == view;
         }
 
         // Returns the page title for the top indicator
         @Override
         public CharSequence getPageTitle(int position) {
-            Category category = menuCategories.get(position);
-            return category.name();
+            ArrayList<Category> categoryArrayList = new ArrayList<>(menuCategories.keySet());
+            Category category = categoryArrayList.get(position);
+            MediaItem i = menuCategories.get(category);
+            return i.getDescription().getTitle();
         }
-
     }
 }

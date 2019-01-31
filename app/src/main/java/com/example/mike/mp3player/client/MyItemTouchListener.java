@@ -57,7 +57,7 @@ public class MyItemTouchListener extends GestureDetector.SimpleOnGestureListener
         super.onSingleTapConfirmed(e);
         if (null != childView) {
             int childPosition = parentView.getChildAdapterPosition(childView);
-            MyViewAdapter myViewAdapter = (MyViewAdapter) parentView.getAdapter();
+            MySongViewAdapter myViewAdapter = (MySongViewAdapter) parentView.getAdapter();
             String mediaId = myViewAdapter.getFilteredSongs().get(childPosition).getDescription().getMediaId();
             this.mediaPlayerActionListener.playSelectedSong(mediaId);
         }

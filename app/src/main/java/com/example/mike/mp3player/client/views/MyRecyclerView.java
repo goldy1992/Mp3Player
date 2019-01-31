@@ -5,7 +5,8 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.util.AttributeSet;
 
 import com.example.mike.mp3player.client.MyItemTouchListener;
-import com.example.mike.mp3player.client.MyViewAdapter;
+import com.example.mike.mp3player.client.MySongViewAdapter;
+import com.example.mike.mp3player.commons.library.Category;
 
 import java.util.List;
 
@@ -15,10 +16,13 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static android.support.v4.media.MediaBrowserCompat.*;
+
 public class MyRecyclerView extends RecyclerView {
     private Context context;
     private MyItemTouchListener myItemTouchListener;
-    private MyViewAdapter myViewAdapter;
+    private MyGenericRecycleViewAdapter myViewAdapter;
+    private Category category;
 
     public MyRecyclerView(@NonNull Context context) {
         this(context, null);
@@ -33,8 +37,14 @@ public class MyRecyclerView extends RecyclerView {
         this.context = context;
     }
 
-    public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener) {
-        this.myViewAdapter = new MyViewAdapter(songs);
+    public void initRecyclerView(Category category, List<MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener) {
+        this.category = category;
+
+        if (category == null) {
+            return;
+        }
+
+        this.myViewAdapter = new MySongViewAdapter(songs);
         this.setAdapter(myViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         this.setLayoutManager(linearLayoutManager);
@@ -58,5 +68,9 @@ public class MyRecyclerView extends RecyclerView {
     }
     public void enable() {
         myItemTouchListener.setEnabled(true);
+    }
+
+    private MyGenericRecycleViewAdapter initViewAdapter(Category category, List<MediaItem> items) {
+        return new MySongViewAdapter(items);
     }
 }

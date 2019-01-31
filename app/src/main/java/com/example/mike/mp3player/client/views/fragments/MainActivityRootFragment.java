@@ -65,7 +65,7 @@ public class MainActivityRootFragment extends Fragment implements SongSearchActi
     }
 
     public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener) {
-  //      mainFrameFragment.initRecyclerView(songs, mediaPlayerActionListener);
+        mainFrameFragment.getViewPagerFragment().initRecyclerView(songs, mediaPlayerActionListener);
     }
 
     public void setPlaybackState(PlaybackStateCompat state) {

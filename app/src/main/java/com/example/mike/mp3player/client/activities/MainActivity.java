@@ -3,7 +3,7 @@ package com.example.mike.mp3player.client.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -15,9 +15,11 @@ import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaControllerWrapper;
 import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
 import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;
-import com.example.mike.mp3player.service.library.SongCollection;
+import com.example.mike.mp3player.commons.library.Category;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 
@@ -25,6 +27,7 @@ import static com.example.mike.mp3player.commons.Constants.CATEGORY_ROOT_ID;
 import static com.example.mike.mp3player.commons.Constants.CATEGORY_SONGS_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
+import static com.example.mike.mp3player.service.library.utils.MediaItemUtils.getMediaId;
 
 public class MainActivity extends MediaActivityCompat implements MediaPlayerActionListener, MediaBrowserConnectorCallback {
     private static final String LOG_TAG = "MAIN_ACTIVITY";
@@ -32,7 +35,7 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
     private MediaBrowserConnector mediaBrowserConnector;
     private MediaControllerWrapper<MainActivity> mediaControllerWrapper;
     private MainActivityRootFragment rootFragment;
-    private List<MediaBrowserCompat.MediaItem> rootItems;
+    private Map<MediaItem, List<MediaItem>> menuItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +43,17 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         Bundle extras = getIntent().getExtras();
         MediaSessionCompat.Token token = (MediaSessionCompat.Token) extras.get(MEDIA_SESSION);
         initMediaBrowserService(token);
-        List<MediaBrowserCompat.MediaItem> songs = getIntent().getExtras().getParcelableArrayList(CATEGORY_SONGS_ID);
-        rootItems = getIntent().getExtras().getParcelableArrayList(CATEGORY_ROOT_ID);
-        init(songs);
+        setContentView(R.layout.activity_main);
+        this.rootFragment = (MainActivityRootFragment) getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
+        InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        this.rootFragment.setInputMethodManager(inputMethodManager);
+        this.rootFragment.setActionListeners(this);
+        this.menuItems = initMenuItems(getIntent().getExtras());
+        this.rootFragment.getMainFrameFragment().getViewPagerFragment().initRootMenu(menuItems, this);
+        //this.rootFragment.initRecyclerView(songs, this);
+
+        rootFragment.getView().setFocusableInTouchMode(true);
+        rootFragment.getView().requestFocus();
     }
 
     @Override
@@ -59,19 +70,6 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
     @Override
     protected void onPause() {
         super.onPause();
-    }
-
-    public void init(List<MediaBrowserCompat.MediaItem> songs) {
-        setContentView(R.layout.activity_main);
-        this.rootFragment = (MainActivityRootFragment) getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
-        InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        this.rootFragment.setInputMethodManager(inputMethodManager);
-        this.rootFragment.setActionListeners(this);
-        this.rootFragment.getMainFrameFragment().getViewPagerFragment().initRootMenu(rootItems);
-        this.rootFragment.initRecyclerView(songs, this);
-
-        rootFragment.getView().setFocusableInTouchMode(true);
-        rootFragment.getView().requestFocus();
     }
 
     public void onMediaBrowserServiceConnected(MediaSessionCompat.Token token) {
@@ -144,12 +142,26 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
     }
 
     @Override
-    public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options) {
+    public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaItem> children, @NonNull Bundle options) {
         //Log.i(LOG_TAG, "more children loaded");
     }
 
     @Override // MediaPlayerActionListener
     public void sendCustomAction(String customAction, Bundle args) {
         mediaControllerWrapper.getMediaControllerCompat().getTransportControls().sendCustomAction(customAction, args);
+    }
+
+    private Map<MediaItem, List<MediaItem>> initMenuItems(Bundle extras) {
+        Map<MediaItem, List<MediaItem>> toReturn = new HashMap<>();
+
+        List<MediaItem> root = extras.getParcelableArrayList(CATEGORY_ROOT_ID);
+        for (MediaItem item : root) {
+            List<MediaItem> children = extras.getParcelableArrayList(Category.valueOf(getMediaId(item)).name());
+            if (children != null) {
+                toReturn.put(item, children);
+            }
+        }
+
+        return toReturn;
     }
 }

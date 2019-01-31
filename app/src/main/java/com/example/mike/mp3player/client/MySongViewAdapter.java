@@ -12,8 +12,10 @@ import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.utils.TimerUtils;
+import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
 import com.example.mike.mp3player.client.views.MyViewHolder;
 import com.example.mike.mp3player.commons.MetaDataKeys;
+import com.example.mike.mp3player.commons.library.Category;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -22,27 +24,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements Filterable {
+public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     private List<MediaBrowserCompat.MediaItem> songs;
     private List<MediaBrowserCompat.MediaItem> filteredSongs;
     private MySongFilter filter;
     private final String LOG_TAG = "MY_VIEW_ADAPTER";
 
 
-    public MyViewAdapter(List<MediaBrowserCompat.MediaItem> songs) {
-        super();
-        this.songs = songs;
-        this.filteredSongs = songs;
-        filter = new MySongFilter();
+    public MySongViewAdapter(List<MediaBrowserCompat.MediaItem> songs) {
+        super(songs);
     }
-    public void setData(List<MediaBrowserCompat.MediaItem> items) {
-        if (getSongs() == null) {
-            this.songs = items;
-        } else {
-            getSongs().addAll(items);
-        }
-    }
-        @Override
+
+    @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         // create a new views
@@ -93,8 +86,13 @@ public class MyViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements
     }
 
     private String extractArtist(MediaBrowserCompat.MediaItem song) {
-        String artist = song.getDescription().getExtras().getString(MetaDataKeys.STRING_METADATA_KEY_ARTIST);
-        if (null == artist) {
+        String artist = null;
+        try {
+            artist = song.getDescription().getExtras().getString(MetaDataKeys.STRING_METADATA_KEY_ARTIST);
+            if (null == artist) {
+                artist = "Unknown";
+            }
+        } catch (NullPointerException ex) {
             artist = "Unknown";
         }
         return artist;
