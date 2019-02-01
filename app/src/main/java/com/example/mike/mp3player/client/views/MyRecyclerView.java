@@ -1,10 +1,10 @@
 package com.example.mike.mp3player.client.views;
 
 import android.content.Context;
-import android.support.v4.media.MediaBrowserCompat;
 import android.util.AttributeSet;
 
-import com.example.mike.mp3player.client.MyItemTouchListener;
+import com.example.mike.mp3player.client.MyGenericItemTouchListener;
+import com.example.mike.mp3player.client.MySongItemTouchListener;
 import com.example.mike.mp3player.client.MySongViewAdapter;
 import com.example.mike.mp3player.commons.library.Category;
 
@@ -20,7 +20,7 @@ import static android.support.v4.media.MediaBrowserCompat.*;
 
 public class MyRecyclerView extends RecyclerView {
     private Context context;
-    private MyItemTouchListener myItemTouchListener;
+    private MyGenericItemTouchListener myGenericItemTouchListener;
     private MyGenericRecycleViewAdapter myViewAdapter;
     private Category category;
 
@@ -49,9 +49,9 @@ public class MyRecyclerView extends RecyclerView {
         this.setAdapter(myViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         this.setLayoutManager(linearLayoutManager);
-        this.myItemTouchListener = new MyItemTouchListener(context);
-        this.myItemTouchListener.setMediaPlayerActionListener(mediaPlayerActionListener);
-        this.addOnItemTouchListener(this.getMyItemTouchListener());
+        this.myGenericItemTouchListener = new MySongItemTouchListener(context);
+        this.myGenericItemTouchListener.setMediaPlayerActionListener(mediaPlayerActionListener);
+        this.addOnItemTouchListener(this.getMyGenericItemTouchListener());
         this.setItemAnimator(new DefaultItemAnimator());
         myViewAdapter.notifyDataSetChanged();
     }
@@ -60,15 +60,15 @@ public class MyRecyclerView extends RecyclerView {
         myViewAdapter.getFilter().filter(filterParam);
     }
 
-    public MyItemTouchListener getMyItemTouchListener() {
-        return myItemTouchListener;
+    public MyGenericItemTouchListener getMyGenericItemTouchListener() {
+        return myGenericItemTouchListener;
     }
 
     public void disable() {
-        myItemTouchListener.setEnabled(false);
+        myGenericItemTouchListener.setEnabled(false);
     }
     public void enable() {
-        myItemTouchListener.setEnabled(true);
+        myGenericItemTouchListener.setEnabled(true);
     }
 
     private MyGenericRecycleViewAdapter initViewAdapter(Category category, List<MediaItem> items) {

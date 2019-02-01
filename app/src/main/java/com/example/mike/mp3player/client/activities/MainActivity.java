@@ -10,6 +10,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaBrowserActionListener;
 import com.example.mike.mp3player.client.MediaBrowserConnector;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaControllerWrapper;
@@ -28,7 +29,7 @@ import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getMediaId;
 
-public class MainActivity extends MediaActivityCompat implements MediaPlayerActionListener, MediaBrowserConnectorCallback {
+public class MainActivity extends MediaActivityCompat implements MediaPlayerActionListener, MediaBrowserActionListener, MediaBrowserConnectorCallback {
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     private static final int READ_REQUEST_CODE = 42;
     private MediaBrowserConnector mediaBrowserConnector;
@@ -161,5 +162,10 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
             }
         }
         return toReturn;
+    }
+
+    @Override
+    public void subscribe(Category category, String id) {
+        mediaBrowserConnector.subscribe(category, id);
     }
 }
