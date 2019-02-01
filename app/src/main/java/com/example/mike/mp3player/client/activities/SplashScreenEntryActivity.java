@@ -104,7 +104,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
 
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options) {
-       // Log.i(LOG_TAG, "children loaded");
+       Log.i(LOG_TAG, "children loaded: " + parentId);
         ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>();
         if (isRoot(parentId)) {
             childrenArrayList.addAll(children);

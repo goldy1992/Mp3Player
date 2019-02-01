@@ -37,15 +37,14 @@ public class ViewPageFragment extends Fragment {
         return view;
     }
 
-
-
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         this.recyclerView = view.findViewById(R.id.myRecyclerView);
-        this.getRecyclerView().initRecyclerView(songs, mediaPlayerActionListener);
+        this.getRecyclerView().initRecyclerView(category, songs, mediaPlayerActionListener);
     }
 
-    public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener) {
+    public void initRecyclerView(Category category, List<MediaBrowserCompat.MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener) {
+        this.category = category;
         this.songs = songs;
         this.mediaPlayerActionListener = mediaPlayerActionListener;
     }

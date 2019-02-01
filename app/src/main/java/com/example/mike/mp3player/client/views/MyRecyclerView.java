@@ -40,11 +40,12 @@ public class MyRecyclerView extends RecyclerView {
     public void initRecyclerView(Category category, List<MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener) {
         this.category = category;
 
-        if (category == null) {
-            return;
+        switch (category) {
+            case SONGS:  myViewAdapter = new MySongViewAdapter(songs); break;
+            case FOLDERS: myViewAdapter = new MyFolderViewAdapter(songs); break;
+            default: return;
         }
 
-        this.myViewAdapter = new MySongViewAdapter(songs);
         this.setAdapter(myViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         this.setLayoutManager(linearLayoutManager);

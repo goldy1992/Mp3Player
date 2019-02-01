@@ -12,10 +12,13 @@ import java.util.Locale;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
+import static com.example.mike.mp3player.commons.MediaItemUtils.hasTitle;
+
 public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements Filterable {
 
-    List<MediaBrowserCompat.MediaItem> items;
-    List<MediaBrowserCompat.MediaItem> filteredSongs;
+    protected List<MediaBrowserCompat.MediaItem> items;
+    protected List<MediaBrowserCompat.MediaItem> filteredSongs;
     MySongFilter filter;
     final String LOG_TAG = "MY_VIEW_ADAPTER";
 
@@ -26,13 +29,30 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
         filter = new MySongFilter();
     }
 
-
     public void setData(List<MediaBrowserCompat.MediaItem> items) {
-        if (this.items == null) {
+        if (this.getItems() == null) {
             this.items = items;
         } else {
-            this.items.addAll(items);
+            this.getItems().addAll(items);
         }
+    }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    @Override
+    public int getItemCount() {
+        return getFilteredSongs() == null ? 0: getFilteredSongs().size();
+    }
+
+    public List<MediaBrowserCompat.MediaItem> getFilteredSongs() {
+        return filteredSongs;
+    }
+
+    public List<MediaBrowserCompat.MediaItem> getItems() {
+        return items;
     }
 
     protected class MySongFilter extends Filter {
@@ -42,11 +62,11 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
             List<MediaBrowserCompat.MediaItem> filteredList = new ArrayList<>();
 
             if (StringUtils.isBlank(constraint.toString())) {
-                return results(items);
+                return results(getItems());
             }
 
-            for (MediaBrowserCompat.MediaItem i : items) {
-                String title = i.getDescription().getTitle().toString().toUpperCase(Locale.getDefault());
+            for (MediaBrowserCompat.MediaItem i : getItems()) {
+                String title = hasTitle(i) ? getTitle(i).toUpperCase(Locale.getDefault()) : null;
                 String uppercaseConstraint = constraint.toString().toUpperCase(Locale.getDefault());
                 if (title.contains(uppercaseConstraint)) {
                     filteredList.add(i);
@@ -54,7 +74,6 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
             }
             return results(filteredList);
         }
-
 
         @Override
         @SuppressWarnings("unchecked")

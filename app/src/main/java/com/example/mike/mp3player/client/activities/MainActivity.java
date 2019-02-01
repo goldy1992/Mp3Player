@@ -24,10 +24,9 @@ import java.util.Map;
 import androidx.annotation.NonNull;
 
 import static com.example.mike.mp3player.commons.Constants.CATEGORY_ROOT_ID;
-import static com.example.mike.mp3player.commons.Constants.CATEGORY_SONGS_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
-import static com.example.mike.mp3player.service.library.utils.MediaItemUtils.getMediaId;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getMediaId;
 
 public class MainActivity extends MediaActivityCompat implements MediaPlayerActionListener, MediaBrowserConnectorCallback {
     private static final String LOG_TAG = "MAIN_ACTIVITY";
@@ -161,7 +160,6 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
                 toReturn.put(item, children);
             }
         }
-
         return toReturn;
     }
 }

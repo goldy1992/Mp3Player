@@ -1,12 +1,8 @@
 package com.example.mike.mp3player.client;
 
 import android.support.v4.media.MediaBrowserCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
@@ -15,19 +11,15 @@ import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
 import com.example.mike.mp3player.client.views.MyViewHolder;
 import com.example.mike.mp3player.commons.MetaDataKeys;
-import com.example.mike.mp3player.commons.library.Category;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+
+import static com.example.mike.mp3player.commons.MediaItemUtils.getExtra;
+import static com.example.mike.mp3player.commons.MediaItemUtils.hasExtras;
 
 public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
-    private List<MediaBrowserCompat.MediaItem> songs;
-    private List<MediaBrowserCompat.MediaItem> filteredSongs;
-    private MySongFilter filter;
     private final String LOG_TAG = "MY_VIEW_ADAPTER";
 
 
@@ -67,15 +59,11 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
         durationText.setText(duration);
     }
 
-    @Override
-    public int getItemCount() {
-        return getFilteredSongs() == null ? 0: getFilteredSongs().size();
-    }
 
     private String extractTitle(MediaBrowserCompat.MediaItem song) {
         CharSequence charSequence = song.getDescription().getTitle();
         if (null == charSequence) {
-            String fileName = (String) song.getDescription().getExtras().get(MetaDataKeys.META_DATA_KEY_FILE_NAME);
+            String fileName = hasExtras(song) ? (String) getExtra(MetaDataKeys.META_DATA_KEY_FILE_NAME, song) : null;
             if (fileName != null) {
                 return FilenameUtils.removeExtension(fileName);
             }
@@ -104,51 +92,4 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
         return TimerUtils.formatTime(duration);
     }
 
-    public List<MediaBrowserCompat.MediaItem> getSongs() {
-        return songs;
-    }
-
-    @Override
-    public Filter getFilter() {
-        return filter;
-    }
-
-    public List<MediaBrowserCompat.MediaItem> getFilteredSongs() {
-        return filteredSongs;
-    }
-
-    private class MySongFilter extends Filter {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-
-            List<MediaBrowserCompat.MediaItem> filteredList = new ArrayList<>();
-
-            if (StringUtils.isBlank(constraint.toString())) {
-                return results(songs);
-            }
-
-            for (MediaBrowserCompat.MediaItem i : songs) {
-                String title = i.getDescription().getTitle().toString().toUpperCase(Locale.getDefault());
-                String uppercaseConstraint = constraint.toString().toUpperCase(Locale.getDefault());
-                if (title.contains(uppercaseConstraint)) {
-                    filteredList.add(i);
-                }
-            }
-            return results(filteredList);
-        }
-
-
-        @Override
-        @SuppressWarnings("unchecked")
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            filteredSongs = (List<MediaBrowserCompat.MediaItem>) results.values;
-            notifyDataSetChanged();
-        }
-
-        private FilterResults results(List<MediaBrowserCompat.MediaItem> filteredSongs) {
-            FilterResults filterResults = new FilterResults();
-            filterResults.values = filteredSongs;
-            return filterResults;
-        }
-    }
 }

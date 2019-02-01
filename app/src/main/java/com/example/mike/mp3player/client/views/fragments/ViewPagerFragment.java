@@ -24,6 +24,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerTabStrip;
 import androidx.viewpager.widget.ViewPager;
 
+import static com.example.mike.mp3player.commons.MediaItemUtils.orderMediaItemSetByCategory;
+
 public class ViewPagerFragment extends Fragment {
 
     private ViewPager rootMenuItemsPager;
@@ -46,10 +48,11 @@ public class ViewPagerFragment extends Fragment {
     }
 
     public void initRootMenu(Map<MediaItem, List<MediaItem>> items, MediaPlayerActionListener listener) {
-        for (MediaItem i : items.keySet()) {
+        List<MediaItem> rootItems = orderMediaItemSetByCategory(items.keySet());
+        for (MediaItem i : rootItems) {
             Category category = LibraryConstructor.getCategoryFromMediaItem(i);
             ViewPageFragment viewPageFragment = new ViewPageFragment();
-            viewPageFragment.initRecyclerView(items.get(i), listener);
+            viewPageFragment.initRecyclerView(category, items.get(i), listener);
             adapter.pagerItems.put(category, viewPageFragment);
             adapter.menuCategories.put(category, i);
             adapter.notifyDataSetChanged();
@@ -58,16 +61,6 @@ public class ViewPagerFragment extends Fragment {
 
     public void enable() {}
     public void disable() {}
-
-    public void initRecyclerView(List<MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener) {
-        // for now hardcode to init songs, in future call mediaservice to get items
-        //getViewPagerFragment().initRecyclerView(songs, mediaPlayerActionListener);
-        Category c = Category.SONGS;
-        ViewPageFragment f = (ViewPageFragment) adapter.pagerItems.get(c);
-        f.initRecyclerView(songs, mediaPlayerActionListener);
-        f.setCategory(c);
-
-    }
 
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
