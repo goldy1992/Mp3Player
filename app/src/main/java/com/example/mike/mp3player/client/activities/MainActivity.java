@@ -49,7 +49,7 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         this.rootFragment.setInputMethodManager(inputMethodManager);
         this.rootFragment.setActionListeners(this);
         this.menuItems = initMenuItems(getIntent().getExtras());
-        this.rootFragment.getMainFrameFragment().getViewPagerFragment().initRootMenu(menuItems, this);
+        this.rootFragment.getMainFrameFragment().getViewPagerFragment().initRootMenu(menuItems, this, this);
         //this.rootFragment.initRecyclerView(songs, this);
 
         rootFragment.getView().setFocusableInTouchMode(true);

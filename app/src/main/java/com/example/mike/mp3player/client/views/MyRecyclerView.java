@@ -3,6 +3,8 @@ package com.example.mike.mp3player.client.views;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import com.example.mike.mp3player.client.MediaBrowserActionListener;
+import com.example.mike.mp3player.client.MyFolderItemTouchListener;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.MySongItemTouchListener;
 import com.example.mike.mp3player.client.MySongViewAdapter;
@@ -37,20 +39,26 @@ public class MyRecyclerView extends RecyclerView {
         this.context = context;
     }
 
-    public void initRecyclerView(Category category, List<MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener) {
+    public void initRecyclerView(Category category, List<MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener, MediaBrowserActionListener mediaBrowserActionListener) {
         this.category = category;
 
         switch (category) {
-            case SONGS:  myViewAdapter = new MySongViewAdapter(songs); break;
-            case FOLDERS: myViewAdapter = new MyFolderViewAdapter(songs); break;
+            case SONGS:
+                this.myViewAdapter = new MySongViewAdapter(songs);
+                this.myGenericItemTouchListener = new MySongItemTouchListener(context);
+                this.myGenericItemTouchListener.setMediaPlayerActionListener(mediaPlayerActionListener);
+                break;
+            case FOLDERS:
+                this.myViewAdapter = new MyFolderViewAdapter(songs);
+                this.myGenericItemTouchListener = new MyFolderItemTouchListener(context);
+                this.myGenericItemTouchListener.setMediaBrowserActionListener(mediaBrowserActionListener);
+                break;
             default: return;
         }
 
         this.setAdapter(myViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         this.setLayoutManager(linearLayoutManager);
-        this.myGenericItemTouchListener = new MySongItemTouchListener(context);
-        this.myGenericItemTouchListener.setMediaPlayerActionListener(mediaPlayerActionListener);
         this.addOnItemTouchListener(this.getMyGenericItemTouchListener());
         this.setItemAnimator(new DefaultItemAnimator());
         myViewAdapter.notifyDataSetChanged();

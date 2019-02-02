@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaBrowserActionListener;
 import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
@@ -47,12 +48,12 @@ public class ViewPagerFragment extends Fragment {
         rootMenuItemsPager.setAdapter(adapter);
     }
 
-    public void initRootMenu(Map<MediaItem, List<MediaItem>> items, MediaPlayerActionListener listener) {
+    public void initRootMenu(Map<MediaItem, List<MediaItem>> items, MediaPlayerActionListener listener, MediaBrowserActionListener mediaBrowserActionListener) {
         List<MediaItem> rootItems = orderMediaItemSetByCategory(items.keySet());
         for (MediaItem i : rootItems) {
             Category category = LibraryConstructor.getCategoryFromMediaItem(i);
             ViewPageFragment viewPageFragment = new ViewPageFragment();
-            viewPageFragment.initRecyclerView(category, items.get(i), listener);
+            viewPageFragment.initRecyclerView(category, items.get(i), listener, mediaBrowserActionListener);
             adapter.pagerItems.put(category, viewPageFragment);
             adapter.menuCategories.put(category, i);
             adapter.notifyDataSetChanged();

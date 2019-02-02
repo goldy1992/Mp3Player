@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaBrowserActionListener;
 import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
 import com.example.mike.mp3player.client.views.MyRecyclerView;
 import com.example.mike.mp3player.commons.library.Category;
@@ -23,10 +24,9 @@ public class ViewPageFragment extends Fragment {
     private MyRecyclerView recyclerView;
     List<MediaBrowserCompat.MediaItem> songs;
     MediaPlayerActionListener mediaPlayerActionListener;
+    MediaBrowserActionListener mediaBrowserActionListener;
 
-    public ViewPageFragment() {
-
-    }
+    public ViewPageFragment() {  }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -40,13 +40,16 @@ public class ViewPageFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         this.recyclerView = view.findViewById(R.id.myRecyclerView);
-        this.getRecyclerView().initRecyclerView(category, songs, mediaPlayerActionListener);
+        this.getRecyclerView().initRecyclerView(category, songs, mediaPlayerActionListener,
+                mediaBrowserActionListener);
     }
 
-    public void initRecyclerView(Category category, List<MediaBrowserCompat.MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener) {
+    public void initRecyclerView(Category category, List<MediaBrowserCompat.MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener,
+                                 MediaBrowserActionListener mediaBrowserActionListener) {
         this.category = category;
         this.songs = songs;
         this.mediaPlayerActionListener = mediaPlayerActionListener;
+        this.mediaBrowserActionListener = mediaBrowserActionListener;
     }
 
     public MyRecyclerView getRecyclerView() {

@@ -19,6 +19,7 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
     RecyclerView parentView;
     View childView;
     MediaPlayerActionListener mediaPlayerActionListener = null;
+    MediaBrowserActionListener mediaBrowserActionListener = null;
     boolean enabled = true;
 
 
@@ -73,4 +74,7 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
     }
 
 
+    public void setMediaBrowserActionListener(MediaBrowserActionListener mediaBrowserActionListener) {
+        this.mediaBrowserActionListener = mediaBrowserActionListener;
+    }
 }
