@@ -41,8 +41,8 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
-        MediaSessionCompat.Token token = (MediaSessionCompat.Token) extras.get(MEDIA_SESSION);
-        initMediaBrowserService(token);
+//        MediaSessionCompat.Token token = (MediaSessionCompat.Token) extras.get(MEDIA_SESSION);
+        initMediaBrowserService(null);
         setContentView(R.layout.activity_main);
         this.rootFragment = (MainActivityRootFragment) getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
         InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -50,7 +50,6 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         this.rootFragment.setActionListeners(this);
         this.menuItems = initMenuItems(getIntent().getExtras());
         this.rootFragment.getMainFrameFragment().getViewPagerFragment().initRootMenu(menuItems, this, this);
-        //this.rootFragment.initRecyclerView(songs, this);
 
         rootFragment.getView().setFocusableInTouchMode(true);
         rootFragment.getView().requestFocus();

@@ -11,11 +11,9 @@ import com.example.mike.mp3player.client.MediaBrowserConnector;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
-import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.commons.library.LibraryId;
-import com.example.mike.mp3player.service.library.SongCollection;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
@@ -133,6 +131,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
     }
 
     private synchronized void onProcessingComplete(Intent mainActivityIntent) {
+        mediaBrowserConnector.getmMediaBrowser().disconnect();
         //Log.i(LOG_TAG, "processing complete");
         while (!splashScreenFinishedDisplaying) {
             try {

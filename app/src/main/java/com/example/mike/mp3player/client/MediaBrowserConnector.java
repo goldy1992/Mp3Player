@@ -47,7 +47,6 @@ public class MediaBrowserConnector {
             mMediaBrowser.subscribe(mMediaBrowser.getRoot(), mySubscriptionCallback);
         }
         this.mediaSessionToken = token;
-
     }
 
     public MediaBrowserCompat getmMediaBrowser() {
