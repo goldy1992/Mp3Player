@@ -42,7 +42,7 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
 //        MediaSessionCompat.Token token = (MediaSessionCompat.Token) extras.get(MEDIA_SESSION);
-        initMediaBrowserService(null);
+        initMediaBrowserService();
         setContentView(R.layout.activity_main);
         this.rootFragment = (MainActivityRootFragment) getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
         InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -78,9 +78,9 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         this.mediaControllerWrapper.init();
     }
 
-    private void initMediaBrowserService(MediaSessionCompat.Token token) {
+    private void initMediaBrowserService() {
         mediaBrowserConnector = new MediaBrowserConnector(getApplicationContext(), this);
-        mediaBrowserConnector.init(token);
+        mediaBrowserConnector.init(null);
     }
 
     private Intent createMediaPlayerActivityIntent() {
