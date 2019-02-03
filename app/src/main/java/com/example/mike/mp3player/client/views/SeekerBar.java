@@ -30,7 +30,7 @@ public class SeekerBar extends AppCompatSeekBar {
         super(context, attrs, defStyleAttr);
     }
 
-    public void init() {
+    public void init(MediaControllerAdapter mediaControllerAdapter) {
         this.mySeekerMediaControllerCallback = new MySeekerMediaControllerCallback(this);
         this.seekBarChangeListener = new SeekerBarChangerListener();
         super.setOnSeekBarChangeListener(seekBarChangeListener);
@@ -71,9 +71,5 @@ public class SeekerBar extends AppCompatSeekBar {
 
     public TimeCounter getTimeCounter() {
         return timeCounter;
-    }
-
-    public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
-        seekBarChangeListener.setMediaControllerAdapter(mediaControllerAdapter);
     }
 }

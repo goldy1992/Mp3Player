@@ -51,7 +51,7 @@ public class MainActivity extends MediaActivityCompat
     protected void onStart() {
         super.onStart();
         if (mediaControllerAdapter != null) {
-            setPlaybackState(mediaControllerAdapter.getCurrentPlaybackState());
+     //       setPlaybackState(mediaControllerAdapter.getCurrentPlaybackState());
         }
         // If it is null it will initialised when the MediaBrowserAdapter has connected
     }
@@ -83,14 +83,6 @@ public class MainActivity extends MediaActivityCompat
     public void goToMediaPlayerActivity() {
         Intent intent = createMediaPlayerActivityIntent();
         startActivityForResult(intent, READ_REQUEST_CODE);
-    }
-
-    @Override // MediaActivityCompat
-    public void setMetaData(MediaMetadataCompat metadata) { /* no need to update meta data in this class */ }
-
-    @Override // MediaActivityCompat
-    public void setPlaybackState(PlaybackStateCompat state) {
-        rootFragment.setPlaybackState(state);
     }
 
     @Override // MediaActivityCompat

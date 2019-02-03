@@ -11,9 +11,9 @@ public abstract class MediaActivityCompat extends AppCompatActivity {
 
     private MediaControllerAdapter mediaControllerAdapter;
 
-    public abstract void setMetaData(MediaMetadataCompat metadata);
+//    public abstract void setMetaData(MediaMetadataCompat metadata);
 
-    public abstract void setPlaybackState(PlaybackStateCompat state);
+//    public abstract void setPlaybackState(PlaybackStateCompat state);
 
     public abstract MediaControllerAdapter getMediaControllerAdapter();
 }

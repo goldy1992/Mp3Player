@@ -5,11 +5,12 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.AttributeSet;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.PlaybackStateListener;
 
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 
-public class PlayPauseButton extends LinearLayoutWithImageView {
+public class PlayPauseButton extends LinearLayoutWithImageView implements PlaybackStateListener {
 
     private static final String LOG_TAG = "PLAY_PAUSE_BUTTON";
     @PlaybackStateCompat.State
@@ -29,9 +30,6 @@ public class PlayPauseButton extends LinearLayoutWithImageView {
         this.context = context;
     }
 
-    public void updateState(PlaybackStateCompat state) {
-        updateState(state.getState());
-    }
 
     public void updateState(int newState) {
         if (newState != getState()) {
@@ -64,5 +62,10 @@ public class PlayPauseButton extends LinearLayoutWithImageView {
         PlayPauseButton toReturn = new PlayPauseButton(context);
         toReturn.updateState(STATE_PAUSED);
         return toReturn;
+    }
+
+    @Override
+    public void onPlaybackStateChanged(PlaybackStateCompat state) {
+        updateState(state.getState());
     }
 }

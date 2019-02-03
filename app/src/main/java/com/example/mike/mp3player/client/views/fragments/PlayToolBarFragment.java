@@ -52,6 +52,7 @@ public class PlayToolBarFragment extends Fragment {
                      MediaPlayerActvityRequester mediaPlayerActvityRequester) {
         this.mediaControllerAdapter = mediaControllerAdapter;
         this.mediaPlayerActvityRequester = mediaPlayerActvityRequester;
+        this.mediaControllerAdapter.registerPlaybackStateListener(playPauseButton);
     }
 
     void playPause() {

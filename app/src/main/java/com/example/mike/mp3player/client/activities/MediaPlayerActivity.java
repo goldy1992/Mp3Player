@@ -2,13 +2,10 @@ package com.example.mike.mp3player.client.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.views.PlayPauseButton;
 import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackToolbarExtendedFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
@@ -53,8 +50,8 @@ public class MediaPlayerActivity extends MediaActivityCompat {
                 mediaControllerAdapter.prepareFromMediaId(getMediaId(), extras);
             }
             else {
-                setMetaData(mediaControllerAdapter.getMetaData());
-                setPlaybackState(mediaControllerAdapter.getCurrentPlaybackState());
+//                setMetaData(mediaControllerAdapter.getMetaData());
+  //              setPlaybackState(mediaControllerAdapter.getCurrentPlaybackState());
             }
         } else {
             /** TODO: Add functionality for when the playback bar is touched in the MainActivity and no
@@ -67,6 +64,10 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     public void onStart() {
         super.onStart();
         setMediaId((String) retrieveIntentInfo(Constants.MEDIA_ID));
+        trackInfoFragment.init(mediaControllerAdapter);
+        playbackSpeedControlsFragment.init(mediaControllerAdapter);
+        playbackTrackerFragment.init(mediaControllerAdapter);
+        playbackToolbarExtendedFragment.init(mediaControllerAdapter);
     }
 
     @Override
@@ -105,11 +106,8 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         setContentView(R.layout.activity_media_player);
         this.trackInfoFragment = (TrackInfoFragment) getSupportFragmentManager().findFragmentById(R.id.trackInfoFragment);
         this.playbackSpeedControlsFragment = (PlaybackSpeedControlsFragment) getSupportFragmentManager().findFragmentById(R.id.playbackSpeedControlsFragment);
-        this.getPlaybackSpeedControlsFragment().setMediaControllerAdapter(mediaControllerAdapter);
         this.playbackTrackerFragment = (PlaybackTrackerFragment) getSupportFragmentManager().findFragmentById(R.id.playbackTrackerFragment);
-        this.getPlaybackTrackerFragment().getSeekerBar().setMediaControllerAdapter(mediaControllerAdapter);
         this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) getSupportFragmentManager().findFragmentById(R.id.playbackToolbarExtendedFragment);
-        this.getPlaybackToolbarExtendedFragment().setMediaControllerAdapter(mediaControllerAdapter);
         this.getPlaybackToolbarExtendedFragment().displayButtons();
     }
 
@@ -119,24 +117,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
             return getIntent().getExtras().get(key);
         }
         return null;
-    }
-
-    @Override
-    public void setMetaData(MediaMetadataCompat metaData) {
-        getPlaybackTrackerFragment().setMetaData(metaData);
-        getTrackInfoFragment().setMetaData(metaData);
-    }
-
-    @Override
-    public void setPlaybackState(PlaybackStateCompat state) {
-        if (state != null) {
-            @PlaybackStateCompat.State
-            final int newState = state.getState();
-            PlayPauseButton playPauseButton = getPlaybackToolbarExtendedFragment().getPlayPauseButton();
-            playPauseButton.updateState(newState);
-            getPlaybackTrackerFragment().setPlaybackState(state);
-            getPlaybackSpeedControlsFragment().setPlaybackState(state);
-        }
     }
 
     @Override

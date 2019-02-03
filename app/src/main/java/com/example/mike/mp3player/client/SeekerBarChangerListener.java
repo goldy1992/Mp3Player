@@ -8,6 +8,9 @@ public class SeekerBarChangerListener implements SeekBar.OnSeekBarChangeListener
 
     private MediaControllerAdapter mediaControllerAdapter;
 
+    public SeekerBarChangerListener(MediaControllerAdapter mediaControllerAdapter) {
+        this.mediaControllerAdapter = mediaControllerAdapter;
+    }
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
     }
@@ -33,8 +36,4 @@ public class SeekerBarChangerListener implements SeekBar.OnSeekBarChangeListener
         }
     }
 
-
-    public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
-        this.mediaControllerAdapter = mediaControllerAdapter;
-    }
 }

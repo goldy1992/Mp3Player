@@ -69,6 +69,22 @@ public class MediaControllerAdapter {
         getMediaControllerCompat().getTransportControls().skipToPrevious();
     }
 
+    public void registerMetaDataListener(MetaDataListener metaDataListener) {
+        myMediaControllerCallback.registerMetaDataListener(metaDataListener);
+    }
+
+    public void unregisterMetaDataListener(MetaDataListener metaDataListener) {
+        myMediaControllerCallback.removeMetaDataListener(metaDataListener);
+    }
+
+    public void registerPlaybackStateListener(PlaybackStateListener playbackStateListener) {
+        myMediaControllerCallback.registerPlaybackStateListener(playbackStateListener);
+    }
+
+    public void unregisterPlaybackStateListener(PlaybackStateListener playbackStateListener) {
+        myMediaControllerCallback.removePlaybackStateListener(playbackStateListener);
+    }
+
     public int getPlaybackState() {
         if (getMediaControllerCompat() != null && getMediaControllerCompat().getPlaybackState() != null) {
             return getMediaControllerCompat().getPlaybackState().getState();
@@ -93,12 +109,12 @@ public class MediaControllerAdapter {
 
     public void disconnect() {
         if (getMediaControllerCompat() != null && myMediaControllerCallback != null) {
-            if (!myMediaControllerCallback.getChildCallbacks().isEmpty()) {
-                // find a way to disconnect all callbacks
-                for (MediaControllerCompat.Callback callback : myMediaControllerCallback.getChildCallbacks()) {
-                    getMediaControllerCompat().unregisterCallback(callback);
-                }
-            }
+//            if (!myMediaControllerCallback.getChildCallbacks().isEmpty()) {
+//                // find a way to disconnect all callbacks
+//                for (MediaControllerCompat.Callback callback : myMediaControllerCallback.getChildCallbacks()) {
+//                    getMediaControllerCompat().unregisterCallback(callback);
+//                }
+//            }
             getMediaControllerCompat().unregisterCallback(myMediaControllerCallback);
         }
     }

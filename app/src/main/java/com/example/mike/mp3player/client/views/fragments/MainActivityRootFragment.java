@@ -75,15 +75,6 @@ public class MainActivityRootFragment extends Fragment implements SongSearchActi
 //        mainFrameFragment.getRecyclerView().filter(filter);
     }
 
-    public void setPlaybackState(PlaybackStateCompat state) {
-        if (state != null) {
-            @PlaybackStateCompat.State
-            final int newState = state.getState();
-            PlayPauseButton playPauseButton = mainFrameFragment.getPlayToolBarFragment().getPlayPauseButton();
-            playPauseButton.updateState(newState);
-        }
-    }
-
     public MainFrameFragment getMainFrameFragment() {
         return mainFrameFragment;
     }
