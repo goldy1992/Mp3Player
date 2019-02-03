@@ -3,7 +3,6 @@ package com.example.mike.mp3player.client.views.fragments;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +43,10 @@ public class SongFilterFragment extends Fragment implements TextWatcher, KeyImeC
         searchText.addTextChangedListener(this);
         searchText.setOnEditorActionListener((TextView v, int actionId, KeyEvent event) -> onEditorAction(v , actionId, event));
         searchText.setKeyImeChangeListener(this);
+    }
+
+    public void init(SongSearchActionListener songSearchActionListener) {
+        this.songSearchActionListener = songSearchActionListener;
     }
 
     public SongFilterFragment() {

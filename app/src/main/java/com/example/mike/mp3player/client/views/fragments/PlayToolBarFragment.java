@@ -10,8 +10,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.client.views.LinearLayoutWithImageView;
-import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
 import com.example.mike.mp3player.client.views.PlayPauseButton;
 
 import androidx.annotation.NonNull;
@@ -23,10 +24,11 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class PlayToolBarFragment extends Fragment {
 
-    protected MediaPlayerActionListener mediaPlayerActionListener;
+    MediaControllerAdapter mediaControllerAdapter;
     PlayPauseButton playPauseButton;
     protected Toolbar toolbar;
     LinearLayout innerPlaybackToolbarLayout;
+    MediaPlayerActvityRequester mediaPlayerActvityRequester;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -39,20 +41,26 @@ public class PlayToolBarFragment extends Fragment {
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         toolbar = view.findViewById(R.id.playbackToolbar);
-        toolbar.setOnClickListener((View v) -> mediaPlayerActionListener.goToMediaPlayerActivity());
+        toolbar.setOnClickListener((View v) -> mediaPlayerActvityRequester.goToMediaPlayerActivity());
         this.innerPlaybackToolbarLayout = view.findViewById(R.id.innerPlaybackToolbarLayout);
         this.playPauseButton = PlayPauseButton.create(getContext());
         this.playPauseButton.getView().setOnClickListener((View v) -> playPause());
         initButton(playPauseButton);
     }
 
+    public void init(MediaControllerAdapter mediaControllerAdapter,
+                     MediaPlayerActvityRequester mediaPlayerActvityRequester) {
+        this.mediaControllerAdapter = mediaControllerAdapter;
+        this.mediaPlayerActvityRequester = mediaPlayerActvityRequester;
+    }
+
     void playPause() {
         int currentPlaybackState = playPauseButton.getState();
         if (currentPlaybackState == PlaybackStateCompat.STATE_PLAYING) {
-            mediaPlayerActionListener.pause();
+            mediaControllerAdapter.pause();
             getPlayPauseButton().setPlayIcon();
         } else {
-            mediaPlayerActionListener.play();
+            mediaControllerAdapter.play();
             getPlayPauseButton().setPauseIcon();
         }
     }
@@ -85,9 +93,6 @@ public class PlayToolBarFragment extends Fragment {
         this.playPauseButton = playPauseButton;
     }
 
-    public void setMediaPlayerActionListener(MediaPlayerActionListener mediaPlayerActionListener) {
-        this.mediaPlayerActionListener = mediaPlayerActionListener;
-    }
 
     LinearLayout.LayoutParams getLinearLayoutParams(ViewGroup.LayoutParams params) {
         if (params != null) {
@@ -96,5 +101,9 @@ public class PlayToolBarFragment extends Fragment {
         }
         return new LinearLayout.LayoutParams(WRAP_CONTENT,
                 WRAP_CONTENT, 1.0f);
+    }
+
+    public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
+        this.mediaControllerAdapter = mediaControllerAdapter;
     }
 }

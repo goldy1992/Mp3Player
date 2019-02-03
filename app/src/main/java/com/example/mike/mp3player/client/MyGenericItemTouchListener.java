@@ -5,7 +5,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
 import com.example.mike.mp3player.client.views.MyRecyclerView;
 
 import androidx.annotation.NonNull;
@@ -18,8 +17,9 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
     GestureDetector gestureDetector;
     RecyclerView parentView;
     View childView;
-    MediaPlayerActionListener mediaPlayerActionListener = null;
-    MediaBrowserActionListener mediaBrowserActionListener = null;
+    MediaBrowserAdapter mediaBrowserAdapter = null;
+    MediaControllerAdapter mediaControllerAdapter = null;
+    MediaPlayerActvityRequester mediaPlayerActvityRequester = null;
     boolean enabled = true;
 
 
@@ -69,12 +69,15 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
         this.enabled = enabled;
     }
 
-    public void setMediaPlayerActionListener(MediaPlayerActionListener mediaPlayerActionListener) {
-        this.mediaPlayerActionListener = mediaPlayerActionListener;
+    public void setMediaBrowserAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
+        this.mediaBrowserAdapter = mediaBrowserAdapter;
     }
 
+    public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
+        this.mediaControllerAdapter = mediaControllerAdapter;
+    }
 
-    public void setMediaBrowserActionListener(MediaBrowserActionListener mediaBrowserActionListener) {
-        this.mediaBrowserActionListener = mediaBrowserActionListener;
+    public void setMediaPlayerActvityRequester(MediaPlayerActvityRequester mediaPlayerActvityRequester) {
+        this.mediaPlayerActvityRequester = mediaPlayerActvityRequester;
     }
 }

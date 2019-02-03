@@ -40,11 +40,11 @@ public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
     }
 
     public void skipToNext() {
-        mediaPlayerActionListener.skipToNext();
+        mediaControllerAdapter.skipToNext();
     }
 
     public void skipToPrevious() {
-        mediaPlayerActionListener.skipToPrevious();
+        mediaControllerAdapter.skipToPrevious();
     }
 
     @Override

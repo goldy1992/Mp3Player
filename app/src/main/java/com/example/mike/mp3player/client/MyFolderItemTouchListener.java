@@ -20,7 +20,7 @@ public class MyFolderItemTouchListener extends MyGenericItemTouchListener {
             int childPosition = parentView.getChildAdapterPosition(childView);
             MyFolderViewAdapter myViewAdapter = (MyFolderViewAdapter) parentView.getAdapter();
             String mediaId = myViewAdapter.getFilteredSongs().get(childPosition).getDescription().getMediaId();
-            this.mediaBrowserActionListener.subscribe(Category.FOLDERS, mediaId);
+            this.mediaBrowserAdapter.subscribe(Category.FOLDERS, mediaId);
         }
         return false;
     }

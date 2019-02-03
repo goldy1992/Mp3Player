@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
 
+import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.SeekerBarChangerListener;
 import com.example.mike.mp3player.client.callbacks.MySeekerMediaControllerCallback;
 
@@ -72,7 +73,7 @@ public class SeekerBar extends AppCompatSeekBar {
         return timeCounter;
     }
 
-    public void setSeekerBarListener(MediaPlayerActionListener listener) {
-        seekBarChangeListener.setListener(listener);
+    public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
+        seekBarChangeListener.setMediaControllerAdapter(mediaControllerAdapter);
     }
 }

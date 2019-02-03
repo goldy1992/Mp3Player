@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.MediaControllerAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +25,7 @@ public class PlaybackSpeedControlsFragment extends Fragment {
     private TextView playbackSpeed;
     private AppCompatImageButton increasePlaybackSpeedButton;
     private AppCompatImageButton decreasePlaybackSpeedButton;
-    private MediaPlayerActionListener mediaPlayerActionListener;
+    private MediaControllerAdapter mediaControllerAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -59,15 +59,15 @@ public class PlaybackSpeedControlsFragment extends Fragment {
 
     public void increasePlaybackSpeed() {
         Bundle extras = new Bundle();
-        mediaPlayerActionListener.sendCustomAction(INCREASE_PLAYBACK_SPEED, extras);
+        mediaControllerAdapter.sendCustomAction(INCREASE_PLAYBACK_SPEED, extras);
     }
 
     public void decreasePlaybackSpeed() {
         Bundle extras = new Bundle();
-        mediaPlayerActionListener.sendCustomAction(DECREASE_PLAYBACK_SPEED, extras);
+        this.mediaControllerAdapter.sendCustomAction(DECREASE_PLAYBACK_SPEED, extras);
     }
 
-    public void setMediaPlayerActionListener(MediaPlayerActionListener mediaPlayerActionListener) {
-        this.mediaPlayerActionListener = mediaPlayerActionListener;
+    public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
+        this.mediaControllerAdapter = mediaControllerAdapter;
     }
 }

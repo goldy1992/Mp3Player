@@ -5,17 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaBrowserActionListener;
-import com.example.mike.mp3player.client.MediaBrowserConnector;
+import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
-import com.example.mike.mp3player.client.MediaControllerWrapper;
-import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;
 import com.example.mike.mp3player.commons.library.Category;
 
@@ -23,49 +20,40 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-
 import static com.example.mike.mp3player.commons.Constants.CATEGORY_ROOT_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getMediaId;
 
-public class MainActivity extends MediaActivityCompat implements MediaPlayerActionListener, MediaBrowserActionListener, MediaBrowserConnectorCallback {
+public class MainActivity extends MediaActivityCompat
+    implements  MediaPlayerActvityRequester,
+                MediaBrowserConnectorCallback {
+
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     private static final int READ_REQUEST_CODE = 42;
-    private MediaBrowserConnector mediaBrowserConnector;
-    private MediaControllerWrapper<MainActivity> mediaControllerWrapper;
+
+    private MediaBrowserAdapter mediaBrowserAdapter;
+    private MediaControllerAdapter mediaControllerAdapter;
+
     private MainActivityRootFragment rootFragment;
+    private InputMethodManager inputMethodManager;
     private Map<MediaItem, List<MediaItem>> menuItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle extras = getIntent().getExtras();
-//        MediaSessionCompat.Token token = (MediaSessionCompat.Token) extras.get(MEDIA_SESSION);
-        initMediaBrowserService();
-        setContentView(R.layout.activity_main);
-        this.rootFragment = (MainActivityRootFragment) getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
-        InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        this.rootFragment.setInputMethodManager(inputMethodManager);
-        this.rootFragment.setActionListeners(this);
         this.menuItems = initMenuItems(getIntent().getExtras());
-        this.rootFragment.getMainFrameFragment().getViewPagerFragment().initRootMenu(menuItems, this, this);
-
-        rootFragment.getView().setFocusableInTouchMode(true);
-        rootFragment.getView().requestFocus();
+        initMediaBrowserService();
+        this.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (mediaControllerWrapper != null) {
-            setPlaybackState(mediaControllerWrapper.getCurrentPlaybackState());
+        if (mediaControllerAdapter != null) {
+            setPlaybackState(mediaControllerAdapter.getCurrentPlaybackState());
         }
-//        } else {
-//            mediaControllerWrapper = new MediaControllerWrapper<>(this, mediaBrowserConnector.getMediaSessionToken());
-//            mediaControllerWrapper.init();
-//        }
+        // If it is null it will initialised when the MediaBrowserAdapter has connected
     }
 
     @Override
@@ -73,54 +61,28 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         super.onPause();
     }
 
-
     private void initMediaBrowserService() {
-        mediaBrowserConnector = new MediaBrowserConnector(getApplicationContext(), this);
-        mediaBrowserConnector.init();
+        mediaBrowserAdapter = new MediaBrowserAdapter(getApplicationContext(), this);
+        mediaBrowserAdapter.init();
     }
 
     private Intent createMediaPlayerActivityIntent() {
         Intent intent = new Intent(getApplicationContext(), MediaPlayerActivity.class);
-        intent.putExtra(MEDIA_SESSION, mediaBrowserConnector.getMediaSessionToken());
+        intent.putExtra(MEDIA_SESSION, mediaBrowserAdapter.getMediaSessionToken());
         return intent;
     }
 
-    @Override //MediaPlayerActionListener
+    @Override
     public void playSelectedSong(String songId) {
         Intent intent = createMediaPlayerActivityIntent();
         intent.putExtra(MEDIA_ID, songId);
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
-    @Override // MediaPlayerActionListener
-    public void play() {
-        mediaControllerWrapper.play();
-    }
-
-    @Override // MediaPlayerActionListener
-    public void pause() {
-        mediaControllerWrapper.pause();
-    }
-
-    @Override // MediaPlayerActionListener
+    @Override
     public void goToMediaPlayerActivity() {
         Intent intent = createMediaPlayerActivityIntent();
         startActivityForResult(intent, READ_REQUEST_CODE);
-    }
-
-    @Override // MediaPlayerActionListener
-    public void skipToNext() {
-        mediaControllerWrapper.skipToNext();
-    }
-
-    @Override // MediaPlayerActionListener
-    public void skipToPrevious() {
-        mediaControllerWrapper.skipToPrevious();
-    }
-
-    @Override // MediaPlayerActionListener
-    public void seekTo(int position) {
-        mediaControllerWrapper.seekTo(position);
     }
 
     @Override // MediaActivityCompat
@@ -132,33 +94,24 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
     }
 
     @Override // MediaActivityCompat
-    public MediaControllerWrapper getMediaControllerWrapper() {
-        return mediaControllerWrapper;
-    }
-
-    @Override
-    public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaItem> children, @NonNull Bundle options) {
-        Log.i(LOG_TAG, "more children loaded main activity");
+    public MediaControllerAdapter getMediaControllerAdapter() {
+        return mediaControllerAdapter;
     }
 
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
-        this.mediaControllerWrapper = new MediaControllerWrapper<MainActivity>(this, mediaBrowserConnector.getMediaSessionToken());
-        this.mediaControllerWrapper.init();
-//        this.mediaBrowserConnector.subscribe(Category.ROOT);
-
+        this.mediaControllerAdapter = new MediaControllerAdapter(this, mediaBrowserAdapter.getMediaSessionToken());
+        this.mediaControllerAdapter.init();
+        setContentView(R.layout.activity_main);
+        this.rootFragment = (MainActivityRootFragment) getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
+        this.rootFragment.init(inputMethodManager, this, mediaBrowserAdapter, mediaControllerAdapter, menuItems);
     }
 
     @Override // MediaBrowserConnectorCallback
-    public void onConnectionSuspended() {    }
+    public void onConnectionSuspended() { /* TODO: implement onConnectionSuspended */   }
 
     @Override // MediaBrowserConnectorCallback
-    public void onConnectionFailed() {    }
-
-    @Override // MediaPlayerActionListener
-    public void sendCustomAction(String customAction, Bundle args) {
-        mediaControllerWrapper.getMediaControllerCompat().getTransportControls().sendCustomAction(customAction, args);
-    }
+    public void onConnectionFailed() {  /* TODO: implement onConnectionFailed */  }
 
     private Map<MediaItem, List<MediaItem>> initMenuItems(Bundle extras) {
         Map<MediaItem, List<MediaItem>> toReturn = new HashMap<>();
@@ -171,10 +124,5 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
             }
         }
         return toReturn;
-    }
-
-    @Override
-    public void subscribe(Category category, String id) {
-        mediaBrowserConnector.subscribe(category, id);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
+import android.support.v4.media.MediaBrowserCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,8 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaBrowserAdapter;
+import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.client.MyDrawerListener;
+import com.example.mike.mp3player.client.views.SongSearchActionListener;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,9 +29,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 public class MainFrameFragment extends Fragment {
+
     private DrawerLayout drawerLayout;
     private TitleBarFragment titleBarFragment;
-
     private PlayToolBarFragment playToolBarFragment;
     private ViewPagerFragment viewPagerFragment;
     private boolean enabled = true;
@@ -57,7 +65,15 @@ public class MainFrameFragment extends Fragment {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
     }
 
-
+    public void init(Map<MediaBrowserCompat.MediaItem, List<MediaBrowserCompat.MediaItem>> menuItems,
+                     MediaPlayerActvityRequester mediaPlayerActvityRequester,
+                     MediaBrowserAdapter mediaBrowserAdapter,
+                     MediaControllerAdapter mediaControllerAdapter,
+                     SongSearchActionListener songSearchActionListener) {
+        this.viewPagerFragment.initRootMenu(menuItems, mediaBrowserAdapter, mediaControllerAdapter, mediaPlayerActvityRequester);
+        this.playToolBarFragment.init(mediaControllerAdapter, mediaPlayerActvityRequester);
+        this.titleBarFragment.setSongSearchActionListener(songSearchActionListener);
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -97,8 +113,6 @@ public class MainFrameFragment extends Fragment {
     public TitleBarFragment getTitleBarFragment() {
         return titleBarFragment;
     }
-
-
 
     public void enable() {
         this.enabled = true;

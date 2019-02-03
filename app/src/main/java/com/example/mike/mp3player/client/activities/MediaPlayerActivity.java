@@ -7,8 +7,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaControllerWrapper;
-import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.PlayPauseButton;
 import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackToolbarExtendedFragment;
@@ -22,10 +21,10 @@ import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
 /**
  * Created by Mike on 24/09/2017.
  */
-public class MediaPlayerActivity extends MediaActivityCompat implements MediaPlayerActionListener {
+public class MediaPlayerActivity extends MediaActivityCompat {
 
     private final String STOP = "Stop";
-    private MediaControllerWrapper<MediaPlayerActivity> mediaControllerWrapper;
+    private MediaControllerAdapter mediaControllerAdapter;
     private String mediaId;
 
 
@@ -43,19 +42,19 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
         token = (MediaSessionCompat.Token) retrieveIntentInfo(Constants.MEDIA_SESSION);
 
         if (token != null) {
-            this.mediaControllerWrapper = new MediaControllerWrapper<MediaPlayerActivity>(this, token);
+            this.mediaControllerAdapter = new MediaControllerAdapter(this, token);
             setMediaId((String) retrieveIntentInfo(Constants.MEDIA_ID));
 
-            mediaControllerWrapper.init();
+            mediaControllerAdapter.init();
             if (playNewSong()) {
                 // Display the initial state
                 Bundle extras = new Bundle();
                 extras.putString(PLAYLIST, PLAY_ALL);
-                mediaControllerWrapper.prepareFromMediaId(getMediaId(), extras);
+                mediaControllerAdapter.prepareFromMediaId(getMediaId(), extras);
             }
             else {
-                setMetaData(mediaControllerWrapper.getMetaData());
-                setPlaybackState(mediaControllerWrapper.getCurrentPlaybackState());
+                setMetaData(mediaControllerAdapter.getMetaData());
+                setPlaybackState(mediaControllerAdapter.getCurrentPlaybackState());
             }
         } else {
             /** TODO: Add functionality for when the playback bar is touched in the MainActivity and no
@@ -79,7 +78,7 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mediaControllerWrapper.disconnect();
+        mediaControllerAdapter.disconnect();
     }
 
     @Override
@@ -106,11 +105,11 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
         setContentView(R.layout.activity_media_player);
         this.trackInfoFragment = (TrackInfoFragment) getSupportFragmentManager().findFragmentById(R.id.trackInfoFragment);
         this.playbackSpeedControlsFragment = (PlaybackSpeedControlsFragment) getSupportFragmentManager().findFragmentById(R.id.playbackSpeedControlsFragment);
-        this.getPlaybackSpeedControlsFragment().setMediaPlayerActionListener(this);
+        this.getPlaybackSpeedControlsFragment().setMediaControllerAdapter(mediaControllerAdapter);
         this.playbackTrackerFragment = (PlaybackTrackerFragment) getSupportFragmentManager().findFragmentById(R.id.playbackTrackerFragment);
-        this.getPlaybackTrackerFragment().getSeekerBar().setSeekerBarListener(this);
+        this.getPlaybackTrackerFragment().getSeekerBar().setMediaControllerAdapter(mediaControllerAdapter);
         this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) getSupportFragmentManager().findFragmentById(R.id.playbackToolbarExtendedFragment);
-        this.getPlaybackToolbarExtendedFragment().setMediaPlayerActionListener(this);
+        this.getPlaybackToolbarExtendedFragment().setMediaControllerAdapter(mediaControllerAdapter);
         this.getPlaybackToolbarExtendedFragment().displayButtons();
     }
 
@@ -141,8 +140,8 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
     }
 
     @Override
-    public MediaControllerWrapper getMediaControllerWrapper() {
-       return mediaControllerWrapper;
+    public MediaControllerAdapter getMediaControllerAdapter() {
+       return mediaControllerAdapter;
     }
 
     private boolean playNewSong() {
@@ -155,46 +154,6 @@ public class MediaPlayerActivity extends MediaActivityCompat implements MediaPla
 
     public void setMediaId(String mediaId) {
         this.mediaId = mediaId;
-    }
-
-    @Override
-    public void playSelectedSong(String songId) {
-        // no song should be selected in this views
-    }
-
-    @Override
-    public void play() {
-        mediaControllerWrapper.play();
-    }
-
-    @Override
-    public void pause() {
-        mediaControllerWrapper.pause();
-    }
-
-    @Override
-    public void goToMediaPlayerActivity() {
-        // do nothing we're already here
-    }
-
-    @Override
-    public void skipToNext() {
-        mediaControllerWrapper.skipToNext();
-    }
-
-    @Override
-    public void skipToPrevious() {
-        mediaControllerWrapper.skipToPrevious();
-    }
-
-    @Override
-    public void seekTo(int position) {
-        mediaControllerWrapper.seekTo(position);
-    }
-
-    @Override
-    public void sendCustomAction(String customAction, Bundle args) {
-        mediaControllerWrapper.getMediaControllerCompat().getTransportControls().sendCustomAction(customAction, args);
     }
 
     public TrackInfoFragment getTrackInfoFragment() {

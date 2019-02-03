@@ -11,7 +11,7 @@ import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 
-public class MediaBrowserConnector {
+public class MediaBrowserAdapter {
 
     private MediaBrowserCompat mMediaBrowser;
     private MyConnectionCallback mConnectionCallbacks;
@@ -19,7 +19,7 @@ public class MediaBrowserConnector {
     private Context context;
     private final MediaBrowserConnectorCallback mediaBrowserConnectorCallback;
 
-    public MediaBrowserConnector(Context context, MediaBrowserConnectorCallback mediaBrowserConnectorCallback) {
+    public MediaBrowserAdapter(Context context, MediaBrowserConnectorCallback mediaBrowserConnectorCallback) {
         this.context = context;
         this.mediaBrowserConnectorCallback = mediaBrowserConnectorCallback;
     }
@@ -29,7 +29,7 @@ public class MediaBrowserConnector {
         ComponentName componentName = new ComponentName(context, MediaPlaybackService.class);
         // Create MediaBrowserServiceCompat
         mMediaBrowser = new MediaBrowserCompat(context, componentName, mConnectionCallbacks, null);
-        this.mySubscriptionCallback = new MySubscriptionCallback(mediaBrowserConnectorCallback);
+        this.mySubscriptionCallback = new MySubscriptionCallback();
         getmMediaBrowser().connect();
     }
 
@@ -58,5 +58,17 @@ public class MediaBrowserConnector {
         return mMediaBrowser.getRoot();
     }
 
+    public boolean isConnected() {
+        return mMediaBrowser != null
+                ? mMediaBrowser.isConnected()
+                : false;
+    }
 
+    public void registerListener(MediaBrowserResponseListener mediaBrowserResponseListener) {
+        mySubscriptionCallback.registerMediaBrowserResponseListener(mediaBrowserResponseListener);
+    }
+
+    public void unregisterListener(MediaBrowserResponseListener mediaBrowserResponseListener) {
+        mySubscriptionCallback.removeMediaBrowserResponseListener(mediaBrowserResponseListener);
+    }
 }

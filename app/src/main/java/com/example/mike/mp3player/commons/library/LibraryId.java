@@ -48,4 +48,11 @@ public class LibraryId implements Parcelable {
         dest.writeInt(category.ordinal());
         dest.writeString(id);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("id: ").append(id).append(", category: ").append(category);
+        return sb.toString();
+    }
 }

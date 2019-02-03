@@ -9,11 +9,14 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.MediaBrowserAdapter;
+import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.client.views.PlayPauseButton;
 import com.example.mike.mp3player.client.views.SongSearchActionListener;
 
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,10 +41,18 @@ public class MainActivityRootFragment extends Fragment implements SongSearchActi
         this.songFilterFragment = (SongFilterFragment) getChildFragmentManager().findFragmentById(R.id.searchSongViewFragment);
     }
 
-    public void setActionListeners(MediaPlayerActionListener mediaPlayerActionListener) {
-        this.getMainFrameFragment().getPlayToolBarFragment().setMediaPlayerActionListener(mediaPlayerActionListener);
-        this.getMainFrameFragment().getTitleBarFragment().setSongSearchActionListener(this);
-        this.getSongFilterFragment().setSongSearchActionListener(this);
+    public void init(InputMethodManager inputMethodManager,
+                    MediaPlayerActvityRequester mediaPlayerActvityRequester,
+                    MediaBrowserAdapter mediaBrowserAdapter,
+                    MediaControllerAdapter mediaControllerAdapter,
+                    Map<MediaBrowserCompat.MediaItem,
+                    List<MediaBrowserCompat.MediaItem>> menuItems) {
+
+        setInputMethodManager(inputMethodManager);
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        this.mainFrameFragment.init(menuItems, mediaPlayerActvityRequester, mediaBrowserAdapter, mediaControllerAdapter, this);
+        this.songFilterFragment.init(this);
     }
 
     @Override // SongSearchActionListener

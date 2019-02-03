@@ -9,15 +9,15 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 
-public class MediaControllerWrapper< A extends MediaActivityCompat>  {
+public class MediaControllerAdapter {
 
     private MediaControllerCompat mediaControllerCompat;
-    private MyMediaControllerCallback<A> myMediaControllerCallback;
-    private A activity;
+    private MyMediaControllerCallback myMediaControllerCallback;
+    private MediaActivityCompat activity;
     private MediaSessionCompat.Token token;
     private boolean isInitialized = false;
 
-    public MediaControllerWrapper(A activity, MediaSessionCompat.Token token) {
+    public MediaControllerAdapter(MediaActivityCompat activity, MediaSessionCompat.Token token) {
         this.activity = activity;
         this.token = token;
     }
@@ -25,7 +25,7 @@ public class MediaControllerWrapper< A extends MediaActivityCompat>  {
     public boolean init() {
         try {
             this.mediaControllerCompat = new MediaControllerCompat(activity.getApplicationContext(), token);
-            this.myMediaControllerCallback = new MyMediaControllerCallback<>(activity, this);
+            this.myMediaControllerCallback = new MyMediaControllerCallback(activity, this);
             this.mediaControllerCompat.registerCallback(myMediaControllerCallback);
         } catch (RemoteException ex) {
             this.isInitialized = false;
@@ -101,6 +101,10 @@ public class MediaControllerWrapper< A extends MediaActivityCompat>  {
             }
             getMediaControllerCompat().unregisterCallback(myMediaControllerCallback);
         }
+    }
+
+    public void sendCustomAction(String customAction, Bundle args) {
+        getMediaControllerCompat().getTransportControls().sendCustomAction(customAction, args);
     }
 
     public PlaybackStateCompat getCurrentPlaybackState() {

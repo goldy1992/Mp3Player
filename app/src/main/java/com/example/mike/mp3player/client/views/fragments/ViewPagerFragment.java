@@ -2,15 +2,19 @@ package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaBrowserActionListener;
-import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.MediaBrowserAdapter;
+import com.example.mike.mp3player.client.MediaBrowserResponseListener;
+import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
+import com.example.mike.mp3player.commons.library.LibraryId;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,12 +31,12 @@ import androidx.viewpager.widget.ViewPager;
 
 import static com.example.mike.mp3player.commons.MediaItemUtils.orderMediaItemSetByCategory;
 
-public class ViewPagerFragment extends Fragment {
+public class ViewPagerFragment extends Fragment implements MediaBrowserResponseListener {
 
     private ViewPager rootMenuItemsPager;
     private PagerTabStrip pagerTabStrip;
     private MyPagerAdapter adapter;
-
+    private static final String LOG_TAG = "VIEW_PAGER_FRAGMENT";
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -48,12 +52,13 @@ public class ViewPagerFragment extends Fragment {
         rootMenuItemsPager.setAdapter(adapter);
     }
 
-    public void initRootMenu(Map<MediaItem, List<MediaItem>> items, MediaPlayerActionListener listener, MediaBrowserActionListener mediaBrowserActionListener) {
+    public void initRootMenu(Map<MediaItem, List<MediaItem>> items, MediaBrowserAdapter mediaBrowserAdapter,
+                             MediaControllerAdapter mediaControllerAdapter, MediaPlayerActvityRequester mediaPlayerActvityRequester) {
         List<MediaItem> rootItems = orderMediaItemSetByCategory(items.keySet());
         for (MediaItem i : rootItems) {
             Category category = LibraryConstructor.getCategoryFromMediaItem(i);
             ViewPageFragment viewPageFragment = new ViewPageFragment();
-            viewPageFragment.initRecyclerView(category, items.get(i), listener, mediaBrowserActionListener);
+            viewPageFragment.initRecyclerView(category, items.get(i), mediaBrowserAdapter, mediaControllerAdapter, mediaPlayerActvityRequester);
             adapter.pagerItems.put(category, viewPageFragment);
             adapter.menuCategories.put(category, i);
             adapter.notifyDataSetChanged();
@@ -63,6 +68,11 @@ public class ViewPagerFragment extends Fragment {
     public void enable() {}
     public void disable() {}
 
+    @Override
+    public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaItem> children, @NonNull Bundle options) {
+        LibraryId libraryId = LibraryConstructor.parseId(parentId);
+        Log.i(LOG_TAG, "more children loaded main activity with parent id " + libraryId);
+    }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
 

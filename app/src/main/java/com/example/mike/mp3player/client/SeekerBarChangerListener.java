@@ -2,12 +2,11 @@ package com.example.mike.mp3player.client;
 
 import android.widget.SeekBar;
 
-import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
 import com.example.mike.mp3player.client.views.SeekerBar;
 
 public class SeekerBarChangerListener implements SeekBar.OnSeekBarChangeListener {
 
-    private MediaPlayerActionListener listener;
+    private MediaControllerAdapter mediaControllerAdapter;
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -24,7 +23,7 @@ public class SeekerBarChangerListener implements SeekBar.OnSeekBarChangeListener
     public void onStopTrackingTouch(SeekBar seekBar) {
         setTracking(seekBar, false);
         SeekerBar seekerBar = (SeekerBar) seekBar;
-        listener.seekTo(seekBar.getProgress());
+        mediaControllerAdapter.seekTo(seekBar.getProgress());
     }
 
     private void setTracking(SeekBar seekBar, boolean tracking) {
@@ -34,7 +33,8 @@ public class SeekerBarChangerListener implements SeekBar.OnSeekBarChangeListener
         }
     }
 
-    public void setListener(MediaPlayerActionListener listener) {
-        this.listener = listener;
+
+    public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
+        this.mediaControllerAdapter = mediaControllerAdapter;
     }
 }

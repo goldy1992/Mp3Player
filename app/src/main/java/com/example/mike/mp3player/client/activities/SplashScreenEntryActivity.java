@@ -7,8 +7,9 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaBrowserConnector;
+import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
+import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
 import com.example.mike.mp3player.commons.library.Category;
@@ -28,12 +29,16 @@ import static com.example.mike.mp3player.commons.Constants.CATEGORY_ROOT_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
 
-public class SplashScreenEntryActivity extends AppCompatActivity implements MediaBrowserConnectorCallback, PermissionGranted {
-    private static final String LOG_TAG = "SPLSH_SCRN_ENTRY_ACTVTY";
+public class SplashScreenEntryActivity extends AppCompatActivity
+    implements  MediaBrowserConnectorCallback,
+                MediaBrowserResponseListener,
+                PermissionGranted {
 
+
+    private static final String LOG_TAG = "SPLSH_SCRN_ENTRY_ACTVTY";
     private PermissionsProcessor permissionsProcessor;
     private volatile boolean splashScreenFinishedDisplaying;
-    private MediaBrowserConnector mediaBrowserConnector;
+    private MediaBrowserAdapter mediaBrowserAdapter;
     private Intent mainActivityIntent;
     private int numberOfItemsToSubscribeTo;
     private int numberOfItemsReceived = 0;
@@ -96,8 +101,8 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
 
     public void initMediaBrowserService() {
        // Log.i(LOG_TAG, "init media browser service");
-        mediaBrowserConnector = new MediaBrowserConnector(getApplicationContext(), this);
-        mediaBrowserConnector.init();
+        mediaBrowserAdapter = new MediaBrowserAdapter(getApplicationContext(), this);
+        mediaBrowserAdapter.init();
     }
 
     @Override
@@ -109,13 +114,13 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
             numberOfItemsToSubscribeTo = childrenArrayList.size();
             for (MediaBrowserCompat.MediaItem item : childrenArrayList) {
                 Category c = LibraryConstructor.getCategoryFromMediaItem(item);
-                mediaBrowserConnector.subscribe(c, null);
+                mediaBrowserAdapter.subscribe(c, null);
             }
             if (null == options) {
                 options = new Bundle();
             }
             options.putParcelableArrayList(CATEGORY_ROOT_ID, childrenArrayList);
-            options.putParcelable(MEDIA_SESSION, mediaBrowserConnector.getMediaSessionToken());
+            options.putParcelable(MEDIA_SESSION, mediaBrowserAdapter.getMediaSessionToken());
             mainActivityIntent.putExtras(options);
             return;
         }
@@ -132,7 +137,8 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
 
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
-        mediaBrowserConnector.subscribe(Category.ROOT);
+        mediaBrowserAdapter.registerListener(this);
+        mediaBrowserAdapter.subscribe(Category.ROOT);
     }
 
     @Override// MediaBrowserConnectorCallback
@@ -142,7 +148,8 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
     public void onConnectionFailed() { }
 
     private synchronized void onProcessingComplete(Intent mainActivityIntent) {
-        mediaBrowserConnector.getmMediaBrowser().disconnect();
+        mediaBrowserAdapter.unregisterListener(this);
+        mediaBrowserAdapter.getmMediaBrowser().disconnect();
         //Log.i(LOG_TAG, "processing complete");
         while (!splashScreenFinishedDisplaying) {
             try {
@@ -176,6 +183,6 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
     }
 
     private boolean isRoot(String id) {
-        return mediaBrowserConnector.getRootId().equals(id);
+        return mediaBrowserAdapter.getRootId().equals(id);
     }
 }
