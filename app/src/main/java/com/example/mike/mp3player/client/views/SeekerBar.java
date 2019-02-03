@@ -32,7 +32,7 @@ public class SeekerBar extends AppCompatSeekBar {
 
     public void init(MediaControllerAdapter mediaControllerAdapter) {
         this.mySeekerMediaControllerCallback = new MySeekerMediaControllerCallback(this);
-        this.seekBarChangeListener = new SeekerBarChangerListener();
+        this.seekBarChangeListener = new SeekerBarChangerListener(mediaControllerAdapter);
         super.setOnSeekBarChangeListener(seekBarChangeListener);
     }
 

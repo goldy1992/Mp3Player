@@ -119,6 +119,11 @@ public class MediaControllerAdapter {
         }
     }
 
+    public void updateUiState() {
+        myMediaControllerCallback.onMetadataChanged(mediaControllerCompat.getMetadata());
+        myMediaControllerCallback.onPlaybackStateChanged(mediaControllerCompat.getPlaybackState());
+    }
+
     public void sendCustomAction(String customAction, Bundle args) {
         getMediaControllerCompat().getTransportControls().sendCustomAction(customAction, args);
     }

@@ -24,7 +24,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     private MediaControllerAdapter mediaControllerAdapter;
     private String mediaId;
 
-
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
     private MediaSessionCompat.Token token;
     private TrackInfoFragment trackInfoFragment;
@@ -68,6 +67,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         playbackSpeedControlsFragment.init(mediaControllerAdapter);
         playbackTrackerFragment.init(mediaControllerAdapter);
         playbackToolbarExtendedFragment.init(mediaControllerAdapter);
+        mediaControllerAdapter.updateUiState();
     }
 
     @Override

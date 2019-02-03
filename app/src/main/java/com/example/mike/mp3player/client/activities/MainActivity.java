@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
-import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.mike.mp3player.R;
@@ -51,6 +49,7 @@ public class MainActivity extends MediaActivityCompat
     protected void onStart() {
         super.onStart();
         if (mediaControllerAdapter != null) {
+            mediaControllerAdapter.updateUiState();
      //       setPlaybackState(mediaControllerAdapter.getCurrentPlaybackState());
         }
         // If it is null it will initialised when the MediaBrowserAdapter has connected
