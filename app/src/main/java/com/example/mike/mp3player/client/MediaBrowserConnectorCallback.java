@@ -11,4 +11,8 @@ public interface MediaBrowserConnectorCallback {
     void onChildrenLoaded(@NonNull String parentId,
                           @NonNull List<MediaBrowserCompat.MediaItem> children,
                           @NonNull Bundle options);
+
+    void onConnected();
+    void onConnectionSuspended();
+    void onConnectionFailed();
 }

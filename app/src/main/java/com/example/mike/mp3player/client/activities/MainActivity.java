@@ -7,6 +7,7 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.mike.mp3player.R;
@@ -60,10 +61,11 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         super.onStart();
         if (mediaControllerWrapper != null) {
             setPlaybackState(mediaControllerWrapper.getCurrentPlaybackState());
-        } else {
-            mediaControllerWrapper = new MediaControllerWrapper<>(this, mediaBrowserConnector.getMediaSessionToken());
-            mediaControllerWrapper.init();
         }
+//        } else {
+//            mediaControllerWrapper = new MediaControllerWrapper<>(this, mediaBrowserConnector.getMediaSessionToken());
+//            mediaControllerWrapper.init();
+//        }
     }
 
     @Override
@@ -71,16 +73,10 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
         super.onPause();
     }
 
-    public void onMediaBrowserServiceConnected(MediaSessionCompat.Token token) {
-        if (this instanceof MainActivity) {
-            this.mediaControllerWrapper = new MediaControllerWrapper<MainActivity>(this, token);
-        }
-        this.mediaControllerWrapper.init();
-    }
 
     private void initMediaBrowserService() {
         mediaBrowserConnector = new MediaBrowserConnector(getApplicationContext(), this);
-        mediaBrowserConnector.init(null);
+        mediaBrowserConnector.init();
     }
 
     private Intent createMediaPlayerActivityIntent() {
@@ -142,8 +138,21 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
 
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaItem> children, @NonNull Bundle options) {
-        //Log.i(LOG_TAG, "more children loaded");
+        Log.i(LOG_TAG, "more children loaded main activity");
     }
+
+    @Override // MediaBrowserConnectorCallback
+    public void onConnected() {
+        this.mediaControllerWrapper = new MediaControllerWrapper<MainActivity>(this, mediaBrowserConnector.getMediaSessionToken());
+        this.mediaControllerWrapper.init();
+
+    }
+
+    @Override // MediaBrowserConnectorCallback
+    public void onConnectionSuspended() {    }
+
+    @Override // MediaBrowserConnectorCallback
+    public void onConnectionFailed() {    }
 
     @Override // MediaPlayerActionListener
     public void sendCustomAction(String customAction, Bundle args) {

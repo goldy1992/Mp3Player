@@ -14,6 +14,7 @@ public class LibraryConstructor {
 
     /** need to escape the character | with delimiters **/
     private static final String DELIMITER = "\\|\\|";
+    private static final String LIMITER = "||";
 
     public static LibraryId parseId(String id) {
         String[] tokens = splitMediaId(id);
@@ -43,7 +44,7 @@ public class LibraryConstructor {
             return stringBuilder.toString();
         }
 
-        stringBuilder.append(DELIMITER);
+        stringBuilder.append(LIMITER);
         stringBuilder.append(mediaId);
 
         return stringBuilder.toString();

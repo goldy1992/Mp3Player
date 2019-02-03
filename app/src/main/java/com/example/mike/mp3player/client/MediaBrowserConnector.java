@@ -18,35 +18,19 @@ public class MediaBrowserConnector {
     private MySubscriptionCallback mySubscriptionCallback;
     private Context context;
     private final MediaBrowserConnectorCallback mediaBrowserConnectorCallback;
-    private MediaSessionCompat.Token mediaSessionToken;
 
     public MediaBrowserConnector(Context context, MediaBrowserConnectorCallback mediaBrowserConnectorCallback) {
         this.context = context;
         this.mediaBrowserConnectorCallback = mediaBrowserConnectorCallback;
     }
 
-    public void init(MediaSessionCompat.Token token) {
-            mConnectionCallbacks = new MyConnectionCallback(this);
-            // Create MediaBrowserServiceCompat
-            mMediaBrowser = new MediaBrowserCompat(context,
-                    new ComponentName(context, MediaPlaybackService.class),
-                    mConnectionCallbacks,
-                    null);
-
+    public void init() {
+        mConnectionCallbacks = new MyConnectionCallback(mediaBrowserConnectorCallback);
+        ComponentName componentName = new ComponentName(context, MediaPlaybackService.class);
+        // Create MediaBrowserServiceCompat
+        mMediaBrowser = new MediaBrowserCompat(context, componentName, mConnectionCallbacks, null);
         this.mySubscriptionCallback = new MySubscriptionCallback(mediaBrowserConnectorCallback);
-        if (token == null ) {
-            getmMediaBrowser().connect();
-        } else{
-            onConnected(token);
-        }
-    }
-
-    public void onConnected(MediaSessionCompat.Token token) {
-        if (token == null) {
-            token = mMediaBrowser.getSessionToken();
-            mMediaBrowser.subscribe(mMediaBrowser.getRoot(), mySubscriptionCallback);
-        }
-        this.mediaSessionToken = token;
+        getmMediaBrowser().connect();
     }
 
     public MediaBrowserCompat getmMediaBrowser() {
@@ -67,7 +51,7 @@ public class MediaBrowserConnector {
     }
 
     public MediaSessionCompat.Token getMediaSessionToken() {
-        return mediaSessionToken;
+        return mMediaBrowser.getSessionToken();
     }
 
     public String getRootId() {

@@ -97,7 +97,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
     public void initMediaBrowserService() {
        // Log.i(LOG_TAG, "init media browser service");
         mediaBrowserConnector = new MediaBrowserConnector(getApplicationContext(), this);
-        mediaBrowserConnector.init(null);
+        mediaBrowserConnector.init();
     }
 
     @Override
@@ -129,6 +129,17 @@ public class SplashScreenEntryActivity extends AppCompatActivity implements Medi
             onProcessingComplete(mainActivityIntent);
         }
     }
+
+    @Override // MediaBrowserConnectorCallback
+    public void onConnected() {
+        mediaBrowserConnector.subscribe(Category.ROOT);
+    }
+
+    @Override// MediaBrowserConnectorCallback
+    public void onConnectionSuspended() {    }
+
+    @Override // MediaBrowserConnectorCallback
+    public void onConnectionFailed() { }
 
     private synchronized void onProcessingComplete(Intent mainActivityIntent) {
         mediaBrowserConnector.getmMediaBrowser().disconnect();
