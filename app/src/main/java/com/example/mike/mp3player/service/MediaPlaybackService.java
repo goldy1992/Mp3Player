@@ -72,8 +72,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             return;
         }
         // Assume for example that the music catalog is already loaded/cached.
-        List<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getSongList();
-        result.sendResult(mediaLibrary.getChildren(parentMediaId));
+        List<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(parentMediaId);
+        result.sendResult(mediaItems);
     }
 
     @Override

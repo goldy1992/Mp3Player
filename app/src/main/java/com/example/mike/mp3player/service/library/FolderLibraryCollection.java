@@ -52,12 +52,13 @@ public class FolderLibraryCollection extends LibraryCollection {
 
     @Override
     public List<MediaItem> getChildren(String id) {
-        if (getRootId().equals(id)) {
+        if (getRootId().name().equals(id)) {
             return getKeys();
         }
         for (MediaItem i : getKeys()) {
-            if (getMediaId(i).equals(id)) {
-                return collection.get(i);
+            String mediaId = getMediaId(i);
+            if (mediaId.equals(id)) {
+                return collection.get(getMediaId(i));
             }
         }
         return null;

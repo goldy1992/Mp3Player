@@ -145,6 +145,7 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActi
     public void onConnected() {
         this.mediaControllerWrapper = new MediaControllerWrapper<MainActivity>(this, mediaBrowserConnector.getMediaSessionToken());
         this.mediaControllerWrapper.init();
+//        this.mediaBrowserConnector.subscribe(Category.ROOT);
 
     }
 
