@@ -2,6 +2,7 @@ package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +19,11 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 public class ViewPageFragment extends Fragment {
 
+    private static final String LOG_TAG = "VIEW_PAGE_FRAGMENT";
     private Category category;
     private MyRecyclerView recyclerView;
     List<MediaBrowserCompat.MediaItem> songs;
@@ -53,6 +56,18 @@ public class ViewPageFragment extends Fragment {
         this.mediaBrowserAdapter = mediaBrowserAdapter;
         this.mediaControllerAdapter = mediaControllerAdapter;
         this.mediaPlayerActvityRequester = mediaPlayerActvityRequester;
+    }
+
+    public void setChildren(int containerId, String id, List<MediaBrowserCompat.MediaItem> children) {
+        Log.i(LOG_TAG, "hit set children with id: " + id);
+
+
+        ViewPageChildFragment viewPageChildFragment = new ViewPageChildFragment();
+        viewPageChildFragment.initRecyclerView(children,mediaBrowserAdapter, mediaControllerAdapter, mediaPlayerActvityRequester);
+        FragmentTransaction transaction = this.getChildFragmentManager().beginTransaction();
+        transaction.replace(containerId, viewPageChildFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     public MyRecyclerView getRecyclerView() {

@@ -5,12 +5,14 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 
 public class MediaControllerAdapter {
 
+    private static final String LOG_TAG = "MDIA_CNTRLLR_ADPTR";
     private MediaControllerCompat mediaControllerCompat;
     private MyMediaControllerCallback myMediaControllerCallback;
     private MediaActivityCompat activity;
@@ -36,20 +38,19 @@ public class MediaControllerAdapter {
         return true;
     }
 
-    public boolean registerCallback(MediaControllerCompat.Callback callback) {
-        getMediaControllerCompat().registerCallback(callback);
-        return true;
-    }
-
     public void prepareFromMediaId(String mediaId, Bundle extras) {
         getMediaControllerCompat().getTransportControls().prepareFromMediaId(mediaId, extras);
     }
 
     public void play() {
+
+        Log.i(LOG_TAG, "play hit");
         getMediaControllerCompat().getTransportControls().play();
     }
 
-    public void pause() {
+    public void pause()
+    {
+        Log.i(LOG_TAG, "pause hit");
         getMediaControllerCompat().getTransportControls().pause();
     }
 

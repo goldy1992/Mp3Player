@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.PagerTabStrip;
 import androidx.viewpager.widget.ViewPager;
 
@@ -35,6 +36,9 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
 
     private ViewPager rootMenuItemsPager;
     private PagerTabStrip pagerTabStrip;
+    private MediaBrowserAdapter mediaBrowserAdapter;
+    private MediaControllerAdapter mediaControllerAdapter;
+    private MediaPlayerActvityRequester mediaPlayerActvityRequester;
     private MyPagerAdapter adapter;
     private static final String LOG_TAG = "VIEW_PAGER_FRAGMENT";
     @Override
@@ -54,6 +58,10 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
 
     public void initRootMenu(Map<MediaItem, List<MediaItem>> items, MediaBrowserAdapter mediaBrowserAdapter,
                              MediaControllerAdapter mediaControllerAdapter, MediaPlayerActvityRequester mediaPlayerActvityRequester) {
+        mediaBrowserAdapter.registerListener(this);
+        this.mediaBrowserAdapter = mediaBrowserAdapter;
+        this.mediaControllerAdapter = mediaControllerAdapter;
+        this.mediaPlayerActvityRequester = mediaPlayerActvityRequester;
         List<MediaItem> rootItems = orderMediaItemSetByCategory(items.keySet());
         for (MediaItem i : rootItems) {
             Category category = LibraryConstructor.getCategoryFromMediaItem(i);
@@ -72,12 +80,24 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaItem> children, @NonNull Bundle options) {
         LibraryId libraryId = LibraryConstructor.parseId(parentId);
         Log.i(LOG_TAG, "more children loaded main activity with parent id " + libraryId);
+        if (null != libraryId && null != libraryId.getCategory() && libraryId.getId() != null) {
+            int currentFragmentId = this.rootMenuItemsPager.getCurrentItem();
+            ViewPageFragment f = adapter.getItem(currentFragmentId);
+
+            Category category = libraryId.getCategory();
+            ViewPageChildFragment viewPageChildFragment = new ViewPageChildFragment();
+            viewPageChildFragment.initRecyclerView(children, mediaBrowserAdapter, mediaControllerAdapter, mediaPlayerActvityRequester);
+            FragmentTransaction transaction = this.getChildFragmentManager().beginTransaction();
+            transaction.replace(R.id.rootItemsPager, viewPageChildFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
     }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
 
         Map<Category, MediaItem> menuCategories = new HashMap<>();
-        Map<Category, Fragment> pagerItems = new HashMap<>();
+        Map<Category, ViewPageFragment> pagerItems = new HashMap<>();
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -89,10 +109,15 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public ViewPageFragment getItem(int position) {
             ArrayList<Category> categoryArrayList = new ArrayList<>(menuCategories.keySet());
             Category category = categoryArrayList.get(position);
             return pagerItems.get(category);
+        }
+        @Override
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+
+            return super.instantiateItem(container, position);
         }
 
         @Override
