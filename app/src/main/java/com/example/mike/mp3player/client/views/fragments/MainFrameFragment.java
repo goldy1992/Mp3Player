@@ -59,6 +59,7 @@ public class MainFrameFragment extends Fragment {
         navigationView.setNavigationItemSelectedListener((MenuItem menuItem) -> onNavigationItemSelected(menuItem));
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
+
         activity.setSupportActionBar(titleBarFragment.getTitleToolbar());
         ActionBar actionBar = activity.getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);

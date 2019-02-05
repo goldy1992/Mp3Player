@@ -3,14 +3,19 @@ package com.example.mike.mp3player.commons.library;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class LibraryId implements Parcelable {
 
     private final Category category;
     private final String id;
+    private Map<String, String> extras;
 
     public LibraryId(Category category, String id) {
         this.category = category;
         this.id = id;
+        this.extras = new HashMap<>();
     }
 
     protected LibraryId(Parcel in) {
@@ -54,5 +59,17 @@ public class LibraryId implements Parcelable {
         StringBuilder sb = new StringBuilder();
         sb.append("id: ").append(id).append(", category: ").append(category);
         return sb.toString();
+    }
+
+    public Map<String, String> getExtras() {
+        return extras;
+    }
+
+    public boolean hasExtra(String key) {
+        return extras.containsKey(key);
+    }
+
+    public String getExtra(String key) {
+        return extras.get(key);
     }
 }

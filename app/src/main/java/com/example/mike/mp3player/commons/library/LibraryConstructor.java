@@ -4,9 +4,15 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.util.Log;
 
+import com.example.mike.mp3player.commons.Constants;
+
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.util.regex.PatternSyntaxException;
+
+import static com.example.mike.mp3player.commons.Constants.*;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getMediaId;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 
 public class LibraryConstructor {
 
@@ -28,8 +34,15 @@ public class LibraryConstructor {
         if (tokens.length >= 2) {
           idToken = tokens[1];
         }
+        LibraryId retVal = new LibraryId(category, idToken);
 
-        return new LibraryId(category, idToken);
+        if (tokens.length >= 3) {
+            switch (category) {
+                case FOLDERS: retVal.getExtras().put(FOLDER_NAME, tokens[2]);
+            }
+        }
+
+        return retVal;
     }
 
     public static String buildId(Category category, String mediaId) {
@@ -47,6 +60,22 @@ public class LibraryConstructor {
         stringBuilder.append(LIMITER);
         stringBuilder.append(mediaId);
 
+        return stringBuilder.toString();
+    }
+
+    public static String buildId(Category category, MediaBrowserCompat.MediaItem mediaItem) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String mediaId = getMediaId(mediaItem);
+
+        if (mediaId == null) {
+            return null;
+        }
+        stringBuilder.append(mediaId);
+        if (Category.FOLDERS == category) {
+            String title = getTitle(mediaItem);
+            stringBuilder.append(LIMITER);
+            stringBuilder.append(title);
+        }
         return stringBuilder.toString();
     }
 
@@ -74,5 +103,11 @@ public class LibraryConstructor {
         }
         return tokens;
     }
+
+//    private StringBuilder appendExtras(StringBuilder builder, Category category, String mediaId) {
+//        if (Category.FOLDERS == category) {
+//
+//        }
+//    }
 
 }

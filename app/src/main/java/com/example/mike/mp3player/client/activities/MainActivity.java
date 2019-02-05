@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
+import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.mike.mp3player.R;
@@ -29,10 +30,6 @@ public class MainActivity extends MediaActivityCompat
 
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     private static final int READ_REQUEST_CODE = 42;
-
-    private MediaBrowserAdapter mediaBrowserAdapter;
-    private MediaControllerAdapter mediaControllerAdapter;
-
     private MainActivityRootFragment rootFragment;
     private InputMethodManager inputMethodManager;
     private Map<MediaItem, List<MediaItem>> menuItems;
@@ -48,8 +45,8 @@ public class MainActivity extends MediaActivityCompat
     @Override
     protected void onStart() {
         super.onStart();
-        if (mediaControllerAdapter != null) {
-            mediaControllerAdapter.updateUiState();
+        if (getMediaControllerAdapter() != null) {
+            getMediaControllerAdapter().updateUiState();
      //       setPlaybackState(mediaControllerAdapter.getCurrentPlaybackState());
         }
         // If it is null it will initialised when the MediaBrowserAdapter has connected
@@ -61,13 +58,13 @@ public class MainActivity extends MediaActivityCompat
     }
 
     private void initMediaBrowserService() {
-        mediaBrowserAdapter = new MediaBrowserAdapter(getApplicationContext(), this);
-        mediaBrowserAdapter.init();
+        setMediaBrowserAdapter(new MediaBrowserAdapter(getApplicationContext(), this));
+        getMediaBrowserAdapter().init();
     }
 
     private Intent createMediaPlayerActivityIntent() {
         Intent intent = new Intent(getApplicationContext(), MediaPlayerActivity.class);
-        intent.putExtra(MEDIA_SESSION, mediaBrowserAdapter.getMediaSessionToken());
+        intent.putExtra(MEDIA_SESSION, getMediaBrowserAdapter().getMediaSessionToken());
         return intent;
     }
 
@@ -84,18 +81,20 @@ public class MainActivity extends MediaActivityCompat
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
-    @Override // MediaActivityCompat
-    public MediaControllerAdapter getMediaControllerAdapter() {
-        return mediaControllerAdapter;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        boolean selected = rootFragment.getMainFrameFragment().onOptionsItemSelected(item);
+        return selected || super.onOptionsItemSelected(item);
     }
+
 
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
-        this.mediaControllerAdapter = new MediaControllerAdapter(this, mediaBrowserAdapter.getMediaSessionToken());
-        this.mediaControllerAdapter.init();
+        setMediaControllerAdapter(new MediaControllerAdapter(this, getMediaBrowserAdapter().getMediaSessionToken()));
+        getMediaControllerAdapter().init();
         setContentView(R.layout.activity_main);
         this.rootFragment = (MainActivityRootFragment) getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
-        this.rootFragment.init(inputMethodManager, this, mediaBrowserAdapter, mediaControllerAdapter, menuItems);
+        this.rootFragment.init(inputMethodManager, this, getMediaBrowserAdapter(), getMediaControllerAdapter(), menuItems);
     }
 
     @Override // MediaBrowserConnectorCallback

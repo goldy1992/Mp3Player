@@ -21,7 +21,6 @@ import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
 public class MediaPlayerActivity extends MediaActivityCompat {
 
     private final String STOP = "Stop";
-    private MediaControllerAdapter mediaControllerAdapter;
     private String mediaId;
 
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
@@ -38,15 +37,15 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         token = (MediaSessionCompat.Token) retrieveIntentInfo(Constants.MEDIA_SESSION);
 
         if (token != null) {
-            this.mediaControllerAdapter = new MediaControllerAdapter(this, token);
+            setMediaControllerAdapter(new MediaControllerAdapter(this, token));
             setMediaId((String) retrieveIntentInfo(Constants.MEDIA_ID));
 
-            mediaControllerAdapter.init();
+            getMediaControllerAdapter().init();
             if (playNewSong()) {
                 // Display the initial state
                 Bundle extras = new Bundle();
                 extras.putString(PLAYLIST, PLAY_ALL);
-                mediaControllerAdapter.prepareFromMediaId(getMediaId(), extras);
+                getMediaControllerAdapter().prepareFromMediaId(getMediaId(), extras);
             }
             else {
 //                setMetaData(mediaControllerAdapter.getMetaData());
@@ -63,11 +62,11 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     public void onStart() {
         super.onStart();
         setMediaId((String) retrieveIntentInfo(Constants.MEDIA_ID));
-        trackInfoFragment.init(mediaControllerAdapter);
-        playbackSpeedControlsFragment.init(mediaControllerAdapter);
-        playbackTrackerFragment.init(mediaControllerAdapter);
-        playbackToolbarExtendedFragment.init(mediaControllerAdapter);
-        mediaControllerAdapter.updateUiState();
+        trackInfoFragment.init(getMediaControllerAdapter());
+        playbackSpeedControlsFragment.init(getMediaControllerAdapter());
+        playbackTrackerFragment.init(getMediaControllerAdapter());
+        playbackToolbarExtendedFragment.init(getMediaControllerAdapter());
+        getMediaControllerAdapter().updateUiState();
     }
 
     @Override
@@ -79,7 +78,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mediaControllerAdapter.disconnect();
+        getMediaControllerAdapter().disconnect();
     }
 
     @Override
@@ -117,11 +116,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
             return getIntent().getExtras().get(key);
         }
         return null;
-    }
-
-    @Override
-    public MediaControllerAdapter getMediaControllerAdapter() {
-       return mediaControllerAdapter;
     }
 
     private boolean playNewSong() {

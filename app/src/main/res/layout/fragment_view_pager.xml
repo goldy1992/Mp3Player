@@ -19,25 +19,6 @@
             android:paddingBottom="4dp"
             android:paddingTop="4dp" />
 
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout android:id="@+id/viewPagerFragmentContainer"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-            <fragment
-                android:id="@+id/viewPageChildFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                class="com.example.mike.mp3player.client.views.fragments.ViewPageChildFragment"
-                tools:layout="@layout/fragment_title_bar"/>
-        </FrameLayout>
-
     </androidx.viewpager.widget.ViewPager>
 
 </LinearLayout>

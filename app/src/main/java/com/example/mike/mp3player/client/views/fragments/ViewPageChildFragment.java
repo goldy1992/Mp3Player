@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+@Deprecated
 public class ViewPageChildFragment extends Fragment {
     private String title;
     private TextView textView;
@@ -33,14 +34,14 @@ public class ViewPageChildFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_view_page_child, container, false);
+        View view = inflater.inflate(0, container, false);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         this.recyclerView = view.findViewById(R.id.myRecyclerView);
-        this.textView = view.findViewById(R.id.parentNameTextView);
+        //this.textView = view.findViewById(R.id.parentNameTextView);
         this.recyclerView.initRecyclerView(Category.SONGS, songs, mediaBrowserAdapter,
                 mediaControllerAdapter, mediaPlayerActvityRequester);
     }

@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.callbacks;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback;
@@ -18,9 +19,11 @@ public class MySubscriptionCallback extends SubscriptionCallback {
 
     private static final String LOG_TAG = "SUBSCRIPTION_CALLBACK";
     private Set<MediaBrowserResponseListener> mediaBrowserResponseListeners;
+    private Context context;
 
-    public MySubscriptionCallback() {
+    public MySubscriptionCallback(Context context) {
         super();
+        this.context = context;
         mediaBrowserResponseListeners = new HashSet<>();
     }
     @Override
@@ -34,9 +37,9 @@ public class MySubscriptionCallback extends SubscriptionCallback {
         super.onChildrenLoaded(parentId, children, options);
 
         // TODO: maybe implement logic to decide which listener the response should be sent to.
-
+        ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>(children);
         for(MediaBrowserResponseListener listener : mediaBrowserResponseListeners) {
-            listener.onChildrenLoaded(parentId, children, options);
+            listener.onChildrenLoaded(parentId, childrenArrayList, options, context);
         }
     }
 

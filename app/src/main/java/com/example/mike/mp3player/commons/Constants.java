@@ -49,5 +49,8 @@ public final class Constants {
 
     public static final String CATEGORY_FOLDERS_TITLE = "Folders";
     public static final String CATEGORY_FOLDERS_ID = Category.FOLDERS.name();
-    public static final String CATEGORY_FOLDERS_DESCRIPTION = "A list of all folders with music inside them";;
+    public static final String CATEGORY_FOLDERS_DESCRIPTION = "A list of all folders with music inside them";
+    public static final String FOLDER_CHILDREN = "FOLDER_CHILDREN";
+    public static final String FOLDER_NAME = "FOLDER_NAME";
+    public static final String PARENT_ID = "PARENT_ID";
 }
