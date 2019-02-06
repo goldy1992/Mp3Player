@@ -71,8 +71,7 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
         List<MediaItem> rootItems = orderMediaItemSetByCategory(items.keySet());
         for (MediaItem i : rootItems) {
             Category category = LibraryConstructor.getCategoryFromMediaItem(i);
-            ViewPageFragment viewPageFragment = new ViewPageFragment();
-            viewPageFragment.initRecyclerView(category, items.get(i), mediaBrowserAdapter, mediaControllerAdapter, mediaPlayerActvityRequester);
+            ViewPageFragment viewPageFragment = ViewPageFragment.createAndInitialiseViewPageFragment(category, items.get(i), mediaBrowserAdapter, mediaControllerAdapter, mediaPlayerActvityRequester);
             adapter.pagerItems.put(category, viewPageFragment);
             adapter.menuCategories.put(category, i);
             adapter.notifyDataSetChanged();
@@ -116,8 +115,7 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
 
         @Override
         public ViewPageFragment getItem(int position) {
-            ArrayList<Category> categoryArrayList = new ArrayList<>(menuCategories.keySet());
-            Category category = categoryArrayList.get(position);
+        Category category = getCategoryFromPosition(position);
             return pagerItems.get(category);
         }
 
@@ -134,6 +132,11 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
             Category category = categoryArrayList.get(position);
             MediaItem i = menuCategories.get(category);
             return i.getDescription().getTitle();
+        }
+
+        private Category getCategoryFromPosition(int position) {
+            ArrayList<Category> categoryArrayList = new ArrayList<>(menuCategories.keySet());
+            return categoryArrayList.get(position);
         }
     }
 }

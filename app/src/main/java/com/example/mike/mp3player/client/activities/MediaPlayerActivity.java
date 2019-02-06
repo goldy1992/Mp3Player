@@ -145,4 +145,9 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     public PlaybackSpeedControlsFragment getPlaybackSpeedControlsFragment() {
         return playbackSpeedControlsFragment;
     }
+
+    @Override
+    public void onConnected() {
+
+    }
 }

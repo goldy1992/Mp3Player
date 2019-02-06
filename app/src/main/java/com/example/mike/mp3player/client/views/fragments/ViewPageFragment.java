@@ -19,7 +19,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 public class ViewPageFragment extends Fragment {
 
@@ -32,6 +31,15 @@ public class ViewPageFragment extends Fragment {
     MediaPlayerActvityRequester mediaPlayerActvityRequester;
 
     public ViewPageFragment() {  }
+
+    public void init(Category category, List<MediaBrowserCompat.MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
+                     MediaControllerAdapter mediaControllerAdapter, MediaPlayerActvityRequester mediaPlayerActvityRequester) {
+        this.songs = songs;
+        this.category = category;
+        this.mediaBrowserAdapter = mediaBrowserAdapter;
+        this.mediaControllerAdapter = mediaControllerAdapter;
+        this.mediaPlayerActvityRequester = mediaPlayerActvityRequester;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -49,27 +57,6 @@ public class ViewPageFragment extends Fragment {
                 mediaControllerAdapter, mediaPlayerActvityRequester);
     }
 
-    public void initRecyclerView(Category category, List<MediaBrowserCompat.MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
-                                 MediaControllerAdapter mediaControllerAdapter, MediaPlayerActvityRequester mediaPlayerActvityRequester) {
-        this.category = category;
-        this.songs = songs;
-        this.mediaBrowserAdapter = mediaBrowserAdapter;
-        this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mediaPlayerActvityRequester = mediaPlayerActvityRequester;
-    }
-
-    public void setChildren(int containerId, String id, List<MediaBrowserCompat.MediaItem> children) {
-        Log.i(LOG_TAG, "hit set children with id: " + id);
-
-
-        ViewPageChildFragment viewPageChildFragment = new ViewPageChildFragment();
-        viewPageChildFragment.initRecyclerView(children,mediaBrowserAdapter, mediaControllerAdapter, mediaPlayerActvityRequester);
-        FragmentTransaction transaction = this.getChildFragmentManager().beginTransaction();
-        transaction.replace(containerId, viewPageChildFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
-
     public MyRecyclerView getRecyclerView() {
         return recyclerView;
     }
@@ -81,4 +68,12 @@ public class ViewPageFragment extends Fragment {
     public void setCategory(Category category) {
         this.category = category;
     }
+
+    public static ViewPageFragment createAndInitialiseViewPageFragment(Category category, List<MediaBrowserCompat.MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
+                                                          MediaControllerAdapter mediaControllerAdapter, MediaPlayerActvityRequester mediaPlayerActvityRequester) {
+        ViewPageFragment viewPageFragment = new ViewPageFragment();
+        viewPageFragment.init(category, songs, mediaBrowserAdapter, mediaControllerAdapter, mediaPlayerActvityRequester);
+        return viewPageFragment;
+    }
 }
+

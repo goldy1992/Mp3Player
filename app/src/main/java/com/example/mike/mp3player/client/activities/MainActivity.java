@@ -24,9 +24,7 @@ import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getMediaId;
 
-public class MainActivity extends MediaActivityCompat
-    implements  MediaPlayerActvityRequester,
-                MediaBrowserConnectorCallback {
+public class MainActivity extends MediaActivityCompat implements MediaPlayerActvityRequester {
 
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     private static final int READ_REQUEST_CODE = 42;
@@ -57,10 +55,7 @@ public class MainActivity extends MediaActivityCompat
         super.onPause();
     }
 
-    private void initMediaBrowserService() {
-        setMediaBrowserAdapter(new MediaBrowserAdapter(getApplicationContext(), this));
-        getMediaBrowserAdapter().init();
-    }
+
 
     private Intent createMediaPlayerActivityIntent() {
         Intent intent = new Intent(getApplicationContext(), MediaPlayerActivity.class);
@@ -87,7 +82,6 @@ public class MainActivity extends MediaActivityCompat
         return selected || super.onOptionsItemSelected(item);
     }
 
-
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
         setMediaControllerAdapter(new MediaControllerAdapter(this, getMediaBrowserAdapter().getMediaSessionToken()));
@@ -96,12 +90,6 @@ public class MainActivity extends MediaActivityCompat
         this.rootFragment = (MainActivityRootFragment) getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
         this.rootFragment.init(inputMethodManager, this, getMediaBrowserAdapter(), getMediaControllerAdapter(), menuItems);
     }
-
-    @Override // MediaBrowserConnectorCallback
-    public void onConnectionSuspended() { /* TODO: implement onConnectionSuspended */   }
-
-    @Override // MediaBrowserConnectorCallback
-    public void onConnectionFailed() {  /* TODO: implement onConnectionFailed */  }
 
     private Map<MediaItem, List<MediaItem>> initMenuItems(Bundle extras) {
         Map<MediaItem, List<MediaItem>> toReturn = new HashMap<>();
