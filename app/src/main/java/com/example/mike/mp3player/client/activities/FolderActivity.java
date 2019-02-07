@@ -81,14 +81,4 @@ public class FolderActivity extends MediaActivityCompat implements MediaPlayerAc
 
 
     }
-
-    @Override
-    public void onConnectionSuspended() {
-
-    }
-
-    @Override
-    public void onConnectionFailed() {
-
-    }
 }

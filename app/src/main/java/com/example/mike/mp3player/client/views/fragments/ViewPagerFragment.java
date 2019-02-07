@@ -3,7 +3,6 @@ package com.example.mike.mp3player.client.views.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,9 +41,6 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
 
     private ViewPager rootMenuItemsPager;
     private PagerTabStrip pagerTabStrip;
-    private MediaBrowserAdapter mediaBrowserAdapter;
-    private MediaControllerAdapter mediaControllerAdapter;
-    private MediaPlayerActvityRequester mediaPlayerActvityRequester;
     private MyPagerAdapter adapter;
     private static final String LOG_TAG = "VIEW_PAGER_FRAGMENT";
     @Override
@@ -65,9 +61,6 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
     public void initRootMenu(Map<MediaItem, List<MediaItem>> items, MediaBrowserAdapter mediaBrowserAdapter,
                              MediaControllerAdapter mediaControllerAdapter, MediaPlayerActvityRequester mediaPlayerActvityRequester) {
         mediaBrowserAdapter.registerListener(this);
-        this.mediaBrowserAdapter = mediaBrowserAdapter;
-        this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mediaPlayerActvityRequester = mediaPlayerActvityRequester;
         List<MediaItem> rootItems = orderMediaItemSetByCategory(items.keySet());
         for (MediaItem i : rootItems) {
             Category category = LibraryConstructor.getCategoryFromMediaItem(i);
@@ -78,6 +71,11 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
     public void enable() {}
     public void disable() {}
 
@@ -86,6 +84,8 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
         LibraryId libraryId = LibraryConstructor.parseId(parentId);
         Log.i(LOG_TAG, "more children loaded main activity with parent id " + libraryId);
         if (null != libraryId && null != libraryId.getCategory() && libraryId.getId() != null) {
+
+            /* TODO: add logic to distribute children to the correct menu fragment */
             int currentFragmentId = this.rootMenuItemsPager.getCurrentItem();
             ViewPageFragment f = adapter.getItem(currentFragmentId);
             Intent intent =  new Intent(context, FolderActivity.class);
