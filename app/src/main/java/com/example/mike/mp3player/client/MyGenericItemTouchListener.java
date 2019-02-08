@@ -20,6 +20,8 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
     MediaBrowserAdapter mediaBrowserAdapter = null;
     MediaControllerAdapter mediaControllerAdapter = null;
     MediaPlayerActvityRequester mediaPlayerActvityRequester = null;
+    ItemSelectedListener itemSelectedListener;
+
     boolean enabled = true;
 
 
@@ -79,5 +81,9 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
 
     public void setMediaPlayerActvityRequester(MediaPlayerActvityRequester mediaPlayerActvityRequester) {
         this.mediaPlayerActvityRequester = mediaPlayerActvityRequester;
+    }
+
+    public interface ItemSelectedListener {
+        void itemSelected(String id);
     }
 }

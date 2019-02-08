@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.views.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.util.Log;
@@ -14,7 +13,6 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
-import com.example.mike.mp3player.client.activities.FolderActivity;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.commons.library.LibraryId;
@@ -32,9 +30,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerTabStrip;
 import androidx.viewpager.widget.ViewPager;
 
-import static com.example.mike.mp3player.commons.Constants.FOLDER_CHILDREN;
-import static com.example.mike.mp3player.commons.Constants.FOLDER_NAME;
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 import static com.example.mike.mp3player.commons.MediaItemUtils.orderMediaItemSetByCategory;
 
 public class ViewPagerFragment extends Fragment implements MediaBrowserResponseListener {
@@ -84,18 +79,11 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
         LibraryId libraryId = LibraryConstructor.parseId(parentId);
         Log.i(LOG_TAG, "more children loaded main activity with parent id " + libraryId);
         if (null != libraryId && null != libraryId.getCategory() && libraryId.getId() != null) {
-
             /* TODO: add logic to distribute children to the correct menu fragment */
             int currentFragmentId = this.rootMenuItemsPager.getCurrentItem();
             ViewPageFragment f = adapter.getItem(currentFragmentId);
-            Intent intent =  new Intent(context, FolderActivity.class);
-            intent.putExtra(PARENT_ID, parentId);
-            String folderName = libraryId.getExtra(FOLDER_NAME);
-            if (folderName  != null) {
-                intent.putExtra(FOLDER_NAME, folderName);
-            }
-            intent.putParcelableArrayListExtra(FOLDER_CHILDREN, children);
-            startActivity(intent);
+            f.onChildrenLoaded(parentId, children, options, context);
+
         }
     }
 
