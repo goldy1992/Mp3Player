@@ -70,6 +70,8 @@ public class LibraryConstructor {
         if (mediaId == null) {
             return null;
         }
+        stringBuilder.append(category);
+        stringBuilder.append(LIMITER);
         stringBuilder.append(mediaId);
         if (Category.FOLDERS == category) {
             String title = getTitle(mediaItem);

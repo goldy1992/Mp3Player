@@ -9,7 +9,7 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
-import com.example.mike.mp3player.client.views.fragments.ViewPageFragment;
+import com.example.mike.mp3player.client.views.fragments.viewpager.SongViewPageFragment;
 import com.example.mike.mp3player.commons.library.Category;
 
 import java.util.List;
@@ -22,7 +22,7 @@ import static com.example.mike.mp3player.commons.Constants.FOLDER_NAME;
 public class FolderActivity extends MediaActivityCompat implements MediaPlayerActvityRequester {
 
     private static final String LOG_TAG = "FOLDER_ACTIVITY";
-    private ViewPageFragment viewPageFragment;
+    private SongViewPageFragment viewPageFragment;
     private List<MediaBrowserCompat.MediaItem> mediaItems;
     private String folderName;
     private PlayToolBarFragment playToolBarFragment;
@@ -66,7 +66,7 @@ public class FolderActivity extends MediaActivityCompat implements MediaPlayerAc
         setMediaControllerAdapter(new MediaControllerAdapter(this, getMediaBrowserAdapter().getMediaSessionToken()));
         getMediaControllerAdapter().init();
         setContentView(R.layout.activity_folder);
-        this.viewPageFragment = ViewPageFragment.createAndInitialiseViewPageFragment(Category.SONGS, mediaItems,getMediaBrowserAdapter(), getMediaControllerAdapter(), this);
+        this.viewPageFragment = SongViewPageFragment.createAndInitialiseViewPageFragment(Category.SONGS, mediaItems,getMediaBrowserAdapter(), getMediaControllerAdapter());
         this.playToolBarFragment = PlayToolBarFragment.createAndInitialisePlayToolbarFragment(getMediaControllerAdapter(), this, false);
         getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
         getSupportFragmentManager().beginTransaction().add(R.id.playToolbarFragment, playToolBarFragment).commitNow();
@@ -77,7 +77,7 @@ public class FolderActivity extends MediaActivityCompat implements MediaPlayerAc
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.FOLDER_NAME, this.folderName));
+//        getSupportActionBar().setTitle(getString(R.string.FOLDER_NAME, this.folderName));
 
 
     }

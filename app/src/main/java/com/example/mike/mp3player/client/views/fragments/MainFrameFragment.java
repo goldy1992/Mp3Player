@@ -15,6 +15,7 @@ import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.client.MyDrawerListener;
 import com.example.mike.mp3player.client.views.SongSearchActionListener;
+import com.example.mike.mp3player.client.views.fragments.viewpager.ViewPagerFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;

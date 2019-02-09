@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.client.MyFolderItemTouchListener;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.MySongItemTouchListener;
@@ -20,7 +19,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static android.support.v4.media.MediaBrowserCompat.*;
+import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 public class MyRecyclerView extends RecyclerView {
     private Context context;
@@ -42,7 +41,7 @@ public class MyRecyclerView extends RecyclerView {
     }
 
     public void initRecyclerView(Category category, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
-                                 MediaControllerAdapter mediaControllerAdapter, MediaPlayerActvityRequester mediaPlayerActvityRequester) {
+                                 MediaControllerAdapter mediaControllerAdapter, MyGenericItemTouchListener.ItemSelectedListener itemSelectedListener) {
         this.category = category;
 
         switch (category) {
@@ -58,10 +57,9 @@ public class MyRecyclerView extends RecyclerView {
                 break;
             default: return;
         }
-
+        this.myGenericItemTouchListener.setItemSelectedListener(itemSelectedListener);
         this.myGenericItemTouchListener.setMediaControllerAdapter(mediaControllerAdapter);
         this.myGenericItemTouchListener.setMediaBrowserAdapter(mediaBrowserAdapter);
-        this.myGenericItemTouchListener.setMediaPlayerActvityRequester(mediaPlayerActvityRequester);
         this.setAdapter(myViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         this.setLayoutManager(linearLayoutManager);

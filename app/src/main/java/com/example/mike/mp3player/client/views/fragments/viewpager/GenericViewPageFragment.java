@@ -1,8 +1,12 @@
-package com.example.mike.mp3player.client.views.fragments;
+package com.example.mike.mp3player.client.views.fragments.viewpager;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
@@ -17,23 +21,46 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 
-public class GenericViewPageFragment extends Fragment implements MyGenericItemTouchListener.ItemSelectedListener {
+public abstract class GenericViewPageFragment extends Fragment implements MyGenericItemTouchListener.ItemSelectedListener {
     private static final String LOG_TAG = "GENRC_VIW_PGE_FRGMNT";
     Category category;
     MyRecyclerView recyclerView;
     Class<?> activityToCall;
     Context context;
+    MyGenericItemTouchListener.ItemSelectedListener itemSelectedListener;
 
     /* TODO: add mechanism to store children in the fragment without having to repoll for the same data */
     Map<MediaItem, List<MediaItem>> songs;
-    MediaBrowserAdapter mediaBrowserAdapter;
+    private MediaBrowserAdapter mediaBrowserAdapter;
     MediaControllerAdapter mediaControllerAdapter;
-    MediaPlayerActvityRequester mediaPlayerActvityRequester;
-    String idRequested = null;
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_view_page, container, false);
+        view.setTag(category);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle bundle) {
+        this.recyclerView = view.findViewById(R.id.myRecyclerView);
+        this.getRecyclerView().initRecyclerView(category, new ArrayList<>(songs.keySet()), getMediaBrowserAdapter(),
+                mediaControllerAdapter, this);
+    }
+
 
     public void init(Category category, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
                      MediaControllerAdapter mediaControllerAdapter, Class<?> activityToCall) {
@@ -47,13 +74,9 @@ public class GenericViewPageFragment extends Fragment implements MyGenericItemTo
         this.activityToCall = activityToCall;
     }
 
-    public void onChildrenLoaded(LibraryId libraryId, @NonNull ArrayList<MediaItem> children,
-                             @NonNull Bundle options, Context context) {
+    public abstract void onChildrenLoaded(LibraryId libraryId, @NonNull ArrayList<MediaItem> children);
 
-    }
-
-
-        public MyRecyclerView getRecyclerView() {
+    public MyRecyclerView getRecyclerView() {
         return recyclerView;
     }
 
@@ -65,8 +88,7 @@ public class GenericViewPageFragment extends Fragment implements MyGenericItemTo
         this.category = category;
     }
 
-    @Override
-    public void itemSelected(String id) {
-
+    public MediaBrowserAdapter getMediaBrowserAdapter() {
+        return mediaBrowserAdapter;
     }
 }

@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.mike.mp3player.client.views.MyRecyclerView;
+import com.example.mike.mp3player.commons.library.LibraryId;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,8 +20,7 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
     View childView;
     MediaBrowserAdapter mediaBrowserAdapter = null;
     MediaControllerAdapter mediaControllerAdapter = null;
-    MediaPlayerActvityRequester mediaPlayerActvityRequester = null;
-    ItemSelectedListener itemSelectedListener;
+    ItemSelectedListener itemSelectedListener = null;
 
     boolean enabled = true;
 
@@ -79,11 +79,11 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
         this.mediaControllerAdapter = mediaControllerAdapter;
     }
 
-    public void setMediaPlayerActvityRequester(MediaPlayerActvityRequester mediaPlayerActvityRequester) {
-        this.mediaPlayerActvityRequester = mediaPlayerActvityRequester;
+    public void setItemSelectedListener(ItemSelectedListener itemSelectedListener) {
+        this.itemSelectedListener = itemSelectedListener;
     }
 
     public interface ItemSelectedListener {
-        void itemSelected(String id);
+        void itemSelected(LibraryId id);
     }
 }

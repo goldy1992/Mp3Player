@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/titleBarFragment"
-            class="com.example.mike.mp3player.client.views.fragments.ViewPagerFragment"
+            class="com.example.mike.mp3player.client.views.fragments.viewpager.ViewPagerFragment"
             tools:layout="@layout/fragment_view_pager"/>
 
         <fragment

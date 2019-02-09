@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.views.fragments;
+package com.example.mike.mp3player.client.views.fragments.viewpager;
 
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
@@ -43,7 +43,7 @@ public class ViewPageChildFragment extends Fragment {
         this.recyclerView = view.findViewById(R.id.myRecyclerView);
         //this.textView = view.findViewById(R.id.parentNameTextView);
         this.recyclerView.initRecyclerView(Category.SONGS, songs, mediaBrowserAdapter,
-                mediaControllerAdapter, mediaPlayerActvityRequester);
+                mediaControllerAdapter, null);
     }
 
     public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
