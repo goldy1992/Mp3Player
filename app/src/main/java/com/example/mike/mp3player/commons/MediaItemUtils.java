@@ -71,6 +71,16 @@ public final class MediaItemUtils {
         return mediaItemList;
     }
 
+    public static final MediaItem findMediaItemInSet(String requestedId, Set<MediaItem> itemSet) {
+        for (MediaItem i : itemSet) {
+            String itemId = getMediaId(i);
+            if (itemId != null && itemId.equals(requestedId)) {
+                return i;
+            }
+        }
+        return null;
+    }
+
     private static final Comparator<MediaItem> mediaItemCategoryComparator = (o1, o2) -> {
         if (hasMediaId(o1) && hasMediaId(o2)) {
             Category c1 = Category.valueOf(getMediaId(o1));

@@ -29,7 +29,7 @@ public class MediaBrowserAdapter {
         ComponentName componentName = new ComponentName(context, MediaPlaybackService.class);
         // Create MediaBrowserServiceCompat
         mMediaBrowser = new MediaBrowserCompat(context, componentName, mConnectionCallbacks, null);
-        this.mySubscriptionCallback = new MySubscriptionCallback();
+        this.mySubscriptionCallback = new MySubscriptionCallback(context);
         getmMediaBrowser().connect();
     }
 

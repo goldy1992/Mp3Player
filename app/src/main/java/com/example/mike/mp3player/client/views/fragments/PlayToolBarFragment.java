@@ -29,12 +29,13 @@ public class PlayToolBarFragment extends Fragment {
     protected Toolbar toolbar;
     LinearLayout innerPlaybackToolbarLayout;
     MediaPlayerActvityRequester mediaPlayerActvityRequester;
+    boolean attachToRoot;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.fragment_playback_toolbar, container, true );
+        return inflater.inflate(R.layout.fragment_playback_toolbar, container, attachToRoot );
     }
 
     @Override
@@ -49,10 +50,11 @@ public class PlayToolBarFragment extends Fragment {
     }
 
     public void init(MediaControllerAdapter mediaControllerAdapter,
-                     MediaPlayerActvityRequester mediaPlayerActvityRequester) {
+                     MediaPlayerActvityRequester mediaPlayerActvityRequester, boolean attachToRoot) {
         this.mediaControllerAdapter = mediaControllerAdapter;
         this.mediaPlayerActvityRequester = mediaPlayerActvityRequester;
         this.mediaControllerAdapter.registerPlaybackStateListener(playPauseButton);
+        this.attachToRoot = attachToRoot;
     }
 
     void playPause() {
@@ -79,7 +81,7 @@ public class PlayToolBarFragment extends Fragment {
 
     }
 
-    void displayButtons() {
+    public void displayButtons() {
         if (null != innerPlaybackToolbarLayout) {
             playPauseButton.setLayoutParams(getLinearLayoutParams(playPauseButton.getLayoutParams()));
             innerPlaybackToolbarLayout.addView(playPauseButton);
@@ -106,5 +108,12 @@ public class PlayToolBarFragment extends Fragment {
 
     public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
         this.mediaControllerAdapter = mediaControllerAdapter;
+    }
+
+    public static PlayToolBarFragment createAndInitialisePlayToolbarFragment(MediaControllerAdapter mediaControllerAdapter,
+                                                                             MediaPlayerActvityRequester mediaPlayerActvityRequester, boolean attachToRoot) {
+        PlayToolBarFragment playToolBarFragment = new PlayToolBarFragment();
+        playToolBarFragment.init(mediaControllerAdapter, mediaPlayerActvityRequester, attachToRoot);
+        return playToolBarFragment;
     }
 }

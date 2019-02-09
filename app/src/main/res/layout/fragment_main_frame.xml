@@ -30,8 +30,6 @@
             class="com.example.mike.mp3player.client.views.fragments.ViewPagerFragment"
             tools:layout="@layout/fragment_view_pager"/>
 
-
-
         <fragment
             android:id="@+id/playToolbarFragment"
             class="com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment"

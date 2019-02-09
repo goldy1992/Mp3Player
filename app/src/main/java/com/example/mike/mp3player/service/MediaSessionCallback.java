@@ -13,6 +13,7 @@ import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import com.example.mike.mp3player.service.library.MediaLibrary;
@@ -32,7 +33,6 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KE
 /**
  * Created by Mike on 24/09/2017.
  */
-
 public class MediaSessionCallback extends MediaSessionCompat.Callback implements MediaPlayer.OnCompletionListener {
 
     private ServiceManager serviceManager;
@@ -92,6 +92,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
     @Override
     public synchronized boolean onMediaButtonEvent(Intent mediaButtonEvent) {
+        Log.i(LOG_TAG, "media button event");
         if (mediaButtonEvent != null && mediaButtonEvent.getExtras() != null
                 && mediaButtonEvent.getExtras().getParcelable(Intent.EXTRA_KEY_EVENT) != null) {
             KeyEvent keyEvent = mediaButtonEvent.getExtras().getParcelable(Intent.EXTRA_KEY_EVENT);
@@ -133,6 +134,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public synchronized void onPlayFromUri(Uri uri, Bundle bundle) {
+        Log.i(LOG_TAG, "play from uri");
         super.onPlayFromUri(uri, bundle);
         myMediaPlayerAdapter.prepareFromUri(uri);
         myMediaPlayerAdapter.play();

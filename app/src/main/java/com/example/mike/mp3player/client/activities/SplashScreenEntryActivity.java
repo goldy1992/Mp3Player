@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -19,7 +20,6 @@ import com.example.mike.mp3player.commons.library.LibraryId;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -106,7 +106,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     }
 
     @Override
-    public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options) {
+    public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options, Context context) {
        Log.i(LOG_TAG, "children loaded: " + parentId);
         ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>();
         if (isRoot(parentId)) {
