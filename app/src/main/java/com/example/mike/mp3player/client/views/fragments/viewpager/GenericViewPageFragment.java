@@ -72,6 +72,7 @@ public abstract class GenericViewPageFragment extends Fragment implements MyGene
         this.mediaBrowserAdapter = mediaBrowserAdapter;
         this.mediaControllerAdapter = mediaControllerAdapter;
         this.activityToCall = activityToCall;
+        this.context = mediaBrowserAdapter.getContext();
     }
 
     public abstract void onChildrenLoaded(LibraryId libraryId, @NonNull ArrayList<MediaItem> children);

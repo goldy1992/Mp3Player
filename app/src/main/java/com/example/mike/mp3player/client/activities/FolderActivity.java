@@ -77,7 +77,7 @@ public class FolderActivity extends MediaActivityCompat implements MediaPlayerAc
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        getSupportActionBar().setTitle(getString(R.string.FOLDER_NAME, this.folderName));
+        getSupportActionBar().setTitle(getString(R.string.FOLDER_NAME, this.folderName));
 
 
     }

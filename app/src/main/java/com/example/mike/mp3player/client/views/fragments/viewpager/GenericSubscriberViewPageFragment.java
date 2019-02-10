@@ -17,10 +17,24 @@ import static com.example.mike.mp3player.commons.Constants.FOLDER_CHILDREN;
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 
 public abstract class GenericSubscriberViewPageFragment extends GenericViewPageFragment {
-    String idRequested = null;
+    MediaBrowserCompat.MediaItem itemRequested = null;
     private static final String LOG_TAG = "GNRC_SUBSCBR_V_P_FGMT";
     public void onChildrenLoaded(LibraryId libraryId, @NonNull ArrayList<MediaBrowserCompat.MediaItem> children) {
-        Log.d(LOG_TAG, "hit");
+        if (null != libraryId && children != null) {
+            MediaBrowserCompat.MediaItem mediaItem = MediaItemUtils.findMediaItemInSet(libraryId, songs.keySet());
+            songs.put(mediaItem, new ArrayList<>(children));
+
+            String idOfRequestedItem = MediaItemUtils.getMediaId(itemRequested);
+            if (idOfRequestedItem != null && idOfRequestedItem.equals(libraryId.getId())) {
+                idOfRequestedItem = null;
+                //IntentUtils.
+                startActivity(libraryId, children);
+
+            }
+
+            Log.d(LOG_TAG, "hit");
+
+        }
     }
 
     @Override
@@ -31,7 +45,7 @@ public abstract class GenericSubscriberViewPageFragment extends GenericViewPageF
         }
         List<MediaBrowserCompat.MediaItem> values = songs.get(item);
         if (values == null) {
-            this.idRequested = id.getId();
+            this.itemRequested = item;
             this.getMediaBrowserAdapter().subscribe(this.category, id.getId());
         } else {
             ArrayList<MediaBrowserCompat.MediaItem> valuesArrayList = new ArrayList<>(songs.get(item));
@@ -41,6 +55,11 @@ public abstract class GenericSubscriberViewPageFragment extends GenericViewPageF
 
     private void startActivity(String id, ArrayList<MediaBrowserCompat.MediaItem> children) {
         LibraryId libraryId = LibraryConstructor.parseId(id);
+        startActivity(libraryId, children);
+    }
+
+    private void startActivity(LibraryId libraryId, ArrayList<MediaBrowserCompat.MediaItem> children) {
+
         Intent intent =  new Intent(context, activityToCall);
         intent.putExtra(PARENT_ID, libraryId.getId());
         intent.putParcelableArrayListExtra(FOLDER_CHILDREN, children);

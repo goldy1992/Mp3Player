@@ -26,10 +26,10 @@ public class MediaBrowserAdapter {
 
     public void init() {
         mConnectionCallbacks = new MyConnectionCallback(mediaBrowserConnectorCallback);
-        ComponentName componentName = new ComponentName(context, MediaPlaybackService.class);
+        ComponentName componentName = new ComponentName(getContext(), MediaPlaybackService.class);
         // Create MediaBrowserServiceCompat
-        mMediaBrowser = new MediaBrowserCompat(context, componentName, mConnectionCallbacks, null);
-        this.mySubscriptionCallback = new MySubscriptionCallback(context);
+        mMediaBrowser = new MediaBrowserCompat(getContext(), componentName, mConnectionCallbacks, null);
+        this.mySubscriptionCallback = new MySubscriptionCallback(getContext());
         getmMediaBrowser().connect();
     }
 
@@ -70,5 +70,9 @@ public class MediaBrowserAdapter {
 
     public void unregisterListener(MediaBrowserResponseListener mediaBrowserResponseListener) {
         mySubscriptionCallback.removeMediaBrowserResponseListener(mediaBrowserResponseListener);
+    }
+
+    public Context getContext() {
+        return context;
     }
 }
