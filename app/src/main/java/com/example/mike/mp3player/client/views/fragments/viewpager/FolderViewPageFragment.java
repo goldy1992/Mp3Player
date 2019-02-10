@@ -5,21 +5,15 @@ import android.support.v4.media.MediaBrowserCompat;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.client.activities.FolderActivity;
-import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
 
 import static com.example.mike.mp3player.commons.Constants.FOLDER_NAME;
 
 public class FolderViewPageFragment extends GenericSubscriberViewPageFragment {
-
 
     @Override
     Intent addExtrasToIntent(LibraryId libraryId, Intent intent) {

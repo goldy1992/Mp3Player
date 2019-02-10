@@ -9,6 +9,8 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -16,6 +18,8 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 
+import com.example.mike.mp3player.commons.MediaItemUtils;
+import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
@@ -120,15 +124,28 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     @Override
     public synchronized void onPrepareFromMediaId(String mediaId, Bundle bundle) {
         super.onPrepareFromMediaId(mediaId, bundle);
-
-        if (bundle.containsKey(PLAYLIST)) {
-              if (bundle.getString(PLAYLIST).equals(PLAY_ALL)) {
-                  playbackManager.createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(mediaLibrary.getSongList()));
-              }
+        String songIdToPlay = LibraryConstructor.getSongIdFromSongRequest(mediaId);
+        if (songIdToPlay == null) {
+            Log.e(LOG_TAG, "received null songId");
+            return;
         }
-        Uri uri = mediaLibrary.getMediaUriFromMediaId(mediaId);
-        myMediaPlayerAdapter.prepareFromUri(uri);
-        playbackManager.setQueueIndex(mediaId);
+        List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getPlaylist(mediaId);
+        playbackManager.createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(results));
+        Uri uriToPlay = null;
+        for (int i = 0; i < results.size(); i++) {
+            String mediaItemId = MediaItemUtils.getMediaId(results.get(i));
+            if (songIdToPlay.equals(mediaItemId)) {
+                uriToPlay = mediaLibrary.getMediaUriFromMediaId(songIdToPlay);
+                myMediaPlayerAdapter.prepareFromUri(uriToPlay);
+                playbackManager.setQueueIndex(mediaItemId);
+                break;
+            }
+        }
+        if (uriToPlay == null) {
+            Log.e(LOG_TAG, "failed to find requested uri in collection");
+            return;
+        }
+
         updateMediaSession();
     }
 

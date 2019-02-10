@@ -32,7 +32,6 @@ public abstract class GenericViewPageFragment extends Fragment implements MyGene
     MyRecyclerView recyclerView;
     Class<?> activityToCall;
     Context context;
-    MyGenericItemTouchListener.ItemSelectedListener itemSelectedListener;
 
     /* TODO: add mechanism to store children in the fragment without having to repoll for the same data */
     Map<MediaItem, List<MediaItem>> songs;
@@ -60,7 +59,6 @@ public abstract class GenericViewPageFragment extends Fragment implements MyGene
         this.getRecyclerView().initRecyclerView(category, new ArrayList<>(songs.keySet()), getMediaBrowserAdapter(),
                 mediaControllerAdapter, this);
     }
-
 
     public void init(Category category, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
                      MediaControllerAdapter mediaControllerAdapter, Class<?> activityToCall) {

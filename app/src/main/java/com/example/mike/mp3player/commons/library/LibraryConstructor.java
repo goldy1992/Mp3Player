@@ -4,13 +4,13 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.util.Log;
 
-import com.example.mike.mp3player.commons.Constants;
+import com.example.mike.mp3player.commons.MediaItemUtils;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.util.regex.PatternSyntaxException;
 
-import static com.example.mike.mp3player.commons.Constants.*;
+import static com.example.mike.mp3player.commons.Constants.FOLDER_NAME;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getMediaId;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 
@@ -63,6 +63,41 @@ public class LibraryConstructor {
         return stringBuilder.toString();
     }
 
+    public static String buildSongId(LibraryId libraryId, String mediaId) {
+        if (libraryId == null) {
+            return null;
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(libraryId.getCategory().name());
+
+        if (null == mediaId) {
+            return stringBuilder.toString();
+        }
+
+        /* If not a song category, add it to show we want to play songs from that category.
+            e.g. FOLDERS||SONGS||REGGAETON || i.e all songs from the reggaeton */
+        if (libraryId.getCategory() != Category.SONGS) {
+            stringBuilder.append(LIMITER);
+            stringBuilder.append(Category.SONGS.name());
+            stringBuilder.append(LIMITER);
+            stringBuilder.append(libraryId.getId());
+        }
+        stringBuilder.append(LIMITER);
+        stringBuilder.append(mediaId);
+
+        return stringBuilder.toString();
+    }
+
+    public static String getSongIdFromSongRequest(String id) {
+        String[] tokens = splitMediaId(id);
+
+        if (tokens.length <= 1) {
+            return null;
+        }
+        return tokens[tokens.length - 1];
+    }
+
     public static String buildId(Category category, MediaBrowserCompat.MediaItem mediaItem) {
         StringBuilder stringBuilder = new StringBuilder();
         String mediaId = getMediaId(mediaItem);
@@ -92,7 +127,7 @@ public class LibraryConstructor {
                 null : Category.valueOf(tokens[0]);
     }
 
-    private static String[] splitMediaId(String id) {
+    public static String[] splitMediaId(String id) {
         if (null == id) {
             return null;
         }
@@ -106,10 +141,10 @@ public class LibraryConstructor {
         return tokens;
     }
 
-//    private StringBuilder appendExtras(StringBuilder builder, Category category, String mediaId) {
-//        if (Category.FOLDERS == category) {
-//
-//        }
-//    }
+    public static void addFolderNameFromMediaItemToLibraryId(LibraryId libraryId, MediaBrowserCompat.MediaItem mediaItem) {
+        if (libraryId != null && libraryId.getExtras() != null) {
+            libraryId.getExtras().put(FOLDER_NAME, MediaItemUtils.getTitle(mediaItem));
+        }
+    }
 
 }

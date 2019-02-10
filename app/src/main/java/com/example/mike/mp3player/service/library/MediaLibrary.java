@@ -115,6 +115,23 @@ public class MediaLibrary {
         return categories.get(Category.SONGS).getKeys();
     }
 
+    public List<MediaBrowserCompat.MediaItem> getPlaylist(String id) {
+          String[] tokens = LibraryConstructor.splitMediaId(id);
+
+            if (tokens.length <= 0) {
+                return null;
+            }
+            // If the playlist is all songs e.g. SONGS||232342
+            if (tokens.length == 2) {
+                return getSongList();
+            } else { // must be asking for a collection of songs from the library.
+                Category category = Category.valueOf(tokens[0]);
+
+                List<MediaBrowserCompat.MediaItem> result = categories.get(category).getChildren(tokens[2]);
+                return result;
+            }
+    }
+
     public List<MediaBrowserCompat.MediaItem> getChildren(String id) {
         LibraryId libraryId = LibraryConstructor.parseId(id);
 

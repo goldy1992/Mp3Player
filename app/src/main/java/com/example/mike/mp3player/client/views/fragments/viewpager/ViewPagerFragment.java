@@ -62,7 +62,7 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
             GenericViewPageFragment viewPageFragment = null;
             switch (category) {
                 case SONGS:
-                    viewPageFragment = SongViewPageFragment.createAndInitialiseViewPageFragment(category, items.get(i), mediaBrowserAdapter, mediaControllerAdapter);
+                    viewPageFragment = SongViewPageFragment.createAndInitialiseViewPageFragment(new LibraryId(category, null), items.get(i), mediaBrowserAdapter, mediaControllerAdapter);
                     break;
                 case FOLDERS:
                     viewPageFragment = FolderViewPageFragment.createAndInitialiseFragment(items.get(i), mediaBrowserAdapter, mediaControllerAdapter);

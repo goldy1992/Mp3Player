@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client.callbacks;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MetaDataListener;
@@ -19,6 +20,7 @@ import java.util.Set;
 
 public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
 
+    private static final String LOG_TAG = "MY_MDIA_CNTLR_CLLBCK";
     private final MediaActivityCompat activity;
     private final MediaControllerAdapter mediaControllerAdapter;
     private Set<MetaDataListener> metaDataListeners;
@@ -33,12 +35,18 @@ public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
 
     @Override
     public void onMetadataChanged(MediaMetadataCompat metadata) {
+        StringBuilder sb = new StringBuilder();
         for (MetaDataListener listener : metaDataListeners) {
-            listener.onMetadataChanged(metadata);
+            if (null != listener) {
+                listener.onMetadataChanged(metadata);
+                sb.append(listener.getClass());
+            }
         }
+        Log.i(LOG_TAG, "hit meta data changed " + ", listeners " + metaDataListeners.size() + ", " + sb.toString());
     }
 
     public synchronized void registerMetaDataListener(MetaDataListener listener) {
+        Log.i(LOG_TAG, "registerMetaDataListener" + listener.getClass());
         metaDataListeners.add(listener);
     }
 
@@ -52,12 +60,20 @@ public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
 
     @Override
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
+        StringBuilder sb = new StringBuilder();
         for (PlaybackStateListener listener : playbackStateListeners) {
-            listener.onPlaybackStateChanged(state);
+            if (listener != null) {
+                listener.onPlaybackStateChanged(state);
+                sb.append(listener.getClass());
+            } else {
+
+            }
         }
+        Log.i(LOG_TAG, "hit playback state changed " + ", listeners " + playbackStateListeners.size() + ", " + sb.toString());
     }
 
     public synchronized void registerPlaybackStateListener(PlaybackStateListener listener) {
+        Log.i(LOG_TAG, "registerPlaybackListener" + listener.getClass());
         playbackStateListeners.add(listener);
     }
 

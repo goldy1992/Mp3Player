@@ -84,6 +84,6 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
     }
 
     public interface ItemSelectedListener {
-        void itemSelected(LibraryId id);
+        void itemSelected(String id);
     }
 }

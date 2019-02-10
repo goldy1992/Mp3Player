@@ -19,10 +19,12 @@ import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 public abstract class GenericSubscriberViewPageFragment extends GenericViewPageFragment {
     MediaBrowserCompat.MediaItem itemRequested = null;
     private static final String LOG_TAG = "GNRC_SUBSCBR_V_P_FGMT";
+
     public void onChildrenLoaded(LibraryId libraryId, @NonNull ArrayList<MediaBrowserCompat.MediaItem> children) {
         if (null != libraryId && children != null) {
             MediaBrowserCompat.MediaItem mediaItem = MediaItemUtils.findMediaItemInSet(libraryId, songs.keySet());
             songs.put(mediaItem, new ArrayList<>(children));
+            LibraryConstructor.addFolderNameFromMediaItemToLibraryId(libraryId, mediaItem);
 
             String idOfRequestedItem = MediaItemUtils.getMediaId(itemRequested);
             if (idOfRequestedItem != null && idOfRequestedItem.equals(libraryId.getId())) {
@@ -38,18 +40,19 @@ public abstract class GenericSubscriberViewPageFragment extends GenericViewPageF
     }
 
     @Override
-    public void itemSelected(LibraryId id) {
-        MediaBrowserCompat.MediaItem item = MediaItemUtils.findMediaItemInSet(id, songs.keySet());
+    public void itemSelected(String id) {
+        LibraryId libraryId = LibraryConstructor.parseId(id);
+        MediaBrowserCompat.MediaItem item = MediaItemUtils.findMediaItemInSet(libraryId, songs.keySet());
         if (item == null) {
             return;
         }
         List<MediaBrowserCompat.MediaItem> values = songs.get(item);
         if (values == null) {
             this.itemRequested = item;
-            this.getMediaBrowserAdapter().subscribe(this.category, id.getId());
+            this.getMediaBrowserAdapter().subscribe(this.category, libraryId.getId());
         } else {
             ArrayList<MediaBrowserCompat.MediaItem> valuesArrayList = new ArrayList<>(songs.get(item));
-            startActivity(id.getId(), valuesArrayList);
+            startActivity(libraryId, valuesArrayList);
         }
     }
 
@@ -61,7 +64,7 @@ public abstract class GenericSubscriberViewPageFragment extends GenericViewPageF
     private void startActivity(LibraryId libraryId, ArrayList<MediaBrowserCompat.MediaItem> children) {
 
         Intent intent =  new Intent(context, activityToCall);
-        intent.putExtra(PARENT_ID, libraryId.getId());
+        intent.putExtra(PARENT_ID, libraryId);
         intent.putParcelableArrayListExtra(FOLDER_CHILDREN, children);
         intent = addExtrasToIntent(libraryId, intent);
         startActivity(intent);

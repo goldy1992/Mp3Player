@@ -10,7 +10,7 @@ import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.viewpager.SongViewPageFragment;
-import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.commons.library.LibraryId;
 
 import java.util.List;
 
@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import static com.example.mike.mp3player.commons.Constants.FOLDER_CHILDREN;
 import static com.example.mike.mp3player.commons.Constants.FOLDER_NAME;
+import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 
 public class FolderActivity extends MediaActivityCompat implements MediaPlayerActvityRequester {
 
@@ -25,6 +26,7 @@ public class FolderActivity extends MediaActivityCompat implements MediaPlayerAc
     private SongViewPageFragment viewPageFragment;
     private List<MediaBrowserCompat.MediaItem> mediaItems;
     private String folderName;
+    private LibraryId parentId;
     private PlayToolBarFragment playToolBarFragment;
 
     @Override
@@ -34,6 +36,7 @@ public class FolderActivity extends MediaActivityCompat implements MediaPlayerAc
         Intent intent = getIntent();
         this.folderName= intent.getStringExtra(FOLDER_NAME);
         this.mediaItems = intent.getParcelableArrayListExtra(FOLDER_CHILDREN);
+        this.parentId = intent.getParcelableExtra(PARENT_ID);
     }
 
     @Override
@@ -66,7 +69,7 @@ public class FolderActivity extends MediaActivityCompat implements MediaPlayerAc
         setMediaControllerAdapter(new MediaControllerAdapter(this, getMediaBrowserAdapter().getMediaSessionToken()));
         getMediaControllerAdapter().init();
         setContentView(R.layout.activity_folder);
-        this.viewPageFragment = SongViewPageFragment.createAndInitialiseViewPageFragment(Category.SONGS, mediaItems,getMediaBrowserAdapter(), getMediaControllerAdapter());
+        this.viewPageFragment = SongViewPageFragment.createAndInitialiseViewPageFragment(parentId, mediaItems,getMediaBrowserAdapter(), getMediaControllerAdapter());
         this.playToolBarFragment = PlayToolBarFragment.createAndInitialisePlayToolbarFragment(getMediaControllerAdapter(), this, false);
         getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
         getSupportFragmentManager().beginTransaction().add(R.id.playToolbarFragment, playToolBarFragment).commitNow();
@@ -78,7 +81,11 @@ public class FolderActivity extends MediaActivityCompat implements MediaPlayerAc
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.FOLDER_NAME, this.folderName));
+        getMediaControllerAdapter().updateUiState();
+    }
 
-
+    @Override
+    public void onBackPressed() {
+        this.finish();
     }
 }

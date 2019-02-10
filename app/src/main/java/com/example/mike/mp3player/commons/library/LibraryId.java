@@ -10,7 +10,7 @@ public class LibraryId implements Parcelable {
 
     private final Category category;
     private final String id;
-    private Map<String, String> extras;
+    private HashMap<String, String> extras;
 
     public LibraryId(Category category, String id) {
         this.category = category;
@@ -19,8 +19,10 @@ public class LibraryId implements Parcelable {
     }
 
     protected LibraryId(Parcel in) {
-        this.id = in.readString();
         this.category = Category.values()[in.readInt()];
+        this.id = in.readString();
+        this.extras = (HashMap) in.readSerializable();
+
     }
 
     public static final Creator<LibraryId> CREATOR = new Creator<LibraryId>() {
@@ -52,6 +54,7 @@ public class LibraryId implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(category.ordinal());
         dest.writeString(id);
+        dest.writeSerializable(extras);
     }
 
     @Override
@@ -61,7 +64,7 @@ public class LibraryId implements Parcelable {
         return sb.toString();
     }
 
-    public Map<String, String> getExtras() {
+    public HashMap<String, String> getExtras() {
         return extras;
     }
 

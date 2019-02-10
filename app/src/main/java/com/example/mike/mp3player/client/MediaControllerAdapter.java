@@ -1,4 +1,5 @@
 package com.example.mike.mp3player.client;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v4.media.MediaMetadataCompat;
@@ -18,10 +19,12 @@ public class MediaControllerAdapter {
     private MediaActivityCompat activity;
     private MediaSessionCompat.Token token;
     private boolean isInitialized = false;
+    private Context context;
 
     public MediaControllerAdapter(MediaActivityCompat activity, MediaSessionCompat.Token token) {
         this.activity = activity;
         this.token = token;
+        this.context = activity.getApplicationContext();
     }
 
     public boolean init() {
@@ -46,6 +49,10 @@ public class MediaControllerAdapter {
 
         Log.i(LOG_TAG, "play hit");
         getMediaControllerCompat().getTransportControls().play();
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     public void pause()

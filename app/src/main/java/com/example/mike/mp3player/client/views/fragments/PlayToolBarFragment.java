@@ -44,7 +44,9 @@ public class PlayToolBarFragment extends Fragment {
         toolbar = view.findViewById(R.id.playbackToolbar);
         toolbar.setOnClickListener((View v) -> mediaPlayerActvityRequester.goToMediaPlayerActivity());
         this.innerPlaybackToolbarLayout = view.findViewById(R.id.innerPlaybackToolbarLayout);
-        this.playPauseButton = PlayPauseButton.create(getContext());
+        if (this.playPauseButton == null) {
+            this.playPauseButton = PlayPauseButton.create(getContext());
+        }
         this.playPauseButton.getView().setOnClickListener((View v) -> playPause());
         initButton(playPauseButton);
     }
@@ -53,6 +55,9 @@ public class PlayToolBarFragment extends Fragment {
                      MediaPlayerActvityRequester mediaPlayerActvityRequester, boolean attachToRoot) {
         this.mediaControllerAdapter = mediaControllerAdapter;
         this.mediaPlayerActvityRequester = mediaPlayerActvityRequester;
+        if (this.playPauseButton == null) {
+            this.playPauseButton = PlayPauseButton.create(mediaControllerAdapter.getContext());
+        }
         this.mediaControllerAdapter.registerPlaybackStateListener(playPauseButton);
         this.attachToRoot = attachToRoot;
     }

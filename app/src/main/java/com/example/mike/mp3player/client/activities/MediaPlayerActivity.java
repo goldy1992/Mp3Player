@@ -33,7 +33,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initView();
         token = (MediaSessionCompat.Token) retrieveIntentInfo(Constants.MEDIA_SESSION);
 
         if (token != null) {
@@ -41,10 +40,10 @@ public class MediaPlayerActivity extends MediaActivityCompat {
             setMediaId((String) retrieveIntentInfo(Constants.MEDIA_ID));
 
             getMediaControllerAdapter().init();
+            initView();
             if (playNewSong()) {
                 // Display the initial state
                 Bundle extras = new Bundle();
-                extras.putString(PLAYLIST, PLAY_ALL);
                 getMediaControllerAdapter().prepareFromMediaId(getMediaId(), extras);
             }
             else {
