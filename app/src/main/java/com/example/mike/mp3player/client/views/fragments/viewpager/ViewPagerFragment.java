@@ -13,6 +13,7 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
+import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.commons.library.LibraryId;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,8 +31,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerTabStrip;
 import androidx.viewpager.widget.ViewPager;
-
-import static com.example.mike.mp3player.commons.MediaItemUtils.orderMediaItemSetByCategory;
 
 public class ViewPagerFragment extends Fragment implements MediaBrowserResponseListener {
 
@@ -56,8 +56,9 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
     public void initRootMenu(Map<MediaItem, List<MediaItem>> items, MediaBrowserAdapter mediaBrowserAdapter,
                              MediaControllerAdapter mediaControllerAdapter, MediaPlayerActvityRequester mediaPlayerActvityRequester) {
         mediaBrowserAdapter.registerListener(this);
-        List<MediaItem> rootItems = orderMediaItemSetByCategory(items.keySet());
-        for (MediaItem i : rootItems) {
+        TreeSet<MediaItem> rootItemsOrdered = new TreeSet<>((MediaItem m1, MediaItem m2) -> ComparatorUtils.compareRootMediaItemsByCategory(m1, m2));
+        rootItemsOrdered.addAll(items.keySet());
+        for (MediaItem i : rootItemsOrdered) {
             Category category = LibraryConstructor.getCategoryFromMediaItem(i);
             GenericViewPageFragment viewPageFragment = null;
             switch (category) {
@@ -69,7 +70,6 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
                     break;
                 default: break;
             }
-
             adapter.pagerItems.put(category, viewPageFragment);
             adapter.menuCategories.put(category, i);
             adapter.notifyDataSetChanged();
