@@ -74,10 +74,15 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public synchronized void onPlay() {
+        Log.i(LOG_TAG, "onPlay");
         broadcastReceiver.registerAudioNoisyReceiver();
+        Log.i(LOG_TAG, "onPlay registed audio noisy receiver");
         myMediaPlayerAdapter.play();
+        Log.i(LOG_TAG, "onPlay playback started");
         updateMediaSession();
+        Log.i(LOG_TAG, "onPlay mediasession updated");
         serviceManager.startService(prepareNotification());
+        Log.i(LOG_TAG, "onPlay finsihed");
     }
 
     @Override
@@ -168,10 +173,12 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public synchronized void onPause() {
+        Log.i(LOG_TAG, "onPause");
         broadcastReceiver.unregisterAudioNoisyReceiver();
         myMediaPlayerAdapter.pause();
         updateMediaSession();
         serviceManager.pauseService(prepareNotification());
+        Log.i(LOG_TAG, "onPause finished");
     }
 
     @Override

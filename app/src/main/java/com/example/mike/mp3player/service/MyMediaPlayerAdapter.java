@@ -298,7 +298,7 @@ public class MyMediaPlayerAdapter {
          * resolve any negative position errors) :- the MediaPlayer JNI throws an IllegalStateException.
          * To resolve this problem 1 is returned instead of zero (assuming in 99.99% the duration is >= 1)
          */
-        if (playbackPosition <= 0) {
+        if (playbackPosition <= 0) { // if at the beginning at track, or for some reason negative
             if (mediaPlayer.getDuration() >= 1) {
                 return 1;
             }

@@ -9,6 +9,7 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
+import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.viewpager.SongViewPageFragment;
 import com.example.mike.mp3player.commons.library.LibraryId;
 
@@ -20,7 +21,7 @@ import static com.example.mike.mp3player.commons.Constants.FOLDER_CHILDREN;
 import static com.example.mike.mp3player.commons.Constants.FOLDER_NAME;
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 
-public class FolderActivity extends MediaActivityCompat implements MediaPlayerActvityRequester {
+public class FolderActivity extends MediaActivityCompat {
 
     private static final String LOG_TAG = "FOLDER_ACTIVITY";
     private SongViewPageFragment viewPageFragment;
@@ -28,12 +29,14 @@ public class FolderActivity extends MediaActivityCompat implements MediaPlayerAc
     private String folderName;
     private LibraryId parentId;
     private PlayToolBarFragment playToolBarFragment;
+    private SimpleTitleBarFragment simpleTitleBarFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initMediaBrowserService();
         Intent intent = getIntent();
+        this.simpleTitleBarFragment = (SimpleTitleBarFragment) getSupportFragmentManager().findFragmentById(R.id.simpleTitleBarFragment);
         this.folderName= intent.getStringExtra(FOLDER_NAME);
         this.mediaItems = intent.getParcelableArrayListExtra(FOLDER_CHILDREN);
         this.parentId = intent.getParcelableExtra(PARENT_ID);
@@ -55,31 +58,16 @@ public class FolderActivity extends MediaActivityCompat implements MediaPlayerAc
     }
 
     @Override
-    public void goToMediaPlayerActivity() {
-
-    }
-
-    @Override
-    public void playSelectedSong(String songId) {
-        Log.i(LOG_TAG, "calling song: " + songId);
-    }
-
-    @Override
     public void onConnected() {
         setMediaControllerAdapter(new MediaControllerAdapter(this, getMediaBrowserAdapter().getMediaSessionToken()));
         getMediaControllerAdapter().init();
         setContentView(R.layout.activity_folder);
         this.viewPageFragment = SongViewPageFragment.createAndInitialiseViewPageFragment(parentId, mediaItems,getMediaBrowserAdapter(), getMediaControllerAdapter());
-        this.playToolBarFragment = PlayToolBarFragment.createAndInitialisePlayToolbarFragment(getMediaControllerAdapter(), this, false);
+        this.playToolBarFragment = PlayToolBarFragment.createAndInitialisePlayToolbarFragment(getMediaControllerAdapter(), false);
         getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
         getSupportFragmentManager().beginTransaction().add(R.id.playToolbarFragment, playToolBarFragment).commitNow();
         playToolBarFragment.displayButtons();
 
-
-        Toolbar toolbar = findViewById(R.id.titleToolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.FOLDER_NAME, this.folderName));
         getMediaControllerAdapter().updateUiState();
     }

@@ -8,9 +8,18 @@
     tools:context="com.example.mike.mp3player.client.activities.MediaPlayerActivity">
 
     <fragment
+        android:id="@+id/simpleTitleBarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        class="com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment"
+        tools:layout="@layout/fragment_simple_title_bar"/>
+
+    <fragment
         android:id="@+id/trackInfoFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/simpleTitleBarFragment"
         android:layout_gravity="top"
         class="com.example.mike.mp3player.client.views.fragments.TrackInfoFragment"
         tools:layout="@layout/fragment_track_info"/>

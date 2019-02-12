@@ -3,29 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+>
 
-    <com.google.android.material.appbar.AppBarLayout
+    <fragment
+        android:id="@+id/simpleTitleBarFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="top"
         android:layout_alignParentTop="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/titleToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar" >
-            <!--app:title="@string/FOLDER_NAME">-->
-        </androidx.appcompat.widget.Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
+        class="com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment"
+        tools:layout="@layout/fragment_simple_title_bar"/>
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_above="@+id/playToolbarFragment"
+        android:layout_below="@+id/simpleTitleBarFragment"
         android:id="@+id/songListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -7,8 +7,8 @@ import com.example.mike.mp3player.commons.library.Category;
 public final class ComparatorUtils {
 
     public static int compareRootMediaItemsByCategory(MediaBrowserCompat.MediaItem m1, MediaBrowserCompat.MediaItem m2) {
-        Category c1 = parseCategory(MediaItemUtils.getTitle(m1));
-        Category c2 = parseCategory(MediaItemUtils.getTitle(m2));
+        Category c1 = parseCategory(MediaItemUtils.getMediaId(m1));
+        Category c2 = parseCategory(MediaItemUtils.getMediaId(m2));
 
 
         if (c1 == null && c2 ==  null) {

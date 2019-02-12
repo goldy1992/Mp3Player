@@ -54,7 +54,7 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
     }
 
     public void initRootMenu(Map<MediaItem, List<MediaItem>> items, MediaBrowserAdapter mediaBrowserAdapter,
-                             MediaControllerAdapter mediaControllerAdapter, MediaPlayerActvityRequester mediaPlayerActvityRequester) {
+                             MediaControllerAdapter mediaControllerAdapter) {
         mediaBrowserAdapter.registerListener(this);
         TreeSet<MediaItem> rootItemsOrdered = new TreeSet<>((MediaItem m1, MediaItem m2) -> ComparatorUtils.compareRootMediaItemsByCategory(m1, m2));
         rootItemsOrdered.addAll(items.keySet());

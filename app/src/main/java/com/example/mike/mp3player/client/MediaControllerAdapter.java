@@ -107,6 +107,10 @@ public class MediaControllerAdapter {
         return null;
     }
 
+    public MediaSessionCompat.Token getToken() {
+        return token;
+    }
+
     public MediaControllerCompat getMediaControllerCompat() {
         return mediaControllerCompat;
     }

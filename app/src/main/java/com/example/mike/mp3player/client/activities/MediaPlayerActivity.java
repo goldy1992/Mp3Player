@@ -9,6 +9,7 @@ import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackToolbarExtendedFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
+import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.commons.Constants;
 
@@ -29,6 +30,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     private PlaybackTrackerFragment playbackTrackerFragment;
     private PlaybackToolbarExtendedFragment playbackToolbarExtendedFragment;
     private PlaybackSpeedControlsFragment playbackSpeedControlsFragment;
+    private SimpleTitleBarFragment simpleTitleBarFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +104,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
     private void initView() {
         setContentView(R.layout.activity_media_player);
+        this.simpleTitleBarFragment = (SimpleTitleBarFragment) getSupportFragmentManager().findFragmentById(R.id.simpleTitleBarFragment);
         this.trackInfoFragment = (TrackInfoFragment) getSupportFragmentManager().findFragmentById(R.id.trackInfoFragment);
         this.playbackSpeedControlsFragment = (PlaybackSpeedControlsFragment) getSupportFragmentManager().findFragmentById(R.id.playbackSpeedControlsFragment);
         this.playbackTrackerFragment = (PlaybackTrackerFragment) getSupportFragmentManager().findFragmentById(R.id.playbackTrackerFragment);

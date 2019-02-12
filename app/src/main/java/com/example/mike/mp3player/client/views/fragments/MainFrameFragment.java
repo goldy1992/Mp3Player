@@ -68,12 +68,11 @@ public class MainFrameFragment extends Fragment {
     }
 
     public void init(Map<MediaBrowserCompat.MediaItem, List<MediaBrowserCompat.MediaItem>> menuItems,
-                     MediaPlayerActvityRequester mediaPlayerActvityRequester,
-                     MediaBrowserAdapter mediaBrowserAdapter,
+                    MediaBrowserAdapter mediaBrowserAdapter,
                      MediaControllerAdapter mediaControllerAdapter,
                      SongSearchActionListener songSearchActionListener) {
-        this.viewPagerFragment.initRootMenu(menuItems, mediaBrowserAdapter, mediaControllerAdapter, mediaPlayerActvityRequester);
-        this.playToolBarFragment.init(mediaControllerAdapter, mediaPlayerActvityRequester, true);
+        this.viewPagerFragment.initRootMenu(menuItems, mediaBrowserAdapter, mediaControllerAdapter);
+        this.playToolBarFragment.init(mediaControllerAdapter,  true);
         this.titleBarFragment.setSongSearchActionListener(songSearchActionListener);
     }
 

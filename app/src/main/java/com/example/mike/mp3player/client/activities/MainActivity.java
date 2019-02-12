@@ -88,7 +88,7 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActv
         getMediaControllerAdapter().init();
         setContentView(R.layout.activity_main);
         this.rootFragment = (MainActivityRootFragment) getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
-        this.rootFragment.init(inputMethodManager, this, getMediaBrowserAdapter(), getMediaControllerAdapter(), menuItems);
+        this.rootFragment.init(inputMethodManager, getMediaBrowserAdapter(), getMediaControllerAdapter(), menuItems);
     }
 
     private Map<MediaItem, List<MediaItem>> initMenuItems(Bundle extras) {

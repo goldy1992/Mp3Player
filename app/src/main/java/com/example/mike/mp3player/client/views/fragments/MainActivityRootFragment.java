@@ -11,8 +11,6 @@ import android.view.inputmethod.InputMethodManager;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
-import com.example.mike.mp3player.client.views.PlayPauseButton;
 import com.example.mike.mp3player.client.views.SongSearchActionListener;
 
 import java.util.List;
@@ -42,7 +40,6 @@ public class MainActivityRootFragment extends Fragment implements SongSearchActi
     }
 
     public void init(InputMethodManager inputMethodManager,
-                    MediaPlayerActvityRequester mediaPlayerActvityRequester,
                     MediaBrowserAdapter mediaBrowserAdapter,
                     MediaControllerAdapter mediaControllerAdapter,
                     Map<MediaBrowserCompat.MediaItem,
@@ -51,7 +48,7 @@ public class MainActivityRootFragment extends Fragment implements SongSearchActi
         setInputMethodManager(inputMethodManager);
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
-        this.mainFrameFragment.init(menuItems, mediaPlayerActvityRequester, mediaBrowserAdapter, mediaControllerAdapter, this);
+        this.mainFrameFragment.init(menuItems, mediaBrowserAdapter, mediaControllerAdapter, this);
         this.songFilterFragment.init(this);
     }
 

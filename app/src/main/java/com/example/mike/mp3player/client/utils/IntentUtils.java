@@ -9,6 +9,9 @@ import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 
+/**
+ *
+ */
 public final class IntentUtils {
 
     public static Intent createMediaPlayerActivityMediaRequestIntent(Context context, MediaSessionCompat.Token token, String songId) {
