@@ -6,13 +6,15 @@ import android.os.Parcelable;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+
 public class LibraryId implements Parcelable {
 
     private final Category category;
     private final String id;
     private HashMap<String, String> extras;
 
-    public LibraryId(Category category, String id) {
+    public LibraryId(Category category, @NonNull String id) {
         this.category = category;
         this.id = id;
         this.extras = new HashMap<>();

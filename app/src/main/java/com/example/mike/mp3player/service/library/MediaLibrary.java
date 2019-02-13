@@ -5,6 +5,7 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.util.Log;
 
@@ -41,7 +42,7 @@ public class MediaLibrary {
     private IsDirectoryFilter isDirectoryFilter = new IsDirectoryFilter();
     private Map<Category, LibraryCollection> categories;
     private Context context;
-    private List<MediaBrowserCompat.MediaItem> rootItems = new ArrayList<>();
+    private List<MediaItem> rootItems = new ArrayList<>();
     private final String LOG_TAG = "MEDIA_LIBRARY";
 
     public MediaLibrary(Context context) {
@@ -58,12 +59,12 @@ public class MediaLibrary {
 
     public void buildMediaLibrary(){
         File externalStorageDirectory = MediaLibraryUtils.getExternalStorageDirectory();
-        List<MediaBrowserCompat.MediaItem> songList = buildSongList(externalStorageDirectory);
+        List<MediaItem> songList = buildSongList(externalStorageDirectory);
         for (Category category : categories.keySet()) {
             categories.get(category).index(songList);
         }
 
-        List<MediaBrowserCompat.MediaItem> rootCategoryMediaItems = new ArrayList<>();
+        List<MediaItem> rootCategoryMediaItems = new ArrayList<>();
         for (LibraryCollection collection : categories.values()) {
             rootCategoryMediaItems.add(collection.getRoot());
         }
@@ -73,9 +74,9 @@ public class MediaLibrary {
     }
 
 
-    private List<MediaBrowserCompat.MediaItem> buildSongList(File directory) {
+    private List<MediaItem> buildSongList(File directory) {
         List<File> directories = new ArrayList<>();
-        List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
+        List<MediaItem> mediaItems = new ArrayList<>();
 
         if (directory.list() != null) {
             for (String currentFileString : directory.list()) {
@@ -87,7 +88,7 @@ public class MediaLibrary {
                     File fileToRetrieve = null;
                     try {
                         fileToRetrieve = new File(directory, currentFileString);
-                        MediaBrowserCompat.MediaItem mediaItem = createPlayableMediaItemFromFile(fileToRetrieve, directory);
+                        MediaItem mediaItem = createPlayableMediaItemFromFile(fileToRetrieve, directory);
                         mediaItems.add(mediaItem);
                     } catch (Exception ex) {
                         if (fileToRetrieve != null) {
@@ -108,14 +109,15 @@ public class MediaLibrary {
         return mediaItems;
     }
 
-    public List<MediaBrowserCompat.MediaItem> getRoot() {
+    public List<MediaItem> getRoot() {
         return rootItems;
     }
-    public List<MediaBrowserCompat.MediaItem> getSongList() {
+    public List<MediaItem> getSongList() {
         return categories.get(Category.SONGS).getKeys();
     }
 
-    public List<MediaBrowserCompat.MediaItem> getPlaylist(String id) {
+    @Deprecated
+    public List<MediaItem> getPlaylist(String id) {
           String[] tokens = LibraryConstructor.splitMediaId(id);
 
             if (tokens.length <= 0) {
@@ -127,14 +129,32 @@ public class MediaLibrary {
             } else { // must be asking for a collection of songs from the library.
                 Category category = Category.valueOf(tokens[0]);
 
-                List<MediaBrowserCompat.MediaItem> result = categories.get(category).getChildren(tokens[2]);
+                List<MediaItem> result = categories.get(category).getChildren(tokens[2]);
                 return result;
             }
     }
 
-    public List<MediaBrowserCompat.MediaItem> getChildren(String id) {
-        LibraryId libraryId = LibraryConstructor.parseId(id);
+    public List<MediaItem> getPlaylist(LibraryId libraryId) {
+        Category category = libraryId.getCategory();
+        if (category == Category.SONGS) {
+            // song items don't have children therefore just return all songs
+            return categories.get(category).getKeys();
+        } else
+        return categories.get(category).getChildren(libraryId);
+    }
 
+    /**
+     * Use #getChildren(LibraryId)
+     * @param id
+     * @return
+     */
+    @Deprecated
+    public List<MediaItem> getChildren(String id) {
+        LibraryId libraryId = LibraryConstructor.parseId(id);
+        return getChildren(libraryId);
+    }
+
+    public List<MediaItem> getChildren(LibraryId libraryId) {
         if (libraryId == null || libraryId.getCategory() == null) {
             return null;
         }
@@ -142,11 +162,11 @@ public class MediaLibrary {
         if (libraryId.getId() == null) {
             return categories.get(libraryId.getCategory()).getKeys();
         } else {
-            return categories.get(libraryId.getCategory()).getChildren(libraryId.getId());
+            return categories.get(libraryId.getCategory()).getChildren(libraryId);
         }
     }
 
-    private MediaBrowserCompat.MediaItem createPlayableMediaItemFromFile(File file, File directory) throws Exception {
+    private MediaItem createPlayableMediaItemFromFile(File file, File directory) throws Exception {
         Uri uri = Uri.fromFile(file);
         String mediaId = String.valueOf(uri.getPath().hashCode());
         String parentPath = file.getParentFile().getAbsolutePath();
@@ -170,13 +190,13 @@ public class MediaLibrary {
                 .setTitle(MediaLibraryUtils.getSongTitle(mmr, fileName))
                 .setExtras(extras);
 
-        MediaBrowserCompat.MediaItem mediaItem = new MediaBrowserCompat.MediaItem(mediaDescriptionCompatBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
+        MediaItem mediaItem = new MediaItem(mediaDescriptionCompatBuilder.build(), MediaItem.FLAG_PLAYABLE);
         return mediaItem;
     }
 
-    private class MediaItemComparator implements Comparator<MediaBrowserCompat.MediaItem> {
+    private class MediaItemComparator implements Comparator<MediaItem> {
         @Override
-        public int compare(MediaBrowserCompat.MediaItem o1, MediaBrowserCompat.MediaItem o2) {
+        public int compare(MediaItem o1, MediaItem o2) {
             String s1 = o1.getDescription().getTitle().toString().toUpperCase(Locale.getDefault());
             String s2 = o2.getDescription().getTitle().toString().toUpperCase(Locale.getDefault());
             return s1.compareTo(s2);
@@ -184,7 +204,7 @@ public class MediaLibrary {
     }
 
     public Uri getMediaUriFromMediaId(String mediaId){
-        for (MediaBrowserCompat.MediaItem i : getSongList()) {
+        for (MediaItem i : getSongList()) {
             if (i.getDescription().getMediaId().equals(mediaId)) {
                 return i.getDescription().getMediaUri();
             }

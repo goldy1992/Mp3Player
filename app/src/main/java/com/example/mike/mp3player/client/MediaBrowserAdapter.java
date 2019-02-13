@@ -2,6 +2,7 @@ package com.example.mike.mp3player.client;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
@@ -9,7 +10,10 @@ import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
 import com.example.mike.mp3player.client.callbacks.MySubscriptionCallback;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
+import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.MediaPlaybackService;
+
+import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 
 public class MediaBrowserAdapter {
 
@@ -41,10 +45,31 @@ public class MediaBrowserAdapter {
         getmMediaBrowser().disconnect();
     }
 
+    /**
+     * subscribes to a MediaItem via a libraryId. The id of the libraryId will be used for the parent
+     * ID when communicating with the MediaPlaybackService.
+     * @param libraryId the libraryId
+     */
+    public void subscribe(LibraryId libraryId) {
+        Bundle options = new Bundle();
+        options.putParcelable(PARENT_ID, libraryId);
+        getmMediaBrowser().subscribe(libraryId.getId(), options, mySubscriptionCallback);
+    }
+    /**
+     * We should subscribe to MediaItems using LibraryIds in order to avoid having to parse String ids.
+     * @param category category
+     */
+    @Deprecated
     public void subscribe(Category category) {
         this.subscribe(category, null);
     }
 
+    /**
+     * we should subscribe to MediaItems using LibraryIds in order to avoid having to parse String ids.
+     * @param category category
+     * @param id id
+     */
+    @Deprecated
     public void subscribe(Category category, String id) {
         String token = LibraryConstructor.buildId(category, id);
         getmMediaBrowser().subscribe(token, mySubscriptionCallback);

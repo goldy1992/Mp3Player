@@ -12,9 +12,9 @@ import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment
 import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.commons.Constants;
+import com.example.mike.mp3player.commons.library.LibraryId;
 
-import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
-import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
+import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -22,9 +22,8 @@ import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
 public class MediaPlayerActivity extends MediaActivityCompat {
 
     private final String STOP = "Stop";
-    private String mediaId;
-
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
+
     private MediaSessionCompat.Token token;
     private TrackInfoFragment trackInfoFragment;
     private PlaybackTrackerFragment playbackTrackerFragment;
@@ -39,14 +38,16 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
         if (token != null) {
             setMediaControllerAdapter(new MediaControllerAdapter(this, token));
-            setMediaId((String) retrieveIntentInfo(Constants.MEDIA_ID));
+            String mediaId = (String) retrieveIntentInfo(Constants.MEDIA_ID);
+            LibraryId parentId = (LibraryId) retrieveIntentInfo(Constants.PARENT_ID);
 
             getMediaControllerAdapter().init();
             initView();
-            if (playNewSong()) {
+            if (mediaId != null) { // if rq came with an media id it's a song request
                 // Display the initial state
                 Bundle extras = new Bundle();
-                getMediaControllerAdapter().prepareFromMediaId(getMediaId(), extras);
+                extras.putParcelable(PARENT_ID, parentId); // parent id will sure that the correct playlist is found in the media library
+                getMediaControllerAdapter().prepareFromMediaId(mediaId, extras);
             }
             else {
 //                setMetaData(mediaControllerAdapter.getMetaData());
@@ -62,7 +63,9 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     @Override
     public void onStart() {
         super.onStart();
-        setMediaId((String) retrieveIntentInfo(Constants.MEDIA_ID));
+        /* TODO: setMediaId is possible redundant code and needs to be tested. Will temporarily comment it out in order to test.
+        //setMediaId((String) retrieveIntentInfo(Constants.MEDIA_ID));
+        */
         trackInfoFragment.init(getMediaControllerAdapter());
         playbackSpeedControlsFragment.init(getMediaControllerAdapter());
         playbackTrackerFragment.init(getMediaControllerAdapter());
@@ -81,27 +84,9 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         super.onDestroy();
         getMediaControllerAdapter().disconnect();
     }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
+    /**
+     *
+     */
     private void initView() {
         setContentView(R.layout.activity_media_player);
         this.simpleTitleBarFragment = (SimpleTitleBarFragment) getSupportFragmentManager().findFragmentById(R.id.simpleTitleBarFragment);
@@ -120,22 +105,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         return null;
     }
 
-    private boolean playNewSong() {
-        return null != getMediaId();
-    }
-
-    public String getMediaId() {
-        return mediaId;
-    }
-
-    public void setMediaId(String mediaId) {
-        this.mediaId = mediaId;
-    }
-
-    public TrackInfoFragment getTrackInfoFragment() {
-        return trackInfoFragment;
-    }
-
     public PlaybackTrackerFragment getPlaybackTrackerFragment() {
         return playbackTrackerFragment;
     }
@@ -144,12 +113,11 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         return playbackToolbarExtendedFragment;
     }
 
-    public PlaybackSpeedControlsFragment getPlaybackSpeedControlsFragment() {
-        return playbackSpeedControlsFragment;
-    }
-
     @Override
     public void onConnected() {
-
+        /**
+         * not used as a media token is assumed from parent activities since this activity does not
+         * require a MediaBrowser
+         */
     }
 }

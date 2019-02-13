@@ -22,10 +22,6 @@ import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 public class SongViewPageFragment extends GenericViewPageFragment implements MyGenericItemTouchListener.ItemSelectedListener {
 
     private static final String LOG_TAG = "VIEW_PAGE_FRAGMENT";
-    /**
-     * The parent f all the media items in this view; if null, the fragment represent a list of all available songs.
-     */
-    private LibraryId parent;
 
     public SongViewPageFragment() {  }
 
@@ -67,7 +63,7 @@ public class SongViewPageFragment extends GenericViewPageFragment implements MyG
         String mediaId = LibraryConstructor.buildSongId(parent, songId);
         Intent intent =
             IntentUtils.createMediaPlayerActivityMediaRequestIntent(context,
-                    getMediaBrowserAdapter().getMediaSessionToken(),mediaId);
+                    getMediaBrowserAdapter().getMediaSessionToken(),mediaId, parent);
 
         startActivity(intent);
     }

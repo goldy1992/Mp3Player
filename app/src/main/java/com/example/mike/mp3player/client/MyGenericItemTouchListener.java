@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client;
 
 import android.content.Context;
+import android.support.v4.media.MediaBrowserCompat;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -84,6 +85,6 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
     }
 
     public interface ItemSelectedListener {
-        void itemSelected(String id);
+        void itemSelected(MediaBrowserCompat.MediaItem item);
     }
 }

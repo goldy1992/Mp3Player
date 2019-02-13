@@ -40,16 +40,24 @@ public abstract class GenericSubscriberViewPageFragment extends GenericViewPageF
     }
 
     @Override
-    public void itemSelected(String id) {
-        LibraryId libraryId = LibraryConstructor.parseId(id);
+    public void itemSelected(MediaBrowserCompat.MediaItem id) {
+        String mediaId = MediaItemUtils.getMediaId(id);
+        if (mediaId == null)
+        {
+            Log.e(LOG_TAG, "could not find MediaId for mediaItem " + id);
+            return;
+        }
+        LibraryId libraryId = new LibraryId(this.category, mediaId);
         MediaBrowserCompat.MediaItem item = MediaItemUtils.findMediaItemInSet(libraryId, songs.keySet());
         if (item == null) {
             return;
         }
+
         List<MediaBrowserCompat.MediaItem> values = songs.get(item);
-        if (values == null) {
+        if (!isSubscribed(item)) {
             this.itemRequested = item;
-            this.getMediaBrowserAdapter().subscribe(this.category, libraryId.getId());
+
+            this.getMediaBrowserAdapter().subscribe(libraryId);
         } else {
             ArrayList<MediaBrowserCompat.MediaItem> valuesArrayList = new ArrayList<>(songs.get(item));
             startActivity(libraryId, valuesArrayList);
@@ -68,6 +76,14 @@ public abstract class GenericSubscriberViewPageFragment extends GenericViewPageF
         intent.putParcelableArrayListExtra(FOLDER_CHILDREN, children);
         intent = addExtrasToIntent(libraryId, intent);
         startActivity(intent);
+    }
+
+    private boolean isSubscribed(MediaBrowserCompat.MediaItem item) {
+        if (songs == null) {
+            return false;
+        }
+        List<MediaBrowserCompat.MediaItem> results = songs.get(item);
+        return results != null && !results.isEmpty();
     }
 
    abstract Intent addExtrasToIntent(LibraryId is, Intent intent);

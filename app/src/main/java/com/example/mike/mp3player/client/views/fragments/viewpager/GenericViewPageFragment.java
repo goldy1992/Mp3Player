@@ -28,6 +28,10 @@ import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 public abstract class GenericViewPageFragment extends Fragment implements MyGenericItemTouchListener.ItemSelectedListener {
     private static final String LOG_TAG = "GENRC_VIW_PGE_FRGMNT";
+    /**
+     * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
+     */
+    LibraryId parent;
     Category category;
     MyRecyclerView recyclerView;
     Class<?> activityToCall;

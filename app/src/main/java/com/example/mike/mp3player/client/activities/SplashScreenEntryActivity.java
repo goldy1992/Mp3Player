@@ -114,7 +114,8 @@ public class SplashScreenEntryActivity extends AppCompatActivity
             numberOfItemsToSubscribeTo = childrenArrayList.size();
             for (MediaBrowserCompat.MediaItem item : childrenArrayList) {
                 Category c = LibraryConstructor.getCategoryFromMediaItem(item);
-                mediaBrowserAdapter.subscribe(c, null);
+                LibraryId libraryId = new LibraryId(c, c.name());
+                mediaBrowserAdapter.subscribe(libraryId);
             }
             if (null == options) {
                 options = new Bundle();
@@ -138,7 +139,8 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
         mediaBrowserAdapter.registerListener(this);
-        mediaBrowserAdapter.subscribe(Category.ROOT);
+        LibraryId libraryId = new LibraryId(Category.ROOT, Category.ROOT.name());
+        mediaBrowserAdapter.subscribe(libraryId);
     }
 
     @Override// MediaBrowserConnectorCallback

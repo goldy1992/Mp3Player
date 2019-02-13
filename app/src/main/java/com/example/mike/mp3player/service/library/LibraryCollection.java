@@ -4,6 +4,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 
 import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.commons.library.LibraryId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,10 @@ public abstract class LibraryCollection {
     private final MediaBrowserCompat.MediaItem root;
     private List<MediaBrowserCompat.MediaItem> keys;
     protected Map<String, List<MediaBrowserCompat.MediaItem>> collection;
+    @Deprecated
     public abstract List<MediaBrowserCompat.MediaItem> getChildren(String id);
+
+    public abstract List<MediaBrowserCompat.MediaItem> getChildren(LibraryId id);
     public abstract void index(List<MediaBrowserCompat.MediaItem> items);
     public abstract Category getRootId();
 
@@ -34,6 +38,10 @@ public abstract class LibraryCollection {
 
     public MediaBrowserCompat.MediaItem getRoot() {
         return root;
+    }
+
+    public String getRootIdAsString() {
+        return getRootId().name();
     }
 
     public List<MediaBrowserCompat.MediaItem> getKeys() {

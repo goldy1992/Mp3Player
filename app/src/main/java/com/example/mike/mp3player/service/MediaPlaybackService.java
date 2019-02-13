@@ -7,13 +7,17 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
 
 import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.SongCollection;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
 import androidx.media.MediaBrowserServiceCompat;
 
 import static com.example.mike.mp3player.commons.Constants.CATEGORY_SONGS_ID;
+import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -62,9 +66,32 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
 //        }
     }
 
+    /**
+     * onLoadChildren(String, Result, Bundle) :- onLoadChildren should always be called with a LibraryId item as a bundle option. Searching for
+     * a MediaItem's children is now deprecated as it wasted
+     * @param parentId
+     * @param result
+     */
+    @Deprecated
+    @Override
+    public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
+     //   this.onLoadChildren(parentId, result, null);
+    }
+
     @Override
     public void onLoadChildren(final String parentMediaId,
-                               final Result<List<MediaBrowserCompat.MediaItem>> result) {
+                               final Result<List<MediaBrowserCompat.MediaItem>> result, Bundle options) {
+        if (options == null) {
+            result.sendResult(null);
+            return;
+        }
+
+        LibraryId libraryId = (LibraryId) options.get(PARENT_ID);
+        if (libraryId == null) {
+            result.sendResult(null);
+            return;
+        }
+
 
         //  Browsing not allowed
         if (TextUtils.equals(MY_EMPTY_MEDIA_ROOT_ID, parentMediaId)) {
