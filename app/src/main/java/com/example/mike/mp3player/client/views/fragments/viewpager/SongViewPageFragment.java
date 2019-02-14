@@ -7,8 +7,8 @@ import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.client.utils.IntentUtils;
+import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.commons.library.LibraryId;
 
 import java.util.ArrayList;
@@ -59,18 +59,21 @@ public class SongViewPageFragment extends GenericViewPageFragment implements MyG
     }
 
     @Override
-    public void itemSelected(String songId) {
-        String mediaId = LibraryConstructor.buildSongId(parent, songId);
-        Intent intent =
-            IntentUtils.createMediaPlayerActivityMediaRequestIntent(context,
-                    getMediaBrowserAdapter().getMediaSessionToken(),mediaId, parent);
+    public void onChildrenLoaded(LibraryId libraryId, @NonNull ArrayList<MediaItem> children) {
 
-        startActivity(intent);
     }
 
     @Override
-    public void onChildrenLoaded(LibraryId libraryId, @NonNull ArrayList<MediaItem> children) {
+    public void itemSelected(MediaItem item) {
+        String mediaId = MediaItemUtils.getMediaId(item);
+        if (null == mediaId) {
+            return;
+        }
+        Intent intent =
+                IntentUtils.createMediaPlayerActivityMediaRequestIntent(context,
+                        getMediaBrowserAdapter().getMediaSessionToken(),mediaId, parent);
 
+        startActivity(intent);
     }
 }
 

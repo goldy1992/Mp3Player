@@ -72,7 +72,7 @@ public class FolderLibraryCollection extends LibraryCollection {
         }
         for (MediaItem i : getKeys()) {
             String mediaId = getMediaId(i);
-            if (mediaId != null && mediaId.equals(libraryId)) {
+            if (mediaId != null && mediaId.equals(libraryId.getId())) {
                 return collection.get(getMediaId(i));
             }
         }

@@ -159,7 +159,7 @@ public class MediaLibrary {
             return null;
         }
 
-        if (libraryId.getId() == null) {
+        if (Category.isCategory(libraryId.getId())) {
             return categories.get(libraryId.getCategory()).getKeys();
         } else {
             return categories.get(libraryId.getCategory()).getChildren(libraryId);

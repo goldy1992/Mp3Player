@@ -12,7 +12,6 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
@@ -31,6 +30,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerTabStrip;
 import androidx.viewpager.widget.ViewPager;
+
+import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 
 public class ViewPagerFragment extends Fragment implements MediaBrowserResponseListener {
 
@@ -86,14 +87,13 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
 
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaItem> children, @NonNull Bundle options, Context context) {
-        LibraryId libraryId = LibraryConstructor.parseId(parentId);
+        LibraryId libraryId = (LibraryId) options.get(PARENT_ID);
         Log.i(LOG_TAG, "more children loaded main activity with parent id " + libraryId);
         if (null != libraryId && null != libraryId.getCategory() && libraryId.getId() != null) {
             /* TODO: add logic to distribute children to the correct menu fragment */
             int currentFragmentId = this.rootMenuItemsPager.getCurrentItem();
             GenericViewPageFragment f = adapter.getItem(currentFragmentId);
             f.onChildrenLoaded(libraryId, children);
-
         }
     }
 

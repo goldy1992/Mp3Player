@@ -10,14 +10,16 @@ public enum Category implements Comparator<Category> {
     ARTISTS (4),
     GENRES  (5);
 
+    public static boolean isCategory(String s) {
+        for (Category c : Category.values()) {
+            if (c.name().equals(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
     private final Integer rank;
 
-//    public static GenericViewPageFragment getViewPageFragment(Category category) {
-//        switch (category) {
-//            case SONGS: return new SongViewPageFragment();
-//            default: return null;
-//        }
-//    }
     Category(int rank) {
         this.rank = rank;
     }
