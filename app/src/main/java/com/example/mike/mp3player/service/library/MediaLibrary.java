@@ -4,13 +4,12 @@ import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.util.Log;
 
+import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.utils.IsDirectoryFilter;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
@@ -23,10 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeSet;
 
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST;
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ARTIST;
 import static android.media.MediaMetadataRetriever.METADATA_KEY_DURATION;
+import static com.example.mike.mp3player.commons.ComparatorUtils.*;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
@@ -42,7 +43,7 @@ public class MediaLibrary {
     private IsDirectoryFilter isDirectoryFilter = new IsDirectoryFilter();
     private Map<Category, LibraryCollection> categories;
     private Context context;
-    private List<MediaItem> rootItems = new ArrayList<>();
+    private TreeSet<MediaItem> rootItems = new TreeSet<>(compareRootMediaItemsByCategory);
     private final String LOG_TAG = "MEDIA_LIBRARY";
 
     public MediaLibrary(Context context) {
@@ -109,32 +110,15 @@ public class MediaLibrary {
         return mediaItems;
     }
 
-    public List<MediaItem> getRoot() {
+    public TreeSet<MediaItem> getRoot() {
         return rootItems;
     }
-    public List<MediaItem> getSongList() {
+    public TreeSet<MediaItem> getSongList() {
         return categories.get(Category.SONGS).getKeys();
     }
 
-    @Deprecated
-    public List<MediaItem> getPlaylist(String id) {
-          String[] tokens = LibraryConstructor.splitMediaId(id);
 
-            if (tokens.length <= 0) {
-                return null;
-            }
-            // If the playlist is all songs e.g. SONGS||232342
-            if (tokens.length == 2) {
-                return getSongList();
-            } else { // must be asking for a collection of songs from the library.
-                Category category = Category.valueOf(tokens[0]);
-
-                List<MediaItem> result = categories.get(category).getChildren(tokens[2]);
-                return result;
-            }
-    }
-
-    public List<MediaItem> getPlaylist(LibraryId libraryId) {
+    public TreeSet<MediaItem> getPlaylist(LibraryId libraryId) {
         Category category = libraryId.getCategory();
         if (category == Category.SONGS) {
             // song items don't have children therefore just return all songs
@@ -143,18 +127,7 @@ public class MediaLibrary {
         return categories.get(category).getChildren(libraryId);
     }
 
-    /**
-     * Use #getChildren(LibraryId)
-     * @param id
-     * @return
-     */
-    @Deprecated
-    public List<MediaItem> getChildren(String id) {
-        LibraryId libraryId = LibraryConstructor.parseId(id);
-        return getChildren(libraryId);
-    }
-
-    public List<MediaItem> getChildren(LibraryId libraryId) {
+    public TreeSet<MediaItem> getChildren(LibraryId libraryId) {
         if (libraryId == null || libraryId.getCategory() == null) {
             return null;
         }

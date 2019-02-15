@@ -12,7 +12,6 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.commons.library.LibraryId;
@@ -31,6 +30,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerTabStrip;
 import androidx.viewpager.widget.ViewPager;
 
+import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 
 public class ViewPagerFragment extends Fragment implements MediaBrowserResponseListener {
@@ -57,7 +57,7 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
     public void initRootMenu(Map<MediaItem, List<MediaItem>> items, MediaBrowserAdapter mediaBrowserAdapter,
                              MediaControllerAdapter mediaControllerAdapter) {
         mediaBrowserAdapter.registerListener(this);
-        TreeSet<MediaItem> rootItemsOrdered = new TreeSet<>((MediaItem m1, MediaItem m2) -> ComparatorUtils.compareRootMediaItemsByCategory(m1, m2));
+        TreeSet<MediaItem> rootItemsOrdered = new TreeSet<>(compareRootMediaItemsByCategory);
         rootItemsOrdered.addAll(items.keySet());
         for (MediaItem i : rootItemsOrdered) {
             Category category = LibraryConstructor.getCategoryFromMediaItem(i);

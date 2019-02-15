@@ -2,11 +2,13 @@ package com.example.mike.mp3player.service.library;
 
 import android.support.v4.media.MediaBrowserCompat;
 
+import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.LibraryId;
 
 import java.util.List;
+import java.util.TreeSet;
 
 public class SongCollection extends LibraryCollection {
 
@@ -15,18 +17,11 @@ public class SongCollection extends LibraryCollection {
     public static final String DESCRIPTION = Constants.CATEGORY_SONGS_DESCRIPTION;
 
     public SongCollection() {
-        super(ID, TITLE, DESCRIPTION);
-    }
-
-    @Deprecated
-    @Override
-    public List<MediaBrowserCompat.MediaItem> getChildren(String id) {
-        // never used for songs collection as a song cannot have a child
-        return null;
+        super(ID, TITLE, DESCRIPTION, ComparatorUtils.compareMediaItemsByTitle, null);
     }
 
     @Override
-    public List<MediaBrowserCompat.MediaItem> getChildren(LibraryId id) {
+    public TreeSet<MediaBrowserCompat.MediaItem> getChildren(LibraryId id) {
         // never used for songs collection as a song cannot have a child
         return null;
     }
@@ -41,7 +36,7 @@ public class SongCollection extends LibraryCollection {
         return Category.SONGS;
     }
 
-    public List<MediaBrowserCompat.MediaItem> getSongs() {
+    public TreeSet<MediaBrowserCompat.MediaItem> getSongs() {
         return getKeys();
     }
 }

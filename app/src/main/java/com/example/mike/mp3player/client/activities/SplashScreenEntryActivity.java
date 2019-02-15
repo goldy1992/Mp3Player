@@ -28,12 +28,12 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.CATEGORY_ROOT_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
+import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 
 public class SplashScreenEntryActivity extends AppCompatActivity
     implements  MediaBrowserConnectorCallback,
                 MediaBrowserResponseListener,
                 PermissionGranted {
-
 
     private static final String LOG_TAG = "SPLSH_SCRN_ENTRY_ACTVTY";
     private PermissionsProcessor permissionsProcessor;
@@ -108,8 +108,9 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options, Context context) {
        Log.i(LOG_TAG, "children loaded: " + parentId);
+       LibraryId parentLibraryId = (LibraryId) options.get(PARENT_ID);
         ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>();
-        if (isRoot(parentId)) {
+        if (isRoot(parentLibraryId)) {
             childrenArrayList.addAll(children);
             numberOfItemsToSubscribeTo = childrenArrayList.size();
             for (MediaBrowserCompat.MediaItem item : childrenArrayList) {
@@ -125,10 +126,10 @@ public class SplashScreenEntryActivity extends AppCompatActivity
             mainActivityIntent.putExtras(options);
             return;
         }
-        LibraryId libraryId = LibraryConstructor.parseId(parentId);
-        if (libraryId.getCategory() != null) {
+
+        if (parentLibraryId.getCategory() != null) {
             childrenArrayList.addAll(children);
-            mainActivityIntent.putParcelableArrayListExtra(libraryId.getCategory().name(), childrenArrayList);
+            mainActivityIntent.putParcelableArrayListExtra(parentLibraryId.getCategory().name(), childrenArrayList);
             numberOfItemsReceived++;
         }
         if (numberOfItemsReceived >= numberOfItemsToSubscribeTo) {
@@ -184,7 +185,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
         splashScreenWaitThread.start();
     }
 
-    private boolean isRoot(String id) {
-        return mediaBrowserAdapter.getRootId().equals(id);
+    private boolean isRoot(LibraryId id) {
+        return mediaBrowserAdapter.getRootId().equals(id.getId());
     }
 }

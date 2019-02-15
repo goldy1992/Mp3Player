@@ -1,17 +1,13 @@
 package com.example.mike.mp3player.client.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaBrowserAdapter;
-import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;
 import com.example.mike.mp3player.commons.library.Category;
 
@@ -20,11 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 import static com.example.mike.mp3player.commons.Constants.CATEGORY_ROOT_ID;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getMediaId;
 
-public class MainActivity extends MediaActivityCompat implements MediaPlayerActvityRequester {
+public class MainActivity extends MediaActivityCompat{
 
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     private static final int READ_REQUEST_CODE = 42;
@@ -53,27 +47,6 @@ public class MainActivity extends MediaActivityCompat implements MediaPlayerActv
     @Override
     protected void onPause() {
         super.onPause();
-    }
-
-
-
-    private Intent createMediaPlayerActivityIntent() {
-        Intent intent = new Intent(getApplicationContext(), MediaPlayerActivity.class);
-        intent.putExtra(MEDIA_SESSION, getMediaBrowserAdapter().getMediaSessionToken());
-        return intent;
-    }
-
-    @Override
-    public void playSelectedSong(String songId) {
-        Intent intent = createMediaPlayerActivityIntent();
-        intent.putExtra(MEDIA_ID, songId);
-        startActivityForResult(intent, READ_REQUEST_CODE);
-    }
-
-    @Override
-    public void goToMediaPlayerActivity() {
-        Intent intent = createMediaPlayerActivityIntent();
-        startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
     @Override

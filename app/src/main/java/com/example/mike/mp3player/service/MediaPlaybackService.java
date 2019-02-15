@@ -12,6 +12,7 @@ import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.SongCollection;
 
 import java.util.List;
+import java.util.TreeSet;
 
 import androidx.annotation.NonNull;
 import androidx.media.MediaBrowserServiceCompat;
@@ -99,7 +100,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             return;
         }
         // Assume for example that the music catalog is already loaded/cached.
-        List<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryId);
+        TreeSet<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryId);
         result.sendResult(mediaItems);
     }
 

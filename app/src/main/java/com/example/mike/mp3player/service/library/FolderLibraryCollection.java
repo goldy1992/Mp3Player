@@ -1,19 +1,20 @@
 package com.example.mike.mp3player.service.library;
 
-import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.MediaItemUtils;
+import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeSet;
 
-import static android.support.v4.media.MediaBrowserCompat.*;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
+import static android.support.v4.media.MediaBrowserCompat.MediaItem;
+import static com.example.mike.mp3player.commons.ComparatorUtils.compareMediaItemsByTitle;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getExtras;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getMediaId;
+import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
+import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 
 public class FolderLibraryCollection extends LibraryCollection {
     private final String LOG_TAG = "FOLDER_LIB_COLLECTION";
@@ -22,7 +23,7 @@ public class FolderLibraryCollection extends LibraryCollection {
     public static final String DESCRIPTION = Constants.CATEGORY_FOLDERS_DESCRIPTION;
 
     public FolderLibraryCollection() {
-        super(ID, TITLE, DESCRIPTION);
+        super(ID, TITLE, DESCRIPTION, compareMediaItemsByTitle, compareMediaItemsByTitle);
         this.collection = new HashMap<>();
     }
 
@@ -44,29 +45,15 @@ public class FolderLibraryCollection extends LibraryCollection {
                 }
                 if (!collection.containsKey(key)) {
                     getKeys().add(createCollectionRootMediaItem(parentDirectoryPath, parentDirectoryName, parentDirectoryPath));
-                    collection.put(key, new ArrayList<>());
+                    collection.put(key, new TreeSet<>());
                 }
                 collection.get(key).add(i);
             }
         }
     }
 
-    @Deprecated
     @Override
-    public List<MediaItem> getChildren(String id) {
-        if (getRootIdAsString().equals(id)) {
-            return getKeys();
-        }
-        for (MediaItem i : getKeys()) {
-            String mediaId = getMediaId(i);
-            if (mediaId != null && mediaId.equals(id)) {
-                return collection.get(getMediaId(i));
-            }
-        }
-        return null;
-    }
-    @Override
-    public List<MediaItem> getChildren(LibraryId libraryId) {
+    public TreeSet<MediaItem> getChildren(LibraryId libraryId) {
         if (getRootIdAsString().equals(libraryId)) {
             return getKeys();
         }
@@ -83,5 +70,4 @@ public class FolderLibraryCollection extends LibraryCollection {
     public Category getRootId() {
         return Category.FOLDERS;
     }
-
 }
