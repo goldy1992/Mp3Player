@@ -9,15 +9,14 @@ import android.text.TextUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.MediaLibrary;
-import com.example.mike.mp3player.service.library.SongCollection;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
 import androidx.annotation.NonNull;
 import androidx.media.MediaBrowserServiceCompat;
 
-import static com.example.mike.mp3player.commons.Constants.CATEGORY_SONGS_ID;
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 
 /**
@@ -101,7 +100,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         }
         // Assume for example that the music catalog is already loaded/cached.
         TreeSet<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryId);
-        result.sendResult(mediaItems);
+        result.sendResult(new ArrayList<>(mediaItems));
     }
 
     @Override

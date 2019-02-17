@@ -7,6 +7,7 @@ import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.client.utils.IntentUtils;
+import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
@@ -14,6 +15,7 @@ import com.example.mike.mp3player.commons.library.LibraryId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import androidx.annotation.NonNull;
 
@@ -29,7 +31,7 @@ public class SongViewPageFragment extends GenericViewPageFragment implements MyG
                      MediaControllerAdapter mediaControllerAdapter) {
         super.init(Category.SONGS, songs, mediaBrowserAdapter, mediaControllerAdapter, MediaPlayerActivity.class);
         this.parent = libraryId;
-        this.songs = new HashMap<>();
+        this.songs = new TreeMap<>(ComparatorUtils.compareMediaItemsByTitle);
         for (MediaItem m : songs) {
             this.songs.put(m, null);
         }
@@ -60,7 +62,7 @@ public class SongViewPageFragment extends GenericViewPageFragment implements MyG
 
     @Override
     public void onChildrenLoaded(LibraryId libraryId, @NonNull ArrayList<MediaItem> children) {
-
+        // not needed
     }
 
     @Override

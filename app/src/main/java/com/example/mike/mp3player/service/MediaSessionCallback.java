@@ -9,7 +9,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
@@ -20,17 +19,19 @@ import android.view.KeyEvent;
 
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
+import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
-import static com.example.mike.mp3player.commons.Constants.PLAYLIST;
-import static com.example.mike.mp3player.commons.Constants.PLAY_ALL;
+import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
 
@@ -63,7 +64,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     public void init() {
-        List<MediaSessionCompat.QueueItem> queueItems =  MediaLibraryUtils.convertMediaItemsToQueueItem(this.mediaLibrary.getSongList());
+        List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(new ArrayList<>(this.mediaLibrary.getSongList()));
         this.playbackManager.init(queueItems);
 
         Uri firstSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.selectFirstItem());
@@ -129,20 +130,22 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     @Override
     public synchronized void onPrepareFromMediaId(String mediaId, Bundle bundle) {
         super.onPrepareFromMediaId(mediaId, bundle);
-        String songIdToPlay = LibraryConstructor.getSongIdFromSongRequest(mediaId);
-        if (songIdToPlay == null) {
-            Log.e(LOG_TAG, "received null songId");
+        LibraryId parentId = (LibraryId) bundle.get(PARENT_ID);
+        List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getPlaylist(parentId);
+        playbackManager.createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(results));
+
+        if (mediaId == null) {
+            Log.e(LOG_TAG, "received null mediaId");
             return;
         }
-        List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getPlaylist(mediaId);
-        playbackManager.createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(results));
+
         Uri uriToPlay = null;
-        for (int i = 0; i < results.size(); i++) {
-            String mediaItemId = MediaItemUtils.getMediaId(results.get(i));
-            if (songIdToPlay.equals(mediaItemId)) {
-                uriToPlay = mediaLibrary.getMediaUriFromMediaId(songIdToPlay);
+        for (MediaBrowserCompat.MediaItem m : results) {
+            String id = MediaItemUtils.getMediaId(m);
+            if (id != null && id.equals(mediaId)) {
+                uriToPlay = mediaLibrary.getMediaUriFromMediaId(id);
                 myMediaPlayerAdapter.prepareFromUri(uriToPlay);
-                playbackManager.setQueueIndex(mediaItemId);
+                playbackManager.setQueueIndex(mediaId);
                 break;
             }
         }

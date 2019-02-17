@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static android.media.MediaMetadataRetriever.METADATA_KEY_TITLE;
 
@@ -36,6 +37,12 @@ public final class MediaLibraryUtils {
         return Environment.getExternalStorageDirectory();
     }
 
+    /**
+     * This should make a list of pre-ordered QueueItems since the parameter is a tree set, which is
+     * orered by definition.
+     * @param mediaItems
+     * @return
+     */
     public static List<MediaSessionCompat.QueueItem> convertMediaItemsToQueueItem(List<MediaItem> mediaItems) {
         List<MediaSessionCompat.QueueItem> queueItemList = new ArrayList<>();
         for (MediaItem  mediaItem : mediaItems) {

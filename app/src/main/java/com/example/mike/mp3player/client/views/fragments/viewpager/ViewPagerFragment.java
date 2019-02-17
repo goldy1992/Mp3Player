@@ -12,6 +12,7 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.commons.library.LibraryId;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import androidx.annotation.NonNull;
@@ -99,8 +101,8 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
 
-        Map<Category, MediaItem> menuCategories = new HashMap<>();
-        Map<Category, GenericViewPageFragment> pagerItems = new HashMap<>();
+        Map<Category, MediaItem> menuCategories = new TreeMap<>();
+        Map<Category, GenericViewPageFragment> pagerItems = new TreeMap<>();
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);

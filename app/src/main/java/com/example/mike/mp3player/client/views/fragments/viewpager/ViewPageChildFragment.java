@@ -28,7 +28,6 @@ public class ViewPageChildFragment extends Fragment {
     private List<MediaBrowserCompat.MediaItem> songs;
     private MediaControllerAdapter mediaControllerAdapter;
     private MediaBrowserAdapter mediaBrowserAdapter;
-    private MediaPlayerActvityRequester mediaPlayerActvityRequester;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -47,10 +46,9 @@ public class ViewPageChildFragment extends Fragment {
     }
 
     public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
-                                 MediaControllerAdapter mediaControllerAdapter, MediaPlayerActvityRequester mediaPlayerActvityRequester) {
+                                 MediaControllerAdapter mediaControllerAdapter) {
         this.songs = songs;
         this.mediaBrowserAdapter = mediaBrowserAdapter;
         this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mediaPlayerActvityRequester = mediaPlayerActvityRequester;
     }
 }

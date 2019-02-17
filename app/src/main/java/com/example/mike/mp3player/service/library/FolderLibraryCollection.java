@@ -45,7 +45,7 @@ public class FolderLibraryCollection extends LibraryCollection {
                 }
                 if (!collection.containsKey(key)) {
                     getKeys().add(createCollectionRootMediaItem(parentDirectoryPath, parentDirectoryName, parentDirectoryPath));
-                    collection.put(key, new TreeSet<>());
+                    collection.put(key, new TreeSet<>(compareMediaItemsByTitle));
                 }
                 collection.get(key).add(i);
             }

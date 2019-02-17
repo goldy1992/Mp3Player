@@ -48,6 +48,7 @@ public abstract class GenericSubscriberViewPageFragment extends GenericViewPageF
             return;
         }
         LibraryId libraryId = new LibraryId(this.category, mediaId);
+        LibraryConstructor.addFolderNameFromMediaItemToLibraryId(libraryId, id);
         MediaBrowserCompat.MediaItem item = MediaItemUtils.findMediaItemInSet(libraryId, songs.keySet());
         if (item == null) {
             return;

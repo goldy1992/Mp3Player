@@ -113,18 +113,19 @@ public class MediaLibrary {
     public TreeSet<MediaItem> getRoot() {
         return rootItems;
     }
+
     public TreeSet<MediaItem> getSongList() {
         return categories.get(Category.SONGS).getKeys();
     }
 
 
-    public TreeSet<MediaItem> getPlaylist(LibraryId libraryId) {
+    public List<MediaItem> getPlaylist(LibraryId libraryId) {
         Category category = libraryId.getCategory();
         if (category == Category.SONGS) {
             // song items don't have children therefore just return all songs
-            return categories.get(category).getKeys();
+            return new ArrayList<>(categories.get(category).getKeys());
         } else
-        return categories.get(category).getChildren(libraryId);
+        return new ArrayList<>(categories.get(category).getChildren(libraryId));
     }
 
     public TreeSet<MediaItem> getChildren(LibraryId libraryId) {
