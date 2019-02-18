@@ -7,6 +7,7 @@ import com.example.mike.mp3player.commons.library.LibraryId;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
@@ -24,7 +25,7 @@ public class FolderLibraryCollection extends LibraryCollection {
 
     public FolderLibraryCollection() {
         super(ID, TITLE, DESCRIPTION, compareMediaItemsByTitle, compareMediaItemsByTitle);
-        this.collection = new HashMap<>();
+        this.collection = new TreeMap<>();
     }
 
     @Override
