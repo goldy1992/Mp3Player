@@ -28,7 +28,9 @@ public class SongCollection extends LibraryCollection {
 
     @Override
     public void index(List<MediaBrowserCompat.MediaItem> items) {
-        this.getKeys().addAll(items);
+        if (items != null) {
+            this.getKeys().addAll(items);
+        }
     }
 
     @Override
