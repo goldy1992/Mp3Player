@@ -2,6 +2,7 @@ package com.example.mike.mp3player.service;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.HandlerThread;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
@@ -31,18 +32,22 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     private MediaSessionCallback mediaSessionCallback;
     private ServiceManager serviceManager;
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
+    private static final String WORKER_ID = "MEDIA_PLAYBACK_SERVICE_WORKER";
     private MediaLibrary mediaLibrary;
+    private HandlerThread worker;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        worker = new HandlerThread(WORKER_ID);
+        worker.start();
         mediaLibrary = new MediaLibrary(getBaseContext());
         mediaLibrary.init();
         mMediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);
         setSessionToken(mMediaSession.getSessionToken());
         notificationManager = new MyNotificationManager(this);
         serviceManager = new ServiceManager(this, getApplicationContext(), mMediaSession, notificationManager);
-        mediaSessionCallback = new MediaSessionCallback(getApplicationContext(), notificationManager, serviceManager, mMediaSession, mediaLibrary);
+        mediaSessionCallback = new MediaSessionCallback(getApplicationContext(), notificationManager, serviceManager, mMediaSession, mediaLibrary, worker);
         mediaSessionCallback.init();
         // MySessionCallback() has methods that handle callbacks from a media controller
         mMediaSession.setCallback(mediaSessionCallback);
@@ -108,6 +113,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         super.onDestroy();
         notificationManager.onDestroy();
         mMediaSession.release();
+        worker.quitSafely();
     }
 
     @Override

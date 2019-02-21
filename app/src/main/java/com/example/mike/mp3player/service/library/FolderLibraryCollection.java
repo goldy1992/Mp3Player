@@ -5,7 +5,6 @@ import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
