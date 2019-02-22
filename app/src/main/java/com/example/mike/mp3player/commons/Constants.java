@@ -17,6 +17,7 @@ public final class Constants {
     public static final String PLAYLIST = "PLAYLiST";
     public static final String PLAY_ALL = "PLAY_ALL";
     public static final String MEDIA_SERVICE_DATA = "MEDIA_SERVICE_DATA";
+    public static final int FIRST_ITEM = 0;
     public static final long ONE_SECOND = 1000L;
     public static final String UNKNOWN = "Unknown";
     public static final String INCREASE_PLAYBACK_SPEED = "INCREASE_PLAYBACK_SPEED";

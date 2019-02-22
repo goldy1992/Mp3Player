@@ -9,6 +9,7 @@ import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MetaDataListener;
 import com.example.mike.mp3player.client.PlaybackStateListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
+import com.example.mike.mp3player.commons.Constants;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -69,7 +70,7 @@ public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
 
             }
         }
-        Log.i(LOG_TAG, "hit playback state changed " + ", listeners " + playbackStateListeners.size() + ", " + sb.toString());
+        Log.i(LOG_TAG, "hit playback state changed with status " + Constants.playbackStateDebugMap.get(state.getState()) + ", listeners " + playbackStateListeners.size() + ", " + sb.toString());
     }
 
     public synchronized void registerPlaybackStateListener(PlaybackStateListener listener) {

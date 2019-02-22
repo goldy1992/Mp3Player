@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -12,9 +13,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.io.IOException;
 
-import androidx.annotation.IntRange;
-
-public class MyMediaPlayerAdapter {
+public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnInfoListener, MediaPlayer.OnSeekCompleteListener {
 
     private static final float DEFAULT_SPEED = 1.0f;
     private static final float DEFAULT_PITCH = 1.0f;
@@ -23,7 +22,8 @@ public class MyMediaPlayerAdapter {
     private static final float MAXIMUM_PLAYBACK_SPEED = 2f;
     private static final String LOG_TAG = "MEDIA_PLAYER_ADAPTER";
 
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer currentMediaPlayer;
+    private MediaPlayer nextMediaPlayer;
     private AudioFocusManager audioFocusManager;
     private Context context;
     private Uri currentUri;
@@ -36,7 +36,7 @@ public class MyMediaPlayerAdapter {
     private float currentPitch = DEFAULT_PITCH;
     private int position = DEFAULT_POSITION;
     private int bufferedPosition = DEFAULT_POSITION;
-    private boolean isPrepared = false;
+    private boolean isPrepared = true;
     private boolean dataSourceSet = false;
     private boolean useBufferedPosition = false;
 
@@ -48,18 +48,29 @@ public class MyMediaPlayerAdapter {
      * TODO: Provide a track that is prepared for when the service starts, to stop the Activities from
      * crashing
      */
-    public void init(Uri uri) {
-        resetPlayer();
-        //currentPlaybackSpeed = 0f;
-        setCurrentUri(uri);// set player to paused
+    public void reset(Uri firstItemUri, Uri secondItemUri) {
+        if (audioFocusManager != null && audioFocusManager.hasFocus) {
+            audioFocusManager.abandonAudioFocus();
+        }
+        if (this.currentMediaPlayer != null) {
+            currentMediaPlayer.release();
+            currentMediaPlayer = null;
+        }
+
+        if (this.nextMediaPlayer != null) {
+            nextMediaPlayer.release();
+            nextMediaPlayer = null;
+        }
+        this.currentMediaPlayer = createMediaPlayer(firstItemUri);
+        this.nextMediaPlayer = createMediaPlayer(secondItemUri);
         //prepareFromUri(uri);
-        prepare();
+//        prepare();
         audioFocusManager = new AudioFocusManager(context, this);
         audioFocusManager.init();
     }
 
     public synchronized void playFromUri(Uri uri) {
-        resetPlayer();
+     //   resetPlayer();
         setCurrentUri(uri);
         play();
     }
@@ -72,19 +83,22 @@ public class MyMediaPlayerAdapter {
         if (audioFocusManager.requestAudioFocus()) {
             try {
                 // Set the session active  (and update metadata and state)
-                setPlaybackParamsAndPosition();
-                getMediaPlayer().start();
+                getCurrentMediaPlayer().start();
+                PlaybackParams playbackParams = currentMediaPlayer.getPlaybackParams();
+                playbackParams.setSpeed(currentPlaybackSpeed);
+                getCurrentMediaPlayer().setPlaybackParams(playbackParams);
                 currentState = PlaybackStateCompat.STATE_PLAYING;
             } catch (Exception e) {
-                e.printStackTrace();
+               Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(e));
             }
         }
+        Log.i(LOG_TAG, "finished mplayer_adapter onPlay");
     }
 
     public boolean prepareFromUri(Uri uri) {
         if (null != uri) {
             try {
-                resetPlayer();
+         //       resetPlayer();
                 setCurrentUri(uri);
                 prepare();
                 return true;
@@ -96,14 +110,28 @@ public class MyMediaPlayerAdapter {
         return false;
     }
 
-    private void resetPlayer() {
-        if (null != getMediaPlayer()) {
-            getMediaPlayer().reset();
-        } else {
-            mediaPlayer = new MediaPlayer();
+    /**
+     * 1) complete the current completed MediaPlayer
+     * 2) set the currentMediaPlayer to me the next one that is currently playing
+     * 3) create the next mediaPlayer and set it.
+     * @param nextUriToPrepare next URI that needs to be prepared.
+     */
+    public void onComplete(Uri nextUriToPrepare) {
+        this.currentMediaPlayer.release();
+        this.currentMediaPlayer = nextMediaPlayer;
+
+        // TODO: we might want to make this an asynchronous task in the future
+        this.nextMediaPlayer = MediaPlayer.create(context, nextUriToPrepare);
+
+    }
+
+    private void resetPlayer(Uri uri) {
+        if (null != getCurrentMediaPlayer()) {
+            getCurrentMediaPlayer().release();
         }
-        this.isPrepared = false;
-        this.currentState = PlaybackStateCompat.STATE_NONE;
+        this. currentMediaPlayer = MediaPlayer.create(context, uri);
+        this.isPrepared = true;
+        this.currentState = PlaybackStateCompat.STATE_PAUSED;
         this.dataSourceSet = false;
     }
 
@@ -119,53 +147,44 @@ public class MyMediaPlayerAdapter {
         }
         currentState= PlaybackStateCompat.STATE_STOPPED;
         isPrepared = false;
-        getMediaPlayer().stop();
-        resetPlayer();
+        getCurrentMediaPlayer().stop();
         // Take the service out of the foreground
     }
 
     public void pause() {
-        if (!isPrepared() || isPaused()) {
+        if (isPaused()) {
             return;
         }
-        this.currentPlaybackSpeed = getMediaPlayer().getPlaybackParams().getSpeed();
+        this.currentPlaybackSpeed = getCurrentMediaPlayer().getPlaybackParams().getSpeed();
         // Update metadata and state
-        getMediaPlayer().pause();
+        getCurrentMediaPlayer().pause();
         audioFocusManager.playbackPaused();
         currentState = PlaybackStateCompat.STATE_PAUSED;
-        //logPlaybackParams(mediaPlayer.getPlaybackParams());
+        //logPlaybackParams(currentMediaPlayer.getPlaybackParams());
     }
 
     public void increaseSpeed(float by) {
         float newSpeed = currentPlaybackSpeed + by;
-        if (newSpeed < MAXIMUM_PLAYBACK_SPEED) {
+        if (newSpeed <= MAXIMUM_PLAYBACK_SPEED) {
             this.currentPlaybackSpeed = newSpeed;
-            //Log.i(LOG_TAG, "current speed ¡ " + this.currentPlaybackSpeed);
+            Log.i(LOG_TAG, "current speed ¡ " + this.currentPlaybackSpeed);
             if (currentState == PlaybackStateCompat.STATE_PLAYING) {
-                setBufferedPosition(mediaPlayer.getCurrentPosition());
-                this.isPrepared = false;
-                resetPlayer();
-                setCurrentUri(currentUri);
-                play();
-            } else {
-                prepare();
+                PlaybackParams newPlaybackParams = this.currentMediaPlayer.getPlaybackParams();
+                newPlaybackParams.setSpeed(newSpeed);
+                this.currentMediaPlayer.setPlaybackParams(newPlaybackParams);
             }
         }
     }
 
     public void decreaseSpeed(float by) {
         float newSpeed = currentPlaybackSpeed - by;
-        if (newSpeed > MINIMUM_PLAYBACK_SPEED) {
+        if (newSpeed >= MINIMUM_PLAYBACK_SPEED) {
             this.currentPlaybackSpeed = newSpeed;
             Log.i(LOG_TAG, "current speed ¡ " + this.currentPlaybackSpeed);
             if (currentState == PlaybackStateCompat.STATE_PLAYING) {
-                setBufferedPosition(mediaPlayer.getCurrentPosition());
-                this.isPrepared = false;
-                resetPlayer();
-                setCurrentUri(currentUri);
-                play();
-            } else {
-                prepare();
+                PlaybackParams newPlaybackParams = this.currentMediaPlayer.getPlaybackParams();
+                newPlaybackParams.setSpeed(newSpeed);
+                this.currentMediaPlayer.setPlaybackParams(newPlaybackParams);
             }
         }
     }
@@ -174,13 +193,13 @@ public class MyMediaPlayerAdapter {
         if (!prepare()) {
             return;
         }
-        getMediaPlayer().seekTo((int)position);
+        getCurrentMediaPlayer().seekTo((int)position);
     }
 
     private boolean setCurrentUri(Uri uri) {
-       try {
-           this.mediaPlayer.setDataSource(context, uri);
-       } catch (IOException ex) {
+        try {
+       this.currentMediaPlayer = MediaPlayer.create(context, uri);
+       } catch (Exception ex) {
            Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex.fillInStackTrace()));
            return false;
        }
@@ -190,10 +209,16 @@ public class MyMediaPlayerAdapter {
         return true;
     }
 
+    private void setNextMediaPlayer(Uri nextUri) {
+        if (currentMediaPlayer != null && nextUri != null) {
+            this.nextMediaPlayer = createMediaPlayer(nextUri);
+        }
+    }
+
     private boolean prepare() {
         if (!isPrepared()) {
             try {
-                getMediaPlayer().prepare();
+                getCurrentMediaPlayer().prepare();
                 currentState = PlaybackStateCompat.STATE_PAUSED;
                 isPrepared = true;
             } catch (IOException ex) {
@@ -204,21 +229,21 @@ public class MyMediaPlayerAdapter {
     }
 
 
-    public MediaPlayer getMediaPlayer() {
-        return mediaPlayer;
+    public MediaPlayer getCurrentMediaPlayer() {
+        return currentMediaPlayer;
     }
 
     public PlaybackStateCompat getMediaPlayerState() {
         return new PlaybackStateCompat.Builder()
                 .setState(getCurrentState(),
-                        mediaPlayer.getCurrentPosition(),
+                        currentMediaPlayer.getCurrentPosition(),
                         getCurrentPlaybackSpeed())
                 .build();
     }
 
     public MediaMetadataCompat.Builder getCurrentMetaData() {
         MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
-        return builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
+        return builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, currentMediaPlayer.getDuration());
     }
 
     public int getCurrentState() {
@@ -230,8 +255,8 @@ public class MyMediaPlayerAdapter {
     }
 
     public void setVolume(float volume) {
-        if (mediaPlayer != null) {
-            mediaPlayer.setVolume(volume, volume);
+        if (currentMediaPlayer != null) {
+            currentMediaPlayer.setVolume(volume, volume);
         }
     }
 
@@ -277,8 +302,8 @@ public class MyMediaPlayerAdapter {
                 .setSpeed(currentPlaybackSpeed)
                 .setAudioFallbackMode(PlaybackParams.AUDIO_FALLBACK_MODE_DEFAULT);
         int currentPlaybackPosition = getCurrentPlaybackPosition();
-        mediaPlayer.seekTo(currentPlaybackPosition);
-        mediaPlayer.setPlaybackParams(playbackParams);
+        currentMediaPlayer.seekTo(currentPlaybackPosition);
+        currentMediaPlayer.setPlaybackParams(playbackParams);
     }
 
     public void setBufferedPosition(int position) {
@@ -287,7 +312,7 @@ public class MyMediaPlayerAdapter {
     }
 
     public int getCurrentPlaybackPosition() {
-        int playbackPosition = mediaPlayer.getCurrentPosition();
+        int playbackPosition = currentMediaPlayer.getCurrentPosition();
         if (useBufferedPosition) {
             useBufferedPosition = false;
             playbackPosition = bufferedPosition;
@@ -299,10 +324,43 @@ public class MyMediaPlayerAdapter {
          * To resolve this problem 1 is returned instead of zero (assuming in 99.99% the duration is >= 1)
          */
         if (playbackPosition <= 0) { // if at the beginning at track, or for some reason negative
-            if (mediaPlayer.getDuration() >= 1) {
+            if (currentMediaPlayer.getDuration() >= 1) {
                 return 1;
             }
         }
         return playbackPosition;
+    }
+
+    private MediaPlayer createMediaPlayer(Uri uri) {
+        /**
+         * This is to resolve a bug on some phones where the playback position is 0 (using <= 0 to
+         * resolve any negative position errors) :- the MediaPlayer JNI throws an IllegalStateException.
+         * To resolve this problem 1 is returned instead of zero (assuming in 99.99% the duration is >= 1)
+         */
+        MediaPlayer mediaPlayer = MediaPlayer.create(context, uri);
+        mediaPlayer.seekTo(1);
+        return mediaPlayer;
+    }
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        Log.e(LOG_TAG, "what: " + what + ", extra " + extra);
+        return true;
+    }
+
+    @Override
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+        Log.i(LOG_TAG, "buffering at: " + percent + "%");
+    }
+
+    @Override
+    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+        Log.i(LOG_TAG, "what: " + what + ", extra " + extra);
+        return true;
+    }
+
+    @Override
+    public void onSeekComplete(MediaPlayer mp) {
+        Log.i(LOG_TAG, "seek complete");
     }
 }

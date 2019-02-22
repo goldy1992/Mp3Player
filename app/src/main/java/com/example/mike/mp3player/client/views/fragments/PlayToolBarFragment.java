@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class PlayToolBarFragment extends Fragment {
 
+    private static final String LOG_TAG = "PLY_PAUSE_BTN";
     MediaControllerAdapter mediaControllerAdapter;
     PlayPauseButton playPauseButton;
     protected Toolbar toolbar;
@@ -68,9 +70,11 @@ public class PlayToolBarFragment extends Fragment {
     void playPause() {
         int currentPlaybackState = playPauseButton.getState();
         if (currentPlaybackState == PlaybackStateCompat.STATE_PLAYING) {
+            Log.d(LOG_TAG, "calling pause");
             mediaControllerAdapter.pause();
             getPlayPauseButton().setPlayIcon();
         } else {
+            Log.d(LOG_TAG, "calling play");
             mediaControllerAdapter.play();
             getPlayPauseButton().setPauseIcon();
         }

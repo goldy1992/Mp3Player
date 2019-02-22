@@ -16,6 +16,7 @@ public class AudioFocusManager
     MyMediaPlayerAdapter player;
     AudioManager audioManager;
     Context context;
+    public boolean hasFocus = false;
 
     boolean playWhenAudioFocusGained = false;
     private boolean audioNoisyReceiverRegistered = false;
@@ -35,17 +36,21 @@ public class AudioFocusManager
             case AudioManager.AUDIOFOCUS_GAIN:
                 if (playWhenAudioFocusGained && !player.isPlaying()) {
                     player.play();
+                    hasFocus = true;
                 } else if (player.isPlaying()) {
                     player.setVolume(MEDIA_VOLUME_DEFAULT);
+
                 }
                 playWhenAudioFocusGained = false;
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 player.setVolume(MEDIA_VOLUME_DUCK);
+                hasFocus = true;
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                 if (player.isPlaying()) {
                     playWhenAudioFocusGained = true;
+                    hasFocus = false;
                     player.pause();
                 }
                 break;
@@ -53,6 +58,7 @@ public class AudioFocusManager
                 abandonAudioFocus();
                 playWhenAudioFocusGained  = false;
                 player.pause();
+                hasFocus = false;
                 break;
         }
     }
@@ -70,8 +76,8 @@ public class AudioFocusManager
                 .setWillPauseWhenDucked(false).build();
 
         int result = AudioManagerCompat.requestAudioFocus(audioManager, audioFocusRequestCompat);
-
-        return isRequestGranted(result);
+        hasFocus = isRequestGranted(result);
+        return hasFocus;
     }
 
     private boolean isRequestGranted(int result) {
@@ -87,11 +93,12 @@ public class AudioFocusManager
         }
     }
 
-    private boolean abandonAudioFocus() {
+    public boolean abandonAudioFocus() {
         AudioFocusRequestCompat audioFocusRequestCompat = new AudioFocusRequestCompat.Builder(AudioManagerCompat.AUDIOFOCUS_GAIN)
                 .setOnAudioFocusChangeListener(this)
                 .build();
         int result = AudioManagerCompat.abandonAudioFocusRequest(audioManager, audioFocusRequestCompat);
-        return  isRequestGranted(result);
+        hasFocus = isRequestGranted(result) ? false : true;
+        return  !hasFocus;
     }
 }

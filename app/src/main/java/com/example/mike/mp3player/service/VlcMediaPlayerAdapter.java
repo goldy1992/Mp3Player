@@ -55,7 +55,7 @@
 //     * TODO: Provide a track that is prepared for when the service starts, to stop the Activities from
 //     * crashing
 //     */
-//    public void init(Uri uri) {
+//    public void reset(Uri uri) {
 //        Log.i(LOG_TAG, "compatible cpu: " + VLCUtil.hasCompatibleCPU(context));
 //        resetPlayer();
 //        prepareFromUri(uri);
@@ -77,7 +77,7 @@
 //                // Set the session active  (and update metadata and state)
 //                currentState = PlaybackStateCompat.STATE_PLAYING;
 //                // start the player (custom call)
-//                getMediaPlayer().play();
+//                getCurrentMediaPlayer().play();
 //               // updatePlaybackParameters();
 //                //            // Register BECOME_NOISY BroadcastReceiver
 ////            registerReceiver(myNoisyAudioStreamReceiver, intentFilter);
@@ -105,8 +105,8 @@
 //    }
 //
 //    private void resetPlayer() {
-//        if (null != getMediaPlayer()) {
-//            getMediaPlayer().release();
+//        if (null != getCurrentMediaPlayer()) {
+//            getCurrentMediaPlayer().release();
 //        } else {
 //            this.libVLC = new LibVLC();
 //            this.mediaPlayer = new MediaPlayer(libVLC);
@@ -128,7 +128,7 @@
 //        // unregisterReceiver(myNoisyAudioStreamReceiver);
 //        currentState= PlaybackStateCompat.STATE_STOPPED;
 //        isPrepared = false;
-//        getMediaPlayer().stop();
+//        getCurrentMediaPlayer().stop();
 //        resetPlayer();
 //        // Take the service out of the foreground
 //    }
@@ -138,12 +138,12 @@
 //            return;
 //        }
 //        // Update metadata and state
-//        getMediaPlayer().pause();
+//        getCurrentMediaPlayer().pause();
 //        currentState = PlaybackStateCompat.STATE_PAUSED;
 //    }
 //
 //    public void increaseSpeed(float by) {
-//        float currentSpeed = getMediaPlayer().getRate();
+//        float currentSpeed = getCurrentMediaPlayer().getRate();
 //        float newSpeed = currentSpeed + by;
 //        if (validSpeed(newSpeed)) {
 //            mediaPlayer.setRate(newSpeed);
@@ -153,7 +153,7 @@
 //    }
 //
 //    public void decreaseSpeed(float by) {
-//        float currentSpeed = getMediaPlayer().getRate();
+//        float currentSpeed = getCurrentMediaPlayer().getRate();
 //        float newSpeed = currentSpeed - by;
 //        if (validSpeed(newSpeed)) {
 //            mediaPlayer.setRate(newSpeed);
@@ -166,7 +166,7 @@
 //        if (!prepare()) {
 //            return;
 //        }
-//        getMediaPlayer().setTime(position);
+//        getCurrentMediaPlayer().setTime(position);
 //    }
 //
 //    private boolean requestAudioFocus() {
@@ -199,7 +199,7 @@
 //
 ////    private void updatePlaybackParameters() {
 ////        if (currentState == PlaybackStateCompat.STATE_PLAYING) {
-////            if (getMediaPlayer() != null && getMediaPlayer().getPlaybackParams() != null) {
+////            if (getCurrentMediaPlayer() != null && getCurrentMediaPlayer().getPlaybackParams() != null) {
 ////                if (validSpeed(currentPlaybackSpeed)) {
 ////                    PlaybackParams newparams = mediaPlayer.getPlaybackParams().setSpeed(currentPlaybackSpeed);
 ////                    mediaPlayer.setPlaybackParams(newparams);
@@ -209,7 +209,7 @@
 ////        }
 ////    }
 //
-//    public MediaPlayer getMediaPlayer() {
+//    public MediaPlayer getCurrentMediaPlayer() {
 //        return mediaPlayer;
 //    }
 //
@@ -283,7 +283,7 @@
 //    }
 //
 //    /**
-//     * init playbackspeed to be paused i.e 0.0f
+//     * reset playbackspeed to be paused i.e 0.0f
 //     */
 //    public float getCurrentPlaybackSpeed() {
 //        return currentPlaybackSpeed;

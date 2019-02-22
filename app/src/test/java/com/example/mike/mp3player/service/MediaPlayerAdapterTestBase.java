@@ -25,9 +25,9 @@ public class MediaPlayerAdapterTestBase {
 
     public void setup() {
         mediaPlayerAdapter = createMediaPlayerAdapter();
-        mediaPlayerAdapter.init(uri);
+        mediaPlayerAdapter.reset(uri);
         Whitebox.setInternalState(mediaPlayerAdapter, "audioFocusManager", audioFocusManager);
-      //  assertNotNull("MediaPlayer should not be null after initialisation", mediaPlayerAdapter.getMediaPlayer());
+      //  assertNotNull("MediaPlayer should not be null after initialisation", mediaPlayerAdapter.getCurrentMediaPlayer());
         assertTrue("Didn't initialise MediaPlayerAdapter correctly", mediaPlayerAdapter.isPrepared());
         assertEquals("Initialised into the incorrect state", PlaybackStateCompat.STATE_PAUSED, mediaPlayerAdapter.getCurrentState());
     }

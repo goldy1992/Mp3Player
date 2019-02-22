@@ -42,6 +42,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     private Intent mainActivityIntent;
     private int numberOfItemsToSubscribeTo;
     private int numberOfItemsReceived = 0;
+    private static final int APP_TERMINATED = 0x78;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +101,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     }
 
     public void initMediaBrowserService() {
-       // Log.i(LOG_TAG, "init media browser service");
+       // Log.i(LOG_TAG, "reset media browser service");
         mediaBrowserAdapter = new MediaBrowserAdapter(getApplicationContext(), this);
         mediaBrowserAdapter.init();
     }
@@ -152,7 +153,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
 
     private synchronized void onProcessingComplete(Intent mainActivityIntent) {
         mediaBrowserAdapter.unregisterListener(this);
-        mediaBrowserAdapter.getmMediaBrowser().disconnect();
+ //       mediaBrowserAdapter.getmMediaBrowser().disconnect();
         //Log.i(LOG_TAG, "processing complete");
         while (!splashScreenFinishedDisplaying) {
             try {
@@ -167,10 +168,17 @@ public class SplashScreenEntryActivity extends AppCompatActivity
 
     private void startMainActivity(Intent mainActivityIntent) {
        // Log.i(LOG_TAG, "start main activity");
-        startActivity(mainActivityIntent);
-        finish();
+        startActivityForResult(mainActivityIntent, APP_TERMINATED);
+
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == APP_TERMINATED) {
+            mediaBrowserAdapter.disconnect();
+            finish();
+        }
+    }
     @Override
     public void onPermissionGranted() {
         Runnable r = new Thread(() -> initMediaBrowserService());
@@ -178,7 +186,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     }
 
     public void init() {
-        //Log.i(LOG_TAG, "init");
+        //Log.i(LOG_TAG, "reset");
         permissionsProcessor = new PermissionsProcessor(this, this);
         permissionsProcessor.requestPermission(WRITE_EXTERNAL_STORAGE);
         Thread splashScreenWaitThread = new Thread(() -> splashScreenRun());
