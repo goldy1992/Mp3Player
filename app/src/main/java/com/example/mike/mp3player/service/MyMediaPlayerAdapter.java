@@ -4,7 +4,6 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -13,7 +12,9 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.io.IOException;
 
-public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnInfoListener, MediaPlayer.OnSeekCompleteListener {
+import static android.media.MediaPlayer.MEDIA_INFO_STARTED_AS_NEXT;
+
+public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener {
 
     private static final float DEFAULT_SPEED = 1.0f;
     private static final float DEFAULT_PITCH = 1.0f;
@@ -26,7 +27,6 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
     private MediaPlayer nextMediaPlayer;
     private AudioFocusManager audioFocusManager;
     private Context context;
-    private Uri currentUri;
     /**
      * initialise to paused so the player doesn't start playing immediately
      */
@@ -34,11 +34,7 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
     private int currentState = PlaybackStateCompat.STATE_PAUSED;;
     private float currentPlaybackSpeed = DEFAULT_SPEED;
     private float currentPitch = DEFAULT_PITCH;
-    private int position = DEFAULT_POSITION;
-    private int bufferedPosition = DEFAULT_POSITION;
     private boolean isPrepared = true;
-    private boolean dataSourceSet = false;
-    private boolean useBufferedPosition = false;
 
     public MyMediaPlayerAdapter(Context context) {
         this.context = context;
@@ -48,7 +44,7 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
      * TODO: Provide a track that is prepared for when the service starts, to stop the Activities from
      * crashing
      */
-    public void reset(Uri firstItemUri, Uri secondItemUri) {
+    public void reset(Uri firstItemUri, Uri secondItemUri, MediaPlayer.OnCompletionListener onCompletionListener) {
         if (audioFocusManager != null && audioFocusManager.hasFocus) {
             audioFocusManager.abandonAudioFocus();
         }
@@ -61,19 +57,14 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
             nextMediaPlayer.release();
             nextMediaPlayer = null;
         }
-        this.currentMediaPlayer = createMediaPlayer(firstItemUri);
-        this.nextMediaPlayer = createMediaPlayer(secondItemUri);
-        //prepareFromUri(uri);
-//        prepare();
-        audioFocusManager = new AudioFocusManager(context, this);
-        audioFocusManager.init();
+        this.currentMediaPlayer = createMediaPlayer(firstItemUri, onCompletionListener);
+        this.nextMediaPlayer = secondItemUri == null ? null : createMediaPlayer(secondItemUri, onCompletionListener);
+        this.currentMediaPlayer.setNextMediaPlayer(nextMediaPlayer);
+        this.audioFocusManager = new AudioFocusManager(context, this);
+        this.audioFocusManager.init();
+        this.currentState = PlaybackStateCompat.STATE_PAUSED;
     }
 
-    public synchronized void playFromUri(Uri uri) {
-     //   resetPlayer();
-        setCurrentUri(uri);
-        play();
-    }
 
     public synchronized void play() {
         if (!prepare()) {
@@ -116,23 +107,15 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
      * 3) create the next mediaPlayer and set it.
      * @param nextUriToPrepare next URI that needs to be prepared.
      */
-    public void onComplete(Uri nextUriToPrepare) {
+    public void onComplete(Uri nextUriToPrepare, MediaPlayer.OnCompletionListener newOnCompletionListener) {
         this.currentMediaPlayer.release();
-        this.currentMediaPlayer = nextMediaPlayer;
-
+//        this.currentMediaPlayer = null;
+        this.currentMediaPlayer = this.nextMediaPlayer;
         // TODO: we might want to make this an asynchronous task in the future
-        this.nextMediaPlayer = MediaPlayer.create(context, nextUriToPrepare);
-
-    }
-
-    private void resetPlayer(Uri uri) {
-        if (null != getCurrentMediaPlayer()) {
-            getCurrentMediaPlayer().release();
+        if (nextUriToPrepare != null) {
+            this.nextMediaPlayer = createMediaPlayer(nextUriToPrepare, newOnCompletionListener);
+            this.currentMediaPlayer.setNextMediaPlayer(nextMediaPlayer);
         }
-        this. currentMediaPlayer = MediaPlayer.create(context, uri);
-        this.isPrepared = true;
-        this.currentState = PlaybackStateCompat.STATE_PAUSED;
-        this.dataSourceSet = false;
     }
 
     /**
@@ -203,16 +186,7 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
            Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex.fillInStackTrace()));
            return false;
        }
-        this.dataSourceSet = true;
-        this.position = DEFAULT_POSITION;
-        this.currentUri = uri;
         return true;
-    }
-
-    private void setNextMediaPlayer(Uri nextUri) {
-        if (currentMediaPlayer != null && nextUri != null) {
-            this.nextMediaPlayer = createMediaPlayer(nextUri);
-        }
     }
 
     private boolean prepare() {
@@ -295,50 +269,41 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         Log.i(LOG_TAG, log);
     }
 
-    private void setPlaybackParamsAndPosition() {
-        PlaybackParams playbackParams = new PlaybackParams();
-        playbackParams = playbackParams.allowDefaults()
-                .setPitch(currentPitch)
-                .setSpeed(currentPlaybackSpeed)
-                .setAudioFallbackMode(PlaybackParams.AUDIO_FALLBACK_MODE_DEFAULT);
-        int currentPlaybackPosition = getCurrentPlaybackPosition();
-        currentMediaPlayer.seekTo(currentPlaybackPosition);
-        currentMediaPlayer.setPlaybackParams(playbackParams);
+    private void setPlaybackParams(MediaPlayer mediaPlayer) {
+        if (null != mediaPlayer) {
+            PlaybackParams playbackParams = mediaPlayer.getPlaybackParams();
+            playbackParams.setSpeed(currentPlaybackSpeed);
+            mediaPlayer.setPlaybackParams(playbackParams);
+        }
     }
 
-    public void setBufferedPosition(int position) {
-        this.bufferedPosition = position;
-        this.useBufferedPosition = true;
-    }
 
     public int getCurrentPlaybackPosition() {
-        int playbackPosition = currentMediaPlayer.getCurrentPosition();
-        if (useBufferedPosition) {
-            useBufferedPosition = false;
-            playbackPosition = bufferedPosition;
-        }
-
-        /**
-         * This is to resolve a bug on some phones where the playback position is 0 (using <= 0 to
-         * resolve any negative position errors) :- the MediaPlayer JNI throws an IllegalStateException.
-         * To resolve this problem 1 is returned instead of zero (assuming in 99.99% the duration is >= 1)
-         */
-        if (playbackPosition <= 0) { // if at the beginning at track, or for some reason negative
-            if (currentMediaPlayer.getDuration() >= 1) {
-                return 1;
-            }
-        }
-        return playbackPosition;
+        return currentMediaPlayer.getCurrentPosition();
+//        int playbackPosition = currentMediaPlayer.getCurrentPosition();
+//        if (useBufferedPosition) {
+//            useBufferedPosition = false;
+//            playbackPosition = bufferedPosition;
+//        }
+//
+//        /**
+//         * This is to resolve a bug on some phones where the playback position is 0 (using <= 0 to
+//         * resolve any negative position errors) :- the MediaPlayer JNI throws an IllegalStateException.
+//         * To resolve this problem 1 is returned instead of zero (assuming in 99.99% the duration is >= 1)
+//         */
+//        if (playbackPosition <= 0) { // if at the beginning at track, or for some reason negative
+//            if (currentMediaPlayer.getDuration() >= 1) {
+//                return 1;
+//            }
+//        }
+//        return playbackPosition;
     }
 
-    private MediaPlayer createMediaPlayer(Uri uri) {
-        /**
-         * This is to resolve a bug on some phones where the playback position is 0 (using <= 0 to
-         * resolve any negative position errors) :- the MediaPlayer JNI throws an IllegalStateException.
-         * To resolve this problem 1 is returned instead of zero (assuming in 99.99% the duration is >= 1)
-         */
+    private MediaPlayer createMediaPlayer(Uri uri, MediaPlayer.OnCompletionListener onCompletionListener) {
         MediaPlayer mediaPlayer = MediaPlayer.create(context, uri);
-        mediaPlayer.seekTo(1);
+        mediaPlayer.setOnInfoListener(this::onInfo);
+        mediaPlayer.setOnErrorListener(this::onError);
+        mediaPlayer.setOnCompletionListener(onCompletionListener);
         return mediaPlayer;
     }
 
@@ -349,18 +314,10 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
     }
 
     @Override
-    public void onBufferingUpdate(MediaPlayer mp, int percent) {
-        Log.i(LOG_TAG, "buffering at: " + percent + "%");
-    }
-
-    @Override
     public boolean onInfo(MediaPlayer mp, int what, int extra) {
+        if (what == MEDIA_INFO_STARTED_AS_NEXT) {
+            setPlaybackParams(mp);
+        }
         Log.i(LOG_TAG, "what: " + what + ", extra " + extra);
         return true;
-    }
-
-    @Override
-    public void onSeekComplete(MediaPlayer mp) {
-        Log.i(LOG_TAG, "seek complete");
-    }
-}
+    }}
