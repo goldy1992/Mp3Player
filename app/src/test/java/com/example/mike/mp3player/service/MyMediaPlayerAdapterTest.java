@@ -6,37 +6,37 @@ import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.commons.Constants;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({MediaPlayer.class})
 public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
-    @Mock
-    MediaPlayer mediaPlayer;
-    @BeforeEach
+
+    @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        PowerMockito.mockStatic(MediaPlayer.class);
         super.setup();
     }
 
     @Test
-    public void testPauseWhilePlaying() {
-        Whitebox.setInternalState(mediaPlayerAdapter, "currentState", PlaybackStateCompat.STATE_PLAYING);
-        Whitebox.setInternalState(mediaPlayerAdapter, "mediaPlayer", mediaPlayer);
-        PlaybackParams mockPlaybackParams = mock(PlaybackParams.class);
-        when(mediaPlayer.getPlaybackParams()).thenReturn(mockPlaybackParams);
-        when (mockPlaybackParams.getSpeed()).thenReturn(1.2f);
-        mediaPlayerAdapter.pause();
-        assertEquals("playback should be paused but state is" + Constants.playbackStateDebugMap.get(mediaPlayerAdapter.getCurrentState()), PlaybackStateCompat.STATE_PAUSED, mediaPlayerAdapter.getCurrentState());
+    public void testReset() {
+        mediaPlayerAdapter.reset(uri, nextUri, mock(MediaPlayer.OnCompletionListener.class));
+        assertNotNull(mediaPlayerAdapter.getCurrentMediaPlayer());
+        assertNotNull(mediaPlayerAdapter.getNextMediaPlayer());
     }
 
     @Test
@@ -52,15 +52,21 @@ public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
     }
 
     @Test
+    public void testPlay() {
+        Whitebox.setInternalState(mediaPlayerAdapter, "isPrepared", true);
+        when(audioFocusManager.requestAudioFocus()).thenReturn(true);
+        when(mediaPlayer.getPlaybackParams()).thenReturn(new PlaybackParams());
+        mediaPlayerAdapter.play();
+        assertEquals(PlaybackStateCompat.STATE_PLAYING, mediaPlayerAdapter.getCurrentState());
+    }
+
+    @Test
     public void testDecreaseSpeed() {
         expectedSpeedChange(1.50f, 0.05f, 1.45f);
     }
 
     @Test
     public void testSeekToPrepared() {
-        MediaPlayer mediaPlayer = mock(MediaPlayer.class);
-        setMediaPlayer(mediaPlayer);
-
         spy(mediaPlayer);
         mediaPlayerAdapter.seekTo(555L);
         Mockito.verify(mediaPlayer, times(1)).seekTo(555);
@@ -69,8 +75,7 @@ public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
     @Test
     public void testSeekToNotPrepared() {
         Whitebox.setInternalState(mediaPlayerAdapter, "isPrepared", false);
-        MediaPlayer mediaPlayer = mock(MediaPlayer.class);
-        setMediaPlayer(mediaPlayer);
+
 
         spy(mediaPlayer);
         mediaPlayerAdapter.seekTo(555L);
@@ -83,14 +88,11 @@ public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
         final int EXPECTED_CURRENT_POSITION = 1234;
         final float EXPECTED_SPEED = 123f;
 
-        MediaPlayer mediaPlayer = mock(MediaPlayer.class);
         when(mediaPlayer.getCurrentPosition()).thenReturn(EXPECTED_CURRENT_POSITION);
         PlaybackParams playbackParams = new PlaybackParams();
         playbackParams.setSpeed(EXPECTED_SPEED);
-
         when(mediaPlayer.getPlaybackParams()).thenReturn(playbackParams);
         mediaPlayer.setPlaybackParams(playbackParams);
-        setMediaPlayer(mediaPlayer);
         Whitebox.setInternalState(mediaPlayerAdapter, "currentState", EXPECTED_STATE);
 
         PlaybackStateCompat result = mediaPlayerAdapter.getMediaPlayerState();
@@ -101,13 +103,9 @@ public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
         assertEquals(EXPECTED_CURRENT_POSITION, (int)resultPosition);
         assertEquals(EXPECTED_SPEED, resultSpeed, speedDiff);
         assertEquals(EXPECTED_STATE, resultState);
-
     }
 
     private void expectedSpeedChange(float originalSpeed, float changeInSpeed, float expectedNewSpeed) {
-        MediaPlayer mediaPlayer = mock(MediaPlayer.class);
-
-        setMediaPlayer(mediaPlayer);
         PlaybackParams mockPlaybackParams = mock(PlaybackParams.class);
         when(mockPlaybackParams.getSpeed()).thenReturn(originalSpeed);
         when (mediaPlayer.getPlaybackParams()).thenReturn(mockPlaybackParams);

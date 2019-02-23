@@ -146,9 +146,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void prepareFromUri(Uri uri, Bundle bundle) {
-        super.onPrepareFromUri(uri, bundle);
-        myMediaPlayerAdapter.prepareFromUri(uri);
-        updateMediaSession();
+//        super.onPrepareFromUri(uri, bundle);
+//        myMediaPlayerAdapter.prepareFromUri(uri);
+//        updateMediaSession();
     }
 
     @Override
@@ -190,13 +190,13 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public synchronized void onPlayFromUri(Uri uri, Bundle bundle) {
-        Log.i(LOG_TAG, "play from uri");
-        super.onPlayFromUri(uri, bundle);
-        myMediaPlayerAdapter.prepareFromUri(uri);
-        myMediaPlayerAdapter.play();
-        broadcastReceiver.registerAudioNoisyReceiver();
-        serviceManager.startMediaSession();
-        updateMediaSession();
+//        Log.i(LOG_TAG, "play from uri");
+//        super.onPlayFromUri(uri, bundle);
+//        myMediaPlayerAdapter.prepareFromUri(uri);
+//        myMediaPlayerAdapter.play();
+//        broadcastReceiver.registerAudioNoisyReceiver();
+//        serviceManager.startMediaSession();
+//        updateMediaSession();
     }
 
     @Override

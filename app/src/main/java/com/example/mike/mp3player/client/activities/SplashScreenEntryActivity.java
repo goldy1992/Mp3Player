@@ -48,21 +48,21 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Thread thread = new Thread(() -> init());
+        thread.start();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         setContentView(R.layout.splash_screen);
-      //  Log.i(LOG_TAG, "onStart");
+        Log.i(LOG_TAG, "onStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-       // Log.i(LOG_TAG, "onresume");
-        Thread thread = new Thread(() -> init());
-        thread.start();
+       Log.i(LOG_TAG, "onresume");
     }
 
     @Override
@@ -92,6 +92,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
                 // Request for camera permission.
                 if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission has been granted. Start camera preview Activity.
+                    Log.i(LOG_TAG, "permission granted from request");
                     onPermissionGranted();
                 }
             }
@@ -101,7 +102,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     }
 
     public void initMediaBrowserService() {
-       // Log.i(LOG_TAG, "reset media browser service");
+        Log.i(LOG_TAG, "reset media browser service");
         mediaBrowserAdapter = new MediaBrowserAdapter(getApplicationContext(), this);
         mediaBrowserAdapter.init();
     }
@@ -140,6 +141,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
 
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
+        Log.i(LOG_TAG, "hit on connected");
         mediaBrowserAdapter.registerListener(this);
         LibraryId libraryId = new LibraryId(Category.ROOT, Category.ROOT.name());
         mediaBrowserAdapter.subscribe(libraryId);
@@ -154,7 +156,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     private synchronized void onProcessingComplete(Intent mainActivityIntent) {
         mediaBrowserAdapter.unregisterListener(this);
  //       mediaBrowserAdapter.getmMediaBrowser().disconnect();
-        //Log.i(LOG_TAG, "processing complete");
+        Log.i(LOG_TAG, "processing complete");
         while (!splashScreenFinishedDisplaying) {
             try {
                 wait(ONE_SECOND);
@@ -167,7 +169,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     }
 
     private void startMainActivity(Intent mainActivityIntent) {
-       // Log.i(LOG_TAG, "start main activity");
+        Log.i(LOG_TAG, "start main activity");
         startActivityForResult(mainActivityIntent, APP_TERMINATED);
 
     }
@@ -179,14 +181,16 @@ public class SplashScreenEntryActivity extends AppCompatActivity
             finish();
         }
     }
+
     @Override
     public void onPermissionGranted() {
+        Log.i(LOG_TAG, "permission granted");
         Runnable r = new Thread(() -> initMediaBrowserService());
         runOnUiThread(r);
     }
 
     public void init() {
-        //Log.i(LOG_TAG, "reset");
+        Log.i(LOG_TAG, "reset");
         permissionsProcessor = new PermissionsProcessor(this, this);
         permissionsProcessor.requestPermission(WRITE_EXTERNAL_STORAGE);
         Thread splashScreenWaitThread = new Thread(() -> splashScreenRun());

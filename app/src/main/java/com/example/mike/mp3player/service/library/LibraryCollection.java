@@ -18,7 +18,6 @@ public abstract class LibraryCollection {
     private final MediaItem root;
     private TreeSet<MediaItem> keys;
     protected Map<String, TreeSet<MediaItem>> collection;
-
     public abstract TreeSet<MediaItem> getChildren(LibraryId id);
     public abstract void index(List<MediaItem> items);
     public abstract Category getRootId();

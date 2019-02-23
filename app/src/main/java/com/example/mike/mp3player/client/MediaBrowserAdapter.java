@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.util.Log;
 
 import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
 import com.example.mike.mp3player.client.callbacks.MySubscriptionCallback;
@@ -17,6 +18,7 @@ import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 
 public class MediaBrowserAdapter {
 
+    private static final String LOG_TAG = "MDIA_BRWSR_ADPTR";
     private MediaBrowserCompat mMediaBrowser;
     private MyConnectionCallback mConnectionCallbacks;
     private MySubscriptionCallback mySubscriptionCallback;
@@ -34,6 +36,7 @@ public class MediaBrowserAdapter {
         // Create MediaBrowserServiceCompat
         mMediaBrowser = new MediaBrowserCompat(getContext(), componentName, mConnectionCallbacks, null);
         this.mySubscriptionCallback = new MySubscriptionCallback(getContext());
+        Log.i(LOG_TAG, "calling connect");
         getmMediaBrowser().connect();
     }
 
