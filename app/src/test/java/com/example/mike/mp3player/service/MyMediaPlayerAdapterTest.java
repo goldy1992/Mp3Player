@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.net.Uri;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.commons.Constants;
@@ -32,13 +33,12 @@ public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
 
     @Before
     public void setup() {
+        super.setup();
         PowerMockito.mockStatic(MediaPlayer.class);
-        MockitoAnnotations.initMocks(this);
         mediaPlayerAdapter = createMediaPlayerAdapter();
         PowerMockito.when(MediaPlayer.create(any(Context.class), any(Uri.class))).thenReturn(mediaPlayer);
         mediaPlayerAdapter.reset(uri, null, mock(MediaPlayer.OnCompletionListener.class));
         Whitebox.setInternalState(mediaPlayerAdapter, "audioFocusManager", audioFocusManager);
-        super.setup();
     }
 
     @Test

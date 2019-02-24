@@ -28,7 +28,7 @@ public class MediaPlayerAdapterTestBase {
     MyMediaPlayerAdapter mediaPlayerAdapter;
 
     public void setup() {
-
+        MockitoAnnotations.initMocks(this);
 //      //  assertNotNull("MediaPlayer should not be null after initialisation", mediaPlayerAdapter.getCurrentMediaPlayer());
 //        assertTrue("Didn't initialise MediaPlayerAdapter correctly", mediaPlayerAdapter.isPrepared());
 //        assertEquals("Initialised into the incorrect state", PlaybackStateCompat.STATE_PAUSED, mediaPlayerAdapter.getCurrentState());
