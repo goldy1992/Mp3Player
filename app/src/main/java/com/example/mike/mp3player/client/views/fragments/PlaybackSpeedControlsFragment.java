@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
+import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.PlaybackStateListener;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,12 +21,12 @@ import androidx.fragment.app.Fragment;
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 
-public class PlaybackSpeedControlsFragment extends Fragment {
+public class PlaybackSpeedControlsFragment extends Fragment implements PlaybackStateListener {
 
     private TextView playbackSpeed;
     private AppCompatImageButton increasePlaybackSpeedButton;
     private AppCompatImageButton decreasePlaybackSpeedButton;
-    private MediaPlayerActionListener mediaPlayerActionListener;
+    private MediaControllerAdapter mediaControllerAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -44,11 +45,9 @@ public class PlaybackSpeedControlsFragment extends Fragment {
         this.playbackSpeed = view.findViewById(R.id.playbackSpeedValue);
     }
 
-    public void setPlaybackState(PlaybackStateCompat state) {
-        float speed = state.getPlaybackSpeed();
-        if (speed > 0) {
-            updatePlaybackSpeedText(speed);
-        }
+    public void init(MediaControllerAdapter mediaControllerAdapter) {
+        this.mediaControllerAdapter = mediaControllerAdapter;
+        this.mediaControllerAdapter.registerPlaybackStateListener(this);
     }
 
     private void updatePlaybackSpeedText(float speed) {
@@ -59,15 +58,20 @@ public class PlaybackSpeedControlsFragment extends Fragment {
 
     public void increasePlaybackSpeed() {
         Bundle extras = new Bundle();
-        mediaPlayerActionListener.sendCustomAction(INCREASE_PLAYBACK_SPEED, extras);
+        mediaControllerAdapter.sendCustomAction(INCREASE_PLAYBACK_SPEED, extras);
     }
 
     public void decreasePlaybackSpeed() {
         Bundle extras = new Bundle();
-        mediaPlayerActionListener.sendCustomAction(DECREASE_PLAYBACK_SPEED, extras);
+        this.mediaControllerAdapter.sendCustomAction(DECREASE_PLAYBACK_SPEED, extras);
     }
 
-    public void setMediaPlayerActionListener(MediaPlayerActionListener mediaPlayerActionListener) {
-        this.mediaPlayerActionListener = mediaPlayerActionListener;
+
+    @Override
+    public void onPlaybackStateChanged(PlaybackStateCompat state) {
+        float speed = state.getPlaybackSpeed();
+        if (speed > 0) {
+            updatePlaybackSpeedText(speed);
+        }
     }
 }

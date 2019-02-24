@@ -7,41 +7,39 @@
     android:fitsSystemWindows="true"
     >
 
-    <LinearLayout
+    <RelativeLayout
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="10"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:context="com.example.mike.mp3player.client.activities.MainActivity">
 
         <fragment
             android:id="@+id/titleBarFragment"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             class="com.example.mike.mp3player.client.views.fragments.TitleBarFragment"
             tools:layout="@layout/fragment_title_bar"/>
 
-
-        <LinearLayout
+        <fragment
+            android:id="@+id/viewPagerFragment"
             android:layout_width="match_parent"
-            android:layout_weight="8"
-            android:layout_height="0dp">
-            <include layout="@layout/content_main" />
-        </LinearLayout>
-
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/titleBarFragment"
+            class="com.example.mike.mp3player.client.views.fragments.viewpager.ViewPagerFragment"
+            tools:layout="@layout/fragment_view_pager"/>
 
         <fragment
             android:id="@+id/playToolbarFragment"
             class="com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             tools:layout="@layout/fragment_playback_toolbar" />
 
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
     <com.google.android.material.navigation.NavigationView

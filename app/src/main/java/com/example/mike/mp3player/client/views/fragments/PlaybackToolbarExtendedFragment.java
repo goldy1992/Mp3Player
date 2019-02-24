@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.client.views.LinearLayoutWithImageView;
 
 import androidx.annotation.NonNull;
@@ -35,16 +37,18 @@ public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
         this.skipToNextButton = LinearLayoutWithImageView.create(getContext(), R.drawable.ic_baseline_skip_next_24px);
         this.skipToNextButton.getView().setOnClickListener((View v) -> skipToNext());
         initButton(skipToNextButton);
+    }
 
-
+    public void init(MediaControllerAdapter mediaControllerAdapter) {
+        super.init(mediaControllerAdapter, true);
     }
 
     public void skipToNext() {
-        mediaPlayerActionListener.skipToNext();
+        mediaControllerAdapter.skipToNext();
     }
 
     public void skipToPrevious() {
-        mediaPlayerActionListener.skipToPrevious();
+        mediaControllerAdapter.skipToPrevious();
     }
 
     @Override

@@ -1,31 +1,36 @@
 package com.example.mike.mp3player.client;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 
-public class MediaControllerWrapper< A extends MediaActivityCompat>  {
+public class MediaControllerAdapter {
 
+    private static final String LOG_TAG = "MDIA_CNTRLLR_ADPTR";
     private MediaControllerCompat mediaControllerCompat;
-    private MyMediaControllerCallback<A> myMediaControllerCallback;
-    private A activity;
+    private MyMediaControllerCallback myMediaControllerCallback;
+    private MediaActivityCompat activity;
     private MediaSessionCompat.Token token;
     private boolean isInitialized = false;
+    private Context context;
 
-    public MediaControllerWrapper(A activity, MediaSessionCompat.Token token) {
+    public MediaControllerAdapter(MediaActivityCompat activity, MediaSessionCompat.Token token) {
         this.activity = activity;
         this.token = token;
+        this.context = activity.getApplicationContext();
     }
 
     public boolean init() {
         try {
             this.mediaControllerCompat = new MediaControllerCompat(activity.getApplicationContext(), token);
-            this.myMediaControllerCallback = new MyMediaControllerCallback<>(activity, this);
+            this.myMediaControllerCallback = new MyMediaControllerCallback(activity, this);
             this.mediaControllerCompat.registerCallback(myMediaControllerCallback);
         } catch (RemoteException ex) {
             this.isInitialized = false;
@@ -36,20 +41,23 @@ public class MediaControllerWrapper< A extends MediaActivityCompat>  {
         return true;
     }
 
-    public boolean registerCallback(MediaControllerCompat.Callback callback) {
-        getMediaControllerCompat().registerCallback(callback);
-        return true;
-    }
-
     public void prepareFromMediaId(String mediaId, Bundle extras) {
         getMediaControllerCompat().getTransportControls().prepareFromMediaId(mediaId, extras);
     }
 
     public void play() {
+
+        Log.i(LOG_TAG, "play hit");
         getMediaControllerCompat().getTransportControls().play();
     }
 
-    public void pause() {
+    public Context getContext() {
+        return context;
+    }
+
+    public void pause()
+    {
+        Log.i(LOG_TAG, "pause hit");
         getMediaControllerCompat().getTransportControls().pause();
     }
 
@@ -69,6 +77,22 @@ public class MediaControllerWrapper< A extends MediaActivityCompat>  {
         getMediaControllerCompat().getTransportControls().skipToPrevious();
     }
 
+    public void registerMetaDataListener(MetaDataListener metaDataListener) {
+        myMediaControllerCallback.registerMetaDataListener(metaDataListener);
+    }
+
+    public void unregisterMetaDataListener(MetaDataListener metaDataListener) {
+        myMediaControllerCallback.removeMetaDataListener(metaDataListener);
+    }
+
+    public void registerPlaybackStateListener(PlaybackStateListener playbackStateListener) {
+        myMediaControllerCallback.registerPlaybackStateListener(playbackStateListener);
+    }
+
+    public void unregisterPlaybackStateListener(PlaybackStateListener playbackStateListener) {
+        myMediaControllerCallback.removePlaybackStateListener(playbackStateListener);
+    }
+
     public int getPlaybackState() {
         if (getMediaControllerCompat() != null && getMediaControllerCompat().getPlaybackState() != null) {
             return getMediaControllerCompat().getPlaybackState().getState();
@@ -83,6 +107,10 @@ public class MediaControllerWrapper< A extends MediaActivityCompat>  {
         return null;
     }
 
+    public MediaSessionCompat.Token getToken() {
+        return token;
+    }
+
     public MediaControllerCompat getMediaControllerCompat() {
         return mediaControllerCompat;
     }
@@ -93,14 +121,23 @@ public class MediaControllerWrapper< A extends MediaActivityCompat>  {
 
     public void disconnect() {
         if (getMediaControllerCompat() != null && myMediaControllerCallback != null) {
-            if (!myMediaControllerCallback.getChildCallbacks().isEmpty()) {
-                // find a way to disconnect all callbacks
-                for (MediaControllerCompat.Callback callback : myMediaControllerCallback.getChildCallbacks()) {
-                    getMediaControllerCompat().unregisterCallback(callback);
-                }
-            }
+//            if (!myMediaControllerCallback.getChildCallbacks().isEmpty()) {
+//                // find a way to disconnect all callbacks
+//                for (MediaControllerCompat.Callback callback : myMediaControllerCallback.getChildCallbacks()) {
+//                    getMediaControllerCompat().unregisterCallback(callback);
+//                }
+//            }
             getMediaControllerCompat().unregisterCallback(myMediaControllerCallback);
         }
+    }
+
+    public void updateUiState() {
+        myMediaControllerCallback.onMetadataChanged(mediaControllerCompat.getMetadata());
+        myMediaControllerCallback.onPlaybackStateChanged(mediaControllerCompat.getPlaybackState());
+    }
+
+    public void sendCustomAction(String customAction, Bundle args) {
+        getMediaControllerCompat().getTransportControls().sendCustomAction(customAction, args);
     }
 
     public PlaybackStateCompat getCurrentPlaybackState() {

@@ -1,11 +1,15 @@
 package com.example.mike.mp3player.client.views;
 
 import android.content.Context;
-import android.support.v4.media.MediaBrowserCompat;
 import android.util.AttributeSet;
 
-import com.example.mike.mp3player.client.MyItemTouchListener;
-import com.example.mike.mp3player.client.MyViewAdapter;
+import com.example.mike.mp3player.client.MediaBrowserAdapter;
+import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.MyFolderItemTouchListener;
+import com.example.mike.mp3player.client.MyGenericItemTouchListener;
+import com.example.mike.mp3player.client.MySongItemTouchListener;
+import com.example.mike.mp3player.client.MySongViewAdapter;
+import com.example.mike.mp3player.commons.library.Category;
 
 import java.util.List;
 
@@ -15,10 +19,13 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static android.support.v4.media.MediaBrowserCompat.MediaItem;
+
 public class MyRecyclerView extends RecyclerView {
     private Context context;
-    private MyItemTouchListener myItemTouchListener;
-    private MyViewAdapter myViewAdapter;
+    private MyGenericItemTouchListener myGenericItemTouchListener;
+    private MyGenericRecycleViewAdapter myViewAdapter;
+    private Category category;
 
     public MyRecyclerView(@NonNull Context context) {
         this(context, null);
@@ -33,14 +40,30 @@ public class MyRecyclerView extends RecyclerView {
         this.context = context;
     }
 
-    public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener) {
-        this.myViewAdapter = new MyViewAdapter(songs);
+    public void initRecyclerView(Category category, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
+                                 MediaControllerAdapter mediaControllerAdapter, MyGenericItemTouchListener.ItemSelectedListener itemSelectedListener) {
+        this.category = category;
+
+        switch (category) {
+            case SONGS:
+                this.myViewAdapter = new MySongViewAdapter(songs);
+                this.myGenericItemTouchListener = new MySongItemTouchListener(context);
+
+                break;
+            case FOLDERS:
+                this.myViewAdapter = new MyFolderViewAdapter(songs);
+                this.myGenericItemTouchListener = new MyFolderItemTouchListener(context);
+
+                break;
+            default: return;
+        }
+        this.myGenericItemTouchListener.setItemSelectedListener(itemSelectedListener);
+        this.myGenericItemTouchListener.setMediaControllerAdapter(mediaControllerAdapter);
+        this.myGenericItemTouchListener.setMediaBrowserAdapter(mediaBrowserAdapter);
         this.setAdapter(myViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         this.setLayoutManager(linearLayoutManager);
-        this.myItemTouchListener = new MyItemTouchListener(context);
-        this.myItemTouchListener.setMediaPlayerActionListener(mediaPlayerActionListener);
-        this.addOnItemTouchListener(this.getMyItemTouchListener());
+        this.addOnItemTouchListener(this.getMyGenericItemTouchListener());
         this.setItemAnimator(new DefaultItemAnimator());
         myViewAdapter.notifyDataSetChanged();
     }
@@ -49,14 +72,18 @@ public class MyRecyclerView extends RecyclerView {
         myViewAdapter.getFilter().filter(filterParam);
     }
 
-    public MyItemTouchListener getMyItemTouchListener() {
-        return myItemTouchListener;
+    public MyGenericItemTouchListener getMyGenericItemTouchListener() {
+        return myGenericItemTouchListener;
     }
 
     public void disable() {
-        myItemTouchListener.setEnabled(false);
+        myGenericItemTouchListener.setEnabled(false);
     }
     public void enable() {
-        myItemTouchListener.setEnabled(true);
+        myGenericItemTouchListener.setEnabled(true);
+    }
+
+    private MyGenericRecycleViewAdapter initViewAdapter(Category category, List<MediaItem> items) {
+        return new MySongViewAdapter(items);
     }
 }

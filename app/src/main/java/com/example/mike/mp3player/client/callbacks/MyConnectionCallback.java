@@ -2,24 +2,23 @@ package com.example.mike.mp3player.client.callbacks;
 
 import android.support.v4.media.MediaBrowserCompat;
 
-import com.example.mike.mp3player.client.MediaBrowserConnector;
+import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 
 /**
  * Created by Mike on 04/10/2017.
  */
-
 public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback {
 
-    private MediaBrowserConnector mediaBrowserConnector;
+    private MediaBrowserConnectorCallback mediaBrowserConnectorCallback;
 
-    public MyConnectionCallback(MediaBrowserConnector mediaBrowserConnector) {
+    public MyConnectionCallback(MediaBrowserConnectorCallback mediaBrowserConnectorCallback) {
         super();
-        this.mediaBrowserConnector = mediaBrowserConnector;
+        this.mediaBrowserConnectorCallback = mediaBrowserConnectorCallback;
     }
 
     @Override
     public void onConnected() {
-        mediaBrowserConnector.onConnected(null);
+        mediaBrowserConnectorCallback.onConnected();
    }
 
     @Override

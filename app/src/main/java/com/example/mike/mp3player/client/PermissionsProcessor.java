@@ -50,6 +50,7 @@ public class PermissionsProcessor {
             }
         } else {
             // Permission has already been granted
+            Log.i(LOG_TAG, "Permission has already been granted");
             permissionGranted.onPermissionGranted();
         }
     }

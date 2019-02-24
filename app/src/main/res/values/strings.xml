@@ -16,4 +16,6 @@
     <string name="LOGO_DESCRIPTION">The title logo</string>
     <string name="APP_TITLE">Mike\'s MP3 Player</string>
     <string name="APP_TITLE_H1"><![CDATA[<h1>Mike\'s MP3 Player</h1>]]></string>
+    <string name="FOLDER_NAME">%1$s</string>
+    <string name="FOLDER_PATH"></string>
 </resources>

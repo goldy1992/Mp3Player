@@ -32,6 +32,12 @@
             android:parentActivityName=".client.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <activity
+            android:name=".client.activities.FolderActivity"
+            android:label="@string/FOLDER_NAME"
+            android:parentActivityName=".client.activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
 
         <service android:name=".service.MediaPlaybackService"
             android:enabled="true"

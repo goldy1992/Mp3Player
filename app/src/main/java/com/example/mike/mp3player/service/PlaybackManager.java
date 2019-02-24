@@ -37,6 +37,9 @@ public class PlaybackManager {
         return playlist;
     }
 
+    public void notifyPlaybackComplete() {
+        queueIndex++;
+    }
 
     public String playbackComplete() {
         queueIndex++;
@@ -49,6 +52,9 @@ public class PlaybackManager {
         return null;
     }
 
+    public String getNext() {
+        return getPlaylistMediaId(queueIndex + 1);
+    }
     public String skipToNext() {
         return setNewPlaylistItem(queueIndex + 1) ? getPlaylistMediaId(queueIndex) : null;
     }
@@ -63,7 +69,13 @@ public class PlaybackManager {
     }
 
     public String getPlaylistMediaId(int index) {
-        return playlist.get(index).getDescription().getMediaId();
+        if (validQueueIndex(index)) {
+            MediaSessionCompat.QueueItem queueItem = playlist.get(index);
+            if (queueItem != null) {
+                return playlist.get(index).getDescription().getMediaId();
+            }
+        }
+        return null;
     }
 
     public String getCurrentMediaId() {
@@ -103,15 +115,11 @@ public class PlaybackManager {
         }
     }
 
-    public String selectFirstItem() {
-        if (!CollectionUtils.isEmpty(playlist)) {
-            MediaSessionCompat.QueueItem qi = playlist.get(0);
-            return qi.getDescription().getMediaId();
-        }
-        return null;
-    }
-
     public MediaSessionCompat.QueueItem getCurrentItem() {
         return playlist.get(queueIndex);
+    }
+
+    public String getCurrentItemId() {
+        return getCurrentItem().getDescription().getMediaId();
     }
 }

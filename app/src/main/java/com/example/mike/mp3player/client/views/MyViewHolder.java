@@ -15,7 +15,6 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
         this.menuItem = view.findViewById(R.id.menu_item);
     }
 
-
     public GridLayout getView() {
         return menuItem;
     }

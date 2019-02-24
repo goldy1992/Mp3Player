@@ -10,12 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaBrowserAdapter;
+import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MyDrawerListener;
-import com.example.mike.mp3player.client.views.MediaPlayerActionListener;
-import com.example.mike.mp3player.client.views.MyRecyclerView;
+import com.example.mike.mp3player.client.views.SongSearchActionListener;
+import com.example.mike.mp3player.client.views.fragments.viewpager.ViewPagerFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,10 +29,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 public class MainFrameFragment extends Fragment {
+
     private DrawerLayout drawerLayout;
     private TitleBarFragment titleBarFragment;
-    private MyRecyclerView recyclerView;
     private PlayToolBarFragment playToolBarFragment;
+    private ViewPagerFragment viewPagerFragment;
     private boolean enabled = true;
 
     @Override
@@ -45,22 +49,30 @@ public class MainFrameFragment extends Fragment {
         this.drawerLayout = view.findViewById(R.id.drawer_layout);
         this.playToolBarFragment = (PlayToolBarFragment) getChildFragmentManager().findFragmentById(R.id.playToolbarFragment);
         this.playToolBarFragment.displayButtons();
+        this.viewPagerFragment = (ViewPagerFragment) getChildFragmentManager().findFragmentById(R.id.viewPagerFragment);
         this.titleBarFragment = (TitleBarFragment) getChildFragmentManager().findFragmentById(R.id.titleBarFragment);
+
         MyDrawerListener myDrawerListener = new MyDrawerListener();
         drawerLayout.addDrawerListener(myDrawerListener);
+
         NavigationView navigationView = view.findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener((MenuItem menuItem) -> onNavigationItemSelected(menuItem));
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
+
         activity.setSupportActionBar(titleBarFragment.getTitleToolbar());
         ActionBar actionBar = activity.getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
     }
 
-    public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs, MediaPlayerActionListener mediaPlayerActionListener) {
-        this.recyclerView = getView().findViewById(R.id.myRecyclerView);
-        this.getRecyclerView().initRecyclerView(songs, mediaPlayerActionListener);
+    public void init(Map<MediaBrowserCompat.MediaItem, List<MediaBrowserCompat.MediaItem>> menuItems,
+                    MediaBrowserAdapter mediaBrowserAdapter,
+                     MediaControllerAdapter mediaControllerAdapter,
+                     SongSearchActionListener songSearchActionListener) {
+        this.viewPagerFragment.initRootMenu(menuItems, mediaBrowserAdapter, mediaControllerAdapter);
+        this.playToolBarFragment.init(mediaControllerAdapter,  true);
+        this.titleBarFragment.setSongSearchActionListener(songSearchActionListener);
     }
 
     @Override
@@ -102,25 +114,25 @@ public class MainFrameFragment extends Fragment {
         return titleBarFragment;
     }
 
-    public MyRecyclerView getRecyclerView() {
-        return recyclerView;
-    }
-
     public void enable() {
         this.enabled = true;
-        recyclerView.enable();
+        getViewPagerFragment().enable();
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 
     public void disable() {
         drawerLayout.closeDrawers();
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        recyclerView.disable();
+        getViewPagerFragment().disable();
         this.enabled = false;
 
     }
 
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public ViewPagerFragment getViewPagerFragment() {
+        return viewPagerFragment;
     }
 }

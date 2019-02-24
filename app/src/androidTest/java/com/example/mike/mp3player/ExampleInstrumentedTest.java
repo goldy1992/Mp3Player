@@ -2,7 +2,7 @@ package com.example.mike.mp3player;
 
 import android.content.Context;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;

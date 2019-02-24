@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.MetaDataListener;
+import com.example.mike.mp3player.client.PlaybackStateListener;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.client.views.TimeCounter;
@@ -17,8 +20,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class PlaybackTrackerFragment extends Fragment {
+public class PlaybackTrackerFragment extends Fragment implements PlaybackStateListener, MetaDataListener {
 
+    private MediaControllerAdapter mediaControllerAdapter;
     private TextView duration;
     private SeekerBar seekerBar;
     private TimeCounter counter;
@@ -37,25 +41,20 @@ public class PlaybackTrackerFragment extends Fragment {
         this.counter = new TimeCounter( counterView);
 
         this.setSeekerBar(view.findViewById(R.id.seekBar));
-        this.getSeekerBar().init();
         this.getSeekerBar().setTimeCounter(counter);
         this.duration = view.findViewById(R.id.duration);
     }
 
+    public void init(MediaControllerAdapter mediaControllerAdapter) {
+        this.mediaControllerAdapter = mediaControllerAdapter;
+        this.mediaControllerAdapter.registerPlaybackStateListener(this);
+        this.mediaControllerAdapter.registerMetaDataListener(this);
+        this.getSeekerBar().init(mediaControllerAdapter);
+
+    }
+
     public TimeCounter getCounter() {
         return counter;
-    }
-
-    public void setMetaData(MediaMetadataCompat metaData) {
-        long duration = metaData.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
-        getCounter().setDuration(duration);
-        this.duration.setText(TimerUtils.formatTime(duration));
-        getSeekerBar().getMySeekerMediaControllerCallback().onMetadataChanged(metaData);
-    }
-
-    public void setPlaybackState(PlaybackStateCompat state) {
-        getCounter().updateState(state);
-        getSeekerBar().getMySeekerMediaControllerCallback().onPlaybackStateChanged(state);
     }
 
     public SeekerBar getSeekerBar() {
@@ -64,5 +63,19 @@ public class PlaybackTrackerFragment extends Fragment {
 
     public void setSeekerBar(SeekerBar seekerBar) {
         this.seekerBar = seekerBar;
+    }
+
+    @Override
+    public void onPlaybackStateChanged(PlaybackStateCompat state) {
+        getCounter().updateState(state);
+        getSeekerBar().getMySeekerMediaControllerCallback().onPlaybackStateChanged(state);
+    }
+
+    @Override
+    public void onMetadataChanged(MediaMetadataCompat metadata) {
+        long duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
+        getCounter().setDuration(duration);
+        this.duration.setText(TimerUtils.formatTime(duration));
+        getSeekerBar().getMySeekerMediaControllerCallback().onMetadataChanged(metadata);
     }
 }
