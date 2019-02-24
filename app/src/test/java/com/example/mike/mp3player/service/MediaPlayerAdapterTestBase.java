@@ -28,11 +28,7 @@ public class MediaPlayerAdapterTestBase {
     MyMediaPlayerAdapter mediaPlayerAdapter;
 
     public void setup() {
-        MockitoAnnotations.initMocks(this);
-        mediaPlayerAdapter = createMediaPlayerAdapter();
-        when(MediaPlayer.create(any(Context.class), any(Uri.class))).thenReturn(mediaPlayer);
-        mediaPlayerAdapter.reset(uri, null, mock(MediaPlayer.OnCompletionListener.class));
-        Whitebox.setInternalState(mediaPlayerAdapter, "audioFocusManager", audioFocusManager);
+
 //      //  assertNotNull("MediaPlayer should not be null after initialisation", mediaPlayerAdapter.getCurrentMediaPlayer());
 //        assertTrue("Didn't initialise MediaPlayerAdapter correctly", mediaPlayerAdapter.isPrepared());
 //        assertEquals("Initialised into the incorrect state", PlaybackStateCompat.STATE_PAUSED, mediaPlayerAdapter.getCurrentState());

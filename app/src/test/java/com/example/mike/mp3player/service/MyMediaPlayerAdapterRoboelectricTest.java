@@ -6,11 +6,10 @@ import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.commons.Constants;
 
+import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowMediaPlayer;
@@ -21,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 @Config(manifest=Config.NONE, sdk = 26, shadows = {ShadowBundle.class, ShadowMediaPlayer.class})
 public class MyMediaPlayerAdapterRoboelectricTest extends MediaPlayerAdapterTestBase {
 
-    @BeforeEach
+    @Before
     public void setup() {
         Uri uri = new Uri.Builder().build();
         mediaPlayerAdapter = createMediaPlayerAdapter();
@@ -40,13 +39,5 @@ public class MyMediaPlayerAdapterRoboelectricTest extends MediaPlayerAdapterTest
 
     }
 
-    @org.junit.jupiter.api.Test
-    @Ignore
-    public void testPauseWhilePlaying() {
-        Whitebox.setInternalState(mediaPlayerAdapter, "currentState", PlaybackStateCompat.STATE_PLAYING);
-      //  Whitebox.setInternalState(mediaPlayerAdapter, "mediaPlayer", mediaPlayer);
-      //  when (mockPlaybackParams.getSpeed()).thenReturn(1.2f);
-        mediaPlayerAdapter.pause();
-        assertEquals("playback should be paused but state is" + Constants.playbackStateDebugMap.get(mediaPlayerAdapter.getCurrentState()), PlaybackStateCompat.STATE_PAUSED, mediaPlayerAdapter.getCurrentState());
-    }
+
 }
