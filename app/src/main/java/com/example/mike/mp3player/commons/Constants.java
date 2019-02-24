@@ -22,7 +22,7 @@ public final class Constants {
     public static final String UNKNOWN = "Unknown";
     public static final String INCREASE_PLAYBACK_SPEED = "INCREASE_PLAYBACK_SPEED";
     public static final String DECREASE_PLAYBACK_SPEED = "DECREASE_PLAYBACK_SPEED";
-
+    public static final String REPEAT_MODE = "REPEAT_MODE";
 
     public static final SparseArray<String> playbackStateDebugMap = new SparseArray<>();
     static {

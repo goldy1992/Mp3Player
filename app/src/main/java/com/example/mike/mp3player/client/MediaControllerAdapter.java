@@ -51,6 +51,10 @@ public class MediaControllerAdapter {
         getMediaControllerCompat().getTransportControls().play();
     }
 
+    public void setRepeatMode(@PlaybackStateCompat.RepeatMode int repeatMode) {
+        getMediaControllerCompat().getTransportControls().setRepeatMode(repeatMode);
+    }
+
     public Context getContext() {
         return context;
     }

@@ -246,6 +246,19 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         mediaSession.setQueue(playbackManager.onRemoveQueueItem(item));
     }
 
+    @Override
+    public void onSetRepeatMode (int repeatMode) {
+        PlaybackStateCompat newState = myMediaPlayerAdapter.updateRepeatMode(repeatMode);
+        PlaybackStateCompat currentState = myMediaPlayerAdapter.getMediaPlayerState();
+
+        mediaSession.setPlaybackState(newState);
+        /**
+         * TODO: set logic to put in the respective repeat mode
+         */
+
+        updateMediaSession();
+    }
+
     /**
      * When playback is complete,
      * IF NOT LAST SONG

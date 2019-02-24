@@ -18,7 +18,7 @@ import java.util.Set;
 /**
  * Created by Mike on 04/10/2017.
  */
-
+// TODO: ORGANIZE LISTENERS INTO CATEGORIES DEFINED BY THE ACTION THAT SHOULD BE SET IN THE ACTIONS LIST
 public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
 
     private static final String LOG_TAG = "MY_MDIA_CNTLR_CLLBCK";
@@ -61,6 +61,8 @@ public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
 
     @Override
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
+        // TODO: make use of the actions in state to direct updates to the relevant listeners only
+
         StringBuilder sb = new StringBuilder();
         for (PlaybackStateListener listener : playbackStateListeners) {
             if (listener != null) {

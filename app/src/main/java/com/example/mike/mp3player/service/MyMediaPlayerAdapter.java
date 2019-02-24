@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -13,6 +14,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import java.io.IOException;
 
 import static android.media.MediaPlayer.MEDIA_INFO_STARTED_AS_NEXT;
+import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 
 public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener {
 
@@ -26,6 +28,8 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
     private MediaPlayer currentMediaPlayer;
     private MediaPlayer nextMediaPlayer;
     private AudioFocusManager audioFocusManager;
+    @PlaybackStateCompat.RepeatMode
+    private int repeatMode;
     private Context context;
     /**
      * initialise to paused so the player doesn't start playing immediately
@@ -272,5 +276,23 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
 
     public MediaPlayer getNextMediaPlayer() {
         return nextMediaPlayer;
+    }
+
+    public int getRepeatMode() {
+        return repeatMode;
+    }
+
+    public PlaybackStateCompat updateRepeatMode(int repeatMode) {
+        this.repeatMode = repeatMode;
+        Bundle extras = new Bundle();
+        extras.putInt(REPEAT_MODE, repeatMode);
+        return new PlaybackStateCompat.Builder()
+                .setActions(PlaybackStateCompat.ACTION_SET_REPEAT_MODE)
+                .setExtras(extras)
+                .build();
+    }
+
+    public void setRepeatMode(int repeatMode) {
+        this.repeatMode = repeatMode;
     }
 }
