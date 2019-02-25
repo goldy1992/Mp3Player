@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client.activities;
 
 import android.os.Bundle;
+import android.os.HandlerThread;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -16,6 +17,8 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     private MediaControllerAdapter mediaControllerAdapter;
     private MediaBrowserAdapter mediaBrowserAdapter;
     private static final String LOG_TAG = "MEDIA_ACTIVITY_COMPAT";
+    private HandlerThread worker;
+
     void initMediaBrowserService() {
         setMediaBrowserAdapter(new MediaBrowserAdapter(getApplicationContext(), this));
         getMediaBrowserAdapter().init();
