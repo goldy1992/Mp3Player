@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.PlaybackStateListener;
+import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ALL;
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_NONE;

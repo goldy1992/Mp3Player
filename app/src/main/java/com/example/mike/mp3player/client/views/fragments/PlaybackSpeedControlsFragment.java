@@ -11,7 +11,8 @@ import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.PlaybackStateListener;
+import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
+import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +22,7 @@ import androidx.fragment.app.Fragment;
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 
-public class PlaybackSpeedControlsFragment extends Fragment implements PlaybackStateListener {
+public class PlaybackSpeedControlsFragment extends Fragment implements PlaybackStateListener<ListenerType> {
 
     private TextView playbackSpeed;
     private AppCompatImageButton increasePlaybackSpeedButton;

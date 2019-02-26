@@ -5,7 +5,8 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.AttributeSet;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.PlaybackStateListener;
+import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
+import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;

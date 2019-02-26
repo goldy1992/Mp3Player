@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MetaDataListener;
-import com.example.mike.mp3player.client.PlaybackStateListener;
+import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.client.views.TimeCounter;

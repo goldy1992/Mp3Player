@@ -10,10 +10,10 @@ import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
 
 public abstract class MediaActivityCompat extends AppCompatActivity implements MediaBrowserConnectorCallback {
 
+    private final String WORKER_ID = getClass().toString();
     private MediaControllerAdapter mediaControllerAdapter;
     private MediaBrowserAdapter mediaBrowserAdapter;
     private static final String LOG_TAG = "MEDIA_ACTIVITY_COMPAT";
@@ -23,6 +23,14 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
         setMediaBrowserAdapter(new MediaBrowserAdapter(getApplicationContext(), this));
         getMediaBrowserAdapter().init();
     }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        worker = new HandlerThread(WORKER_ID);
+        worker.start();
+    }
+
     @Override // MediaBrowserConnectorCallback
     public void onConnectionSuspended() { /* TODO: implement onConnectionSuspended */
         Log.i(LOG_TAG, "connection suspended");}
@@ -40,6 +48,12 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        worker.quitSafely();
     }
 
 

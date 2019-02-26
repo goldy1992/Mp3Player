@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -10,6 +11,8 @@ import android.util.Log;
 
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
+import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
+import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 
 public class MediaControllerAdapter {
 
@@ -20,17 +23,19 @@ public class MediaControllerAdapter {
     private MediaSessionCompat.Token token;
     private boolean isInitialized = false;
     private Context context;
+    private Looper looper;
 
-    public MediaControllerAdapter(MediaActivityCompat activity, MediaSessionCompat.Token token) {
+    public MediaControllerAdapter(MediaActivityCompat activity, MediaSessionCompat.Token token, Looper looper) {
         this.activity = activity;
         this.token = token;
         this.context = activity.getApplicationContext();
+        this.looper = looper;
     }
 
     public boolean init() {
         try {
             this.mediaControllerCompat = new MediaControllerCompat(activity.getApplicationContext(), token);
-            this.myMediaControllerCallback = new MyMediaControllerCallback(activity, this);
+            this.myMediaControllerCallback = new MyMediaControllerCallback(looper);
             this.mediaControllerCompat.registerCallback(myMediaControllerCallback);
         } catch (RemoteException ex) {
             this.isInitialized = false;
@@ -82,19 +87,19 @@ public class MediaControllerAdapter {
     }
 
     public void registerMetaDataListener(MetaDataListener metaDataListener) {
-        myMediaControllerCallback.registerMetaDataListener(metaDataListener);
+        myMediaControllerCallback.getMyMetaDataCallback().registerMetaDataListener(metaDataListener);
     }
 
     public void unregisterMetaDataListener(MetaDataListener metaDataListener) {
-        myMediaControllerCallback.removeMetaDataListener(metaDataListener);
+        myMediaControllerCallback.getMyMetaDataCallback().removeMetaDataListener(metaDataListener);
     }
 
-    public void registerPlaybackStateListener(PlaybackStateListener playbackStateListener) {
-        myMediaControllerCallback.registerPlaybackStateListener(playbackStateListener);
+    public void registerPlaybackStateListener(PlaybackStateListener playbackStateListener, ListenerType listenerType) {
+        myMediaControllerCallback.getMyPlaybackStateCallback().registerPlaybackStateListener(playbackStateListener, listenerType);
     }
 
-    public void unregisterPlaybackStateListener(PlaybackStateListener playbackStateListener) {
-        myMediaControllerCallback.removePlaybackStateListener(playbackStateListener);
+    public void unregisterPlaybackStateListener(PlaybackStateListener playbackStateListener, ListenerType listenerType) {
+        myMediaControllerCallback.getMyPlaybackStateCallback().removePlaybackStateListener(playbackStateListener, listenerType);
     }
 
     public int getPlaybackState() {

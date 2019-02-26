@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client;
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
@@ -24,10 +25,12 @@ public class MediaBrowserAdapter {
     private MySubscriptionCallback mySubscriptionCallback;
     private Context context;
     private final MediaBrowserConnectorCallback mediaBrowserConnectorCallback;
+    private Looper looper;
 
-    public MediaBrowserAdapter(Context context, MediaBrowserConnectorCallback mediaBrowserConnectorCallback) {
+    public MediaBrowserAdapter(Context context, MediaBrowserConnectorCallback mediaBrowserConnectorCallback, Looper looper) {
         this.context = context;
         this.mediaBrowserConnectorCallback = mediaBrowserConnectorCallback;
+        this.looper = looper;
     }
 
     public void init() {
@@ -35,7 +38,7 @@ public class MediaBrowserAdapter {
         ComponentName componentName = new ComponentName(getContext(), MediaPlaybackService.class);
         // Create MediaBrowserServiceCompat
         mMediaBrowser = new MediaBrowserCompat(getContext(), componentName, mConnectionCallbacks, null);
-        this.mySubscriptionCallback = new MySubscriptionCallback(getContext());
+        this.mySubscriptionCallback = new MySubscriptionCallback(getContext(), this.looper);
         Log.i(LOG_TAG, "calling connect");
         getmMediaBrowser().connect();
     }

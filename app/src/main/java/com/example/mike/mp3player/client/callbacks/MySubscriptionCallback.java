@@ -2,6 +2,8 @@ package com.example.mike.mp3player.client.callbacks;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback;
 
@@ -20,11 +22,13 @@ public class MySubscriptionCallback extends SubscriptionCallback {
     private static final String LOG_TAG = "SUBSCRIPTION_CALLBACK";
     private Set<MediaBrowserResponseListener> mediaBrowserResponseListeners;
     private Context context;
+    Handler handler;
 
-    public MySubscriptionCallback(Context context) {
+    public MySubscriptionCallback(Context context, Looper looper) {
         super();
         this.context = context;
-        mediaBrowserResponseListeners = new HashSet<>();
+        this.mediaBrowserResponseListeners = new HashSet<>();
+        this.handler = new Handler(looper);
     }
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children) {

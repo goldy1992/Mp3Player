@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client;
+package com.example.mike.mp3player.client.callbacks.playback;
 
 import android.support.v4.media.session.PlaybackStateCompat;
 

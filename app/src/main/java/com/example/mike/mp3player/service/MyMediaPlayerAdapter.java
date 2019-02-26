@@ -199,8 +199,9 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         return currentMediaPlayer;
     }
 
-    public PlaybackStateCompat getMediaPlayerState() {
+    public PlaybackStateCompat getMediaPlayerState(long actions) {
         return new PlaybackStateCompat.Builder()
+                .setActions(actions)
                 .setState(getCurrentState(),
                         currentMediaPlayer.getCurrentPosition(),
                         getCurrentPlaybackSpeed())
