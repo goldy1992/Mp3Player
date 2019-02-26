@@ -20,7 +20,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     private HandlerThread worker;
 
     void initMediaBrowserService() {
-        setMediaBrowserAdapter(new MediaBrowserAdapter(getApplicationContext(), this));
+        setMediaBrowserAdapter(new MediaBrowserAdapter(getApplicationContext(), this, worker.getLooper()));
         getMediaBrowserAdapter().init();
     }
 
