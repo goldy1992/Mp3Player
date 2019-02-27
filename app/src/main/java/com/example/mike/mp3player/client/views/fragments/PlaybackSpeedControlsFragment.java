@@ -22,7 +22,7 @@ import androidx.fragment.app.Fragment;
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 
-public class PlaybackSpeedControlsFragment extends Fragment implements PlaybackStateListener<ListenerType> {
+public class PlaybackSpeedControlsFragment extends Fragment implements PlaybackStateListener {
 
     private TextView playbackSpeed;
     private AppCompatImageButton increasePlaybackSpeedButton;
@@ -48,7 +48,7 @@ public class PlaybackSpeedControlsFragment extends Fragment implements PlaybackS
 
     public void init(MediaControllerAdapter mediaControllerAdapter) {
         this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mediaControllerAdapter.registerPlaybackStateListener(this);
+        this.mediaControllerAdapter.registerPlaybackStateListener(this, ListenerType.MISC);
     }
 
     private void updatePlaybackSpeedText(float speed) {

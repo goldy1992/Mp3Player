@@ -39,7 +39,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         token = (MediaSessionCompat.Token) retrieveIntentInfo(Constants.MEDIA_SESSION);
 
         if (token != null) {
-            setMediaControllerAdapter(new MediaControllerAdapter(this, token));
+            setMediaControllerAdapter(new MediaControllerAdapter(this, token, getWorker().getLooper()));
             String mediaId = (String) retrieveIntentInfo(Constants.MEDIA_ID);
             LibraryId parentId = (LibraryId) retrieveIntentInfo(Constants.PARENT_ID);
 

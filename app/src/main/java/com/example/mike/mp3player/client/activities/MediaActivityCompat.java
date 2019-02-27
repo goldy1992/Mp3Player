@@ -20,7 +20,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     private HandlerThread worker;
 
     void initMediaBrowserService() {
-        setMediaBrowserAdapter(new MediaBrowserAdapter(getApplicationContext(), this, worker.getLooper()));
+        setMediaBrowserAdapter(new MediaBrowserAdapter(getApplicationContext(), this, getWorker().getLooper()));
         getMediaBrowserAdapter().init();
     }
 
@@ -28,7 +28,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         worker = new HandlerThread(WORKER_ID);
-        worker.start();
+        getWorker().start();
     }
 
     @Override // MediaBrowserConnectorCallback
@@ -53,7 +53,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     @Override
     public void onDestroy() {
         super.onDestroy();
-        worker.quitSafely();
+        getWorker().quitSafely();
     }
 
 
@@ -69,5 +69,9 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
 
     public final void setMediaBrowserAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
         this.mediaBrowserAdapter = mediaBrowserAdapter;
+    }
+
+    public HandlerThread getWorker() {
+        return worker;
     }
 }

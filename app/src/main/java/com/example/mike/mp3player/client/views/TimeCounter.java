@@ -1,5 +1,7 @@
 package com.example.mike.mp3player.client.views;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.TextView;
 
@@ -21,10 +23,12 @@ public class TimeCounter {
     private float currentSpeed;
     private ScheduledExecutorService timer;
     private boolean isRunning = false;
+    private Handler mainHandler;
     public static final String LOG_TAG = "TimeCounter";
 
     public TimeCounter(TextView view) {
         this.view = view;
+        this.mainHandler = new Handler(Looper.getMainLooper());
     }
 
     public void setDuration(Long duration) {
@@ -51,7 +55,7 @@ public class TimeCounter {
     private void work(long startTime) {
         //Log.d(LOG_TAG, "work timer");
         setCurrentPosition(startTime);
-        getView().setText(formatTime(startTime));
+        setTimerText(formatTime(startTime));
         createTimer();
         setRunning(true);
     }
@@ -60,14 +64,14 @@ public class TimeCounter {
         //Log.d(LOG_TAG, "halt timer");
         cancelTimer();
         this.setCurrentPosition(currentTime);
-        getView().setText(formatTime(currentTime));
+        setTimerText(formatTime(currentTime));
     }
 
     private void resetTimer() {
         //Log.d(LOG_TAG, "reset timer");
         cancelTimer();
         this.setCurrentPosition(0L);
-        getView().setText(formatTime(0L));
+        setTimerText(formatTime(0L));
     }
 
     private void cancelTimer() {
@@ -82,7 +86,7 @@ public class TimeCounter {
     }
 
     private void createTimer() {
-        TimeCounterTimerTask timerTask = new TimeCounterTimerTask(this);
+        TimeCounterTimerTask timerTask = new TimeCounterTimerTask(this, mainHandler);
         cancelTimer();
         timer = Executors.newSingleThreadScheduledExecutor();
         timer.scheduleAtFixedRate(timerTask,0L, getTimerFixedRate(), TimeUnit.MILLISECONDS);
@@ -95,6 +99,10 @@ public class TimeCounter {
          * 0.95 playbacks speed => 1000ms / 0.95 = 1052
          **/
         return (long)(ONE_SECOND / currentSpeed);
+    }
+
+    private void setTimerText(String text) {
+        mainHandler.post(() -> {getView().setText(text);});
     }
 
     public boolean isRunning() {

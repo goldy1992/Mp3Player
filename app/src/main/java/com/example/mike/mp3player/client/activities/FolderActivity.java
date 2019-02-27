@@ -59,7 +59,7 @@ public class FolderActivity extends MediaActivityCompat {
 
     @Override
     public void onConnected() {
-        setMediaControllerAdapter(new MediaControllerAdapter(this, getMediaBrowserAdapter().getMediaSessionToken()));
+        setMediaControllerAdapter(new MediaControllerAdapter(getApplicationContext(), getMediaBrowserAdapter().getMediaSessionToken(), getWorker().getLooper()));
         getMediaControllerAdapter().init();
         setContentView(R.layout.activity_folder);
         this.viewPageFragment = SongViewPageFragment.createAndInitialiseViewPageFragment(parentId, mediaItems,getMediaBrowserAdapter(), getMediaControllerAdapter());

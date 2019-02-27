@@ -2,9 +2,12 @@ package com.example.mike.mp3player.client.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -54,6 +57,16 @@ public class LinearLayoutWithImageView extends LinearLayout {
         return getContext().getResources().getDrawable(resourceToReturn, null);
     }
 
+    public void init() {
+        ImageView imageView = getView();
+        imageView.setScaleX(2);
+        imageView.setScaleY(2);
+        int imageHeight = imageView.getDrawable().getIntrinsicHeight();
+        long exactMarginSize =  imageHeight / 2;
+        int marginSize =  (int) exactMarginSize;
+        imageView.setPadding(marginSize, marginSize, marginSize, marginSize);
+        setGravity(Gravity.CENTER_HORIZONTAL);
+    }
 
     public ImageView getView() {
         return view;
@@ -64,9 +77,11 @@ public class LinearLayoutWithImageView extends LinearLayout {
         getView().setImageDrawable(drawable);
     }
 
-    public static LinearLayoutWithImageView create(Context context, int imageResource) {
+    public static LinearLayoutWithImageView create(Context context, int imageResource, OnClickListener onClickListener) {
         LinearLayoutWithImageView toReturn = new LinearLayoutWithImageView(context);
         toReturn.setViewImage(imageResource);
+        toReturn.init();
+        toReturn.getView().setOnClickListener(onClickListener);
         return toReturn;
     }
 }

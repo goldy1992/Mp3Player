@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.views.RepeatOneRepeatAllButton;
 
 import androidx.annotation.NonNull;
@@ -42,7 +43,7 @@ public class ShuffleRepeatFragment extends Fragment {
         if (this.repeatOneRepeatAllButton == null) {
             this.repeatOneRepeatAllButton = RepeatOneRepeatAllButton.create(mediaControllerAdapter.getContext());
         }
-        this.mediaControllerAdapter.registerPlaybackStateListener(repeatOneRepeatAllButton);
+        this.mediaControllerAdapter.registerPlaybackStateListener(repeatOneRepeatAllButton, ListenerType.REPEAT);
         this.attachToRoot = attachToRoot;
     }
 

@@ -37,6 +37,7 @@ import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_T
 import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS;
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
+import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
@@ -47,7 +48,7 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KE
  */
 public class MediaSessionCallback extends MediaSessionCompat.Callback implements MediaPlayer.OnCompletionListener {
 
-    private static final int NO_ACTION = 0;
+
     private ServiceManager serviceManager;
     private PlaybackManager playbackManager;
     private MyMediaPlayerAdapter myMediaPlayerAdapter;
@@ -193,7 +194,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             return;
         }
 
-        updateMediaSession(ACTION_PREPARE_FROM_MEDIA_ID);
+        updateMediaSession(ACTION_PREPARE_FROM_MEDIA_ID | ACTION_PAUSE);
     }
 
     @Override

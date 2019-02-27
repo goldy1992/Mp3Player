@@ -14,9 +14,11 @@ public class TimeCounterTimerTask extends TimerTask {
     private TimeCounter timeCounter;
     private String LOG_TAG = "TIMER_COUNTER_TASK";
     private Runnable updateUi = () -> timeCounter.getView().setText(formatTime(timeCounter.getCurrentPosition()));
+    private Handler mainHandler;
 
-    public TimeCounterTimerTask(TimeCounter timeCounter) {
+    public TimeCounterTimerTask(TimeCounter timeCounter, Handler mainHandler) {
         this.timeCounter = timeCounter;
+        this.mainHandler = mainHandler;
     }
 
     @Override
@@ -24,7 +26,6 @@ public class TimeCounterTimerTask extends TimerTask {
         //Log.d(LOG_TAG,"current position: " + timeCounter.getCurrentPosition() + ", duration: " + timeCounter.getDuration());
         if (timeCounter.getCurrentPosition() < timeCounter.getDuration()) {
             timeCounter.setCurrentPosition(timeCounter.getCurrentPosition() + ONE_SECOND);
-            Handler mainHandler = new Handler(Looper.getMainLooper());
             mainHandler.post(updateUi);
         }
         //Log.d(LOG_TAG, "finished run call");

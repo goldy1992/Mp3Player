@@ -57,7 +57,7 @@ public class MainActivity extends MediaActivityCompat{
 
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
-        setMediaControllerAdapter(new MediaControllerAdapter(this, getMediaBrowserAdapter().getMediaSessionToken()));
+        setMediaControllerAdapter(new MediaControllerAdapter(this, getMediaBrowserAdapter().getMediaSessionToken(), getWorker().getLooper()));
         getMediaControllerAdapter().init();
         setContentView(R.layout.activity_main);
         this.rootFragment = (MainActivityRootFragment) getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);

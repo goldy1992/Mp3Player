@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class TrackInfoFragment extends Fragment implements MetaDataListener {
+public class TrackInfoFragment extends AsyncFragment implements MetaDataListener {
 
     private TextView artist;
     private TextView track;
@@ -49,11 +49,15 @@ public class TrackInfoFragment extends Fragment implements MetaDataListener {
     }
 
     public void setArtist(String artist) {
-        this.artist.setText(getString(R.string.ARTIST_NAME, artist));
+        mainUpdater.post(() -> {
+            this.artist.setText(getString(R.string.ARTIST_NAME, artist));
+        });
     }
 
     public void setTrack(String track) {
-        this.track.setText(getString(R.string.TRACK_NAME, track));
+        mainUpdater.post(() ->{
+                this.track.setText(getString(R.string.TRACK_NAME, track));
+        });
     }
 
     @Override

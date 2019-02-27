@@ -5,19 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
+import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.utils.IntentUtils;
-import com.example.mike.mp3player.client.views.LinearLayoutWithImageView;
 import com.example.mike.mp3player.client.views.PlayPauseButton;
 
 import androidx.annotation.NonNull;
@@ -52,18 +49,16 @@ public class PlayToolBarFragment extends Fragment {
         }
         this.innerPlaybackToolbarLayout = view.findViewById(R.id.innerPlaybackToolbarLayout);
         if (this.playPauseButton == null) {
-            this.playPauseButton = PlayPauseButton.create(getContext());
+            this.playPauseButton = PlayPauseButton.create(getContext(), (View v) -> playPause());
         }
-        this.playPauseButton.getView().setOnClickListener((View v) -> playPause());
-        initButton(playPauseButton);
     }
 
     public void init(MediaControllerAdapter mediaControllerAdapter, boolean attachToRoot) {
         this.mediaControllerAdapter = mediaControllerAdapter;
         if (this.playPauseButton == null) {
-            this.playPauseButton = PlayPauseButton.create(mediaControllerAdapter.getContext());
+            this.playPauseButton = PlayPauseButton.create(mediaControllerAdapter.getContext(), (View v) -> playPause());
         }
-        this.mediaControllerAdapter.registerPlaybackStateListener(playPauseButton);
+        this.mediaControllerAdapter.registerPlaybackStateListener(playPauseButton, ListenerType.PLAYBACK);
         this.attachToRoot = attachToRoot;
     }
 
@@ -72,25 +67,12 @@ public class PlayToolBarFragment extends Fragment {
         if (currentPlaybackState == PlaybackStateCompat.STATE_PLAYING) {
             Log.d(LOG_TAG, "calling pause");
             mediaControllerAdapter.pause();
-            getPlayPauseButton().setPlayIcon();
+ //           getPlayPauseButton().setS
         } else {
             Log.d(LOG_TAG, "calling play");
             mediaControllerAdapter.play();
-            getPlayPauseButton().setPauseIcon();
+   //         getPlayPauseButton().setPauseIcon();
         }
-    }
-
-    void initButton(LinearLayoutWithImageView layout) {
-        ImageView imageView = layout.getView();
-        imageView.setScaleX(2);
-        imageView.setScaleY(2);
-        int imageHeight = imageView.getDrawable().getIntrinsicHeight();
-        long exactMarginSize =  imageHeight / 2;
-        int marginSize =  (int) exactMarginSize;
-        imageView.setPadding(marginSize, marginSize, marginSize, marginSize);
-        layout.setGravity(Gravity.CENTER_HORIZONTAL);
-        //layout.setBackgroundColor(getContext().getResources().getColor(android.R.color.holo_orange_light, null));
-
     }
 
     public void displayButtons() {

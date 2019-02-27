@@ -19,22 +19,20 @@ public class MediaControllerAdapter {
     private static final String LOG_TAG = "MDIA_CNTRLLR_ADPTR";
     private MediaControllerCompat mediaControllerCompat;
     private MyMediaControllerCallback myMediaControllerCallback;
-    private MediaActivityCompat activity;
     private MediaSessionCompat.Token token;
     private boolean isInitialized = false;
     private Context context;
     private Looper looper;
 
-    public MediaControllerAdapter(MediaActivityCompat activity, MediaSessionCompat.Token token, Looper looper) {
-        this.activity = activity;
+    public MediaControllerAdapter(Context context, MediaSessionCompat.Token token, Looper looper) {
         this.token = token;
-        this.context = activity.getApplicationContext();
+        this.context = context;
         this.looper = looper;
     }
 
     public boolean init() {
         try {
-            this.mediaControllerCompat = new MediaControllerCompat(activity.getApplicationContext(), token);
+            this.mediaControllerCompat = new MediaControllerCompat(context, token);
             this.myMediaControllerCallback = new MyMediaControllerCallback(looper);
             this.mediaControllerCompat.registerCallback(myMediaControllerCallback);
         } catch (RemoteException ex) {
