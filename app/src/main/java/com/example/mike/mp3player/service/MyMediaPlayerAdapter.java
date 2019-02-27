@@ -199,9 +199,10 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         return currentMediaPlayer;
     }
 
-    public PlaybackStateCompat getMediaPlayerState(long actions) {
+    public PlaybackStateCompat getMediaPlayerState(long actions, Bundle extras) {
         return new PlaybackStateCompat.Builder()
                 .setActions(actions)
+                .setExtras(extras)
                 .setState(getCurrentState(),
                         currentMediaPlayer.getCurrentPosition(),
                         getCurrentPlaybackSpeed())
@@ -283,14 +284,12 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         return repeatMode;
     }
 
-    public PlaybackStateCompat updateRepeatMode(int repeatMode) {
+    public void updateRepeatMode(int repeatMode) {
         this.repeatMode = repeatMode;
-        Bundle extras = new Bundle();
-        extras.putInt(REPEAT_MODE, repeatMode);
-        return new PlaybackStateCompat.Builder()
-                .setActions(PlaybackStateCompat.ACTION_SET_REPEAT_MODE)
-                .setExtras(extras)
-                .build();
+
+        if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE) {
+            currentMediaPlayer.setLooping(true);
+        }
     }
 
     public void setRepeatMode(int repeatMode) {

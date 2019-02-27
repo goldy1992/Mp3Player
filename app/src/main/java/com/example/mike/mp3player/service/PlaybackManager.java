@@ -15,6 +15,7 @@ public class PlaybackManager {
 
     private static final int START_OF_PLAYLIST = 0;
     private int queueIndex = -1;
+    private boolean isRepeating;
     private final List<MediaSessionCompat.QueueItem> playlist = new ArrayList<>();
 
     private boolean shuffleOn = false;
@@ -43,10 +44,16 @@ public class PlaybackManager {
 
     public String playbackComplete() {
         queueIndex++;
-        if (!playlist.isEmpty() && queueIndex < playlist.size()) {
-            MediaSessionCompat.QueueItem nextItem = playlist.get(queueIndex);
-            if (null != nextItem.getDescription()) {
-                return nextItem.getDescription().getMediaId();
+        if (!playlist.isEmpty()) {
+            MediaSessionCompat.QueueItem nextItem = null;
+            if(isLast(queueIndex) && isRepeating) {
+               nextItem = playlist.get(START_OF_PLAYLIST);
+            }
+            else if (queueIndex < playlist.size()) {
+                nextItem = playlist.get(queueIndex);
+                if (null != nextItem.getDescription()) {
+                    return nextItem.getDescription().getMediaId();
+                }
             }
         }
         return null;
@@ -121,5 +128,17 @@ public class PlaybackManager {
 
     public String getCurrentItemId() {
         return getCurrentItem().getDescription().getMediaId();
+    }
+
+    public boolean isRepeating() {
+        return isRepeating;
+    }
+
+    public boolean isLast(int index) {
+        return !playlist.isEmpty() && index == (playlist.size() - 1);
+    }
+
+    public void setRepeating(boolean repeating) {
+        isRepeating = repeating;
     }
 }

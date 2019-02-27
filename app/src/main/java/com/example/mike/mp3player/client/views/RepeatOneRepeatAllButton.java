@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client.views;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -11,6 +12,7 @@ import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListene
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ALL;
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_NONE;
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ONE;
+import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 
 
 public class RepeatOneRepeatAllButton extends LinearLayoutWithImageView implements PlaybackStateListener {
@@ -52,15 +54,15 @@ public class RepeatOneRepeatAllButton extends LinearLayoutWithImageView implemen
         }
     }
 
-    public void setRepeatAllIcon() {
+    private void setRepeatAllIcon() {
         setViewImage(R.drawable.ic_baseline_repeat_24px);
         getView().setImageAlpha(OPAQUE);
     }
-    public void setRepeatOneIcon() {
+    private void setRepeatOneIcon() {
         setViewImage(R.drawable.ic_baseline_repeat_one_24px);
         getView().setImageAlpha(OPAQUE);
     }
-    public void setRepeatNoneIcon() {
+    private void setRepeatNoneIcon() {
         setViewImage(R.drawable.ic_baseline_repeat_24px);
         this.getView().setImageAlpha(TRANSLUCENT);
     }
@@ -89,6 +91,12 @@ public class RepeatOneRepeatAllButton extends LinearLayoutWithImageView implemen
 
     @Override
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
-       // state.
+        Bundle extras = state.getExtras();
+        if (null != extras) {
+            Integer repeatMode = extras.getInt(REPEAT_MODE);
+            if (null != repeatMode) {
+                updateState(repeatMode);
+            }
+        }
     }
 }
