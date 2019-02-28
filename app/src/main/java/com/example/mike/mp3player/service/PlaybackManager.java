@@ -1,12 +1,8 @@
 package com.example.mike.mp3player.service;
 
-import android.net.Uri;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
-
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +11,10 @@ public class PlaybackManager {
 
     private static final int START_OF_PLAYLIST = 0;
     private int queueIndex = -1;
-    private boolean isRepeating;
+    private boolean isRepeating = true;
     private final List<MediaSessionCompat.QueueItem> playlist = new ArrayList<>();
 
     private boolean shuffleOn = false;
-    private int repeatMode = PlaybackStateCompat.REPEAT_MODE_ALL;
 
     public void init(List<MediaSessionCompat.QueueItem> queueItems) {
         playlist.addAll(queueItems);
@@ -40,35 +35,50 @@ public class PlaybackManager {
 
     public void notifyPlaybackComplete() {
         queueIndex++;
-    }
-
-    public String playbackComplete() {
-        queueIndex++;
-        if (!playlist.isEmpty()) {
-            MediaSessionCompat.QueueItem nextItem = null;
-            if(isLast(queueIndex) && isRepeating) {
-               nextItem = playlist.get(START_OF_PLAYLIST);
-            }
-            else if (queueIndex < playlist.size()) {
-                nextItem = playlist.get(queueIndex);
-                if (null != nextItem.getDescription()) {
-                    return nextItem.getDescription().getMediaId();
-                }
-            }
+        if (isRepeating && (queueIndex >= playlist.size())) {
+            queueIndex = START_OF_PLAYLIST;
         }
-        return null;
     }
 
     public String getNext() {
-        return getPlaylistMediaId(queueIndex + 1);
-    }
-    public String skipToNext() {
-        return setNewPlaylistItem(queueIndex + 1) ? getPlaylistMediaId(queueIndex) : null;
+        int newIndex = getNextQueueItemIndex();
+        return getPlaylistMediaId(newIndex);
     }
 
+    public String skipToNext() {
+        incrementQueue();
+        return getCurrentMediaId();
+    }
 
     public String skipToPrevious() {
-        return setNewPlaylistItem(queueIndex - 1) ? getPlaylistMediaId(queueIndex) : null;
+        decrementQueue();
+        return getCurrentMediaId();
+    }
+
+    private void incrementQueue() {
+        this.queueIndex = getNextQueueItemIndex();
+    }
+
+    private void decrementQueue() {
+        this.queueIndex = getPreviousQueueItemIndex();
+    }
+
+    private int getNextQueueItemIndex() {
+        int newIndex = queueIndex + 1;
+        boolean passedEndOfQueue = newIndex >= playlist.size();
+        if (passedEndOfQueue) {
+            return isRepeating ? START_OF_PLAYLIST : -1;
+        }
+        return newIndex;
+    }
+
+    private int getPreviousQueueItemIndex() {
+        int newIndex = queueIndex - 1;
+        boolean beforeStartOfQueue = newIndex < START_OF_PLAYLIST;
+        if (beforeStartOfQueue) {
+            return isRepeating ? getLastIndex() : -1;
+        }
+        return newIndex;
     }
 
     public boolean validQueueIndex(int newQueueIndex) {
@@ -89,25 +99,6 @@ public class PlaybackManager {
         return playlist.get(queueIndex).getDescription().getMediaId();
     }
 
-
-    private boolean setNewPlaylistItem(int newIndex) {
-        if (!validQueueIndex(newIndex)) {
-            return false;
-        }
-            queueIndex = newIndex;
-            return true;
-    }
-//            int currentState = myMediaPlayerAdapter.getCurrentState();
-//            String newMediaId = playbackManager.getPlaylistMediaId(newIndex);
-//            Uri newUri = mediaLibrary.getMediaUri(newMediaId);
-//            myMediaPlayerAdapter.prepareFromUri(newUri);
-//
-//            if (currentState == PlaybackStateCompat.STATE_PLAYING) {
-//                myMediaPlayerAdapter.play();
-//            }
-//        }
-//    }
-
     public boolean createNewPlaylist(List<MediaSessionCompat.QueueItem> newList) {
         playlist.clear();;
         return playlist.addAll(newList);
@@ -126,16 +117,8 @@ public class PlaybackManager {
         return playlist.get(queueIndex);
     }
 
-    public String getCurrentItemId() {
-        return getCurrentItem().getDescription().getMediaId();
-    }
-
-    public boolean isRepeating() {
-        return isRepeating;
-    }
-
-    public boolean isLast(int index) {
-        return !playlist.isEmpty() && index == (playlist.size() - 1);
+    public int getLastIndex() {
+        return playlist.size() - 1;
     }
 
     public void setRepeating(boolean repeating) {

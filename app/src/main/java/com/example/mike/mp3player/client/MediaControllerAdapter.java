@@ -140,7 +140,8 @@ public class MediaControllerAdapter {
 
     public void updateUiState() {
         myMediaControllerCallback.onMetadataChanged(mediaControllerCompat.getMetadata());
-        myMediaControllerCallback.onPlaybackStateChanged(mediaControllerCompat.getPlaybackState());
+//        myMediaControllerCallback.onPlaybackStateChanged(mediaControllerCompat.getPlaybackState());
+        myMediaControllerCallback.getMyPlaybackStateCallback().updateAll(mediaControllerCompat.getPlaybackState());
     }
 
     public void sendCustomAction(String customAction, Bundle args) {

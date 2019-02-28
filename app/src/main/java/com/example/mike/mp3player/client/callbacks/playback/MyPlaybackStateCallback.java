@@ -23,6 +23,12 @@ public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> 
         this.listeners = new HashMap<>();
     }
 
+    public void updateAll(PlaybackStateCompat state) {
+        for (ListenerType listenerType : listeners.keySet()) {
+            notifyListenersOfType(listenerType, state);
+        }
+    }
+
     @Override
     public void processCallback(PlaybackStateCompat data) {
         // TODO: make use of the actions in state to direct updates to the relevant listeners only

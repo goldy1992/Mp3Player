@@ -17,6 +17,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_below="@+id/simpleTitleBarFragment"
+        android:layout_above="@+id/playToolbarFragment"
         android:id="@+id/songListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -19,6 +19,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 
+import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.MediaLibrary;
@@ -82,7 +83,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         Uri nextSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
         this.myMediaPlayerAdapter.reset(firstSongUri, nextSongUri, this);
         this.myMediaPlayerAdapter.getCurrentMediaPlayer().setOnCompletionListener(this);
-        updateMediaSession(ACTION_PREPARE_FROM_MEDIA_ID, null);
+        updateMediaSession(ACTION_PREPARE_FROM_MEDIA_ID);
     }
 
     @Override
@@ -96,9 +97,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         Log.i(LOG_TAG, "onPlay registed audio noisy receiver");
         myMediaPlayerAdapter.play();
         Log.i(LOG_TAG, "onPlay playback started");
-        updateMediaSession(ACTION_PLAY, null);
+        updateMediaSession(ACTION_PLAY);
         Log.i(LOG_TAG, "onPlay mediasession updated");
-        serviceManager.startService(prepareNotification(ACTION_PLAY, null));
+        serviceManager.startService(prepareNotification(ACTION_PLAY));
     }
 
         @Override
@@ -110,7 +111,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         String newMediaId = playbackManager.skipToNext();
         if (newMediaId != null) {
             skipToNewMedia(newMediaId);
-            serviceManager.notify(prepareNotification(ACTION_SKIP_TO_NEXT, null));
+            serviceManager.notify(prepareNotification(ACTION_SKIP_TO_NEXT));
+            updateMediaSession(ACTION_SKIP_TO_NEXT);
         }
     }
 
@@ -127,7 +129,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             playbackManager.skipToPrevious();
         }
         skipToNewMedia(playbackManager.getCurrentMediaId());
-        serviceManager.notify(prepareNotification(ACTION_SKIP_TO_PREVIOUS, null));
+        serviceManager.notify(prepareNotification(ACTION_SKIP_TO_PREVIOUS));
+        updateMediaSession(ACTION_SKIP_TO_PREVIOUS);
     }
     @Override
     public synchronized boolean onMediaButtonEvent(Intent mediaButtonEvent) {
@@ -183,7 +186,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             return;
         }
 
-        updateMediaSession(ACTION_PREPARE_FROM_MEDIA_ID | ACTION_PAUSE, null);
+        updateMediaSession(ACTION_PREPARE_FROM_MEDIA_ID | ACTION_PAUSE);
     }
 
     @Override
@@ -199,8 +202,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         Log.i(LOG_TAG, "onPause");
         broadcastReceiver.unregisterAudioNoisyReceiver();
         myMediaPlayerAdapter.pause();
-        updateMediaSession(ACTION_PAUSE, null);
-        serviceManager.pauseService(prepareNotification(ACTION_PAUSE, null));
+        updateMediaSession(ACTION_PAUSE);
+        serviceManager.pauseService(prepareNotification(ACTION_PAUSE));
         Log.i(LOG_TAG, "onPause finished");
     }
 
@@ -211,7 +214,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
     private void seekTo(long position) {
         myMediaPlayerAdapter.seekTo(position);
-        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState(ACTION_SEEK_TO, null));
+        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState(ACTION_SEEK_TO));
     }
 
     @Override
@@ -252,7 +255,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
          */
         Bundle bundle = new Bundle();
         bundle.putInt(REPEAT_MODE, repeatMode);
-        updateMediaSession(ACTION_SET_REPEAT_MODE, bundle);
+        updateMediaSession(ACTION_SET_REPEAT_MODE);
 
     }
 
@@ -267,14 +270,19 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     @Override
     public synchronized void onCompletion(MediaPlayer mediaPlayer) {
         if (mediaPlayer != null && mediaPlayer.equals(myMediaPlayerAdapter.getCurrentMediaPlayer())) {
-            playbackManager.notifyPlaybackComplete(); // increments queue
-            String nextUriToPrepare = playbackManager.getNext();
-            if (null != nextUriToPrepare) {
-                Uri nextItemUri = mediaLibrary.getMediaUriFromMediaId(nextUriToPrepare);
-                myMediaPlayerAdapter.onComplete(nextItemUri, this);
+
+            if (!mediaPlayer.isLooping()) {
+                playbackManager.notifyPlaybackComplete(); // increments queue
+                String nextUriToPrepare = playbackManager.getNext(); // gets uri after newly incremented index
+                if (null != nextUriToPrepare) {
+                    Uri nextItemUri = mediaLibrary.getMediaUriFromMediaId(nextUriToPrepare);
+                    myMediaPlayerAdapter.onComplete(nextItemUri, this);
+                }
+            } else {
+
             }
-            updateMediaSession(NO_ACTION, null);
-            serviceManager.notify(prepareNotification(NO_ACTION, null));
+            updateMediaSession(ACTION_SEEK_TO);
+            serviceManager.notify(prepareNotification(ACTION_SEEK_TO));
         }
     }
 
@@ -292,12 +300,12 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                 break;
             default: break;
         }
-        updateMediaSession(NO_ACTION, extras);
+        updateMediaSession(NO_ACTION);
     }
 
-    private Notification prepareNotification(long actions, Bundle bundle) {
+    private Notification prepareNotification(long actions) {
         return myNotificationManager.getNotification(getCurrentMetaData(),
-                myMediaPlayerAdapter.getMediaPlayerState(actions, bundle),
+                myMediaPlayerAdapter.getMediaPlayerState(actions),
                 mediaSession.getSessionToken());
     }
 
@@ -321,15 +329,15 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private void skipToNewMedia(String newMediaId) {
         Uri newUri = mediaLibrary.getMediaUriFromMediaId(newMediaId);
         Uri followingUri = mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
-        PlaybackStateCompat currentState = myMediaPlayerAdapter.getMediaPlayerState(NO_ACTION, null);
+        PlaybackStateCompat currentState = myMediaPlayerAdapter.getMediaPlayerState(ACTION_SEEK_TO);
         myMediaPlayerAdapter.reset(newUri, followingUri, this);
         if (currentState.getState() == PlaybackStateCompat.STATE_PLAYING) {
             myMediaPlayerAdapter.play();
         }
     }
 
-    private void updateMediaSession(long actions, Bundle extras) {
-        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState(actions, null));
+    private void updateMediaSession(long actions) {
+        mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState(actions));
         mediaSession.setMetadata(getCurrentMetaData());
     }
 
@@ -343,8 +351,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
                 if (myMediaPlayerAdapter.isPlaying()) {
                     myMediaPlayerAdapter.pause();
-                    updateMediaSession(ACTION_PAUSE, null);
-                    serviceManager.notify(prepareNotification(ACTION_PAUSE, null));
+                    updateMediaSession(ACTION_PAUSE);
+                    serviceManager.notify(prepareNotification(ACTION_PAUSE));
                 }
             }
         }

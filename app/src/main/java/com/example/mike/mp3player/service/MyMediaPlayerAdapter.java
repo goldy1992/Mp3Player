@@ -64,12 +64,11 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         }
         this.currentMediaPlayer = createMediaPlayer(firstItemUri, onCompletionListener);
         this.nextMediaPlayer = secondItemUri == null ? null : createMediaPlayer(secondItemUri, onCompletionListener);
-        this.currentMediaPlayer.setNextMediaPlayer(getNextMediaPlayer());
+        this.currentMediaPlayer.setNextMediaPlayer(isLooping() ? null : getNextMediaPlayer());
         this.audioFocusManager = new AudioFocusManager(context, this);
         this.audioFocusManager.init();
         this.currentState = PlaybackStateCompat.STATE_PAUSED;
     }
-
 
     public synchronized void play() {
         if (!prepare()) {
@@ -81,6 +80,9 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
                 getCurrentMediaPlayer().start();
                 PlaybackParams playbackParams = currentMediaPlayer.getPlaybackParams();
                 playbackParams.setSpeed(currentPlaybackSpeed);
+                Log.i(LOG_TAG, "repeating = " + isLooping());
+                currentMediaPlayer.setLooping(isLooping());
+
                 getCurrentMediaPlayer().setPlaybackParams(playbackParams);
                 currentState = PlaybackStateCompat.STATE_PLAYING;
             } catch (Exception e) {
@@ -199,10 +201,12 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         return currentMediaPlayer;
     }
 
-    public PlaybackStateCompat getMediaPlayerState(long actions, Bundle extras) {
+    public PlaybackStateCompat getMediaPlayerState(long actions) {
+        Bundle ex = new Bundle();
+        ex.putInt(REPEAT_MODE, repeatMode);
         return new PlaybackStateCompat.Builder()
                 .setActions(actions)
-                .setExtras(extras)
+                .setExtras(ex)
                 .setState(getCurrentState(),
                         currentMediaPlayer.getCurrentPosition(),
                         getCurrentPlaybackSpeed())
@@ -255,6 +259,7 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
 
     private MediaPlayer createMediaPlayer(Uri uri, MediaPlayer.OnCompletionListener onCompletionListener) {
         MediaPlayer mediaPlayer = MediaPlayer.create(context, uri);
+        mediaPlayer.setLooping(repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE);
         mediaPlayer.setOnInfoListener(this::onInfo);
         mediaPlayer.setOnErrorListener(this::onError);
         mediaPlayer.setOnCompletionListener(onCompletionListener);
@@ -276,6 +281,10 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         return true;
     }
 
+    public boolean isLooping() {
+        return repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE;
+    }
+
     public MediaPlayer getNextMediaPlayer() {
         return nextMediaPlayer;
     }
@@ -289,6 +298,10 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
 
         if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE) {
             currentMediaPlayer.setLooping(true);
+            currentMediaPlayer.setNextMediaPlayer(null);
+        } else {
+            currentMediaPlayer.setLooping(false);
+            currentMediaPlayer.setNextMediaPlayer(nextMediaPlayer);
         }
     }
 

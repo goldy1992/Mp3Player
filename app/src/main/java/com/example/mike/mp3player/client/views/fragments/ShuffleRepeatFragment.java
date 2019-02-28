@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ public class ShuffleRepeatFragment extends Fragment {
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         repeatOneRepeatAllButton = view.findViewById(R.id.repeatOneRepeatAllButton);
-        repeatOneRepeatAllButton.setRepeatAllIcon();
+        repeatOneRepeatAllButton.updateState(PlaybackStateCompat.REPEAT_MODE_ALL);
         repeatOneRepeatAllButton.setOnClickListener((View v) -> setRepeatOneRepeatAllButtonMode(v));
     }
 
@@ -51,7 +52,7 @@ public class ShuffleRepeatFragment extends Fragment {
 
         int nextState = repeatOneRepeatAllButton.getNextState();
         // TODO: activate statement when MediaPlaybackService is ready to consume repeat requests
-       // mediaControllerAdapter.setRepeatMode(nextState);
+        mediaControllerAdapter.setRepeatMode(nextState);
         repeatOneRepeatAllButton.updateState(repeatOneRepeatAllButton.getNextState());
     }
 
