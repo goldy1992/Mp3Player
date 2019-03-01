@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
@@ -19,7 +20,6 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 
-import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.MediaLibrary;
@@ -49,8 +49,6 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KE
  * Created by Mike on 24/09/2017.
  */
 public class MediaSessionCallback extends MediaSessionCompat.Callback implements MediaPlayer.OnCompletionListener {
-
-
     private ServiceManager serviceManager;
     private PlaybackManager playbackManager;
     private MyMediaPlayerAdapter myMediaPlayerAdapter;
@@ -64,7 +62,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     public MediaSessionCallback(Context context, MyNotificationManager myNotificationManager,
                                 ServiceManager serviceManager, MediaSessionCompat mediaSession,
-                                MediaLibrary mediaLibrary, HandlerThread worker) {
+                                MediaLibrary mediaLibrary, Looper looper) {
         this.serviceManager = serviceManager;
         this.mediaSession = mediaSession;
         this.mediaLibrary = mediaLibrary;
@@ -73,7 +71,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.myMediaPlayerAdapter = new MyMediaPlayerAdapter(context);
         this.broadcastReceiver = new ReceiveBroadcasts();
         this.context = context;
-        this.worker = new Handler(worker.getLooper());
+        this.worker = new Handler(looper);
     }
 
     public void init() {

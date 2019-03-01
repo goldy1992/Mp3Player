@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
+import static com.example.mike.mp3player.commons.LoggingUtils.logPlaybackStateCompat;
 
 public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> {
     private static final String LOG_TAG = "MY_PLYBK_ST_CLLBK";
@@ -32,7 +33,7 @@ public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> 
     @Override
     public void processCallback(PlaybackStateCompat data) {
         // TODO: make use of the actions in state to direct updates to the relevant listeners only
-
+        logPlaybackStateCompat(data, LOG_TAG);
         long actions = data.getActions();
         if (containsAction(actions, PlaybackStateCompat.ACTION_PLAY) || containsAction(actions, PlaybackStateCompat.ACTION_PAUSE) || containsAction(actions, PlaybackStateCompat.ACTION_SEEK_TO)) {
             notifyListenersOfType(ListenerType.PLAYBACK, data);
