@@ -43,6 +43,7 @@ import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
+import static com.example.mike.mp3player.commons.LoggingUtils.logRepeatMode;
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
 
 /**
@@ -240,6 +241,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void setRepeatMode(int repeatMode) {
+        logRepeatMode(repeatMode, LOG_TAG);
         myMediaPlayerAdapter.updateRepeatMode(repeatMode);
 
         if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL) {
@@ -267,17 +269,18 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
      */
     @Override
     public synchronized void onCompletion(MediaPlayer mediaPlayer) {
+        Log.i(LOG_TAG, "on playback complete hit");
         if (mediaPlayer != null && mediaPlayer.equals(myMediaPlayerAdapter.getCurrentMediaPlayer())) {
 
-            if (!mediaPlayer.isLooping()) {
-                playbackManager.notifyPlaybackComplete(); // increments queue
-                String nextUriToPrepare = playbackManager.getNext(); // gets uri after newly incremented index
-                if (null != nextUriToPrepare) {
-                    Uri nextItemUri = mediaLibrary.getMediaUriFromMediaId(nextUriToPrepare);
-                    myMediaPlayerAdapter.onComplete(nextItemUri, this);
-                }
+            if (mediaPlayer.isLooping()) {
+                // update media session to be the beginning of the current song
             } else {
-
+//                playbackManager.notifyPlaybackComplete(); // increments queue
+//                String nextUriToPrepare = playbackManager.getNext(); // gets uri after newly incremented index
+//                if (null != nextUriToPrepare) {
+//                    Uri nextItemUri = mediaLibrary.getMediaUriFromMediaId(nextUriToPrepare);
+//                    myMediaPlayerAdapter.onComplete(nextItemUri, this);
+//                }
             }
             updateMediaSession(ACTION_SEEK_TO);
             serviceManager.notify(prepareNotification(ACTION_SEEK_TO));

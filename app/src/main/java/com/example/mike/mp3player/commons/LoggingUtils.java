@@ -50,4 +50,19 @@ public final class LoggingUtils {
 
     }
 
+    public static void logRepeatMode(int RepeatMode, final String LOG_TAG) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Repeat mode is: ");
+        switch (RepeatMode) {
+            case PlaybackStateCompat.REPEAT_MODE_ALL: sb.append("REPEAT_MODE_ALL");
+                break;
+            case PlaybackStateCompat.REPEAT_MODE_NONE: sb.append("REPEAT_MODE_NONE");
+                break;
+            case PlaybackStateCompat.REPEAT_MODE_ONE: sb.append("REPEAT_MODE_ONE");
+                break;
+            default:
+                sb.append("invalid repeat mode");
+        }
+        Log.i(LOG_TAG, sb.toString());
+    }
 }
