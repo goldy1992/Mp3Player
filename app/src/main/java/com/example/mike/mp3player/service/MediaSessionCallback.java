@@ -10,7 +10,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
@@ -82,7 +81,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         Uri nextSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
         this.myMediaPlayerAdapter.reset(firstSongUri, nextSongUri, this);
         this.myMediaPlayerAdapter.getCurrentMediaPlayer().setOnCompletionListener(this);
-        updateMediaSession(ACTION_PREPARE_FROM_MEDIA_ID);
+        updateMediaSession();
     }
 
     @Override
@@ -96,9 +95,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         Log.i(LOG_TAG, "onPlay registed audio noisy receiver");
         myMediaPlayerAdapter.play();
         Log.i(LOG_TAG, "onPlay playback started");
-        updateMediaSession(ACTION_PLAY);
+        updateMediaSession();
         Log.i(LOG_TAG, "onPlay mediasession updated");
-        serviceManager.startService(prepareNotification(ACTION_PLAY));
+        serviceManager.startService(prepareNotification());
     }
 
         @Override
@@ -110,8 +109,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         String newMediaId = playbackManager.skipToNext();
         if (newMediaId != null) {
             skipToNewMedia(newMediaId);
-            serviceManager.notify(prepareNotification(ACTION_SKIP_TO_NEXT));
-            updateMediaSession(ACTION_SKIP_TO_NEXT);
+            serviceManager.notify(prepareNotification());
+            updateMediaSession();
         }
     }
 
@@ -128,8 +127,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             playbackManager.skipToPrevious();
         }
         skipToNewMedia(playbackManager.getCurrentMediaId());
-        serviceManager.notify(prepareNotification(ACTION_SKIP_TO_PREVIOUS));
-        updateMediaSession(ACTION_SKIP_TO_PREVIOUS);
+        serviceManager.notify(prepareNotification());
+        updateMediaSession();
     }
     @Override
     public synchronized boolean onMediaButtonEvent(Intent mediaButtonEvent) {
@@ -185,7 +184,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             return;
         }
 
-        updateMediaSession(ACTION_PREPARE_FROM_MEDIA_ID | ACTION_PAUSE);
+        updateMediaSession();
     }
 
     @Override
@@ -201,8 +200,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         Log.i(LOG_TAG, "onPause");
         broadcastReceiver.unregisterAudioNoisyReceiver();
         myMediaPlayerAdapter.pause();
-        updateMediaSession(ACTION_PAUSE);
-        serviceManager.pauseService(prepareNotification(ACTION_PAUSE));
+        updateMediaSession();
+        serviceManager.pauseService(prepareNotification());
         Log.i(LOG_TAG, "onPause finished");
     }
 
@@ -273,17 +272,20 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         if (mediaPlayer != null && mediaPlayer.equals(myMediaPlayerAdapter.getCurrentMediaPlayer())) {
 
             if (mediaPlayer.isLooping()) {
+                mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState(NO_ACTION, true));
+
                 // update media session to be the beginning of the current song
             } else {
-//                playbackManager.notifyPlaybackComplete(); // increments queue
-//                String nextUriToPrepare = playbackManager.getNext(); // gets uri after newly incremented index
-//                if (null != nextUriToPrepare) {
-//                    Uri nextItemUri = mediaLibrary.getMediaUriFromMediaId(nextUriToPrepare);
-//                    myMediaPlayerAdapter.onComplete(nextItemUri, this);
-//                }
+                playbackManager.notifyPlaybackComplete(); // increments queue
+                String nextUriToPrepare = playbackManager.getNext(); // gets uri after newly incremented index
+                if (null != nextUriToPrepare) {
+                    Uri nextItemUri = mediaLibrary.getMediaUriFromMediaId(nextUriToPrepare);
+                    myMediaPlayerAdapter.onComplete(nextItemUri, this);
+                    updateMediaSession();
+                }
             }
-            updateMediaSession(ACTION_SEEK_TO);
-            serviceManager.notify(prepareNotification(ACTION_SEEK_TO));
+
+            serviceManager.notify(prepareNotification());
         }
     }
 
@@ -301,12 +303,18 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                 break;
             default: break;
         }
-        updateMediaSession(NO_ACTION);
+        updateMediaSession();
     }
 
     private Notification prepareNotification(long actions) {
         return myNotificationManager.getNotification(getCurrentMetaData(),
                 myMediaPlayerAdapter.getMediaPlayerState(actions),
+                mediaSession.getSessionToken());
+    }
+
+    private Notification prepareNotification() {
+        return myNotificationManager.getNotification(getCurrentMetaData(),
+                myMediaPlayerAdapter.getMediaPlayerState(NO_ACTION),
                 mediaSession.getSessionToken());
     }
 
@@ -342,6 +350,10 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         mediaSession.setMetadata(getCurrentMetaData());
     }
 
+    private void updateMediaSession() {
+        updateMediaSession(NO_ACTION);
+    }
+
     private class ReceiveBroadcasts extends BroadcastReceiver {
         private boolean audioNoisyReceiverRegistered;
         private final IntentFilter AUDIO_NOISY_INTENT_FILTER =
@@ -352,8 +364,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
                 if (myMediaPlayerAdapter.isPlaying()) {
                     myMediaPlayerAdapter.pause();
-                    updateMediaSession(ACTION_PAUSE);
-                    serviceManager.notify(prepareNotification(ACTION_PAUSE));
+                    updateMediaSession();
+                    serviceManager.notify(prepareNotification());
                 }
             }
         }

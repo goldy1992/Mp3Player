@@ -20,7 +20,6 @@ public class PlayPauseButton extends LinearLayoutWithImageView implements Playba
     private static final String LOG_TAG = "PLAY_PAUSE_BUTTON";
     @PlaybackStateCompat.State
     private int state = PlaybackStateCompat.STATE_NONE;
-    private Handler mainUpdater;
 
     public PlayPauseButton(Context context) { this(context, null); }
 
@@ -30,7 +29,6 @@ public class PlayPauseButton extends LinearLayoutWithImageView implements Playba
 
     public PlayPauseButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.mainUpdater = new Handler(Looper.getMainLooper());
     }
 
     public void updateState(int newState) {

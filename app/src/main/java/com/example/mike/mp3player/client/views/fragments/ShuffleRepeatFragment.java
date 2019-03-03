@@ -5,7 +5,6 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
@@ -14,11 +13,8 @@ import com.example.mike.mp3player.client.views.RepeatOneRepeatAllButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-
-public class ShuffleRepeatFragment extends Fragment {
+public class ShuffleRepeatFragment extends AsyncFragment {
     private static final String LOG_TAG = "PLY_PAUSE_BTN";
     MediaControllerAdapter mediaControllerAdapter;
     RepeatOneRepeatAllButton repeatOneRepeatAllButton;

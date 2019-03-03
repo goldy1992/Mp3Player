@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ public class LinearLayoutWithImageView extends LinearLayout {
 
     private ImageView view;
     private LayoutInflater inflater;
+    Handler mainUpdater;
 
     public LinearLayoutWithImageView(Context context) {
         this(context, null);
@@ -35,6 +38,7 @@ public class LinearLayoutWithImageView extends LinearLayout {
 
     public LinearLayoutWithImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        this.mainUpdater = new Handler(Looper.getMainLooper());
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_linear_layout_with_image_view, this);
         this.view = this.findViewById(R.id.view);

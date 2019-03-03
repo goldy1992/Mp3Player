@@ -46,21 +46,29 @@ public class PlaybackManager {
     }
 
     public String skipToNext() {
-        incrementQueue();
-        return getCurrentMediaId();
+        return incrementQueue() ? getCurrentMediaId() : null;
     }
 
     public String skipToPrevious() {
-        decrementQueue();
-        return getCurrentMediaId();
+        return decrementQueue() ? getCurrentMediaId() : null;
     }
 
-    private void incrementQueue() {
-        this.queueIndex = getNextQueueItemIndex();
+    private boolean incrementQueue() {
+        int newIndex = getNextQueueItemIndex();
+        if (newIndex >= 0) {
+            this.queueIndex = newIndex;
+            return true;
+        }
+        return false;
     }
 
-    private void decrementQueue() {
-        this.queueIndex = getPreviousQueueItemIndex();
+    private boolean decrementQueue() {
+        int newIndex = getPreviousQueueItemIndex();
+        if (newIndex >= 0) {
+            this.queueIndex = newIndex;
+            return true;
+        }
+        return false;
     }
 
     private int getNextQueueItemIndex() {
@@ -96,7 +104,13 @@ public class PlaybackManager {
     }
 
     public String getCurrentMediaId() {
-        return playlist.get(queueIndex).getDescription().getMediaId();
+        if (playlist != null && playlist.get(queueIndex) != null) {
+            MediaSessionCompat.QueueItem currentItem = playlist.get(queueIndex);
+            if (currentItem.getDescription() != null) {
+                return  currentItem.getDescription().getMediaId();
+            }
+        }
+        return null;
     }
 
     public boolean createNewPlaylist(List<MediaSessionCompat.QueueItem> newList) {

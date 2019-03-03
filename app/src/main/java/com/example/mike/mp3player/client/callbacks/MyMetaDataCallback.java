@@ -26,7 +26,7 @@ public class MyMetaDataCallback extends AsyncCallback<MediaMetadataCompat> {
 
     @Override
     public void processCallback(MediaMetadataCompat mediaMetadataCompat) {
-        logMetaData(mediaMetadataCompat, LOG_TAG);
+        //logMetaData(mediaMetadataCompat, LOG_TAG);
         StringBuilder sb = new StringBuilder();
         for (MetaDataListener listener : metaDataListeners) {
             if (null != listener) {
@@ -34,7 +34,7 @@ public class MyMetaDataCallback extends AsyncCallback<MediaMetadataCompat> {
                 sb.append(listener.getClass());
             }
         }
-        Log.i(LOG_TAG, "hit meta data changed " + ", listeners " + metaDataListeners.size() + ", " + sb.toString());
+   //     Log.i(LOG_TAG, "hit meta data changed " + ", listeners " + metaDataListeners.size() + ", " + sb.toString());
     }
 
     public synchronized void registerMetaDataListener(MetaDataListener listener) {

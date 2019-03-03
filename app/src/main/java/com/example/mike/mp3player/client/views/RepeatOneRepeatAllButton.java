@@ -39,13 +39,13 @@ public class RepeatOneRepeatAllButton extends LinearLayoutWithImageView implemen
 
     public void updateState(@PlaybackStateCompat.RepeatMode int newState) {
         switch (newState) {
-            case REPEAT_MODE_ALL: setRepeatAllIcon();
+            case REPEAT_MODE_ALL: this.mainUpdater.post(() -> setRepeatAllIcon());
                 this.repeatMode = REPEAT_MODE_ALL;
                 break;
-            case REPEAT_MODE_ONE: setRepeatOneIcon();
+            case REPEAT_MODE_ONE: this.mainUpdater.post(() -> setRepeatOneIcon());
                 this.repeatMode = REPEAT_MODE_ONE;
                 break;
-            case REPEAT_MODE_NONE: setRepeatNoneIcon();
+            case REPEAT_MODE_NONE: this.mainUpdater.post(() -> setRepeatNoneIcon());
                 this.repeatMode = REPEAT_MODE_NONE;
                 break;
             default:

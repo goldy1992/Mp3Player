@@ -17,12 +17,11 @@ import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.fragment.app.Fragment;
 
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 
-public class PlaybackSpeedControlsFragment extends Fragment implements PlaybackStateListener {
+public class PlaybackSpeedControlsFragment extends AsyncFragment implements PlaybackStateListener {
 
     private TextView playbackSpeed;
     private AppCompatImageButton increasePlaybackSpeedButton;
@@ -48,13 +47,12 @@ public class PlaybackSpeedControlsFragment extends Fragment implements PlaybackS
 
     public void init(MediaControllerAdapter mediaControllerAdapter) {
         this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mediaControllerAdapter.registerPlaybackStateListener(this, ListenerType.MISC);
+        this.mediaControllerAdapter.registerPlaybackStateListener(this, ListenerType.PLAYBACK);
     }
 
     private void updatePlaybackSpeedText(float speed) {
         Runnable r = () ->  playbackSpeed.setText(getString(R.string.PLAYBACK_SPEED_VALUE, speed));
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(r);
+        this.mainUpdater.post(r);
     }
 
     public void increasePlaybackSpeed() {

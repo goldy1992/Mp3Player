@@ -14,6 +14,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import java.io.IOException;
 
 import static android.media.MediaPlayer.MEDIA_INFO_STARTED_AS_NEXT;
+import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ONE;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 
 public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener {
@@ -79,6 +80,7 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
             try {
                 // Set the session active  (and update metadata and state)
                 getCurrentMediaPlayer().start();
+                getCurrentMediaPlayer().setLooping(isLooping());
                 PlaybackParams playbackParams = currentMediaPlayer.getPlaybackParams();
                 playbackParams.setSpeed(currentPlaybackSpeed);
                 Log.i(LOG_TAG, "repeating = " + isLooping());
@@ -110,7 +112,7 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
     }
 
     /**
-     * we never want to use stop when calling the player,
+     * we never _want to use stop when calling the player,
      * because we can just reset the mediaplayer and when a song is
      * prepared we can put it into the paused state.
      */
@@ -170,16 +172,6 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         getCurrentMediaPlayer().seekTo((int)position);
     }
 
-    private boolean setCurrentUri(Uri uri) {
-        try {
-       this.currentMediaPlayer = MediaPlayer.create(context, uri);
-       } catch (Exception ex) {
-           Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex.fillInStackTrace()));
-           return false;
-       }
-        return true;
-    }
-
     private boolean prepare() {
         if (!isPrepared()) {
             try {
@@ -202,13 +194,17 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
     }
 
     public PlaybackStateCompat getMediaPlayerState(long actions) {
+        return getMediaPlayerState(actions, false);
+    }
+
+    public PlaybackStateCompat getMediaPlayerState(long actions, boolean startOfSong) {
         Bundle ex = new Bundle();
         ex.putInt(REPEAT_MODE, repeatMode);
         return new PlaybackStateCompat.Builder()
                 .setActions(actions)
                 .setExtras(ex)
                 .setState(getCurrentState(),
-                        currentMediaPlayer.getCurrentPosition(),
+                        startOfSong ? 0 : currentMediaPlayer.getCurrentPosition(),
                         getCurrentPlaybackSpeed())
                 .build();
     }
@@ -280,7 +276,7 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         return true;
     }
 
-    public boolean isLooping() { return repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE;
+    public boolean isLooping() { return repeatMode == REPEAT_MODE_ONE;
     }
 
     public MediaPlayer getNextMediaPlayer() {
@@ -293,8 +289,11 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
 
     public void updateRepeatMode(int repeatMode) {
         this.repeatMode = repeatMode;
+        if (currentMediaPlayer != null) {
+            currentMediaPlayer.setLooping(isLooping());
+        }
 
-        if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE) {
+        if (isLooping()) {
             currentMediaPlayer.setNextMediaPlayer(null);
         } else {
             currentMediaPlayer.setNextMediaPlayer(nextMediaPlayer);

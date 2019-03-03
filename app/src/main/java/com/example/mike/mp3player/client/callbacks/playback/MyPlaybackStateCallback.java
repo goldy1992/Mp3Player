@@ -2,10 +2,8 @@ package com.example.mike.mp3player.client.callbacks.playback;
 
 import android.os.Looper;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import com.example.mike.mp3player.client.callbacks.AsyncCallback;
-import com.example.mike.mp3player.commons.Constants;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
-import static com.example.mike.mp3player.commons.LoggingUtils.logPlaybackStateCompat;
 
 public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> {
     private static final String LOG_TAG = "MY_PLYBK_ST_CLLBK";
@@ -33,18 +30,19 @@ public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> 
     @Override
     public void processCallback(PlaybackStateCompat data) {
         // TODO: make use of the actions in state to direct updates to the relevant listeners only
-        logPlaybackStateCompat(data, LOG_TAG);
+        //logPlaybackStateCompat(data, LOG_TAG);
         long actions = data.getActions();
-        if (containsAction(actions, PlaybackStateCompat.ACTION_PLAY) || containsAction(actions, PlaybackStateCompat.ACTION_PAUSE) || containsAction(actions, PlaybackStateCompat.ACTION_SEEK_TO)) {
+
+        if (actions == NO_ACTION) {
             notifyListenersOfType(ListenerType.PLAYBACK, data);
         }
 
-        if (containsAction(actions, PlaybackStateCompat.ACTION_SEEK_TO)) {
-            notifyListenersOfType(ListenerType.PLAYBACK, data);
+        if (containsAction(actions, PlaybackStateCompat.ACTION_SET_REPEAT_MODE)) {
+            notifyListenersOfType(ListenerType.REPEAT, data);
         }
 
-        if (containsAction(actions, NO_ACTION)) {
-            notifyListenersOfType(ListenerType.MISC, data);
+        if (containsAction(actions, PlaybackStateCompat.ACTION_SET_SHUFFLE_MODE)) {
+            notifyListenersOfType(ListenerType.SHUFFLE, data);
         }
     }
 
@@ -53,7 +51,7 @@ public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> 
             listeners.put(listenerType, new HashSet<>());
         }
         listeners.get(listenerType).add(listener);
-        Log.i(LOG_TAG, "registerPlaybackListener" + listener.getClass());
+        //Log.i(LOG_TAG, "registerPlaybackListener" + listener.getClass());
     }
 
 
@@ -82,6 +80,6 @@ public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> 
                 sb.append(listener.getClass());
             }
         }
-        Log.i(LOG_TAG, "hit playback state changed with status " + Constants.playbackStateDebugMap.get(state.getState()) + ", listeners " + listenersSet.size() + ", " + sb.toString());
+        //Log.i(LOG_TAG, "hit playback state changed with status " + Constants.playbackStateDebugMap.get(state.getState()) + ", listeners " + listenersSet.size() + ", " + sb.toString());
     }
 }
