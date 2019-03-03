@@ -23,7 +23,7 @@ public class TimeCounterTimerTask extends TimerTask {
     @Override
     public void run() {
         //Log.d(LOG_TAG,"current position: " + timeCounter.getCurrentPosition() + ", duration: " + timeCounter.getDuration());
-        if (timeCounter.getCurrentPosition() <= timeCounter.getDuration()) {
+        if (timeCounter.getCurrentPosition() < timeCounter.getDuration()) {
             timeCounter.setCurrentPosition(timeCounter.getCurrentPosition() + ONE_SECOND);
             mainHandler.post(updateUi);
         }
