@@ -19,6 +19,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 
+import com.example.mike.mp3player.commons.AndroidUtils;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.MediaLibrary;
@@ -68,6 +69,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.mediaLibrary = mediaLibrary;
         this.myNotificationManager = myNotificationManager;
         this.playbackManager = new PlaybackManager();
+        this.myMediaPlayerAdapter = AndroidUtils.isMashmallowOrLower() ? new MarshmallowMediaPlayerAdapter(context) : new MyMediaPlayerAdapter(context);
         this.myMediaPlayerAdapter = new MyMediaPlayerAdapter(context);
         this.broadcastReceiver = new ReceiveBroadcasts();
         this.context = context;

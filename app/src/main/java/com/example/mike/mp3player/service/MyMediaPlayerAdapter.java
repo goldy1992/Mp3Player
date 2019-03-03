@@ -19,27 +19,27 @@ import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 
 public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener {
 
-    private static final float DEFAULT_SPEED = 1.0f;
-    private static final float DEFAULT_PITCH = 1.0f;
-    private static final int DEFAULT_POSITION = 0;
-    private static final float MINIMUM_PLAYBACK_SPEED = 0.25f;
-    private static final float MAXIMUM_PLAYBACK_SPEED = 2f;
-    private static final String LOG_TAG = "MEDIA_PLAYER_ADAPTER";
+    static final float DEFAULT_SPEED = 1.0f;
+    static final float DEFAULT_PITCH = 1.0f;
+    static final int DEFAULT_POSITION = 0;
+    static final float MINIMUM_PLAYBACK_SPEED = 0.25f;
+    static final float MAXIMUM_PLAYBACK_SPEED = 2f;
+    static final String LOG_TAG = "MEDIA_PLAYER_ADAPTER";
 
-    private MediaPlayer currentMediaPlayer;
-    private MediaPlayer nextMediaPlayer;
-    private AudioFocusManager audioFocusManager;
+    MediaPlayer currentMediaPlayer;
+    MediaPlayer nextMediaPlayer;
+    AudioFocusManager audioFocusManager;
     @PlaybackStateCompat.RepeatMode
-    private int repeatMode;
-    private Context context;
+    int repeatMode;
+    Context context;
     /**
      * initialise to paused so the player doesn't start playing immediately
      */
     @PlaybackStateCompat.State
-    private int currentState = PlaybackStateCompat.STATE_PAUSED;;
-    private float currentPlaybackSpeed = DEFAULT_SPEED;
-    private float currentPitch = DEFAULT_PITCH;
-    private boolean isPrepared = true;
+    int currentState = PlaybackStateCompat.STATE_PAUSED;;
+    float currentPlaybackSpeed = DEFAULT_SPEED;
+    float currentPitch = DEFAULT_PITCH;
+    boolean isPrepared = true;
 
     public MyMediaPlayerAdapter(Context context) {
         this.context = context;
