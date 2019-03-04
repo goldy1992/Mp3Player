@@ -1,8 +1,8 @@
 package com.example.mike.mp3player.service;
 
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.support.v4.media.MediaMetadataCompat;
+
+import com.example.mike.mp3player.service.player.MyMediaPlayerAdapter;
 
 import org.junit.Before;
 import org.junit.Ignore;

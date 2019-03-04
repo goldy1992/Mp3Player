@@ -3,6 +3,8 @@ package com.example.mike.mp3player.service;
 import android.content.Context;
 import android.media.AudioManager;
 
+import com.example.mike.mp3player.service.player.MyMediaPlayerAdapter;
+
 import androidx.media.AudioAttributesCompat;
 import androidx.media.AudioFocusRequestCompat;
 import androidx.media.AudioManagerCompat;

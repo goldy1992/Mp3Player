@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.service;
+package com.example.mike.mp3player.service.player;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -9,6 +9,8 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
+import com.example.mike.mp3player.service.AudioFocusManager;
+
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.io.IOException;
@@ -17,38 +19,20 @@ import static android.media.MediaPlayer.MEDIA_INFO_STARTED_AS_NEXT;
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ONE;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 
-public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener {
-
-    static final float DEFAULT_SPEED = 1.0f;
-    static final float DEFAULT_PITCH = 1.0f;
-    static final int DEFAULT_POSITION = 0;
-    static final float MINIMUM_PLAYBACK_SPEED = 0.25f;
-    static final float MAXIMUM_PLAYBACK_SPEED = 2f;
-    static final String LOG_TAG = "MEDIA_PLAYER_ADAPTER";
+public class MyMediaPlayerAdapter extends GenericMediaPlayerAdapter {
 
     MediaPlayer currentMediaPlayer;
     MediaPlayer nextMediaPlayer;
-    AudioFocusManager audioFocusManager;
-    @PlaybackStateCompat.RepeatMode
-    int repeatMode;
-    Context context;
-    /**
-     * initialise to paused so the player doesn't start playing immediately
-     */
-    @PlaybackStateCompat.State
-    int currentState = PlaybackStateCompat.STATE_PAUSED;;
-    float currentPlaybackSpeed = DEFAULT_SPEED;
-    float currentPitch = DEFAULT_PITCH;
-    boolean isPrepared = true;
 
     public MyMediaPlayerAdapter(Context context) {
-        this.context = context;
+        super(context);
     }
 
     /**
      * TODO: Provide a track that is prepared for when the service starts, to stop the Activities from
      * crashing
      */
+    @Override
     public void reset(Uri firstItemUri, Uri secondItemUri, MediaPlayer.OnCompletionListener onCompletionListener) {
         Log.i(LOG_TAG, "reset");
         if (audioFocusManager != null && audioFocusManager.hasFocus) {
@@ -72,6 +56,7 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         this.currentState = PlaybackStateCompat.STATE_PAUSED;
     }
 
+    @Override
     public synchronized void play() {
         if (!prepare()) {
             return;
@@ -100,6 +85,7 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
      * 3) create the next mediaPlayer and set it.
      * @param nextUriToPrepare next URI that needs to be prepared.
      */
+    @Override
     public void onComplete(Uri nextUriToPrepare, MediaPlayer.OnCompletionListener newOnCompletionListener) {
         this.currentMediaPlayer.release();
 //        this.currentMediaPlayer = null;
@@ -111,22 +97,7 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         }
     }
 
-    /**
-     * we never _want to use stop when calling the player,
-     * because we can just reset the mediaplayer and when a song is
-     * prepared we can put it into the paused state.
-     */
-    @Deprecated
-    public void stop() {
-        if (!isPrepared()) {
-            return;
-        }
-        currentState= PlaybackStateCompat.STATE_STOPPED;
-        isPrepared = false;
-        getCurrentMediaPlayer().stop();
-        // Take the service out of the foreground
-    }
-
+    @Override
     public void pause() {
         if (isPaused()) {
             return;
@@ -139,6 +110,7 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         //logPlaybackParams(currentMediaPlayer.getPlaybackParams());
     }
 
+    @Override
     public void increaseSpeed(float by) {
         float newSpeed = currentPlaybackSpeed + by;
         if (newSpeed <= MAXIMUM_PLAYBACK_SPEED) {
@@ -152,6 +124,7 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         }
     }
 
+    @Override
     public void decreaseSpeed(float by) {
         float newSpeed = currentPlaybackSpeed - by;
         if (newSpeed >= MINIMUM_PLAYBACK_SPEED) {
@@ -165,6 +138,7 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         }
     }
 
+    @Override
     public void seekTo(long position) {
         if (!prepare()) {
             return;
@@ -214,30 +188,10 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         return builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, currentMediaPlayer.getDuration());
     }
 
-    public int getCurrentState() {
-        return currentState;
-    }
-
-    public boolean isPrepared() {
-        return isPrepared;
-    }
-
     public void setVolume(float volume) {
         if (currentMediaPlayer != null) {
             currentMediaPlayer.setVolume(volume, volume);
         }
-    }
-
-    public boolean isPlaying() {
-        return currentState == PlaybackStateCompat.STATE_PLAYING;
-    }
-
-    public boolean isPaused() {
-        return currentState == PlaybackStateCompat.STATE_PAUSED;
-    }
-
-    public float getCurrentPlaybackSpeed() {
-        return currentPlaybackSpeed;
     }
 
     private boolean validSpeed(float speed) {
@@ -253,7 +207,8 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         }
     }
 
-    private MediaPlayer createMediaPlayer(Uri uri, MediaPlayer.OnCompletionListener onCompletionListener) {
+    @Override
+    MediaPlayer createMediaPlayer(Uri uri, MediaPlayer.OnCompletionListener onCompletionListener) {
         MediaPlayer mediaPlayer = MediaPlayer.create(context, uri);
         mediaPlayer.setOnInfoListener(this::onInfo);
         mediaPlayer.setOnErrorListener(this::onError);
@@ -276,15 +231,8 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         return true;
     }
 
-    public boolean isLooping() { return repeatMode == REPEAT_MODE_ONE;
-    }
-
     public MediaPlayer getNextMediaPlayer() {
         return nextMediaPlayer;
-    }
-
-    public int getRepeatMode() {
-        return repeatMode;
     }
 
     public void updateRepeatMode(int repeatMode) {
@@ -298,9 +246,5 @@ public class MyMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaP
         } else {
             currentMediaPlayer.setNextMediaPlayer(nextMediaPlayer);
         }
-    }
-
-    public void setRepeatMode(int repeatMode) {
-        this.repeatMode = repeatMode;
     }
 }

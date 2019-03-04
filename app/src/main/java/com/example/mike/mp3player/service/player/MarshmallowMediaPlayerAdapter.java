@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.service;
+package com.example.mike.mp3player.service.player;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -6,6 +6,8 @@ import android.media.PlaybackParams;
 import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
+
+import com.example.mike.mp3player.service.AudioFocusManager;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
@@ -19,9 +21,34 @@ public class MarshmallowMediaPlayerAdapter extends MyMediaPlayerAdapter {
     private boolean useBufferedPosition = false;
     private int position = DEFAULT_POSITION;
     private int bufferedPosition = DEFAULT_POSITION;
+    private static final String LOG_TAG = "MSHMLW_PLY_ADPR";
 
     public MarshmallowMediaPlayerAdapter(Context context) {
         super(context);
+        this.currentPlaybackSpeed = 1.25f;
+    }
+    @Override
+    public void reset(Uri firstItemUri, Uri secondItemUri, MediaPlayer.OnCompletionListener onCompletionListener) {
+        Log.i(LOG_TAG, "resetting marshmallow player adapter");
+        if (audioFocusManager != null && audioFocusManager.hasFocus) {
+            audioFocusManager.abandonAudioFocus();
+        }
+
+        if (this.currentMediaPlayer != null) {
+            currentMediaPlayer.release();
+            currentMediaPlayer = null;
+        }
+
+        if (this.getNextMediaPlayer() != null) {
+            getNextMediaPlayer().release();
+            nextMediaPlayer = null;
+        }
+        this.currentMediaPlayer = createMediaPlayer(firstItemUri, onCompletionListener);
+        this.nextMediaPlayer = secondItemUri == null ? null : createMediaPlayer(secondItemUri, onCompletionListener);
+        this.currentMediaPlayer.setNextMediaPlayer(getNextMediaPlayer());
+        this.audioFocusManager = new AudioFocusManager(context, this);
+        this.audioFocusManager.init();
+        this.currentState = PlaybackStateCompat.STATE_PAUSED;
     }
 
     @Override
@@ -33,7 +60,6 @@ public class MarshmallowMediaPlayerAdapter extends MyMediaPlayerAdapter {
         if (audioFocusManager.requestAudioFocus()) {
             try {
                 // Set the session active  (and update metadata and state)
-                setPlaybackParamsAndPosition();
                 currentMediaPlayer.start();
                 currentState = PlaybackStateCompat.STATE_PLAYING;
             } catch (Exception e) {
@@ -42,19 +68,26 @@ public class MarshmallowMediaPlayerAdapter extends MyMediaPlayerAdapter {
         }
     }
 
-    private void setPlaybackParamsAndPosition() {
+    @Override
+    MediaPlayer createMediaPlayer(Uri uri, MediaPlayer.OnCompletionListener onCompletionListener) {
+        MediaPlayer mediaPlayer = MediaPlayer.create(context, uri);
+        setPlaybackParamsAndPosition(mediaPlayer);
+        return  mediaPlayer;
+    }
+
+        private void setPlaybackParamsAndPosition(MediaPlayer currentMediaPlayer) {
         PlaybackParams playbackParams = new PlaybackParams();
         playbackParams = playbackParams.allowDefaults()
                 .setPitch(currentPitch)
                 .setSpeed(currentPlaybackSpeed)
                 .setAudioFallbackMode(PlaybackParams.AUDIO_FALLBACK_MODE_DEFAULT);
+        currentMediaPlayer.setPlaybackParams(playbackParams);
         if (useBufferedPosition) {
             currentMediaPlayer.seekTo(bufferedPosition);
             useBufferedPosition = false;
         } else {
-            currentMediaPlayer.seekTo(getMediaPlayerPosition());
+           currentMediaPlayer.seekTo(getMediaPlayerPosition(currentMediaPlayer));
         }
-        currentMediaPlayer.setPlaybackParams(playbackParams);
     }
 
     @Override
@@ -105,8 +138,8 @@ public class MarshmallowMediaPlayerAdapter extends MyMediaPlayerAdapter {
             int originalState = currentState;
             setBufferedPosition(currentMediaPlayer.getCurrentPosition());
             this.isPrepared = false;
-            resetPlayer();
-            setCurrentUri(currentUri);
+  //          resetPlayer();
+    //        setCurrentUri(currentUri);
             if (originalState == PlaybackStateCompat.STATE_PLAYING) {
                 play();
             } else {
@@ -146,10 +179,10 @@ public class MarshmallowMediaPlayerAdapter extends MyMediaPlayerAdapter {
         this.useBufferedPosition = true;
     }
 
-    public int getMediaPlayerPosition() {
+    public int getMediaPlayerPosition(MediaPlayer mediaPlayer) {
         if (useBufferedPosition) {
             return bufferedPosition;
         }
-        return currentMediaPlayer.getCurrentPosition();
+        return mediaPlayer.getCurrentPosition();
     }
 }

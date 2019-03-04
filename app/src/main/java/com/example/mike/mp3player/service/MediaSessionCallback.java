@@ -25,17 +25,14 @@ import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
+import com.example.mike.mp3player.service.player.MarshmallowMediaPlayerAdapter;
+import com.example.mike.mp3player.service.player.MyMediaPlayerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PAUSE;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PLAY;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PREPARE_FROM_MEDIA_ID;
 import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SEEK_TO;
 import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SET_REPEAT_MODE;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_NEXT;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS;
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
@@ -70,7 +67,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.myNotificationManager = myNotificationManager;
         this.playbackManager = new PlaybackManager();
         this.myMediaPlayerAdapter = AndroidUtils.isMashmallowOrLower() ? new MarshmallowMediaPlayerAdapter(context) : new MyMediaPlayerAdapter(context);
-        this.myMediaPlayerAdapter = new MyMediaPlayerAdapter(context);
         this.broadcastReceiver = new ReceiveBroadcasts();
         this.context = context;
         this.worker = new Handler(looper);
