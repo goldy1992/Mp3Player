@@ -25,6 +25,7 @@ import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
+import com.example.mike.mp3player.service.player.GenericMediaPlayerAdapter;
 import com.example.mike.mp3player.service.player.MarshmallowMediaPlayerAdapter;
 import com.example.mike.mp3player.service.player.MyMediaPlayerAdapter;
 
@@ -49,7 +50,7 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KE
 public class MediaSessionCallback extends MediaSessionCompat.Callback implements MediaPlayer.OnCompletionListener {
     private ServiceManager serviceManager;
     private PlaybackManager playbackManager;
-    private MyMediaPlayerAdapter myMediaPlayerAdapter;
+    private GenericMediaPlayerAdapter myMediaPlayerAdapter;
     private MediaSessionCompat mediaSession;
     private MyNotificationManager myNotificationManager;
     private MediaLibrary mediaLibrary;
@@ -84,11 +85,11 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public synchronized void onPlay() {
-        worker.post(this::play);
+        Log.i(LOG_TAG, "on play, status of worker " + worker.getLooper().getQueue());
+        worker.post(() -> this.play());
     }
 
     private void play() {
-        Log.i(LOG_TAG, "onPlay");
         broadcastReceiver.registerAudioNoisyReceiver();
         Log.i(LOG_TAG, "onPlay registed audio noisy receiver");
         myMediaPlayerAdapter.play();
@@ -100,7 +101,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
         @Override
     public synchronized void onSkipToNext() {
-        worker.post(this::skipToNext);
+        worker.post(() -> this.skipToNext());
     }
 
     private void skipToNext() {
@@ -114,7 +115,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public synchronized void onSkipToPrevious() {
-        worker.post(this::skipToPrevious);
+        worker.post(() -> this.skipToPrevious());
     }
 
     private void skipToPrevious() {
@@ -150,7 +151,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public synchronized void onPrepareFromMediaId(String mediaId, Bundle bundle) {
-        worker.post(() -> prepareFromMediaId(mediaId, bundle));
+        worker.post(() -> this.prepareFromMediaId(mediaId, bundle));
     }
 
     private void prepareFromMediaId(String mediaId, Bundle bundle) {
@@ -192,7 +193,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public synchronized void onPause() {
-        worker.post(this::pause);
+        worker.post(() -> this.pause());
     }
     private void pause() {
         Log.i(LOG_TAG, "onPause");
@@ -205,7 +206,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public void onSeekTo(long position ) {
-        worker.post(() -> seekTo(position));
+        worker.post(() -> this.seekTo(position));
 
     }
     private void seekTo(long position) {
@@ -215,7 +216,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public synchronized void onAddQueueItem(MediaDescriptionCompat description) {
-        worker.post(() -> addQueueItem(description));
+        worker.post(() -> this.addQueueItem(description));
     }
 
     private void addQueueItem(MediaDescriptionCompat description) {
@@ -225,7 +226,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public synchronized void onRemoveQueueItem(MediaDescriptionCompat description) {
-        worker.post(() -> removeQueueItem(description));
+        worker.post(() -> this.removeQueueItem(description));
     }
     private void removeQueueItem(MediaDescriptionCompat description) {
         MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
@@ -234,7 +235,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public void onSetRepeatMode (int repeatMode) {
-        worker.post(() -> setRepeatMode(repeatMode));
+        worker.post(() -> this.setRepeatMode(repeatMode));
     }
 
     private void setRepeatMode(int repeatMode) {
@@ -289,7 +290,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public synchronized void onCustomAction(String customAction, Bundle extras) {
-        worker.post(() -> customAction(customAction, extras));
+        worker.post(() -> this.customAction(customAction, extras));
     }
 
     private void customAction(String customAction, Bundle extras) {
