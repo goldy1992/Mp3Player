@@ -67,7 +67,12 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
             this.currentMediaPlayer.setNextMediaPlayer(getNextMediaPlayer());
         }
     }
-
+    /**
+     *
+     * @param firstItemUri
+     * @param secondItemUri
+     * @param onCompletionListener
+     */
     public void reset(Uri firstItemUri, Uri secondItemUri, MediaPlayer.OnCompletionListener onCompletionListener) {
         Log.i(LOG_TAG, "reset");
         if (audioFocusManager != null && audioFocusManager.hasFocus) {
@@ -196,12 +201,19 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
     public MediaPlayer getCurrentMediaPlayer() {
         return currentMediaPlayer;
     }
-
+    /**
+     *
+     * @param speed
+     * @return
+     */
     boolean validSpeed(float speed) {
         return speed >= MINIMUM_PLAYBACK_SPEED &&
                 speed <= MAXIMUM_PLAYBACK_SPEED;
     }
-
+    /**
+     *
+     * @param repeatMode
+     */
     public void updateRepeatMode(int repeatMode) {
         this.repeatMode = repeatMode;
         if (currentMediaPlayer != null) {
