@@ -59,6 +59,7 @@ public class SeekerBarController extends MediaControllerCompat.Callback implemen
                 : 0;
         seekerBar.setMax(max);
         this.currentSongDuration = max;
+        createAndStartAnimator(DEFAULT_POSITION);
     }
 
     @Override
@@ -71,6 +72,7 @@ public class SeekerBarController extends MediaControllerCompat.Callback implemen
     public void onStartTrackingTouch(SeekBar seekBar) {
         SeekerBar seekerBar = (SeekerBar) seekBar;
         seekerBar.getTimeCounter().cancelTimerDuringTracking();
+        removeValueAnimator();
         setTracking(seekBar, true);
     }
 
@@ -80,10 +82,6 @@ public class SeekerBarController extends MediaControllerCompat.Callback implemen
         SeekerBar seekerBar = (SeekerBar) seekBar;
         if (seekerBar != null ) {
             mediaControllerAdapter.seekTo(seekBar.getProgress());
-            if (seekerBar.getValueAnimator() != null) {
-                seekerBar.getValueAnimator().cancel();
-            }
-
         }
     }
 
@@ -100,25 +98,34 @@ public class SeekerBarController extends MediaControllerCompat.Callback implemen
             if (isLooping()) {
                 createAndStartAnimator(DEFAULT_POSITION);
             } else {
-                seekerBar.setProgress(DEFAULT_POSITION);
-                if (seekerBar.getValueAnimator() != null) {
-                    seekerBar.getValueAnimator().cancel();
-                }
-                seekerBar.setValueAnimator(null);
+                removeValueAnimator();
             }
+            seekerBar.setProgress(DEFAULT_POSITION);
         }
     }
 
-    private void createAndStartAnimator(long latestPosition) {
-
-        if (seekerBar.getValueAnimator() != null) {
-            seekerBar.getValueAnimator().cancel();
-            seekerBar.setValueAnimator(null);
+    private void createAnimator() {
+        removeValueAnimator();
+        try {
+            if (currentState == PlaybackStateCompat.STATE_PLAYING) {
+                ValueAnimator valueAnimator = ValueAnimator.ofInt(0, seekerBar.getMax());
+                valueAnimator.setDuration(seekerBar.getMax());
+                seekerBar.setValueAnimator(valueAnimator);
+                seekerBar.getValueAnimator().addListener(this);
+                seekerBar.getValueAnimator().setInterpolator(new LinearInterpolator());
+                seekerBar.getValueAnimator().start();
+            }
+        } catch (IllegalArgumentException ex) {
+            Log.e(getClass().getName(), "seekerbarMax: " + currentSongDuration);
+            throw new IllegalArgumentException(ex);
         }
+    }
 
+
+    private void createAndStartAnimator(long latestPosition) {
+        removeValueAnimator();
         final int progress = validPosition(latestPosition) ? (int) latestPosition : NO_PROGRESS;
         seekerBar.setProgress(progress);
-
         // If the media is playing then the seekbar should follow it, and the easiest
         // way to do that is to create a ValueAnimator to update it so the bar reaches
         // the end of the media the same time as playback gets there (or close enough).
@@ -164,6 +171,13 @@ public class SeekerBarController extends MediaControllerCompat.Callback implemen
             if (null != repeatMode) {
                 this.looping = repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE;
             }
+        }
+    }
+    private void removeValueAnimator() {
+        if (null != seekerBar && null != seekerBar.getValueAnimator()) {
+            seekerBar.getValueAnimator().removeAllUpdateListeners();
+            seekerBar.getValueAnimator().cancel();
+            seekerBar.setValueAnimator(null);
         }
     }
 }
