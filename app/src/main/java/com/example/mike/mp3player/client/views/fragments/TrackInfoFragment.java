@@ -13,7 +13,6 @@ import com.example.mike.mp3player.client.MetaDataListener;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 public class TrackInfoFragment extends AsyncFragment implements MetaDataListener {
 

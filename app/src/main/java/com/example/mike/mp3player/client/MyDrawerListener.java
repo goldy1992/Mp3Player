@@ -1,7 +1,8 @@
 package com.example.mike.mp3player.client;
 
-import androidx.drawerlayout.widget.DrawerLayout;
 import android.view.View;
+
+import androidx.drawerlayout.widget.DrawerLayout;
 
 public class MyDrawerListener implements DrawerLayout.DrawerListener {
     @Override

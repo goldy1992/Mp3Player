@@ -2,12 +2,8 @@ package com.example.mike.mp3player.commons;
 
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.SparseArray;
-import android.util.SparseIntArray;
 
 import com.example.mike.mp3player.commons.library.Category;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public final class Constants {
 

@@ -11,8 +11,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.example.mike.mp3player.commons.LoggingUtils.logMetaData;
-
 public class MyMetaDataCallback extends AsyncCallback<MediaMetadataCompat> {
     private static final String LOG_TAG = "MY_META_DTA_CLLBK";
     Handler worker;

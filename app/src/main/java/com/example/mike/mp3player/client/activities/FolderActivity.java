@@ -3,19 +3,15 @@ package com.example.mike.mp3player.client.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
-import android.util.Log;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.viewpager.SongViewPageFragment;
 import com.example.mike.mp3player.commons.library.LibraryId;
 
 import java.util.List;
-
-import androidx.appcompat.widget.Toolbar;
 
 import static com.example.mike.mp3player.commons.Constants.FOLDER_CHILDREN;
 import static com.example.mike.mp3player.commons.Constants.FOLDER_NAME;

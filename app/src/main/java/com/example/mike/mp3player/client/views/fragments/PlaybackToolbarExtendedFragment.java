@@ -8,7 +8,6 @@ import android.widget.LinearLayout;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.MediaPlayerActvityRequester;
 import com.example.mike.mp3player.client.views.LinearLayoutWithImageView;
 
 import androidx.annotation.NonNull;

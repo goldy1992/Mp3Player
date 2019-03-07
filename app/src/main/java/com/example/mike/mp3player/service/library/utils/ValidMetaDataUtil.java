@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.service.library.utils;
 
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;

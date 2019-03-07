@@ -1,8 +1,6 @@
 package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +9,8 @@ import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
+import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 
 import java.util.Collections;
 

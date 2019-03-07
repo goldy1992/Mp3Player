@@ -18,8 +18,6 @@ import com.example.mike.mp3player.client.utils.IntentUtils;
 import com.example.mike.mp3player.client.views.PlayPauseButton;
 
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

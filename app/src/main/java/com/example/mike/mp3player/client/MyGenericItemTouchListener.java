@@ -7,7 +7,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.mike.mp3player.client.views.MyRecyclerView;
-import com.example.mike.mp3player.commons.library.LibraryId;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;

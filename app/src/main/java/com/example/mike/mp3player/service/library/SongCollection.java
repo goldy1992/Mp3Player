@@ -3,8 +3,8 @@ package com.example.mike.mp3player.service.library;
 import android.support.v4.media.MediaBrowserCompat;
 
 import com.example.mike.mp3player.commons.ComparatorUtils;
-import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.Constants;
+import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 
 import java.util.List;

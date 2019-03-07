@@ -5,8 +5,8 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
-import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 import com.example.mike.mp3player.client.callbacks.playback.MyPlaybackStateCallback;
+import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 
 import java.util.HashSet;
 import java.util.Set;

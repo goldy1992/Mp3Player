@@ -30,4 +30,3 @@ public class TimeCounterTimerTask extends TimerTask {
         //Log.d(LOG_TAG, "finished run call");
     } // run
 }
-

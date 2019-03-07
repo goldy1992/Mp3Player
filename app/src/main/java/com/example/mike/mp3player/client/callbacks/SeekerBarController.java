@@ -15,6 +15,7 @@ import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.SeekerBar;
 
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
+import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_SPEED;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 
@@ -95,14 +96,16 @@ public class SeekerBarController extends MediaControllerCompat.Callback implemen
 
     @Override
     public void onAnimationEnd(Animator animation) {
-        if (isLooping()) {
-            createAndStartAnimator(0);
-        } else {
-            seekerBar.setProgress(0);
-            if (seekerBar.getValueAnimator() != null ) {
-                seekerBar.getValueAnimator().cancel();
+        if (seekerBar != null && !seekerBar.isTracking()) {
+            if (isLooping()) {
+                createAndStartAnimator(DEFAULT_POSITION);
+            } else {
+                seekerBar.setProgress(DEFAULT_POSITION);
+                if (seekerBar.getValueAnimator() != null) {
+                    seekerBar.getValueAnimator().cancel();
+                }
+                seekerBar.setValueAnimator(null);
             }
-            seekerBar.setValueAnimator(null);
         }
     }
 

@@ -5,8 +5,6 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.view.MotionEvent;
 
 import com.example.mike.mp3player.client.views.MyFolderViewAdapter;
-import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryConstructor;
 
 public class MyFolderItemTouchListener extends MyGenericItemTouchListener {
 
