@@ -7,6 +7,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Printer;
 
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
@@ -33,7 +34,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     private MediaSessionCallback mediaSessionCallback;
     private ServiceManager serviceManager;
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
-    private static final String WORKER_ID = "MEDIA_PLAYBACK_ FSERVICE_WORKER";
+    private static final String WORKER_ID = "MDIA_PLYBK_SRVC_WKR";
     private MediaLibrary mediaLibrary;
     private HandlerThread worker;
 
@@ -42,6 +43,9 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         super.onCreate();
         worker = new HandlerThread(WORKER_ID);
         worker.start();
+        worker.getLooper().setMessageLogging((String x) -> {
+            Log.i(WORKER_ID, x);
+        });
         mediaLibrary = new MediaLibrary(getBaseContext());
         mediaLibrary.init();
         mMediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);

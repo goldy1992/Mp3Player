@@ -3,7 +3,6 @@ package com.example.mike.mp3player.service.player;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.PlaybackParams;
-import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 

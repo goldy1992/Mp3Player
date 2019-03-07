@@ -17,9 +17,10 @@ import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.client.views.TimeCounter;
 
+import java.util.Collections;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackStateListener, MetaDataListener {
 
@@ -48,7 +49,7 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
 
     public void init(MediaControllerAdapter mediaControllerAdapter) {
         this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mediaControllerAdapter.registerPlaybackStateListener(this, ListenerType.PLAYBACK);
+        this.mediaControllerAdapter.registerPlaybackStateListener(this, Collections.singleton(ListenerType.PLAYBACK));
         this.mediaControllerAdapter.registerMetaDataListener(this);
         this.getSeekerBar().init(mediaControllerAdapter);
 
@@ -69,7 +70,7 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
     @Override
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
         getCounter().updateState(state);
-        getSeekerBar().getMySeekerMediaControllerCallback().onPlaybackStateChanged(state);
+        getSeekerBar().getSeekerBarController().onPlaybackStateChanged(state);
     }
 
     @Override
@@ -78,7 +79,7 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
         getCounter().setDuration(duration);
         String durationString = TimerUtils.formatTime(duration);
         mainUpdater.post(() -> updateDurationText(durationString));
-        getSeekerBar().getMySeekerMediaControllerCallback().onMetadataChanged(metadata);
+        getSeekerBar().getSeekerBarController().onMetadataChanged(metadata);
     }
 
     private void updateDurationText(String duration) {

@@ -11,6 +11,8 @@ import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.views.RepeatOneRepeatAllButton;
 
+import java.util.Collections;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -40,7 +42,7 @@ public class ShuffleRepeatFragment extends AsyncFragment {
         if (this.repeatOneRepeatAllButton == null) {
             this.repeatOneRepeatAllButton = RepeatOneRepeatAllButton.create(mediaControllerAdapter.getContext());
         }
-        this.mediaControllerAdapter.registerPlaybackStateListener(repeatOneRepeatAllButton, ListenerType.REPEAT);
+        this.mediaControllerAdapter.registerPlaybackStateListener(repeatOneRepeatAllButton, Collections.singleton(ListenerType.REPEAT));
         this.attachToRoot = attachToRoot;
     }
 

@@ -46,11 +46,13 @@ public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> 
         }
     }
 
-    public synchronized void registerPlaybackStateListener(PlaybackStateListener listener, ListenerType listenerType) {
-        if (!listeners.containsKey(listenerType)) {
-            listeners.put(listenerType, new HashSet<>());
+    public synchronized void registerPlaybackStateListener(PlaybackStateListener listener, Set<ListenerType> listenerTypes) {
+        for (ListenerType listenerType : listenerTypes) {
+            if (!listeners.containsKey(listenerType)) {
+                listeners.put(listenerType, new HashSet<>());
+            }
+            listeners.get(listenerType).add(listener);
         }
-        listeners.get(listenerType).add(listener);
         //Log.i(LOG_TAG, "registerPlaybackListener" + listener.getClass());
     }
 

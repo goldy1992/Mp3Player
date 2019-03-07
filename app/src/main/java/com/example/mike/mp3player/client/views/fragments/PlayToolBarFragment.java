@@ -17,6 +17,10 @@ import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.utils.IntentUtils;
 import com.example.mike.mp3player.client.views.PlayPauseButton;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
@@ -58,7 +62,7 @@ public class PlayToolBarFragment extends Fragment {
         if (this.playPauseButton == null) {
             this.playPauseButton = PlayPauseButton.create(mediaControllerAdapter.getContext(), (View v) -> playPause());
         }
-        this.mediaControllerAdapter.registerPlaybackStateListener(playPauseButton, ListenerType.PLAYBACK);
+        this.mediaControllerAdapter.registerPlaybackStateListener(playPauseButton, Collections.singleton(ListenerType.PLAYBACK));
         this.attachToRoot = attachToRoot;
     }
 

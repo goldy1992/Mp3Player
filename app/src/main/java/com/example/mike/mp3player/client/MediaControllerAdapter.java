@@ -14,6 +14,8 @@ import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 
+import java.util.Set;
+
 public class MediaControllerAdapter {
 
     private static final String LOG_TAG = "MDIA_CNTRLLR_ADPTR";
@@ -92,8 +94,8 @@ public class MediaControllerAdapter {
         myMediaControllerCallback.getMyMetaDataCallback().removeMetaDataListener(metaDataListener);
     }
 
-    public void registerPlaybackStateListener(PlaybackStateListener playbackStateListener, ListenerType listenerType) {
-        myMediaControllerCallback.getMyPlaybackStateCallback().registerPlaybackStateListener(playbackStateListener, listenerType);
+    public void registerPlaybackStateListener(PlaybackStateListener playbackStateListener, Set<ListenerType> listenerTypes) {
+        myMediaControllerCallback.getMyPlaybackStateCallback().registerPlaybackStateListener(playbackStateListener, listenerTypes);
     }
 
     public void unregisterPlaybackStateListener(PlaybackStateListener playbackStateListener, ListenerType listenerType) {

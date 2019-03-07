@@ -2,6 +2,8 @@ package com.example.mike.mp3player.service.player;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
@@ -14,14 +16,14 @@ import java.io.IOException;
 
 import static android.media.MediaPlayer.MEDIA_INFO_STARTED_AS_NEXT;
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ONE;
+import static com.example.mike.mp3player.commons.Constants.DEFAULT_PITCH;
+import static com.example.mike.mp3player.commons.Constants.DEFAULT_SPEED;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 
 public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener  {
 
     static final int NOT_IN_USE = -1;
-    static final float DEFAULT_SPEED = 1.0f;
-    static final float DEFAULT_PITCH = 1.0f;
-    static final int DEFAULT_POSITION = 0;
+
     static final float MINIMUM_PLAYBACK_SPEED = 0.25f;
     static final float MAXIMUM_PLAYBACK_SPEED = 2f;
     static final String LOG_TAG = "MEDIA_PLAYER_ADAPTER";
@@ -58,12 +60,12 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
      * 3) create the next mediaPlayer and set it.
      * @param nextUriToPrepare next URI that needs to be prepared.
      */
-    public void onComplete(Uri nextUriToPrepare, MediaPlayer.OnCompletionListener newOnCompletionListener) {
+    public void onComplete(Uri nextUriToPrepare, OnCompletionListener newOnCompletionListener, OnSeekCompleteListener onSeekCompleteListener) {
         this.currentMediaPlayer.release();
         this.currentMediaPlayer = this.getNextMediaPlayer();
         // TODO: we might want to make this an asynchronous task in the future
         if (nextUriToPrepare != null) {
-            this.nextMediaPlayer = createMediaPlayer(nextUriToPrepare, newOnCompletionListener);
+            this.nextMediaPlayer = createMediaPlayer(nextUriToPrepare, newOnCompletionListener, onSeekCompleteListener);
             this.currentMediaPlayer.setNextMediaPlayer(getNextMediaPlayer());
         }
     }
@@ -73,7 +75,7 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
      * @param secondItemUri
      * @param onCompletionListener
      */
-    public void reset(Uri firstItemUri, Uri secondItemUri, MediaPlayer.OnCompletionListener onCompletionListener) {
+    public void reset(Uri firstItemUri, Uri secondItemUri, OnCompletionListener onCompletionListener, OnSeekCompleteListener onSeekCompleteListener) {
         Log.i(LOG_TAG, "reset");
         if (audioFocusManager != null && audioFocusManager.hasFocus) {
             audioFocusManager.abandonAudioFocus();
@@ -91,9 +93,9 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
             Log.i(LOG_TAG,"next mediaplayer released");
             nextMediaPlayer = null;
         }
-        this.currentMediaPlayer = createMediaPlayer(firstItemUri, onCompletionListener);
+        this.currentMediaPlayer = createMediaPlayer(firstItemUri, onCompletionListener, onSeekCompleteListener);
         Log.i(LOG_TAG,"Created first mediaplayer");
-        this.nextMediaPlayer = secondItemUri == null ? null : createMediaPlayer(secondItemUri, onCompletionListener);
+        this.nextMediaPlayer = secondItemUri == null ? null : createMediaPlayer(secondItemUri, onCompletionListener, onSeekCompleteListener);
         Log.i(LOG_TAG,"Created second mediaplayer");
         this.currentMediaPlayer.setNextMediaPlayer(getNextMediaPlayer());
         this.audioFocusManager = new AudioFocusManager(context, this);
@@ -101,10 +103,11 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
         this.currentState = PlaybackStateCompat.STATE_PAUSED;
     }
 
-    MediaPlayer createMediaPlayer(Uri uri, MediaPlayer.OnCompletionListener onCompletionListener) {
+    MediaPlayer createMediaPlayer(Uri uri, OnCompletionListener onCompletionListener, OnSeekCompleteListener onSeekCompleteListener) {
         MediaPlayer mediaPlayer = MediaPlayer.create(context, uri);
         mediaPlayer.setOnInfoListener(this);
         mediaPlayer.setOnErrorListener(this);
+        mediaPlayer.setOnSeekCompleteListener(onSeekCompleteListener);
         mediaPlayer.setOnCompletionListener(onCompletionListener);
         return mediaPlayer;
     }
@@ -137,6 +140,9 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
     }
 
     public PlaybackStateCompat getMediaPlayerState(long actions, boolean startOfSong) {
+        if (startOfSong) {
+            Log.i(LOG_TAG, "start of song");
+        }
         Bundle ex = new Bundle();
         ex.putInt(REPEAT_MODE, repeatMode);
         return new PlaybackStateCompat.Builder()

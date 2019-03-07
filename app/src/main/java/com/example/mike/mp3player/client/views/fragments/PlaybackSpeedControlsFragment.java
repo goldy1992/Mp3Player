@@ -14,6 +14,8 @@ import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 
+import java.util.Collections;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -47,7 +49,7 @@ public class PlaybackSpeedControlsFragment extends AsyncFragment implements Play
 
     public void init(MediaControllerAdapter mediaControllerAdapter) {
         this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mediaControllerAdapter.registerPlaybackStateListener(this, ListenerType.PLAYBACK);
+        this.mediaControllerAdapter.registerPlaybackStateListener(this, Collections.singleton(ListenerType.PLAYBACK));
     }
 
     private void updatePlaybackSpeedText(float speed) {

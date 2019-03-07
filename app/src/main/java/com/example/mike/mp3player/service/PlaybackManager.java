@@ -104,7 +104,7 @@ public class PlaybackManager {
     }
 
     public String getCurrentMediaId() {
-        if (playlist != null && playlist.get(queueIndex) != null) {
+        if (playlist != null && !playlist.isEmpty() && playlist.get(queueIndex) != null) {
             MediaSessionCompat.QueueItem currentItem = playlist.get(queueIndex);
             if (currentItem.getDescription() != null) {
                 return  currentItem.getDescription().getMediaId();

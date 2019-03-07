@@ -47,7 +47,7 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KE
 /**
  * Created by Mike on 24/09/2017.
  */
-public class MediaSessionCallback extends MediaSessionCompat.Callback implements MediaPlayer.OnCompletionListener {
+public class MediaSessionCallback extends MediaSessionCompat.Callback implements MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
     private ServiceManager serviceManager;
     private PlaybackManager playbackManager;
     private GenericMediaPlayerAdapter myMediaPlayerAdapter;
@@ -78,7 +78,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.playbackManager.init(queueItems);
         Uri firstSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getCurrentMediaId());
         Uri nextSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
-        this.myMediaPlayerAdapter.reset(firstSongUri, nextSongUri, this);
+        this.myMediaPlayerAdapter.reset(firstSongUri, nextSongUri, this, this);
         this.myMediaPlayerAdapter.getCurrentMediaPlayer().setOnCompletionListener(this);
         updateMediaSession();
     }
@@ -119,15 +119,17 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void skipToPrevious() {
+        Log.i(LOG_TAG, "skipToPrevious");
         int position = myMediaPlayerAdapter.getCurrentPlaybackPosition();
         if (position > ONE_SECOND) {
             myMediaPlayerAdapter.seekTo(1);
         } else {
             playbackManager.skipToPrevious();
+            skipToNewMedia(playbackManager.getCurrentMediaId());
+            serviceManager.notify(prepareNotification());
+            updateMediaSession();
         }
-        skipToNewMedia(playbackManager.getCurrentMediaId());
-        serviceManager.notify(prepareNotification());
-        updateMediaSession();
+
     }
     @Override
     public synchronized boolean onMediaButtonEvent(Intent mediaButtonEvent) {
@@ -155,6 +157,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void prepareFromMediaId(String mediaId, Bundle bundle) {
+        Log.i(LOG_TAG, "prepareFromMediaId");
         super.onPrepareFromMediaId(mediaId, bundle);
         LibraryId parentId = (LibraryId) bundle.get(PARENT_ID);
         List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getPlaylist(parentId);
@@ -173,7 +176,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                 uriToPlay = mediaLibrary.getMediaUriFromMediaId(id);
                 playbackManager.setQueueIndex(mediaId);
                 followingUri = mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
-                myMediaPlayerAdapter.reset(uriToPlay, followingUri, this);
+                myMediaPlayerAdapter.reset(uriToPlay, followingUri, this, this);
 
                 break;
             }
@@ -210,6 +213,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     }
     private void seekTo(long position) {
+        Log.i(LOG_TAG, "seekTO");
         myMediaPlayerAdapter.seekTo(position);
         mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState(ACTION_SEEK_TO));
     }
@@ -220,6 +224,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void addQueueItem(MediaDescriptionCompat description) {
+        Log.i(LOG_TAG, "addQueueItem");
         MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
         mediaSession.setQueue(playbackManager.onAddQueueItem(item));
     }
@@ -239,6 +244,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void setRepeatMode(int repeatMode) {
+        Log.i(LOG_TAG, "set Repeat mode");
         logRepeatMode(repeatMode, LOG_TAG);
         myMediaPlayerAdapter.updateRepeatMode(repeatMode);
 
@@ -247,7 +253,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         } else {
             playbackManager.setRepeating(false);
         }
-
         /**
          * TODO: set logic to put in the respective repeat mode
          */
@@ -271,15 +276,14 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         if (mediaPlayer != null && mediaPlayer.equals(myMediaPlayerAdapter.getCurrentMediaPlayer())) {
 
             if (mediaPlayer.isLooping()) {
-                mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState(NO_ACTION, true));
-
+               // mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState(NO_ACTION, true));
                 // update media session to be the beginning of the current song
             } else {
                 playbackManager.notifyPlaybackComplete(); // increments queue
                 String nextUriToPrepare = playbackManager.getNext(); // gets uri after newly incremented index
                 if (null != nextUriToPrepare) {
                     Uri nextItemUri = mediaLibrary.getMediaUriFromMediaId(nextUriToPrepare);
-                    myMediaPlayerAdapter.onComplete(nextItemUri, this);
+                    myMediaPlayerAdapter.onComplete(nextItemUri, this, this);
                     updateMediaSession();
                 }
             }
@@ -338,7 +342,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         Uri newUri = mediaLibrary.getMediaUriFromMediaId(newMediaId);
         Uri followingUri = mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
         PlaybackStateCompat currentState = myMediaPlayerAdapter.getMediaPlayerState(ACTION_SEEK_TO);
-        myMediaPlayerAdapter.reset(newUri, followingUri, this);
+        myMediaPlayerAdapter.reset(newUri, followingUri, this, this);
         if (currentState.getState() == PlaybackStateCompat.STATE_PLAYING) {
             myMediaPlayerAdapter.play();
         }
@@ -350,6 +354,11 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void updateMediaSession() {
+        updateMediaSession(NO_ACTION);
+    }
+
+    @Override
+    public void onSeekComplete(MediaPlayer mp) {
         updateMediaSession(NO_ACTION);
     }
 

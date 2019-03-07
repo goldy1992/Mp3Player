@@ -60,7 +60,9 @@ public class MediaLibrary {
 
     public void buildMediaLibrary(){
         File externalStorageDirectory = MediaLibraryUtils.getExternalStorageDirectory();
+        File internalStorage = MediaLibraryUtils.getInternalStorageDirectory();
         List<MediaItem> songList = buildSongList(externalStorageDirectory);
+        songList.addAll(buildSongList(internalStorage));
         for (Category category : categories.keySet()) {
             categories.get(category).index(songList);
         }

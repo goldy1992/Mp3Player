@@ -34,6 +34,8 @@ public final class MediaLibraryUtils {
         return new File(STORAGE_DIR);
     }
 
+    public static File getInternalStorageDirectory() { return Environment.getExternalStorageDirectory(); }
+
     /**
      * This should make a list of pre-ordered QueueItems since the parameter is a tree set, which is
      * orered by definition.
