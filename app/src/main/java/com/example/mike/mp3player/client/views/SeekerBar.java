@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.SeekerBarController;
+import com.example.mike.mp3player.client.callbacks.SeekerBarController2;
 
 import androidx.appcompat.widget.AppCompatSeekBar;
 
@@ -14,7 +15,7 @@ public class SeekerBar extends AppCompatSeekBar {
     private ValueAnimator valueAnimator;
     private boolean isTracking = false;
 
-    private SeekerBarController seekerBarController;
+    private SeekerBarController2 seekerBarController;
     private TimeCounter timeCounter;
 
     public SeekerBar(Context context) {
@@ -30,13 +31,13 @@ public class SeekerBar extends AppCompatSeekBar {
     }
 
     public void init(MediaControllerAdapter mediaControllerAdapter) {
-        this.seekerBarController = new SeekerBarController(this, mediaControllerAdapter);
+        this.seekerBarController = new SeekerBarController2(this, mediaControllerAdapter);
         super.setOnSeekBarChangeListener(seekerBarController);
     }
 
     @Override
-    public final void setOnSeekBarChangeListener(OnSeekBarChangeListener l) {
-        super.setOnSeekBarChangeListener(l);
+    public final void setOnSeekBarChangeListener(OnSeekBarChangeListener listener) {
+        super.setOnSeekBarChangeListener(listener);
     }
 
     public ValueAnimator getValueAnimator() {
@@ -55,7 +56,7 @@ public class SeekerBar extends AppCompatSeekBar {
         isTracking = tracking;
     }
 
-    public SeekerBarController getSeekerBarController() {
+    public SeekerBarController2 getSeekerBarController() {
         return seekerBarController;
     }
 
