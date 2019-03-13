@@ -53,12 +53,13 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
         }
 
         if (null == valueAnimator || speedChanged) {
+            Log.i(LOG_TAG, "recreate animator");
             createAnimator();
         }
         seekerBar.setProgress(currentPosition);
         switch (currentState) {
             case PlaybackStateCompat.STATE_PAUSED: valueAnimator.pause(); break;
-            case PlaybackStateCompat.STATE_PLAYING: valueAnimator.start(); break;
+            case PlaybackStateCompat.STATE_PLAYING: valueAnimator.resume(); break;
             default: break;
         }
         this.currentState = state.getState();
@@ -88,7 +89,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
     public void onStartTrackingTouch(SeekBar seekBar) {
         SeekerBar seekerBar = (SeekerBar) seekBar;
         seekerBar.getTimeCounter().cancelTimerDuringTracking();
-        removeValueAnimator();
+        valueAnimator.cancel();
         setTracking(seekBar, true);
     }
 
@@ -97,7 +98,10 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
         setTracking(seekBar, false);
         SeekerBar seekerBar = (SeekerBar) seekBar;
         if (seekerBar != null ) {
-            mediaControllerAdapter.seekTo(seekBar.getProgress());
+            int progress = seekBar.getProgress();
+            mediaControllerAdapter.seekTo(progress);
+            valueAnimator.start();
+            valueAnimator.setCurrentPlayTime(progress);
         }
     }
 
@@ -151,7 +155,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        Log.i(LOG_TAG, "hit progressed changed");
+   //     Log.i(LOG_TAG, "hit progressed changed");
         seekerBar.setProgress(progress);
     }
 }

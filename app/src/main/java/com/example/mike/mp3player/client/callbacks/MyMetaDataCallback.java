@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.callbacks;
 
+import android.media.MediaMetadata;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.media.MediaMetadataCompat;
@@ -13,7 +14,7 @@ import java.util.Set;
 
 public class MyMetaDataCallback extends AsyncCallback<MediaMetadataCompat> {
     private static final String LOG_TAG = "MY_META_DTA_CLLBK";
-    Handler worker;
+    private String currentMediaId = null;
     private Set<MetaDataListener> metaDataListeners;
 
 
@@ -24,15 +25,24 @@ public class MyMetaDataCallback extends AsyncCallback<MediaMetadataCompat> {
 
     @Override
     public void processCallback(MediaMetadataCompat mediaMetadataCompat) {
-        //logMetaData(mediaMetadataCompat, LOG_TAG);
-        StringBuilder sb = new StringBuilder();
-        for (MetaDataListener listener : metaDataListeners) {
-            if (null != listener) {
-                listener.onMetadataChanged(mediaMetadataCompat);
-                sb.append(listener.getClass());
+        if (mediaMetadataCompat != null) {
+            MediaMetadata mediaMetadata = (MediaMetadata) mediaMetadataCompat.getMediaMetadata();
+            if (null != mediaMetadata && mediaMetadata.getDescription() != null) {
+                String newMediaId = mediaMetadata.getDescription().getMediaId();
+                if (newMediaId != null && !newMediaId.equals(currentMediaId)) {
+                    this.currentMediaId = newMediaId;
+                    //logMetaData(mediaMetadataCompat, LOG_TAG);
+                    StringBuilder sb = new StringBuilder();
+                    for (MetaDataListener listener : metaDataListeners) {
+                        if (null != listener) {
+                            listener.onMetadataChanged(mediaMetadataCompat);
+                            sb.append(listener.getClass());
+                        }
+                    }
+                    // Log.i(LOG_TAG, "hit meta data changed " + ", listeners " + metaDataListeners.size() + ", " + sb.toString());
+                }
             }
         }
-   //     Log.i(LOG_TAG, "hit meta data changed " + ", listeners " + metaDataListeners.size() + ", " + sb.toString());
     }
 
     public synchronized void registerMetaDataListener(MetaDataListener listener) {

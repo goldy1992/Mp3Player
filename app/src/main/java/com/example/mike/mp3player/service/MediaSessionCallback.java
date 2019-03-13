@@ -324,6 +324,10 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private MediaMetadataCompat getCurrentMetaData() {
         MediaMetadataCompat.Builder builder = myMediaPlayerAdapter.getCurrentMetaData();
         MediaSessionCompat.QueueItem currentItem = playbackManager.getCurrentItem();
+        if(ValidMetaDataUtil.validMediaId(currentItem)) {
+            builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, currentItem.getDescription().getMediaId());
+        }
+
         if (ValidMetaDataUtil.validTitle(currentItem)) {
             builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, currentItem.getDescription().getTitle().toString());
         } else {
