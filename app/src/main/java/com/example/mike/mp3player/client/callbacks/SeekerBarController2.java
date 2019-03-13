@@ -57,6 +57,9 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
             createAnimator();
         }
         seekerBar.setProgress(currentPosition);
+        if (valueAnimator.isStarted()) {
+            valueAnimator.start();
+        }
         switch (currentState) {
             case PlaybackStateCompat.STATE_PAUSED: valueAnimator.pause(); break;
             case PlaybackStateCompat.STATE_PLAYING: valueAnimator.resume(); break;
@@ -115,8 +118,8 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
     private void createAnimator() {
         removeValueAnimator();
         try {
-            ValueAnimator valueAnimator = ValueAnimator.ofInt(0, seekerBar.getMax());
-            int duration = (int) (seekerBar.getMax() * currentPlaybackSpeed);
+            int duration = (int) (seekerBar.getMax() / currentPlaybackSpeed);
+            ValueAnimator valueAnimator = ValueAnimator.ofInt(0, duration);
             valueAnimator.setDuration(duration);
             valueAnimator.addUpdateListener(this);
             valueAnimator.setInterpolator(new LinearInterpolator());
