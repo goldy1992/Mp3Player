@@ -11,6 +11,8 @@ import android.widget.SeekBar;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.SeekerBar;
 
+import androidx.annotation.VisibleForTesting;
+
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_SPEED;
@@ -57,7 +59,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
             createAnimator();
         }
         seekerBar.setProgress(currentPosition);
-        if (valueAnimator.isStarted()) {
+        if (!valueAnimator.isStarted()) {
             valueAnimator.start();
         }
         switch (currentState) {
@@ -123,6 +125,10 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
             valueAnimator.setDuration(duration);
             valueAnimator.addUpdateListener(this);
             valueAnimator.setInterpolator(new LinearInterpolator());
+            if (currentPosition >= 0 && seekerBar.getMax() > currentPosition) {
+                float animationPosition = currentPosition / (float) seekerBar.getMax();
+                valueAnimator.setCurrentFraction(animationPosition);
+            }
             seekerBar.setValueAnimator(valueAnimator);
             this.valueAnimator = valueAnimator;
         } catch (IllegalArgumentException ex) {
@@ -160,5 +166,10 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
    //     Log.i(LOG_TAG, "hit progressed changed");
         seekerBar.setProgress(progress);
+    }
+
+    @VisibleForTesting
+    public ValueAnimator getValueAnimator() {
+        return this.valueAnimator;
     }
 }
