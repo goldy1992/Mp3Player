@@ -76,27 +76,27 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
      * @param onCompletionListener
      */
     public void reset(Uri firstItemUri, Uri secondItemUri, OnCompletionListener onCompletionListener, OnSeekCompleteListener onSeekCompleteListener) {
-        Log.i(LOG_TAG, "reset");
+        //Log.i(LOG_TAG, "reset");
         if (audioFocusManager != null && audioFocusManager.hasFocus) {
             audioFocusManager.abandonAudioFocus();
-            Log.i(LOG_TAG, "focus abandoned");
+            //Log.i(LOG_TAG, "focus abandoned");
         }
 
         if (this.currentMediaPlayer != null) {
             currentMediaPlayer.release();
-            Log.i(LOG_TAG,"current mediaplayer released");
+           //Log.i(LOG_TAG,"current mediaplayer released");
             currentMediaPlayer = null;
         }
 
         if (this.getNextMediaPlayer() != null) {
             getNextMediaPlayer().release();
-            Log.i(LOG_TAG,"next mediaplayer released");
+            //Log.i(LOG_TAG,"next mediaplayer released");
             nextMediaPlayer = null;
         }
         this.currentMediaPlayer = createMediaPlayer(firstItemUri, onCompletionListener, onSeekCompleteListener);
-        Log.i(LOG_TAG,"Created first mediaplayer");
+        //Log.i(LOG_TAG,"Created first mediaplayer");
         this.nextMediaPlayer = secondItemUri == null ? null : createMediaPlayer(secondItemUri, onCompletionListener, onSeekCompleteListener);
-        Log.i(LOG_TAG,"Created second mediaplayer");
+        //Log.i(LOG_TAG,"Created second mediaplayer");
         this.currentMediaPlayer.setNextMediaPlayer(getNextMediaPlayer());
         this.audioFocusManager = new AudioFocusManager(context, this);
         this.audioFocusManager.init();
@@ -257,7 +257,7 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
         if (what == MEDIA_INFO_STARTED_AS_NEXT) {
             setPlaybackParams(mp);
         }
-        Log.i(LOG_TAG, "what: " + what + ", extra " + extra);
+        //Log.i(LOG_TAG, "what: " + what + ", extra " + extra);
         return true;
     }
 }

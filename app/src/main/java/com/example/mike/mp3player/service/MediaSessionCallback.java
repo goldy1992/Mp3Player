@@ -85,17 +85,17 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     @Override
     public synchronized void onPlay() {
-        Log.i(LOG_TAG, "on play, status of worker " + worker.getLooper().getQueue());
+        //Log.i(LOG_TAG, "on play, status of worker " + worker.getLooper().getQueue());
         worker.post(() -> this.play());
     }
 
     private void play() {
         broadcastReceiver.registerAudioNoisyReceiver();
-        Log.i(LOG_TAG, "onPlay registed audio noisy receiver");
+        //Log.i(LOG_TAG, "onPlay registed audio noisy receiver");
         myMediaPlayerAdapter.play();
-        Log.i(LOG_TAG, "onPlay playback started");
+        //Log.i(LOG_TAG, "onPlay playback started");
         updateMediaSession();
-        Log.i(LOG_TAG, "onPlay mediasession updated");
+        //Log.i(LOG_TAG, "onPlay mediasession updated");
         serviceManager.startService(prepareNotification());
     }
 
@@ -119,7 +119,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void skipToPrevious() {
-        Log.i(LOG_TAG, "skipToPrevious");
+        //Log.i(LOG_TAG, "skipToPrevious");
         int position = myMediaPlayerAdapter.getCurrentPlaybackPosition();
         if (position > ONE_SECOND) {
             myMediaPlayerAdapter.seekTo(1);
@@ -133,7 +133,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
     @Override
     public synchronized boolean onMediaButtonEvent(Intent mediaButtonEvent) {
-        Log.i(LOG_TAG, "media button event");
+        //(LOG_TAG, "media button event");
         if (mediaButtonEvent != null && mediaButtonEvent.getExtras() != null
                 && mediaButtonEvent.getExtras().getParcelable(Intent.EXTRA_KEY_EVENT) != null) {
             KeyEvent keyEvent = mediaButtonEvent.getExtras().getParcelable(Intent.EXTRA_KEY_EVENT);
@@ -157,7 +157,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void prepareFromMediaId(String mediaId, Bundle bundle) {
-        Log.i(LOG_TAG, "prepareFromMediaId");
+        //Log.i(LOG_TAG, "prepareFromMediaId");
         super.onPrepareFromMediaId(mediaId, bundle);
         LibraryId parentId = (LibraryId) bundle.get(PARENT_ID);
         List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getPlaylist(parentId);
@@ -199,12 +199,12 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         worker.post(() -> this.pause());
     }
     private void pause() {
-        Log.i(LOG_TAG, "onPause");
+        //Log.i(LOG_TAG, "onPause");
         broadcastReceiver.unregisterAudioNoisyReceiver();
         myMediaPlayerAdapter.pause();
         updateMediaSession();
         serviceManager.pauseService(prepareNotification());
-        Log.i(LOG_TAG, "onPause finished");
+        //Log.i(LOG_TAG, "onPause finished");
     }
 
     @Override
@@ -213,7 +213,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     }
     private void seekTo(long position) {
-        Log.i(LOG_TAG, "seekTO");
+        //Log.i(LOG_TAG, "seekTO");
         myMediaPlayerAdapter.seekTo(position);
         mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState(ACTION_SEEK_TO));
     }
@@ -224,7 +224,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void addQueueItem(MediaDescriptionCompat description) {
-        Log.i(LOG_TAG, "addQueueItem");
+        //Log.i(LOG_TAG, "addQueueItem");
         MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
         mediaSession.setQueue(playbackManager.onAddQueueItem(item));
     }
@@ -244,7 +244,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void setRepeatMode(int repeatMode) {
-        Log.i(LOG_TAG, "set Repeat mode");
+        //Log.i(LOG_TAG, "set Repeat mode");
         logRepeatMode(repeatMode, LOG_TAG);
         myMediaPlayerAdapter.updateRepeatMode(repeatMode);
 
@@ -272,7 +272,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
      */
     @Override
     public synchronized void onCompletion(MediaPlayer mediaPlayer) {
-        Log.i(LOG_TAG, "on playback complete hit");
+        //Log.i(LOG_TAG, "on playback complete hit");
         if (mediaPlayer != null && mediaPlayer.equals(myMediaPlayerAdapter.getCurrentMediaPlayer())) {
 
             if (mediaPlayer.isLooping()) {

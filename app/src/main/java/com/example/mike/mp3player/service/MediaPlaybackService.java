@@ -43,7 +43,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         worker = new HandlerThread(WORKER_ID);
         worker.start();
         worker.getLooper().setMessageLogging((String x) -> {
-            Log.i(WORKER_ID, x);
+            //Log.i(WORKER_ID, x);
         });
         mediaLibrary = new MediaLibrary(getBaseContext());
         mediaLibrary.init();

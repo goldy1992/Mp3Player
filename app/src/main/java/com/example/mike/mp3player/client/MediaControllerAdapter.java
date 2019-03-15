@@ -52,7 +52,7 @@ public class MediaControllerAdapter {
 
     public void play() {
 
-        Log.i(LOG_TAG, "play hit");
+        //Log.i(LOG_TAG, "play hit");
         getMediaControllerCompat().getTransportControls().play();
     }
 
@@ -64,9 +64,8 @@ public class MediaControllerAdapter {
         return context;
     }
 
-    public void pause()
-    {
-        Log.i(LOG_TAG, "pause hit");
+    public void pause() {
+        //Log.i(LOG_TAG, "pause hit");
         getMediaControllerCompat().getTransportControls().pause();
     }
 
