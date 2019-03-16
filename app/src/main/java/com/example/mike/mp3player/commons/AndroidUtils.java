@@ -13,6 +13,10 @@ public final class AndroidUtils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
+    public static boolean isMashmallowOrLower() {
+        return Build.VERSION.SDK_INT <= Build.VERSION_CODES.M;
+    }
+
     public static int getAndroidApiVersion() {
         return Build.VERSION.SDK_INT;
     }

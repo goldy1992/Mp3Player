@@ -11,16 +11,18 @@ import android.widget.TextView;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MetaDataListener;
-import com.example.mike.mp3player.client.PlaybackStateListener;
+import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
+import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.client.views.TimeCounter;
 
+import java.util.Collections;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
-public class PlaybackTrackerFragment extends Fragment implements PlaybackStateListener, MetaDataListener {
+public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackStateListener, MetaDataListener {
 
     private MediaControllerAdapter mediaControllerAdapter;
     private TextView duration;
@@ -47,7 +49,7 @@ public class PlaybackTrackerFragment extends Fragment implements PlaybackStateLi
 
     public void init(MediaControllerAdapter mediaControllerAdapter) {
         this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mediaControllerAdapter.registerPlaybackStateListener(this);
+        this.mediaControllerAdapter.registerPlaybackStateListener(this, Collections.singleton(ListenerType.PLAYBACK));
         this.mediaControllerAdapter.registerMetaDataListener(this);
         this.getSeekerBar().init(mediaControllerAdapter);
 
@@ -68,14 +70,19 @@ public class PlaybackTrackerFragment extends Fragment implements PlaybackStateLi
     @Override
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
         getCounter().updateState(state);
-        getSeekerBar().getMySeekerMediaControllerCallback().onPlaybackStateChanged(state);
+        getSeekerBar().getSeekerBarController().onPlaybackStateChanged(state);
     }
 
     @Override
     public void onMetadataChanged(MediaMetadataCompat metadata) {
         long duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
         getCounter().setDuration(duration);
-        this.duration.setText(TimerUtils.formatTime(duration));
-        getSeekerBar().getMySeekerMediaControllerCallback().onMetadataChanged(metadata);
+        String durationString = TimerUtils.formatTime(duration);
+        mainUpdater.post(() -> updateDurationText(durationString));
+        getSeekerBar().getSeekerBarController().onMetadataChanged(metadata);
+    }
+
+    private void updateDurationText(String duration) {
+        this.duration.setText(duration);
     }
 }

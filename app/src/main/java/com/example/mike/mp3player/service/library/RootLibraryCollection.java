@@ -7,7 +7,7 @@ import com.example.mike.mp3player.commons.library.LibraryId;
 import java.util.List;
 import java.util.TreeSet;
 
-import static android.support.v4.media.MediaBrowserCompat.*;
+import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
 
 public class RootLibraryCollection extends LibraryCollection {

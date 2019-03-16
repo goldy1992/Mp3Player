@@ -3,7 +3,6 @@ package com.example.mike.mp3player.commons;
 import android.os.Bundle;
 
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.commons.library.LibraryId;
 
 import java.util.ArrayList;

@@ -9,6 +9,7 @@ import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackToolbarExtendedFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
+import com.example.mike.mp3player.client.views.fragments.ShuffleRepeatFragment;
 import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.commons.Constants;
@@ -30,6 +31,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     private PlaybackToolbarExtendedFragment playbackToolbarExtendedFragment;
     private PlaybackSpeedControlsFragment playbackSpeedControlsFragment;
     private SimpleTitleBarFragment simpleTitleBarFragment;
+    private ShuffleRepeatFragment shuffleRepeatFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         token = (MediaSessionCompat.Token) retrieveIntentInfo(Constants.MEDIA_SESSION);
 
         if (token != null) {
-            setMediaControllerAdapter(new MediaControllerAdapter(this, token));
+            setMediaControllerAdapter(new MediaControllerAdapter(this, token, getWorker().getLooper()));
             String mediaId = (String) retrieveIntentInfo(Constants.MEDIA_ID);
             LibraryId parentId = (LibraryId) retrieveIntentInfo(Constants.PARENT_ID);
 
@@ -70,6 +72,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         playbackSpeedControlsFragment.init(getMediaControllerAdapter());
         playbackTrackerFragment.init(getMediaControllerAdapter());
         playbackToolbarExtendedFragment.init(getMediaControllerAdapter());
+        shuffleRepeatFragment.init(getMediaControllerAdapter(), true);
         getMediaControllerAdapter().updateUiState();
     }
 
@@ -94,6 +97,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         this.playbackSpeedControlsFragment = (PlaybackSpeedControlsFragment) getSupportFragmentManager().findFragmentById(R.id.playbackSpeedControlsFragment);
         this.playbackTrackerFragment = (PlaybackTrackerFragment) getSupportFragmentManager().findFragmentById(R.id.playbackTrackerFragment);
         this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) getSupportFragmentManager().findFragmentById(R.id.playbackToolbarExtendedFragment);
+        this.shuffleRepeatFragment = (ShuffleRepeatFragment) getSupportFragmentManager().findFragmentById(R.id.shuffleRepeatFragment);
         this.getPlaybackToolbarExtendedFragment().displayButtons();
     }
 

@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client;
 
+import android.os.Handler;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
@@ -11,13 +12,16 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 public class TimeCounterTimerTaskTest {
 
     @Mock
     private TextView view;
     @Mock
-    private MediaActivityCompat mediaActivityCompat;
+    private Handler mockHandler;
 
     private TimeCounter timeCounter;
     private TimeCounterTimerTask timeCounterTimerTask;
@@ -28,8 +32,9 @@ public class TimeCounterTimerTaskTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
+//        when(mockHandler.post(any())).then(doNothing());
         timeCounter = new TimeCounter(view);
-        timeCounterTimerTask = new TimeCounterTimerTask(timeCounter);
+        timeCounterTimerTask = new TimeCounterTimerTask(timeCounter, mockHandler);
       //  when(timeCounter.getView().setText().then(doNothing());
     }
 

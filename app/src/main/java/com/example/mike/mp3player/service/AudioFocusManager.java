@@ -3,6 +3,8 @@ package com.example.mike.mp3player.service;
 import android.content.Context;
 import android.media.AudioManager;
 
+import com.example.mike.mp3player.service.player.GenericMediaPlayerAdapter;
+
 import androidx.media.AudioAttributesCompat;
 import androidx.media.AudioFocusRequestCompat;
 import androidx.media.AudioManagerCompat;
@@ -13,7 +15,7 @@ public class AudioFocusManager
     public static final float MEDIA_VOLUME_DEFAULT = 1.0f;
     private static final float MEDIA_VOLUME_DUCK = 0.2f;
 
-    MyMediaPlayerAdapter player;
+    GenericMediaPlayerAdapter player;
     AudioManager audioManager;
     Context context;
     public boolean hasFocus = false;
@@ -21,7 +23,7 @@ public class AudioFocusManager
     boolean playWhenAudioFocusGained = false;
     private boolean audioNoisyReceiverRegistered = false;
 
-    public AudioFocusManager(Context context, MyMediaPlayerAdapter player) {
+    public AudioFocusManager(Context context, GenericMediaPlayerAdapter player) {
         this.context = context;
         this.player = player;
     }

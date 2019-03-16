@@ -1,8 +1,6 @@
 package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,17 +9,19 @@ import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.PlaybackStateListener;
+import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
+import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
+
+import java.util.Collections;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.fragment.app.Fragment;
 
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 
-public class PlaybackSpeedControlsFragment extends Fragment implements PlaybackStateListener {
+public class PlaybackSpeedControlsFragment extends AsyncFragment implements PlaybackStateListener {
 
     private TextView playbackSpeed;
     private AppCompatImageButton increasePlaybackSpeedButton;
@@ -47,13 +47,12 @@ public class PlaybackSpeedControlsFragment extends Fragment implements PlaybackS
 
     public void init(MediaControllerAdapter mediaControllerAdapter) {
         this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mediaControllerAdapter.registerPlaybackStateListener(this);
+        this.mediaControllerAdapter.registerPlaybackStateListener(this, Collections.singleton(ListenerType.PLAYBACK));
     }
 
     private void updatePlaybackSpeedText(float speed) {
         Runnable r = () ->  playbackSpeed.setText(getString(R.string.PLAYBACK_SPEED_VALUE, speed));
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(r);
+        this.mainUpdater.post(r);
     }
 
     public void increasePlaybackSpeed() {

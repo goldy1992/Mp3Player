@@ -33,6 +33,14 @@
         class="com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment"
         tools:layout="@layout/fragment_playback_speed_controls"/>
 
+    <fragment
+        android:id="@+id/shuffleRepeatFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/playbackTrackerFragment"
+        class="com.example.mike.mp3player.client.views.fragments.ShuffleRepeatFragment"
+        tools:layout="@layout/fragment_playback_tracker"/>
+
 
     <fragment
         android:id="@+id/playbackTrackerFragment"

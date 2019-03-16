@@ -1,10 +1,11 @@
 package com.example.mike.mp3player.client.views;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.GridLayout;
 
 import com.example.mike.mp3player.R;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MyViewHolder extends RecyclerView.ViewHolder {
 

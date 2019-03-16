@@ -2,20 +2,19 @@ package com.example.mike.mp3player.client.views;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
-import androidx.appcompat.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
 
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.SeekerBarChangerListener;
-import com.example.mike.mp3player.client.callbacks.MySeekerMediaControllerCallback;
+import com.example.mike.mp3player.client.callbacks.SeekerBarController2;
+
+import androidx.appcompat.widget.AppCompatSeekBar;
 
 public class SeekerBar extends AppCompatSeekBar {
 
     private ValueAnimator valueAnimator;
     private boolean isTracking = false;
 
-    private MySeekerMediaControllerCallback mySeekerMediaControllerCallback;
-    public SeekerBarChangerListener seekBarChangeListener;
+    private SeekerBarController2 seekerBarController;
     private TimeCounter timeCounter;
 
     public SeekerBar(Context context) {
@@ -31,14 +30,13 @@ public class SeekerBar extends AppCompatSeekBar {
     }
 
     public void init(MediaControllerAdapter mediaControllerAdapter) {
-        this.mySeekerMediaControllerCallback = new MySeekerMediaControllerCallback(this);
-        this.seekBarChangeListener = new SeekerBarChangerListener(mediaControllerAdapter);
-        super.setOnSeekBarChangeListener(seekBarChangeListener);
+        this.seekerBarController = new SeekerBarController2(this, mediaControllerAdapter);
+        super.setOnSeekBarChangeListener(seekerBarController);
     }
 
     @Override
-    public final void setOnSeekBarChangeListener(OnSeekBarChangeListener l) {
-        super.setOnSeekBarChangeListener(l);
+    public final void setOnSeekBarChangeListener(OnSeekBarChangeListener listener) {
+        super.setOnSeekBarChangeListener(listener);
     }
 
     public ValueAnimator getValueAnimator() {
@@ -49,6 +47,10 @@ public class SeekerBar extends AppCompatSeekBar {
         this.valueAnimator = valueAnimator;
     }
 
+    public void setTimerCounterProgress(int progress) {
+        timeCounter.seekTo(progress);
+    }
+
     public boolean isTracking() {
         return isTracking;
     }
@@ -57,12 +59,8 @@ public class SeekerBar extends AppCompatSeekBar {
         isTracking = tracking;
     }
 
-    public OnSeekBarChangeListener getOnSeekBarChangeListener(){
-        return seekBarChangeListener;
-    }
-
-    public MySeekerMediaControllerCallback getMySeekerMediaControllerCallback() {
-        return mySeekerMediaControllerCallback;
+    public SeekerBarController2 getSeekerBarController() {
+        return seekerBarController;
     }
 
     public void setTimeCounter(TimeCounter timeCounter) {

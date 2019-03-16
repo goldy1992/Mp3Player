@@ -2,12 +2,8 @@ package com.example.mike.mp3player.service.library.utils;
 
 import android.media.MediaMetadataRetriever;
 import android.os.Environment;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
-import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-
-import com.example.mike.mp3player.commons.MetaDataKeys;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -15,11 +11,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import static android.media.MediaMetadataRetriever.METADATA_KEY_TITLE;
 
 public final class MediaLibraryUtils {
+    private static final String LOG_TAG = "MDIA_LBRY_UTLS";
+    private static final String STORAGE_DIR = "/storage/";
 
     public static String appendToPath(String path, String toAppend) {
         return path + File.separator + toAppend;
@@ -34,8 +31,10 @@ public final class MediaLibraryUtils {
     }
 
     public static File getExternalStorageDirectory(){
-        return Environment.getExternalStorageDirectory();
+        return new File(STORAGE_DIR);
     }
+
+    public static File getInternalStorageDirectory() { return Environment.getExternalStorageDirectory(); }
 
     /**
      * This should make a list of pre-ordered QueueItems since the parameter is a tree set, which is

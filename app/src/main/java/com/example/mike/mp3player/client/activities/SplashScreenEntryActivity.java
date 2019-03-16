@@ -103,7 +103,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
 
     public void initMediaBrowserService() {
         Log.i(LOG_TAG, "reset media browser service");
-        mediaBrowserAdapter = new MediaBrowserAdapter(getApplicationContext(), this);
+        mediaBrowserAdapter = new MediaBrowserAdapter(getApplicationContext(), this, getMainLooper());
         mediaBrowserAdapter.init();
     }
 

@@ -8,7 +8,6 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.util.Log;
 
-import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.utils.IsDirectoryFilter;
@@ -27,7 +26,7 @@ import java.util.TreeSet;
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST;
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ARTIST;
 import static android.media.MediaMetadataRetriever.METADATA_KEY_DURATION;
-import static com.example.mike.mp3player.commons.ComparatorUtils.*;
+import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
@@ -60,7 +59,9 @@ public class MediaLibrary {
 
     public void buildMediaLibrary(){
         File externalStorageDirectory = MediaLibraryUtils.getExternalStorageDirectory();
+        File internalStorage = MediaLibraryUtils.getInternalStorageDirectory();
         List<MediaItem> songList = buildSongList(externalStorageDirectory);
+        songList.addAll(buildSongList(internalStorage));
         for (Category category : categories.keySet()) {
             categories.get(category).index(songList);
         }

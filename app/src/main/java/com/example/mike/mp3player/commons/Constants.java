@@ -2,12 +2,8 @@ package com.example.mike.mp3player.commons;
 
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.SparseArray;
-import android.util.SparseIntArray;
 
 import com.example.mike.mp3player.commons.library.Category;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public final class Constants {
 
@@ -22,7 +18,10 @@ public final class Constants {
     public static final String UNKNOWN = "Unknown";
     public static final String INCREASE_PLAYBACK_SPEED = "INCREASE_PLAYBACK_SPEED";
     public static final String DECREASE_PLAYBACK_SPEED = "DECREASE_PLAYBACK_SPEED";
-
+    public static final String REPEAT_MODE = "REPEAT_MODE";
+    public static final float DEFAULT_SPEED = 1.0f;
+    public static final float DEFAULT_PITCH = 1.0f;
+    public static final int DEFAULT_POSITION = 0;
 
     public static final SparseArray<String> playbackStateDebugMap = new SparseArray<>();
     static {
@@ -55,4 +54,5 @@ public final class Constants {
     public static final String FOLDER_NAME = "FOLDER_NAME";
     public static final String PARENT_ID = "PARENT_ID";
     public static final String PARENT_MEDIA_ITEM = "PARENT_MEDIA_ITEM";
+    public static final int NO_ACTION = 0;
 }

@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client.activities;
 
 import android.os.Bundle;
+import android.os.HandlerThread;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -9,17 +10,27 @@ import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
 
 public abstract class MediaActivityCompat extends AppCompatActivity implements MediaBrowserConnectorCallback {
 
+    private final String WORKER_ID = getClass().toString();
     private MediaControllerAdapter mediaControllerAdapter;
     private MediaBrowserAdapter mediaBrowserAdapter;
     private static final String LOG_TAG = "MEDIA_ACTIVITY_COMPAT";
+    private HandlerThread worker;
+
     void initMediaBrowserService() {
-        setMediaBrowserAdapter(new MediaBrowserAdapter(getApplicationContext(), this));
+        setMediaBrowserAdapter(new MediaBrowserAdapter(getApplicationContext(), this, getWorker().getLooper()));
         getMediaBrowserAdapter().init();
     }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        worker = new HandlerThread(WORKER_ID);
+        getWorker().start();
+    }
+
     @Override // MediaBrowserConnectorCallback
     public void onConnectionSuspended() { /* TODO: implement onConnectionSuspended */
         Log.i(LOG_TAG, "connection suspended");}
@@ -39,6 +50,12 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getWorker().quitSafely();
+    }
+
 
     public final MediaControllerAdapter getMediaControllerAdapter() {
         return mediaControllerAdapter;
@@ -52,5 +69,9 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
 
     public final void setMediaBrowserAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
         this.mediaBrowserAdapter = mediaBrowserAdapter;
+    }
+
+    public HandlerThread getWorker() {
+        return worker;
     }
 }
