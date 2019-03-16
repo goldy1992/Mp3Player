@@ -11,7 +11,6 @@ import android.widget.SeekBar;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.commons.Constants;
-import com.example.mike.mp3player.commons.LoggingUtils;
 
 import androidx.annotation.VisibleForTesting;
 
@@ -107,6 +106,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
+        Log.i(LOG_TAG, "START TRACKING");
         SeekerBar seekerBar = (SeekerBar) seekBar;
         seekerBar.getTimeCounter().cancelTimerDuringTracking();
         valueAnimator.cancel();
@@ -187,8 +187,14 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-   //     Log.i(LOG_TAG, "hit progressed changed");
-        seekerBar.setProgress(progress);
+        if (seekBar != null) {
+            if (seekBar instanceof SeekerBar) {
+                SeekerBar seekerBar = (SeekerBar) seekBar;
+                if (seekerBar.isTracking()) {
+                    seekerBar.setTimerCounterProgress(progress);
+                }
+            }
+        }
     }
 
     @VisibleForTesting

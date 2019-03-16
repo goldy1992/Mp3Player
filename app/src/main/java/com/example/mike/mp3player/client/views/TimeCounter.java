@@ -35,6 +35,11 @@ public class TimeCounter {
         this.duration = duration;
     }
 
+    public void seekTo(long position) {
+        this.currentPosition = position;
+        setTimerText(formatTime(position));
+    }
+
     public void cancelTimerDuringTracking() {
         //Log.d(LOG_TAG, "cancel timer during tracking");
         cancelTimer();
