@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client.views;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.client.TimeCounterTimerTask;
@@ -12,10 +13,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ONE;
 import static com.example.mike.mp3player.client.utils.TimerUtils.ONE_SECOND;
 import static com.example.mike.mp3player.client.utils.TimerUtils.formatTime;
+import static com.example.mike.mp3player.commons.PlaybackStateUtil.getRepeatModeFromPlaybackStateCompat;
 
 public class TimeCounter {
+    public static final String LOG_TAG = "TimeCounter";
     private TextView view;
     private long duration;
     private long currentPosition;
@@ -24,7 +28,7 @@ public class TimeCounter {
     private ScheduledExecutorService timer;
     private boolean isRunning = false;
     private Handler mainHandler;
-    public static final String LOG_TAG = "TimeCounter";
+    private boolean repeating = false;
 
     public TimeCounter(TextView view) {
         this.view = view;
@@ -48,6 +52,8 @@ public class TimeCounter {
         //Log.d(LOG_TAG, "new state");
         this.currentState = state.getState();
         this.currentSpeed = state.getPlaybackSpeed();
+        Integer repeatMode = getRepeatModeFromPlaybackStateCompat(state);
+        this.repeating = repeatMode != null && repeatMode == REPEAT_MODE_ONE;
         long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(state);
 
         switch (getCurrentState()) {
@@ -80,7 +86,7 @@ public class TimeCounter {
     }
 
     private void cancelTimer() {
-        //Log.d(LOG_TAG, "Cancel timer");
+        Log.d(LOG_TAG, "Cancel timer");
         if (timer != null && isRunning()) {
             // cancel timer and make new one
             timer.shutdown();
@@ -144,6 +150,14 @@ public class TimeCounter {
 
     public float getCurrentSpeed() {
         return currentSpeed;
+    }
+
+    public boolean isRepeating() {
+        return repeating;
+    }
+
+    public void setRepeating(boolean repeating) {
+        this.repeating = repeating;
     }
 }
 

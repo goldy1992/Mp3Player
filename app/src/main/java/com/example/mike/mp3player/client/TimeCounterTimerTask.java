@@ -8,6 +8,7 @@ import java.util.TimerTask;
 
 import static com.example.mike.mp3player.client.utils.TimerUtils.ONE_SECOND;
 import static com.example.mike.mp3player.client.utils.TimerUtils.formatTime;
+import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 
 public class TimeCounterTimerTask extends TimerTask {
     private TimeCounter timeCounter;
@@ -23,10 +24,15 @@ public class TimeCounterTimerTask extends TimerTask {
     @Override
     public void run() {
         //Log.d(LOG_TAG,"current position: " + timeCounter.getCurrentPosition() + ", duration: " + timeCounter.getDuration());
-        if (timeCounter.getCurrentPosition() < timeCounter.getDuration()) {
-            timeCounter.setCurrentPosition(timeCounter.getCurrentPosition() + ONE_SECOND);
+        long newPosition = timeCounter.getCurrentPosition() + ONE_SECOND;
+        if (newPosition < timeCounter.getDuration()) {
+            timeCounter.setCurrentPosition(newPosition);
+            mainHandler.post(updateUi);
+        } else if (timeCounter.isRepeating()) {
+            timeCounter.setCurrentPosition(DEFAULT_POSITION);
             mainHandler.post(updateUi);
         }
+
         //Log.d(LOG_TAG, "finished run call");
     } // run
 }

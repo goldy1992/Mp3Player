@@ -16,8 +16,8 @@ public final class TimerUtils {
         return (int) (milliseconds / ONE_SECOND);
     }
 
-    public static String formatTime(long miliseconds) {
-        Date date = new Date(miliseconds);
+    public static String formatTime(long milliseconds) {
+        Date date = new Date(milliseconds);
         SimpleDateFormat timerFormat = new SimpleDateFormat("mm:ss", Locale.getDefault());
         String formattedTime = timerFormat.format(date);
         //Log.d(LOG_TAG, "returning formatted time: " + formattedTime);

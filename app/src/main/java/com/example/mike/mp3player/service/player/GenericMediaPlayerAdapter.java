@@ -97,7 +97,10 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
         //Log.i(LOG_TAG,"Created first mediaplayer");
         this.nextMediaPlayer = secondItemUri == null ? null : createMediaPlayer(secondItemUri, onCompletionListener, onSeekCompleteListener);
         //Log.i(LOG_TAG,"Created second mediaplayer");
-        this.currentMediaPlayer.setNextMediaPlayer(getNextMediaPlayer());
+
+        if (!isLooping()) {
+            this.currentMediaPlayer.setNextMediaPlayer(getNextMediaPlayer());
+        }
         this.audioFocusManager = new AudioFocusManager(context, this);
         this.audioFocusManager.init();
         this.currentState = PlaybackStateCompat.STATE_PAUSED;

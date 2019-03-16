@@ -25,6 +25,7 @@ public class MediaPlayerPool {
     }
 
     public void reset(Uri uri) {
+        Log.i(LOG_TAG, "hit reset");
         this.currentUri = uri;
         queue.clear();
         for (int i=1; i <= QUEUE_CAPACITY; i++) {

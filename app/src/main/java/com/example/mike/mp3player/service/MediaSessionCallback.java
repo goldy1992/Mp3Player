@@ -247,12 +247,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         //Log.i(LOG_TAG, "set Repeat mode");
         logRepeatMode(repeatMode, LOG_TAG);
         myMediaPlayerAdapter.updateRepeatMode(repeatMode);
+        playbackManager.setRepeating(repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE);
 
-        if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL) {
-            playbackManager.setRepeating(true);
-        } else {
-            playbackManager.setRepeating(false);
-        }
         /**
          * TODO: set logic to put in the respective repeat mode
          */
@@ -272,9 +268,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
      */
     @Override
     public synchronized void onCompletion(MediaPlayer mediaPlayer) {
-        //Log.i(LOG_TAG, "on playback complete hit");
+        Log.i(LOG_TAG, "on playback complete hit");
         if (mediaPlayer != null && mediaPlayer.equals(myMediaPlayerAdapter.getCurrentMediaPlayer())) {
-
+            Log.i(LOG_TAG, "looping " + mediaPlayer.isLooping());
             if (mediaPlayer.isLooping()) {
                // mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState(NO_ACTION, true));
                 // update media session to be the beginning of the current song
@@ -298,6 +294,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void customAction(String customAction, Bundle extras) {
+        Log.i(LOG_TAG, "hit speed change");
         super.onCustomAction(customAction, extras);
         switch (customAction) {
             case INCREASE_PLAYBACK_SPEED: myMediaPlayerAdapter.increaseSpeed(0.05f);

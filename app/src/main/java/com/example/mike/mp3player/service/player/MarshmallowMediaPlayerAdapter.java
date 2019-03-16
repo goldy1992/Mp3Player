@@ -77,10 +77,10 @@ public class MarshmallowMediaPlayerAdapter extends GenericMediaPlayerAdapter {
 
     @Override
     public void onComplete(Uri nextUriToPrepare, OnCompletionListener newOnCompletionListener, OnSeekCompleteListener onSeekCompleteListener) {
-        mediaPlayerPool.reset(nextUriToPrepare);
+        super.onComplete(nextUriToPrepare, newOnCompletionListener, onSeekCompleteListener);
         this.currentUri = this.nextUri;
         this.nextUri = nextUriToPrepare;
-        super.onComplete(nextUriToPrepare, newOnCompletionListener, onSeekCompleteListener);
+        mediaPlayerPool.reset(currentUri);
     }
 
     @Override

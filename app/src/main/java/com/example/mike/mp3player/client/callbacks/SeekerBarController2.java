@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.callbacks;
 
 import android.animation.ValueAnimator;
-import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -17,7 +16,7 @@ import androidx.annotation.VisibleForTesting;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_SPEED;
-import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
+import static com.example.mike.mp3player.commons.PlaybackStateUtil.getRepeatModeFromPlaybackStateCompat;
 
 /**
  *
@@ -99,14 +98,14 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
 
     @Override
     public void onAnimationUpdate(final ValueAnimator valueAnimator) {
-        Log.i(LOG_TAG, "animation update");
+        //Log.i(LOG_TAG, "animation update");
         final int animatedIntValue = (int) valueAnimator.getAnimatedValue();
         seekerBar.setProgress(animatedIntValue);
     }
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        Log.i(LOG_TAG, "START TRACKING");
+        //Log.i(LOG_TAG, "START TRACKING");
         SeekerBar seekerBar = (SeekerBar) seekBar;
         seekerBar.getTimeCounter().cancelTimerDuringTracking();
         valueAnimator.cancel();
@@ -154,17 +153,15 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
     }
 
     public void setLooping(PlaybackStateCompat state) {
-        Bundle extras = state.getExtras();
-        if (null != extras) {
-            Integer repeatMode = extras.getInt(REPEAT_MODE);
-            if (null != repeatMode) {
-                this.looping = repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE;
-                if (null != valueAnimator) {
-                    valueAnimator.setRepeatCount(isLooping() ? ValueAnimator.INFINITE : 0);
-                }
+        Integer repeatMode = getRepeatModeFromPlaybackStateCompat(state);
+        if (null != repeatMode) {
+            this.looping = repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE;
+            if (null != valueAnimator) {
+                valueAnimator.setRepeatCount(isLooping() ? ValueAnimator.INFINITE : 0);
             }
         }
     }
+
     private void removeValueAnimator() {
         if (null != seekerBar && null != seekerBar.getValueAnimator()) {
             seekerBar.getValueAnimator().removeAllUpdateListeners();
