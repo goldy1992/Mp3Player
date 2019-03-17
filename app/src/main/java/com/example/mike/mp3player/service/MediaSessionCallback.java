@@ -67,7 +67,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.mediaLibrary = mediaLibrary;
         this.myNotificationManager = myNotificationManager;
         this.playbackManager = new PlaybackManager();
-        this.myMediaPlayerAdapter = AndroidUtils.isMashmallowOrLower() ? new MarshmallowMediaPlayerAdapter(context) : new MyMediaPlayerAdapter(context);
+        this.myMediaPlayerAdapter = AndroidUtils.isNougatOrLower() ? new MarshmallowMediaPlayerAdapter(context) : new MyMediaPlayerAdapter(context);
         this.broadcastReceiver = new ReceiveBroadcasts();
         this.context = context;
         this.worker = new Handler(looper);
