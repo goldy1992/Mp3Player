@@ -19,16 +19,17 @@ public class MarshmallowMediaPlayerAdapter extends GenericMediaPlayerAdapter {
     private Uri nextUri;
     private Uri currentUri;
 
-    public MarshmallowMediaPlayerAdapter(Context context) {
-        super(context);
+    public MarshmallowMediaPlayerAdapter(Context context, OnCompletionListener onCompletionListener,
+                                         OnSeekCompleteListener onSeekCompleteListener) {
+        super(context, onCompletionListener, onSeekCompleteListener);
         this.mediaPlayerPool = new MediaPlayerPool(context);
     }
     @Override
-    public void reset(Uri firstItemUri, Uri secondItemUri, OnCompletionListener onCompletionListener, OnSeekCompleteListener onSeekCompleteListener) {
+    public void reset(Uri firstItemUri, Uri secondItemUri) {
         mediaPlayerPool.reset(firstItemUri);
         this.currentUri = firstItemUri;
         this.nextUri = secondItemUri;
-        super.reset(firstItemUri, secondItemUri, onCompletionListener, onSeekCompleteListener);
+        super.reset(firstItemUri, secondItemUri);
     }
 
     @Override
@@ -46,8 +47,8 @@ public class MarshmallowMediaPlayerAdapter extends GenericMediaPlayerAdapter {
     }
 
     @Override
-    MediaPlayer createMediaPlayer(Uri uri, OnCompletionListener onCompletionListener, OnSeekCompleteListener onSeekCompleteListener) {
-        MediaPlayer mediaPlayer = super.createMediaPlayer(uri, onCompletionListener, onSeekCompleteListener);
+    MediaPlayer createMediaPlayer(Uri uri) {
+        MediaPlayer mediaPlayer = super.createMediaPlayer(uri);
         setPlaybackParams(mediaPlayer);
         return  mediaPlayer;
     }
@@ -76,8 +77,8 @@ public class MarshmallowMediaPlayerAdapter extends GenericMediaPlayerAdapter {
     }
 
     @Override
-    public void onComplete(Uri nextUriToPrepare, OnCompletionListener newOnCompletionListener, OnSeekCompleteListener onSeekCompleteListener) {
-        super.onComplete(nextUriToPrepare, newOnCompletionListener, onSeekCompleteListener);
+    public void onComplete(Uri nextUriToPrepare) {
+        super.onComplete(nextUriToPrepare);
         this.currentUri = this.nextUri;
         this.nextUri = nextUriToPrepare;
         mediaPlayerPool.reset(currentUri);
@@ -90,7 +91,7 @@ public class MarshmallowMediaPlayerAdapter extends GenericMediaPlayerAdapter {
             int originalState = currentState;
             int bufferedPosition = currentMediaPlayer.getCurrentPosition();
             this.currentMediaPlayer.release();
-            this.currentMediaPlayer = mediaPlayerPool.take();
+            this.currentMediaPlayer = takeFromMediaPlayerPool();
             setPlaybackParams(currentMediaPlayer);
             currentMediaPlayer.seekTo(bufferedPosition);
 
@@ -100,5 +101,10 @@ public class MarshmallowMediaPlayerAdapter extends GenericMediaPlayerAdapter {
                 prepare();
             }
         }
+    }
+
+    private MediaPlayer takeFromMediaPlayerPool() {
+        MediaPlayer mediaPlayer = this.mediaPlayerPool.take();
+        return  setListeners(mediaPlayer);
     }
 }

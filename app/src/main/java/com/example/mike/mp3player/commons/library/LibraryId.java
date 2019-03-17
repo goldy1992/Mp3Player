@@ -19,6 +19,7 @@ public class LibraryId implements Parcelable {
         this.extras = new HashMap<>();
     }
 
+    @SuppressWarnings("unchecked")
     protected LibraryId(Parcel in) {
         this.category = Category.values()[in.readInt()];
         this.id = in.readString();

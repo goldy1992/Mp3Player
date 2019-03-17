@@ -10,8 +10,9 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 public class MyMediaPlayerAdapter extends GenericMediaPlayerAdapter {
 
-    public MyMediaPlayerAdapter(Context context) {
-        super(context);
+    public MyMediaPlayerAdapter(Context context, MediaPlayer.OnCompletionListener onCompletionListener,
+                                MediaPlayer.OnSeekCompleteListener onSeekCompleteListener) {
+        super(context, onCompletionListener, onSeekCompleteListener);
     }
 
     @Override

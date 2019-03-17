@@ -80,7 +80,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.playbackManager.init(queueItems);
         Uri firstSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getCurrentMediaId());
         Uri nextSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
-        this.myMediaPlayerAdapter.reset(firstSongUri, nextSongUri, this, this);
+        this.myMediaPlayerAdapter.reset(firstSongUri, nextSongUri);
         this.myMediaPlayerAdapter.getCurrentMediaPlayer().setOnCompletionListener(this);
         updateMediaSession();
     }
@@ -178,7 +178,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                 uriToPlay = mediaLibrary.getMediaUriFromMediaId(id);
                 playbackManager.setQueueIndex(mediaId);
                 followingUri = mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
-                myMediaPlayerAdapter.reset(uriToPlay, followingUri, this, this);
+                myMediaPlayerAdapter.reset(uriToPlay, followingUri);
 
                 break;
             }
@@ -279,7 +279,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                 String nextUriToPrepare = playbackManager.getNext(); // gets uri after newly incremented index
                 if (null != nextUriToPrepare) {
                     Uri nextItemUri = mediaLibrary.getMediaUriFromMediaId(nextUriToPrepare);
-                    myMediaPlayerAdapter.onComplete(nextItemUri, this, this);
+                    myMediaPlayerAdapter.onComplete(nextItemUri);
                     updateMediaSession();
                 }
             }
@@ -343,7 +343,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         Uri newUri = mediaLibrary.getMediaUriFromMediaId(newMediaId);
         Uri followingUri = mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
         PlaybackStateCompat currentState = myMediaPlayerAdapter.getMediaPlayerState(ACTION_SEEK_TO);
-        myMediaPlayerAdapter.reset(newUri, followingUri, this, this);
+        myMediaPlayerAdapter.reset(newUri, followingUri);
         if (currentState.getState() == PlaybackStateCompat.STATE_PLAYING) {
             myMediaPlayerAdapter.play();
         }
@@ -366,10 +366,10 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private GenericMediaPlayerAdapter createMediaPlayerAdapter(Context context) {
         switch (Build.VERSION.SDK_INT) {
             case Build.VERSION_CODES.M:
-                return new MarshmallowMediaPlayerAdapter(context);
+                return new MarshmallowMediaPlayerAdapter(context, this, this);
             case Build.VERSION_CODES.N:
-                return new NougatMediaPlayerAdapter(context);
-            default: return new MyMediaPlayerAdapter(context);
+                return new NougatMediaPlayerAdapter(context, this, this);
+            default: return new MyMediaPlayerAdapter(context, this, this);
         }
     }
 

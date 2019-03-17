@@ -17,18 +17,19 @@ public class NougatMediaPlayerAdapter extends GenericMediaPlayerAdapter {
     private Uri currentUri;
     private boolean needToSetPlaybackParams = true;
 
-    public NougatMediaPlayerAdapter(Context context) {
-        super(context);
+    public NougatMediaPlayerAdapter(Context context, MediaPlayer.OnCompletionListener onCompletionListener,
+                                    MediaPlayer.OnSeekCompleteListener onSeekCompleteListener) {
+        super(context, onCompletionListener, onSeekCompleteListener);
         this.mediaPlayerPool = new MediaPlayerPool(context);
     }
 
     @Override
-    public void reset(Uri firstItemUri, Uri secondItemUri, MediaPlayer.OnCompletionListener onCompletionListener, MediaPlayer.OnSeekCompleteListener onSeekCompleteListener) {
+    public void reset(Uri firstItemUri, Uri secondItemUri) {
         this.needToSetPlaybackParams = true;
         mediaPlayerPool.reset(firstItemUri);
         this.currentUri = firstItemUri;
         this.nextUri = secondItemUri;
-        super.reset(firstItemUri, secondItemUri, onCompletionListener, onSeekCompleteListener);
+        super.reset(firstItemUri, secondItemUri);
     }
 
     @Override
@@ -60,8 +61,8 @@ public class NougatMediaPlayerAdapter extends GenericMediaPlayerAdapter {
     }
 
     @Override
-    MediaPlayer createMediaPlayer(Uri uri, MediaPlayer.OnCompletionListener onCompletionListener, MediaPlayer.OnSeekCompleteListener onSeekCompleteListener) {
-        MediaPlayer mediaPlayer = super.createMediaPlayer(uri, onCompletionListener, onSeekCompleteListener);
+    MediaPlayer createMediaPlayer(Uri uri) {
+        MediaPlayer mediaPlayer = super.createMediaPlayer(uri);
         return  mediaPlayer;
     }
 

@@ -25,7 +25,6 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
 
     private static final String LOG_TAG = "SKR_MDIA_CNTRLR_CLBK";
     private final SeekerBar seekerBar;
-    private final int NO_PROGRESS = 0;
     @PlaybackStateCompat.State
     private int currentState = STATE_PAUSED;
     private float currentPlaybackSpeed = DEFAULT_SPEED;

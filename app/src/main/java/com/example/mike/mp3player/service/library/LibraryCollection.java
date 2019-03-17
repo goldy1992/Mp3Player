@@ -22,6 +22,7 @@ public abstract class LibraryCollection {
     public abstract void index(List<MediaItem> items);
     public abstract Category getRootId();
 
+    @SuppressWarnings("unchecked")
     public LibraryCollection(String id, String title, String description, Comparator keyComparator, Comparator valueComparator) {
         this.root = createCollectionRootMediaItem(id, title, description);
         this.keyComparator = keyComparator;
