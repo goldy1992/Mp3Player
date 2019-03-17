@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,6 +29,7 @@ import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
 import com.example.mike.mp3player.service.player.GenericMediaPlayerAdapter;
 import com.example.mike.mp3player.service.player.MarshmallowMediaPlayerAdapter;
 import com.example.mike.mp3player.service.player.MyMediaPlayerAdapter;
+import com.example.mike.mp3player.service.player.NougatMediaPlayerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +69,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.mediaLibrary = mediaLibrary;
         this.myNotificationManager = myNotificationManager;
         this.playbackManager = new PlaybackManager();
-        this.myMediaPlayerAdapter = AndroidUtils.isNougatOrLower() ? new MarshmallowMediaPlayerAdapter(context) : new MyMediaPlayerAdapter(context);
+        this.myMediaPlayerAdapter = createMediaPlayerAdapter(context);
         this.broadcastReceiver = new ReceiveBroadcasts();
         this.context = context;
         this.worker = new Handler(looper);
@@ -272,8 +274,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         if (mediaPlayer != null && mediaPlayer.equals(myMediaPlayerAdapter.getCurrentMediaPlayer())) {
             Log.i(LOG_TAG, "looping " + mediaPlayer.isLooping());
             if (mediaPlayer.isLooping()) {
-               // mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState(NO_ACTION, true));
-                // update media session to be the beginning of the current song
             } else {
                 playbackManager.notifyPlaybackComplete(); // increments queue
                 String nextUriToPrepare = playbackManager.getNext(); // gets uri after newly incremented index
@@ -361,6 +361,16 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     @Override
     public void onSeekComplete(MediaPlayer mp) {
         updateMediaSession(NO_ACTION);
+    }
+
+    private GenericMediaPlayerAdapter createMediaPlayerAdapter(Context context) {
+        switch (Build.VERSION.SDK_INT) {
+            case Build.VERSION_CODES.M:
+                return new MarshmallowMediaPlayerAdapter(context);
+            case Build.VERSION_CODES.N:
+                return new NougatMediaPlayerAdapter(context);
+            default: return new MyMediaPlayerAdapter(context);
+        }
     }
 
     private class ReceiveBroadcasts extends BroadcastReceiver {

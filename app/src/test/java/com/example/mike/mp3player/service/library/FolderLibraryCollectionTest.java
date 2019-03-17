@@ -77,7 +77,6 @@ public class FolderLibraryCollectionTest {
         List<String> collectionKeysetAsList = new ArrayList<>(folderLibraryCollection.collection.keySet());
         assertEquals(PATH1, collectionKeysetAsList.get(0));
         assertEquals(PATH2, collectionKeysetAsList.get(1));
-
     }
 
     /**

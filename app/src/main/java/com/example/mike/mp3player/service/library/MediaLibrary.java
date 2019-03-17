@@ -8,6 +8,7 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.util.Log;
 
+import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.utils.IsDirectoryFilter;
@@ -115,6 +116,8 @@ public class MediaLibrary {
             return s1.compareTo(s2);
         }
     }
+
+
 
     public Uri getMediaUriFromMediaId(String mediaId){
         for (MediaItem i : getSongList()) {

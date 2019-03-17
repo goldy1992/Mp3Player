@@ -2,8 +2,6 @@ package com.example.mike.mp3player.service.player;
 
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.media.PlaybackParams;
 import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -11,20 +9,22 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.LoggingUtils.logPlaybackParams;
 
-public class MarshmallowMediaPlayerAdapter extends GenericMediaPlayerAdapter {
-
+public class NougatMediaPlayerAdapter extends GenericMediaPlayerAdapter {
     private MediaPlayerPool mediaPlayerPool;
     private int position = DEFAULT_POSITION;
     private static final String LOG_TAG = "MSHMLW_PLY_ADPR";
     private Uri nextUri;
     private Uri currentUri;
+    private boolean needToSetPlaybackParams = true;
 
-    public MarshmallowMediaPlayerAdapter(Context context) {
+    public NougatMediaPlayerAdapter(Context context) {
         super(context);
         this.mediaPlayerPool = new MediaPlayerPool(context);
     }
+
     @Override
-    public void reset(Uri firstItemUri, Uri secondItemUri, OnCompletionListener onCompletionListener, OnSeekCompleteListener onSeekCompleteListener) {
+    public void reset(Uri firstItemUri, Uri secondItemUri, MediaPlayer.OnCompletionListener onCompletionListener, MediaPlayer.OnSeekCompleteListener onSeekCompleteListener) {
+        this.needToSetPlaybackParams = true;
         mediaPlayerPool.reset(firstItemUri);
         this.currentUri = firstItemUri;
         this.nextUri = secondItemUri;
@@ -36,6 +36,7 @@ public class MarshmallowMediaPlayerAdapter extends GenericMediaPlayerAdapter {
         if (audioFocusManager.requestAudioFocus()) {
             try {
                 // Set the session active  (and update metadata and state)
+                setPlaybackParams(currentMediaPlayer);
                 currentMediaPlayer.start();
                 getCurrentMediaPlayer().setLooping(isLooping());
                 currentState = PlaybackStateCompat.STATE_PLAYING;
@@ -43,23 +44,6 @@ public class MarshmallowMediaPlayerAdapter extends GenericMediaPlayerAdapter {
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    MediaPlayer createMediaPlayer(Uri uri, OnCompletionListener onCompletionListener, OnSeekCompleteListener onSeekCompleteListener) {
-        MediaPlayer mediaPlayer = super.createMediaPlayer(uri, onCompletionListener, onSeekCompleteListener);
-        setPlaybackParams(mediaPlayer);
-        return  mediaPlayer;
-    }
-
-    @Override
-    void setPlaybackParams(MediaPlayer currentMediaPlayer) {
-        PlaybackParams playbackParams = new PlaybackParams();
-        playbackParams = playbackParams.allowDefaults()
-                .setPitch(currentPitch)
-                .setSpeed(currentPlaybackSpeed)
-                .setAudioFallbackMode(PlaybackParams.AUDIO_FALLBACK_MODE_DEFAULT);
-        currentMediaPlayer.setPlaybackParams(playbackParams);
     }
 
     @Override
@@ -76,11 +60,9 @@ public class MarshmallowMediaPlayerAdapter extends GenericMediaPlayerAdapter {
     }
 
     @Override
-    public void onComplete(Uri nextUriToPrepare, OnCompletionListener newOnCompletionListener, OnSeekCompleteListener onSeekCompleteListener) {
-        super.onComplete(nextUriToPrepare, newOnCompletionListener, onSeekCompleteListener);
-        this.currentUri = this.nextUri;
-        this.nextUri = nextUriToPrepare;
-        mediaPlayerPool.reset(currentUri);
+    MediaPlayer createMediaPlayer(Uri uri, MediaPlayer.OnCompletionListener onCompletionListener, MediaPlayer.OnSeekCompleteListener onSeekCompleteListener) {
+        MediaPlayer mediaPlayer = super.createMediaPlayer(uri, onCompletionListener, onSeekCompleteListener);
+        return  mediaPlayer;
     }
 
     @Override
@@ -91,7 +73,7 @@ public class MarshmallowMediaPlayerAdapter extends GenericMediaPlayerAdapter {
             int bufferedPosition = currentMediaPlayer.getCurrentPosition();
             this.currentMediaPlayer.release();
             this.currentMediaPlayer = mediaPlayerPool.take();
-            setPlaybackParams(currentMediaPlayer);
+            this.needToSetPlaybackParams = true;
             currentMediaPlayer.seekTo(bufferedPosition);
 
             if (originalState == PlaybackStateCompat.STATE_PLAYING) {
@@ -99,6 +81,19 @@ public class MarshmallowMediaPlayerAdapter extends GenericMediaPlayerAdapter {
             } else {
                 prepare();
             }
+        }
+    }
+
+    @Override
+    void setPlaybackParams(MediaPlayer mediaPlayer) {
+        if (needToSetPlaybackParams) {
+            PlaybackParams playbackParams = new PlaybackParams();
+            playbackParams = playbackParams.allowDefaults()
+                    .setPitch(currentPitch)
+                    .setSpeed(currentPlaybackSpeed)
+                    .setAudioFallbackMode(PlaybackParams.AUDIO_FALLBACK_MODE_DEFAULT);
+            currentMediaPlayer.setPlaybackParams(playbackParams);
+            needToSetPlaybackParams = false;
         }
     }
 }

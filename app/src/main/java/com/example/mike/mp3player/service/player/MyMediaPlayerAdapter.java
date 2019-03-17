@@ -50,9 +50,8 @@ public class MyMediaPlayerAdapter extends GenericMediaPlayerAdapter {
     }
 
     @Override
-    public void increaseSpeed(float by) {
-        float newSpeed = currentPlaybackSpeed + by;
-        if (newSpeed <= MAXIMUM_PLAYBACK_SPEED) {
+    public void changeSpeed(float newSpeed) {
+        if (validSpeed(newSpeed)) {
             this.currentPlaybackSpeed = newSpeed;
             Log.i(LOG_TAG, "current speed : " + this.currentPlaybackSpeed);
             if (currentState == PlaybackStateCompat.STATE_PLAYING) {
@@ -62,26 +61,6 @@ public class MyMediaPlayerAdapter extends GenericMediaPlayerAdapter {
             }
         }
     }
-
-    @Override
-    public void decreaseSpeed(float by) {
-        float newSpeed = currentPlaybackSpeed - by;
-        if (newSpeed >= MINIMUM_PLAYBACK_SPEED) {
-            this.currentPlaybackSpeed = newSpeed;
-            Log.i(LOG_TAG, "current speed : " + this.currentPlaybackSpeed);
-            if (currentState == PlaybackStateCompat.STATE_PLAYING) {
-                PlaybackParams newPlaybackParams = this.currentMediaPlayer.getPlaybackParams();
-                newPlaybackParams.setSpeed(newSpeed);
-                this.currentMediaPlayer.setPlaybackParams(newPlaybackParams);
-            }
-        }
-    }
-
-    @Override
-    public void seekTo(long position) {
-        super.seekTo(position);
-    }
-
 
     @Override
     void setPlaybackParams(MediaPlayer mediaPlayer) {

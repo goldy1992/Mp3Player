@@ -50,8 +50,14 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
 
     public abstract void play();
     public abstract void pause();
-    public abstract void increaseSpeed(float by);
-    public abstract void decreaseSpeed(float by);
+    abstract void changeSpeed(float newSpeed);
+
+    public final void increaseSpeed(float by) {
+        changeSpeed(currentPlaybackSpeed + by);
+    }
+    public final void decreaseSpeed(float by) {
+        changeSpeed(currentPlaybackSpeed - by);
+    }
     abstract void setPlaybackParams(MediaPlayer mediaPlayer);
 
     /**
