@@ -13,11 +13,7 @@ import org.powermock.reflect.Whitebox;
 public class MediaPlayerAdapterTestBase {
 
     @Mock
-    Context context;
-    @Mock
     MediaPlayer mediaPlayer;
-    @Mock
-    Uri uri;
     @Mock
     Uri nextUri;
     @Mock
@@ -32,10 +28,6 @@ public class MediaPlayerAdapterTestBase {
 //        assertEquals("Initialised into the incorrect state", PlaybackStateCompat.STATE_PAUSED, mediaPlayerAdapter.getCurrentState());
     }
 
-
-    protected MyMediaPlayerAdapter createMediaPlayerAdapter() {
-        return new MyMediaPlayerAdapter(context);
-    }
 
     protected void setMediaPlayer(MediaPlayer mediaPlayer) {
         Whitebox.setInternalState(mediaPlayerAdapter, "mediaPlayer", mediaPlayer);

@@ -4,10 +4,12 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.commons.Constants;
+import com.example.mike.mp3player.service.player.MyMediaPlayerAdapter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +20,10 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowMediaPlayer;
 
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static org.junit.Assert.assertEquals;
@@ -28,23 +34,22 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({MediaPlayer.class})
+@RunWith(RobolectricTestRunner.class)
+@Config(manifest=Config.NONE, sdk = 26, shadows = {ShadowBundle.class, ShadowMediaPlayer.class})
 public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
 
     @Before
     public void setup() {
         super.setup();
-        PowerMockito.mockStatic(MediaPlayer.class);
         mediaPlayerAdapter = createMediaPlayerAdapter();
-        PowerMockito.when(MediaPlayer.create(any(Context.class), any(Uri.class))).thenReturn(mediaPlayer);
-       // mediaPlayerAdapter.reset(uri, null, mock(MediaPlayer.OnCompletionListener.class));
+
+        mediaPlayerAdapter.reset(new Uri.Builder().appendPath("abc").build(), null);
         Whitebox.setInternalState(mediaPlayerAdapter, "audioFocusManager", audioFocusManager);
     }
 
     @Test
     public void testReset() {
-    //    mediaPlayerAdapter.reset(uri, nextUri, mock(MediaPlayer.OnCompletionListener.class));
+       // mediaPlayerAdapter.reset(uri, nextUri);
         assertNotNull(mediaPlayerAdapter.getCurrentMediaPlayer());
         assertNotNull(mediaPlayerAdapter.getNextMediaPlayer());
     }
@@ -63,9 +68,7 @@ public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
 
     @Test
     public void testPlay() {
-        Whitebox.setInternalState(mediaPlayerAdapter, "isPrepared", true);
         when(audioFocusManager.requestAudioFocus()).thenReturn(true);
-        when(mediaPlayer.getPlaybackParams()).thenReturn(new PlaybackParams());
         mediaPlayerAdapter.play();
         assertEquals(PlaybackStateCompat.STATE_PLAYING, mediaPlayerAdapter.getCurrentState());
     }
@@ -138,5 +141,9 @@ public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
         float delta = expectedNewSpeed - actualSpeed;
         assertEquals("Incorrect playback speed, expected " + expectedNewSpeed + " but was " + mediaPlayerAdapter.getCurrentPlaybackSpeed(),
                 expectedNewSpeed, actualSpeed, delta);
+    }
+
+    protected MyMediaPlayerAdapter createMediaPlayerAdapter() {
+        return new MyMediaPlayerAdapter(RuntimeEnvironment.systemContext, null, null);
     }
 }

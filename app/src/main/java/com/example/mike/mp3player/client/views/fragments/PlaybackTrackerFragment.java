@@ -18,6 +18,8 @@ import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.client.views.TimeCounter;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,7 +51,10 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
 
     public void init(MediaControllerAdapter mediaControllerAdapter) {
         this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mediaControllerAdapter.registerPlaybackStateListener(this, Collections.singleton(ListenerType.PLAYBACK));
+        Set<ListenerType> listenForSet = new HashSet();
+        listenForSet.add(ListenerType.PLAYBACK);
+        listenForSet.add(ListenerType.REPEAT);
+        this.mediaControllerAdapter.registerPlaybackStateListener(this, listenForSet);
         this.mediaControllerAdapter.registerMetaDataListener(this);
         this.getSeekerBar().init(mediaControllerAdapter);
 

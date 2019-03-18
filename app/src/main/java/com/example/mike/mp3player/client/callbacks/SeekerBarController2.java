@@ -10,6 +10,7 @@ import android.widget.SeekBar;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.commons.Constants;
+import com.example.mike.mp3player.commons.LoggingUtils;
 
 import androidx.annotation.VisibleForTesting;
 
@@ -40,9 +41,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
     }
 
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
-        Log.i(LOG_TAG, "playback change, state: "
-                + Constants.playbackStateDebugMap.get(state.getState()) + " position: " + state.getPosition()
-        + " speed: " + state.getPlaybackSpeed());
+        LoggingUtils.logPlaybackStateCompat(state, LOG_TAG);
         setLooping(state);
         this.currentState = state.getState();
         long position = state.getPosition();
@@ -134,7 +133,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
         removeValueAnimator();
         try {
             int duration = (int) (seekerBar.getMax() / currentPlaybackSpeed);
-            ValueAnimator valueAnimator = ValueAnimator.ofInt(0, duration);
+            ValueAnimator valueAnimator = ValueAnimator.ofInt(0, seekerBar.getMax());
             valueAnimator.setDuration(duration);
             valueAnimator.addUpdateListener(this);
             valueAnimator.setInterpolator(new LinearInterpolator());

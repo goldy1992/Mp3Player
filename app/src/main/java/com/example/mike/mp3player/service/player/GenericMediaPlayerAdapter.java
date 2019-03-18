@@ -74,10 +74,14 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
     public void onComplete(Uri nextUriToPrepare) {
         this.currentMediaPlayer.release();
         this.currentMediaPlayer = this.getNextMediaPlayer();
+
+        if (null != currentMediaPlayer) {
+            play();
+        }
+
         // TODO: we might want to make this an asynchronous task in the future
         if (nextUriToPrepare != null) {
             this.nextMediaPlayer = createMediaPlayer(nextUriToPrepare);
-            this.currentMediaPlayer.setNextMediaPlayer(getNextMediaPlayer());
         }
     }
     /**
@@ -108,9 +112,6 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
         this.nextMediaPlayer = secondItemUri == null ? null : createMediaPlayer(secondItemUri);
         //Log.i(LOG_TAG,"Created second mediaplayer");
 
-        if (!isLooping()) {
-            this.currentMediaPlayer.setNextMediaPlayer(getNextMediaPlayer());
-        }
         this.audioFocusManager = new AudioFocusManager(context, this);
         this.audioFocusManager.init();
         this.currentState = PlaybackStateCompat.STATE_PAUSED;
@@ -233,12 +234,6 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
         this.repeatMode = repeatMode;
         if (currentMediaPlayer != null) {
             currentMediaPlayer.setLooping(isLooping());
-        }
-
-        if (isLooping()) {
-            currentMediaPlayer.setNextMediaPlayer(null);
-        } else {
-            currentMediaPlayer.setNextMediaPlayer(nextMediaPlayer);
         }
     }
 

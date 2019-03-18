@@ -39,6 +39,13 @@ public final class Constants {
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_SKIPPING_TO_QUEUE_ITEM, "STATE_SKIPPING_TO_QUEUE_ITEM"); // 11
     };
 
+    public static final SparseArray<String> repeatModeDebugMap = new SparseArray<>();
+    static {
+        playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ALL, "REPEAT_MODE_ALL"); // 2
+        playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_NONE, "REPEAT_MODE_NONE"); // 0
+        playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ONE, "REPEAT_MODE_ONE"); // 1
+    };
+
 
     /* LIBRARY CONSTANTS */
     public static final String CATEGORY_ROOT_ID = Category.ROOT.name();

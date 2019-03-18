@@ -29,7 +29,7 @@ public class MyMediaPlayerAdapterRoboelectricTest extends MediaPlayerAdapterTest
     @Test
     public void testGetCurrentMetaData() {
         final int EXPECTED_DURATION = 1234;
-        mediaPlayerAdapter = new MyMediaPlayerAdapter(context);
+        //mediaPlayerAdapter = new MyMediaPlayerAdapter(context, null, null);
         Whitebox.setInternalState(mediaPlayerAdapter, "currentMediaPlayer", mediaPlayer);
         when(mediaPlayer.getDuration()).thenReturn(EXPECTED_DURATION);
         //setMediaPlayer(mediaPlayer);

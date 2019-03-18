@@ -78,6 +78,10 @@ public class MarshmallowMediaPlayerAdapter extends GenericMediaPlayerAdapter {
 
     @Override
     public void onComplete(Uri nextUriToPrepare) {
+        if (null != nextMediaPlayer) {
+            setPlaybackParams(nextMediaPlayer);
+        }
+
         super.onComplete(nextUriToPrepare);
         this.currentUri = this.nextUri;
         this.nextUri = nextUriToPrepare;
