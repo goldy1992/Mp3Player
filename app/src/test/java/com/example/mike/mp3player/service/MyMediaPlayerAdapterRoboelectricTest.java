@@ -16,7 +16,6 @@ import org.robolectric.shadows.ShadowMediaPlayer;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-@Ignore
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest=Config.NONE, sdk = 26, shadows = {ShadowBundle.class, ShadowMediaPlayer.class})
 public class MyMediaPlayerAdapterRoboelectricTest extends MediaPlayerAdapterTestBase {
