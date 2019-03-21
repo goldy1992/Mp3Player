@@ -4,13 +4,18 @@ import android.media.MediaMetadataRetriever;
 import android.os.Environment;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.util.Range;
 
 import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static android.media.MediaMetadataRetriever.METADATA_KEY_TITLE;
 
@@ -91,5 +96,33 @@ public final class MediaLibraryUtils {
         return null;
 
     }
+    /**
+     *
+     */
+    public static Set<MediaItem> getSubSetFromRange(Set<MediaItem> set, Range<Integer> range) {
 
+        if (range == null) {
+            return set;
+        }
+
+        if (!validRange(set, range)) {
+            return null;
+        }
+        List<MediaItem> l = new ArrayList<>(set);
+       l.subList(range.getLower(), range.getUpper() + 1);
+
+       TreeSet<MediaItem> ts = new TreeSet<>();
+       ts.addAll(l);
+        return ts;
+    }
+
+    /**
+     *
+     */
+    public static boolean validRange(Set<MediaItem> set, Range<Integer> range) {
+        if (set == null || range == null) {
+            return false;
+        }
+        return  range.getLower() >= 0 && range.getUpper() < set.size();
+    }
 }

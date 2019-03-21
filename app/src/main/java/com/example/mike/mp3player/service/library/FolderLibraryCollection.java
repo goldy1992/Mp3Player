@@ -1,11 +1,15 @@
 package com.example.mike.mp3player.service.library;
 
+import android.util.Range;
+
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
 import java.util.List;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -55,14 +59,20 @@ public class FolderLibraryCollection extends LibraryCollection {
     }
 
     @Override
-    public TreeSet<MediaItem> getChildren(LibraryId libraryId) {
+    public Set<MediaItem> getChildren(LibraryId libraryId) {
+        return getChildren(libraryId, null);
+    }
+
+    @Override
+    public Set<MediaItem> getChildren(LibraryId libraryId, Range<Integer> range) {
         if (getRootIdAsString().equals(libraryId)) {
             return getKeys();
         }
         for (MediaItem i : getKeys()) {
             String mediaId = getMediaId(i);
             if (mediaId != null && mediaId.equals(libraryId.getId())) {
-                return collection.get(getMediaId(i));
+                TreeSet<MediaItem> resultSet = collection.get(getMediaId(i));
+                return range == null ? resultSet : MediaLibraryUtils.getSubSetFromRange(resultSet, range);
             }
         }
         return null;

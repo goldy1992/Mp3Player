@@ -9,6 +9,7 @@ import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.service.ShadowMediaSessionCompat_Token;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
@@ -21,6 +22,7 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import static org.junit.Assert.assertEquals;
+@Ignore
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE, sdk = 26, shadows = {ShadowMediaSessionCompat_Token.class})
 public class MediaPlayerActivityTest {

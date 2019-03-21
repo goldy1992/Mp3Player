@@ -2,6 +2,7 @@ package com.example.mike.mp3player.service.library;
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
+import android.util.Range;
 
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
@@ -9,6 +10,7 @@ import com.example.mike.mp3player.commons.library.LibraryId;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 
 public abstract class LibraryCollection {
@@ -18,7 +20,14 @@ public abstract class LibraryCollection {
     private final MediaItem root;
     private TreeSet<MediaItem> keys;
     protected Map<String, TreeSet<MediaItem>> collection;
-    public abstract TreeSet<MediaItem> getChildren(LibraryId id);
+
+    /**
+     * Returns a Set of
+     * @param id
+     * @param range
+     * @return
+     */
+    public abstract Set<MediaItem> getChildren(LibraryId id, Range<Integer> range);
     public abstract void index(List<MediaItem> items);
     public abstract Category getRootId();
 

@@ -1,42 +1,29 @@
 package com.example.mike.mp3player.service.library;
 
 import android.content.Context;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
-import android.support.v4.media.MediaDescriptionCompat;
-import android.util.Log;
+import android.util.Range;
 
-import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
-import com.example.mike.mp3player.service.library.utils.IsDirectoryFilter;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
-import com.example.mike.mp3player.service.library.utils.MusicFileFilter;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 
-import static android.media.MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST;
-import static android.media.MediaMetadataRetriever.METADATA_KEY_ARTIST;
-import static android.media.MediaMetadataRetriever.METADATA_KEY_DURATION;
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ALBUM_ARTIST;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_DURATION;
 
 public class MediaLibrary {
+    private static final int INITAL_ITEMS_BUFFER = 10;
+    private static final Range<Integer> INITAL_ITEMS_RANGE = Range.create(0, INITAL_ITEMS_BUFFER);
+
     private boolean playlistRecursInSubDirectory = false;
 
     private MediaRetriever mediaRetriever;
@@ -73,51 +60,68 @@ public class MediaLibrary {
         categories.put(rootLibraryCollection.getRootId(), rootLibraryCollection);
     }
 
-
-
-
     public TreeSet<MediaItem> getRoot() {
         return rootItems;
     }
 
-    public TreeSet<MediaItem> getSongList() {
+    public Set<MediaItem> getSongList() {
         return categories.get(Category.SONGS).getKeys();
     }
 
-
+    /**
+     * Used by MediaSessionCallback to get the children of the MediaItem requested in the
+     * libraryId param.
+     * @param libraryId libraryId
+     * @return A list of MediaItems in the requested libraryId
+     */
     public List<MediaItem> getPlaylist(LibraryId libraryId) {
         Category category = libraryId.getCategory();
         if (category == Category.SONGS) {
             // song items don't have children therefore just return all songs
             return new ArrayList<>(categories.get(category).getKeys());
-        } else
-        return new ArrayList<>(categories.get(category).getChildren(libraryId));
+        } else {
+            return new ArrayList<>(categories.get(category).getChildren(libraryId));
+        }
     }
 
-    public TreeSet<MediaItem> getChildren(LibraryId libraryId) {
+    public Set<MediaItem> getChildren(LibraryId libraryId, Range range) {
         if (libraryId == null || libraryId.getCategory() == null) {
             return null;
         }
-
+        Set<MediaItem> returnSet = null;
         if (Category.isCategory(libraryId.getId())) {
-            return categories.get(libraryId.getCategory()).getKeys();
+            if (libraryId.getCategory() == Category.ROOT) {
+                returnSet =  getRootItems();
+            } else {
+
+                returnSet = categories.get(libraryId.getCategory()).getKeys();
+            }
         } else {
-            return categories.get(libraryId.getCategory()).getChildren(libraryId);
+            returnSet = categories.get(libraryId.getCategory()).getChildren(libraryId);
         }
+        return range == null ? returnSet : MediaLibraryUtils.getSubSetFromRange(returnSet, range);
     }
 
-
-
-    private class MediaItemComparator implements Comparator<MediaItem> {
-        @Override
-        public int compare(MediaItem o1, MediaItem o2) {
-            String s1 = o1.getDescription().getTitle().toString().toUpperCase(Locale.getDefault());
-            String s2 = o2.getDescription().getTitle().toString().toUpperCase(Locale.getDefault());
-            return s1.compareTo(s2);
+    /**
+     * returns all of the Categpry ids as well as the first 10 of each category as to avoid a
+     * @link{android.os.TransactionTooLargeException} when passing the initial data to the
+     * MainActivity.
+     *
+     * @return A TreeSet of MediaItems
+     */
+    private Set<MediaItem> getRootItems() {
+        Set<MediaItem> toReturn = new TreeSet<>();
+        toReturn.addAll(categories.get(Category.ROOT).getKeys());
+        // get first ten of each item
+        for (Category category : categories.keySet()) {
+            if (category != Category.ROOT) {
+                LibraryCollection lc = categories.get(category);
+                Set<MediaItem> subSet = MediaLibraryUtils.getSubSetFromRange(lc.getKeys(), INITAL_ITEMS_RANGE);
+                toReturn.addAll(subSet);
+            }
         }
+        return toReturn;
     }
-
-
 
     public Uri getMediaUriFromMediaId(String mediaId){
         for (MediaItem i : getSongList()) {

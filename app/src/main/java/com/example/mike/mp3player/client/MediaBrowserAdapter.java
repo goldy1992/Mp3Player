@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
+import android.util.Range;
 
 import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
 import com.example.mike.mp3player.client.callbacks.MySubscriptionCallback;
@@ -59,6 +60,7 @@ public class MediaBrowserAdapter {
     public void subscribe(LibraryId libraryId) {
         Bundle options = new Bundle();
         options.putParcelable(PARENT_ID, libraryId);
+        options.putParcelable("", new Range<Integer>(1 ,2));
         getmMediaBrowser().subscribe(libraryId.getId(), options, mySubscriptionCallback);
     }
     /**

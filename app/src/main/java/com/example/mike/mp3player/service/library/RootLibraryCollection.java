@@ -1,5 +1,7 @@
 package com.example.mike.mp3player.service.library;
 
+import android.util.Range;
+
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
@@ -19,7 +21,7 @@ public class RootLibraryCollection extends LibraryCollection {
     }
 
     @Override
-    public TreeSet<MediaItem> getChildren(LibraryId id) {
+    public TreeSet<MediaItem> getChildren(LibraryId id, Range<Integer> range) {
         return null;
     }
     @Override

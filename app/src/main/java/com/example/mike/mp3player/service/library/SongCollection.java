@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.service.library;
 
 import android.support.v4.media.MediaBrowserCompat;
+import android.util.Range;
 
 import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.Constants;
@@ -27,6 +28,11 @@ public class SongCollection extends LibraryCollection {
     }
 
     @Override
+    public TreeSet<MediaBrowserCompat.MediaItem> getChildren(LibraryId id, Range<Integer> range) {
+        return null;
+    }
+
+    @Override
     public void index(List<MediaBrowserCompat.MediaItem> items) {
         if (items != null) {
             this.getKeys().addAll(items);
@@ -41,4 +47,12 @@ public class SongCollection extends LibraryCollection {
     public TreeSet<MediaBrowserCompat.MediaItem> getSongs() {
         return getKeys();
     }
+
+//    public TreeSet<MediaBrowserCompat.MediaItem> getSongs(Range<Integer> range) {
+//        getKeys().range.getLower();
+//        return getKeys();
+//        getKeys().
+//    }
+
+
 }

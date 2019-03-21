@@ -7,6 +7,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Range;
 
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
@@ -102,6 +103,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             return;
         }
 
+        Range<Integer>
+
 
         //  Browsing not allowed
         if (TextUtils.equals(MY_EMPTY_MEDIA_ROOT_ID, parentMediaId)) {
@@ -127,6 +130,12 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         notificationManager.onDestroy();
         mMediaSession.release();
         stopSelf();
+    }
+
+    private Range<Integer> parseRangeFromBundleExtras(Bundle extras) {
+        if (extras == null) {
+            return null;
+        }
     }
 
 }
