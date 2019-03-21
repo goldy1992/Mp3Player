@@ -1,11 +1,13 @@
 package com.example.mike.mp3player.commons;
 
 import android.os.Bundle;
+import android.util.Pair;
 
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -83,6 +85,34 @@ public final class MediaItemUtils {
             }
         }
         return null;
+    }
+
+    public static final Pair<MediaItem, MediaItem> getRangeBoundItem(Range range, Collection<MediaItem> collection) {
+        if (range == null || collection == null || collection.size() < 1) {
+            return null;
+        }
+
+        int lower = range.getLower();
+        int upper = range.getUpper();
+
+        if (lower >= upper) {
+            return null;
+        }
+
+        List<MediaItem> list = new ArrayList(collection);
+        MediaItem lowerBound = null;
+        if (lower >= 0 && range.getLower() < collection.size())
+        {
+            lowerBound = list.get(lower);
+        }
+
+        MediaItem upperBound = null;
+        if (upper < collection.size()) {
+            upperBound = list.get(upper);
+        } else {
+            upperBound = list.get(list.size() - 1);
+        }
+        return new Pair<>(lowerBound, upperBound);
     }
 
     private static final Comparator<MediaItem> mediaItemCategoryComparator = (o1, o2) -> {

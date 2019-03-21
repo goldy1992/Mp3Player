@@ -7,20 +7,21 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Range;
 
+import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.media.MediaBrowserServiceCompat;
 
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
+import static com.example.mike.mp3player.commons.Constants.RANGE;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -103,7 +104,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             return;
         }
 
-        Range<Integer>
+        Range range = parseRangeFromBundleExtras(options);
 
 
         //  Browsing not allowed
@@ -112,7 +113,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             return;
         }
         // Assume for example that the music catalog is already loaded/cached.
-        TreeSet<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryId);
+        Set<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryId, range);
         result.sendResult(new ArrayList<>(mediaItems));
     }
 
@@ -132,10 +133,12 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         stopSelf();
     }
 
-    private Range<Integer> parseRangeFromBundleExtras(Bundle extras) {
+    private Range parseRangeFromBundleExtras(Bundle extras) {
         if (extras == null) {
             return null;
         }
+        return extras.getParcelable(RANGE);
+
     }
 
 }

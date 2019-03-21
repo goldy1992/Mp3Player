@@ -1,15 +1,15 @@
 package com.example.mike.mp3player.service.library;
 
 import android.support.v4.media.MediaBrowserCompat;
-import android.util.Range;
 
 import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.Constants;
+import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 
 import java.util.List;
-import java.util.TreeSet;
+import java.util.Set;
 
 public class SongCollection extends LibraryCollection {
 
@@ -22,14 +22,8 @@ public class SongCollection extends LibraryCollection {
     }
 
     @Override
-    public TreeSet<MediaBrowserCompat.MediaItem> getChildren(LibraryId id) {
-        // never used for songs collection as a song cannot have a child
-        return null;
-    }
-
-    @Override
-    public TreeSet<MediaBrowserCompat.MediaItem> getChildren(LibraryId id, Range<Integer> range) {
-        return null;
+    public Set<MediaBrowserCompat.MediaItem> getChildren(LibraryId id, Range range) {
+        return getKeys(range);
     }
 
     @Override
@@ -44,15 +38,8 @@ public class SongCollection extends LibraryCollection {
         return Category.SONGS;
     }
 
-    public TreeSet<MediaBrowserCompat.MediaItem> getSongs() {
+    public Set<MediaBrowserCompat.MediaItem> getSongs() {
         return getKeys();
     }
-
-//    public TreeSet<MediaBrowserCompat.MediaItem> getSongs(Range<Integer> range) {
-//        getKeys().range.getLower();
-//        return getKeys();
-//        getKeys().
-//    }
-
 
 }

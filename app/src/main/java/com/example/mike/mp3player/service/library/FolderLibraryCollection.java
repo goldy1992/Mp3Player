@@ -1,9 +1,8 @@
 package com.example.mike.mp3player.service.library;
 
-import android.util.Range;
-
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.MediaItemUtils;
+import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
@@ -59,15 +58,8 @@ public class FolderLibraryCollection extends LibraryCollection {
     }
 
     @Override
-    public Set<MediaItem> getChildren(LibraryId libraryId) {
-        return getChildren(libraryId, null);
-    }
+    public Set<MediaItem> getChildren(LibraryId libraryId, Range range) {
 
-    @Override
-    public Set<MediaItem> getChildren(LibraryId libraryId, Range<Integer> range) {
-        if (getRootIdAsString().equals(libraryId)) {
-            return getKeys();
-        }
         for (MediaItem i : getKeys()) {
             String mediaId = getMediaId(i);
             if (mediaId != null && mediaId.equals(libraryId.getId())) {

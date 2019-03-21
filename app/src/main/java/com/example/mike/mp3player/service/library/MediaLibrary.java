@@ -3,17 +3,15 @@ package com.example.mike.mp3player.service.library;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
-import android.util.Range;
 
+import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -22,7 +20,7 @@ import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMedi
 
 public class MediaLibrary {
     private static final int INITAL_ITEMS_BUFFER = 10;
-    private static final Range<Integer> INITAL_ITEMS_RANGE = Range.create(0, INITAL_ITEMS_BUFFER);
+    private static final Range INITAL_ITEMS_RANGE = Range.create(0, INITAL_ITEMS_BUFFER);
 
     private boolean playlistRecursInSubDirectory = false;
 
@@ -80,7 +78,7 @@ public class MediaLibrary {
             // song items don't have children therefore just return all songs
             return new ArrayList<>(categories.get(category).getKeys());
         } else {
-            return new ArrayList<>(categories.get(category).getChildren(libraryId));
+            return new ArrayList<>(categories.get(category).getChildren(libraryId, null));
         }
     }
 
@@ -88,22 +86,17 @@ public class MediaLibrary {
         if (libraryId == null || libraryId.getCategory() == null) {
             return null;
         }
-        Set<MediaItem> returnSet = null;
-        if (Category.isCategory(libraryId.getId())) {
-            if (libraryId.getCategory() == Category.ROOT) {
-                returnSet =  getRootItems();
-            } else {
+        LibraryCollection collection = categories.get(libraryId.getCategory());
 
-                returnSet = categories.get(libraryId.getCategory()).getKeys();
-            }
+        if (Category.isCategory(libraryId.getId())) {
+            return collection.getKeys(range);
         } else {
-            returnSet = categories.get(libraryId.getCategory()).getChildren(libraryId);
+            return collection.getChildren(libraryId, range);
         }
-        return range == null ? returnSet : MediaLibraryUtils.getSubSetFromRange(returnSet, range);
     }
 
     /**
-     * returns all of the Categpry ids as well as the first 10 of each category as to avoid a
+     * returns all of the Category ids as well as the first 10 of each category as to avoid a
      * @link{android.os.TransactionTooLargeException} when passing the initial data to the
      * MainActivity.
      *
