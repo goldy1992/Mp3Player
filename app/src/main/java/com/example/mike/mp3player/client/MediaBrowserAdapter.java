@@ -9,12 +9,14 @@ import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
 import com.example.mike.mp3player.client.callbacks.MySubscriptionCallback;
+import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
+import static com.example.mike.mp3player.commons.Constants.RANGE;
 
 public class MediaBrowserAdapter {
 
@@ -55,10 +57,15 @@ public class MediaBrowserAdapter {
      * ID when communicating with the MediaPlaybackService.
      * @param libraryId the libraryId
      */
-    public void subscribe(LibraryId libraryId) {
+    public void subscribe(LibraryId libraryId, Range range) {
         Bundle options = new Bundle();
+        options.putParcelable(RANGE, range);
         options.putParcelable(PARENT_ID, libraryId);
         getmMediaBrowser().subscribe(libraryId.getId(), options, mySubscriptionCallback);
+    }
+    public void subscribe(LibraryId libraryId)
+    {
+        subscribe(libraryId, null);
     }
     /**
      * We should subscribe to MediaItems using LibraryIds in order to avoid having to parse String ids.

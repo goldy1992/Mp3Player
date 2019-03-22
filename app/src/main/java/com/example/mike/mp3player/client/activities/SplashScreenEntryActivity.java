@@ -13,6 +13,7 @@ import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
+import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.commons.library.LibraryId;
@@ -42,6 +43,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     private Intent mainActivityIntent;
     private int numberOfItemsToSubscribeTo;
     private int numberOfItemsReceived = 0;
+    private static final long SPLASH_SCREEN_DISPLAY_TIME = 3000L;
     private static final int APP_TERMINATED = 0x78;
 
     @Override
@@ -73,7 +75,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     private synchronized void splashScreenRun() {
     //    Log.i(LOG_TAG, "splashscreen run");
         try {
-            Thread.sleep(5000L);
+            Thread.sleep(SPLASH_SCREEN_DISPLAY_TIME);
         } catch (InterruptedException ex) {
             Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex.fillInStackTrace()));
         } finally {
@@ -118,7 +120,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
             for (MediaBrowserCompat.MediaItem item : childrenArrayList) {
                 Category c = LibraryConstructor.getCategoryFromMediaItem(item);
                 LibraryId libraryId = new LibraryId(c, c.name());
-                mediaBrowserAdapter.subscribe(libraryId);
+                mediaBrowserAdapter.subscribe(libraryId, new Range(0, 10));
             }
             if (null == options) {
                 options = new Bundle();
@@ -144,7 +146,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
         Log.i(LOG_TAG, "hit on connected");
         mediaBrowserAdapter.registerListener(this);
         LibraryId libraryId = new LibraryId(Category.ROOT, Category.ROOT.name());
-        mediaBrowserAdapter.subscribe(libraryId);
+        mediaBrowserAdapter.subscribe(libraryId, null);
     }
 
     @Override// MediaBrowserConnectorCallback

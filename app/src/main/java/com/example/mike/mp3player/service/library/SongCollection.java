@@ -23,7 +23,8 @@ public class SongCollection extends LibraryCollection {
 
     @Override
     public Set<MediaBrowserCompat.MediaItem> getChildren(LibraryId id, Range range) {
-        return getKeys(range);
+        return null;
+//        return getKeys(range);
     }
 
     @Override

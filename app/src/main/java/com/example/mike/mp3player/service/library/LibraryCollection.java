@@ -76,6 +76,9 @@ public abstract class LibraryCollection {
     }
 
     public Set<MediaItem> getKeys(Range range) {
+        if (range == null) {
+            return keys;
+        }
         Pair<MediaItem, MediaItem> subsetBounds = MediaItemUtils.getRangeBoundItem(range, keys);
         return keys.subSet(subsetBounds.first, true, subsetBounds.second, true);
     }
