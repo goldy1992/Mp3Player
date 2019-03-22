@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -80,7 +81,7 @@ public class SongCollectionTest {
         songCollection.index(mediaItems);
 
         LibraryId libraryId = mock(LibraryId.class);
-        TreeSet<MediaItem> resultSet = songCollection.getChildren(libraryId);
+        Set<MediaItem> resultSet = songCollection.getChildren(libraryId, null);
         assertNull(resultSet);
     }
 }

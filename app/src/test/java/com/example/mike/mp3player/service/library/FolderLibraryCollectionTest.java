@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
@@ -113,7 +114,7 @@ public class FolderLibraryCollectionTest {
         indexTestData(itemsToIndex);
 
         LibraryId libraryId = new LibraryId(Category.FOLDERS, PATH1);
-        TreeSet<MediaItem> result = folderLibraryCollection.getChildren(libraryId);
+        Set<MediaItem> result = folderLibraryCollection.getChildren(libraryId, null);
         StringBuilder errorMessage = new StringBuilder().append("Number of items in FOLDER1 should be 2 but was: ")
                 .append(result.size());
         assertEquals(EXPECTED_NUMBER_OF_TRACKS_IN_FOLDER1, result.size(), errorMessage.toString());
