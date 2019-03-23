@@ -27,6 +27,10 @@ public class LibraryId implements Parcelable {
 
     }
 
+    public void putExtra(String key, String value) {
+        extras.put(key, value);
+    }
+
     public static final Creator<LibraryId> CREATOR = new Creator<LibraryId>() {
         @Override
         public LibraryId createFromParcel(Parcel in) {

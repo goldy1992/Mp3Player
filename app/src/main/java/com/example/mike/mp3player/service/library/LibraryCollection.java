@@ -15,8 +15,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static com.example.mike.mp3player.commons.MediaItemUtils.getRangeBoundItem;
-
 public abstract class LibraryCollection {
 
     private Comparator<MediaItem> keyComparator;

@@ -62,5 +62,11 @@ public final class Constants {
     public static final String PARENT_ID = "PARENT_ID";
     public static final String PARENT_MEDIA_ITEM = "PARENT_MEDIA_ITEM";
     public static final int NO_ACTION = 0;
+
+    /** RANGE CONSTANTS */
     public static final String RANGE = "RANGE";
+    public static final int RANGE_SIZE = 10;
+    public static final int DEFAULT_LOWER_BOUND = 0;
+    public static final int DEFAULT_UPPER_BOUND = 9;
+    public static final Range DEFAULT_RANGE =  new Range(DEFAULT_LOWER_BOUND, DEFAULT_UPPER_BOUND);
 }

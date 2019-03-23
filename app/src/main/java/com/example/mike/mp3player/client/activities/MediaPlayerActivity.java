@@ -24,7 +24,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
     private final String STOP = "Stop";
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
-
     private MediaSessionCompat.Token token;
     private TrackInfoFragment trackInfoFragment;
     private PlaybackTrackerFragment playbackTrackerFragment;

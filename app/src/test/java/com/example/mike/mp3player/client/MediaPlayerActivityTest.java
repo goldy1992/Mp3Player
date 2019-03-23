@@ -20,8 +20,6 @@ import org.robolectric.annotation.Config;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
-
-import static org.junit.Assert.assertEquals;
 @Ignore
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE, sdk = 26, shadows = {ShadowMediaSessionCompat_Token.class})

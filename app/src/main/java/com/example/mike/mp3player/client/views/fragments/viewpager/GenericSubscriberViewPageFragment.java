@@ -11,33 +11,14 @@ import com.example.mike.mp3player.commons.library.LibraryId;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-
 import static com.example.mike.mp3player.commons.Constants.FOLDER_CHILDREN;
+import static com.example.mike.mp3player.commons.Constants.FOLDER_NAME;
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 
 public abstract class GenericSubscriberViewPageFragment extends GenericViewPageFragment {
     MediaBrowserCompat.MediaItem itemRequested = null;
     private static final String LOG_TAG = "GNRC_SUBSCBR_V_P_FGMT";
-
-    public void onChildrenLoaded(LibraryId libraryId, @NonNull ArrayList<MediaBrowserCompat.MediaItem> children) {
-        if (null != libraryId && children != null) {
-            MediaBrowserCompat.MediaItem mediaItem = MediaItemUtils.findMediaItemInSet(libraryId, songs.keySet());
-            songs.put(mediaItem, new ArrayList<>(children));
-            LibraryConstructor.addFolderNameFromMediaItemToLibraryId(libraryId, mediaItem);
-
-            String idOfRequestedItem = MediaItemUtils.getMediaId(itemRequested);
-            if (idOfRequestedItem != null && idOfRequestedItem.equals(libraryId.getId())) {
-                idOfRequestedItem = null;
-                //IntentUtils.
-                startActivity(libraryId, children);
-
-            }
-
-            Log.d(LOG_TAG, "hit");
-
-        }
-    }
 
     @Override
     public void itemSelected(MediaBrowserCompat.MediaItem id) {
@@ -48,21 +29,8 @@ public abstract class GenericSubscriberViewPageFragment extends GenericViewPageF
             return;
         }
         LibraryId libraryId = new LibraryId(this.category, mediaId);
-        LibraryConstructor.addFolderNameFromMediaItemToLibraryId(libraryId, id);
-        MediaBrowserCompat.MediaItem item = MediaItemUtils.findMediaItemInSet(libraryId, songs.keySet());
-        if (item == null) {
-            return;
-        }
-
-        List<MediaBrowserCompat.MediaItem> values = songs.get(item);
-        if (!isSubscribed(item)) {
-            this.itemRequested = item;
-
-            this.getMediaBrowserAdapter().subscribe(libraryId);
-        } else {
-            ArrayList<MediaBrowserCompat.MediaItem> valuesArrayList = new ArrayList<>(songs.get(item));
-            startActivity(libraryId, valuesArrayList);
-        }
+        libraryId.putExtra(FOLDER_NAME, getTitle(id));
+        startActivity(libraryId);
     }
 
     private void startActivity(String id, ArrayList<MediaBrowserCompat.MediaItem> children) {
@@ -75,6 +43,14 @@ public abstract class GenericSubscriberViewPageFragment extends GenericViewPageF
         Intent intent =  new Intent(context, activityToCall);
         intent.putExtra(PARENT_ID, libraryId);
         intent.putParcelableArrayListExtra(FOLDER_CHILDREN, children);
+        intent = addExtrasToIntent(libraryId, intent);
+        startActivity(intent);
+    }
+
+    private void startActivity(LibraryId libraryId) {
+
+        Intent intent =  new Intent(context, activityToCall);
+        intent.putExtra(PARENT_ID, libraryId);
         intent = addExtrasToIntent(libraryId, intent);
         startActivity(intent);
     }

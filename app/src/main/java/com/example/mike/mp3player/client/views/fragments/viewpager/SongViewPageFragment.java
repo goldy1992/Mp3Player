@@ -12,11 +12,8 @@ import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
-
-import androidx.annotation.NonNull;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 
@@ -31,9 +28,6 @@ public class SongViewPageFragment extends GenericViewPageFragment implements MyG
         super.init(Category.SONGS, songs, mediaBrowserAdapter, mediaControllerAdapter, MediaPlayerActivity.class);
         this.parent = libraryId;
         this.songs = new TreeMap<>(ComparatorUtils.compareMediaItemsByTitle);
-        for (MediaItem m : songs) {
-            this.songs.put(m, null);
-        }
     }
 
 
@@ -57,11 +51,6 @@ public class SongViewPageFragment extends GenericViewPageFragment implements MyG
         SongViewPageFragment viewPageFragment = new SongViewPageFragment();
         viewPageFragment.init(Category.SONGS, songs, mediaBrowserAdapter, mediaControllerAdapter, MediaPlayerActivity.class);
         return viewPageFragment;
-    }
-
-    @Override
-    public void onChildrenLoaded(LibraryId libraryId, @NonNull ArrayList<MediaItem> children) {
-        // not needed
     }
 
     @Override

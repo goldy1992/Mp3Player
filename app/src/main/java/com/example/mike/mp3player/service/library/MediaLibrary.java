@@ -109,7 +109,7 @@ public class MediaLibrary {
         for (Category category : categories.keySet()) {
             if (category != Category.ROOT) {
                 LibraryCollection lc = categories.get(category);
-                Set<MediaItem> subSet = MediaLibraryUtils.getSubSetFromRange(lc.getKeys(), INITAL_ITEMS_RANGE);
+                Set<MediaItem> subSet = MediaLibraryUtils.getSubSetFromRange((TreeSet<MediaItem>) lc.getKeys(), INITAL_ITEMS_RANGE);
                 toReturn.addAll(subSet);
             }
         }

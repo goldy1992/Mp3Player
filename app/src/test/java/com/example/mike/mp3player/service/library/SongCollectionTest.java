@@ -12,9 +12,11 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class SongCollectionTest {
@@ -75,7 +77,6 @@ public class SongCollectionTest {
      */
     @Test
     public void testChildren() {
-
         List<MediaItem> mediaItems = new ArrayList<>();
         mediaItems.add(mockMediaItem);
         songCollection.index(mediaItems);

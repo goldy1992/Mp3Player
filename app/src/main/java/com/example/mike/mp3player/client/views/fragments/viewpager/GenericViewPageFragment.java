@@ -66,8 +66,10 @@ public abstract class GenericViewPageFragment extends Fragment implements MyGene
     public void init(Category category, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
                      MediaControllerAdapter mediaControllerAdapter, Class<?> activityToCall) {
         this.songs = new HashMap<>();
-        for (MediaItem m : songs) {
-            this.songs.put(m, null);
+        if (null != songs) {
+            for (MediaItem m : songs) {
+                this.songs.put(m, null);
+            }
         }
         this.category = category;
         this.mediaBrowserAdapter = mediaBrowserAdapter;
@@ -76,7 +78,9 @@ public abstract class GenericViewPageFragment extends Fragment implements MyGene
         this.context = mediaBrowserAdapter.getContext();
     }
 
-    public abstract void onChildrenLoaded(LibraryId libraryId, @NonNull ArrayList<MediaItem> children);
+    public void onChildrenLoaded(LibraryId libraryId, @NonNull ArrayList<MediaItem> children) {
+        recyclerView.addData(children);
+    }
 
     public MyRecyclerView getRecyclerView() {
         return recyclerView;

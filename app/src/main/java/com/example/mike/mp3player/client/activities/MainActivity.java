@@ -9,7 +9,9 @@ import android.view.inputmethod.InputMethodManager;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;
+import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.commons.library.LibraryId;
 
 import java.util.HashMap;
 import java.util.List;
@@ -62,11 +64,16 @@ public class MainActivity extends MediaActivityCompat{
         setContentView(R.layout.activity_main);
         this.rootFragment = (MainActivityRootFragment) getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
         this.rootFragment.init(inputMethodManager, getMediaBrowserAdapter(), getMediaControllerAdapter(), menuItems);
+
+        for (MediaItem m : menuItems.keySet()) {
+            String id = getMediaId(m);
+            LibraryId libraryId = new LibraryId(Category.valueOf(id), id);
+            getMediaBrowserAdapter().subscribe(libraryId, new Range(10, 19));
+        }
     }
 
     private Map<MediaItem, List<MediaItem>> initMenuItems(Bundle extras) {
         Map<MediaItem, List<MediaItem>> toReturn = new HashMap<>();
-
         List<MediaItem> root = extras.getParcelableArrayList(CATEGORY_ROOT_ID);
         for (MediaItem item : root) {
             List<MediaItem> children = extras.getParcelableArrayList(Category.valueOf(getMediaId(item)).name());

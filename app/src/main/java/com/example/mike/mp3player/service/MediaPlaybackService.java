@@ -12,6 +12,7 @@ import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 import com.example.mike.mp3player.service.library.MediaLibrary;
+import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.media.MediaBrowserServiceCompat;
 
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
-import static com.example.mike.mp3player.commons.Constants.RANGE;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -104,7 +104,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             return;
         }
 
-        Range range = parseRangeFromBundleExtras(options);
+        Range range = MediaLibraryUtils.parseRangeFromBundleExtras(options);
 
 
         //  Browsing not allowed
@@ -132,13 +132,4 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         mMediaSession.release();
         stopSelf();
     }
-
-    private Range parseRangeFromBundleExtras(Bundle extras) {
-        if (extras == null) {
-            return null;
-        }
-        return extras.getParcelable(RANGE);
-
-    }
-
 }

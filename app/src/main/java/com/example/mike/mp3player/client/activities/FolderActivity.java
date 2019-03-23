@@ -13,6 +13,7 @@ import com.example.mike.mp3player.commons.library.LibraryId;
 
 import java.util.List;
 
+import static com.example.mike.mp3player.commons.Constants.DEFAULT_RANGE;
 import static com.example.mike.mp3player.commons.Constants.FOLDER_CHILDREN;
 import static com.example.mike.mp3player.commons.Constants.FOLDER_NAME;
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
@@ -57,6 +58,7 @@ public class FolderActivity extends MediaActivityCompat {
     public void onConnected() {
         setMediaControllerAdapter(new MediaControllerAdapter(getApplicationContext(), getMediaBrowserAdapter().getMediaSessionToken(), getWorker().getLooper()));
         getMediaControllerAdapter().init();
+        getMediaBrowserAdapter().subscribe(parentId, DEFAULT_RANGE);
         setContentView(R.layout.activity_folder);
         this.viewPageFragment = SongViewPageFragment.createAndInitialiseViewPageFragment(parentId, mediaItems,getMediaBrowserAdapter(), getMediaControllerAdapter());
         this.playToolBarFragment = PlayToolBarFragment.createAndInitialisePlayToolbarFragment(getMediaControllerAdapter(), false);

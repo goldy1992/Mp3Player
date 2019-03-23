@@ -1,8 +1,12 @@
 package com.example.mike.mp3player.client.views;
 
+import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.widget.Filter;
 import android.widget.Filterable;
+
+import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -10,12 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 import static com.example.mike.mp3player.commons.MediaItemUtils.hasTitle;
 
-public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements Filterable {
+public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements Filterable, MediaBrowserResponseListener {
 
     protected List<MediaBrowserCompat.MediaItem> items;
     protected List<MediaBrowserCompat.MediaItem> filteredSongs;
@@ -29,12 +34,23 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
         filter = new MySongFilter();
     }
 
+    @Override
+    public void onChildrenLoaded(@NonNull String parentId,
+                          @NonNull ArrayList<MediaBrowserCompat.MediaItem> children,
+                          @NonNull Bundle options,
+                          Context context) {
+        items.addAll(children);
+        notifyDataSetChanged();
+    }
+
+
     public void setData(List<MediaBrowserCompat.MediaItem> items) {
         if (this.getItems() == null) {
             this.items = items;
         } else {
             this.getItems().addAll(items);
         }
+        notifyDataSetChanged();
     }
 
     @Override

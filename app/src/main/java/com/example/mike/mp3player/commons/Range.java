@@ -3,8 +3,6 @@ package com.example.mike.mp3player.commons;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Collection;
-
 public final class Range implements Parcelable {
 
     private final int lower;

@@ -11,7 +11,7 @@ import org.junit.runner.notification.RunNotifier;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Instrumentation test, which will execute on an Android device.

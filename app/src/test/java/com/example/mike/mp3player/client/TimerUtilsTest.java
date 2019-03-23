@@ -4,9 +4,9 @@ import android.os.SystemClock;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.client.utils.TimerUtils;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;

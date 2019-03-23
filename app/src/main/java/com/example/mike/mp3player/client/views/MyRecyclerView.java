@@ -60,16 +60,21 @@ public class MyRecyclerView extends RecyclerView {
         this.myGenericItemTouchListener.setItemSelectedListener(itemSelectedListener);
         this.myGenericItemTouchListener.setMediaControllerAdapter(mediaControllerAdapter);
         this.myGenericItemTouchListener.setMediaBrowserAdapter(mediaBrowserAdapter);
-        this.setAdapter(myViewAdapter);
+        this.setAdapter(getMyViewAdapter());
+        mediaBrowserAdapter.registerListener(category, this.myViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         this.setLayoutManager(linearLayoutManager);
         this.addOnItemTouchListener(this.getMyGenericItemTouchListener());
         this.setItemAnimator(new DefaultItemAnimator());
-        myViewAdapter.notifyDataSetChanged();
+        getMyViewAdapter().notifyDataSetChanged();
+    }
+
+    public void addData(List<MediaItem> data) {
+        myViewAdapter.setData(data);
     }
 
     public void filter(String filterParam) {
-        myViewAdapter.getFilter().filter(filterParam);
+        getMyViewAdapter().getFilter().filter(filterParam);
     }
 
     public MyGenericItemTouchListener getMyGenericItemTouchListener() {
@@ -85,5 +90,9 @@ public class MyRecyclerView extends RecyclerView {
 
     private MyGenericRecycleViewAdapter initViewAdapter(Category category, List<MediaItem> items) {
         return new MySongViewAdapter(items);
+    }
+
+    public MyGenericRecycleViewAdapter getMyViewAdapter() {
+        return myViewAdapter;
     }
 }

@@ -8,7 +8,8 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
-import com.example.mike.mp3player.client.callbacks.MySubscriptionCallback;
+import com.example.mike.mp3player.client.callbacks.subscription.GenericSubscriptionCallback;
+import com.example.mike.mp3player.client.callbacks.subscription.MySubscriptionCallback;
 import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
@@ -23,7 +24,7 @@ public class MediaBrowserAdapter {
     private static final String LOG_TAG = "MDIA_BRWSR_ADPTR";
     private MediaBrowserCompat mMediaBrowser;
     private MyConnectionCallback mConnectionCallbacks;
-    private MySubscriptionCallback mySubscriptionCallback;
+    private GenericSubscriptionCallback mySubscriptionCallback;
     private Context context;
     private final MediaBrowserConnectorCallback mediaBrowserConnectorCallback;
     private Looper looper;
@@ -39,7 +40,7 @@ public class MediaBrowserAdapter {
         ComponentName componentName = new ComponentName(getContext(), MediaPlaybackService.class);
         // Create MediaBrowserServiceCompat
         mMediaBrowser = new MediaBrowserCompat(getContext(), componentName, mConnectionCallbacks, null);
-        this.mySubscriptionCallback = new MySubscriptionCallback(getContext(), this.looper);
+        this.mySubscriptionCallback = new MySubscriptionCallback(this);
         //Log.i(LOG_TAG, "calling connect");
         getmMediaBrowser().connect();
     }
@@ -101,15 +102,19 @@ public class MediaBrowserAdapter {
                 : false;
     }
 
-    public void registerListener(MediaBrowserResponseListener mediaBrowserResponseListener) {
-        mySubscriptionCallback.registerMediaBrowserResponseListener(mediaBrowserResponseListener);
+    public void registerListener(Category category, MediaBrowserResponseListener mediaBrowserResponseListener) {
+        mySubscriptionCallback.registerMediaBrowserResponseListener(category, mediaBrowserResponseListener);
     }
 
-    public void unregisterListener(MediaBrowserResponseListener mediaBrowserResponseListener) {
-        mySubscriptionCallback.removeMediaBrowserResponseListener(mediaBrowserResponseListener);
+    public void unregisterListener(Category category, MediaBrowserResponseListener mediaBrowserResponseListener) {
+        mySubscriptionCallback.removeMediaBrowserResponseListener(category, mediaBrowserResponseListener);
     }
 
     public Context getContext() {
         return context;
+    }
+
+    public Looper getLooper() {
+        return looper;
     }
 }
