@@ -80,8 +80,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     /**
      * onLoadChildren(String, Result, Bundle) :- onLoadChildren should always be called with a LibraryId item as a bundle option. Searching for
      * a MediaItem's children is now deprecated as it wasted
-     * @param parentId
-     * @param result
+     * @param parentId the parent id
+     * @param result the result object
      */
     @Deprecated
     @Override
