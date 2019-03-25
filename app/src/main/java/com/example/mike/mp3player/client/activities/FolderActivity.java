@@ -6,6 +6,7 @@ import android.support.v4.media.MediaBrowserCompat;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.viewpager.SongViewPageFragment;
@@ -31,7 +32,7 @@ public class FolderActivity extends MediaActivityCompat {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initMediaBrowserService();
+        initMediaBrowserService(SubscriptionType.NOTIFY_ALL);
         Intent intent = getIntent();
         this.simpleTitleBarFragment = (SimpleTitleBarFragment) getSupportFragmentManager().findFragmentById(R.id.simpleTitleBarFragment);
         this.folderName= intent.getStringExtra(FOLDER_NAME);

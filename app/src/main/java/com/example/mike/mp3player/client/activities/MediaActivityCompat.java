@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,9 +20,9 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     private static final String LOG_TAG = "MEDIA_ACTIVITY_COMPAT";
     private HandlerThread worker;
 
-    void initMediaBrowserService() {
+    void initMediaBrowserService(SubscriptionType subscriptionType) {
         setMediaBrowserAdapter(new MediaBrowserAdapter(getApplicationContext(), this, getWorker().getLooper()));
-        getMediaBrowserAdapter().init();
+        getMediaBrowserAdapter().init(subscriptionType);
     }
 
     @Override

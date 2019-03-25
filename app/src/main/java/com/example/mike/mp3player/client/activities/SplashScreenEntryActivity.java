@@ -13,6 +13,7 @@ import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
+import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.commons.library.LibraryId;
@@ -106,7 +107,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     public void initMediaBrowserService() {
         Log.i(LOG_TAG, "reset media browser service");
         mediaBrowserAdapter = new MediaBrowserAdapter(getApplicationContext(), this, getMainLooper());
-        mediaBrowserAdapter.init();
+        mediaBrowserAdapter.init(SubscriptionType.NOTIFY_ALL);
     }
 
     @Override

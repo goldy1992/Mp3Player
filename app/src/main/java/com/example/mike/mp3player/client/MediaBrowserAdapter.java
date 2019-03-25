@@ -9,7 +9,9 @@ import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.GenericSubscriptionCallback;
-import com.example.mike.mp3player.client.callbacks.subscription.MySubscriptionCallback;
+import com.example.mike.mp3player.client.callbacks.subscription.CategorySubscriptionCallback;
+import com.example.mike.mp3player.client.callbacks.subscription.NotifyAllSubscriptionCallback;
+import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
@@ -35,12 +37,13 @@ public class MediaBrowserAdapter {
         this.looper = looper;
     }
 
-    public void init() {
+    public void init(SubscriptionType subscriptionType) {
         mConnectionCallbacks = new MyConnectionCallback(mediaBrowserConnectorCallback);
         ComponentName componentName = new ComponentName(getContext(), MediaPlaybackService.class);
         // Create MediaBrowserServiceCompat
         mMediaBrowser = new MediaBrowserCompat(getContext(), componentName, mConnectionCallbacks, null);
-        this.mySubscriptionCallback = new MySubscriptionCallback(this);
+        this.mySubscriptionCallback = new CategorySubscriptionCallback(this);
+        createSubscriptionCallback(subscriptionType);
         //Log.i(LOG_TAG, "calling connect");
         getmMediaBrowser().connect();
     }
@@ -116,5 +119,15 @@ public class MediaBrowserAdapter {
 
     public Looper getLooper() {
         return looper;
+    }
+
+    private void createSubscriptionCallback(SubscriptionType subscriptionType) {
+        if (null != subscriptionType) {
+            switch (subscriptionType) {
+                case CATEGORY: this.mySubscriptionCallback = new CategorySubscriptionCallback(this);
+                    break;
+                default: this.mySubscriptionCallback = new NotifyAllSubscriptionCallback(this);
+            }
+        }
     }
 }

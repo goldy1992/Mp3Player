@@ -5,6 +5,7 @@ import android.support.v4.media.MediaBrowserCompat;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
+import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 
 import java.util.ArrayList;
@@ -15,9 +16,14 @@ import androidx.annotation.NonNull;
 
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 
-public class MySubscriptionCallback extends GenericSubscriptionCallback {
+public class CategorySubscriptionCallback extends GenericSubscriptionCallback<Category> {
 
-    public MySubscriptionCallback(MediaBrowserAdapter mediaBrowserAdapter) {
+    @Override
+    public SubscriptionType getType() {
+        return SubscriptionType.CATEGORY;
+    }
+
+    public CategorySubscriptionCallback(MediaBrowserAdapter mediaBrowserAdapter) {
         super(mediaBrowserAdapter);
     }
 

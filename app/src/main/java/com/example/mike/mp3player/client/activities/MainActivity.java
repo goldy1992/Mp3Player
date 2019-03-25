@@ -8,6 +8,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;
 import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
@@ -32,7 +33,7 @@ public class MainActivity extends MediaActivityCompat{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.menuItems = initMenuItems(getIntent().getExtras());
-        initMediaBrowserService();
+        initMediaBrowserService(SubscriptionType.CATEGORY);
         this.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
