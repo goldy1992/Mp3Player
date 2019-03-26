@@ -50,7 +50,7 @@ public class MainActivityRootFragment extends Fragment implements SongSearchActi
     }
 
     public void populatePlaybackMetaDataListeners(MediaBrowserAdapter mediaBrowserAdapter, MediaControllerAdapter mediaControllerAdapter) {
-
+        mainFrameFragment.populatePlaybackMetaDataListeners(mediaBrowserAdapter, mediaControllerAdapter);
     }
 
     @Override // SongSearchActionListener

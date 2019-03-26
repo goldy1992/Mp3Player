@@ -2,10 +2,14 @@ package com.example.mike.mp3player.commons.library;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.media.MediaBrowserCompat;
 
 import java.util.HashMap;
+import java.util.List;
 
 import androidx.annotation.NonNull;
+
+import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 public class LibraryId implements Parcelable {
 
@@ -14,6 +18,8 @@ public class LibraryId implements Parcelable {
     private final String id;
     private HashMap<String, String> extras;
     private int resultSize = RESULT_SIZE_NOT_SET;
+    private MediaItem mediaItem;
+    private List<MediaItem> children;
 
     public LibraryId(Category category, @NonNull String id) {
         this.category = category;
@@ -27,7 +33,8 @@ public class LibraryId implements Parcelable {
         this.id = in.readString();
         this.extras = (HashMap) in.readSerializable();
         this.resultSize = in.readInt();
-
+        this.mediaItem = in.readParcelable(MediaItem.class.getClassLoader());
+        this.children = in.createTypedArrayList(MediaBrowserCompat.MediaItem.CREATOR);
     }
 
     public void putExtra(String key, String value) {
@@ -65,6 +72,7 @@ public class LibraryId implements Parcelable {
         dest.writeString(id);
         dest.writeSerializable(extras);
         dest.writeInt(resultSize);
+        dest.writeParcelable(mediaItem, mediaItem.getFlags());
     }
 
     @Override
