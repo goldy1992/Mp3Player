@@ -39,16 +39,18 @@ public class MainActivityRootFragment extends Fragment implements SongSearchActi
     }
 
     public void init(InputMethodManager inputMethodManager,
-                    MediaBrowserAdapter mediaBrowserAdapter,
-                    MediaControllerAdapter mediaControllerAdapter,
                     Map<MediaBrowserCompat.MediaItem,
                     List<MediaBrowserCompat.MediaItem>> menuItems) {
 
         setInputMethodManager(inputMethodManager);
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
-        this.mainFrameFragment.init(menuItems, mediaBrowserAdapter, mediaControllerAdapter, this);
+        this.mainFrameFragment.init(menuItems, this);
         this.songFilterFragment.init(this);
+    }
+
+    public void populatePlaybackMetaDataListeners(MediaBrowserAdapter mediaBrowserAdapter, MediaControllerAdapter mediaControllerAdapter) {
+
     }
 
     @Override // SongSearchActionListener

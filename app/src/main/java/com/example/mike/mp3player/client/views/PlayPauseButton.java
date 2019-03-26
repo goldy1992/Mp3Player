@@ -41,18 +41,6 @@ public class PlayPauseButton extends LinearLayoutWithImageView implements Playba
         }
     }
 
-//    @Override
-//    public void init() {
-//        ImageView imageView = getView();
-//        imageView.setScaleX(2);
-//        imageView.setScaleY(2);
-//        int imageHeight = imageView.getDrawable().getIntrinsicHeight();
-//        long exactMarginSize =  imageHeight / 2;
-//        int marginSize =  (int) exactMarginSize;
-//        imageView.setPadding(marginSize, marginSize, marginSize, marginSize);
-//        setGravity(Gravity.CENTER_HORIZONTAL);
-//    }
-
     private synchronized void setPlayIcon() {
         setViewImage(R.drawable.ic_baseline_play_arrow_24px);
     }

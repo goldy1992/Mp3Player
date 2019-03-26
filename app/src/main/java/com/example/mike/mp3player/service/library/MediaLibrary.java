@@ -124,4 +124,17 @@ public class MediaLibrary {
         }
         return null;
      }
+
+     public int getNumberOfChildren(LibraryId libraryId) {
+         if (libraryId == null) {
+             return -1;
+         }
+         LibraryCollection collection = categories.get(libraryId.getCategory());
+
+         if (Category.isCategory(libraryId.getId())) {
+             return collection.getKeys().size();
+         } else {
+             return collection.getNumberOfChildren(libraryId);
+         }
+     }
 }

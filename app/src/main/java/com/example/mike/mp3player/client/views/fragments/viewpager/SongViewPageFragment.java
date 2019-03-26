@@ -23,33 +23,30 @@ public class SongViewPageFragment extends GenericViewPageFragment implements MyG
 
     public SongViewPageFragment() {  }
 
-    public void init(LibraryId libraryId, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
-                     MediaControllerAdapter mediaControllerAdapter) {
-        super.init(Category.SONGS, songs, mediaBrowserAdapter, mediaControllerAdapter, MediaPlayerActivity.class);
+    public void init(LibraryId libraryId, List<MediaItem> songs) {
+        super.init(Category.SONGS, songs, MediaPlayerActivity.class);
         this.parent = libraryId;
-        this.songs = new TreeMap<>(ComparatorUtils.compareMediaItemsByTitle);
+    }
+    public void populatePlaybackMetaDataListeners(MediaBrowserAdapter mediaBrowserAdapter, MediaControllerAdapter mediaControllerAdapter) {
+
     }
 
 
-    public static SongViewPageFragment createAndInitialiseViewPageFragment(LibraryId libraryId, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
-                                                                           MediaControllerAdapter mediaControllerAdapter) {
+    public static SongViewPageFragment createAndInitialiseViewPageFragment(LibraryId libraryId, List<MediaItem> songs) {
         SongViewPageFragment viewPageFragment = new SongViewPageFragment();
-        viewPageFragment.init(libraryId, songs, mediaBrowserAdapter, mediaControllerAdapter);
+        viewPageFragment.init(libraryId, songs);
         return viewPageFragment;
     }
 
     /**
      * @deprecated must specify category in order to know which type of request to build
      * @param songs
-     * @param mediaBrowserAdapter
-     * @param mediaControllerAdapter
      * @return
      */
     @Deprecated
-    public static SongViewPageFragment createAndInitialiseViewPageFragment(List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
-                                                                           MediaControllerAdapter mediaControllerAdapter) {
+    public static SongViewPageFragment createAndInitialiseViewPageFragment(List<MediaItem> songs) {
         SongViewPageFragment viewPageFragment = new SongViewPageFragment();
-        viewPageFragment.init(Category.SONGS, songs, mediaBrowserAdapter, mediaControllerAdapter, MediaPlayerActivity.class);
+        viewPageFragment.init(Category.SONGS, songs, MediaPlayerActivity.class);
         return viewPageFragment;
     }
 

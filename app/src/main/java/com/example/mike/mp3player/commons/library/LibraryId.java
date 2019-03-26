@@ -9,9 +9,11 @@ import androidx.annotation.NonNull;
 
 public class LibraryId implements Parcelable {
 
+    public static final int RESULT_SIZE_NOT_SET = -1;
     private final Category category;
     private final String id;
     private HashMap<String, String> extras;
+    private int resultSize = RESULT_SIZE_NOT_SET;
 
     public LibraryId(Category category, @NonNull String id) {
         this.category = category;
@@ -24,6 +26,7 @@ public class LibraryId implements Parcelable {
         this.category = Category.values()[in.readInt()];
         this.id = in.readString();
         this.extras = (HashMap) in.readSerializable();
+        this.resultSize = in.readInt();
 
     }
 
@@ -61,6 +64,7 @@ public class LibraryId implements Parcelable {
         dest.writeInt(category.ordinal());
         dest.writeString(id);
         dest.writeSerializable(extras);
+        dest.writeInt(resultSize);
     }
 
     @Override
@@ -80,5 +84,13 @@ public class LibraryId implements Parcelable {
 
     public String getExtra(String key) {
         return extras.get(key);
+    }
+
+    public int getResultSize() {
+        return resultSize;
+    }
+
+    public void setResultSize(int resultSize) {
+        this.resultSize = resultSize;
     }
 }

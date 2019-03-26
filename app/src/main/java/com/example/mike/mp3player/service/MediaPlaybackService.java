@@ -104,6 +104,11 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             return;
         }
 
+        if (libraryId.getResultSize() == LibraryId.RESULT_SIZE_NOT_SET) {
+            int resultSize = mediaLibrary.getNumberOfChildren(libraryId);
+            libraryId.setResultSize(resultSize );
+        }
+
         Range range = MediaLibraryUtils.parseRangeFromBundleExtras(options);
 
 
@@ -112,6 +117,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             result.sendResult(null);
             return;
         }
+
         // Assume for example that the music catalog is already loaded/cached.
         Set<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryId, range);
         result.sendResult(new ArrayList<>(mediaItems));

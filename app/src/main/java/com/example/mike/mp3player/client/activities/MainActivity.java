@@ -32,9 +32,12 @@ public class MainActivity extends MediaActivityCompat{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         this.menuItems = initMenuItems(getIntent().getExtras());
         initMediaBrowserService(SubscriptionType.CATEGORY);
         this.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        this.rootFragment = (MainActivityRootFragment)getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
+        this.rootFragment.init(inputMethodManager, menuItems);
     }
 
     @Override
@@ -62,10 +65,9 @@ public class MainActivity extends MediaActivityCompat{
     public void onConnected() {
         setMediaControllerAdapter(new MediaControllerAdapter(this, getMediaBrowserAdapter().getMediaSessionToken(), getWorker().getLooper()));
         getMediaControllerAdapter().init();
-        setContentView(R.layout.activity_main);
-        this.rootFragment = (MainActivityRootFragment) getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
-        this.rootFragment.init(inputMethodManager, getMediaBrowserAdapter(), getMediaControllerAdapter(), menuItems);
+        //setContentView(R.layout.activity_main);
 
+        rootFragment.populatePlaybackMetaDataListeners(getMediaBrowserAdapter(), getMediaControllerAdapter());
         for (MediaItem m : menuItems.keySet()) {
             String id = getMediaId(m);
             LibraryId libraryId = new LibraryId(Category.valueOf(id), id);

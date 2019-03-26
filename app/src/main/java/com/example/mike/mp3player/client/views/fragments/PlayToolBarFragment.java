@@ -55,13 +55,17 @@ public class PlayToolBarFragment extends Fragment {
         }
     }
 
-    public void init(MediaControllerAdapter mediaControllerAdapter, boolean attachToRoot) {
-        this.mediaControllerAdapter = mediaControllerAdapter;
+    public void init(boolean attachToRoot) {
+
         if (this.playPauseButton == null) {
-            this.playPauseButton = PlayPauseButton.create(mediaControllerAdapter.getContext(), (View v) -> playPause());
+            this.playPauseButton = PlayPauseButton.create(getContext(), (View v) -> playPause());
         }
-        this.mediaControllerAdapter.registerPlaybackStateListener(playPauseButton, Collections.singleton(ListenerType.PLAYBACK));
         this.attachToRoot = attachToRoot;
+    }
+
+    public void populateMediaControllerAdapterAndListener(MediaControllerAdapter mediaControllerAdapter) {
+        this.mediaControllerAdapter = mediaControllerAdapter;
+        this.mediaControllerAdapter.registerPlaybackStateListener(playPauseButton, Collections.singleton(ListenerType.PLAYBACK));
     }
 
     void playPause() {
@@ -106,9 +110,9 @@ public class PlayToolBarFragment extends Fragment {
         this.mediaControllerAdapter = mediaControllerAdapter;
     }
 
-    public static PlayToolBarFragment createAndInitialisePlayToolbarFragment(MediaControllerAdapter mediaControllerAdapter, boolean attachToRoot) {
+    public static PlayToolBarFragment createAndInitialisePlayToolbarFragment(boolean attachToRoot) {
         PlayToolBarFragment playToolBarFragment = new PlayToolBarFragment();
-        playToolBarFragment.init(mediaControllerAdapter, attachToRoot);
+        playToolBarFragment.init(attachToRoot);
         return playToolBarFragment;
     }
 

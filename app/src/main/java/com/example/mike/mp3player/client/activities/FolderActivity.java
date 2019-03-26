@@ -38,6 +38,13 @@ public class FolderActivity extends MediaActivityCompat {
         this.folderName= intent.getStringExtra(FOLDER_NAME);
         this.mediaItems = intent.getParcelableArrayListExtra(FOLDER_CHILDREN);
         this.parentId = intent.getParcelableExtra(PARENT_ID);
+
+//        this.viewPageFragment = SongViewPageFragment.createAndInitialiseViewPageFragment(parentId, mediaItems,getMediaBrowserAdapter(), getMediaControllerAdapter());
+  //      this.playToolBarFragment = PlayToolBarFragment.createAndInitialisePlayToolbarFragment(getMediaControllerAdapter(), false);
+        getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.playToolbarFragment, playToolBarFragment).commitNow();
+        playToolBarFragment.displayButtons();
+
     }
 
     @Override
@@ -61,12 +68,6 @@ public class FolderActivity extends MediaActivityCompat {
         getMediaControllerAdapter().init();
         getMediaBrowserAdapter().subscribe(parentId, DEFAULT_RANGE);
         setContentView(R.layout.activity_folder);
-        this.viewPageFragment = SongViewPageFragment.createAndInitialiseViewPageFragment(parentId, mediaItems,getMediaBrowserAdapter(), getMediaControllerAdapter());
-        this.playToolBarFragment = PlayToolBarFragment.createAndInitialisePlayToolbarFragment(getMediaControllerAdapter(), false);
-        getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.playToolbarFragment, playToolBarFragment).commitNow();
-        playToolBarFragment.displayButtons();
-
         getSupportActionBar().setTitle(getString(R.string.FOLDER_NAME, this.folderName));
         getMediaControllerAdapter().updateUiState();
     }

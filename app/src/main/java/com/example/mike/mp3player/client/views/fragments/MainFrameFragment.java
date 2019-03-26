@@ -67,12 +67,15 @@ public class MainFrameFragment extends Fragment {
     }
 
     public void init(Map<MediaBrowserCompat.MediaItem, List<MediaBrowserCompat.MediaItem>> menuItems,
-                    MediaBrowserAdapter mediaBrowserAdapter,
-                     MediaControllerAdapter mediaControllerAdapter,
                      SongSearchActionListener songSearchActionListener) {
-        this.viewPagerFragment.initRootMenu(menuItems, mediaBrowserAdapter, mediaControllerAdapter);
-        this.playToolBarFragment.init(mediaControllerAdapter,  true);
+        this.viewPagerFragment.initRootMenu(menuItems);
+        this.playToolBarFragment.init(true);
         this.titleBarFragment.setSongSearchActionListener(songSearchActionListener);
+    }
+
+    public void populatePlaybackMetaDataListeners(MediaBrowserAdapter mediaBrowserAdapter, MediaControllerAdapter mediaControllerAdapter) {
+        this.viewPagerFragment.populatePlaybackMetaDataListeners(mediaBrowserAdapter, mediaControllerAdapter);
+        this.playToolBarFragment.populateMediaControllerAdapterAndListener(mediaControllerAdapter);
     }
 
     @Override

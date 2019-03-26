@@ -11,6 +11,7 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.views.MyRecyclerView;
+import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -63,19 +65,23 @@ public abstract class GenericViewPageFragment extends Fragment implements MyGene
                 mediaControllerAdapter, this);
     }
 
-    public void init(Category category, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
-                     MediaControllerAdapter mediaControllerAdapter, Class<?> activityToCall) {
-        this.songs = new HashMap<>();
+    public void init(Category category, List<MediaItem> songs, Class<?> activityToCall) {
+        this.songs = new TreeMap<>(ComparatorUtils.compareMediaItemsByTitle);
         if (null != songs) {
             for (MediaItem m : songs) {
                 this.songs.put(m, null);
             }
         }
         this.category = category;
+        this.activityToCall = activityToCall;
+
+    }
+
+    public void populatePlaybackMetaDataListeners(MediaBrowserAdapter mediaBrowserAdapter, MediaControllerAdapter mediaControllerAdapter) {
         this.mediaBrowserAdapter = mediaBrowserAdapter;
         this.mediaControllerAdapter = mediaControllerAdapter;
-        this.activityToCall = activityToCall;
         this.context = mediaBrowserAdapter.getContext();
+        this.recyclerView.populatePlaybackMetaDataListeners(mediaBrowserAdapter, mediaControllerAdapter);
     }
 
     public void onChildrenLoaded(LibraryId libraryId, @NonNull ArrayList<MediaItem> children) {

@@ -58,15 +58,19 @@ public class MyRecyclerView extends RecyclerView {
             default: return;
         }
         this.myGenericItemTouchListener.setItemSelectedListener(itemSelectedListener);
-        this.myGenericItemTouchListener.setMediaControllerAdapter(mediaControllerAdapter);
-        this.myGenericItemTouchListener.setMediaBrowserAdapter(mediaBrowserAdapter);
+
         this.setAdapter(getMyViewAdapter());
-        mediaBrowserAdapter.registerListener(category, this.myViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         this.setLayoutManager(linearLayoutManager);
         this.addOnItemTouchListener(this.getMyGenericItemTouchListener());
         this.setItemAnimator(new DefaultItemAnimator());
         getMyViewAdapter().notifyDataSetChanged();
+    }
+
+    public void populatePlaybackMetaDataListeners(MediaBrowserAdapter mediaBrowserAdapter, MediaControllerAdapter mediaControllerAdapter) {
+        this.myGenericItemTouchListener.setMediaControllerAdapter(mediaControllerAdapter);
+        this.myGenericItemTouchListener.setMediaBrowserAdapter(mediaBrowserAdapter);
+        mediaBrowserAdapter.registerListener(category, this.myViewAdapter);
     }
 
     public void addData(List<MediaItem> data) {

@@ -34,7 +34,7 @@ public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
     }
 
     public void init(MediaControllerAdapter mediaControllerAdapter) {
-        super.init(mediaControllerAdapter, true);
+        super.init( true);
     }
 
     public void skipToNext() {

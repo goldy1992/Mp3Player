@@ -54,8 +54,7 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
         rootMenuItemsPager.setAdapter(adapter);
     }
 
-    public void initRootMenu(Map<MediaItem, List<MediaItem>> items, MediaBrowserAdapter mediaBrowserAdapter,
-                             MediaControllerAdapter mediaControllerAdapter) {
+    public void initRootMenu(Map<MediaItem, List<MediaItem>> items) {
         TreeSet<MediaItem> rootItemsOrdered = new TreeSet<>(compareRootMediaItemsByCategory);
         rootItemsOrdered.addAll(items.keySet());
         for (MediaItem i : rootItemsOrdered) {
@@ -63,16 +62,22 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
             GenericViewPageFragment viewPageFragment = null;
             switch (category) {
                 case SONGS:
-                    viewPageFragment = SongViewPageFragment.createAndInitialiseViewPageFragment(new LibraryId(category, null), items.get(i), mediaBrowserAdapter, mediaControllerAdapter);
+                    viewPageFragment = SongViewPageFragment.createAndInitialiseViewPageFragment(new LibraryId(category, null), items.get(i));
                     break;
                 case FOLDERS:
-                    viewPageFragment = FolderViewPageFragment.createAndInitialiseFragment(items.get(i), mediaBrowserAdapter, mediaControllerAdapter);
+                    viewPageFragment = FolderViewPageFragment.createAndInitialiseFragment(items.get(i));
                     break;
                 default: break;
             }
             adapter.pagerItems.put(category, viewPageFragment);
             adapter.menuCategories.put(category, i);
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    public void populatePlaybackMetaDataListeners(MediaBrowserAdapter mediaBrowserAdapter, MediaControllerAdapter mediaControllerAdapter) {
+        for(GenericViewPageFragment genericViewPageFragment : adapter.pagerItems.values()) {
+            genericViewPageFragment.populatePlaybackMetaDataListeners(mediaBrowserAdapter, mediaControllerAdapter);
         }
     }
 

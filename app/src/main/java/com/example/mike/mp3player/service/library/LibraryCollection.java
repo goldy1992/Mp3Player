@@ -41,6 +41,11 @@ public abstract class LibraryCollection {
         return children.subSet(subsetBounds.first, true, subsetBounds.second, true);
     }
 
+    public int getNumberOfChildren(LibraryId libraryId) {
+        TreeSet<MediaItem> items = collection.get(libraryId.getId());
+        return null != items ? items.size() : -1;
+    }
+
     public abstract void index(List<MediaItem> items);
     public abstract Category getRootId();
 
