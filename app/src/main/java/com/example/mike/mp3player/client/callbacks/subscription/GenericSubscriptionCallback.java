@@ -48,10 +48,14 @@ public abstract class GenericSubscriptionCallback<K> extends MediaBrowserCompat.
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children,
                                  @NonNull Bundle options) {
         super.onChildrenLoaded(parentId, children, options);
-
+        LibraryId libraryId = null;
+        if (null != options) {
+            libraryId = (LibraryId) options.get(PARENT_ID);
+            libraryId.setChildren(children);
+        }
         Range range = MediaLibraryUtils.parseRangeFromBundleExtras(options);
         if (range != null && children != null && children.size() >= RANGE_SIZE) {
-            LibraryId libraryId = (LibraryId) options.get(PARENT_ID);
+
             int newLower = range.getUpper()+1;
             int newUpper = newLower + RANGE_SIZE;
             mediaBrowserAdapter.subscribe(libraryId, new Range(newLower, newUpper));

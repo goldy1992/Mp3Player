@@ -2,7 +2,8 @@ package com.example.mike.mp3player.commons.library;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.media.MediaBrowserCompat;
+
+import com.example.mike.mp3player.commons.Range;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ public class LibraryId implements Parcelable {
     private final String id;
     private HashMap<String, String> extras;
     private int resultSize = RESULT_SIZE_NOT_SET;
+    private Range range;
     private MediaItem mediaItem;
     private List<MediaItem> children;
 
@@ -34,7 +36,7 @@ public class LibraryId implements Parcelable {
         this.extras = (HashMap) in.readSerializable();
         this.resultSize = in.readInt();
         this.mediaItem = in.readParcelable(MediaItem.class.getClassLoader());
-        this.children = in.createTypedArrayList(MediaBrowserCompat.MediaItem.CREATOR);
+        this.setChildren(in.createTypedArrayList(MediaItem.CREATOR));
     }
 
     public void putExtra(String key, String value) {
@@ -73,6 +75,7 @@ public class LibraryId implements Parcelable {
         dest.writeSerializable(extras);
         dest.writeInt(resultSize);
         dest.writeParcelable(mediaItem, mediaItem.getFlags());
+        dest.writeTypedList(children);
     }
 
     @Override
@@ -100,5 +103,21 @@ public class LibraryId implements Parcelable {
 
     public void setResultSize(int resultSize) {
         this.resultSize = resultSize;
+    }
+
+    public List<MediaItem> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<MediaItem> children) {
+        this.children = children;
+    }
+
+    public Range getRange() {
+        return range;
+    }
+
+    public void setRange(Range range) {
+        this.range = range;
     }
 }
