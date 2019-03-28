@@ -21,7 +21,7 @@ import java.util.Map;
 import static com.example.mike.mp3player.commons.Constants.CATEGORY_ROOT_ID;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getMediaId;
 
-public class MainActivity extends MediaActivityCompat{
+public class MainActivity extends MediaSubscriberActivityCompat{
 
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     private static final int READ_REQUEST_CODE = 42;
@@ -30,14 +30,19 @@ public class MainActivity extends MediaActivityCompat{
     private Map<MediaItem, List<MediaItem>> menuItems;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        this.menuItems = initMenuItems(getIntent().getExtras());
-        initMediaBrowserService(SubscriptionType.CATEGORY);
-        this.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+    void initialiseView() {
         this.rootFragment = (MainActivityRootFragment)getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
         this.rootFragment.init(inputMethodManager, menuItems);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        initMediaBrowserService(SubscriptionType.CATEGORY);
+        this.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+
     }
 
     @Override

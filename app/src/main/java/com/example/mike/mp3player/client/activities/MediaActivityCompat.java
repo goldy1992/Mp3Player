@@ -19,6 +19,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     private MediaBrowserAdapter mediaBrowserAdapter;
     private static final String LOG_TAG = "MEDIA_ACTIVITY_COMPAT";
     private HandlerThread worker;
+    abstract void initialiseView();
 
     void initMediaBrowserService(SubscriptionType subscriptionType) {
         setMediaBrowserAdapter(new MediaBrowserAdapter(getApplicationContext(), this, getWorker().getLooper()));
@@ -26,7 +27,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         worker = new HandlerThread(WORKER_ID);
         getWorker().start();

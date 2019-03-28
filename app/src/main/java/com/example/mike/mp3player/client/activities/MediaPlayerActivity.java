@@ -33,7 +33,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     private ShuffleRepeatFragment shuffleRepeatFragment;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         token = (MediaSessionCompat.Token) retrieveIntentInfo(Constants.MEDIA_SESSION);
 
@@ -41,9 +41,8 @@ public class MediaPlayerActivity extends MediaActivityCompat {
             setMediaControllerAdapter(new MediaControllerAdapter(this, token, getWorker().getLooper()));
             String mediaId = (String) retrieveIntentInfo(Constants.MEDIA_ID);
             LibraryId parentId = (LibraryId) retrieveIntentInfo(Constants.PARENT_ID);
-
             getMediaControllerAdapter().init();
-            initView();
+            initialiseView();
             if (mediaId != null) { // if rq came with an media id it's a song request
                 // Display the initial state
                 Bundle extras = new Bundle();
@@ -89,7 +88,8 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     /**
      *
      */
-    private void initView() {
+    @Override
+     void initialiseView() {
         setContentView(R.layout.activity_media_player);
         this.simpleTitleBarFragment = (SimpleTitleBarFragment) getSupportFragmentManager().findFragmentById(R.id.simpleTitleBarFragment);
         this.trackInfoFragment = (TrackInfoFragment) getSupportFragmentManager().findFragmentById(R.id.trackInfoFragment);
