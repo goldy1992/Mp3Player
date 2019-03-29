@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
+import android.util.Log;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
@@ -26,6 +27,7 @@ import static com.example.mike.mp3player.commons.Constants.RANGE_SIZE;
 public abstract class GenericSubscriptionCallback<K> extends MediaBrowserCompat.SubscriptionCallback {
     public abstract SubscriptionType getType();
     private static final String LOG_TAG = "SUBSCRIPTION_CALLBACK";
+    private boolean autoSubscribe = false;
     Handler handler;
     Map<K, Set<MediaBrowserResponseListener>> mediaBrowserResponseListeners;
     Context context;
@@ -48,17 +50,18 @@ public abstract class GenericSubscriptionCallback<K> extends MediaBrowserCompat.
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children,
                                  @NonNull Bundle options) {
         super.onChildrenLoaded(parentId, children, options);
-        LibraryId libraryId = null;
-        if (null != options) {
-            libraryId = (LibraryId) options.get(PARENT_ID);
-            libraryId.setChildren(children);
-        }
-        Range range = MediaLibraryUtils.parseRangeFromBundleExtras(options);
-        if (range != null && children != null && children.size() >= RANGE_SIZE) {
+        if (autoSubscribe) {
+            LibraryId libraryId = (LibraryId) options.get(PARENT_ID);
+            if (null == libraryId) {
+                Log.e(LOG_TAG, getClass() + " onLoadChildren, did not contain a library id in " +
+                        "the options bundle");
+                return;
+            }
 
-            int newLower = range.getUpper()+1;
-            int newUpper = newLower + RANGE_SIZE;
-            mediaBrowserAdapter.subscribe(libraryId, new Range(newLower, newUpper));
+            if (libraryId.hasMoreChildren()) {
+                libraryId.setNext();
+                mediaBrowserAdapter.subscribe(libraryId);
+            }
         }
     }
 
@@ -80,4 +83,15 @@ public abstract class GenericSubscriptionCallback<K> extends MediaBrowserCompat.
         return mediaBrowserResponseListeners.get(key).remove(listener);
     }
 
+    /**
+     * If set to true, when MediaItems are received, it will automatically send another request for more
+     * children of the MediaItem.
+     */
+    public boolean isAutoSubscribe() {
+        return autoSubscribe;
+    }
+
+    public void setAutoSubscribe(boolean autoSubscribe) {
+        this.autoSubscribe = autoSubscribe;
+    }
 }

@@ -15,6 +15,8 @@ import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.LibraryId;
 
+import androidx.annotation.LayoutRes;
+
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 
 /**
@@ -42,7 +44,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
             String mediaId = (String) retrieveIntentInfo(Constants.MEDIA_ID);
             LibraryId parentId = (LibraryId) retrieveIntentInfo(Constants.PARENT_ID);
             getMediaControllerAdapter().init();
-            initialiseView();
+            initialiseView(R.layout.activity_media_player);
             if (mediaId != null) { // if rq came with an media id it's a song request
                 // Display the initial state
                 Bundle extras = new Bundle();
@@ -89,8 +91,8 @@ public class MediaPlayerActivity extends MediaActivityCompat {
      *
      */
     @Override
-     void initialiseView() {
-        setContentView(R.layout.activity_media_player);
+    void initialiseView(@LayoutRes int layoutRes) {
+        super.initialiseView(layoutRes);
         this.simpleTitleBarFragment = (SimpleTitleBarFragment) getSupportFragmentManager().findFragmentById(R.id.simpleTitleBarFragment);
         this.trackInfoFragment = (TrackInfoFragment) getSupportFragmentManager().findFragmentById(R.id.trackInfoFragment);
         this.playbackSpeedControlsFragment = (PlaybackSpeedControlsFragment) getSupportFragmentManager().findFragmentById(R.id.playbackSpeedControlsFragment);

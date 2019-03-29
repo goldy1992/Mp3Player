@@ -104,9 +104,9 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             return;
         }
 
-        if (libraryId.getResultSize() == LibraryId.RESULT_SIZE_NOT_SET) {
-            int resultSize = mediaLibrary.getNumberOfChildren(libraryId);
-            libraryId.setResultSize(resultSize );
+        if (libraryId.getTotalNumberOfChildren() == LibraryId.UNKNOWN) {
+            int numberOfChildren = mediaLibrary.getNumberOfChildren(libraryId);
+            libraryId.setTotalNumberOfChildren(numberOfChildren);
         }
 
         Range range = MediaLibraryUtils.parseRangeFromBundleExtras(options);

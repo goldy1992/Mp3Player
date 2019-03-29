@@ -62,6 +62,7 @@ public final class Constants {
     public static final String PARENT_ID = "PARENT_ID";
     public static final String PARENT_MEDIA_ITEM = "PARENT_MEDIA_ITEM";
     public static final int NO_ACTION = 0;
+    public static final String PRE_SUBSCRIBED_MEDIA_ITEMS  = "PRE_SUBSCRIBED_MEDIA_ITEMS";
 
     /** RANGE CONSTANTS */
     public static final String RANGE = "RANGE";

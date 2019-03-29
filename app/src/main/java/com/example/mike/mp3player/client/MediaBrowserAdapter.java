@@ -61,15 +61,10 @@ public class MediaBrowserAdapter {
      * ID when communicating with the MediaPlaybackService.
      * @param libraryId the libraryId
      */
-    public void subscribe(LibraryId libraryId, Range range) {
+    public void subscribe(LibraryId libraryId) {
         Bundle options = new Bundle();
-        options.putParcelable(RANGE, range);
         options.putParcelable(PARENT_ID, libraryId);
         getmMediaBrowser().subscribe(libraryId.getId(), options, mySubscriptionCallback);
-    }
-    public void subscribe(LibraryId libraryId)
-    {
-        subscribe(libraryId, null);
     }
     /**
      * We should subscribe to MediaItems using LibraryIds in order to avoid having to parse String ids.
@@ -100,9 +95,7 @@ public class MediaBrowserAdapter {
     }
 
     public boolean isConnected() {
-        return mMediaBrowser != null
-                ? mMediaBrowser.isConnected()
-                : false;
+        return mMediaBrowser != null && mMediaBrowser.isConnected();
     }
 
     public void registerListener(Category category, MediaBrowserResponseListener mediaBrowserResponseListener) {

@@ -10,6 +10,7 @@ import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 
+import androidx.annotation.LayoutRes;
 import androidx.appcompat.app.AppCompatActivity;
 
 public abstract class MediaActivityCompat extends AppCompatActivity implements MediaBrowserConnectorCallback {
@@ -19,7 +20,10 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     private MediaBrowserAdapter mediaBrowserAdapter;
     private static final String LOG_TAG = "MEDIA_ACTIVITY_COMPAT";
     private HandlerThread worker;
-    abstract void initialiseView();
+
+    void initialiseView(@LayoutRes int layoutId) {
+        setContentView(layoutId);
+    }
 
     void initMediaBrowserService(SubscriptionType subscriptionType) {
         setMediaBrowserAdapter(new MediaBrowserAdapter(getApplicationContext(), this, getWorker().getLooper()));
@@ -27,7 +31,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         worker = new HandlerThread(WORKER_ID);
         getWorker().start();

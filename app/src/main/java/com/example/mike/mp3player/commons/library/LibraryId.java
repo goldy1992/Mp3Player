@@ -6,22 +6,23 @@ import android.os.Parcelable;
 import com.example.mike.mp3player.commons.Range;
 
 import java.util.HashMap;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
+import static com.example.mike.mp3player.commons.Constants.DEFAULT_RANGE;
 
 public class LibraryId implements Parcelable {
 
     public static final int RESULT_SIZE_NOT_SET = -1;
+    public static final int UNKNOWN = -1;
     private final Category category;
     private final String id;
     private HashMap<String, String> extras;
     private int resultSize = RESULT_SIZE_NOT_SET;
-    private Range range;
+    private int totalNumberOfChildren = UNKNOWN;
+    private Range range = DEFAULT_RANGE;
     private MediaItem mediaItem;
-    private List<MediaItem> children;
 
     public LibraryId(Category category, @NonNull String id) {
         this.category = category;
@@ -35,8 +36,12 @@ public class LibraryId implements Parcelable {
         this.id = in.readString();
         this.extras = (HashMap) in.readSerializable();
         this.resultSize = in.readInt();
-        this.mediaItem = in.readParcelable(MediaItem.class.getClassLoader());
-        this.setChildren(in.createTypedArrayList(MediaItem.CREATOR));
+        this.totalNumberOfChildren = in.readInt();
+        this.setMediaItem(in.readParcelable(MediaItem.class.getClassLoader()));
+    }
+
+    public void setNext() {
+        setRange(range.getNextRange());
     }
 
     public void putExtra(String key, String value) {
@@ -74,8 +79,8 @@ public class LibraryId implements Parcelable {
         dest.writeString(id);
         dest.writeSerializable(extras);
         dest.writeInt(resultSize);
-        dest.writeParcelable(mediaItem, mediaItem.getFlags());
-        dest.writeTypedList(children);
+        dest.writeInt(totalNumberOfChildren);
+        dest.writeParcelable(getMediaItem(), getMediaItem().getFlags());
     }
 
     @Override
@@ -83,6 +88,10 @@ public class LibraryId implements Parcelable {
         StringBuilder sb = new StringBuilder();
         sb.append("id: ").append(id).append(", category: ").append(category);
         return sb.toString();
+    }
+
+    public boolean hasMoreChildren() {
+        return resultSize < totalNumberOfChildren;
     }
 
     public HashMap<String, String> getExtras() {
@@ -105,19 +114,27 @@ public class LibraryId implements Parcelable {
         this.resultSize = resultSize;
     }
 
-    public List<MediaItem> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<MediaItem> children) {
-        this.children = children;
-    }
-
     public Range getRange() {
         return range;
     }
 
     public void setRange(Range range) {
         this.range = range;
+    }
+
+    public int getTotalNumberOfChildren() {
+        return totalNumberOfChildren;
+    }
+
+    public void setTotalNumberOfChildren(int totalNumberOfChildren) {
+        this.totalNumberOfChildren = totalNumberOfChildren;
+    }
+
+    public MediaItem getMediaItem() {
+        return mediaItem;
+    }
+
+    public void setMediaItem(MediaItem mediaItem) {
+        this.mediaItem = mediaItem;
     }
 }

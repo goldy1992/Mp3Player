@@ -13,13 +13,14 @@ import com.example.mike.mp3player.client.views.fragments.viewpager.SongViewPageF
 import com.example.mike.mp3player.commons.library.LibraryId;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_RANGE;
 import static com.example.mike.mp3player.commons.Constants.FOLDER_CHILDREN;
 import static com.example.mike.mp3player.commons.Constants.FOLDER_NAME;
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 
-public class FolderActivity extends MediaActivityCompat {
+public class FolderActivity extends MediaSubscriberActivityCompat {
 
     private static final String LOG_TAG = "FOLDER_ACTIVITY";
     private SongViewPageFragment viewPageFragment;
@@ -28,6 +29,7 @@ public class FolderActivity extends MediaActivityCompat {
     private LibraryId parentId;
     private PlayToolBarFragment playToolBarFragment;
     private SimpleTitleBarFragment simpleTitleBarFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +66,7 @@ public class FolderActivity extends MediaActivityCompat {
 
     @Override
     public void onConnected() {
-        setMediaControllerAdapter(new MediaControllerAdapter(getApplicationContext(), getMediaBrowserAdapter().getMediaSessionToken(), getWorker().getLooper()));
-        getMediaControllerAdapter().init();
-        getMediaBrowserAdapter().subscribe(parentId, DEFAULT_RANGE);
+        super.onConnected();
         setContentView(R.layout.activity_folder);
         getSupportActionBar().setTitle(getString(R.string.FOLDER_NAME, this.folderName));
         getMediaControllerAdapter().updateUiState();
@@ -75,5 +75,10 @@ public class FolderActivity extends MediaActivityCompat {
     @Override
     public void onBackPressed() {
         this.finish();
+    }
+
+    @Override
+    SubscriptionType getSubscriptionType() {
+        return SubscriptionType.NOTIFY_ALL;
     }
 }

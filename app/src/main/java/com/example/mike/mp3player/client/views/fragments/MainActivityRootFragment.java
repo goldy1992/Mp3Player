@@ -11,6 +11,7 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.SongSearchActionListener;
+import com.example.mike.mp3player.commons.library.LibraryId;
 
 import java.util.List;
 import java.util.Map;
@@ -39,9 +40,8 @@ public class MainActivityRootFragment extends Fragment implements SongSearchActi
     }
 
     public void init(InputMethodManager inputMethodManager,
-                    Map<MediaBrowserCompat.MediaItem,
+                    Map<LibraryId,
                     List<MediaBrowserCompat.MediaItem>> menuItems) {
-
         setInputMethodManager(inputMethodManager);
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();

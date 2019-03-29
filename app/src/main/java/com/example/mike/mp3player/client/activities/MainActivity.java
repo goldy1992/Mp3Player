@@ -2,7 +2,6 @@ package com.example.mike.mp3player.client.activities;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
@@ -10,39 +9,28 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;
-import com.example.mike.mp3player.commons.Range;
-import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryId;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.example.mike.mp3player.commons.Constants.CATEGORY_ROOT_ID;
-import static com.example.mike.mp3player.commons.MediaItemUtils.getMediaId;
+import androidx.annotation.LayoutRes;
 
 public class MainActivity extends MediaSubscriberActivityCompat{
 
     private static final String LOG_TAG = "MAIN_ACTIVITY";
-    private static final int READ_REQUEST_CODE = 42;
     private MainActivityRootFragment rootFragment;
     private InputMethodManager inputMethodManager;
-    private Map<MediaItem, List<MediaItem>> menuItems;
-
-    @Override
-    void initialiseView() {
-        this.rootFragment = (MainActivityRootFragment)getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
-        this.rootFragment.init(inputMethodManager, menuItems);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        initMediaBrowserService(SubscriptionType.CATEGORY);
         this.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        initialiseView(R.layout.activity_main);
+    }
 
+    @Override
+    void initialiseView(@LayoutRes int layoutRes) {
+        setContentView(layoutRes);
+        this.rootFragment = (MainActivityRootFragment)getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
+        this.rootFragment.init(inputMethodManager, getPreSubscribedItems());
     }
 
     @Override
@@ -68,27 +56,13 @@ public class MainActivity extends MediaSubscriberActivityCompat{
 
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
-        setMediaControllerAdapter(new MediaControllerAdapter(this, getMediaBrowserAdapter().getMediaSessionToken(), getWorker().getLooper()));
-        getMediaControllerAdapter().init();
-        //setContentView(R.layout.activity_main);
-
+        super.onConnected();
+        initMediaBrowserService(getSubscriptionType());
         rootFragment.populatePlaybackMetaDataListeners(getMediaBrowserAdapter(), getMediaControllerAdapter());
-        for (MediaItem m : menuItems.keySet()) {
-            String id = getMediaId(m);
-            LibraryId libraryId = new LibraryId(Category.valueOf(id), id);
-            getMediaBrowserAdapter().subscribe(libraryId, new Range(10, 19));
-        }
     }
 
-    private Map<MediaItem, List<MediaItem>> initMenuItems(Bundle extras) {
-        Map<MediaItem, List<MediaItem>> toReturn = new HashMap<>();
-        List<MediaItem> root = extras.getParcelableArrayList(CATEGORY_ROOT_ID);
-        for (MediaItem item : root) {
-            List<MediaItem> children = extras.getParcelableArrayList(Category.valueOf(getMediaId(item)).name());
-            if (children != null) {
-                toReturn.put(item, children);
-            }
-        }
-        return toReturn;
+    @Override
+    SubscriptionType getSubscriptionType() {
+        return SubscriptionType.CATEGORY;
     }
 }

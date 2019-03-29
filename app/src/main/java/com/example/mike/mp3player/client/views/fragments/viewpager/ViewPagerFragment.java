@@ -54,9 +54,13 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
         rootMenuItemsPager.setAdapter(adapter);
     }
 
-    public void initRootMenu(Map<MediaItem, List<MediaItem>> items) {
+    public void initRootMenu(Map<LibraryId, List<MediaItem>> items) {
+
         TreeSet<MediaItem> rootItemsOrdered = new TreeSet<>(compareRootMediaItemsByCategory);
-        rootItemsOrdered.addAll(items.keySet());
+        for (LibraryId id : items.keySet()) {
+            rootItemsOrdered.add(id.getMediaItem());
+        }
+
         for (MediaItem i : rootItemsOrdered) {
             Category category = LibraryConstructor.getCategoryFromMediaItem(i);
             GenericViewPageFragment viewPageFragment = null;

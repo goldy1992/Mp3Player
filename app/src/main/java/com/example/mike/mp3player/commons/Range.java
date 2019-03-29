@@ -3,6 +3,8 @@ package com.example.mike.mp3player.commons;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import static com.example.mike.mp3player.commons.Constants.RANGE_SIZE;
+
 public final class Range implements Parcelable {
 
     private final int lower;
@@ -16,6 +18,12 @@ public final class Range implements Parcelable {
     public Range(Parcel in) {
         this.lower = in.readInt();
         this.upper = in.readInt();
+    }
+
+    public Range getNextRange() {
+        int newLower = upper + 1;
+        int newUpper = upper + RANGE_SIZE;
+        return new Range(newLower, newUpper);
     }
 
     public static final Creator<Range> CREATOR = new Creator<Range>() {
