@@ -82,10 +82,19 @@ public class MediaLibrary {
         }
     }
 
-    public Set<MediaItem> getChildren(LibraryId libraryId, Range range) {
+    public MediaItem getItem(LibraryId libraryId) {
+        return null;
+    }
+
+    public LibraryId populateLibraryObject(LibraryId libraryId) {
+        return null;
+    }
+
+    public Set<MediaItem> getChildren(LibraryId libraryId) {
         if (libraryId == null || libraryId.getCategory() == null) {
             return null;
         }
+        Range range = libraryId.getRange();
         LibraryCollection collection = categories.get(libraryId.getCategory());
 
         if (Category.isCategory(libraryId.getId())) {

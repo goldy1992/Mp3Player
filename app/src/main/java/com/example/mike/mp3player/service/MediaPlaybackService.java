@@ -93,6 +93,11 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onLoadChildren(final String parentMediaId,
                                final Result<List<MediaBrowserCompat.MediaItem>> result, Bundle options) {
+        //  Browsing not allowed
+        if (TextUtils.equals(MY_EMPTY_MEDIA_ROOT_ID, parentMediaId)) {
+            result.sendResult(null);
+            return;
+        }
         if (options == null) {
             result.sendResult(null);
             return;
@@ -108,15 +113,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             int numberOfChildren = mediaLibrary.getNumberOfChildren(libraryId);
             libraryId.setTotalNumberOfChildren(numberOfChildren);
         }
-
-        Range range = MediaLibraryUtils.parseRangeFromBundleExtras(options);
-
-
-        //  Browsing not allowed
-        if (TextUtils.equals(MY_EMPTY_MEDIA_ROOT_ID, parentMediaId)) {
-            result.sendResult(null);
-            return;
-        }
+        Range range = libraryId.getRange();
 
         // Assume for example that the music catalog is already loaded/cached.
         Set<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryId, range);
