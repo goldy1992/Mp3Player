@@ -15,6 +15,7 @@ import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.example.mike.mp3player.commons.library.LibraryResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ import androidx.viewpager.widget.PagerTabStrip;
 import androidx.viewpager.widget.ViewPager;
 
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
+import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
 public class ViewPagerFragment extends Fragment implements MediaBrowserResponseListener {
 
@@ -54,10 +55,10 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
         rootMenuItemsPager.setAdapter(adapter);
     }
 
-    public void initRootMenu(Map<LibraryRequest, List<MediaItem>> items) {
+    public void initRootMenu(Map<LibraryResponse, List<MediaItem>> items) {
 
         TreeSet<MediaItem> rootItemsOrdered = new TreeSet<>(compareRootMediaItemsByCategory);
-        for (LibraryRequest id : items.keySet()) {
+        for (LibraryResponse id : items.keySet()) {
             rootItemsOrdered.add(id.getMediaItem());
         }
 
@@ -95,7 +96,7 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
 
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaItem> children, @NonNull Bundle options, Context context) {
-        LibraryRequest libraryRequest = (LibraryRequest) options.get(PARENT_ID);
+        LibraryRequest libraryRequest = (LibraryRequest) options.get(REQUEST_OBJECT);
         Log.i(LOG_TAG, "more children loaded main activity with parent id " + libraryRequest);
         if (null != libraryRequest && null != libraryRequest.getCategory() && libraryRequest.getId() != null) {
             /* TODO: add logic to distribute children to the correct menu fragment */

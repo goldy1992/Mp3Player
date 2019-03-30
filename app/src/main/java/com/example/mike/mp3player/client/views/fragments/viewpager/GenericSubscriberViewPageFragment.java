@@ -13,7 +13,7 @@ import java.util.List;
 
 import static com.example.mike.mp3player.commons.Constants.FOLDER_CHILDREN;
 import static com.example.mike.mp3player.commons.Constants.FOLDER_NAME;
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
+import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 
 public abstract class GenericSubscriberViewPageFragment extends GenericViewPageFragment {
@@ -41,7 +41,7 @@ public abstract class GenericSubscriberViewPageFragment extends GenericViewPageF
     private void startActivity(LibraryRequest libraryRequest, ArrayList<MediaBrowserCompat.MediaItem> children) {
 
         Intent intent =  new Intent(context, activityToCall);
-        intent.putExtra(PARENT_ID, libraryRequest);
+        intent.putExtra(REQUEST_OBJECT, libraryRequest);
         intent.putParcelableArrayListExtra(FOLDER_CHILDREN, children);
         intent = addExtrasToIntent(libraryRequest, intent);
         startActivity(intent);
@@ -50,7 +50,7 @@ public abstract class GenericSubscriberViewPageFragment extends GenericViewPageF
     private void startActivity(LibraryRequest libraryRequest) {
 
         Intent intent =  new Intent(context, activityToCall);
-        intent.putExtra(PARENT_ID, libraryRequest);
+        intent.putExtra(REQUEST_OBJECT, libraryRequest);
         intent = addExtrasToIntent(libraryRequest, intent);
         startActivity(intent);
     }

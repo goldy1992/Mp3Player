@@ -87,7 +87,7 @@ public class MediaLibrary {
         return null;
     }
 
-    public void populateLibraryResponse(LibraryResponse libraryResponse) {
+    public LibraryResponse populateLibraryResponse(LibraryResponse libraryResponse) {
 
         LibraryCollection collection = categories.get(libraryResponse.getCategory());
 
@@ -97,6 +97,7 @@ public class MediaLibrary {
             libraryResponse.setTotalNumberOfChildren(collection.getNumberOfChildren(libraryResponse.getId()));
         }
         libraryResponse.setMediaItem(collection.getRoot());
+        return libraryResponse;
     }
 
     public Set<MediaItem> getChildren(LibraryRequest libraryRequest) {

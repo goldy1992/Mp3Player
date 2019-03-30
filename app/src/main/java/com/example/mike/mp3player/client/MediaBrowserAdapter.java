@@ -17,7 +17,7 @@ import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
+import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
 public class MediaBrowserAdapter {
 
@@ -61,7 +61,7 @@ public class MediaBrowserAdapter {
      */
     public void subscribe(LibraryRequest libraryRequest) {
         Bundle options = new Bundle();
-        options.putParcelable(PARENT_ID, libraryRequest);
+        options.putParcelable(REQUEST_OBJECT, libraryRequest);
         getmMediaBrowser().subscribe(libraryRequest.getId(), options, mySubscriptionCallback);
     }
     /**

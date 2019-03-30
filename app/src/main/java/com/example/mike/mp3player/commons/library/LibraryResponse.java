@@ -3,15 +3,16 @@ package com.example.mike.mp3player.commons.library;
 import android.os.Parcel;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
+import com.example.mike.mp3player.commons.Range;
+
 import androidx.annotation.NonNull;
 
-public class LibraryResponse extends LibraryObject {
+public class LibraryResponse extends LibraryRequest {
     public static final int RESULT_SIZE_NOT_SET = -1;
     public static final int UNKNOWN = -1;
 
     private int resultSize = RESULT_SIZE_NOT_SET;
     private int totalNumberOfChildren = UNKNOWN;
-
     private MediaItem mediaItem;
 
     public LibraryResponse(@NonNull LibraryRequest libraryRequest) {
@@ -55,6 +56,11 @@ public class LibraryResponse extends LibraryObject {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         return sb.toString();
+    }
+
+    public LibraryRequest getNextRequest() {
+        Range nextRange = getRange().getNextRange();
+        return new LibraryRequest(this, nextRange);
     }
 
     public boolean hasMoreChildren() {

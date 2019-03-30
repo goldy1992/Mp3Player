@@ -15,7 +15,7 @@ import java.util.List;
 
 import static com.example.mike.mp3player.commons.Constants.FOLDER_CHILDREN;
 import static com.example.mike.mp3player.commons.Constants.FOLDER_NAME;
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
+import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
 public class FolderActivity extends MediaSubscriberActivityCompat {
 
@@ -36,7 +36,7 @@ public class FolderActivity extends MediaSubscriberActivityCompat {
         this.simpleTitleBarFragment = (SimpleTitleBarFragment) getSupportFragmentManager().findFragmentById(R.id.simpleTitleBarFragment);
         this.folderName= intent.getStringExtra(FOLDER_NAME);
         this.mediaItems = intent.getParcelableArrayListExtra(FOLDER_CHILDREN);
-        this.parentId = intent.getParcelableExtra(PARENT_ID);
+        this.parentId = intent.getParcelableExtra(REQUEST_OBJECT);
 
 //        this.viewPageFragment = SongViewPageFragment.createAndInitialiseViewPageFragment(parentId, mediaItems,getMediaBrowserAdapter(), getMediaControllerAdapter());
   //      this.playToolBarFragment = PlayToolBarFragment.createAndInitialisePlayToolbarFragment(getMediaControllerAdapter(), false);

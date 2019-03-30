@@ -9,6 +9,7 @@ import android.util.Log;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.example.mike.mp3player.commons.library.LibraryResponse;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,7 +20,8 @@ import java.util.Set;
 
 import androidx.annotation.NonNull;
 
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
+import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
+import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
 
 public abstract class GenericSubscriptionCallback<K> extends MediaBrowserCompat.SubscriptionCallback {
     public abstract SubscriptionType getType();
@@ -48,7 +50,7 @@ public abstract class GenericSubscriptionCallback<K> extends MediaBrowserCompat.
                                  @NonNull Bundle options) {
         super.onChildrenLoaded(parentId, children, options);
         if (autoSubscribe) {
-            LibraryRequest libraryRequest = (LibraryRequest) options.get(PARENT_ID);
+            LibraryResponse libraryRequest = (LibraryResponse) options.get(RESPONSE_OBJECT);
             if (null == libraryRequest) {
                 Log.e(LOG_TAG, getClass() + " onLoadChildren, did not contain a library id in " +
                         "the options bundle");

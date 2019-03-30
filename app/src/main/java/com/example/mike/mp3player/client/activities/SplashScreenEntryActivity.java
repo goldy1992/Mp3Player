@@ -15,7 +15,9 @@ import com.example.mike.mp3player.client.PermissionsProcessor;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.example.mike.mp3player.commons.library.LibraryResponse;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
@@ -27,8 +29,9 @@ import androidx.annotation.NonNull;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
+import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 import static com.example.mike.mp3player.commons.Constants.PRE_SUBSCRIBED_MEDIA_ITEMS;
+import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
 
 public class SplashScreenEntryActivity extends MediaSubscriberActivityCompat
     implements  MediaBrowserConnectorCallback,
@@ -43,8 +46,6 @@ public class SplashScreenEntryActivity extends MediaSubscriberActivityCompat
     private int numberOfItemsReceived = 0;
     private static final long SPLASH_SCREEN_DISPLAY_TIME = 3000L;
     private static final int APP_TERMINATED = 0x78;
-
-    private HashMap<LibraryRequest, List<MediaBrowserCompat.MediaItem>> preSubscribedItems;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,7 +99,7 @@ public class SplashScreenEntryActivity extends MediaSubscriberActivityCompat
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options, Context context) {
        Log.i(LOG_TAG, "children loaded: " + parentId);
-       LibraryRequest parentLibraryRequest = (LibraryRequest) options.get(PARENT_ID);
+        LibraryResponse parentLibraryRequest = (LibraryResponse) options.get(RESPONSE_OBJECT);
 
        if (null == parentLibraryRequest) {
            return;
@@ -192,7 +193,7 @@ public class SplashScreenEntryActivity extends MediaSubscriberActivityCompat
         return SubscriptionType.NOTIFY_ALL;
     }
 
-    private boolean isRoot(LibraryRequest id) {
-        return getMediaBrowserAdapter().getRootId().equals(id.getId());
+    private boolean isRoot(LibraryObject libraryObject) {
+        return getMediaBrowserAdapter().getRootId().equals(libraryObject.getId());
     }
 }

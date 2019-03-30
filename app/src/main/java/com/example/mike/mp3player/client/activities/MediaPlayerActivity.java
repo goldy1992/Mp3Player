@@ -17,7 +17,7 @@ import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import androidx.annotation.LayoutRes;
 
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
+import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -42,13 +42,13 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         if (token != null) {
             setMediaControllerAdapter(new MediaControllerAdapter(this, token, getWorker().getLooper()));
             String mediaId = (String) retrieveIntentInfo(Constants.MEDIA_ID);
-            LibraryRequest parentId = (LibraryRequest) retrieveIntentInfo(Constants.PARENT_ID);
+            LibraryRequest parentId = (LibraryRequest) retrieveIntentInfo(Constants.REQUEST_OBJECT);
             getMediaControllerAdapter().init();
             initialiseView(R.layout.activity_media_player);
             if (mediaId != null) { // if rq came with an media id it's a song request
                 // Display the initial state
                 Bundle extras = new Bundle();
-                extras.putParcelable(PARENT_ID, parentId); // parent id will sure that the correct playlist is found in the media library
+                extras.putParcelable(REQUEST_OBJECT, parentId); // parent id will sure that the correct playlist is found in the media library
                 getMediaControllerAdapter().prepareFromMediaId(mediaId, extras);
             }
             else {

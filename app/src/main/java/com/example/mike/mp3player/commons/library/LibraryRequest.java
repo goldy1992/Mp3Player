@@ -16,6 +16,21 @@ public class LibraryRequest extends LibraryObject {
         super(category, id);
     }
 
+    public LibraryRequest(Category category, @NonNull String id, Range range) {
+        super(category, id);
+        this.range = range;
+    }
+
+    public LibraryRequest(@NonNull LibraryRequest libraryRequest) {
+        super(libraryRequest.getCategory(), libraryRequest.getId());
+        this.range = libraryRequest.getRange();
+    }
+
+    public LibraryRequest(@NonNull LibraryRequest libraryRequest, Range range) {
+        super(libraryRequest.getCategory(), libraryRequest.getId());
+        this.range = range;
+    }
+
     @SuppressWarnings("unchecked")
     protected LibraryRequest(Parcel in) {
         super(in);

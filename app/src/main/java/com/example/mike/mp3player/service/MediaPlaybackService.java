@@ -20,7 +20,8 @@ import java.util.Set;
 import androidx.annotation.NonNull;
 import androidx.media.MediaBrowserServiceCompat;
 
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
+import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
+import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -100,13 +101,15 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             return;
         }
 
-        LibraryRequest libraryRequest = (LibraryRequest) options.get(PARENT_ID);
+        LibraryRequest libraryRequest = (LibraryRequest) options.get(REQUEST_OBJECT);
         if (libraryRequest == null) {
             result.sendResult(null);
             return;
         }
+
         LibraryResponse libraryResponse = new LibraryResponse(libraryRequest);
-        mediaLibrary.populateLibraryResponse(libraryResponse);
+        libraryResponse = mediaLibrary.populateLibraryResponse(libraryResponse);
+        options.putParcelable(RESPONSE_OBJECT, libraryResponse);
 
         // Assume for example that the music catalog is already loaded/cached.
         Set<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryRequest);

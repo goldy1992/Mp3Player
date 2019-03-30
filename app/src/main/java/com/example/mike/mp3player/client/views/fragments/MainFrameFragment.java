@@ -16,6 +16,7 @@ import com.example.mike.mp3player.client.MyDrawerListener;
 import com.example.mike.mp3player.client.views.SongSearchActionListener;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ViewPagerFragment;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.example.mike.mp3player.commons.library.LibraryResponse;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
@@ -67,7 +68,7 @@ public class MainFrameFragment extends Fragment {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
     }
 
-    public void init(Map<LibraryRequest, List<MediaBrowserCompat.MediaItem>> menuItems,
+    public void init(Map<LibraryResponse, List<MediaBrowserCompat.MediaItem>> menuItems,
                      SongSearchActionListener songSearchActionListener) {
         this.viewPagerFragment.initRootMenu(menuItems);
         this.playToolBarFragment.init(true);
