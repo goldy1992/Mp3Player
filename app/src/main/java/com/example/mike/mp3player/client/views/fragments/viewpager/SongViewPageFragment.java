@@ -7,13 +7,11 @@ import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.client.utils.IntentUtils;
-import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.util.List;
-import java.util.TreeMap;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 
@@ -23,18 +21,18 @@ public class SongViewPageFragment extends GenericViewPageFragment implements MyG
 
     public SongViewPageFragment() {  }
 
-    public void init(LibraryId libraryId, List<MediaItem> songs) {
+    public void init(LibraryRequest libraryRequest, List<MediaItem> songs) {
         super.init(Category.SONGS, songs, MediaPlayerActivity.class);
-        this.parent = libraryId;
+        this.parent = libraryRequest;
     }
     public void populatePlaybackMetaDataListeners(MediaBrowserAdapter mediaBrowserAdapter, MediaControllerAdapter mediaControllerAdapter) {
 
     }
 
 
-    public static SongViewPageFragment createAndInitialiseViewPageFragment(LibraryId libraryId, List<MediaItem> songs) {
+    public static SongViewPageFragment createAndInitialiseViewPageFragment(LibraryRequest libraryRequest, List<MediaItem> songs) {
         SongViewPageFragment viewPageFragment = new SongViewPageFragment();
-        viewPageFragment.init(libraryId, songs);
+        viewPageFragment.init(libraryRequest, songs);
         return viewPageFragment;
     }
 

@@ -5,17 +5,14 @@ import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.viewpager.SongViewPageFragment;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.util.List;
-import java.util.Map;
 
-import static com.example.mike.mp3player.commons.Constants.DEFAULT_RANGE;
 import static com.example.mike.mp3player.commons.Constants.FOLDER_CHILDREN;
 import static com.example.mike.mp3player.commons.Constants.FOLDER_NAME;
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
@@ -26,7 +23,7 @@ public class FolderActivity extends MediaSubscriberActivityCompat {
     private SongViewPageFragment viewPageFragment;
     private List<MediaBrowserCompat.MediaItem> mediaItems;
     private String folderName;
-    private LibraryId parentId;
+    private LibraryRequest parentId;
     private PlayToolBarFragment playToolBarFragment;
     private SimpleTitleBarFragment simpleTitleBarFragment;
 

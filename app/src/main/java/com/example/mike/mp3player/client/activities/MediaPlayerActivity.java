@@ -13,7 +13,7 @@ import com.example.mike.mp3player.client.views.fragments.ShuffleRepeatFragment;
 import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.commons.Constants;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import androidx.annotation.LayoutRes;
 
@@ -42,7 +42,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         if (token != null) {
             setMediaControllerAdapter(new MediaControllerAdapter(this, token, getWorker().getLooper()));
             String mediaId = (String) retrieveIntentInfo(Constants.MEDIA_ID);
-            LibraryId parentId = (LibraryId) retrieveIntentInfo(Constants.PARENT_ID);
+            LibraryRequest parentId = (LibraryRequest) retrieveIntentInfo(Constants.PARENT_ID);
             getMediaControllerAdapter().init();
             initialiseView(R.layout.activity_media_player);
             if (mediaId != null) { // if rq came with an media id it's a song request

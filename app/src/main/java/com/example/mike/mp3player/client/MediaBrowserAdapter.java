@@ -12,14 +12,12 @@ import com.example.mike.mp3player.client.callbacks.subscription.GenericSubscript
 import com.example.mike.mp3player.client.callbacks.subscription.CategorySubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.NotifyAllSubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
-import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
-import static com.example.mike.mp3player.commons.Constants.RANGE;
 
 public class MediaBrowserAdapter {
 
@@ -57,14 +55,14 @@ public class MediaBrowserAdapter {
     }
 
     /**
-     * subscribes to a MediaItem via a libraryId. The id of the libraryId will be used for the parent
+     * subscribes to a MediaItem via a libraryRequest. The id of the libraryRequest will be used for the parent
      * ID when communicating with the MediaPlaybackService.
-     * @param libraryId the libraryId
+     * @param libraryRequest the libraryRequest
      */
-    public void subscribe(LibraryId libraryId) {
+    public void subscribe(LibraryRequest libraryRequest) {
         Bundle options = new Bundle();
-        options.putParcelable(PARENT_ID, libraryId);
-        getmMediaBrowser().subscribe(libraryId.getId(), options, mySubscriptionCallback);
+        options.putParcelable(PARENT_ID, libraryRequest);
+        getmMediaBrowser().subscribe(libraryRequest.getId(), options, mySubscriptionCallback);
     }
     /**
      * We should subscribe to MediaItems using LibraryIds in order to avoid having to parse String ids.

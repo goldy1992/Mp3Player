@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,30 +28,30 @@ public abstract class GenericSubscriberViewPageFragment extends GenericViewPageF
             Log.e(LOG_TAG, "could not find MediaId for mediaItem " + id);
             return;
         }
-        LibraryId libraryId = new LibraryId(this.category, mediaId);
-        libraryId.putExtra(FOLDER_NAME, getTitle(id));
-        startActivity(libraryId);
+        LibraryRequest libraryRequest = new LibraryRequest(this.category, mediaId);
+        libraryRequest.putExtra(FOLDER_NAME, getTitle(id));
+        startActivity(libraryRequest);
     }
 
     private void startActivity(String id, ArrayList<MediaBrowserCompat.MediaItem> children) {
-        LibraryId libraryId = LibraryConstructor.parseId(id);
-        startActivity(libraryId, children);
+        LibraryRequest libraryRequest = LibraryConstructor.parseId(id);
+        startActivity(libraryRequest, children);
     }
 
-    private void startActivity(LibraryId libraryId, ArrayList<MediaBrowserCompat.MediaItem> children) {
+    private void startActivity(LibraryRequest libraryRequest, ArrayList<MediaBrowserCompat.MediaItem> children) {
 
         Intent intent =  new Intent(context, activityToCall);
-        intent.putExtra(PARENT_ID, libraryId);
+        intent.putExtra(PARENT_ID, libraryRequest);
         intent.putParcelableArrayListExtra(FOLDER_CHILDREN, children);
-        intent = addExtrasToIntent(libraryId, intent);
+        intent = addExtrasToIntent(libraryRequest, intent);
         startActivity(intent);
     }
 
-    private void startActivity(LibraryId libraryId) {
+    private void startActivity(LibraryRequest libraryRequest) {
 
         Intent intent =  new Intent(context, activityToCall);
-        intent.putExtra(PARENT_ID, libraryId);
-        intent = addExtrasToIntent(libraryId, intent);
+        intent.putExtra(PARENT_ID, libraryRequest);
+        intent = addExtrasToIntent(libraryRequest, intent);
         startActivity(intent);
     }
 
@@ -63,5 +63,5 @@ public abstract class GenericSubscriberViewPageFragment extends GenericViewPageF
         return results != null && !results.isEmpty();
     }
 
-   abstract Intent addExtrasToIntent(LibraryId is, Intent intent);
+   abstract Intent addExtrasToIntent(LibraryRequest is, Intent intent);
 }

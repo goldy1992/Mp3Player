@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompat;
 
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -112,8 +112,8 @@ public class FolderLibraryCollectionTest {
         itemsToIndex.add(createMediaItemWithFolderRef(MP3_3, FOLDER2, PATH2));
         indexTestData(itemsToIndex);
 
-        LibraryId libraryId = new LibraryId(Category.FOLDERS, PATH1);
-        Set<MediaItem> result = folderLibraryCollection.getChildren(libraryId, null);
+        LibraryRequest libraryRequest = new LibraryRequest(Category.FOLDERS, PATH1);
+        Set<MediaItem> result = folderLibraryCollection.getChildren(libraryRequest, null);
         StringBuilder errorMessage = new StringBuilder().append("Number of items in FOLDER1 should be 2 but was: ")
                 .append(result.size());
         assertEquals(EXPECTED_NUMBER_OF_TRACKS_IN_FOLDER1, result.size(), errorMessage.toString());

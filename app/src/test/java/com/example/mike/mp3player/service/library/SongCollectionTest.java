@@ -2,7 +2,7 @@ package com.example.mike.mp3player.service.library;
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -71,8 +71,8 @@ public class SongCollectionTest {
         assertTrue(songCollection.getSongs().isEmpty(), "Songs list should be empty");
     }
     /**
-     * GIVEN: A SongCollection that is non empty and a LibraryId
-     * WHEN: getChildren is called for a LibraryId
+     * GIVEN: A SongCollection that is non empty and a LibraryRequest
+     * WHEN: getChildren is called for a LibraryRequest
      * THEN: null is returned since Songs don't have any children
      */
     @Test
@@ -81,8 +81,8 @@ public class SongCollectionTest {
         mediaItems.add(mockMediaItem);
         songCollection.index(mediaItems);
 
-        LibraryId libraryId = mock(LibraryId.class);
-        Set<MediaItem> resultSet = songCollection.getChildren(libraryId, null);
+        LibraryRequest libraryRequest = mock(LibraryRequest.class);
+        Set<MediaItem> resultSet = songCollection.getChildren(libraryRequest, null);
         assertNull(resultSet);
     }
 }

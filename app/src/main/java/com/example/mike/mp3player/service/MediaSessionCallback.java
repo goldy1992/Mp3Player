@@ -21,7 +21,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 
 import com.example.mike.mp3player.commons.MediaItemUtils;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
@@ -159,7 +159,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private void prepareFromMediaId(String mediaId, Bundle bundle) {
         //Log.i(LOG_TAG, "prepareFromMediaId");
         super.onPrepareFromMediaId(mediaId, bundle);
-        LibraryId parentId = (LibraryId) bundle.get(PARENT_ID);
+        LibraryRequest parentId = (LibraryRequest) bundle.get(PARENT_ID);
         List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getPlaylist(parentId);
         playbackManager.createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(results));
 

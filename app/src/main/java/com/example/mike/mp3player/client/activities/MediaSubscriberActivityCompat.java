@@ -6,7 +6,7 @@ import android.support.v4.media.MediaBrowserCompat;
 
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,18 +16,18 @@ import static com.example.mike.mp3player.commons.Constants.PRE_SUBSCRIBED_MEDIA_
 
 public abstract class MediaSubscriberActivityCompat extends MediaActivityCompat {
 
-    private Map<LibraryId, List<MediaBrowserCompat.MediaItem>> preSubscribedItems;
+    private Map<LibraryRequest, List<MediaBrowserCompat.MediaItem>> preSubscribedItems;
 
     abstract SubscriptionType getSubscriptionType();
 
     @SuppressWarnings("unchecked")
-    private Map<LibraryId, List<MediaBrowserCompat.MediaItem>> initMenuItems(Intent intent) {
+    private Map<LibraryRequest, List<MediaBrowserCompat.MediaItem>> initMenuItems(Intent intent) {
         if (intent != null && intent.getExtras() != null) {
             Bundle bundle = intent.getExtras();
             if (null != bundle) {
                 Serializable serializable = bundle.getSerializable(PRE_SUBSCRIBED_MEDIA_ITEMS);
                 if (serializable != null) {
-                    return (Map<LibraryId, List<MediaBrowserCompat.MediaItem>>) serializable;
+                    return (Map<LibraryRequest, List<MediaBrowserCompat.MediaItem>>) serializable;
                 }
             }
         }
@@ -47,7 +47,7 @@ public abstract class MediaSubscriberActivityCompat extends MediaActivityCompat 
         //setContentView(R.layout.activity_main);
 
         if (null != getPreSubscribedItems()) {
-            for (LibraryId m : getPreSubscribedItems().keySet()) {
+            for (LibraryRequest m : getPreSubscribedItems().keySet()) {
                 if (m.getResultSize() < m.getTotalNumberOfChildren()) {
                     m.setNext();
                     getMediaBrowserAdapter().subscribe(m);
@@ -56,7 +56,7 @@ public abstract class MediaSubscriberActivityCompat extends MediaActivityCompat 
         }
     }
 
-    public Map<LibraryId, List<MediaBrowserCompat.MediaItem>> getPreSubscribedItems() {
+    public Map<LibraryRequest, List<MediaBrowserCompat.MediaItem>> getPreSubscribedItems() {
         return preSubscribedItems;
     }
 }

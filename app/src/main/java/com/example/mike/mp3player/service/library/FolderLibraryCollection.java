@@ -4,7 +4,7 @@ import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
 import java.util.List;
@@ -58,11 +58,11 @@ public class FolderLibraryCollection extends LibraryCollection {
     }
 
     @Override
-    public Set<MediaItem> getChildren(LibraryId libraryId, Range range) {
+    public Set<MediaItem> getChildren(LibraryRequest libraryRequest, Range range) {
 
         for (MediaItem i : getKeys()) {
             String mediaId = getMediaId(i);
-            if (mediaId != null && mediaId.equals(libraryId.getId())) {
+            if (mediaId != null && mediaId.equals(libraryRequest.getId())) {
                 TreeSet<MediaItem> resultSet = collection.get(getMediaId(i));
                 return range == null ? resultSet : MediaLibraryUtils.getSubSetFromRange(resultSet, range);
             }

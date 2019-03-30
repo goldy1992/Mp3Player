@@ -6,7 +6,8 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.example.mike.mp3player.commons.library.LibraryResponse;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
 import java.util.ArrayList;
@@ -68,39 +69,47 @@ public class MediaLibrary {
 
     /**
      * Used by MediaSessionCallback to get the children of the MediaItem requested in the
-     * libraryId param.
-     * @param libraryId libraryId
-     * @return A list of MediaItems in the requested libraryId
+     * libraryRequest param.
+     * @param libraryRequest libraryRequest
+     * @return A list of MediaItems in the requested libraryRequest
      */
-    public List<MediaItem> getPlaylist(LibraryId libraryId) {
-        Category category = libraryId.getCategory();
+    public List<MediaItem> getPlaylist(LibraryRequest libraryRequest) {
+        Category category = libraryRequest.getCategory();
         if (category == Category.SONGS) {
             // song items don't have children therefore just return all songs
             return new ArrayList<>(categories.get(category).getKeys());
         } else {
-            return new ArrayList<>(categories.get(category).getChildren(libraryId, null));
+            return new ArrayList<>(categories.get(category).getChildren(libraryRequest, null));
         }
     }
 
-    public MediaItem getItem(LibraryId libraryId) {
+    public MediaItem getItem(LibraryRequest libraryRequest) {
         return null;
     }
 
-    public LibraryId populateLibraryObject(LibraryId libraryId) {
-        return null;
+    public void populateLibraryResponse(LibraryResponse libraryResponse) {
+
+        LibraryCollection collection = categories.get(libraryResponse.getCategory());
+
+        if (Category.isCategory(libraryResponse.getId())) {
+            libraryResponse.setTotalNumberOfChildren(collection.getKeys().size());
+        } else {
+            libraryResponse.setTotalNumberOfChildren(collection.getNumberOfChildren(libraryResponse.getId()));
+        }
+        libraryResponse.setMediaItem(collection.getRoot());
     }
 
-    public Set<MediaItem> getChildren(LibraryId libraryId) {
-        if (libraryId == null || libraryId.getCategory() == null) {
+    public Set<MediaItem> getChildren(LibraryRequest libraryRequest) {
+        if (libraryRequest == null || libraryRequest.getCategory() == null) {
             return null;
         }
-        Range range = libraryId.getRange();
-        LibraryCollection collection = categories.get(libraryId.getCategory());
+        Range range = libraryRequest.getRange();
+        LibraryCollection collection = categories.get(libraryRequest.getCategory());
 
-        if (Category.isCategory(libraryId.getId())) {
+        if (Category.isCategory(libraryRequest.getId())) {
             return collection.getKeys(range);
         } else {
-            return collection.getChildren(libraryId, range);
+            return collection.getChildren(libraryRequest, range);
         }
     }
 
@@ -132,18 +141,5 @@ public class MediaLibrary {
             }
         }
         return null;
-     }
-
-     public int getNumberOfChildren(LibraryId libraryId) {
-         if (libraryId == null) {
-             return -1;
-         }
-         LibraryCollection collection = categories.get(libraryId.getCategory());
-
-         if (Category.isCategory(libraryId.getId())) {
-             return collection.getKeys().size();
-         } else {
-             return collection.getNumberOfChildren(libraryId);
-         }
      }
 }

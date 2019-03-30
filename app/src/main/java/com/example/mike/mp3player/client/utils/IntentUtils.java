@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
@@ -16,7 +16,7 @@ import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
  */
 public final class IntentUtils {
 
-    public static Intent createMediaPlayerActivityMediaRequestIntent(Context context, MediaSessionCompat.Token token, String songId, LibraryId parentId) {
+    public static Intent createMediaPlayerActivityMediaRequestIntent(Context context, MediaSessionCompat.Token token, String songId, LibraryRequest parentId) {
         Intent intent = createGoToMediaPlayerActivity(context, token);
         intent.putExtra(MEDIA_ID, songId);
         intent.putExtra(PARENT_ID, parentId);

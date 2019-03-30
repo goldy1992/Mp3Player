@@ -1,18 +1,15 @@
 package com.example.mike.mp3player.commons.library;
 
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class PreSubscribedMediaItemsHolder implements Parcelable {
 
-    private HashMap<LibraryId, List<MediaItem>> itemMap;
+    private HashMap<LibraryRequest, List<MediaItem>> itemMap;
 
     public PreSubscribedMediaItemsHolder() {
         itemMap = new HashMap<>();
@@ -22,8 +19,8 @@ public class PreSubscribedMediaItemsHolder implements Parcelable {
         //in.r
     }
 
-    public void addItem(LibraryId libraryId, List<MediaItem> children) {
-        itemMap.put(libraryId, children);
+    public void addItem(LibraryRequest libraryRequest, List<MediaItem> children) {
+        itemMap.put(libraryRequest, children);
     }
 
 

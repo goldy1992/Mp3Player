@@ -13,10 +13,9 @@ import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.views.MyRecyclerView;
 import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -32,7 +31,7 @@ public abstract class GenericViewPageFragment extends Fragment implements MyGene
     /**
      * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
      */
-    LibraryId parent;
+    LibraryRequest parent;
     Category category;
     MyRecyclerView recyclerView;
     Class<?> activityToCall;
@@ -84,7 +83,7 @@ public abstract class GenericViewPageFragment extends Fragment implements MyGene
         this.recyclerView.populatePlaybackMetaDataListeners(mediaBrowserAdapter, mediaControllerAdapter);
     }
 
-    public void onChildrenLoaded(LibraryId libraryId, @NonNull ArrayList<MediaItem> children) {
+    public void onChildrenLoaded(LibraryRequest libraryRequest, @NonNull ArrayList<MediaItem> children) {
         recyclerView.addData(children);
     }
 

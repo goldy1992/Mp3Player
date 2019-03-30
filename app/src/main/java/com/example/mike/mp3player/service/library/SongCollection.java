@@ -6,7 +6,7 @@ import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.util.List;
 import java.util.Set;
@@ -22,7 +22,7 @@ public class SongCollection extends LibraryCollection {
     }
 
     @Override
-    public Set<MediaBrowserCompat.MediaItem> getChildren(LibraryId id, Range range) {
+    public Set<MediaBrowserCompat.MediaItem> getChildren(LibraryRequest id, Range range) {
         return null;
 //        return getKeys(range);
     }

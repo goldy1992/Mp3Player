@@ -7,7 +7,7 @@ import android.util.Pair;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.util.Comparator;
 import java.util.List;
@@ -29,7 +29,7 @@ public abstract class LibraryCollection {
      * @param range the range on indexes to select from
      * @return a subset of the library items children or null if invalid range
      */
-    public Set<MediaItem> getChildren(LibraryId id, Range range) {
+    public Set<MediaItem> getChildren(LibraryRequest id, Range range) {
         if (getRootIdAsString().equals(id.getId())) {
             return getKeys(range);
         }
@@ -41,8 +41,8 @@ public abstract class LibraryCollection {
         return children.subSet(subsetBounds.first, true, subsetBounds.second, true);
     }
 
-    public int getNumberOfChildren(LibraryId libraryId) {
-        TreeSet<MediaItem> items = collection.get(libraryId.getId());
+    public int getNumberOfChildren(String libraryId) {
+        TreeSet<MediaItem> items = collection.get(libraryId);
         return null != items ? items.size() : -1;
     }
 

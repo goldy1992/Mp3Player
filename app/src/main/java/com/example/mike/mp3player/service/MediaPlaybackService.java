@@ -8,11 +8,10 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.example.mike.mp3player.commons.Range;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.example.mike.mp3player.commons.library.LibraryResponse;
 import com.example.mike.mp3player.service.library.MediaLibrary;
-import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +29,13 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
 
     private static final String MY_MEDIA_ROOT_ID = Category.ROOT.name();
     private static final String MY_EMPTY_MEDIA_ROOT_ID = "empty_root_id";
+    private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
+    private static final String WORKER_ID = "MDIA_PLYBK_SRVC_WKR";
+
     private MyNotificationManager notificationManager;
     private MediaSessionCompat mMediaSession;
     private MediaSessionCallback mediaSessionCallback;
     private ServiceManager serviceManager;
-    private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
-    private static final String WORKER_ID = "MDIA_PLYBK_SRVC_WKR";
     private MediaLibrary mediaLibrary;
     private HandlerThread worker;
 
@@ -62,7 +62,6 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public BrowserRoot onGetRoot(String clientPackageName, int clientUid,
                                  Bundle rootHints) {
-
 //        // (Optional) Control the level of access for the specified package name.
 //        // You'll need to write your own logic to do this.
 //        if (allowBrowsing(clientPackageName, clientUid)) {
@@ -73,12 +72,10 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
 //            // Clients can connect, but this BrowserRoot is an empty hierachy
 //            // so onLoadChildren returns nothing. This disables the ability to browse for content.
             return new BrowserRoot(MY_MEDIA_ROOT_ID, null);
-
 //        }
     }
-
     /**
-     * onLoadChildren(String, Result, Bundle) :- onLoadChildren should always be called with a LibraryId item as a bundle option. Searching for
+     * onLoadChildren(String, Result, Bundle) :- onLoadChildren should always be called with a LibraryRequest item as a bundle option. Searching for
      * a MediaItem's children is now deprecated as it wasted
      * @param parentId the parent id
      * @param result the result object
@@ -103,20 +100,16 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             return;
         }
 
-        LibraryId libraryId = (LibraryId) options.get(PARENT_ID);
-        if (libraryId == null) {
+        LibraryRequest libraryRequest = (LibraryRequest) options.get(PARENT_ID);
+        if (libraryRequest == null) {
             result.sendResult(null);
             return;
         }
-
-        if (libraryId.getTotalNumberOfChildren() == LibraryId.UNKNOWN) {
-            int numberOfChildren = mediaLibrary.getNumberOfChildren(libraryId);
-            libraryId.setTotalNumberOfChildren(numberOfChildren);
-        }
-        Range range = libraryId.getRange();
+        LibraryResponse libraryResponse = new LibraryResponse(libraryRequest);
+        mediaLibrary.populateLibraryResponse(libraryResponse);
 
         // Assume for example that the music catalog is already loaded/cached.
-        Set<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryId, range);
+        Set<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryRequest);
         result.sendResult(new ArrayList<>(mediaItems));
     }
 

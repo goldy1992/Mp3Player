@@ -8,7 +8,6 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.PermissionGranted;
@@ -16,19 +15,17 @@ import com.example.mike.mp3player.client.PermissionsProcessor;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static com.example.mike.mp3player.commons.Constants.DEFAULT_RANGE;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
 import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 import static com.example.mike.mp3player.commons.Constants.PRE_SUBSCRIBED_MEDIA_ITEMS;
@@ -47,7 +44,7 @@ public class SplashScreenEntryActivity extends MediaSubscriberActivityCompat
     private static final long SPLASH_SCREEN_DISPLAY_TIME = 3000L;
     private static final int APP_TERMINATED = 0x78;
 
-    private HashMap<LibraryId, List<MediaBrowserCompat.MediaItem>> preSubscribedItems;
+    private HashMap<LibraryRequest, List<MediaBrowserCompat.MediaItem>> preSubscribedItems;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,25 +98,25 @@ public class SplashScreenEntryActivity extends MediaSubscriberActivityCompat
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options, Context context) {
        Log.i(LOG_TAG, "children loaded: " + parentId);
-       LibraryId parentLibraryId = (LibraryId) options.get(PARENT_ID);
+       LibraryRequest parentLibraryRequest = (LibraryRequest) options.get(PARENT_ID);
 
-       if (null == parentLibraryId) {
+       if (null == parentLibraryRequest) {
            return;
        }
 
-        if (isRoot(parentLibraryId)) {
+        if (isRoot(parentLibraryRequest)) {
             numberOfItemsToSubscribeTo = children.size();
 
             for (MediaBrowserCompat.MediaItem item : children) {
                 Category c = LibraryConstructor.getCategoryFromMediaItem(item);
-                LibraryId libraryId = new LibraryId(c, c.name());
-                getMediaBrowserAdapter().subscribe(libraryId);
+                LibraryRequest libraryRequest = new LibraryRequest(c, c.name());
+                getMediaBrowserAdapter().subscribe(libraryRequest);
             }
             return;
         }
 
-        if (parentLibraryId.getCategory() != null) {
-            preSubscribedItems.put(parentLibraryId, children);
+        if (parentLibraryRequest.getCategory() != null) {
+            preSubscribedItems.put(parentLibraryRequest, children);
             numberOfItemsReceived++;
         }
         if (numberOfItemsReceived >= numberOfItemsToSubscribeTo) {
@@ -134,8 +131,8 @@ public class SplashScreenEntryActivity extends MediaSubscriberActivityCompat
         for (Category category : Category.values()) {
             getMediaBrowserAdapter().registerListener(category, this);
         }
-        LibraryId libraryId = new LibraryId(Category.ROOT, Category.ROOT.name());
-        getMediaBrowserAdapter().subscribe(libraryId);
+        LibraryRequest libraryRequest = new LibraryRequest(Category.ROOT, Category.ROOT.name());
+        getMediaBrowserAdapter().subscribe(libraryRequest);
     }
 
     @Override// MediaBrowserConnectorCallback
@@ -195,7 +192,7 @@ public class SplashScreenEntryActivity extends MediaSubscriberActivityCompat
         return SubscriptionType.NOTIFY_ALL;
     }
 
-    private boolean isRoot(LibraryId id) {
+    private boolean isRoot(LibraryRequest id) {
         return getMediaBrowserAdapter().getRootId().equals(id.getId());
     }
 }

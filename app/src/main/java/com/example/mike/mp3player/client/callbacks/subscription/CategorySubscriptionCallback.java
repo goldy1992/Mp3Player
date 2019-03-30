@@ -6,7 +6,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +31,10 @@ public class CategorySubscriptionCallback extends GenericSubscriptionCallback<Ca
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children,
                                  @NonNull Bundle options) {
         super.onChildrenLoaded(parentId, children, options);
-        LibraryId libraryId = (LibraryId) options.get(PARENT_ID);
+        LibraryRequest libraryRequest = (LibraryRequest) options.get(PARENT_ID);
         // TODO: maybe implement logic to decide which listener the response should be sent to.
         ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>(children);
-        Set<MediaBrowserResponseListener> listenersToNotify = mediaBrowserResponseListeners.get(libraryId.getCategory());
+        Set<MediaBrowserResponseListener> listenersToNotify = mediaBrowserResponseListeners.get(libraryRequest.getCategory());
         if (null != listenersToNotify) {
             for (MediaBrowserResponseListener listener : listenersToNotify) {
                 listener.onChildrenLoaded(parentId, childrenArrayList, options, context);
