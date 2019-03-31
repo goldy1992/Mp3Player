@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.commons.library;
 
 import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.example.mike.mp3player.commons.Range;
@@ -27,15 +28,15 @@ public class LibraryResponse extends LibraryRequest {
         this.setMediaItem(in.readParcelable(MediaItem.class.getClassLoader()));
     }
 
-    public static final Creator<LibraryRequest> CREATOR = new Creator<LibraryRequest>() {
+    public static final Creator<LibraryResponse> CREATOR = new Creator<LibraryResponse>() {
         @Override
-        public LibraryRequest createFromParcel(Parcel in) {
-            return new LibraryRequest(in);
+        public LibraryResponse createFromParcel(Parcel in) {
+            return new LibraryResponse(in);
         }
 
         @Override
-        public LibraryRequest[] newArray(int size) {
-            return new LibraryRequest[size];
+        public LibraryResponse[] newArray(int size) {
+            return new LibraryResponse[size];
         }
     };
 

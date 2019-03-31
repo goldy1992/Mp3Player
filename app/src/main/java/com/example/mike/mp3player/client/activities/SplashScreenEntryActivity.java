@@ -52,7 +52,6 @@ public class SplashScreenEntryActivity extends MediaSubscriberActivityCompat
         super.onCreate(savedInstanceState);
         initialiseView(R.layout.splash_screen);
         mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
-        preSubscribedItems = new HashMap<>();
         Thread thread = new Thread(() -> init());
         thread.start();
 
@@ -117,7 +116,7 @@ public class SplashScreenEntryActivity extends MediaSubscriberActivityCompat
         }
 
         if (parentLibraryRequest.getCategory() != null) {
-            preSubscribedItems.put(parentLibraryRequest, children);
+            preSubscribedItems.addItem(parentLibraryRequest, children);
             numberOfItemsReceived++;
         }
         if (numberOfItemsReceived >= numberOfItemsToSubscribeTo) {
