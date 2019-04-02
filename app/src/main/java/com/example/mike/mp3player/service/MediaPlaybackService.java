@@ -109,10 +109,12 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
 
         LibraryResponse libraryResponse = new LibraryResponse(libraryRequest);
         libraryResponse = mediaLibrary.populateLibraryResponse(libraryResponse);
-        options.putParcelable(RESPONSE_OBJECT, libraryResponse);
 
         // Assume for example that the music catalog is already loaded/cached.
         Set<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryRequest);
+        libraryResponse = mediaLibrary.updateResponse(libraryResponse, mediaItems.size());
+        options.putParcelable(RESPONSE_OBJECT, libraryResponse);
+
         result.sendResult(new ArrayList<>(mediaItems));
     }
 

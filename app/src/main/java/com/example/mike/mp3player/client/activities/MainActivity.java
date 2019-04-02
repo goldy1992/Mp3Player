@@ -20,6 +20,7 @@ public class MainActivity extends MediaSubscriberActivityCompat{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initMediaBrowserService(getSubscriptionType());
         this.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         initialiseView(R.layout.activity_main);
     }
@@ -42,7 +43,7 @@ public class MainActivity extends MediaSubscriberActivityCompat{
     }
 
     @Override
-    protected void onPause() {
+    protected void onPause  () {
         super.onPause();
     }
 
@@ -55,7 +56,7 @@ public class MainActivity extends MediaSubscriberActivityCompat{
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
         super.onConnected();
-        initMediaBrowserService(getSubscriptionType());
+        getMediaBrowserAdapter().setAutoSubscribe(true);
         rootFragment.populatePlaybackMetaDataListeners(getMediaBrowserAdapter(), getMediaControllerAdapter());
     }
 

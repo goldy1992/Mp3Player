@@ -49,7 +49,7 @@ public abstract class MediaSubscriberActivityCompat extends MediaActivityCompat 
 
         if (null != getPreSubscribedItems()) {
             for (LibraryResponse m : getPreSubscribedItems().getKeySet()) {
-                if (m.getResultSize() < m.getTotalNumberOfChildren()) {
+                if (m.hasMoreChildren()) {
                     m.setNext();
                     getMediaBrowserAdapter().subscribe(m);
                 }

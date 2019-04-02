@@ -62,7 +62,7 @@ public class MediaBrowserAdapter {
     public void subscribe(LibraryRequest libraryRequest) {
         Bundle options = new Bundle();
         options.putParcelable(REQUEST_OBJECT, libraryRequest);
-        getmMediaBrowser().subscribe(libraryRequest.getId(), options, mySubscriptionCallback);
+        getmMediaBrowser().subscribe(libraryRequest.getId(), options, getMySubscriptionCallback());
     }
     /**
      * We should subscribe to MediaItems using LibraryIds in order to avoid having to parse String ids.
@@ -81,7 +81,7 @@ public class MediaBrowserAdapter {
     @Deprecated
     public void subscribe(Category category, String id) {
         String token = LibraryConstructor.buildId(category, id);
-        getmMediaBrowser().subscribe(token, mySubscriptionCallback);
+        getmMediaBrowser().subscribe(token, getMySubscriptionCallback());
     }
 
     public MediaSessionCompat.Token getMediaSessionToken() {
@@ -97,11 +97,11 @@ public class MediaBrowserAdapter {
     }
 
     public void registerListener(Category category, MediaBrowserResponseListener mediaBrowserResponseListener) {
-        mySubscriptionCallback.registerMediaBrowserResponseListener(category, mediaBrowserResponseListener);
+        getMySubscriptionCallback().registerMediaBrowserResponseListener(category, mediaBrowserResponseListener);
     }
 
     public void unregisterListener(Category category, MediaBrowserResponseListener mediaBrowserResponseListener) {
-        mySubscriptionCallback.removeMediaBrowserResponseListener(category, mediaBrowserResponseListener);
+        getMySubscriptionCallback().removeMediaBrowserResponseListener(category, mediaBrowserResponseListener);
     }
 
     public Context getContext() {
@@ -120,5 +120,15 @@ public class MediaBrowserAdapter {
                 default: this.mySubscriptionCallback = new NotifyAllSubscriptionCallback(this);
             }
         }
+    }
+    /**
+     *
+     */
+    public void setAutoSubscribe(boolean isAutoSubscribe) {
+        getMySubscriptionCallback().setAutoSubscribe(isAutoSubscribe);
+    }
+
+    public GenericSubscriptionCallback getMySubscriptionCallback() {
+        return mySubscriptionCallback;
     }
 }

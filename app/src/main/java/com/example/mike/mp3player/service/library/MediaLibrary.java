@@ -100,6 +100,18 @@ public class MediaLibrary {
         return libraryResponse;
     }
 
+    /**
+     *
+     * @param libraryResponse the response object
+     * @param resultSize the resultSize
+     * @return the updated library response
+     */
+    public LibraryResponse updateResponse(LibraryResponse libraryResponse, int resultSize) {
+        int newResultSize = libraryResponse.getRange().getLower() + resultSize;
+        libraryResponse.setResultSize(newResultSize);
+        return libraryResponse;
+    }
+
     public Set<MediaItem> getChildren(LibraryRequest libraryRequest) {
         if (libraryRequest == null || libraryRequest.getCategory() == null) {
             return null;
