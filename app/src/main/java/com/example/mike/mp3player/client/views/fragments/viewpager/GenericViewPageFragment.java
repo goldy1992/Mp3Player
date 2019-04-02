@@ -31,7 +31,7 @@ public abstract class GenericViewPageFragment extends Fragment implements MyGene
     /**
      * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
      */
-    LibraryRequest parent;
+    //LibraryRequest parent;
     Category category;
     MyRecyclerView recyclerView;
     Class<?> activityToCall;
@@ -41,7 +41,6 @@ public abstract class GenericViewPageFragment extends Fragment implements MyGene
     Map<MediaItem, List<MediaItem>> songs;
     private MediaBrowserAdapter mediaBrowserAdapter;
     MediaControllerAdapter mediaControllerAdapter;
-
 
     @Override
     public void onStart() {

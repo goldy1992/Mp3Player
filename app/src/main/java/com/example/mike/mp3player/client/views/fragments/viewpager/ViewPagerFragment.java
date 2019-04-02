@@ -57,20 +57,21 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
 
     public void initRootMenu(Map<LibraryResponse, List<MediaItem>> items) {
 
-        TreeSet<MediaItem> rootItemsOrdered = new TreeSet<>(compareRootMediaItemsByCategory);
+        TreeMap<MediaItem, List<MediaItem>> rootItemsOrdered = new TreeMap<>(compareRootMediaItemsByCategory);
         for (LibraryResponse id : items.keySet()) {
-            rootItemsOrdered.add(id.getMediaItem());
+            rootItemsOrdered.put(id.getMediaItem(), items.get(id));
         }
 
-        for (MediaItem i : rootItemsOrdered) {
+        for (MediaItem i : rootItemsOrdered.keySet()) {
             Category category = LibraryConstructor.getCategoryFromMediaItem(i);
             GenericViewPageFragment viewPageFragment = null;
             switch (category) {
                 case SONGS:
-                    viewPageFragment = SongViewPageFragment.createAndInitialiseViewPageFragment(new LibraryRequest(category, null), items.get(i));
+
+                    viewPageFragment = SongViewPageFragment.createAndInitialiseViewPageFragment(Category.SONGS, rootItemsOrdered.get(i));
                     break;
                 case FOLDERS:
-                    viewPageFragment = FolderViewPageFragment.createAndInitialiseFragment(items.get(i));
+                    viewPageFragment = FolderViewPageFragment.createAndInitialiseFragment(rootItemsOrdered.get(i));
                     break;
                 default: break;
             }
