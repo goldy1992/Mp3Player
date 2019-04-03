@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackToolbarExtendedFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
@@ -13,9 +12,9 @@ import com.example.mike.mp3player.client.views.fragments.ShuffleRepeatFragment;
 import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.commons.Constants;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
+import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -39,16 +38,14 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         token = (MediaSessionCompat.Token) retrieveIntentInfo(Constants.MEDIA_SESSION);
 
         if (token != null) {
-            setMediaControllerAdapter(new MediaControllerAdapter(this, token, getWorker().getLooper()));
+            initialiseMediaControllerAdapter(token);
             String mediaId = (String) retrieveIntentInfo(Constants.MEDIA_ID);
-            LibraryId parentId = (LibraryId) retrieveIntentInfo(Constants.PARENT_ID);
-
-            getMediaControllerAdapter().init();
+            LibraryObject parentId = (LibraryObject) retrieveIntentInfo(Constants.REQUEST_OBJECT);
             initView();
             if (mediaId != null) { // if rq came with an media id it's a song request
                 // Display the initial state
                 Bundle extras = new Bundle();
-                extras.putParcelable(PARENT_ID, parentId); // parent id will sure that the correct playlist is found in the media library
+                extras.putParcelable(REQUEST_OBJECT, parentId); // parent id will sure that the correct playlist is found in the media library
                 getMediaControllerAdapter().prepareFromMediaId(mediaId, extras);
             }
             else {
@@ -117,11 +114,4 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         return playbackToolbarExtendedFragment;
     }
 
-    @Override
-    public void onConnected() {
-        /**
-         * not used as a media token is assumed from parent activities since this activity does not
-         * require a MediaBrowser
-         */
-    }
 }

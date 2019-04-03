@@ -7,7 +7,8 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.activities.FolderActivity;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryObject;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.util.List;
 
@@ -16,8 +17,8 @@ import static com.example.mike.mp3player.commons.Constants.FOLDER_NAME;
 public class FolderViewPageFragment extends GenericSubscriberViewPageFragment {
 
     @Override
-    Intent addExtrasToIntent(LibraryId libraryId, Intent intent) {
-        String folderName = libraryId.getExtra(FOLDER_NAME);
+    Intent addExtrasToIntent(LibraryRequest libraryObject, Intent intent) {
+        String folderName = libraryObject.getExtra(FOLDER_NAME);
         if (folderName  != null) {
             intent.putExtra(FOLDER_NAME, folderName);
         }

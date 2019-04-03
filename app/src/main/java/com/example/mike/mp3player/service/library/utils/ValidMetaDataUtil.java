@@ -2,8 +2,6 @@ package com.example.mike.mp3player.service.library.utils;
 
 import android.support.v4.media.session.MediaSessionCompat;
 
-import org.apache.commons.lang.StringUtils;
-
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
 
 public final class ValidMetaDataUtil {

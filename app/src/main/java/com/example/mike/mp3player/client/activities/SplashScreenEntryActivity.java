@@ -10,12 +10,12 @@ import android.util.Log;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
-import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
+import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
@@ -28,16 +28,16 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.CATEGORY_ROOT_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
+import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
-public class SplashScreenEntryActivity extends AppCompatActivity
+public class SplashScreenEntryActivity extends MediaSubscriberActivityCompat
     implements  MediaBrowserConnectorCallback,
-                MediaBrowserResponseListener,
                 PermissionGranted {
 
     private static final String LOG_TAG = "SPLSH_SCRN_ENTRY_ACTVTY";
     private PermissionsProcessor permissionsProcessor;
-    private volatile boolean splashScreenFinishedDisplaying;
+    private volatile boolean splashScreenFinishedDisplaying = false;
+    private volatile boolean permissionGranted = false;
     private MediaBrowserAdapter mediaBrowserAdapter;
     private Intent mainActivityIntent;
     private int numberOfItemsToSubscribeTo;
@@ -45,11 +45,16 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     private static final int APP_TERMINATED = 0x78;
 
     @Override
+    SubscriptionType getSubscriptionType() {
+        return SubscriptionType.NOTIFY_ALL;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
         Thread thread = new Thread(() -> init());
         thread.start();
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -93,7 +98,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
                 if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission has been granted. Start camera preview Activity.
                     Log.i(LOG_TAG, "permission granted from request");
-                    onPermissionGranted();
+                    permissionGranted = true;
                 }
             }
         } else {
@@ -101,50 +106,44 @@ public class SplashScreenEntryActivity extends AppCompatActivity
         }
     }
 
-    public void initMediaBrowserService() {
-        Log.i(LOG_TAG, "reset media browser service");
-        mediaBrowserAdapter = new MediaBrowserAdapter(getApplicationContext(), this, getMainLooper());
-        mediaBrowserAdapter.init();
-    }
 
-    @Override
-    public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options, Context context) {
-       Log.i(LOG_TAG, "children loaded: " + parentId);
-       LibraryId parentLibraryId = (LibraryId) options.get(PARENT_ID);
-        ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>();
-        if (isRoot(parentLibraryId)) {
-            childrenArrayList.addAll(children);
-            numberOfItemsToSubscribeTo = childrenArrayList.size();
-            for (MediaBrowserCompat.MediaItem item : childrenArrayList) {
-                Category c = LibraryConstructor.getCategoryFromMediaItem(item);
-                LibraryId libraryId = new LibraryId(c, c.name());
-                mediaBrowserAdapter.subscribe(libraryId);
-            }
-            if (null == options) {
-                options = new Bundle();
-            }
-            options.putParcelableArrayList(CATEGORY_ROOT_ID, childrenArrayList);
-            options.putParcelable(MEDIA_SESSION, mediaBrowserAdapter.getMediaSessionToken());
-            mainActivityIntent.putExtras(options);
-            return;
-        }
-
-        if (parentLibraryId.getCategory() != null) {
-            childrenArrayList.addAll(children);
-            mainActivityIntent.putParcelableArrayListExtra(parentLibraryId.getCategory().name(), childrenArrayList);
-            numberOfItemsReceived++;
-        }
-        if (numberOfItemsReceived >= numberOfItemsToSubscribeTo) {
-            onProcessingComplete(mainActivityIntent);
-        }
-    }
+//    @Override
+//    public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options, Context context) {
+//       Log.i(LOG_TAG, "children loaded: " + parentId);
+//       LibraryObject parentLibraryObject = (LibraryObject) options.get(REQUEST_OBJECT);
+//        ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>();
+//        if (isRoot(parentLibraryObject)) {
+//            childrenArrayList.addAll(children);
+//            numberOfItemsToSubscribeTo = childrenArrayList.size();
+//            for (MediaBrowserCompat.MediaItem item : childrenArrayList) {
+//                Category c = LibraryConstructor.getCategoryFromMediaItem(item);
+//                LibraryObject libraryObject = new LibraryObject(c, c.name());
+//                mediaBrowserAdapter.subscribe(libraryObject);
+//            }
+//            if (null == options) {
+//                options = new Bundle();
+//            }
+//            options.putParcelableArrayList(CATEGORY_ROOT_ID, childrenArrayList);
+//            options.putParcelable(MEDIA_SESSION, mediaBrowserAdapter.getMediaSessionToken());
+//            mainActivityIntent.putExtras(options);
+//            return;
+//        }
+//
+//        if (parentLibraryObject.getCategory() != null) {
+//            childrenArrayList.addAll(children);
+//            mainActivityIntent.putParcelableArrayListExtra(parentLibraryObject.getCategory().name(), childrenArrayList);
+//            numberOfItemsReceived++;
+//        }
+//        if (numberOfItemsReceived >= numberOfItemsToSubscribeTo) {
+//            onProcessingComplete(mainActivityIntent);
+//        }
+//    }
 
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
+        onProcessingComplete();
         Log.i(LOG_TAG, "hit on connected");
-        mediaBrowserAdapter.registerListener(this);
-        LibraryId libraryId = new LibraryId(Category.ROOT, Category.ROOT.name());
-        mediaBrowserAdapter.subscribe(libraryId);
+
     }
 
     @Override// MediaBrowserConnectorCallback
@@ -153,11 +152,10 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     @Override // MediaBrowserConnectorCallback
     public void onConnectionFailed() { }
 
-    private synchronized void onProcessingComplete(Intent mainActivityIntent) {
-        mediaBrowserAdapter.unregisterListener(this);
+    private synchronized void onProcessingComplete() {
  //       mediaBrowserAdapter.getmMediaBrowser().disconnect();
         Log.i(LOG_TAG, "processing complete");
-        while (!splashScreenFinishedDisplaying) {
+        while (!splashScreenFinishedDisplaying || !permissionGranted) {
             try {
                 wait(ONE_SECOND);
             } catch (InterruptedException ex) {
@@ -185,8 +183,9 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     @Override
     public void onPermissionGranted() {
         Log.i(LOG_TAG, "permission granted");
-        Runnable r = new Thread(() -> initMediaBrowserService());
-        runOnUiThread(r);
+        permissionGranted = true;
+        //Runnable r = new Thread(() -> initMediaBrowserService());
+       // runOnUiThread(r);
     }
 
     public void init() {
@@ -197,7 +196,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
         splashScreenWaitThread.start();
     }
 
-    private boolean isRoot(LibraryId id) {
+    private boolean isRoot(LibraryObject id) {
         return mediaBrowserAdapter.getRootId().equals(id.getId());
     }
 }

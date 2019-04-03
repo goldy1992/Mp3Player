@@ -3,7 +3,7 @@ package com.example.mike.mp3player.commons;
 import android.os.Bundle;
 
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,7 +72,7 @@ public final class MediaItemUtils {
         return mediaItemList;
     }
 
-    public static final MediaItem findMediaItemInSet(LibraryId requestedId, Set<MediaItem> itemSet) {
+    public static final MediaItem findMediaItemInSet(LibraryObject requestedId, Set<MediaItem> itemSet) {
         if (requestedId == null || requestedId.getId() == null || itemSet == null || itemSet.isEmpty()) {
             return null;
         }

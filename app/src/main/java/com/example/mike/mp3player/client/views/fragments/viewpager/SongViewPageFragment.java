@@ -10,7 +10,8 @@ import com.example.mike.mp3player.client.utils.IntentUtils;
 import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryObject;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +27,10 @@ public class SongViewPageFragment extends GenericViewPageFragment implements MyG
 
     public SongViewPageFragment() {  }
 
-    public void init(LibraryId libraryId, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
+    public void init(LibraryRequest libraryObject, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
                      MediaControllerAdapter mediaControllerAdapter) {
         super.init(Category.SONGS, songs, mediaBrowserAdapter, mediaControllerAdapter, MediaPlayerActivity.class);
-        this.parent = libraryId;
+        this.parent = libraryObject;
         this.songs = new TreeMap<>(ComparatorUtils.compareMediaItemsByTitle);
         for (MediaItem m : songs) {
             this.songs.put(m, null);
@@ -37,10 +38,10 @@ public class SongViewPageFragment extends GenericViewPageFragment implements MyG
     }
 
 
-    public static SongViewPageFragment createAndInitialiseViewPageFragment(LibraryId libraryId, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
+    public static SongViewPageFragment createAndInitialiseViewPageFragment(LibraryRequest libraryObject, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
                                                                            MediaControllerAdapter mediaControllerAdapter) {
         SongViewPageFragment viewPageFragment = new SongViewPageFragment();
-        viewPageFragment.init(libraryId, songs, mediaBrowserAdapter, mediaControllerAdapter);
+        viewPageFragment.init(libraryObject, songs, mediaBrowserAdapter, mediaControllerAdapter);
         return viewPageFragment;
     }
 
@@ -60,7 +61,7 @@ public class SongViewPageFragment extends GenericViewPageFragment implements MyG
     }
 
     @Override
-    public void onChildrenLoaded(LibraryId libraryId, @NonNull ArrayList<MediaItem> children) {
+    public void onChildrenLoaded(LibraryRequest libraryObject, @NonNull ArrayList<MediaItem> children) {
         // not needed
     }
 
@@ -70,11 +71,11 @@ public class SongViewPageFragment extends GenericViewPageFragment implements MyG
         if (null == mediaId) {
             return;
         }
-        Intent intent =
-                IntentUtils.createMediaPlayerActivityMediaRequestIntent(context,
-                        getMediaBrowserAdapter().getMediaSessionToken(),mediaId, parent);
-
-        startActivity(intent);
+//        Intent intent =
+//                IntentUtils.createMediaPlayerActivityMediaRequestIntent(context,
+//                        getMediaBrowserAdapter().getMediaSessionToken(),mediaId, parent);
+//
+//        startActivity(intent);
     }
 }
 

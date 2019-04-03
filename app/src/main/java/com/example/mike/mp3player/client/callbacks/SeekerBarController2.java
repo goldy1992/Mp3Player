@@ -9,7 +9,6 @@ import android.widget.SeekBar;
 
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.SeekerBar;
-import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.LoggingUtils;
 
 import androidx.annotation.VisibleForTesting;

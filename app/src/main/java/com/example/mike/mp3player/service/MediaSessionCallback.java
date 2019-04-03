@@ -20,9 +20,9 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 
-import com.example.mike.mp3player.commons.AndroidUtils;
 import com.example.mike.mp3player.commons.MediaItemUtils;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryObject;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
@@ -40,8 +40,8 @@ import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPE
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
+import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
 import static com.example.mike.mp3player.commons.LoggingUtils.logRepeatMode;
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
@@ -160,7 +160,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private void prepareFromMediaId(String mediaId, Bundle bundle) {
         //Log.i(LOG_TAG, "prepareFromMediaId");
         super.onPrepareFromMediaId(mediaId, bundle);
-        LibraryId parentId = (LibraryId) bundle.get(PARENT_ID);
+        LibraryRequest parentId = (LibraryRequest) bundle.get(REQUEST_OBJECT);
         List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getPlaylist(parentId);
         playbackManager.createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(results));
 

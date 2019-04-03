@@ -3,7 +3,7 @@ package com.example.mike.mp3player.service.library;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import java.util.List;
 import java.util.TreeMap;
@@ -55,13 +55,13 @@ public class FolderLibraryCollection extends LibraryCollection {
     }
 
     @Override
-    public TreeSet<MediaItem> getChildren(LibraryId libraryId) {
-        if (getRootIdAsString().equals(libraryId)) {
+    public TreeSet<MediaItem> getChildren(LibraryObject libraryObject) {
+        if (getRootIdAsString().equals(libraryObject)) {
             return getKeys();
         }
         for (MediaItem i : getKeys()) {
             String mediaId = getMediaId(i);
-            if (mediaId != null && mediaId.equals(libraryId.getId())) {
+            if (mediaId != null && mediaId.equals(libraryObject.getId())) {
                 return collection.get(getMediaId(i));
             }
         }

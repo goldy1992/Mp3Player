@@ -59,7 +59,8 @@ public final class Constants {
     public static final String CATEGORY_FOLDERS_DESCRIPTION = "A list of all folders with music inside them";
     public static final String FOLDER_CHILDREN = "FOLDER_CHILDREN";
     public static final String FOLDER_NAME = "FOLDER_NAME";
-    public static final String PARENT_ID = "PARENT_ID";
+    public static final String REQUEST_OBJECT = "REQUEST_OBJECT";
+    public static final String RESPONSE_OBJECT = "RESPONSE_OBJECT";
     public static final String PARENT_MEDIA_ITEM = "PARENT_MEDIA_ITEM";
     public static final int NO_ACTION = 0;
 }

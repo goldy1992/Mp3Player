@@ -18,7 +18,6 @@ import org.powermock.reflect.Whitebox;
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import org.junit.runners.JUnit4;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;

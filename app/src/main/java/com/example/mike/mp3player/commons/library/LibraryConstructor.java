@@ -22,7 +22,7 @@ public class LibraryConstructor {
     private static final String DELIMITER = "\\|\\|";
     private static final String LIMITER = "||";
 
-    public static LibraryId parseId(String id) {
+    public static LibraryRequest parseId(String id) {
         String[] tokens = splitMediaId(id);
 
         if (tokens.length <= 0) {
@@ -34,7 +34,7 @@ public class LibraryConstructor {
         if (tokens.length >= 2) {
           idToken = tokens[1];
         }
-        LibraryId retVal = new LibraryId(category, idToken);
+        LibraryRequest retVal = new LibraryRequest(category, idToken);
 
         if (tokens.length >= 3) {
             switch (category) {
@@ -63,13 +63,13 @@ public class LibraryConstructor {
         return stringBuilder.toString();
     }
 
-    public static String buildSongId(LibraryId libraryId, String mediaId) {
-        if (libraryId == null) {
+    public static String buildSongId(LibraryObject libraryObject, String mediaId) {
+        if (libraryObject == null) {
             return null;
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(libraryId.getCategory().name());
+        stringBuilder.append(libraryObject.getCategory().name());
 
         if (null == mediaId) {
             return stringBuilder.toString();
@@ -77,11 +77,11 @@ public class LibraryConstructor {
 
         /* If not a song category, add it to show we want to play songs from that category.
             e.g. FOLDERS||SONGS||REGGAETON || i.e all songs from the reggaeton */
-        if (libraryId.getCategory() != Category.SONGS) {
+        if (libraryObject.getCategory() != Category.SONGS) {
             stringBuilder.append(LIMITER);
             stringBuilder.append(Category.SONGS.name());
             stringBuilder.append(LIMITER);
-            stringBuilder.append(libraryId.getId());
+            stringBuilder.append(libraryObject.getId());
         }
         stringBuilder.append(LIMITER);
         stringBuilder.append(mediaId);
@@ -141,9 +141,9 @@ public class LibraryConstructor {
         return tokens;
     }
 
-    public static void addFolderNameFromMediaItemToLibraryId(LibraryId libraryId, MediaBrowserCompat.MediaItem mediaItem) {
-        if (libraryId != null && libraryId.getExtras() != null) {
-            libraryId.getExtras().put(FOLDER_NAME, MediaItemUtils.getTitle(mediaItem));
+    public static void addFolderNameFromMediaItemToLibraryId(LibraryRequest libraryObject, MediaBrowserCompat.MediaItem mediaItem) {
+        if (libraryObject != null && libraryObject.getExtras() != null) {
+            libraryObject.getExtras().put(FOLDER_NAME, MediaItemUtils.getTitle(mediaItem));
         }
     }
 

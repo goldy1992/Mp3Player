@@ -8,7 +8,6 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
@@ -26,23 +25,26 @@ public class MediaControllerAdapter {
     private Context context;
     private Looper looper;
 
-    public MediaControllerAdapter(Context context, MediaSessionCompat.Token token, Looper looper) {
-        this.token = token;
+    public MediaControllerAdapter(Context context, Looper looper) {
         this.context = context;
         this.looper = looper;
+        this.myMediaControllerCallback = new MyMediaControllerCallback(looper);
     }
 
-    public boolean init() {
+
+    public MediaControllerAdapter(Context context, MediaSessionCompat.Token token, Looper looper) {
+        this(context, looper);
+        this.token = token;
+        this.isInitialized = init();
+    }
+
+    private boolean init() {
         try {
             this.mediaControllerCompat = new MediaControllerCompat(context, token);
-            this.myMediaControllerCallback = new MyMediaControllerCallback(looper);
             this.mediaControllerCompat.registerCallback(myMediaControllerCallback);
         } catch (RemoteException ex) {
-            this.isInitialized = false;
             return false;
         }
-
-        this.isInitialized = true;
         return true;
     }
 
@@ -140,9 +142,11 @@ public class MediaControllerAdapter {
     }
 
     public void updateUiState() {
-        myMediaControllerCallback.onMetadataChanged(mediaControllerCompat.getMetadata());
+        if (isInitialized) {
+            myMediaControllerCallback.onMetadataChanged(mediaControllerCompat.getMetadata());
 //        myMediaControllerCallback.onPlaybackStateChanged(mediaControllerCompat.getPlaybackState());
-        myMediaControllerCallback.getMyPlaybackStateCallback().updateAll(mediaControllerCompat.getPlaybackState());
+            myMediaControllerCallback.getMyPlaybackStateCallback().updateAll(mediaControllerCompat.getPlaybackState());
+        }
     }
 
     public void sendCustomAction(String customAction, Bundle args) {

@@ -17,7 +17,6 @@ import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.client.views.TimeCounter;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 

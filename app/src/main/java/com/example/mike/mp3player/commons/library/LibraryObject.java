@@ -7,35 +7,35 @@ import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 
-public class LibraryId implements Parcelable {
+public class LibraryObject implements Parcelable {
 
     private final Category category;
     private final String id;
     private HashMap<String, String> extras;
 
-    public LibraryId(Category category, @NonNull String id) {
+    public LibraryObject(Category category, @NonNull String id) {
         this.category = category;
         this.id = id;
         this.extras = new HashMap<>();
     }
 
     @SuppressWarnings("unchecked")
-    protected LibraryId(Parcel in) {
+    protected LibraryObject(Parcel in) {
         this.category = Category.values()[in.readInt()];
         this.id = in.readString();
         this.extras = (HashMap) in.readSerializable();
 
     }
 
-    public static final Creator<LibraryId> CREATOR = new Creator<LibraryId>() {
+    public static final Creator<LibraryObject> CREATOR = new Creator<LibraryObject>() {
         @Override
-        public LibraryId createFromParcel(Parcel in) {
-            return new LibraryId(in);
+        public LibraryObject createFromParcel(Parcel in) {
+            return new LibraryObject(in);
         }
 
         @Override
-        public LibraryId[] newArray(int size) {
-            return new LibraryId[size];
+        public LibraryObject[] newArray(int size) {
+            return new LibraryObject[size];
         }
     };
 

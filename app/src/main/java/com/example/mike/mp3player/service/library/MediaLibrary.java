@@ -1,21 +1,12 @@
 package com.example.mike.mp3player.service.library;
 
 import android.content.Context;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
-import android.support.v4.media.MediaDescriptionCompat;
-import android.util.Log;
 
-import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
-import com.example.mike.mp3player.service.library.utils.IsDirectoryFilter;
-import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
-import com.example.mike.mp3player.service.library.utils.MusicFileFilter;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -24,17 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeSet;
 
-import static android.media.MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST;
-import static android.media.MediaMetadataRetriever.METADATA_KEY_ARTIST;
-import static android.media.MediaMetadataRetriever.METADATA_KEY_DURATION;
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ALBUM_ARTIST;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_DURATION;
 
 public class MediaLibrary {
     private boolean playlistRecursInSubDirectory = false;
@@ -85,24 +66,24 @@ public class MediaLibrary {
     }
 
 
-    public List<MediaItem> getPlaylist(LibraryId libraryId) {
-        Category category = libraryId.getCategory();
+    public List<MediaItem> getPlaylist(LibraryRequest libraryRequest) {
+        Category category = libraryRequest.getCategory();
         if (category == Category.SONGS) {
             // song items don't have children therefore just return all songs
             return new ArrayList<>(categories.get(category).getKeys());
         } else
-        return new ArrayList<>(categories.get(category).getChildren(libraryId));
+        return new ArrayList<>(categories.get(category).getChildren(libraryRequest));
     }
 
-    public TreeSet<MediaItem> getChildren(LibraryId libraryId) {
-        if (libraryId == null || libraryId.getCategory() == null) {
+    public TreeSet<MediaItem> getChildren(LibraryRequest libraryRequest) {
+        if (libraryRequest == null || libraryRequest.getCategory() == null) {
             return null;
         }
 
-        if (Category.isCategory(libraryId.getId())) {
-            return categories.get(libraryId.getCategory()).getKeys();
+        if (Category.isCategory(libraryRequest.getId())) {
+            return categories.get(libraryRequest.getCategory()).getKeys();
         } else {
-            return categories.get(libraryId.getCategory()).getChildren(libraryId);
+            return categories.get(libraryRequest.getCategory()).getChildren(libraryRequest);
         }
     }
 
