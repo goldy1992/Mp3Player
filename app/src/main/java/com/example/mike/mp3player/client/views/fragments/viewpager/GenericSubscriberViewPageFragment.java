@@ -73,7 +73,7 @@ public abstract class GenericSubscriberViewPageFragment extends GenericViewPageF
 
     private void startActivity(LibraryRequest libraryObject, ArrayList<MediaBrowserCompat.MediaItem> children) {
 
-        Intent intent =  new Intent(context, activityToCall);
+        Intent intent =  new Intent(getContext(), activityToCall);
         intent.putExtra(REQUEST_OBJECT, libraryObject);
         intent.putParcelableArrayListExtra(FOLDER_CHILDREN, children);
         intent = addExtrasToIntent(libraryObject, intent);

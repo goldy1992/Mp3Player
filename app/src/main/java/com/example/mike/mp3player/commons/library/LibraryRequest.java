@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 public class LibraryRequest extends LibraryObject {
 
 
-    public LibraryRequest(Category category, @NonNull String id) {
+    public LibraryRequest(@NonNull Category category, @NonNull String id) {
         super(category, id);
     }
 

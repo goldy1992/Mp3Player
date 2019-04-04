@@ -12,6 +12,7 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
@@ -29,6 +30,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerTabStrip;
 import androidx.viewpager.widget.ViewPager;
 
+import static com.example.mike.mp3player.client.views.fragments.viewpager.GenericViewPageFragment.createViewPageFragment;
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
@@ -62,20 +64,10 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
         this.mediaBrowserAdapter.registerListener(Category.ROOT, this);
     }
 
-//    public void initRootMenu(Map<MediaItem, List<MediaItem>> items, MediaBrowserAdapter mediaBrowserAdapter,
-//                             MediaControllerAdapter mediaControllerAdapter) {
-//        mediaBrowserAdapter.registerListener(this);
-
-//        for (MediaItem i : rootItemsOrdered) {
-
-//        }
-//    }
-
     @Override
     public void onStart() {
         super.onStart();
     }
-
     public void enable() {}
     public void disable() {}
 
@@ -85,31 +77,13 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
         TreeSet<MediaItem> rootItemsOrdered = new TreeSet<>(compareRootMediaItemsByCategory);
         rootItemsOrdered.addAll(children);
         for (MediaItem mediaItem : rootItemsOrdered) {
-            Category category = LibraryConstructor.getCategoryFromMediaItem(mediaItem);
-            GenericViewPageFragment viewPageFragment = null;
-            switch (category) {
-                case SONGS:
-//                    viewPageFragment = SongViewPageFragment.createAndInitialiseViewPageFragment(new LibraryRequest(category, null), items.get(i), mediaBrowserAdapter, mediaControllerAdapter);
-                        viewPageFragment = new SongViewPageFragment();
-                    break;
-                case FOLDERS:
-//                    viewPageFragment = FolderViewPageFragment.createAndInitialiseFragment(items.get(i), mediaBrowserAdapter, mediaControllerAdapter);
-                    viewPageFragment = new FolderViewPageFragment();
-                    break;
-                default: break;
-            }
+            String id = MediaItemUtils.getMediaId(mediaItem);
+            Category category = Category.valueOf(id);
+            GenericViewPageFragment viewPageFragment = createViewPageFragment(category, mediaBrowserAdapter);
             adapter.pagerItems.put(category, viewPageFragment);
             adapter.menuCategories.put(category, mediaItem);
             adapter.notifyDataSetChanged();
         }
-//        Log.i(LOG_TAG, "more children loaded main activity with parent id " + libraryObject);
-//        if (null != libraryObject) {
-//
-//            /* TODO: add logic to distribute children to the correct menu fragment */
-//            int currentFragmentId = this.rootMenuItemsPager.getCurrentItem();
-//            GenericViewPageFragment f = adapter.getItem(currentFragmentId);
-//            f.onChildrenLoaded(libraryObject, children);
-//        }
     }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {

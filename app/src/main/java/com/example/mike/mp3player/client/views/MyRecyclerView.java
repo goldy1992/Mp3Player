@@ -41,26 +41,21 @@ public class MyRecyclerView extends RecyclerView {
     }
 
     public void initRecyclerView(Category category, MediaBrowserAdapter mediaBrowserAdapter,
-                                 MediaControllerAdapter mediaControllerAdapter,
-                                 MyGenericItemTouchListener.ItemSelectedListener itemSelectedListener) {
+                                 MediaControllerAdapter mediaControllerAdapter) {
         this.category = category;
         switch (category) {
             case SONGS:
-                this.myViewAdapter = new MySongViewAdapter();
+                this.myViewAdapter = new MySongViewAdapter(mediaBrowserAdapter);
                 this.myGenericItemTouchListener = new MySongItemTouchListener(context);
 
                 break;
             case FOLDERS:
-                this.myViewAdapter = new MyFolderViewAdapter();
+                this.myViewAdapter = new MyFolderViewAdapter(mediaBrowserAdapter);
                 this.myGenericItemTouchListener = new MyFolderItemTouchListener(context);
 
                 break;
             default: return;
         }
-        mediaBrowserAdapter.registerListener(myViewAdapter.getSubscriptionCategory(), myViewAdapter);
-        this.myGenericItemTouchListener.setItemSelectedListener(itemSelectedListener);
-        this.myGenericItemTouchListener.setMediaControllerAdapter(mediaControllerAdapter);
-        this.myGenericItemTouchListener.setMediaBrowserAdapter(mediaBrowserAdapter);
         this.setAdapter(myViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         this.setLayoutManager(linearLayoutManager);

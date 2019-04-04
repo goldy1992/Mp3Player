@@ -25,11 +25,8 @@ public class FolderViewPageFragment extends GenericSubscriberViewPageFragment {
         return intent;
     }
 
-    public static FolderViewPageFragment createAndInitialiseFragment(List<MediaBrowserCompat.MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
-                                                                           MediaControllerAdapter mediaControllerAdapter) {
-        FolderViewPageFragment viewPageFragment = new FolderViewPageFragment();
-        viewPageFragment.init(Category.FOLDERS, songs, mediaBrowserAdapter, mediaControllerAdapter, FolderActivity.class);
-        return viewPageFragment;
+    @Override
+    Class<?> getActivityToCall() {
+        return FolderActivity.class;
     }
-
 }

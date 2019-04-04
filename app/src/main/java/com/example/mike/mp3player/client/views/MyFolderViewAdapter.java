@@ -7,6 +7,7 @@ import android.widget.GridLayout;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.commons.library.Category;
 
 import java.util.List;
@@ -23,8 +24,8 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
         return Category.FOLDERS;
     }
 
-    public MyFolderViewAdapter() {
-        super();
+    public MyFolderViewAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
+        super(mediaBrowserAdapter);
     }
 
     @Override

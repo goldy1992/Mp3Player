@@ -26,8 +26,8 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
         return Category.SONGS;
     }
 
-    public MySongViewAdapter() {
-        super();
+    public MySongViewAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
+        super(mediaBrowserAdapter);
     }
 
     @Override

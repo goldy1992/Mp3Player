@@ -10,6 +10,9 @@ public class MyFolderItemTouchListener extends MyGenericItemTouchListener {
 
     private static final String LOG_TAG = "FLDER_ITM_TCH_LISNER";
 
+    @Override
+    void callIntent() {    }
+
     public MyFolderItemTouchListener(Context context) {
         super(context);
     }

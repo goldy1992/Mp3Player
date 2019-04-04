@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.media.MediaBrowserServiceCompat;
 
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
+import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -110,9 +111,10 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         }
 
 
-
         // Assume for example that the music catalog is already loaded/cached.
         TreeSet<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryRequest);
+        LibraryResponse libraryResponse = new LibraryResponse(libraryRequest);
+        options.putParcelable(RESPONSE_OBJECT, libraryResponse);
         result.sendResult(new ArrayList<>(mediaItems));
     }
 

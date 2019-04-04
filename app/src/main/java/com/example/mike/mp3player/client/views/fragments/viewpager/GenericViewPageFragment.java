@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.client.views.fragments.viewpager;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +12,7 @@ import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.views.MyRecyclerView;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
-import com.example.mike.mp3player.commons.library.LibraryRequest;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,13 +31,12 @@ public abstract class GenericViewPageFragment extends Fragment implements MyGene
     Category category;
     MyRecyclerView recyclerView;
     Class<?> activityToCall;
-    Context context;
 
     /* TODO: add mechanism to store children in the fragment without having to repoll for the same data */
     Map<MediaItem, List<MediaItem>> songs;
     private MediaBrowserAdapter mediaBrowserAdapter;
+    abstract Class<?> getActivityToCall();
     MediaControllerAdapter mediaControllerAdapter;
-
 
     @Override
     public void onStart() {
@@ -60,22 +55,19 @@ public abstract class GenericViewPageFragment extends Fragment implements MyGene
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         this.recyclerView = view.findViewById(R.id.myRecyclerView);
+        this.recyclerView.initRecyclerView(category, mediaBrowserAdapter, mediaControllerAdapter);
+
     }
 
-    public void init(Category category, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
-                     MediaControllerAdapter mediaControllerAdapter, Class<?> activityToCall) {
-        this.songs = new HashMap<>();
-        for (MediaItem m : songs) {
-            this.songs.put(m, null);
-        }
+    public void init(Category category, MediaBrowserAdapter mediaBrowserAdapter,
+                     MediaControllerAdapter mediaControllerAdapter) {
         this.category = category;
         this.mediaBrowserAdapter = mediaBrowserAdapter;
         this.mediaControllerAdapter = mediaControllerAdapter;
-        this.activityToCall = activityToCall;
-        this.context = mediaBrowserAdapter.getContext();
+
+
     }
 
-    public abstract void onChildrenLoaded(LibraryRequest libraryObject, @NonNull ArrayList<MediaItem> children);
 
     public MyRecyclerView getRecyclerView() {
         return recyclerView;
@@ -91,5 +83,22 @@ public abstract class GenericViewPageFragment extends Fragment implements MyGene
 
     public MediaBrowserAdapter getMediaBrowserAdapter() {
         return mediaBrowserAdapter;
+    }
+
+    public static GenericViewPageFragment createViewPageFragment(Category category, MediaBrowserAdapter mediaBrowserAdapter) {
+        GenericViewPageFragment viewPageFragment = null;
+        switch (category) {
+            case SONGS:
+                viewPageFragment = new SongViewPageFragment();
+                break;
+            case FOLDERS:
+                viewPageFragment = new FolderViewPageFragment();
+                break;
+            default: break;
+        }
+        viewPageFragment.mediaBrowserAdapter = mediaBrowserAdapter;
+        viewPageFragment.init(category, mediaBrowserAdapter, null);
+
+        return viewPageFragment;
     }
 }

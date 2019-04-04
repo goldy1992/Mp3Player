@@ -21,11 +21,10 @@ public class SongViewPageFragment extends GenericViewPageFragment implements MyG
 
     private static final String LOG_TAG = "VIEW_PAGE_FRAGMENT";
 
-    public SongViewPageFragment() {  }
 
     public void init(LibraryRequest libraryObject, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
                      MediaControllerAdapter mediaControllerAdapter) {
-        super.init(Category.SONGS, songs, mediaBrowserAdapter, mediaControllerAdapter, MediaPlayerActivity.class);
+        super.init(Category.SONGS, mediaBrowserAdapter, mediaControllerAdapter);
         this.parent = libraryObject;
         this.songs = new TreeMap<>(ComparatorUtils.compareMediaItemsByTitle);
         for (MediaItem m : songs) {
@@ -33,32 +32,11 @@ public class SongViewPageFragment extends GenericViewPageFragment implements MyG
         }
     }
 
-
     public static SongViewPageFragment createAndInitialiseViewPageFragment(LibraryRequest libraryObject, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
                                                                            MediaControllerAdapter mediaControllerAdapter) {
         SongViewPageFragment viewPageFragment = new SongViewPageFragment();
         viewPageFragment.init(libraryObject, songs, mediaBrowserAdapter, mediaControllerAdapter);
         return viewPageFragment;
-    }
-
-    /**
-     * @deprecated must specify category in order to know which type of request to build
-     * @param songs
-     * @param mediaBrowserAdapter
-     * @param mediaControllerAdapter
-     * @return
-     */
-    @Deprecated
-    public static SongViewPageFragment createAndInitialiseViewPageFragment(List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
-                                                                           MediaControllerAdapter mediaControllerAdapter) {
-        SongViewPageFragment viewPageFragment = new SongViewPageFragment();
-        viewPageFragment.init(Category.SONGS, songs, mediaBrowserAdapter, mediaControllerAdapter, MediaPlayerActivity.class);
-        return viewPageFragment;
-    }
-
-    @Override
-    public void onChildrenLoaded(LibraryRequest libraryObject, @NonNull ArrayList<MediaItem> children) {
-        // not needed
     }
 
     @Override
@@ -72,6 +50,11 @@ public class SongViewPageFragment extends GenericViewPageFragment implements MyG
 //                        getMediaBrowserAdapter().getMediaSessionToken(),mediaId, parent);
 //
 //        startActivity(intent);
+    }
+
+    @Override
+    Class<?> getActivityToCall() {
+        return MediaPlayerActivity.class;
     }
 }
 

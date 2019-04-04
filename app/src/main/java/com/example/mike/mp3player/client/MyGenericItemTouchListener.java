@@ -15,17 +15,18 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
         implements RecyclerView.OnItemTouchListener  {
 
     private static final String LOG_TAG = "MY_ITEM_TOUCH_LISTENER";
-    GestureDetector gestureDetector;
+    Context context;
+    private GestureDetector gestureDetector;
     RecyclerView parentView;
     View childView;
-    MediaBrowserAdapter mediaBrowserAdapter = null;
-    MediaControllerAdapter mediaControllerAdapter = null;
     ItemSelectedListener itemSelectedListener = null;
+    abstract void callIntent();
 
     boolean enabled = true;
 
 
     public MyGenericItemTouchListener(Context context) {
+        this.context = context;
         this.gestureDetector = new GestureDetector(context, this);
     }
 
@@ -71,17 +72,6 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
         this.enabled = enabled;
     }
 
-    public void setMediaBrowserAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
-        this.mediaBrowserAdapter = mediaBrowserAdapter;
-    }
-
-    public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
-        this.mediaControllerAdapter = mediaControllerAdapter;
-    }
-
-    public void setItemSelectedListener(ItemSelectedListener itemSelectedListener) {
-        this.itemSelectedListener = itemSelectedListener;
-    }
 
     public interface ItemSelectedListener {
         void itemSelected(MediaBrowserCompat.MediaItem item);
