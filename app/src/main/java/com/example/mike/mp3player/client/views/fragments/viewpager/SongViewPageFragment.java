@@ -1,16 +1,12 @@
 package com.example.mike.mp3player.client.views.fragments.viewpager;
 
-import android.content.Intent;
-
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
-import com.example.mike.mp3player.client.utils.IntentUtils;
 import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.util.ArrayList;
