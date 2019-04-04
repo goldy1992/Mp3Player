@@ -1,8 +1,13 @@
 package com.example.mike.mp3player.client.views;
 
+import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.widget.Filter;
 import android.widget.Filterable;
+
+import com.example.mike.mp3player.client.MediaBrowserResponseListener;
+import com.example.mike.mp3player.commons.library.Category;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -10,22 +15,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 import static com.example.mike.mp3player.commons.MediaItemUtils.hasTitle;
 
-public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements Filterable {
+public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements
+        Filterable, MediaBrowserResponseListener {
 
+    public abstract Category getSubscriptionCategory();
     protected List<MediaBrowserCompat.MediaItem> items;
     protected List<MediaBrowserCompat.MediaItem> filteredSongs;
     MySongFilter filter;
     final String LOG_TAG = "MY_VIEW_ADAPTER";
 
-    public MyGenericRecycleViewAdapter(List<MediaBrowserCompat.MediaItem> songs) {
+    public MyGenericRecycleViewAdapter() {
         super();
-        this.items = songs;
-        this.filteredSongs = songs;
+        this.items = new ArrayList<>();
+        this.filteredSongs = new ArrayList<>();
         filter = new MySongFilter();
     }
 
@@ -45,6 +53,11 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
     @Override
     public int getItemCount() {
         return getFilteredSongs() == null ? 0: getFilteredSongs().size();
+    }
+
+    @Override
+    public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options, Context context) {
+
     }
 
     public List<MediaBrowserCompat.MediaItem> getFilteredSongs() {
@@ -88,4 +101,6 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
             return filterResults;
         }
     }
+
+
 }

@@ -40,8 +40,8 @@ public class ViewPageChildFragment extends Fragment {
     public void onViewCreated(View view, Bundle bundle) {
         this.recyclerView = view.findViewById(R.id.myRecyclerView);
         //this.textView = view.findViewById(R.id.parentNameTextView);
-        this.recyclerView.initRecyclerView(Category.SONGS, songs, mediaBrowserAdapter,
-                mediaControllerAdapter, null);
+//        this.recyclerView.initRecyclerView(Category.SONGS, songs, mediaBrowserAdapter,
+//                mediaControllerAdapter, null);
     }
 
     public void initRecyclerView(List<MediaBrowserCompat.MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,

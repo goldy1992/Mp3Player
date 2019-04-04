@@ -9,24 +9,18 @@ import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 
 
-public abstract class MediaSubscriberActivityCompat extends MediaActivityCompat implements MediaBrowserConnectorCallback {
+public abstract class MediaBrowserCreatorActivityCompat extends MediaActivityCompat implements MediaBrowserConnectorCallback {
 
     private MediaBrowserAdapter mediaBrowserAdapter;
     private static final String LOG_TAG = "MDIA_SBSCRBR_ACTVY_CBK";
     abstract SubscriptionType getSubscriptionType();
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initMediaBrowserService();
-    }
 
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
         initialiseMediaControllerAdapter(mediaBrowserAdapter.getMediaSessionToken());
     }
 
-    private void initMediaBrowserService() {
+    void initMediaBrowserService() {
         MediaBrowserAdapter mediaBrowserAdapter = new MediaBrowserAdapter(getApplicationContext(),
                 this,
                 getWorker().getLooper(),

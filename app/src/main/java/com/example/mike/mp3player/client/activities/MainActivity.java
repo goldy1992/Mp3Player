@@ -13,7 +13,7 @@ import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import androidx.annotation.LayoutRes;
 
-public class MainActivity extends MediaSubscriberActivityCompat {
+public class MainActivity extends MediaBrowserSubscriberActivityCompat {
 
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     private static final int READ_REQUEST_CODE = 42;

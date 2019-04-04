@@ -40,23 +40,24 @@ public class MyRecyclerView extends RecyclerView {
         this.context = context;
     }
 
-    public void initRecyclerView(Category category, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
-                                 MediaControllerAdapter mediaControllerAdapter, MyGenericItemTouchListener.ItemSelectedListener itemSelectedListener) {
+    public void initRecyclerView(Category category, MediaBrowserAdapter mediaBrowserAdapter,
+                                 MediaControllerAdapter mediaControllerAdapter,
+                                 MyGenericItemTouchListener.ItemSelectedListener itemSelectedListener) {
         this.category = category;
-
         switch (category) {
             case SONGS:
-                this.myViewAdapter = new MySongViewAdapter(songs);
+                this.myViewAdapter = new MySongViewAdapter();
                 this.myGenericItemTouchListener = new MySongItemTouchListener(context);
 
                 break;
             case FOLDERS:
-                this.myViewAdapter = new MyFolderViewAdapter(songs);
+                this.myViewAdapter = new MyFolderViewAdapter();
                 this.myGenericItemTouchListener = new MyFolderItemTouchListener(context);
 
                 break;
             default: return;
         }
+        mediaBrowserAdapter.registerListener(myViewAdapter.getSubscriptionCategory(), myViewAdapter);
         this.myGenericItemTouchListener.setItemSelectedListener(itemSelectedListener);
         this.myGenericItemTouchListener.setMediaControllerAdapter(mediaControllerAdapter);
         this.myGenericItemTouchListener.setMediaBrowserAdapter(mediaBrowserAdapter);
@@ -83,7 +84,4 @@ public class MyRecyclerView extends RecyclerView {
         myGenericItemTouchListener.setEnabled(true);
     }
 
-    private MyGenericRecycleViewAdapter initViewAdapter(Category category, List<MediaItem> items) {
-        return new MySongViewAdapter(items);
-    }
 }

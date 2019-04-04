@@ -60,8 +60,6 @@ public abstract class GenericViewPageFragment extends Fragment implements MyGene
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         this.recyclerView = view.findViewById(R.id.myRecyclerView);
-        this.getRecyclerView().initRecyclerView(category, new ArrayList<>(songs.keySet()), getMediaBrowserAdapter(),
-                mediaControllerAdapter, this);
     }
 
     public void init(Category category, List<MediaItem> songs, MediaBrowserAdapter mediaBrowserAdapter,
