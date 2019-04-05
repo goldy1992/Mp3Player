@@ -87,6 +87,7 @@ dependencies {
     def TEST_RUNNER_VERSION = '1.0.2'
     def TEST_RULES_VERSION = '1.1.1'
     def ESPRESSO_CORE_VERSION = '3.1.1'
+    def GOOGLE_GUAVA_VERSION = '27.1-android'
 
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -101,6 +102,9 @@ dependencies {
     implementation group: 'commons-io', name: 'commons-io', version: COMMONS_IO_VERSION
     implementation group: 'commons-lang', name: 'commons-lang', version: COMMONS_LANG_VERSION
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
+
     //vintage
     testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
     // (Optional) If you also have JUnit 4-based tests

@@ -1,5 +1,11 @@
 package com.example.mike.mp3player.commons.library;
 
+import com.example.mike.mp3player.client.activities.FolderActivity;
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
+import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
 import java.util.Comparator;
 
 public enum Category implements Comparator<Category> {
@@ -28,5 +34,13 @@ public enum Category implements Comparator<Category> {
     public int compare(Category o1, Category o2) {
         return o1.rank.compareTo(o2.rank);
     }
+
+    public static final BiMap<Category, Class<? extends MediaActivityCompat>> CATEGORY_TO_ACTIVITY_MAP = HashBiMap.create();
+
+    static {
+        CATEGORY_TO_ACTIVITY_MAP.put(Category.SONGS, MediaPlayerActivity.class);
+        CATEGORY_TO_ACTIVITY_MAP.put(Category.FOLDERS, FolderActivity.class);
+    }
+   // public static final Map<>
 }
 

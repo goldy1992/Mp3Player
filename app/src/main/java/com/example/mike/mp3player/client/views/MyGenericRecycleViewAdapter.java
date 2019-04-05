@@ -29,7 +29,6 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
 
     public abstract Category getSubscriptionCategory();
     MediaBrowserAdapter mediaBrowserAdapter;
-    private LibraryObject parent;
     protected List<MediaBrowserCompat.MediaItem> items;
     protected List<MediaBrowserCompat.MediaItem> filteredSongs;
     MySongFilter filter;
@@ -38,7 +37,6 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
     public MyGenericRecycleViewAdapter(MediaBrowserAdapter mediaBrowserAdapter, LibraryObject parent) {
         super();
         this.items = new ArrayList<>();
-        this.parent = parent;
         this.mediaBrowserAdapter = mediaBrowserAdapter;
         this.filteredSongs = new ArrayList<>();
         filter = new MySongFilter();

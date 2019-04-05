@@ -12,6 +12,7 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.views.MyRecyclerView;
 import com.example.mike.mp3player.commons.MediaItemUtils;
+import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
@@ -85,7 +86,14 @@ public class GenericViewPageFragment extends Fragment implements MyGenericItemTo
         return mediaBrowserAdapter;
     }
 
-    public static GenericViewPageFragment createViewPageFragment(Class<?> activityToCall, LibraryObject libraryObject, MediaBrowserAdapter mediaBrowserAdapter) {
+    /**
+     *
+     * @param category the category of the view, this will help to know which activity should be called.
+     * @param parent to know which MediaItem needs to be subscribed to.
+     * @param mediaBrowserAdapter used to register the appropriate listeners
+     * @return
+     */
+    public static GenericViewPageFragment createViewPageFragment(Category category, LibraryObject parent, MediaBrowserAdapter mediaBrowserAdapter) {
         GenericViewPageFragment viewPageFragment = new GenericViewPageFragment();
         viewPageFragment.init(activityToCall, libraryObject, mediaBrowserAdapter);
         return viewPageFragment;
