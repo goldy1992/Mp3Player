@@ -66,6 +66,6 @@ public class MainActivity extends MediaBrowserSubscriberActivityCompat {
 
     @Override
     SubscriptionType getSubscriptionType() {
-        return SubscriptionType.CATEGORY;
+        return SubscriptionType.MEDIA_ID;
     }
 }

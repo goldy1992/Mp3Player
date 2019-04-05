@@ -11,11 +11,14 @@ public class LibraryObject implements Parcelable {
 
     private final Category category;
     private final String id;
+    private String title;
     private HashMap<String, String> extras;
+
 
     public LibraryObject(Category category, @NonNull String id) {
         this.category = category;
         this.id = id;
+        this.setTitle(null);
         this.extras = new HashMap<>();
     }
 
@@ -23,8 +26,8 @@ public class LibraryObject implements Parcelable {
     protected LibraryObject(Parcel in) {
         this.category = Category.values()[in.readInt()];
         this.id = in.readString();
+        this.setTitle(in.readString());
         this.extras = (HashMap) in.readSerializable();
-
     }
 
     public static final Creator<LibraryObject> CREATOR = new Creator<LibraryObject>() {
@@ -56,6 +59,7 @@ public class LibraryObject implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(category.ordinal());
         dest.writeString(id);
+        dest.writeString(getTitle());
         dest.writeSerializable(extras);
     }
 
@@ -76,5 +80,13 @@ public class LibraryObject implements Parcelable {
 
     public String getExtra(String key) {
         return extras.get(key);
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

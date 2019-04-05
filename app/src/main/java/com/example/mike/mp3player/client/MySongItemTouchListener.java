@@ -5,11 +5,8 @@ import android.view.MotionEvent;
 
 public class MySongItemTouchListener extends MyGenericItemTouchListener {
 
-    @Override
-    void callIntent() { }
-
-    public MySongItemTouchListener(Context context) {
-        super(context);
+    public MySongItemTouchListener(Context context, ItemSelectedListener itemSelectedListener) {
+        super(context, itemSelectedListener);
     }
 
     @Override

@@ -15,19 +15,16 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
         implements RecyclerView.OnItemTouchListener  {
 
     private static final String LOG_TAG = "MY_ITEM_TOUCH_LISTENER";
-    Context context;
     private GestureDetector gestureDetector;
     RecyclerView parentView;
     View childView;
     ItemSelectedListener itemSelectedListener = null;
-    abstract void callIntent();
-
     boolean enabled = true;
 
 
-    public MyGenericItemTouchListener(Context context) {
-        this.context = context;
+    public MyGenericItemTouchListener(Context context, ItemSelectedListener itemSelectedListener) {
         this.gestureDetector = new GestureDetector(context, this);
+        this.itemSelectedListener = itemSelectedListener;
     }
 
     @Override

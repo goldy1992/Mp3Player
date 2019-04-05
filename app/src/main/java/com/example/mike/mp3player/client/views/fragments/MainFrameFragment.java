@@ -68,7 +68,7 @@ public class MainFrameFragment extends Fragment {
 
     public void init(SongSearchActionListener songSearchActionListener, MediaBrowserAdapter mediaBrowserAdapter,
                      MediaControllerAdapter mediaControllerAdapter) {
-        this.viewPagerFragment.init(mediaBrowserAdapter, mediaControllerAdapter);
+        this.viewPagerFragment.init(mediaBrowserAdapter);
         this.playToolBarFragment.init(mediaControllerAdapter,  true);
         this.titleBarFragment.setSongSearchActionListener(songSearchActionListener);
     }

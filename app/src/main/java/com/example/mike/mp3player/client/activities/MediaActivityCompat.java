@@ -17,10 +17,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity  {
     private static final String LOG_TAG = "MEDIA_ACTIVITY_COMPAT";
     private HandlerThread worker;
 
-    boolean initialiseView(@LayoutRes int layoutId) {
-        setContentView(layoutId);
-        return true;
-    }
+    abstract boolean initialiseView(@LayoutRes int layoutId);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

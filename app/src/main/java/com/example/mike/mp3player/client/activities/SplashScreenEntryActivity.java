@@ -36,17 +36,24 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
     }
 
     @Override
+    boolean initialiseView(int layoutId) {
+        setContentView(layoutId);
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+        initialiseView(R.layout.splash_screen);
         Thread thread = new Thread(() -> init());
         thread.start();
-        super.onCreate(savedInstanceState);
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        setContentView(R.layout.splash_screen);
         Log.i(LOG_TAG, "onStart");
     }
 

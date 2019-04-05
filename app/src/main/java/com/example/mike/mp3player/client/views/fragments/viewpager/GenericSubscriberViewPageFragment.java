@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import static com.example.mike.mp3player.commons.Constants.FOLDER_CHILDREN;
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
+@Deprecated
 public abstract class GenericSubscriberViewPageFragment extends GenericViewPageFragment {
     MediaBrowserCompat.MediaItem itemRequested = null;
     private static final String LOG_TAG = "GNRC_SUBSCBR_V_P_FGMT";
@@ -48,7 +49,7 @@ public abstract class GenericSubscriberViewPageFragment extends GenericViewPageF
             Log.e(LOG_TAG, "could not find MediaId for mediaItem " + id);
             return;
         }
-        LibraryRequest libraryObject = new LibraryRequest(this.category, mediaId);
+        LibraryRequest libraryObject = new LibraryRequest(this.parent.getCategory(), mediaId);
         LibraryConstructor.addFolderNameFromMediaItemToLibraryId(libraryObject, id);
         MediaBrowserCompat.MediaItem item = MediaItemUtils.findMediaItemInSet(libraryObject, songs.keySet());
         if (item == null) {
@@ -73,7 +74,7 @@ public abstract class GenericSubscriberViewPageFragment extends GenericViewPageF
 
     private void startActivity(LibraryRequest libraryObject, ArrayList<MediaBrowserCompat.MediaItem> children) {
 
-        Intent intent =  new Intent(getContext(), activityToCall);
+        Intent intent =  new Intent(getContext(),null);
         intent.putExtra(REQUEST_OBJECT, libraryObject);
         intent.putParcelableArrayListExtra(FOLDER_CHILDREN, children);
         intent = addExtrasToIntent(libraryObject, intent);

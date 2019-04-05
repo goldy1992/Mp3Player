@@ -9,6 +9,7 @@ import android.widget.Filterable;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -28,19 +29,21 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
 
     public abstract Category getSubscriptionCategory();
     MediaBrowserAdapter mediaBrowserAdapter;
+    private LibraryObject parent;
     protected List<MediaBrowserCompat.MediaItem> items;
     protected List<MediaBrowserCompat.MediaItem> filteredSongs;
     MySongFilter filter;
     final String LOG_TAG = "MY_VIEW_ADAPTER";
 
-    public MyGenericRecycleViewAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
+    public MyGenericRecycleViewAdapter(MediaBrowserAdapter mediaBrowserAdapter, LibraryObject parent) {
         super();
         this.items = new ArrayList<>();
+        this.parent = parent;
         this.mediaBrowserAdapter = mediaBrowserAdapter;
         this.filteredSongs = new ArrayList<>();
         filter = new MySongFilter();
-        mediaBrowserAdapter.registerListener(getSubscriptionCategory(), this);
-        mediaBrowserAdapter.subscribe(new LibraryRequest(getSubscriptionCategory(), getSubscriptionCategory().name()));
+        mediaBrowserAdapter.registerListener(parent.getId(), this);
+        mediaBrowserAdapter.subscribe(new LibraryRequest(parent));
     }
 
     public void setData(List<MediaBrowserCompat.MediaItem> items) {

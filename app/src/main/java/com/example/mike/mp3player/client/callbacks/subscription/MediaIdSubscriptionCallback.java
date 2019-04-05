@@ -5,7 +5,6 @@ import android.support.v4.media.MediaBrowserCompat;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
-import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.util.ArrayList;
@@ -16,24 +15,16 @@ import androidx.annotation.NonNull;
 
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
-public class CategorySubscriptionCallback extends GenericSubscriptionCallback<Category> {
+public class MediaIdSubscriptionCallback extends GenericSubscriptionCallback<String> {
 
-    @Override
-    public SubscriptionType getType() {
-        return SubscriptionType.CATEGORY;
-    }
-
-    public CategorySubscriptionCallback(MediaBrowserAdapter mediaBrowserAdapter) {
+    public MediaIdSubscriptionCallback(MediaBrowserAdapter mediaBrowserAdapter) {
         super(mediaBrowserAdapter);
     }
 
     @Override
-    public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children,
-                                 @NonNull Bundle options) {
-        LibraryRequest libraryRequest = (LibraryRequest) options.get(REQUEST_OBJECT);
-        // TODO: maybe implement logic to decide which listener the response should be sent to.
+    public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options) {
         ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>(children);
-        Set<MediaBrowserResponseListener> listenersToNotify = mediaBrowserResponseListeners.get(libraryRequest.getCategory());
+        Set<MediaBrowserResponseListener> listenersToNotify = mediaBrowserResponseListeners.get(parentId);
         if (null != listenersToNotify) {
             for (MediaBrowserResponseListener listener : listenersToNotify) {
                 listener.onChildrenLoaded(parentId, childrenArrayList, options, context);
@@ -41,4 +32,8 @@ public class CategorySubscriptionCallback extends GenericSubscriptionCallback<Ca
         }
     }
 
+    @Override
+    public SubscriptionType getType() {
+        return SubscriptionType.MEDIA_ID;
+    }
 }

@@ -12,9 +12,12 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.activities.FolderActivity;
+import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryConstructor;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.util.ArrayList;
@@ -24,6 +27,7 @@ import java.util.TreeSet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -38,7 +42,6 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
 
     private ViewPager rootMenuItemsPager;
     private PagerTabStrip pagerTabStrip;
-    private MediaControllerAdapter mediaControllerAdapter;
     private MediaBrowserAdapter mediaBrowserAdapter;
 
     private MyPagerAdapter adapter;
@@ -58,10 +61,9 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
         rootMenuItemsPager.setAdapter(adapter);
     }
 
-    public void init(MediaBrowserAdapter mediaBrowserAdapter, MediaControllerAdapter mediaControllerAdapter) {
+    public void init(MediaBrowserAdapter mediaBrowserAdapter) {
         this.mediaBrowserAdapter = mediaBrowserAdapter;
-        this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mediaBrowserAdapter.registerListener(Category.ROOT, this);
+        this.mediaBrowserAdapter.registerListener(Category.ROOT.name(), this);
     }
 
     @Override
@@ -73,13 +75,15 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
 
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaItem> children, @NonNull Bundle options, Context context) {
-        LibraryRequest libraryObject = (LibraryRequest) options.get(REQUEST_OBJECT);
         TreeSet<MediaItem> rootItemsOrdered = new TreeSet<>(compareRootMediaItemsByCategory);
         rootItemsOrdered.addAll(children);
         for (MediaItem mediaItem : rootItemsOrdered) {
             String id = MediaItemUtils.getMediaId(mediaItem);
+            Log.i(LOG_TAG, "media id: " + id);
             Category category = Category.valueOf(id);
-            GenericViewPageFragment viewPageFragment = createViewPageFragment(category, mediaBrowserAdapter);
+            Class<?> activityToCall = getActivityToCall(category);
+            LibraryObject libraryObject = new LibraryObject(category, id);
+            GenericViewPageFragment viewPageFragment = createViewPageFragment(activityToCall, libraryObject, mediaBrowserAdapter);
             adapter.pagerItems.put(category, viewPageFragment);
             adapter.menuCategories.put(category, mediaItem);
             adapter.notifyDataSetChanged();
@@ -124,6 +128,14 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
         private Category getCategoryFromPosition(int position) {
             ArrayList<Category> categoryArrayList = new ArrayList<>(menuCategories.keySet());
             return categoryArrayList.get(position);
+        }
+    }
+
+    private Class<?> getActivityToCall(Category category) {
+        switch (category) {
+            case SONGS: return MediaPlayerActivity.class;
+            case FOLDERS: return FolderActivity.class;
+            default: return null;
         }
     }
 }

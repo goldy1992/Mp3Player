@@ -15,6 +15,9 @@ public class LibraryRequest extends LibraryObject {
         super(libraryRequest.getCategory(), libraryRequest.getId());
     }
 
+    public LibraryRequest(@NonNull LibraryObject libraryRequest) {
+        super(libraryRequest.getCategory(), libraryRequest.getId());
+    }
 
     @SuppressWarnings("unchecked")
     protected LibraryRequest(Parcel in) {

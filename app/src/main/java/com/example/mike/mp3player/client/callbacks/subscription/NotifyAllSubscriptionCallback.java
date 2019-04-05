@@ -36,7 +36,6 @@ public class NotifyAllSubscriptionCallback extends GenericSubscriptionCallback<O
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children,
                                  @NonNull Bundle options) {
-        super.onChildrenLoaded(parentId, children, options);
         ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>(children);
         for (MediaBrowserResponseListener m : SUBSCRIBER_MAP) {
             m.onChildrenLoaded(parentId, childrenArrayList, options, context);

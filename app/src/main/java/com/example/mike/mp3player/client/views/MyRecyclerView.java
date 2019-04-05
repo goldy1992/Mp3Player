@@ -10,6 +10,7 @@ import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.MySongItemTouchListener;
 import com.example.mike.mp3player.client.MySongViewAdapter;
 import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import java.util.List;
 
@@ -25,7 +26,6 @@ public class MyRecyclerView extends RecyclerView {
     private Context context;
     private MyGenericItemTouchListener myGenericItemTouchListener;
     private MyGenericRecycleViewAdapter myViewAdapter;
-    private Category category;
 
     public MyRecyclerView(@NonNull Context context) {
         this(context, null);
@@ -40,22 +40,9 @@ public class MyRecyclerView extends RecyclerView {
         this.context = context;
     }
 
-    public void initRecyclerView(Category category, MediaBrowserAdapter mediaBrowserAdapter,
-                                 MediaControllerAdapter mediaControllerAdapter) {
-        this.category = category;
-        switch (category) {
-            case SONGS:
-                this.myViewAdapter = new MySongViewAdapter(mediaBrowserAdapter);
-                this.myGenericItemTouchListener = new MySongItemTouchListener(context);
-
-                break;
-            case FOLDERS:
-                this.myViewAdapter = new MyFolderViewAdapter(mediaBrowserAdapter);
-                this.myGenericItemTouchListener = new MyFolderItemTouchListener(context);
-
-                break;
-            default: return;
-        }
+    public void initRecyclerView(LibraryObject parent, MediaBrowserAdapter mediaBrowserAdapter,
+                                 MyGenericItemTouchListener.ItemSelectedListener itemSelectedListener) {
+        setAdapterAndListener(parent, mediaBrowserAdapter, itemSelectedListener);
         this.setAdapter(myViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         this.setLayoutManager(linearLayoutManager);
@@ -77,6 +64,23 @@ public class MyRecyclerView extends RecyclerView {
     }
     public void enable() {
         myGenericItemTouchListener.setEnabled(true);
+    }
+
+    private void setAdapterAndListener(LibraryObject parent, MediaBrowserAdapter mediaBrowserAdapter,
+                                       MyGenericItemTouchListener.ItemSelectedListener itemSelectedListener) {
+        switch (parent.getCategory()) {
+            case SONGS:
+                this.myViewAdapter = new MySongViewAdapter(mediaBrowserAdapter, parent);
+                this.myGenericItemTouchListener = new MySongItemTouchListener(context, itemSelectedListener);
+
+                break;
+            case FOLDERS:
+                this.myViewAdapter = new MyFolderViewAdapter(mediaBrowserAdapter, parent);
+                this.myGenericItemTouchListener = new MyFolderItemTouchListener(context, itemSelectedListener);
+
+                break;
+            default: return;
+        }
     }
 
 }

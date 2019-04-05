@@ -33,8 +33,22 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     private ShuffleRepeatFragment shuffleRepeatFragment;
 
     @Override
+    boolean initialiseView(int layoutId) {
+        setContentView(layoutId);
+        this.simpleTitleBarFragment = (SimpleTitleBarFragment) getSupportFragmentManager().findFragmentById(R.id.simpleTitleBarFragment);
+        this.trackInfoFragment = (TrackInfoFragment) getSupportFragmentManager().findFragmentById(R.id.trackInfoFragment);
+        this.playbackSpeedControlsFragment = (PlaybackSpeedControlsFragment) getSupportFragmentManager().findFragmentById(R.id.playbackSpeedControlsFragment);
+        this.playbackTrackerFragment = (PlaybackTrackerFragment) getSupportFragmentManager().findFragmentById(R.id.playbackTrackerFragment);
+        this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) getSupportFragmentManager().findFragmentById(R.id.playbackToolbarExtendedFragment);
+        this.shuffleRepeatFragment = (ShuffleRepeatFragment) getSupportFragmentManager().findFragmentById(R.id.shuffleRepeatFragment);
+        this.getPlaybackToolbarExtendedFragment().displayButtons();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initialiseView(R.layout.activity_media_player);
         token = (MediaSessionCompat.Token) retrieveIntentInfo(Constants.MEDIA_SESSION);
 
         if (token != null) {
@@ -88,14 +102,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
      *
      */
     private void initView() {
-        setContentView(R.layout.activity_media_player);
-        this.simpleTitleBarFragment = (SimpleTitleBarFragment) getSupportFragmentManager().findFragmentById(R.id.simpleTitleBarFragment);
-        this.trackInfoFragment = (TrackInfoFragment) getSupportFragmentManager().findFragmentById(R.id.trackInfoFragment);
-        this.playbackSpeedControlsFragment = (PlaybackSpeedControlsFragment) getSupportFragmentManager().findFragmentById(R.id.playbackSpeedControlsFragment);
-        this.playbackTrackerFragment = (PlaybackTrackerFragment) getSupportFragmentManager().findFragmentById(R.id.playbackTrackerFragment);
-        this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) getSupportFragmentManager().findFragmentById(R.id.playbackToolbarExtendedFragment);
-        this.shuffleRepeatFragment = (ShuffleRepeatFragment) getSupportFragmentManager().findFragmentById(R.id.shuffleRepeatFragment);
-        this.getPlaybackToolbarExtendedFragment().displayButtons();
     }
 
     private Object retrieveIntentInfo(String key) {

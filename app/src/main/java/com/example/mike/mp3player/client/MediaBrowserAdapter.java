@@ -10,6 +10,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.CategorySubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.GenericSubscriptionCallback;
+import com.example.mike.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.NotifyAllSubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.commons.library.Category;
@@ -96,10 +97,16 @@ public class MediaBrowserAdapter {
         return mMediaBrowser != null && mMediaBrowser.isConnected();
     }
 
+    public void registerListener(Object parentId, MediaBrowserResponseListener mediaBrowserResponseListener) {
+        getMySubscriptionCallback().registerMediaBrowserResponseListener(parentId, mediaBrowserResponseListener);
+    }
+
+    @Deprecated
     public void registerListener(Category category, MediaBrowserResponseListener mediaBrowserResponseListener) {
         getMySubscriptionCallback().registerMediaBrowserResponseListener(category, mediaBrowserResponseListener);
     }
 
+    @Deprecated
     public void unregisterListener(Category category, MediaBrowserResponseListener mediaBrowserResponseListener) {
         getMySubscriptionCallback().removeMediaBrowserResponseListener(category, mediaBrowserResponseListener);
     }
@@ -116,6 +123,7 @@ public class MediaBrowserAdapter {
         if (null != subscriptionType) {
             switch (subscriptionType) {
                 case CATEGORY: return new CategorySubscriptionCallback(this);
+                case MEDIA_ID: return new MediaIdSubscriptionCallback(this);
                 default: return new NotifyAllSubscriptionCallback(this);
             }
         }
