@@ -63,9 +63,9 @@ public class FolderActivity extends MediaBrowserSubscriberActivityCompat {
     public void onConnected() {
         super.onConnected();
 
-        this.viewPageFragment = GenericViewPageFragment.createViewPageFragment(MediaPlayerActivity.class, parentId, getMediaBrowserAdapter());
+        this.viewPageFragment = GenericViewPageFragment.createViewPageFragment(Category.SONGS, parentId, getMediaBrowserAdapter());
       getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
-//         getSupportFragmentManager().beginTransaction().add(R.id.playToolbarFragment, playToolBarFragment).commitNow();
+         getSupportFragmentManager().beginTransaction().add(R.id.playToolbarFragment, playToolBarFragment).commitNow();
         playToolBarFragment.displayButtons();
 
         getSupportActionBar().setTitle(getString(R.string.FOLDER_NAME, this.folderName));

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
+import com.example.mike.mp3player.client.activities.MainActivity;
 import com.example.mike.mp3player.client.views.MyRecyclerView;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
@@ -34,7 +35,7 @@ public class GenericViewPageFragment extends Fragment implements MyGenericItemTo
      */
     LibraryObject parent;
     MyRecyclerView recyclerView;
-    Class<?> activityToCall;
+    Category category;
 
     /* TODO: add mechanism to store children in the fragment without having to repoll for the same data */
     Map<MediaItem, List<MediaItem>> songs;
@@ -57,11 +58,11 @@ public class GenericViewPageFragment extends Fragment implements MyGenericItemTo
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         this.recyclerView = view.findViewById(R.id.myRecyclerView);
-        this.recyclerView.initRecyclerView(parent, mediaBrowserAdapter, this);
+        this.recyclerView.initRecyclerView(parent, mediaBrowserAdapter, this.category, this);
     }
 
-    public void init(Class<?> activityToCall, LibraryObject parent, MediaBrowserAdapter mediaBrowserAdapter) {
-        this.activityToCall = activityToCall;
+    public void init(Category category, LibraryObject parent, MediaBrowserAdapter mediaBrowserAdapter) {
+        this.category = category;
         this.parent = parent;
         this.mediaBrowserAdapter = mediaBrowserAdapter;
     }
@@ -72,7 +73,7 @@ public class GenericViewPageFragment extends Fragment implements MyGenericItemTo
         String title = MediaItemUtils.getTitle(item);
         LibraryRequest libraryRequest = new LibraryRequest(parent.getCategory(), id);
         libraryRequest.setTitle(title);
-        Intent intent = new Intent(getContext(), activityToCall);
+        Intent intent = new Intent(getContext(), Category.CATEGORY_TO_ACTIVITY_MAP.get(category));
         intent.putExtra(REQUEST_OBJECT, libraryRequest);
         intent.putExtra(MEDIA_SESSION, mediaBrowserAdapter.getMediaSessionToken());
         startActivity(intent);
@@ -91,11 +92,11 @@ public class GenericViewPageFragment extends Fragment implements MyGenericItemTo
      * @param category the category of the view, this will help to know which activity should be called.
      * @param parent to know which MediaItem needs to be subscribed to.
      * @param mediaBrowserAdapter used to register the appropriate listeners
-     * @return
+     * @return a new generuc
      */
     public static GenericViewPageFragment createViewPageFragment(Category category, LibraryObject parent, MediaBrowserAdapter mediaBrowserAdapter) {
         GenericViewPageFragment viewPageFragment = new GenericViewPageFragment();
-        viewPageFragment.init(activityToCall, libraryObject, mediaBrowserAdapter);
+        viewPageFragment.init(category, parent, mediaBrowserAdapter);
         return viewPageFragment;
     }
 }

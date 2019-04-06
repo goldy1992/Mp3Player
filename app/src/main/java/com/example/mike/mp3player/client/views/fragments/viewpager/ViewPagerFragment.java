@@ -83,7 +83,7 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
             Category category = Category.valueOf(id);
             Class<?> activityToCall = getActivityToCall(category);
             LibraryObject libraryObject = new LibraryObject(category, id);
-            GenericViewPageFragment viewPageFragment = createViewPageFragment(activityToCall, libraryObject, mediaBrowserAdapter);
+            GenericViewPageFragment viewPageFragment = createViewPageFragment(category, libraryObject, mediaBrowserAdapter);
             adapter.pagerItems.put(category, viewPageFragment);
             adapter.menuCategories.put(category, mediaItem);
             adapter.notifyDataSetChanged();
