@@ -1,9 +1,13 @@
 package com.example.mike.mp3player.commons;
 
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.SparseArray;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
+import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
+import com.example.mike.mp3player.commons.library.Category;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 public final class Constants {
 
@@ -12,12 +16,18 @@ public final class Constants {
 
     public static final String PLAYLIST = "PLAYLiST";
     public static final String PLAY_ALL = "PLAY_ALL";
-    public static final String PLAYBACK_STATE = "PLAYBACK_STATE";
+    public static final String MEDIA_SERVICE_DATA = "MEDIA_SERVICE_DATA";
+    public static final int FIRST_ITEM = 0;
     public static final long ONE_SECOND = 1000L;
-    public static final String UNKNOWN = "Uknown";
-    public static final String TIMESTAMP = "TIMESTAMP";
+    public static final String UNKNOWN = "Unknown";
+    public static final String INCREASE_PLAYBACK_SPEED = "INCREASE_PLAYBACK_SPEED";
+    public static final String DECREASE_PLAYBACK_SPEED = "DECREASE_PLAYBACK_SPEED";
+    public static final String REPEAT_MODE = "REPEAT_MODE";
+    public static final float DEFAULT_SPEED = 1.0f;
+    public static final float DEFAULT_PITCH = 1.0f;
+    public static final int DEFAULT_POSITION = 0;
 
-    public static final Map<Integer, String> playbackStateDebugMap = new HashMap<>();
+    public static final SparseArray<String> playbackStateDebugMap = new SparseArray<>();
     static {
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_NONE, "STATE_NONE"); // 0
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_STOPPED, "STATE_STOPPED"); // 1
@@ -32,4 +42,30 @@ public final class Constants {
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_SKIPPING_TO_NEXT, "STATE_SKIPPING_TO_NEXT"); // 10
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_SKIPPING_TO_QUEUE_ITEM, "STATE_SKIPPING_TO_QUEUE_ITEM"); // 11
     };
+
+    public static final SparseArray<String> repeatModeDebugMap = new SparseArray<>();
+    static {
+        playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ALL, "REPEAT_MODE_ALL"); // 2
+        playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_NONE, "REPEAT_MODE_NONE"); // 0
+        playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ONE, "REPEAT_MODE_ONE"); // 1
+    };
+
+
+    /* LIBRARY CONSTANTS */
+    public static final String CATEGORY_ROOT_ID = Category.ROOT.name();
+
+    public static final String CATEGORY_SONGS_TITLE = "Songs";
+    public static final String CATEGORY_SONGS_ID = Category.SONGS.name();
+    public static final String CATEGORY_SONGS_DESCRIPTION = "A list of all songs in the library";
+
+    public static final String CATEGORY_FOLDERS_TITLE = "Folders";
+    public static final String CATEGORY_FOLDERS_ID = Category.FOLDERS.name();
+    public static final String CATEGORY_FOLDERS_DESCRIPTION = "A list of all folders with music inside them";
+    public static final String FOLDER_CHILDREN = "FOLDER_CHILDREN";
+    public static final String FOLDER_NAME = "FOLDER_NAME";
+    public static final String REQUEST_OBJECT = "REQUEST_OBJECT";
+    public static final String RESPONSE_OBJECT = "RESPONSE_OBJECT";
+    public static final String PARENT_OBJECT = "PARENT_OBJECT";
+    public static final String PARENT_MEDIA_ITEM = "PARENT_MEDIA_ITEM";
+    public static final int NO_ACTION = 0;
 }

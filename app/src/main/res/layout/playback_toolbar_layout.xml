@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/playbackToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="5dp"
+        android:background="@color/design_default_color_secondary_variant"
+        android:minHeight="?attr/actionBarSize">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <com.example.mike.mp3player.client.views.LinearLayoutWithImageView
+                android:id="@+id/skip_to_previous"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                custom:imgSrc="@drawable/ic_baseline_skip_previous_24px"
+                tools:showIn="@layout/fragment_playback_toolbar_extended" />
+
+
+            <com.example.mike.mp3player.client.views.PlayPauseButton
+                android:id="@+id/playPauseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                custom:imgSrc="@drawable/ic_baseline_play_arrow_24px" />
+
+            <com.example.mike.mp3player.client.views.LinearLayoutWithImageView
+                android:id="@+id/skip_to_next"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                custom:imgSrc="@drawable/ic_baseline_skip_next_24px"
+                tools:showIn="@layout/fragment_playback_toolbar_extended" />
+        </LinearLayout>
+
+
+    </androidx.appcompat.widget.Toolbar>
+</merge>

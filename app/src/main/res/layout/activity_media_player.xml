@@ -1,107 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.mike.mp3player.client.MediaPlayerActivity">
+    tools:context="com.example.mike.mp3player.client.activities.MediaPlayerActivity">
 
+    <fragment
+        android:id="@+id/simpleTitleBarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        class="com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment"
+        tools:layout="@layout/fragment_simple_title_bar"/>
 
-    <TextView
-        android:id="@+id/artistName"
+    <fragment
+        android:id="@+id/trackInfoFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/simpleTitleBarFragment"
         android:layout_gravity="top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/ARTIST_NAME" />
+        class="com.example.mike.mp3player.client.views.fragments.TrackInfoFragment"
+        tools:layout="@layout/fragment_track_info"/>
 
-    <TextView
-        android:id="@+id/trackName"
-        android:layout_below="@+id/artistName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/TRACK_NAME" />
 
-    <TextView
-        android:id="@+id/timer"
+    <fragment
+        android:id="@+id/playbackSpeedControlsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/seekBar"
-        android:layout_alignParentStart="true"
-        android:text="@string/DEFAULT_TIME"
-        android:textAlignment="textEnd" />
+        android:layout_below="@+id/trackInfoFragment"
+        class="com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment"
+        tools:layout="@layout/fragment_playback_speed_controls"/>
 
-    <com.example.mike.mp3player.client.view.SeekerBar
-        android:id="@+id/seekBar"
+    <fragment
+        android:id="@+id/shuffleRepeatFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/toolbar2" />
+        android:layout_above="@+id/playbackTrackerFragment"
+        class="com.example.mike.mp3player.client.views.fragments.ShuffleRepeatFragment"
+        tools:layout="@layout/fragment_playback_tracker"/>
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar2"
+
+    <fragment
+        android:id="@+id/playbackTrackerFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/playbackToolbarExtendedFragment"
+        class="com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment"
+        tools:layout="@layout/fragment_playback_tracker"/>
+
+    <fragment
+        android:id="@+id/playbackToolbarExtendedFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_gravity="bottom"
         android:layout_marginTop="5dp"
-        android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:id="@+id/playBarLayout">
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:saveEnabled="true"
-                android:scaleType="center"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:onClick="skipToPrevious"
-                android:contentDescription="skip to previous button"
-                app:srcCompat="@drawable/ic_baseline_skip_previous_24px"
-                android:id="@+id/skip_to_previous"/>
-
-            <com.example.mike.mp3player.client.view.PlayPauseButton
-                android:id="@+id/playPauseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:scaleType="center"
-                android:onClick="playPause"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:saveEnabled="true"
-                android:scaleX="2"
-                android:scaleY="2"
-                app:srcCompat="@drawable/ic_baseline_play_arrow_24px" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:saveEnabled="true"
-                android:scaleType="center"
-                android:onClick="skipToNext"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:contentDescription="skip to next button"
-                app:srcCompat="@drawable/ic_baseline_skip_next_24px"
-                android:id="@+id/skip_to_next"/>
-
-
-        </LinearLayout>
-    </android.support.v7.widget.Toolbar>
-
+        class="com.example.mike.mp3player.client.views.fragments.PlaybackToolbarExtendedFragment"
+        tools:layout="@layout/playback_toolbar_layout" />
 
 </RelativeLayout>

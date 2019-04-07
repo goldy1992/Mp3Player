@@ -1,40 +1,46 @@
 package com.example.mike.mp3player.client;
 
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
+import android.support.v4.media.session.MediaSessionCompat;
 
-import com.example.mike.mp3player.BuildConfig;
+import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
+import com.example.mike.mp3player.commons.Constants;
+import com.example.mike.mp3player.service.ShadowMediaSessionCompat_Token;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.platform.app.InstrumentationRegistry;
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(manifest = Config.NONE, sdk = 26, shadows = {ShadowMediaSessionCompat_Token.class})
 public class MediaPlayerActivityTest {
 
-    @Mock
-    Uri uri;
+    private static final String MOCK_MEDIA_ID = "MOCK_MEDIA_ID";
 
     MediaPlayerActivity mediaPlayerActivity;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        Intent intent = new Intent(RuntimeEnvironment.application.getApplicationContext(), MediaPlayerActivity.class);
-        intent.putExtra("uri", uri);
+        MockitoAnnotations.initMocks(this);
+        Context context = InstrumentationRegistry.getInstrumentation().getContext();
+        MediaSessionCompat ms = new MediaSessionCompat(context, "TAG");
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MediaPlayerActivity.class);
+        intent.putExtra(Constants.MEDIA_SESSION, ms.getSessionToken());
+        intent.putExtra(Constants.MEDIA_ID, MOCK_MEDIA_ID);
         mediaPlayerActivity = Robolectric.buildActivity(MediaPlayerActivity.class, intent).create().get();
+    }
+
+    @Before
+    public void oldSetup() {
+        setup();
     }
 
     /**
@@ -43,7 +49,7 @@ public class MediaPlayerActivityTest {
      * THEN: i contains u.
      */
     @Test
-    public void onCreateSetUriTest() {
-        assertEquals(uri, mediaPlayerActivity.getSelectedUri());
+    public void onCreateSetMediaIdTest() {
+     //  assertEquals(MOCK_MEDIA_ID, mediaPlayerActivity.getMediaId());
     }
 }

@@ -1,14 +1,12 @@
 package com.example.mike.mp3player.service.library.utils;
 
-import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class MediaLibraryUtilsTest {
 
@@ -16,11 +14,11 @@ public class MediaLibraryUtilsTest {
     private final String FILE = "test";
     private final String EXPECTED_APPENDED_PATH = PARENT_DIR + File.separator + FILE;
 
-    @Before
+    @BeforeEach
     public void setUp() {
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
     }
 

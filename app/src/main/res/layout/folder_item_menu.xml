@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:id="@+id/menu_item"
+    android:background="@android:color/white"
+
+    android:useDefaultMargins="true"
+    android:alignmentMode="alignBounds"
+    android:columnOrderPreserved="false"
+    android:columnCount="1">
+
+    <TextView android:id="@+id/folderName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_columnSpan="1"/>
+
+    <TextView android:id="@+id/folderPath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        android:layout_columnSpan="1"/>
+
+</GridLayout>

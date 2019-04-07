@@ -3,6 +3,7 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:id="@+id/menu_item"
+    android:background="@android:color/white"
 
     android:useDefaultMargins="true"
     android:alignmentMode="alignBounds"
@@ -12,32 +13,32 @@
     <TextView android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:textSize="16dp"
+            android:layout_gravity="start"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:layout_columnSpan="3"/>
 
 
     <TextView android:id="@+id/artist"
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:layout_column="0"
-        android:textSize="14dp"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
     <TextView
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:layout_column="1"
-        android:textSize="14dp"
+        android:textSize="14sp"
         android:textStyle="normal"
-        android:text=" - "/>
+        android:text="@string/TITLE_ARTIST_SEPARATOR"/>
 
     <TextView android:id="@+id/duration"
         android:layout_height="wrap_content"
         android:layout_column="2"
-        android:layout_gravity="left"
-        android:textSize="14dp"
+        android:layout_gravity="start"
+        android:textSize="14sp"
         android:textStyle="normal"
             />
 

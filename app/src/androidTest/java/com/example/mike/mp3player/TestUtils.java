@@ -1,14 +1,16 @@
 package com.example.mike.mp3player;
 
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.matcher.ViewMatchers;
+
 import android.view.View;
 import android.widget.SeekBar;
 
-import com.example.mike.mp3player.client.view.SeekerBar;
+import com.example.mike.mp3player.client.views.SeekerBar;
 
 import org.hamcrest.Matcher;
+
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.matcher.ViewMatchers;
 
 public class TestUtils {
 
@@ -27,7 +29,7 @@ public class TestUtils {
                 int progressValue = (int)((max / 100) * progress);
                 seekerBar.setProgress(progressValue);
                 seekerBar.getOnSeekBarChangeListener().onStopTrackingTouch(seekerBar);
-                //or ((SeekBar) view).setProgress(progress);
+                //or ((SeekBar) views).setProgress(progress);
             }
 
             @Override

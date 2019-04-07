@@ -1,24 +1,23 @@
 package com.example.mike.mp3player.client;
 
+import android.os.Handler;
 import android.widget.TextView;
 
-import com.example.mike.mp3player.client.view.TimeCounter;
+import com.example.mike.mp3player.client.views.TimeCounter;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.hamcrest.CoreMatchers.any;
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertTrue;
 
 public class TimeCounterTimerTaskTest {
 
     @Mock
     private TextView view;
+    @Mock
+    private Handler mockHandler;
 
     private TimeCounter timeCounter;
     private TimeCounterTimerTask timeCounterTimerTask;
@@ -26,19 +25,20 @@ public class TimeCounterTimerTaskTest {
     final long CURRENT_TIME = 4500L;
 
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
+//        when(mockHandler.post(any())).then(doNothing());
         timeCounter = new TimeCounter(view);
-        timeCounterTimerTask = new TimeCounterTimerTask(timeCounter);
+        timeCounterTimerTask = new TimeCounterTimerTask(timeCounter, mockHandler);
       //  when(timeCounter.getView().setText().then(doNothing());
     }
 
     @Test
     public void runTest() {
         timeCounter.setDuration(DURATION);
-        timeCounter.setCurrentTime(CURRENT_TIME);
+        timeCounter.setCurrentPosition(CURRENT_TIME);
         timeCounterTimerTask.run();
-        assertTrue("currentTime should be equal to the position parameter", timeCounter.getCurrentTime() > CURRENT_TIME);
+        assertTrue("currentTime should be equal to the position parameter", timeCounter.getCurrentPosition() >= CURRENT_TIME);
     }
 }

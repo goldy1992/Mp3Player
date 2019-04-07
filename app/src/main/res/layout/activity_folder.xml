@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment
+        android:id="@+id/simpleTitleBarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        class="com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment"
+        tools:layout="@layout/fragment_simple_title_bar"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_below="@+id/simpleTitleBarFragment"
+        android:layout_above="@+id/playToolbarFragment"
+        android:id="@+id/songListFragment"
+        android:layout_width="match_parent"
+        class="com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment"
+        android:layout_height="match_parent" />
+
+    <fragment
+        android:orientation="vertical"
+        android:id="@+id/playToolbarFragment"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        class="com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

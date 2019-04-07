@@ -1,58 +1,49 @@
 package com.example.mike.mp3player.client.callbacks;
 
+import android.os.Looper;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
-import com.example.mike.mp3player.client.MediaActivityCompat;
-import com.example.mike.mp3player.client.MediaControllerWrapper;
-import com.example.mike.mp3player.client.PlaybackStateWrapper;
+import com.example.mike.mp3player.client.callbacks.playback.MyPlaybackStateCallback;
+import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Mike on 04/10/2017.
  */
+// TODO: ORGANIZE LISTENERS INTO CATEGORIES DEFINED BY THE ACTION THAT SHOULD BE SET IN THE ACTIONS LIST
+public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
 
-public class MyMediaControllerCallback< A extends MediaActivityCompat> extends MediaControllerCompat.Callback {
+    private static final String LOG_TAG = "MY_MDIA_CNTLR_CLLBCK";
+    private final MyPlaybackStateCallback myPlaybackStateCallback;
+    private final MyMetaDataCallback myMetaDataCallback;
 
-    private final A activity;
-    private final MediaControllerWrapper mediaControllerWrapper;
-    private List<MediaControllerCompat.Callback> childCallbacks;
+    private Set<PlaybackStateListener> playbackStateListeners;
 
-    public MyMediaControllerCallback(A activity, MediaControllerWrapper mediaControllerWrapper) {
-        this.activity = activity;
-        this.mediaControllerWrapper = mediaControllerWrapper;
-        this.childCallbacks = new ArrayList<>();
+    public MyMediaControllerCallback(Looper looper) {
+        this.myMetaDataCallback = new MyMetaDataCallback(looper);
+        this.myPlaybackStateCallback = new MyPlaybackStateCallback(looper);
+        this.playbackStateListeners = new HashSet<>();
     }
 
     @Override
     public void onMetadataChanged(MediaMetadataCompat metadata) {
-        activity.setMetaData(metadata);
-        if (!childCallbacks.isEmpty()) {
-            for (MediaControllerCompat.Callback callback : childCallbacks) {
-                callback.onMetadataChanged(metadata);
-            }
-        }
+        this.getMyMetaDataCallback().onStateChanged(metadata);
     }
 
     @Override
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
-        onPlaybackStateChanged(new PlaybackStateWrapper(state));
-        if (!childCallbacks.isEmpty()) {
-            for (MediaControllerCompat.Callback callback : childCallbacks) {
-                callback.onPlaybackStateChanged(state);
-            }
-        }
+        this.getMyPlaybackStateCallback().onStateChanged(state);
     }
 
-    public void onPlaybackStateChanged(PlaybackStateWrapper playbackStateWrapper) {
-        mediaControllerWrapper.setCurrentPlaybackState(playbackStateWrapper);
-        activity.setPlaybackState(playbackStateWrapper);
+    public MyPlaybackStateCallback getMyPlaybackStateCallback() {
+        return myPlaybackStateCallback;
     }
 
-    public List<MediaControllerCompat.Callback> getChildCallbacks() {
-        return childCallbacks;
+    public MyMetaDataCallback getMyMetaDataCallback() {
+        return myMetaDataCallback;
     }
 }

@@ -8,24 +8,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.Icon;
 import android.media.session.MediaSession;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.app.NotificationCompat.MediaStyle;
-import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaPlayerActivity;
+import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
+import com.example.mike.mp3player.commons.AndroidUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+import androidx.media.app.NotificationCompat.MediaStyle;
+import androidx.media.session.MediaButtonReceiver;
+
+import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 
 public class MyNotificationManager {
 
@@ -46,23 +48,23 @@ public class MyNotificationManager {
     }
 
     public void onDestroy() {
-        if (isAndroidOreoOrHigher()) {
+        if (AndroidUtils.isAndroidOreoOrHigher()) {
             notificationManager.deleteNotificationChannel(CHANNEL_ID);
         }
-        Log.d(TAG, "onDestroy: ");
+        //Log.d(TAG, "onDestroy: ");
     }
 
-    public NotificationManager getNotificationManager() {
+    public synchronized NotificationManager getNotificationManager() {
         return notificationManager;
     }
 
-    public Notification getNotification(MediaMetadataCompat metadata,
+    public synchronized Notification getNotification(MediaMetadataCompat metadata,
                                                       @NonNull PlaybackStateCompat state,
                                                       MediaSessionCompat.Token token) {
         boolean isPlaying = state.getState() == PlaybackStateCompat.STATE_PLAYING;
         MediaDescriptionCompat description = metadata.getDescription();
 
-        if (isAndroidOreoOrHigher()) {
+        if (AndroidUtils.isAndroidOreoOrHigher()) {
             return buildOreoNotification(token, isPlaying, description).build();
         }
         return buildNotification(token, isPlaying, description).build();
@@ -100,7 +102,7 @@ public class MyNotificationManager {
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
                     service, PlaybackStateCompat.ACTION_STOP))
-            .setContentIntent(createContentIntent())
+            .setContentIntent(createContentIntent(token))
             .addAction(skipToPreviousAction)
             .addAction(playPauseAction)
             .addAction(skipToNextAction);
@@ -149,8 +151,9 @@ public class MyNotificationManager {
             .setColor(ContextCompat.getColor(service, R.color.colorPrimary))
             .setSmallIcon(getSmallIcon(isPlaying))
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
             .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(service, PlaybackStateCompat.ACTION_STOP))
-            .setContentIntent(createContentIntent())
+            .setContentIntent(createContentIntent(token))
             .addAction(skipToPreviousAction)
             .addAction(playPauseAction)
             .addAction(skipToNextAction)
@@ -166,31 +169,26 @@ public class MyNotificationManager {
             CharSequence name = "MediaSession";
             // The user-visible description of the channel.
             String description = "MediaSession and MediaPlayer";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
+            int importance = NotificationManager.IMPORTANCE_LOW;
             NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
             // Configure the notification channel.
             mChannel.setDescription(description);
             mChannel.enableLights(true);
-            // Sets the notification light color for notifications posted to this
-            // channel, if the device supports this feature.
-            mChannel.setLightColor(Color.RED);
+            /* Sets the notification light color for notifications posted to this
+               channel, if the device supports this feature. WIll possibly implement in the future
+               mChannel.setLightColor(Color.RED);
+            */
             mChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-            mChannel.enableVibration(true);
-            mChannel.setVibrationPattern(
-                    new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-                        notificationManager.createNotificationChannel(mChannel);
-            Log.d(TAG, "createChannel: New channel created");
+            notificationManager.createNotificationChannel(mChannel);
+            //Log.d(TAG, "createChannel: New channel created");
         } else {
-            Log.d(TAG, "createChannel: Existing channel reused");
+            //Log.d(TAG, "createChannel: Existing channel reused");
         }
     }
 
-    private boolean isAndroidOreoOrHigher() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
-    }
-
-    private PendingIntent createContentIntent() {
+    private PendingIntent createContentIntent(MediaSessionCompat.Token token) {
         Intent openUI = new Intent(service, MediaPlayerActivity.class);
+        openUI.putExtra(MEDIA_SESSION, token);
         openUI.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return PendingIntent.getActivity(
                 service, REQUEST_CODE, openUI, PendingIntent.FLAG_CANCEL_CURRENT);

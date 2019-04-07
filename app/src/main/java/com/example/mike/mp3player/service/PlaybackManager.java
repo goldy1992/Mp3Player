@@ -1,12 +1,8 @@
 package com.example.mike.mp3player.service;
 
-import android.net.Uri;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
-
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +11,10 @@ public class PlaybackManager {
 
     private static final int START_OF_PLAYLIST = 0;
     private int queueIndex = -1;
+    private boolean isRepeating = true;
     private final List<MediaSessionCompat.QueueItem> playlist = new ArrayList<>();
 
     private boolean shuffleOn = false;
-    private int repeatMode = PlaybackStateCompat.REPEAT_MODE_ALL;
 
     public void init(List<MediaSessionCompat.QueueItem> queueItems) {
         playlist.addAll(queueItems);
@@ -37,25 +33,60 @@ public class PlaybackManager {
         return playlist;
     }
 
-
-    public String playbackComplete() {
+    public void notifyPlaybackComplete() {
         queueIndex++;
-        if (!playlist.isEmpty() && queueIndex < playlist.size()) {
-            MediaSessionCompat.QueueItem nextItem = playlist.get(queueIndex);
-            if (null != nextItem.getDescription()) {
-                return nextItem.getDescription().getMediaId();
-            }
+        if (isRepeating && (queueIndex >= playlist.size())) {
+            queueIndex = START_OF_PLAYLIST;
         }
-        return null;
+    }
+
+    public String getNext() {
+        int newIndex = getNextQueueItemIndex();
+        return getPlaylistMediaId(newIndex);
     }
 
     public String skipToNext() {
-        return setNewPlaylistItem(queueIndex + 1) ? getPlaylistMediaId(queueIndex) : null;
+        return incrementQueue() ? getCurrentMediaId() : null;
     }
 
-
     public String skipToPrevious() {
-        return setNewPlaylistItem(queueIndex - 1) ? getPlaylistMediaId(queueIndex) : null;
+        return decrementQueue() ? getCurrentMediaId() : null;
+    }
+
+    private boolean incrementQueue() {
+        int newIndex = getNextQueueItemIndex();
+        if (newIndex >= 0) {
+            this.queueIndex = newIndex;
+            return true;
+        }
+        return false;
+    }
+
+    private boolean decrementQueue() {
+        int newIndex = getPreviousQueueItemIndex();
+        if (newIndex >= 0) {
+            this.queueIndex = newIndex;
+            return true;
+        }
+        return false;
+    }
+
+    private int getNextQueueItemIndex() {
+        int newIndex = queueIndex + 1;
+        boolean passedEndOfQueue = newIndex >= playlist.size();
+        if (passedEndOfQueue) {
+            return isRepeating ? START_OF_PLAYLIST : -1;
+        }
+        return newIndex;
+    }
+
+    private int getPreviousQueueItemIndex() {
+        int newIndex = queueIndex - 1;
+        boolean beforeStartOfQueue = newIndex < START_OF_PLAYLIST;
+        if (beforeStartOfQueue) {
+            return isRepeating ? getLastIndex() : -1;
+        }
+        return newIndex;
     }
 
     public boolean validQueueIndex(int newQueueIndex) {
@@ -63,31 +94,24 @@ public class PlaybackManager {
     }
 
     public String getPlaylistMediaId(int index) {
-        return playlist.get(index).getDescription().getMediaId();
+        if (validQueueIndex(index)) {
+            MediaSessionCompat.QueueItem queueItem = playlist.get(index);
+            if (queueItem != null) {
+                return playlist.get(index).getDescription().getMediaId();
+            }
+        }
+        return null;
     }
 
     public String getCurrentMediaId() {
-        return playlist.get(queueIndex).getDescription().getMediaId();
-    }
-
-
-    private boolean setNewPlaylistItem(int newIndex) {
-        if (!validQueueIndex(newIndex)) {
-            return false;
+        if (playlist != null && !playlist.isEmpty() && playlist.get(queueIndex) != null) {
+            MediaSessionCompat.QueueItem currentItem = playlist.get(queueIndex);
+            if (currentItem.getDescription() != null) {
+                return  currentItem.getDescription().getMediaId();
+            }
         }
-            queueIndex = newIndex;
-            return true;
+        return null;
     }
-//            int currentState = myMediaPlayerAdapter.getCurrentState();
-//            String newMediaId = playbackManager.getPlaylistMediaId(newIndex);
-//            Uri newUri = mediaLibrary.getMediaUri(newMediaId);
-//            myMediaPlayerAdapter.prepareFromUri(newUri);
-//
-//            if (currentState == PlaybackStateCompat.STATE_PLAYING) {
-//                myMediaPlayerAdapter.play();
-//            }
-//        }
-//    }
 
     public boolean createNewPlaylist(List<MediaSessionCompat.QueueItem> newList) {
         playlist.clear();;
@@ -103,15 +127,15 @@ public class PlaybackManager {
         }
     }
 
-    public String selectFirstItem() {
-        if (!CollectionUtils.isEmpty(playlist)) {
-            MediaSessionCompat.QueueItem qi = playlist.get(0);
-            return qi.getDescription().getMediaId();
-        }
-        return null;
-    }
-
     public MediaSessionCompat.QueueItem getCurrentItem() {
         return playlist.get(queueIndex);
+    }
+
+    public int getLastIndex() {
+        return playlist.size() - 1;
+    }
+
+    public void setRepeating(boolean repeating) {
+        isRepeating = repeating;
     }
 }
