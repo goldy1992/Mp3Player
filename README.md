@@ -1,3 +1,5 @@
+![Android MP3 Player](app/src/main/res/mipmap-hdpi/my_app_icon.png)
+
 # Android MP3 Player
 ---
 Supported Versions `>= Android Marshmallow`
