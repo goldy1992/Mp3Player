@@ -3,11 +3,7 @@ package com.example.mike.mp3player.commons;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.SparseArray;
 
-import com.example.mike.mp3player.client.activities.MediaActivityCompat;
-import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.commons.library.Category;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 
 public final class Constants {
 

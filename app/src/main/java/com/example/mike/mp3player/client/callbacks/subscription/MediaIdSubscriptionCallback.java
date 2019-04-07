@@ -5,15 +5,12 @@ import android.support.v4.media.MediaBrowserCompat;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
-import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
-
-import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
 public class MediaIdSubscriptionCallback extends GenericSubscriptionCallback<String> {
 
