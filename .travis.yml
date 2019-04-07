@@ -1,3 +1,5 @@
-language: java
+language: android
+sudo: required
+jdk: oraclejdk8
 script:
-  - gradle clean build
+  - ./gradlew clean build
