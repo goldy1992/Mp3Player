@@ -20,6 +20,8 @@ import java.util.TreeSet;
 import androidx.annotation.NonNull;
 import androidx.media.MediaBrowserServiceCompat;
 
+import static com.example.mike.mp3player.commons.Constants.EMPTY_LIBRARY;
+import static com.example.mike.mp3player.commons.Constants.REJECTION;
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
 
@@ -28,8 +30,9 @@ import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
  */
 public class MediaPlaybackService extends MediaBrowserServiceCompat {
 
-    private static final String MY_MEDIA_ROOT_ID = Category.ROOT.name();
-    private static final String MY_EMPTY_MEDIA_ROOT_ID = "empty_root_id";
+    private static final String PACKAGE_NAME = "com.example.mike.mp3player";
+    private static final String ACCEPTED_MEDIA_ROOT_ID = Category.ROOT.name();
+    private static final String REJECTED_MEDIA_ROOT_ID = "empty_root_id";
     private MyNotificationManager notificationManager;
     private MediaSessionCompat mMediaSession;
     private MediaSessionCallback mediaSessionCallback;
@@ -62,19 +65,23 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public BrowserRoot onGetRoot(String clientPackageName, int clientUid,
                                  Bundle rootHints) {
-
-//        // (Optional) Control the level of access for the specified package name.
-//        // You'll need to write your own logic to do this.
-//        if (allowBrowsing(clientPackageName, clientUid)) {
-//            // Returns a root ID that clients can use with onLoadChildren() to retrieve
-//            // the content hierarchy.
-//            return new BrowserRoot(MY_MEDIA_ROOT_ID, null);
-//        } else {
-//            // Clients can connect, but this BrowserRoot is an empty hierachy
-//            // so onLoadChildren returns nothing. This disables the ability to browse for content.
-            return new BrowserRoot(MY_MEDIA_ROOT_ID, null);
-
-//        }
+        Bundle extras = new Bundle();
+        // (Optional) Control the level of access for the specified package name.
+        // You'll need to write your own logic to do this.
+        if (allowBrowsing(clientPackageName, clientUid)) {
+            if (mediaLibrary.isPopulated()) {
+                // Returns a root ID that clients can use with onLoadChildren() to retrieve
+                // the content hierarchy.
+                return new BrowserRoot(ACCEPTED_MEDIA_ROOT_ID, extras);
+            } else {
+                extras.putString(REJECTION, EMPTY_LIBRARY);
+                return new BrowserRoot(REJECTED_MEDIA_ROOT_ID, extras);
+            }
+        } else {
+            // Clients can connect, but this BrowserRoot is an empty hierachy
+            // so onLoadChildren returns nothing. This disables the ability to browse for content.
+            return new BrowserRoot(REJECTED_MEDIA_ROOT_ID, extras);
+        }
     }
 
     /**
@@ -94,7 +101,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     public void onLoadChildren(@NonNull final String parentMediaId,
                                final Result<List<MediaBrowserCompat.MediaItem>> result, Bundle options) {
         //  Browsing not allowed
-        if (TextUtils.equals(MY_EMPTY_MEDIA_ROOT_ID, parentMediaId)) {
+        if (TextUtils.equals(REJECTED_MEDIA_ROOT_ID, parentMediaId)) {
             result.sendResult(null);
             return;
         }
@@ -132,6 +139,10 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         notificationManager.onDestroy();
         mMediaSession.release();
         stopSelf();
+    }
+
+    private boolean allowBrowsing(String clientPackageName, int clientUid) {
+        return clientPackageName.equals(PACKAGE_NAME);
     }
 
 }

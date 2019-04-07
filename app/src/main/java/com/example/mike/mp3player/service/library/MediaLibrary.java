@@ -9,10 +9,8 @@ import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -42,7 +40,7 @@ public class MediaLibrary {
         buildMediaLibrary();
     }
 
-    public void buildMediaLibrary(){
+    private void buildMediaLibrary(){
         List<MediaItem> songList = mediaRetriever.retrieveMedia();
         for (Category category : categories.keySet()) {
             categories.get(category).index(songList);
@@ -57,9 +55,6 @@ public class MediaLibrary {
         categories.put(rootLibraryCollection.getRootId(), rootLibraryCollection);
     }
 
-
-
-
     public TreeSet<MediaItem> getRoot() {
         return rootItems;
     }
@@ -68,14 +63,13 @@ public class MediaLibrary {
         return categories.get(Category.SONGS).getKeys();
     }
 
-
     public List<MediaItem> getPlaylist(LibraryObject libraryObject) {
         Category category = libraryObject.getCategory();
         if (category == Category.SONGS) {
             // song items don't have children therefore just return all songs
             return new ArrayList<>(categories.get(category).getKeys());
         } else
-        return new ArrayList<>(categories.get(category).getChildren(libraryObject));
+            return new ArrayList<>(categories.get(category).getChildren(libraryObject));
     }
 
     public TreeSet<MediaItem> getChildren(@NonNull LibraryRequest libraryRequest) {
@@ -87,19 +81,6 @@ public class MediaLibrary {
         }
     }
 
-
-
-    private class MediaItemComparator implements Comparator<MediaItem> {
-        @Override
-        public int compare(MediaItem o1, MediaItem o2) {
-            String s1 = o1.getDescription().getTitle().toString().toUpperCase(Locale.getDefault());
-            String s2 = o2.getDescription().getTitle().toString().toUpperCase(Locale.getDefault());
-            return s1.compareTo(s2);
-        }
-    }
-
-
-
     public Uri getMediaUriFromMediaId(String mediaId){
         for (MediaItem i : getSongList()) {
             if (i.getDescription().getMediaId().equals(mediaId)) {
@@ -107,5 +88,9 @@ public class MediaLibrary {
             }
         }
         return null;
-     }
+    }
+
+    public boolean isPopulated() {
+        return getSongList() != null && !getSongList().isEmpty();
+    }
 }

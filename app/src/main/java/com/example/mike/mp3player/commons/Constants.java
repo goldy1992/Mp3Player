@@ -64,4 +64,10 @@ public final class Constants {
     public static final String PARENT_OBJECT = "PARENT_OBJECT";
     public static final String PARENT_MEDIA_ITEM = "PARENT_MEDIA_ITEM";
     public static final int NO_ACTION = 0;
+
+    // connection extras
+    public static final String REJECTION = "REJECTION";
+    // connection rejections
+    public static final String INVALID_PACKAGE = "INVALID_PACKAGE";
+    public static final String EMPTY_LIBRARY = "EMPTY_LIBRARY";
 }
