@@ -50,6 +50,7 @@ public class LibraryRequest extends LibraryObject {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append(super.toString());
         return sb.toString();
     }
 

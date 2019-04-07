@@ -7,7 +7,7 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
-import com.example.mike.mp3player.client.views.fragments.viewpager.GenericViewPageFragment;
+import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
@@ -16,7 +16,7 @@ import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 public class FolderActivity extends MediaBrowserSubscriberActivityCompat {
 
     private static final String LOG_TAG = "FOLDER_ACTIVITY";
-    private GenericViewPageFragment viewPageFragment;
+    private ChildViewPagerFragment viewPageFragment;
     private String folderName;
     private LibraryRequest parentId;
     private PlayToolBarFragment playToolBarFragment;
@@ -63,7 +63,7 @@ public class FolderActivity extends MediaBrowserSubscriberActivityCompat {
     public void onConnected() {
         super.onConnected();
 
-        this.viewPageFragment = GenericViewPageFragment.createViewPageFragment(Category.SONGS, parentId, getMediaBrowserAdapter());
+        this.viewPageFragment = ChildViewPagerFragment.createViewPageFragment(Category.SONGS, parentId, getMediaBrowserAdapter());
       getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
          getSupportFragmentManager().beginTransaction().add(R.id.playToolbarFragment, playToolBarFragment).commitNow();
         playToolBarFragment.displayButtons();

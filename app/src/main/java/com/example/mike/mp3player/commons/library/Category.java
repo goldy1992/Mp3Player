@@ -35,12 +35,19 @@ public enum Category implements Comparator<Category> {
         return o1.rank.compareTo(o2.rank);
     }
 
-    public static final BiMap<Category, Class<? extends MediaActivityCompat>> CATEGORY_TO_ACTIVITY_MAP = HashBiMap.create();
-
+    private static final BiMap<Category, Class<? extends MediaActivityCompat>> CATEGORY_TO_ACTIVITY_MAP = HashBiMap.create();
+    private static final BiMap<Class<? extends MediaActivityCompat>, Category> ACTIVITY_TO_CATEGORY_MAP;
     static {
         CATEGORY_TO_ACTIVITY_MAP.put(Category.SONGS, MediaPlayerActivity.class);
         CATEGORY_TO_ACTIVITY_MAP.put(Category.FOLDERS, FolderActivity.class);
+        ACTIVITY_TO_CATEGORY_MAP = CATEGORY_TO_ACTIVITY_MAP.inverse();
     }
-   // public static final Map<>
-}
 
+    public static Class<? extends MediaActivityCompat> getActivityClassForCategory(Category category) {
+        return CATEGORY_TO_ACTIVITY_MAP.get(category);
+    }
+
+    public static Category getCategoryForActivityClass(Class<? extends MediaActivityCompat> classKey) {
+        return ACTIVITY_TO_CATEGORY_MAP.get(classKey);
+    }
+}

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.util.ArrayList;
@@ -14,6 +15,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeSet;
+
+import androidx.annotation.NonNull;
 
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
 
@@ -66,19 +69,16 @@ public class MediaLibrary {
     }
 
 
-    public List<MediaItem> getPlaylist(LibraryRequest libraryRequest) {
-        Category category = libraryRequest.getCategory();
+    public List<MediaItem> getPlaylist(LibraryObject libraryObject) {
+        Category category = libraryObject.getCategory();
         if (category == Category.SONGS) {
             // song items don't have children therefore just return all songs
             return new ArrayList<>(categories.get(category).getKeys());
         } else
-        return new ArrayList<>(categories.get(category).getChildren(libraryRequest));
+        return new ArrayList<>(categories.get(category).getChildren(libraryObject));
     }
 
-    public TreeSet<MediaItem> getChildren(LibraryRequest libraryRequest) {
-        if (libraryRequest == null || libraryRequest.getCategory() == null) {
-            return null;
-        }
+    public TreeSet<MediaItem> getChildren(@NonNull LibraryRequest libraryRequest) {
 
         if (Category.isCategory(libraryRequest.getId())) {
             return categories.get(libraryRequest.getCategory()).getKeys();

@@ -18,7 +18,7 @@
         android:layout_above="@+id/playToolbarFragment"
         android:id="@+id/songListFragment"
         android:layout_width="match_parent"
-        class="com.example.mike.mp3player.client.views.fragments.viewpager.GenericViewPageFragment"
+        class="com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment"
         android:layout_height="match_parent" />
 
     <fragment

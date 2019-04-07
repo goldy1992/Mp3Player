@@ -11,14 +11,11 @@ import android.view.ViewGroup;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
-import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.activities.FolderActivity;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.commons.library.LibraryObject;
-import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -27,16 +24,14 @@ import java.util.TreeSet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerTabStrip;
 import androidx.viewpager.widget.ViewPager;
 
-import static com.example.mike.mp3player.client.views.fragments.viewpager.GenericViewPageFragment.createViewPageFragment;
+import static com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment.createViewPageFragment;
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
-import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
 public class ViewPagerFragment extends Fragment implements MediaBrowserResponseListener {
 
@@ -83,7 +78,7 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
             Category category = Category.valueOf(id);
             Class<?> activityToCall = getActivityToCall(category);
             LibraryObject libraryObject = new LibraryObject(category, id);
-            GenericViewPageFragment viewPageFragment = createViewPageFragment(category, libraryObject, mediaBrowserAdapter);
+            ChildViewPagerFragment viewPageFragment = createViewPageFragment(category, libraryObject, mediaBrowserAdapter);
             adapter.pagerItems.put(category, viewPageFragment);
             adapter.menuCategories.put(category, mediaItem);
             adapter.notifyDataSetChanged();
@@ -93,7 +88,7 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
     private class MyPagerAdapter extends FragmentPagerAdapter {
 
         Map<Category, MediaItem> menuCategories = new TreeMap<>();
-        Map<Category, GenericViewPageFragment> pagerItems = new TreeMap<>();
+        Map<Category, ChildViewPagerFragment> pagerItems = new TreeMap<>();
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -105,14 +100,14 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
         }
 
         @Override
-        public GenericViewPageFragment getItem(int position) {
+        public ChildViewPagerFragment getItem(int position) {
         Category category = getCategoryFromPosition(position);
             return pagerItems.get(category);
         }
 
         @Override
         public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-            GenericViewPageFragment v = (GenericViewPageFragment) object;
+            ChildViewPagerFragment v = (ChildViewPagerFragment) object;
             return v.getView() == view;
         }
 

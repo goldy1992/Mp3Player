@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
-import com.example.mike.mp3player.client.activities.MainActivity;
 import com.example.mike.mp3player.client.views.MyRecyclerView;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
@@ -26,9 +25,10 @@ import androidx.fragment.app.Fragment;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
+import static com.example.mike.mp3player.commons.Constants.PARENT_OBJECT;
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
-public class GenericViewPageFragment extends Fragment implements MyGenericItemTouchListener.ItemSelectedListener {
+public class ChildViewPagerFragment extends Fragment implements MyGenericItemTouchListener.ItemSelectedListener {
     private static final String LOG_TAG = "GENRC_VIW_PGE_FRGMNT";
     /**
      * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
@@ -71,9 +71,11 @@ public class GenericViewPageFragment extends Fragment implements MyGenericItemTo
     public void itemSelected(MediaBrowserCompat.MediaItem item) {
         String id = MediaItemUtils.getMediaId(item);
         String title = MediaItemUtils.getTitle(item);
+
         LibraryRequest libraryRequest = new LibraryRequest(parent.getCategory(), id);
         libraryRequest.setTitle(title);
-        Intent intent = new Intent(getContext(), Category.CATEGORY_TO_ACTIVITY_MAP.get(category));
+        Intent intent = new Intent(getContext(), Category.getActivityClassForCategory(category));
+        intent.putExtra(PARENT_OBJECT, parent);
         intent.putExtra(REQUEST_OBJECT, libraryRequest);
         intent.putExtra(MEDIA_SESSION, mediaBrowserAdapter.getMediaSessionToken());
         startActivity(intent);
@@ -94,8 +96,8 @@ public class GenericViewPageFragment extends Fragment implements MyGenericItemTo
      * @param mediaBrowserAdapter used to register the appropriate listeners
      * @return a new generuc
      */
-    public static GenericViewPageFragment createViewPageFragment(Category category, LibraryObject parent, MediaBrowserAdapter mediaBrowserAdapter) {
-        GenericViewPageFragment viewPageFragment = new GenericViewPageFragment();
+    public static ChildViewPagerFragment createViewPageFragment(Category category, LibraryObject parent, MediaBrowserAdapter mediaBrowserAdapter) {
+        ChildViewPagerFragment viewPageFragment = new ChildViewPagerFragment();
         viewPageFragment.init(category, parent, mediaBrowserAdapter);
         return viewPageFragment;
     }

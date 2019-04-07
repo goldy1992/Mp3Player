@@ -13,6 +13,7 @@ import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.LibraryObject;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
@@ -53,14 +54,12 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
         if (token != null) {
             initialiseMediaControllerAdapter(token);
-            String mediaId = (String) retrieveIntentInfo(Constants.MEDIA_ID);
-            LibraryObject parentId = (LibraryObject) retrieveIntentInfo(Constants.REQUEST_OBJECT);
-            initView();
-            if (mediaId != null) { // if rq came with an media id it's a song request
+            LibraryRequest libraryRequest = (LibraryRequest) retrieveIntentInfo(Constants.REQUEST_OBJECT);
+            if (libraryRequest != null) { // if rq came with an media id it's a song request
+                String mediaId = libraryRequest.getId();
                 // Display the initial state
-                Bundle extras = new Bundle();
-                extras.putParcelable(REQUEST_OBJECT, parentId); // parent id will sure that the correct playlist is found in the media library
-                getMediaControllerAdapter().prepareFromMediaId(mediaId, extras);
+                ; // parent id will sure that the correct playlist is found in the media library
+                getMediaControllerAdapter().prepareFromMediaId(mediaId, getIntent().getExtras());
             }
             else {
 //                setMetaData(mediaControllerAdapter.getMetaData());
