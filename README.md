@@ -1,4 +1,7 @@
-# ![Android MP3 Player](app/src/main/res/mipmap-hdpi/my_app_icon.png) Android MP3 Player
+
+# Android MP3 Player ![Android MP3 Player](app/src/main/res/mipmap-hdpi/my_app_icon.png)   
+![build](https://travis-ci.org/goldy1992/Mp3Player.svg?branch=master)
+
 ---
 Supported Versions `>= Android Marshmallow`
 An open source MP3 Player for Android, developed using the design principles in [Google's Android Audio App](https://developer.android.com/guide/topics/media-apps/audio-app/building-an-audio-app) tutorial.
