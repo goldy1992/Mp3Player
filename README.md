@@ -1,5 +1,4 @@
-
-# Android MP3 Player ![Android MP3 Player](app/src/main/res/mipmap-hdpi/my_app_icon.png)   
+# ![Android MP3 Player](app/src/main/res/mipmap-hdpi/my_app_icon.png) Android MP3 Player    
 ![build](https://travis-ci.org/goldy1992/Mp3Player.svg?branch=master)
 
 ---
