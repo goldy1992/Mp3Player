@@ -4,7 +4,7 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
 
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import java.util.Comparator;
 import java.util.List;
@@ -18,10 +18,11 @@ public abstract class LibraryCollection {
     private final MediaItem root;
     private TreeSet<MediaItem> keys;
     protected Map<String, TreeSet<MediaItem>> collection;
-    public abstract TreeSet<MediaItem> getChildren(LibraryId id);
+    public abstract TreeSet<MediaItem> getChildren(LibraryObject id);
     public abstract void index(List<MediaItem> items);
     public abstract Category getRootId();
 
+    @SuppressWarnings("unchecked")
     public LibraryCollection(String id, String title, String description, Comparator keyComparator, Comparator valueComparator) {
         this.root = createCollectionRootMediaItem(id, title, description);
         this.keyComparator = keyComparator;

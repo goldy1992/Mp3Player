@@ -1,10 +1,7 @@
 package com.example.mike.mp3player.service;
 
-import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.PlaybackParams;
-import android.net.Uri;
-import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.commons.Constants;
@@ -13,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -22,7 +18,6 @@ import org.powermock.reflect.Whitebox;
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -34,17 +29,17 @@ public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
 
     @Before
     public void setup() {
-        super.setup();
         PowerMockito.mockStatic(MediaPlayer.class);
-        mediaPlayerAdapter = createMediaPlayerAdapter();
-        PowerMockito.when(MediaPlayer.create(any(Context.class), any(Uri.class))).thenReturn(mediaPlayer);
-       // mediaPlayerAdapter.reset(uri, null, mock(MediaPlayer.OnCompletionListener.class));
+        super.setup();
+//        mediaPlayerAdapter = createMediaPlayerAdapter();
+//
+//        mediaPlayerAdapter.reset(new Uri.Builder().appendPath("abc").build(), null);
         Whitebox.setInternalState(mediaPlayerAdapter, "audioFocusManager", audioFocusManager);
     }
 
     @Test
     public void testReset() {
-    //    mediaPlayerAdapter.reset(uri, nextUri, mock(MediaPlayer.OnCompletionListener.class));
+        mediaPlayerAdapter.reset(uri, nextUri);
         assertNotNull(mediaPlayerAdapter.getCurrentMediaPlayer());
         assertNotNull(mediaPlayerAdapter.getNextMediaPlayer());
     }
@@ -63,9 +58,8 @@ public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
 
     @Test
     public void testPlay() {
-        Whitebox.setInternalState(mediaPlayerAdapter, "isPrepared", true);
         when(audioFocusManager.requestAudioFocus()).thenReturn(true);
-        when(mediaPlayer.getPlaybackParams()).thenReturn(new PlaybackParams());
+        when(mediaPlayerAdapter.getCurrentMediaPlayer().getPlaybackParams()).thenReturn(mock(PlaybackParams.class));
         mediaPlayerAdapter.play();
         assertEquals(PlaybackStateCompat.STATE_PLAYING, mediaPlayerAdapter.getCurrentState());
     }

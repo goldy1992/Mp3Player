@@ -1,20 +1,13 @@
 package com.example.mike.mp3player.service.library;
 
 import android.content.Context;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
-import android.support.v4.media.MediaDescriptionCompat;
-import android.util.Log;
 
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
-import com.example.mike.mp3player.service.library.utils.IsDirectoryFilter;
-import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
-import com.example.mike.mp3player.service.library.utils.MusicFileFilter;
+import com.example.mike.mp3player.commons.library.LibraryObject;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -23,23 +16,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeSet;
 
-import static android.media.MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST;
-import static android.media.MediaMetadataRetriever.METADATA_KEY_ARTIST;
-import static android.media.MediaMetadataRetriever.METADATA_KEY_DURATION;
+import androidx.annotation.NonNull;
+
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ALBUM_ARTIST;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_DURATION;
 
 public class MediaLibrary {
     private boolean playlistRecursInSubDirectory = false;
 
-    private MusicFileFilter musicFileFilter = new MusicFileFilter();
-    private IsDirectoryFilter isDirectoryFilter = new IsDirectoryFilter();
+    private MediaRetriever mediaRetriever;
     private Map<Category, LibraryCollection> categories;
     private Context context;
     private TreeSet<MediaItem> rootItems = new TreeSet<>(compareRootMediaItemsByCategory);
@@ -47,6 +31,7 @@ public class MediaLibrary {
 
     public MediaLibrary(Context context) {
         this.context = context;
+        this.mediaRetriever = new ContentResolverMediaRetriever(context);
         categories = new HashMap<>();
     }
     public void init() {
@@ -58,10 +43,7 @@ public class MediaLibrary {
     }
 
     public void buildMediaLibrary(){
-        File externalStorageDirectory = MediaLibraryUtils.getExternalStorageDirectory();
-        File internalStorage = MediaLibraryUtils.getInternalStorageDirectory();
-        List<MediaItem> songList = buildSongList(externalStorageDirectory);
-        songList.addAll(buildSongList(internalStorage));
+        List<MediaItem> songList = mediaRetriever.retrieveMedia();
         for (Category category : categories.keySet()) {
             categories.get(category).index(songList);
         }
@@ -76,40 +58,7 @@ public class MediaLibrary {
     }
 
 
-    private List<MediaItem> buildSongList(File directory) {
-        List<File> directories = new ArrayList<>();
-        List<MediaItem> mediaItems = new ArrayList<>();
 
-        if (directory.list() != null) {
-            for (String currentFileString : directory.list()) {
-
-                if (isDirectoryFilter.accept(directory, currentFileString)) {
-                    directories.add(new File(directory, currentFileString));
-                } else if (musicFileFilter.accept(directory, currentFileString)) {
-
-                    File fileToRetrieve = null;
-                    try {
-                        fileToRetrieve = new File(directory, currentFileString);
-                        MediaItem mediaItem = createPlayableMediaItemFromFile(fileToRetrieve, directory);
-                        mediaItems.add(mediaItem);
-                    } catch (Exception ex) {
-                        if (fileToRetrieve != null) {
-                            Log.e(LOG_TAG, "could not add " + fileToRetrieve.getPath() + " to the media library");
-                        } else {
-                            Log.e(LOG_TAG, "file is null");
-                        }
-                    }
-                }
-            } // for
-        }
-
-        if (!directories.isEmpty()) {
-            for (File directoryToBrowse : directories) {
-                mediaItems.addAll(buildSongList(directoryToBrowse));
-            }
-        }
-        return mediaItems;
-    }
 
     public TreeSet<MediaItem> getRoot() {
         return rootItems;
@@ -120,54 +69,25 @@ public class MediaLibrary {
     }
 
 
-    public List<MediaItem> getPlaylist(LibraryId libraryId) {
-        Category category = libraryId.getCategory();
+    public List<MediaItem> getPlaylist(LibraryObject libraryObject) {
+        Category category = libraryObject.getCategory();
         if (category == Category.SONGS) {
             // song items don't have children therefore just return all songs
             return new ArrayList<>(categories.get(category).getKeys());
         } else
-        return new ArrayList<>(categories.get(category).getChildren(libraryId));
+        return new ArrayList<>(categories.get(category).getChildren(libraryObject));
     }
 
-    public TreeSet<MediaItem> getChildren(LibraryId libraryId) {
-        if (libraryId == null || libraryId.getCategory() == null) {
-            return null;
-        }
+    public TreeSet<MediaItem> getChildren(@NonNull LibraryRequest libraryRequest) {
 
-        if (Category.isCategory(libraryId.getId())) {
-            return categories.get(libraryId.getCategory()).getKeys();
+        if (Category.isCategory(libraryRequest.getId())) {
+            return categories.get(libraryRequest.getCategory()).getKeys();
         } else {
-            return categories.get(libraryId.getCategory()).getChildren(libraryId);
+            return categories.get(libraryRequest.getCategory()).getChildren(libraryRequest);
         }
     }
 
-    private MediaItem createPlayableMediaItemFromFile(File file, File directory) throws Exception {
-        Uri uri = Uri.fromFile(file);
-        String mediaId = String.valueOf(uri.getPath().hashCode());
-        String parentPath = file.getParentFile().getAbsolutePath();
-        String fileName = file.getName();
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        mmr.setDataSource(context, uri);
 
-        Bundle extras = new Bundle();
-        extras.putString(STRING_METADATA_KEY_DURATION, mmr.extractMetadata(METADATA_KEY_DURATION));
-        extras.putString(STRING_METADATA_KEY_ARTIST, mmr.extractMetadata(METADATA_KEY_ARTIST));
-        extras.putString(STRING_METADATA_KEY_ALBUM_ARTIST, mmr.extractMetadata(METADATA_KEY_ALBUMARTIST));
-        extras.putString(META_DATA_KEY_PARENT_PATH, parentPath);
-        extras.putString(META_DATA_KEY_FILE_NAME, fileName);
-        extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directory.getName());
-        extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directory.getAbsolutePath());
-
-        // TODO: add code to fetch album art also
-        MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()
-                .setMediaId(mediaId)
-                .setMediaUri(uri)
-                .setTitle(MediaLibraryUtils.getSongTitle(mmr, fileName))
-                .setExtras(extras);
-
-        MediaItem mediaItem = new MediaItem(mediaDescriptionCompatBuilder.build(), MediaItem.FLAG_PLAYABLE);
-        return mediaItem;
-    }
 
     private class MediaItemComparator implements Comparator<MediaItem> {
         @Override
@@ -177,6 +97,8 @@ public class MediaLibrary {
             return s1.compareTo(s2);
         }
     }
+
+
 
     public Uri getMediaUriFromMediaId(String mediaId){
         for (MediaItem i : getSongList()) {

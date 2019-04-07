@@ -45,7 +45,7 @@ public class MainFrameFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle bundle) {
+    public void onViewCreated(@NonNull View view, Bundle bundle) {
         this.drawerLayout = view.findViewById(R.id.drawer_layout);
         this.playToolBarFragment = (PlayToolBarFragment) getChildFragmentManager().findFragmentById(R.id.playToolbarFragment);
         this.playToolBarFragment.displayButtons();
@@ -66,11 +66,9 @@ public class MainFrameFragment extends Fragment {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
     }
 
-    public void init(Map<MediaBrowserCompat.MediaItem, List<MediaBrowserCompat.MediaItem>> menuItems,
-                    MediaBrowserAdapter mediaBrowserAdapter,
-                     MediaControllerAdapter mediaControllerAdapter,
-                     SongSearchActionListener songSearchActionListener) {
-        this.viewPagerFragment.initRootMenu(menuItems, mediaBrowserAdapter, mediaControllerAdapter);
+    public void init(SongSearchActionListener songSearchActionListener, MediaBrowserAdapter mediaBrowserAdapter,
+                     MediaControllerAdapter mediaControllerAdapter) {
+        this.viewPagerFragment.init(mediaBrowserAdapter);
         this.playToolBarFragment.init(mediaControllerAdapter,  true);
         this.titleBarFragment.setSongSearchActionListener(songSearchActionListener);
     }

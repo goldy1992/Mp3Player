@@ -7,6 +7,9 @@ import android.widget.GridLayout;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaBrowserAdapter;
+import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import java.util.List;
 
@@ -17,8 +20,13 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
 
     private final String LOG_TAG = "FOLDER_VIEW_ADAPTER";
 
-    public MyFolderViewAdapter(List<MediaBrowserCompat.MediaItem> songs) {
-        super(songs);
+    @Override
+    public Category getSubscriptionCategory() {
+        return Category.FOLDERS;
+    }
+
+    public MyFolderViewAdapter(MediaBrowserAdapter mediaBrowserAdapter, LibraryObject parent) {
+        super(mediaBrowserAdapter, parent);
     }
 
     @Override

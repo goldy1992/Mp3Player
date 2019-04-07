@@ -10,8 +10,8 @@ public class MyFolderItemTouchListener extends MyGenericItemTouchListener {
 
     private static final String LOG_TAG = "FLDER_ITM_TCH_LISNER";
 
-    public MyFolderItemTouchListener(Context context) {
-        super(context);
+    public MyFolderItemTouchListener(Context context, ItemSelectedListener itemSelectedListener) {
+        super(context, itemSelectedListener);
     }
 
     @Override

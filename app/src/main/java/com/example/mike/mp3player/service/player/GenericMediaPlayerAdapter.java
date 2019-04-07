@@ -34,6 +34,8 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
     MediaPlayer nextMediaPlayer;
     MediaPlayer currentMediaPlayer;
     AudioFocusManager audioFocusManager;
+    final OnCompletionListener onCompletionListener;
+    final OnSeekCompleteListener onSeekCompleteListener;
 
     @PlaybackStateCompat.RepeatMode
     int repeatMode;
@@ -44,14 +46,23 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
     @PlaybackStateCompat.State
     int currentState = PlaybackStateCompat.STATE_PAUSED;
 
-    public GenericMediaPlayerAdapter(Context context) {
+    public GenericMediaPlayerAdapter(Context context, OnCompletionListener onCompletionListener,
+                                     OnSeekCompleteListener onSeekCompleteListener) {
         this.context = context;
+        this.onCompletionListener = onCompletionListener;
+        this.onSeekCompleteListener = onSeekCompleteListener;
     }
 
     public abstract void play();
     public abstract void pause();
-    public abstract void increaseSpeed(float by);
-    public abstract void decreaseSpeed(float by);
+    abstract void changeSpeed(float newSpeed);
+
+    public final void increaseSpeed(float by) {
+        changeSpeed(currentPlaybackSpeed + by);
+    }
+    public final void decreaseSpeed(float by) {
+        changeSpeed(currentPlaybackSpeed - by);
+    }
     abstract void setPlaybackParams(MediaPlayer mediaPlayer);
 
     /**
@@ -60,22 +71,25 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
      * 3) create the next mediaPlayer and set it.
      * @param nextUriToPrepare next URI that needs to be prepared.
      */
-    public void onComplete(Uri nextUriToPrepare, OnCompletionListener newOnCompletionListener, OnSeekCompleteListener onSeekCompleteListener) {
+    public void onComplete(Uri nextUriToPrepare) {
         this.currentMediaPlayer.release();
         this.currentMediaPlayer = this.getNextMediaPlayer();
+
+        if (null != currentMediaPlayer) {
+            play();
+        }
+
         // TODO: we might want to make this an asynchronous task in the future
         if (nextUriToPrepare != null) {
-            this.nextMediaPlayer = createMediaPlayer(nextUriToPrepare, newOnCompletionListener, onSeekCompleteListener);
-            this.currentMediaPlayer.setNextMediaPlayer(getNextMediaPlayer());
+            this.nextMediaPlayer = createMediaPlayer(nextUriToPrepare);
         }
     }
     /**
      *
-     * @param firstItemUri
-     * @param secondItemUri
-     * @param onCompletionListener
+     * @param firstItemUri first URI
+     * @param secondItemUri second URI
      */
-    public void reset(Uri firstItemUri, Uri secondItemUri, OnCompletionListener onCompletionListener, OnSeekCompleteListener onSeekCompleteListener) {
+    public void reset(Uri firstItemUri, Uri secondItemUri) {
         //Log.i(LOG_TAG, "reset");
         if (audioFocusManager != null && audioFocusManager.hasFocus) {
             audioFocusManager.abandonAudioFocus();
@@ -93,26 +107,19 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
             //Log.i(LOG_TAG,"next mediaplayer released");
             nextMediaPlayer = null;
         }
-        this.currentMediaPlayer = createMediaPlayer(firstItemUri, onCompletionListener, onSeekCompleteListener);
+        this.currentMediaPlayer = createMediaPlayer(firstItemUri);
         //Log.i(LOG_TAG,"Created first mediaplayer");
-        this.nextMediaPlayer = secondItemUri == null ? null : createMediaPlayer(secondItemUri, onCompletionListener, onSeekCompleteListener);
+        this.nextMediaPlayer = secondItemUri == null ? null : createMediaPlayer(secondItemUri);
         //Log.i(LOG_TAG,"Created second mediaplayer");
 
-        if (!isLooping()) {
-            this.currentMediaPlayer.setNextMediaPlayer(getNextMediaPlayer());
-        }
         this.audioFocusManager = new AudioFocusManager(context, this);
         this.audioFocusManager.init();
         this.currentState = PlaybackStateCompat.STATE_PAUSED;
     }
 
-    MediaPlayer createMediaPlayer(Uri uri, OnCompletionListener onCompletionListener, OnSeekCompleteListener onSeekCompleteListener) {
+    MediaPlayer createMediaPlayer(Uri uri) {
         MediaPlayer mediaPlayer = MediaPlayer.create(context, uri);
-        mediaPlayer.setOnInfoListener(this);
-        mediaPlayer.setOnErrorListener(this);
-        mediaPlayer.setOnSeekCompleteListener(onSeekCompleteListener);
-        mediaPlayer.setOnCompletionListener(onCompletionListener);
-        return mediaPlayer;
+        return setListeners(mediaPlayer);
     }
 
     /**
@@ -228,12 +235,6 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
         if (currentMediaPlayer != null) {
             currentMediaPlayer.setLooping(isLooping());
         }
-
-        if (isLooping()) {
-            currentMediaPlayer.setNextMediaPlayer(null);
-        } else {
-            currentMediaPlayer.setNextMediaPlayer(nextMediaPlayer);
-        }
     }
 
     boolean prepare() {
@@ -262,5 +263,13 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
         }
         //Log.i(LOG_TAG, "what: " + what + ", extra " + extra);
         return true;
+    }
+
+    MediaPlayer setListeners(MediaPlayer mediaPlayer) {
+        mediaPlayer.setOnInfoListener(this);
+        mediaPlayer.setOnErrorListener(this);
+        mediaPlayer.setOnSeekCompleteListener(onSeekCompleteListener);
+        mediaPlayer.setOnCompletionListener(onCompletionListener);
+        return mediaPlayer;
     }
 }

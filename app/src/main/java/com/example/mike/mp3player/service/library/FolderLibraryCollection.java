@@ -3,13 +3,14 @@ package com.example.mike.mp3player.service.library;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
+import static com.example.mike.mp3player.commons.ComparatorUtils.compareMediaItemById;
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareMediaItemsByTitle;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getExtras;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getMediaId;
@@ -23,7 +24,7 @@ public class FolderLibraryCollection extends LibraryCollection {
     public static final String DESCRIPTION = Constants.CATEGORY_FOLDERS_DESCRIPTION;
 
     public FolderLibraryCollection() {
-        super(ID, TITLE, DESCRIPTION, compareMediaItemsByTitle, compareMediaItemsByTitle);
+        super(ID, TITLE, DESCRIPTION, compareMediaItemById, compareMediaItemById);
         this.collection = new TreeMap<>();
     }
 
@@ -44,7 +45,8 @@ public class FolderLibraryCollection extends LibraryCollection {
                     break;
                 }
                 if (!collection.containsKey(key)) {
-                    getKeys().add(createCollectionRootMediaItem(parentDirectoryPath, parentDirectoryName, parentDirectoryPath));
+                    MediaItem newFolder = createCollectionRootMediaItem(parentDirectoryPath, parentDirectoryName, parentDirectoryPath);
+                    getKeys().add(newFolder);
                     collection.put(key, new TreeSet<>(compareMediaItemsByTitle));
                 }
                 collection.get(key).add(i);
@@ -53,13 +55,13 @@ public class FolderLibraryCollection extends LibraryCollection {
     }
 
     @Override
-    public TreeSet<MediaItem> getChildren(LibraryId libraryId) {
-        if (getRootIdAsString().equals(libraryId)) {
+    public TreeSet<MediaItem> getChildren(LibraryObject libraryObject) {
+        if (getRootIdAsString().equals(libraryObject)) {
             return getKeys();
         }
         for (MediaItem i : getKeys()) {
             String mediaId = getMediaId(i);
-            if (mediaId != null && mediaId.equals(libraryId.getId())) {
+            if (mediaId != null && mediaId.equals(libraryObject.getId())) {
                 return collection.get(getMediaId(i));
             }
         }

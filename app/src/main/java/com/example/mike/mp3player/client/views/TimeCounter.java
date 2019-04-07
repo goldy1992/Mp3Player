@@ -3,7 +3,6 @@ package com.example.mike.mp3player.client.views;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.client.TimeCounterTimerTask;
@@ -86,7 +85,7 @@ public class TimeCounter {
     }
 
     private void cancelTimer() {
-        Log.d(LOG_TAG, "Cancel timer");
+        //Log.d(LOG_TAG, "Cancel timer");
         if (timer != null && isRunning()) {
             // cancel timer and make new one
             timer.shutdown();

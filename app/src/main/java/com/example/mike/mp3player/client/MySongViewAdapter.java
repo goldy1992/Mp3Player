@@ -11,10 +11,10 @@ import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
 import com.example.mike.mp3player.client.views.MyViewHolder;
 import com.example.mike.mp3player.commons.MetaDataKeys;
+import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import org.apache.commons.io.FilenameUtils;
-
-import java.util.List;
 
 import static com.example.mike.mp3player.commons.MediaItemUtils.getExtra;
 import static com.example.mike.mp3player.commons.MediaItemUtils.hasExtras;
@@ -22,9 +22,13 @@ import static com.example.mike.mp3player.commons.MediaItemUtils.hasExtras;
 public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     private final String LOG_TAG = "MY_VIEW_ADAPTER";
 
+    @Override
+    public Category getSubscriptionCategory() {
+        return Category.SONGS;
+    }
 
-    public MySongViewAdapter(List<MediaBrowserCompat.MediaItem> songs) {
-        super(songs);
+    public MySongViewAdapter(MediaBrowserAdapter mediaBrowserAdapter, LibraryObject parent) {
+        super(mediaBrowserAdapter, parent);
     }
 
     @Override
@@ -91,5 +95,4 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
         long duration = Long.parseLong(durationString);
         return TimerUtils.formatTime(duration);
     }
-
 }

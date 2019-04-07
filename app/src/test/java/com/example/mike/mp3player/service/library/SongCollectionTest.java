@@ -2,7 +2,7 @@ package com.example.mike.mp3player.service.library;
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class SongCollectionTest {
@@ -68,8 +71,8 @@ public class SongCollectionTest {
         assertTrue(songCollection.getSongs().isEmpty(), "Songs list should be empty");
     }
     /**
-     * GIVEN: A SongCollection that is non empty and a LibraryId
-     * WHEN: getChildren is called for a LibraryId
+     * GIVEN: A SongCollection that is non empty and a LibraryObject
+     * WHEN: getChildren is called for a LibraryObject
      * THEN: null is returned since Songs don't have any children
      */
     @Test
@@ -79,8 +82,8 @@ public class SongCollectionTest {
         mediaItems.add(mockMediaItem);
         songCollection.index(mediaItems);
 
-        LibraryId libraryId = mock(LibraryId.class);
-        TreeSet<MediaItem> resultSet = songCollection.getChildren(libraryId);
+        LibraryObject libraryObject = mock(LibraryObject.class);
+        TreeSet<MediaItem> resultSet = songCollection.getChildren(libraryObject);
         assertNull(resultSet);
     }
 }

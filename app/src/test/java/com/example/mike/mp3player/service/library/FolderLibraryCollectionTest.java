@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompat;
 
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +32,7 @@ public class FolderLibraryCollectionTest {
     final String PATH1 = "/c/" + FOLDER1;
     final String FOLDER2 = "folder2";
     final String PATH2 = "/c/" + FOLDER2;
+    final String PATH3 ="/d/" + FOLDER2;
     final String MP3_1 = "mp3_1.mp3";
     final String MP3_2 = "mp3_2.mp3";
     final String MP3_3 = "mp3_3.mp3";
@@ -61,6 +62,21 @@ public class FolderLibraryCollectionTest {
         assertTrue(folderLibraryCollection.collection.isEmpty(), "Folders collection should be empty");
     }
     /**
+     * GIVEN: a list of 2 media items of 2 different folders of which 2 of them have the same folder name
+     * WHEN: the indexer processes the null list
+     * THEN: The FolderCollection size is 3 and no error is thrown.
+     */
+    @Test
+    public void testIndexWithTwoFoldersOfSameTitleList() {
+        List<MediaItem> itemsToIndex = new ArrayList<>();
+        itemsToIndex.add(createMediaItemWithFolderRef(MP3_1, FOLDER1, PATH1));
+        itemsToIndex.add(createMediaItemWithFolderRef(MP3_3, FOLDER2, PATH2));
+        itemsToIndex.add(createMediaItemWithFolderRef(MP3_3, FOLDER2, PATH3));
+        indexTestData(itemsToIndex);
+
+        assertEquals(3, folderLibraryCollection.collection.keySet().size(), "Folders collection size should be 3");
+    }
+    /**
      * GIVEN: @See{indexTestData()}
      * WHEN: The indexer processes the directories
      * THEN: Both directories are added to the collection
@@ -68,7 +84,11 @@ public class FolderLibraryCollectionTest {
      */
     @Test
     public void testIndexAndOrdering() {
-        indexTestData();
+        List<MediaItem> itemsToIndex = new ArrayList<>();
+        itemsToIndex.add(createMediaItemWithFolderRef(MP3_1, FOLDER1, PATH1));
+        itemsToIndex.add(createMediaItemWithFolderRef(MP3_2, FOLDER1, PATH1));
+        itemsToIndex.add(createMediaItemWithFolderRef(MP3_3, FOLDER2, PATH2));
+        indexTestData(itemsToIndex);
         assertEquals(EXPECTED_NUMBER_OF_FOLDERS, folderLibraryCollection.collection.keySet().size());
         assertEquals(EXPECTED_NUMBER_OF_TRACKS_IN_FOLDER1, folderLibraryCollection.collection.get(PATH1).size());
         assertEquals(EXPECTED_NUMBER_OF_TRACKS_IN_FOLDER2, folderLibraryCollection.collection.get(PATH2).size());
@@ -77,7 +97,6 @@ public class FolderLibraryCollectionTest {
         List<String> collectionKeysetAsList = new ArrayList<>(folderLibraryCollection.collection.keySet());
         assertEquals(PATH1, collectionKeysetAsList.get(0));
         assertEquals(PATH2, collectionKeysetAsList.get(1));
-
     }
 
     /**
@@ -87,9 +106,14 @@ public class FolderLibraryCollectionTest {
      */
     @Test
     public void testGetChildren() {
-        indexTestData();
-        LibraryId libraryId = new LibraryId(Category.FOLDERS, PATH1);
-        TreeSet<MediaItem> result = folderLibraryCollection.getChildren(libraryId);
+        List<MediaItem> itemsToIndex = new ArrayList<>();
+        itemsToIndex.add(createMediaItemWithFolderRef(MP3_1, FOLDER1, PATH1));
+        itemsToIndex.add(createMediaItemWithFolderRef(MP3_2, FOLDER1, PATH1));
+        itemsToIndex.add(createMediaItemWithFolderRef(MP3_3, FOLDER2, PATH2));
+        indexTestData(itemsToIndex);
+
+        LibraryObject libraryObject = new LibraryObject(Category.FOLDERS, PATH1);
+        TreeSet<MediaItem> result = folderLibraryCollection.getChildren(libraryObject);
         StringBuilder errorMessage = new StringBuilder().append("Number of items in FOLDER1 should be 2 but was: ")
                 .append(result.size());
         assertEquals(EXPECTED_NUMBER_OF_TRACKS_IN_FOLDER1, result.size(), errorMessage.toString());
@@ -129,16 +153,7 @@ public class FolderLibraryCollectionTest {
      * AND: FOLDER1 contains mp3_1.mp3 and mp3_2.mp3
      * AND FOLDER2 contains mp3_3.mp3
      */
-    private void indexTestData() {
-        MediaItem song1 = createMediaItemWithFolderRef(MP3_1, FOLDER1, PATH1);
-        MediaItem song2 = createMediaItemWithFolderRef(MP3_2, FOLDER1, PATH1);
-        MediaItem song3 = createMediaItemWithFolderRef(MP3_3, FOLDER2, PATH2);
-
-        List<MediaItem> items =new ArrayList<>();
-        items.add(song1);
-        items.add(song2);
-        items.add(song3);
-
+    private void indexTestData(List<MediaItem> items) {
         folderLibraryCollection.index(items);
     }
 }

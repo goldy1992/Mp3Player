@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.callbacks;
 
 import android.media.MediaMetadata;
-import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.media.MediaMetadataCompat;
 import android.util.Log;

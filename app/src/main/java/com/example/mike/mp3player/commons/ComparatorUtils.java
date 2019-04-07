@@ -34,6 +34,17 @@ public final class ComparatorUtils {
         return 0;
     }
 
+    public static  Comparator<MediaItem> compareMediaItemById = (MediaItem m1, MediaItem m2) -> compareMediaItembyId(m1, m2);
+    private static int compareMediaItembyId(MediaItem o1, MediaItem o2) {
+        String m1 = MediaItemUtils.getMediaId(o1);
+        String m2 = MediaItemUtils.getMediaId(o2);
+        if (m1 != null && m2 != null ) {
+            return m1.compareTo(m2);
+        }
+        return  0;
+    }
+
+
     private static Category parseCategory(String categoryString) {
         Category c = null;
         try{

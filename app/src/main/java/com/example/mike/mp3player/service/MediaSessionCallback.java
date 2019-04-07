@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,15 +20,16 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 
-import com.example.mike.mp3player.commons.AndroidUtils;
 import com.example.mike.mp3player.commons.MediaItemUtils;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryObject;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
 import com.example.mike.mp3player.service.player.GenericMediaPlayerAdapter;
 import com.example.mike.mp3player.service.player.MarshmallowMediaPlayerAdapter;
 import com.example.mike.mp3player.service.player.MyMediaPlayerAdapter;
+import com.example.mike.mp3player.service.player.NougatMediaPlayerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +40,9 @@ import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPE
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
+import static com.example.mike.mp3player.commons.Constants.PARENT_OBJECT;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
+import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
 import static com.example.mike.mp3player.commons.LoggingUtils.logRepeatMode;
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
@@ -67,7 +70,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.mediaLibrary = mediaLibrary;
         this.myNotificationManager = myNotificationManager;
         this.playbackManager = new PlaybackManager();
-        this.myMediaPlayerAdapter = AndroidUtils.isMashmallowOrLower() ? new MarshmallowMediaPlayerAdapter(context) : new MyMediaPlayerAdapter(context);
+        this.myMediaPlayerAdapter = createMediaPlayerAdapter(context);
         this.broadcastReceiver = new ReceiveBroadcasts();
         this.context = context;
         this.worker = new Handler(looper);
@@ -78,8 +81,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.playbackManager.init(queueItems);
         Uri firstSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getCurrentMediaId());
         Uri nextSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
-        this.myMediaPlayerAdapter.reset(firstSongUri, nextSongUri, this, this);
-        this.myMediaPlayerAdapter.getCurrentMediaPlayer().setOnCompletionListener(this);
+        this.myMediaPlayerAdapter.reset(firstSongUri, nextSongUri);
         updateMediaSession();
     }
 
@@ -159,8 +161,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private void prepareFromMediaId(String mediaId, Bundle bundle) {
         //Log.i(LOG_TAG, "prepareFromMediaId");
         super.onPrepareFromMediaId(mediaId, bundle);
-        LibraryId parentId = (LibraryId) bundle.get(PARENT_ID);
-        List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getPlaylist(parentId);
+        LibraryObject parent = (LibraryObject) bundle.get(PARENT_OBJECT);
+        List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getPlaylist(parent);
         playbackManager.createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(results));
 
         if (mediaId == null) {
@@ -176,7 +178,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                 uriToPlay = mediaLibrary.getMediaUriFromMediaId(id);
                 playbackManager.setQueueIndex(mediaId);
                 followingUri = mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
-                myMediaPlayerAdapter.reset(uriToPlay, followingUri, this, this);
+                myMediaPlayerAdapter.reset(uriToPlay, followingUri);
 
                 break;
             }
@@ -272,14 +274,12 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         if (mediaPlayer != null && mediaPlayer.equals(myMediaPlayerAdapter.getCurrentMediaPlayer())) {
             Log.i(LOG_TAG, "looping " + mediaPlayer.isLooping());
             if (mediaPlayer.isLooping()) {
-               // mediaSession.setPlaybackState(myMediaPlayerAdapter.getMediaPlayerState(NO_ACTION, true));
-                // update media session to be the beginning of the current song
             } else {
                 playbackManager.notifyPlaybackComplete(); // increments queue
                 String nextUriToPrepare = playbackManager.getNext(); // gets uri after newly incremented index
                 if (null != nextUriToPrepare) {
                     Uri nextItemUri = mediaLibrary.getMediaUriFromMediaId(nextUriToPrepare);
-                    myMediaPlayerAdapter.onComplete(nextItemUri, this, this);
+                    myMediaPlayerAdapter.onComplete(nextItemUri);
                     updateMediaSession();
                 }
             }
@@ -343,7 +343,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         Uri newUri = mediaLibrary.getMediaUriFromMediaId(newMediaId);
         Uri followingUri = mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
         PlaybackStateCompat currentState = myMediaPlayerAdapter.getMediaPlayerState(ACTION_SEEK_TO);
-        myMediaPlayerAdapter.reset(newUri, followingUri, this, this);
+        myMediaPlayerAdapter.reset(newUri, followingUri);
         if (currentState.getState() == PlaybackStateCompat.STATE_PLAYING) {
             myMediaPlayerAdapter.play();
         }
@@ -361,6 +361,16 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     @Override
     public void onSeekComplete(MediaPlayer mp) {
         updateMediaSession(NO_ACTION);
+    }
+
+    private GenericMediaPlayerAdapter createMediaPlayerAdapter(Context context) {
+        switch (Build.VERSION.SDK_INT) {
+            case Build.VERSION_CODES.M:
+                return new MarshmallowMediaPlayerAdapter(context, this, this);
+            case Build.VERSION_CODES.N:
+                return new NougatMediaPlayerAdapter(context, this, this);
+            default: return new MyMediaPlayerAdapter(context, this, this);
+        }
     }
 
     private class ReceiveBroadcasts extends BroadcastReceiver {

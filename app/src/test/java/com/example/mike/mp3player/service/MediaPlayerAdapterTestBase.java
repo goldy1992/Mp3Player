@@ -10,6 +10,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.reflect.Whitebox;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.powermock.api.mockito.PowerMockito.when;
+
 public class MediaPlayerAdapterTestBase {
 
     @Mock
@@ -27,6 +30,10 @@ public class MediaPlayerAdapterTestBase {
 
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        mediaPlayerAdapter = createMediaPlayerAdapter();
+        when(MediaPlayer.create(any(Context.class), any(Uri.class))).thenReturn(mediaPlayer);
+        mediaPlayerAdapter.reset(uri, null);
+        Whitebox.setInternalState(mediaPlayerAdapter, "audioFocusManager", audioFocusManager);
 //      //  assertNotNull("MediaPlayer should not be null after initialisation", mediaPlayerAdapter.getCurrentMediaPlayer());
 //        assertTrue("Didn't initialise MediaPlayerAdapter correctly", mediaPlayerAdapter.isPrepared());
 //        assertEquals("Initialised into the incorrect state", PlaybackStateCompat.STATE_PAUSED, mediaPlayerAdapter.getCurrentState());
@@ -34,7 +41,7 @@ public class MediaPlayerAdapterTestBase {
 
 
     protected MyMediaPlayerAdapter createMediaPlayerAdapter() {
-        return new MyMediaPlayerAdapter(context);
+        return new MyMediaPlayerAdapter(this.context, null, null);
     }
 
     protected void setMediaPlayer(MediaPlayer mediaPlayer) {

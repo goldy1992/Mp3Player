@@ -3,7 +3,11 @@ package com.example.mike.mp3player.commons;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.SparseArray;
 
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
+import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.commons.library.Category;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 public final class Constants {
 
@@ -39,6 +43,13 @@ public final class Constants {
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_SKIPPING_TO_QUEUE_ITEM, "STATE_SKIPPING_TO_QUEUE_ITEM"); // 11
     };
 
+    public static final SparseArray<String> repeatModeDebugMap = new SparseArray<>();
+    static {
+        playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ALL, "REPEAT_MODE_ALL"); // 2
+        playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_NONE, "REPEAT_MODE_NONE"); // 0
+        playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ONE, "REPEAT_MODE_ONE"); // 1
+    };
+
 
     /* LIBRARY CONSTANTS */
     public static final String CATEGORY_ROOT_ID = Category.ROOT.name();
@@ -52,7 +63,9 @@ public final class Constants {
     public static final String CATEGORY_FOLDERS_DESCRIPTION = "A list of all folders with music inside them";
     public static final String FOLDER_CHILDREN = "FOLDER_CHILDREN";
     public static final String FOLDER_NAME = "FOLDER_NAME";
-    public static final String PARENT_ID = "PARENT_ID";
+    public static final String REQUEST_OBJECT = "REQUEST_OBJECT";
+    public static final String RESPONSE_OBJECT = "RESPONSE_OBJECT";
+    public static final String PARENT_OBJECT = "PARENT_OBJECT";
     public static final String PARENT_MEDIA_ITEM = "PARENT_MEDIA_ITEM";
     public static final int NO_ACTION = 0;
 }

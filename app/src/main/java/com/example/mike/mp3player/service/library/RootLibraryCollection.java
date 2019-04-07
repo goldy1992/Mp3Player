@@ -2,7 +2,7 @@ package com.example.mike.mp3player.service.library;
 
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import java.util.List;
 import java.util.TreeSet;
@@ -19,7 +19,7 @@ public class RootLibraryCollection extends LibraryCollection {
     }
 
     @Override
-    public TreeSet<MediaItem> getChildren(LibraryId id) {
+    public TreeSet<MediaItem> getChildren(LibraryObject id) {
         return null;
     }
     @Override

@@ -9,7 +9,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.example.mike.mp3player.commons.library.LibraryResponse;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 
 import java.util.ArrayList;
@@ -19,7 +20,8 @@ import java.util.TreeSet;
 import androidx.annotation.NonNull;
 import androidx.media.MediaBrowserServiceCompat;
 
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
+import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
+import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -76,7 +78,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     }
 
     /**
-     * onLoadChildren(String, Result, Bundle) :- onLoadChildren should always be called with a LibraryId item as a bundle option. Searching for
+     * onLoadChildren(String, Result, Bundle) :- onLoadChildren should always be called with a LibraryObject item as a bundle option. Searching for
      * a MediaItem's children is now deprecated as it wasted
      * @param parentId
      * @param result
@@ -89,27 +91,30 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     }
 
     @Override
-    public void onLoadChildren(final String parentMediaId,
+    public void onLoadChildren(@NonNull final String parentMediaId,
                                final Result<List<MediaBrowserCompat.MediaItem>> result, Bundle options) {
-        if (options == null) {
-            result.sendResult(null);
-            return;
-        }
-
-        LibraryId libraryId = (LibraryId) options.get(PARENT_ID);
-        if (libraryId == null) {
-            result.sendResult(null);
-            return;
-        }
-
-
         //  Browsing not allowed
         if (TextUtils.equals(MY_EMPTY_MEDIA_ROOT_ID, parentMediaId)) {
             result.sendResult(null);
             return;
         }
+
+        if (options == null) {
+            result.sendResult(null);
+            return;
+        }
+
+        LibraryRequest libraryRequest = (LibraryRequest) options.get(REQUEST_OBJECT);
+        if (libraryRequest == null) {
+            result.sendResult(null);
+            return;
+        }
+
+
         // Assume for example that the music catalog is already loaded/cached.
-        TreeSet<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryId);
+        TreeSet<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryRequest);
+        LibraryResponse libraryResponse = new LibraryResponse(libraryRequest);
+        options.putParcelable(RESPONSE_OBJECT, libraryResponse);
         result.sendResult(new ArrayList<>(mediaItems));
     }
 

@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
-import android.support.v4.media.MediaBrowserCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +10,6 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.SongSearchActionListener;
-
-import java.util.List;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,16 +34,15 @@ public class MainActivityRootFragment extends Fragment implements SongSearchActi
         this.songFilterFragment = (SongFilterFragment) getChildFragmentManager().findFragmentById(R.id.searchSongViewFragment);
     }
 
-    public void init(InputMethodManager inputMethodManager,
-                    MediaBrowserAdapter mediaBrowserAdapter,
-                    MediaControllerAdapter mediaControllerAdapter,
-                    Map<MediaBrowserCompat.MediaItem,
-                    List<MediaBrowserCompat.MediaItem>> menuItems) {
-
+    public void init(InputMethodManager inputMethodManager, MediaBrowserAdapter mediaBrowserAdapter,
+                     MediaControllerAdapter mediaControllerAdapter) {
         setInputMethodManager(inputMethodManager);
-        getView().setFocusableInTouchMode(true);
-        getView().requestFocus();
-        this.mainFrameFragment.init(menuItems, mediaBrowserAdapter, mediaControllerAdapter, this);
+        View view = getView();
+        if (null != view) {
+            view.setFocusableInTouchMode(true);
+            view.requestFocus();
+        }
+        this.mainFrameFragment.init(this, mediaBrowserAdapter, mediaControllerAdapter);
         this.songFilterFragment.init(this);
     }
 

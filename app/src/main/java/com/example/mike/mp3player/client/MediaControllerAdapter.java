@@ -8,7 +8,6 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
@@ -21,29 +20,33 @@ public class MediaControllerAdapter {
     private static final String LOG_TAG = "MDIA_CNTRLLR_ADPTR";
     private MediaControllerCompat mediaControllerCompat;
     private MyMediaControllerCallback myMediaControllerCallback;
-    private MediaSessionCompat.Token token;
+    private MediaSessionCompat.Token token = null;
     private boolean isInitialized = false;
     private Context context;
     private Looper looper;
 
-    public MediaControllerAdapter(Context context, MediaSessionCompat.Token token, Looper looper) {
-        this.token = token;
+    public MediaControllerAdapter(Context context, Looper looper) {
         this.context = context;
         this.looper = looper;
+        this.myMediaControllerCallback = new MyMediaControllerCallback(looper);
     }
 
-    public boolean init() {
+
+    public MediaControllerAdapter(Context context, MediaSessionCompat.Token token, Looper looper) {
+        this(context, looper);
+        init(token);
+    }
+
+    public void init(MediaSessionCompat.Token token) {
+        boolean result = true;
         try {
             this.mediaControllerCompat = new MediaControllerCompat(context, token);
-            this.myMediaControllerCallback = new MyMediaControllerCallback(looper);
             this.mediaControllerCompat.registerCallback(myMediaControllerCallback);
         } catch (RemoteException ex) {
-            this.isInitialized = false;
-            return false;
+            result = false;
         }
-
-        this.isInitialized = true;
-        return true;
+        this.isInitialized = result;
+        this.token = token;
     }
 
     public void prepareFromMediaId(String mediaId, Bundle extras) {
@@ -140,9 +143,11 @@ public class MediaControllerAdapter {
     }
 
     public void updateUiState() {
-        myMediaControllerCallback.onMetadataChanged(mediaControllerCompat.getMetadata());
+        if (isInitialized) {
+            myMediaControllerCallback.onMetadataChanged(mediaControllerCompat.getMetadata());
 //        myMediaControllerCallback.onPlaybackStateChanged(mediaControllerCompat.getPlaybackState());
-        myMediaControllerCallback.getMyPlaybackStateCallback().updateAll(mediaControllerCompat.getPlaybackState());
+            myMediaControllerCallback.getMyPlaybackStateCallback().updateAll(mediaControllerCompat.getPlaybackState());
+        }
     }
 
     public void sendCustomAction(String customAction, Bundle args) {

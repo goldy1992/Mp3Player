@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackToolbarExtendedFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
@@ -13,9 +12,10 @@ import com.example.mike.mp3player.client.views.fragments.ShuffleRepeatFragment;
 import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.commons.Constants;
-import com.example.mike.mp3player.commons.library.LibraryId;
+import com.example.mike.mp3player.commons.library.LibraryObject;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
+import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -34,22 +34,32 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     private ShuffleRepeatFragment shuffleRepeatFragment;
 
     @Override
+    boolean initialiseView(int layoutId) {
+        setContentView(layoutId);
+        this.simpleTitleBarFragment = (SimpleTitleBarFragment) getSupportFragmentManager().findFragmentById(R.id.simpleTitleBarFragment);
+        this.trackInfoFragment = (TrackInfoFragment) getSupportFragmentManager().findFragmentById(R.id.trackInfoFragment);
+        this.playbackSpeedControlsFragment = (PlaybackSpeedControlsFragment) getSupportFragmentManager().findFragmentById(R.id.playbackSpeedControlsFragment);
+        this.playbackTrackerFragment = (PlaybackTrackerFragment) getSupportFragmentManager().findFragmentById(R.id.playbackTrackerFragment);
+        this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) getSupportFragmentManager().findFragmentById(R.id.playbackToolbarExtendedFragment);
+        this.shuffleRepeatFragment = (ShuffleRepeatFragment) getSupportFragmentManager().findFragmentById(R.id.shuffleRepeatFragment);
+        this.getPlaybackToolbarExtendedFragment().displayButtons();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initialiseView(R.layout.activity_media_player);
         token = (MediaSessionCompat.Token) retrieveIntentInfo(Constants.MEDIA_SESSION);
 
         if (token != null) {
-            setMediaControllerAdapter(new MediaControllerAdapter(this, token, getWorker().getLooper()));
-            String mediaId = (String) retrieveIntentInfo(Constants.MEDIA_ID);
-            LibraryId parentId = (LibraryId) retrieveIntentInfo(Constants.PARENT_ID);
-
-            getMediaControllerAdapter().init();
-            initView();
-            if (mediaId != null) { // if rq came with an media id it's a song request
+            initialiseMediaControllerAdapter(token);
+            LibraryRequest libraryRequest = (LibraryRequest) retrieveIntentInfo(Constants.REQUEST_OBJECT);
+            if (libraryRequest != null) { // if rq came with an media id it's a song request
+                String mediaId = libraryRequest.getId();
                 // Display the initial state
-                Bundle extras = new Bundle();
-                extras.putParcelable(PARENT_ID, parentId); // parent id will sure that the correct playlist is found in the media library
-                getMediaControllerAdapter().prepareFromMediaId(mediaId, extras);
+                ; // parent id will sure that the correct playlist is found in the media library
+                getMediaControllerAdapter().prepareFromMediaId(mediaId, getIntent().getExtras());
             }
             else {
 //                setMetaData(mediaControllerAdapter.getMetaData());
@@ -91,14 +101,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
      *
      */
     private void initView() {
-        setContentView(R.layout.activity_media_player);
-        this.simpleTitleBarFragment = (SimpleTitleBarFragment) getSupportFragmentManager().findFragmentById(R.id.simpleTitleBarFragment);
-        this.trackInfoFragment = (TrackInfoFragment) getSupportFragmentManager().findFragmentById(R.id.trackInfoFragment);
-        this.playbackSpeedControlsFragment = (PlaybackSpeedControlsFragment) getSupportFragmentManager().findFragmentById(R.id.playbackSpeedControlsFragment);
-        this.playbackTrackerFragment = (PlaybackTrackerFragment) getSupportFragmentManager().findFragmentById(R.id.playbackTrackerFragment);
-        this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) getSupportFragmentManager().findFragmentById(R.id.playbackToolbarExtendedFragment);
-        this.shuffleRepeatFragment = (ShuffleRepeatFragment) getSupportFragmentManager().findFragmentById(R.id.shuffleRepeatFragment);
-        this.getPlaybackToolbarExtendedFragment().displayButtons();
     }
 
     private Object retrieveIntentInfo(String key) {
@@ -117,11 +119,4 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         return playbackToolbarExtendedFragment;
     }
 
-    @Override
-    public void onConnected() {
-        /**
-         * not used as a media token is assumed from parent activities since this activity does not
-         * require a MediaBrowser
-         */
-    }
 }
