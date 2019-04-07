@@ -12,10 +12,7 @@ import com.example.mike.mp3player.client.views.fragments.ShuffleRepeatFragment;
 import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.commons.Constants;
-import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
-
-import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
 /**
  * Created by Mike on 24/09/2017.

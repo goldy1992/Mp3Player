@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.client.activities;
 
-import android.os.Bundle;
 import android.util.Log;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
