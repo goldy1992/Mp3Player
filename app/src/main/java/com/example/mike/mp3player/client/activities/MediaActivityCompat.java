@@ -27,7 +27,11 @@ public abstract class MediaActivityCompat extends AppCompatActivity  {
     }
 
     public void initialiseMediaControllerAdapter(MediaSessionCompat.Token token) {
-        this.mediaControllerAdapter = new MediaControllerAdapter(this, token, worker.getLooper());
+        if (null == this.mediaControllerAdapter) {
+            this.mediaControllerAdapter = new MediaControllerAdapter(this, token, worker.getLooper());
+        }
+        this.mediaControllerAdapter.init(token);
+
     }
 
     @Override

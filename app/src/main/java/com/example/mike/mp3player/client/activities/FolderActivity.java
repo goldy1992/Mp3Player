@@ -31,7 +31,8 @@ public class FolderActivity extends MediaBrowserSubscriberActivityCompat {
     boolean initialiseView(int layoutId) {
         setContentView(layoutId);
         this.simpleTitleBarFragment = (SimpleTitleBarFragment) getSupportFragmentManager().findFragmentById(R.id.simpleTitleBarFragment);
-        this.playToolBarFragment = PlayToolBarFragment.createAndInitialisePlayToolbarFragment(getMediaControllerAdapter(), false);
+        this.playToolBarFragment = (PlayToolBarFragment) getSupportFragmentManager().findFragmentById(R.id.playToolbarFragment);
+//        this.playToolBarFragment = PlayToolBarFragment.createAndInitialisePlayToolbarFragment(getMediaControllerAdapter(), false);
         return true;
     }
 
@@ -64,9 +65,11 @@ public class FolderActivity extends MediaBrowserSubscriberActivityCompat {
         super.onConnected();
 
         this.viewPageFragment = ChildViewPagerFragment.createViewPageFragment(Category.SONGS, parentId, getMediaBrowserAdapter());
-      getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
-         getSupportFragmentManager().beginTransaction().add(R.id.playToolbarFragment, playToolBarFragment).commitNow();
+        getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
+        this.playToolBarFragment.init(getMediaControllerAdapter(), false);
         playToolBarFragment.displayButtons();
+//        getSupportFragmentManager().beginTransaction().add(R.id.playToolbarFragment, playToolBarFragment).commitNow();
+
 
         getSupportActionBar().setTitle(getString(R.string.FOLDER_NAME, this.folderName));
         getMediaControllerAdapter().updateUiState();

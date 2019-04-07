@@ -20,7 +20,7 @@ public class MediaControllerAdapter {
     private static final String LOG_TAG = "MDIA_CNTRLLR_ADPTR";
     private MediaControllerCompat mediaControllerCompat;
     private MyMediaControllerCallback myMediaControllerCallback;
-    private MediaSessionCompat.Token token;
+    private MediaSessionCompat.Token token = null;
     private boolean isInitialized = false;
     private Context context;
     private Looper looper;
@@ -34,18 +34,19 @@ public class MediaControllerAdapter {
 
     public MediaControllerAdapter(Context context, MediaSessionCompat.Token token, Looper looper) {
         this(context, looper);
-        this.token = token;
-        this.isInitialized = init();
+        init(token);
     }
 
-    private boolean init() {
+    public void init(MediaSessionCompat.Token token) {
+        boolean result = true;
         try {
             this.mediaControllerCompat = new MediaControllerCompat(context, token);
             this.mediaControllerCompat.registerCallback(myMediaControllerCallback);
         } catch (RemoteException ex) {
-            return false;
+            result = false;
         }
-        return true;
+        this.isInitialized = result;
+        this.token = token;
     }
 
     public void prepareFromMediaId(String mediaId, Bundle extras) {
