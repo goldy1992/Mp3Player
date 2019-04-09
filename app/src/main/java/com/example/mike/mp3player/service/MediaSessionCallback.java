@@ -25,10 +25,10 @@ import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
-import com.example.mike.mp3player.service.player.GenericMediaPlayerAdapter;
-import com.example.mike.mp3player.service.player.MarshmallowMediaPlayerAdapter;
-import com.example.mike.mp3player.service.player.MyMediaPlayerAdapter;
-import com.example.mike.mp3player.service.player.NougatMediaPlayerAdapter;
+import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.MarshmallowMediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.MyMediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.NougatMediaPlayerAdapterBase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KE
 public class MediaSessionCallback extends MediaSessionCompat.Callback implements MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
     private ServiceManager serviceManager;
     private PlaybackManager playbackManager;
-    private GenericMediaPlayerAdapter myMediaPlayerAdapter;
+    private MediaPlayerAdapterBase myMediaPlayerAdapter;
     private MediaSessionCompat mediaSession;
     private MyNotificationManager myNotificationManager;
     private MediaLibrary mediaLibrary;
@@ -59,6 +59,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private Context context;
     private Handler worker;
     private static final String LOG_TAG = "MEDIA_SESSION_CALLBACK";
+    private boolean isInitialised = false;
 
     public MediaSessionCallback(Context context, MyNotificationManager myNotificationManager,
                                 ServiceManager serviceManager, MediaSessionCompat mediaSession,
@@ -75,13 +76,13 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     public void init() {
-        List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.mediaLibrary.getSongList());
-        List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
-        this.playbackManager.init(queueItems);
-        Uri firstSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getCurrentMediaId());
-        Uri nextSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
-        this.myMediaPlayerAdapter.reset(firstSongUri, nextSongUri);
-        updateMediaSession();
+            List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.mediaLibrary.getSongList());
+            List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
+            this.playbackManager.init(queueItems);
+            Uri firstSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getCurrentMediaId());
+            Uri nextSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
+            this.myMediaPlayerAdapter.reset(firstSongUri, nextSongUri);
+            updateMediaSession();
     }
 
     @Override
@@ -362,13 +363,13 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         updateMediaSession(NO_ACTION);
     }
 
-    private GenericMediaPlayerAdapter createMediaPlayerAdapter(Context context) {
+    private MediaPlayerAdapterBase createMediaPlayerAdapter(Context context) {
         switch (Build.VERSION.SDK_INT) {
             case Build.VERSION_CODES.M:
-                return new MarshmallowMediaPlayerAdapter(context, this, this);
+                return new MarshmallowMediaPlayerAdapterBase(context, this, this);
             case Build.VERSION_CODES.N:
-                return new NougatMediaPlayerAdapter(context, this, this);
-            default: return new MyMediaPlayerAdapter(context, this, this);
+                return new NougatMediaPlayerAdapterBase(context, this, this);
+            default: return new MyMediaPlayerAdapterBase(context, this, this);
         }
     }
 

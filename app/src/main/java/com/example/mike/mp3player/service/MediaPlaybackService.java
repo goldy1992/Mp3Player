@@ -8,7 +8,6 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.commons.library.LibraryResponse;
 import com.example.mike.mp3player.service.library.MediaLibrary;
@@ -20,7 +19,11 @@ import java.util.TreeSet;
 import androidx.annotation.NonNull;
 import androidx.media.MediaBrowserServiceCompat;
 
+import static com.example.mike.mp3player.commons.Constants.ACCEPTED_MEDIA_ROOT_ID;
 import static com.example.mike.mp3player.commons.Constants.EMPTY_LIBRARY;
+import static com.example.mike.mp3player.commons.Constants.EXTRA;
+import static com.example.mike.mp3player.commons.Constants.PACKAGE_NAME;
+import static com.example.mike.mp3player.commons.Constants.REJECTED_MEDIA_ROOT_ID;
 import static com.example.mike.mp3player.commons.Constants.REJECTION;
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
@@ -30,9 +33,6 @@ import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
  */
 public class MediaPlaybackService extends MediaBrowserServiceCompat {
 
-    private static final String PACKAGE_NAME = "com.example.mike.mp3player";
-    private static final String ACCEPTED_MEDIA_ROOT_ID = Category.ROOT.name();
-    private static final String REJECTED_MEDIA_ROOT_ID = "empty_root_id";
     private MyNotificationManager notificationManager;
     private MediaSessionCompat mMediaSession;
     private MediaSessionCallback mediaSessionCallback;
@@ -69,14 +69,9 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         // (Optional) Control the level of access for the specified package name.
         // You'll need to write your own logic to do this.
         if (allowBrowsing(clientPackageName, clientUid)) {
-            if (mediaLibrary.isPopulated()) {
-                // Returns a root ID that clients can use with onLoadChildren() to retrieve
-                // the content hierarchy.
-                return new BrowserRoot(ACCEPTED_MEDIA_ROOT_ID, extras);
-            } else {
-                extras.putString(REJECTION, EMPTY_LIBRARY);
-                return new BrowserRoot(REJECTED_MEDIA_ROOT_ID, extras);
-            }
+            // Returns a root ID that clients can use with onLoadChildren() to retrieve
+            // the content hierarchy.
+            return new BrowserRoot(ACCEPTED_MEDIA_ROOT_ID, extras);
         } else {
             // Clients can connect, but this BrowserRoot is an empty hierachy
             // so onLoadChildren returns nothing. This disables the ability to browse for content.
@@ -117,7 +112,6 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             return;
         }
 
-
         // Assume for example that the music catalog is already loaded/cached.
         TreeSet<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryRequest);
         LibraryResponse libraryResponse = new LibraryResponse(libraryRequest);
@@ -144,5 +138,4 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     private boolean allowBrowsing(String clientPackageName, int clientUid) {
         return clientPackageName.equals(PACKAGE_NAME);
     }
-
 }

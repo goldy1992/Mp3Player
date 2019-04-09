@@ -44,10 +44,12 @@ public final class MediaLibraryUtils {
      */
     public static List<MediaSessionCompat.QueueItem> convertMediaItemsToQueueItem(List<MediaItem> mediaItems) {
         List<MediaSessionCompat.QueueItem> queueItemList = new ArrayList<>();
-        for (MediaItem  mediaItem : mediaItems) {
-            queueItemList.add(
-                    new MediaSessionCompat.QueueItem( mediaItem.getDescription(), Long.parseLong(mediaItem.getMediaId() ) )
-            );
+        if (mediaItems != null) {
+            for (MediaItem mediaItem : mediaItems) {
+                queueItemList.add(
+                        new MediaSessionCompat.QueueItem(mediaItem.getDescription(), Long.parseLong(mediaItem.getMediaId()))
+                );
+            }
         }
         return queueItemList;
     }

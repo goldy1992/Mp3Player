@@ -7,6 +7,9 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.example.mike.mp3player.service.library.mediaretriever.ContentResolverMediaRetriever;
+import com.example.mike.mp3player.service.library.mediaretriever.EmptyMediaRetriever;
+import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +32,7 @@ public class MediaLibrary {
 
     public MediaLibrary(Context context) {
         this.context = context;
-        this.mediaRetriever = new ContentResolverMediaRetriever(context);
+        this.mediaRetriever = new EmptyMediaRetriever(context);
         categories = new HashMap<>();
     }
     public void init() {

@@ -128,7 +128,10 @@ public class PlaybackManager {
     }
 
     public MediaSessionCompat.QueueItem getCurrentItem() {
-        return playlist.get(queueIndex);
+        if (validQueueIndex(queueIndex)) {
+            return playlist.get(queueIndex);
+        }
+        return  null;
     }
 
     public int getLastIndex() {

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
-import com.example.mike.mp3player.service.player.MyMediaPlayerAdapter;
+import com.example.mike.mp3player.service.player.MyMediaPlayerAdapterBase;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -26,7 +26,7 @@ public class MediaPlayerAdapterTestBase {
     @Mock
     AudioFocusManager audioFocusManager;
 
-    MyMediaPlayerAdapter mediaPlayerAdapter;
+    MyMediaPlayerAdapterBase mediaPlayerAdapter;
 
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -40,8 +40,8 @@ public class MediaPlayerAdapterTestBase {
     }
 
 
-    protected MyMediaPlayerAdapter createMediaPlayerAdapter() {
-        return new MyMediaPlayerAdapter(this.context, null, null);
+    protected MyMediaPlayerAdapterBase createMediaPlayerAdapter() {
+        return new MyMediaPlayerAdapterBase(this.context, null, null);
     }
 
     protected void setMediaPlayer(MediaPlayer mediaPlayer) {
