@@ -1,6 +1,6 @@
 package com.example.mike.mp3player.service;
 
-import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.MediaSessionCompat.QueueItem;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -9,8 +9,9 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class PlaybackManagerTest {
     public PlaybackManager playbackManager;
@@ -68,5 +69,21 @@ public class PlaybackManagerTest {
     public void testGetLastOnEmptyPlaylist() {
         final int EXPECTED_LAST_INDEX = -1;
         assertEquals(EXPECTED_LAST_INDEX, playbackManager.getLastIndex());
+    }
+    /**
+     * GIVEN: a playlist with 1 queue item at index 0
+     * WHEN: we get the media id of index 0
+     */
+    @Test
+    public void getPlaylistMediaId() {
+        QueueItem queueItem = MOCK_QUEUE_ITEM;
+        final int QUEUE_ITEM_INDEX = 0;
+        final String EXPECTED_MEDIA_ID = "EXPECTED_MEDIA_ID";
+        MediaDescriptionCompat description = mock(MediaDescriptionCompat.class);
+        when(description.getMediaId()).thenReturn(EXPECTED_MEDIA_ID);
+        when(queueItem.getDescription()).thenReturn(description);
+        playbackManager.onAddQueueItem(queueItem);
+        String result = playbackManager.getPlaylistMediaId(QUEUE_ITEM_INDEX);
+        assertEquals(EXPECTED_MEDIA_ID, result);
     }
 }
