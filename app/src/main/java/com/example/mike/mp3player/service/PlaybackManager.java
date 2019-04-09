@@ -119,11 +119,11 @@ public class PlaybackManager {
     }
 
     public boolean createNewPlaylist(List<QueueItem> newList) {
-        playlist.clear();;
+        playlist.clear();
         return playlist.addAll(newList);
     }
 
-    public void setQueueIndex(String mediaId) {
+    public void setCurrentItem(String mediaId) {
         Integer integerQueueIndex = MediaLibraryUtils.findIndexOfTrackInPlaylist(playlist, mediaId);
         if (integerQueueIndex == null) {
             queueIndex = -1;

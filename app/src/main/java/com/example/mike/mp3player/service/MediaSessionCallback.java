@@ -176,7 +176,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             String id = MediaItemUtils.getMediaId(m);
             if (id != null && id.equals(mediaId)) {
                 uriToPlay = mediaLibrary.getMediaUriFromMediaId(id);
-                playbackManager.setQueueIndex(mediaId);
+                playbackManager.setCurrentItem(mediaId);
                 followingUri = mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
                 myMediaPlayerAdapter.reset(uriToPlay, followingUri);
 

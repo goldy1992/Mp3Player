@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -85,5 +86,86 @@ public class PlaybackManagerTest {
         playbackManager.onAddQueueItem(queueItem);
         String result = playbackManager.getPlaylistMediaId(QUEUE_ITEM_INDEX);
         assertEquals(EXPECTED_MEDIA_ID, result);
+    }
+    /**
+     * GIVEN: a playlist of 2 items and the playlist is repeating
+     * AND: the current item is the first item
+     * WHEN: notifyPlaybackComplete() is called
+     * THEN: the new queue index is the 2nd queue item
+     */
+    @Test
+    public void testNotifyPlaybackCompleteNotLastItem() {
+        final QueueItem ITEM1 = MOCK_QUEUE_ITEM;
+        final QueueItem ITEM2 = mock(QueueItem.class);
+        playbackManager.onAddQueueItem(ITEM1);
+        playbackManager.onAddQueueItem(ITEM2);
+        playbackManager.setRepeating(true);
+        QueueItem currentItem = playbackManager.getCurrentItem();
+        assertEquals(ITEM1, currentItem);
+        playbackManager.notifyPlaybackComplete();
+        currentItem = playbackManager.getCurrentItem();
+        assertEquals(ITEM2, currentItem);
+        playbackManager.notifyPlaybackComplete();
+        currentItem = playbackManager.getCurrentItem();
+        assertEquals(ITEM1, currentItem);
+    }
+    /**
+     * GIVEN: a playlist of 2 items and the playlist is repeating
+     * AND: the current item is the last item in the list
+     * WHEN: notifyPlaybackComplete() is called subsequently
+     * THEN: the new queue index returns to be the first item since repeating is set to true.
+     */
+    @Test
+    public void testNotifyPlaybackCompleteLastItemRepeating() {
+        final QueueItem ITEM1 = MOCK_QUEUE_ITEM;
+        final QueueItem ITEM2 = mock(QueueItem.class);
+        playbackManager.onAddQueueItem(ITEM1);
+        playbackManager.onAddQueueItem(ITEM2);
+        playbackManager.setRepeating(true);
+        playbackManager.notifyPlaybackComplete(); //increment to the last item
+        playbackManager.notifyPlaybackComplete(); // incrementation on the last item
+        QueueItem currentItem = playbackManager.getCurrentItem();
+        assertEquals(ITEM1, currentItem);
+    }
+    /**
+     * GIVEN: a playlist of 2 items and the playlist is NOT repeating
+     * AND: the current item is the last item in the list
+     * WHEN: notifyPlaybackComplete() is called subsequently
+     * THEN: the new queue index should return null because it was already at the last item in the
+     * list.
+     */
+    @Test
+    public void testNotifyPlaybackCompleteLastItemNotRepeating() {
+        final QueueItem ITEM1 = MOCK_QUEUE_ITEM;
+        final QueueItem ITEM2 = mock(QueueItem.class);
+        playbackManager.onAddQueueItem(ITEM1);
+        playbackManager.onAddQueueItem(ITEM2);
+        playbackManager.setRepeating(false);
+        playbackManager.notifyPlaybackComplete(); //increment to the last item
+        playbackManager.notifyPlaybackComplete(); // incrementation on the last item
+        QueueItem currentItem = playbackManager.getCurrentItem();
+        assertNull(currentItem);
+    }
+    /**
+     * GIVEN: a playlist of 3 items
+     * WHEN: setCurrentItem() is called with the media id of the last item
+     * THEN: the last item is the new current item
+     */
+    @Test
+    public void testGetCurrentItem() {
+        final String MEDIA_ID = "MEDIA_ID";
+        final QueueItem ITEM1 = MOCK_QUEUE_ITEM;
+        final QueueItem ITEM2 = mock(QueueItem.class);
+        final QueueItem LAST_ITEM = mock(QueueItem.class);
+        MediaDescriptionCompat description = mock(MediaDescriptionCompat.class);
+        when(description.getMediaId()).thenReturn(MEDIA_ID);
+        when(LAST_ITEM.getDescription()).thenReturn(description);
+        playbackManager.onAddQueueItem(ITEM1);
+        playbackManager.onAddQueueItem(ITEM2);
+        playbackManager.onAddQueueItem(LAST_ITEM);
+        playbackManager.setCurrentItem(MEDIA_ID);
+
+        QueueItem result = playbackManager.getCurrentItem();
+        assertEquals(LAST_ITEM, result);
     }
 }

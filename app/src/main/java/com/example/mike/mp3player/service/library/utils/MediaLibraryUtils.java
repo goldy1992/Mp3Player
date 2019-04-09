@@ -62,7 +62,7 @@ public final class MediaLibraryUtils {
         for (int currentIndex = 0; currentIndex < queue.size(); currentIndex++) {
             MediaSessionCompat.QueueItem queueItem = queue.get(currentIndex);
             if (queueItem == null || queueItem.getDescription() == null) {
-                break;
+                continue;
             }
             if (queue.get(currentIndex).getDescription().getMediaId().equals(mediaId)) {
                 return currentIndex;
