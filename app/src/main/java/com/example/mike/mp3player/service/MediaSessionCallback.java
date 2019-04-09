@@ -68,21 +68,21 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.mediaSession = mediaSession;
         this.mediaLibrary = mediaLibrary;
         this.myNotificationManager = myNotificationManager;
-        this.playbackManager = new PlaybackManager();
+        List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.mediaLibrary.getSongList());
+        List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
+        this.playbackManager = new PlaybackManager(queueItems);
         this.myMediaPlayerAdapter = createMediaPlayerAdapter(context);
         this.broadcastReceiver = new ReceiveBroadcasts();
         this.context = context;
         this.worker = new Handler(looper);
+        init();
     }
 
-    public void init() {
-            List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.mediaLibrary.getSongList());
-            List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
-            this.playbackManager.init(queueItems);
-            Uri firstSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getCurrentMediaId());
-            Uri nextSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
-            this.myMediaPlayerAdapter.reset(firstSongUri, nextSongUri);
-            updateMediaSession();
+    private void init() {
+        Uri firstSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getCurrentMediaId());
+        Uri nextSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
+        this.myMediaPlayerAdapter.reset(firstSongUri, nextSongUri);
+        updateMediaSession();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         serviceManager.startService(prepareNotification());
     }
 
-        @Override
+    @Override
     public synchronized void onSkipToNext() {
         worker.post(() -> this.skipToNext());
     }
