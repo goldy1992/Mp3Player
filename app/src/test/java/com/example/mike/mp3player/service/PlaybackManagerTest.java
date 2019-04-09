@@ -168,4 +168,30 @@ public class PlaybackManagerTest {
         QueueItem result = playbackManager.getCurrentItem();
         assertEquals(LAST_ITEM, result);
     }
+    /**
+     * GIVEN: a playlist of one item with a media id 'm'
+     * WHEN: we call getCurrentMediaId()
+     * THEN: m is returned
+     */
+    @Test
+    public void testGetCurrentMediaId() {
+        final String MEDIA_ID = "MEDIA_ID";
+        final QueueItem ITEM1 = MOCK_QUEUE_ITEM;
+        MediaDescriptionCompat description = mock(MediaDescriptionCompat.class);
+        when(description.getMediaId()).thenReturn(MEDIA_ID);
+        when(ITEM1.getDescription()).thenReturn(description);
+        playbackManager.onAddQueueItem(ITEM1);
+        final String result = playbackManager.getCurrentMediaId();
+        assertEquals(MEDIA_ID, result);
+    }
+    /**
+     * GIVEN: an empty playlist
+     * WHEN: we call getCurrentMediaId()
+     * THEN: null is returned
+     */
+    @Test
+    public void testGetCurrentMediaIdWithNullPlaylist() {
+        final String result = playbackManager.getCurrentMediaId();
+        assertNull(result);
+    }
 }
