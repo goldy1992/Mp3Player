@@ -20,7 +20,7 @@ import static com.example.mike.mp3player.commons.Constants.DEFAULT_PITCH;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_SPEED;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 
-public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener  {
+public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener  {
 
     static final int NOT_IN_USE = -1;
 
@@ -46,8 +46,8 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
     @PlaybackStateCompat.State
     int currentState = PlaybackStateCompat.STATE_PAUSED;
 
-    public GenericMediaPlayerAdapter(Context context, OnCompletionListener onCompletionListener,
-                                     OnSeekCompleteListener onSeekCompleteListener) {
+    public MediaPlayerAdapterBase(Context context, OnCompletionListener onCompletionListener,
+                                  OnSeekCompleteListener onSeekCompleteListener) {
         this.context = context;
         this.onCompletionListener = onCompletionListener;
         this.onSeekCompleteListener = onSeekCompleteListener;
@@ -118,6 +118,9 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
     }
 
     MediaPlayer createMediaPlayer(Uri uri) {
+        if (uri == null) {
+            return null;
+        }
         MediaPlayer mediaPlayer = MediaPlayer.create(context, uri);
         return setListeners(mediaPlayer);
     }
@@ -159,14 +162,28 @@ public abstract class GenericMediaPlayerAdapter implements MediaPlayer.OnErrorLi
                 .setActions(actions)
                 .setExtras(ex)
                 .setState(getCurrentState(),
-                        startOfSong ? 0 : currentMediaPlayer.getCurrentPosition(),
+                        startOfSong ? 0 : getCurrentPosition(),
                         getCurrentPlaybackSpeed())
                 .build();
     }
 
+    /**
+     *
+     * @return
+     */
+    public int getCurrentPosition() {
+        return currentMediaPlayer != null ? currentMediaPlayer.getCurrentPosition() : 0;
+    }
+    /**
+     *
+     * @return
+     */
+    public int getCurrentDuration() {
+        return currentMediaPlayer != null ? currentMediaPlayer.getDuration() : 0;
+    }
     public MediaMetadataCompat.Builder getCurrentMetaData() {
         MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
-        return builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, currentMediaPlayer.getDuration());
+        return builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, getCurrentDuration());
     }
 
     public boolean isPlaying() {

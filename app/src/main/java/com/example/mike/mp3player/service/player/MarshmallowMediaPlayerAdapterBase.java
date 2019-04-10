@@ -11,7 +11,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.LoggingUtils.logPlaybackParams;
 
-public class MarshmallowMediaPlayerAdapter extends GenericMediaPlayerAdapter {
+public class MarshmallowMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
 
     private MediaPlayerPool mediaPlayerPool;
     private int position = DEFAULT_POSITION;
@@ -19,8 +19,8 @@ public class MarshmallowMediaPlayerAdapter extends GenericMediaPlayerAdapter {
     private Uri nextUri;
     private Uri currentUri;
 
-    public MarshmallowMediaPlayerAdapter(Context context, OnCompletionListener onCompletionListener,
-                                         OnSeekCompleteListener onSeekCompleteListener) {
+    public MarshmallowMediaPlayerAdapterBase(Context context, OnCompletionListener onCompletionListener,
+                                             OnSeekCompleteListener onSeekCompleteListener) {
         super(context, onCompletionListener, onSeekCompleteListener);
         this.mediaPlayerPool = new MediaPlayerPool(context);
     }

@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.service.library;
+package com.example.mike.mp3player.service.library.mediaretriever;
 
 import android.content.Context;
 import android.support.v4.media.MediaBrowserCompat;
@@ -22,7 +22,7 @@ public class LecacyMediaRetriever extends MediaRetriever {
     }
 
     @Override
-    List<MediaBrowserCompat.MediaItem> retrieveMedia() {
+    public List<MediaBrowserCompat.MediaItem> retrieveMedia() {
         File externalStorageDirectory = MediaLibraryUtils.getExternalStorageDirectory();
         File internalStorage = MediaLibraryUtils.getInternalStorageDirectory();
         List<MediaBrowserCompat.MediaItem> songList = buildSongList(externalStorageDirectory);

@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.service.library;
+package com.example.mike.mp3player.service.library.mediaretriever;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -29,7 +29,7 @@ public class ContentResolverMediaRetriever extends MediaRetriever {
 
     final String[] PROJECTION = {Media.DATA, Media.DURATION, Media.ARTIST, Media.TITLE};
     @Override
-    List<MediaBrowserCompat.MediaItem> retrieveMedia() {
+    public List<MediaBrowserCompat.MediaItem> retrieveMedia() {
         List<MediaBrowserCompat.MediaItem> listToReturn = new ArrayList<>();
         Cursor cursor = m_contentResolver.query(Media.EXTERNAL_CONTENT_URI ,PROJECTION,
                 null, null, null);

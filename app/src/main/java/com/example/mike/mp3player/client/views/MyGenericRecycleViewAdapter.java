@@ -2,10 +2,15 @@ package com.example.mike.mp3player.client.views;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaDescriptionCompat;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.GridLayout;
 
+import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.commons.library.Category;
@@ -21,35 +26,30 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static android.support.v4.media.MediaBrowserCompat.MediaItem;
+import static com.example.mike.mp3player.commons.Constants.FIRST;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 import static com.example.mike.mp3player.commons.MediaItemUtils.hasTitle;
 
 public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements
         Filterable, MediaBrowserResponseListener {
-
+    final String LOG_TAG = "MY_VIEW_ADAPTER";
+    private static final String EMPTY_MEDIA_ID = "EMPTY_MEDIA_ID";
+    final int EMPTY_VIEW_TYPE = -1;
     public abstract Category getSubscriptionCategory();
     MediaBrowserAdapter mediaBrowserAdapter;
-    protected List<MediaBrowserCompat.MediaItem> items;
-    protected List<MediaBrowserCompat.MediaItem> filteredSongs;
+    protected List<MediaItem> items = new ArrayList<>();;
+    protected List<MediaItem> filteredSongs = new ArrayList<>();;
     MySongFilter filter;
-    final String LOG_TAG = "MY_VIEW_ADAPTER";
+    private boolean isInitialised = false;
+    private final MediaItem EMPTY_LIST_ITEM = buildEmptyListMediaItem();
 
     public MyGenericRecycleViewAdapter(MediaBrowserAdapter mediaBrowserAdapter, LibraryObject parent) {
         super();
-        this.items = new ArrayList<>();
         this.mediaBrowserAdapter = mediaBrowserAdapter;
-        this.filteredSongs = new ArrayList<>();
         filter = new MySongFilter();
         mediaBrowserAdapter.registerListener(parent.getId(), this);
         mediaBrowserAdapter.subscribe(new LibraryRequest(parent));
-    }
-
-    public void setData(List<MediaBrowserCompat.MediaItem> items) {
-        if (this.getItems() == null) {
-            this.items = items;
-        } else {
-            this.getItems().addAll(items);
-        }
     }
 
     @Override
@@ -63,31 +63,72 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
     }
 
     @Override
-    public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options, Context context) {
-        this.filteredSongs.addAll(children);
-        this.items.addAll(children);
+    public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaItem> children, @NonNull Bundle options, Context context) {
+        if (!isInitialised && children.isEmpty()) {
+            addNoChildrenFoundItem();
+        }
+
+        if (!children.isEmpty()) {
+            this.filteredSongs.addAll(children);
+            this.items.addAll(children);
+            notifyDataSetChanged();
+        }
+        this.isInitialised = true;
+    }
+    @Override
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == EMPTY_VIEW_TYPE) {
+            GridLayout t = (GridLayout) LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.empty_item_menu, parent, false);
+            return new MyViewHolder(t);
+        }
+        return null;
+    }
+
+    @Override
+    public int getItemViewType (int position) {
+        if (position == FIRST && isEmptyRecycleView()) {
+            return EMPTY_VIEW_TYPE;
+        }
+        return super.getItemViewType(position);
+    }
+
+    private void addNoChildrenFoundItem() {
+        filteredSongs.add(EMPTY_LIST_ITEM);
+        items.add(EMPTY_LIST_ITEM);
         notifyDataSetChanged();
     }
 
-    public List<MediaBrowserCompat.MediaItem> getFilteredSongs() {
+    private MediaItem buildEmptyListMediaItem() {
+        MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder()
+                .setMediaId(EMPTY_MEDIA_ID)
+                .build();
+        return new MediaItem(mediaDescriptionCompat, MediaItem.FLAG_PLAYABLE);
+    }
+
+    public List<MediaItem> getFilteredSongs() {
         return filteredSongs;
     }
 
-    public List<MediaBrowserCompat.MediaItem> getItems() {
+    public List<MediaItem> getItems() {
         return items;
+    }
+
+    protected boolean isEmptyRecycleView() {
+        return items.isEmpty() || items.get(FIRST).equals(EMPTY_LIST_ITEM);
     }
 
     protected class MySongFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
 
-            List<MediaBrowserCompat.MediaItem> filteredList = new ArrayList<>();
+            List<MediaItem> filteredList = new ArrayList<>();
 
             if (StringUtils.isBlank(constraint.toString())) {
                 return results(getItems());
             }
 
-            for (MediaBrowserCompat.MediaItem i : getItems()) {
+            for (MediaItem i : getItems()) {
                 String title = hasTitle(i) ? getTitle(i).toUpperCase(Locale.getDefault()) : null;
                 String uppercaseConstraint = constraint.toString().toUpperCase(Locale.getDefault());
                 if (title.contains(uppercaseConstraint)) {
@@ -100,16 +141,14 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
         @Override
         @SuppressWarnings("unchecked")
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            filteredSongs = (List<MediaBrowserCompat.MediaItem>) results.values;
+            filteredSongs = (List<MediaItem>) results.values;
             notifyDataSetChanged();
         }
 
-        private FilterResults results(List<MediaBrowserCompat.MediaItem> filteredSongs) {
+        private FilterResults results(List<MediaItem> filteredSongs) {
             FilterResults filterResults = new FilterResults();
             filterResults.values = filteredSongs;
             return filterResults;
         }
     }
-
-
 }
