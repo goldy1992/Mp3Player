@@ -39,6 +39,7 @@ public class ShuffleRepeatFragment extends AsyncFragment {
         repeatOneRepeatAllButton.setOnClickListener((View v) -> setRepeatOneRepeatAllButtonMode(v));
         shuffleButton = view.findViewById(R.id.shuffleButton);
         shuffleButton.updateState(PlaybackStateCompat.SHUFFLE_MODE_NONE);
+        shuffleButton.setOnClickListener((View v) -> setShuffleButtonMode(v));
     }
 
     public void init(MediaControllerAdapter mediaControllerAdapter, boolean attachToRoot) {
@@ -47,6 +48,7 @@ public class ShuffleRepeatFragment extends AsyncFragment {
             this.repeatOneRepeatAllButton = RepeatOneRepeatAllButton.create(mediaControllerAdapter.getContext());
         }
         this.mediaControllerAdapter.registerPlaybackStateListener(repeatOneRepeatAllButton, Collections.singleton(ListenerType.REPEAT));
+        this.mediaControllerAdapter.registerPlaybackStateListener(shuffleButton, Collections.singleton(ListenerType.SHUFFLE));
         this.attachToRoot = attachToRoot;
     }
 
@@ -56,6 +58,11 @@ public class ShuffleRepeatFragment extends AsyncFragment {
         // TODO: activate statement when MediaPlaybackService is ready to consume repeat requests
         mediaControllerAdapter.setRepeatMode(nextState);
         repeatOneRepeatAllButton.updateState(repeatOneRepeatAllButton.getNextState());
+    }
+
+    void setShuffleButtonMode(View view) {
+        @PlaybackStateCompat.ShuffleMode int newShuffleMode = shuffleButton.toggleShuffle();
+        mediaControllerAdapter.setShuffleMode(newShuffleMode);
     }
 
 
