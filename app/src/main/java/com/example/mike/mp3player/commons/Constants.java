@@ -76,4 +76,5 @@ public final class Constants {
     public static final String EMPTY_LIBRARY = "EMPTY_LIBRARY";
 
     public static final String EXTRA = "EXTRA";
+    public static final int FIRST = 0;
 }

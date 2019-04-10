@@ -32,7 +32,8 @@ public class MediaLibrary {
 
     public MediaLibrary(Context context) {
         this.context = context;
-        this.mediaRetriever = new EmptyMediaRetriever(context);
+//        this.mediaRetriever = new EmptyMediaRetriever(context);
+        this.mediaRetriever = new ContentResolverMediaRetriever(context);
         categories = new HashMap<>();
     }
     public void init() {

@@ -29,28 +29,33 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new views
-        GridLayout t = (GridLayout) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.folder_item_menu, parent, false);
+        MyViewHolder vh = super.onCreateViewHolder(parent, viewType);
+        if (vh == null) {
+            // create a new views
+            GridLayout t = (GridLayout) LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.folder_item_menu, parent, false);
 
-        MyViewHolder vh = new MyViewHolder(t);
+            vh = new MyViewHolder(t);
+        }
         return vh;
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        //Log.i(LOG_TAG, "position: " + position);
-        MediaBrowserCompat.MediaItem song = getFilteredSongs().get(holder.getAdapterPosition());
-        // - get element from your dataset at this position
-        // - replace the contents of the views with that element
-        //song.getMediaId();
-        String folderName = extractFolderName(song);
-        TextView folderNameText = holder.getView().findViewById(R.id.folderName);
-        folderNameText.setText(folderName);
+        if (!isEmptyRecycleView()) {
+            //Log.i(LOG_TAG, "position: " + position);
+            MediaBrowserCompat.MediaItem song = getFilteredSongs().get(holder.getAdapterPosition());
+            // - get element from your dataset at this position
+            // - replace the contents of the views with that element
+            //song.getMediaId();
+            String folderName = extractFolderName(song);
+            TextView folderNameText = holder.getView().findViewById(R.id.folderName);
+            folderNameText.setText(folderName);
 
-        String folderPath = extractFolderPath(song);
-        TextView folderPathText = holder.getView().findViewById(R.id.folderPath);
-        folderPathText.setText(folderPath);
+            String folderPath = extractFolderPath(song);
+            TextView folderPathText = holder.getView().findViewById(R.id.folderPath);
+            folderPathText.setText(folderPath);
+        }
     }
 
     private String extractFolderName(MediaBrowserCompat.MediaItem song) {
