@@ -194,4 +194,124 @@ public class PlaybackManagerTest {
         final String result = playbackManager.getCurrentMediaId();
         assertNull(result);
     }
+    /**
+     * GIVEN: a playlist of 2 items where the current position is the first in the queue
+     * WHEN: skipToNext() is called
+     * THEN: the current item is the second in the queue
+     */
+    @Test
+    public void testSkipToNext() {
+        QueueItem ITEM1 = MOCK_QUEUE_ITEM;
+        QueueItem ITEM2 = mock(QueueItem.class);
+        playbackManager.onAddQueueItem(ITEM1);
+        playbackManager.onAddQueueItem(ITEM2);
+        playbackManager.skipToNext();
+        QueueItem result = playbackManager.getCurrentItem();
+        assertEquals(ITEM2, result);
+    }
+    /**
+     * GIVEN: a playlist of 2 items where the current position is the last in the queue
+     * WHEN: skipToNext() is called
+     * THEN: the current item is the first in the queue
+     */
+    @Test
+    public void testSkipToNextLastItemWhenRepeating() {
+        QueueItem ITEM1 = MOCK_QUEUE_ITEM;
+        QueueItem ITEM2 = mock(QueueItem.class);
+        playbackManager.setRepeating(true);
+        playbackManager.onAddQueueItem(ITEM1);
+        playbackManager.onAddQueueItem(ITEM2);
+        playbackManager.notifyPlaybackComplete(); // make current item the last item
+        playbackManager.skipToNext();
+        QueueItem result = playbackManager.getCurrentItem();
+        assertEquals(ITEM1, result);
+    }
+    /**
+     * GIVEN: a playlist of 2 items where the current position is the last in the queue
+     * WHEN: skipToNext() is called
+     * THEN: the current item is unchanged and still the last in the queue
+     */
+    @Test
+    public void testSkipToNextLastItemWhenNotRepeating() {
+        QueueItem ITEM1 = MOCK_QUEUE_ITEM;
+        QueueItem ITEM2 = mock(QueueItem.class);
+        playbackManager.setRepeating(false);
+        playbackManager.onAddQueueItem(ITEM1);
+        playbackManager.onAddQueueItem(ITEM2);
+        playbackManager.notifyPlaybackComplete(); // make current item the last item
+        playbackManager.skipToNext();
+        QueueItem result = playbackManager.getCurrentItem();
+        assertEquals(ITEM2, result);
+    }
+    /**
+     * GIVEN: a playlist of 2 items where the current position is the second in the queue
+     * WHEN: skipToPrevious() is called
+     * THEN: the current item is the first in the queue
+     */
+    @Test
+    public void testSkipToPrevious() {
+        QueueItem ITEM1 = MOCK_QUEUE_ITEM;
+        QueueItem ITEM2 = mock(QueueItem.class);
+        playbackManager.onAddQueueItem(ITEM1);
+        playbackManager.onAddQueueItem(ITEM2);
+        playbackManager.notifyPlaybackComplete(); // make current item the second in the queue
+        playbackManager.skipToPrevious();
+        QueueItem result = playbackManager.getCurrentItem();
+        assertEquals(ITEM1, result);
+    }
+    /**
+     * GIVEN: a playlist of 2 items where the current position is the first in the queue
+     * WHEN: skipToPrevious() is called
+     * THEN: the current item is the last in the queue
+     */
+    @Test
+    public void testSkipToPreviousFirstItemWhenRepeating() {
+        QueueItem ITEM1 = MOCK_QUEUE_ITEM;
+        QueueItem ITEM2 = mock(QueueItem.class);
+        playbackManager.setRepeating(true);
+        playbackManager.onAddQueueItem(ITEM1);
+        playbackManager.onAddQueueItem(ITEM2);
+        playbackManager.skipToPrevious();
+        QueueItem result = playbackManager.getCurrentItem();
+        assertEquals(ITEM2, result);
+    }
+    /**
+     * GIVEN: a playlist of 2 items where the current position is the first in the queue
+     * WHEN: skipToPrevious() is called
+     * THEN: the current item is unchanged and still the first in the queue
+     */
+    @Test
+    public void testSkipToPreviousFirstItemWhenNotRepeating() {
+        QueueItem ITEM1 = MOCK_QUEUE_ITEM;
+        QueueItem ITEM2 = mock(QueueItem.class);
+        playbackManager.setRepeating(false);
+        playbackManager.onAddQueueItem(ITEM1);
+        playbackManager.onAddQueueItem(ITEM2);
+        playbackManager.skipToPrevious();
+        QueueItem result = playbackManager.getCurrentItem();
+        assertEquals(ITEM1, result);
+    }
+    /**
+     * GIVEN: a playback manager with 2 items in the playlist
+     * WHEN: createNewPlaylist() is called with a new list of 1 item
+     * THEN: the new playbackManager queue size is 1
+     */
+    @Test
+    public void testCreateNewPlaylist()
+    {
+        final int OLD_QUEUE_SIZE = 2;
+        QueueItem OLD_ITEM1 = MOCK_QUEUE_ITEM;
+        QueueItem OLD_ITEM2 = mock(QueueItem.class);
+        playbackManager.onAddQueueItem(OLD_ITEM1);
+        playbackManager.onAddQueueItem(OLD_ITEM2);
+        assertEquals(OLD_QUEUE_SIZE, playbackManager.getQueueSize());
+        final int NEW_QUEUE_SIZE = 1;
+        QueueItem NEW_ITEM = mock(QueueItem.class);
+        List<QueueItem> newList = new ArrayList<>();
+        newList.add(NEW_ITEM);
+        playbackManager.createNewPlaylist(newList);
+        assertEquals(NEW_QUEUE_SIZE, playbackManager.getQueueSize());
+        QueueItem result = playbackManager.getCurrentItem();
+        assertEquals(NEW_ITEM, result);
+    }
 }

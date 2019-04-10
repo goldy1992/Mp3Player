@@ -60,7 +60,7 @@ public class PlaybackManager {
 
     private boolean incrementQueue() {
         int newIndex = getNextQueueItemIndex();
-        if (newIndex >= 0) {
+        if (validQueueIndex(newIndex)) {
             this.queueIndex = newIndex;
             return true;
         }
@@ -69,7 +69,7 @@ public class PlaybackManager {
 
     private boolean decrementQueue() {
         int newIndex = getPreviousQueueItemIndex();
-        if (newIndex >= 0) {
+        if (validQueueIndex(newIndex)) {
             this.queueIndex = newIndex;
             return true;
         }
