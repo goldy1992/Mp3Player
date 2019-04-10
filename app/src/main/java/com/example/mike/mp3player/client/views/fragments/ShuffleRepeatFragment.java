@@ -10,6 +10,7 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.views.RepeatOneRepeatAllButton;
+import com.example.mike.mp3player.client.views.ShuffleButton;
 
 import java.util.Collections;
 
@@ -20,6 +21,7 @@ public class ShuffleRepeatFragment extends AsyncFragment {
     private static final String LOG_TAG = "PLY_PAUSE_BTN";
     MediaControllerAdapter mediaControllerAdapter;
     RepeatOneRepeatAllButton repeatOneRepeatAllButton;
+    ShuffleButton shuffleButton;
     boolean attachToRoot;
 
     @Override
@@ -35,6 +37,8 @@ public class ShuffleRepeatFragment extends AsyncFragment {
         repeatOneRepeatAllButton = view.findViewById(R.id.repeatOneRepeatAllButton);
         repeatOneRepeatAllButton.updateState(PlaybackStateCompat.REPEAT_MODE_ALL);
         repeatOneRepeatAllButton.setOnClickListener((View v) -> setRepeatOneRepeatAllButtonMode(v));
+        shuffleButton = view.findViewById(R.id.shuffleButton);
+        shuffleButton.updateState(PlaybackStateCompat.SHUFFLE_MODE_NONE);
     }
 
     public void init(MediaControllerAdapter mediaControllerAdapter, boolean attachToRoot) {

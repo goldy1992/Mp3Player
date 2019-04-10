@@ -77,4 +77,7 @@ public final class Constants {
 
     public static final String EXTRA = "EXTRA";
     public static final int FIRST = 0;
+
+    public static final int OPAQUE = 255;
+    public static final int TRANSLUCENT = 100;
 }
