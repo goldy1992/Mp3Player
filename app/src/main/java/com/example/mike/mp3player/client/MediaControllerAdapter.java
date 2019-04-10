@@ -53,7 +53,6 @@ public class MediaControllerAdapter {
     }
 
     public void play() {
-
         //Log.i(LOG_TAG, "play hit");
         getMediaControllerCompat().getTransportControls().play();
     }

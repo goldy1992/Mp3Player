@@ -43,6 +43,7 @@ import static com.example.mike.mp3player.commons.Constants.PARENT_OBJECT;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
 import static com.example.mike.mp3player.commons.LoggingUtils.logRepeatMode;
+import static com.example.mike.mp3player.commons.LoggingUtils.logShuffleMode;
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
 
 /**
@@ -260,6 +261,15 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     }
 
+    @Override
+    public void onSetShuffleMode(@PlaybackStateCompat.ShuffleMode int shuffleMode) {
+        worker.post(() -> this.setShuffleMode(shuffleMode));
+    }
+
+    private void setShuffleMode(@PlaybackStateCompat.ShuffleMode int shuffleMode) {
+        logShuffleMode(shuffleMode, LOG_TAG);
+        // TODO: set shuffle mode and therefore set the next mediaplayers accordingly
+    }
     /**
      * When playback is complete,
      * IF NOT LAST SONG

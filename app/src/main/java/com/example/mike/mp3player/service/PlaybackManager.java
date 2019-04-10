@@ -6,22 +6,26 @@ import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Stack;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 public class PlaybackManager {
 
     private static final int START_OF_PLAYLIST = 0;
+    private Stack<Integer> shufflePreviousStack = new Stack<>();
+    private Stack<Integer> shuffleNextStack = new Stack<>();
+    private int nextShuffledIndex = 0;
     private int queueIndex = -1;
     private boolean isRepeating = true;
     private final List<QueueItem> playlist = new ArrayList<>();
-
     private boolean shuffleOn = false;
 
     public PlaybackManager(@NonNull List<QueueItem> queueItems) {
         playlist.addAll(queueItems);
         queueIndex = START_OF_PLAYLIST;
-
     }
 
     public List<QueueItem> onAddQueueItem(QueueItem item) {
@@ -39,9 +43,15 @@ public class PlaybackManager {
     }
 
     public void notifyPlaybackComplete() {
-        queueIndex++;
-        if (isRepeating && (queueIndex >= playlist.size())) {
-            queueIndex = START_OF_PLAYLIST;
+        if (shuffleOn) {
+            shufflePreviousStack.push(new Integer(queueIndex));
+            queueIndex = nextShuffledIndex;
+            nextShuffledIndex = getNextShuffledIndex();
+        } else {
+            queueIndex++;
+            if (isRepeating && (queueIndex >= playlist.size())) {
+                queueIndex = START_OF_PLAYLIST;
+            }
         }
     }
 
@@ -51,11 +61,27 @@ public class PlaybackManager {
     }
 
     public String skipToNext() {
-        return incrementQueue() ? getCurrentMediaId() : null;
+        if (shuffleOn) {
+            shufflePreviousStack.push(new Integer(queueIndex));
+            String toReturn = getPlaylistMediaId(this.nextShuffledIndex);
+            this.nextShuffledIndex = getNextShuffledIndex();
+            return toReturn;
+        } else {
+            return incrementQueue() ? getCurrentMediaId() : null;
+        }
     }
 
     public String skipToPrevious() {
-        return decrementQueue() ? getCurrentMediaId() : null;
+        if (shuffleOn) {
+            if (shufflePreviousStack.empty()) { // there's no previous available so keep same track
+                return getPlaylistMediaId(queueIndex);
+            } else { // get prevo=ious and add to the next stack;
+                shuffleNextStack.push(new Integer(queueIndex));
+                return getPlaylistMediaId(shufflePreviousStack.pop());
+            }
+        } else {
+            return decrementQueue() ? getCurrentMediaId() : null;
+        }
     }
 
     private boolean incrementQueue() {
@@ -75,7 +101,10 @@ public class PlaybackManager {
         }
         return false;
     }
-
+    /**
+     * ASSUMES shuffleON IS FALSE
+     * @return
+     */
     private int getNextQueueItemIndex() {
         int newIndex = queueIndex + 1;
         boolean passedEndOfQueue = newIndex >= playlist.size();
@@ -84,7 +113,10 @@ public class PlaybackManager {
         }
         return newIndex;
     }
-
+    /**
+     * ASSUMES shuffleON IS FALSE
+     * @return
+     */
     private int getPreviousQueueItemIndex() {
         int newIndex = queueIndex - 1;
         boolean beforeStartOfQueue = newIndex < START_OF_PLAYLIST;
@@ -139,6 +171,19 @@ public class PlaybackManager {
         return  null;
     }
 
+    private int getNextShuffledIndex() {
+        this.nextShuffledIndex = shuffleNextStack.empty() ? shuffleNewIndex() : shuffleNextStack.pop();
+        return this.nextShuffledIndex;
+    }
+
+    @VisibleForTesting()
+    public int shuffleNewIndex() {
+        Random random = new Random();
+        // random.nextInt((max - min) + 1) + min [min , max]
+        // queueSize == max + 1
+        return random.nextInt(getQueueSize());
+    }
+
     public int getLastIndex() {
         return playlist.size() - 1;
     }
@@ -150,4 +195,8 @@ public class PlaybackManager {
     public int getQueueSize() {
         return playlist.size();
     }
+
+    public boolean isShuffleOn() { return shuffleOn; }
+
+    public void setShuffleOn(boolean shuffleOn) { this.shuffleOn = shuffleOn; }
 }
