@@ -9,7 +9,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.LoggingUtils.logPlaybackParams;
 
-public class NougatMediaPlayerAdapter extends GenericMediaPlayerAdapter {
+public class NougatMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
     private MediaPlayerPool mediaPlayerPool;
     private int position = DEFAULT_POSITION;
     private static final String LOG_TAG = "MSHMLW_PLY_ADPR";
@@ -17,8 +17,8 @@ public class NougatMediaPlayerAdapter extends GenericMediaPlayerAdapter {
     private Uri currentUri;
     private boolean needToSetPlaybackParams = true;
 
-    public NougatMediaPlayerAdapter(Context context, MediaPlayer.OnCompletionListener onCompletionListener,
-                                    MediaPlayer.OnSeekCompleteListener onSeekCompleteListener) {
+    public NougatMediaPlayerAdapterBase(Context context, MediaPlayer.OnCompletionListener onCompletionListener,
+                                        MediaPlayer.OnSeekCompleteListener onSeekCompleteListener) {
         super(context, onCompletionListener, onSeekCompleteListener);
         this.mediaPlayerPool = new MediaPlayerPool(context);
     }

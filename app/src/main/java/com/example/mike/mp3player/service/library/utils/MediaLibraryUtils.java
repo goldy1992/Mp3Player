@@ -44,10 +44,12 @@ public final class MediaLibraryUtils {
      */
     public static List<MediaSessionCompat.QueueItem> convertMediaItemsToQueueItem(List<MediaItem> mediaItems) {
         List<MediaSessionCompat.QueueItem> queueItemList = new ArrayList<>();
-        for (MediaItem  mediaItem : mediaItems) {
-            queueItemList.add(
-                    new MediaSessionCompat.QueueItem( mediaItem.getDescription(), Long.parseLong(mediaItem.getMediaId() ) )
-            );
+        if (mediaItems != null) {
+            for (MediaItem mediaItem : mediaItems) {
+                queueItemList.add(
+                        new MediaSessionCompat.QueueItem(mediaItem.getDescription(), Long.parseLong(mediaItem.getMediaId()))
+                );
+            }
         }
         return queueItemList;
     }
@@ -60,7 +62,7 @@ public final class MediaLibraryUtils {
         for (int currentIndex = 0; currentIndex < queue.size(); currentIndex++) {
             MediaSessionCompat.QueueItem queueItem = queue.get(currentIndex);
             if (queueItem == null || queueItem.getDescription() == null) {
-                break;
+                continue;
             }
             if (queue.get(currentIndex).getDescription().getMediaId().equals(mediaId)) {
                 return currentIndex;

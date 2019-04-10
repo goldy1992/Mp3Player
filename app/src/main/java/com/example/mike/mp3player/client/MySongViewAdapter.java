@@ -16,6 +16,8 @@ import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import org.apache.commons.io.FilenameUtils;
 
+import androidx.annotation.NonNull;
+
 import static com.example.mike.mp3player.commons.MediaItemUtils.getExtra;
 import static com.example.mike.mp3player.commons.MediaItemUtils.hasExtras;
 
@@ -32,35 +34,39 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        MyViewHolder vh = super.onCreateViewHolder(parent, viewType);
+        if (vh == null) {
+            // create a new views
+            GridLayout t = (GridLayout) LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.song_item_menu, parent, false);
 
-        // create a new views
-        GridLayout t = (GridLayout) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.song_item_menu, parent, false);
-
-        MyViewHolder vh = new MyViewHolder(t);
+            vh = new MyViewHolder(t);
+        }
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        //Log.i(LOG_TAG, "position: " + position);
-        MediaBrowserCompat.MediaItem song = getFilteredSongs().get(holder.getAdapterPosition());
-        // - get element from your dataset at this position
-        // - replace the contents of the views with that element
-        song.getMediaId();
-        String title = extractTitle(song);
-        String artist = extractArtist(song);
-        String duration = extractDuration(song);
+    public void onBindViewHolder( @NonNull MyViewHolder holder, int position) {
+        if (!isEmptyRecycleView()) {
+            //Log.i(LOG_TAG, "position: " + position);
+            MediaBrowserCompat.MediaItem song = getFilteredSongs().get(holder.getAdapterPosition());
+            // - get element from your dataset at this position
+            // - replace the contents of the views with that element
+            song.getMediaId();
+            String title = extractTitle(song);
+            String artist = extractArtist(song);
+            String duration = extractDuration(song);
 
-        TextView artistText = holder.getView().findViewById(R.id.artist);
-        artistText.setText(artist);
+            TextView artistText = holder.getView().findViewById(R.id.artist);
+            artistText.setText(artist);
 
-        TextView titleText = holder.getView().findViewById(R.id.title);
-        titleText.setText(title);
+            TextView titleText = holder.getView().findViewById(R.id.title);
+            titleText.setText(title);
 
-        TextView durationText = holder.getView().findViewById(R.id.duration);
-        durationText.setText(duration);
+            TextView durationText = holder.getView().findViewById(R.id.duration);
+            durationText.setText(duration);
+        }
     }
 
 

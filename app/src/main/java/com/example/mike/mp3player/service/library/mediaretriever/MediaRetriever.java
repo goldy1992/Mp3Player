@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.service.library;
+package com.example.mike.mp3player.service.library.mediaretriever;
 
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
@@ -27,10 +27,10 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KE
 public abstract class MediaRetriever {
     final Context context;
 
-    public MediaRetriever(Context context) {
+    MediaRetriever(Context context) {
         this.context = context;
     }
-    abstract List<MediaItem> retrieveMedia();
+    public abstract List<MediaItem> retrieveMedia();
 
     MediaBrowserCompat.MediaItem createPlayableMediaItemFromFile(File file, File directory) {
         Uri uri = Uri.fromFile(file);

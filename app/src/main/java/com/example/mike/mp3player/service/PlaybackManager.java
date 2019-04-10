@@ -1,35 +1,40 @@
 package com.example.mike.mp3player.service;
 
-import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.MediaSessionCompat.QueueItem;
 
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+
 public class PlaybackManager {
 
     private static final int START_OF_PLAYLIST = 0;
     private int queueIndex = -1;
     private boolean isRepeating = true;
-    private final List<MediaSessionCompat.QueueItem> playlist = new ArrayList<>();
+    private final List<QueueItem> playlist = new ArrayList<>();
 
     private boolean shuffleOn = false;
 
-    public void init(List<MediaSessionCompat.QueueItem> queueItems) {
+    public PlaybackManager(@NonNull List<QueueItem> queueItems) {
         playlist.addAll(queueItems);
         queueIndex = START_OF_PLAYLIST;
+
     }
 
-    public List<MediaSessionCompat.QueueItem> onAddQueueItem(MediaSessionCompat.QueueItem item) {
+    public List<QueueItem> onAddQueueItem(QueueItem item) {
         playlist.add(item);
         queueIndex = (queueIndex == -1) ? 0 : queueIndex;
         return playlist;
     }
 
-    public List<MediaSessionCompat.QueueItem> onRemoveQueueItem(MediaSessionCompat.QueueItem item) {
-        playlist.remove(item);
-        queueIndex = (playlist.isEmpty()) ? -1 : queueIndex;
+    public List<QueueItem> onRemoveQueueItem(QueueItem item) {
+        boolean removed = playlist.remove(item);
+        if (removed) {
+            queueIndex = (playlist.isEmpty()) ? -1 : queueIndex;
+        }
         return playlist;
     }
 
@@ -55,7 +60,7 @@ public class PlaybackManager {
 
     private boolean incrementQueue() {
         int newIndex = getNextQueueItemIndex();
-        if (newIndex >= 0) {
+        if (validQueueIndex(newIndex)) {
             this.queueIndex = newIndex;
             return true;
         }
@@ -64,7 +69,7 @@ public class PlaybackManager {
 
     private boolean decrementQueue() {
         int newIndex = getPreviousQueueItemIndex();
-        if (newIndex >= 0) {
+        if (validQueueIndex(newIndex)) {
             this.queueIndex = newIndex;
             return true;
         }
@@ -95,7 +100,7 @@ public class PlaybackManager {
 
     public String getPlaylistMediaId(int index) {
         if (validQueueIndex(index)) {
-            MediaSessionCompat.QueueItem queueItem = playlist.get(index);
+            QueueItem queueItem = playlist.get(index);
             if (queueItem != null) {
                 return playlist.get(index).getDescription().getMediaId();
             }
@@ -105,7 +110,7 @@ public class PlaybackManager {
 
     public String getCurrentMediaId() {
         if (playlist != null && !playlist.isEmpty() && playlist.get(queueIndex) != null) {
-            MediaSessionCompat.QueueItem currentItem = playlist.get(queueIndex);
+            QueueItem currentItem = playlist.get(queueIndex);
             if (currentItem.getDescription() != null) {
                 return  currentItem.getDescription().getMediaId();
             }
@@ -113,12 +118,12 @@ public class PlaybackManager {
         return null;
     }
 
-    public boolean createNewPlaylist(List<MediaSessionCompat.QueueItem> newList) {
-        playlist.clear();;
+    public boolean createNewPlaylist(List<QueueItem> newList) {
+        playlist.clear();
         return playlist.addAll(newList);
     }
 
-    public void setQueueIndex(String mediaId) {
+    public void setCurrentItem(String mediaId) {
         Integer integerQueueIndex = MediaLibraryUtils.findIndexOfTrackInPlaylist(playlist, mediaId);
         if (integerQueueIndex == null) {
             queueIndex = -1;
@@ -127,8 +132,11 @@ public class PlaybackManager {
         }
     }
 
-    public MediaSessionCompat.QueueItem getCurrentItem() {
-        return playlist.get(queueIndex);
+    public QueueItem getCurrentItem() {
+        if (validQueueIndex(queueIndex)) {
+            return playlist.get(queueIndex);
+        }
+        return  null;
     }
 
     public int getLastIndex() {
@@ -137,5 +145,9 @@ public class PlaybackManager {
 
     public void setRepeating(boolean repeating) {
         isRepeating = repeating;
+    }
+
+    public int getQueueSize() {
+        return playlist.size();
     }
 }

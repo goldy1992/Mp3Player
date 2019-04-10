@@ -109,7 +109,9 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
     public void onConnectionSuspended() {    }
 
     @Override // MediaBrowserConnectorCallback
-    public void onConnectionFailed() { }
+    public void onConnectionFailed() {
+        Log.i(LOG_TAG, "connection failed");
+    }
 
     private synchronized void onProcessingComplete() {
         Log.i(LOG_TAG, "processing complete");
