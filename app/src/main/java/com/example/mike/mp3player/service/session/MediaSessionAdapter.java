@@ -49,7 +49,10 @@ public class MediaSessionAdapter {
     }
 
     public MediaMetadataCompat getCurrentMetaData() {
-        MediaMetadataCompat.Builder builder = mediaPlayerAdapter.getCurrentMetaData();
+        MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
+        builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayerAdapter.getCurrentDuration());
+
+        //mediaPlayerAdapter.getCurrentMetaData();
         MediaSessionCompat.QueueItem currentItem = playbackManager.getCurrentItem();
         if(ValidMetaDataUtil.validMediaId(currentItem)) {
             builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, currentItem.getDescription().getMediaId());

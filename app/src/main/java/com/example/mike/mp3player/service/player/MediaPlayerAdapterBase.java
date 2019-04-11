@@ -170,10 +170,6 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
     public int getCurrentDuration() {
         return currentMediaPlayer != null ? currentMediaPlayer.getDuration() : 0;
     }
-    public MediaMetadataCompat.Builder getCurrentMetaData() {
-        MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
-        return builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, getCurrentDuration());
-    }
 
     public boolean isPlaying() {
         return currentState == PlaybackStateCompat.STATE_PLAYING;

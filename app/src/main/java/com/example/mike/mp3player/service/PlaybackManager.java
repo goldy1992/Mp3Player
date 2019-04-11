@@ -46,8 +46,12 @@ public class PlaybackManager {
     public void notifyPlaybackComplete() {
         if (isShuffleOn()) {
             shufflePreviousStack.push(new Integer(queueIndex));
-            queueIndex = nextShuffledIndex;
-            nextShuffledIndex = getNextShuffledIndex();
+            if (shuffleNextStack.empty()) {
+                queueIndex = nextShuffledIndex;
+                nextShuffledIndex = getNextShuffledIndex();
+            } else {
+                queueIndex = shuffleNextStack.pop();
+            }
         } else {
             queueIndex++;
             if (isRepeating && (queueIndex >= playlist.size())) {
@@ -57,17 +61,31 @@ public class PlaybackManager {
     }
 
     public String getNext() {
-        int newIndex = isShuffleOn() ? getNextQueueItemIndex() : nextShuffledIndex;
+        int newIndex;
+        if (isShuffleOn()) {
+            if (shuffleNextStack.empty()) {
+                newIndex =  nextShuffledIndex;
+            } else {
+                newIndex = shuffleNextStack.peek();
+            }
+        } else {
+            newIndex = getNextQueueItemIndex();
+        }
         return getPlaylistMediaId(newIndex);
     }
 
     public String skipToNext() {
         if (isShuffleOn()) {
             shufflePreviousStack.push(new Integer(queueIndex));
-            String toReturn = getPlaylistMediaId(this.nextShuffledIndex);
-            this.queueIndex = this.nextShuffledIndex;
-            this.nextShuffledIndex = getNextShuffledIndex();
-            return toReturn;
+            if (shuffleNextStack.empty()) {
+                String toReturn = getPlaylistMediaId(this.nextShuffledIndex);
+                this.queueIndex = this.nextShuffledIndex;
+                this.nextShuffledIndex = getNextShuffledIndex();
+                return toReturn;
+            } else {
+                this.queueIndex = shuffleNextStack.pop();
+                return  getPlaylistMediaId(this.queueIndex);
+            }
         } else {
             return incrementQueue() ? getCurrentMediaId() : null;
         }
@@ -79,7 +97,8 @@ public class PlaybackManager {
                 return getPlaylistMediaId(queueIndex);
             } else { // get prevo=ious and add to the next stack;
                 shuffleNextStack.push(new Integer(queueIndex));
-                return getPlaylistMediaId(shufflePreviousStack.pop());
+                queueIndex = shufflePreviousStack.pop();
+                return getPlaylistMediaId(queueIndex);
             }
         } else {
             return decrementQueue() ? getCurrentMediaId() : null;
