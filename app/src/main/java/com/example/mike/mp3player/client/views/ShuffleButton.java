@@ -37,10 +37,12 @@ public class ShuffleButton extends LinearLayoutWithImageView implements Playback
         switch (newState) {
             case SHUFFLE_MODE_ALL:
                 this.shuffleMode = SHUFFLE_MODE_ALL;
-                setShuffleOn(); break;
+                mainUpdater.post(() -> setShuffleOn());
+                break;
             default:
                 this.shuffleMode = SHUFFLE_MODE_NONE;
-                setShuffleOff(); break;
+                mainUpdater.post(() -> setShuffleOff());
+                break;
         }
     }
 

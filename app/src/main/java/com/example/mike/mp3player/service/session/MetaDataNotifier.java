@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.service;
+package com.example.mike.mp3player.service.session;
 
 import android.media.MediaPlayer;
 import android.support.v4.media.MediaMetadataCompat;

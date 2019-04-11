@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.service;
 
 import android.support.v4.media.session.MediaSessionCompat.QueueItem;
+import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
@@ -43,7 +44,7 @@ public class PlaybackManager {
     }
 
     public void notifyPlaybackComplete() {
-        if (shuffleOn) {
+        if (isShuffleOn()) {
             shufflePreviousStack.push(new Integer(queueIndex));
             queueIndex = nextShuffledIndex;
             nextShuffledIndex = getNextShuffledIndex();
@@ -56,14 +57,15 @@ public class PlaybackManager {
     }
 
     public String getNext() {
-        int newIndex = getNextQueueItemIndex();
+        int newIndex = isShuffleOn() ? getNextQueueItemIndex() : nextShuffledIndex;
         return getPlaylistMediaId(newIndex);
     }
 
     public String skipToNext() {
-        if (shuffleOn) {
+        if (isShuffleOn()) {
             shufflePreviousStack.push(new Integer(queueIndex));
             String toReturn = getPlaylistMediaId(this.nextShuffledIndex);
+            this.queueIndex = this.nextShuffledIndex;
             this.nextShuffledIndex = getNextShuffledIndex();
             return toReturn;
         } else {
@@ -72,7 +74,7 @@ public class PlaybackManager {
     }
 
     public String skipToPrevious() {
-        if (shuffleOn) {
+        if (isShuffleOn()) {
             if (shufflePreviousStack.empty()) { // there's no previous available so keep same track
                 return getPlaylistMediaId(queueIndex);
             } else { // get prevo=ious and add to the next stack;
@@ -184,6 +186,27 @@ public class PlaybackManager {
         return random.nextInt(getQueueSize());
     }
 
+    public void setShuffle(boolean shuffleOn) {
+        if (shuffleOn == this.isShuffleOn()) {
+            return;
+        }
+        this.shuffleOn = shuffleOn;
+        if (shuffleOn) {
+            this.shuffleNextStack.clear();
+            this.shufflePreviousStack.clear();
+            this.nextShuffledIndex = shuffleNewIndex();
+        }
+    }
+
+    @PlaybackStateCompat.ShuffleMode
+    public int getShuffleMode() {
+        if (shuffleOn)
+        {
+            return PlaybackStateCompat.SHUFFLE_MODE_ALL;
+        }
+        return PlaybackStateCompat.SHUFFLE_MODE_NONE;
+    }
+
     public int getLastIndex() {
         return playlist.size() - 1;
     }
@@ -197,6 +220,4 @@ public class PlaybackManager {
     }
 
     public boolean isShuffleOn() { return shuffleOn; }
-
-    public void setShuffleOn(boolean shuffleOn) { this.shuffleOn = shuffleOn; }
 }

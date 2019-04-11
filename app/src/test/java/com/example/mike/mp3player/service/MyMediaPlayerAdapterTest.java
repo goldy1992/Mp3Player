@@ -99,7 +99,7 @@ public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
         mediaPlayer.setPlaybackParams(playbackParams);
         Whitebox.setInternalState(mediaPlayerAdapter, "currentState", EXPECTED_STATE);
 
-        PlaybackStateCompat result = mediaPlayerAdapter.getMediaPlayerState(NO_ACTION);
+        PlaybackStateCompat result = null;//mediaPlayerAdapter.getMediaPlayerState(NO_ACTION);
         long resultPosition = result.getPosition();
         float resultSpeed = result.getPlaybackSpeed();
         float speedDiff = EXPECTED_SPEED - resultSpeed;

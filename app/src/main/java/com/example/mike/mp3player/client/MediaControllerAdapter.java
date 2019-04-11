@@ -87,7 +87,7 @@ public class MediaControllerAdapter {
     }
 
     public void setShuffleMode(@PlaybackStateCompat.ShuffleMode int shuffleMode) {
-
+        getMediaControllerCompat().getTransportControls().setShuffleMode(shuffleMode);
     }
 
     public void registerMetaDataListener(MetaDataListener metaDataListener) {
