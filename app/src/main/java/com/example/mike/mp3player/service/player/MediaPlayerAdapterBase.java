@@ -37,6 +37,7 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
     AudioFocusManager audioFocusManager;
     final OnCompletionListener onCompletionListener;
     final OnSeekCompleteListener onSeekCompleteListener;
+    boolean isInitialised = false;
 
     @PlaybackStateCompat.RepeatMode
     int repeatMode;
@@ -120,8 +121,11 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
         //Log.i(LOG_TAG,"Created second mediaplayer");
 
         this.audioFocusManager = new AudioFocusManager(context, this);
-        this.audioFocusManager.init();
         this.currentState = PlaybackStateCompat.STATE_PAUSED;
+
+        if (audioFocusManager.isInitialised() && null != currentMediaPlayer) {
+            this.isInitialised = true;
+        }
     }
 
     MediaPlayer createMediaPlayer(Uri uri) {
@@ -149,10 +153,12 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
     }
 
     public void seekTo(long position) {
-        if (!prepare()) {
-            return;
+        if (isInitialised) {
+            if (!prepare()) {
+                return;
+            }
+            getCurrentMediaPlayer().seekTo((int) position);
         }
-        getCurrentMediaPlayer().seekTo((int)position);
     }
 
 

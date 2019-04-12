@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.RemoteException;
-import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -23,11 +22,9 @@ public class MediaControllerAdapter {
     private MediaSessionCompat.Token token = null;
     private boolean isInitialized = false;
     private Context context;
-    private Looper looper;
 
     public MediaControllerAdapter(Context context, Looper looper) {
         this.context = context;
-        this.looper = looper;
         this.myMediaControllerCallback = new MyMediaControllerCallback(looper);
     }
 
@@ -36,7 +33,11 @@ public class MediaControllerAdapter {
         init(token);
     }
 
-    public void init(MediaSessionCompat.Token token) {
+    public void setMediaToken(MediaSessionCompat.Token token) {
+        init(token);
+    }
+
+    private void init(MediaSessionCompat.Token token) {
         boolean result = true;
         try {
             this.mediaControllerCompat = new MediaControllerCompat(context, token);
@@ -49,16 +50,15 @@ public class MediaControllerAdapter {
     }
 
     public void prepareFromMediaId(String mediaId, Bundle extras) {
-        getMediaControllerCompat().getTransportControls().prepareFromMediaId(mediaId, extras);
+        getController().prepareFromMediaId(mediaId, extras);
     }
 
     public void play() {
-        //Log.i(LOG_TAG, "play hit");
-        getMediaControllerCompat().getTransportControls().play();
+        getController().play();
     }
 
     public void setRepeatMode(@PlaybackStateCompat.RepeatMode int repeatMode) {
-        getMediaControllerCompat().getTransportControls().setRepeatMode(repeatMode);
+        getController().setRepeatMode(repeatMode);
     }
 
     public Context getContext() {
@@ -67,27 +67,27 @@ public class MediaControllerAdapter {
 
     public void pause() {
         //Log.i(LOG_TAG, "pause hit");
-        getMediaControllerCompat().getTransportControls().pause();
+        getController().pause();
     }
 
     public void seekTo(long position) {
-        getMediaControllerCompat().getTransportControls().seekTo(position);
+        getController().seekTo(position);
     }
 
     public void stop() {
-        getMediaControllerCompat().getTransportControls().stop();
+        getController().stop();
     }
 
     public void skipToNext() {
-        getMediaControllerCompat().getTransportControls().skipToNext();
+        getController().skipToNext();
     }
 
     public void skipToPrevious() {
-        getMediaControllerCompat().getTransportControls().skipToPrevious();
+        getController().skipToPrevious();
     }
 
     public void setShuffleMode(@PlaybackStateCompat.ShuffleMode int shuffleMode) {
-        getMediaControllerCompat().getTransportControls().setShuffleMode(shuffleMode);
+        getController().setShuffleMode(shuffleMode);
     }
 
     public void registerMetaDataListener(MetaDataListener metaDataListener) {
@@ -107,15 +107,15 @@ public class MediaControllerAdapter {
     }
 
     public int getPlaybackState() {
-        if (getMediaControllerCompat() != null && getMediaControllerCompat().getPlaybackState() != null) {
-            return getMediaControllerCompat().getPlaybackState().getState();
+        if (mediaControllerCompat != null && mediaControllerCompat.getPlaybackState() != null) {
+            return mediaControllerCompat.getPlaybackState().getState();
         }
         return 0;
     }
 
     public PlaybackStateCompat getPlaybackStateAsCompat() {
-        if (getMediaControllerCompat() != null ) {
-            return getMediaControllerCompat().getPlaybackState();
+        if (mediaControllerCompat != null ) {
+            return mediaControllerCompat.getPlaybackState();
         }
         return null;
     }
@@ -124,39 +124,24 @@ public class MediaControllerAdapter {
         return token;
     }
 
-    public MediaControllerCompat getMediaControllerCompat() {
-        return mediaControllerCompat;
-    }
-
-    public MediaMetadataCompat getMetaData() {
-        return mediaControllerCompat.getMetadata();
-    }
-
     public void disconnect() {
-        if (getMediaControllerCompat() != null && myMediaControllerCallback != null) {
-//            if (!myMediaControllerCallback.getChildCallbacks().isEmpty()) {
-//                // find a way to disconnect all callbacks
-//                for (MediaControllerCompat.Callback callback : myMediaControllerCallback.getChildCallbacks()) {
-//                    getMediaControllerCompat().unregisterCallback(callback);
-//                }
-//            }
-            getMediaControllerCompat().unregisterCallback(myMediaControllerCallback);
+        if (mediaControllerCompat != null && myMediaControllerCallback != null) {
+            mediaControllerCompat.unregisterCallback(myMediaControllerCallback);
         }
     }
 
     public void updateUiState() {
         if (isInitialized) {
             myMediaControllerCallback.onMetadataChanged(mediaControllerCompat.getMetadata());
-//        myMediaControllerCallback.onPlaybackStateChanged(mediaControllerCompat.getPlaybackState());
             myMediaControllerCallback.getMyPlaybackStateCallback().updateAll(mediaControllerCompat.getPlaybackState());
         }
     }
 
     public void sendCustomAction(String customAction, Bundle args) {
-        getMediaControllerCompat().getTransportControls().sendCustomAction(customAction, args);
+        getController().sendCustomAction(customAction, args);
     }
-
-    public PlaybackStateCompat getCurrentPlaybackState() {
-        return mediaControllerCompat.getPlaybackState();
+    
+    private MediaControllerCompat.TransportControls getController() {
+        return mediaControllerCompat.getTransportControls();
     }
 }

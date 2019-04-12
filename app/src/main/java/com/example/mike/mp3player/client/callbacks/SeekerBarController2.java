@@ -14,6 +14,7 @@ import com.example.mike.mp3player.commons.LoggingUtils;
 import androidx.annotation.VisibleForTesting;
 
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
+import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_SPEED;
 import static com.example.mike.mp3player.commons.PlaybackStateUtil.getRepeatModeFromPlaybackStateCompat;
@@ -144,7 +145,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
             seekerBar.setValueAnimator(valueAnimator);
             this.valueAnimator = valueAnimator;
         } catch (IllegalArgumentException ex) {
-            Log.e(getClass().getName(), "seekerbar Max: " + currentSongDuration);
+            Log.e(LOG_TAG, "seekerbar Max: " + currentSongDuration);
             throw new IllegalArgumentException(ex);
         }
     }

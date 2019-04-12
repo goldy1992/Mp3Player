@@ -22,14 +22,19 @@ public class AudioFocusManager
 
     boolean playWhenAudioFocusGained = false;
     private boolean audioNoisyReceiverRegistered = false;
+    private boolean isInitialised = false;
 
     public AudioFocusManager(Context context, MediaPlayerAdapterBase player) {
         this.context = context;
         this.player = player;
+        init();
     }
 
-    public void init() {
+    private void init() {
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        if (null != audioManager) {
+            this.isInitialised = true;
+        }
     }
 
     @Override
@@ -102,5 +107,9 @@ public class AudioFocusManager
         int result = AudioManagerCompat.abandonAudioFocusRequest(audioManager, audioFocusRequestCompat);
         hasFocus = isRequestGranted(result) ? false : true;
         return  !hasFocus;
+    }
+
+    public boolean isInitialised() {
+        return isInitialised;
     }
 }
