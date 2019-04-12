@@ -33,6 +33,7 @@ public class MyNotificationManager {
 
     private final MediaPlaybackService service;
     private final NotificationManager notificationManager;
+    private final MediaSessionCompat mediaSessionCompat;
 
     public static final int NOTIFICATION_ID = 512;
     private static final String TAG = "MY_NOTIFICATION_MANAGER";
@@ -41,6 +42,7 @@ public class MyNotificationManager {
 
     public MyNotificationManager(MediaPlaybackService service) {
         this.service = service;
+        this.mediaSessionCompat = service.getMediaSession();
         notificationManager = (NotificationManager) service.getSystemService(Context.NOTIFICATION_SERVICE);
         // Cancel all notifications to handle the case where the Service was killed and
         // restarted by the system.
@@ -59,15 +61,14 @@ public class MyNotificationManager {
     }
 
     public synchronized Notification getNotification(MediaMetadataCompat metadata,
-                                                      @NonNull PlaybackStateCompat state,
-                                                      MediaSessionCompat.Token token) {
+                                                      @NonNull PlaybackStateCompat state) {
         boolean isPlaying = state.getState() == PlaybackStateCompat.STATE_PLAYING;
         MediaDescriptionCompat description = metadata.getDescription();
 
         if (AndroidUtils.isAndroidOreoOrHigher()) {
-            return buildOreoNotification(token, isPlaying, description).build();
+            return buildOreoNotification(mediaSessionCompat.getSessionToken(), isPlaying, description).build();
         }
-        return buildNotification(token, isPlaying, description).build();
+        return buildNotification(mediaSessionCompat.getSessionToken(), isPlaying, description).build();
     }
 
     // Does nothing on versions of Android earlier than Oreo.

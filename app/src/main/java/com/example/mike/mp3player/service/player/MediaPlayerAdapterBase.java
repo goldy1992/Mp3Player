@@ -19,6 +19,7 @@ import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_O
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_PITCH;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_SPEED;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
+import static com.example.mike.mp3player.commons.Constants.SHUFFLE_MODE;
 
 public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener  {
 
@@ -78,11 +79,17 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
         if (null != currentMediaPlayer) {
             play();
         }
-
+        setNextMediaPlayer(nextUriToPrepare);
+    }
+    /**
+     *
+     */
+    public void setNextMediaPlayer(Uri nextUriToPrepare) {
         // TODO: we might want to make this an asynchronous task in the future
         if (nextUriToPrepare != null) {
             this.nextMediaPlayer = createMediaPlayer(nextUriToPrepare);
         }
+
     }
     /**
      *
@@ -148,24 +155,6 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
         getCurrentMediaPlayer().seekTo((int)position);
     }
 
-    public PlaybackStateCompat getMediaPlayerState(long actions) {
-        return getMediaPlayerState(actions, false);
-    }
-
-    public PlaybackStateCompat getMediaPlayerState(long actions, boolean startOfSong) {
-        if (startOfSong) {
-            Log.i(LOG_TAG, "start of song");
-        }
-        Bundle ex = new Bundle();
-        ex.putInt(REPEAT_MODE, repeatMode);
-        return new PlaybackStateCompat.Builder()
-                .setActions(actions)
-                .setExtras(ex)
-                .setState(getCurrentState(),
-                        startOfSong ? 0 : getCurrentPosition(),
-                        getCurrentPlaybackSpeed())
-                .build();
-    }
 
     /**
      *
@@ -180,10 +169,6 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
      */
     public int getCurrentDuration() {
         return currentMediaPlayer != null ? currentMediaPlayer.getDuration() : 0;
-    }
-    public MediaMetadataCompat.Builder getCurrentMetaData() {
-        MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
-        return builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, getCurrentDuration());
     }
 
     public boolean isPlaying() {

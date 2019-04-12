@@ -11,6 +11,7 @@ import android.util.Log;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.commons.library.LibraryResponse;
 import com.example.mike.mp3player.service.library.MediaLibrary;
+import com.example.mike.mp3player.service.session.MediaSessionCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.media.MediaBrowserServiceCompat;
 
 import static com.example.mike.mp3player.commons.Constants.ACCEPTED_MEDIA_ROOT_ID;
-import static com.example.mike.mp3player.commons.Constants.EMPTY_LIBRARY;
-import static com.example.mike.mp3player.commons.Constants.EXTRA;
 import static com.example.mike.mp3player.commons.Constants.PACKAGE_NAME;
 import static com.example.mike.mp3player.commons.Constants.REJECTED_MEDIA_ROOT_ID;
-import static com.example.mike.mp3player.commons.Constants.REJECTION;
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
 
@@ -34,7 +32,7 @@ import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
 public class MediaPlaybackService extends MediaBrowserServiceCompat {
 
     private MyNotificationManager notificationManager;
-    private MediaSessionCompat mMediaSession;
+    private MediaSessionCompat mediaSession;
     private MediaSessionCallback mediaSessionCallback;
     private ServiceManager serviceManager;
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
@@ -52,13 +50,13 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         });
         mediaLibrary = new MediaLibrary(getBaseContext());
         mediaLibrary.init();
-        mMediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);
-        setSessionToken(mMediaSession.getSessionToken());
+        mediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);
+        setSessionToken(getMediaSession().getSessionToken());
         notificationManager = new MyNotificationManager(this);
-        serviceManager = new ServiceManager(this, getApplicationContext(), mMediaSession, notificationManager);
-        mediaSessionCallback = new MediaSessionCallback(getApplicationContext(), notificationManager, serviceManager, mMediaSession, mediaLibrary, worker.getLooper());
+        serviceManager = new ServiceManager(this, getApplicationContext(), getMediaSession(), notificationManager);
+        mediaSessionCallback = new MediaSessionCallback(getApplicationContext(), notificationManager, serviceManager, getMediaSession(), mediaLibrary, worker.getLooper());
         // MySessionCallback() has methods that handle callbacks from a media controller
-        mMediaSession.setCallback(mediaSessionCallback);
+        getMediaSession().setCallback(mediaSessionCallback);
     }
 
     @Override
@@ -122,7 +120,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     public void onDestroy() {
         super.onDestroy();
         notificationManager.onDestroy();
-        mMediaSession.release();
+        getMediaSession().release();
         worker.quitSafely();
     }
 
@@ -130,11 +128,15 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
         notificationManager.onDestroy();
-        mMediaSession.release();
+        getMediaSession().release();
         stopSelf();
     }
 
     private boolean allowBrowsing(String clientPackageName, int clientUid) {
         return clientPackageName.equals(PACKAGE_NAME);
+    }
+
+    public MediaSessionCompat getMediaSession() {
+        return mediaSession;
     }
 }

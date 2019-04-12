@@ -19,6 +19,7 @@ public final class Constants {
     public static final String INCREASE_PLAYBACK_SPEED = "INCREASE_PLAYBACK_SPEED";
     public static final String DECREASE_PLAYBACK_SPEED = "DECREASE_PLAYBACK_SPEED";
     public static final String REPEAT_MODE = "REPEAT_MODE";
+    public static final String SHUFFLE_MODE = "SHUFFLE_MODE";
     public static final float DEFAULT_SPEED = 1.0f;
     public static final float DEFAULT_PITCH = 1.0f;
     public static final int DEFAULT_POSITION = 0;
@@ -77,4 +78,7 @@ public final class Constants {
 
     public static final String EXTRA = "EXTRA";
     public static final int FIRST = 0;
+
+    public static final int OPAQUE = 255;
+    public static final int TRANSLUCENT = 100;
 }
