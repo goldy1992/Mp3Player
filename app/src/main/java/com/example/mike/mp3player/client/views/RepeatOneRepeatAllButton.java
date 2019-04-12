@@ -12,14 +12,15 @@ import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListene
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ALL;
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_NONE;
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ONE;
+import static com.example.mike.mp3player.commons.Constants.OPAQUE;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
+import static com.example.mike.mp3player.commons.Constants.TRANSLUCENT;
 
 
 public class RepeatOneRepeatAllButton extends LinearLayoutWithImageView implements PlaybackStateListener {
 
     private static final String LOG_TAG = "RPT1_RPT_ALL_BTN";
-    private static final int OPAQUE = 255;
-    private static final int TRANSLUCENT = 100;
+
     private Context context;
     @PlaybackStateCompat.RepeatMode
     private int repeatMode;

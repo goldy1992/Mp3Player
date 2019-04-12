@@ -2,14 +2,17 @@ package com.example.mike.mp3player.service;
 
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.MediaSessionCompat.QueueItem;
+import android.util.Log;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.powermock.reflect.Whitebox;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -313,5 +316,21 @@ public class PlaybackManagerTest {
         assertEquals(NEW_QUEUE_SIZE, playbackManager.getQueueSize());
         QueueItem result = playbackManager.getCurrentItem();
         assertEquals(NEW_ITEM, result);
+    }
+    /**
+     * GIVEN: a playback manager with a queue size of 11
+     * WHEN: we call shuffleNewIndex()
+     * THEN: it returns a number between 0 and 10 inclusive
+     */
+    @Test
+    public void testShuffleNewIndex() {
+        final int QUEUE_SIZE = 11;
+        PlaybackManager playbackManager = mock(PlaybackManager.class);
+        when(playbackManager.getQueueSize()).thenReturn(QUEUE_SIZE);
+        when(playbackManager.shuffleNewIndex()).thenCallRealMethod();
+        int result = playbackManager.shuffleNewIndex();
+        System.out.println("number generated: " + result);
+        assertTrue(result >= 0);
+        assertTrue(result < QUEUE_SIZE);
     }
 }

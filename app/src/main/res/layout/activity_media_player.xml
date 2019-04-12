@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/playbackTrackerFragment"
         class="com.example.mike.mp3player.client.views.fragments.ShuffleRepeatFragment"
-        tools:layout="@layout/fragment_playback_tracker"/>
+        tools:layout="@layout/fragment_shuffle_repeat"/>
 
 
     <fragment

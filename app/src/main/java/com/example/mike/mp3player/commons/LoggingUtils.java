@@ -69,4 +69,15 @@ public final class LoggingUtils {
         }
         Log.i(LOG_TAG, sb.toString());
     }
+
+    public static void logShuffleMode(int shuffleMode, final String LOG_TAG) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Shuffle mode is: ");
+        switch (shuffleMode) {
+            case PlaybackStateCompat.SHUFFLE_MODE_ALL: sb.append("SHUFFLE_MODE_ALL"); break;
+            case PlaybackStateCompat.SHUFFLE_MODE_NONE: sb.append("SHUFFLE_MODE_NONE"); break;
+            case PlaybackStateCompat.SHUFFLE_MODE_INVALID: sb.append("SHUFFLE_MODE_INVALID"); break;
+            default: sb.append("SHUFFLE_MODE_GROUP");
+        }
+    }
 }

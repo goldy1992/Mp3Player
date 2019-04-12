@@ -87,29 +87,6 @@ public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
     }
 
     @Test
-    public void getMediaPlayerStateBuilder() {
-        final int EXPECTED_STATE = PlaybackStateCompat.STATE_BUFFERING;
-        final int EXPECTED_CURRENT_POSITION = 1234;
-        final float EXPECTED_SPEED = 123f;
-
-        when(mediaPlayer.getCurrentPosition()).thenReturn(EXPECTED_CURRENT_POSITION);
-        PlaybackParams playbackParams = new PlaybackParams();
-        playbackParams.setSpeed(EXPECTED_SPEED);
-        when(mediaPlayer.getPlaybackParams()).thenReturn(playbackParams);
-        mediaPlayer.setPlaybackParams(playbackParams);
-        Whitebox.setInternalState(mediaPlayerAdapter, "currentState", EXPECTED_STATE);
-
-        PlaybackStateCompat result = mediaPlayerAdapter.getMediaPlayerState(NO_ACTION);
-        long resultPosition = result.getPosition();
-        float resultSpeed = result.getPlaybackSpeed();
-        float speedDiff = EXPECTED_SPEED - resultSpeed;
-        int resultState = result.getState();
-        assertEquals(EXPECTED_CURRENT_POSITION, (int)resultPosition);
-        assertEquals(EXPECTED_SPEED, resultSpeed, speedDiff);
-        assertEquals(EXPECTED_STATE, resultState);
-    }
-
-    @Test
     public void testPauseWhilePlaying() {
         Whitebox.setInternalState(mediaPlayerAdapter, "currentState", PlaybackStateCompat.STATE_PLAYING);
         when(mediaPlayer.getPlaybackParams()).thenReturn(new PlaybackParams());

@@ -31,7 +31,6 @@ public class MediaControllerAdapter {
         this.myMediaControllerCallback = new MyMediaControllerCallback(looper);
     }
 
-
     public MediaControllerAdapter(Context context, MediaSessionCompat.Token token, Looper looper) {
         this(context, looper);
         init(token);
@@ -54,7 +53,6 @@ public class MediaControllerAdapter {
     }
 
     public void play() {
-
         //Log.i(LOG_TAG, "play hit");
         getMediaControllerCompat().getTransportControls().play();
     }
@@ -86,6 +84,10 @@ public class MediaControllerAdapter {
 
     public void skipToPrevious() {
         getMediaControllerCompat().getTransportControls().skipToPrevious();
+    }
+
+    public void setShuffleMode(@PlaybackStateCompat.ShuffleMode int shuffleMode) {
+        getMediaControllerCompat().getTransportControls().setShuffleMode(shuffleMode);
     }
 
     public void registerMetaDataListener(MetaDataListener metaDataListener) {
