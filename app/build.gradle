@@ -37,6 +37,7 @@ android {
     lintOptions {
         disable 'GoogleAppIndexingWarning'
         disable 'PrivateResource'
+        abortOnError false
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -124,7 +125,7 @@ dependencies {
 
     testImplementation group: 'org.robolectric', name: 'robolectric', version: ROBOELECTRIC_VERSION
     implementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
-    implementation group: 'androidx.fragment', name: 'fragment-testing', version: '1.1.0-alpha06'
+    debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: '1.1.0-alpha06'
 
     androidTestImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION

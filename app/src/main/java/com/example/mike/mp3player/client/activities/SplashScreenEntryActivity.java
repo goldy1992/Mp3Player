@@ -133,6 +133,7 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == APP_TERMINATED) {
             getMediaBrowserAdapter().disconnect();
             finish();

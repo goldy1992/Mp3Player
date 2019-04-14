@@ -18,52 +18,56 @@ import androidx.test.filters.MediumTest;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.matcher.ViewMatchers.withChild;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.containsString;
+
 @MediumTest
 @RunWith(AndroidJUnit4.class)
 public class PlaybackTrackerFragmentTest {
 
+    private final String HANDLER_THREAD_ID = "HANDLER_THREAD_ID";
+    private long duration;
     FragmentScenario<PlaybackTrackerFragment> fragmentScenario;
-    FragmentScenario.FragmentAction<PlaybackTrackerFragment> playbackTrackerFragmentFragmentAction;
+    FragmentScenario.FragmentAction<PlaybackTrackerFragment> onMetadataChangedAction;
     @Before
     public void init(){
-       fragmentScenario =
-               FragmentScenario.launchInContainer(PlaybackTrackerFragment.class);
-       fragmentScenario.moveToState(Lifecycle.State.CREATED);
-       fragmentScenario.onFragment(fragment -> initFragment(fragment));
+        fragmentScenario = FragmentScenario.launchInContainer(PlaybackTrackerFragment.class);
+        fragmentScenario.moveToState(Lifecycle.State.CREATED);
+        fragmentScenario.onFragment(fragment -> initFragment(fragment));
         fragmentScenario.moveToState(Lifecycle.State.STARTED);
-       playbackTrackerFragmentFragmentAction = (PlaybackTrackerFragment fragment) -> changeMetaData(fragment);
+        fragmentScenario.moveToState(Lifecycle.State.RESUMED);
+        onMetadataChangedAction = (PlaybackTrackerFragment fragment) -> changeMetaData(fragment);
     }
 
+    /**
+     * GIVEN an initialised instance of PlaybackTrackerFragment
+     * WHEN: onMetadataChanged is called with a duration of twenty seconds
+     * THEN: the duration TextView is updated accordingly.
+     */
     @Test
-    public void firstTest() {
-
-        fragmentScenario.onFragment(playbackTrackerFragmentFragmentAction);
-
-        //InstrumentationRegistry.getInstrumentation().get
-        onView(withChild(withId(R.id.decor_content_parent))).perform(click());
-//                allOf(withChild( allOf(withId(R.id.timerLayout))), withChild(withId(R.id.duration))))
-
-       // click();
-     //   isDisplayed();
-   //     v.check(matches(isDisplayed());
+    public void testDurationUpdated() {
+        this.duration = 20000; // 20 seconds
+        final String EXPECTED = "20";
+        fragmentScenario.onFragment(onMetadataChangedAction);
+        onView(withId(R.id.duration)).check(
+                matches(withText(containsString(EXPECTED))));
     }
-
+    /**
+     *
+     * @param fragment
+     */
     private void initFragment(PlaybackTrackerFragment fragment) {
-        HandlerThread worker = new HandlerThread("dsfsdf");
+        HandlerThread worker = new HandlerThread(HANDLER_THREAD_ID);
         worker.start();
-        worker.getLooper().setMessageLogging((String x) -> {
-            //Log.i(WORKER_ID, x);
-        });
         MediaControllerAdapter mediaControllerAdapter = new MediaControllerAdapter(getApplicationContext(), worker.getLooper());
         fragment.init(mediaControllerAdapter);
-
     }
 
     private void changeMetaData(@NonNull PlaybackTrackerFragment fragment){
-        MediaMetadataCompat m=new MediaMetadataCompat.Builder().putLong(MediaMetadataCompat.METADATA_KEY_DURATION,20000).build();
-        fragment.onMetadataChanged(m);
-        }
+        MediaMetadataCompat metadataCompat = new MediaMetadataCompat.Builder()
+                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, this.duration).build();
+        fragment.onMetadataChanged(metadataCompat);
+    }
 }
