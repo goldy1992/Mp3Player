@@ -53,16 +53,14 @@ before_install:
 # Install the system image.
 - sdkmanager "system-images;android-28;default;armeabi-v7a"
 # Create and start emulator for the script. Meant to race the install task.
-- echo no | avdmanager create avd --force -n test -k "system-images;android-28;default;armeabi-v7a"
-- $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
-- chmod +x gradlew
-- ./gradlew dependencies || true
 
 before_script:
-- echo no | android create avd --force -n test -t $EMULATOR_API --abi google_apis;armeabi-v7a
-- emulator -avd test -no-skin -no-audio -no-window &
+- echo no | avdmanager create avd --force -n test -k "system-images;android-28;default;armeabi-v7a"
+- $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
 - android-wait-for-emulator
 - adb shell input keyevent 82 &
+- chmod +x gradlew
+- ./gradlew dependencies || true
 
 script:
 - "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
