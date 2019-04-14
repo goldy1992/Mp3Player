@@ -14,7 +14,7 @@ cache:
 env:
   global:
   - ANDROID_API=28
-  - EMULATOR_API=28
+  - EMULATOR_API=25
   - ANDROID_BUILD_TOOLS=28.0.3
   - ANDROID_ABI="google_apis;armeabi-v7a"
   - ANDROID_TAG=google_apis
@@ -27,10 +27,12 @@ android:
   - platform-tools
   - build-tools-$ANDROID_BUILD_TOOLS
   - android-$ANDROID_API
+  - android-$EMULATOR_API
   - extra-google-m2repository
   - extra-android-m2repository # for design library
   - addon-google_apis-google-19 # google play services
   - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API
+  - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API
   licenses:
   - android-sdk-preview-license-.+
   - android-sdk-license-.+
@@ -51,7 +53,7 @@ before_install:
 - ./gradlew dependencies || true
 
 before_script:
-- echo no | avdmanager create avd --force -n test -k "system-images;$ANDROID_API;$ABI"
+- echo no | android create avd --force -n test -t $EMULATOR_API --abi google_apis;armeabi-v7a
 - emulator -avd test -no-skin -no-audio -no-window &
 - android-wait-for-emulator
 - adb shell input keyevent 82 &
