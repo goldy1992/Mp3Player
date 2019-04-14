@@ -27,12 +27,10 @@ android:
   - platform-tools
   - build-tools-$ANDROID_BUILD_TOOLS
   - android-$ANDROID_API
-  - android-$EMULATOR_API
   - extra-google-m2repository
   - extra-android-m2repository # for design library
   - addon-google_apis-google-19 # google play services
   - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API
-  - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API
   licenses:
   - android-sdk-preview-license-.+
   - android-sdk-license-.+
@@ -49,7 +47,7 @@ before_install:
 - mkdir "$ANDROID_HOME/licenses" || true
 - echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
 # Install the rest of tools (e.g., avdmanager).
-- sdkmanager tools
+- echo yes | sdkmanager tools
 # Install the system image.
 - echo yes | sdkmanager "system-images;android-28;default;armeabi-v7a"
 # Create and start emulator for the script. Meant to race the install task.
