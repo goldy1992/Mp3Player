@@ -19,7 +19,7 @@ env:
   - EMULATOR_TAG=armeabi-v7a
   - ABI_TAG=google_apis
   - ABI=$ABI_TAG;$EMULATOR_TAG
-  - EMULATOR=system-images;$EMULATOR_API;$ABI_TAG;$EMULATOR_TAG
+  - EMULATOR=system-images;{{EMULATOR_API}};{{ABI_TAG}};{{EMULATOR_TAG}}
   - ADB_INSTALL_TIMEOUT=5 # minutes
   - AVD_NAME=test
 
@@ -43,7 +43,7 @@ android:
   - extra-android-m2repository # for design library
   # Specify at least one system image,
   # if you need to run emulator(s) during your tests
-  - sys-img-$EMULATOR_TAG-EMULATOR_API
+  - sys-img-{{EMULATOR_TAG}}-{{EMULATOR_API}}
 
   licenses:
   - android-sdk-preview-license-.+
