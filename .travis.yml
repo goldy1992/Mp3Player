@@ -14,13 +14,14 @@ cache:
 env:
   global:
   - ANDROID_API=android-28
-  #- EMULATOR_API=android-25
+  - EMULATOR_API=android-25
   - ANDROID_BUILD_TOOLS=28.0.3
-  - ABI="google_apis;x86"
-  - ANDROID_TAG=google_apis
+  - EMULATOR_TAG=armeabi-v7a
+  - ABI_TAG=google_apis
+  - ABI=$ABI_TAG;$EMULATOR_TAG
+  - EMULATOR=system-images;$EMULATOR_API;$ABI_TAG;$EMULATOR_TAG
   - ADB_INSTALL_TIMEOUT=5 # minutes
   - AVD_NAME=test
-
 
 android:
   components:
@@ -40,10 +41,9 @@ android:
   - extra-google-google_play_services # google play services
   - extra-google-m2repository
   - extra-android-m2repository # for design library
-  - extras-intel-Hardware_Accelerated_Execution_Manager
   # Specify at least one system image,
   # if you need to run emulator(s) during your tests
-  - sys-img-x86-$ANDROID_API
+  - sys-img-$EMULATOR_TAG-EMULATOR_API
 
   licenses:
   - android-sdk-preview-license-.+
@@ -64,9 +64,9 @@ before_install:
 - echo yes | sdkmanager --update
 - echo yes | sdkmanager tools
 # Install the system image.
-- echo yes | sdkmanager "emulator" "system-images;android-28;default;x86"
+- echo yes | sdkmanager "emulator" "$EMULATOR"
 # Create and start emulator for the script. Meant to race the install task.
-- echo no | avdmanager create avd --force -n $AVD_NAME -k "system-images;android-28;default;x86"
+- echo no | avdmanager create avd --force -n $AVD_NAME -k $EMULATOR
 - $ANDROID_HOME/emulator/emulator -avd $AVD_NAME -no-audio -no-window &
 
 before_script:
