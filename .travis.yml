@@ -40,7 +40,7 @@ android:
   - extra-google-google_play_services # google play services
   - extra-google-m2repository
   - extra-android-m2repository # for design library
--   extras-intel-Hardware_Accelerated_Execution_Manager
+  - extras-intel-Hardware_Accelerated_Execution_Manager
   # Specify at least one system image,
   # if you need to run emulator(s) during your tests
   - sys-img-x86-$ANDROID_API
