@@ -19,7 +19,7 @@ env:
   - EMULATOR_TAG=armeabi-v7a
   - ABI_TAG=google_apis
   - ABI=$ABI_TAG;$EMULATOR_TAG
-  - EMULATOR=system-images;{{EMULATOR_API}};{{ABI_TAG}};{{EMULATOR_TAG}}
+  - EMULATOR=system-images;$EMULATOR_API;$ABI_TAG;$EMULATOR_TAG
   - ADB_INSTALL_TIMEOUT=5 # minutes
   - AVD_NAME=test
 
@@ -43,7 +43,7 @@ android:
   - extra-android-m2repository # for design library
   # Specify at least one system image,
   # if you need to run emulator(s) during your tests
-  - sys-img-{{EMULATOR_TAG}}-{{EMULATOR_API}}
+  - sys-img-EMULATOR_TAG-EMULATOR_API
 
   licenses:
   - android-sdk-preview-license-.+
@@ -64,7 +64,7 @@ before_install:
 - echo yes | sdkmanager --update
 - echo yes | sdkmanager tools
 # Install the system image.
-- echo yes | sdkmanager "emulator" $EMULATOR
+- echo yes | sdkmanager "emulator" {{EMULATOR}}
 # Create and start emulator for the script. Meant to race the install task.
 - echo no | avdmanager create avd --force -n $AVD_NAME -k $EMULATOR
 - $ANDROID_HOME/emulator/emulator -avd $AVD_NAME -no-audio -no-window &
