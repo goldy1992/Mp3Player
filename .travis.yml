@@ -1,4 +1,5 @@
-language: android
+language: generic
+dist: trusty
 sudo: required
 jdk: oraclejdk8
 
@@ -26,22 +27,22 @@ env:
   - AVD_NAME=test
 
 
-android:
-  components:
-  - tools
-  - platform-tools
-  - build-tools-$ANDROID_BUILD_TOOLS
-  - android-$ANDROID_API
-  - android-$EMULATOR_API
-  - extra-google-m2repository
-  - extra-android-m2repository # for design library
-  - addon-google_apis-google-25 # google play services
-  - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API
-  - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API
-  licenses:
-  - android-sdk-preview-license-.+
-  - android-sdk-license-.+
-  - google-gdk-license-.+
+#android:
+#  components:
+#  - tools
+#  - platform-tools
+#  - build-tools-$ANDROID_BUILD_TOOLS
+#  - android-$ANDROID_API
+#  - android-$EMULATOR_API
+#  - extra-google-m2repository
+#  - extra-android-m2repository # for design library
+#  - addon-google_apis-google-25 # google play services
+#  - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API
+#  - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API
+#  licenses:
+#  - android-sdk-preview-license-.+
+#  - android-sdk-license-.+
+#  - google-gdk-license-.+
 
 # safelist
 branches:
@@ -63,7 +64,7 @@ before_install:
 - HOMEBREW_NO_AUTO_UPDATE=1
 - if [ $TRAVIS_OS_NAME == "osx" ]; then brew cask uninstall java; brew tap caskroom/versions; brew cask install java8; fi
 # Accept licenses before installing components, no need to echo y for each component
-#- yes | sdkmanager --licenses
+- yes | sdkmanager --licenses
 # Platform tools
 - echo yes | sdkmanager "emulator" "tools" "platform-tools" > /dev/null
 - sdkmanager --list | head -15
@@ -85,4 +86,5 @@ before_script:
 - ./gradlew dependencies || true
 
 script:
+- echo "DONE. "
 - "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
