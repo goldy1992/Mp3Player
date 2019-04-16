@@ -24,16 +24,25 @@ env:
 
 android:
   components:
+  # Uncomment the lines below if you want to
+  # use the latest revision of Android SDK Tools
   - tools
   - platform-tools
-  - platform-tools;android-28
+
+  # The BuildTools version used by your project
   - build-tools-$ANDROID_BUILD_TOOLS
+
+  # The SDK version used to compile your project
   - $ANDROID_API
-  - $EMULATOR_API
+
+  - extra-google-google_play_services # google play services
   - extra-google-m2repository
   - extra-android-m2repository # for design library
- # - addon-google_apis-google-25 # google play services
-  - sys-img-x86-$EMULATOR_API
+
+  # Specify at least one system image,
+  # if you need to run emulator(s) during your tests
+  - sys-img-x86-$ANDROID_API
+
   licenses:
   - android-sdk-preview-license-.+
   - android-sdk-license-.+
@@ -49,8 +58,8 @@ before_install:
 # Install SDK license so Android Gradle plugin can install deps.
 - mkdir "$ANDROID_HOME/licenses" || true
 - echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
-- echo yes | sdkmanager update
 # Install the rest of tools (e.g., avdmanager).
+- echo yes | skdmanager --update
 - echo yes | sdkmanager tools
 # Install the system image.
 - echo yes | sdkmanager "emulator" "system-images;android-28;default;x86"
