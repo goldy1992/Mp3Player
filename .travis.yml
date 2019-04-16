@@ -59,7 +59,7 @@ before_install:
 - mkdir "$ANDROID_HOME/licenses" || true
 - echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
 # Install the rest of tools (e.g., avdmanager).
-- echo yes | skdmanager --update
+- echo yes | sdkmanager --update
 - echo yes | sdkmanager tools
 # Install the system image.
 - echo yes | sdkmanager "emulator" "system-images;android-28;default;x86"
