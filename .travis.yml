@@ -19,6 +19,7 @@ env:
   - ANDROID_ABI="google_apis;armeabi-v7a"
   - ANDROID_TAG=google_apis
   - ADB_INSTALL_TIMEOUT=5 # minutes
+  - AVD_NAME=test
 
 
 android:
@@ -53,10 +54,8 @@ before_install:
 # Install the system image.
 - echo yes | sdkmanager "system-images;android-25;google_apis;armeabi-v7a"
 # Create and start emulator for the script. Meant to race the install task.
-- echo no | avdmanager create avd --force -n test -k "system-images;android-25;google_apis;armeabi-v7a"
-- AVDS="$($ANDROID_HOME/emulator/emulator -list-avds)"
-- echo "${AVDS}"
-- $ANDROID_HOME/emulator/emulator -avd emulatorApi25 -no-audio -no-window &
+- echo no | avdmanager create avd --force -n $AVD_NAME -k "system-images;android-25;google_apis;armeabi-v7a"
+- $ANDROID_HOME/emulator/emulator -avd $AVD_NAME -no-audio -no-window &
 
 before_script:
 - android-wait-for-emulator
