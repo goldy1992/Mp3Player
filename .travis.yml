@@ -51,7 +51,7 @@ before_install:
 # Install the rest of tools (e.g., avdmanager).
 - echo yes | sdkmanager tools
 # Install the system image.
-- echo yes | sdkmanager "system-images;$EMULATOR_API;$ABI"
+- echo yes | sdkmanager "emulator" "system-images;$EMULATOR_API;$ABI"
 # Create and start emulator for the script. Meant to race the install task.
 - echo no | avdmanager create avd --force -n $AVD_NAME -k "system-images;$EMULATOR_API;$ABI"
 - emulator -avd $AVD_NAME -no-audio -no-window &
