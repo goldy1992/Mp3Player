@@ -14,15 +14,16 @@ cache:
 env:
   global:
   - ANDROID_API="android-28"
-  - EMULATOR_API="android-25"
+  - EMULATOR_API="android-$EMULATOR_VERSION"
   - ANDROID_BUILD_TOOLS=28.0.3
   - EMULATOR_TAG="armeabi-v7a"
   - ABI_TAG="google_apis"
+  - ABI_VERSION="$ABI_TAG-25"
   - ABI="$ABI_TAG;$EMULATOR_TAG"
   - EMULATOR="system-images;$EMULATOR_API;$ABI_TAG;$EMULATOR_TAG"
   - ADB_INSTALL_TIMEOUT=5 # minutes
   - AVD_NAME=test
-  - SYS_IMG="sys-img-$EMULATOR_TAG-$EMULATOR_API"
+  - SYS_IMG="sys-img-$EMULATOR_TAG-$ABI_VERSION"
 
 android:
   components:
