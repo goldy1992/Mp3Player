@@ -1,5 +1,5 @@
 language: android
-sudo: required
+sudo: false
 jdk: oraclejdk8
 
 before_cache:
