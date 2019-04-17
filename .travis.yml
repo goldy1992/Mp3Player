@@ -70,7 +70,7 @@ before_install:
 - echo yes | sdkmanager "emulator"
 #"$EMULATOR"
 # Create and start emulator for the script. Meant to race the install task.
-- echo no | avdmanager create avd --force -n $AVD_NAME -k EMULATOR
+- echo no | avdmanager create avd --force -n $AVD_NAME -k $EMULATOR
 - $ANDROID_HOME/emulator/emulator -avd $AVD_NAME -no-audio -no-window &
 - adb wait-for-device get-serialno
 - adb shell input keyevent 82 &
