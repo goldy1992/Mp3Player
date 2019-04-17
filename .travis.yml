@@ -22,6 +22,7 @@ env:
   - EMULATOR="system-images;$EMULATOR_API;$ABI_TAG;$EMULATOR_TAG"
   - ADB_INSTALL_TIMEOUT=5 # minutes
   - AVD_NAME=test
+  - SYS_IMG="sys-img-$EMULATOR_TAG-$EMULATOR_API"
 
 android:
   components:
@@ -43,7 +44,7 @@ android:
   - extra-android-m2repository # for design library
   # Specify at least one system image,
   # if you need to run emulator(s) during your tests
-  - sys-img-{{EMULATOR_TAG}}-{{EMULATOR_API}}
+  - $SYS_IMG
 
   licenses:
   - android-sdk-preview-license-.+
@@ -69,9 +70,6 @@ before_install:
 - echo no | avdmanager create avd --force -n $AVD_NAME -k $EMULATOR
 - $ANDROID_HOME/emulator/emulator -avd $AVD_NAME -no-audio -no-window &
 - adb wait-for-device get-serialno
-- adb shell settings put global window_animation_scale 0 &
-- adb shell settings put global transition_animation_scale 0 &
-- adb shell settings put global animator_duration_scale 0 &
 - adb shell input keyevent 82 &
 
 before_script:
