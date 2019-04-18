@@ -71,7 +71,7 @@ before_install:
 - echo yes | sdkmanager "emulator" "$EMULATOR"
 # Create and start emulator for the script. Meant to race the install task.
 - echo no | avdmanager create avd --force -n $AVD_NAME -k $EMULATOR -c 700M
-- $ANDROID_HOME/emulator/emulator -avd $AVD_NAME -no-audio -no-window -gpu swiftshader_indirect -memory 700 &
+- $ANDROID_HOME/emulator/emulator -avd $AVD_NAME -no-snapshot-save -no-audio -no-window -gpu swiftshader_indirect -memory 700 &
 
 before_script:
 - chmod +x ./android-wait-for-emulator
