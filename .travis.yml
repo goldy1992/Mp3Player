@@ -16,11 +16,11 @@ env:
   global:
   - ADB_INSTALL_TIMEOUT=15
   - ANDROID_API="android-28"
-  - EMULATOR_API="android-24"
+  - EMULATOR_API="android-23"
   - ANDROID_BUILD_TOOLS=28.0.3
   - EMULATOR_TAG="armeabi-v7a"
   - ABI_TAG="google_apis"
-  - ABI_VERSION="$ABI_TAG-24"
+  - ABI_VERSION="$ABI_TAG-23"
   - ABI="$ABI_TAG;$EMULATOR_TAG"
   - EMULATOR="system-images;$EMULATOR_API;$ABI_TAG;$EMULATOR_TAG"
   - AVD_NAME=test
@@ -71,7 +71,7 @@ before_install:
 - echo yes | sdkmanager "emulator" "$EMULATOR"
 # Create and start emulator for the script. Meant to race the install task.
 - echo no | avdmanager create avd --force -n $AVD_NAME -k $EMULATOR
-- $ANDROID_HOME/emulator/emulator -avd $AVD_NAME -no-audio -no-window &
+- $ANDROID_HOME/emulator/emulator -avd $AVD_NAME -no-audio -no-window -no-accel -gpu on -no-snapshot-load &
 - bash android-wait-for-emulator
 - adb shell input keyevent 82 &
 
