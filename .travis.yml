@@ -80,4 +80,4 @@ before_script:
 - ./gradlew dependencies || true
 
 script:
-- travis_wait 30 "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
+- travis_wait 30 ./gradlew clean build connectedCheck -PdisablePreDex --stacktrace
