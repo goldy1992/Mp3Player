@@ -74,12 +74,13 @@ before_install:
 - $ANDROID_HOME/emulator/emulator -avd $AVD_NAME -no-snapshot-save -no-audio -no-window -gpu swiftshader_indirect -memory 700 &
 
 before_script:
-- chmod +x ./android-wait-for-emulator
-- bash ./android-wait-for-emulator
-- adb shell shell getprop ro.build.version.sdk
-- adb shell input keyevent 82 &
 - chmod +x gradlew
 - ./gradlew dependencies || true
 
 script:
-- travis_wait 45 ./gradlew clean build connectedCheck -PdisablePreDex --stacktrace
+- ./gradlew clean build -PdisablePreDex --stacktrace
+- chmod +x ./android-wait-for-emulator
+- bash ./android-wait-for-emulator
+- adb shell shell getprop ro.build.version.sdk
+- adb shell input keyevent 82 &
+- travis_wait 45 ./gradlew connectedCheck -PdisablePreDex --stacktrace
