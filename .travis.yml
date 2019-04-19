@@ -14,7 +14,7 @@ cache:
 
 env:
   global:
-  - ADB_INSTALL_TIMEOUT=20
+  - ADB_INSTALL_TIMEOUT=35
   - ANDROID_API="android-28"
   - EMULATOR_API="android-25"
   - ANDROID_BUILD_TOOLS=28.0.3

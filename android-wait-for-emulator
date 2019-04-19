@@ -22,20 +22,4 @@ until [[ "$bootanim" =~ "stopped" ]]; do
   sleep 1
 done
 
-probeApi=""
-timeout_in_sec=1000
-failcounter=0
-until [["$probeApi" =~ 25]]
-  probeApi=`adb -e shell getprop ro.build.version.sdk 2>&1 &`
-  if [["$probeApi" =~ "Unknown API Level"]]; then
-  let "failcounter += 1"
-      echo "Waiting to poll for API level"
-      if [[ $failcounter -gt timeout_in_sec ]]; then
-        echo "Timeout ($timeout_in_sec seconds) reached; failed to start emulator"
-        exit 1
-      fi
-    fi
-    sleep 1
-done
-
 echo "Emulator is ready"
