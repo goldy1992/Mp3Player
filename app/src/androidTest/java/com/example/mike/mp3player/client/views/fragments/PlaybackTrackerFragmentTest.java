@@ -1,7 +1,9 @@
 package com.example.mike.mp3player.client.views.fragments;
 
+import android.media.session.PlaybackState;
 import android.os.HandlerThread;
 import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
@@ -29,6 +31,8 @@ public class PlaybackTrackerFragmentTest {
 
     private final String HANDLER_THREAD_ID = "HANDLER_THREAD_ID";
     private long duration;
+    private int position;
+    private float playbackSpeed;
     FragmentScenario<PlaybackTrackerFragment> fragmentScenario;
     FragmentScenario.FragmentAction<PlaybackTrackerFragment> onMetadataChangedAction;
     @Before
@@ -70,4 +74,11 @@ public class PlaybackTrackerFragmentTest {
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, this.duration).build();
         fragment.onMetadataChanged(metadataCompat);
     }
+
+    private void changePlaybackState(@NonNull PlaybackTrackerFragment fragment){
+        PlaybackStateCompat playbackState = new PlaybackStateCompat.Builder()
+                .setState(PlaybackStateCompat.STATE_PAUSED, position, playbackSpeed).build();
+        fragment.onPlaybackStateChanged(playbackState);
+    }
+
 }
