@@ -19,7 +19,10 @@ import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_SPEED;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 
-
+/**
+ * Deprecated: use SeekerBarController2
+ */
+@Deprecated
 public class SeekerBarController extends MediaControllerCompat.Callback implements Animator.AnimatorListener, ValueAnimator.AnimatorUpdateListener, SeekBar.OnSeekBarChangeListener {
 
     private static final String LOG_TAG = "SKR_MDIA_CNTRLR_CLBK";

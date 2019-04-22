@@ -1,9 +1,13 @@
 package com.example.mike.mp3player.client.views.fragments;
 
-import android.media.session.PlaybackState;
 import android.os.HandlerThread;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.testing.FragmentScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.MediumTest;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
@@ -12,17 +16,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.testing.FragmentScenario;
-import androidx.lifecycle.Lifecycle;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.MediumTest;
-
+import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static com.example.mike.mp3player.CustomMatchers.withSeekbarProgress;
 import static org.hamcrest.CoreMatchers.containsString;
 
 @MediumTest
@@ -33,16 +34,21 @@ public class PlaybackTrackerFragmentTest {
     private long duration;
     private int position;
     private float playbackSpeed;
+    @PlaybackStateCompat.State
+    private int playbackState = STATE_PAUSED;
+
     FragmentScenario<PlaybackTrackerFragment> fragmentScenario;
     FragmentScenario.FragmentAction<PlaybackTrackerFragment> onMetadataChangedAction;
+    FragmentScenario.FragmentAction<PlaybackTrackerFragment> onPlaybackStateChangedAction;
     @Before
     public void init(){
         fragmentScenario = FragmentScenario.launchInContainer(PlaybackTrackerFragment.class);
-        fragmentScenario.moveToState(Lifecycle.State.CREATED);
+//        fragmentScenario.moveToState(Lifecycle.State.CREATED);
         fragmentScenario.onFragment(fragment -> initFragment(fragment));
-        fragmentScenario.moveToState(Lifecycle.State.STARTED);
-        fragmentScenario.moveToState(Lifecycle.State.RESUMED);
+//        fragmentScenario.moveToState(Lifecycle.State.STARTED);
+//        fragmentScenario.moveToState(Lifecycle.State.RESUMED);
         onMetadataChangedAction = (PlaybackTrackerFragment fragment) -> changeMetaData(fragment);
+        onPlaybackStateChangedAction = (PlaybackTrackerFragment fragment) -> changePlaybackState(fragment);
     }
 
     /**
@@ -53,10 +59,16 @@ public class PlaybackTrackerFragmentTest {
     @Test
     public void testDurationUpdated() {
         this.duration = 20000; // 20 seconds
+        this.position = 10000;
+        this.playbackState = STATE_PAUSED;
+        this.playbackSpeed = 1.0f;
         final String EXPECTED = "20";
         fragmentScenario.onFragment(onMetadataChangedAction);
-        onView(withId(R.id.duration)).check(
-                matches(withText(containsString(EXPECTED))));
+
+        onView(withId(R.id.duration)).check(matches(withText(containsString(EXPECTED))));
+        fragmentScenario.onFragment(onPlaybackStateChangedAction);
+        onView(withId(R.id.seekBar)).check(matches(isCompletelyDisplayed()));
+        onView(withId(R.id.seekBar)).check(matches(withSeekbarProgress(10000)));
     }
     /**
      *
@@ -76,9 +88,9 @@ public class PlaybackTrackerFragmentTest {
     }
 
     private void changePlaybackState(@NonNull PlaybackTrackerFragment fragment){
-        PlaybackStateCompat playbackState = new PlaybackStateCompat.Builder()
-                .setState(PlaybackStateCompat.STATE_PAUSED, position, playbackSpeed).build();
-        fragment.onPlaybackStateChanged(playbackState);
+        PlaybackStateCompat playbackStateCompat = new PlaybackStateCompat.Builder()
+                .setState(playbackState, position, playbackSpeed).build();
+        fragment.onPlaybackStateChanged(playbackStateCompat);
     }
 
 }

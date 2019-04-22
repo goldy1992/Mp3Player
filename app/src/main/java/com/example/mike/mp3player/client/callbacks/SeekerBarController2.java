@@ -7,14 +7,13 @@ import android.util.Log;
 import android.view.animation.LinearInterpolator;
 import android.widget.SeekBar;
 
+import androidx.annotation.VisibleForTesting;
+
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.commons.LoggingUtils;
 
-import androidx.annotation.VisibleForTesting;
-
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
-import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_SPEED;
 import static com.example.mike.mp3player.commons.PlaybackStateUtil.getRepeatModeFromPlaybackStateCompat;
