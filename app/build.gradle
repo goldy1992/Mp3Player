@@ -77,7 +77,7 @@ dependencies {
     def COMMONS_IO_VERSION = '2.6'
     def COMMONS_LANG_VERSION = '2.6'
     def COMMONS_COLLECTIONS4_VERSION = '4.3'
-    def MOCKITO_CORE_VERSION = '2.25.1'
+    def MOCKITO_CORE_VERSION = '2.27.0'
     def POWERMOCK_JUNIT4_VERSION = '2.0.0'
     def JUNIT4_VERSION = '4.12'
     def JUNIT5_VERSION = '5.4.1'
@@ -91,7 +91,6 @@ dependencies {
     def TEST_RULES_VERSION = '1.1.1'
     def ESPRESSO_CORE_VERSION = '3.1.0'
     def GOOGLE_GUAVA_VERSION = '27.1-android'
-
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation group: 'androidx.constraintlayout', name: 'constraintlayout', version: CONSTRAINT_LAYOUT_VERSION
@@ -120,7 +119,7 @@ dependencies {
     testRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-launcher', version: JUNIT_PLATFORM_VERSION
     testRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-console', version: JUNIT_PLATFORM_VERSION
     //testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.25.1'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
+    debugImplementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
     testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: POWERMOCK_JUNIT4_VERSION
     testImplementation group: 'org.powermock', name: 'powermock-core', version: POWERMOCKITO_CORE_VERSION
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: POWERMOCKITO_API_VERSION
@@ -129,7 +128,6 @@ dependencies {
     testImplementation group: 'org.robolectric', name: 'robolectric', version: ROBOELECTRIC_VERSION
     implementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: '1.1.0-alpha06'
-
     androidTestImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
     androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: JUINT_EXT_VERSION

@@ -43,10 +43,7 @@ public class PlaybackTrackerFragmentTest {
     @Before
     public void init(){
         fragmentScenario = FragmentScenario.launchInContainer(PlaybackTrackerFragment.class);
-//        fragmentScenario.moveToState(Lifecycle.State.CREATED);
         fragmentScenario.onFragment(fragment -> initFragment(fragment));
-//        fragmentScenario.moveToState(Lifecycle.State.STARTED);
-//        fragmentScenario.moveToState(Lifecycle.State.RESUMED);
         onMetadataChangedAction = (PlaybackTrackerFragment fragment) -> changeMetaData(fragment);
         onPlaybackStateChangedAction = (PlaybackTrackerFragment fragment) -> changePlaybackState(fragment);
     }

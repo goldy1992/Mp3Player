@@ -2,39 +2,47 @@ package com.example.mike.mp3player;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.media.session.MediaSession;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.util.Log;
+
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
-import com.example.mike.mp3player.client.views.SeekerBar;
-import com.example.mike.mp3player.client.views.TimeCounter;
+import com.example.mike.mp3player.commons.Constants;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
-
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-@Ignore
 @RunWith(AndroidJUnit4.class)
 public class MediaPlayerIntegrationTest {
 //
 //    public static final String PACKAGE_NAME = "com.example.mike.mp3player";
 //    public static final String ANDROID_RESOURCE = "android.resource";
 //    public static final String TEST_MP3_URL = null; // ANDROID_RESOURCE + "://" + PACKAGE_NAME + "/" + R.raw.test_yomil_dany_jala_jala;
-//
+    @Rule
+    public ActivityScenarioRule<MediaPlayerActivity> mediaPlayerActivityScenario;
+    Intent mediaPlayerActivityIntent;
+
+    @Before
+    public void setUp() {
+        Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        mediaPlayerActivityIntent = new Intent(targetContext, MediaPlayerActivity.class);
+        MediaSession mediaSession = new MediaSession(targetContext, "MEDIA_SESSION");
+        MediaSessionCompat mediaSessionCompat = MediaSessionCompat.fromMediaSession(targetContext, mediaSession);
+        mediaPlayerActivityIntent.putExtra(Constants.MEDIA_SESSION, mediaSessionCompat.getSessionToken());
+        ActivityScenario.launch(mediaPlayerActivityIntent);
+    }
+
+    @Test
+    public void testStartUp() {
+        Log.i("", "info");
+    }
 //    @Rule
 //    public final ActivityTestRule activityTestRule = new ActivityTestRule(MediaPlayerActivity.class) {
 //        @Override
