@@ -2,6 +2,7 @@ package com.example.mike.mp3player.client.views;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.TextView;
 
@@ -53,7 +54,7 @@ public class TimeCounter {
             this.currentSpeed = state.getPlaybackSpeed();
             Integer repeatMode = getRepeatModeFromPlaybackStateCompat(state);
             this.repeating = repeatMode != null && repeatMode == REPEAT_MODE_ONE;
-            long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(state);
+            long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(state, SystemClock.elapsedRealtime());
 
             switch (getCurrentState()) {
                 case PlaybackStateCompat.STATE_PLAYING:

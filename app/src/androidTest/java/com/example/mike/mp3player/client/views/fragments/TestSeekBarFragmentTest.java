@@ -7,6 +7,8 @@ import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
 
+import com.example.mike.mp3player.R;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +23,9 @@ public class TestSeekBarFragmentTest {
 
     @Before
     public void init() {
-        fragmentScenario = FragmentScenario.launchInContainer(TestSeekBarFragment.class, null, new FragmentFactory());
+        FragmentFactory fragmentFactory = new FragmentFactory();
+        fragmentScenario = FragmentScenario.launchInContainer(TestSeekBarFragment.class, null, R.style.AppTheme_NoActionBar, fragmentFactory);
+
     }
 
     /**

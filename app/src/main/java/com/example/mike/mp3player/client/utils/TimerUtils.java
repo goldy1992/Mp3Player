@@ -24,7 +24,7 @@ public final class TimerUtils {
         return formattedTime;
     }
 
-    public static long calculateCurrentPlaybackPosition(PlaybackStateCompat state) {
+    public static long calculateCurrentPlaybackPosition(PlaybackStateCompat state, long currentTime) {
             if (state == null) {
                 return 0L;
             }
@@ -36,7 +36,6 @@ public final class TimerUtils {
                 if (timestamp == null) {
                     return state.getBufferedPosition();
                 }
-                long currentTime = SystemClock.elapsedRealtime();
                 long timeDiff = currentTime - timestamp;
                 return state.getPosition() + timeDiff;
             }

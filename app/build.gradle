@@ -119,7 +119,7 @@ dependencies {
     testRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-launcher', version: JUNIT_PLATFORM_VERSION
     testRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-console', version: JUNIT_PLATFORM_VERSION
     //testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.25.1'
-    debugImplementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
     testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: POWERMOCK_JUNIT4_VERSION
     testImplementation group: 'org.powermock', name: 'powermock-core', version: POWERMOCKITO_CORE_VERSION
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: POWERMOCKITO_API_VERSION

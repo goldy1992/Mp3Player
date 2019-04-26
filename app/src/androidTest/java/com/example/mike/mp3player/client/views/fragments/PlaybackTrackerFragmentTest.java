@@ -5,6 +5,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentFactory;
 import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
@@ -42,7 +43,8 @@ public class PlaybackTrackerFragmentTest {
     FragmentScenario.FragmentAction<PlaybackTrackerFragment> onPlaybackStateChangedAction;
     @Before
     public void init(){
-        fragmentScenario = FragmentScenario.launchInContainer(PlaybackTrackerFragment.class);
+        FragmentFactory fragmentFactory = new FragmentFactory();
+        fragmentScenario = FragmentScenario.launchInContainer(PlaybackTrackerFragment.class, null, R.style.AppTheme_NoActionBar, fragmentFactory);
         fragmentScenario.onFragment(fragment -> initFragment(fragment));
         onMetadataChangedAction = (PlaybackTrackerFragment fragment) -> changeMetaData(fragment);
         onPlaybackStateChangedAction = (PlaybackTrackerFragment fragment) -> changePlaybackState(fragment);
