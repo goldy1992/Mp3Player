@@ -74,7 +74,6 @@ public class SeekerBarController2Test {
     public void testStartTracking() {
         TimeCounter timeCounter = mock(TimeCounter.class);
         m_seekerBar.setTimeCounter(timeCounter);
-        ValueAnimator valueAnimator = m_seekerBarController2.getValueAnimator();
         m_seekerBarController2.onStartTrackingTouch(m_seekerBar);
         assertTrue(m_seekerBar.isTracking());
     }

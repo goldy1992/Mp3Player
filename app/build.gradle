@@ -127,7 +127,7 @@ dependencies {
 
     testImplementation group: 'org.robolectric', name: 'robolectric', version: ROBOELECTRIC_VERSION
     implementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
-    debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: '1.1.0-alpha06'
+    debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: '1.1.0-alpha07'
     androidTestImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
     androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: JUINT_EXT_VERSION
