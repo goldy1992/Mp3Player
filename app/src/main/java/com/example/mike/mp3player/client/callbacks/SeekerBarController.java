@@ -50,7 +50,7 @@ public class SeekerBarController extends MediaControllerCompat.Callback implemen
         setLooping(state);
         this.currentState = state.getState();
         this.currentPlaybackSpeed = state.getPlaybackSpeed();
-        long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(state, SystemClock.elapsedRealtime());
+        long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(state);
         createAndStartAnimator(latestPosition);
     }
 

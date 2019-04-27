@@ -78,7 +78,7 @@ before_script:
 - ./gradlew dependencies || true
 
 script:
-- ./gradlew assembleDebugAndroidTest -PdisablePreDex --stacktrace
+- ./gradlew clean build -PdisablePreDex --stacktrace
 #- chmod +x ./android-wait-for-emulator
 #- bash ./android-wait-for-emulator
 #- adb shell getprop ro.build.version.sdk

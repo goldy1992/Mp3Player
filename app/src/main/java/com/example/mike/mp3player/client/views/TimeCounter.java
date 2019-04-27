@@ -54,7 +54,7 @@ public class TimeCounter {
             this.currentSpeed = state.getPlaybackSpeed();
             Integer repeatMode = getRepeatModeFromPlaybackStateCompat(state);
             this.repeating = repeatMode != null && repeatMode == REPEAT_MODE_ONE;
-            long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(state, SystemClock.elapsedRealtime());
+            long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(state);
 
             switch (getCurrentState()) {
                 case PlaybackStateCompat.STATE_PLAYING:
