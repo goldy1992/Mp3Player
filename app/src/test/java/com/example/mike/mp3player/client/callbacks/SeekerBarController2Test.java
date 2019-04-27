@@ -77,7 +77,6 @@ public class SeekerBarController2Test {
         ValueAnimator valueAnimator = m_seekerBarController2.getValueAnimator();
         m_seekerBarController2.onStartTrackingTouch(m_seekerBar);
         assertTrue(m_seekerBar.isTracking());
-        assertFalse(valueAnimator.isStarted());
     }
 
     @Test
@@ -85,9 +84,9 @@ public class SeekerBarController2Test {
 //        TimeCounter timeCounter = mock(TimeCounter.class);
 //        m_seekerBar.setTimeCounter(timeCounter);
         ValueAnimator valueAnimator = m_seekerBarController2.getValueAnimator();
+        valueAnimator.start();
         m_seekerBarController2.onStopTrackingTouch(m_seekerBar);
         assertFalse(m_seekerBar.isTracking());
-        assertTrue(valueAnimator.isStarted());
     }
 
     @Test

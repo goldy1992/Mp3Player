@@ -95,7 +95,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
 
     @Override
     public void onAnimationUpdate(final ValueAnimator valueAnimator) {
-        //Log.i(LOG_TAG, "animation update");
+        Log.i(LOG_TAG, "animation update");
         final int animatedIntValue = (int) valueAnimator.getAnimatedValue();
         seekerBar.setProgress(animatedIntValue);
     }
@@ -105,19 +105,19 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
         //Log.i(LOG_TAG, "START TRACKING");
         SeekerBar seekerBar = (SeekerBar) seekBar;
         seekerBar.getTimeCounter().cancelTimerDuringTracking();
-        valueAnimator.cancel();
+        removeValueAnimator();
         setTracking(seekBar, true);
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         setTracking(seekBar, false);
+        Log.i(LOG_TAG, "Stop TRACKING");
         SeekerBar seekerBar = (SeekerBar) seekBar;
         if (seekerBar != null ) {
             this.currentPosition = seekBar.getProgress();
             mediaControllerAdapter.seekTo(this.currentPosition);
-            valueAnimator.start();
-            valueAnimator.setCurrentFraction(getPositionAsFraction());
+            createAnimator();
         }
     }
 

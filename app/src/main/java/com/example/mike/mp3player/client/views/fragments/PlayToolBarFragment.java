@@ -69,11 +69,9 @@ public class PlayToolBarFragment extends Fragment {
         if (currentPlaybackState == PlaybackStateCompat.STATE_PLAYING) {
             Log.d(LOG_TAG, "calling pause");
             mediaControllerAdapter.pause();
- //           getPlayPauseButton().setS
         } else {
             Log.d(LOG_TAG, "calling play");
             mediaControllerAdapter.play();
-   //         getPlayPauseButton().setPauseIcon();
         }
     }
 
