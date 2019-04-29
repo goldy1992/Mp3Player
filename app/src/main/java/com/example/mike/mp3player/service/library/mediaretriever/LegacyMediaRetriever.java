@@ -12,12 +12,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LecacyMediaRetriever extends MediaRetriever {
+public class LegacyMediaRetriever extends MediaRetriever {
     private static final String LOG_TAG = "LECY_MDIA_RTVR";
     private MusicFileFilter musicFileFilter = new MusicFileFilter();
     private IsDirectoryFilter isDirectoryFilter = new IsDirectoryFilter();
 
-    public LecacyMediaRetriever(Context context) {
+    public LegacyMediaRetriever(Context context) {
         super(context);
     }
 
