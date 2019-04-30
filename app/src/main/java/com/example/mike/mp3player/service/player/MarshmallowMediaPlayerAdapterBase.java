@@ -7,6 +7,7 @@ import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.media.PlaybackParams;
 import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.LoggingUtils.logPlaybackParams;
@@ -49,6 +50,7 @@ public class MarshmallowMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
     @Override
     MediaPlayer createMediaPlayer(Uri uri) {
         MediaPlayer mediaPlayer = super.createMediaPlayer(uri);
+        System.err.println("creating media player with URI: " + uri.getPath());
         setPlaybackParams(mediaPlayer);
         return  mediaPlayer;
     }
