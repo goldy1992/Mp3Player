@@ -29,8 +29,19 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        uiTests {
-            initWith debug
+    }
+    flavorDimensions "version"
+    productFlavors {
+        full {
+            applicationIdSuffix ".full"
+            versionNameSuffix "-full"
+            resValue "string", "app_name", "MP3 Player"
+        }
+        automation {
+            applicationIdSuffix ".automation"
+            versionNameSuffix "-automation"
+            resValue "string", "app_name", "Test Mp3 Player"
+
         }
     }
 
@@ -94,6 +105,7 @@ dependencies {
     def TEST_RULES_VERSION = '1.1.1'
     def ESPRESSO_CORE_VERSION = '3.1.0'
     def GOOGLE_GUAVA_VERSION = '27.1-android'
+    def TEST_UI_AUTOMATOR_VERSION= '2.2.0'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation group: 'androidx.constraintlayout', name: 'constraintlayout', version: CONSTRAINT_LAYOUT_VERSION
@@ -140,4 +152,5 @@ dependencies {
     androidTestImplementation(group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION) {
         exclude module: "support-annotations"
     }
+    androidTestImplementation group: 'androidx.test.uiautomator', name: 'uiautomator', version: TEST_UI_AUTOMATOR_VERSION
 }

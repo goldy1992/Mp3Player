@@ -83,7 +83,11 @@ public final class Constants {
     public static final int TRANSLUCENT = 100;
 
     /* BUILD CONFIG */
-    public static final String UI_TESTS = "uiTests";
+    // BUILD TYPES
     public static final String DEBUG = "debug";
     public static final String RELEASE = "release";
+
+    // PRODUCT FLAVORS
+    public static final String FULL = "full";
+    public static final String AUTOMATION = "automation";
 }

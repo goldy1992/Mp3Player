@@ -2,15 +2,14 @@ package com.example.mike.mp3player.service.library;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
-import com.example.mike.mp3player.BuildConfig;
+import androidx.annotation.NonNull;
+
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.library.mediaretriever.ContentResolverMediaRetriever;
-import com.example.mike.mp3player.service.library.mediaretriever.EmptyMediaRetriever;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
 import com.example.mike.mp3player.service.library.mediaretriever.MockMediaRetriever;
 
@@ -20,10 +19,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import androidx.annotation.NonNull;
-
+import static com.example.mike.mp3player.commons.AndroidUtils.getProductFlavor;
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
-import static com.example.mike.mp3player.commons.Constants.UI_TESTS;
+import static com.example.mike.mp3player.commons.Constants.AUTOMATION;
 
 public class MediaLibrary {
     private boolean playlistRecursInSubDirectory = false;
@@ -102,9 +100,8 @@ public class MediaLibrary {
     }
 
     private void initContentResolver() {
-        switch (BuildConfig.BUILD_TYPE) {
-            case UI_TESTS: this.mediaRetriever = new MockMediaRetriever(context); break;
+        switch (getProductFlavor()) {
+            case AUTOMATION: this.mediaRetriever = new MockMediaRetriever(context); break;
             default: this.mediaRetriever = new ContentResolverMediaRetriever(context); break;
-        }
-    }
+        }}
 }

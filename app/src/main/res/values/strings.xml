@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Mp3Player</string>
     <string name="action_settings">Settings</string>
     <string name="PLAY">Play</string>
     <string name="SKIP_TO_NEXT">Skip to Next</string>
