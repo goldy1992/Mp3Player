@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client.callbacks;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -19,7 +20,10 @@ import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_SPEED;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 
-
+/**
+ * Deprecated: use SeekerBarController2
+ */
+@Deprecated
 public class SeekerBarController extends MediaControllerCompat.Callback implements Animator.AnimatorListener, ValueAnimator.AnimatorUpdateListener, SeekBar.OnSeekBarChangeListener {
 
     private static final String LOG_TAG = "SKR_MDIA_CNTRLR_CLBK";

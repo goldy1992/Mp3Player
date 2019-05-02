@@ -74,12 +74,14 @@ public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> 
     }
 
     private void notifyListenersOfType(ListenerType listenerType, PlaybackStateCompat state) {
-        Set<PlaybackStateListener> listenersSet = listeners.get(listenerType);
-        StringBuilder sb = new StringBuilder();
-        if (listenersSet != null) {
-            for (PlaybackStateListener listener : listenersSet) {
-                listener.onPlaybackStateChanged(state);
-                sb.append(listener.getClass());
+        if (null != state) {
+            Set<PlaybackStateListener> listenersSet = listeners.get(listenerType);
+            StringBuilder sb = new StringBuilder();
+            if (listenersSet != null) {
+                for (PlaybackStateListener listener : listenersSet) {
+                    listener.onPlaybackStateChanged(state);
+                    sb.append(listener.getClass());
+                }
             }
         }
         //Log.i(LOG_TAG, "hit playback state changed with status " + Constants.playbackStateDebugMap.get(state.getState()) + ", listeners " + listenersSet.size() + ", " + sb.toString());

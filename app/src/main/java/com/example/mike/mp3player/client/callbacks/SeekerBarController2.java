@@ -7,11 +7,11 @@ import android.util.Log;
 import android.view.animation.LinearInterpolator;
 import android.widget.SeekBar;
 
+import androidx.annotation.VisibleForTesting;
+
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.commons.LoggingUtils;
-
-import androidx.annotation.VisibleForTesting;
 
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
@@ -95,7 +95,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
 
     @Override
     public void onAnimationUpdate(final ValueAnimator valueAnimator) {
-        //Log.i(LOG_TAG, "animation update");
+        Log.i(LOG_TAG, "animation update");
         final int animatedIntValue = (int) valueAnimator.getAnimatedValue();
         seekerBar.setProgress(animatedIntValue);
     }
@@ -105,19 +105,19 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
         //Log.i(LOG_TAG, "START TRACKING");
         SeekerBar seekerBar = (SeekerBar) seekBar;
         seekerBar.getTimeCounter().cancelTimerDuringTracking();
-        valueAnimator.cancel();
+        removeValueAnimator();
         setTracking(seekBar, true);
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         setTracking(seekBar, false);
+        Log.i(LOG_TAG, "Stop TRACKING");
         SeekerBar seekerBar = (SeekerBar) seekBar;
         if (seekerBar != null ) {
             this.currentPosition = seekBar.getProgress();
             mediaControllerAdapter.seekTo(this.currentPosition);
-            valueAnimator.start();
-            valueAnimator.setCurrentFraction(getPositionAsFraction());
+            createAnimator();
         }
     }
 
@@ -144,7 +144,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
             seekerBar.setValueAnimator(valueAnimator);
             this.valueAnimator = valueAnimator;
         } catch (IllegalArgumentException ex) {
-            Log.e(getClass().getName(), "seekerbar Max: " + currentSongDuration);
+            Log.e(LOG_TAG, "seekerbar Max: " + currentSongDuration);
             throw new IllegalArgumentException(ex);
         }
     }

@@ -20,10 +20,28 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    adbOptions {
+        timeOutInMs 20 * 60 * 1000 // 10 minutes
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    flavorDimensions "version"
+    productFlavors {
+        full {
+            applicationIdSuffix ".full"
+            versionNameSuffix "-full"
+            resValue "string", "app_name", "MP3 Player"
+        }
+        automation {
+            applicationIdSuffix ".automation"
+            versionNameSuffix "-automation"
+            resValue "string", "app_name", "Test Mp3 Player"
+
         }
     }
 
@@ -32,11 +50,19 @@ android {
             includeAndroidResources = true
             returnDefaultValues = true
         }
+        unitTests.all {
+            testLogging {
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                outputs.upToDateWhen {false}
+                showStandardStreams = true
+            }
+        }
     }
 
     lintOptions {
         disable 'GoogleAppIndexingWarning'
         disable 'PrivateResource'
+        abortOnError false
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -61,20 +87,18 @@ dependencyUpdates {
 }
 
 dependencies {
-
-
     def CONSTRAINT_LAYOUT_VERSION = '2.0.0-alpha2'
-    def MATERIAL_VERSION = '1.1.0-alpha02'
+    def MATERIAL_VERSION = '1.1.0-alpha05'
     def GRID_LAYOUT_VERSION = '1.0.0'
     def CORE_VERSION = '1.0.1'
     def MEDIA_VERSION = '1.1.0-alpha02'
-    def ANNOTATION_VERSION = '1.0.2'
+    def ANNOTATION_VERSION = '1.1.0-beta01'
     def APP_COMPAT_VERSION = '1.0.2'
     def DRAWER_LAYOUT_VERSION = '1.0.0'
     def COMMONS_IO_VERSION = '2.6'
     def COMMONS_LANG_VERSION = '2.6'
     def COMMONS_COLLECTIONS4_VERSION = '4.3'
-    def MOCKITO_CORE_VERSION = '2.25.1'
+    def MOCKITO_CORE_VERSION = '2.27.0'
     def POWERMOCK_JUNIT4_VERSION = '2.0.0'
     def JUNIT4_VERSION = '4.12'
     def JUNIT5_VERSION = '5.4.1'
@@ -83,12 +107,13 @@ dependencies {
     def POWERMOCKITO_CORE_VERSION = '2.0.0'
     def POWERMOCKITO_API_VERSION = '2.0.0'
     def ROBOELECTRIC_VERSION = '4.2.1'
-    def TEST_CORE_VERSION = '1.1.0'
+    def TEST_CORE_VERSION = '1.2.0-alpha03'
     def TEST_RUNNER_VERSION = '1.0.2'
     def TEST_RULES_VERSION = '1.1.1'
-    def ESPRESSO_CORE_VERSION = '3.1.1'
+    def ESPRESSO_CORE_VERSION = '3.1.0'
     def GOOGLE_GUAVA_VERSION = '27.1-android'
-
+    def TEST_UI_AUTOMATOR_VERSION= '2.2.0'
+    def FRAGMENT_TESTING_VERSION = '1.1.0-alpha07'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation group: 'androidx.constraintlayout', name: 'constraintlayout', version: CONSTRAINT_LAYOUT_VERSION
@@ -96,7 +121,7 @@ dependencies {
     implementation group: 'androidx.gridlayout', name: 'gridlayout', version: GRID_LAYOUT_VERSION
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
     implementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
-    implementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
+    debugImplementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
     implementation group: 'androidx.drawerlayout', name: 'drawerlayout', version: DRAWER_LAYOUT_VERSION
     implementation group: 'androidx.core', name: 'core', version: CORE_VERSION
     implementation group: 'commons-io', name: 'commons-io', version: COMMONS_IO_VERSION
@@ -104,6 +129,7 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
     // https://mvnrepository.com/artifact/com.google.guava/guava
     implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
+    implementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
 
     //vintage
     testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
@@ -121,13 +147,18 @@ dependencies {
     testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: POWERMOCK_JUNIT4_VERSION
     testImplementation group: 'org.powermock', name: 'powermock-core', version: POWERMOCKITO_CORE_VERSION
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: POWERMOCKITO_API_VERSION
-
+    testImplementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
     testImplementation group: 'org.robolectric', name: 'robolectric', version: ROBOELECTRIC_VERSION
-    testImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
+
+    debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_TESTING_VERSION
+    androidTestImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
     androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: JUINT_EXT_VERSION
     androidTestImplementation group: 'androidx.test', name: 'rules', version: TEST_RULES_VERSION
+    androidTestImplementation group: 'androidx.test', name: 'runner', version: TEST_RUNNER_VERSION
+
     androidTestImplementation(group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION) {
         exclude module: "support-annotations"
     }
+    androidTestImplementation group: 'androidx.test.uiautomator', name: 'uiautomator', version: TEST_UI_AUTOMATOR_VERSION
 }

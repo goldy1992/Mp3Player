@@ -34,11 +34,11 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.fragment_playback_tracker, container, true);
+        return inflater.inflate(R.layout.fragment_playback_tracker, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle bundle) {
+    public void onViewCreated(@NonNull View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         TextView counterView = view.findViewById(R.id.timer);
         this.counter = new TimeCounter( counterView);
@@ -50,13 +50,12 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
 
     public void init(MediaControllerAdapter mediaControllerAdapter) {
         this.mediaControllerAdapter = mediaControllerAdapter;
-        Set<ListenerType> listenForSet = new HashSet();
+        Set<ListenerType> listenForSet = new HashSet<>();
         listenForSet.add(ListenerType.PLAYBACK);
         listenForSet.add(ListenerType.REPEAT);
         this.mediaControllerAdapter.registerPlaybackStateListener(this, listenForSet);
         this.mediaControllerAdapter.registerMetaDataListener(this);
         this.getSeekerBar().init(mediaControllerAdapter);
-
     }
 
     public TimeCounter getCounter() {

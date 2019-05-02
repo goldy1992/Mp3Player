@@ -1,15 +1,59 @@
 language: android
+sudo: required
+os: linux
+jdk: oraclejdk8
+
+before_cache:
+- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+
+env:
+  global:
+  - ADB_INSTALL_TIMEOUT=35
+  - ANDROID_API="android-28"
+  - EMULATOR_API="android-25"
+  - ANDROID_BUILD_TOOLS=28.0.3
+  - EMULATOR_TAG="armeabi-v7a"
+  - ABI_TAG="google_apis"
+  - ABI_VERSION="$ABI_TAG-25"
+  - ABI="$ABI_TAG;$EMULATOR_TAG"
+  - EMULATOR="system-images;$EMULATOR_API;$ABI_TAG;$EMULATOR_TAG"
+  - AVD_NAME=test
+  - SYS_IMG="sys-img-$EMULATOR_TAG-$ABI_VERSION"
+
 android:
   components:
-  - build-tools-28.0.3
-  - android-28
-  - add-on
-  - extra
+  # Uncomment the lines below if you want to
+  # use the latest revision of Android SDK Tools
+#  - tools
+#  - platform-tools
+#  - extra
+#  - add-on
+
+  # The BuildTools version used by your project
+  - build-tools-$ANDROID_BUILD_TOOLS
+
+  # The SDK version used to compile your project
+  - $ANDROID_API
+  - $EMULATOR_API
+
+  - extra-google-google_play_services # google play services
+  - extra-google-m2repository
+  - extra-android-m2repository # for design library
+  # Specify at least one system image,
+  # if you need to run emulator(s) during your tests
+ # - $SYS_IMG
+
   licenses:
-  - 'android-sdk-license-.+'
-  - 'google-gdk-license-.+'
-sudo: required
-jdk: oraclejdk8
+  - android-sdk-preview-license-.+
+  - android-sdk-license-.+
+  - google-gdk-license-.+
+
 # safelist
 branches:
   only:
@@ -17,7 +61,26 @@ branches:
   - develop
 
 before_install:
- - chmod +x gradlew
- - yes | sdkmanager "platforms;android-28"
+# Install SDK license so Android Gradle plugin can install deps.
+- mkdir "$ANDROID_HOME/licenses" || true
+- echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
+# Install the rest of tools (e.g., avdmanager).
+- echo yes | sdkmanager --update
+- echo yes | sdkmanager tools
+# Install the system image.
+- echo yes | sdkmanager "emulator" "$EMULATOR"
+# Create and start emulator for the script. Meant to race the install task.
+- echo no | avdmanager create avd --force -n $AVD_NAME -k $EMULATOR -c 700M
+#- $ANDROID_HOME/emulator/emulator -avd $AVD_NAME -no-snapshot-save -no-audio -no-window -gpu swiftshader_indirect -memory 700 &
+
+before_script:
+- chmod +x gradlew
+- ./gradlew dependencies || true
+
 script:
-  - ./gradlew clean build
+- ./gradlew clean build -PdisablePreDex --stacktrace
+#- chmod +x ./android-wait-for-emulator
+#- bash ./android-wait-for-emulator
+#- adb shell getprop ro.build.version.sdk
+#- adb shell input keyevent 82 &
+#- travis_wait 45 ./gradlew connectedDebugAndroidTest -PdisablePreDex --stacktrace

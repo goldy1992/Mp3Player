@@ -2,6 +2,7 @@ package com.example.mike.mp3player.client.views;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.TextView;
 
@@ -49,17 +50,24 @@ public class TimeCounter {
     }
     public void updateState(PlaybackStateCompat state) {
         //Log.d(LOG_TAG, "new state");
-        this.currentState = state.getState();
-        this.currentSpeed = state.getPlaybackSpeed();
-        Integer repeatMode = getRepeatModeFromPlaybackStateCompat(state);
-        this.repeating = repeatMode != null && repeatMode == REPEAT_MODE_ONE;
-        long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(state);
+            this.currentState = state.getState();
+            this.currentSpeed = state.getPlaybackSpeed();
+            Integer repeatMode = getRepeatModeFromPlaybackStateCompat(state);
+            this.repeating = repeatMode != null && repeatMode == REPEAT_MODE_ONE;
+            long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(state);
 
-        switch (getCurrentState()) {
-            case PlaybackStateCompat.STATE_PLAYING: work(latestPosition); break;
-            case PlaybackStateCompat.STATE_PAUSED: haltTimer(latestPosition); break;
-            default: resetTimer(); break;
-        }
+            switch (getCurrentState()) {
+                case PlaybackStateCompat.STATE_PLAYING:
+                    work(latestPosition);
+                    break;
+                case PlaybackStateCompat.STATE_PAUSED:
+                    haltTimer(latestPosition);
+                    break;
+                default:
+                    resetTimer();
+                    break;
+            }
+
     }
 
     private void work(long startTime) {

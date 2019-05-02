@@ -31,7 +31,7 @@ public class MainActivity extends MediaBrowserSubscriberActivityCompat {
     @Override
     boolean initialiseView(@LayoutRes int layoutRes) {
         setContentView(layoutRes);
-        this.rootFragment = (MainActivityRootFragment)getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
+        this.rootFragment = (MainActivityRootFragment) getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
         this.rootFragment.init(inputMethodManager, getMediaBrowserAdapter(), getMediaControllerAdapter());
         return true;
     }
