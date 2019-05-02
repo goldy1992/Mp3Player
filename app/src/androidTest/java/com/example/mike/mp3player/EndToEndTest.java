@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.activities;
+package com.example.mike.mp3player;
 
 
 import android.view.View;
@@ -11,6 +11,7 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.activities.SplashScreenEntryActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -30,7 +31,7 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(androidx.test.ext.junit.runners.AndroidJUnit4.class)
-public class SplashScreenEntryActivityTest {
+public class EndToEndTest {
 
     @Rule
     public ActivityTestRule<SplashScreenEntryActivity> mActivityTestRule = new ActivityTestRule<>(SplashScreenEntryActivity.class);
