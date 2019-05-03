@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:gravity="top"
         android:layout_alignParentTop="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppThemeOrange.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/titleToolbar"
