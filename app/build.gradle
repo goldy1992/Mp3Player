@@ -162,3 +162,5 @@ dependencies {
     }
     androidTestImplementation group: 'androidx.test.uiautomator', name: 'uiautomator', version: TEST_UI_AUTOMATOR_VERSION
 }
+
+// https://stackoverflow.com/questions/39307633/how-to-change-the-color-primary-color-primarydark-etc
