@@ -10,9 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
-        android:background="@color/ic_launcher_background"
+        android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
 
         android:contentInsetLeft="0dp"
         android:contentInsetStart="0dp"

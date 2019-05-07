@@ -13,7 +13,7 @@
         android:icon="@mipmap/my_app_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:theme="@style/AppThemeOrange">
         <activity
             android:name=".client.activities.SplashScreenEntryActivity"
             android:label="@string/app_name">

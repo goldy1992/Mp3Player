@@ -11,7 +11,7 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:layout_marginTop="5dp"
-        android:background="@color/design_default_color_secondary_variant"
+        android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize">
 
         <LinearLayout
@@ -44,7 +44,6 @@
                 custom:imgSrc="@drawable/ic_baseline_skip_next_24px"
                 tools:showIn="@layout/fragment_playback_toolbar_extended" />
         </LinearLayout>
-
 
     </androidx.appcompat.widget.Toolbar>
 </merge>
