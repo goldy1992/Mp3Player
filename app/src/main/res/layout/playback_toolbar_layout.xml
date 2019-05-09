@@ -11,7 +11,7 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:layout_marginTop="5dp"
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize">
 
         <LinearLayout

@@ -6,8 +6,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Icon;
 import android.media.session.MediaSession;
 import android.os.Build;
@@ -15,11 +18,15 @@ import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
+import android.util.TypedValue;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.commons.AndroidUtils;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -98,7 +105,7 @@ public class MyNotificationManager {
             .setAutoCancel(!isPlaying)
             .setColorized(true)
             .setOngoing(isPlaying)
-            .setColor(ContextCompat.getColor(service, R.color.colorPrimary))
+            .setColor(getPrimaryColor(context))
             .setSmallIcon(getSmallIcon(isPlaying))
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
@@ -121,7 +128,7 @@ public class MyNotificationManager {
     private NotificationCompat.Builder buildNotification(MediaSessionCompat.Token token,
                                                          boolean isPlaying,
                                                          MediaDescriptionCompat description) {
-
+        Context context = service.getApplicationContext();
         // Create the (mandatory) notification channel when running on Android Oreo.
         NotificationCompat.Action playPauseAction = null;
         if (isPlaying) {
@@ -132,7 +139,7 @@ public class MyNotificationManager {
 
         NotificationCompat.Action skipToNextAction = makeNoneOreoAction(android.R.drawable.ic_media_next, service.getString(R.string.SKIP_TO_NEXT), PlaybackStateCompat.ACTION_SKIP_TO_NEXT);
         NotificationCompat.Action skipToPreviousAction = makeNoneOreoAction(android.R.drawable.ic_media_previous, service.getString(R.string.SKIP_TO_PREVIOUS), PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(service.getApplicationContext(), CHANNEL_ID);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
 
         MediaStyle mediaStyle = new MediaStyle();
         NotificationCompat.Style style = mediaStyle.setMediaSession(token)
@@ -149,7 +156,7 @@ public class MyNotificationManager {
             .setTicker("to do")
             .setAutoCancel(!isPlaying)
             .setOngoing(isPlaying)
-            .setColor(ContextCompat.getColor(service, R.color.colorPrimary))
+            .setColor(getPrimaryColor(context))
             .setSmallIcon(getSmallIcon(isPlaying))
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setPriority(NotificationCompat.PRIORITY_LOW)
@@ -220,5 +227,13 @@ public class MyNotificationManager {
             return android.R.drawable.ic_media_play;
         }
         return android.R.drawable.ic_media_pause;
+    }
+
+    private @ColorInt int getPrimaryColor(Context context) {
+        Resources.Theme theme = context.getTheme();
+        // The attributes you want retrieved
+        int[] attrs = {android.R.attr.colorPrimary};
+        TypedArray ta = theme.obtainStyledAttributes(attrs);
+        return ta.getColor(0, Color.BLUE);
     }
 }
