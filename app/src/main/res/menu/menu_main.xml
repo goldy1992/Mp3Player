@@ -8,5 +8,9 @@
         android:title="@string/action_settings"
         android:orderInCategory="100"
         app:showAsAction="never" />
+        <item android:id="@+id/action_do_x"
+            android:title="do x"
+            android:orderInCategory="100"
+            app:showAsAction="never" />
     </group>
 </menu>

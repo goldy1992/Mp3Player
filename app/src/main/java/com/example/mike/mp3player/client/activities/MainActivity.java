@@ -2,6 +2,7 @@ package com.example.mike.mp3player.client.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
@@ -26,6 +27,11 @@ public class MainActivity extends MediaBrowserSubscriberActivityCompat {
         super.onCreate(savedInstanceState);
         this.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         this.viewInitialised = initialiseView(R.layout.activity_main);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return false;
     }
 
     @Override
