@@ -2,10 +2,11 @@
 <resources>
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Base theme !-->
+        <item name="colorPrimary">?themeColorPrimary</item>
     </style>
 
     <style name="AppTheme.Blue" >
-        <item name="colorPrimary">@color/primary_blue</item>
+        <item name="themeColorPrimary">@color/primary_blue</item>
         <item name="colorPrimaryDark">@color/dark_blue</item>
         <item name="colorAccent">@color/accent_pink</item>
     </style>
@@ -14,7 +15,7 @@
         <item name="windowNoTitle">true</item>
     </style>
     <style name="AppTheme.Orange" >
-        <item name="colorPrimary">@color/primary_orange</item>
+        <item name="themeColorPrimary">@color/primary_orange</item>
         <item name="colorPrimaryDark">@color/dark_orange</item>
         <item name="colorAccent">@color/accent_orange</item>
     </style>

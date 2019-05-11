@@ -31,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.TypedArrayUtils;
 import androidx.media.app.NotificationCompat.MediaStyle;
 import androidx.media.session.MediaButtonReceiver;
 
@@ -229,11 +230,17 @@ public class MyNotificationManager {
         return android.R.drawable.ic_media_pause;
     }
 
+    /**
+     *
+     * @param context
+     * @return
+     */
     private @ColorInt int getPrimaryColor(Context context) {
         Resources.Theme theme = context.getTheme();
-        // The attributes you want retrieved
-        int[] attrs = {android.R.attr.colorPrimary};
-        TypedArray ta = theme.obtainStyledAttributes(attrs);
-        return ta.getColor(0, Color.BLUE);
+        int[] attrs = {R.attr.themeColorPrimary};
+        TypedArray typedArray = theme.obtainStyledAttributes(R.style.AppTheme_Orange, attrs);
+        @ColorInt int toReturn = ContextCompat.getColor(context, typedArray.getResourceId(0, 0));
+        typedArray.recycle();
+        return toReturn;
     }
 }

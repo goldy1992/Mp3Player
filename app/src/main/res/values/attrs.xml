@@ -3,4 +3,5 @@
     <declare-styleable name="LinearLayoutWithImageView">
         <attr name="imgSrc" format="reference" />
     </declare-styleable>
+    <attr name="themeColorPrimary" format="reference"/>
 </resources>
