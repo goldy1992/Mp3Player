@@ -1,16 +1,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.mike.mp3player.client.activities.MainActivity" >
+    tools:context="com.example.mike.mp3player.client.activities.MainActivity"
+    >
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single" android:menuCategory="container"
+        android:orderInCategory="1">
+
         <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-        <item android:id="@+id/action_do_x"
-            android:title="do x"
-            android:orderInCategory="100"
+            android:orderInCategory="1"
+            android:title="@string/action_settings"
             app:showAsAction="never" />
+
+        <item android:id="@+id/themes_menu_item"
+            android:title="Themes"
+            app:showAsAction="always"
+            android:orderInCategory="2"
+            app:actionViewClass="android.widget.Spinner"
+            android:icon="@android:drawable/ic_menu_share"
+            android:actionLayout="@layout/layout_theme_spinner"
+            />
     </group>
 </menu>

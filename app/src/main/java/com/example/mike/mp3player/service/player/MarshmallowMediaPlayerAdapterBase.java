@@ -50,7 +50,7 @@ public class MarshmallowMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
     @Override
     MediaPlayer createMediaPlayer(Uri uri) {
         MediaPlayer mediaPlayer = super.createMediaPlayer(uri);
-        System.err.println("creating media player with URI: " + uri.getPath());
+        Log.d(LOG_TAG, "creating media player with URI: " + uri);
         setPlaybackParams(mediaPlayer);
         return  mediaPlayer;
     }

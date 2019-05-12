@@ -3,13 +3,18 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Base theme !-->
         <item name="colorPrimary">?themeColorPrimary</item>
+        <item name="colorPrimaryDark">?themeColorPrimaryDark</item>
+        <item name="colorAccent">?themeColorAccent</item>
+        <item name="android:name">?themeName</item>
     </style>
 
     <style name="AppTheme.Blue" >
         <item name="themeColorPrimary">@color/primary_blue</item>
-        <item name="colorPrimaryDark">@color/dark_blue</item>
-        <item name="colorAccent">@color/accent_pink</item>
+        <item name="themeColorPrimaryDark">@color/dark_blue</item>
+        <item name="themeColorAccent">@color/accent_pink</item>
+        <item name="themeName">@string/THEME_BLUE</item>
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -18,5 +23,6 @@
         <item name="themeColorPrimary">@color/primary_orange</item>
         <item name="colorPrimaryDark">@color/dark_orange</item>
         <item name="colorAccent">@color/accent_orange</item>
+        <item name="themeName">@string/THEME_ORANGE</item>
     </style>
 </resources>
