@@ -23,6 +23,7 @@ public final class Constants {
     public static final float DEFAULT_SPEED = 1.0f;
     public static final float DEFAULT_PITCH = 1.0f;
     public static final int DEFAULT_POSITION = 0;
+    public static final String THEME = "THEME";
 
     public static final SparseArray<String> playbackStateDebugMap = new SparseArray<>();
     static {

@@ -56,17 +56,6 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
         Log.i(LOG_TAG, "onStart");
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-       Log.i(LOG_TAG, "onresume");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
     private synchronized void splashScreenRun() {
     //    Log.i(LOG_TAG, "splashscreen run");
         try {

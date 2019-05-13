@@ -13,6 +13,9 @@ import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import androidx.annotation.LayoutRes;
+import androidx.annotation.StyleRes;
+
+import static com.example.mike.mp3player.commons.Constants.THEME;
 
 public class MainActivity extends MediaBrowserSubscriberActivityCompat {
 
@@ -25,6 +28,8 @@ public class MainActivity extends MediaBrowserSubscriberActivityCompat {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        @StyleRes int themeRes = getIntent().getIntExtra(THEME, R.style.AppTheme_Blue);
+        setTheme(themeRes);
         this.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         this.viewInitialised = initialiseView(R.layout.activity_main);
     }

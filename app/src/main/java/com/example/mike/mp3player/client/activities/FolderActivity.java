@@ -56,11 +56,6 @@ public class FolderActivity extends MediaBrowserSubscriberActivityCompat {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
     public void onConnected() {
         super.onConnected();
 

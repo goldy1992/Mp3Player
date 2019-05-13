@@ -19,6 +19,7 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MyDrawerListener;
 import com.example.mike.mp3player.client.activities.MainActivity;
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.views.SongSearchActionListener;
 import com.example.mike.mp3player.client.views.ThemeSpinnerController;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ViewPagerFragment;
@@ -112,7 +113,7 @@ public class MainFrameFragment extends Fragment {
 
         Spinner spinner = (Spinner) navigationView.getMenu().findItem(R.id.themes_menu_item).getActionView();
 
-        ThemeSpinnerController themeSpinnerController = new ThemeSpinnerController(getContext(), spinner, getActivity());
+        ThemeSpinnerController themeSpinnerController = new ThemeSpinnerController(getContext(), spinner, (MediaActivityCompat) getActivity());
     }
 
 
