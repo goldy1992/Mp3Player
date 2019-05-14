@@ -6,7 +6,7 @@
     android:theme="@style/ThemeOverlay.AppCompat.Light"
     android:orientation="vertical"
     android:gravity="bottom"
-    android:background="@color/accent_orange">
+    android:background="?themeColorPrimary">
 
 
     <TextView

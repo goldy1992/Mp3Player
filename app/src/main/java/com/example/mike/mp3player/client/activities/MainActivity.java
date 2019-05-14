@@ -28,8 +28,6 @@ public class MainActivity extends MediaBrowserSubscriberActivityCompat {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        @StyleRes int themeRes = getIntent().getIntExtra(THEME, R.style.AppTheme_Blue);
-        setTheme(themeRes);
         this.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         this.viewInitialised = initialiseView(R.layout.activity_main);
     }
