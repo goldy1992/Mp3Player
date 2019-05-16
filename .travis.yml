@@ -32,15 +32,15 @@ android:
   # Uncomment the lines below if you want to
   # use the latest revision of Android SDK Tools
   # The BuildTools version used by your project
-  - build-tools-$ANDROID_BUILD_TOOLS
+  #- build-tools-$ANDROID_BUILD_TOOLS
 
   # The SDK version used to compile your project
-  - $ANDROID_API
-  - $EMULATOR_API
+  #- $ANDROID_API
+  #- $EMULATOR_API
 
-  - extra-google-google_play_services # google play services
-  - extra-google-m2repository
-  - extra-android-m2repository # for design library
+  #- extra-google-google_play_services # google play services
+  #- extra-google-m2repository
+  #- extra-android-m2repository # for design library
   # Specify at least one system image,
   # if you need to run emulator(s) during your tests
  # - $SYS_IMG
@@ -58,15 +58,15 @@ branches:
   - feature/issue-50/create-color-theme
 before_install:
 # Install SDK license so Android Gradle plugin can install deps.
-- mkdir "$ANDROID_HOME/licenses" || true
-- echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
+#- mkdir "$ANDROID_HOME/licenses" || true
+#- echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
 # Install the rest of tools (e.g., avdmanager).
-- echo yes | sdkmanager --update
-- echo yes | sdkmanager tools
+#- echo yes | sdkmanager --update
+#- echo yes | sdkmanager tools
 # Install the system image.
-- echo yes | sdkmanager "emulator" "$EMULATOR"
+#- echo yes | sdkmanager "emulator" "$EMULATOR"
 # Create and start emulator for the script. Meant to race the install task.
-- echo no | avdmanager create avd --force -n $AVD_NAME -k $EMULATOR -c 700M
+#- echo no | avdmanager create avd --force -n $AVD_NAME -k $EMULATOR -c 700M
 #- $ANDROID_HOME/emulator/emulator -avd $AVD_NAME -no-snapshot-save -no-audio -no-window -gpu swiftshader_indirect -memory 700 &
 
 before_script:
