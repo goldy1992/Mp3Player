@@ -81,7 +81,7 @@ addons:
 
 
 script:
-- ./gradlew clean build sonarqube -PdisablePreDex --stacktrace
+- ./gradlew clean build -PdisablePreDex --stacktrace
 - sonar-scanner
 #- chmod +x ./android-wait-for-emulator
 #- bash ./android-wait-for-emulator
