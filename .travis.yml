@@ -55,7 +55,7 @@ branches:
   only:
   - master
   - develop
-
+  - feature/issue-50/create-color-theme
 before_install:
 # Install SDK license so Android Gradle plugin can install deps.
 - mkdir "$ANDROID_HOME/licenses" || true
