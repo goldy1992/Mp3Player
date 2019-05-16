@@ -50,12 +50,12 @@ android:
   - android-sdk-license-.+
   - google-gdk-license-.+
 
-# safelist
-branches:
-  only:
-  - master
-  - develop
-  - feature/issue-50/create-color-theme
+## safelist
+#branches:
+#  only:
+#  - master
+#  - develop
+#  - feature/issue-50/create-color-theme
 before_install:
 # Install SDK license so Android Gradle plugin can install deps.
 - mkdir "$ANDROID_HOME/licenses" || true
@@ -82,8 +82,8 @@ addons:
 
 script:
 #- ./gradlew clean build -PdisablePreDex --stacktrace
-- ./gradlew sonarqube
-#- sonar-scanner
+#- ./gradlew sonarqube
+- sonar-scanner
 #- chmod +x ./android-wait-for-emulator
 #- bash ./android-wait-for-emulator
 #- adb shell getprop ro.build.version.sdk
