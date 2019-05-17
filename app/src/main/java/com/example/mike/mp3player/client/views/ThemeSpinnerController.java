@@ -62,17 +62,18 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
                 String themeName = attrArray.getString(0);
                 adapter.add(themeName);
                 themeNameToResMap.put(themeName, res);
-                attrArray.recycle();
+                recycleTypedArray(attrArray);
             }
         }
-        typedArray.recycle();
+
+        recycleTypedArray(typedArray);
         int currentThemeId = getCurrentThemeId();
         if (currentThemeId != -1) {
             currentTheme = themeNameToResMap.inverse().get(currentThemeId);
             int position = adapter.getPosition(currentTheme);
             spinner.setSelection(position);
         }
-        typedArray.recycle();
+        recycleTypedArray(typedArray);
     }
 
 
@@ -91,7 +92,6 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
             spinner.setSelection(adapter.getPosition(currentTheme));
         }
         selectCount++;
-
     }
 
     @Override
@@ -126,5 +126,13 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt(THEME, themeId);
         editor.commit();
+    }
+    /**
+     *
+     */
+    private void recycleTypedArray(TypedArray typedArray) {
+        if (null != typedArray) {
+            typedArray.recycle();
+        }
     }
 }
