@@ -1,14 +1,19 @@
 package com.example.mike.mp3player.client.activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.HandlerThread;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.view.MenuItem;
 
+import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 
 import androidx.annotation.LayoutRes;
+import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AppCompatActivity;
+
+import static com.example.mike.mp3player.commons.Constants.THEME;
 
 public abstract class MediaActivityCompat extends AppCompatActivity  {
 
@@ -22,6 +27,8 @@ public abstract class MediaActivityCompat extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences settings = getApplicationContext().getSharedPreferences(THEME, MODE_PRIVATE);
+        setTheme(settings.getInt(THEME, R.style.AppTheme_Blue));
         worker = new HandlerThread(WORKER_ID);
         getWorker().start();
     }

@@ -94,13 +94,15 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void play() {
-        broadcastReceiver.registerAudioNoisyReceiver();
         //Log.i(LOG_TAG, "onPlay registed audio noisy receiver");
-        myMediaPlayerAdapter.play();
-        //Log.i(LOG_TAG, "onPlay playback started");
-        updateMediaSession();
-        //Log.i(LOG_TAG, "onPlay mediasession updated");
-        serviceManager.startService(prepareNotification());
+        if (myMediaPlayerAdapter.play()) {
+            broadcastReceiver.registerAudioNoisyReceiver();
+            //Log.i(LOG_TAG, "onPlay playback started");
+            updateMediaSession();
+            //Log.i(LOG_TAG, "onPlay mediasession updated");
+            serviceManager.startService(prepareNotification());
+
+        }
     }
 
     @Override
