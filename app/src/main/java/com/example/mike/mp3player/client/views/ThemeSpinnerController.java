@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -104,10 +103,9 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
      * @return
      */
     private int getCurrentThemeId() {
-        Resources.Theme currentTheme = activity.getTheme();
+        Resources.Theme activityTheme = activity.getTheme();
         int[] attrs = {R.attr.themeName};
-        TypedArray typedArray = context.getResources().obtainTypedArray(R.array.themes);
-        typedArray = currentTheme.obtainStyledAttributes(attrs);
+        TypedArray typedArray = activityTheme.obtainStyledAttributes(attrs);
         if (null != typedArray && typedArray.length() > 0) {
             String themeName = typedArray.getString(0);
             typedArray.recycle();
