@@ -55,7 +55,7 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
         this.onSeekCompleteListener = onSeekCompleteListener;
     }
 
-    public abstract void play();
+    public abstract boolean play();
     public abstract void pause();
     abstract void changeSpeed(float newSpeed);
 

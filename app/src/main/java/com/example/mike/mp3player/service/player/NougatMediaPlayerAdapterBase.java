@@ -33,8 +33,8 @@ public class NougatMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
     }
 
     @Override
-    public synchronized void play() {
-        if (audioFocusManager.requestAudioFocus()) {
+    public synchronized boolean play() {
+        if (currentMediaPlayer != null && audioFocusManager.requestAudioFocus()) {
             try {
                 // Set the session active  (and update metadata and state)
                 setPlaybackParams(currentMediaPlayer);
@@ -43,8 +43,11 @@ public class NougatMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
                 currentState = PlaybackStateCompat.STATE_PLAYING;
             } catch (Exception e) {
                 e.printStackTrace();
+                return false;
             }
+            return true;
         }
+        return false;
     }
 
     @Override
