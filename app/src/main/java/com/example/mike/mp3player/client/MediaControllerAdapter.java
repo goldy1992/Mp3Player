@@ -47,6 +47,7 @@ public class MediaControllerAdapter {
         }
         this.isInitialized = result;
         this.token = token;
+        updateUiState();
     }
 
     public void prepareFromMediaId(String mediaId, Bundle extras) {
