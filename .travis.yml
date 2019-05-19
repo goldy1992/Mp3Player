@@ -81,7 +81,6 @@ addons:
 
 
 script:
-- git fetch
 - ./gradlew clean testFullDebugUnitTest -PdisablePreDex --stacktrace
 #- ./gradlew sonarqube
 - sonar-scanner
