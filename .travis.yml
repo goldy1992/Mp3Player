@@ -61,7 +61,6 @@ android:
 #  - develop
 #  - feature/issue-50/create-color-theme
 before_install:
-- git fetch --unshallow
 # Install SDK license so Android Gradle plugin can install deps.
 - mkdir "$ANDROID_HOME/licenses" || true
 - echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
