@@ -12,6 +12,10 @@ cache:
   - $HOME/.gradle/caches/
   - $HOME/.gradle/wrapper/
 
+# for sonarqube non shallow clone
+git:
+  depth: false
+
 env:
   global:
   - ADB_INSTALL_TIMEOUT=35
