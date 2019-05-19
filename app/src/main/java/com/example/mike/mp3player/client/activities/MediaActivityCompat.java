@@ -10,7 +10,6 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 
 import androidx.annotation.LayoutRes;
-import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import static com.example.mike.mp3player.commons.Constants.THEME;
