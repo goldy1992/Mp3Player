@@ -25,7 +25,7 @@ public class LibraryConstructor {
     public static LibraryRequest parseId(String id) {
         String[] tokens = splitMediaId(id);
 
-        if (tokens.length <= 0) {
+        if (tokens != null && tokens.length <= 0) {
             return null;
         }
         Category category = Category.valueOf(tokens[0]);
@@ -92,7 +92,7 @@ public class LibraryConstructor {
     public static String getSongIdFromSongRequest(String id) {
         String[] tokens = splitMediaId(id);
 
-        if (tokens.length <= 1) {
+        if (tokens != null && tokens.length <= 1) {
             return null;
         }
         return tokens[tokens.length - 1];

@@ -5,8 +5,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.mike.mp3player.commons.LoggingUtils;
-
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.io.File;
