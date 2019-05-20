@@ -5,6 +5,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.mike.mp3player.commons.LoggingUtils;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,6 +43,8 @@ public final class UserInterfaceUtils {
      */
     private static void saveState(Context context)
     {
+        FileOutputStream fileOut = null;
+        ObjectOutputStream objectOut = null;
         try {
             File fileToCache = new File(context.getCacheDir(), "mediaPlayerState");
             if (fileToCache.exists())
@@ -46,15 +52,25 @@ public final class UserInterfaceUtils {
                 fileToCache.delete();
             }
             fileToCache.createNewFile();
-            FileOutputStream fileOut = new FileOutputStream(fileToCache);
-            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            fileOut = new FileOutputStream(fileToCache);
+            objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(null);
-            objectOut.close();
-            fileOut.close();
+
 
         } catch (IOException e) {
             Log.e(LOG_TAG, e.getMessage());
-        }
+        } finally {
+            try {
+                if (null != objectOut) {
+                    objectOut.close();
+                }
+                if (null != fileOut) {
+                    fileOut.close();
+                }
+            } catch (IOException ex) {
+                Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex));
+            }
+        } // finally
     }
 
 }
