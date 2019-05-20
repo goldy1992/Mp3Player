@@ -23,6 +23,7 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
                 PermissionGranted {
 
     private static final String LOG_TAG = "SPLSH_SCRN_ENTRY_ACTVTY";
+    private static final long WAIT_TIME = 3000L;
     private PermissionsProcessor permissionsProcessor;
     private volatile boolean splashScreenFinishedDisplaying = false;
     private volatile boolean permissionGranted = false;
@@ -59,9 +60,10 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
     private synchronized void splashScreenRun() {
     //    Log.i(LOG_TAG, "splashscreen run");
         try {
-            Thread.sleep(5000L);
+            wait(WAIT_TIME);
         } catch (InterruptedException ex) {
             Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex.fillInStackTrace()));
+            Thread.currentThread().interrupt();
         } finally {
             splashScreenFinishedDisplaying = true;
             notifyAll();
@@ -110,6 +112,7 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
             } catch (InterruptedException ex) {
                 String error = ExceptionUtils.getFullStackTrace(ex.fillInStackTrace());
                 Log.e(LOG_TAG, error);
+                Thread.currentThread().interrupt();
             }
         }
         startMainActivity(mainActivityIntent);

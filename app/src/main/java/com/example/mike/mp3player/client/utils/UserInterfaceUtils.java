@@ -10,9 +10,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+/**
+ * Unused at the moment
+ */
 public final class UserInterfaceUtils {
     private static final String LOG_TAG = "USER_INTERFACE_UTILS";
 
+    /**
+     * currently unused, util method for the future to make items clickable
+     * @param view the view to be set/unset clickable
+     * @param value true if to be set clickable, false otherwise
+     */
     public static void setClickable(View view, boolean value) {
         if (view != null) {
             view.setClickable(value);
@@ -25,11 +33,12 @@ public final class UserInterfaceUtils {
         }
     }
 
+    /**
+     * currently unused. Could possibly use in the future
+     * @param context context
+     */
     private static void saveState(Context context)
     {
-        if (0 == 0) {
-            return;
-        }
         try {
             File fileToCache = new File(context.getCacheDir(), "mediaPlayerState");
             if (fileToCache.exists())

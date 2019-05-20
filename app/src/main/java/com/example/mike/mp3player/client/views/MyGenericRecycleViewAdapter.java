@@ -131,7 +131,7 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
             for (MediaItem i : getItems()) {
                 String title = hasTitle(i) ? getTitle(i).toUpperCase(Locale.getDefault()) : null;
                 String uppercaseConstraint = constraint.toString().toUpperCase(Locale.getDefault());
-                if (title.contains(uppercaseConstraint)) {
+                if (null != title && title.contains(uppercaseConstraint)) {
                     filteredList.add(i);
                 }
             }
