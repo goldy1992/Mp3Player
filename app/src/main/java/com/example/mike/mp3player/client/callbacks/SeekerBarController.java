@@ -3,7 +3,6 @@ package com.example.mike.mp3player.client.callbacks;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;

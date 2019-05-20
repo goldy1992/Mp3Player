@@ -10,6 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
@@ -18,11 +23,6 @@ import com.example.mike.mp3player.client.utils.IntentUtils;
 import com.example.mike.mp3player.client.views.PlayPauseButton;
 
 import java.util.Collections;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 
+import androidx.annotation.NonNull;
+
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 
@@ -14,8 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import androidx.annotation.NonNull;
 
 public abstract class GenericSubscriptionCallback<K> extends MediaBrowserCompat.SubscriptionCallback {
     public abstract SubscriptionType getType();

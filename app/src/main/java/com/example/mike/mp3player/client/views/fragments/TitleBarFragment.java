@@ -6,13 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.views.SongSearchActionListener;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+
+import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.views.SongSearchActionListener;
 
 public class TitleBarFragment extends Fragment {
 

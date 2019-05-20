@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
 
-import com.example.mike.mp3player.commons.AndroidUtils;
 import com.example.mike.mp3player.service.library.utils.IsDirectoryFilter;
 import com.example.mike.mp3player.service.library.utils.MusicFileFilter;
 
