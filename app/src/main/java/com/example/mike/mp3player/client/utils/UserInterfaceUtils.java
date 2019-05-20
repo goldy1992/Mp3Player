@@ -41,34 +41,25 @@ public final class UserInterfaceUtils {
      */
     private static void saveState(Context context)
     {
-        FileOutputStream fileOut = null;
-        ObjectOutputStream objectOut = null;
+        File fileToCache = new File(context.getCacheDir(), "mediaPlayerState");
+        if (fileToCache.exists())
+        {
+            fileToCache.delete();
+        }
         try {
-            File fileToCache = new File(context.getCacheDir(), "mediaPlayerState");
-            if (fileToCache.exists())
-            {
-                fileToCache.delete();
-            }
             fileToCache.createNewFile();
-            fileOut = new FileOutputStream(fileToCache);
-            objectOut = new ObjectOutputStream(fileOut);
+        } catch (IOException ex) {
+            Log.e(LOG_TAG, ex.getMessage());
+        }
+
+        try (FileOutputStream fileOut = new FileOutputStream(fileToCache);
+                ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+
             objectOut.writeObject(null);
 
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, e.getMessage());
-        } finally {
-            try {
-                if (null != objectOut) {
-                    objectOut.close();
-                }
-                if (null != fileOut) {
-                    fileOut.close();
-                }
-            } catch (IOException ex) {
-                Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex));
-            }
-        } // finally
+        } catch (IOException ex) {
+            Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex));
+        }
     }
 
 }

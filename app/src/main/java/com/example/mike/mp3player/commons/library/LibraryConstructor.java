@@ -146,5 +146,4 @@ public class LibraryConstructor {
             libraryObject.getExtras().put(FOLDER_NAME, MediaItemUtils.getTitle(mediaItem));
         }
     }
-
 }
