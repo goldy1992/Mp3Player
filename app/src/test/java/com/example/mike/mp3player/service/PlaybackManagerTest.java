@@ -322,10 +322,12 @@ public class PlaybackManagerTest {
      */
     @Test
     public void testShuffleNewIndex() {
+        List<QueueItem> queueItemList = new ArrayList<>();
         final int QUEUE_SIZE = 11;
-        PlaybackManager playbackManager = mock(PlaybackManager.class);
-        when(playbackManager.getQueueSize()).thenReturn(QUEUE_SIZE);
-        when(playbackManager.shuffleNewIndex()).thenCallRealMethod();
+        for (int i = 1; i <= QUEUE_SIZE; i++) {
+            queueItemList.add(mock(QueueItem.class));
+        }
+        PlaybackManager playbackManager = new PlaybackManager(queueItemList);
         int result = playbackManager.shuffleNewIndex();
         System.out.println("number generated: " + result);
         assertTrue(result >= 0);
