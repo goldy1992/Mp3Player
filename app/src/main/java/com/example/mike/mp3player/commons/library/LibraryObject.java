@@ -3,9 +3,9 @@ package com.example.mike.mp3player.commons.library;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.HashMap;
-
 import androidx.annotation.NonNull;
+
+import java.util.HashMap;
 
 public class LibraryObject implements Parcelable {
 

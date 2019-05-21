@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
@@ -13,9 +16,6 @@ import com.example.mike.mp3player.client.views.RepeatOneRepeatAllButton;
 import com.example.mike.mp3player.client.views.ShuffleButton;
 
 import java.util.Collections;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public class ShuffleRepeatFragment extends AsyncFragment {
     private static final String LOG_TAG = "PLY_PAUSE_BTN";

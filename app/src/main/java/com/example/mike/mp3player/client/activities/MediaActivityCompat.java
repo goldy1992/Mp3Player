@@ -6,11 +6,11 @@ import android.os.HandlerThread;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.view.MenuItem;
 
-import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaControllerAdapter;
-
 import androidx.annotation.LayoutRes;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaControllerAdapter;
 
 import static com.example.mike.mp3player.commons.Constants.THEME;
 

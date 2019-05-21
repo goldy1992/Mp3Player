@@ -3,11 +3,11 @@ package com.example.mike.mp3player.service;
 import android.content.Context;
 import android.media.AudioManager;
 
-import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
-
 import androidx.media.AudioAttributesCompat;
 import androidx.media.AudioFocusRequestCompat;
 import androidx.media.AudioManagerCompat;
+
+import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
 
 public class AudioFocusManager
  implements AudioManager.OnAudioFocusChangeListener {

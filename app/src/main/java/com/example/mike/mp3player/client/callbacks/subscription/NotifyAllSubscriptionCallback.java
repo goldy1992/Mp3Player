@@ -3,6 +3,9 @@ package com.example.mike.mp3player.client.callbacks.subscription;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 
@@ -12,9 +15,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public class NotifyAllSubscriptionCallback extends GenericSubscriptionCallback<Object> {
 

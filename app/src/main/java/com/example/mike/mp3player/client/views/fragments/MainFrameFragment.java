@@ -1,29 +1,11 @@
 package com.example.mike.mp3player.client.views.fragments;
 
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
-
-import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaBrowserAdapter;
-import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.MyDrawerListener;
-import com.example.mike.mp3player.client.activities.MainActivity;
-import com.example.mike.mp3player.client.activities.MediaActivityCompat;
-import com.example.mike.mp3player.client.views.SongSearchActionListener;
-import com.example.mike.mp3player.client.views.ThemeSpinnerController;
-import com.example.mike.mp3player.client.views.fragments.viewpager.ViewPagerFragment;
-import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +14,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+
+import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaBrowserAdapter;
+import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.MyDrawerListener;
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
+import com.example.mike.mp3player.client.views.SongSearchActionListener;
+import com.example.mike.mp3player.client.views.ThemeSpinnerController;
+import com.example.mike.mp3player.client.views.fragments.viewpager.ViewPagerFragment;
+import com.google.android.material.navigation.NavigationView;
 
 public class MainFrameFragment extends Fragment {
 

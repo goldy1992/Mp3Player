@@ -6,12 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.LinearLayoutWithImageView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
 

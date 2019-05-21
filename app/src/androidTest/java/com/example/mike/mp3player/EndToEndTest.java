@@ -10,7 +10,6 @@ import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
-import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.activities.SplashScreenEntryActivity;
 
 import org.hamcrest.Description;

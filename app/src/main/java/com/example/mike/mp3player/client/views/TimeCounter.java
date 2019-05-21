@@ -2,7 +2,6 @@ package com.example.mike.mp3player.client.views;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.os.SystemClock;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.TextView;
 

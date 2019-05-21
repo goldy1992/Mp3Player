@@ -3,15 +3,15 @@ package com.example.mike.mp3player.service;
 import android.support.v4.media.session.MediaSessionCompat.QueueItem;
 import android.support.v4.media.session.PlaybackStateCompat;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
+
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
 
 public class PlaybackManager {
 

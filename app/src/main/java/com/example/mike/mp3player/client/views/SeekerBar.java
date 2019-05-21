@@ -5,11 +5,11 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.appcompat.widget.AppCompatSeekBar;
+
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.SeekerBarController2;
-
-import androidx.appcompat.widget.AppCompatSeekBar;
 
 public class SeekerBar extends AppCompatSeekBar {
 
