@@ -85,7 +85,7 @@ addons:
 
 
 script:
-- ./gradlew clean testFullDebugUnitTest -PdisablePreDex --stacktrace
+- ./gradlew clean testFullDebugUnitTest jacocoTestReport -PdisablePreDex --stacktrace
 #- ./gradlew sonarqube
 - sonar-scanner
 #- chmod +x ./android-wait-for-emulator
