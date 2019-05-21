@@ -110,9 +110,9 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
             String themeName = typedArray.getString(0);
             typedArray.recycle();
             Log.d(LOG_TAG, "current theme is: " + themeName);
+            typedArray.recycle();
             return themeNameToResMap.get(themeName);
         }
-        typedArray.recycle();
         return  -1;
     }
     /**
