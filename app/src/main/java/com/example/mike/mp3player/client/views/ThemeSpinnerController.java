@@ -110,8 +110,8 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
             String themeName = typedArray.getString(0);
             typedArray.recycle();
             Log.d(LOG_TAG, "current theme is: " + themeName);
-            typedArray.recycle();
-            return themeNameToResMap.get(themeName);
+            Integer result = themeNameToResMap.get(themeName);
+            return result == null ? -1  : result;
         }
         return  -1;
     }
@@ -121,9 +121,13 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
      */
     private void setThemePreference(int themeId) {
         SharedPreferences settings = context.getSharedPreferences(THEME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putInt(THEME, themeId);
-        editor.commit();
+        if (settings != null) {
+            SharedPreferences.Editor editor = settings.edit();
+            if (editor != null) {
+                editor.putInt(THEME, themeId);
+                editor.apply();
+            }
+        }
     }
     /**
      *
