@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.PermissionGranted;
@@ -12,8 +14,6 @@ import com.example.mike.mp3player.client.PermissionsProcessor;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-
-import androidx.annotation.NonNull;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
@@ -23,6 +23,7 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
                 PermissionGranted {
 
     private static final String LOG_TAG = "SPLSH_SCRN_ENTRY_ACTVTY";
+    private static final long WAIT_TIME = 3000L;
     private PermissionsProcessor permissionsProcessor;
     private volatile boolean splashScreenFinishedDisplaying = false;
     private volatile boolean permissionGranted = false;
@@ -56,23 +57,13 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
         Log.i(LOG_TAG, "onStart");
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-       Log.i(LOG_TAG, "onresume");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
     private synchronized void splashScreenRun() {
     //    Log.i(LOG_TAG, "splashscreen run");
         try {
-            Thread.sleep(5000L);
+            wait(WAIT_TIME);
         } catch (InterruptedException ex) {
             Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex.fillInStackTrace()));
+            Thread.currentThread().interrupt();
         } finally {
             splashScreenFinishedDisplaying = true;
             notifyAll();
@@ -121,6 +112,7 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
             } catch (InterruptedException ex) {
                 String error = ExceptionUtils.getFullStackTrace(ex.fillInStackTrace());
                 Log.e(LOG_TAG, error);
+                Thread.currentThread().interrupt();
             }
         }
         startMainActivity(mainActivityIntent);
@@ -133,6 +125,7 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == APP_TERMINATED) {
             getMediaBrowserAdapter().disconnect();
             finish();

@@ -3,6 +3,12 @@ package com.example.mike.mp3player.client.views;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MyFolderItemTouchListener;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
@@ -10,12 +16,6 @@ import com.example.mike.mp3player.client.MySongItemTouchListener;
 import com.example.mike.mp3player.client.MySongViewAdapter;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class MyRecyclerView extends RecyclerView {
     private Context context;

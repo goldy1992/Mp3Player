@@ -5,8 +5,6 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
@@ -18,8 +16,6 @@ import static android.media.MediaPlayer.MEDIA_INFO_STARTED_AS_NEXT;
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ONE;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_PITCH;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_SPEED;
-import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
-import static com.example.mike.mp3player.commons.Constants.SHUFFLE_MODE;
 
 public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener  {
 
@@ -37,6 +33,7 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
     AudioFocusManager audioFocusManager;
     final OnCompletionListener onCompletionListener;
     final OnSeekCompleteListener onSeekCompleteListener;
+    boolean isInitialised = false;
 
     @PlaybackStateCompat.RepeatMode
     int repeatMode;
@@ -54,7 +51,7 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
         this.onSeekCompleteListener = onSeekCompleteListener;
     }
 
-    public abstract void play();
+    public abstract boolean play();
     public abstract void pause();
     abstract void changeSpeed(float newSpeed);
 
@@ -120,8 +117,11 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
         //Log.i(LOG_TAG,"Created second mediaplayer");
 
         this.audioFocusManager = new AudioFocusManager(context, this);
-        this.audioFocusManager.init();
         this.currentState = PlaybackStateCompat.STATE_PAUSED;
+
+        if (audioFocusManager.isInitialised() && null != currentMediaPlayer) {
+            this.isInitialised = true;
+        }
     }
 
     MediaPlayer createMediaPlayer(Uri uri) {
@@ -149,10 +149,12 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
     }
 
     public void seekTo(long position) {
-        if (!prepare()) {
-            return;
+        if (isInitialised) {
+            if (!prepare()) {
+                return;
+            }
+            getCurrentMediaPlayer().seekTo((int) position);
         }
-        getCurrentMediaPlayer().seekTo((int)position);
     }
 
 

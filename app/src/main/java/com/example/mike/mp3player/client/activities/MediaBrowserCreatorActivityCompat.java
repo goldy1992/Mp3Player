@@ -37,6 +37,13 @@ public abstract class MediaBrowserCreatorActivityCompat extends MediaActivityCom
         this.mediaBrowserAdapter = mediaBrowserAdapter;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getMediaControllerAdapter().disconnect();
+        getMediaBrowserAdapter().disconnect();
+    }
+
     @Override // MediaBrowserConnectorCallback
     public void onConnectionSuspended() { /* TODO: implement onConnectionSuspended */
         Log.i(LOG_TAG, "connection suspended");}

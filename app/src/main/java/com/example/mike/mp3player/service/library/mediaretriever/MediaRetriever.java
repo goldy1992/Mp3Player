@@ -25,14 +25,14 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KE
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_DURATION;
 
 public abstract class MediaRetriever {
-    final Context context;
+    private final Context context;
 
-    MediaRetriever(Context context) {
+    public MediaRetriever(Context context) {
         this.context = context;
     }
     public abstract List<MediaItem> retrieveMedia();
 
-    MediaBrowserCompat.MediaItem createPlayableMediaItemFromFile(File file, File directory) {
+    public MediaBrowserCompat.MediaItem createPlayableMediaItemFromFile(File file, File directory) {
         Uri uri = Uri.fromFile(file);
         String mediaId = String.valueOf(uri.getPath().hashCode());
         String parentPath = file.getParentFile().getAbsolutePath();
@@ -60,4 +60,7 @@ public abstract class MediaRetriever {
         return mediaItem;
     }
 
+    public Context getContext() {
+        return context;
+    }
 }

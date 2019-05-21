@@ -2,6 +2,8 @@ package com.example.mike.mp3player.commons;
 
 import android.os.Build;
 
+import com.example.mike.mp3player.BuildConfig;
+
 public final class AndroidUtils {
 
 
@@ -24,4 +26,7 @@ public final class AndroidUtils {
     public static int getAndroidApiVersion() {
         return Build.VERSION.SDK_INT;
     }
+
+    public static String getProductFlavor () { return BuildConfig.FLAVOR; }
+
 }

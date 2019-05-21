@@ -3,4 +3,13 @@
     <declare-styleable name="LinearLayoutWithImageView">
         <attr name="imgSrc" format="reference" />
     </declare-styleable>
+    <attr name="themeColorPrimary" format="reference"/>
+    <attr name="themeColorPrimaryDark" format="reference"/>
+    <attr name="themeColorAccent" format="reference"/>
+    <attr name="themeName" format="reference"/>
+
+    <array name="themes">
+        <item>@style/AppTheme.Orange</item>
+        <item>@style/AppTheme.Blue</item>
+    </array>
 </resources>

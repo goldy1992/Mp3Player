@@ -16,11 +16,10 @@ public class MyMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
     }
 
     @Override
-    public synchronized void play() {
-        if (!prepare()) {
-            return;
-        }
-        if (audioFocusManager.requestAudioFocus()) {
+    public synchronized boolean play() {
+
+        boolean canPlay = currentMediaPlayer != null && prepare() && audioFocusManager.requestAudioFocus();
+        if (canPlay) {
             try {
                 // Set the session active  (and update metadata and state)
                 getCurrentMediaPlayer().start();
@@ -32,9 +31,12 @@ public class MyMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
                 currentState = PlaybackStateCompat.STATE_PLAYING;
             } catch (Exception e) {
                Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(e));
+               return false;
             }
+            return true;
         }
         Log.i(LOG_TAG, "finished mplayer_adapter onPlay");
+        return false;
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.media.PlaybackParams;
 import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.LoggingUtils.logPlaybackParams;
@@ -26,15 +27,17 @@ public class MarshmallowMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
     }
     @Override
     public void reset(Uri firstItemUri, Uri secondItemUri) {
-        mediaPlayerPool.reset(firstItemUri);
         this.currentUri = firstItemUri;
         this.nextUri = secondItemUri;
+        if (null != firstItemUri) {
+            mediaPlayerPool.reset(firstItemUri);
+        }
         super.reset(firstItemUri, secondItemUri);
     }
 
     @Override
-    public synchronized void play() {
-        if (audioFocusManager.requestAudioFocus()) {
+    public synchronized boolean play() {
+        if (null != currentMediaPlayer && audioFocusManager.requestAudioFocus()) {
             try {
                 // Set the session active  (and update metadata and state)
                 currentMediaPlayer.start();
@@ -42,14 +45,20 @@ public class MarshmallowMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
                 currentState = PlaybackStateCompat.STATE_PLAYING;
             } catch (Exception e) {
                 e.printStackTrace();
+                return false;
             }
+            return true;
         }
+        return false;
     }
 
     @Override
     MediaPlayer createMediaPlayer(Uri uri) {
         MediaPlayer mediaPlayer = super.createMediaPlayer(uri);
-        setPlaybackParams(mediaPlayer);
+        Log.d(LOG_TAG, "creating media player with URI: " + uri);
+        if (mediaPlayer != null) {
+            setPlaybackParams(mediaPlayer);
+        }
         return  mediaPlayer;
     }
 

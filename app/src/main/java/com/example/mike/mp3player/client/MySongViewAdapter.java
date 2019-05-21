@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
@@ -15,8 +17,6 @@ import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import org.apache.commons.io.FilenameUtils;
-
-import androidx.annotation.NonNull;
 
 import static com.example.mike.mp3player.commons.MediaItemUtils.getExtra;
 import static com.example.mike.mp3player.commons.MediaItemUtils.hasExtras;

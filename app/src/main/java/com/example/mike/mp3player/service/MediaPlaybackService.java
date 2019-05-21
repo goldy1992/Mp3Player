@@ -8,6 +8,9 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.media.MediaBrowserServiceCompat;
+
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.commons.library.LibraryResponse;
 import com.example.mike.mp3player.service.library.MediaLibrary;
@@ -16,9 +19,6 @@ import com.example.mike.mp3player.service.session.MediaSessionCallback;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
-
-import androidx.annotation.NonNull;
-import androidx.media.MediaBrowserServiceCompat;
 
 import static com.example.mike.mp3player.commons.Constants.ACCEPTED_MEDIA_ROOT_ID;
 import static com.example.mike.mp3player.commons.Constants.PACKAGE_NAME;

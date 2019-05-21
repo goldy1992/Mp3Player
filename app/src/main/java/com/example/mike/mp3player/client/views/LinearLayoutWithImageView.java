@@ -11,10 +11,10 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.example.mike.mp3player.R;
-
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
+
+import com.example.mike.mp3player.R;
 
 public class LinearLayoutWithImageView extends LinearLayout {
 

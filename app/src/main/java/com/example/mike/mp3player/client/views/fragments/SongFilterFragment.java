@@ -12,14 +12,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.views.EditTextSearchSong;
 import com.example.mike.mp3player.client.views.KeyImeChangeListener;
 import com.example.mike.mp3player.client.views.SongSearchActionListener;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 public class SongFilterFragment extends Fragment implements TextWatcher, KeyImeChangeListener {
 

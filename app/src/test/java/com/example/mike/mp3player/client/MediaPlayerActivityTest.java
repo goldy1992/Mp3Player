@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.media.session.MediaSessionCompat;
 
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.platform.app.InstrumentationRegistry;
+
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.service.ShadowMediaSessionCompat_Token;
@@ -16,9 +19,6 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.platform.app.InstrumentationRegistry;
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE, sdk = 26, shadows = {ShadowMediaSessionCompat_Token.class})
 public class MediaPlayerActivityTest {

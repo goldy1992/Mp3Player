@@ -2,16 +2,17 @@ package com.example.mike.mp3player.client.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+
+import androidx.annotation.LayoutRes;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
-
-import androidx.annotation.LayoutRes;
 
 public class MainActivity extends MediaBrowserSubscriberActivityCompat {
 
@@ -29,9 +30,14 @@ public class MainActivity extends MediaBrowserSubscriberActivityCompat {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return false;
+    }
+
+    @Override
     boolean initialiseView(@LayoutRes int layoutRes) {
         setContentView(layoutRes);
-        this.rootFragment = (MainActivityRootFragment)getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
+        this.rootFragment = (MainActivityRootFragment) getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
         this.rootFragment.init(inputMethodManager, getMediaBrowserAdapter(), getMediaControllerAdapter());
         return true;
     }

@@ -4,12 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
+import androidx.annotation.NonNull;
+
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.library.mediaretriever.ContentResolverMediaRetriever;
-import com.example.mike.mp3player.service.library.mediaretriever.EmptyMediaRetriever;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
+import com.example.mike.mp3player.service.library.mediaretriever.MockMediaRetriever;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,9 +19,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import androidx.annotation.NonNull;
-
+import static com.example.mike.mp3player.commons.AndroidUtils.getProductFlavor;
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
+import static com.example.mike.mp3player.commons.Constants.AUTOMATION;
 
 public class MediaLibrary {
     private boolean playlistRecursInSubDirectory = false;
@@ -32,8 +34,7 @@ public class MediaLibrary {
 
     public MediaLibrary(Context context) {
         this.context = context;
-//        this.mediaRetriever = new EmptyMediaRetriever(context);
-        this.mediaRetriever = new ContentResolverMediaRetriever(context);
+        initContentResolver();
         categories = new HashMap<>();
     }
     public void init() {
@@ -97,4 +98,10 @@ public class MediaLibrary {
     public boolean isPopulated() {
         return getSongList() != null && !getSongList().isEmpty();
     }
+
+    private void initContentResolver() {
+        switch (getProductFlavor()) {
+            case AUTOMATION: this.mediaRetriever = new MockMediaRetriever(context); break;
+            default: this.mediaRetriever = new ContentResolverMediaRetriever(context); break;
+        }}
 }

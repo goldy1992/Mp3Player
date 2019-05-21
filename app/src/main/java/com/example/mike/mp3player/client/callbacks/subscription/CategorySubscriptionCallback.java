@@ -3,6 +3,8 @@ package com.example.mike.mp3player.client.callbacks.subscription;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 
+import androidx.annotation.NonNull;
+
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.commons.library.Category;
@@ -11,8 +13,6 @@ import com.example.mike.mp3player.commons.library.LibraryRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import androidx.annotation.NonNull;
 
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
