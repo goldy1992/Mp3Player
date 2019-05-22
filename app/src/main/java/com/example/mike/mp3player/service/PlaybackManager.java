@@ -20,6 +20,7 @@ public class PlaybackManager {
     private Stack<Integer> shuffleNextStack = new Stack<>();
     private int nextShuffledIndex = 0;
     private int queueIndex = -1;
+    private Random random = new Random();
     private boolean isRepeating = true;
     private final List<QueueItem> playlist = new ArrayList<>();
     private boolean shuffleOn = false;
@@ -199,9 +200,6 @@ public class PlaybackManager {
 
     @VisibleForTesting()
     public int shuffleNewIndex() {
-        Random random = new Random();
-        // random.nextInt((max - min) + 1) + min [min , max]
-        // queueSize == max + 1
         return random.nextInt(getQueueSize());
     }
 

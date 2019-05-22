@@ -39,6 +39,7 @@ public class MediaPlayerPool {
             toReturn = queue.take();
         } catch (InterruptedException ex) {
             Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex));
+            Thread.currentThread().interrupt();
         }
         addMediaPlayer();
         return toReturn;
