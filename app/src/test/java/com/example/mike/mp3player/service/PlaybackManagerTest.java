@@ -16,7 +16,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class PlaybackManagerTest {
-    public PlaybackManager playbackManager;
+    private PlaybackManager playbackManager;
     private static final QueueItem MOCK_QUEUE_ITEM = mock(QueueItem.class);
 
 

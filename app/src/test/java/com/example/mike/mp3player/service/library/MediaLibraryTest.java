@@ -2,6 +2,7 @@ package com.example.mike.mp3player.service.library;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
@@ -25,7 +26,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MediaLibraryUtils.class, Uri.class})
 public class MediaLibraryTest {
-
+    private static final String LOG_TAG = "MDIA_LBRY_TST";
     private static final String MOCK_PATH = "PATH";
 
     @Mock
@@ -93,9 +94,11 @@ public class MediaLibraryTest {
         return f;
     }
 
-    private File createDirectory(File parentDir, String name) throws IOException {
+    private File createDirectory(File parentDir, String name) {
         File f = new File(parentDir, name);
-        f.mkdir();
+        if (!f.mkdir()) {
+            Log.i(LOG_TAG, "file: " + f + " does already exists");
+        }
         return f;
     }
 }
