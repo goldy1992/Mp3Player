@@ -18,7 +18,7 @@ public class AudioFocusManager
     MediaPlayerAdapterBase player;
     AudioManager audioManager;
     Context context;
-    public boolean hasFocus = false;
+    private boolean hasFocus = false;
 
     boolean playWhenAudioFocusGained = false;
     private boolean audioNoisyReceiverRegistered = false;
@@ -84,7 +84,7 @@ public class AudioFocusManager
 
         int result = AudioManagerCompat.requestAudioFocus(audioManager, audioFocusRequestCompat);
         hasFocus = isRequestGranted(result);
-        return hasFocus;
+        return hasFocus();
     }
 
     private boolean isRequestGranted(int result) {
@@ -106,10 +106,14 @@ public class AudioFocusManager
                 .build();
         int result = AudioManagerCompat.abandonAudioFocusRequest(audioManager, audioFocusRequestCompat);
         hasFocus = isRequestGranted(result) ? false : true;
-        return  !hasFocus;
+        return  !hasFocus();
     }
 
     public boolean isInitialised() {
         return isInitialised;
+    }
+
+    public boolean hasFocus() {
+        return hasFocus;
     }
 }

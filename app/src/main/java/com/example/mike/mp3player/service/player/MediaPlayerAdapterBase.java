@@ -95,7 +95,7 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
      */
     public void reset(Uri firstItemUri, Uri secondItemUri) {
         //Log.i(LOG_TAG, "reset");
-        if (audioFocusManager != null && audioFocusManager.hasFocus) {
+        if (audioFocusManager != null && audioFocusManager.hasFocus()) {
             audioFocusManager.abandonAudioFocus();
             //Log.i(LOG_TAG, "focus abandoned");
         }
