@@ -43,14 +43,19 @@ public final class ComparatorUtils {
         }
     }
 
-    public static  Comparator<MediaItem> compareMediaItemById = (MediaItem m1, MediaItem m2) -> compareMediaItembyId(m1, m2);
-    private static int compareMediaItembyId(MediaItem o1, MediaItem o2) {
+    public static  Comparator<MediaItem> compareMediaItemById = (MediaItem m1, MediaItem m2) -> compareMediaItemById(m1, m2);
+    private static int compareMediaItemById(MediaItem o1, MediaItem o2) {
         String m1 = MediaItemUtils.getMediaId(o1);
         String m2 = MediaItemUtils.getMediaId(o2);
-        if (m1 != null && m2 != null ) {
+        if (m1 == null && m2 == null ) {
+            return 0;
+        } else if (m1 == null) {
+            return -1;
+        } else if (m2 == null) {
+            return 1;
+        } else {
             return m1.compareTo(m2);
         }
-        return  0;
     }
 
 

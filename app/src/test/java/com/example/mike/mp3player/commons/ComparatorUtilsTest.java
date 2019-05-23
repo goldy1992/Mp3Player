@@ -76,6 +76,50 @@ class ComparatorUtilsTest {
         assertTrue( result > 0);
     }
     /**
+     *
+     */
+    @Test
+    public void testCompareMediaItemByTitleEqual() {
+        final MediaItem MEDIA_ITEM = createMediaItem(MISC_STRING, MISC_STRING, MISC_STRING);
+        final MediaItem MEDIA_ITEM_SAME_ID = createMediaItem(MISC_STRING, MISC_STRING, MISC_STRING);
+        final int result = ComparatorUtils.compareMediaItemById.compare(MEDIA_ITEM, MEDIA_ITEM_SAME_ID);
+        final boolean EQUAL = result == 0;
+        assertTrue(EQUAL);
+    }
+    /**
+     *
+     */
+    @Test
+    public void testCompareMediaItemByIdGreaterAndLessThan() {
+        final MediaItem GREATER_TITLE_MEDIA_ITEM = createMediaItem(GREATER_STRING, MISC_STRING, MISC_STRING);
+        final MediaItem LESSER_TITLE_MEDIA_ITEM = createMediaItem(LESSER_STRING, MISC_STRING, MISC_STRING);
+        int result = ComparatorUtils.compareMediaItemById.compare(GREATER_TITLE_MEDIA_ITEM, LESSER_TITLE_MEDIA_ITEM);
+        assertTrue( result > 0);
+        result = ComparatorUtils.compareMediaItemById.compare(LESSER_TITLE_MEDIA_ITEM, GREATER_TITLE_MEDIA_ITEM);
+        assertTrue( result < 0);
+    }
+    /**
+     *
+     */
+    @Test
+    public void testCompareMediaItemByIdAgainstNull() {
+        final MediaItem MEDIA_ITEM_NULL_ID = createMediaItem(null, MISC_STRING, MISC_STRING);
+        final MediaItem MEDIA_ITEM = createMediaItem(LESSER_STRING, MISC_STRING, MISC_STRING);
+        int result = ComparatorUtils.compareMediaItemById.compare(MEDIA_ITEM_NULL_ID, MEDIA_ITEM);
+        assertTrue( result < 0);
+    }
+    /**
+     *
+     */
+    @Test
+    public void testCompareMediaItemByIdEqualIds() {
+        final MediaItem MEDIA_ITEM = createMediaItem(MISC_STRING, GREATER_STRING, MISC_STRING);
+        final MediaItem MEDIA_ITEM_SAME_ID = createMediaItem(MISC_STRING, LESSER_STRING, MISC_STRING);
+        final int result = ComparatorUtils.compareMediaItemById.compare(MEDIA_ITEM, MEDIA_ITEM_SAME_ID);
+        final boolean EQUAL = result == 0;
+        assertTrue(EQUAL);
+    }
+    /**
      * @return a root category item
      */
     private MediaItem createRootItem(Category category) {
