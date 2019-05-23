@@ -1,6 +1,10 @@
 package com.example.mike.mp3player.commons;
 
+import android.util.Log;
+
 import com.example.mike.mp3player.commons.library.Category;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.util.Comparator;
 
@@ -9,17 +13,20 @@ import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 
 public final class ComparatorUtils {
 
-    public static Comparator<MediaItem> compareRootMediaItemsByCategory = (MediaItem m1, MediaItem m2) -> compareRootMediaItemsByCategory(m1, m2);
+    private static final String LOG_TAG = "COMPARATOR_UTILS";
+    public static final Comparator<MediaItem> compareRootMediaItemsByCategory = (MediaItem m1, MediaItem m2) -> compareRootMediaItemsByCategory(m1, m2);
     private static int compareRootMediaItemsByCategory(MediaItem m1, MediaItem m2) {
         Category c1 = parseCategory(MediaItemUtils.getMediaId(m1));
         Category c2 = parseCategory(MediaItemUtils.getMediaId(m2));
-        if (null != c1) {
+        if (c1 == null && c2 == null) {
+            return 0;
+        } else if (c1 == null) {
+            return -1;
+        } else if (c2 == null) {
+            return 1;
+        } else {
            return c1.compareTo(c2);
         }
-        if (null != c2) { // we can assume c1 to be null
-            return 1;
-        }
-        return 0;
     }
     public static Comparator<MediaItem> compareMediaItemsByTitle = (MediaItem m1, MediaItem m2) -> compareMediaItemsByTitle(m1, m2);
     private static int compareMediaItemsByTitle(MediaItem m1, MediaItem m2) {
@@ -50,7 +57,7 @@ public final class ComparatorUtils {
         try{
             c = Category.valueOf(categoryString);
         } catch (IllegalArgumentException | NullPointerException ex) {
-
+            Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex));
         }
         return c;
     }

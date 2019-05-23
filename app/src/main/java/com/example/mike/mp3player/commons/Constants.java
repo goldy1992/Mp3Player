@@ -5,6 +5,8 @@ import android.util.SparseArray;
 
 import com.example.mike.mp3player.commons.library.Category;
 
+import java.util.Map;
+
 public final class Constants {
 
     public static final String MEDIA_SESSION = "mediaSession";
@@ -47,7 +49,6 @@ public final class Constants {
         playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_NONE, "REPEAT_MODE_NONE"); // 0
         playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ONE, "REPEAT_MODE_ONE"); // 1
     };
-
 
     /* LIBRARY CONSTANTS */
     public static final String CATEGORY_ROOT_ID = Category.ROOT.name();
