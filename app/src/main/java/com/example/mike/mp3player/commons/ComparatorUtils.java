@@ -32,13 +32,15 @@ public final class ComparatorUtils {
     private static int compareMediaItemsByTitle(MediaItem m1, MediaItem m2) {
         String title1 = getTitle(m1);
         String title2 = getTitle(m2);
-        if (null != title1) {
+        if (title1 == null && title2 == null) {
+            return 0;
+        } else if (null == title1) {
+            return -1;
+        } else if (null == title2) {
+            return 1;
+        } else {
             return title1.compareTo(title2);
         }
-        else if (null != title2) {
-            return 1;
-        }
-        return 0;
     }
 
     public static  Comparator<MediaItem> compareMediaItemById = (MediaItem m1, MediaItem m2) -> compareMediaItembyId(m1, m2);

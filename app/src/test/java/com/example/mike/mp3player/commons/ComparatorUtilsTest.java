@@ -70,11 +70,10 @@ class ComparatorUtilsTest {
      */
     @Test
     public void testCompareMediaItemByTitleAgainstNull() {
-        // TODO: fix test
         final MediaItem GREATER_TITLE_MEDIA_ITEM = createMediaItem(MISC_STRING, GREATER_STRING, MISC_STRING);
         final MediaItem NULL_TITLE_MEDIA_ITEM = createMediaItem(MISC_STRING, null, MISC_STRING);
-        //int result = ComparatorUtils.compareMediaItemsByTitle.compare(GREATER_TITLE_MEDIA_ITEM, NULL_TITLE_MEDIA_ITEM);
-        //assertTrue( result > 0);
+        int result = ComparatorUtils.compareMediaItemsByTitle.compare(GREATER_TITLE_MEDIA_ITEM, NULL_TITLE_MEDIA_ITEM);
+        assertTrue( result > 0);
     }
     /**
      * @return a root category item
