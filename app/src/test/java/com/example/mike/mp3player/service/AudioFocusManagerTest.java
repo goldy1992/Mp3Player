@@ -15,8 +15,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 @RunWith(RobolectricTestRunner.class)
 public class AudioFocusManagerTest {
 
@@ -33,13 +36,44 @@ public class AudioFocusManagerTest {
         assertTrue(m_audioFocusManager.isInitialised());
     }
 
+    /**
+     *
+     */
+    @Test
+    public void testRequestAudioFocus() {
+        m_audioFocusManager.requestAudioFocus();
+        assertTrue(m_audioFocusManager.hasFocus());
+    }
     // TODO: Make a test that will request Audio Focus. Consider make this functionality
     //  asynchronous
+
+    /**
+     *
+     */
     @Test
-    public void testOnAudioFocusChangeAudioFocusGain() {
-        // TODO: fix test
+    public void testOnAudioFocusChangeAudioLossTransientCanDuck() {
+        m_audioFocusManager.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK);
+        assertTrue(m_audioFocusManager.hasFocus());
+    }
+    /**
+     *
+     */
+    @Test
+    public void testOnAudioFocusChangeAudioLossTransientAndGain() {
+        when(mediaPlayerAdapterBase.isPlaying()).thenReturn(true);
+        m_audioFocusManager.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS_TRANSIENT);
+        assertFalse(m_audioFocusManager.hasFocus());
+        when(mediaPlayerAdapterBase.isPlaying()).thenReturn(false);
         m_audioFocusManager.onAudioFocusChange(AudioManager.AUDIOFOCUS_GAIN);
-        //assertTrue(m_audioFocusManager.hasFocus());
+        assertTrue(m_audioFocusManager.hasFocus());
+    }
+    /**
+     *
+     */
+    @Test
+    public void testOnAudioFocusChangeAudioLoss() {
+        m_audioFocusManager.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS);
+        assertFalse(m_audioFocusManager.hasFocus());
     }
 
 
