@@ -19,7 +19,6 @@ import com.example.mike.mp3player.commons.library.LibraryRequest;
  */
 public class MediaPlayerActivity extends MediaActivityCompat {
 
-    private final String STOP = "Stop";
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
 
     private MediaSessionCompat.Token token;
@@ -55,12 +54,8 @@ public class MediaPlayerActivity extends MediaActivityCompat {
             if (libraryRequest != null) { // if rq came with an media id it's a song request
                 String mediaId = libraryRequest.getId();
                 // Display the initial state
-                ; // parent id will sure that the correct playlist is found in the media library
+                // parent id will sure that the correct playlist is found in the media library
                 getMediaControllerAdapter().prepareFromMediaId(mediaId, getIntent().getExtras());
-            }
-            else {
-//                setMetaData(mediaControllerAdapter.getMetaData());
-  //              setPlaybackState(mediaControllerAdapter.getCurrentPlaybackState());
             }
         } else {
             /** TODO: Add functionality for when the playback bar is touched in the MainActivity and no
@@ -93,11 +88,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     public void onDestroy() {
         super.onDestroy();
         getMediaControllerAdapter().disconnect();
-    }
-    /**
-     *
-     */
-    private void initView() {
     }
 
     private Object retrieveIntentInfo(String key) {
