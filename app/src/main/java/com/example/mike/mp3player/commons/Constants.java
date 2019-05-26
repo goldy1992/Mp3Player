@@ -48,7 +48,6 @@ public final class Constants {
         playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ONE, "REPEAT_MODE_ONE"); // 1
     };
 
-
     /* LIBRARY CONSTANTS */
     public static final String CATEGORY_ROOT_ID = Category.ROOT.name();
 
