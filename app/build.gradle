@@ -20,6 +20,13 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    sourceSets {
+        test {
+            java.srcDirs = ['src/test/java']
+            res.srcDirs = ['src/test/resources']
+        }
+    }
+
     adbOptions {
         timeOutInMs 20 * 60 * 1000 // 10 minutes
     }
