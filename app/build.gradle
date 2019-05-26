@@ -60,6 +60,9 @@ android {
                 outputs.upToDateWhen {false}
                 showStandardStreams = true
             }
+            jacoco {
+                includeNoLocationClasses=true
+            }
         }
     }
 
