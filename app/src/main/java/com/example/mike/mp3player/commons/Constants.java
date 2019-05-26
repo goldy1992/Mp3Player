@@ -5,8 +5,6 @@ import android.util.SparseArray;
 
 import com.example.mike.mp3player.commons.library.Category;
 
-import java.util.Map;
-
 public final class Constants {
 
     public static final String MEDIA_SESSION = "mediaSession";
