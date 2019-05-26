@@ -9,12 +9,12 @@ import com.google.common.collect.HashBiMap;
 import java.util.Comparator;
 
 public enum Category implements Comparator<Category> {
-    ROOT    (0),
-    SONGS   (1),
-    FOLDERS (2),
-    ALBUMS  (3),
-    ARTISTS (4),
-    GENRES  (5);
+    ROOT    (0, "Root", "The root item of the library"),
+    SONGS   (1, "Songs", null),
+    FOLDERS (2, "Folders", null),
+    ALBUMS  (3, "Albums", null),
+    ARTISTS (4, "Artists", null),
+    GENRES  (5, "Genres", null);
 
     public static boolean isCategory(String s) {
         for (Category c : Category.values()) {
@@ -25,9 +25,13 @@ public enum Category implements Comparator<Category> {
         return false;
     }
     private final Integer rank;
+    private final String title;
+    private final String description;
 
-    Category(int rank) {
+    Category(int rank, String title, String description) {
         this.rank = rank;
+        this.title = title;
+        this.description = description;
     }
 
     @Override
@@ -49,5 +53,13 @@ public enum Category implements Comparator<Category> {
 
     public static Category getCategoryForActivityClass(Class<? extends MediaActivityCompat> classKey) {
         return ACTIVITY_TO_CATEGORY_MAP.get(classKey);
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

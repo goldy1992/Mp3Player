@@ -3,6 +3,9 @@ package com.example.mike.mp3player.client.views;
 import android.content.Context;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.AttributeSet;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
@@ -26,17 +29,19 @@ public class PlayPauseButton extends LinearLayoutWithImageView implements Playba
         super(context, attrs, defStyleAttr);
     }
 
-    public void updateState(int newState) {
+    private void updateState(int newState) {
         if (newState != getState()) {
             switch (newState) {
                 case STATE_PLAYING:
-                    mainUpdater.post(() -> setPauseIcon());
+                    mainUpdater.post(this::setPauseIcon);
                     this.state = STATE_PLAYING;
                     break;
-                default:
-                    mainUpdater.post(() -> setPlayIcon());
+                case STATE_PAUSED:
+                    mainUpdater.post(this::setPlayIcon);
                     this.state = STATE_PAUSED;
                     break;
+                default:
+                    Log.e(LOG_TAG, "invalid state hit for PlayPauseButton state");
             } // switch
         }
     }
@@ -62,7 +67,7 @@ public class PlayPauseButton extends LinearLayoutWithImageView implements Playba
     }
 
     @Override
-    public void onPlaybackStateChanged(PlaybackStateCompat state) {
+    public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
         updateState(state.getState());
     }
 }
