@@ -14,7 +14,7 @@ import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 public final class ComparatorUtils {
 
     private static final String LOG_TAG = "COMPARATOR_UTILS";
-    public static final Comparator<MediaItem> compareRootMediaItemsByCategory = (MediaItem m1, MediaItem m2) -> compareRootMediaItemsByCategory(m1, m2);
+    public static final Comparator<MediaItem> compareRootMediaItemsByCategory = ComparatorUtils::compareRootMediaItemsByCategory;
     private static int compareRootMediaItemsByCategory(MediaItem m1, MediaItem m2) {
         Category c1 = parseCategory(MediaItemUtils.getMediaId(m1));
         Category c2 = parseCategory(MediaItemUtils.getMediaId(m2));
@@ -28,7 +28,7 @@ public final class ComparatorUtils {
            return c1.compareTo(c2);
         }
     }
-    public static Comparator<MediaItem> compareMediaItemsByTitle = (MediaItem m1, MediaItem m2) -> compareMediaItemsByTitle(m1, m2);
+    public final static Comparator<MediaItem> compareMediaItemsByTitle = ComparatorUtils::compareMediaItemsByTitle;
     private static int compareMediaItemsByTitle(MediaItem m1, MediaItem m2) {
         String title1 = getTitle(m1);
         String title2 = getTitle(m2);
@@ -43,7 +43,7 @@ public final class ComparatorUtils {
         }
     }
 
-    public static  Comparator<MediaItem> compareMediaItemById = (MediaItem m1, MediaItem m2) -> compareMediaItemById(m1, m2);
+    public static final Comparator<MediaItem> compareMediaItemById = ComparatorUtils::compareMediaItemById;
     private static int compareMediaItemById(MediaItem o1, MediaItem o2) {
         String m1 = MediaItemUtils.getMediaId(o1);
         String m2 = MediaItemUtils.getMediaId(o2);
