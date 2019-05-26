@@ -28,7 +28,7 @@ public final class ComparatorUtils {
            return c1.compareTo(c2);
         }
     }
-    public final static Comparator<MediaItem> compareMediaItemsByTitle = ComparatorUtils::compareMediaItemsByTitle;
+    public static final Comparator<MediaItem> compareMediaItemsByTitle = ComparatorUtils::compareMediaItemsByTitle;
     private static int compareMediaItemsByTitle(MediaItem m1, MediaItem m2) {
         String title1 = getTitle(m1);
         String title2 = getTitle(m2);

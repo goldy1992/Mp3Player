@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricTestRunner.class)
 public class AudioFocusManagerTest {
 
-    private AudioFocusManager m_audioFocusManager;
+    private AudioFocusManager audioFocusManager;
 
     @Mock
     MediaPlayerAdapterBase mediaPlayerAdapterBase = mock(MediaPlayerAdapterBase.class);
@@ -32,8 +32,8 @@ public class AudioFocusManagerTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        m_audioFocusManager = new AudioFocusManager(context, mediaPlayerAdapterBase);
-        assertTrue(m_audioFocusManager.isInitialised());
+        audioFocusManager = new AudioFocusManager(context, mediaPlayerAdapterBase);
+        assertTrue(audioFocusManager.isInitialised());
     }
 
     /**
@@ -41,8 +41,8 @@ public class AudioFocusManagerTest {
      */
     @Test
     public void testRequestAudioFocus() {
-        m_audioFocusManager.requestAudioFocus();
-        assertTrue(m_audioFocusManager.hasFocus());
+        audioFocusManager.requestAudioFocus();
+        assertTrue(audioFocusManager.hasFocus());
     }
     // TODO: Make a test that will request Audio Focus. Consider make this functionality
     //  asynchronous
@@ -52,8 +52,8 @@ public class AudioFocusManagerTest {
      */
     @Test
     public void testOnAudioFocusChangeAudioLossTransientCanDuck() {
-        m_audioFocusManager.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK);
-        assertTrue(m_audioFocusManager.hasFocus());
+        audioFocusManager.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK);
+        assertTrue(audioFocusManager.hasFocus());
     }
     /**
      *
@@ -61,19 +61,19 @@ public class AudioFocusManagerTest {
     @Test
     public void testOnAudioFocusChangeAudioLossTransientAndGain() {
         when(mediaPlayerAdapterBase.isPlaying()).thenReturn(true);
-        m_audioFocusManager.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS_TRANSIENT);
-        assertFalse(m_audioFocusManager.hasFocus());
+        audioFocusManager.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS_TRANSIENT);
+        assertFalse(audioFocusManager.hasFocus());
         when(mediaPlayerAdapterBase.isPlaying()).thenReturn(false);
-        m_audioFocusManager.onAudioFocusChange(AudioManager.AUDIOFOCUS_GAIN);
-        assertTrue(m_audioFocusManager.hasFocus());
+        audioFocusManager.onAudioFocusChange(AudioManager.AUDIOFOCUS_GAIN);
+        assertTrue(audioFocusManager.hasFocus());
     }
     /**
      *
      */
     @Test
     public void testOnAudioFocusChangeAudioLoss() {
-        m_audioFocusManager.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS);
-        assertFalse(m_audioFocusManager.hasFocus());
+        audioFocusManager.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS);
+        assertFalse(audioFocusManager.hasFocus());
     }
 
 
