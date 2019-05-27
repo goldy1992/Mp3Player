@@ -16,8 +16,6 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class MediaPlayerAdapterTestBase {
 
     @Mock
-    Context context;
-    @Mock
     MediaPlayer mediaPlayer;
     @Mock
     Uri uri;
@@ -30,7 +28,7 @@ public class MediaPlayerAdapterTestBase {
 
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        mediaPlayerAdapter = createMediaPlayerAdapter();
+      //  mediaPlayerAdapter = createMediaPlayerAdapter();
         when(MediaPlayer.create(any(Context.class), any(Uri.class))).thenReturn(mediaPlayer);
         mediaPlayerAdapter.reset(uri, null);
         Whitebox.setInternalState(mediaPlayerAdapter, "audioFocusManager", audioFocusManager);
@@ -40,9 +38,7 @@ public class MediaPlayerAdapterTestBase {
     }
 
 
-    protected MyMediaPlayerAdapterBase createMediaPlayerAdapter() {
-        return new MyMediaPlayerAdapterBase(this.context, null, null);
-    }
+
 
     protected void setMediaPlayer(MediaPlayer mediaPlayer) {
         Whitebox.setInternalState(mediaPlayerAdapter, "mediaPlayer", mediaPlayer);

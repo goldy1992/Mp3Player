@@ -44,7 +44,9 @@ public class MyMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
         if (isPaused()) {
             return;
         }
-        this.currentPlaybackSpeed = getCurrentMediaPlayer().getPlaybackParams().getSpeed();
+        if (null != getCurrentMediaPlayer() && null != getCurrentMediaPlayer().getPlaybackParams()) {
+            this.currentPlaybackSpeed = getCurrentMediaPlayer().getPlaybackParams().getSpeed();
+        }
         // Update metadata and state
         getCurrentMediaPlayer().pause();
         audioFocusManager.playbackPaused();
