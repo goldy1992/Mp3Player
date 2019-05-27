@@ -28,7 +28,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
+public class MyMediaPlayerAdapterTest {
     /** mock MediaPlayer.OnCompletionListener */
     @Mock
     private MediaPlayer.OnCompletionListener mockOnCompletionListener;
@@ -39,6 +39,12 @@ public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
     private AudioFocusManager audioFocusManager;
     /** context */
     private Context context;
+    @Mock
+    Uri uri;
+    @Mock
+    Uri nextUri;
+    /** Media Player Adapter */
+    MyMediaPlayerAdapterBase mediaPlayerAdapter;
     /**
      * setup
      */
@@ -95,7 +101,7 @@ public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
 
     @Test
     public void testSeekToPrepared() {
-        spy(mediaPlayer);
+        spy(mediaPlayerAdapter.getCurrentMediaPlayer());
         mediaPlayerAdapter.seekTo(555L);
 //        Mockito.verify(mediaPlayer, times(1)).seekTo(555);
     }
@@ -105,7 +111,7 @@ public class MyMediaPlayerAdapterTest extends MediaPlayerAdapterTestBase {
         Whitebox.setInternalState(mediaPlayerAdapter, "isPrepared", false);
 
 
-        spy(mediaPlayer);
+        spy(mediaPlayerAdapter.getCurrentMediaPlayer());
         mediaPlayerAdapter.seekTo(555L);
   //      Mockito.verify(mediaPlayer, times(1)).seekTo(555);
     }
