@@ -8,10 +8,10 @@ import android.util.Log;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
-public class MyMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
+public class OreoPlayerAdapterBase extends MediaPlayerAdapterBase {
 
-    public MyMediaPlayerAdapterBase(Context context, MediaPlayer.OnCompletionListener onCompletionListener,
-                                    MediaPlayer.OnSeekCompleteListener onSeekCompleteListener) {
+    public OreoPlayerAdapterBase(Context context, MediaPlayer.OnCompletionListener onCompletionListener,
+                                 MediaPlayer.OnSeekCompleteListener onSeekCompleteListener) {
         super(context, onCompletionListener, onSeekCompleteListener);
     }
 
@@ -75,5 +75,4 @@ public class MyMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
             mediaPlayer.setPlaybackParams(playbackParams);
         }
     }
-
 }

@@ -8,7 +8,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.commons.Constants;
-import com.example.mike.mp3player.service.player.MyMediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.OreoPlayerAdapterBase;
 
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.junit.Before;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-public class MyMediaPlayerAdapterTest {
+public class OreoPlayerAdapterTest {
     /** mock MediaPlayer.OnCompletionListener */
     @Mock
     private MediaPlayer.OnCompletionListener mockOnCompletionListener;
@@ -44,7 +44,7 @@ public class MyMediaPlayerAdapterTest {
     @Mock
     Uri nextUri;
     /** Media Player Adapter */
-    MyMediaPlayerAdapterBase mediaPlayerAdapter;
+    OreoPlayerAdapterBase mediaPlayerAdapter;
     /**
      * setup
      */
@@ -142,7 +142,7 @@ public class MyMediaPlayerAdapterTest {
     public void testGetCurrentMetaData() {
         assertTrue(true);
 //        final int EXPECTED_DURATION = 1234;
-//        //mediaPlayerAdapter = new MyMediaPlayerAdapterBase(context, null, null);
+//        //mediaPlayerAdapter = new OreoPlayerAdapterBase(context, null, null);
 //        Whitebox.setInternalState(mediaPlayerAdapter, "currentMediaPlayer", mediaPlayer);
 //        when(mediaPlayer.getDuration()).thenReturn(EXPECTED_DURATION);
 //        //setMediaPlayer(mediaPlayer);
@@ -152,7 +152,7 @@ public class MyMediaPlayerAdapterTest {
 
     }
 
-    private MyMediaPlayerAdapterBase createMediaPlayerAdapter() {
-        return new MyMediaPlayerAdapterBase(context, mockOnCompletionListener, mockOnSeekCompleteListener);
+    private OreoPlayerAdapterBase createMediaPlayerAdapter() {
+        return new OreoPlayerAdapterBase(context, mockOnCompletionListener, mockOnSeekCompleteListener);
     }
 }

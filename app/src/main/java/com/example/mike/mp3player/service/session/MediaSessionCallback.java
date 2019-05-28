@@ -28,7 +28,7 @@ import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.player.MarshmallowMediaPlayerAdapterBase;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
-import com.example.mike.mp3player.service.player.MyMediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.OreoPlayerAdapterBase;
 import com.example.mike.mp3player.service.player.NougatMediaPlayerAdapterBase;
 
 import java.util.ArrayList;
@@ -361,7 +361,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                 return new MarshmallowMediaPlayerAdapterBase(context, this, this);
             case Build.VERSION_CODES.N:
                 return new NougatMediaPlayerAdapterBase(context, this, this);
-            default: return new MyMediaPlayerAdapterBase(context, this, this);
+            default: return new OreoPlayerAdapterBase(context, this, this);
         }
     }
 
