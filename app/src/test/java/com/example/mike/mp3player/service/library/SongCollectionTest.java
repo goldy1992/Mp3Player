@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.service.library;
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
+import android.support.v4.media.MediaDescriptionCompat;
 
 import com.example.mike.mp3player.commons.library.LibraryObject;
 
@@ -40,9 +41,10 @@ public class SongCollectionTest {
         List<MediaItem> mediaItems = new ArrayList<>();
 
         final int EXPECTED_SET_SIZE = 1;
+        MediaItem mediaItem = createMediaItem();
 
         for (int i = 1; i <= EXPECTED_SET_SIZE; i++) {
-            mediaItems.add(mockMediaItem);
+            mediaItems.add(mediaItem);
         }
         songCollection.index(mediaItems);
 
@@ -79,11 +81,17 @@ public class SongCollectionTest {
     public void testChildren() {
 
         List<MediaItem> mediaItems = new ArrayList<>();
-        mediaItems.add(mockMediaItem);
+        mediaItems.add(createMediaItem());
         songCollection.index(mediaItems);
 
         LibraryObject libraryObject = mock(LibraryObject.class);
         TreeSet<MediaItem> resultSet = songCollection.getChildren(libraryObject);
         assertNull(resultSet);
+    }
+
+    private MediaItem createMediaItem() {
+        MediaDescriptionCompat mediaDescription = new MediaDescriptionCompat.Builder()
+                .setMediaId("media_id").setTitle("title").build();
+        return new MediaItem(mediaDescription, 0);
     }
 }
