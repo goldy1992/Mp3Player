@@ -51,7 +51,6 @@ public class OreoPlayerAdapterBase extends MediaPlayerAdapterBase {
         getCurrentMediaPlayer().pause();
         audioFocusManager.playbackPaused();
         currentState = PlaybackStateCompat.STATE_PAUSED;
-        //logPlaybackParams(currentMediaPlayer.getPlaybackParams());
     }
 
     @Override

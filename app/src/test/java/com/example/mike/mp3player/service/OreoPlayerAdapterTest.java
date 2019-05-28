@@ -23,8 +23,9 @@ import org.robolectric.shadows.util.DataSource;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
@@ -40,17 +41,16 @@ public class OreoPlayerAdapterTest {
     /** context */
     private Context context;
     @Mock
-    Uri uri;
+    private Uri uri;
     @Mock
-    Uri nextUri;
+    private Uri nextUri;
     /** Media Player Adapter */
-    OreoPlayerAdapterBase mediaPlayerAdapter;
+    private OreoPlayerAdapterBase mediaPlayerAdapter;
     /**
      * setup
      */
     @Before
     public void setup() {
-       // super.setup();
         MockitoAnnotations.initMocks(this);
         context = InstrumentationRegistry.getInstrumentation().getContext();
         final String path = "dummy";
@@ -59,9 +59,6 @@ public class OreoPlayerAdapterTest {
                 DataSource.toDataSource(context, uri),
                 new ShadowMediaPlayer.MediaInfo(100, 10));
         mediaPlayerAdapter = createMediaPlayerAdapter();
-
-
-//        mediaPlayerAdapter.reset(new Uri.Builder().appendPath("abc").build(), null);
         mediaPlayerAdapter.reset(uri, null);
         Whitebox.setInternalState(mediaPlayerAdapter, "audioFocusManager", audioFocusManager);
     }
@@ -88,7 +85,6 @@ public class OreoPlayerAdapterTest {
     @Test
     public void testPlay() throws IllegalAccessException {
         FieldUtils.writeField( mediaPlayerAdapter, "audioFocusManager", audioFocusManager, true);
-//        Whitebox.setInternalState(mediaPlayerAdapter, "audioFocusManager", audioFocusManager, true);
         when(audioFocusManager.requestAudioFocus()).thenReturn(true);
         mediaPlayerAdapter.play();
         assertEquals(PlaybackStateCompat.STATE_PLAYING, mediaPlayerAdapter.getCurrentState());
@@ -100,27 +96,26 @@ public class OreoPlayerAdapterTest {
     }
 
     @Test
-    public void testSeekToPrepared() {
-        spy(mediaPlayerAdapter.getCurrentMediaPlayer());
+    public void testSeekToPrepared() throws IllegalAccessException {
+        MediaPlayer mediaPlayerSpied = spy(mediaPlayerAdapter.getCurrentMediaPlayer());
+        FieldUtils.writeField(mediaPlayerAdapter, "currentMediaPlayer", mediaPlayerSpied, true);
         mediaPlayerAdapter.seekTo(555L);
-//        Mockito.verify(mediaPlayer, times(1)).seekTo(555);
+        verify(mediaPlayerSpied, times(1)).seekTo(555);
     }
 
     @Test
-    public void testSeekToNotPrepared() {
-        Whitebox.setInternalState(mediaPlayerAdapter, "isPrepared", false);
-
-
-        spy(mediaPlayerAdapter.getCurrentMediaPlayer());
+    public void testSeekToNotPrepared() throws IllegalAccessException {
+        FieldUtils.writeField(mediaPlayerAdapter, "isPrepared", false, true);
+        MediaPlayer mediaPlayerSpied = spy(mediaPlayerAdapter.getCurrentMediaPlayer());
+        FieldUtils.writeField(mediaPlayerAdapter, "currentMediaPlayer", mediaPlayerSpied, true);
         mediaPlayerAdapter.seekTo(555L);
-  //      Mockito.verify(mediaPlayer, times(1)).seekTo(555);
+        verify(mediaPlayerSpied, times(1)).seekTo(555);
     }
 
     @Test
-    public void testPauseWhilePlaying() {
-        Whitebox.setInternalState(mediaPlayerAdapter, "currentState", PlaybackStateCompat.STATE_PLAYING);
+    public void testPauseWhilePlaying() throws Exception {
+        FieldUtils.writeField(mediaPlayerAdapter, "currentState", PlaybackStateCompat.STATE_PLAYING, true);
         mediaPlayerAdapter.pause();
-        //  when (mockPlaybackParams.getSpeed()).thenReturn(1.2f);
         assertEquals("playback should be paused but state is" + Constants.playbackStateDebugMap.get(mediaPlayerAdapter.getCurrentState()), PlaybackStateCompat.STATE_PAUSED, mediaPlayerAdapter.getCurrentState());
     }
 
@@ -135,21 +130,6 @@ public class OreoPlayerAdapterTest {
         float delta = expectedNewSpeed - actualSpeed;
         assertEquals("Incorrect playback speed, expected " + expectedNewSpeed + " but was " + mediaPlayerAdapter.getCurrentPlaybackSpeed(),
                 expectedNewSpeed, actualSpeed, delta);
-    }
-
-    // ROBOELECTRIC
-    @Test
-    public void testGetCurrentMetaData() {
-        assertTrue(true);
-//        final int EXPECTED_DURATION = 1234;
-//        //mediaPlayerAdapter = new OreoPlayerAdapterBase(context, null, null);
-//        Whitebox.setInternalState(mediaPlayerAdapter, "currentMediaPlayer", mediaPlayer);
-//        when(mediaPlayer.getDuration()).thenReturn(EXPECTED_DURATION);
-//        //setMediaPlayer(mediaPlayer);
-//        MediaMetadataCompat mediaMetadataCompat = mediaPlayerAdapter.getCurrentMetaData().build();
-//        long resultDuration = mediaMetadataCompat.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
-//        assertEquals(EXPECTED_DURATION, resultDuration);
-
     }
 
     private OreoPlayerAdapterBase createMediaPlayerAdapter() {
