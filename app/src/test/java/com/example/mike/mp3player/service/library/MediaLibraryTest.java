@@ -1,19 +1,16 @@
 package com.example.mike.mp3player.service.library;
 
-import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 
-import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
+import androidx.test.platform.app.InstrumentationRegistry;
 
+import org.codehaus.plexus.util.ExceptionUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,39 +20,25 @@ import static org.junit.Assert.assertTrue;
 /**
  * Tests run using JUnit 4!
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({MediaLibraryUtils.class, Uri.class})
+@RunWith(RobolectricTestRunner.class)
 public class MediaLibraryTest {
     private static final String LOG_TAG = "MDIA_LBRY_TST";
     private static final String MOCK_PATH = "PATH";
 
-    @Mock
-    Context context;
-    @Mock
-    Uri uri;
-
     MediaLibrary mediaLibrary;
 
-    @BeforeEach
-    public void setUp() {
-        mediaLibrary = new MediaLibrary(context);
-    }
-
     @Before
-    public void oldSetup() {
-        setUp();
+    public void setUp() {
+        try {
+            mediaLibrary = new MediaLibrary(InstrumentationRegistry.getInstrumentation().getContext());
+        } catch (Exception ex) {
+            Log.e("MEDIA_LIBRARY_TEST", "" + ExceptionUtils.getFullStackTrace(ex));
+        }
     }
-
-    @AfterEach
-    public void tearDown () {
-
-    }
-
     /**
      *
      * @throws IOException
      */
-
     @Test
     public void rootDirectoryTest() throws IOException {
         assertTrue(true);

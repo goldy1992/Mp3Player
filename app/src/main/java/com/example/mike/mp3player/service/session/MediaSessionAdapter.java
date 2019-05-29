@@ -5,10 +5,13 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
+import androidx.annotation.NonNull;
+
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
 
+import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 import static com.example.mike.mp3player.commons.Constants.SHUFFLE_MODE;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
@@ -20,7 +23,7 @@ public class MediaSessionAdapter {
     private final PlaybackManager playbackManager;
     private final MediaPlayerAdapterBase mediaPlayerAdapter;
 
-    public MediaSessionAdapter(MediaSessionCompat mediaSession, PlaybackManager playbackManager,
+    public MediaSessionAdapter(@NonNull MediaSessionCompat mediaSession, PlaybackManager playbackManager,
                                MediaPlayerAdapterBase mediaPlayerAdapterBase) {
         this.mediaSession = mediaSession;
         this.playbackManager = playbackManager;
@@ -46,6 +49,19 @@ public class MediaSessionAdapter {
 
     public void updateMetaData() {
         mediaSession.setMetadata(getCurrentMetaData());
+    }
+
+    /**
+     * added this method instead of calling both of the playback and meta data methods when
+     * wanting to update the Media Session
+     * @param actions
+     */
+    public void updateAll(long actions) {
+        updatePlaybackState(actions);
+        updateMetaData();
+    }
+    public void updateAll() {
+        updateAll(NO_ACTION);
     }
 
     public MediaMetadataCompat getCurrentMetaData() {
@@ -74,6 +90,14 @@ public class MediaSessionAdapter {
 
     public void setQueue(MediaSessionCompat.QueueItem item) {
         mediaSession.setQueue(playbackManager.onAddQueueItem(item));
+    }
+
+    public void setActive(boolean isActive) {
+        this.mediaSession.setActive(isActive);
+    }
+
+    public MediaSessionCompat.Token getMediaSessionToken() {
+        return mediaSession.getSessionToken();
     }
 
 

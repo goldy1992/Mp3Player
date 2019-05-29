@@ -43,18 +43,15 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onCreate() {
         super.onCreate();
-        worker = new HandlerThread(WORKER_ID);
-        worker.start();
-        worker.getLooper().setMessageLogging((String x) -> {
+        this.worker = new HandlerThread(WORKER_ID);
+        this.worker.start();
+        this.worker.getLooper().setMessageLogging((String x) -> {
             //Log.i(WORKER_ID, x);
         });
-        mediaLibrary = new MediaLibrary(getBaseContext());
-        mediaLibrary.init();
-        mediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);
+        this.mediaLibrary = new MediaLibrary(getBaseContext());
+        this.mediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);
         setSessionToken(getMediaSession().getSessionToken());
-        notificationManager = new MyNotificationManager(this);
-        serviceManager = new ServiceManager(this, getApplicationContext(), getMediaSession(), notificationManager);
-        mediaSessionCallback = new MediaSessionCallback(getApplicationContext(), notificationManager, serviceManager, getMediaSession(), mediaLibrary, worker.getLooper());
+        this.mediaSessionCallback = new MediaSessionCallback(this, notificationManager, getMediaSession(), mediaLibrary, worker.getLooper());
         // MySessionCallback() has methods that handle callbacks from a media controller
         getMediaSession().setCallback(mediaSessionCallback);
     }

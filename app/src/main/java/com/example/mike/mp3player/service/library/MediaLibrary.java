@@ -9,19 +9,15 @@ import androidx.annotation.NonNull;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
-import com.example.mike.mp3player.service.library.mediaretriever.ContentResolverMediaRetriever;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
-import com.example.mike.mp3player.service.library.mediaretriever.MockMediaRetriever;
+import com.example.mike.mp3player.service.library.mediaretriever.MediaRetrieverSelector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
-
-import static com.example.mike.mp3player.commons.AndroidUtils.getProductFlavor;
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
-import static com.example.mike.mp3player.commons.Constants.AUTOMATION;
 
 public class MediaLibrary {
     private boolean playlistRecursInSubDirectory = false;
@@ -34,10 +30,11 @@ public class MediaLibrary {
 
     public MediaLibrary(Context context) {
         this.context = context;
-        initContentResolver();
+        this.mediaRetriever = new MediaRetrieverSelector(context).getMediaRetriever();
         categories = new HashMap<>();
+        init();
     }
-    public void init() {
+    private void init() {
         SongCollection songs = new SongCollection();
         FolderLibraryCollection folders = new FolderLibraryCollection();
         categories.put(songs.getRootId(), songs);
@@ -99,9 +96,5 @@ public class MediaLibrary {
         return getSongList() != null && !getSongList().isEmpty();
     }
 
-    private void initContentResolver() {
-        switch (getProductFlavor()) {
-            case AUTOMATION: this.mediaRetriever = new MockMediaRetriever(context); break;
-            default: this.mediaRetriever = new ContentResolverMediaRetriever(context); break;
-        }}
+
 }
