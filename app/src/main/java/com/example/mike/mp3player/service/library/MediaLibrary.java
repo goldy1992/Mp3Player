@@ -17,16 +17,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+
+import javax.inject.Inject;
+
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
 
 public class MediaLibrary {
     private boolean playlistRecursInSubDirectory = false;
 
+    @Inject
     private MediaRetriever mediaRetriever;
     private Map<Category, LibraryCollection> categories;
     private Context context;
     private TreeSet<MediaItem> rootItems = new TreeSet<>(compareRootMediaItemsByCategory);
     private final String LOG_TAG = "MEDIA_LIBRARY";
+    private boolean isInitialised = false;
 
     public MediaLibrary(Context context) {
         this.context = context;
@@ -39,10 +44,10 @@ public class MediaLibrary {
         FolderLibraryCollection folders = new FolderLibraryCollection();
         categories.put(songs.getRootId(), songs);
         categories.put(folders.getRootId(), folders);
-        buildMediaLibrary();
+        this.isInitialised = true;
     }
 
-    private void buildMediaLibrary(){
+    public void buildMediaLibrary(){
         List<MediaItem> songList = mediaRetriever.retrieveMedia();
         for (Category category : categories.keySet()) {
             categories.get(category).index(songList);

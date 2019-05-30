@@ -18,7 +18,7 @@ public class MediaRetrieverSelector {
 
     private void initContentResolver() {
         switch (getProductFlavor()) {
-           // case AUTOMATION: return new MockMediaRetriever(context); break;
+        //    case AUTOMATION: return new MockMediaRetriever(context); break;
           //  default: return; new ContentResolverMediaRetriever(context); break;
         }}
 }

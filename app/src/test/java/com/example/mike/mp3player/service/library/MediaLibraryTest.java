@@ -4,6 +4,9 @@ import android.util.Log;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.example.mike.mp3player.BuildConfig;
+
+import org.apache.commons.lang.reflect.FieldUtils;
 import org.codehaus.plexus.util.ExceptionUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +14,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,13 +28,14 @@ import static org.junit.Assert.assertTrue;
 public class MediaLibraryTest {
     private static final String LOG_TAG = "MDIA_LBRY_TST";
     private static final String MOCK_PATH = "PATH";
-
+b
     MediaLibrary mediaLibrary;
 
     @Before
     public void setUp() {
+
         try {
-            mediaLibrary = new MediaLibrary(InstrumentationRegistry.getInstrumentation().getContext());
+           // mediaLibrary = new MediaLibrary(InstrumentationRegistry.getInstrumentation().getContext());
         } catch (Exception ex) {
             Log.e("MEDIA_LIBRARY_TEST", "" + ExceptionUtils.getFullStackTrace(ex));
         }

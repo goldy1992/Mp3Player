@@ -49,6 +49,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             //Log.i(WORKER_ID, x);
         });
         this.mediaLibrary = new MediaLibrary(getBaseContext());
+        this.mediaLibrary.buildMediaLibrary();
         this.mediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);
         setSessionToken(getMediaSession().getSessionToken());
         this.mediaSessionCallback = new MediaSessionCallback(this, notificationManager, getMediaSession(), mediaLibrary, worker.getLooper());

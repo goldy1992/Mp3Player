@@ -137,6 +137,9 @@ dependencies {
     implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
     implementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
 
+    implementation 'com.google.dagger:dagger:2.10'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
+
     //vintage
     testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
     // (Optional) If you also have JUnit 4-based tests
