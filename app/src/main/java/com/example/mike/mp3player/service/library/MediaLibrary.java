@@ -6,11 +6,11 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.annotation.NonNull;
 
+import com.example.mike.mp3player.MikesMp3Player;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
-import com.example.mike.mp3player.service.library.mediaretriever.MediaRetrieverSelector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,12 +18,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
+
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
 
 public class MediaLibrary {
     private boolean playlistRecursInSubDirectory = false;
 
-    private MediaRetriever mediaRetriever;
+    @Inject
+    MediaRetriever mediaRetriever;
+
     private Map<Category, LibraryCollection> categories;
     private Context context;
     private TreeSet<MediaItem> rootItems = new TreeSet<>(compareRootMediaItemsByCategory);
@@ -31,6 +37,7 @@ public class MediaLibrary {
     private boolean isInitialised = false;
 
     public MediaLibrary(Context context) {
+
         this.context = context;
       //  AndroidInjection.inject(this);
 //        this.mediaRetriever = new MediaRetrieverSelector(context).getMediaRetriever();

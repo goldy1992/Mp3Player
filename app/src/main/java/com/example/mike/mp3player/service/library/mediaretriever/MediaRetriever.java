@@ -13,6 +13,8 @@ import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import java.io.File;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST;
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ARTIST;
 import static android.media.MediaMetadataRetriever.METADATA_KEY_DURATION;
@@ -25,7 +27,9 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KE
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_DURATION;
 
 public abstract class MediaRetriever {
-    private final Context context;
+
+    @Inject
+    Context context;
 
     public MediaRetriever(Context context) {
         this.context = context;
