@@ -18,16 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import javax.inject.Inject;
-
-import dagger.android.AndroidInjection;
-
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
 
 public class MediaLibrary {
     private boolean playlistRecursInSubDirectory = false;
 
-    @Inject
     private MediaRetriever mediaRetriever;
     private Map<Category, LibraryCollection> categories;
     private Context context;
