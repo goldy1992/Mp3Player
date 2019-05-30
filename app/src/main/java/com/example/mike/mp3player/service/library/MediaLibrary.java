@@ -20,6 +20,8 @@ import java.util.TreeSet;
 
 import javax.inject.Inject;
 
+import dagger.android.AndroidInjection;
+
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
 
 public class MediaLibrary {
@@ -35,7 +37,8 @@ public class MediaLibrary {
 
     public MediaLibrary(Context context) {
         this.context = context;
-        this.mediaRetriever = new MediaRetrieverSelector(context).getMediaRetriever();
+      //  AndroidInjection.inject(this);
+//        this.mediaRetriever = new MediaRetrieverSelector(context).getMediaRetriever();
         categories = new HashMap<>();
         init();
     }
