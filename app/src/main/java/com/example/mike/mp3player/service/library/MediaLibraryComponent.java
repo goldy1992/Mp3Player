@@ -1,6 +1,8 @@
 package com.example.mike.mp3player.service.library;
 
+import com.example.mike.mp3player.service.MediaPlaybackService;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
+import com.example.mike.mp3player.service.library.mediaretriever.MediaRetrieverComponent;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetrieverModule;
 
 import javax.inject.Singleton;
@@ -8,10 +10,12 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = MediaRetrieverModule.class)
+@Component(modules = {MediaLibraryModule.class}, dependencies = MediaRetrieverComponent.class)
 public interface MediaLibraryComponent {
 
-    MediaRetriever provideMediaRetriever();
+    MediaLibrary provideMediaLibrary();
 
-    void inject(MediaLibrary mediaLibrary);
+    void inject(MediaPlaybackService mediaPlaybackService);
+
+
 }

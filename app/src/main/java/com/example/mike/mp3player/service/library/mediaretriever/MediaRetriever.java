@@ -28,7 +28,6 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KE
 
 public abstract class MediaRetriever {
 
-    @Inject
     Context context;
 
     public MediaRetriever(Context context) {

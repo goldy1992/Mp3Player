@@ -59,17 +59,17 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private static final String LOG_TAG = "MEDIA_SESSION_CALLBACK";
     private boolean isInitialised = false;
 
-    public MediaSessionCallback(MediaPlaybackService service, MyNotificationManager myNotificationManager,
+    public MediaSessionCallback(MediaPlaybackService service,
                                 MediaSessionCompat mediaSession,
                                 MediaLibrary mediaLibrary, Looper looper) {
-        this.serviceManager = serviceManager;
+        this.context = service.getApplicationContext();
         this.mediaLibrary = mediaLibrary;
         List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.mediaLibrary.getSongList());
         List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
         this.playbackManager = new PlaybackManager(queueItems);
         this.mediaPlayerAdapter = createMediaPlayerAdapter(context);
         this.mediaSessionAdapter = new MediaSessionAdapter(mediaSession, playbackManager, mediaPlayerAdapter);
-        this.context = service.getApplicationContext();
+
         this.serviceManager = new ServiceManager(service, mediaSessionAdapter);
         this.broadcastReceiver = new AudioBecomingNoisyBroadcastReceiver(context, mediaSessionAdapter, mediaPlayerAdapter, serviceManager);
 

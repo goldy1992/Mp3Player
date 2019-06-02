@@ -39,9 +39,7 @@ public class MediaLibrary {
     public MediaLibrary(Context context) {
 
         this.context = context;
-      //  AndroidInjection.inject(this);
-//        this.mediaRetriever = new MediaRetrieverSelector(context).getMediaRetriever();
-        categories = new HashMap<>();
+        this.categories = new HashMap<>();
         init();
     }
     private void init() {

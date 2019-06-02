@@ -72,7 +72,6 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
             int position = adapter.getPosition(currentTheme);
             spinner.setSelection(position);
         }
-        recycleTypedArray(typedArray);
     }
 
 

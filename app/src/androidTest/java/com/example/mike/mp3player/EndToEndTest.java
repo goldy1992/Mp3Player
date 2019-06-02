@@ -7,10 +7,14 @@ import android.view.ViewParent;
 
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import com.example.mike.mp3player.client.activities.SplashScreenEntryActivity;
+import com.example.mike.mp3player.service.library.DaggerMediaLibraryComponent;
+import com.example.mike.mp3player.service.library.MediaLibraryComponent;
+import com.example.mike.mp3player.service.library.mediaretriever.MockMediaRetriever;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -34,6 +38,20 @@ public class EndToEndTest {
 
     @Rule
     public ActivityTestRule<SplashScreenEntryActivity> mActivityTestRule = new ActivityTestRule<>(SplashScreenEntryActivity.class);
+
+    @Override
+    protected void beforeActivityLaunched() {
+        MikesMp3Player application = (MikesMp3Player) InstrumentationRegistry
+                .getInstrumentation()
+                .getTargetContext()
+                .getApplicationContext();
+
+        MockMediaRetriever mockMediaRetriever = new MockMediaRetriever(application.getApplicationContext());
+        MediaLibraryComponent myComponent = DaggerMediaLibraryComponent
+                .builder().mediaRetrieverModule(mockMediaRetriever)
+                .build();
+        application.setMyComponent(myComponent);
+    }
 
     @Rule
     public GrantPermissionRule mGrantPermissionRule =
