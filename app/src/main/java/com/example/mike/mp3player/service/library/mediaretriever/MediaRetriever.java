@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST;
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ARTIST;
@@ -25,9 +26,8 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_D
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ALBUM_ARTIST;
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_DURATION;
-
+@Singleton
 public abstract class MediaRetriever {
-
     Context context;
 
     public MediaRetriever(Context context) {

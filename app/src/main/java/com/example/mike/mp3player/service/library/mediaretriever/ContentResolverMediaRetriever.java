@@ -13,6 +13,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
@@ -22,6 +24,8 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KE
 
 public class ContentResolverMediaRetriever extends MediaRetriever {
     private ContentResolver m_contentResolver;
+
+    @Inject
     public ContentResolverMediaRetriever(Context context) {
         super(context);
         this.m_contentResolver = context.getContentResolver();

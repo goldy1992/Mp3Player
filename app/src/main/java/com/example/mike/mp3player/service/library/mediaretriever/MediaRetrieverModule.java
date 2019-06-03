@@ -1,22 +1,22 @@
 package com.example.mike.mp3player.service.library.mediaretriever;
 
-import android.content.Context;
-
 import javax.inject.Singleton;
 
-import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 
-public abstract class MediaRetrieverModule {
+@Module
+public class MediaRetrieverModule {
 
-    protected final Context context;
+    private final MediaRetriever mediaRetriever;
 
-    public MediaRetrieverModule(Context context) {
-        this.context = context;
+    public MediaRetrieverModule(MediaRetriever mediaRetriever) {
+        this.mediaRetriever = mediaRetriever;
     }
 
     @Provides
     @Singleton
-    public abstract MediaRetriever provideMediaRetriever();
+    public MediaRetriever provideMediaRetriever() {
+        return mediaRetriever;
+    }
 }

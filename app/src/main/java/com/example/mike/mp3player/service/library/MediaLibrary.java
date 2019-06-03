@@ -19,15 +19,13 @@ import java.util.Map;
 import java.util.TreeSet;
 
 import javax.inject.Inject;
-
-import dagger.android.AndroidInjection;
+import javax.inject.Singleton;
 
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
 
+@Singleton
 public class MediaLibrary {
     private boolean playlistRecursInSubDirectory = false;
-
-    @Inject
     MediaRetriever mediaRetriever;
 
     private Map<Category, LibraryCollection> categories;
@@ -36,7 +34,8 @@ public class MediaLibrary {
     private final String LOG_TAG = "MEDIA_LIBRARY";
     private boolean isInitialised = false;
 
-    public MediaLibrary(Context context) {
+    @Inject
+    public MediaLibrary(Context context, MediaRetriever mediaRetriever) {
 
         this.context = context;
         this.categories = new HashMap<>();
