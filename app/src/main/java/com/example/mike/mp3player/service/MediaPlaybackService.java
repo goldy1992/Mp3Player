@@ -15,7 +15,6 @@ import com.example.mike.mp3player.MikesMp3Player;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.commons.library.LibraryResponse;
 import com.example.mike.mp3player.service.library.MediaLibrary;
-import com.example.mike.mp3player.service.library.MediaLibraryComponent;
 import com.example.mike.mp3player.service.session.MediaSessionCallback;
 
 import java.util.ArrayList;
@@ -45,13 +44,12 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     public void onCreate() {
         super.onCreate();
         ((MikesMp3Player)getApplication()).getMediaLibraryComponent().inject(this);
+
         this.worker = new HandlerThread(WORKER_ID);
         this.worker.start();
         this.worker.getLooper().setMessageLogging((String x) -> {
             //Log.i(WORKER_ID, x);
         });
-        this.mediaLibrary = new MediaLibrary(getBaseContext());
-
 
         this.mediaLibrary.buildMediaLibrary();
         this.mediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);

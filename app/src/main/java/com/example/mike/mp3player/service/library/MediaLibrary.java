@@ -6,7 +6,6 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.annotation.NonNull;
 
-import com.example.mike.mp3player.MikesMp3Player;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
@@ -29,15 +28,15 @@ public class MediaLibrary {
     MediaRetriever mediaRetriever;
 
     private Map<Category, LibraryCollection> categories;
-    private Context context;
+    private final Context context;
     private TreeSet<MediaItem> rootItems = new TreeSet<>(compareRootMediaItemsByCategory);
     private final String LOG_TAG = "MEDIA_LIBRARY";
     private boolean isInitialised = false;
 
     @Inject
     public MediaLibrary(Context context, MediaRetriever mediaRetriever) {
-
         this.context = context;
+        this.mediaRetriever = mediaRetriever;
         this.categories = new HashMap<>();
         init();
     }
