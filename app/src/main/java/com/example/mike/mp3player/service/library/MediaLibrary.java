@@ -25,7 +25,7 @@ import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMedi
 @Singleton
 public class MediaLibrary {
     private boolean playlistRecursInSubDirectory = false;
-    MediaRetriever mediaRetriever;
+    private MediaRetriever mediaRetriever;
 
     private Map<Category, LibraryCollection> categories;
     private final Context context;

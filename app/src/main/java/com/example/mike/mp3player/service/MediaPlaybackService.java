@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.example.mike.mp3player.MikesMp3Player;
+import com.example.mike.mp3player.MikesMp3PlayerBase;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.commons.library.LibraryResponse;
 import com.example.mike.mp3player.service.library.MediaLibrary;
@@ -43,7 +44,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onCreate() {
         super.onCreate();
-        ((MikesMp3Player)getApplication()).getMediaLibraryComponent().inject(this);
+        ((MikesMp3PlayerBase)getApplication()).getMediaLibraryComponent().inject(this);
 
         this.worker = new HandlerThread(WORKER_ID);
         this.worker.start();

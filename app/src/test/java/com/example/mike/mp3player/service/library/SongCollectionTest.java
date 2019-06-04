@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
+import static com.example.mike.mp3player.TestUtils.createMediaItem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -87,11 +88,5 @@ public class SongCollectionTest {
         LibraryObject libraryObject = mock(LibraryObject.class);
         TreeSet<MediaItem> resultSet = songCollection.getChildren(libraryObject);
         assertNull(resultSet);
-    }
-
-    private MediaItem createMediaItem() {
-        MediaDescriptionCompat mediaDescription = new MediaDescriptionCompat.Builder()
-                .setMediaId("media_id").setTitle("title").build();
-        return new MediaItem(mediaDescription, 0);
     }
 }

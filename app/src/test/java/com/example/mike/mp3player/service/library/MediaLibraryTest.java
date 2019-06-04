@@ -1,6 +1,12 @@
 package com.example.mike.mp3player.service.library;
 
+import android.content.Context;
 import android.util.Log;
+
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
+import com.example.mike.mp3player.service.library.mediaretriever.MockMediaRetriever;
 
 import org.codehaus.plexus.util.ExceptionUtils;
 import org.junit.Before;
@@ -24,9 +30,10 @@ public class MediaLibraryTest {
 
     @Before
     public void setUp() {
-
+        Context context = InstrumentationRegistry.getInstrumentation().getContext();
+        MediaRetriever mediaRetriever = new MockMediaRetriever(context);
         try {
-           // mediaLibrary = new MediaLibrary(InstrumentationRegistry.getInstrumentation().getContext());
+            mediaLibrary = new MediaLibrary(context, mediaRetriever);
         } catch (Exception ex) {
             Log.e("MEDIA_LIBRARY_TEST", "" + ExceptionUtils.getFullStackTrace(ex));
         }
@@ -37,6 +44,7 @@ public class MediaLibraryTest {
      */
     @Test
     public void rootDirectoryTest() throws IOException {
+        mediaLibrary.buildMediaLibrary();
         assertTrue(true);
 //        File rootDir = new File("rootDir");
 //        rootDir.mkdir();

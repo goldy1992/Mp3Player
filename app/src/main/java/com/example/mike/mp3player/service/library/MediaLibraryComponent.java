@@ -1,7 +1,5 @@
 package com.example.mike.mp3player.service.library;
 
-import android.provider.MediaStore;
-
 import com.example.mike.mp3player.service.MediaPlaybackService;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetrieverModule;
