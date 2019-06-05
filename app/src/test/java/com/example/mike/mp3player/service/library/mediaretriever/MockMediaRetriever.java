@@ -14,6 +14,7 @@ import static com.example.mike.mp3player.TestUtils.createMediaItem;
  */
 public class MockMediaRetriever extends MediaRetriever {
 
+    public static final int NUM_OF_SONGS = 5;
     public MockMediaRetriever(Context context) {
         super(context);
     }
@@ -21,7 +22,7 @@ public class MockMediaRetriever extends MediaRetriever {
     @Override
     public List<MediaItem> retrieveMedia() {
         List<MediaItem> mediaItems = new ArrayList<>();
-        IntStream.rangeClosed(1, 5).parallel().forEach(i -> mediaItems.add(createMediaItem()));
+        IntStream.rangeClosed(1, NUM_OF_SONGS).parallel().forEach(i -> mediaItems.add(createMediaItem()));
         return mediaItems;
     }
 }

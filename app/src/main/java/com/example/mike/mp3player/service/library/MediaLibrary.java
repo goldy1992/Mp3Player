@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
@@ -43,24 +44,24 @@ public class MediaLibrary {
     private void init() {
         SongCollection songs = new SongCollection();
         FolderLibraryCollection folders = new FolderLibraryCollection();
-        categories.put(songs.getRootId(), songs);
-        categories.put(folders.getRootId(), folders);
+        getCategories().put(songs.getRootId(), songs);
+        getCategories().put(folders.getRootId(), folders);
         this.isInitialised = true;
     }
 
     public void buildMediaLibrary(){
         List<MediaItem> songList = mediaRetriever.retrieveMedia();
-        for (Category category : categories.keySet()) {
-            categories.get(category).index(songList);
+        for (Category category : getCategories().keySet()) {
+            getCategories().get(category).index(songList);
         }
 
         List<MediaItem> rootCategoryMediaItems = new ArrayList<>();
-        for (LibraryCollection collection : categories.values()) {
+        for (LibraryCollection collection : getCategories().values()) {
             rootCategoryMediaItems.add(collection.getRoot());
         }
         RootLibraryCollection rootLibraryCollection = new RootLibraryCollection();
         rootLibraryCollection.index(rootCategoryMediaItems);
-        categories.put(rootLibraryCollection.getRootId(), rootLibraryCollection);
+        getCategories().put(rootLibraryCollection.getRootId(), rootLibraryCollection);
     }
 
     public TreeSet<MediaItem> getRoot() {
@@ -68,24 +69,24 @@ public class MediaLibrary {
     }
 
     public TreeSet<MediaItem> getSongList() {
-        return categories.get(Category.SONGS).getKeys();
+        return getCategories().get(Category.SONGS).getKeys();
     }
 
     public List<MediaItem> getPlaylist(LibraryObject libraryObject) {
         Category category = libraryObject.getCategory();
         if (category == Category.SONGS) {
             // song items don't have children therefore just return all songs
-            return new ArrayList<>(categories.get(category).getKeys());
+            return new ArrayList<>(getCategories().get(category).getKeys());
         } else
-            return new ArrayList<>(categories.get(category).getChildren(libraryObject));
+            return new ArrayList<>(getCategories().get(category).getChildren(libraryObject));
     }
 
     public TreeSet<MediaItem> getChildren(@NonNull LibraryRequest libraryRequest) {
 
         if (Category.isCategory(libraryRequest.getId())) {
-            return categories.get(libraryRequest.getCategory()).getKeys();
+            return getCategories().get(libraryRequest.getCategory()).getKeys();
         } else {
-            return categories.get(libraryRequest.getCategory()).getChildren(libraryRequest);
+            return getCategories().get(libraryRequest.getCategory()).getChildren(libraryRequest);
         }
     }
 
@@ -103,4 +104,8 @@ public class MediaLibrary {
     }
 
 
+    @VisibleForTesting
+    Map<Category, LibraryCollection> getCategories() {
+        return categories;
+    }
 }
