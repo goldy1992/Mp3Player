@@ -32,11 +32,11 @@ import static org.junit.Assert.assertTrue;
 public class MediaLibraryTest {
     private static final String LOG_TAG = "MDIA_LBRY_TST";
     private static final String MOCK_PATH = "PATH";
-    MediaLibrary mediaLibrary;
-    MockMediaRetriever mediaRetriever;
+    private MediaLibrary mediaLibrary;
+    private MockMediaRetriever mediaRetriever;
 
     @Before
-    public void setUp() {
+    public void setup() {
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
         this.mediaRetriever = new MockMediaRetriever(context);
         try {
