@@ -68,20 +68,22 @@ public class MediaSessionAdapter {
         MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
         builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayerAdapter.getCurrentDuration());
 
-        //mediaPlayerAdapter.getCurrentMetaData();
         MediaSessionCompat.QueueItem currentItem = playbackManager.getCurrentItem();
         if(ValidMetaDataUtil.validMediaId(currentItem)) {
-            builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, currentItem.getDescription().getMediaId());
+            builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, currentItem.getDescription()
+                    .getMediaId());
         }
 
         if (ValidMetaDataUtil.validTitle(currentItem)) {
-            builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, currentItem.getDescription().getTitle().toString());
+            builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, currentItem.getDescription()
+                    .getTitle().toString());
         } else {
             builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, UNKNOWN);
         }
 
         if (ValidMetaDataUtil.validArtist(currentItem)) {
-            builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, currentItem.getDescription().getExtras().getString(STRING_METADATA_KEY_ARTIST));
+            builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, currentItem.getDescription()
+                    .getExtras().getString(STRING_METADATA_KEY_ARTIST));
         } else {
             builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, UNKNOWN);
         }
