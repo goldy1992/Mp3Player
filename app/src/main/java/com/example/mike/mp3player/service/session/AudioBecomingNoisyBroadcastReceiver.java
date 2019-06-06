@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 
+import androidx.annotation.VisibleForTesting;
+
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
 
@@ -17,7 +19,7 @@ public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
     private final MediaSessionAdapter mediaSessionAdapter;
     private final Context context;
     private ServiceManager serviceManager;
-    private boolean audioNoisyReceiverRegistered;
+    private boolean audioNoisyReceiverRegistered = false;
     private final IntentFilter AUDIO_NOISY_INTENT_FILTER =
             new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 
@@ -43,16 +45,20 @@ public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
     }
 
     public void registerAudioNoisyReceiver() {
-        if (!audioNoisyReceiverRegistered) {
+        if (!isAudioNoisyReceiverRegistered()) {
             context.registerReceiver(this, AUDIO_NOISY_INTENT_FILTER);
             audioNoisyReceiverRegistered = true;
         }
     }
 
     public void unregisterAudioNoisyReceiver() {
-        if (audioNoisyReceiverRegistered) {
+        if (isAudioNoisyReceiverRegistered()) {
             context.unregisterReceiver(this);
             audioNoisyReceiverRegistered = false;
         }
+    }
+    @VisibleForTesting
+    public boolean isAudioNoisyReceiverRegistered() {
+        return audioNoisyReceiverRegistered;
     }
 }
