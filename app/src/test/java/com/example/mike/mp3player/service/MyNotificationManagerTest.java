@@ -2,9 +2,7 @@ package com.example.mike.mp3player.service;
 
 import android.app.Notification;
 import android.content.Context;
-import android.media.MediaMetadata;
 import android.os.Bundle;
-import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -23,6 +21,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(RobolectricTestRunner.class)
 public class MyNotificationManagerTest
 {
+    private static final String TITLE = "title";
     private static final int OREO = 28;
     private static final int MARSHMALLOW = 23;
     private MyNotificationManager myNotificationManager;
@@ -37,15 +36,24 @@ public class MyNotificationManagerTest
     @Test
     @Config(sdk = OREO)
     public void testGetOreoNotification() {
-        final String title = "title";
-        Notification result = myNotificationManager.getNotification(createMetaData(title), createPlaybackState());
+        getNotification();
+    }
+
+    @Test
+    @Config(sdk = MARSHMALLOW)
+    public void testGetNotificationNoneOreo() {
+        getNotification();
+    }
+    private void getNotification() {
+        Notification result = myNotificationManager.getNotification(createMetaData(TITLE), createPlaybackState());
         assertNotNull(result);
 
         Bundle extras = result.extras;
-        assertEquals(title, extras.getString(Notification.EXTRA_TITLE));
+        assertEquals(TITLE, extras.getString(Notification.EXTRA_TITLE));
         assertEquals("There should be 3 actions, Skip to previous, play/pause, skip to next",
                 3, result.actions.length);
     }
+
 
     private MediaMetadataCompat createMetaData(String title) {
         return new MediaMetadataCompat.Builder()
