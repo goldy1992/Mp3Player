@@ -63,7 +63,7 @@ public class MyNotificationManager {
         return notificationManager;
     }
 
-    public synchronized Notification getNotification(MediaMetadataCompat metadata,
+    public synchronized Notification getNotification(@NonNull MediaMetadataCompat metadata,
                                                       @NonNull PlaybackStateCompat state) {
         boolean isPlaying = state.getState() == PlaybackStateCompat.STATE_PLAYING;
         MediaDescriptionCompat description = metadata.getDescription();
