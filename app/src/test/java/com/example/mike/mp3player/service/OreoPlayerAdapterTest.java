@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowMediaPlayer;
 import org.robolectric.shadows.util.DataSource;
@@ -50,7 +49,7 @@ public class OreoPlayerAdapterTest {
      * setup
      */
     @Before
-    public void setup() {
+    public void setup() throws IllegalAccessException {
         MockitoAnnotations.initMocks(this);
         context = InstrumentationRegistry.getInstrumentation().getContext();
         final String path = "dummy";
@@ -60,7 +59,7 @@ public class OreoPlayerAdapterTest {
                 new ShadowMediaPlayer.MediaInfo(100, 10));
         mediaPlayerAdapter = createMediaPlayerAdapter();
         mediaPlayerAdapter.reset(uri, null);
-        Whitebox.setInternalState(mediaPlayerAdapter, "audioFocusManager", audioFocusManager);
+        FieldUtils.writeField(mediaPlayerAdapter, "audioFocusManager", audioFocusManager, true);
     }
 
     @Test
@@ -71,8 +70,8 @@ public class OreoPlayerAdapterTest {
     }
 
     @Test
-    public void testPauseWhilePaused() {
-        Whitebox.setInternalState(mediaPlayerAdapter, "currentState", PlaybackStateCompat.STATE_PAUSED);
+    public void testPauseWhilePaused() throws IllegalAccessException {
+        FieldUtils.writeField(mediaPlayerAdapter, "currentState", PlaybackStateCompat.STATE_PAUSED, true);
         mediaPlayerAdapter.pause();
         assertEquals("playback should be paused but state is" + Constants.playbackStateDebugMap.get(mediaPlayerAdapter.getCurrentState()), PlaybackStateCompat.STATE_PAUSED, mediaPlayerAdapter.getCurrentState());
     }
