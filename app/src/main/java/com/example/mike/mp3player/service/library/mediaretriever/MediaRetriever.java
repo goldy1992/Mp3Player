@@ -13,7 +13,6 @@ import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import java.io.File;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST;

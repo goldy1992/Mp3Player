@@ -99,8 +99,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                                 Looper looper) {
         this.context = service.getApplicationContext();
         this.mediaLibrary = mediaLibrary;
-        List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.getMediaLibrary().getSongList());
-        List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
         this.playbackManager = playbackManager;
         this.mediaPlayerAdapter = mediaPlayerAdapterBase;
         this.mediaSessionAdapter = mediaSessionAdapter;

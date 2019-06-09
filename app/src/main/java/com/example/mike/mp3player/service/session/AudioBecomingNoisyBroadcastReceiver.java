@@ -20,7 +20,7 @@ public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
     private final Context context;
     private ServiceManager serviceManager;
     private boolean audioNoisyReceiverRegistered = false;
-    private final IntentFilter AUDIO_NOISY_INTENT_FILTER =
+    private static final IntentFilter AUDIO_NOISY_INTENT_FILTER =
             new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 
     /**

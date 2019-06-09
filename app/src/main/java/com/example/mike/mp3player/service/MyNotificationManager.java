@@ -80,7 +80,6 @@ public class MyNotificationManager {
                                                        boolean isPlaying,
                                                        MediaDescriptionCompat description) {
         createChannel();
-        Context context = this.context.getApplicationContext();
         Notification.Action playPauseAction = null;
 
         if (isPlaying) {
@@ -124,7 +123,6 @@ public class MyNotificationManager {
     private NotificationCompat.Builder buildNotification(Token token,
                                                          boolean isPlaying,
                                                          MediaDescriptionCompat description) {
-        Context context = this.context.getApplicationContext();
         // Create the (mandatory) notification channel when running on Android Oreo.
         NotificationCompat.Action playPauseAction = null;
         if (isPlaying) {

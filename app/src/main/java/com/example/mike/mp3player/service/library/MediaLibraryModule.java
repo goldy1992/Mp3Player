@@ -3,8 +3,6 @@ package com.example.mike.mp3player.service.library;
 import android.content.Context;
 
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
-
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -20,8 +18,8 @@ public class MediaLibraryModule {
 
     @Provides
     @Singleton
-    public MediaLibrary provideMediaLibrary(Context context, MediaRetriever mediaRetriever) {
-        return new MediaLibrary(context, mediaRetriever);
+    public MediaLibrary provideMediaLibrary(MediaRetriever mediaRetriever) {
+        return new MediaLibrary(mediaRetriever);
     }
 
 

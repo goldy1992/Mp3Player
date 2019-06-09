@@ -13,6 +13,7 @@ import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,16 +30,13 @@ public class MediaLibrary {
     private MediaRetriever mediaRetriever;
 
     private Map<Category, LibraryCollection> categories;
-    private final Context context;
     private TreeSet<MediaItem> rootItems = new TreeSet<>(compareRootMediaItemsByCategory);
     private final String LOG_TAG = "MEDIA_LIBRARY";
-    private boolean isInitialised = false;
 
     @Inject
-    public MediaLibrary(Context context, MediaRetriever mediaRetriever) {
-        this.context = context;
+    public MediaLibrary(MediaRetriever mediaRetriever) {
         this.mediaRetriever = mediaRetriever;
-        this.categories = new HashMap<>();
+        this.categories = new EnumMap<>(Category.class);
         init();
     }
     private void init() {
@@ -46,7 +44,6 @@ public class MediaLibrary {
         FolderLibraryCollection folders = new FolderLibraryCollection();
         getCategories().put(songs.getRootId(), songs);
         getCategories().put(folders.getRootId(), folders);
-        this.isInitialised = true;
     }
 
     public void buildMediaLibrary(){

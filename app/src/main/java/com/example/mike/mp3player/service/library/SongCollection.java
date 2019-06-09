@@ -7,7 +7,6 @@ import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
