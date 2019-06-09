@@ -375,6 +375,11 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         getMediaSessionAdapter().updateAll(NO_ACTION);
     }
 
+    /**
+     * TODO: remove dependency of this method, initialise the object with Dagger2 and inject
+     * @param context context
+     * @return the appropriate Media Player object
+     */
     private MediaPlayerAdapterBase createMediaPlayerAdapter(Context context) {
         switch (Build.VERSION.SDK_INT) {
             case Build.VERSION_CODES.M:

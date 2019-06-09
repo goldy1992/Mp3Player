@@ -2,12 +2,17 @@ package com.example.mike.mp3player.service.session;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Looper;
+import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.KeyEvent;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
@@ -21,7 +26,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
+import java.util.Collections;
+import java.util.List;
+
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
+import static com.example.mike.mp3player.TestUtils.createMediaItem;
+import static com.example.mike.mp3player.commons.Constants.PARENT_OBJECT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -151,6 +161,38 @@ public class MediaSessionCallbackTest {
         assertTrue(result);
         verify(mediaPlayerAdapter, times(1)).reset(any(), any());
         verify(serviceManager, times(1)).notifyService();
+    }
+
+    @Test
+    public void testPrepareFromMediaId() {
+        final String mediaId = "5452213";
+        final Bundle bundle = new Bundle();
+        LibraryObject parent = new LibraryObject(Category.ARTISTS, mediaId);
+        bundle.putParcelable(PARENT_OBJECT, parent);
+        List<MediaItem> mediaItems = Collections.singletonList(createMediaItem(mediaId, null, null));
+        when(mediaLibrary.getPlaylist(parent)).thenReturn(mediaItems);
+        mediaSessionCallback.onPrepareFromMediaId(mediaId, bundle);
+        verify(mediaPlayerAdapter, times(1)).reset(any(), any());
+    }
+
+    @Test
+    public void testSetShuffleMode() {
+        // TODO: write shuffle mode test
+    }
+
+    @Test
+    public void testSetRepeatMode() {
+        // TODO: write set repeat mode test
+    }
+
+    @Test
+    public void testCustomAction() {
+        // TODO: write test to change playback speeds
+    }
+
+    @Test
+    public void testOnCompletion() {
+        // TODO: write test for onCompletion
     }
 
     private PlaybackStateCompat createState(@PlaybackStateCompat.State int playbackstate) {
