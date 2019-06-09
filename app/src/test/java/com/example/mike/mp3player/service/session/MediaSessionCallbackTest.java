@@ -9,6 +9,7 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.KeyEvent;
 
+import androidx.core.app.NavUtils;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.commons.library.Category;
@@ -33,10 +34,14 @@ import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_A
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_NONE;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 import static com.example.mike.mp3player.TestUtils.createMediaItem;
+import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
+import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.PARENT_OBJECT;
+import static com.example.mike.mp3player.service.session.MediaSessionCallback.DEFAULT_PLAYBACK_SPEED_CHANGE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -198,8 +203,22 @@ public class MediaSessionCallbackTest {
     }
 
     @Test
-    public void testCustomAction() {
-        // TODO: write test to change playback speeds
+    public void testCustomActionIncreasePlaybackSpeed() {
+        mediaSessionCallback.onCustomAction(INCREASE_PLAYBACK_SPEED, null);
+        verify(mediaPlayerAdapter, times(1)).increaseSpeed(DEFAULT_PLAYBACK_SPEED_CHANGE);
+    }
+
+    @Test
+    public void testCustomActionDecreasePlaybackSpeed() {
+        mediaSessionCallback.onCustomAction(DECREASE_PLAYBACK_SPEED, null);
+        verify(mediaPlayerAdapter, times(1)).decreaseSpeed(DEFAULT_PLAYBACK_SPEED_CHANGE);
+    }
+
+    @Test
+    public void testCustomActionInvalidAction() {
+        mediaSessionCallback.onCustomAction("invalid action", null);
+        verify(mediaPlayerAdapter, never()).decreaseSpeed(anyFloat());
+        verify(mediaPlayerAdapter, never()).increaseSpeed(anyFloat());
     }
 
     @Test

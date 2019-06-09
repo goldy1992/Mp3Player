@@ -57,6 +57,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private final Context context;
     private final Handler worker;
     private static final String LOG_TAG = "MEDIA_SESSION_CALLBACK";
+    public static final float DEFAULT_PLAYBACK_SPEED_CHANGE = 0.05f;
     private boolean isInitialised = false;
 
     public MediaSessionCallback(MediaPlaybackService service,
@@ -343,9 +344,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         Log.i(LOG_TAG, "hit speed change");
         super.onCustomAction(customAction, extras);
         switch (customAction) {
-            case INCREASE_PLAYBACK_SPEED: getMediaPlayerAdapter().increaseSpeed(0.05f);
+            case INCREASE_PLAYBACK_SPEED: getMediaPlayerAdapter().increaseSpeed(DEFAULT_PLAYBACK_SPEED_CHANGE);
                 break;
-            case DECREASE_PLAYBACK_SPEED: getMediaPlayerAdapter().decreaseSpeed(0.05f);
+            case DECREASE_PLAYBACK_SPEED: getMediaPlayerAdapter().decreaseSpeed(DEFAULT_PLAYBACK_SPEED_CHANGE);
                 break;
             default: break;
         }

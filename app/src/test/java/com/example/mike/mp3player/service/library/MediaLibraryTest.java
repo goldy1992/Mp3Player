@@ -40,7 +40,7 @@ public class MediaLibraryTest {
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
         this.mediaRetriever = new MockMediaRetriever(context);
         try {
-            mediaLibrary = new MediaLibrary(context, mediaRetriever);
+            mediaLibrary = new MediaLibrary(mediaRetriever);
             mediaLibrary.buildMediaLibrary();
         } catch (Exception ex) {
             Log.e("MEDIA_LIBRARY_TEST", "" + ExceptionUtils.getFullStackTrace(ex));
