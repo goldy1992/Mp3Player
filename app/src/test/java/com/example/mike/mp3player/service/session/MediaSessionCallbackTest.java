@@ -2,14 +2,15 @@ package com.example.mike.mp3player.service.session;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
+import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.KeyEvent;
 
-import androidx.core.app.NavUtils;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.commons.library.Category;
@@ -43,6 +44,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -223,17 +225,36 @@ public class MediaSessionCallbackTest {
 
     @Test
     public void testOnCompletion() {
-        // TODO: write test for onCompletion
+        final String mediaId = "344234";
+        MediaPlayer mediaPlayer = mock(MediaPlayer.class);
+        Uri uri = mock(Uri.class);
+        when(mediaLibrary.getMediaUriFromMediaId(mediaId)).thenReturn(uri);
+        when(mediaPlayerAdapter.getCurrentMediaPlayer()).thenReturn(mediaPlayer);
+        when(mediaPlayer.isLooping()).thenReturn(false);
+        when(playbackManager.getNext()).thenReturn(mediaId);
+        mediaSessionCallback.onCompletion(mediaPlayer);
+        verify(mediaPlayerAdapter, times(1)).onComplete(uri);
     }
 
     @Test
     public void testAddQueueItem() {
-        // TODO: write test for on Add Queue Item
+        MediaDescriptionCompat description = new MediaDescriptionCompat.Builder().build();
+        mediaSessionCallback.onAddQueueItem(description);
+        verify(mediaSessionAdapter, times(1)).setQueue(any());
     }
 
     @Test
     public void testRemoveQueueItem() {
-        // TODO: write test for on Remove Queue Item
+        MediaDescriptionCompat description = new MediaDescriptionCompat.Builder().build();
+        mediaSessionCallback.onRemoveQueueItem(description);
+        verify(mediaSessionAdapter, times(1)).setQueue(any());
+    }
+
+    @Test
+    public void testOnSeekTo() {
+        final long position = 98;
+        mediaSessionCallback.onSeekTo(position);
+        verify(mediaPlayerAdapter, times(1)).seekTo(position);
     }
 
     private PlaybackStateCompat createState(@PlaybackStateCompat.State int playbackstate) {
