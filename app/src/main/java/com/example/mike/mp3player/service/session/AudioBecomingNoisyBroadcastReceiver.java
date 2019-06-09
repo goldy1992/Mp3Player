@@ -20,8 +20,6 @@ public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
     private final Context context;
     private ServiceManager serviceManager;
     private boolean audioNoisyReceiverRegistered = false;
-    private static final IntentFilter AUDIO_NOISY_INTENT_FILTER =
-            new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 
     /**
      * Constructor
@@ -46,7 +44,9 @@ public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
 
     public void registerAudioNoisyReceiver() {
         if (!isAudioNoisyReceiverRegistered()) {
-            context.registerReceiver(this, AUDIO_NOISY_INTENT_FILTER);
+            IntentFilter audioNoisyIntentFilter =
+                    new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+            context.registerReceiver(this, audioNoisyIntentFilter);
             audioNoisyReceiverRegistered = true;
         }
     }
