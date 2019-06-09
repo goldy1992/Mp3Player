@@ -41,7 +41,6 @@ import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
 import static com.example.mike.mp3player.commons.Constants.PARENT_OBJECT;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
-import static com.example.mike.mp3player.commons.Constants.SHUFFLE_MODE;
 import static com.example.mike.mp3player.commons.LoggingUtils.logRepeatMode;
 import static com.example.mike.mp3player.commons.LoggingUtils.logShuffleMode;
 
@@ -284,7 +283,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         //Log.i(LOG_TAG, "set Repeat mode");
         logRepeatMode(repeatMode, LOG_TAG);
         getMediaPlayerAdapter().updateRepeatMode(repeatMode);
-        getPlaybackManager().setRepeating(repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE);
+        getPlaybackManager().setRepeating(repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL);
 
         /**
          * TODO: set logic to put in the respective repeat mode
@@ -308,8 +307,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         String nextSongId = getPlaybackManager().getNext();
         Uri nextUri = getMediaLibrary().getMediaUriFromMediaId(nextSongId);
         getMediaPlayerAdapter().setNextMediaPlayer(nextUri);
-        Bundle bundle = new Bundle();
-        bundle.putInt(SHUFFLE_MODE, shuffleMode);
         getMediaSessionAdapter().updateAll(ACTION_SET_SHUFFLE_MODE);
     }
     /**

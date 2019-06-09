@@ -29,6 +29,8 @@ import org.robolectric.RobolectricTestRunner;
 import java.util.Collections;
 import java.util.List;
 
+import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ALL;
+import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_NONE;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 import static com.example.mike.mp3player.TestUtils.createMediaItem;
 import static com.example.mike.mp3player.commons.Constants.PARENT_OBJECT;
@@ -177,12 +179,22 @@ public class MediaSessionCallbackTest {
 
     @Test
     public void testSetShuffleMode() {
-        // TODO: write shuffle mode test
+        mediaSessionCallback.onSetShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
+        verify(mediaPlayerAdapter, times(1)).setNextMediaPlayer(any());
     }
 
     @Test
-    public void testSetRepeatMode() {
-        // TODO: write set repeat mode test
+    public void testSetRepeatModeAll() {
+        mediaSessionCallback.onSetRepeatMode(REPEAT_MODE_ALL);
+        verify(mediaPlayerAdapter, times(1)).updateRepeatMode(REPEAT_MODE_ALL);
+        verify(playbackManager, times(1)).setRepeating(true);
+    }
+
+    @Test
+    public void testSetRepeatModeNone() {
+        mediaSessionCallback.onSetRepeatMode(REPEAT_MODE_NONE);
+        verify(mediaPlayerAdapter, times(1)).updateRepeatMode(REPEAT_MODE_NONE);
+        verify(playbackManager, times(1)).setRepeating(false);
     }
 
     @Test
@@ -193,6 +205,16 @@ public class MediaSessionCallbackTest {
     @Test
     public void testOnCompletion() {
         // TODO: write test for onCompletion
+    }
+
+    @Test
+    public void testAddQueueItem() {
+        // TODO: write test for on Add Queue Item
+    }
+
+    @Test
+    public void testRemoveQueueItem() {
+        // TODO: write test for on Remove Queue Item
     }
 
     private PlaybackStateCompat createState(@PlaybackStateCompat.State int playbackstate) {
