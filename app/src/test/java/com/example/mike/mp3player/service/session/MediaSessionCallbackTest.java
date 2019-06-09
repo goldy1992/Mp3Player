@@ -20,8 +20,10 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -52,6 +54,8 @@ public class MediaSessionCallbackTest {
         when(mediaPlaybackService.getApplicationContext()).thenReturn(context);
         this.mediaSessionCallback = new MediaSessionCallback(mediaPlaybackService, mediaLibrary,
                 playbackManager, mediaPlayerAdapter, mediaSessionAdapter, serviceManager, broadcastReceiver, Looper.myLooper());
+        reset(mediaSessionAdapter);
+        reset(mediaPlayerAdapter);
     }
 
     @Test
@@ -71,14 +75,35 @@ public class MediaSessionCallbackTest {
     }
     @Test
     public void testSkipToNext() {
-        // TODO: fix test
-//        final String newMediaId = "newMediaID";
-//        when(playbackManager.skipToNext()).thenReturn(newMediaId);
-//        when(mediaSessionAdapter.getCurrentPlaybackState(any())).thenReturn(createState(STATE_PLAYING));
-//        mediaSessionCallback.onSkipToNext();
-//        verify(mediaPlayerAdapter, times(1)).reset(any(), any());
-//        verify(serviceManager, times(1)).notifyService();
-            assertTrue(true);
+        final String newMediaId = "newMediaID";
+        when(playbackManager.skipToNext()).thenReturn(newMediaId);
+        when(mediaSessionAdapter.getCurrentPlaybackState(anyLong())).thenReturn(createState(STATE_PLAYING));
+        mediaSessionCallback.onSkipToNext();
+        verify(mediaPlayerAdapter, times(1)).reset(any(), any());
+        verify(serviceManager, times(1)).notifyService();
+    }
+    @Test
+    public void testSkipToPreviousPositionGreaterThanOneSecond() {
+        // position greater than 1000 ms
+        final int position = 1001;
+        when(mediaPlayerAdapter.getCurrentPlaybackPosition()).thenReturn(position);
+        mediaSessionCallback.onSkipToPrevious();
+        verify(mediaPlayerAdapter, times(1)).seekTo(1);
+        verify(playbackManager, never()).skipToPrevious();
+        verify(serviceManager, never()).notifyService();
+        verify(mediaSessionAdapter, never()).updateAll();
+    }
+    @Test
+    public void testSkipToPreviousPositionLessThanOneSecond() {
+        // position less than 1000 ms
+        final int position = 5;
+        when(mediaPlayerAdapter.getCurrentPlaybackPosition()).thenReturn(position);
+        when(mediaSessionAdapter.getCurrentPlaybackState(anyLong())).thenReturn(createState(STATE_PLAYING));
+        mediaSessionCallback.onSkipToPrevious();
+        verify(mediaPlayerAdapter, never()).seekTo(anyLong());
+        verify(playbackManager, times(1)).skipToPrevious();
+        verify(serviceManager, times(1)).notifyService();
+        verify(mediaSessionAdapter, times(1)).updateAll();
     }
 
     private PlaybackStateCompat createState(@PlaybackStateCompat.State int playbackstate) {

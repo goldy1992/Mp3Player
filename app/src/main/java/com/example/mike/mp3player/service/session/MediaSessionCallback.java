@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.service.session;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
