@@ -181,7 +181,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                 case KeyEvent.KEYCODE_MEDIA_PAUSE: onPause(); break;
                 case KeyEvent.KEYCODE_MEDIA_NEXT: onSkipToNext(); break;
                 case KeyEvent.KEYCODE_MEDIA_PREVIOUS: onSkipToPrevious(); break;
-                default: break;
+                default: return false;
             }
             return true;
         }

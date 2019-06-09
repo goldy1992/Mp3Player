@@ -1,8 +1,10 @@
 package com.example.mike.mp3player.service.session;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Looper;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.view.KeyEvent;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -20,6 +22,8 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
@@ -75,13 +79,18 @@ public class MediaSessionCallbackTest {
     }
     @Test
     public void testSkipToNext() {
-        final String newMediaId = "newMediaID";
-        when(playbackManager.skipToNext()).thenReturn(newMediaId);
-        when(mediaSessionAdapter.getCurrentPlaybackState(anyLong())).thenReturn(createState(STATE_PLAYING));
+        setUpSkipToNextTest();
         mediaSessionCallback.onSkipToNext();
         verify(mediaPlayerAdapter, times(1)).reset(any(), any());
         verify(serviceManager, times(1)).notifyService();
     }
+
+    private void setUpSkipToNextTest() {
+        final String newMediaId = "newMediaID";
+        when(playbackManager.skipToNext()).thenReturn(newMediaId);
+        when(mediaSessionAdapter.getCurrentPlaybackState(anyLong())).thenReturn(createState(STATE_PLAYING));
+    }
+
     @Test
     public void testSkipToPreviousPositionGreaterThanOneSecond() {
         // position greater than 1000 ms
@@ -105,8 +114,53 @@ public class MediaSessionCallbackTest {
         verify(serviceManager, times(1)).notifyService();
         verify(mediaSessionAdapter, times(1)).updateAll();
     }
+    @Test
+    public void testMediaButtonEventNullIntent() {
+        Intent intent = null;
+        assertFalse(mediaSessionCallback.onMediaButtonEvent(intent));
+    }
+
+    @Test
+    public void testMediaButtonEventPlay() {
+        Intent intent = createKeyEventIntent(KeyEvent.KEYCODE_MEDIA_PLAY);
+        boolean result = mediaSessionCallback.onMediaButtonEvent(intent);
+        assertTrue(result);
+        verify(mediaPlayerAdapter, times(1)).play();
+    }
+    @Test
+    public void testMediaButtonEventPause() {
+        Intent intent = createKeyEventIntent(KeyEvent.KEYCODE_MEDIA_PAUSE);
+        boolean result = mediaSessionCallback.onMediaButtonEvent(intent);
+        assertTrue(result);
+        verify(mediaPlayerAdapter, times(1)).pause();
+    }
+    @Test
+    public void testMediaButtonEventSkipToPrevious() {
+        Intent intent = createKeyEventIntent(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
+        final int position = 1001;
+        when(mediaPlayerAdapter.getCurrentPlaybackPosition()).thenReturn(position);
+        boolean result = mediaSessionCallback.onMediaButtonEvent(intent);
+        assertTrue(result);
+        verify(mediaPlayerAdapter, times(1)).seekTo(anyLong());
+    }
+    @Test
+    public void testMediaButtonEventSkipToNext() {
+        Intent intent = createKeyEventIntent(KeyEvent.KEYCODE_MEDIA_NEXT);
+        setUpSkipToNextTest();
+        boolean result = mediaSessionCallback.onMediaButtonEvent(intent);
+        assertTrue(result);
+        verify(mediaPlayerAdapter, times(1)).reset(any(), any());
+        verify(serviceManager, times(1)).notifyService();
+    }
 
     private PlaybackStateCompat createState(@PlaybackStateCompat.State int playbackstate) {
         return new PlaybackStateCompat.Builder().setState(playbackstate, 0L, 0f).build();
+    }
+
+    private Intent createKeyEventIntent(final int keyCode) {
+        Intent intent = new Intent();
+        KeyEvent keyEvent = new KeyEvent(0, keyCode);
+        intent.putExtra(Intent.EXTRA_KEY_EVENT, keyEvent);
+        return intent;
     }
 }
