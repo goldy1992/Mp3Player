@@ -7,8 +7,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Util Class for the timer
+ */
 public final class TimerUtils {
-
+    /**
+     * One second constant
+     */
     public static final int ONE_SECOND = 1000;
     private static final String LOG_TAG = "TIMER_UTILS";
 

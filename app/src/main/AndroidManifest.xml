@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
+        android:name=".MikesMp3Player"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/my_app_icon"

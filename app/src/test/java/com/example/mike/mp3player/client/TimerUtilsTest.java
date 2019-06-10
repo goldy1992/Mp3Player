@@ -2,13 +2,13 @@ package com.example.mike.mp3player.client;
 
 import android.os.SystemClock;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import com.example.mike.mp3player.client.utils.TimerUtils;
 
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowSystemClock;
@@ -19,13 +19,25 @@ import static org.junit.Assert.assertEquals;
 /**
  * In order to use Powermockito, used old Test tag so that the class runs with JUnit4.
  */
-@Ignore
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest=Config.NONE, sdk = 26, shadows = {ShadowSystemClock.class})
-@PrepareForTest({SystemClock.class})
 public class TimerUtilsTest {
-
-    private static final long CURRENT_TIME = 50000L;
+    /**
+     * Class setup method
+     */
+    @BeforeAll
+    public static void setupTests() {
+        final long currentTime = SystemClock.elapsedRealtime();
+        String wrongCurrentTimeErrorMessage = "SystemClock.elapsedRealTime() (i.e. ShadowSystemClock)" +
+                " returned unexpected result. Tests are based on the assumption that this method will" +
+                " return" + SHADOW_SYSTEM_CLOCK_ELAPSED_TIME +
+                ". Consult the Robolectric documentation for more information";
+        assertEquals(wrongCurrentTimeErrorMessage, SHADOW_SYSTEM_CLOCK_ELAPSED_TIME, currentTime);
+    }
+    /**
+     * assumed elapsed time will return 100L.
+     */
+    private static final long SHADOW_SYSTEM_CLOCK_ELAPSED_TIME = 100L;
 
     @Test
     public void testConvertToSecondsOneSecond() {
@@ -36,7 +48,7 @@ public class TimerUtilsTest {
     }
 
     @Test
-    public void testConvertToSecondsMilisecondsToRound() {
+    public void testConvertToSecondsMillisecondsToRound() {
         long milliseconds = 17972;
         int result = TimerUtils.convertToSeconds(milliseconds);
         int expect = 17;
@@ -60,22 +72,23 @@ public class TimerUtilsTest {
     }
     @Test
     public void calculateCurrentPlaybackPositionWhenStatePlayingTest() {
-        final long timeDiff = 5000L;
+        final long timeDiff = 400L;
+        final long originalTime = SystemClock.elapsedRealtime() - timeDiff;
+        final long originalPosition = 40000L;
         PlaybackStateCompat playbackStateCompat =
-                new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING, 40000L, 0f, CURRENT_TIME).build();
-        long newPosition = TimerUtils.calculateCurrentPlaybackPosition(playbackStateCompat);
-
-        assertEquals(playbackStateCompat.getPosition() + timeDiff, newPosition);
+                new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING,
+                        originalPosition, 0f, originalTime).build();
+        final long newPosition = TimerUtils.calculateCurrentPlaybackPosition(playbackStateCompat);
+        final long expectedNewPosition = originalPosition + timeDiff;
+        assertEquals(expectedNewPosition, newPosition);
     }
 
     @Test
     public void calculateCurrentPlaybackPositionWhenNotStatePlayingTest() {
-        final long timeDiff = 5000L;
         PlaybackStateCompat playbackStateCompat =
-                new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PAUSED, 40000L, 0f, CURRENT_TIME).build();
-        long newPostion = TimerUtils.calculateCurrentPlaybackPosition(playbackStateCompat);
-
-        assertEquals(playbackStateCompat.getPosition(), newPostion);
+                new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PAUSED, 40000L, 0f, 0).build();
+        long newPosition = TimerUtils.calculateCurrentPlaybackPosition(playbackStateCompat);
+        assertEquals(playbackStateCompat.getPosition(), newPosition);
     }
 
 

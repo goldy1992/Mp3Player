@@ -7,6 +7,9 @@ import com.example.mike.mp3player.commons.library.Category;
 import org.junit.jupiter.api.Test;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
+import static com.example.mike.mp3player.TestUtils.createMediaItem;
+import static com.example.mike.mp3player.TestUtils.createMediaItemWithNullCategory;
+import static com.example.mike.mp3player.TestUtils.createRootItem;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ComparatorUtilsTest {
@@ -163,36 +166,5 @@ class ComparatorUtilsTest {
         final boolean EQUAL = result == 0;
         assertTrue(EQUAL);
     }
-    /**
-     * @return a root category item
-     */
-    private static MediaItem createRootItem(Category category) {
-        MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder()
-                .setDescription(category.getDescription())
-                .setTitle(category.getTitle())
-                .setMediaId(category.name())
-                .build();
-        return new MediaItem(mediaDescriptionCompat, 0);
-    }
-    /**
-     * @return a null category MediaItem
-     */
-    private static MediaItem createMediaItemWithNullCategory() {
-       return createMediaItem(null, null, null);
-    }
-    /**
-     * Utility class to make a media item
-     * @param id the id
-     * @param title the title
-     * @param description the description
-     * @return a new MediaItem
-     */
-    private static MediaItem createMediaItem(final String id, final String title, final String description) {
-        MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder()
-                .setDescription(description)
-                .setTitle(title)
-                .setMediaId(id)
-                .build();
-        return new MediaItem(mediaDescriptionCompat, 0);
-    }
+
 }

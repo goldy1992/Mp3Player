@@ -87,7 +87,7 @@ addons:
 script:
 - ./gradlew clean testFullDebugUnitTest jacocoTestReportFullDebug -PdisablePreDex --stacktrace
 #- ./gradlew sonarqube
-- sonar-scanner
+- sonar-scanner -D sonar.java.libraries=${ANDROID_HOME}/platforms/${ANDROID_API}/android.jar
 #- chmod +x ./android-wait-for-emulator
 #- bash ./android-wait-for-emulator
 #- adb shell getprop ro.build.version.sdk
