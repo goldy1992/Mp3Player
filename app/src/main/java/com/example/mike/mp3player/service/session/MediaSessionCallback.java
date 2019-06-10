@@ -1,11 +1,7 @@
 package com.example.mike.mp3player.service.session;
 
-import android.app.Notification;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -19,16 +15,18 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 
+import androidx.annotation.VisibleForTesting;
+
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.LibraryObject;
-import com.example.mike.mp3player.service.MyNotificationManager;
+import com.example.mike.mp3player.service.MediaPlaybackService;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.player.MarshmallowMediaPlayerAdapterBase;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
-import com.example.mike.mp3player.service.player.MyMediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.OreoPlayerAdapterBase;
 import com.example.mike.mp3player.service.player.NougatMediaPlayerAdapterBase;
 
 import java.util.ArrayList;
@@ -43,7 +41,6 @@ import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
 import static com.example.mike.mp3player.commons.Constants.PARENT_OBJECT;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
-import static com.example.mike.mp3player.commons.Constants.SHUFFLE_MODE;
 import static com.example.mike.mp3player.commons.LoggingUtils.logRepeatMode;
 import static com.example.mike.mp3player.commons.LoggingUtils.logShuffleMode;
 
@@ -51,40 +48,72 @@ import static com.example.mike.mp3player.commons.LoggingUtils.logShuffleMode;
  * Created by Mike on 24/09/2017.
  */
 public class MediaSessionCallback extends MediaSessionCompat.Callback implements MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
-    private ServiceManager serviceManager;
-    private PlaybackManager playbackManager;
-    private MediaPlayerAdapterBase myMediaPlayerAdapter;
-    private MyNotificationManager myNotificationManager;
-    private MediaLibrary mediaLibrary;
-    private MediaSessionAdapter mediaSessionAdapter;
-    private ReceiveBroadcasts broadcastReceiver;
-    private Context context;
-    private Handler worker;
+    private final ServiceManager serviceManager;
+    private final PlaybackManager playbackManager;
+    private final MediaPlayerAdapterBase mediaPlayerAdapter;
+    private final MediaLibrary mediaLibrary;
+    private final MediaSessionAdapter mediaSessionAdapter;
+    private final AudioBecomingNoisyBroadcastReceiver broadcastReceiver;
+    private final Context context;
+    private final Handler worker;
     private static final String LOG_TAG = "MEDIA_SESSION_CALLBACK";
+    public static final float DEFAULT_PLAYBACK_SPEED_CHANGE = 0.05f;
     private boolean isInitialised = false;
 
-    public MediaSessionCallback(Context context, MyNotificationManager myNotificationManager,
-                                ServiceManager serviceManager, MediaSessionCompat mediaSession,
+    public MediaSessionCallback(MediaPlaybackService service,
+                                MediaSessionCompat mediaSession,
                                 MediaLibrary mediaLibrary, Looper looper) {
-        this.serviceManager = serviceManager;
+        this.context = service.getApplicationContext();
         this.mediaLibrary = mediaLibrary;
-        this.myNotificationManager = myNotificationManager;
-        List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.mediaLibrary.getSongList());
+        List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.getMediaLibrary().getSongList());
         List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
         this.playbackManager = new PlaybackManager(queueItems);
-        this.myMediaPlayerAdapter = createMediaPlayerAdapter(context);
-        this.mediaSessionAdapter = new MediaSessionAdapter(mediaSession, playbackManager, myMediaPlayerAdapter);
-        this.broadcastReceiver = new ReceiveBroadcasts();
-        this.context = context;
+        this.mediaPlayerAdapter = createMediaPlayerAdapter(context);
+        this.mediaSessionAdapter = new MediaSessionAdapter(mediaSession, getPlaybackManager(), getMediaPlayerAdapter());
+
+        this.serviceManager = new ServiceManager(service, getMediaSessionAdapter());
+        this.broadcastReceiver = new AudioBecomingNoisyBroadcastReceiver(context, getMediaSessionAdapter(), getMediaPlayerAdapter(), getServiceManager());
+
+        this.worker = new Handler(looper);
+        init();
+    }
+
+    /**
+     * new constructor to be used for testing and also for future use with dagger2 via the @Inject
+     * annotation
+     * @param service service
+     * @param mediaLibrary media library
+     * @param playbackManager playback manager
+     * @param mediaPlayerAdapterBase media player adapter
+     * @param mediaSessionAdapter media session adapter
+     * @param serviceManager service manager
+     * @param broadcastReceiver broadcast receiver
+     * @param looper looper
+     */
+    public MediaSessionCallback(MediaPlaybackService service,
+                                MediaLibrary mediaLibrary,
+                                PlaybackManager playbackManager,
+                                MediaPlayerAdapterBase mediaPlayerAdapterBase,
+                                MediaSessionAdapter mediaSessionAdapter,
+                                ServiceManager serviceManager,
+                                AudioBecomingNoisyBroadcastReceiver broadcastReceiver,
+                                Looper looper) {
+        this.context = service.getApplicationContext();
+        this.mediaLibrary = mediaLibrary;
+        this.playbackManager = playbackManager;
+        this.mediaPlayerAdapter = mediaPlayerAdapterBase;
+        this.mediaSessionAdapter = mediaSessionAdapter;
+        this.serviceManager = serviceManager;
+        this.broadcastReceiver = broadcastReceiver;
         this.worker = new Handler(looper);
         init();
     }
 
     private void init() {
-        Uri firstSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getCurrentMediaId());
-        Uri nextSongUri = this.mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
-        this.myMediaPlayerAdapter.reset(firstSongUri, nextSongUri);
-        updateMediaSession();
+        Uri firstSongUri = this.getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getCurrentMediaId());
+        Uri nextSongUri = this.getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getNext());
+        this.getMediaPlayerAdapter().reset(firstSongUri, nextSongUri);
+        getMediaSessionAdapter().updateAll();
     }
 
     @Override
@@ -95,12 +124,12 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     private void play() {
         //Log.i(LOG_TAG, "onPlay registed audio noisy receiver");
-        if (myMediaPlayerAdapter.play()) {
-            broadcastReceiver.registerAudioNoisyReceiver();
+        if (getMediaPlayerAdapter().play()) {
+            getBroadcastReceiver().registerAudioNoisyReceiver();
             //Log.i(LOG_TAG, "onPlay playback started");
-            updateMediaSession();
+            getMediaSessionAdapter().updateAll();
             //Log.i(LOG_TAG, "onPlay mediasession updated");
-            serviceManager.startService(prepareNotification());
+            getServiceManager().startService();
 
         }
     }
@@ -111,11 +140,11 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void skipToNext() {
-        String newMediaId = playbackManager.skipToNext();
+        String newMediaId = getPlaybackManager().skipToNext();
         if (newMediaId != null) {
             skipToNewMedia(newMediaId);
-            serviceManager.notify(prepareNotification());
-            updateMediaSession();
+            getServiceManager().notifyService();
+            getMediaSessionAdapter().updateAll();
         }
     }
 
@@ -126,14 +155,14 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     private void skipToPrevious() {
         //Log.i(LOG_TAG, "skipToPrevious");
-        int position = myMediaPlayerAdapter.getCurrentPlaybackPosition();
+        int position = getMediaPlayerAdapter().getCurrentPlaybackPosition();
         if (position > ONE_SECOND) {
-            myMediaPlayerAdapter.seekTo(1);
+            getMediaPlayerAdapter().seekTo(1);
         } else {
-            playbackManager.skipToPrevious();
-            skipToNewMedia(playbackManager.getCurrentMediaId());
-            serviceManager.notify(prepareNotification());
-            updateMediaSession();
+            getPlaybackManager().skipToPrevious();
+            skipToNewMedia(getPlaybackManager().getCurrentMediaId());
+            getServiceManager().notifyService();
+            getMediaSessionAdapter().updateAll();
         }
 
     }
@@ -150,7 +179,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                 case KeyEvent.KEYCODE_MEDIA_PAUSE: onPause(); break;
                 case KeyEvent.KEYCODE_MEDIA_NEXT: onSkipToNext(); break;
                 case KeyEvent.KEYCODE_MEDIA_PREVIOUS: onSkipToPrevious(); break;
-                default: break;
+                default: return false;
             }
             return true;
         }
@@ -166,8 +195,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         //Log.i(LOG_TAG, "prepareFromMediaId");
         super.onPrepareFromMediaId(mediaId, bundle);
         LibraryObject parent = (LibraryObject) bundle.get(PARENT_OBJECT);
-        List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getPlaylist(parent);
-        playbackManager.createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(results));
+        List<MediaBrowserCompat.MediaItem> results = getMediaLibrary().getPlaylist(parent);
+        getPlaybackManager().createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(results));
 
         if (mediaId == null) {
             Log.e(LOG_TAG, "received null mediaId");
@@ -179,10 +208,10 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         for (MediaBrowserCompat.MediaItem m : results) {
             String id = MediaItemUtils.getMediaId(m);
             if (id != null && id.equals(mediaId)) {
-                uriToPlay = mediaLibrary.getMediaUriFromMediaId(id);
-                playbackManager.setCurrentItem(mediaId);
-                followingUri = mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
-                myMediaPlayerAdapter.reset(uriToPlay, followingUri);
+                uriToPlay = getMediaLibrary().getMediaUriFromMediaId(id);
+                getPlaybackManager().setCurrentItem(mediaId);
+                followingUri = getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getNext());
+                getMediaPlayerAdapter().reset(uriToPlay, followingUri);
 
                 break;
             }
@@ -191,7 +220,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             Log.e(LOG_TAG, "failed to find requested uri in collection");
             return;
         }
-        updateMediaSession();
+        getMediaSessionAdapter().updateAll();
     }
 
     @Override
@@ -205,10 +234,10 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
     private void pause() {
         //Log.i(LOG_TAG, "onPause");
-        broadcastReceiver.unregisterAudioNoisyReceiver();
-        myMediaPlayerAdapter.pause();
-        updateMediaSession();
-        serviceManager.pauseService(prepareNotification());
+        getBroadcastReceiver().unregisterAudioNoisyReceiver();
+        getMediaPlayerAdapter().pause();
+        getMediaSessionAdapter().updateAll();
+        getServiceManager().pauseService();
         //Log.i(LOG_TAG, "onPause finished");
     }
 
@@ -220,8 +249,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     private void seekTo(long position) {
         //Log.i(LOG_TAG, "seekTO");
-        myMediaPlayerAdapter.seekTo(position);
-        mediaSessionAdapter.updatePlaybackState(ACTION_SEEK_TO);
+        getMediaPlayerAdapter().seekTo(position);
+        getMediaSessionAdapter().updatePlaybackState(ACTION_SEEK_TO);
     }
 
     @Override
@@ -232,7 +261,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private void addQueueItem(MediaDescriptionCompat description) {
         //Log.i(LOG_TAG, "addQueueItem");
         MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
-        mediaSessionAdapter.setQueue(item);
+        getMediaSessionAdapter().setQueue(item);
     }
 
     @Override
@@ -241,7 +270,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
     private void removeQueueItem(MediaDescriptionCompat description) {
         MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
-        mediaSessionAdapter.setQueue(item);
+        getMediaSessionAdapter().setQueue(item);
     }
 
     @Override
@@ -252,15 +281,15 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private void setRepeatMode(int repeatMode) {
         //Log.i(LOG_TAG, "set Repeat mode");
         logRepeatMode(repeatMode, LOG_TAG);
-        myMediaPlayerAdapter.updateRepeatMode(repeatMode);
-        playbackManager.setRepeating(repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE);
+        getMediaPlayerAdapter().updateRepeatMode(repeatMode);
+        getPlaybackManager().setRepeating(repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL);
 
         /**
          * TODO: set logic to put in the respective repeat mode
          */
         Bundle bundle = new Bundle();
         bundle.putInt(REPEAT_MODE, repeatMode);
-        updateMediaSession(ACTION_SET_REPEAT_MODE);
+        getMediaSessionAdapter().updateAll(ACTION_SET_REPEAT_MODE);
 
     }
 
@@ -273,13 +302,11 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         logShuffleMode(shuffleMode, LOG_TAG);
         // TODO: set shuffle mode and therefore set the next mediaplayers accordingly
         boolean shuffleOn = shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL;
-        playbackManager.setShuffle(shuffleOn);
-        String nextSongId = playbackManager.getNext();
-        Uri nextUri = mediaLibrary.getMediaUriFromMediaId(nextSongId);
-        myMediaPlayerAdapter.setNextMediaPlayer(nextUri);
-        Bundle bundle = new Bundle();
-        bundle.putInt(SHUFFLE_MODE, shuffleMode);
-        updateMediaSession(ACTION_SET_SHUFFLE_MODE);
+        getPlaybackManager().setShuffle(shuffleOn);
+        String nextSongId = getPlaybackManager().getNext();
+        Uri nextUri = getMediaLibrary().getMediaUriFromMediaId(nextSongId);
+        getMediaPlayerAdapter().setNextMediaPlayer(nextUri);
+        getMediaSessionAdapter().updateAll(ACTION_SET_SHUFFLE_MODE);
     }
     /**
      * When playback is complete,
@@ -292,19 +319,19 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     @Override
     public synchronized void onCompletion(MediaPlayer mediaPlayer) {
         Log.i(LOG_TAG, "on playback complete hit");
-        if (mediaPlayer != null && mediaPlayer.equals(myMediaPlayerAdapter.getCurrentMediaPlayer())) {
+        if (mediaPlayer != null && mediaPlayer.equals(getMediaPlayerAdapter().getCurrentMediaPlayer())) {
             Log.i(LOG_TAG, "looping " + mediaPlayer.isLooping());
             if (mediaPlayer.isLooping()) {
             } else {
-                playbackManager.notifyPlaybackComplete(); // increments queue
-                String nextUriToPrepare = playbackManager.getNext(); // gets uri after newly incremented index
+                getPlaybackManager().notifyPlaybackComplete(); // increments queue
+                String nextUriToPrepare = getPlaybackManager().getNext(); // gets uri after newly incremented index
                 if (null != nextUriToPrepare) {
-                    Uri nextItemUri = mediaLibrary.getMediaUriFromMediaId(nextUriToPrepare);
-                    myMediaPlayerAdapter.onComplete(nextItemUri);
-                    updateMediaSession();
+                    Uri nextItemUri = getMediaLibrary().getMediaUriFromMediaId(nextUriToPrepare);
+                    getMediaPlayerAdapter().onComplete(nextItemUri);
+                    getMediaSessionAdapter().updateAll();
                 }
             }
-            serviceManager.notify(prepareNotification());
+            getServiceManager().notifyService();
         }
     }
 
@@ -317,82 +344,69 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         Log.i(LOG_TAG, "hit speed change");
         super.onCustomAction(customAction, extras);
         switch (customAction) {
-            case INCREASE_PLAYBACK_SPEED: myMediaPlayerAdapter.increaseSpeed(0.05f);
+            case INCREASE_PLAYBACK_SPEED: getMediaPlayerAdapter().increaseSpeed(DEFAULT_PLAYBACK_SPEED_CHANGE);
                 break;
-            case DECREASE_PLAYBACK_SPEED: myMediaPlayerAdapter.decreaseSpeed(0.05f);
+            case DECREASE_PLAYBACK_SPEED: getMediaPlayerAdapter().decreaseSpeed(DEFAULT_PLAYBACK_SPEED_CHANGE);
                 break;
             default: break;
         }
-        updateMediaSession();
+        getMediaSessionAdapter().updateAll();
     }
 
-    private Notification prepareNotification() {
-        return myNotificationManager.getNotification(mediaSessionAdapter.getCurrentMetaData(),
-                mediaSessionAdapter.getCurrentPlaybackState(NO_ACTION));
-    }
+
 
     private void skipToNewMedia(String newMediaId) {
-        Uri newUri = mediaLibrary.getMediaUriFromMediaId(newMediaId);
-        Uri followingUri = mediaLibrary.getMediaUriFromMediaId(playbackManager.getNext());
-        PlaybackStateCompat currentState = mediaSessionAdapter.getCurrentPlaybackState(ACTION_SEEK_TO);
-        myMediaPlayerAdapter.reset(newUri, followingUri);
+        Uri newUri = getMediaLibrary().getMediaUriFromMediaId(newMediaId);
+        Uri followingUri = getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getNext());
+        PlaybackStateCompat currentState = getMediaSessionAdapter().getCurrentPlaybackState(ACTION_SEEK_TO);
+        getMediaPlayerAdapter().reset(newUri, followingUri);
         if (currentState.getState() == PlaybackStateCompat.STATE_PLAYING) {
-            myMediaPlayerAdapter.play();
+            getMediaPlayerAdapter().play();
         }
     }
 
-    private void updateMediaSession(long actions) {
-        mediaSessionAdapter.updatePlaybackState(actions);
-        mediaSessionAdapter.updateMetaData();
-    }
-
-    private void updateMediaSession() {
-        updateMediaSession(NO_ACTION);
-    }
 
     @Override
     public void onSeekComplete(MediaPlayer mp) {
-        updateMediaSession(NO_ACTION);
+        getMediaSessionAdapter().updateAll(NO_ACTION);
     }
 
+    /**
+     * TODO: remove dependency of this method, initialise the object with Dagger2 and inject
+     * @param context context
+     * @return the appropriate Media Player object
+     */
     private MediaPlayerAdapterBase createMediaPlayerAdapter(Context context) {
         switch (Build.VERSION.SDK_INT) {
             case Build.VERSION_CODES.M:
                 return new MarshmallowMediaPlayerAdapterBase(context, this, this);
             case Build.VERSION_CODES.N:
                 return new NougatMediaPlayerAdapterBase(context, this, this);
-            default: return new MyMediaPlayerAdapterBase(context, this, this);
+            default: return new OreoPlayerAdapterBase(context, this, this);
         }
     }
-
-    private class ReceiveBroadcasts extends BroadcastReceiver {
-        private boolean audioNoisyReceiverRegistered;
-        private final IntentFilter AUDIO_NOISY_INTENT_FILTER =
-                new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-
-        @Override
-        public synchronized void onReceive(Context context, Intent intent) {
-            if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
-                if (myMediaPlayerAdapter.isPlaying()) {
-                    myMediaPlayerAdapter.pause();
-                    updateMediaSession();
-                    serviceManager.notify(prepareNotification());
-                }
-            }
-        }
-
-        private void registerAudioNoisyReceiver() {
-            if (!audioNoisyReceiverRegistered) {
-                context.registerReceiver(this, AUDIO_NOISY_INTENT_FILTER);
-                audioNoisyReceiverRegistered = true;
-            }
-        }
-
-        private void unregisterAudioNoisyReceiver() {
-            if (audioNoisyReceiverRegistered) {
-                context.unregisterReceiver(this);
-                audioNoisyReceiverRegistered = false;
-            }
-        }
-    } // ReceivesBroadcasts class
+    @VisibleForTesting
+    public ServiceManager getServiceManager() {
+        return serviceManager;
+    }
+    @VisibleForTesting
+    public PlaybackManager getPlaybackManager() {
+        return playbackManager;
+    }
+    @VisibleForTesting
+    public MediaPlayerAdapterBase getMediaPlayerAdapter() {
+        return mediaPlayerAdapter;
+    }
+    @VisibleForTesting
+    public MediaLibrary getMediaLibrary() {
+        return mediaLibrary;
+    }
+    @VisibleForTesting
+    public MediaSessionAdapter getMediaSessionAdapter() {
+        return mediaSessionAdapter;
+    }
+    @VisibleForTesting
+    public AudioBecomingNoisyBroadcastReceiver getBroadcastReceiver() {
+        return broadcastReceiver;
+    }
 }

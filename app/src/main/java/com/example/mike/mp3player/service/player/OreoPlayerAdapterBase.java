@@ -8,10 +8,10 @@ import android.util.Log;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
-public class MyMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
+public class OreoPlayerAdapterBase extends MediaPlayerAdapterBase {
 
-    public MyMediaPlayerAdapterBase(Context context, MediaPlayer.OnCompletionListener onCompletionListener,
-                                    MediaPlayer.OnSeekCompleteListener onSeekCompleteListener) {
+    public OreoPlayerAdapterBase(Context context, MediaPlayer.OnCompletionListener onCompletionListener,
+                                 MediaPlayer.OnSeekCompleteListener onSeekCompleteListener) {
         super(context, onCompletionListener, onSeekCompleteListener);
     }
 
@@ -44,12 +44,13 @@ public class MyMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
         if (isPaused()) {
             return;
         }
-        this.currentPlaybackSpeed = getCurrentMediaPlayer().getPlaybackParams().getSpeed();
+        if (null != getCurrentMediaPlayer() && null != getCurrentMediaPlayer().getPlaybackParams()) {
+            this.currentPlaybackSpeed = getCurrentMediaPlayer().getPlaybackParams().getSpeed();
+        }
         // Update metadata and state
         getCurrentMediaPlayer().pause();
         audioFocusManager.playbackPaused();
         currentState = PlaybackStateCompat.STATE_PAUSED;
-        //logPlaybackParams(currentMediaPlayer.getPlaybackParams());
     }
 
     @Override
@@ -73,5 +74,4 @@ public class MyMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
             mediaPlayer.setPlaybackParams(playbackParams);
         }
     }
-
 }

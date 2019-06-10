@@ -15,7 +15,6 @@ import android.media.session.MediaSession;
 import android.os.Build;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.annotation.ColorInt;
@@ -30,23 +29,24 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.commons.AndroidUtils;
 
+import static android.support.v4.media.session.MediaSessionCompat.Token;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 
 public class MyNotificationManager {
 
-    private final MediaPlaybackService service;
+    private final Context context;
     private final NotificationManager notificationManager;
-    private final MediaSessionCompat mediaSessionCompat;
+    private final Token sessionToken;
 
     public static final int NOTIFICATION_ID = 512;
     private static final String TAG = "MY_NOTIFICATION_MANAGER";
-    private static final String CHANNEL_ID = "com.example.mike.mp3player.service";
+    private static final String CHANNEL_ID = "com.example.mike.mp3player.context";
     private static final int REQUEST_CODE = 501;
 
-    public MyNotificationManager(MediaPlaybackService service) {
-        this.service = service;
-        this.mediaSessionCompat = service.getMediaSession();
-        notificationManager = (NotificationManager) service.getSystemService(Context.NOTIFICATION_SERVICE);
+    public MyNotificationManager(Context context, Token sessionToken) {
+        this.context = context;
+        this.sessionToken = sessionToken;
+        notificationManager = (NotificationManager) this.context.getSystemService(Context.NOTIFICATION_SERVICE);
         // Cancel all notifications to handle the case where the Service was killed and
         // restarted by the system.
         notificationManager.cancelAll();
@@ -63,34 +63,33 @@ public class MyNotificationManager {
         return notificationManager;
     }
 
-    public synchronized Notification getNotification(MediaMetadataCompat metadata,
+    public synchronized Notification getNotification(@NonNull MediaMetadataCompat metadata,
                                                       @NonNull PlaybackStateCompat state) {
         boolean isPlaying = state.getState() == PlaybackStateCompat.STATE_PLAYING;
         MediaDescriptionCompat description = metadata.getDescription();
 
         if (AndroidUtils.isAndroidOreoOrHigher()) {
-            return buildOreoNotification(mediaSessionCompat.getSessionToken(), isPlaying, description).build();
+            return buildOreoNotification(sessionToken, isPlaying, description).build();
         }
-        return buildNotification(mediaSessionCompat.getSessionToken(), isPlaying, description).build();
+        return buildNotification(sessionToken, isPlaying, description).build();
     }
 
     // Does nothing on versions of Android earlier than Oreo.
     @RequiresApi(Build.VERSION_CODES.O)
-    private Notification.Builder buildOreoNotification(MediaSessionCompat.Token token,
-                                                        boolean isPlaying,
-                                                        MediaDescriptionCompat description) {
+    private Notification.Builder buildOreoNotification(Token token,
+                                                       boolean isPlaying,
+                                                       MediaDescriptionCompat description) {
         createChannel();
-        Context context = service.getApplicationContext();
         Notification.Action playPauseAction = null;
 
         if (isPlaying) {
-            playPauseAction = makeOreoAction(context, android.R.drawable.ic_media_pause, service.getString(R.string.PAUSE), PlaybackStateCompat.ACTION_PAUSE);
+            playPauseAction = makeOreoAction(context, android.R.drawable.ic_media_pause, this.context.getString(R.string.PAUSE), PlaybackStateCompat.ACTION_PAUSE);
         } else {
-            playPauseAction = makeOreoAction(context, android.R.drawable.ic_media_play, service.getString(R.string.PLAY), PlaybackStateCompat.ACTION_PLAY);
+            playPauseAction = makeOreoAction(context, android.R.drawable.ic_media_play, this.context.getString(R.string.PLAY), PlaybackStateCompat.ACTION_PLAY);
         }
-        Notification.Action skipToNextAction = makeOreoAction(context, android.R.drawable.ic_media_next, service.getString(R.string.SKIP_TO_NEXT), PlaybackStateCompat.ACTION_SKIP_TO_NEXT);
-        Notification.Action skipToPreviousAction = makeOreoAction(context, android.R.drawable.ic_media_previous, service.getString(R.string.SKIP_TO_PREVIOUS), PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
-        Notification.Builder builder = new Notification.Builder(service.getApplicationContext(), CHANNEL_ID);
+        Notification.Action skipToNextAction = makeOreoAction(context, android.R.drawable.ic_media_next, this.context.getString(R.string.SKIP_TO_NEXT), PlaybackStateCompat.ACTION_SKIP_TO_NEXT);
+        Notification.Action skipToPreviousAction = makeOreoAction(context, android.R.drawable.ic_media_previous, this.context.getString(R.string.SKIP_TO_PREVIOUS), PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
+        Notification.Builder builder = new Notification.Builder(this.context.getApplicationContext(), CHANNEL_ID);
 
         builder
             .setVisibility(Notification.VISIBILITY_PUBLIC)
@@ -105,7 +104,7 @@ public class MyNotificationManager {
             .setSmallIcon(getSmallIcon(isPlaying))
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
-                    service, PlaybackStateCompat.ACTION_STOP))
+                    this.context, PlaybackStateCompat.ACTION_STOP))
             .setContentIntent(createContentIntent(token))
             .addAction(skipToPreviousAction)
             .addAction(playPauseAction)
@@ -121,27 +120,26 @@ public class MyNotificationManager {
          return builder;
     }
 
-    private NotificationCompat.Builder buildNotification(MediaSessionCompat.Token token,
+    private NotificationCompat.Builder buildNotification(Token token,
                                                          boolean isPlaying,
                                                          MediaDescriptionCompat description) {
-        Context context = service.getApplicationContext();
         // Create the (mandatory) notification channel when running on Android Oreo.
         NotificationCompat.Action playPauseAction = null;
         if (isPlaying) {
-            playPauseAction = makeNoneOreoAction(android.R.drawable.ic_media_pause, service.getString(R.string.PAUSE), PlaybackStateCompat.ACTION_PAUSE);
+            playPauseAction = makeNoneOreoAction(android.R.drawable.ic_media_pause, this.context.getString(R.string.PAUSE), PlaybackStateCompat.ACTION_PAUSE);
         } else {
-            playPauseAction = makeNoneOreoAction(android.R.drawable.ic_media_play, service.getString(R.string.PLAY), PlaybackStateCompat.ACTION_PLAY);
+            playPauseAction = makeNoneOreoAction(android.R.drawable.ic_media_play, this.context.getString(R.string.PLAY), PlaybackStateCompat.ACTION_PLAY);
         }
 
-        NotificationCompat.Action skipToNextAction = makeNoneOreoAction(android.R.drawable.ic_media_next, service.getString(R.string.SKIP_TO_NEXT), PlaybackStateCompat.ACTION_SKIP_TO_NEXT);
-        NotificationCompat.Action skipToPreviousAction = makeNoneOreoAction(android.R.drawable.ic_media_previous, service.getString(R.string.SKIP_TO_PREVIOUS), PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
+        NotificationCompat.Action skipToNextAction = makeNoneOreoAction(android.R.drawable.ic_media_next, this.context.getString(R.string.SKIP_TO_NEXT), PlaybackStateCompat.ACTION_SKIP_TO_NEXT);
+        NotificationCompat.Action skipToPreviousAction = makeNoneOreoAction(android.R.drawable.ic_media_previous, this.context.getString(R.string.SKIP_TO_PREVIOUS), PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
 
         MediaStyle mediaStyle = new MediaStyle();
         NotificationCompat.Style style = mediaStyle.setMediaSession(token)
             .setShowCancelButton(true)
             .setCancelButtonIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
-                    service,
+                    this.context,
                     PlaybackStateCompat.ACTION_STOP))
             .setShowActionsInCompactView(0,1,2);
         builder
@@ -156,7 +154,7 @@ public class MyNotificationManager {
             .setSmallIcon(getSmallIcon(isPlaying))
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(service, PlaybackStateCompat.ACTION_STOP))
+            .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(this.context, PlaybackStateCompat.ACTION_STOP))
             .setContentIntent(createContentIntent(token))
             .addAction(skipToPreviousAction)
             .addAction(playPauseAction)
@@ -190,32 +188,32 @@ public class MyNotificationManager {
         }
     }
 
-    private PendingIntent createContentIntent(MediaSessionCompat.Token token) {
-        Intent openUI = new Intent(service, MediaPlayerActivity.class);
+    private PendingIntent createContentIntent(Token token) {
+        Intent openUI = new Intent(context, MediaPlayerActivity.class);
         openUI.putExtra(MEDIA_SESSION, token);
         openUI.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return PendingIntent.getActivity(
-                service, REQUEST_CODE, openUI, PendingIntent.FLAG_CANCEL_CURRENT);
+                context, REQUEST_CODE, openUI, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     private NotificationCompat.Action makeNoneOreoAction(int iconId, String title, long action) {
-        PendingIntent intent = MediaButtonReceiver.buildMediaButtonPendingIntent(service, action);
+        PendingIntent intent = MediaButtonReceiver.buildMediaButtonPendingIntent(context, action);
         return new NotificationCompat.Action(iconId, title, intent);
     }
 
     private Notification.Action makeOreoAction(Context context, int iconId, String title, long action) {
         Icon icon = Icon.createWithResource(context, iconId);
-        PendingIntent intent = MediaButtonReceiver.buildMediaButtonPendingIntent(service, action);
+        PendingIntent intent = MediaButtonReceiver.buildMediaButtonPendingIntent(this.context, action);
         return new Notification.Action.Builder( icon, title, intent).build();
     }
 
     private Bitmap getLargeIconBitmap() {
-        return BitmapFactory.decodeResource(service.getApplicationContext().getResources(), R.drawable.ic_music_note);
+        return BitmapFactory.decodeResource(context.getApplicationContext().getResources(), R.drawable.ic_music_note);
 
     }
 
     private Icon getLargeIcon() {
-       return Icon.createWithResource(service.getApplicationContext(), R.drawable.ic_music_note);
+       return Icon.createWithResource(context.getApplicationContext(), R.drawable.ic_music_note);
     }
 
     private int getSmallIcon(boolean isPlaying) {

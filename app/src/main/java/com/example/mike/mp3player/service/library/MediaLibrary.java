@@ -5,59 +5,60 @@ import android.net.Uri;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
-import com.example.mike.mp3player.service.library.mediaretriever.ContentResolverMediaRetriever;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
-import com.example.mike.mp3player.service.library.mediaretriever.MockMediaRetriever;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import static com.example.mike.mp3player.commons.AndroidUtils.getProductFlavor;
-import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
-import static com.example.mike.mp3player.commons.Constants.AUTOMATION;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
+
+@Singleton
 public class MediaLibrary {
     private boolean playlistRecursInSubDirectory = false;
-
     private MediaRetriever mediaRetriever;
+
     private Map<Category, LibraryCollection> categories;
-    private Context context;
     private TreeSet<MediaItem> rootItems = new TreeSet<>(compareRootMediaItemsByCategory);
     private final String LOG_TAG = "MEDIA_LIBRARY";
 
-    public MediaLibrary(Context context) {
-        this.context = context;
-        initContentResolver();
-        categories = new HashMap<>();
+    @Inject
+    public MediaLibrary(MediaRetriever mediaRetriever) {
+        this.mediaRetriever = mediaRetriever;
+        this.categories = new EnumMap<>(Category.class);
+        init();
     }
-    public void init() {
+    private void init() {
         SongCollection songs = new SongCollection();
         FolderLibraryCollection folders = new FolderLibraryCollection();
-        categories.put(songs.getRootId(), songs);
-        categories.put(folders.getRootId(), folders);
-        buildMediaLibrary();
+        getCategories().put(songs.getRootId(), songs);
+        getCategories().put(folders.getRootId(), folders);
     }
 
-    private void buildMediaLibrary(){
+    public void buildMediaLibrary(){
         List<MediaItem> songList = mediaRetriever.retrieveMedia();
-        for (Category category : categories.keySet()) {
-            categories.get(category).index(songList);
+        for (Category category : getCategories().keySet()) {
+            getCategories().get(category).index(songList);
         }
 
         List<MediaItem> rootCategoryMediaItems = new ArrayList<>();
-        for (LibraryCollection collection : categories.values()) {
+        for (LibraryCollection collection : getCategories().values()) {
             rootCategoryMediaItems.add(collection.getRoot());
         }
         RootLibraryCollection rootLibraryCollection = new RootLibraryCollection();
         rootLibraryCollection.index(rootCategoryMediaItems);
-        categories.put(rootLibraryCollection.getRootId(), rootLibraryCollection);
+        getCategories().put(rootLibraryCollection.getRootId(), rootLibraryCollection);
     }
 
     public TreeSet<MediaItem> getRoot() {
@@ -65,24 +66,24 @@ public class MediaLibrary {
     }
 
     public TreeSet<MediaItem> getSongList() {
-        return categories.get(Category.SONGS).getKeys();
+        return getCategories().get(Category.SONGS).getKeys();
     }
 
     public List<MediaItem> getPlaylist(LibraryObject libraryObject) {
         Category category = libraryObject.getCategory();
         if (category == Category.SONGS) {
             // song items don't have children therefore just return all songs
-            return new ArrayList<>(categories.get(category).getKeys());
+            return new ArrayList<>(getCategories().get(category).getKeys());
         } else
-            return new ArrayList<>(categories.get(category).getChildren(libraryObject));
+            return new ArrayList<>(getCategories().get(category).getChildren(libraryObject));
     }
 
     public TreeSet<MediaItem> getChildren(@NonNull LibraryRequest libraryRequest) {
 
         if (Category.isCategory(libraryRequest.getId())) {
-            return categories.get(libraryRequest.getCategory()).getKeys();
+            return getCategories().get(libraryRequest.getCategory()).getKeys();
         } else {
-            return categories.get(libraryRequest.getCategory()).getChildren(libraryRequest);
+            return getCategories().get(libraryRequest.getCategory()).getChildren(libraryRequest);
         }
     }
 
@@ -99,9 +100,9 @@ public class MediaLibrary {
         return getSongList() != null && !getSongList().isEmpty();
     }
 
-    private void initContentResolver() {
-        switch (getProductFlavor()) {
-            case AUTOMATION: this.mediaRetriever = new MockMediaRetriever(context); break;
-            default: this.mediaRetriever = new ContentResolverMediaRetriever(context); break;
-        }}
+
+    @VisibleForTesting
+    Map<Category, LibraryCollection> getCategories() {
+        return categories;
+    }
 }
