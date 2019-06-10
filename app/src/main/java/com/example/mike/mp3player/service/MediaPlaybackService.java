@@ -113,7 +113,11 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         TreeSet<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryRequest);
         LibraryResponse libraryResponse = new LibraryResponse(libraryRequest);
         options.putParcelable(RESPONSE_OBJECT, libraryResponse);
-        result.sendResult(new ArrayList<>(mediaItems));
+        ArrayList<MediaBrowserCompat.MediaItem> toReturn = new ArrayList<>();
+        if (mediaItems != null) {
+            toReturn.addAll(mediaItems);
+        }
+        result.sendResult(toReturn);
     }
 
     @Override
