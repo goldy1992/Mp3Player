@@ -94,7 +94,6 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     /**
@@ -103,14 +102,16 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
      */
     private int getCurrentThemeId() {
         Resources.Theme activityTheme = activity.getTheme();
-        int[] attrs = {R.attr.themeName};
-        TypedArray typedArray = activityTheme.obtainStyledAttributes(attrs);
-        if (null != typedArray && typedArray.length() > 0) {
-            String themeName = typedArray.getString(0);
-            typedArray.recycle();
-            Log.d(LOG_TAG, "current theme is: " + themeName);
-            Integer result = themeNameToResMap.get(themeName);
-            return result == null ? -1  : result;
+        if (null != activityTheme) {
+            int[] attrs = {R.attr.themeName};
+            TypedArray typedArray = activityTheme.obtainStyledAttributes(attrs);
+            if (null != typedArray && typedArray.length() > 0) {
+                String themeName = typedArray.getString(0);
+                typedArray.recycle();
+                Log.d(LOG_TAG, "current theme is: " + themeName);
+                Integer result = themeNameToResMap.get(themeName);
+                return result == null ? -1 : result;
+            }
         }
         return  -1;
     }
