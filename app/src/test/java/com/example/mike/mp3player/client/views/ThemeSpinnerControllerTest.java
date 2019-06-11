@@ -1,8 +1,6 @@
 package com.example.mike.mp3player.client.views;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.widget.Spinner;
 
 import androidx.test.platform.app.InstrumentationRegistry;
