@@ -23,7 +23,7 @@ public class MediaPlayerPoolTest {
     private Context context;
     @Mock
     private Looper looper;
-    @Mock
+
     private Uri uri;
 
     private MediaPlayerPool m_mediaPlayerPool;
@@ -33,7 +33,7 @@ public class MediaPlayerPoolTest {
         MockitoAnnotations.initMocks(this);
         this.context = InstrumentationRegistry.getInstrumentation().getContext();
         final String path = "dummy";
-        Uri uri = new Uri.Builder().appendPath(path).build();
+        uri = new Uri.Builder().appendPath(path).build();
         ShadowMediaPlayer.addMediaInfo(
                 DataSource.toDataSource(context, uri),
                 new ShadowMediaPlayer.MediaInfo(100, 10));
