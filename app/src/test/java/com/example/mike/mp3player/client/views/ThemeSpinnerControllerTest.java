@@ -18,7 +18,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
-import static com.example.mike.mp3player.client.views.ThemeSpinnerController.*;
+import static com.example.mike.mp3player.client.views.ThemeSpinnerController.attrs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -30,6 +30,7 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricTestRunner.class)
 public class ThemeSpinnerControllerTest {
 
+
     private ThemeSpinnerController themeSpinnerController;
     @Mock
     private MainActivity mainActivity = mock(MainActivity.class);
@@ -37,11 +38,10 @@ public class ThemeSpinnerControllerTest {
     private Spinner spinner;
     private Context context;
     @Before
-    public void setup() {
+    public void setup() throws IllegalAccessException {
         MockitoAnnotations.initMocks(this);
         this.context = InstrumentationRegistry.getInstrumentation().getContext();
-
-    }
+     }
     @Test
     public void onItemSelected() {
         this.themeSpinnerController = new ThemeSpinnerController(context, spinner, mainActivity);
@@ -58,7 +58,7 @@ public class ThemeSpinnerControllerTest {
     public void createThemeSpinnerControllerWithExistingThemes() {
         TypedArray themesArray = context.getResources().obtainTypedArray(R.array.themes);
         int res = themesArray.getResourceId(0, 0); // res if of the FIRST THEME
-        TypedArray themeNameArray = context.obtainStyledAttributes(res, attrs);
+        TypedArray themeNameArray = context.obtainStyledAttributes(res, ThemeSpinnerController.attrs);
         String expectedThemeName = themeNameArray.getString(0);
 
         // WHEN: the activities theme name is requested, return id of the FIRST theme
