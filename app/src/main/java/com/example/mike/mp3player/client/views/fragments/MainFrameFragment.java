@@ -105,7 +105,7 @@ public class MainFrameFragment extends Fragment {
 
         Spinner spinner = (Spinner) navigationView.getMenu().findItem(R.id.themes_menu_item).getActionView();
 
-        ThemeSpinnerController themeSpinnerController = new ThemeSpinnerController(getContext(), spinner, (MediaActivityCompat) getActivity());
+        ThemeSpinnerController themeSpinnerController = new ThemeSpinnerController(getContext(), spinner, getActivity());
     }
 
 

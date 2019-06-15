@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,7 +31,7 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
 
     private static final int[] attrs = {R.attr.themeName};
     private static final String LOG_TAG = "THM_SPNR_CTLR";
-    private final MediaActivityCompat activity;
+    private final Activity activity;
     private Context context;
     private Spinner spinner;
     private ArrayAdapter<String> adapter; // TODO: make a make from Theme name to resource
@@ -39,7 +40,7 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
     private long selectCount = 0;
     private String currentTheme;
 
-    public ThemeSpinnerController(@NonNull Context context, @NonNull Spinner spinner, @NonNull MediaActivityCompat activity) {
+    public ThemeSpinnerController(@NonNull Context context, @NonNull Spinner spinner, @NonNull Activity activity) {
         this.context = context;
         this.spinner = spinner;
         this.activity = activity;
@@ -88,8 +89,6 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
             Intent intent = new Intent(context, MainActivity.class);
             intent.putExtra(THEME, res);
             activity.startActivity(intent);
-        } else {
-            spinner.setSelection(adapter.getPosition(getCurrentTheme()));
         }
         selectCount++;
     }

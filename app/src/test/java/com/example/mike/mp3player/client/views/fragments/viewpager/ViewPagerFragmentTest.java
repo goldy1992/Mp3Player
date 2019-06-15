@@ -1,13 +1,12 @@
 package com.example.mike.mp3player.client.views.fragments.viewpager;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.fragment.app.testing.FragmentScenario;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
+import com.example.mike.mp3player.client.views.fragments.FragmentTestBase;
 import com.example.mike.mp3player.commons.library.Category;
 
 import org.junit.Before;
@@ -26,23 +25,20 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
-public class ViewPagerFragmentTest {
+public class ViewPagerFragmentTest extends FragmentTestBase<ViewPagerFragment> {
 
     @Mock
     private MediaBrowserAdapter mediaBrowserAdapter;
     @Mock
     private ViewPagerFragment.MyPagerAdapter myPagerAdapter;
 
-    private FragmentScenario<ViewPagerFragment> viewPagerFragmentScenario;
-    private Context context;
-
     @Before
     public void setup() {
+        super.setup(ViewPagerFragment.class);
         MockitoAnnotations.initMocks(this);
-        this.context = InstrumentationRegistry.getInstrumentation().getContext();
-        this.viewPagerFragmentScenario = FragmentScenario.launch(ViewPagerFragment.class);
-        FragmentScenario.FragmentAction<ViewPagerFragment> initFragment = (ViewPagerFragment fragment) -> callInitFragment(fragment);
-        viewPagerFragmentScenario.onFragment(initFragment);
+        this.fragmentScenario = FragmentScenario.launch(ViewPagerFragment.class);
+        FragmentScenario.FragmentAction<ViewPagerFragment> initFragment = this::callInitFragment;
+        fragmentScenario.onFragment(initFragment);
     }
 
     @Test
@@ -61,9 +57,8 @@ public class ViewPagerFragmentTest {
      */
     @Test
     public void testOnChildrenLoaded() {
-        FragmentScenario.FragmentAction<ViewPagerFragment> onLoadChildren =
-                (ViewPagerFragment fragment) -> onLoadChildren(fragment);
-        viewPagerFragmentScenario.onFragment(onLoadChildren);
+        FragmentScenario.FragmentAction<ViewPagerFragment> onLoadChildren = this::onLoadChildren;
+        fragmentScenario.onFragment(onLoadChildren);
     }
 
     private void callInitFragment(ViewPagerFragment fragment) {
