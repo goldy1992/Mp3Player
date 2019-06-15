@@ -11,6 +11,7 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.activities.MainActivity;
 import com.google.common.collect.BiMap;
 
+import org.apache.commons.lang.reflect.FieldUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
-import static com.example.mike.mp3player.client.views.ThemeSpinnerController.attrs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricTestRunner.class)
 public class ThemeSpinnerControllerTest {
 
-
+    private int[] attrs;
     private ThemeSpinnerController themeSpinnerController;
     @Mock
     private MainActivity mainActivity = mock(MainActivity.class);
@@ -41,6 +41,7 @@ public class ThemeSpinnerControllerTest {
     public void setup() throws IllegalAccessException {
         MockitoAnnotations.initMocks(this);
         this.context = InstrumentationRegistry.getInstrumentation().getContext();
+        attrs = (int[]) FieldUtils.readDeclaredStaticField(ThemeSpinnerController.class, "attrs", true);
      }
     @Test
     public void onItemSelected() {
@@ -58,7 +59,7 @@ public class ThemeSpinnerControllerTest {
     public void createThemeSpinnerControllerWithExistingThemes() {
         TypedArray themesArray = context.getResources().obtainTypedArray(R.array.themes);
         int res = themesArray.getResourceId(0, 0); // res if of the FIRST THEME
-        TypedArray themeNameArray = context.obtainStyledAttributes(res, ThemeSpinnerController.attrs);
+        TypedArray themeNameArray = context.obtainStyledAttributes(res, attrs);
         String expectedThemeName = themeNameArray.getString(0);
 
         // WHEN: the activities theme name is requested, return id of the FIRST theme

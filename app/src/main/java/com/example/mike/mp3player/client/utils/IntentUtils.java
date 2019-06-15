@@ -7,11 +7,8 @@ import android.support.v4.media.session.MediaSessionCompat;
 import androidx.annotation.NonNull;
 
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
-import com.example.mike.mp3player.commons.library.LibraryRequest;
 
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
-import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
 /**
  * Utility classes for making intent objects for other classes and services

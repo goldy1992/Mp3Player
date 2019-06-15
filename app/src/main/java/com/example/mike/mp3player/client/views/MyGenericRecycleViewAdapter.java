@@ -38,8 +38,8 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
     final int EMPTY_VIEW_TYPE = -1;
     public abstract Category getSubscriptionCategory();
     MediaBrowserAdapter mediaBrowserAdapter;
-    private List<MediaItem> items = new ArrayList<>();;
-    private List<MediaItem> filteredSongs = new ArrayList<>();;
+    private List<MediaItem> items = new ArrayList<>();
+    private List<MediaItem> filteredSongs = new ArrayList<>();
     MySongFilter filter;
     private boolean isInitialised = false;
     private final MediaItem EMPTY_LIST_ITEM = buildEmptyListMediaItem();

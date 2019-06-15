@@ -27,8 +27,8 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.example.mike.mp3player.commons.Constants.THEME;
 
 public class ThemeSpinnerController implements AdapterView.OnItemSelectedListener {
-    @VisibleForTesting
-    public static final int[] attrs = {R.attr.themeName};
+
+    private static final int[] attrs = {R.attr.themeName};
     private static final String LOG_TAG = "THM_SPNR_CTLR";
     private final MediaActivityCompat activity;
     private Context context;
