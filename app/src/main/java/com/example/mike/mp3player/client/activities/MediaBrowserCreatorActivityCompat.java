@@ -1,5 +1,7 @@
 package com.example.mike.mp3player.client.activities;
 
+import android.content.Context;
+import android.os.Looper;
 import android.util.Log;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
@@ -20,13 +22,22 @@ public abstract class MediaBrowserCreatorActivityCompat extends MediaActivityCom
     }
 
     void initMediaBrowserService() {
-        MediaBrowserAdapter mediaBrowserAdapter = new MediaBrowserAdapter(getApplicationContext(),
+        MediaBrowserAdapter mediaBrowserAdapter = makeMediaBrowserAdapter(getApplicationContext(),
                 this,
                 getWorker().getLooper(),
                 getSubscriptionType());
         setMediaBrowserAdapter(mediaBrowserAdapter);
         getMediaBrowserAdapter().init();
-        setMediaControllerAdapter(new MediaControllerAdapter(this, getWorker().getLooper()));
+        setMediaControllerAdapter(makeMediaControllerAdapter(this, getWorker().getLooper()));
+    }
+
+    public MediaBrowserAdapter makeMediaBrowserAdapter(Context context, MediaBrowserConnectorCallback callback,
+                                        Looper looper, SubscriptionType subscriptionType) {
+        return new MediaBrowserAdapter(context, callback, looper, subscriptionType);
+    }
+
+    public MediaControllerAdapter makeMediaControllerAdapter(Context context, Looper looper) {
+        return new MediaControllerAdapter(context,looper);
     }
 
     public final MediaBrowserAdapter getMediaBrowserAdapter() {

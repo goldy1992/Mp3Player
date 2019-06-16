@@ -1,53 +1,69 @@
 package com.example.mike.mp3player.client.views.fragments;
 
+import android.view.LayoutInflater;
+import android.view.View;
+
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.testing.FragmentScenario;
-import androidx.test.core.app.ActivityScenario;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
-import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.activities.MainActivity;
-import com.example.mike.mp3player.client.views.SongSearchActionListener;
+import com.example.mike.mp3player.client.views.fragments.viewpager.ViewPagerFragment;
+import com.google.android.material.navigation.NavigationView;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
+public class MainFrameFragmentTest {
 
+    private MainFrameFragment mainFrameFragment;
     @Mock
-    private SongSearchActionListener songSearchActionListener;
+    private DrawerLayout drawerLayout;
     @Mock
     private MediaBrowserAdapter mediaBrowserAdapter;
     @Mock
-    private MediaControllerAdapter mediaControllerAdapter;
+    private TitleBarFragment titleBarFragment;
+    @Mock
+    private PlayToolBarFragment playToolBarFragment;
+    @Mock
+    private ViewPagerFragment viewPagerFragment;
+    @Mock
+    private NavigationView navigationView;
+    @Mock
+    private FragmentManager childFragmentManager;
+
     @Before
-    public void setup() {
-
-        ActivityScenario<MainActivity> activityScenario = ActivityScenario.launch(MainActivity.class);
-      //  activityScenario.onActivity()
-        // TODO: fix test
-//        super.setup(MainFrameFragment.class);
+    public void setup() throws IllegalAccessException {
+//        FragmentActivity activity = Robolectric.buildActivity(FragmentActivity.class).get();
+//        activity.getSupportFragmentManager().beginTransaction().add(mainFrameFragment, "main_fragment").commit();
 //        MockitoAnnotations.initMocks(this);
-//        FragmentScenario.FragmentAction<MainFrameFragment> initFragment = this::callInitFragment;
-//        fragmentScenario.onFragment(initFragment);
-
+//        LayoutInflater layoutInflater = mock(LayoutInflater.class);
+//        this.mainFrameFragment.onCreateView(layoutInflater, null, null);
+//        FragmentManager fragmentManager = mainFrameFragment.getChildFragmentManager();
+//   //     FieldUtils.writeField(mainFrameFragment, "mChildFragmentManager", childFragmentManager, true);
+//        View view = mock(View.class);
+//        when(view.findViewById(R.id.drawer_layout)).thenReturn(drawerLayout);
+//        when(view.findViewById(R.id.nav_view)).thenReturn(navigationView);
+//        when(childFragmentManager.findFragmentById(R.id.playToolbarFragment)).thenReturn(playToolBarFragment);
+//        when(childFragmentManager.findFragmentById(R.id.viewPagerFragment)).thenReturn(viewPagerFragment);
+//        when(childFragmentManager.findFragmentById(R.id.titleBarFragment)).thenReturn(titleBarFragment);
+//        mainFrameFragment.onViewCreated(view, null);
     }
 
     @Test
     public void testEnable() {
         assertTrue(true);
-    }
-
-    private void callInitFragment(MainFrameFragment fragment) {
-        fragment.init(songSearchActionListener, mediaBrowserAdapter, mediaControllerAdapter);
     }
 
 }
