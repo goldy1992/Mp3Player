@@ -53,11 +53,6 @@ public class MainActivity extends MediaBrowserSubscriberActivityCompat {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean selected = rootFragment.getMainFrameFragment().onOptionsItemSelected(item);
         return selected || super.onOptionsItemSelected(item);

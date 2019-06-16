@@ -1,10 +1,13 @@
 package com.example.mike.mp3player.client.views.fragments;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.testing.FragmentScenario;
+import androidx.test.core.app.ActivityScenario;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.activities.MainActivity;
 import com.example.mike.mp3player.client.views.SongSearchActionListener;
 
 import org.junit.Before;
@@ -27,6 +30,9 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
     private MediaControllerAdapter mediaControllerAdapter;
     @Before
     public void setup() {
+
+        ActivityScenario<MainActivity> activityScenario = ActivityScenario.launch(MainActivity.class);
+      //  activityScenario.onActivity()
         // TODO: fix test
 //        super.setup(MainFrameFragment.class);
 //        MockitoAnnotations.initMocks(this);
