@@ -1,13 +1,8 @@
 package com.example.mike.mp3player.client.views.fragments;
 
-import android.view.LayoutInflater;
-import android.view.View;
-
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ViewPagerFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -16,14 +11,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
+/**
+ * Likely to replace this with MainFrameFragmentTest2 in the future
+ */
 @RunWith(RobolectricTestRunner.class)
 public class MainFrameFragmentTest {
 

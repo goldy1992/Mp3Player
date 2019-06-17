@@ -19,7 +19,6 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MyDrawerListener;
-import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.views.SongSearchActionListener;
 import com.example.mike.mp3player.client.views.ThemeSpinnerController;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ViewPagerFragment;
@@ -57,12 +56,14 @@ public class MainFrameFragment extends Fragment {
         drawerLayout.addDrawerListener(myDrawerListener);
 
 
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (getActivity() instanceof AppCompatActivity) {
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
 
-        activity.setSupportActionBar(titleBarFragment.getTitleToolbar());
-        ActionBar actionBar = activity.getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+            activity.setSupportActionBar(titleBarFragment.getTitleToolbar());
+            ActionBar actionBar = activity.getSupportActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        }
     }
 
     public void init(SongSearchActionListener songSearchActionListener, MediaBrowserAdapter mediaBrowserAdapter,
