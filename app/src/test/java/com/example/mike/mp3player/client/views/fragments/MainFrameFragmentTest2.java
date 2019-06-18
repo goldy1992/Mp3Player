@@ -8,7 +8,7 @@ import org.robolectric.RobolectricTestRunner;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
-public class MainFragmentTest2 extends FragmentTestBase<MainFrameFragment> {
+public class MainFrameFragmentTest2 extends FragmentTestBase<MainFrameFragment> {
 
     @Before
     public void setup() {
