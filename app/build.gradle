@@ -102,7 +102,7 @@ dependencies {
     def ANNOTATION_VERSION = '1.1.0-rc01'
     def APP_COMPAT_VERSION = '1.0.2'
     def DRAWER_LAYOUT_VERSION = '1.0.0'
-    def COMMONS_IO_VERSION = '2.6'
+    def COMMONS_IO_VERSION = '1.3.2'
     def COMMONS_LANG_VERSION = '3.9'
     def COMMONS_COLLECTIONS4_VERSION = '4.3'
     def MOCKITO_CORE_VERSION = '2.27.0'
@@ -127,7 +127,7 @@ dependencies {
     debugImplementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
     implementation group: 'androidx.drawerlayout', name: 'drawerlayout', version: DRAWER_LAYOUT_VERSION
     implementation group: 'androidx.core', name: 'core', version: CORE_VERSION
-    implementation group: 'commons-io', name: 'commons-io', version: COMMONS_IO_VERSION
+    implementation group: 'org.apache.commons', name: 'commons-io', version: COMMONS_IO_VERSION
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
     // https://mvnrepository.com/artifact/com.google.guava/guava

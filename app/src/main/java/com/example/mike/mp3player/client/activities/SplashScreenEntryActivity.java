@@ -111,7 +111,7 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
             try {
                 wait(ONE_SECOND);
             } catch (InterruptedException ex) {
-                String error = ExceptionUtils.getFullStackTrace(ex.fillInStackTrace());
+                String error = ExceptionUtils.getMessage(ex.fillInStackTrace());
                 Log.e(LOG_TAG, error);
                 Thread.currentThread().interrupt();
             }

@@ -64,7 +64,7 @@ public final class ComparatorUtils {
         try{
             c = Category.valueOf(categoryString);
         } catch (IllegalArgumentException | NullPointerException ex) {
-            Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex));
+            Log.e(LOG_TAG, ExceptionUtils.getMessage(ex));
         }
         return c;
     }

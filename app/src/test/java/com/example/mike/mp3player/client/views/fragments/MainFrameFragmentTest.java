@@ -115,12 +115,13 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
         MenuItem menuItem = mock(MenuItem.class);
         DrawerLayout drawerLayoutSpy = spy(fragment.getDrawerLayout());
         try {
+
             FieldUtils.writeField(fragment, "drawerLayout", drawerLayoutSpy, true);
             Class[] classes = {MenuItem.class};
-            Method m = MethodUtils.getMatchingAccessibleMethod(MainFrameFragment.class, "onNavigationItemSelected", classes);
+            Method m  = fragment.getClass().getMethod("onNavigationItemSelected", classes);
             m.setAccessible(true);
-            m.invoke(menuItem);
-        } catch (InvocationTargetException | IllegalAccessException ex) {
+            m.invoke(fragment, menuItem);
+        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException ex) {
             ExceptionUtils.readStackTrace(ex);
             fail();
         }

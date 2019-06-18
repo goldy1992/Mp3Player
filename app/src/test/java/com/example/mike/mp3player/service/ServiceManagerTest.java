@@ -74,7 +74,7 @@ public class ServiceManagerTest {
         }
         catch (IllegalAccessException ex) {
             StringBuilder sb = new StringBuilder();
-            sb.append(ExceptionUtils.getFullStackTrace(ex));
+            sb.append(ExceptionUtils.getMessage(ex));
             sb.append("\nFAILING TEST");
             Log.e(LOG_TAG, sb.toString());
             fail();

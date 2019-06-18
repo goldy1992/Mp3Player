@@ -8,6 +8,7 @@ import android.util.Log;
 
 import androidx.annotation.VisibleForTesting;
 
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -49,11 +50,9 @@ public class MediaPlayerPool {
             try {
                 toReturn = getQueue().poll(POLL_TIMEOUT, TimeUnit.MILLISECONDS);
                 addMediaPlayer();
-            } catch (InterruptedException ex) {
-                Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex));
+            } catch (InterruptedException | IllegalStateException ex) {
+                Log.e(LOG_TAG, ExceptionUtils.getMessage(ex));
                 Thread.currentThread().interrupt();
-            } catch (IllegalStateException ex) {
-                Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex));
             }
 
         }

@@ -29,8 +29,8 @@ public class OreoPlayerAdapterBase extends MediaPlayerAdapterBase {
                 Log.i(LOG_TAG, "repeating = " + isLooping());
                 getCurrentMediaPlayer().setPlaybackParams(playbackParams);
                 currentState = PlaybackStateCompat.STATE_PLAYING;
-            } catch (Exception e) {
-               Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(e));
+            } catch (Exception ex) {
+               Log.e(LOG_TAG, ExceptionUtils.getMessage(ex));
                return false;
             }
             return true;
