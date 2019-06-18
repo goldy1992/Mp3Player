@@ -14,7 +14,7 @@ import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragmen
 import com.example.mike.mp3player.client.views.fragments.MainFrameFragment;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
-import org.apache.commons.lang.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

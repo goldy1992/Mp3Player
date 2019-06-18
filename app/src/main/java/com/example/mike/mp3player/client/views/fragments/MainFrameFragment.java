@@ -102,9 +102,9 @@ public class MainFrameFragment extends Fragment {
     }
 
     private void initNavigationView() {
-        navigationView.setNavigationItemSelectedListener((MenuItem menuItem) -> onNavigationItemSelected(menuItem));
+        getNavigationView().setNavigationItemSelectedListener((MenuItem menuItem) -> onNavigationItemSelected(menuItem));
 
-        Spinner spinner = (Spinner) navigationView.getMenu().findItem(R.id.themes_menu_item).getActionView();
+        Spinner spinner = (Spinner) getNavigationView().getMenu().findItem(R.id.themes_menu_item).getActionView();
 
         ThemeSpinnerController themeSpinnerController = new ThemeSpinnerController(getContext(), spinner, getActivity());
     }
@@ -138,5 +138,9 @@ public class MainFrameFragment extends Fragment {
 
     public DrawerLayout getDrawerLayout() {
         return drawerLayout;
+    }
+
+    public NavigationView getNavigationView() {
+        return navigationView;
     }
 }

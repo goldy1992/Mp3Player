@@ -11,7 +11,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
 
-import org.apache.commons.lang.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -6,7 +6,7 @@ import android.media.PlaybackParams;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class OreoPlayerAdapterBase extends MediaPlayerAdapterBase {
 

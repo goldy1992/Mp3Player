@@ -14,7 +14,7 @@ import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
@@ -63,7 +63,7 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
         try {
             wait(WAIT_TIME);
         } catch (InterruptedException ex) {
-            Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex.fillInStackTrace()));
+            Log.e(LOG_TAG, ExceptionUtils.getMessage(ex.fillInStackTrace()));
             Thread.currentThread().interrupt();
         } finally {
             setSplashScreenFinishedDisplaying(true);
