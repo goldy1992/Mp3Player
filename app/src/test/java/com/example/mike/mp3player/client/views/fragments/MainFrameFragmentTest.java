@@ -32,7 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-public class MainFrameFragmentTest2 extends FragmentTestBase<MainFrameFragment> {
+public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
     @Mock
     private MediaBrowserAdapter mediaBrowserAdapter;
     @Mock
