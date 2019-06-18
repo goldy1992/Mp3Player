@@ -24,8 +24,7 @@ public class MainFrameFragmentTest {
     private MainFrameFragment mainFrameFragment;
     @Mock
     private DrawerLayout drawerLayout;
-    @Mock
-    private MediaBrowserAdapter mediaBrowserAdapter;
+
     @Mock
     private TitleBarFragment titleBarFragment;
     @Mock

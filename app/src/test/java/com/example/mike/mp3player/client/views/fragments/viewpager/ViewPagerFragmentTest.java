@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ public class ViewPagerFragmentTest extends FragmentTestBase<ViewPagerFragment> {
     @Before
     public void setup() {
         super.setup(ViewPagerFragment.class);
-        MockitoAnnotations.initMocks(this);
         this.fragmentScenario = FragmentScenario.launch(ViewPagerFragment.class);
         FragmentScenario.FragmentAction<ViewPagerFragment> initFragment = this::callInitFragment;
         fragmentScenario.onFragment(initFragment);

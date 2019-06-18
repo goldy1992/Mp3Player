@@ -53,7 +53,7 @@ public class MainFrameFragment extends Fragment {
         initNavigationView();
 
         MyDrawerListener myDrawerListener = new MyDrawerListener();
-        drawerLayout.addDrawerListener(myDrawerListener);
+        getDrawerLayout().addDrawerListener(myDrawerListener);
 
 
         if (getActivity() instanceof AppCompatActivity) {
@@ -78,7 +78,7 @@ public class MainFrameFragment extends Fragment {
         if (enabled) {
             switch (item.getItemId()) {
                 case android.R.id.home:
-                    drawerLayout.openDrawer(GravityCompat.START);
+                    getDrawerLayout().openDrawer(GravityCompat.START);
                     return true;
             }
             return super.onOptionsItemSelected(item);
@@ -94,7 +94,7 @@ public class MainFrameFragment extends Fragment {
         // set item as selected to persist highlight
         menuItem.setChecked(true);
         // close drawer when item is tapped
-        drawerLayout.closeDrawers();
+        getDrawerLayout().closeDrawers();
 
         // Add code here to update the UI based on the item selected
         // For example, swap UI fragments here
@@ -117,12 +117,12 @@ public class MainFrameFragment extends Fragment {
     public void enable() {
         this.enabled = true;
         getViewPagerFragment().enable();
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 
     public void disable() {
-        drawerLayout.closeDrawers();
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        getDrawerLayout().closeDrawers();
+        getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         getViewPagerFragment().disable();
         this.enabled = false;
 
@@ -134,5 +134,9 @@ public class MainFrameFragment extends Fragment {
 
     public ViewPagerFragment getViewPagerFragment() {
         return viewPagerFragment;
+    }
+
+    public DrawerLayout getDrawerLayout() {
+        return drawerLayout;
     }
 }

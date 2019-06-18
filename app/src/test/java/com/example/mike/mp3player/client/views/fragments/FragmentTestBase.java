@@ -11,12 +11,15 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.R;
 
+import org.mockito.MockitoAnnotations;
+
 public class FragmentTestBase<F extends Fragment> {
 
     protected Context context;
     protected FragmentScenario<F> fragmentScenario;
 
     protected void setup(Class<F> clazz) {
+        MockitoAnnotations.initMocks(this);
         this.context = InstrumentationRegistry.getInstrumentation().getContext();
         FragmentFactory fragmentFactory = new FragmentFactory();
         Bundle args = new Bundle();
