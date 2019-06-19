@@ -11,9 +11,9 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.SongSearchActionListener;
+import com.example.mike.mp3player.client.views.fragments.viewpager.ViewPagerFragment;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.commons.lang3.reflect.MethodUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -74,6 +75,17 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
         fragmentScenario.onFragment(navigationViewSelected);
     }
 
+    @Test
+    public void testEnable() {
+        FragmentScenario.FragmentAction<MainFrameFragment> enable = this::enable;
+        fragmentScenario.onFragment(enable);
+    }
+
+    @Test
+    public void testDisable() {
+        FragmentScenario.FragmentAction<MainFrameFragment> disable = this::disable;
+        fragmentScenario.onFragment(disable);
+    }
     private void onOptionsItemSelectedNonEnabledFragment(MainFrameFragment fragment) {
         try {
             FieldUtils.writeField(fragment, "enabled", false, true);
@@ -129,5 +141,38 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
         }
         verify(menuItem, times(1)).setChecked(true);
         verify(drawerLayoutSpy, times(1)).closeDrawers();
+    }
+
+    private void enable(MainFrameFragment fragment) {
+        try {
+            DrawerLayout drawerLayoutSpy = spy(fragment.getDrawerLayout());
+            ViewPagerFragment viewPagerFragmentSpy = spy(fragment.getViewPagerFragment());
+            FieldUtils.writeField(fragment, "drawerLayout", drawerLayoutSpy, true);
+            FieldUtils.writeField(fragment, "viewPagerFragment", viewPagerFragmentSpy, true);
+            fragment.enable();
+            boolean enabled = (boolean) FieldUtils.readField(fragment, "enabled", true);
+            assertTrue(enabled);
+            verify(viewPagerFragmentSpy, times(1)).enable();
+            verify(drawerLayoutSpy, times(1)).setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        } catch (IllegalAccessException ex) {
+            Log.e(LOG_TAG, ExceptionUtils.readStackTrace(ex));
+            fail();
+        }
+    }
+
+    private void disable(MainFrameFragment fragment) {
+        try {
+            DrawerLayout drawerLayoutSpy = spy(fragment.getDrawerLayout());
+            FieldUtils.writeField(fragment, "drawerLayout", drawerLayoutSpy, true);
+            fragment.disable();
+            boolean enabled = (boolean) FieldUtils.readField(fragment, "enabled", true);
+            assertFalse(enabled);
+            verify(drawerLayoutSpy, times(1)).closeDrawers();
+            verify(drawerLayoutSpy, times(1)).setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
+        } catch (IllegalAccessException ex) {
+            Log.e(LOG_TAG, ExceptionUtils.readStackTrace(ex));
+            fail();
+        }
     }
 }

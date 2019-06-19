@@ -55,7 +55,7 @@ public class MainFrameFragment extends Fragment {
         MyDrawerListener myDrawerListener = new MyDrawerListener();
         getDrawerLayout().addDrawerListener(myDrawerListener);
 
-
+        /* TODO: consider different implementation of this functionalirt */
         if (getActivity() instanceof AppCompatActivity) {
             AppCompatActivity activity = (AppCompatActivity) getActivity();
 
@@ -109,10 +109,6 @@ public class MainFrameFragment extends Fragment {
         ThemeSpinnerController themeSpinnerController = new ThemeSpinnerController(getContext(), spinner, getActivity());
     }
 
-
-    public TitleBarFragment getTitleBarFragment() {
-        return titleBarFragment;
-    }
 
     public void enable() {
         this.enabled = true;
