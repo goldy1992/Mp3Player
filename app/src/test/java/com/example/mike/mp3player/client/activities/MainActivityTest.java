@@ -58,19 +58,6 @@ public class MainActivityTest {
         this.activityController.create().start().resume();
     }
 
-    @Test
-    public void testGetSubscriptionType() {
-        SubscriptionType expectedSubscriptionType = SubscriptionType.MEDIA_ID;
-        SubscriptionType actualSubscriptionType = mainActivity.getSubscriptionType();
-        assertEquals(expectedSubscriptionType, actualSubscriptionType);
-    }
-
-    @Test
-    public void testCreateOptionsMenu() {
-        Menu menu = mock(Menu.class);
-        boolean result = this.mainActivity.onCreateOptionsMenu(menu);
-        assertFalse(result);
-    }
 
     @Test
     public void testInitialiseView() throws IllegalAccessException {
