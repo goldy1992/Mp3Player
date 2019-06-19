@@ -38,7 +38,8 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
         MyViewHolder vh = super.onCreateViewHolder(parent, viewType);
         if (vh == null) {
             // create a new views
-            GridLayout t = (GridLayout) LayoutInflater.from(parent.getContext())
+            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+            GridLayout t = (GridLayout) layoutInflater
                     .inflate(R.layout.song_item_menu, parent, false);
 
             vh = new MyViewHolder(t);
@@ -49,6 +50,7 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     @Override
     public void onBindViewHolder( @NonNull MyViewHolder holder, int position) {
         if (!isEmptyRecycleView()) {
+            // TODO: look into the use of holder.getAdapterPosition rather than the position parameter.
             //Log.i(LOG_TAG, "position: " + position);
             MediaBrowserCompat.MediaItem song = getFilteredSongs().get(holder.getAdapterPosition());
             // - get element from your dataset at this position

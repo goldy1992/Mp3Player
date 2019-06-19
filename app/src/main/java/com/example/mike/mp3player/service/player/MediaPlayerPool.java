@@ -6,47 +6,78 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import androidx.annotation.VisibleForTesting;
+
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public class MediaPlayerPool {
 
     private static final String WORKER_ID = "M_PLYR_POOL_WRKR";
     private static final String LOG_TAG = "MDIA_PLYR_POOL";
-    private final int QUEUE_CAPACITY = 4;
+    private static final long POLL_TIMEOUT = 1000L;
+    public static final int DEFAULT_QUEUE_CAPACITY = 4;
     private ArrayBlockingQueue<MediaPlayer> queue;
     private Uri currentUri;
     private final Context context;
+    private final int queueCapacity;
 
     public MediaPlayerPool(Context context) {
+        this(context, DEFAULT_QUEUE_CAPACITY);
+    }
+
+    public MediaPlayerPool(Context context, final int queueCapacity) {
         this.context = context;
-        queue = new ArrayBlockingQueue<>(QUEUE_CAPACITY, true);
+        this.queueCapacity = queueCapacity;
+        setQueue(new ArrayBlockingQueue<>(queueCapacity, true));
     }
 
     public void reset(Uri uri) {
         Log.i(LOG_TAG, "hit reset");
         this.currentUri = uri;
-        queue.clear();
-        for (int i=1; i <= QUEUE_CAPACITY; i++) {
-            AsyncTask.execute(() -> this.addMediaPlayer());
+        getQueue().clear();
+        for (int i = 1; i <= queueCapacity; i++) {
+            AsyncTask.execute(this::addMediaPlayer);
         }
     }
 
     public MediaPlayer take() {
         MediaPlayer toReturn = null;
-        try {
-            toReturn = queue.take();
-        } catch (InterruptedException ex) {
-            Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex));
-            Thread.currentThread().interrupt();
+        if (isSet()) {
+            try {
+                toReturn = getQueue().poll(POLL_TIMEOUT, TimeUnit.MILLISECONDS);
+                addMediaPlayer();
+            } catch (InterruptedException | IllegalStateException ex) {
+                Log.e(LOG_TAG, ExceptionUtils.getMessage(ex));
+                Thread.currentThread().interrupt();
+            }
+
         }
-        addMediaPlayer();
         return toReturn;
     }
 
     private void addMediaPlayer() {
-        MediaPlayer mediaPlayer = MediaPlayer.create(context, currentUri);
-        queue.add(mediaPlayer);
+        if (isSet()) {
+            MediaPlayer mediaPlayer = MediaPlayer.create(context, currentUri);
+            if (!getQueue().add(mediaPlayer)) {
+                Log.e(LOG_TAG, "failed to add mediaplayer: " + mediaPlayer + " to the queue");
+            }
+        }
+    }
+
+    public boolean isSet() {
+        return currentUri != null;
+    }
+
+    @VisibleForTesting
+    public ArrayBlockingQueue<MediaPlayer> getQueue() {
+        return queue;
+    }
+
+    public void setQueue(ArrayBlockingQueue<MediaPlayer> queue) {
+        this.queue = queue;
     }
 }

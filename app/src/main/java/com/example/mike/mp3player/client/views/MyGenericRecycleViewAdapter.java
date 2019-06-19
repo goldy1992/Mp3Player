@@ -10,6 +10,7 @@ import android.widget.Filterable;
 import android.widget.GridLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.R;
@@ -19,7 +20,7 @@ import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +38,8 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
     final int EMPTY_VIEW_TYPE = -1;
     public abstract Category getSubscriptionCategory();
     MediaBrowserAdapter mediaBrowserAdapter;
-    protected List<MediaItem> items = new ArrayList<>();;
-    protected List<MediaItem> filteredSongs = new ArrayList<>();;
+    private List<MediaItem> items = new ArrayList<>();
+    private List<MediaItem> filteredSongs = new ArrayList<>();
     MySongFilter filter;
     private boolean isInitialised = false;
     private final MediaItem EMPTY_LIST_ITEM = buildEmptyListMediaItem();
@@ -69,7 +70,7 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
 
         if (!children.isEmpty()) {
             this.filteredSongs.addAll(children);
-            this.items.addAll(children);
+            this.getItems().addAll(children);
             notifyDataSetChanged();
         }
         this.isInitialised = true;
@@ -94,7 +95,7 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
 
     private void addNoChildrenFoundItem() {
         filteredSongs.add(EMPTY_LIST_ITEM);
-        items.add(EMPTY_LIST_ITEM);
+        getItems().add(EMPTY_LIST_ITEM);
         notifyDataSetChanged();
     }
 
@@ -114,7 +115,17 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
     }
 
     protected boolean isEmptyRecycleView() {
-        return items.isEmpty() || items.get(FIRST).equals(EMPTY_LIST_ITEM);
+        return getItems().isEmpty() || getItems().get(FIRST).equals(EMPTY_LIST_ITEM);
+    }
+
+    @VisibleForTesting
+    public void setFilteredSongs(List<MediaItem> filteredSongs) {
+        this.filteredSongs = filteredSongs;
+    }
+
+    @VisibleForTesting
+    public void setItems(List<MediaItem> items) {
+        this.items = items;
     }
 
     protected class MySongFilter extends Filter {
@@ -140,7 +151,7 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
         @Override
         @SuppressWarnings("unchecked")
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            filteredSongs = (List<MediaItem>) results.values;
+            setFilteredSongs((List<MediaItem>) results.values);
             notifyDataSetChanged();
         }
 

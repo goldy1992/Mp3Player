@@ -14,7 +14,6 @@ import com.example.mike.mp3player.client.callbacks.subscription.MediaIdSubscript
 import com.example.mike.mp3player.client.callbacks.subscription.NotifyAllSubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryConstructor;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 
@@ -64,25 +63,6 @@ public class MediaBrowserAdapter {
         Bundle options = new Bundle();
         options.putParcelable(REQUEST_OBJECT, libraryRequest);
         getmMediaBrowser().subscribe(libraryRequest.getId(), options, getMySubscriptionCallback());
-    }
-    /**
-     * We should subscribe to MediaItems using LibraryIds in order to avoid having to parse String ids.
-     * @param category category
-     */
-    @Deprecated
-    public void subscribe(Category category) {
-        this.subscribe(category, null);
-    }
-
-    /**
-     * we should subscribe to MediaItems using LibraryIds in order to avoid having to parse String ids.
-     * @param category category
-     * @param id id
-     */
-    @Deprecated
-    public void subscribe(Category category, String id) {
-        String token = LibraryConstructor.buildId(category, id);
-        getmMediaBrowser().subscribe(token, getMySubscriptionCallback());
     }
 
     public MediaSessionCompat.Token getMediaSessionToken() {

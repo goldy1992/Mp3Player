@@ -83,7 +83,12 @@ public class MediaLibrary {
         if (Category.isCategory(libraryRequest.getId())) {
             return getCategories().get(libraryRequest.getCategory()).getKeys();
         } else {
-            return getCategories().get(libraryRequest.getCategory()).getChildren(libraryRequest);
+            LibraryCollection libraryCollection = getCategories().get(libraryRequest.getCategory());
+            if (null != libraryCollection) {
+                return libraryCollection.getChildren(libraryRequest);
+            }
+            return null;
+
         }
     }
 

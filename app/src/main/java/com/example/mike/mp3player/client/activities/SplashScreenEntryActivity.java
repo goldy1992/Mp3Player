@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
@@ -13,7 +14,7 @@ import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
@@ -28,7 +29,8 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
     private volatile boolean splashScreenFinishedDisplaying = false;
     private volatile boolean permissionGranted = false;
     private Intent mainActivityIntent;
-    private static final int APP_TERMINATED = 0x78;
+    public static final int APP_TERMINATED = 0x78;
+    private Thread thread = new Thread(() -> init());
 
     @Override
     SubscriptionType getSubscriptionType() {
@@ -46,7 +48,6 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
         super.onCreate(savedInstanceState);
         mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
         initialiseView(R.layout.splash_screen);
-        Thread thread = new Thread(() -> init());
         thread.start();
 
     }
@@ -62,10 +63,10 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
         try {
             wait(WAIT_TIME);
         } catch (InterruptedException ex) {
-            Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex.fillInStackTrace()));
+            Log.e(LOG_TAG, ExceptionUtils.getMessage(ex.fillInStackTrace()));
             Thread.currentThread().interrupt();
         } finally {
-            splashScreenFinishedDisplaying = true;
+            setSplashScreenFinishedDisplaying(true);
             notifyAll();
         }
     }
@@ -106,11 +107,11 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
 
     private synchronized void onProcessingComplete() {
         Log.i(LOG_TAG, "processing complete");
-        while (!splashScreenFinishedDisplaying || !permissionGranted) {
+        while (!isSplashScreenFinishedDisplaying() || !isPermissionGranted()) {
             try {
                 wait(ONE_SECOND);
             } catch (InterruptedException ex) {
-                String error = ExceptionUtils.getFullStackTrace(ex.fillInStackTrace());
+                String error = ExceptionUtils.getMessage(ex.fillInStackTrace());
                 Log.e(LOG_TAG, error);
                 Thread.currentThread().interrupt();
             }
@@ -127,7 +128,9 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == APP_TERMINATED) {
-            getMediaBrowserAdapter().disconnect();
+            if (getMediaBrowserAdapter() != null) {
+                getMediaBrowserAdapter().disconnect();
+            }
             finish();
         }
     }
@@ -135,7 +138,7 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
     @Override
     public void onPermissionGranted() {
         Log.i(LOG_TAG, "permission granted");
-        permissionGranted = true;
+        setPermissionGranted(true);
         Runnable r = new Thread(() -> initMediaBrowserService());
         runOnUiThread(r);
     }
@@ -146,5 +149,28 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
         permissionsProcessor.requestPermission(WRITE_EXTERNAL_STORAGE);
         Thread splashScreenWaitThread = new Thread(() -> splashScreenRun());
         splashScreenWaitThread.start();
+    }
+
+    @VisibleForTesting
+    public Thread getThread() {
+        return thread;
+    }
+
+    @VisibleForTesting
+    public boolean isSplashScreenFinishedDisplaying() {
+        return splashScreenFinishedDisplaying;
+    }
+
+    @VisibleForTesting
+    public boolean isPermissionGranted() {
+        return permissionGranted;
+    }
+    @VisibleForTesting
+    public void setSplashScreenFinishedDisplaying(boolean splashScreenFinishedDisplaying) {
+        this.splashScreenFinishedDisplaying = splashScreenFinishedDisplaying;
+    }
+    @VisibleForTesting
+    public void setPermissionGranted(boolean permissionGranted) {
+        this.permissionGranted = permissionGranted;
     }
 }

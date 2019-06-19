@@ -19,7 +19,6 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MyDrawerListener;
-import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.views.SongSearchActionListener;
 import com.example.mike.mp3player.client.views.ThemeSpinnerController;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ViewPagerFragment;
@@ -54,15 +53,17 @@ public class MainFrameFragment extends Fragment {
         initNavigationView();
 
         MyDrawerListener myDrawerListener = new MyDrawerListener();
-        drawerLayout.addDrawerListener(myDrawerListener);
+        getDrawerLayout().addDrawerListener(myDrawerListener);
 
+        /* TODO: consider different implementation of this functionalirt */
+        if (getActivity() instanceof AppCompatActivity) {
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
 
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-
-        activity.setSupportActionBar(titleBarFragment.getTitleToolbar());
-        ActionBar actionBar = activity.getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+            activity.setSupportActionBar(titleBarFragment.getTitleToolbar());
+            ActionBar actionBar = activity.getSupportActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        }
     }
 
     public void init(SongSearchActionListener songSearchActionListener, MediaBrowserAdapter mediaBrowserAdapter,
@@ -77,7 +78,7 @@ public class MainFrameFragment extends Fragment {
         if (enabled) {
             switch (item.getItemId()) {
                 case android.R.id.home:
-                    drawerLayout.openDrawer(GravityCompat.START);
+                    getDrawerLayout().openDrawer(GravityCompat.START);
                     return true;
             }
             return super.onOptionsItemSelected(item);
@@ -93,7 +94,7 @@ public class MainFrameFragment extends Fragment {
         // set item as selected to persist highlight
         menuItem.setChecked(true);
         // close drawer when item is tapped
-        drawerLayout.closeDrawers();
+        getDrawerLayout().closeDrawers();
 
         // Add code here to update the UI based on the item selected
         // For example, swap UI fragments here
@@ -101,27 +102,23 @@ public class MainFrameFragment extends Fragment {
     }
 
     private void initNavigationView() {
-        navigationView.setNavigationItemSelectedListener((MenuItem menuItem) -> onNavigationItemSelected(menuItem));
+        getNavigationView().setNavigationItemSelectedListener((MenuItem menuItem) -> onNavigationItemSelected(menuItem));
 
-        Spinner spinner = (Spinner) navigationView.getMenu().findItem(R.id.themes_menu_item).getActionView();
+        Spinner spinner = (Spinner) getNavigationView().getMenu().findItem(R.id.themes_menu_item).getActionView();
 
-        ThemeSpinnerController themeSpinnerController = new ThemeSpinnerController(getContext(), spinner, (MediaActivityCompat) getActivity());
+        ThemeSpinnerController themeSpinnerController = new ThemeSpinnerController(getContext(), spinner, getActivity());
     }
 
-
-    public TitleBarFragment getTitleBarFragment() {
-        return titleBarFragment;
-    }
 
     public void enable() {
         this.enabled = true;
         getViewPagerFragment().enable();
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 
     public void disable() {
-        drawerLayout.closeDrawers();
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        getDrawerLayout().closeDrawers();
+        getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         getViewPagerFragment().disable();
         this.enabled = false;
 
@@ -133,5 +130,13 @@ public class MainFrameFragment extends Fragment {
 
     public ViewPagerFragment getViewPagerFragment() {
         return viewPagerFragment;
+    }
+
+    public DrawerLayout getDrawerLayout() {
+        return drawerLayout;
+    }
+
+    public NavigationView getNavigationView() {
+        return navigationView;
     }
 }

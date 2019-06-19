@@ -45,7 +45,6 @@ public class MyRecyclerView extends RecyclerView {
     public void initRecyclerView(LibraryObject parent, MediaBrowserAdapter mediaBrowserAdapter,
                                 Category category, MyGenericItemTouchListener.ItemSelectedListener itemSelectedListener) {
         setAdapterAndListener(parent, mediaBrowserAdapter, category, itemSelectedListener);
-        this.setAdapter(myViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         this.setLayoutManager(linearLayoutManager);
         this.addOnItemTouchListener(this.getMyGenericItemTouchListener());
@@ -83,6 +82,7 @@ public class MyRecyclerView extends RecyclerView {
                 break;
             default: return;
         }
+        this.setAdapter(myViewAdapter);
     }
 
 }
