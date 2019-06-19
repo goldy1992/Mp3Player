@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views.fragments;
 
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.core.view.GravityCompat;
@@ -35,6 +36,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
+    private static final String LOG_TAG = "MAIN_FRM_FRGMT_TST";
     @Mock
     private MediaBrowserAdapter mediaBrowserAdapter;
     @Mock
@@ -118,11 +120,11 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
 
             FieldUtils.writeField(fragment, "drawerLayout", drawerLayoutSpy, true);
             Class[] classes = {MenuItem.class};
-            Method m  = fragment.getClass().getMethod("onNavigationItemSelected", classes);
+            Method m  = fragment.getClass().getDeclaredMethod("onNavigationItemSelected", classes);
             m.setAccessible(true);
             m.invoke(fragment, menuItem);
         } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException ex) {
-            ExceptionUtils.readStackTrace(ex);
+            Log.e(LOG_TAG, ExceptionUtils.readStackTrace(ex));
             fail();
         }
         verify(menuItem, times(1)).setChecked(true);
