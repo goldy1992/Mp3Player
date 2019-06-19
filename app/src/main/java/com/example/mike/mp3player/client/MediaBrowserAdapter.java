@@ -17,6 +17,8 @@ import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 
+import javax.inject.Inject;
+
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
 public class MediaBrowserAdapter {
@@ -29,6 +31,7 @@ public class MediaBrowserAdapter {
     private final MediaBrowserConnectorCallback mediaBrowserConnectorCallback;
     private Looper looper;
 
+    @Inject
     public MediaBrowserAdapter(Context context, MediaBrowserConnectorCallback mediaBrowserConnectorCallback, Looper looper, SubscriptionType subscriptionType) {
         this.context = context;
         this.mediaBrowserConnectorCallback = mediaBrowserConnectorCallback;

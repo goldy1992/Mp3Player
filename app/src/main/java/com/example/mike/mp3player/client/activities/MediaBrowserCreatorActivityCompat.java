@@ -9,6 +9,8 @@ import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 
+import javax.inject.Inject;
+
 
 public abstract class MediaBrowserCreatorActivityCompat extends MediaActivityCompat implements MediaBrowserConnectorCallback {
 
@@ -44,6 +46,7 @@ public abstract class MediaBrowserCreatorActivityCompat extends MediaActivityCom
         return mediaBrowserAdapter;
     }
 
+    @Inject
     public final void setMediaBrowserAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
         this.mediaBrowserAdapter = mediaBrowserAdapter;
     }

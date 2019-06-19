@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.activities;
 
 
-import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.fragment.app.FragmentManager;
@@ -9,7 +8,6 @@ import androidx.fragment.app.FragmentManager;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;
 import com.example.mike.mp3player.client.views.fragments.MainFrameFragment;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
@@ -24,8 +22,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;

@@ -1,7 +1,8 @@
-package com.example.mike.mp3player.service.library;
+package com.example.mike.mp3player.dagger.modules;
 
 import android.content.Context;
 
+import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
 import javax.inject.Singleton;
 

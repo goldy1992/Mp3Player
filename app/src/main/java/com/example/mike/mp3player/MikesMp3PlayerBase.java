@@ -3,10 +3,10 @@ package com.example.mike.mp3player;
 import android.app.Application;
 
 import com.example.mike.mp3player.service.library.DaggerMediaLibraryComponent;
-import com.example.mike.mp3player.service.library.MediaLibraryComponent;
-import com.example.mike.mp3player.service.library.MediaLibraryModule;
+import com.example.mike.mp3player.dagger.components.MediaLibraryComponent;
+import com.example.mike.mp3player.dagger.modules.MediaLibraryModule;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
-import com.example.mike.mp3player.service.library.mediaretriever.MediaRetrieverModule;
+import com.example.mike.mp3player.dagger.modules.MediaRetrieverModule;
 
 public class MikesMp3PlayerBase extends Application {
 

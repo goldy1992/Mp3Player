@@ -1,8 +1,10 @@
-package com.example.mike.mp3player.service.library;
+package com.example.mike.mp3player.dagger.components;
 
+import com.example.mike.mp3player.dagger.modules.MediaLibraryModule;
 import com.example.mike.mp3player.service.MediaPlaybackService;
+import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
-import com.example.mike.mp3player.service.library.mediaretriever.MediaRetrieverModule;
+import com.example.mike.mp3player.dagger.modules.MediaRetrieverModule;
 
 import javax.inject.Singleton;
 
