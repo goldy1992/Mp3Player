@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.example.mike.mp3player.commons.library.Category;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.Comparator;
 
@@ -64,7 +64,7 @@ public final class ComparatorUtils {
         try{
             c = Category.valueOf(categoryString);
         } catch (IllegalArgumentException | NullPointerException ex) {
-            Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(ex));
+            Log.e(LOG_TAG, ExceptionUtils.getMessage(ex));
         }
         return c;
     }

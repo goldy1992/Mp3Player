@@ -1,19 +1,18 @@
 package com.example.mike.mp3player.service;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 
 import androidx.media.MediaBrowserServiceCompat;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.UnitTestMikesMp3Player;
-import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
-import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,9 +30,9 @@ import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(application = UnitTestMikesMp3Player.class)
@@ -97,6 +96,14 @@ public class MediaPlaybackServiceTest {
         extras.putParcelable(REQUEST_OBJECT, libraryRequest);
         mediaPlaybackService.onLoadChildren(parentId, result, extras);
         verify(result, times(1)).sendResult(any(ArrayList.class));
+    }
+
+    @Test
+    public void testOnDestroy() throws IllegalAccessException {
+        MediaSessionCompat mediaSessionSpy = spy(mediaPlaybackService.getMediaSession());
+        FieldUtils.writeField(mediaPlaybackService, "mediaSession", mediaSessionSpy, true);
+        mediaPlaybackService.onDestroy();
+        verify(mediaSessionSpy, times(1)).release();
     }
 
 }

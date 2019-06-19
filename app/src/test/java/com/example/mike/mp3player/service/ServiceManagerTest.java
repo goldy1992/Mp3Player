@@ -8,8 +8,8 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.service.session.MediaSessionAdapter;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.commons.lang.reflect.FieldUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,7 +74,7 @@ public class ServiceManagerTest {
         }
         catch (IllegalAccessException ex) {
             StringBuilder sb = new StringBuilder();
-            sb.append(ExceptionUtils.getFullStackTrace(ex));
+            sb.append(ExceptionUtils.getMessage(ex));
             sb.append("\nFAILING TEST");
             Log.e(LOG_TAG, sb.toString());
             fail();

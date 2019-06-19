@@ -6,7 +6,7 @@ import android.media.PlaybackParams;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class OreoPlayerAdapterBase extends MediaPlayerAdapterBase {
 
@@ -29,8 +29,8 @@ public class OreoPlayerAdapterBase extends MediaPlayerAdapterBase {
                 Log.i(LOG_TAG, "repeating = " + isLooping());
                 getCurrentMediaPlayer().setPlaybackParams(playbackParams);
                 currentState = PlaybackStateCompat.STATE_PLAYING;
-            } catch (Exception e) {
-               Log.e(LOG_TAG, ExceptionUtils.getFullStackTrace(e));
+            } catch (Exception ex) {
+               Log.e(LOG_TAG, ExceptionUtils.getMessage(ex));
                return false;
             }
             return true;

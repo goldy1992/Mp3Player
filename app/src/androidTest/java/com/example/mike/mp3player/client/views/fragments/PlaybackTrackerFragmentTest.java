@@ -46,7 +46,7 @@ public class PlaybackTrackerFragmentTest {
         FragmentFactory fragmentFactory = new FragmentFactory();
         fragmentScenario = FragmentScenario.launchInContainer(PlaybackTrackerFragment.class, null, R.style.AppTheme_NoActionBar, fragmentFactory);
         fragmentScenario.onFragment(fragment -> initFragment(fragment));
-        onMetadataChangedAction = (PlaybackTrackerFragment fragment) -> changeMetaData(fragment);
+        onMetadataChangedAction = this::changeMetaData;
         onPlaybackStateChangedAction = (PlaybackTrackerFragment fragment) -> changePlaybackState(fragment);
     }
 

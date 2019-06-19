@@ -1,4 +1,4 @@
-package com.example.mike.mp3player;
+package com.example.mike.mp3player.shadows;
 
 import android.content.Context;
 import android.media.MediaPlayer;

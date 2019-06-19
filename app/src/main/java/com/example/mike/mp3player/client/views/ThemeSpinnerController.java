@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.activities.MainActivity;
@@ -26,8 +28,10 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.example.mike.mp3player.commons.Constants.THEME;
 
 public class ThemeSpinnerController implements AdapterView.OnItemSelectedListener {
+
+    private static final int[] attrs = {R.attr.themeName};
     private static final String LOG_TAG = "THM_SPNR_CTLR";
-    private final MediaActivityCompat activity;
+    private final Activity activity;
     private Context context;
     private Spinner spinner;
     private ArrayAdapter<String> adapter; // TODO: make a make from Theme name to resource
@@ -36,7 +40,7 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
     private long selectCount = 0;
     private String currentTheme;
 
-    public ThemeSpinnerController(@NonNull Context context, @NonNull Spinner spinner, @NonNull MediaActivityCompat activity) {
+    public ThemeSpinnerController(@NonNull Context context, @NonNull Spinner spinner, @NonNull Activity activity) {
         this.context = context;
         this.spinner = spinner;
         this.activity = activity;
@@ -47,29 +51,28 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
         this.adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-        int[] attrs = {R.attr.themeName};
-        TypedArray typedArray = context.getResources().obtainTypedArray(R.array.themes);
+        TypedArray themeArray = context.getResources().obtainTypedArray(R.array.themes);
         this.themeResIds = new ArrayList<>();
         this.themeNameToResMap = HashBiMap.create();
 
-        if (typedArray != null && typedArray.length() > 0) {
-            int numberOfResources = typedArray.length();
-            for (int i = 0; i < numberOfResources; i++) {
-                int res = typedArray.getResourceId(i, 0);
+        if (themeArray != null && themeArray.length() > 0) {
+            int numberOfResources = themeArray.length();
+            for (int i = 0; i < numberOfResources; i++) { // for each theme in the theme array
+                int res = themeArray.getResourceId(i, 0);
                 themeResIds.add(res);
-                TypedArray attrArray = context.obtainStyledAttributes(res, attrs);
-                String themeName = attrArray.getString(0);
+                TypedArray themeNameArray = context.obtainStyledAttributes(res, attrs); // get the theme name GIVEN the themes res if.
+                String themeName = themeNameArray.getString(0);
                 adapter.add(themeName);
-                themeNameToResMap.put(themeName, res);
-                recycleTypedArray(attrArray);
+                getThemeNameToResMap().put(themeName, res);
+                recycleTypedArray(themeNameArray);
             }
         }
 
-        recycleTypedArray(typedArray);
+        recycleTypedArray(themeArray);
         int currentThemeId = getCurrentThemeId();
         if (currentThemeId != -1) {
-            currentTheme = themeNameToResMap.inverse().get(currentThemeId);
-            int position = adapter.getPosition(currentTheme);
+            currentTheme = getThemeNameToResMap().inverse().get(currentThemeId);
+            int position = adapter.getPosition(getCurrentTheme());
             spinner.setSelection(position);
         }
     }
@@ -78,7 +81,7 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         int res = themeResIds.get(position);
-        Log.d(LOG_TAG, "selected " + themeNameToResMap.get(res));
+        Log.d(LOG_TAG, "selected " + getThemeNameToResMap().get(res));
         if (selectCount >= 1) {
             Log.d(LOG_TAG, "select count > 1");
             setThemePreference(res);
@@ -86,15 +89,12 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
             Intent intent = new Intent(context, MainActivity.class);
             intent.putExtra(THEME, res);
             activity.startActivity(intent);
-        } else {
-            spinner.setSelection(adapter.getPosition(currentTheme));
         }
         selectCount++;
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     /**
@@ -103,14 +103,16 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
      */
     private int getCurrentThemeId() {
         Resources.Theme activityTheme = activity.getTheme();
-        int[] attrs = {R.attr.themeName};
-        TypedArray typedArray = activityTheme.obtainStyledAttributes(attrs);
-        if (null != typedArray && typedArray.length() > 0) {
-            String themeName = typedArray.getString(0);
-            typedArray.recycle();
-            Log.d(LOG_TAG, "current theme is: " + themeName);
-            Integer result = themeNameToResMap.get(themeName);
-            return result == null ? -1  : result;
+        if (null != activityTheme) {
+
+            TypedArray themeNameArray = activityTheme.obtainStyledAttributes(attrs);
+            if (null != themeNameArray && themeNameArray.length() > 0) {
+                String themeName = themeNameArray.getString(0);
+                themeNameArray.recycle();
+                Log.d(LOG_TAG, "current theme is: " + themeName);
+                Integer result = getThemeNameToResMap().get(themeName);
+                return result == null ? -1 : result;
+            }
         }
         return  -1;
     }
@@ -135,5 +137,14 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
         if (null != typedArray) {
             typedArray.recycle();
         }
+    }
+
+    @VisibleForTesting
+    public BiMap<String, Integer> getThemeNameToResMap() {
+        return themeNameToResMap;
+    }
+
+    public String getCurrentTheme() {
+        return currentTheme;
     }
 }
