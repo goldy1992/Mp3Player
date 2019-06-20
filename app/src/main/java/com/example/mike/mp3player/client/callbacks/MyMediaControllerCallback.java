@@ -11,6 +11,8 @@ import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListene
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 /**
  * Created by Mike on 04/10/2017.
  */
@@ -21,12 +23,11 @@ public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
     private final MyPlaybackStateCallback myPlaybackStateCallback;
     private final MyMetaDataCallback myMetaDataCallback;
 
-    private Set<PlaybackStateListener> playbackStateListeners;
-
-    public MyMediaControllerCallback(Looper looper) {
-        this.myMetaDataCallback = new MyMetaDataCallback(looper);
-        this.myPlaybackStateCallback = new MyPlaybackStateCallback(looper);
-        this.playbackStateListeners = new HashSet<>();
+    @Inject
+    public MyMediaControllerCallback(MyMetaDataCallback myMetaDataCallback,
+                                     MyPlaybackStateCallback myPlaybackStateCallback) {
+        this.myMetaDataCallback = myMetaDataCallback;
+        this.myPlaybackStateCallback = myPlaybackStateCallback;
     }
 
     @Override

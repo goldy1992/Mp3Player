@@ -11,12 +11,14 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 public class MyMetaDataCallback extends AsyncCallback<MediaMetadataCompat> {
     private static final String LOG_TAG = "MY_META_DTA_CLLBK";
     private String currentMediaId = null;
     private Set<MetaDataListener> metaDataListeners;
 
-
+    @Inject
     public MyMetaDataCallback(Looper looper) {
         super(looper);
         this.metaDataListeners = new HashSet<>();

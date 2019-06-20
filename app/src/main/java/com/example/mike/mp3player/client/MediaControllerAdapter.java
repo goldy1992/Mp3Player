@@ -2,17 +2,19 @@ package com.example.mike.mp3player.client;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.RemoteException;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 
 import java.util.Set;
+
+import javax.inject.Inject;
 
 public class MediaControllerAdapter {
 
@@ -23,18 +25,19 @@ public class MediaControllerAdapter {
     private boolean isInitialized = false;
     private Context context;
 
-    public MediaControllerAdapter(Context context, Looper looper) {
-        this.context = context;
-        this.myMediaControllerCallback = new MyMediaControllerCallback(looper);
-    }
+    @Inject
+    public MediaControllerAdapter() { }
 
-    public MediaControllerAdapter(Context context, MediaSessionCompat.Token token, Looper looper) {
-        this(context, looper);
+    public MediaControllerAdapter(MediaSessionCompat.Token token) {
         init(token);
     }
 
     public void setMediaToken(MediaSessionCompat.Token token) {
-        init(token);
+        if (!isInitialized) {
+            init(token);
+        } else {
+            Log.e(LOG_TAG, "MediaControllerAdapter already initialised");
+        }
     }
 
     private void init(MediaSessionCompat.Token token) {
@@ -144,5 +147,15 @@ public class MediaControllerAdapter {
     
     private MediaControllerCompat.TransportControls getController() {
         return mediaControllerCompat.getTransportControls();
+    }
+
+    @Inject
+    public void setMyMediaControllerCallback(MyMediaControllerCallback myMediaControllerCallback) {
+        this.myMediaControllerCallback = myMediaControllerCallback;
+    }
+
+    @Inject
+    public void setContext(Context context) {
+        this.context = context;
     }
 }

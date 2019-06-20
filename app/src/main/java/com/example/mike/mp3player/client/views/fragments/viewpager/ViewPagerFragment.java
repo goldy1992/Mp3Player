@@ -90,7 +90,7 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
         Map<Category, ChildViewPagerFragment> pagerItems = new TreeMap<>();
 
         public MyPagerAdapter(FragmentManager fm) {
-            super(fm);
+            super(fm, RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
         @Override

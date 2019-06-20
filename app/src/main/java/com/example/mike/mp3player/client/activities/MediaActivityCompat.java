@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 
+import javax.inject.Inject;
+
 import static com.example.mike.mp3player.commons.Constants.THEME;
 
 public abstract class MediaActivityCompat extends AppCompatActivity  {
@@ -34,7 +36,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity  {
 
     public void initialiseMediaControllerAdapter(MediaSessionCompat.Token token) {
         if (null == this.mediaControllerAdapter) {
-            this.mediaControllerAdapter = new MediaControllerAdapter(this, token, worker.getLooper());
+       //     this.mediaControllerAdapter = new MediaControllerAdapter(this, token, worker.getLooper());
         } else {
             this.mediaControllerAdapter.setMediaToken(token);
         }
@@ -59,6 +61,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity  {
     public final MediaControllerAdapter getMediaControllerAdapter() {
         return mediaControllerAdapter;
     }
+    @Inject
     public final void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
         this.mediaControllerAdapter = mediaControllerAdapter;
     }

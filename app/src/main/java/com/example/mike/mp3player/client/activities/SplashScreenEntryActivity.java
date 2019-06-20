@@ -50,8 +50,7 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        initialiseDependencies();
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
         initialiseView(R.layout.splash_screen);
