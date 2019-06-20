@@ -24,12 +24,13 @@ public abstract class MediaBrowserCreatorActivityCompat extends MediaActivityCom
     }
 
     void initMediaBrowserService() {
-        MediaBrowserAdapter mediaBrowserAdapter = makeMediaBrowserAdapter(getApplicationContext(),
-                this,
-                getWorker().getLooper(),
-                getSubscriptionType());
-        setMediaBrowserAdapter(mediaBrowserAdapter);
-        getMediaBrowserAdapter().init();
+        mediaBrowserAdapter.init();
+//        MediaBrowserAdapter mediaBrowserAdapter = makeMediaBrowserAdapter(getApplicationContext(),
+//                this,
+//                getWorker().getLooper(),
+//                getSubscriptionType());
+//        setMediaBrowserAdapter(mediaBrowserAdapter);
+//        getMediaBrowserAdapter().init();
         setMediaControllerAdapter(makeMediaControllerAdapter(this, getWorker().getLooper()));
     }
 

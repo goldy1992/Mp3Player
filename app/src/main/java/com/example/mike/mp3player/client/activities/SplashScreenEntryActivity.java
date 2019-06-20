@@ -13,6 +13,12 @@ import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
+import com.example.mike.mp3player.dagger.components.DaggerMainActivityComponent;
+import com.example.mike.mp3player.dagger.components.MainActivityComponent;
+import com.example.mike.mp3player.dagger.modules.ApplicationContextModule;
+import com.example.mike.mp3player.dagger.modules.LooperModule;
+import com.example.mike.mp3player.dagger.modules.MediaBrowserConnectorCallbackModule;
+import com.example.mike.mp3player.dagger.modules.SubscriptionTypeModule;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -45,6 +51,7 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        initialiseDependencies();
         super.onCreate(savedInstanceState);
         mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
         initialiseView(R.layout.splash_screen);
@@ -172,5 +179,18 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
     @VisibleForTesting
     public void setPermissionGranted(boolean permissionGranted) {
         this.permissionGranted = permissionGranted;
+    }
+
+    private void initialiseDependencies() {
+        ApplicationContextModule applicationContextModule = new ApplicationContextModule(getApplicationContext());
+        LooperModule looperModule = new LooperModule(getWorker().getLooper());
+        MediaBrowserConnectorCallbackModule mediaBrowserConnectorCallbackModule = new MediaBrowserConnectorCallbackModule(this);
+        SubscriptionTypeModule subscriptionTypeModule = new SubscriptionTypeModule(getSubscriptionType());
+        MainActivityComponent daggerMainActivityComponent = DaggerMainActivityComponent.builder().applicationContextModule(applicationContextModule)
+                .looperModule(looperModule)
+                .mediaBrowserConnectorCallbackModule(mediaBrowserConnectorCallbackModule)
+                .subscriptionTypeModule(subscriptionTypeModule)
+                .build();
+        daggerMainActivityComponent.inject(this);
     }
 }

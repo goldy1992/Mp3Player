@@ -13,6 +13,12 @@ import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType
 import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.example.mike.mp3player.dagger.components.DaggerMainActivityComponent;
+import com.example.mike.mp3player.dagger.components.MainActivityComponent;
+import com.example.mike.mp3player.dagger.modules.ApplicationContextModule;
+import com.example.mike.mp3player.dagger.modules.LooperModule;
+import com.example.mike.mp3player.dagger.modules.MediaBrowserConnectorCallbackModule;
+import com.example.mike.mp3player.dagger.modules.SubscriptionTypeModule;
 
 public class MainActivity extends MediaBrowserSubscriberActivityCompat {
 
@@ -24,6 +30,7 @@ public class MainActivity extends MediaBrowserSubscriberActivityCompat {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        initialiseDependencies();
         super.onCreate(savedInstanceState);
         this.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         this.viewInitialised = initialiseView(R.layout.activity_main);
@@ -63,6 +70,19 @@ public class MainActivity extends MediaBrowserSubscriberActivityCompat {
         super.onConnected();
         LibraryRequest libraryRequest = new LibraryRequest(Category.ROOT, Category.ROOT.name());
         getMediaBrowserAdapter().subscribe(libraryRequest);
+    }
+
+    private void initialiseDependencies() {
+        ApplicationContextModule applicationContextModule = new ApplicationContextModule(getApplicationContext());
+        LooperModule looperModule = new LooperModule(getWorker().getLooper());
+        MediaBrowserConnectorCallbackModule mediaBrowserConnectorCallbackModule = new MediaBrowserConnectorCallbackModule(this);
+        SubscriptionTypeModule subscriptionTypeModule = new SubscriptionTypeModule(getSubscriptionType());
+        MainActivityComponent daggerMainActivityComponent = DaggerMainActivityComponent.builder().applicationContextModule(applicationContextModule)
+                .looperModule(looperModule)
+                .mediaBrowserConnectorCallbackModule(mediaBrowserConnectorCallbackModule)
+                .subscriptionTypeModule(subscriptionTypeModule)
+                .build();
+        daggerMainActivityComponent.inject(this);
     }
 
     @Override
