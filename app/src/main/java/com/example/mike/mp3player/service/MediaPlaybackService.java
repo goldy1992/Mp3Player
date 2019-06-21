@@ -52,9 +52,9 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         });
 
         this.mediaLibrary.buildMediaLibrary();
-        this.mediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);
+     //   this.mediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);
         setSessionToken(getMediaSession().getSessionToken());
-        this.mediaSessionCallback = new MediaSessionCallback(this, getMediaSession(), mediaLibrary, worker.getLooper());
+   //     this.mediaSessionCallback = new MediaSessionCallback(this, getMediaSession(), mediaLibrary, worker.getLooper());
         // MySessionCallback() has methods that handle callbacks from a media controller
         getMediaSession().setCallback(mediaSessionCallback);
     }
@@ -138,12 +138,20 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         return clientPackageName.equals(PACKAGE_NAME);
     }
 
+
+
+    public MediaSessionCompat getMediaSession() {
+        return mediaSession;
+    }
+
+    @Inject
+    public void setMediaSessionCallback(MediaSessionCallback mediaSessionCallback) {
+        this.mediaSessionCallback = mediaSessionCallback;
+    }
+
     @Inject
     public void setMediaLibrary(MediaLibrary mediaLibrary) {
         this.mediaLibrary = mediaLibrary;
     }
 
-    public MediaSessionCompat getMediaSession() {
-        return mediaSession;
-    }
 }

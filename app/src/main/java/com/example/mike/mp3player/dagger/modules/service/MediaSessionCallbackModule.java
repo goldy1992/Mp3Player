@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.dagger.modules.service;
 
-import android.content.Context;
 import android.os.Looper;
 
 import com.example.mike.mp3player.service.MediaPlaybackService;

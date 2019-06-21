@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
+import javax.inject.Inject;
+
 public class PlaybackManager {
 
     private static final int START_OF_PLAYLIST = 0;
@@ -25,6 +27,7 @@ public class PlaybackManager {
     private final List<QueueItem> playlist = new ArrayList<>();
     private boolean shuffleOn = false;
 
+    @Inject
     public PlaybackManager(@NonNull List<QueueItem> queueItems) {
         playlist.addAll(queueItems);
         queueIndex = START_OF_PLAYLIST;

@@ -1,7 +1,5 @@
 package com.example.mike.mp3player.commons;
 
-import android.support.v4.media.MediaDescriptionCompat;
-
 import com.example.mike.mp3player.commons.library.Category;
 
 import org.junit.jupiter.api.Test;

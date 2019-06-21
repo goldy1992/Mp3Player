@@ -19,17 +19,15 @@ import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.LibraryObject;
-import com.example.mike.mp3player.service.MediaPlaybackService;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.player.MarshmallowMediaPlayerAdapterBase;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
-import com.example.mike.mp3player.service.player.OreoPlayerAdapterBase;
 import com.example.mike.mp3player.service.player.NougatMediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.OreoPlayerAdapterBase;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -63,24 +61,24 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private boolean isInitialised = false;
 
 
-    @Deprecated
-    public MediaSessionCallback(MediaPlaybackService service,
-                                MediaSessionCompat mediaSession,
-                                MediaLibrary mediaLibrary, Looper looper) {
-        this.context = service.getApplicationContext();
-        this.mediaLibrary = mediaLibrary;
-        List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.getMediaLibrary().getSongList());
-        List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
-        this.playbackManager = new PlaybackManager(queueItems);
-        this.mediaPlayerAdapter = createMediaPlayerAdapter(context);
-        this.mediaSessionAdapter = new MediaSessionAdapter(mediaSession, getPlaybackManager(), getMediaPlayerAdapter());
-
-        this.serviceManager = new ServiceManager(service, getMediaSessionAdapter());
-        this.broadcastReceiver = new AudioBecomingNoisyBroadcastReceiver(context, getMediaSessionAdapter(), getMediaPlayerAdapter(), getServiceManager());
-
-        this.worker = new Handler(looper);
-        init();
-    }
+//    @Deprecated
+//    public MediaSessionCallback(MediaPlaybackService service,
+//                                MediaSessionCompat mediaSession,
+//                                MediaLibrary mediaLibrary, Looper looper) {
+//        this.context = service.getApplicationContext();
+//        this.mediaLibrary = mediaLibrary;
+//        List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.getMediaLibrary().getSongList());
+//        List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
+//        this.playbackManager = new PlaybackManager(queueItems);
+//        this.mediaPlayerAdapter = createMediaPlayerAdapter(context);
+//       // this.mediaSessionAdapter = new MediaSessionAdapter(mediaSession, getPlaybackManager(), getMediaPlayerAdapter());
+//
+//        //this.serviceManager = new ServiceManager(service, getMediaSessionAdapter());
+//        this.broadcastReceiver = new AudioBecomingNoisyBroadcastReceiver(context, getMediaSessionAdapter(), getMediaPlayerAdapter(), getServiceManager());
+//
+//        this.worker = new Handler(looper);
+//        init();
+//    }
 
     /**
      * new constructor to be used for testing and also for future use with dagger2 via the @Inject

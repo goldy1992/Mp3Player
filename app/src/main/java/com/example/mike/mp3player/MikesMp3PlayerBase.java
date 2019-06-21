@@ -7,8 +7,8 @@ import com.example.mike.mp3player.dagger.components.MainActivityComponent;
 import com.example.mike.mp3player.dagger.components.ServiceComponent;
 import com.example.mike.mp3player.dagger.modules.MediaBrowserAdapterModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaLibraryModule;
-import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
 import com.example.mike.mp3player.dagger.modules.service.MediaRetrieverModule;
+import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
 
 public class MikesMp3PlayerBase extends Application {
 

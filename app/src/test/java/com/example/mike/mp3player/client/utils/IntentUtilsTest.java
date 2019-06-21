@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.media.session.MediaSessionCompat;
 
-
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Test;

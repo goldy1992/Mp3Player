@@ -29,6 +29,8 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.commons.AndroidUtils;
 
+import javax.inject.Inject;
+
 import static android.support.v4.media.session.MediaSessionCompat.Token;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
 
@@ -43,9 +45,10 @@ public class MyNotificationManager {
     private static final String CHANNEL_ID = "com.example.mike.mp3player.context";
     private static final int REQUEST_CODE = 501;
 
-    public MyNotificationManager(Context context, Token sessionToken) {
-        this.context = context;
-        this.sessionToken = sessionToken;
+    @Inject
+    public MyNotificationManager(MediaPlaybackService mediaPlaybackService) {
+        this.context = mediaPlaybackService.getApplicationContext();
+        this.sessionToken = mediaPlaybackService.getSessionToken();
         notificationManager = (NotificationManager) this.context.getSystemService(Context.NOTIFICATION_SERVICE);
         // Cancel all notifications to handle the case where the Service was killed and
         // restarted by the system.

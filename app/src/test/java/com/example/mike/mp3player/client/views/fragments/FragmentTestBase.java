@@ -3,7 +3,6 @@ package com.example.mike.mp3player.client.views.fragments;
 import android.content.Context;
 import android.os.Bundle;
 
-import androidx.annotation.IdRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentFactory;
 import androidx.fragment.app.testing.FragmentScenario;

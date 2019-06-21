@@ -8,7 +8,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
-import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
 import com.example.mike.mp3player.service.library.mediaretriever.MockMediaRetriever;
 
 import org.codehaus.plexus.util.ExceptionUtils;

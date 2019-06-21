@@ -24,4 +24,10 @@ public class ServiceModule {
                                          MyNotificationManager myNotificationManager) {
         return new ServiceManager(service, mediaSessionAdapter, myNotificationManager);
     }
+
+    @Singleton
+    @Provides
+    MyNotificationManager provideMyNotificationManager() {
+        return new MyNotificationManager(service);
+    }
 }
