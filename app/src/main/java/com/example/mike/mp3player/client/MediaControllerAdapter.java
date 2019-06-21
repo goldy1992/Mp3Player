@@ -23,13 +23,12 @@ public class MediaControllerAdapter {
     private MyMediaControllerCallback myMediaControllerCallback;
     private MediaSessionCompat.Token token = null;
     private boolean isInitialized = false;
-    private Context context;
+    private final Context context;
 
     @Inject
-    public MediaControllerAdapter() { }
-
-    public MediaControllerAdapter(MediaSessionCompat.Token token) {
-        init(token);
+    public MediaControllerAdapter(Context context, MyMediaControllerCallback myMediaControllerCallback) {
+        this.context = context;
+        this.myMediaControllerCallback = myMediaControllerCallback;
     }
 
     public void setMediaToken(MediaSessionCompat.Token token) {
@@ -154,8 +153,4 @@ public class MediaControllerAdapter {
         this.myMediaControllerCallback = myMediaControllerCallback;
     }
 
-    @Inject
-    public void setContext(Context context) {
-        this.context = context;
-    }
 }

@@ -32,6 +32,8 @@ import com.example.mike.mp3player.service.player.NougatMediaPlayerAdapterBase;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SEEK_TO;
 import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SET_REPEAT_MODE;
 import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SET_SHUFFLE_MODE;
@@ -60,6 +62,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     public static final float DEFAULT_PLAYBACK_SPEED_CHANGE = 0.05f;
     private boolean isInitialised = false;
 
+
+    @Deprecated
     public MediaSessionCallback(MediaPlaybackService service,
                                 MediaSessionCompat mediaSession,
                                 MediaLibrary mediaLibrary, Looper looper) {
@@ -81,7 +85,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     /**
      * new constructor to be used for testing and also for future use with dagger2 via the @Inject
      * annotation
-     * @param service service
+     * @param context context
      * @param mediaLibrary media library
      * @param playbackManager playback manager
      * @param mediaPlayerAdapterBase media player adapter
@@ -90,7 +94,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
      * @param broadcastReceiver broadcast receiver
      * @param looper looper
      */
-    public MediaSessionCallback(MediaPlaybackService service,
+    @Inject
+    public MediaSessionCallback(Context context,
                                 MediaLibrary mediaLibrary,
                                 PlaybackManager playbackManager,
                                 MediaPlayerAdapterBase mediaPlayerAdapterBase,
@@ -98,7 +103,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                                 ServiceManager serviceManager,
                                 AudioBecomingNoisyBroadcastReceiver broadcastReceiver,
                                 Looper looper) {
-        this.context = service.getApplicationContext();
+        this.context = context;
         this.mediaLibrary = mediaLibrary;
         this.playbackManager = playbackManager;
         this.mediaPlayerAdapter = mediaPlayerAdapterBase;

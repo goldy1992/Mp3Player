@@ -18,8 +18,8 @@ public class MediaControllerAdapterModule {
 
     @Provides
     @Singleton
-    MediaControllerAdapter provideMediaControllerAdapter() {
-        return new MediaControllerAdapter();
+    MediaControllerAdapter provideMediaControllerAdapter(Context context, MyMediaControllerCallback myMediaControllerCallback) {
+        return new MediaControllerAdapter(context, myMediaControllerCallback);
     }
 
     @Provides

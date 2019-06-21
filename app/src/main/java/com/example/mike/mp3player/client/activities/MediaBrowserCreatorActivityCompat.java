@@ -95,6 +95,5 @@ public abstract class MediaBrowserCreatorActivityCompat extends MediaActivityCom
                 .subscriptionTypeModule(subscriptionTypeModule)
                 .build();
         daggerMainActivityComponent.inject(this);
-        daggerMainActivityComponent.inject(this.getMediaControllerAdapter());
     }
 }
