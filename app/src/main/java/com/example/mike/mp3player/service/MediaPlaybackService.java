@@ -43,7 +43,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onCreate() {
         super.onCreate();
-        ((MikesMp3PlayerBase)getApplication()).getMediaLibraryComponent().inject(this);
+        ((MikesMp3PlayerBase)getApplication()).getServiceComponent().inject(this);
 
         this.worker = new HandlerThread(WORKER_ID);
         this.worker.start();

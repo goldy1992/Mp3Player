@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.dagger.modules;
+package com.example.mike.mp3player.dagger.modules.service;
 
 import android.content.Context;
 

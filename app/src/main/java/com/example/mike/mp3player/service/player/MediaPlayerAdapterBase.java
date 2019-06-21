@@ -12,11 +12,14 @@ import com.example.mike.mp3player.service.AudioFocusManager;
 
 import java.io.IOException;
 
+import javax.inject.Singleton;
+
 import static android.media.MediaPlayer.MEDIA_INFO_STARTED_AS_NEXT;
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ONE;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_PITCH;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_SPEED;
 
+@Singleton
 public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener  {
 
     static final int NOT_IN_USE = -1;

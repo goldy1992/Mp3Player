@@ -2,27 +2,27 @@ package com.example.mike.mp3player;
 
 import android.app.Application;
 
+import com.example.mike.mp3player.dagger.components.DaggerServiceComponent;
 import com.example.mike.mp3player.dagger.components.MainActivityComponent;
+import com.example.mike.mp3player.dagger.components.ServiceComponent;
 import com.example.mike.mp3player.dagger.modules.MediaBrowserAdapterModule;
-import com.example.mike.mp3player.dagger.components.DaggerMediaLibraryComponent;
-import com.example.mike.mp3player.dagger.components.MediaLibraryComponent;
-import com.example.mike.mp3player.dagger.modules.MediaLibraryModule;
+import com.example.mike.mp3player.dagger.modules.service.MediaLibraryModule;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
-import com.example.mike.mp3player.dagger.modules.MediaRetrieverModule;
+import com.example.mike.mp3player.dagger.modules.service.MediaRetrieverModule;
 
 public class MikesMp3PlayerBase extends Application {
 
-    private MediaLibraryComponent mediaLibraryComponent;
+    private ServiceComponent serviceComponent;
     private MainActivityComponent mainActivityComponent;
 
-    public MediaLibraryComponent getMediaLibraryComponent() {
-        return mediaLibraryComponent;
+    public ServiceComponent getServiceComponent() {
+        return serviceComponent;
     }
 
     protected void setupMediaLibrary(MediaRetriever mediaRetriever) {
         MediaLibraryModule mediaLibraryModule = new MediaLibraryModule(getApplicationContext());
         MediaRetrieverModule mediaRetrieverModule = new MediaRetrieverModule(mediaRetriever);
-        this.mediaLibraryComponent = DaggerMediaLibraryComponent.builder()
+        this.serviceComponent = DaggerServiceComponent.builder()
                 .mediaRetrieverModule(mediaRetrieverModule)
                 .mediaLibraryModule(mediaLibraryModule).build();
 
