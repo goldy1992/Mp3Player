@@ -20,7 +20,7 @@ public class MikesMp3PlayerBase extends Application {
     }
 
     protected void setupMediaLibrary(MediaRetriever mediaRetriever) {
-        MediaLibraryModule mediaLibraryModule = new MediaLibraryModule(getApplicationContext());
+        MediaLibraryModule mediaLibraryModule = new MediaLibraryModule();
         MediaRetrieverModule mediaRetrieverModule = new MediaRetrieverModule(mediaRetriever);
         this.serviceComponent = DaggerServiceComponent.builder()
                 .mediaRetrieverModule(mediaRetrieverModule)

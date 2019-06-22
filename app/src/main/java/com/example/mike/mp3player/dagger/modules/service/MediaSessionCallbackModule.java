@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.dagger.modules.service;
 
+import android.os.Handler;
 import android.os.Looper;
 
 import com.example.mike.mp3player.service.MediaPlaybackService;
@@ -28,7 +29,7 @@ public class MediaSessionCallbackModule {
                                                             MediaSessionAdapter mediaSessionAdapter,
                                                             ServiceManager serviceManager,
                                                             AudioBecomingNoisyBroadcastReceiver broadcastReceiver,
-                                                            Looper looper) {
+                                                            Handler handler) {
         return new MediaSessionCallback(service,
                 mediaLibrary,
                 playbackManager,
@@ -36,7 +37,7 @@ public class MediaSessionCallbackModule {
                 mediaSessionAdapter,
                 serviceManager,
                 broadcastReceiver,
-                looper);
+                handler);
     }
 
     @Singleton

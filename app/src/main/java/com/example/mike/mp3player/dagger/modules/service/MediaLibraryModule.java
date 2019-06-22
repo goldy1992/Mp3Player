@@ -20,10 +20,9 @@ import dagger.Provides;
 
 @Module
 public class MediaLibraryModule {
-    private final Context context;
 
-    public MediaLibraryModule(Context context) {
-        this.context = context;
+    public MediaLibraryModule() {
+
     }
 
     @Provides
@@ -39,11 +38,6 @@ public class MediaLibraryModule {
         return MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
     }
 
-
-    @Provides
-    public Context provideContext() {
-        return context;
-    }
 
 
 

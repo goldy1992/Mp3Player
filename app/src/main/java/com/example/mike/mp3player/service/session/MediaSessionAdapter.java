@@ -11,6 +11,8 @@ import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
 
+import javax.inject.Inject;
+
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 import static com.example.mike.mp3player.commons.Constants.SHUFFLE_MODE;
@@ -23,6 +25,7 @@ public class MediaSessionAdapter {
     private final PlaybackManager playbackManager;
     private final MediaPlayerAdapterBase mediaPlayerAdapter;
 
+    @Inject
     public MediaSessionAdapter(@NonNull MediaSessionCompat mediaSession, PlaybackManager playbackManager,
                                MediaPlayerAdapterBase mediaPlayerAdapterBase) {
         this.mediaSession = mediaSession;

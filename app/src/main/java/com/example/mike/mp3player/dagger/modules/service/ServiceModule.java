@@ -1,5 +1,8 @@
 package com.example.mike.mp3player.dagger.modules.service;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.example.mike.mp3player.service.MediaPlaybackService;
 import com.example.mike.mp3player.service.MyNotificationManager;
 import com.example.mike.mp3player.service.ServiceManager;
@@ -30,4 +33,16 @@ public class ServiceModule {
     MyNotificationManager provideMyNotificationManager() {
         return new MyNotificationManager(service);
     }
+
+    @Singleton
+    @Provides
+    MediaPlaybackService provideMediaPlaybackService() {
+        return this.service;
+    }
+
+    @Provides
+    Handler provideHandler() {
+        return new Handler(service.getWorker().getLooper());
+    }
+
 }

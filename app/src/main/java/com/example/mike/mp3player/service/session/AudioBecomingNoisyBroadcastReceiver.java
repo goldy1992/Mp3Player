@@ -11,6 +11,8 @@ import androidx.annotation.VisibleForTesting;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
 
+import javax.inject.Inject;
+
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 
 public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
@@ -24,6 +26,7 @@ public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
     /**
      * Constructor
      */
+    @Inject
     public AudioBecomingNoisyBroadcastReceiver(Context context, MediaSessionAdapter mediaSessionAdapter,
                            MediaPlayerAdapterBase mediaPlayerAdapter, ServiceManager serviceManager) {
         this.context = context;

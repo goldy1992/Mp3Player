@@ -90,7 +90,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
      * @param mediaSessionAdapter media session adapter
      * @param serviceManager service manager
      * @param broadcastReceiver broadcast receiver
-     * @param looper looper
+     * @param handler handler
      */
     @Inject
     public MediaSessionCallback(Context context,
@@ -100,7 +100,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                                 MediaSessionAdapter mediaSessionAdapter,
                                 ServiceManager serviceManager,
                                 AudioBecomingNoisyBroadcastReceiver broadcastReceiver,
-                                Looper looper) {
+                                Handler handler) {
         this.context = context;
         this.mediaLibrary = mediaLibrary;
         this.playbackManager = playbackManager;
@@ -108,7 +108,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.mediaSessionAdapter = mediaSessionAdapter;
         this.serviceManager = serviceManager;
         this.broadcastReceiver = broadcastReceiver;
-        this.worker = new Handler(looper);
+        this.worker = handler;
         init();
     }
 
@@ -374,20 +374,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         getMediaSessionAdapter().updateAll(NO_ACTION);
     }
 
-    /**
-     * TODO: remove dependency of this method, initialise the object with Dagger2 and inject
-     * @param context context
-     * @return the appropriate Media Player object
-     */
-    private MediaPlayerAdapterBase createMediaPlayerAdapter(Context context) {
-        switch (Build.VERSION.SDK_INT) {
-            case Build.VERSION_CODES.M:
-                return new MarshmallowMediaPlayerAdapterBase(context, this, this);
-            case Build.VERSION_CODES.N:
-                return new NougatMediaPlayerAdapterBase(context, this, this);
-            default: return new OreoPlayerAdapterBase(context, this, this);
-        }
-    }
     @VisibleForTesting
     public ServiceManager getServiceManager() {
         return serviceManager;

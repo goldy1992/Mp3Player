@@ -46,8 +46,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         ((MikesMp3PlayerBase)getApplication()).getServiceComponent().inject(this);
 
         this.worker = new HandlerThread(WORKER_ID);
-        this.worker.start();
-        this.worker.getLooper().setMessageLogging((String x) -> {
+        this.getWorker().start();
+        this.getWorker().getLooper().setMessageLogging((String x) -> {
             //Log.i(WORKER_ID, x);
         });
 
@@ -124,7 +124,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     public void onDestroy() {
         super.onDestroy();
         getMediaSession().release();
-        worker.quitSafely();
+        getWorker().quitSafely();
     }
 
     @Override
@@ -154,4 +154,12 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         this.mediaLibrary = mediaLibrary;
     }
 
+    @Inject
+    public void setMediaSession(MediaSessionCompat mediaSession) {
+        this.mediaSession = mediaSession;
+    }
+
+    public HandlerThread getWorker() {
+        return worker;
+    }
 }
