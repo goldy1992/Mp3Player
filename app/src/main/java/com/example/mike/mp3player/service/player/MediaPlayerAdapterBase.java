@@ -12,6 +12,7 @@ import com.example.mike.mp3player.service.AudioFocusManager;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static android.media.MediaPlayer.MEDIA_INFO_STARTED_AS_NEXT;
@@ -34,8 +35,8 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
     MediaPlayer nextMediaPlayer;
     MediaPlayer currentMediaPlayer;
     AudioFocusManager audioFocusManager;
-    final OnCompletionListener onCompletionListener;
-    final OnSeekCompleteListener onSeekCompleteListener;
+    private OnCompletionListener onCompletionListener;
+    private OnSeekCompleteListener onSeekCompleteListener;
     boolean isInitialised = false;
 
     @PlaybackStateCompat.RepeatMode
@@ -47,11 +48,10 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
     @PlaybackStateCompat.State
     int currentState = PlaybackStateCompat.STATE_PAUSED;
 
-    public MediaPlayerAdapterBase(Context context, OnCompletionListener onCompletionListener,
-                                  OnSeekCompleteListener onSeekCompleteListener) {
+    public MediaPlayerAdapterBase(Context context) {
         this.context = context;
-        this.onCompletionListener = onCompletionListener;
-        this.onSeekCompleteListener = onSeekCompleteListener;
+        this.setOnCompletionListener(getOnCompletionListener());
+        this.setOnSeekCompleteListener(getOnSeekCompleteListener());
     }
 
     public abstract boolean play();
@@ -121,10 +121,6 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
 
         this.audioFocusManager = new AudioFocusManager(context, this);
         this.currentState = PlaybackStateCompat.STATE_PAUSED;
-
-        if (audioFocusManager.isInitialised() && null != currentMediaPlayer) {
-            this.isInitialised = true;
-        }
     }
 
     MediaPlayer createMediaPlayer(Uri uri) {
@@ -160,6 +156,10 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
         }
     }
 
+    public boolean isInitialised() {
+       return audioFocusManager.isInitialised() && null != currentMediaPlayer
+                && onCompletionListener != null && onSeekCompleteListener != null;
+    }
 
     /**
      *
@@ -275,8 +275,26 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
     MediaPlayer setListeners(MediaPlayer mediaPlayer) {
         mediaPlayer.setOnInfoListener(this);
         mediaPlayer.setOnErrorListener(this);
-        mediaPlayer.setOnSeekCompleteListener(onSeekCompleteListener);
-        mediaPlayer.setOnCompletionListener(onCompletionListener);
+        mediaPlayer.setOnSeekCompleteListener(getOnSeekCompleteListener());
+        mediaPlayer.setOnCompletionListener(getOnCompletionListener());
         return mediaPlayer;
+    }
+
+    public OnCompletionListener getOnCompletionListener() {
+        return onCompletionListener;
+    }
+
+    @Inject
+    public void setOnCompletionListener(OnCompletionListener onCompletionListener) {
+        this.onCompletionListener = onCompletionListener;
+    }
+
+    public OnSeekCompleteListener getOnSeekCompleteListener() {
+        return onSeekCompleteListener;
+    }
+
+    @Inject
+    public void setOnSeekCompleteListener(OnSeekCompleteListener onSeekCompleteListener) {
+        this.onSeekCompleteListener = onSeekCompleteListener;
     }
 }

@@ -21,10 +21,6 @@ import dagger.Provides;
 @Module
 public class MediaLibraryModule {
 
-    public MediaLibraryModule() {
-
-    }
-
     @Provides
     @Singleton
     public MediaLibrary provideMediaLibrary(MediaRetriever mediaRetriever) {
@@ -33,7 +29,7 @@ public class MediaLibraryModule {
 
     @Provides
     @Singleton
-    List<MediaSessionCompat.QueueItem> provdeInitialQueueItems(@NonNull MediaLibrary mediaLibrary) {
+    List<MediaSessionCompat.QueueItem> provideInitialQueueItems(@NonNull MediaLibrary mediaLibrary) {
         List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(mediaLibrary.getSongList());
         return MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
     }

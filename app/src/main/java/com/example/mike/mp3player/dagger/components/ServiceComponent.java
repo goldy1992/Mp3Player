@@ -16,6 +16,7 @@ import com.example.mike.mp3player.service.MyNotificationManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
+import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
 import com.example.mike.mp3player.service.session.AudioBecomingNoisyBroadcastReceiver;
 import com.example.mike.mp3player.service.session.MediaSessionAdapter;
 
@@ -47,5 +48,6 @@ public interface ServiceComponent {
 
     void inject(MediaPlaybackService mediaPlaybackService);
     void injectMediaRetriever(MediaLibrary mediaLibrary);
+    void inject(MediaPlayerAdapterBase mediaPlayerAdapterBase);
 
 }

@@ -14,7 +14,9 @@ import androidx.media.MediaBrowserServiceCompat;
 import com.example.mike.mp3player.MikesMp3PlayerBase;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.commons.library.LibraryResponse;
+import com.example.mike.mp3player.dagger.components.ServiceComponent;
 import com.example.mike.mp3player.service.library.MediaLibrary;
+import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
 import com.example.mike.mp3player.service.session.MediaSessionCallback;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
 public class MediaPlaybackService extends MediaBrowserServiceCompat {
     private MediaSessionCompat mediaSession;
     private MediaSessionCallback mediaSessionCallback;
+    private MediaPlayerAdapterBase mediaPlayerAdapterBase;
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
     private static final String WORKER_ID = "MDIA_PLYBK_SRVC_WKR";
     private MediaLibrary mediaLibrary;
@@ -43,7 +46,10 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onCreate() {
         super.onCreate();
-        ((MikesMp3PlayerBase)getApplication()).getServiceComponent().inject(this);
+        ServiceComponent serviceComponent = ((MikesMp3PlayerBase)getApplication()).getServiceComponent();
+        serviceComponent.inject(this);
+        serviceComponent.inject(mediaPlayerAdapterBase);
+
 
         this.worker = new HandlerThread(WORKER_ID);
         this.getWorker().start();
@@ -157,6 +163,11 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Inject
     public void setMediaSession(MediaSessionCompat mediaSession) {
         this.mediaSession = mediaSession;
+    }
+
+    @Inject
+    public void setMediaPlayerAdapter(MediaPlayerAdapterBase mediaPlayerAdapterBase) {
+        this.mediaPlayerAdapterBase = mediaPlayerAdapterBase;
     }
 
     public HandlerThread getWorker() {

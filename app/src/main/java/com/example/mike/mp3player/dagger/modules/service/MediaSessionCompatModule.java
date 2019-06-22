@@ -15,12 +15,7 @@ import dagger.Provides;
 @Module
 public class MediaSessionCompatModule {
 
-    private final String LOG_TAG;
-
-
-    public MediaSessionCompatModule(final String logTag) {
-        this.LOG_TAG = logTag;
-    }
+    private final String LOG_TAG = "MEDIA_SESSION_COMPAT";
 
     @Singleton
     @Provides
