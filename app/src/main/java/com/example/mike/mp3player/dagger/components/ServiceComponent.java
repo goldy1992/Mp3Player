@@ -1,9 +1,9 @@
 package com.example.mike.mp3player.dagger.components;
 
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.media.session.MediaSessionCompat;
 
+import com.example.mike.mp3player.dagger.modules.service.HandlerThreadModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaLibraryModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaPlayerAdapterModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaRetrieverModule;
@@ -19,6 +19,7 @@ import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
 import com.example.mike.mp3player.service.session.AudioBecomingNoisyBroadcastReceiver;
 import com.example.mike.mp3player.service.session.MediaSessionAdapter;
+import com.example.mike.mp3player.service.session.MediaSessionCallback;
 
 import javax.inject.Singleton;
 
@@ -26,15 +27,18 @@ import dagger.Component;
 
 @Singleton
 @Component(modules = {
-        MediaLibraryModule.class,
-        MediaRetrieverModule.class,
-        MediaPlayerAdapterModule.class,
-        MediaSessionCallbackModule.class,
-        MediaSessionCompatModule.class,
-        ServiceModule.class,
-        ServiceContextModule.class})
+    HandlerThreadModule.class,
+    MediaLibraryModule.class,
+    MediaPlayerAdapterModule.class,
+    MediaRetrieverModule.class,
+    MediaSessionCallbackModule.class,
+    MediaSessionCompatModule.class,
+    ServiceContextModule.class,
+    ServiceModule.class
+})
 public interface ServiceComponent {
 
+    MediaPlayerAdapterBase provideMediaPlayerAdapter();
     MediaPlaybackService provideMediaPlaybackService();
     MediaRetriever mediaRetriever();
     MediaLibrary provideMediaLibrary();
@@ -45,9 +49,11 @@ public interface ServiceComponent {
     MediaSessionAdapter provideMediaSessionAdapter();
     AudioBecomingNoisyBroadcastReceiver provideAudioBecomingNoisyBroadcastReceiver();
     Handler provideHandler();
+    ApplicationComponent
 
     void inject(MediaPlaybackService mediaPlaybackService);
     void injectMediaRetriever(MediaLibrary mediaLibrary);
     void inject(MediaPlayerAdapterBase mediaPlayerAdapterBase);
+    void inject(MediaSessionCallback mediaSessionCallback);
 
 }

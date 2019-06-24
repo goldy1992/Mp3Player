@@ -1,35 +1,26 @@
 package com.example.mike.mp3player;
 
 import android.app.Application;
+import android.content.Context;
 
-import com.example.mike.mp3player.dagger.components.DaggerServiceComponent;
-import com.example.mike.mp3player.dagger.components.MainActivityComponent;
-import com.example.mike.mp3player.dagger.components.ServiceComponent;
-import com.example.mike.mp3player.dagger.modules.MediaBrowserAdapterModule;
-import com.example.mike.mp3player.dagger.modules.service.MediaLibraryModule;
-import com.example.mike.mp3player.dagger.modules.service.MediaRetrieverModule;
-import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
+import com.example.mike.mp3player.dagger.components.ApplicationComponent;
+import com.example.mike.mp3player.dagger.components.DaggerApplicationComponent;
+import com.example.mike.mp3player.dagger.modules.ApplicationContextModule;
 
 public class MikesMp3PlayerBase extends Application {
 
-    private ServiceComponent serviceComponent;
-    private MainActivityComponent mainActivityComponent;
+  private ApplicationComponent applicationComponent;
 
-    public ServiceComponent getServiceComponent() {
-        return serviceComponent;
+    protected void setupServiceComponent(Context context) {
+        ApplicationContextModule applicationContextModule = new ApplicationContextModule(context);
+
+        this.applicationComponent = DaggerApplicationComponent.builder()
+                .applicationContextModule(applicationContextModule)
+                .build();
     }
 
-    protected void setupMediaLibrary(MediaRetriever mediaRetriever) {
-        MediaLibraryModule mediaLibraryModule = new MediaLibraryModule();
-        MediaRetrieverModule mediaRetrieverModule = new MediaRetrieverModule(mediaRetriever);
-        this.serviceComponent = DaggerServiceComponent.builder()
-                .mediaRetrieverModule(mediaRetrieverModule)
-                .mediaLibraryModule(mediaLibraryModule).build();
 
-    }
-
-    protected void setupMainActivity() {
-        MediaBrowserAdapterModule mediaBrowserAdapterModule = new MediaBrowserAdapterModule();
-        //this.mainActivityComponent = DaggerMainActivityComponent.builder()
+    public ApplicationComponent getApplicationComponent() {
+        return applicationComponent;
     }
 }

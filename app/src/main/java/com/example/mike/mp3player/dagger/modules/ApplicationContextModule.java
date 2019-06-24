@@ -10,7 +10,7 @@ import dagger.Provides;
 @Module
 public class ApplicationContextModule {
 
-    private final Context context;
+    private Context context;
 
     public ApplicationContextModule(Context context) {
         this.context = context;
@@ -18,7 +18,7 @@ public class ApplicationContextModule {
 
     @Provides
     @Singleton
-    Context getContext() {
+    Context provideContext() {
         return context;
     }
 }

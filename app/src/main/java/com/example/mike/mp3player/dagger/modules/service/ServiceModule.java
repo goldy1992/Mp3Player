@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.dagger.modules.service;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -38,11 +39,6 @@ public class ServiceModule {
     @Provides
     MediaPlaybackService provideMediaPlaybackService() {
         return this.service;
-    }
-
-    @Provides
-    Handler provideHandler() {
-        return new Handler(service.getWorker().getLooper());
     }
 
 }

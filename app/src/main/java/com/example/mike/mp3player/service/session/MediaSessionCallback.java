@@ -48,7 +48,7 @@ import static com.example.mike.mp3player.commons.LoggingUtils.logShuffleMode;
  * Created by Mike on 24/09/2017.
  */
 public class MediaSessionCallback extends MediaSessionCompat.Callback implements MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
-    private final ServiceManager serviceManager;
+    private ServiceManager serviceManager;
     private final PlaybackManager playbackManager;
     private final MediaPlayerAdapterBase mediaPlayerAdapter;
     private final MediaLibrary mediaLibrary;
@@ -88,7 +88,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
      * @param playbackManager playback manager
      * @param mediaPlayerAdapterBase media player adapter
      * @param mediaSessionAdapter media session adapter
-     * @param serviceManager service manager
+     * @param serviceManager serviceManager
      * @param broadcastReceiver broadcast receiver
      * @param handler handler
      */
@@ -368,6 +368,12 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         }
     }
 
+    /**
+     * @param serviceManager service manager
+     */
+    public void setServiceManager(ServiceManager serviceManager) {
+        this.serviceManager = serviceManager;
+    }
 
     @Override
     public void onSeekComplete(MediaPlayer mp) {

@@ -14,6 +14,7 @@ import androidx.media.MediaBrowserServiceCompat;
 import com.example.mike.mp3player.MikesMp3PlayerBase;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.commons.library.LibraryResponse;
+import com.example.mike.mp3player.dagger.components.ApplicationComponent;
 import com.example.mike.mp3player.dagger.components.ServiceComponent;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
@@ -36,33 +37,26 @@ import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
  */
 public class MediaPlaybackService extends MediaBrowserServiceCompat {
     private MediaSessionCompat mediaSession;
-    private MediaSessionCallback mediaSessionCallback;
-    private MediaPlayerAdapterBase mediaPlayerAdapterBase;
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
-    private static final String WORKER_ID = "MDIA_PLYBK_SRVC_WKR";
+
     private MediaLibrary mediaLibrary;
     private HandlerThread worker;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        ServiceComponent serviceComponent = ((MikesMp3PlayerBase)getApplication()).getServiceComponent();
-        serviceComponent.inject(this);
-        serviceComponent.inject(mediaPlayerAdapterBase);
+        ServiceComponent serviceComponent = ServiceC
+        ApplicationComponent serviceComponent = ((MikesMp3PlayerBase)getApplication()).getApplicationComponent();
+        //serviceComponent.inject(this);
+        //serviceComponent.inject(mediaPlayerAdapterBase);
 
-
-        this.worker = new HandlerThread(WORKER_ID);
-        this.getWorker().start();
-        this.getWorker().getLooper().setMessageLogging((String x) -> {
-            //Log.i(WORKER_ID, x);
-        });
 
         this.mediaLibrary.buildMediaLibrary();
      //   this.mediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);
         setSessionToken(getMediaSession().getSessionToken());
    //     this.mediaSessionCallback = new MediaSessionCallback(this, getMediaSession(), mediaLibrary, worker.getLooper());
         // MySessionCallback() has methods that handle callbacks from a media controller
-        getMediaSession().setCallback(mediaSessionCallback);
+      //  getMediaSession().setCallback(mediaSessionCallback);
     }
 
     @Override
@@ -130,7 +124,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     public void onDestroy() {
         super.onDestroy();
         getMediaSession().release();
-        getWorker().quitSafely();
+        worker.quitSafely();
     }
 
     @Override
@@ -144,15 +138,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         return clientPackageName.equals(PACKAGE_NAME);
     }
 
-
-
     public MediaSessionCompat getMediaSession() {
         return mediaSession;
-    }
-
-    @Inject
-    public void setMediaSessionCallback(MediaSessionCallback mediaSessionCallback) {
-        this.mediaSessionCallback = mediaSessionCallback;
     }
 
     @Inject
@@ -166,8 +153,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     }
 
     @Inject
-    public void setMediaPlayerAdapter(MediaPlayerAdapterBase mediaPlayerAdapterBase) {
-        this.mediaPlayerAdapterBase = mediaPlayerAdapterBase;
+    public void setWorker(HandlerThread handlerThread) {
+        this.worker = handlerThread;
     }
 
     public HandlerThread getWorker() {

@@ -23,12 +23,10 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {ApplicationContextModule.class,
+@Component(modules = { ApplicationContextModule.class,
         MediaBrowserAdapterModule.class, MediaControllerAdapterModule.class,
         MediaBrowserConnectorCallbackModule.class, LooperModule.class, SubscriptionTypeModule.class})
 public interface MainActivityComponent {
-    void inject(Context context);
-    Context provideContext();
 
     void inject(Looper looper);
     Looper provideLooper();

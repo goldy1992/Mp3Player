@@ -1,9 +1,9 @@
 package com.example.mike.mp3player.dagger.modules.service;
 
+import android.content.Context;
 import android.os.Handler;
-import android.os.Looper;
 
-import com.example.mike.mp3player.service.MediaPlaybackService;
+import com.example.mike.mp3player.dagger.components.ApplicationComponent;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
@@ -17,12 +17,12 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-@Module
+@Module(subcomponents = ApplicationComponent.class)
 public class MediaSessionCallbackModule {
 
     @Singleton
     @Provides
-    public MediaSessionCallback provideMediaSessionCallback(MediaPlaybackService service,
+    public MediaSessionCallback provideMediaSessionCallback(Context context,
                                                             MediaLibrary mediaLibrary,
                                                             PlaybackManager playbackManager,
                                                             MediaPlayerAdapterBase mediaPlayerAdapterBase,
@@ -30,7 +30,7 @@ public class MediaSessionCallbackModule {
                                                             ServiceManager serviceManager,
                                                             AudioBecomingNoisyBroadcastReceiver broadcastReceiver,
                                                             Handler handler) {
-        return new MediaSessionCallback(service,
+        return new MediaSessionCallback(context,
                 mediaLibrary,
                 playbackManager,
                 mediaPlayerAdapterBase,
@@ -43,7 +43,7 @@ public class MediaSessionCallbackModule {
     @Singleton
     @Provides
     public PlaybackManager providePlaybackManager() {
-        return null;
+        return new PlaybackManager();
     }
 
 

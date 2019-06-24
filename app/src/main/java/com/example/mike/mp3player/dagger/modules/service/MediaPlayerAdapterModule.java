@@ -18,9 +18,6 @@ import dagger.Provides;
 @Module
 public class MediaPlayerAdapterModule {
 
-    public MediaPlayerAdapterModule() {
-    }
-
     @Singleton
     @Provides
     public MediaPlayerAdapterBase provideMediaPlayerAdapter(Context context) {
@@ -41,8 +38,6 @@ public class MediaPlayerAdapterModule {
 
 
     /**
-     * TODO: remove dependency of this method, initialise the object with Dagger2 and inject
-     * @param context context
      * @return the appropriate Media Player object
      */
     private MediaPlayerAdapterBase createMediaPlayerAdapter(Context context) {

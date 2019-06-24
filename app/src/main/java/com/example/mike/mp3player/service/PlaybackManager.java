@@ -18,20 +18,18 @@ import javax.inject.Inject;
 public class PlaybackManager {
 
     private static final int START_OF_PLAYLIST = 0;
+    private static final int EMPTY_PLAYLIST_INDEX = -1;
     private Stack<Integer> shufflePreviousStack = new Stack<>();
     private Stack<Integer> shuffleNextStack = new Stack<>();
     private int nextShuffledIndex = 0;
-    private int queueIndex = -1;
+    private int queueIndex = EMPTY_PLAYLIST_INDEX;
     private Random random = new Random();
     private boolean isRepeating = true;
     private final List<QueueItem> playlist = new ArrayList<>();
     private boolean shuffleOn = false;
 
     @Inject
-    public PlaybackManager(@NonNull List<QueueItem> queueItems) {
-        playlist.addAll(queueItems);
-        queueIndex = START_OF_PLAYLIST;
-    }
+    public PlaybackManager() { }
 
     public List<QueueItem> onAddQueueItem(QueueItem item) {
         playlist.add(item);
@@ -177,7 +175,9 @@ public class PlaybackManager {
 
     public boolean createNewPlaylist(List<QueueItem> newList) {
         playlist.clear();
-        return playlist.addAll(newList);
+        boolean result = playlist.addAll(newList);
+        queueIndex = playlist.isEmpty() ?  EMPTY_PLAYLIST_INDEX : START_OF_PLAYLIST;
+        return result;
     }
 
     public void setCurrentItem(String mediaId) {
@@ -240,4 +240,8 @@ public class PlaybackManager {
     }
 
     public boolean isShuffleOn() { return shuffleOn; }
+
+    public boolean isInitialised() {
+        return !playlist.isEmpty();
+    }
 }
