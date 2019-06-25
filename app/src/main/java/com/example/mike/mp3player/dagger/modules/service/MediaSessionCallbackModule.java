@@ -3,7 +3,6 @@ package com.example.mike.mp3player.dagger.modules.service;
 import android.content.Context;
 import android.os.Handler;
 
-import com.example.mike.mp3player.dagger.components.ApplicationComponent;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
@@ -17,7 +16,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-@Module(subcomponents = ApplicationComponent.class)
+@Module
 public class MediaSessionCallbackModule {
 
     @Singleton

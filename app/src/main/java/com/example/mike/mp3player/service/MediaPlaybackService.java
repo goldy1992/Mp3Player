@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.service;
 
+import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.HandlerThread;
@@ -11,13 +12,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.media.MediaBrowserServiceCompat;
 
-import com.example.mike.mp3player.MikesMp3PlayerBase;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.commons.library.LibraryResponse;
-import com.example.mike.mp3player.dagger.components.ApplicationComponent;
-import com.example.mike.mp3player.dagger.components.ServiceComponent;
+import com.example.mike.mp3player.dagger.modules.MediaPlaybackServiceModule;
 import com.example.mike.mp3player.service.library.MediaLibrary;
-import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
 import com.example.mike.mp3player.service.session.MediaSessionCallback;
 
 import java.util.ArrayList;
@@ -25,6 +23,11 @@ import java.util.List;
 import java.util.TreeSet;
 
 import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
+import dagger.android.ContributesAndroidInjector;
+import dagger.android.HasServiceInjector;
 
 import static com.example.mike.mp3player.commons.Constants.ACCEPTED_MEDIA_ROOT_ID;
 import static com.example.mike.mp3player.commons.Constants.PACKAGE_NAME;
@@ -36,27 +39,21 @@ import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
  * Created by Mike on 24/09/2017.
  */
 public class MediaPlaybackService extends MediaBrowserServiceCompat {
-    private MediaSessionCompat mediaSession;
+
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
 
     private MediaLibrary mediaLibrary;
     private HandlerThread worker;
+    private MediaSessionCompat mediaSession;
+    private MediaSessionCallback mediaSessionCallback;
 
     @Override
     public void onCreate() {
+        AndroidInjection.inject(this);
         super.onCreate();
-        ServiceComponent serviceComponent = ServiceC
-        ApplicationComponent serviceComponent = ((MikesMp3PlayerBase)getApplication()).getApplicationComponent();
-        //serviceComponent.inject(this);
-        //serviceComponent.inject(mediaPlayerAdapterBase);
-
-
         this.mediaLibrary.buildMediaLibrary();
-     //   this.mediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);
-        setSessionToken(getMediaSession().getSessionToken());
-   //     this.mediaSessionCallback = new MediaSessionCallback(this, getMediaSession(), mediaLibrary, worker.getLooper());
-        // MySessionCallback() has methods that handle callbacks from a media controller
-      //  getMediaSession().setCallback(mediaSessionCallback);
+        setSessionToken(mediaSession.getSessionToken());
+        mediaSession.setCallback(mediaSessionCallback);
     }
 
     @Override
@@ -150,6 +147,11 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Inject
     public void setMediaSession(MediaSessionCompat mediaSession) {
         this.mediaSession = mediaSession;
+    }
+
+    @Inject
+    public void setMediaSessionCallback(MediaSessionCallback mediaSessionCallback) {
+        this.mediaSessionCallback = mediaSessionCallback;
     }
 
     @Inject
