@@ -51,7 +51,7 @@ public interface ServiceComponent extends AndroidInjector<MikesMp3PlayerBase> {
     Handler provideHandler();
     MediaLibrary provideMediaLibrary();
     MediaPlayerAdapterBase provideMediaPlayerAdapter();
-    MediaPlaybackService provideMediaPlaybackService();
+
     MediaRetriever mediaRetriever();
     MediaSessionAdapter provideMediaSessionAdapter();
     MediaSessionCompat provideMediaSessionCompat();

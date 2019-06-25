@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.service;
 
-import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.HandlerThread;
@@ -14,7 +13,6 @@ import androidx.media.MediaBrowserServiceCompat;
 
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.commons.library.LibraryResponse;
-import com.example.mike.mp3player.dagger.modules.MediaPlaybackServiceModule;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.session.MediaSessionCallback;
 
@@ -25,9 +23,6 @@ import java.util.TreeSet;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
-import dagger.android.AndroidInjector;
-import dagger.android.ContributesAndroidInjector;
-import dagger.android.HasServiceInjector;
 
 import static com.example.mike.mp3player.commons.Constants.ACCEPTED_MEDIA_ROOT_ID;
 import static com.example.mike.mp3player.commons.Constants.PACKAGE_NAME;

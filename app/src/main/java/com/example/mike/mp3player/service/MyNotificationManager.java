@@ -46,9 +46,9 @@ public class MyNotificationManager {
     private static final int REQUEST_CODE = 501;
 
     @Inject
-    public MyNotificationManager(MediaPlaybackService mediaPlaybackService) {
-        this.context = mediaPlaybackService.getApplicationContext();
-        this.sessionToken = mediaPlaybackService.getSessionToken();
+    public MyNotificationManager(Context context, Token token) {
+        this.context = context;
+        this.sessionToken = token;
         notificationManager = (NotificationManager) this.context.getSystemService(Context.NOTIFICATION_SERVICE);
         // Cancel all notifications to handle the case where the Service was killed and
         // restarted by the system.
