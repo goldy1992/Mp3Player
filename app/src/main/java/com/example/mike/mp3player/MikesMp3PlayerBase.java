@@ -6,7 +6,6 @@ import android.content.Context;
 
 import com.example.mike.mp3player.dagger.components.DaggerServiceComponent;
 import com.example.mike.mp3player.dagger.components.ServiceComponent;
-import com.example.mike.mp3player.dagger.modules.service.ServiceContextModule;
 
 import javax.inject.Inject;
 
@@ -20,8 +19,7 @@ public class MikesMp3PlayerBase extends Application implements HasServiceInjecto
     DispatchingAndroidInjector<Service> dispatchingAndroidServiceInjector;
 
     protected void setupServiceComponent(Context context) {
-        ServiceContextModule serviceContextModule = new ServiceContextModule(context);
-        ServiceComponent serviceComponent = DaggerServiceComponent.builder().serviceContextModule(serviceContextModule).build();
+        ServiceComponent serviceComponent = DaggerServiceComponent.builder().context(context).build();
         serviceComponent.inject(this);
 
     }

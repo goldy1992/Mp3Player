@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.dagger.components;
 
+import android.content.Context;
 import android.os.Handler;
 import android.support.v4.media.session.MediaSessionCompat;
 
@@ -11,7 +12,6 @@ import com.example.mike.mp3player.dagger.modules.service.MediaPlayerAdapterModul
 import com.example.mike.mp3player.dagger.modules.service.MediaRetrieverModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaSessionCallbackModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaSessionCompatModule;
-import com.example.mike.mp3player.dagger.modules.service.ServiceContextModule;
 import com.example.mike.mp3player.dagger.modules.service.ServiceModule;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 import com.example.mike.mp3player.service.MyNotificationManager;
@@ -25,6 +25,7 @@ import com.example.mike.mp3player.service.session.MediaSessionCallback;
 
 import javax.inject.Singleton;
 
+import dagger.BindsInstance;
 import dagger.Component;
 import dagger.android.AndroidInjectionModule;
 import dagger.android.AndroidInjector;
@@ -40,7 +41,6 @@ import dagger.android.AndroidInjector;
     MediaRetrieverModule.class,
     MediaSessionCallbackModule.class,
     MediaSessionCompatModule.class,
-    ServiceContextModule.class,
     ServiceModule.class
 })
 public interface ServiceComponent extends AndroidInjector<MikesMp3PlayerBase> {
@@ -61,4 +61,10 @@ public interface ServiceComponent extends AndroidInjector<MikesMp3PlayerBase> {
     void injectMediaRetriever(MediaLibrary mediaLibrary);
     void inject(MediaPlayerAdapterBase mediaPlayerAdapterBase);
     void inject(MediaSessionCallback mediaSessionCallback);
+
+    @Component.Builder
+    interface Builder {
+        @BindsInstance Builder context(Context context);
+        ServiceComponent build();
+    }
 }

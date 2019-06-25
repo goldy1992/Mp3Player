@@ -85,7 +85,7 @@ public abstract class MediaBrowserCreatorActivityCompat extends MediaActivityCom
         MediaBrowserConnectorCallbackModule mediaBrowserConnectorCallbackModule = new MediaBrowserConnectorCallbackModule(this);
         MediaControllerAdapterModule mediaControllerAdapterModule = new MediaControllerAdapterModule();
         SubscriptionTypeModule subscriptionTypeModule = new SubscriptionTypeModule(getSubscriptionType());
-        MainActivityComponent daggerMainActivityComponent = DaggerMainActivityComponent.builder().applicationContextModule(applicationContextModule)
+        MainActivityComponent daggerMainActivityComponent = DaggerMainActivityComponent.builder()
                 .looperModule(looperModule)
                 .mediaBrowserConnectorCallbackModule(mediaBrowserConnectorCallbackModule)
                 .mediaControllerAdapterModule(mediaControllerAdapterModule)

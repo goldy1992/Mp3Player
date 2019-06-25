@@ -181,11 +181,10 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
     }
 
     private void initialiseDependencies() {
-        ApplicationContextModule applicationContextModule = new ApplicationContextModule(getApplicationContext());
         LooperModule looperModule = new LooperModule(getWorker().getLooper());
         MediaBrowserConnectorCallbackModule mediaBrowserConnectorCallbackModule = new MediaBrowserConnectorCallbackModule(this);
         SubscriptionTypeModule subscriptionTypeModule = new SubscriptionTypeModule(getSubscriptionType());
-        MainActivityComponent daggerMainActivityComponent = DaggerMainActivityComponent.builder().applicationContextModule(applicationContextModule)
+        MainActivityComponent daggerMainActivityComponent = DaggerMainActivityComponent.builder()
                 .looperModule(looperModule)
                 .mediaBrowserConnectorCallbackModule(mediaBrowserConnectorCallbackModule)
                 .subscriptionTypeModule(subscriptionTypeModule)

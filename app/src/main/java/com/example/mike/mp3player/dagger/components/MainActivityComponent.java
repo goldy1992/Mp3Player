@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.dagger.components;
 
+import android.content.Context;
 import android.os.Looper;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
@@ -19,11 +20,11 @@ import com.example.mike.mp3player.dagger.modules.SubscriptionTypeModule;
 
 import javax.inject.Singleton;
 
+import dagger.BindsInstance;
 import dagger.Component;
 
 @Singleton
-@Component(modules = { ApplicationContextModule.class,
-        MediaBrowserAdapterModule.class, MediaControllerAdapterModule.class,
+@Component(modules = { MediaBrowserAdapterModule.class, MediaControllerAdapterModule.class,
         MediaBrowserConnectorCallbackModule.class, LooperModule.class, SubscriptionTypeModule.class})
 public interface MainActivityComponent {
 
@@ -52,4 +53,11 @@ public interface MainActivityComponent {
 
     void inject(MyMediaControllerCallback myMediaControllerCallback);
     MyMediaControllerCallback provideMyMediaControllerCallback();
+
+    @Component.Builder
+    interface Builder {
+        @BindsInstance
+        Builder context(Context context);
+        MainActivityComponent build();
+    }
 }
