@@ -19,12 +19,9 @@ public class MikesMp3PlayerBase extends Application implements HasServiceInjecto
     @Inject
     DispatchingAndroidInjector<Service> dispatchingAndroidServiceInjector;
 
-
-
     protected void setupServiceComponent(Context context) {
         ServiceContextModule serviceContextModule = new ServiceContextModule(context);
-   ServiceComponent serviceComponent = DaggerServiceComponent.builder().serviceContextModule(serviceContextModule).build();
-
+        ServiceComponent serviceComponent = DaggerServiceComponent.builder().serviceContextModule(serviceContextModule).build();
         serviceComponent.inject(this);
 
     }

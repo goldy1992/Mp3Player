@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.service;
 
 import android.app.Notification;
-import android.content.Context;
 import android.content.Intent;
 
 import androidx.core.content.ContextCompat;
@@ -22,10 +21,12 @@ public class ServiceManager {
     @Inject
     public ServiceManager(MediaSessionAdapter mediaSession,
                           MyNotificationManager myNotificationManager) {
-        this.service = service;
         this.mediaSession = mediaSession;
         this.notificationManager = myNotificationManager;
-       // this.notificationManager = new MyNotificationManager(context, mediaSession.getMediaSessionToken());
+    }
+
+    public void init(MediaPlaybackService mediaPlaybackService) {
+        this.service = mediaPlaybackService;
     }
 
     public void startService(Notification notification) {

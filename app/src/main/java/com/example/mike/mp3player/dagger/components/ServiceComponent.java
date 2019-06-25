@@ -2,6 +2,7 @@ package com.example.mike.mp3player.dagger.components;
 
 import android.content.Context;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.MikesMp3PlayerBase;

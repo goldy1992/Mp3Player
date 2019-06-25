@@ -41,14 +41,22 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     private HandlerThread worker;
     private MediaSessionCompat mediaSession;
     private MediaSessionCallback mediaSessionCallback;
+    private ServiceManager serviceManager;
 
     @Override
     public void onCreate() {
-        AndroidInjection.inject(this);
+        init();
         super.onCreate();
         this.mediaLibrary.buildMediaLibrary();
         setSessionToken(mediaSession.getSessionToken());
         mediaSession.setCallback(mediaSessionCallback);
+    }
+    /**
+     * TO BE CALLED BEFORE SUPER CLASS
+     */
+    private void init() {
+        AndroidInjection.inject(this);
+        serviceManager.setMediaPlaybackService(this);
     }
 
     @Override
@@ -148,10 +156,14 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     public void setMediaSessionCallback(MediaSessionCallback mediaSessionCallback) {
         this.mediaSessionCallback = mediaSessionCallback;
     }
-
     @Inject
     public void setWorker(HandlerThread handlerThread) {
         this.worker = handlerThread;
+    }
+
+    @Inject
+    public void setServiceManager(ServiceManager serviceManager) {
+        this.serviceManager = serviceManager;
     }
 
     public HandlerThread getWorker() {

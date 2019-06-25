@@ -10,6 +10,7 @@ import com.example.mike.mp3player.service.session.MediaSessionAdapter;
 
 import javax.inject.Singleton;
 
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 
@@ -28,4 +29,5 @@ public class ServiceModule {
     MyNotificationManager provideMyNotificationManager(Context context, MediaSessionCompat.Token token) {
         return new MyNotificationManager(context, token);
     }
+
 }

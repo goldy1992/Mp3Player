@@ -28,6 +28,7 @@ import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
 import com.example.mike.mp3player.service.player.NougatMediaPlayerAdapterBase;
 import com.example.mike.mp3player.service.player.OreoPlayerAdapterBase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -54,36 +55,14 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private final MediaLibrary mediaLibrary;
     private final MediaSessionAdapter mediaSessionAdapter;
     private final AudioBecomingNoisyBroadcastReceiver broadcastReceiver;
-    private final Context context;
     private final Handler worker;
     private static final String LOG_TAG = "MEDIA_SESSION_CALLBACK";
     public static final float DEFAULT_PLAYBACK_SPEED_CHANGE = 0.05f;
     private boolean isInitialised = false;
 
-
-//    @Deprecated
-//    public MediaSessionCallback(MediaPlaybackService service,
-//                                MediaSessionCompat mediaSession,
-//                                MediaLibrary mediaLibrary, Looper looper) {
-//        this.context = service.getApplicationContext();
-//        this.mediaLibrary = mediaLibrary;
-//        List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.getMediaLibrary().getSongList());
-//        List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
-//        this.playbackManager = new PlaybackManager(queueItems);
-//        this.mediaPlayerAdapter = createMediaPlayerAdapter(context);
-//       // this.mediaSessionAdapter = new MediaSessionAdapter(mediaSession, getPlaybackManager(), getMediaPlayerAdapter());
-//
-//        //this.serviceManager = new ServiceManager(service, getMediaSessionAdapter());
-//        this.broadcastReceiver = new AudioBecomingNoisyBroadcastReceiver(context, getMediaSessionAdapter(), getMediaPlayerAdapter(), getServiceManager());
-//
-//        this.worker = new Handler(looper);
-//        init();
-//    }
-
     /**
      * new constructor to be used for testing and also for future use with dagger2 via the @Inject
      * annotation
-     * @param context context
      * @param mediaLibrary media library
      * @param playbackManager playback manager
      * @param mediaPlayerAdapterBase media player adapter
@@ -93,15 +72,13 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
      * @param handler handler
      */
     @Inject
-    public MediaSessionCallback(Context context,
-                                MediaLibrary mediaLibrary,
+    public MediaSessionCallback(MediaLibrary mediaLibrary,
                                 PlaybackManager playbackManager,
                                 MediaPlayerAdapterBase mediaPlayerAdapterBase,
                                 MediaSessionAdapter mediaSessionAdapter,
                                 ServiceManager serviceManager,
                                 AudioBecomingNoisyBroadcastReceiver broadcastReceiver,
                                 Handler handler) {
-        this.context = context;
         this.mediaLibrary = mediaLibrary;
         this.playbackManager = playbackManager;
         this.mediaPlayerAdapter = mediaPlayerAdapterBase;
@@ -116,6 +93,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         Uri firstSongUri = this.getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getCurrentMediaId());
         Uri nextSongUri = this.getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getNext());
         this.getMediaPlayerAdapter().reset(firstSongUri, nextSongUri);
+        List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.getMediaLibrary().getSongList());
+        List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
+        this.playbackManager.createNewPlaylist(queueItems);
         getMediaSessionAdapter().updateAll();
     }
 
