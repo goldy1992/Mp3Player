@@ -1,8 +1,6 @@
 package com.example.mike.mp3player.dagger.components;
 
-import android.content.Context;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.MikesMp3PlayerBase;
@@ -28,7 +26,6 @@ import com.example.mike.mp3player.service.session.MediaSessionCallback;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import dagger.Subcomponent;
 import dagger.android.AndroidInjectionModule;
 import dagger.android.AndroidInjector;
 

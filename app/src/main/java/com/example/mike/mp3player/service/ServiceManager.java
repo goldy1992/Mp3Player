@@ -92,7 +92,6 @@ public class ServiceManager {
         return service;
     }
 
-    @Inject
     public void setMediaPlaybackService(MediaPlaybackService mediaPlaybackService) {
         this.service = mediaPlaybackService;
     }
