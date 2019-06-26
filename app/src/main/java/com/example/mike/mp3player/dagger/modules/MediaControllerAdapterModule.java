@@ -1,7 +1,7 @@
 package com.example.mike.mp3player.dagger.modules;
 
 import android.content.Context;
-import android.os.Looper;
+import android.os.Handler;
 
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
@@ -29,12 +29,12 @@ public class MediaControllerAdapterModule {
     }
 
     @Provides
-    MyMetaDataCallback provideMetadataCallback(Looper looper) {
-        return new MyMetaDataCallback(looper);
+    MyMetaDataCallback provideMetadataCallback(Handler handler) {
+        return new MyMetaDataCallback(handler);
     }
 
     @Provides
-    MyPlaybackStateCallback providePlaybackStateCallback(Looper looper) {
-        return new MyPlaybackStateCallback(looper);
+    MyPlaybackStateCallback providePlaybackStateCallback(Handler handler) {
+        return new MyPlaybackStateCallback(handler);
     }
 }

@@ -13,25 +13,19 @@ import dagger.Provides;
 public class HandlerThreadModule {
 
     private static final String WORKER_ID = "MDIA_PLYBK_SRVC_WKR";
-    private final HandlerThread handlerThread;
 
-    public HandlerThreadModule() {
-        HandlerThread newHandlerThread = new HandlerThread(WORKER_ID);
-        newHandlerThread.start();
-        newHandlerThread.getLooper().setMessageLogging((String x) -> {
+    @Provides
+    public HandlerThread provideHandlerThread(String workerId) {
+        HandlerThread handlerThread = new HandlerThread(WORKER_ID);
+        handlerThread.start();
+        handlerThread.getLooper().setMessageLogging((String x) -> {
             Log.i(WORKER_ID, x);
         });
-        this.handlerThread = newHandlerThread;
-    }
-
-    @Singleton
-    @Provides
-    public HandlerThread provideHandlerThread() {
         return handlerThread;
     }
 
     @Provides
-    public Handler providesHandler() {
+    public Handler providesHandler(HandlerThread handlerThread) {
         return new Handler(handlerThread.getLooper());
     }
 }

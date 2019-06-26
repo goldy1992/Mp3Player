@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client;
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -30,16 +31,15 @@ public class MediaBrowserAdapter {
     private MyConnectionCallback mConnectionCallbacks;
     private GenericSubscriptionCallback mySubscriptionCallback;
     private Context context;
-    private final MediaBrowserConnectorCallback mediaBrowserConnectorCallback;
-    private Looper looper;
+    private Handler handler;
 
     @Inject
-    public MediaBrowserAdapter(Context context, MediaBrowserConnectorCallback mediaBrowserConnectorCallback, Looper looper, SubscriptionType subscriptionType) {
+    public MediaBrowserAdapter(Context context, Handler handler, SubscriptionType subscriptionType,
+                               MyConnectionCallback myConnectionCallback) {
         this.context = context;
-        this.mediaBrowserConnectorCallback = mediaBrowserConnectorCallback;
-        this.looper = looper;
+        this.handler = handler;
         this.mySubscriptionCallback = createSubscriptionCallback(subscriptionType);
-        mConnectionCallbacks = new MyConnectionCallback(mediaBrowserConnectorCallback);
+        mConnectionCallbacks = myConnectionCallback;
         ComponentName componentName = new ComponentName(getContext(), MediaPlaybackService.class);
         this.mediaBrowser = new MediaBrowserCompat(getContext(), componentName, mConnectionCallbacks, null);
 
@@ -100,16 +100,13 @@ public class MediaBrowserAdapter {
         return context;
     }
 
-    public Looper getLooper() {
-        return looper;
-    }
 
     private GenericSubscriptionCallback createSubscriptionCallback(SubscriptionType subscriptionType) {
         if (null != subscriptionType) {
             switch (subscriptionType) {
-                case CATEGORY: return new CategorySubscriptionCallback(this);
-                case MEDIA_ID: return new MediaIdSubscriptionCallback(this);
-                default: return new NotifyAllSubscriptionCallback(this);
+                case CATEGORY: return new CategorySubscriptionCallback(handler);
+                case MEDIA_ID: return new MediaIdSubscriptionCallback(handler);
+                default: return new NotifyAllSubscriptionCallback(handler);
             }
         }
         return null;

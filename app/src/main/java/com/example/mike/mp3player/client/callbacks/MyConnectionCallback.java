@@ -11,14 +11,15 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
 
     private MediaBrowserConnectorCallback mediaBrowserConnectorCallback;
 
-    public MyConnectionCallback(MediaBrowserConnectorCallback mediaBrowserConnectorCallback) {
+    public MyConnectionCallback() {
         super();
-        this.mediaBrowserConnectorCallback = mediaBrowserConnectorCallback;
     }
 
     @Override
     public void onConnected() {
-        mediaBrowserConnectorCallback.onConnected();
+     if (null != mediaBrowserConnectorCallback) {
+         mediaBrowserConnectorCallback.onConnected();
+     }
    }
 
     @Override
@@ -29,5 +30,9 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
     @Override
     public void onConnectionFailed() {
         // The Service has refused our connection
+    }
+
+    public void setMediaBrowserConnectorCallback(MediaBrowserConnectorCallback mediaBrowserConnectorCallback) {
+        this.mediaBrowserConnectorCallback = mediaBrowserConnectorCallback;
     }
 }

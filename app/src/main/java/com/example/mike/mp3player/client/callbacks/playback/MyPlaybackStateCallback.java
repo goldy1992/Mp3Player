@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.callbacks.playback;
 
+import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.media.session.PlaybackStateCompat;
 
@@ -19,8 +20,8 @@ public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> 
     private Map<ListenerType, Set<PlaybackStateListener>> listeners;
 
     @Inject
-    public MyPlaybackStateCallback(Looper looper) {
-        super(looper);
+    public MyPlaybackStateCallback(Handler handler) {
+        super(handler);
         this.listeners = new HashMap<>();
     }
 

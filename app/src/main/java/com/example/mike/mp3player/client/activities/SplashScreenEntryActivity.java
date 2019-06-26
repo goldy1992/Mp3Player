@@ -13,14 +13,12 @@ import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
-import com.example.mike.mp3player.dagger.components.DaggerMainActivityComponent;
 import com.example.mike.mp3player.dagger.components.MainActivityComponent;
-import com.example.mike.mp3player.dagger.modules.ApplicationContextModule;
 import com.example.mike.mp3player.dagger.modules.LooperModule;
-import com.example.mike.mp3player.dagger.modules.MediaBrowserConnectorCallbackModule;
-import com.example.mike.mp3player.dagger.modules.SubscriptionTypeModule;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import dagger.android.AndroidInjection;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
@@ -51,6 +49,7 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
         initialiseView(R.layout.splash_screen);
@@ -182,12 +181,9 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
 
     private void initialiseDependencies() {
         LooperModule looperModule = new LooperModule(getWorker().getLooper());
-        MediaBrowserConnectorCallbackModule mediaBrowserConnectorCallbackModule = new MediaBrowserConnectorCallbackModule(this);
-        SubscriptionTypeModule subscriptionTypeModule = new SubscriptionTypeModule(getSubscriptionType());
         MainActivityComponent daggerMainActivityComponent = DaggerMainActivityComponent.builder()
-                .looperModule(looperModule)
-                .mediaBrowserConnectorCallbackModule(mediaBrowserConnectorCallbackModule)
-                .subscriptionTypeModule(subscriptionTypeModule)
+                .subscription(SubscriptionType.NOTIFY_ALL)
+                .worker("SPSH_SCRN_ACTVTY_WRKR")
                 .build();
         daggerMainActivityComponent.inject(this);
     }

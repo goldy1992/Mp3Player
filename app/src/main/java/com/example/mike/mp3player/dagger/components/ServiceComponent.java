@@ -1,10 +1,12 @@
 package com.example.mike.mp3player.dagger.components;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.MikesMp3PlayerBase;
+import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.dagger.modules.MediaPlaybackServiceModule;
 import com.example.mike.mp3player.dagger.modules.service.HandlerThreadModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaLibraryModule;
@@ -49,6 +51,8 @@ public interface ServiceComponent extends AndroidInjector<MikesMp3PlayerBase> {
     Handler provideHandler();
     MediaLibrary provideMediaLibrary();
     MediaPlayerAdapterBase provideMediaPlayerAdapter();
+    MediaPlayer.OnCompletionListener provideOnCompletionListener();
+    MediaPlayer.OnSeekCompleteListener provideOnSeekCompleteListener();
 
     MediaRetriever mediaRetriever();
     MediaSessionAdapter provideMediaSessionAdapter();
@@ -56,6 +60,8 @@ public interface ServiceComponent extends AndroidInjector<MikesMp3PlayerBase> {
     MediaSessionCompat.Token provideMediaSessionToken();
     MyNotificationManager provideMyNotificationManager();
     ServiceManager provideServiceManager();
+    String workerId();
+
     void inject(MikesMp3PlayerBase mp3PlayerBase);
     void inject(MediaPlaybackService mediaPlaybackService);
     void injectMediaRetriever(MediaLibrary mediaLibrary);
@@ -65,6 +71,7 @@ public interface ServiceComponent extends AndroidInjector<MikesMp3PlayerBase> {
     @Component.Builder
     interface Builder {
         @BindsInstance Builder context(Context context);
+        @BindsInstance Builder worker(String workerId);
         ServiceComponent build();
     }
 }

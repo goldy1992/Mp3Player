@@ -7,8 +7,8 @@ import android.os.Parcelable;
 public abstract class AsyncCallback<P extends Parcelable> {
     Handler worker;
 
-    public AsyncCallback(Looper looper) {
-        this.worker = new Handler(looper);
+    public AsyncCallback(Handler handler) {
+        this.worker = handler;
     }
 
     public final void onStateChanged(P state) {

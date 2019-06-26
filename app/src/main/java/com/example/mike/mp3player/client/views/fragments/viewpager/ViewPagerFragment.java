@@ -63,7 +63,7 @@ public class ViewPagerFragment extends Fragment implements MediaBrowserResponseL
     public void disable() {}
 
     @Override
-    public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaItem> children, @NonNull Bundle options, Context context) {
+    public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaItem> children, @NonNull Bundle options) {
         TreeSet<MediaItem> rootItemsOrdered = new TreeSet<>(compareRootMediaItemsByCategory);
         rootItemsOrdered.addAll(children);
         for (MediaItem mediaItem : rootItemsOrdered) {

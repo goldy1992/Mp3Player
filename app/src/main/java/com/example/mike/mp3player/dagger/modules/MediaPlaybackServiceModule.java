@@ -1,14 +1,21 @@
 package com.example.mike.mp3player.dagger.modules;
 
+import com.example.mike.mp3player.dagger.components.MediaPlaybackServiceSubcomponent;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 
+import dagger.Binds;
 import dagger.Module;
-import dagger.android.ContributesAndroidInjector;
+import dagger.android.AndroidInjector;
+import dagger.multibindings.ClassKey;
+import dagger.multibindings.IntoMap;
 
-@Module
+@Module(subcomponents = MediaPlaybackServiceSubcomponent.class)
 public abstract class MediaPlaybackServiceModule {
 
-    @ContributesAndroidInjector
-    abstract MediaPlaybackService provideMediaPlaybackService();
+    @Binds
+    @IntoMap
+    @ClassKey(MediaPlaybackService.class)
+    abstract AndroidInjector.Builder<?> provideMediaPlaybackService(
+            MediaPlaybackServiceSubcomponent.Factory factory);
 
 }
