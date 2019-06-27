@@ -11,6 +11,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.media.MediaBrowserServiceCompat;
 
+import com.example.mike.mp3player.MikesMp3PlayerBase;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.commons.library.LibraryResponse;
 import com.example.mike.mp3player.service.library.MediaLibrary;
@@ -55,7 +56,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
      * TO BE CALLED BEFORE SUPER CLASS
      */
     private void init() {
-        AndroidInjection.inject(this);
+        MikesMp3PlayerBase app = (MikesMp3PlayerBase)getApplication();
+        app.getServiceComponent().inject(this);
         serviceManager.setMediaPlaybackService(this);
     }
 
@@ -135,7 +137,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     }
 
     private boolean allowBrowsing(String clientPackageName, int clientUid) {
-        return clientPackageName.equals(PACKAGE_NAME);
+        return clientPackageName.contains(PACKAGE_NAME);
     }
 
     public MediaSessionCompat getMediaSession() {

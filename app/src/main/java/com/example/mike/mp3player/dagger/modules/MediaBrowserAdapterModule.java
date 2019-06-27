@@ -17,7 +17,6 @@ import dagger.Provides;
 @Module
 public class MediaBrowserAdapterModule {
     @Provides
-    @Singleton
     public MediaBrowserAdapter provideMediaBrowserAdapter(Context context, Handler handler,
           SubscriptionType subscriptionType, MyConnectionCallback myConnectionCallback) {
         return new MediaBrowserAdapter(context, handler,
@@ -25,7 +24,6 @@ public class MediaBrowserAdapterModule {
     }
 
     @Provides
-    @Singleton
     public MyConnectionCallback provideMyConnectionCallback() {
         return new MyConnectionCallback();
     }

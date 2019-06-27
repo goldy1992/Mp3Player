@@ -8,6 +8,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
+import com.example.mike.mp3player.MikesMp3PlayerBase;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.PermissionGranted;
@@ -49,7 +50,7 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        AndroidInjection.inject(this);
+        initialiseDependencies();
         super.onCreate(savedInstanceState);
         mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
         initialiseView(R.layout.splash_screen);
@@ -180,11 +181,9 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
     }
 
     private void initialiseDependencies() {
-//        LooperModule looperModule = new LooperModule(getWorker().getLooper());
-//        MainActivityComponent daggerMainActivityComponent = DaggerMainActivityComponent.builder()
-//                .subscription(SubscriptionType.NOTIFY_ALL)
-//                .worker("SPSH_SCRN_ACTVTY_WRKR")
-//                .build();
-//        daggerMainActivityComponent.inject(this);
+        MikesMp3PlayerBase app = (MikesMp3PlayerBase)getApplication();
+        app.getSplashScreenActivityComponent().inject(this);
+        this.getMediaBrowserAdapter().getConnectionCallback().setMediaBrowserConnectorCallback(this);
+
     }
 }

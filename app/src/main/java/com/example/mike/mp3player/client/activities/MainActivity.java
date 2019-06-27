@@ -8,6 +8,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.LayoutRes;
 
+import com.example.mike.mp3player.MikesMp3PlayerBase;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;
@@ -24,6 +25,7 @@ public class MainActivity extends MediaBrowserSubscriberActivityCompat {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        initialiseDependencies();
         super.onCreate(savedInstanceState);
         this.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         this.viewInitialised = initialiseView(R.layout.activity_main);
@@ -68,5 +70,11 @@ public class MainActivity extends MediaBrowserSubscriberActivityCompat {
     @Override
     SubscriptionType getSubscriptionType() {
         return SubscriptionType.MEDIA_ID;
+    }
+
+    private void initialiseDependencies() {
+        MikesMp3PlayerBase app = (MikesMp3PlayerBase)getApplication();
+        app.getMainActivityComponent().inject(this);
+        this.getMediaBrowserAdapter().getConnectionCallback().setMediaBrowserConnectorCallback(this);
     }
 }

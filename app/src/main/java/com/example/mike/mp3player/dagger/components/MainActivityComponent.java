@@ -24,11 +24,9 @@ import dagger.android.AndroidInjectionModule;
 
 @Singleton
 @Component(modules = {
-        AndroidInjectionModule.class,
         HandlerThreadModule.class,
         MediaBrowserAdapterModule.class,
-        MediaControllerAdapterModule.class,
-        SplashScreenEntryActivityModule.class})
+        MediaControllerAdapterModule.class})
 public interface MainActivityComponent {
 
     MediaBrowserAdapter provideMediaBrowserAdapter();

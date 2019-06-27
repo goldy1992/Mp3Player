@@ -1,8 +1,6 @@
 package com.example.mike.mp3player;
 
-import android.app.Activity;
 import android.app.Application;
-import android.app.Service;
 import android.content.Context;
 
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
@@ -11,44 +9,38 @@ import com.example.mike.mp3player.dagger.components.DaggerServiceComponent;
 import com.example.mike.mp3player.dagger.components.MainActivityComponent;
 import com.example.mike.mp3player.dagger.components.ServiceComponent;
 
-import javax.inject.Inject;
+public class MikesMp3PlayerBase extends Application {
 
-import dagger.android.AndroidInjector;
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasActivityInjector;
-import dagger.android.HasServiceInjector;
-
-public class MikesMp3PlayerBase extends Application implements HasServiceInjector, HasActivityInjector {
-
-    @Inject
-    DispatchingAndroidInjector<Service> dispatchingAndroidServiceInjector;
-
-    @Inject
-    DispatchingAndroidInjector<Activity> dispatchingAndroidActivityInjector;
+    private MainActivityComponent splashScreenActivityComponent;
+    private MainActivityComponent mainActivityComponent;
+    private ServiceComponent serviceComponent;
 
     protected void setupServiceComponent(Context context) {
 
+        this.splashScreenActivityComponent = DaggerMainActivityComponent
+                .factory()
+                .create(context,"SPSH_SCRN_ACTVTY_WRKR", SubscriptionType.NOTIFY_ALL);
 
-
-        MainActivityComponent mainActivityComponent = DaggerMainActivityComponent
+        this.mainActivityComponent = DaggerMainActivityComponent
                 .factory()
                 .create(context,"MAIN_ACTVTY_WRKR", SubscriptionType.MEDIA_ID);
-        mainActivityComponent.inject(this);
 
-        ServiceComponent serviceComponent = DaggerServiceComponent
+        this.serviceComponent = DaggerServiceComponent
                 .factory()
                 .create(context, "MEDIA_PLYBK_SRVC_WKR");
-        serviceComponent.inject(this);
+        getServiceComponent().inject(this);
 
     }
 
-    @Override
-    public AndroidInjector<Service> serviceInjector() {
-        return dispatchingAndroidServiceInjector;
+    public MainActivityComponent getSplashScreenActivityComponent() {
+        return splashScreenActivityComponent;
     }
 
-    @Override
-    public AndroidInjector<Activity> activityInjector() {
-        return dispatchingAndroidActivityInjector;
+    public MainActivityComponent getMainActivityComponent() {
+        return mainActivityComponent;
+    }
+
+    public ServiceComponent getServiceComponent() {
+        return serviceComponent;
     }
 }

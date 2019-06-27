@@ -36,11 +36,9 @@ import dagger.android.AndroidInjector;
 
 @Singleton
 @Component(modules = {
-    AndroidInjectionModule.class,
     HandlerThreadModule.class,
     MediaLibraryModule.class,
     MediaPlayerAdapterModule.class,
-    MediaPlaybackServiceModule.class,
     MediaRetrieverModule.class,
     MediaSessionCallbackModule.class,
     MediaSessionCompatModule.class,

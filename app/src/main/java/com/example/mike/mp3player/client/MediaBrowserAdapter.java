@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
@@ -28,7 +27,7 @@ public class MediaBrowserAdapter {
 
     private static final String LOG_TAG = "MDIA_BRWSR_ADPTR";
     private MediaBrowserCompat mediaBrowser;
-    private MyConnectionCallback mConnectionCallbacks;
+    private MyConnectionCallback connectionCallback;
     private GenericSubscriptionCallback mySubscriptionCallback;
     private Context context;
     private Handler handler;
@@ -39,9 +38,9 @@ public class MediaBrowserAdapter {
         this.context = context;
         this.handler = handler;
         this.mySubscriptionCallback = createSubscriptionCallback(subscriptionType);
-        mConnectionCallbacks = myConnectionCallback;
+        connectionCallback = myConnectionCallback;
         ComponentName componentName = new ComponentName(getContext(), MediaPlaybackService.class);
-        this.mediaBrowser = new MediaBrowserCompat(getContext(), componentName, mConnectionCallbacks, null);
+        this.mediaBrowser = new MediaBrowserCompat(getContext(), componentName, getConnectionCallback(), null);
 
     }
 
@@ -114,5 +113,9 @@ public class MediaBrowserAdapter {
 
     public GenericSubscriptionCallback getMySubscriptionCallback() {
         return mySubscriptionCallback;
+    }
+
+    public MyConnectionCallback getConnectionCallback() {
+        return connectionCallback;
     }
 }

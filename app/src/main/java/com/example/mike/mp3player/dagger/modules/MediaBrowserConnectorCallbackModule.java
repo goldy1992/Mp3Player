@@ -15,7 +15,6 @@ public class MediaBrowserConnectorCallbackModule {
         this.mediaBrowserConnectorCallback = mediaBrowserConnectorCallback;
     }
 
-    @Singleton
     @Provides
     MediaBrowserConnectorCallback provideMediaBrowserConnectorCallback() {
         return mediaBrowserConnectorCallback;
