@@ -6,9 +6,9 @@ import dagger.Subcomponent;
 import dagger.android.AndroidInjector;
 
 @Subcomponent
-public interface SplashScreenEntryActivitySubcomponent {
+public interface SplashScreenEntryActivitySubcomponent extends AndroidInjector<SplashScreenEntryActivity> {
 
 
     @Subcomponent.Factory
-    public interface Factory extends AndroidInjector<SplashScreenEntryActivity> {}
+    public interface Factory extends AndroidInjector.Factory<SplashScreenEntryActivity> {}
 }

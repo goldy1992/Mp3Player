@@ -5,7 +5,7 @@ import com.example.mike.mp3player.dagger.components.SplashScreenEntryActivitySub
 
 import dagger.Binds;
 import dagger.Module;
-import dagger.android.ContributesAndroidInjector;
+import dagger.android.AndroidInjector;
 import dagger.multibindings.ClassKey;
 import dagger.multibindings.IntoMap;
 
@@ -15,6 +15,6 @@ public abstract class SplashScreenEntryActivityModule {
     @Binds
     @IntoMap
     @ClassKey(SplashScreenEntryActivity.class)
-    abstract SplashScreenEntryActivity provideSplashScreenEntryActivity(
+    abstract AndroidInjector.Factory<?>  provideSplashScreenEntryActivity(
             SplashScreenEntryActivitySubcomponent.Factory factory);
 }

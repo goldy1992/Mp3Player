@@ -180,11 +180,11 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
     }
 
     private void initialiseDependencies() {
-        LooperModule looperModule = new LooperModule(getWorker().getLooper());
-        MainActivityComponent daggerMainActivityComponent = DaggerMainActivityComponent.builder()
-                .subscription(SubscriptionType.NOTIFY_ALL)
-                .worker("SPSH_SCRN_ACTVTY_WRKR")
-                .build();
-        daggerMainActivityComponent.inject(this);
+//        LooperModule looperModule = new LooperModule(getWorker().getLooper());
+//        MainActivityComponent daggerMainActivityComponent = DaggerMainActivityComponent.builder()
+//                .subscription(SubscriptionType.NOTIFY_ALL)
+//                .worker("SPSH_SCRN_ACTVTY_WRKR")
+//                .build();
+//        daggerMainActivityComponent.inject(this);
     }
 }

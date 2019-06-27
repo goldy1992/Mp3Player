@@ -15,7 +15,7 @@ public abstract class MediaPlaybackServiceModule {
     @Binds
     @IntoMap
     @ClassKey(MediaPlaybackService.class)
-    abstract AndroidInjector.Builder<?> provideMediaPlaybackService(
+    abstract AndroidInjector.Factory<?> provideMediaPlaybackService(
             MediaPlaybackServiceSubcomponent.Factory factory);
 
 }

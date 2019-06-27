@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.MikesMp3PlayerBase;
+import com.example.mike.mp3player.client.activities.SplashScreenEntryActivity;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.dagger.modules.MediaPlaybackServiceModule;
 import com.example.mike.mp3player.dagger.modules.service.HandlerThreadModule;
@@ -45,7 +46,7 @@ import dagger.android.AndroidInjector;
     MediaSessionCompatModule.class,
     ServiceModule.class
 })
-public interface ServiceComponent extends AndroidInjector<MikesMp3PlayerBase> {
+public interface ServiceComponent {
 
     AudioBecomingNoisyBroadcastReceiver provideAudioBecomingNoisyBroadcastReceiver();
     Handler provideHandler();
@@ -68,10 +69,9 @@ public interface ServiceComponent extends AndroidInjector<MikesMp3PlayerBase> {
     void inject(MediaPlayerAdapterBase mediaPlayerAdapterBase);
     void inject(MediaSessionCallback mediaSessionCallback);
 
-    @Component.Builder
-    interface Builder {
-        @BindsInstance Builder context(Context context);
-        @BindsInstance Builder worker(String workerId);
-        ServiceComponent build();
+    @Component.Factory
+    interface Factory {
+        ServiceComponent create(@BindsInstance Context context,
+                                @BindsInstance String workerId);
     }
 }

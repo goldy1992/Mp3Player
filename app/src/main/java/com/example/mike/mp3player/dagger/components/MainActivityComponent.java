@@ -21,7 +21,6 @@ import javax.inject.Singleton;
 import dagger.BindsInstance;
 import dagger.Component;
 import dagger.android.AndroidInjectionModule;
-import dagger.android.AndroidInjector;
 
 @Singleton
 @Component(modules = {
@@ -29,8 +28,8 @@ import dagger.android.AndroidInjector;
         HandlerThreadModule.class,
         MediaBrowserAdapterModule.class,
         MediaControllerAdapterModule.class,
-SplashScreenEntryActivityModule.class})
-public interface MainActivityComponent extends AndroidInjector<MikesMp3PlayerBase> {
+        SplashScreenEntryActivityModule.class})
+public interface MainActivityComponent {
 
     MediaBrowserAdapter provideMediaBrowserAdapter();
     MediaControllerAdapter provideMediaControllerAdapter();
@@ -43,14 +42,11 @@ public interface MainActivityComponent extends AndroidInjector<MikesMp3PlayerBas
     void inject(SplashScreenEntryActivity splashScreenEntryActivity);
     void inject(MainActivity mainActivity);
 
-    @Component.Builder
-    interface Builder {
-        @BindsInstance
-        Builder context(Context context);
-        @BindsInstance
-        Builder worker(String workerId);
-        @BindsInstance
-        Builder subscription(SubscriptionType subscriptionType);
-        MainActivityComponent build();
+    @Component.Factory
+    interface Factory {
+        MainActivityComponent create(@BindsInstance Context context,
+                                     @BindsInstance String workerId,
+                                     @BindsInstance SubscriptionType subscriptionType);
+
     }
 }

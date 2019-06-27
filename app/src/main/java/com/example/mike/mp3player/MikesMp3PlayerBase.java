@@ -30,15 +30,14 @@ public class MikesMp3PlayerBase extends Application implements HasServiceInjecto
 
 
 
-        MainActivityComponent mainActivityComponent = DaggerMainActivityComponent.builder()
-                .context(context)
-                .worker("MAIN_ACTVTY_WRKR")
-                .subscription(SubscriptionType.MEDIA_ID)
-                .build();
+        MainActivityComponent mainActivityComponent = DaggerMainActivityComponent
+                .factory()
+                .create(context,"MAIN_ACTVTY_WRKR", SubscriptionType.MEDIA_ID);
         mainActivityComponent.inject(this);
 
-        ServiceComponent serviceComponent = DaggerServiceComponent.builder().context(context)
-                .worker("MEDIA_PLYBK_SRVC_WKR").build();
+        ServiceComponent serviceComponent = DaggerServiceComponent
+                .factory()
+                .create(context, "MEDIA_PLYBK_SRVC_WKR");
         serviceComponent.inject(this);
 
     }
