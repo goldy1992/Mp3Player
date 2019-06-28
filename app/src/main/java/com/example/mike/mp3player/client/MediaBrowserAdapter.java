@@ -38,7 +38,6 @@ public class MediaBrowserAdapter {
     public void init() {
         // Create MediaBrowserServiceCompat
         mediaBrowser.connect();
-
         //Log.i(LOG_TAG, "calling connect");
     }
 

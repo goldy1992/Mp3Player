@@ -19,7 +19,6 @@ public abstract class MediaBrowserCreatorActivityCompat extends MediaActivityCom
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-        initialiseDependencies();
     }
 
     @Override // MediaBrowserConnectorCallback
@@ -72,7 +71,4 @@ public abstract class MediaBrowserCreatorActivityCompat extends MediaActivityCom
         Log.i(LOG_TAG, "connection failed");
     }
 
-    private void initialiseDependencies() {
-
-    }
 }

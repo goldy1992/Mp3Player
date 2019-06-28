@@ -42,7 +42,7 @@ public class MediaBrowserAdapterModule {
 
     @Provides
     public MediaBrowserCompat provideMediaBrowserCompat(Context context, ComponentName componentName,
-                                                        MyConnectionCallback myConnectionCallback) {
+                                                        MyConnectionCallback myConnectionCallback, Handler handler) {
         return new MediaBrowserCompat(context, componentName, myConnectionCallback, null);
     }
 
