@@ -45,6 +45,5 @@ public interface MainActivityComponent {
         MainActivityComponent create(@BindsInstance Context context,
                                      @BindsInstance String workerId,
                                      @BindsInstance SubscriptionType subscriptionType);
-
     }
 }

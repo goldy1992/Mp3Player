@@ -6,18 +6,20 @@ import android.content.Context;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.dagger.components.DaggerMainActivityComponent;
 import com.example.mike.mp3player.dagger.components.DaggerServiceComponent;
+import com.example.mike.mp3player.dagger.components.DaggerSplashScreenEntryActivityComponent;
 import com.example.mike.mp3player.dagger.components.MainActivityComponent;
 import com.example.mike.mp3player.dagger.components.ServiceComponent;
+import com.example.mike.mp3player.dagger.components.SplashScreenEntryActivityComponent;
 
 public class MikesMp3PlayerBase extends Application {
 
-    private MainActivityComponent splashScreenActivityComponent;
+    private SplashScreenEntryActivityComponent splashScreenActivityComponent;
     private MainActivityComponent mainActivityComponent;
     private ServiceComponent serviceComponent;
 
     protected void setupServiceComponent(Context context) {
 
-        this.splashScreenActivityComponent = DaggerMainActivityComponent
+        this.splashScreenActivityComponent = DaggerSplashScreenEntryActivityComponent
                 .factory()
                 .create(context,"SPSH_SCRN_ACTVTY_WRKR", SubscriptionType.NOTIFY_ALL);
 
@@ -32,7 +34,7 @@ public class MikesMp3PlayerBase extends Application {
 
     }
 
-    public MainActivityComponent getSplashScreenActivityComponent() {
+    public SplashScreenEntryActivityComponent getSplashScreenActivityComponent() {
         return splashScreenActivityComponent;
     }
 

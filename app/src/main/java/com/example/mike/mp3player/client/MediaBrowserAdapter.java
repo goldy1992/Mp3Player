@@ -1,21 +1,13 @@
 package com.example.mike.mp3player.client;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
-import com.example.mike.mp3player.client.callbacks.subscription.CategorySubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.GenericSubscriptionCallback;
-import com.example.mike.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback;
-import com.example.mike.mp3player.client.callbacks.subscription.NotifyAllSubscriptionCallback;
-import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
-import com.example.mike.mp3player.service.MediaPlaybackService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -29,33 +21,33 @@ public class MediaBrowserAdapter {
     private MediaBrowserCompat mediaBrowser;
     private MyConnectionCallback connectionCallback;
     private GenericSubscriptionCallback mySubscriptionCallback;
-    private Context context;
-    private Handler handler;
 
     @Inject
-    public MediaBrowserAdapter(Context context, Handler handler, SubscriptionType subscriptionType,
-                               MyConnectionCallback myConnectionCallback) {
-        this.context = context;
-        this.handler = handler;
-        this.mySubscriptionCallback = createSubscriptionCallback(subscriptionType);
-        connectionCallback = myConnectionCallback;
-        ComponentName componentName = new ComponentName(getContext(), MediaPlaybackService.class);
-        this.mediaBrowser = new MediaBrowserCompat(getContext(), componentName, getConnectionCallback(), null);
+    public MediaBrowserAdapter(MediaBrowserCompat mediaBrowser,
+                                MyConnectionCallback myConnectionCallback,
+                                GenericSubscriptionCallback mySubscriptionCallback) {
+        this.mediaBrowser = mediaBrowser;
+        this.connectionCallback = myConnectionCallback;
+        this.mySubscriptionCallback = mySubscriptionCallback;
+    //  this.mySubscriptionCallback = createSubscriptionCallback(subscriptionType);
+    //  ComponentName componentName = new ComponentName(getContext(), MediaPlaybackService.class);
+    //  this.mediaBrowser = new MediaBrowserCompat(getContext(), componentName, getConnectionCallback(), null);
 
     }
 
     public void init() {
-        getmMediaBrowser().connect();
         // Create MediaBrowserServiceCompat
+        mediaBrowser.connect();
+
         //Log.i(LOG_TAG, "calling connect");
     }
 
-    public MediaBrowserCompat getmMediaBrowser() {
+    public MediaBrowserCompat getMediaBrowser() {
         return mediaBrowser;
     }
 
     public void disconnect() {
-        getmMediaBrowser().disconnect();
+        mediaBrowser.disconnect();
     }
 
     /**
@@ -66,7 +58,7 @@ public class MediaBrowserAdapter {
     public void subscribe(LibraryRequest libraryRequest) {
         Bundle options = new Bundle();
         options.putParcelable(REQUEST_OBJECT, libraryRequest);
-        getmMediaBrowser().subscribe(libraryRequest.getId(), options, getMySubscriptionCallback());
+        mediaBrowser.subscribe(libraryRequest.getId(), options, getMySubscriptionCallback());
     }
 
     public MediaSessionCompat.Token getMediaSessionToken() {
@@ -95,21 +87,6 @@ public class MediaBrowserAdapter {
         getMySubscriptionCallback().removeMediaBrowserResponseListener(category, mediaBrowserResponseListener);
     }
 
-    public Context getContext() {
-        return context;
-    }
-
-
-    private GenericSubscriptionCallback createSubscriptionCallback(SubscriptionType subscriptionType) {
-        if (null != subscriptionType) {
-            switch (subscriptionType) {
-                case CATEGORY: return new CategorySubscriptionCallback(handler);
-                case MEDIA_ID: return new MediaIdSubscriptionCallback(handler);
-                default: return new NotifyAllSubscriptionCallback(handler);
-            }
-        }
-        return null;
-    }
 
     public GenericSubscriptionCallback getMySubscriptionCallback() {
         return mySubscriptionCallback;
