@@ -21,6 +21,6 @@ public interface MediaPlayerActivityComponent {
     @Component.Factory
     interface Factory {
         MediaPlayerActivityComponent create(@BindsInstance Context context,
-                                                  @BindsInstance String workerId);
+                                              @BindsInstance String workerId);
     }
 }

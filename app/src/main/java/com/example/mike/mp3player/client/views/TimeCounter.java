@@ -1,25 +1,28 @@
 package com.example.mike.mp3player.client.views;
 
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.TextView;
 
-import com.example.mike.mp3player.client.TimeCounterTimerTask;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ONE;
 import static com.example.mike.mp3player.client.utils.TimerUtils.ONE_SECOND;
 import static com.example.mike.mp3player.client.utils.TimerUtils.formatTime;
+import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.PlaybackStateUtil.getRepeatModeFromPlaybackStateCompat;
 
 public class TimeCounter {
+    private static final long START = 0L;
     public static final String LOG_TAG = "TimeCounter";
-    private TextView view;
+    private TextView textView;
     private long duration;
     private long currentPosition;
     private int currentState;
@@ -29,9 +32,13 @@ public class TimeCounter {
     private Handler mainHandler;
     private boolean repeating = false;
 
-    public TimeCounter(TextView view) {
-        this.view = view;
-        this.mainHandler = new Handler(Looper.getMainLooper());
+    @Inject
+    public TimeCounter(Handler mainHandler) {
+        this.mainHandler = mainHandler;
+    }
+
+    public boolean isInitialised() {
+        return textView != null;
     }
 
     public void setDuration(Long duration) {
@@ -40,7 +47,7 @@ public class TimeCounter {
 
     public void seekTo(long position) {
         this.currentPosition = position;
-        setTimerText(formatTime(position));
+        updateTimerText();
     }
 
     public void cancelTimerDuringTracking() {
@@ -49,30 +56,29 @@ public class TimeCounter {
     }
     public void updateState(PlaybackStateCompat state) {
         //Log.d(LOG_TAG, "new state");
-            this.currentState = state.getState();
-            this.currentSpeed = state.getPlaybackSpeed();
-            Integer repeatMode = getRepeatModeFromPlaybackStateCompat(state);
-            this.repeating = repeatMode != null && repeatMode == REPEAT_MODE_ONE;
-            long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(state);
+        this.currentState = state.getState();
+        this.currentSpeed = state.getPlaybackSpeed();
+        Integer repeatMode = getRepeatModeFromPlaybackStateCompat(state);
+        this.repeating = repeatMode != null && repeatMode == REPEAT_MODE_ONE;
+        long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(state);
 
-            switch (getCurrentState()) {
-                case PlaybackStateCompat.STATE_PLAYING:
-                    work(latestPosition);
-                    break;
-                case PlaybackStateCompat.STATE_PAUSED:
-                    haltTimer(latestPosition);
-                    break;
-                default:
-                    resetTimer();
-                    break;
-            }
-
+        switch (getCurrentState()) {
+            case PlaybackStateCompat.STATE_PLAYING:
+                work(latestPosition);
+                break;
+            case PlaybackStateCompat.STATE_PAUSED:
+                haltTimer(latestPosition);
+                break;
+            default:
+                resetTimer();
+                break;
+        }
     }
 
     private void work(long startTime) {
         //Log.d(LOG_TAG, "work timer");
-        setCurrentPosition(startTime);
-        setTimerText(formatTime(startTime));
+        this.currentPosition = startTime;
+        updateTimerText();
         createTimer();
         setRunning(true);
     }
@@ -80,15 +86,15 @@ public class TimeCounter {
     private void haltTimer(long currentTime) {
         //Log.d(LOG_TAG, "halt timer");
         cancelTimer();
-        this.setCurrentPosition(currentTime);
-        setTimerText(formatTime(currentTime));
+        this.currentPosition = currentTime;
+        updateTimerText();
     }
 
     private void resetTimer() {
         //Log.d(LOG_TAG, "reset timer");
         cancelTimer();
-        this.setCurrentPosition(0L);
-        setTimerText(formatTime(0L));
+        this.currentPosition = START;
+        updateTimerText();
     }
 
     private void cancelTimer() {
@@ -96,17 +102,14 @@ public class TimeCounter {
         if (timer != null && isRunning()) {
             // cancel timer and make new one
             timer.shutdown();
-
         }
         setRunning(false);
-
     }
 
     private void createTimer() {
-        TimeCounterTimerTask timerTask = new TimeCounterTimerTask(this, mainHandler);
         cancelTimer();
         timer = Executors.newSingleThreadScheduledExecutor();
-        timer.scheduleAtFixedRate(timerTask,0L, getTimerFixedRate(), TimeUnit.MILLISECONDS);
+        timer.scheduleAtFixedRate(this::updateUi,0L, getTimerFixedRate(), TimeUnit.MILLISECONDS);
         //Log.d(LOG_TAG, "create timer");
     }
 
@@ -118,9 +121,25 @@ public class TimeCounter {
         return (long)(ONE_SECOND / currentSpeed);
     }
 
-    private void setTimerText(String text) {
-        mainHandler.post(() -> {getView().setText(text);});
+    private void updateTimerText() {
+        String text = formatTime(currentPosition);
+        mainHandler.post(() -> { textView.setText(text);} );
     }
+    
+    private void updateUi() {
+        //Log.d(LOG_TAG,"current position: " + timeCounter.getCurrentPosition() + ", duration: " + timeCounter.getDuration());
+        final long newPosition = currentPosition + ONE_SECOND;
+        if (newPosition < duration) {
+            this.currentPosition = newPosition;
+            this.updateTimerText();
+        } else if (isRepeating()) {
+            this.currentPosition = DEFAULT_POSITION;
+            this.updateTimerText();
+        }
+        //Log.d(LOG_TAG, "finished run call");
+    } // run
+    
+    
 
     public boolean isRunning() {
         return isRunning;
@@ -129,17 +148,13 @@ public class TimeCounter {
     public long getCurrentPosition() {
         return currentPosition;
     }
-
-    public void setCurrentPosition(long currentPosition) {
-        this.currentPosition = currentPosition;
-    }
-
+    
     public void setRunning(boolean running) {
         isRunning = running;
     }
 
-    public TextView getView() {
-        return view;
+    public TextView getTextView() {
+        return textView;
     }
 
     public long getDuration() {
@@ -164,6 +179,10 @@ public class TimeCounter {
 
     public void setRepeating(boolean repeating) {
         this.repeating = repeating;
+    }
+
+    public void setTextView(TextView textView) {
+        this.textView = textView;
     }
 }
 

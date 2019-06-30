@@ -19,9 +19,12 @@ import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListene
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.client.views.TimeCounter;
+import com.example.mike.mp3player.dagger.components.fragments.DaggerPlaybackTrackerFragmentComponent;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackStateListener, MetaDataListener {
 
@@ -33,6 +36,7 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        initialiseDependencies();
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_playback_tracker, container, false);
     }
@@ -41,7 +45,7 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
     public void onViewCreated(@NonNull View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         TextView counterView = view.findViewById(R.id.timer);
-        this.counter = new TimeCounter( counterView);
+        this.counter.setTextView(counterView);
 
         this.setSeekerBar(view.findViewById(R.id.seekBar));
         this.getSeekerBar().setTimeCounter(counter);
@@ -85,7 +89,16 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
         getSeekerBar().getSeekerBarController().onMetadataChanged(metadata);
     }
 
+    public void initialiseDependencies() {
+        DaggerPlaybackTrackerFragmentComponent.create().inject(this);
+    }
+
     private void updateDurationText(String duration) {
         this.duration.setText(duration);
+    }
+
+    @Inject
+    public void setTimeCounter(TimeCounter timeCounter) {
+        this.counter = timeCounter;
     }
 }
