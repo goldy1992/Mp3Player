@@ -13,6 +13,7 @@ import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.example.mike.mp3player.dagger.components.DaggerMediaPlayerActivityComponent;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -44,6 +45,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        initialiseDependencies();
         super.onCreate(savedInstanceState);
         initialiseView(R.layout.activity_media_player);
         token = (MediaSessionCompat.Token) retrieveIntentInfo(Constants.MEDIA_SESSION);
@@ -104,6 +106,13 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
     public PlaybackToolbarExtendedFragment getPlaybackToolbarExtendedFragment() {
         return playbackToolbarExtendedFragment;
+    }
+
+    public void initialiseDependencies() {
+        DaggerMediaPlayerActivityComponent
+                .factory()
+                .create(getApplicationContext(), "MDIA_PLYER_ACTVT_WKR")
+                .inject(this);
     }
 
 }

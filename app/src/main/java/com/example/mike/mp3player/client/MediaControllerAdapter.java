@@ -22,7 +22,6 @@ public class MediaControllerAdapter {
     private MediaControllerCompat mediaControllerCompat;
     private MyMediaControllerCallback myMediaControllerCallback;
     private MediaSessionCompat.Token token = null;
-    private boolean isInitialized = false;
     private final Context context;
 
     @Inject
@@ -32,7 +31,7 @@ public class MediaControllerAdapter {
     }
 
     public void setMediaToken(MediaSessionCompat.Token token) {
-        if (!isInitialized) {
+        if (!isInitialized()) {
             init(token);
         } else {
             Log.e(LOG_TAG, "MediaControllerAdapter already initialised");
@@ -47,7 +46,6 @@ public class MediaControllerAdapter {
         } catch (RemoteException ex) {
             result = false;
         }
-        this.isInitialized = result;
         this.token = token;
         updateUiState();
     }
@@ -133,8 +131,12 @@ public class MediaControllerAdapter {
         }
     }
 
+    public boolean isInitialized() {
+        return mediaControllerCompat != null && mediaControllerCompat.isSessionReady();
+    }
+
     public void updateUiState() {
-        if (isInitialized) {
+        if (isInitialized()) {
             myMediaControllerCallback.onMetadataChanged(mediaControllerCompat.getMetadata());
             myMediaControllerCallback.getMyPlaybackStateCallback().updateAll(mediaControllerCompat.getPlaybackState());
         }

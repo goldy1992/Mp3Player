@@ -10,6 +10,7 @@ import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.example.mike.mp3player.dagger.components.DaggerFolderActivityComponent;
 
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
@@ -38,6 +39,7 @@ public class FolderActivity extends MediaBrowserSubscriberActivityCompat {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        initialiseDependencies();
         super.onCreate(savedInstanceState);
         initialiseView(R.layout.activity_folder);
         Intent intent = getIntent();
@@ -73,5 +75,13 @@ public class FolderActivity extends MediaBrowserSubscriberActivityCompat {
     @Override
     public void onBackPressed() {
         this.finish();
+    }
+
+    public void initialiseDependencies() {
+        DaggerFolderActivityComponent.
+            factory()
+            .create(getApplicationContext(), "FLDER_ACTVY_WKR",
+                getSubscriptionType(),this)
+            .inject(this);
     }
 }
