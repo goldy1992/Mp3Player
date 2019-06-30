@@ -31,8 +31,8 @@ public class MediaBrowserAdapterModule {
     }
 
     @Provides
-    public MyConnectionCallback provideMyConnectionCallback() {
-        return new MyConnectionCallback();
+    public MyConnectionCallback provideMyConnectionCallback(MediaBrowserConnectorCallback mediaBrowserConnectorCallback) {
+        return new MyConnectionCallback(mediaBrowserConnectorCallback);
     }
 
     @Provides

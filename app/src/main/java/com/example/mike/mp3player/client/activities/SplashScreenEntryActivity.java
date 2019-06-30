@@ -8,18 +8,16 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
-import com.example.mike.mp3player.MikesMp3PlayerBase;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
-import com.example.mike.mp3player.dagger.components.MainActivityComponent;
-import com.example.mike.mp3player.dagger.modules.LooperModule;
+import com.example.mike.mp3player.dagger.components.DaggerSplashScreenEntryActivityComponent;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import dagger.android.AndroidInjection;
+import javax.inject.Inject;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
@@ -55,7 +53,6 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
         mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
         initialiseView(R.layout.splash_screen);
         thread.start();
-
     }
 
     @Override
@@ -151,7 +148,6 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
 
     public void init() {
         Log.i(LOG_TAG, "reset");
-        permissionsProcessor = new PermissionsProcessor(this, this);
         permissionsProcessor.requestPermission(WRITE_EXTERNAL_STORAGE);
         Thread splashScreenWaitThread = new Thread(() -> splashScreenRun());
         splashScreenWaitThread.start();
@@ -180,10 +176,16 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
         this.permissionGranted = permissionGranted;
     }
 
-    private void initialiseDependencies() {
-        MikesMp3PlayerBase app = (MikesMp3PlayerBase)getApplication();
-        app.getSplashScreenActivityComponent().inject(this);
-        this.getMediaBrowserAdapter().getConnectionCallback().setMediaBrowserConnectorCallback(this);
+    @Inject
+    public void setPermissionsProcessor(PermissionsProcessor permissionsProcessor) {
+        this.permissionsProcessor = permissionsProcessor;
+    }
 
+    private void initialiseDependencies() {
+        DaggerSplashScreenEntryActivityComponent
+                .factory()
+                .create(getApplicationContext(),"SPSH_SCRN_ACTVTY_WRKR",
+                        getSubscriptionType(), this, this, this).
+                inject(this);
     }
 }

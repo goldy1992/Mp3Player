@@ -4,6 +4,8 @@ import android.support.v4.media.MediaBrowserCompat;
 
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 
+import javax.inject.Inject;
+
 /**
  * Created by Mike on 04/10/2017.
  */
@@ -11,8 +13,10 @@ public class MyConnectionCallback extends MediaBrowserCompat.ConnectionCallback 
 
     private MediaBrowserConnectorCallback mediaBrowserConnectorCallback;
 
-    public MyConnectionCallback() {
+    @Inject
+    public MyConnectionCallback(MediaBrowserConnectorCallback mediaBrowserConnectorCallback) {
         super();
+        this.mediaBrowserConnectorCallback = mediaBrowserConnectorCallback;
     }
 
     @Override

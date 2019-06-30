@@ -6,9 +6,6 @@ import android.os.Handler;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.MikesMp3PlayerBase;
-import com.example.mike.mp3player.client.activities.SplashScreenEntryActivity;
-import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
-import com.example.mike.mp3player.dagger.modules.MediaPlaybackServiceModule;
 import com.example.mike.mp3player.dagger.modules.service.HandlerThreadModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaLibraryModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaPlayerAdapterModule;
@@ -30,8 +27,6 @@ import javax.inject.Singleton;
 
 import dagger.BindsInstance;
 import dagger.Component;
-import dagger.android.AndroidInjectionModule;
-import dagger.android.AndroidInjector;
 
 
 @Singleton

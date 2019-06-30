@@ -14,6 +14,8 @@ import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType
 import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.example.mike.mp3player.dagger.components.DaggerMainActivityComponent;
+import com.example.mike.mp3player.dagger.components.MainActivityComponent;
 
 public class MainActivity extends MediaBrowserSubscriberActivityCompat {
 
@@ -73,8 +75,10 @@ public class MainActivity extends MediaBrowserSubscriberActivityCompat {
     }
 
     private void initialiseDependencies() {
-        MikesMp3PlayerBase app = (MikesMp3PlayerBase)getApplication();
-        app.getMainActivityComponent().inject(this);
-        this.getMediaBrowserAdapter().getConnectionCallback().setMediaBrowserConnectorCallback(this);
+        MainActivityComponent mainActivityComponent = DaggerMainActivityComponent
+                .factory()
+                .create(getApplicationContext(),"MAIN_ACTVTY_WRKR", SubscriptionType.MEDIA_ID, this);
+        mainActivityComponent.inject(this);
+
     }
 }

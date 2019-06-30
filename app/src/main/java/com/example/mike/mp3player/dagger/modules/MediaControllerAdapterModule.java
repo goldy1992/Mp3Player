@@ -17,7 +17,6 @@ import dagger.Provides;
 public class MediaControllerAdapterModule {
 
     @Provides
-    @Singleton
     MediaControllerAdapter provideMediaControllerAdapter(Context context, MyMediaControllerCallback myMediaControllerCallback) {
         return new MediaControllerAdapter(context, myMediaControllerCallback);
     }

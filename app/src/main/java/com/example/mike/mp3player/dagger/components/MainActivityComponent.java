@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.mike.mp3player.MikesMp3PlayerBase;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
+import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.activities.MainActivity;
 import com.example.mike.mp3player.client.activities.SplashScreenEntryActivity;
@@ -14,13 +15,11 @@ import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType
 import com.example.mike.mp3player.dagger.modules.MediaBrowserAdapterModule;
 import com.example.mike.mp3player.dagger.modules.MediaControllerAdapterModule;
 import com.example.mike.mp3player.dagger.modules.service.HandlerThreadModule;
-import com.example.mike.mp3player.dagger.modules.service.SplashScreenEntryActivityModule;
 
 import javax.inject.Singleton;
 
 import dagger.BindsInstance;
 import dagger.Component;
-import dagger.android.AndroidInjectionModule;
 
 @Singleton
 @Component(modules = {
@@ -37,13 +36,13 @@ public interface MainActivityComponent {
     String workerId();
 
     void inject(MikesMp3PlayerBase mp3PlayerBase);
-    void inject(SplashScreenEntryActivity splashScreenEntryActivity);
     void inject(MainActivity mainActivity);
 
     @Component.Factory
     interface Factory {
         MainActivityComponent create(@BindsInstance Context context,
                                      @BindsInstance String workerId,
-                                     @BindsInstance SubscriptionType subscriptionType);
+                                     @BindsInstance SubscriptionType subscriptionType,
+                                     @BindsInstance MediaBrowserConnectorCallback callback);
     }
 }
