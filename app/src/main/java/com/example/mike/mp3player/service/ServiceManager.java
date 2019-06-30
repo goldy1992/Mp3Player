@@ -19,8 +19,11 @@ public class ServiceManager {
     private boolean serviceStarted = false;
 
     @Inject
-    public ServiceManager(MediaSessionAdapter mediaSession,
+    public ServiceManager(MediaPlaybackService service,
+                          MediaSessionAdapter mediaSession,
                           MyNotificationManager myNotificationManager) {
+
+        this.service = service;
         this.mediaSession = mediaSession;
         this.notificationManager = myNotificationManager;
     }
@@ -90,9 +93,5 @@ public class ServiceManager {
 
     public MediaPlaybackService getService() {
         return service;
-    }
-
-    public void setMediaPlaybackService(MediaPlaybackService mediaPlaybackService) {
-        this.service = mediaPlaybackService;
     }
 }

@@ -8,7 +8,6 @@ import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.LayoutRes;
 
-import com.example.mike.mp3player.MikesMp3PlayerBase;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;

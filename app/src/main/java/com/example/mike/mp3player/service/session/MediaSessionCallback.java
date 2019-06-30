@@ -86,16 +86,16 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.serviceManager = serviceManager;
         this.broadcastReceiver = broadcastReceiver;
         this.worker = handler;
-        init();
     }
 
-    private void init() {
-        Uri firstSongUri = this.getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getCurrentMediaId());
-        Uri nextSongUri = this.getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getNext());
-        this.getMediaPlayerAdapter().reset(firstSongUri, nextSongUri);
+    public void init() {
         List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.getMediaLibrary().getSongList());
         List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
         this.playbackManager.createNewPlaylist(queueItems);
+        Uri firstSongUri = this.getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getCurrentMediaId());
+        Uri nextSongUri = this.getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getNext());
+        this.getMediaPlayerAdapter().reset(firstSongUri, nextSongUri);
+
         getMediaSessionAdapter().updateAll();
     }
 

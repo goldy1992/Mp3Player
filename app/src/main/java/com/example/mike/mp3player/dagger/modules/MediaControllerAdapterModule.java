@@ -8,7 +8,6 @@ import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 import com.example.mike.mp3player.client.callbacks.MyMetaDataCallback;
 import com.example.mike.mp3player.client.callbacks.playback.MyPlaybackStateCallback;
 
-import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;

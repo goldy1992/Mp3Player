@@ -14,6 +14,7 @@ import androidx.media.MediaBrowserServiceCompat;
 import com.example.mike.mp3player.MikesMp3PlayerBase;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.commons.library.LibraryResponse;
+import com.example.mike.mp3player.dagger.components.DaggerServiceComponent;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.session.MediaSessionCallback;
 
@@ -22,8 +23,6 @@ import java.util.List;
 import java.util.TreeSet;
 
 import javax.inject.Inject;
-
-import dagger.android.AndroidInjection;
 
 import static com.example.mike.mp3player.commons.Constants.ACCEPTED_MEDIA_ROOT_ID;
 import static com.example.mike.mp3player.commons.Constants.PACKAGE_NAME;
@@ -49,6 +48,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         init();
         super.onCreate();
         this.mediaLibrary.buildMediaLibrary();
+        this.mediaSessionCallback.init();
         setSessionToken(mediaSession.getSessionToken());
         mediaSession.setCallback(mediaSessionCallback);
     }
@@ -56,9 +56,10 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
      * TO BE CALLED BEFORE SUPER CLASS
      */
     private void init() {
-        MikesMp3PlayerBase app = (MikesMp3PlayerBase)getApplication();
-        app.getServiceComponent().inject(this);
-        serviceManager.setMediaPlaybackService(this);
+        DaggerServiceComponent
+            .factory()
+            .create(getApplicationContext(), this, "MEDIA_PLYBK_SRVC_WKR")
+            .inject(this);
     }
 
     @Override

@@ -19,9 +19,10 @@ public class ServiceModule {
 
     @Singleton
     @Provides
-    ServiceManager provideServiceManager(MediaSessionAdapter mediaSessionAdapter,
+    ServiceManager provideServiceManager(MediaPlaybackService service,
+                                         MediaSessionAdapter mediaSessionAdapter,
                                          MyNotificationManager myNotificationManager) {
-        return new ServiceManager(mediaSessionAdapter, myNotificationManager);
+        return new ServiceManager(service, mediaSessionAdapter, myNotificationManager);
     }
 
     @Singleton

@@ -65,6 +65,7 @@ public interface ServiceComponent {
     @Component.Factory
     interface Factory {
         ServiceComponent create(@BindsInstance Context context,
+                                @BindsInstance MediaPlaybackService mediaPlaybackService,
                                 @BindsInstance String workerId);
     }
 }

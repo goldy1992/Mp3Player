@@ -14,10 +14,6 @@ public class MikesMp3PlayerBase extends Application {
 
     protected void setupServiceComponent(Context context) {
 
-        this.serviceComponent = DaggerServiceComponent
-                .factory()
-                .create(context, "MEDIA_PLYBK_SRVC_WKR");
-        getServiceComponent().inject(this);
 
     }
 
