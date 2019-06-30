@@ -14,7 +14,7 @@ import com.example.mike.mp3player.dagger.components.DaggerFolderActivityComponen
 
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
-public class FolderActivity extends MediaBrowserSubscriberActivityCompat {
+public class FolderActivity extends MediaActivityCompat {
 
     private static final String LOG_TAG = "FOLDER_ACTIVITY";
     private ChildViewPagerFragment viewPageFragment;

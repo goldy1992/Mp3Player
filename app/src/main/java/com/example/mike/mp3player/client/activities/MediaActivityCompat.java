@@ -4,24 +4,60 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.HandlerThread;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.LayoutRes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaBrowserAdapter;
+import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 
 import javax.inject.Inject;
 
 import static com.example.mike.mp3player.commons.Constants.THEME;
 
-public abstract class MediaActivityCompat extends AppCompatActivity  {
+public abstract class MediaActivityCompat extends AppCompatActivity implements MediaBrowserConnectorCallback {
 
-    private final String WORKER_ID = getClass().toString();
+    private MediaBrowserAdapter mediaBrowserAdapter;
     private MediaControllerAdapter mediaControllerAdapter;
     private static final String LOG_TAG = "MEDIA_ACTIVITY_COMPAT";
     private HandlerThread worker;
+    abstract SubscriptionType getSubscriptionType();
+
+    @Override // MediaBrowserConnectorCallback
+    public void onConnected() {
+        initialiseMediaControllerAdapter(mediaBrowserAdapter.getMediaSessionToken());
+    }
+
+    public final MediaBrowserAdapter getMediaBrowserAdapter() {
+        return mediaBrowserAdapter;
+    }
+
+    @Inject
+    public final void setMediaBrowserAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
+        this.mediaBrowserAdapter = mediaBrowserAdapter;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getMediaControllerAdapter().disconnect();
+        getMediaBrowserAdapter().disconnect();
+        worker.quitSafely();
+    }
+
+    @Override // MediaBrowserConnectorCallback
+    public void onConnectionSuspended() { /* TODO: implement onConnectionSuspended */
+        Log.i(LOG_TAG, "connection suspended");}
+
+    @Override // MediaBrowserConnectorCallback
+    public void onConnectionFailed() {  /* TODO: implement onConnectionFailed */
+        Log.i(LOG_TAG, "connection failed");
+    }
 
     abstract boolean initialiseView(@LayoutRes int layoutId);
 
@@ -30,8 +66,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         SharedPreferences settings = getApplicationContext().getSharedPreferences(THEME, MODE_PRIVATE);
         setTheme(settings.getInt(THEME, R.style.AppTheme_Blue));
-        worker = new HandlerThread(WORKER_ID);
-        getWorker().start();
+        mediaBrowserAdapter.init();
     }
 
     public void initialiseMediaControllerAdapter(MediaSessionCompat.Token token) {
@@ -52,12 +87,6 @@ public abstract class MediaActivityCompat extends AppCompatActivity  {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getWorker().quitSafely();
-    }
-
     public final MediaControllerAdapter getMediaControllerAdapter() {
         return mediaControllerAdapter;
     }
@@ -66,7 +95,8 @@ public abstract class MediaActivityCompat extends AppCompatActivity  {
         this.mediaControllerAdapter = mediaControllerAdapter;
     }
 
-    public HandlerThread getWorker() {
-        return worker;
+    @Inject
+    public final void setWorker(HandlerThread thread) {
+        this.worker = thread;
     }
 }

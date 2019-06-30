@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackToolbarExtendedFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
@@ -61,7 +62,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
             }
         } else {
             /** TODO: Add functionality for when the playback bar is touched in the MainActivity and no
-             * token is passed or when no track info is specified, a track must be sent to the mediacontrollerwrapper
+             * token is passed or when no track info is specified, a track must be sent
              */
         }
     }
@@ -84,6 +85,11 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     public void onStop() {
         super.onStop();
         // (see "stay in sync with the MediaSession")
+    }
+
+    @Override
+    SubscriptionType getSubscriptionType() {
+        return SubscriptionType.NONE;
     }
 
     @Override
@@ -111,7 +117,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     public void initialiseDependencies() {
         DaggerMediaPlayerActivityComponent
                 .factory()
-                .create(getApplicationContext(), "MDIA_PLYER_ACTVT_WKR")
+                .create(getApplicationContext(), "MDIA_PLYER_ACTVT_WKR", getSubscriptionType(), this)
                 .inject(this);
     }
 

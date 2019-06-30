@@ -95,7 +95,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         Uri firstSongUri = this.getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getCurrentMediaId());
         Uri nextSongUri = this.getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getNext());
         this.getMediaPlayerAdapter().reset(firstSongUri, nextSongUri);
-
         getMediaSessionAdapter().updateAll();
     }
 

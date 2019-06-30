@@ -14,14 +14,12 @@ import dagger.Provides;
 @Module
 public class HandlerThreadModule {
 
-    private static final String WORKER_ID = "MDIA_PLYBK_SRVC_WKR";
-
     @Provides
     public HandlerThread provideHandlerThread(String workerId) {
-        HandlerThread handlerThread = new HandlerThread(WORKER_ID);
+        HandlerThread handlerThread = new HandlerThread(workerId);
         handlerThread.start();
         handlerThread.getLooper().setMessageLogging((String x) -> {
-            Log.i(WORKER_ID, x);
+            Log.i(workerId, x);
         });
         return handlerThread;
     }

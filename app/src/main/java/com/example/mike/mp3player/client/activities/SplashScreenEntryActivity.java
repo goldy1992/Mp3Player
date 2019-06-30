@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
 
-public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
+public class SplashScreenEntryActivity extends MediaActivityCompat
     implements  MediaBrowserConnectorCallback,
                 PermissionGranted {
 
