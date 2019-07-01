@@ -48,17 +48,12 @@ public class MediaPlayerActivity extends MediaActivityCompat {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        initialiseDependencies();
         super.onCreate(savedInstanceState);
         initialiseView(R.layout.activity_media_player);
     }
-
     @Override
     public void onStart() {
         super.onStart();
-        /* TODO: setMediaId is possible redundant code and needs to be tested. Will temporarily comment it out in order to test.
-        //setMediaId((String) retrieveIntentInfo(Constants.MEDIA_ID));
-        */
         trackInfoFragment.init(getMediaControllerAdapter());
         playbackSpeedControlsFragment.init(getMediaControllerAdapter());
         playbackTrackerFragment.init(getMediaControllerAdapter());
@@ -84,12 +79,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
             // Display the initial state
             // parent id will sure that the correct playlist is found in the media library
             getMediaControllerAdapter().prepareFromMediaId(mediaId, getIntent().getExtras());
-        }
-        else {
-            /** TODO: Add functionality for when the playback bar is touched in the MainActivity and no
-             * token is passed or when no track info is specified, a track must be sent
-             */
-            Log.e(LOG_TAG, "Call to MediaPlayerActivity happened without a Library Request");
         }
     }
 
@@ -128,8 +117,8 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     public PlaybackToolbarExtendedFragment getPlaybackToolbarExtendedFragment() {
         return playbackToolbarExtendedFragment;
     }
-
-    public void initialiseDependencies() {
+    @Override
+    void initialiseDependencies() {
         DaggerMediaPlayerActivityComponent
                 .factory()
                 .create(getApplicationContext(), getWorkerId(), getSubscriptionType(), this)

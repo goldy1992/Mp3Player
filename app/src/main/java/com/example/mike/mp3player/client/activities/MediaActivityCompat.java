@@ -3,7 +3,6 @@ package com.example.mike.mp3player.client.activities;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.HandlerThread;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -21,21 +20,24 @@ import javax.inject.Inject;
 import static com.example.mike.mp3player.commons.Constants.THEME;
 
 public abstract class MediaActivityCompat extends AppCompatActivity implements MediaBrowserConnectorCallback {
-
-    private MediaBrowserAdapter mediaBrowserAdapter;
-    private MediaControllerAdapter mediaControllerAdapter;
     private static final String LOG_TAG = "MEDIA_ACTIVITY_COMPAT";
-    private HandlerThread worker;
-    abstract SubscriptionType getSubscriptionType();
+    /** MediaBrowserAdapter */
+    private MediaBrowserAdapter mediaBrowserAdapter;
+    /** MediaControllerAdapter */
+    private MediaControllerAdapter mediaControllerAdapter;
 
-    /**
-     * @return The unique name of the HandlerThread used by the activity
-     */
+    private HandlerThread worker;
+    /** @return The subscription type of the MediaActivityCompat */
+    abstract SubscriptionType getSubscriptionType();
+    /** @return The unique name of the HandlerThread used by the activity */
     abstract String getWorkerId();
+    /** Utility method used to initialise the dependencies set up by Dagger2. DOES NOT need to be
+     * called by sub class */
+    abstract void initialiseDependencies();
 
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
-        initialiseMediaControllerAdapter(mediaBrowserAdapter.getMediaSessionToken());
+        this.mediaControllerAdapter.setMediaToken(mediaBrowserAdapter.getMediaSessionToken());
     }
 
     public final MediaBrowserAdapter getMediaBrowserAdapter() {
@@ -68,18 +70,11 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        initialiseDependencies();
         super.onCreate(savedInstanceState);
         SharedPreferences settings = getApplicationContext().getSharedPreferences(THEME, MODE_PRIVATE);
         setTheme(settings.getInt(THEME, R.style.AppTheme_Blue));
         mediaBrowserAdapter.init();
-    }
-
-    public void initialiseMediaControllerAdapter(MediaSessionCompat.Token token) {
-        if (null == this.mediaControllerAdapter) {
-       //     this.mediaControllerAdapter = new MediaControllerAdapter(this, token, worker.getLooper());
-        } else {
-            this.mediaControllerAdapter.setMediaToken(token);
-        }
     }
 
     @Override
@@ -95,6 +90,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     public final MediaControllerAdapter getMediaControllerAdapter() {
         return mediaControllerAdapter;
     }
+
     @Inject
     public final void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
         this.mediaControllerAdapter = mediaControllerAdapter;

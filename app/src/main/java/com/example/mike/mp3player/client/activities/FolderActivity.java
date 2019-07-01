@@ -38,13 +38,11 @@ public class FolderActivity extends MediaActivityCompat {
         setContentView(layoutId);
         this.simpleTitleBarFragment = (SimpleTitleBarFragment) getSupportFragmentManager().findFragmentById(R.id.simpleTitleBarFragment);
         this.playToolBarFragment = (PlayToolBarFragment) getSupportFragmentManager().findFragmentById(R.id.playToolbarFragment);
-//        this.playToolBarFragment = PlayToolBarFragment.createAndInitialisePlayToolbarFragment(getMediaControllerAdapter(), false);
         return true;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        initialiseDependencies();
         super.onCreate(savedInstanceState);
         initialiseView(R.layout.activity_folder);
         Intent intent = getIntent();
@@ -57,7 +55,6 @@ public class FolderActivity extends MediaActivityCompat {
         super.onStart();
         if (getMediaControllerAdapter() != null) {
             getMediaControllerAdapter().updateUiState();
-            //       setPlaybackState(mediaControllerAdapter.getCurrentPlaybackState());
         }
         // If it is null it will initialised when the MediaBrowserAdapter has connected
     }
@@ -70,8 +67,6 @@ public class FolderActivity extends MediaActivityCompat {
         getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
         this.playToolBarFragment.init(getMediaControllerAdapter(), false);
         playToolBarFragment.displayButtons();
-//        getSupportFragmentManager().beginTransaction().add(R.id.playToolbarFragment, playToolBarFragment).commitNow();
-
 
         getSupportActionBar().setTitle(getString(R.string.FOLDER_NAME, this.folderName));
         getMediaControllerAdapter().updateUiState();
@@ -82,7 +77,9 @@ public class FolderActivity extends MediaActivityCompat {
         this.finish();
     }
 
-    public void initialiseDependencies() {
+    /** {@inheritDoc} */
+    @Override
+    void initialiseDependencies() {
         DaggerFolderActivityComponent.
             factory()
             .create(getApplicationContext(), getWorkerId(),

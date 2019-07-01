@@ -26,7 +26,6 @@ public class MainActivity extends MediaActivityCompat {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        initialiseDependencies();
         super.onCreate(savedInstanceState);
         this.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         this.viewInitialised = initialiseView(R.layout.activity_main);
@@ -81,7 +80,9 @@ public class MainActivity extends MediaActivityCompat {
         return "MAIN_ACTVTY_WRKR";
     }
 
-    private void initialiseDependencies() {
+    /** {@inheritDoc} */
+    @Override
+    void initialiseDependencies() {
         MainActivityComponent mainActivityComponent = DaggerMainActivityComponent
                 .factory()
                 .create(getApplicationContext(),getWorkerId(), SubscriptionType.MEDIA_ID, this);

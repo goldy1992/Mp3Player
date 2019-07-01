@@ -36,7 +36,6 @@ public abstract class MediaPlayerAdapter implements MediaPlayer.OnErrorListener,
     AudioFocusManager audioFocusManager;
     private OnCompletionListener onCompletionListener;
     private OnSeekCompleteListener onSeekCompleteListener;
-    boolean isInitialised = false;
 
     @PlaybackStateCompat.RepeatMode
     int repeatMode;
@@ -145,7 +144,7 @@ public abstract class MediaPlayerAdapter implements MediaPlayer.OnErrorListener,
     }
 
     public void seekTo(long position) {
-        if (isInitialised) {
+        if (isInitialised()) {
             if (!prepare()) {
                 return;
             }
@@ -162,20 +161,23 @@ public abstract class MediaPlayerAdapter implements MediaPlayer.OnErrorListener,
     }
 
     /**
-     *
-     * @return
+     * @return the current position of the track prepared on the current media player, 0 if
+     * currentMediaPlayer is null
      */
     public int getCurrentPosition() {
         return currentMediaPlayer != null ? currentMediaPlayer.getCurrentPosition() : 0;
     }
     /**
-     *
-     * @return
+     * @return the duration of the track prepared on the current media player, 0 if currentMediaPlayer
+     * is null
      */
     public int getCurrentDuration() {
         return currentMediaPlayer != null ? currentMediaPlayer.getDuration() : 0;
     }
 
+    /**
+     * @return true is the current state is set to STATE_PLAYING
+     */
     public boolean isPlaying() {
         return currentState == PlaybackStateCompat.STATE_PLAYING;
     }
@@ -226,8 +228,8 @@ public abstract class MediaPlayerAdapter implements MediaPlayer.OnErrorListener,
     }
     /**
      *
-     * @param speed
-     * @return
+     * @param speed the speed
+     * @return true if it's a valid speed
      */
     boolean validSpeed(float speed) {
         return speed >= MINIMUM_PLAYBACK_SPEED &&
@@ -286,6 +288,9 @@ public abstract class MediaPlayerAdapter implements MediaPlayer.OnErrorListener,
 
     public void setOnCompletionListener(OnCompletionListener onCompletionListener) {
         this.onCompletionListener = onCompletionListener;
+        if (null != currentMediaPlayer) {
+            currentMediaPlayer.setOnCompletionListener(onCompletionListener);
+        }
     }
 
     public OnSeekCompleteListener getOnSeekCompleteListener() {
@@ -294,5 +299,8 @@ public abstract class MediaPlayerAdapter implements MediaPlayer.OnErrorListener,
 
     public void setOnSeekCompleteListener(OnSeekCompleteListener onSeekCompleteListener) {
         this.onSeekCompleteListener = onSeekCompleteListener;
+        if (null != currentMediaPlayer) {
+            currentMediaPlayer.setOnSeekCompleteListener(onSeekCompleteListener);
+        }
     }
 }
