@@ -20,35 +20,20 @@ public class MediaPlayerAdapterModule {
 
     @Singleton
     @Provides
-    public MediaPlayerAdapterBase provideMediaPlayerAdapter(Context context, MediaPlayer.OnCompletionListener onCompletionListener,
-                                                            MediaPlayer.OnSeekCompleteListener seekCompleteListener) {
-        return createMediaPlayerAdapter(context, onCompletionListener, seekCompleteListener);
+    public MediaPlayerAdapterBase provideMediaPlayerAdapter(Context context) {
+        return createMediaPlayerAdapter(context);
     }
-
-    @Provides
-    public MediaPlayer.OnSeekCompleteListener provideOnSeekCompleteListener(
-            MediaSessionCallback mediaSessionCallback) {
-        return mediaSessionCallback;
-    }
-
-    @Provides
-    public MediaPlayer.OnCompletionListener provideOnCompletionListener(
-            MediaSessionCallback mediaSessionCallback) {
-        return mediaSessionCallback;
-    }
-
 
     /**
      * @return the appropriate Media Player object
      */
-    private MediaPlayerAdapterBase createMediaPlayerAdapter(Context context, MediaPlayer.OnCompletionListener onCompletionListener,
-                                                            MediaPlayer.OnSeekCompleteListener seekCompleteListener) {
+    private MediaPlayerAdapterBase createMediaPlayerAdapter(Context context) {
         switch (Build.VERSION.SDK_INT) {
             case Build.VERSION_CODES.M:
-                return new MarshmallowMediaPlayerAdapterBase(context, onCompletionListener, seekCompleteListener);
+                return new MarshmallowMediaPlayerAdapterBase(context);
             case Build.VERSION_CODES.N:
-                return new NougatMediaPlayerAdapterBase(context, onCompletionListener, seekCompleteListener);
-            default: return new OreoPlayerAdapterBase(context, onCompletionListener, seekCompleteListener);
+                return new NougatMediaPlayerAdapterBase(context);
+            default: return new OreoPlayerAdapterBase(context);
         }
     }
 }

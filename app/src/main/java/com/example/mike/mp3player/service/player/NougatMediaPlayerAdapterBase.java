@@ -17,9 +17,8 @@ public class NougatMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
     private Uri currentUri;
     private boolean needToSetPlaybackParams = true;
 
-    public NougatMediaPlayerAdapterBase(Context context, MediaPlayer.OnCompletionListener onCompletionListener,
-                                        MediaPlayer.OnSeekCompleteListener seekCompleteListener) {
-        super(context, onCompletionListener, seekCompleteListener);
+    public NougatMediaPlayerAdapterBase(Context context) {
+        super(context);
         this.mediaPlayerPool = new MediaPlayerPool(context);
     }
 

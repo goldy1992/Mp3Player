@@ -48,11 +48,8 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
     @PlaybackStateCompat.State
     int currentState = PlaybackStateCompat.STATE_PAUSED;
 
-    public MediaPlayerAdapterBase(Context context, OnCompletionListener onCompletionListener,
-                                  OnSeekCompleteListener seekCompleteListener) {
+    public MediaPlayerAdapterBase(Context context) {
         this.context = context;
-        this.setOnCompletionListener(onCompletionListener);
-        this.setOnSeekCompleteListener(seekCompleteListener);
     }
 
     public abstract boolean play();
@@ -157,6 +154,9 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
         }
     }
 
+    /**
+     * @return true if the MediaPlayerAdapter is initialised
+     */
     public boolean isInitialised() {
        return audioFocusManager.isInitialised() && null != currentMediaPlayer
                 && onCompletionListener != null && onSeekCompleteListener != null;
@@ -285,7 +285,6 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
         return onCompletionListener;
     }
 
-    @Inject
     public void setOnCompletionListener(OnCompletionListener onCompletionListener) {
         this.onCompletionListener = onCompletionListener;
     }
@@ -294,7 +293,6 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
         return onSeekCompleteListener;
     }
 
-    @Inject
     public void setOnSeekCompleteListener(OnSeekCompleteListener onSeekCompleteListener) {
         this.onSeekCompleteListener = onSeekCompleteListener;
     }

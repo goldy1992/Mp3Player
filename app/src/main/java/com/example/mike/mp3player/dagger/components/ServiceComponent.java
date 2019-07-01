@@ -44,8 +44,6 @@ public interface ServiceComponent {
     Handler provideHandler();
     MediaLibrary provideMediaLibrary();
     MediaPlayerAdapterBase provideMediaPlayerAdapter();
-    MediaPlayer.OnCompletionListener provideOnCompletionListener();
-    MediaPlayer.OnSeekCompleteListener provideOnSeekCompleteListener();
 
     MediaRetriever mediaRetriever();
     MediaSessionAdapter provideMediaSessionAdapter();
