@@ -7,8 +7,10 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
@@ -22,10 +24,11 @@ import javax.inject.Inject;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
 
-public class SplashScreenEntryActivity extends MediaActivityCompat
+public class SplashScreenEntryActivity extends AppCompatActivity
     implements  MediaBrowserConnectorCallback,
                 PermissionGranted {
 
+    private MediaBrowserAdapter mediaBrowserAdapter;
     private static final String LOG_TAG = "SPLSH_SCRN_ENTRY_ACTVTY";
     private static final long WAIT_TIME = 3000L;
     private PermissionsProcessor permissionsProcessor;
@@ -36,22 +39,11 @@ public class SplashScreenEntryActivity extends MediaActivityCompat
     private Thread thread = new Thread(() -> init());
 
     @Override
-    SubscriptionType getSubscriptionType() {
-        return SubscriptionType.NOTIFY_ALL;
-    }
-
-    @Override
-    boolean initialiseView(int layoutId) {
-        setContentView(layoutId);
-        return true;
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         initialiseDependencies();
         super.onCreate(savedInstanceState);
         mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
-        initialiseView(R.layout.splash_screen);
+        setContentView(R.layout.splash_screen);
         thread.start();
     }
 
@@ -131,8 +123,8 @@ public class SplashScreenEntryActivity extends MediaActivityCompat
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == APP_TERMINATED) {
-            if (getMediaBrowserAdapter() != null) {
-                getMediaBrowserAdapter().disconnect();
+            if (mediaBrowserAdapter != null) {
+                mediaBrowserAdapter.disconnect();
             }
             finish();
         }
@@ -142,7 +134,7 @@ public class SplashScreenEntryActivity extends MediaActivityCompat
     public void onPermissionGranted() {
         Log.i(LOG_TAG, "permission granted");
         setPermissionGranted(true);
-        Runnable r = new Thread(() -> initMediaBrowserService());
+        Runnable r = new Thread(() -> mediaBrowserAdapter.connect());
         runOnUiThread(r);
     }
 
@@ -181,11 +173,16 @@ public class SplashScreenEntryActivity extends MediaActivityCompat
         this.permissionsProcessor = permissionsProcessor;
     }
 
+    @Inject
+    public void setMediaBrowserAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
+        this.mediaBrowserAdapter = mediaBrowserAdapter;
+    }
+
     private void initialiseDependencies() {
         DaggerSplashScreenEntryActivityComponent
                 .factory()
                 .create(getApplicationContext(),"SPSH_SCRN_ACTVTY_WRKR",
-                        getSubscriptionType(), this, this, this).
+                        SubscriptionType.NOTIFY_ALL, this, this, this).
                 inject(this);
     }
 }

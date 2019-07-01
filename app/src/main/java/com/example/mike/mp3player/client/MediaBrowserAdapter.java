@@ -29,10 +29,6 @@ public class MediaBrowserAdapter {
         this.mediaBrowser = mediaBrowser;
         this.connectionCallback = myConnectionCallback;
         this.mySubscriptionCallback = mySubscriptionCallback;
-    //  this.mySubscriptionCallback = createSubscriptionCallback(subscriptionType);
-    //  ComponentName componentName = new ComponentName(getContext(), MediaPlaybackService.class);
-    //  this.mediaBrowser = new MediaBrowserCompat(getContext(), componentName, getConnectionCallback(), null);
-
     }
 
     public void init() {
@@ -45,8 +41,17 @@ public class MediaBrowserAdapter {
         return mediaBrowser;
     }
 
+    /**
+     * Disconnects from the media browser service
+     */
     public void disconnect() {
         mediaBrowser.disconnect();
+    }
+    /**
+     * Connects to the media browser service
+     */
+    public void connect() {
+        mediaBrowser.connect();
     }
 
     /**
