@@ -7,7 +7,7 @@ import androidx.media.AudioAttributesCompat;
 import androidx.media.AudioFocusRequestCompat;
 import androidx.media.AudioManagerCompat;
 
-import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 public class AudioFocusManager
  implements AudioManager.OnAudioFocusChangeListener {
@@ -15,7 +15,7 @@ public class AudioFocusManager
     public static final float MEDIA_VOLUME_DEFAULT = 1.0f;
     private static final float MEDIA_VOLUME_DUCK = 0.2f;
 
-    MediaPlayerAdapterBase player;
+    MediaPlayerAdapter player;
     AudioManager audioManager;
     Context context;
     private boolean hasFocus = false;
@@ -24,7 +24,7 @@ public class AudioFocusManager
     private boolean audioNoisyReceiverRegistered = false;
     private boolean isInitialised = false;
 
-    public AudioFocusManager(Context context, MediaPlayerAdapterBase player) {
+    public AudioFocusManager(Context context, MediaPlayerAdapter player) {
         this.context = context;
         this.player = player;
         init();

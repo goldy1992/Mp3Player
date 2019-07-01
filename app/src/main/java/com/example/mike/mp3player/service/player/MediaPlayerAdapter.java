@@ -12,7 +12,6 @@ import com.example.mike.mp3player.service.AudioFocusManager;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static android.media.MediaPlayer.MEDIA_INFO_STARTED_AS_NEXT;
@@ -21,7 +20,7 @@ import static com.example.mike.mp3player.commons.Constants.DEFAULT_PITCH;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_SPEED;
 
 @Singleton
-public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener  {
+public abstract class MediaPlayerAdapter implements MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener  {
 
     static final int NOT_IN_USE = -1;
 
@@ -48,7 +47,7 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
     @PlaybackStateCompat.State
     int currentState = PlaybackStateCompat.STATE_PAUSED;
 
-    public MediaPlayerAdapterBase(Context context) {
+    public MediaPlayerAdapter(Context context) {
         this.context = context;
     }
 

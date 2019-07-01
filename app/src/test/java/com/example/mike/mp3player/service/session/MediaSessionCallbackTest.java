@@ -19,7 +19,7 @@ import com.example.mike.mp3player.service.MediaPlaybackService;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
-import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -64,7 +64,7 @@ public class MediaSessionCallbackTest {
     @Mock
     private PlaybackManager playbackManager;
     @Mock
-    private MediaPlayerAdapterBase mediaPlayerAdapter;
+    private MediaPlayerAdapter mediaPlayerAdapter;
     @Mock
     private ServiceManager serviceManager;
     @Mock

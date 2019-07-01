@@ -1,13 +1,10 @@
 package com.example.mike.mp3player.service.session;
 
-import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -23,10 +20,7 @@ import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
-import com.example.mike.mp3player.service.player.MarshmallowMediaPlayerAdapterBase;
-import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
-import com.example.mike.mp3player.service.player.NougatMediaPlayerAdapterBase;
-import com.example.mike.mp3player.service.player.OreoPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +45,7 @@ import static com.example.mike.mp3player.commons.LoggingUtils.logShuffleMode;
 public class MediaSessionCallback extends MediaSessionCompat.Callback implements MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
     private ServiceManager serviceManager;
     private final PlaybackManager playbackManager;
-    private final MediaPlayerAdapterBase mediaPlayerAdapter;
+    private final MediaPlayerAdapter mediaPlayerAdapter;
     private final MediaLibrary mediaLibrary;
     private final MediaSessionAdapter mediaSessionAdapter;
     private final AudioBecomingNoisyBroadcastReceiver broadcastReceiver;
@@ -65,7 +59,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
      * annotation
      * @param mediaLibrary media library
      * @param playbackManager playback manager
-     * @param mediaPlayerAdapterBase media player adapter
+     * @param mediaPlayerAdapter media player adapter
      * @param mediaSessionAdapter media session adapter
      * @param serviceManager serviceManager
      * @param broadcastReceiver broadcast receiver
@@ -74,14 +68,14 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     @Inject
     public MediaSessionCallback(MediaLibrary mediaLibrary,
                                 PlaybackManager playbackManager,
-                                MediaPlayerAdapterBase mediaPlayerAdapterBase,
+                                MediaPlayerAdapter mediaPlayerAdapter,
                                 MediaSessionAdapter mediaSessionAdapter,
                                 ServiceManager serviceManager,
                                 AudioBecomingNoisyBroadcastReceiver broadcastReceiver,
                                 Handler handler) {
         this.mediaLibrary = mediaLibrary;
         this.playbackManager = playbackManager;
-        this.mediaPlayerAdapter = mediaPlayerAdapterBase;
+        this.mediaPlayerAdapter = mediaPlayerAdapter;
         this.mediaSessionAdapter = mediaSessionAdapter;
         this.serviceManager = serviceManager;
         this.broadcastReceiver = broadcastReceiver;
@@ -367,7 +361,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         return playbackManager;
     }
     @VisibleForTesting
-    public MediaPlayerAdapterBase getMediaPlayerAdapter() {
+    public MediaPlayerAdapter getMediaPlayerAdapter() {
         return mediaPlayerAdapter;
     }
     @VisibleForTesting

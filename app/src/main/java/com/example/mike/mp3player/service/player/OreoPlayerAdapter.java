@@ -8,9 +8,9 @@ import android.util.Log;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-public class OreoPlayerAdapterBase extends MediaPlayerAdapterBase {
+public class OreoPlayerAdapter extends MediaPlayerAdapter {
 
-    public OreoPlayerAdapterBase(Context context) {
+    public OreoPlayerAdapter(Context context) {
         super(context);
     }
 

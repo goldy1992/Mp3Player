@@ -5,38 +5,38 @@ import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.LoggingUtils.logPlaybackParams;
 
-public class NougatMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
+public class MarshmallowMediaPlayerAdapter extends MediaPlayerAdapter {
+
     private MediaPlayerPool mediaPlayerPool;
     private int position = DEFAULT_POSITION;
     private static final String LOG_TAG = "MSHMLW_PLY_ADPR";
     private Uri nextUri;
     private Uri currentUri;
-    private boolean needToSetPlaybackParams = true;
 
-    public NougatMediaPlayerAdapterBase(Context context) {
+    public MarshmallowMediaPlayerAdapter(Context context) {
         super(context);
         this.mediaPlayerPool = new MediaPlayerPool(context);
     }
-
     @Override
     public void reset(Uri firstItemUri, Uri secondItemUri) {
-        this.needToSetPlaybackParams = true;
-        mediaPlayerPool.reset(firstItemUri);
         this.currentUri = firstItemUri;
         this.nextUri = secondItemUri;
+        if (null != firstItemUri) {
+            mediaPlayerPool.reset(firstItemUri);
+        }
         super.reset(firstItemUri, secondItemUri);
     }
 
     @Override
     public synchronized boolean play() {
-        if (currentMediaPlayer != null && audioFocusManager.requestAudioFocus()) {
+        if (null != currentMediaPlayer && audioFocusManager.requestAudioFocus()) {
             try {
                 // Set the session active  (and update metadata and state)
-                setPlaybackParams(currentMediaPlayer);
                 currentMediaPlayer.start();
                 getCurrentMediaPlayer().setLooping(isLooping());
                 currentState = PlaybackStateCompat.STATE_PLAYING;
@@ -47,6 +47,26 @@ public class NougatMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
             return true;
         }
         return false;
+    }
+
+    @Override
+    MediaPlayer createMediaPlayer(Uri uri) {
+        MediaPlayer mediaPlayer = super.createMediaPlayer(uri);
+        Log.d(LOG_TAG, "creating media player with URI: " + uri);
+        if (mediaPlayer != null) {
+            setPlaybackParams(mediaPlayer);
+        }
+        return  mediaPlayer;
+    }
+
+    @Override
+    void setPlaybackParams(MediaPlayer currentMediaPlayer) {
+        PlaybackParams playbackParams = new PlaybackParams();
+        playbackParams = playbackParams.allowDefaults()
+                .setPitch(currentPitch)
+                .setSpeed(currentPlaybackSpeed)
+                .setAudioFallbackMode(PlaybackParams.AUDIO_FALLBACK_MODE_DEFAULT);
+        currentMediaPlayer.setPlaybackParams(playbackParams);
     }
 
     @Override
@@ -63,9 +83,15 @@ public class NougatMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
     }
 
     @Override
-    MediaPlayer createMediaPlayer(Uri uri) {
-        MediaPlayer mediaPlayer = super.createMediaPlayer(uri);
-        return  mediaPlayer;
+    public void onComplete(Uri nextUriToPrepare) {
+        if (null != nextMediaPlayer) {
+            setPlaybackParams(nextMediaPlayer);
+        }
+
+        super.onComplete(nextUriToPrepare);
+        this.currentUri = this.nextUri;
+        this.nextUri = nextUriToPrepare;
+        mediaPlayerPool.reset(currentUri);
     }
 
     @Override
@@ -75,8 +101,8 @@ public class NougatMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
             int originalState = currentState;
             int bufferedPosition = currentMediaPlayer.getCurrentPosition();
             this.currentMediaPlayer.release();
-            this.currentMediaPlayer = mediaPlayerPool.take();
-            this.needToSetPlaybackParams = true;
+            this.currentMediaPlayer = takeFromMediaPlayerPool();
+            setPlaybackParams(currentMediaPlayer);
             currentMediaPlayer.seekTo(bufferedPosition);
 
             if (originalState == PlaybackStateCompat.STATE_PLAYING) {
@@ -87,16 +113,8 @@ public class NougatMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
         }
     }
 
-    @Override
-    void setPlaybackParams(MediaPlayer mediaPlayer) {
-        if (needToSetPlaybackParams) {
-            PlaybackParams playbackParams = new PlaybackParams();
-            playbackParams = playbackParams.allowDefaults()
-                    .setPitch(currentPitch)
-                    .setSpeed(currentPlaybackSpeed)
-                    .setAudioFallbackMode(PlaybackParams.AUDIO_FALLBACK_MODE_DEFAULT);
-            currentMediaPlayer.setPlaybackParams(playbackParams);
-            needToSetPlaybackParams = false;
-        }
+    private MediaPlayer takeFromMediaPlayerPool() {
+        MediaPlayer mediaPlayer = this.mediaPlayerPool.take();
+        return  setListeners(mediaPlayer);
     }
 }

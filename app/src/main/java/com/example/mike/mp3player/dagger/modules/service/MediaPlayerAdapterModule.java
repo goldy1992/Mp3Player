@@ -1,14 +1,12 @@
 package com.example.mike.mp3player.dagger.modules.service;
 
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.os.Build;
 
-import com.example.mike.mp3player.service.player.MarshmallowMediaPlayerAdapterBase;
-import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
-import com.example.mike.mp3player.service.player.NougatMediaPlayerAdapterBase;
-import com.example.mike.mp3player.service.player.OreoPlayerAdapterBase;
-import com.example.mike.mp3player.service.session.MediaSessionCallback;
+import com.example.mike.mp3player.service.player.MarshmallowMediaPlayerAdapter;
+import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
+import com.example.mike.mp3player.service.player.NougatMediaPlayerAdapter;
+import com.example.mike.mp3player.service.player.OreoPlayerAdapter;
 
 import javax.inject.Singleton;
 
@@ -20,20 +18,20 @@ public class MediaPlayerAdapterModule {
 
     @Singleton
     @Provides
-    public MediaPlayerAdapterBase provideMediaPlayerAdapter(Context context) {
+    public MediaPlayerAdapter provideMediaPlayerAdapter(Context context) {
         return createMediaPlayerAdapter(context);
     }
 
     /**
      * @return the appropriate Media Player object
      */
-    private MediaPlayerAdapterBase createMediaPlayerAdapter(Context context) {
+    private MediaPlayerAdapter createMediaPlayerAdapter(Context context) {
         switch (Build.VERSION.SDK_INT) {
             case Build.VERSION_CODES.M:
-                return new MarshmallowMediaPlayerAdapterBase(context);
+                return new MarshmallowMediaPlayerAdapter(context);
             case Build.VERSION_CODES.N:
-                return new NougatMediaPlayerAdapterBase(context);
-            default: return new OreoPlayerAdapterBase(context);
+                return new NougatMediaPlayerAdapter(context);
+            default: return new OreoPlayerAdapter(context);
         }
     }
 }

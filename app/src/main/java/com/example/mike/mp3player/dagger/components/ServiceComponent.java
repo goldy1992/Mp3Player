@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.dagger.components;
 
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.v4.media.session.MediaSessionCompat;
 
@@ -18,7 +17,7 @@ import com.example.mike.mp3player.service.MyNotificationManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
-import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 import com.example.mike.mp3player.service.session.AudioBecomingNoisyBroadcastReceiver;
 import com.example.mike.mp3player.service.session.MediaSessionAdapter;
 import com.example.mike.mp3player.service.session.MediaSessionCallback;
@@ -43,7 +42,7 @@ public interface ServiceComponent {
     AudioBecomingNoisyBroadcastReceiver provideAudioBecomingNoisyBroadcastReceiver();
     Handler provideHandler();
     MediaLibrary provideMediaLibrary();
-    MediaPlayerAdapterBase provideMediaPlayerAdapter();
+    MediaPlayerAdapter provideMediaPlayerAdapter();
 
     MediaRetriever mediaRetriever();
     MediaSessionAdapter provideMediaSessionAdapter();
@@ -56,7 +55,7 @@ public interface ServiceComponent {
     void inject(MikesMp3PlayerBase mp3PlayerBase);
     void inject(MediaPlaybackService mediaPlaybackService);
     void injectMediaRetriever(MediaLibrary mediaLibrary);
-    void inject(MediaPlayerAdapterBase mediaPlayerAdapterBase);
+    void inject(MediaPlayerAdapter mediaPlayerAdapter);
     void inject(MediaSessionCallback mediaSessionCallback);
 
     @Component.Factory

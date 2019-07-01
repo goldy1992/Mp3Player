@@ -6,7 +6,7 @@ import android.media.AudioManager;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,13 +26,13 @@ public class AudioFocusManagerTest {
     private AudioFocusManager audioFocusManager;
 
     @Mock
-    MediaPlayerAdapterBase mediaPlayerAdapterBase = mock(MediaPlayerAdapterBase.class);
+    MediaPlayerAdapter mediaPlayerAdapter = mock(MediaPlayerAdapter.class);
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        audioFocusManager = new AudioFocusManager(context, mediaPlayerAdapterBase);
+        audioFocusManager = new AudioFocusManager(context, mediaPlayerAdapter);
         assertTrue(audioFocusManager.isInitialised());
     }
 
@@ -60,10 +60,10 @@ public class AudioFocusManagerTest {
      */
     @Test
     public void testOnAudioFocusChangeAudioLossTransientAndGain() {
-        when(mediaPlayerAdapterBase.isPlaying()).thenReturn(true);
+        when(mediaPlayerAdapter.isPlaying()).thenReturn(true);
         audioFocusManager.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS_TRANSIENT);
         assertFalse(audioFocusManager.hasFocus());
-        when(mediaPlayerAdapterBase.isPlaying()).thenReturn(false);
+        when(mediaPlayerAdapter.isPlaying()).thenReturn(false);
         audioFocusManager.onAudioFocusChange(AudioManager.AUDIOFOCUS_GAIN);
         assertTrue(audioFocusManager.hasFocus());
     }

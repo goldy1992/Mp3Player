@@ -8,7 +8,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.commons.Constants;
-import com.example.mike.mp3player.service.player.OreoPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.OreoPlayerAdapter;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Before;
@@ -44,7 +44,7 @@ public class OreoPlayerAdapterTest {
     @Mock
     private Uri nextUri;
     /** Media Player Adapter */
-    private OreoPlayerAdapterBase mediaPlayerAdapter;
+    private OreoPlayerAdapter mediaPlayerAdapter;
     /**
      * setup
      */
@@ -131,7 +131,7 @@ public class OreoPlayerAdapterTest {
                 expectedNewSpeed, actualSpeed, delta);
     }
 
-    private OreoPlayerAdapterBase createMediaPlayerAdapter() {
-        return new OreoPlayerAdapterBase(context, mockOnCompletionListener, mockOnSeekCompleteListener);
+    private OreoPlayerAdapter createMediaPlayerAdapter() {
+        return new OreoPlayerAdapter(context, mockOnCompletionListener, mockOnSeekCompleteListener);
     }
 }

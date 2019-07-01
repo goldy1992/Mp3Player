@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.service.PlaybackManager;
-import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 import com.example.mike.mp3player.service.session.MediaSessionAdapter;
 
 import javax.inject.Singleton;
@@ -32,8 +32,8 @@ public class MediaSessionCompatModule {
     @Singleton
     @Provides
     public MediaSessionAdapter mediaSessionAdapter(MediaSessionCompat mediaSession,
-                                   PlaybackManager playbackManager, MediaPlayerAdapterBase mediaPlayerAdapterBase) {
-        return new MediaSessionAdapter(mediaSession, playbackManager, mediaPlayerAdapterBase);
+                                   PlaybackManager playbackManager, MediaPlayerAdapter mediaPlayerAdapter) {
+        return new MediaSessionAdapter(mediaSession, playbackManager, mediaPlayerAdapter);
     }
 
 }

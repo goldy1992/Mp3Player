@@ -5,7 +5,7 @@ import android.os.Handler;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
-import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 import com.example.mike.mp3player.service.session.AudioBecomingNoisyBroadcastReceiver;
 import com.example.mike.mp3player.service.session.MediaSessionAdapter;
 import com.example.mike.mp3player.service.session.MediaSessionCallback;
@@ -22,14 +22,14 @@ public class MediaSessionCallbackModule {
     @Provides
     public MediaSessionCallback provideMediaSessionCallback(MediaLibrary mediaLibrary,
                                                             PlaybackManager playbackManager,
-                                                            MediaPlayerAdapterBase mediaPlayerAdapterBase,
+                                                            MediaPlayerAdapter mediaPlayerAdapter,
                                                             MediaSessionAdapter mediaSessionAdapter,
                                                             ServiceManager serviceManager,
                                                             AudioBecomingNoisyBroadcastReceiver broadcastReceiver,
                                                             Handler handler) {
         return new MediaSessionCallback(mediaLibrary,
                 playbackManager,
-                mediaPlayerAdapterBase,
+                mediaPlayerAdapter,
                 mediaSessionAdapter,
                 serviceManager,
                 broadcastReceiver,

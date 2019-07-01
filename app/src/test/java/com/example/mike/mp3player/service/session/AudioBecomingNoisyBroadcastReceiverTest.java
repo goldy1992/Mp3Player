@@ -7,7 +7,7 @@ import android.media.AudioManager;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.service.ServiceManager;
-import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricTestRunner.class)
 public class AudioBecomingNoisyBroadcastReceiverTest {
     @Mock
-    private MediaPlayerAdapterBase mediaPlayerAdapterBase;
+    private MediaPlayerAdapter mediaPlayerAdapter;
     @Mock
     private MediaSessionAdapter mediaSessionAdapter;
     @Mock
@@ -44,14 +44,14 @@ public class AudioBecomingNoisyBroadcastReceiverTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         this.audioBecomingNoisyBroadcastReceiver = new AudioBecomingNoisyBroadcastReceiver(context,
-                mediaSessionAdapter, mediaPlayerAdapterBase, serviceManager);
+                mediaSessionAdapter, mediaPlayerAdapter, serviceManager);
     }
 
     @Test
     public void testOnReceive() {
         Intent intent = new Intent();
         intent.setAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-        when(mediaPlayerAdapterBase.isPlaying()).thenReturn(true);
+        when(mediaPlayerAdapter.isPlaying()).thenReturn(true);
         audioBecomingNoisyBroadcastReceiver.onReceive(context, intent);
         verify(mediaSessionAdapter, times(1)).updateAll(NO_ACTION);
     }

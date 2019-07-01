@@ -2,43 +2,41 @@ package com.example.mike.mp3player.service.player;
 
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.media.PlaybackParams;
 import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.LoggingUtils.logPlaybackParams;
 
-public class MarshmallowMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
-
+public class NougatMediaPlayerAdapter extends MediaPlayerAdapter {
     private MediaPlayerPool mediaPlayerPool;
     private int position = DEFAULT_POSITION;
     private static final String LOG_TAG = "MSHMLW_PLY_ADPR";
     private Uri nextUri;
     private Uri currentUri;
+    private boolean needToSetPlaybackParams = true;
 
-    public MarshmallowMediaPlayerAdapterBase(Context context) {
+    public NougatMediaPlayerAdapter(Context context) {
         super(context);
         this.mediaPlayerPool = new MediaPlayerPool(context);
     }
+
     @Override
     public void reset(Uri firstItemUri, Uri secondItemUri) {
+        this.needToSetPlaybackParams = true;
+        mediaPlayerPool.reset(firstItemUri);
         this.currentUri = firstItemUri;
         this.nextUri = secondItemUri;
-        if (null != firstItemUri) {
-            mediaPlayerPool.reset(firstItemUri);
-        }
         super.reset(firstItemUri, secondItemUri);
     }
 
     @Override
     public synchronized boolean play() {
-        if (null != currentMediaPlayer && audioFocusManager.requestAudioFocus()) {
+        if (currentMediaPlayer != null && audioFocusManager.requestAudioFocus()) {
             try {
                 // Set the session active  (and update metadata and state)
+                setPlaybackParams(currentMediaPlayer);
                 currentMediaPlayer.start();
                 getCurrentMediaPlayer().setLooping(isLooping());
                 currentState = PlaybackStateCompat.STATE_PLAYING;
@@ -49,26 +47,6 @@ public class MarshmallowMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
             return true;
         }
         return false;
-    }
-
-    @Override
-    MediaPlayer createMediaPlayer(Uri uri) {
-        MediaPlayer mediaPlayer = super.createMediaPlayer(uri);
-        Log.d(LOG_TAG, "creating media player with URI: " + uri);
-        if (mediaPlayer != null) {
-            setPlaybackParams(mediaPlayer);
-        }
-        return  mediaPlayer;
-    }
-
-    @Override
-    void setPlaybackParams(MediaPlayer currentMediaPlayer) {
-        PlaybackParams playbackParams = new PlaybackParams();
-        playbackParams = playbackParams.allowDefaults()
-                .setPitch(currentPitch)
-                .setSpeed(currentPlaybackSpeed)
-                .setAudioFallbackMode(PlaybackParams.AUDIO_FALLBACK_MODE_DEFAULT);
-        currentMediaPlayer.setPlaybackParams(playbackParams);
     }
 
     @Override
@@ -85,15 +63,9 @@ public class MarshmallowMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
     }
 
     @Override
-    public void onComplete(Uri nextUriToPrepare) {
-        if (null != nextMediaPlayer) {
-            setPlaybackParams(nextMediaPlayer);
-        }
-
-        super.onComplete(nextUriToPrepare);
-        this.currentUri = this.nextUri;
-        this.nextUri = nextUriToPrepare;
-        mediaPlayerPool.reset(currentUri);
+    MediaPlayer createMediaPlayer(Uri uri) {
+        MediaPlayer mediaPlayer = super.createMediaPlayer(uri);
+        return  mediaPlayer;
     }
 
     @Override
@@ -103,8 +75,8 @@ public class MarshmallowMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
             int originalState = currentState;
             int bufferedPosition = currentMediaPlayer.getCurrentPosition();
             this.currentMediaPlayer.release();
-            this.currentMediaPlayer = takeFromMediaPlayerPool();
-            setPlaybackParams(currentMediaPlayer);
+            this.currentMediaPlayer = mediaPlayerPool.take();
+            this.needToSetPlaybackParams = true;
             currentMediaPlayer.seekTo(bufferedPosition);
 
             if (originalState == PlaybackStateCompat.STATE_PLAYING) {
@@ -115,8 +87,16 @@ public class MarshmallowMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
         }
     }
 
-    private MediaPlayer takeFromMediaPlayerPool() {
-        MediaPlayer mediaPlayer = this.mediaPlayerPool.take();
-        return  setListeners(mediaPlayer);
+    @Override
+    void setPlaybackParams(MediaPlayer mediaPlayer) {
+        if (needToSetPlaybackParams) {
+            PlaybackParams playbackParams = new PlaybackParams();
+            playbackParams = playbackParams.allowDefaults()
+                    .setPitch(currentPitch)
+                    .setSpeed(currentPlaybackSpeed)
+                    .setAudioFallbackMode(PlaybackParams.AUDIO_FALLBACK_MODE_DEFAULT);
+            currentMediaPlayer.setPlaybackParams(playbackParams);
+            needToSetPlaybackParams = false;
+        }
     }
 }
