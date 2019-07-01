@@ -13,7 +13,7 @@ public class UnitTestMikesMp3Player extends MikesMp3PlayerBase {
         super.onCreate();
         Log.i(LOG_TAG, "using UNIT test mp3 application");
         MediaRetriever mockMediaRetriever = new EmptyMediaRetriever(getApplicationContext());
-        setupMediaLibrary(mockMediaRetriever);
+//        setupMediaLibrary(mockMediaRetriever);
 
     }
 }

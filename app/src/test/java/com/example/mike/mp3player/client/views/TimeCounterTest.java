@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views;
 
+import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.TextView;
 
@@ -9,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import dagger.Module;
 
 import static android.support.v4.media.session.PlaybackStateCompat.Builder;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
@@ -24,6 +27,8 @@ public class TimeCounterTest {
     private MediaActivityCompat mediaActivityCompat;
     @Mock
     private TextView view;
+    @Mock
+    private Handler handler;
 
     private TimeCounter timeCounter;
     final long POSITION = 3424L;
@@ -31,7 +36,8 @@ public class TimeCounterTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        timeCounter = new TimeCounter(view);
+        timeCounter = new TimeCounter(handler);
+        timeCounter.setTextView(view);
     }
 
     @Test

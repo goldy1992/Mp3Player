@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
@@ -75,8 +76,8 @@ public class MediaSessionCallbackTest {
         MockitoAnnotations.initMocks(this);
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
         when(mediaPlaybackService.getApplicationContext()).thenReturn(context);
-        this.mediaSessionCallback = new MediaSessionCallback(mediaPlaybackService, mediaLibrary,
-                playbackManager, mediaPlayerAdapter, mediaSessionAdapter, serviceManager, broadcastReceiver, Looper.myLooper());
+        this.mediaSessionCallback = new MediaSessionCallback(mediaLibrary,
+                playbackManager, mediaPlayerAdapter, mediaSessionAdapter, serviceManager, broadcastReceiver, new Handler(Looper.myLooper()));
         reset(mediaSessionAdapter);
         reset(mediaPlayerAdapter);
     }

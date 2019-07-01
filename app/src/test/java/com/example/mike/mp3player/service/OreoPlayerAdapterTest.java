@@ -132,6 +132,9 @@ public class OreoPlayerAdapterTest {
     }
 
     private OreoPlayerAdapter createMediaPlayerAdapter() {
-        return new OreoPlayerAdapter(context, mockOnCompletionListener, mockOnSeekCompleteListener);
+        OreoPlayerAdapter oreoPlayerAdapter = new OreoPlayerAdapter(context);
+        oreoPlayerAdapter.setOnCompletionListener(mockOnCompletionListener);
+        oreoPlayerAdapter.setOnSeekCompleteListener(mockOnSeekCompleteListener);
+        return oreoPlayerAdapter;
     }
 }

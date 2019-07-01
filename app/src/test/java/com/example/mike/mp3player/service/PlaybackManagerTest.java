@@ -23,7 +23,8 @@ public class PlaybackManagerTest {
     @BeforeEach
     public void setup() {
         List<QueueItem> queueItems = new ArrayList<>();
-        playbackManager = new PlaybackManager(queueItems);
+        playbackManager = new PlaybackManager();
+        playbackManager.createNewPlaylist(queueItems);
     }
     /**
      * GIVEN: a Playback manager with an empty playlist
@@ -327,7 +328,8 @@ public class PlaybackManagerTest {
         for (int i = 1; i <= QUEUE_SIZE; i++) {
             queueItemList.add(mock(QueueItem.class));
         }
-        PlaybackManager playbackManager = new PlaybackManager(queueItemList);
+        PlaybackManager playbackManager = new PlaybackManager();
+        playbackManager.createNewPlaylist(queueItemList);
         int result = playbackManager.shuffleNewIndex();
         System.out.println("number generated: " + result);
         assertTrue(result >= 0);

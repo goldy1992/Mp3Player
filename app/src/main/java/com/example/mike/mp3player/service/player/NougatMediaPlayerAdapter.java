@@ -38,7 +38,7 @@ public class NougatMediaPlayerAdapter extends MediaPlayerAdapter {
                 // Set the session active  (and update metadata and state)
                 setPlaybackParams(currentMediaPlayer);
                 currentMediaPlayer.start();
-                getCurrentMediaPlayer().setLooping(isLooping());
+                currentMediaPlayer.setLooping(isLooping());
                 currentState = PlaybackStateCompat.STATE_PLAYING;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -60,12 +60,6 @@ public class NougatMediaPlayerAdapter extends MediaPlayerAdapter {
         audioFocusManager.playbackPaused();
         currentState = PlaybackStateCompat.STATE_PAUSED;
         logPlaybackParams(currentMediaPlayer.getPlaybackParams(), LOG_TAG);
-    }
-
-    @Override
-    MediaPlayer createMediaPlayer(Uri uri) {
-        MediaPlayer mediaPlayer = super.createMediaPlayer(uri);
-        return  mediaPlayer;
     }
 
     @Override

@@ -74,7 +74,7 @@ public class ViewPagerFragmentTest extends FragmentTestBase<ViewPagerFragment> {
         for (Category c : Category.values()) {
             children.add(createRootItem(c));
         }
-        fragment.onChildrenLoaded(parent, children, options,  context);
+        fragment.onChildrenLoaded(parent, children, options);
         verify(myPagerAdapter, times(expectedNumberOfDataSetChanges)).notifyDataSetChanged();
         for (Category c : Category.values()) {
             assertTrue(myPagerAdapter.pagerItems.containsKey(c));

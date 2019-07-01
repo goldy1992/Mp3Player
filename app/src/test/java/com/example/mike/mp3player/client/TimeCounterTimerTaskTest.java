@@ -39,7 +39,7 @@ public class TimeCounterTimerTaskTest {
     @Test
     public void runTest() {
         timeCounter.setDuration(DURATION);
-        timeCounter.setCurrentPosition(CURRENT_TIME);
+       // timeCounter.setCurrentPosition(CURRENT_TIME);
      //   timeCounterTimerTask.run();
         assertTrue("currentTime should be equal to the position parameter", timeCounter.getCurrentPosition() >= CURRENT_TIME);
     }

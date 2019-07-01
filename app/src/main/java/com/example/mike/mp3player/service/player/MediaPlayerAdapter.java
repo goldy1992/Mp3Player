@@ -148,7 +148,7 @@ public abstract class MediaPlayerAdapter implements MediaPlayer.OnErrorListener,
             if (!prepare()) {
                 return;
             }
-            getCurrentMediaPlayer().seekTo((int) position);
+            currentMediaPlayer.seekTo((int) position);
         }
     }
 
@@ -237,7 +237,7 @@ public abstract class MediaPlayerAdapter implements MediaPlayer.OnErrorListener,
     }
     /**
      *
-     * @param repeatMode
+     * @param repeatMode the repeat mode
      */
     public void updateRepeatMode(int repeatMode) {
         this.repeatMode = repeatMode;

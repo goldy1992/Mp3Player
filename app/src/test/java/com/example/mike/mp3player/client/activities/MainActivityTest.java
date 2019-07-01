@@ -48,8 +48,6 @@ public class MainActivityTest {
         this.activityController = Robolectric.buildActivity(MainActivity.class);
         this.mainActivity = spy(activityController.get());
         FieldUtils.writeField(activityController, "component", this.mainActivity, true);
-        doReturn(mediaBrowserAdapter).when(mainActivity).makeMediaBrowserAdapter(any(), any(), any(), any());
-        doReturn(mediaControllerAdapter).when(mainActivity).makeMediaControllerAdapter(any(), any());
         doReturn(true).when(mainActivity).initialiseView(R.layout.activity_main);
         this.activityController.create().start().resume();
     }
