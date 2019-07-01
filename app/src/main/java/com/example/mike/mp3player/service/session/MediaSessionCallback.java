@@ -232,7 +232,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private void seekTo(long position) {
         //Log.i(LOG_TAG, "seekTO");
         getMediaPlayerAdapter().seekTo(position);
-        getMediaSessionAdapter().updatePlaybackState(ACTION_SEEK_TO);
     }
 
     @Override
@@ -334,8 +333,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         }
         getMediaSessionAdapter().updateAll();
     }
-
-
 
     private void skipToNewMedia(String newMediaId) {
         Uri newUri = getMediaLibrary().getMediaUriFromMediaId(newMediaId);

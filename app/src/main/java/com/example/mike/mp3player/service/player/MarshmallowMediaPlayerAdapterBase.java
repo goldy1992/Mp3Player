@@ -20,8 +20,9 @@ public class MarshmallowMediaPlayerAdapterBase extends MediaPlayerAdapterBase {
     private Uri nextUri;
     private Uri currentUri;
 
-    public MarshmallowMediaPlayerAdapterBase(Context context) {
-        super(context);
+    public MarshmallowMediaPlayerAdapterBase(Context context, OnCompletionListener onCompletionListener,
+                                             OnSeekCompleteListener seekCompleteListener) {
+        super(context, onCompletionListener, seekCompleteListener);
         this.mediaPlayerPool = new MediaPlayerPool(context);
     }
     @Override

@@ -29,6 +29,11 @@ public class FolderActivity extends MediaActivityCompat {
     }
 
     @Override
+    String getWorkerId() {
+        return "FLDER_ACTVY_WKR";
+    }
+
+    @Override
     boolean initialiseView(int layoutId) {
         setContentView(layoutId);
         this.simpleTitleBarFragment = (SimpleTitleBarFragment) getSupportFragmentManager().findFragmentById(R.id.simpleTitleBarFragment);
@@ -80,7 +85,7 @@ public class FolderActivity extends MediaActivityCompat {
     public void initialiseDependencies() {
         DaggerFolderActivityComponent.
             factory()
-            .create(getApplicationContext(), "FLDER_ACTVY_WKR",
+            .create(getApplicationContext(), getWorkerId(),
                 getSubscriptionType(),this)
             .inject(this);
     }

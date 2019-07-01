@@ -48,10 +48,11 @@ public abstract class MediaPlayerAdapterBase implements MediaPlayer.OnErrorListe
     @PlaybackStateCompat.State
     int currentState = PlaybackStateCompat.STATE_PAUSED;
 
-    public MediaPlayerAdapterBase(Context context) {
+    public MediaPlayerAdapterBase(Context context, OnCompletionListener onCompletionListener,
+                                  OnSeekCompleteListener seekCompleteListener) {
         this.context = context;
-        this.setOnCompletionListener(getOnCompletionListener());
-        this.setOnSeekCompleteListener(getOnSeekCompleteListener());
+        this.setOnCompletionListener(onCompletionListener);
+        this.setOnSeekCompleteListener(seekCompleteListener);
     }
 
     public abstract boolean play();

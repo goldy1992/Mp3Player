@@ -73,10 +73,18 @@ public class MainActivity extends MediaActivityCompat {
         return SubscriptionType.MEDIA_ID;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    String getWorkerId() {
+        return "MAIN_ACTVTY_WRKR";
+    }
+
     private void initialiseDependencies() {
         MainActivityComponent mainActivityComponent = DaggerMainActivityComponent
                 .factory()
-                .create(getApplicationContext(),"MAIN_ACTVTY_WRKR", SubscriptionType.MEDIA_ID, this);
+                .create(getApplicationContext(),getWorkerId(), SubscriptionType.MEDIA_ID, this);
         mainActivityComponent.inject(this);
 
     }

@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.util.Log;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
@@ -30,6 +31,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     private PlaybackSpeedControlsFragment playbackSpeedControlsFragment;
     private SimpleTitleBarFragment simpleTitleBarFragment;
     private ShuffleRepeatFragment shuffleRepeatFragment;
+    private LibraryRequest initialLibraryRequest;
 
     @Override
     boolean initialiseView(int layoutId) {
@@ -49,22 +51,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         initialiseDependencies();
         super.onCreate(savedInstanceState);
         initialiseView(R.layout.activity_media_player);
-        token = (MediaSessionCompat.Token) retrieveIntentInfo(Constants.MEDIA_SESSION);
-
-        if (token != null) {
-            initialiseMediaControllerAdapter(token);
-            LibraryRequest libraryRequest = (LibraryRequest) retrieveIntentInfo(Constants.REQUEST_OBJECT);
-            if (libraryRequest != null) { // if rq came with an media id it's a song request
-                String mediaId = libraryRequest.getId();
-                // Display the initial state
-                // parent id will sure that the correct playlist is found in the media library
-                getMediaControllerAdapter().prepareFromMediaId(mediaId, getIntent().getExtras());
-            }
-        } else {
-            /** TODO: Add functionality for when the playback bar is touched in the MainActivity and no
-             * token is passed or when no track info is specified, a track must be sent
-             */
-        }
     }
 
     @Override
@@ -86,10 +72,43 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         super.onStop();
         // (see "stay in sync with the MediaSession")
     }
+    /**
+     * Callback method for when the activity connects to the MediaPlaybackService
+     */
+    @Override
+    public void onConnected() {
+        super.onConnected();
+        LibraryRequest libraryRequest = (LibraryRequest) retrieveIntentInfo(Constants.REQUEST_OBJECT);
+        if (libraryRequest != null) { // if RQ came with an media id it's a song request
+            String mediaId = libraryRequest.getId();
+            // Display the initial state
+            // parent id will sure that the correct playlist is found in the media library
+            getMediaControllerAdapter().prepareFromMediaId(mediaId, getIntent().getExtras());
+        }
+        else {
+            /** TODO: Add functionality for when the playback bar is touched in the MainActivity and no
+             * token is passed or when no track info is specified, a track must be sent
+             */
+            Log.e(LOG_TAG, "Call to MediaPlayerActivity happened without a Library Request");
+        }
+    }
 
+    /**
+     * The MediaActivity does not subscribe to any type of media, but is the interface to connect
+     * to the control the playback on the MediaPlaybackService
+     * @return the subscription type
+     */
     @Override
     SubscriptionType getSubscriptionType() {
         return SubscriptionType.NONE;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getWorkerId() {
+        return "MDIA_PLYER_ACTVT_WKR";
     }
 
     @Override
@@ -106,10 +125,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
         return null;
     }
 
-    public PlaybackTrackerFragment getPlaybackTrackerFragment() {
-        return playbackTrackerFragment;
-    }
-
     public PlaybackToolbarExtendedFragment getPlaybackToolbarExtendedFragment() {
         return playbackToolbarExtendedFragment;
     }
@@ -117,7 +132,7 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     public void initialiseDependencies() {
         DaggerMediaPlayerActivityComponent
                 .factory()
-                .create(getApplicationContext(), "MDIA_PLYER_ACTVT_WKR", getSubscriptionType(), this)
+                .create(getApplicationContext(), getWorkerId(), getSubscriptionType(), this)
                 .inject(this);
     }
 

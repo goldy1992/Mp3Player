@@ -10,8 +10,9 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class OreoPlayerAdapterBase extends MediaPlayerAdapterBase {
 
-    public OreoPlayerAdapterBase(Context context) {
-        super(context);
+    public OreoPlayerAdapterBase(Context context, MediaPlayer.OnCompletionListener onCompletionListener,
+                                 MediaPlayer.OnSeekCompleteListener seekCompleteListener) {
+        super(context, onCompletionListener, seekCompleteListener);
     }
 
     @Override

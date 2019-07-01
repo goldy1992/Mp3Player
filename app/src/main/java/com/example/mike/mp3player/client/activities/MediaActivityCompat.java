@@ -28,6 +28,11 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     private HandlerThread worker;
     abstract SubscriptionType getSubscriptionType();
 
+    /**
+     * @return The unique name of the HandlerThread used by the activity
+     */
+    abstract String getWorkerId();
+
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
         initialiseMediaControllerAdapter(mediaBrowserAdapter.getMediaSessionToken());
