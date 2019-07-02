@@ -32,7 +32,7 @@ import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
 /**
  * Created by Mike on 24/09/2017.
  */
-public class MediaPlaybackService extends MediaBrowserServiceCompat {
+public class MediaPlaybackService extends MediaPlaybackServiceBase {
 
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
 
@@ -44,7 +44,6 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
 
     @Override
     public void onCreate() {
-        init();
         super.onCreate();
         this.mediaLibrary.buildMediaLibrary();
         this.mediaSessionCallback.init();
@@ -54,7 +53,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     /**
      * TO BE CALLED BEFORE SUPER CLASS
      */
-    private void init() {
+    @Override
+    void initialiseDependencies() {
         DaggerServiceComponent
             .factory()
             .create(getApplicationContext(), this, "MEDIA_PLYBK_SRVC_WKR")

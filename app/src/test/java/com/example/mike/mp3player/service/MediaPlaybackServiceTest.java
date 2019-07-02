@@ -35,15 +35,14 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(application = UnitTestMikesMp3Player.class)
 public class MediaPlaybackServiceTest {
     /** object to test*/
-    public MediaPlaybackService mediaPlaybackService;
+    public MockMediaPlayerService mediaPlaybackService;
     private Context context;
     @Before
     public void setup() {
         this.context = InstrumentationRegistry.getInstrumentation().getContext();
-        this.mediaPlaybackService = Robolectric.buildService(MediaPlaybackService.class).create().get();
+        this.mediaPlaybackService = Robolectric.buildService(MockMediaPlayerService.class).create().get();
     }
 
     @Test
