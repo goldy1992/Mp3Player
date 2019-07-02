@@ -37,10 +37,6 @@ public class MediaBrowserAdapter {
         //Log.i(LOG_TAG, "calling connect");
     }
 
-    public MediaBrowserCompat getMediaBrowser() {
-        return mediaBrowser;
-    }
-
     /**
      * Disconnects from the media browser service
      */

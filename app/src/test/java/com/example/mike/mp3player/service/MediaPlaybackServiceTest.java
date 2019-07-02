@@ -8,7 +8,6 @@ import android.support.v4.media.session.MediaSessionCompat;
 import androidx.media.MediaBrowserServiceCompat;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.example.mike.mp3player.UnitTestMikesMp3Player;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
@@ -18,7 +17,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.List;

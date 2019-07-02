@@ -13,7 +13,6 @@ import androidx.media.MediaBrowserServiceCompat;
 
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.commons.library.LibraryResponse;
-import com.example.mike.mp3player.dagger.components.DaggerServiceComponent;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.session.MediaSessionCallback;
 
@@ -32,7 +31,7 @@ import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
 /**
  * Created by Mike on 24/09/2017.
  */
-public class MediaPlaybackService extends MediaPlaybackServiceBase {
+public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
 
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
 
@@ -40,7 +39,7 @@ public class MediaPlaybackService extends MediaPlaybackServiceBase {
     private HandlerThread worker;
     private MediaSessionCompat mediaSession;
     private MediaSessionCallback mediaSessionCallback;
-    private ServiceManager serviceManager;
+    abstract void initialiseDependencies();
 
     @Override
     public void onCreate() {
@@ -50,16 +49,7 @@ public class MediaPlaybackService extends MediaPlaybackServiceBase {
         setSessionToken(mediaSession.getSessionToken());
         mediaSession.setCallback(mediaSessionCallback);
     }
-    /**
-     * TO BE CALLED BEFORE SUPER CLASS
-     */
-    @Override
-    void initialiseDependencies() {
-        DaggerServiceComponent
-            .factory()
-            .create(getApplicationContext(), this, "MEDIA_PLYBK_SRVC_WKR")
-            .inject(this);
-    }
+
 
     @Override
     public BrowserRoot onGetRoot(String clientPackageName, int clientUid,
@@ -81,8 +71,8 @@ public class MediaPlaybackService extends MediaPlaybackServiceBase {
     /**
      * onLoadChildren(String, Result, Bundle) :- onLoadChildren should always be called with a LibraryObject item as a bundle option. Searching for
      * a MediaItem's children is now deprecated as it wasted
-     * @param parentId
-     * @param result
+     * @param parentId the parent ID
+     * @param result the result object used by the MediaBrowserServiceCompat
      */
     @Deprecated
     @Override
@@ -161,11 +151,6 @@ public class MediaPlaybackService extends MediaPlaybackServiceBase {
     @Inject
     public void setWorker(HandlerThread handlerThread) {
         this.worker = handlerThread;
-    }
-
-    @Inject
-    public void setServiceManager(ServiceManager serviceManager) {
-        this.serviceManager = serviceManager;
     }
 
     public HandlerThread getWorker() {

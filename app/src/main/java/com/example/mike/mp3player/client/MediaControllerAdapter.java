@@ -8,6 +8,8 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
@@ -30,7 +32,7 @@ public class MediaControllerAdapter {
         this.myMediaControllerCallback = myMediaControllerCallback;
     }
 
-    public void setMediaToken(MediaSessionCompat.Token token) {
+    public void setMediaToken(@NonNull MediaSessionCompat.Token token) {
         if (!isInitialized()) {
             init(token);
         } else {
@@ -38,7 +40,7 @@ public class MediaControllerAdapter {
         }
     }
 
-    private void init(MediaSessionCompat.Token token) {
+    private void init(@NonNull MediaSessionCompat.Token token) {
         boolean result = true;
         try {
             this.mediaControllerCompat = new MediaControllerCompat(context, token);
@@ -148,11 +150,6 @@ public class MediaControllerAdapter {
     
     private MediaControllerCompat.TransportControls getController() {
         return mediaControllerCompat.getTransportControls();
-    }
-
-    @Inject
-    public void setMyMediaControllerCallback(MyMediaControllerCallback myMediaControllerCallback) {
-        this.myMediaControllerCallback = myMediaControllerCallback;
     }
 
 }

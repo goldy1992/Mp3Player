@@ -25,7 +25,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     private MediaBrowserAdapter mediaBrowserAdapter;
     /** MediaControllerAdapter */
     private MediaControllerAdapter mediaControllerAdapter;
-
+    /** Thread used to deal with none UI tasks */
     private HandlerThread worker;
     /** @return The subscription type of the MediaActivityCompat */
     abstract SubscriptionType getSubscriptionType();
@@ -37,6 +37,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
 
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
+
         this.mediaControllerAdapter.setMediaToken(mediaBrowserAdapter.getMediaSessionToken());
     }
 
@@ -52,8 +53,8 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getMediaControllerAdapter().disconnect();
-        getMediaBrowserAdapter().disconnect();
+        mediaControllerAdapter.disconnect();
+        mediaBrowserAdapter.disconnect();
         worker.quitSafely();
     }
 
@@ -70,7 +71,6 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        initialiseDependencies();
         super.onCreate(savedInstanceState);
         SharedPreferences settings = getApplicationContext().getSharedPreferences(THEME, MODE_PRIVATE);
         setTheme(settings.getInt(THEME, R.style.AppTheme_Blue));
@@ -87,9 +87,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
         return super.onOptionsItemSelected(item);
     }
 
-    public final MediaControllerAdapter getMediaControllerAdapter() {
-        return mediaControllerAdapter;
-    }
+    public final MediaControllerAdapter getMediaControllerAdapter() { return mediaControllerAdapter; }
 
     @Inject
     public final void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {

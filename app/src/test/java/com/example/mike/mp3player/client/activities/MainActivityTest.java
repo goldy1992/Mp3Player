@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.client.activities;
 
-
 import android.view.MenuItem;
 
 import androidx.fragment.app.FragmentManager;
@@ -16,7 +15,6 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -35,21 +33,18 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricTestRunner.class)
 public class MainActivityTest {
 
-    private ActivityController<MainActivity> activityController;
+    private ActivityController<TestMainActivity> activityController;
     private MainActivity mainActivity;
-    @Mock
-    private MediaBrowserAdapter mediaBrowserAdapter;
-    @Mock
-    private MediaControllerAdapter mediaControllerAdapter;
-
+    private MediaBrowserAdapter spiedMediaBrowserAdapter;
     @Before
     public void setup() throws IllegalAccessException {
         MockitoAnnotations.initMocks(this);
-        this.activityController = Robolectric.buildActivity(MainActivity.class);
+        this.activityController = Robolectric.buildActivity(TestMainActivity.class).setup();
         this.mainActivity = spy(activityController.get());
+        this.spiedMediaBrowserAdapter = spy(mainActivity.getMediaBrowserAdapter());
         FieldUtils.writeField(activityController, "component", this.mainActivity, true);
+        FieldUtils.writeField(mainActivity, "mediaBrowserAdapter", spiedMediaBrowserAdapter, true);
         doReturn(true).when(mainActivity).initialiseView(R.layout.activity_main);
-        this.activityController.create().start().resume();
     }
 
 
@@ -69,7 +64,7 @@ public class MainActivityTest {
     @Test
     public void testOnConnected() {
         mainActivity.onConnected();
-        verify(mediaBrowserAdapter, times(1)).subscribe(any(LibraryRequest.class));
+        verify(spiedMediaBrowserAdapter, times(1)).subscribe(any(LibraryRequest.class));
     }
 
     @Test

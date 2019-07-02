@@ -13,22 +13,19 @@ import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType
 import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
-import com.example.mike.mp3player.dagger.components.DaggerMainActivityComponent;
-import com.example.mike.mp3player.dagger.components.MainActivityComponent;
 
-public class MainActivity extends MediaActivityCompat {
+public abstract class MainActivity extends MediaActivityCompat {
 
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     private static final int READ_REQUEST_CODE = 42;
     private MainActivityRootFragment rootFragment;
     private InputMethodManager inputMethodManager;
-    private boolean viewInitialised = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        this.viewInitialised = initialiseView(R.layout.activity_main);
+        initialiseView(R.layout.activity_main);
     }
 
     @Override
@@ -49,7 +46,6 @@ public class MainActivity extends MediaActivityCompat {
         super.onStart();
         if (getMediaControllerAdapter() != null) {
             getMediaControllerAdapter().updateUiState();
-     //       setPlaybackState(mediaControllerAdapter.getCurrentPlaybackState());
         }
         // If it is null it will initialised when the MediaBrowserAdapter has connected
     }
@@ -72,21 +68,9 @@ public class MainActivity extends MediaActivityCompat {
         return SubscriptionType.MEDIA_ID;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     String getWorkerId() {
         return "MAIN_ACTVTY_WRKR";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    void initialiseDependencies() {
-        MainActivityComponent mainActivityComponent = DaggerMainActivityComponent
-                .factory()
-                .create(getApplicationContext(),getWorkerId(), SubscriptionType.MEDIA_ID, this);
-        mainActivityComponent.inject(this);
-
     }
 }

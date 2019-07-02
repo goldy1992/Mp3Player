@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".client.activities.MainActivity"
+            android:name=".client.activities.MainActivityProduction"
             android:label="@string/app_name"
 
             android:windowSoftInputMode="adjustPan" />
@@ -38,7 +38,7 @@
             android:parentActivityName=".client.activities.MainActivity" />
 
         <service
-            android:name=".service.MediaPlaybackService"
+            android:name=".service.MediaPlaybackServiceProduction"
             android:enabled="true"
             android:exported="false">
             <intent-filter>

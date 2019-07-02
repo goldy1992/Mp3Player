@@ -1,13 +1,14 @@
 package com.example.mike.mp3player;
 
-public class MikesMp3Player extends MikesMp3PlayerBase {
+import android.app.Application;
+
+public class MikesMp3Player extends Application {
     /**
-     * Use this method to set up all of the dagger dependencies before the main activity is created
+     * Declared in case need in the future
      */
     @Override
     public void onCreate() {
         super.onCreate();
-        setupServiceComponent(getApplicationContext());
     }
 
 
