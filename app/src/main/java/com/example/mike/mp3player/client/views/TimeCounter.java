@@ -11,9 +11,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ONE;
+import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 import static com.example.mike.mp3player.client.utils.TimerUtils.ONE_SECOND;
 import static com.example.mike.mp3player.client.utils.TimerUtils.formatTime;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
@@ -28,7 +28,6 @@ public class TimeCounter {
     private int currentState;
     private float currentSpeed;
     private ScheduledExecutorService timer;
-    private boolean isRunning = false;
     private Handler mainHandler;
     private boolean repeating = false;
 
@@ -80,7 +79,6 @@ public class TimeCounter {
         this.currentPosition = startTime;
         updateTimerText();
         createTimer();
-        setRunning(true);
     }
 
     private void haltTimer(long currentTime) {
@@ -103,7 +101,6 @@ public class TimeCounter {
             // cancel timer and make new one
             timer.shutdown();
         }
-        setRunning(false);
     }
 
     private void createTimer() {
@@ -142,16 +139,13 @@ public class TimeCounter {
     
 
     public boolean isRunning() {
-        return isRunning;
+        return currentState == STATE_PLAYING;
     }
 
     public long getCurrentPosition() {
         return currentPosition;
     }
-    
-    public void setRunning(boolean running) {
-        isRunning = running;
-    }
+
 
     public TextView getTextView() {
         return textView;
