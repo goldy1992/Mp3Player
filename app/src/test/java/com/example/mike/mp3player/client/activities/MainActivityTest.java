@@ -2,91 +2,47 @@ package com.example.mike.mp3player.client.activities;
 
 import android.view.MenuItem;
 
-import androidx.fragment.app.FragmentManager;
-
-import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaBrowserAdapter;
-import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragment;
-import com.example.mike.mp3player.client.views.fragments.MainFrameFragment;
-import com.example.mike.mp3player.commons.library.LibraryRequest;
-
-import org.apache.commons.lang3.reflect.FieldUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 public class MainActivityTest {
 
-    private ActivityController<TestMainActivity> activityController;
-    private MainActivity mainActivity;
-    private MediaBrowserAdapter spiedMediaBrowserAdapter;
+    private ActivityController<TestMainActivity> mainActivityTestActivityController;
+
     @Before
-    public void setup() throws IllegalAccessException {
-        MockitoAnnotations.initMocks(this);
-        this.activityController = Robolectric.buildActivity(TestMainActivity.class).setup();
-        this.mainActivity = spy(activityController.get());
-        this.spiedMediaBrowserAdapter = spy(mainActivity.getMediaBrowserAdapter());
-        FieldUtils.writeField(activityController, "component", this.mainActivity, true);
-        FieldUtils.writeField(mainActivity, "mediaBrowserAdapter", spiedMediaBrowserAdapter, true);
-        doReturn(true).when(mainActivity).initialiseView(R.layout.activity_main);
-    }
+    public void setup() {
+        mainActivityTestActivityController = Robolectric.buildActivity(TestMainActivity.class).setup();
+     }
 
-
-    @Test
-    public void testInitialiseView() throws IllegalAccessException {
-        this.mainActivity = spy(activityController.get());
-        FieldUtils.writeField(activityController, "component", this.mainActivity, true);
-
-        MainActivityRootFragment mainFrameFragment = mock(MainActivityRootFragment.class);
-        FragmentManager fragmentManager = mock(FragmentManager.class);
-        doNothing().when(mainActivity).setContentView(R.layout.activity_main);
-        when(mainActivity.getSupportFragmentManager()).thenReturn(fragmentManager);
-        when(fragmentManager.findFragmentById(R.id.mainActivityRootFragment)).thenReturn(mainFrameFragment);
-        assertTrue(mainActivity.initialiseView(R.layout.activity_main));
+    @After
+    public void tearDown() {
+        mainActivityTestActivityController.destroy();
     }
 
     @Test
-    public void testOnConnected() {
-        mainActivity.onConnected();
-        verify(spiedMediaBrowserAdapter, times(1)).subscribe(any(LibraryRequest.class));
-    }
-
-    @Test
-    public void testOnItemSelected() throws IllegalAccessException {
-        MainActivityRootFragment mainActivityRootFragment = mock(MainActivityRootFragment.class);
-        MainFrameFragment mainFrameFragment = mock(MainFrameFragment.class);
-        when(mainActivityRootFragment.getMainFrameFragment()).thenReturn(mainFrameFragment);
-        FieldUtils.writeField(mainActivity, "rootFragment", mainActivityRootFragment, true);
+    public void testOnItemSelected() {
         MenuItem menuItem = mock(MenuItem.class);
-        when(mainFrameFragment.onOptionsItemSelected(menuItem)).thenReturn(true);
-        assertTrue(mainActivity.onOptionsItemSelected(menuItem));
+        boolean result = mainActivityTestActivityController.get().onOptionsItemSelected(menuItem);
+        assertFalse(result);
     }
 
     @Test
-    public void testOnItemSelectedHomeButton() throws IllegalAccessException {
-        MainActivityRootFragment mainActivityRootFragment = mock(MainActivityRootFragment.class);
-        MainFrameFragment mainFrameFragment = mock(MainFrameFragment.class);
-        when(mainActivityRootFragment.getMainFrameFragment()).thenReturn(mainFrameFragment);
-        FieldUtils.writeField(mainActivity, "rootFragment", mainActivityRootFragment, true);
+    public void testOnItemSelectedHomeButton() {
         MenuItem menuItem = mock(MenuItem.class);
         when(menuItem.getItemId()).thenReturn(android.R.id.home);
-        when(mainFrameFragment.onOptionsItemSelected(menuItem)).thenReturn(false);
-        assertTrue(mainActivity.onOptionsItemSelected(menuItem));
-    }
+        boolean result = mainActivityTestActivityController.get().onOptionsItemSelected(menuItem);
+        assertTrue(result);
+   }
+
 }
