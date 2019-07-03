@@ -1,9 +1,9 @@
 package com.example.mike.mp3player.service;
 
-import com.example.mike.mp3player.dagger.components.DaggerServiceComponent;
+import com.example.mike.mp3player.dagger.components.DaggerTestServiceComponent;
 
-public class MediaPlaybackServiceProduction extends MediaPlaybackService
-{
+public class TestMediaPlaybackServiceInjector extends MediaPlaybackService {
+
     @Override
     public void onCreate() {
         initialiseDependencies();
@@ -15,7 +15,7 @@ public class MediaPlaybackServiceProduction extends MediaPlaybackService
      */
     @Override
     void initialiseDependencies() {
-        DaggerServiceComponent
+        DaggerTestServiceComponent
                 .factory()
                 .create(getApplicationContext(), this, "MEDIA_PLYBK_SRVC_WKR")
                 .inject(this);

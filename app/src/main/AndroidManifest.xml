@@ -38,7 +38,7 @@
             android:parentActivityName=".client.activities.MainActivityProduction" />
 
         <service
-            android:name=".service.MediaPlaybackServiceProduction"
+            android:name=".service.MediaPlaybackServiceInjector"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
