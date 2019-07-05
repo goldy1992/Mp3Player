@@ -50,7 +50,6 @@ public class MediaLibraryTest {
      */
     @Test
     public void testBuildMediaLibrary() {
-
         Set<Category> categories = mediaLibrary.getCategories().keySet();
         assertTrue(categories.contains(Category.FOLDERS));
         assertTrue(mediaLibrary.getCategories().get(Category.FOLDERS) instanceof FolderLibraryCollection);

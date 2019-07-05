@@ -2,7 +2,8 @@ package com.example.mike.mp3player.client.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.media.session.MediaSessionCompat;
+
+import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
@@ -22,7 +23,6 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
 
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
 
-    private MediaSessionCompat.Token token;
     private TrackInfoFragment trackInfoFragment;
     private PlaybackTrackerFragment playbackTrackerFragment;
     private PlaybackToolbarExtendedFragment playbackToolbarExtendedFragment;
@@ -52,11 +52,11 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
     @Override
     public void onStart() {
         super.onStart();
-        trackInfoFragment.init(getMediaControllerAdapter());
-        playbackSpeedControlsFragment.init(getMediaControllerAdapter());
-        playbackTrackerFragment.init(getMediaControllerAdapter());
-        playbackToolbarExtendedFragment.init(getMediaControllerAdapter());
-        shuffleRepeatFragment.init(getMediaControllerAdapter(), true);
+        getTrackInfoFragment().init(getMediaControllerAdapter());
+        getPlaybackSpeedControlsFragment().init(getMediaControllerAdapter());
+        getPlaybackTrackerFragment().init(getMediaControllerAdapter());
+        getPlaybackToolbarExtendedFragment().init(getMediaControllerAdapter());
+        getShuffleRepeatFragment().init(getMediaControllerAdapter(), true);
         getMediaControllerAdapter().updateUiState();
     }
 
@@ -112,9 +112,16 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
         return null;
     }
 
-    public PlaybackToolbarExtendedFragment getPlaybackToolbarExtendedFragment() {
-        return playbackToolbarExtendedFragment;
-    }
-
-
+    @VisibleForTesting
+    public PlaybackToolbarExtendedFragment getPlaybackToolbarExtendedFragment() { return playbackToolbarExtendedFragment; }
+    @VisibleForTesting
+    public TrackInfoFragment getTrackInfoFragment() { return trackInfoFragment; }
+    @VisibleForTesting
+    public PlaybackTrackerFragment getPlaybackTrackerFragment() { return playbackTrackerFragment; }
+    @VisibleForTesting
+    public PlaybackSpeedControlsFragment getPlaybackSpeedControlsFragment() { return playbackSpeedControlsFragment; }
+    @VisibleForTesting
+    public SimpleTitleBarFragment getSimpleTitleBarFragment() { return simpleTitleBarFragment; }
+    @VisibleForTesting
+    public ShuffleRepeatFragment getShuffleRepeatFragment() { return shuffleRepeatFragment; }
 }
