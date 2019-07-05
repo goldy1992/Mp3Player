@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
+import com.example.mike.mp3player.service.AudioFocusManager;
+
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.LoggingUtils.logPlaybackParams;
 
@@ -18,8 +20,8 @@ public class MarshmallowMediaPlayerAdapter extends MediaPlayerAdapter {
     private Uri nextUri;
     private Uri currentUri;
 
-    public MarshmallowMediaPlayerAdapter(Context context) {
-        super(context);
+    public MarshmallowMediaPlayerAdapter(Context context, AudioFocusManager audioFocusManager) {
+        super(context, audioFocusManager);
         this.mediaPlayerPool = new MediaPlayerPool(context);
     }
     @Override

@@ -6,6 +6,8 @@ import android.media.PlaybackParams;
 import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
 
+import com.example.mike.mp3player.service.AudioFocusManager;
+
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.LoggingUtils.logPlaybackParams;
 
@@ -17,8 +19,8 @@ public class NougatMediaPlayerAdapter extends MediaPlayerAdapter {
     private Uri currentUri;
     private boolean needToSetPlaybackParams = true;
 
-    public NougatMediaPlayerAdapter(Context context) {
-        super(context);
+    public NougatMediaPlayerAdapter(Context context, AudioFocusManager audioFocusManager) {
+        super(context, audioFocusManager);
         this.mediaPlayerPool = new MediaPlayerPool(context);
     }
 

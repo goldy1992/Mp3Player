@@ -6,12 +6,14 @@ import android.media.PlaybackParams;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
+import com.example.mike.mp3player.service.AudioFocusManager;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class OreoPlayerAdapter extends MediaPlayerAdapter {
 
-    public OreoPlayerAdapter(Context context) {
-        super(context);
+    public OreoPlayerAdapter(Context context, AudioFocusManager audioFocusManager) {
+        super(context, audioFocusManager);
     }
 
     @Override

@@ -42,7 +42,8 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState) {
         initialiseDependencies();
         super.onCreate(savedInstanceState);
-        mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+        // TODO: have this injected so that a test implementation can be provided
+        mainActivityIntent = new Intent(getApplicationContext(), MainActivityProduction.class);
         setContentView(R.layout.splash_screen);
         thread.start();
     }

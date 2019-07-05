@@ -46,8 +46,10 @@ public abstract class MediaPlayerAdapter implements MediaPlayer.OnErrorListener,
     @PlaybackStateCompat.State
     int currentState = PlaybackStateCompat.STATE_PAUSED;
 
-    public MediaPlayerAdapter(Context context) {
+    public MediaPlayerAdapter(Context context, AudioFocusManager audioFocusManager) {
         this.context = context;
+        this.audioFocusManager = audioFocusManager;
+        this.audioFocusManager.setPlayer(this);
     }
 
     public abstract boolean play();
@@ -115,7 +117,6 @@ public abstract class MediaPlayerAdapter implements MediaPlayer.OnErrorListener,
         this.nextMediaPlayer = secondItemUri == null ? null : createMediaPlayer(secondItemUri);
         //Log.i(LOG_TAG,"Created second mediaplayer");
 
-        this.audioFocusManager = new AudioFocusManager(context, this);
         this.currentState = PlaybackStateCompat.STATE_PAUSED;
     }
 

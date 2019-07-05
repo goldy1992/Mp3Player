@@ -15,6 +15,7 @@ import com.example.mike.mp3player.client.callbacks.subscription.MediaIdSubscript
 import com.example.mike.mp3player.client.callbacks.subscription.NotifyAllSubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.service.MediaPlaybackService;
+import com.example.mike.mp3player.service.MediaPlaybackServiceInjector;
 
 import javax.inject.Singleton;
 
@@ -37,7 +38,7 @@ public class MediaBrowserAdapterModule {
 
     @Provides
     public ComponentName provideComponentName(Context context) {
-        return new ComponentName(context, MediaPlaybackService.class);
+        return new ComponentName(context, MediaPlaybackServiceInjector.class);
     }
 
     @Provides
