@@ -8,6 +8,8 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
+import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjector;
+import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjectorTestImpl;
 import com.example.mike.mp3player.commons.Constants;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -17,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.android.controller.ActivityController;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -25,13 +28,15 @@ import static org.junit.Assert.assertNotNull;
 public class MediaPlayerActivityTest {
 
     private static final String MOCK_MEDIA_ID = "MOCK_MEDIA_ID";
-    /**
-     * Intent
-     */
+    /** Intent */
     private Intent intent;
-
+    /** Activity controller */
+    ActivityController<MediaPlayerActivityInjectorTestImpl> activityController;
     /**
      *
+     */
+    private MediaPlayerActivity mediaPlayerActivity;
+    /**
      */
     private MediaSessionCompat mediaSessionCompat;
 
@@ -43,7 +48,8 @@ public class MediaPlayerActivityTest {
         this.intent = new Intent(ApplicationProvider.getApplicationContext(), MediaPlayerActivity.class);
         this.intent.putExtra(Constants.MEDIA_SESSION, mediaSessionCompat.getSessionToken());
         this.intent.putExtra(Constants.MEDIA_ID, MOCK_MEDIA_ID);
-
+        this.activityController = Robolectric.buildActivity(MediaPlayerActivityInjectorTestImpl.class, intent).create();
+        this.mediaPlayerActivity = activityController.get();
     }
     /**
      * GIVEN: Intent i, with Uri u to MediaPlayerActivity m,
@@ -53,7 +59,7 @@ public class MediaPlayerActivityTest {
      */
     @Test
     public void onCreateSetMediaIdTest() throws IllegalAccessException {
-        MediaPlayerActivity mediaPlayerActivity = Robolectric.buildActivity(MediaPlayerActivity.class, intent).create().get();
+
         MediaSessionCompat.Token token = (MediaSessionCompat.Token) FieldUtils.readDeclaredField(mediaPlayerActivity, "token", true);
         assertEquals(mediaSessionCompat.getSessionToken(), token);
     }

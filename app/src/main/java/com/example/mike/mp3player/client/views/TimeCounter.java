@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ONE;
+import static android.support.v4.media.session.PlaybackStateCompat.STATE_NONE;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 import static com.example.mike.mp3player.client.utils.TimerUtils.ONE_SECOND;
 import static com.example.mike.mp3player.client.utils.TimerUtils.formatTime;
@@ -24,8 +25,8 @@ public class TimeCounter {
     public static final String LOG_TAG = "TimeCounter";
     private TextView textView;
     private long duration;
-    private long currentPosition;
-    private int currentState;
+    private long currentPosition = 0;
+    private int currentState = STATE_NONE;
     private float currentSpeed;
     private ScheduledExecutorService timer;
     private Handler mainHandler;
@@ -61,16 +62,18 @@ public class TimeCounter {
         this.repeating = repeatMode != null && repeatMode == REPEAT_MODE_ONE;
         long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(state);
 
-        switch (getCurrentState()) {
-            case PlaybackStateCompat.STATE_PLAYING:
-                work(latestPosition);
-                break;
-            case PlaybackStateCompat.STATE_PAUSED:
-                haltTimer(latestPosition);
-                break;
-            default:
-                resetTimer();
-                break;
+        if (isInitialised()) {
+            switch (getCurrentState()) {
+                case PlaybackStateCompat.STATE_PLAYING:
+                    work(latestPosition);
+                    break;
+                case PlaybackStateCompat.STATE_PAUSED:
+                    haltTimer(latestPosition);
+                    break;
+                default:
+                    resetTimer();
+                    break;
+            }
         }
     }
 
@@ -144,11 +147,6 @@ public class TimeCounter {
 
     public long getCurrentPosition() {
         return currentPosition;
-    }
-
-
-    public TextView getTextView() {
-        return textView;
     }
 
     public long getDuration() {

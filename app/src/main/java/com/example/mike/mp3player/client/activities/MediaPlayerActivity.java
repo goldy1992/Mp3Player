@@ -3,7 +3,6 @@ package com.example.mike.mp3player.client.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.util.Log;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
@@ -15,12 +14,11 @@ import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
-import com.example.mike.mp3player.dagger.components.DaggerMediaPlayerActivityComponent;
 
 /**
  * Created by Mike on 24/09/2017.
  */
-public class MediaPlayerActivity extends MediaActivityCompat {
+public abstract class MediaPlayerActivity extends MediaActivityCompat {
 
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
 
@@ -117,12 +115,6 @@ public class MediaPlayerActivity extends MediaActivityCompat {
     public PlaybackToolbarExtendedFragment getPlaybackToolbarExtendedFragment() {
         return playbackToolbarExtendedFragment;
     }
-    @Override
-    void initialiseDependencies() {
-        DaggerMediaPlayerActivityComponent
-                .factory()
-                .create(getApplicationContext(), getWorkerId(), getSubscriptionType(), this)
-                .inject(this);
-    }
+
 
 }
