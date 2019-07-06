@@ -15,7 +15,6 @@ import static com.example.mike.mp3player.commons.LoggingUtils.logPlaybackParams;
 public class MarshmallowMediaPlayerAdapter extends MediaPlayerAdapter {
 
     private MediaPlayerPool mediaPlayerPool;
-    private int position = DEFAULT_POSITION;
     private static final String LOG_TAG = "MSHMLW_PLY_ADPR";
     private Uri nextUri;
     private Uri currentUri;

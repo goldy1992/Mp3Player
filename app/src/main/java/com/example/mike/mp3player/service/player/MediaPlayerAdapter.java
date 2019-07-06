@@ -17,6 +17,7 @@ import javax.inject.Singleton;
 import static android.media.MediaPlayer.MEDIA_INFO_STARTED_AS_NEXT;
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ONE;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_PITCH;
+import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_SPEED;
 
 @Singleton
@@ -28,6 +29,7 @@ public abstract class MediaPlayerAdapter implements MediaPlayer.OnErrorListener,
     static final float MAXIMUM_PLAYBACK_SPEED = 2f;
     static final String LOG_TAG = "MEDIA_PLAYER_ADAPTER";
     final Context context;
+    int position = DEFAULT_POSITION;
     float currentPlaybackSpeed = DEFAULT_SPEED;
     float currentPitch = DEFAULT_PITCH;
     boolean isPrepared = true;
