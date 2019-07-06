@@ -98,6 +98,7 @@ public class OreoPlayerAdapterTest {
     public void testSeekToPrepared() throws IllegalAccessException {
         MediaPlayer mediaPlayerSpied = spy(mediaPlayerAdapter.getCurrentMediaPlayer());
         FieldUtils.writeField(mediaPlayerAdapter, "currentMediaPlayer", mediaPlayerSpied, true);
+        when(audioFocusManager.isInitialised()).thenReturn(true);
         mediaPlayerAdapter.seekTo(555L);
         verify(mediaPlayerSpied, times(1)).seekTo(555);
     }
@@ -106,6 +107,7 @@ public class OreoPlayerAdapterTest {
     public void testSeekToNotPrepared() throws IllegalAccessException {
         FieldUtils.writeField(mediaPlayerAdapter, "isPrepared", false, true);
         MediaPlayer mediaPlayerSpied = spy(mediaPlayerAdapter.getCurrentMediaPlayer());
+        when(audioFocusManager.isInitialised()).thenReturn(true);
         FieldUtils.writeField(mediaPlayerAdapter, "currentMediaPlayer", mediaPlayerSpied, true);
         mediaPlayerAdapter.seekTo(555L);
         verify(mediaPlayerSpied, times(1)).seekTo(555);
@@ -132,7 +134,7 @@ public class OreoPlayerAdapterTest {
     }
 
     private OreoPlayerAdapter createMediaPlayerAdapter() {
-        OreoPlayerAdapter oreoPlayerAdapter = new OreoPlayerAdapter(context);
+        OreoPlayerAdapter oreoPlayerAdapter = new OreoPlayerAdapter(context, audioFocusManager);
         oreoPlayerAdapter.setOnCompletionListener(mockOnCompletionListener);
         oreoPlayerAdapter.setOnSeekCompleteListener(mockOnSeekCompleteListener);
         return oreoPlayerAdapter;

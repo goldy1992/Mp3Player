@@ -32,7 +32,8 @@ public class AudioFocusManagerTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        audioFocusManager = new AudioFocusManager(context, mediaPlayerAdapter);
+        audioFocusManager = new AudioFocusManager(context);
+        audioFocusManager.setPlayer(mediaPlayerAdapter);
         assertTrue(audioFocusManager.isInitialised());
     }
 
