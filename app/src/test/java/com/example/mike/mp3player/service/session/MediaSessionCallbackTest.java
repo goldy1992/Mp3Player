@@ -32,6 +32,7 @@ import org.robolectric.RobolectricTestRunner;
 import java.util.Collections;
 import java.util.List;
 
+import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS;
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ALL;
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_NONE;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
@@ -120,7 +121,7 @@ public class MediaSessionCallbackTest {
         verify(mediaPlayerAdapter, times(1)).seekTo(1);
         verify(playbackManager, never()).skipToPrevious();
         verify(serviceManager, never()).notifyService();
-        verify(mediaSessionAdapter, never()).updateAll();
+        verify(mediaSessionAdapter, never()).updateAll(ACTION_SKIP_TO_PREVIOUS);
     }
     @Test
     public void testSkipToPreviousPositionLessThanOneSecond() {
@@ -132,7 +133,7 @@ public class MediaSessionCallbackTest {
         verify(mediaPlayerAdapter, never()).seekTo(anyLong());
         verify(playbackManager, times(1)).skipToPrevious();
         verify(serviceManager, times(1)).notifyService();
-        verify(mediaSessionAdapter, times(1)).updateAll();
+        verify(mediaSessionAdapter, times(1)).updateAll(ACTION_SKIP_TO_PREVIOUS);
     }
     @Test
     public void testMediaButtonEventNullIntent() {

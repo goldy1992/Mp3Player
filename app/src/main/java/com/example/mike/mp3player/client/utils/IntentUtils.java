@@ -6,7 +6,6 @@ import android.support.v4.media.session.MediaSessionCompat;
 
 import androidx.annotation.NonNull;
 
-import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjector;
 
 import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;

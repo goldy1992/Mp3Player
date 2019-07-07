@@ -114,7 +114,7 @@ public class MediaSessionAdapterTest {
     }
     @Test
     public void testUpdateAll() {
-        mediaSessionAdapter.updateAll();
+        mediaSessionAdapter.updateAll(NO_ACTION);
         verify(mediaSession, times(1)).setPlaybackState(any());
         verify(mediaSession, times(1)).setMetadata(any());
     }

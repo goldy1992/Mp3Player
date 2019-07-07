@@ -36,15 +36,15 @@ public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> 
         //logPlaybackStateCompat(data, LOG_TAG);
         long actions = data.getActions();
 
-        if (actions == NO_ACTION) {
+        if (containsAction(actions, ListenerType.PLAYBACK)) {
             notifyListenersOfType(ListenerType.PLAYBACK, data);
         }
 
-        if (containsAction(actions, PlaybackStateCompat.ACTION_SET_REPEAT_MODE)) {
+        if (containsAction(actions, ListenerType.REPEAT)) {
             notifyListenersOfType(ListenerType.REPEAT, data);
         }
 
-        if (containsAction(actions, PlaybackStateCompat.ACTION_SET_SHUFFLE_MODE)) {
+        if (containsAction(actions, ListenerType.SHUFFLE)) {
             notifyListenersOfType(ListenerType.SHUFFLE, data);
         }
     }
@@ -72,8 +72,8 @@ public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> 
         return result;
     }
 
-    private boolean containsAction(long actions, long action) {
-        return (actions & action) != 0;
+    private boolean containsAction(long actions, ListenerType listenerType) {
+        return (actions & listenerType.getActions()) != 0;
     }
 
     private void notifyListenersOfType(ListenerType listenerType, PlaybackStateCompat state) {

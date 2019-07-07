@@ -76,7 +76,7 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
 
     @Override
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
-        getCounter().updateState(state);
+        counter.updateState(state);
         getSeekerBar().getSeekerBarController().onPlaybackStateChanged(state);
     }
 

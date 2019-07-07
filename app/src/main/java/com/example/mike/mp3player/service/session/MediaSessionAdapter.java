@@ -63,6 +63,7 @@ public class MediaSessionAdapter {
         updatePlaybackState(actions);
         updateMetaData();
     }
+    @Deprecated
     public void updateAll() {
         updateAll(NO_ACTION);
     }
