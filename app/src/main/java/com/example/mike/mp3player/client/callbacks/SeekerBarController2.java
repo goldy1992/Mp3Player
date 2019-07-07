@@ -13,6 +13,8 @@ import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.commons.LoggingUtils;
 
+import javax.inject.Inject;
+
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_SPEED;
@@ -24,7 +26,7 @@ import static com.example.mike.mp3player.commons.PlaybackStateUtil.getRepeatMode
 public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListener, SeekBar.OnSeekBarChangeListener {
 
     private static final String LOG_TAG = "SKR_MDIA_CNTRLR_CLBK";
-    private final SeekerBar seekerBar;
+    private SeekerBar seekerBar;
     @PlaybackStateCompat.State
     private int currentState = STATE_PAUSED;
     private float currentPlaybackSpeed = DEFAULT_SPEED;
@@ -34,8 +36,9 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
     private ValueAnimator valueAnimator = null;
     private final MediaControllerAdapter mediaControllerAdapter;
 
-    public SeekerBarController2(SeekerBar seekerBar, MediaControllerAdapter mediaControllerAdapter) {
-        this.seekerBar = seekerBar;
+    @Inject
+    public SeekerBarController2(MediaControllerAdapter mediaControllerAdapter) {
+
         this.mediaControllerAdapter = mediaControllerAdapter;
     }
 
@@ -194,5 +197,9 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
     @VisibleForTesting
     public ValueAnimator getValueAnimator() {
         return this.valueAnimator;
+    }
+
+    public void setSeekerBar(SeekerBar seekerBar) {
+        this.seekerBar = seekerBar;
     }
 }

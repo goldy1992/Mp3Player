@@ -15,7 +15,6 @@ public class SeekerBar extends AppCompatSeekBar {
 
     private ValueAnimator valueAnimator;
     private boolean isTracking = false;
-    private SeekerBarController2 seekerBarController;
     private TimeCounter timeCounter;
 
     public SeekerBar(Context context) {
@@ -28,13 +27,14 @@ public class SeekerBar extends AppCompatSeekBar {
 
     public SeekerBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        this.setVisibility(VISIBLE);
+        this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     public void init(MediaControllerAdapter mediaControllerAdapter) {
-        this.setVisibility(VISIBLE);
-        this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        this.seekerBarController = new SeekerBarController2(this, mediaControllerAdapter);
-        super.setOnSeekBarChangeListener(seekerBarController);
+
+//        this.seekerBarController = new SeekerBarController2(this, mediaControllerAdapter);
+//        super.setOnSeekBarChangeListener(seekerBarController);
     }
 
     @Override

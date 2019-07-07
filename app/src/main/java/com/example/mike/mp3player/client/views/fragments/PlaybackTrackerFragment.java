@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MetaDataListener;
+import com.example.mike.mp3player.client.callbacks.SeekerBarController2;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 import com.example.mike.mp3player.client.utils.TimerUtils;
@@ -30,7 +31,7 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
 
     private MediaControllerAdapter mediaControllerAdapter;
     private TextView duration;
-    private SeekerBar seekerBar;
+    private SeekerBarController2 seekerBarController;
     private TimeCounter counter;
 
     @Override
@@ -46,9 +47,9 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
         super.onViewCreated(view, bundle);
         TextView counterView = view.findViewById(R.id.timer);
         this.counter.setTextView(counterView);
+        SeekerBar seekerBar = view.findViewById(R.id.seekBar);
 
-        this.setSeekerBar(view.findViewById(R.id.seekBar));
-        this.getSeekerBar().setTimeCounter(counter);
+        this.getSeekerBarController().setTimeCounter(counter);
         this.duration = view.findViewById(R.id.duration);
     }
 
@@ -59,25 +60,25 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
         listenForSet.add(ListenerType.REPEAT);
         this.mediaControllerAdapter.registerPlaybackStateListener(this, listenForSet);
         this.mediaControllerAdapter.registerMetaDataListener(this);
-        this.getSeekerBar().init(mediaControllerAdapter);
+        this.getSeekerBarController().init(mediaControllerAdapter);
     }
 
     public TimeCounter getCounter() {
         return counter;
     }
 
-    public SeekerBar getSeekerBar() {
-        return seekerBar;
+    public SeekerBar getSeekerBarController() {
+        return seekerBarController;
     }
 
-    public void setSeekerBar(SeekerBar seekerBar) {
-        this.seekerBar = seekerBar;
+    public void setSeekerBarController(SeekerBar seekerBarController) {
+        this.seekerBarController = seekerBarController;
     }
 
     @Override
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
         counter.updateState(state);
-        getSeekerBar().getSeekerBarController().onPlaybackStateChanged(state);
+        getSeekerBarController().getSeekerBarController().onPlaybackStateChanged(state);
     }
 
     @Override
@@ -86,7 +87,7 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
         getCounter().setDuration(duration);
         String durationString = TimerUtils.formatTime(duration);
         mainUpdater.post(() -> updateDurationText(durationString));
-        getSeekerBar().getSeekerBarController().onMetadataChanged(metadata);
+        getSeekerBarController().getSeekerBarController().onMetadataChanged(metadata);
     }
 
     public void initialiseDependencies() {
@@ -100,5 +101,10 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
     @Inject
     public void setTimeCounter(TimeCounter timeCounter) {
         this.counter = timeCounter;
+    }
+
+    @Inject
+    public void setSeekerBarController(SeekerBarController2 controller) {
+        this.seekerBarController = controller;
     }
 }
