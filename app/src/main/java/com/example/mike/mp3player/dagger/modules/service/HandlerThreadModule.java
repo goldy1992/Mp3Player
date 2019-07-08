@@ -2,16 +2,13 @@ package com.example.mike.mp3player.dagger.modules.service;
 
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
-import android.util.Log;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import com.example.mike.mp3player.dagger.components.fragments.PlaybackTrackerFragmentSubcomponent;
 
 import dagger.Module;
 import dagger.Provides;
 
-@Module
+@Module(subcomponents = PlaybackTrackerFragmentSubcomponent.class)
 public class HandlerThreadModule {
 
     @Provides

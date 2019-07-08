@@ -62,9 +62,6 @@ public class SeekerBar extends AppCompatSeekBar {
         isTracking = tracking;
     }
 
-    public SeekerBarController2 getSeekerBarController() {
-        return seekerBarController;
-    }
 
     public void setTimeCounter(TimeCounter timeCounter) {
         this.timeCounter = timeCounter;

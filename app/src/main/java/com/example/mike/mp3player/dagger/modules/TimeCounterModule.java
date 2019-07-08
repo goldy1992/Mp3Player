@@ -9,7 +9,7 @@ import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
 
-@Module
+@Module(includes = MainHandlerModule.class)
 public class TimeCounterModule {
 
     @Provides

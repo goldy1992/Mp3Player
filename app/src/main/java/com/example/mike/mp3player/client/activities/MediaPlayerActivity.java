@@ -15,6 +15,7 @@ import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.example.mike.mp3player.dagger.components.MediaPlayerActivityComponent;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -22,6 +23,8 @@ import com.example.mike.mp3player.commons.library.LibraryRequest;
 public abstract class MediaPlayerActivity extends MediaActivityCompat {
 
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
+
+    private MediaPlayerActivityComponent mediaPlayerActivityComponent;
 
     private TrackInfoFragment trackInfoFragment;
     private PlaybackTrackerFragment playbackTrackerFragment;
@@ -124,4 +127,12 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
     public SimpleTitleBarFragment getSimpleTitleBarFragment() { return simpleTitleBarFragment; }
     @VisibleForTesting
     public ShuffleRepeatFragment getShuffleRepeatFragment() { return shuffleRepeatFragment; }
+
+    public MediaPlayerActivityComponent getMediaPlayerActivityComponent() {
+        return mediaPlayerActivityComponent;
+    }
+
+    public void setMediaPlayerActivityComponent(MediaPlayerActivityComponent mediaPlayerActivityComponent) {
+        this.mediaPlayerActivityComponent = mediaPlayerActivityComponent;
+    }
 }
