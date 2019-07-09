@@ -25,6 +25,7 @@ public final class Constants {
     public static final int DEFAULT_POSITION = 0;
     public static final String THEME = "THEME";
 
+    public static final long ACTION_PLAYBACK_SPEED_CHANGED = 1 << 22;
     public static final SparseArray<String> playbackStateDebugMap = new SparseArray<>();
     static {
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_NONE, "STATE_NONE"); // 0

@@ -13,10 +13,14 @@ import androidx.appcompat.widget.AppCompatImageButton;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
+import com.example.mike.mp3player.dagger.components.fragments.PlaybackSpeedControlsFragmentSubcomponent;
 
 import java.util.Collections;
+
+import javax.inject.Inject;
 
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
@@ -31,6 +35,7 @@ public class PlaybackSpeedControlsFragment extends AsyncFragment implements Play
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        initialiseDependencies();
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_playback_speed_controls, container, true);
     }
@@ -43,11 +48,7 @@ public class PlaybackSpeedControlsFragment extends AsyncFragment implements Play
         this.increasePlaybackSpeedButton = view.findViewById(R.id.increasePlaybackSpeed);
         this.increasePlaybackSpeedButton.setOnClickListener((View v) -> increasePlaybackSpeed());
         this.playbackSpeed = view.findViewById(R.id.playbackSpeedValue);
-    }
-
-    public void init(MediaControllerAdapter mediaControllerAdapter) {
-        this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mediaControllerAdapter.registerPlaybackStateListener(this, Collections.singleton(ListenerType.PLAYBACK));
+        this.mediaControllerAdapter.registerPlaybackStateListener(this, Collections.singleton(ListenerType.PLAYBACK_SPEED));
     }
 
     private void updatePlaybackSpeedText(float speed) {
@@ -67,10 +68,22 @@ public class PlaybackSpeedControlsFragment extends AsyncFragment implements Play
 
 
     @Override
-    public void onPlaybackStateChanged(PlaybackStateCompat state) {
+    public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
         float speed = state.getPlaybackSpeed();
         if (speed > 0) {
             updatePlaybackSpeedText(speed);
         }
+    }
+
+    public void initialiseDependencies() {
+        ((MediaPlayerActivity)getActivity()).getMediaPlayerActivityComponent()
+                .providePlaybackSpeedControlsFragmentSubcomponent()
+                .inject(this);
+
+    }
+
+    @Inject
+    public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
+        this.mediaControllerAdapter = mediaControllerAdapter;
     }
 }

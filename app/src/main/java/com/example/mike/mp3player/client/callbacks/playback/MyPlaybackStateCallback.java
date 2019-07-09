@@ -47,6 +47,10 @@ public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> 
         if (containsAction(actions, ListenerType.SHUFFLE)) {
             notifyListenersOfType(ListenerType.SHUFFLE, data);
         }
+
+        if (containsAction(actions, ListenerType.PLAYBACK_SPEED)) {
+            notifyListenersOfType(ListenerType.PLAYBACK_SPEED, data);
+        }
     }
 
     public synchronized void registerPlaybackStateListener(PlaybackStateListener listener, Set<ListenerType> listenerTypes) {

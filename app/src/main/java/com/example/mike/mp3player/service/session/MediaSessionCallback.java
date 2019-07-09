@@ -37,6 +37,7 @@ import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SET_SH
 import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_NEXT;
 import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS;
 import static android.support.v4.media.session.PlaybackStateCompat.ACTION_STOP;
+import static com.example.mike.mp3player.commons.Constants.ACTION_PLAYBACK_SPEED_CHANGED;
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
@@ -335,7 +336,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                 break;
             default: break;
         }
-        mediaSessionAdapter.updateAll(NO_ACTION);
+        mediaSessionAdapter.updateAll(ACTION_PLAYBACK_SPEED_CHANGED);
     }
 
     private void skipToNewMedia(String newMediaId) {

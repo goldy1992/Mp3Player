@@ -48,19 +48,17 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
         TextView counterView = view.findViewById(R.id.timer);
         this.counter.setTextView(counterView);
         SeekerBar seekerBar = view.findViewById(R.id.seekBar);
-
-       // this.seekerBarController.se(counter);
+        this.seekerBarController.setSeekerBar(seekerBar);
         this.duration = view.findViewById(R.id.duration);
+        init();
     }
 
-    public void init(MediaControllerAdapter mediaControllerAdapter) {
-        this.mediaControllerAdapter = mediaControllerAdapter;
+    private void init() {
         Set<ListenerType> listenForSet = new HashSet<>();
         listenForSet.add(ListenerType.PLAYBACK);
         listenForSet.add(ListenerType.REPEAT);
         this.mediaControllerAdapter.registerPlaybackStateListener(this, listenForSet);
         this.mediaControllerAdapter.registerMetaDataListener(this);
-       // this.getSeekerBarController().init(mediaControllerAdapter);
     }
 
     public TimeCounter getCounter() {
@@ -72,15 +70,15 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
     }
 
     @Override
-    public void onPlaybackStateChanged(PlaybackStateCompat state) {
+    public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
         counter.updateState(state);
         seekerBarController.onPlaybackStateChanged(state);
     }
 
     @Override
-    public void onMetadataChanged(MediaMetadataCompat metadata) {
+    public void onMetadataChanged(@NonNull MediaMetadataCompat metadata) {
         long duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
-        getCounter().setDuration(duration);
+        this.counter.setDuration(duration);
         String durationString = TimerUtils.formatTime(duration);
         mainUpdater.post(() -> updateDurationText(durationString));
         seekerBarController.onMetadataChanged(metadata);
@@ -88,7 +86,9 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
 
     public void initialiseDependencies() {
        MediaPlayerActivity mediaPlayerActivity = (MediaPlayerActivity) getActivity();
-       mediaPlayerActivity.getMediaPlayerActivityComponent().providePlaybackTrackerFragment().create(getContext()).inject(this);
+       mediaPlayerActivity.getMediaPlayerActivityComponent().providePlaybackTrackerFragment()
+               .create(getContext())
+               .inject(this);
     }
 
     private void updateDurationText(String duration) {
@@ -104,7 +104,6 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
     public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
         this.mediaControllerAdapter = mediaControllerAdapter;
     }
-
 
     @Inject
     public void setSeekerBarController(SeekerBarController2 controller) {

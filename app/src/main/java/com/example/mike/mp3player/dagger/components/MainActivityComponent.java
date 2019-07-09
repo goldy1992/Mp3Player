@@ -14,12 +14,14 @@ import com.example.mike.mp3player.dagger.modules.MediaBrowserAdapterModule;
 import com.example.mike.mp3player.dagger.modules.MediaControllerAdapterModule;
 import com.example.mike.mp3player.dagger.modules.MediaControllerCallbackModule;
 import com.example.mike.mp3player.dagger.modules.service.HandlerThreadModule;
+import com.example.mike.mp3player.dagger.scopes.AndroidComponentScope;
 
 import javax.inject.Singleton;
 
 import dagger.BindsInstance;
 import dagger.Component;
 
+@AndroidComponentScope
 @Singleton
 @Component(modules = {
         HandlerThreadModule.class,

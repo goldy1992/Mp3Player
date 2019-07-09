@@ -56,8 +56,6 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
     public void onStart() {
         super.onStart();
         getTrackInfoFragment().init(getMediaControllerAdapter());
-        getPlaybackSpeedControlsFragment().init(getMediaControllerAdapter());
-        getPlaybackTrackerFragment().init(getMediaControllerAdapter());
         getPlaybackToolbarExtendedFragment().init(getMediaControllerAdapter());
         getShuffleRepeatFragment().init(getMediaControllerAdapter(), true);
         getMediaControllerAdapter().updateUiState();

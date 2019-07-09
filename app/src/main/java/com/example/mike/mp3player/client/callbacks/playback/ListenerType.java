@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client.callbacks.playback;
 
 import static android.support.v4.media.session.PlaybackStateCompat.*;
+import static com.example.mike.mp3player.commons.Constants.ACTION_PLAYBACK_SPEED_CHANGED;
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 
 /**
@@ -9,6 +10,7 @@ import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
  */
 public enum ListenerType {
     PLAYBACK(playbackActions()),
+    PLAYBACK_SPEED(getPlaybackSpeedActions()),
     REPEAT(repeatActions()),
     SHUFFLE(shuffleActions());
     /** actions */
@@ -56,6 +58,11 @@ public enum ListenerType {
                 ACTION_PREPARE_FROM_URI |
                 NO_ACTION;
     }
+    /** @return the playback speed actions */
+    private static final long getPlaybackSpeedActions() {
+        return ACTION_PLAYBACK_SPEED_CHANGED;
+    }
+
     /** @return the actions for listener type */
     public long getActions() {
         return actions;

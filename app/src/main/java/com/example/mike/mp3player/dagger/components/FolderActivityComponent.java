@@ -13,6 +13,7 @@ import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType
 import com.example.mike.mp3player.dagger.modules.MediaBrowserAdapterModule;
 import com.example.mike.mp3player.dagger.modules.MediaControllerAdapterModule;
 import com.example.mike.mp3player.dagger.modules.service.HandlerThreadModule;
+import com.example.mike.mp3player.dagger.scopes.AndroidComponentScope;
 
 import javax.inject.Singleton;
 
@@ -20,6 +21,7 @@ import dagger.BindsInstance;
 import dagger.Component;
 
 @Singleton
+@AndroidComponentScope
 @Component(modules = {
         HandlerThreadModule.class,
         MediaBrowserAdapterModule.class,

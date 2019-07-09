@@ -7,7 +7,10 @@ import com.example.mike.mp3player.client.views.TimeCounter;
 import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
 import com.example.mike.mp3player.dagger.modules.SeekerBarModule;
 import com.example.mike.mp3player.dagger.modules.TimeCounterModule;
+import com.example.mike.mp3player.dagger.scopes.AndroidComponentScope;
 import com.example.mike.mp3player.dagger.scopes.FragmentScope;
+
+import javax.inject.Singleton;
 
 import dagger.BindsInstance;
 import dagger.Subcomponent;
