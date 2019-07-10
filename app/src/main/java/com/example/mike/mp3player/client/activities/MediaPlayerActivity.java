@@ -56,7 +56,6 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
     public void onStart() {
         super.onStart();
         getPlaybackToolbarExtendedFragment().init(getMediaControllerAdapter());
-        getShuffleRepeatFragment().init(getMediaControllerAdapter(), true);
         getMediaControllerAdapter().updateUiState();
     }
 

@@ -10,6 +10,7 @@ import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.dagger.components.fragments.PlaybackSpeedControlsFragmentSubcomponent;
 import com.example.mike.mp3player.dagger.components.fragments.PlaybackTrackerFragmentSubcomponent;
+import com.example.mike.mp3player.dagger.components.fragments.ShuffleRepeatFragmentSubcomponent;
 import com.example.mike.mp3player.dagger.components.fragments.TrackInfoFragmentSubcomponent;
 import com.example.mike.mp3player.dagger.modules.MainHandlerModule;
 import com.example.mike.mp3player.dagger.modules.MediaBrowserAdapterModule;
@@ -36,6 +37,7 @@ public interface MediaPlayerActivityComponent {
     PlaybackTrackerFragmentSubcomponent providePlaybackTrackerFragment();
     PlaybackSpeedControlsFragmentSubcomponent providePlaybackSpeedControlsFragmentSubcomponent();
     TrackInfoFragmentSubcomponent provideTrackInfoSubcomponent();
+    ShuffleRepeatFragmentSubcomponent provideShuffleRepeatFragment();
 
     void inject(MediaPlayerActivity activity);
 

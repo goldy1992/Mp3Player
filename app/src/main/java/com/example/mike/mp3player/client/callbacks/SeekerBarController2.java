@@ -82,8 +82,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
         updateValueAnimator();
     }
 
-    private void
-    updateValueAnimator() {
+    private void updateValueAnimator() {
         valueAnimator.setCurrentFraction(getPositionAsFraction());
         if (!valueAnimator.isStarted()) {
             valueAnimator.start();
