@@ -12,8 +12,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
-
 public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> {
     private static final String LOG_TAG = "MY_PLYBK_ST_CLLBK";
     private Map<ListenerType, Set<PlaybackStateListener>> listeners;
