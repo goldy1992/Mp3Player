@@ -87,7 +87,6 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
     public void initialiseDependencies() {
        MediaPlayerActivity mediaPlayerActivity = (MediaPlayerActivity) getActivity();
        mediaPlayerActivity.getMediaPlayerActivityComponent().providePlaybackTrackerFragment()
-               .create(getContext())
                .inject(this);
     }
 

@@ -8,7 +8,7 @@ import com.example.mike.mp3player.dagger.components.fragments.PlaybackTrackerFra
 import dagger.Module;
 import dagger.Provides;
 
-@Module(subcomponents = PlaybackTrackerFragmentSubcomponent.class)
+@Module
 public class HandlerThreadModule {
 
     @Provides
