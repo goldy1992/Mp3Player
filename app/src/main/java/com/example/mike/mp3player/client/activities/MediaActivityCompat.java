@@ -14,6 +14,7 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
+import com.example.mike.mp3player.dagger.components.fragments.MediaActivityCompatComponent;
 
 import javax.inject.Inject;
 
@@ -25,6 +26,8 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     private MediaBrowserAdapter mediaBrowserAdapter;
     /** MediaControllerAdapter */
     private MediaControllerAdapter mediaControllerAdapter;
+    /** Dependencies **/
+    private MediaActivityCompatComponent mediaActivityCompatComponent;
     /** Thread used to deal with none UI tasks */
     private HandlerThread worker;
     /** @return The subscription type of the MediaActivityCompat */
@@ -97,5 +100,13 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     @Inject
     public final void setWorker(HandlerThread thread) {
         this.worker = thread;
+    }
+
+    public void setMediaActivityCompatComponent(MediaActivityCompatComponent mediaActivityCompatComponent) {
+        this.mediaActivityCompatComponent = mediaActivityCompatComponent;
+    }
+    /** @return the mediaActivityCompatComponent **/
+    public MediaActivityCompatComponent getMediaActivityCompatComponent() {
+        return mediaActivityCompatComponent;
     }
 }

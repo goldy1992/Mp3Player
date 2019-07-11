@@ -2,8 +2,8 @@ package com.example.mike.mp3player.client.activities;
 
 import android.os.Bundle;
 
-import com.example.mike.mp3player.dagger.components.DaggerMediaPlayerActivityComponent;
-import com.example.mike.mp3player.dagger.components.MediaPlayerActivityComponent;
+import com.example.mike.mp3player.dagger.components.fragments.DaggerMediaActivityCompatComponent;
+import com.example.mike.mp3player.dagger.components.fragments.MediaActivityCompatComponent;
 
 /**
  * Media Player Activity injector
@@ -17,10 +17,10 @@ public class MediaPlayerActivityInjector extends MediaPlayerActivity {
     }
     @Override
     void initialiseDependencies() {
-        MediaPlayerActivityComponent mainActivityComponent = DaggerMediaPlayerActivityComponent
+        MediaActivityCompatComponent mediaActivityCompatComponent = DaggerMediaActivityCompatComponent
                 .factory()
                 .create(getApplicationContext(), getWorkerId(), getSubscriptionType(), this);
-                mainActivityComponent.inject(this);
-                this.setMediaPlayerActivityComponent(mainActivityComponent);
+                mediaActivityCompatComponent.inject(this);
+        this.setMediaActivityCompatComponent(mediaActivityCompatComponent);
     }
 }

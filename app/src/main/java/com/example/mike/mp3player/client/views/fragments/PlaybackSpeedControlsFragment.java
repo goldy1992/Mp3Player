@@ -13,10 +13,11 @@ import androidx.appcompat.widget.AppCompatImageButton;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
-import com.example.mike.mp3player.dagger.components.fragments.PlaybackSpeedControlsFragmentSubcomponent;
+import com.example.mike.mp3player.dagger.components.fragments.MediaActivityCompatComponent;
 
 import java.util.Collections;
 
@@ -76,10 +77,9 @@ public class PlaybackSpeedControlsFragment extends AsyncFragment implements Play
     }
 
     public void initialiseDependencies() {
-        ((MediaPlayerActivity)getActivity()).getMediaPlayerActivityComponent()
-                .providePlaybackSpeedControlsFragmentSubcomponent()
-                .inject(this);
-
+        MediaActivityCompatComponent component = ((MediaActivityCompat)getActivity())
+                .getMediaActivityCompatComponent();
+            component.inject(this);
     }
 
     @Inject

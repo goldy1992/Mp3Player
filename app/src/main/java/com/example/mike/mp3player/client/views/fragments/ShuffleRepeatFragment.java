@@ -11,12 +11,11 @@ import androidx.annotation.Nullable;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.views.RepeatOneRepeatAllButton;
 import com.example.mike.mp3player.client.views.ShuffleButton;
-import com.example.mike.mp3player.dagger.components.MainActivityComponent;
-import com.example.mike.mp3player.dagger.components.fragments.ShuffleRepeatFragmentSubcomponent;
+import com.example.mike.mp3player.dagger.components.fragments.MediaActivityCompatComponent;
 
 import java.util.Collections;
 
@@ -67,9 +66,8 @@ public class ShuffleRepeatFragment extends AsyncFragment {
     }
 
     public void initialiseDependencies() {
-        ShuffleRepeatFragmentSubcomponent component = ((MediaPlayerActivity)getActivity())
-                .getMediaPlayerActivityComponent()
-                .provideShuffleRepeatFragment();
+        MediaActivityCompatComponent component = ((MediaActivityCompat)getActivity())
+                .getMediaActivityCompatComponent();
         component.inject(this);
     }
 }

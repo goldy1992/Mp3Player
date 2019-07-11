@@ -10,7 +10,6 @@ import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
-import com.example.mike.mp3player.dagger.components.DaggerFolderActivityComponent;
 
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
@@ -77,13 +76,5 @@ public abstract class FolderActivity extends MediaActivityCompat {
         this.finish();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    void initialiseDependencies() {
-        DaggerFolderActivityComponent.
-            factory()
-            .create(getApplicationContext(), getWorkerId(),
-                getSubscriptionType(),this)
-            .inject(this);
-    }
+
 }

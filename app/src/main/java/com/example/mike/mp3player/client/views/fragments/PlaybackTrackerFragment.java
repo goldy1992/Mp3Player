@@ -14,13 +14,14 @@ import androidx.annotation.Nullable;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MetaDataListener;
-import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.callbacks.SeekerBarController2;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.client.views.TimeCounter;
+import com.example.mike.mp3player.dagger.components.fragments.MediaActivityCompatComponent;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -85,9 +86,9 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
     }
 
     public void initialiseDependencies() {
-       MediaPlayerActivity mediaPlayerActivity = (MediaPlayerActivity) getActivity();
-       mediaPlayerActivity.getMediaPlayerActivityComponent().providePlaybackTrackerFragment()
-               .inject(this);
+        MediaActivityCompatComponent component = ((MediaActivityCompat)getActivity())
+                .getMediaActivityCompatComponent();
+        component.inject(this);
     }
 
     private void updateDurationText(String duration) {

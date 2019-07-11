@@ -13,7 +13,9 @@ import androidx.annotation.Nullable;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MetaDataListener;
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
+import com.example.mike.mp3player.dagger.components.fragments.MediaActivityCompatComponent;
 
 import javax.inject.Inject;
 
@@ -71,9 +73,8 @@ public class TrackInfoFragment extends AsyncFragment implements MetaDataListener
     }
 
     public void initialiseDependencies() {
-        MediaPlayerActivity mediaPlayerActivity = (MediaPlayerActivity) getActivity();
-        mediaPlayerActivity.getMediaPlayerActivityComponent()
-                .provideTrackInfoSubcomponent()
-                .inject(this);
+        MediaActivityCompatComponent component = ((MediaActivityCompat)getActivity())
+                .getMediaActivityCompatComponent();
+        component.inject(this);
     }
 }

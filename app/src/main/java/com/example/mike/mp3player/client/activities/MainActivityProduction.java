@@ -3,10 +3,11 @@ package com.example.mike.mp3player.client.activities;
 import android.os.Bundle;
 
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
-import com.example.mike.mp3player.dagger.components.DaggerMainActivityComponent;
-import com.example.mike.mp3player.dagger.components.MainActivityComponent;
+import com.example.mike.mp3player.dagger.components.fragments.DaggerMediaActivityCompatComponent;
+import com.example.mike.mp3player.dagger.components.fragments.MediaActivityCompatComponent;
 
 public class MainActivityProduction extends MainActivity {
+
     @Override
     public void onCreate(Bundle savedInstance) {
         initialiseDependencies();
@@ -16,10 +17,13 @@ public class MainActivityProduction extends MainActivity {
     /** {@inheritDoc} */
     @Override
     void initialiseDependencies() {
-        MainActivityComponent mainActivityComponent = DaggerMainActivityComponent
+        MediaActivityCompatComponent mediaActivityCompatComponent =
+            DaggerMediaActivityCompatComponent
                 .factory()
                 .create(getApplicationContext(),getWorkerId(), SubscriptionType.MEDIA_ID, this);
-        mainActivityComponent.inject(this);
+        this.setMediaActivityCompatComponent(mediaActivityCompatComponent);
+        mediaActivityCompatComponent.inject(this);
+
 
     }
 }

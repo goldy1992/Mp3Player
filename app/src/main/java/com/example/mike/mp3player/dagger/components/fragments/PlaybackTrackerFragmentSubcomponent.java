@@ -1,15 +1,11 @@
 package com.example.mike.mp3player.dagger.components.fragments;
 
-import android.content.Context;
-
 import com.example.mike.mp3player.client.callbacks.SeekerBarController2;
 import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
-import com.example.mike.mp3player.dagger.modules.MainHandlerModule;
 import com.example.mike.mp3player.dagger.modules.SeekerBarModule;
 import com.example.mike.mp3player.dagger.modules.TimeCounterModule;
 import com.example.mike.mp3player.dagger.scopes.FragmentScope;
 
-import dagger.BindsInstance;
 import dagger.Subcomponent;
 
 @FragmentScope

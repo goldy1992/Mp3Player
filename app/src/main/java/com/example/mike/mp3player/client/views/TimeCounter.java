@@ -11,6 +11,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ONE;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_NONE;
@@ -33,7 +34,7 @@ public class TimeCounter {
     private boolean repeating = false;
 
     @Inject
-    public TimeCounter(Handler mainHandler) {
+    public TimeCounter(@Named("main") Handler mainHandler) {
         this.mainHandler = mainHandler;
     }
 
