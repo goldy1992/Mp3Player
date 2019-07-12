@@ -21,7 +21,7 @@ import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListene
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.client.views.TimeCounter;
-import com.example.mike.mp3player.dagger.components.fragments.MediaActivityCompatComponent;
+import com.example.mike.mp3player.dagger.components.fragments.PlaybackTrackerFragmentSubcomponent;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -86,8 +86,9 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
     }
 
     public void initialiseDependencies() {
-        MediaActivityCompatComponent component = ((MediaActivityCompat)getActivity())
-                .getMediaActivityCompatComponent();
+        PlaybackTrackerFragmentSubcomponent component = ((MediaActivityCompat)getActivity())
+                .getMediaActivityCompatComponent()
+                .playbackTrackerSubcomponent();
         component.inject(this);
     }
 
