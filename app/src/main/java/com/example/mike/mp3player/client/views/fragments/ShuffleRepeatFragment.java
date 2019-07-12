@@ -15,7 +15,7 @@ import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.views.RepeatOneRepeatAllButton;
 import com.example.mike.mp3player.client.views.ShuffleButton;
-import com.example.mike.mp3player.dagger.components.fragments.MediaActivityCompatComponent;
+import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 
 import java.util.Collections;
 

@@ -14,8 +14,6 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
-import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
-import com.example.mike.mp3player.dagger.components.DaggerSplashScreenEntryActivityComponent;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -180,10 +178,10 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     }
 
     private void initialiseDependencies() {
-        DaggerSplashScreenEntryActivityComponent
-                .factory()
-                .create(getApplicationContext(),"SPSH_SCRN_ACTVTY_WRKR",
-                        SubscriptionType.NOTIFY_ALL, this, this, this).
-                inject(this);
+//        DaggerSplashScreenEntryActivityComponent
+//                .factory()
+//                .create(getApplicationContext(),"SPSH_SCRN_ACTVTY_WRKR",
+//                        SubscriptionType.NOTIFY_ALL, this, this, this).
+//                inject(this);
     }
 }

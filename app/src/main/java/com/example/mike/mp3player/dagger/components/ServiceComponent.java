@@ -37,19 +37,6 @@ import dagger.Component;
 })
 public interface ServiceComponent {
 
-    AudioBecomingNoisyBroadcastReceiver provideAudioBecomingNoisyBroadcastReceiver();
-    Handler provideHandler();
-    MediaLibrary provideMediaLibrary();
-    MediaPlayerAdapter provideMediaPlayerAdapter();
-
-    MediaRetriever mediaRetriever();
-    MediaSessionAdapter provideMediaSessionAdapter();
-    MediaSessionCompat provideMediaSessionCompat();
-    MediaSessionCompat.Token provideMediaSessionToken();
-    MyNotificationManager provideMyNotificationManager();
-    ServiceManager provideServiceManager();
-    String workerId();
-
     void inject(MediaPlaybackService mediaPlaybackService);
 
     @Component.Factory

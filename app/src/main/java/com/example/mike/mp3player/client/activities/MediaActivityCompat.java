@@ -14,7 +14,7 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
-import com.example.mike.mp3player.dagger.components.fragments.MediaActivityCompatComponent;
+import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 
 import javax.inject.Inject;
 

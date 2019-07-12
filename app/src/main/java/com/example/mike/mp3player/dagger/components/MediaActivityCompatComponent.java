@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.dagger.components.fragments;
+package com.example.mike.mp3player.dagger.components;
 
 import android.content.Context;
 
@@ -11,14 +11,14 @@ import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.ShuffleRepeatFragment;
 import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
+import com.example.mike.mp3player.dagger.components.fragments.PlaybackTrackerFragmentSubcomponent;
 import com.example.mike.mp3player.dagger.modules.MainHandlerModule;
 import com.example.mike.mp3player.dagger.modules.MediaBrowserAdapterModule;
 import com.example.mike.mp3player.dagger.modules.MediaControllerAdapterModule;
 import com.example.mike.mp3player.dagger.modules.MediaControllerCallbackModule;
 import com.example.mike.mp3player.dagger.modules.service.HandlerThreadModule;
 import com.example.mike.mp3player.dagger.scopes.ComponentScope;
-
-import javax.inject.Singleton;
+import com.example.mike.mp3player.dagger.scopes.FragmentScope;
 
 import dagger.BindsInstance;
 import dagger.Component;
@@ -45,6 +45,7 @@ public interface MediaActivityCompatComponent {
 
     // subcomponents
     PlaybackTrackerFragmentSubcomponent playbackTrackerSubcomponent();
+    SplashScreenEntryActivityComponent.Factory splashScreenEntryActivity();
 
     @Component.Factory
     interface Factory {

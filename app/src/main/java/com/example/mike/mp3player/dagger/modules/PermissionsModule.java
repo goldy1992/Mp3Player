@@ -13,7 +13,6 @@ import dagger.Provides;
 public class PermissionsModule {
 
     @Provides
-    @Singleton
     public PermissionsProcessor providePermission(SplashScreenEntryActivity activity,
                                                   PermissionGranted permissionGranted) {
         return new PermissionsProcessor(activity, permissionGranted);
