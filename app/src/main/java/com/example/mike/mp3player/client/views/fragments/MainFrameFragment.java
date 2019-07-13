@@ -16,10 +16,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaBrowserAdapter;
-import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MyDrawerListener;
-import com.example.mike.mp3player.client.views.SongSearchActionListener;
 import com.example.mike.mp3player.client.views.ThemeSpinnerController;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ViewPagerFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -45,17 +42,15 @@ public class MainFrameFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle bundle) {
         this.drawerLayout = view.findViewById(R.id.drawer_layout);
         this.playToolBarFragment = (PlayToolBarFragment) getChildFragmentManager().findFragmentById(R.id.playToolbarFragment);
-        this.playToolBarFragment.displayButtons();
         this.viewPagerFragment = (ViewPagerFragment) getChildFragmentManager().findFragmentById(R.id.viewPagerFragment);
         this.titleBarFragment = (TitleBarFragment) getChildFragmentManager().findFragmentById(R.id.titleBarFragment);
         this.navigationView = view.findViewById(R.id.nav_view);
-
         initNavigationView();
 
         MyDrawerListener myDrawerListener = new MyDrawerListener();
         getDrawerLayout().addDrawerListener(myDrawerListener);
 
-        /* TODO: consider different implementation of this functionalirt */
+        /* TODO: consider different implementation of this functionality */
         if (getActivity() instanceof AppCompatActivity) {
             AppCompatActivity activity = (AppCompatActivity) getActivity();
 
@@ -64,13 +59,6 @@ public class MainFrameFragment extends Fragment {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
-    }
-
-    public void init(SongSearchActionListener songSearchActionListener, MediaBrowserAdapter mediaBrowserAdapter,
-                     MediaControllerAdapter mediaControllerAdapter) {
-        this.viewPagerFragment.init(mediaBrowserAdapter);
-        this.playToolBarFragment.init(mediaControllerAdapter,  true);
-        this.titleBarFragment.setSongSearchActionListener(songSearchActionListener);
     }
 
     @Override

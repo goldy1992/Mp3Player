@@ -40,7 +40,6 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
         this.playbackTrackerFragment = (PlaybackTrackerFragment) getSupportFragmentManager().findFragmentById(R.id.playbackTrackerFragment);
         this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) getSupportFragmentManager().findFragmentById(R.id.playbackToolbarExtendedFragment);
         this.shuffleRepeatFragment = (ShuffleRepeatFragment) getSupportFragmentManager().findFragmentById(R.id.shuffleRepeatFragment);
-        this.getPlaybackToolbarExtendedFragment().displayButtons();
         return true;
     }
 
@@ -52,7 +51,6 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
     @Override
     public void onStart() {
         super.onStart();
-        getPlaybackToolbarExtendedFragment().init(getMediaControllerAdapter());
         getMediaControllerAdapter().updateUiState();
     }
 

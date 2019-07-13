@@ -21,6 +21,7 @@ public class LinearLayoutWithImageView extends LinearLayout {
     private ImageView view;
     private LayoutInflater inflater;
     Handler mainUpdater;
+    private int scale;
 
     public LinearLayoutWithImageView(Context context) {
         this(context, null);
@@ -31,38 +32,25 @@ public class LinearLayoutWithImageView extends LinearLayout {
     }
 
     public LinearLayoutWithImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, 0);
+        this(context, attrs, defStyleAttr, 0, 0, 1);
     }
 
-    public LinearLayoutWithImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public LinearLayoutWithImageView(Context context, AttributeSet attrs,
+                                     int defStyleAttr, int defStyleRes, int resource, int scale) {
         super(context, attrs, defStyleAttr, defStyleRes);
         this.mainUpdater = new Handler(Looper.getMainLooper());
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_linear_layout_with_image_view, this);
         this.view = this.findViewById(R.id.view);
-        //this.view.setImageDrawable(getDrawableResourceFromAttribute(attrs));
-    }
-    private Drawable getDrawableResourceFromAttribute(AttributeSet attrs) {
-        int resourceToReturn = 0;
-        if (attrs != null) {
-            TypedArray a = getContext().getTheme().obtainStyledAttributes(
-                    attrs,
-                    R.styleable.LinearLayoutWithImageView,
-                    0, 0);
-
-            try {
-                resourceToReturn = a.getResourceId(R.styleable.LinearLayoutWithImageView_imgSrc, 0);
-            } finally {
-                a.recycle();
-            }
-        }
-        return getContext().getResources().getDrawable(resourceToReturn, null);
+        this.view.setImageResource(resource);
+        this.scale = scale;
+        init();
     }
 
-    public void init() {
+    private void init() {
         ImageView imageView = getView();
-        imageView.setScaleX(2);
-        imageView.setScaleY(2);
+        imageView.setScaleX(scale);
+        imageView.setScaleY(scale);
         int imageHeight = imageView.getDrawable().getIntrinsicHeight();
         long exactMarginSize =  imageHeight / 2;
         int marginSize =  (int) exactMarginSize;

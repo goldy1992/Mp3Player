@@ -121,8 +121,8 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
     }
 
     private void initFragment(MainFrameFragment fragment) {
-        doNothing().when(mediaBrowserAdapter).registerListener(any(Object.class), any(MediaBrowserResponseListener.class));
-        fragment.init(songSearchActionListener, mediaBrowserAdapter, mediaControllerAdapter);
+//        doNothing().when(mediaBrowserAdapter).registerListener(any(Object.class), any(MediaBrowserResponseListener.class));
+//  //      fragment.init(songSearchActionListener, mediaBrowserAdapter, mediaControllerAdapter);
     }
 
     private void navigationViewSelected(MainFrameFragment fragment) {

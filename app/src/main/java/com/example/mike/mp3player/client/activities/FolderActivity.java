@@ -64,9 +64,6 @@ public abstract class FolderActivity extends MediaActivityCompat {
 
         this.viewPageFragment = ChildViewPagerFragment.createViewPageFragment(Category.SONGS, parentId, getMediaBrowserAdapter());
         getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
-        this.playToolBarFragment.init(getMediaControllerAdapter(), false);
-        playToolBarFragment.displayButtons();
-
         getSupportActionBar().setTitle(getString(R.string.FOLDER_NAME, this.folderName));
         getMediaControllerAdapter().updateUiState();
     }

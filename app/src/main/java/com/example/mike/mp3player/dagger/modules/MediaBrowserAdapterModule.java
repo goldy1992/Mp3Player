@@ -14,6 +14,7 @@ import com.example.mike.mp3player.client.callbacks.subscription.GenericSubscript
 import com.example.mike.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.NotifyAllSubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
+import com.example.mike.mp3player.dagger.scopes.ComponentScope;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 import com.example.mike.mp3player.service.MediaPlaybackServiceInjector;
 
@@ -24,6 +25,8 @@ import dagger.Provides;
 
 @Module
 public class MediaBrowserAdapterModule {
+
+    @ComponentScope
     @Provides
     public MediaBrowserAdapter provideMediaBrowserAdapter(MediaBrowserCompat mediaBrowser,
                                                           MyConnectionCallback myConnectionCallback,

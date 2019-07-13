@@ -198,7 +198,7 @@ public class PlaybackManagerTest {
     }
     /**
      * GIVEN: a playlist of 2 items where the current position is the first in the queue
-     * WHEN: skipToNext() is called
+     * WHEN: skipToPrevious() is called
      * THEN: the current item is the second in the queue
      */
     @Test
@@ -213,7 +213,7 @@ public class PlaybackManagerTest {
     }
     /**
      * GIVEN: a playlist of 2 items where the current position is the last in the queue
-     * WHEN: skipToNext() is called
+     * WHEN: skipToPrevious() is called
      * THEN: the current item is the first in the queue
      */
     @Test
@@ -230,7 +230,7 @@ public class PlaybackManagerTest {
     }
     /**
      * GIVEN: a playlist of 2 items where the current position is the last in the queue
-     * WHEN: skipToNext() is called
+     * WHEN: skipToPrevious() is called
      * THEN: the current item is unchanged and still the last in the queue
      */
     @Test

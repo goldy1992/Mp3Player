@@ -17,13 +17,10 @@ public final class IntentUtils {
     /**
      * Creates an intent to go to the MediaPlayerActivity
      * @param context context
-     * @param token the media session token
      * @return an Intent to go to the MediaPlayerActivity
      */
-    public static Intent createGoToMediaPlayerActivity(@NonNull Context context, @NonNull MediaSessionCompat.Token token) {
-        Intent intent = new Intent(context, MediaPlayerActivityInjector.class);
-        intent.putExtra(MEDIA_SESSION, token);
-        return intent;
+    public static Intent createGoToMediaPlayerActivity(@NonNull Context context) {
+        return new Intent(context, MediaPlayerActivityInjector.class);
     }
 
 }

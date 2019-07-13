@@ -14,6 +14,10 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
+import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
+import com.example.mike.mp3player.dagger.components.DaggerMediaActivityCompatComponent;
+import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
+import com.example.mike.mp3player.dagger.components.SplashScreenEntryActivityComponent;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -41,7 +45,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
         initialiseDependencies();
         super.onCreate(savedInstanceState);
         // TODO: have this injected so that a test implementation can be provided
-        mainActivityIntent = new Intent(getApplicationContext(), MainActivityProduction.class);
+        mainActivityIntent = new Intent(getApplicationContext(), MainActivityInjector.class);
         setContentView(R.layout.splash_screen);
         thread.start();
     }
@@ -178,10 +182,12 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     }
 
     private void initialiseDependencies() {
-//        DaggerSplashScreenEntryActivityComponent
-//                .factory()
-//                .create(getApplicationContext(),"SPSH_SCRN_ACTVTY_WRKR",
-//                        SubscriptionType.NOTIFY_ALL, this, this, this).
-//                inject(this);
+        MediaActivityCompatComponent component = DaggerMediaActivityCompatComponent
+            .factory()
+            .create(getApplicationContext(),"SPSH_SCRN_ACTVTY_WRKR",
+                    SubscriptionType.NOTIFY_ALL, this);
+        SplashScreenEntryActivityComponent splashScreenEntryActivityComponent =
+                component.splashScreenEntryActivity().create(this, this);
+        splashScreenEntryActivityComponent.inject(this);
     }
 }

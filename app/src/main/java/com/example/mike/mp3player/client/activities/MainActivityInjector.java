@@ -6,7 +6,7 @@ import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType
 import com.example.mike.mp3player.dagger.components.DaggerMediaActivityCompatComponent;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 
-public class MainActivityProduction extends MainActivity {
+public class MainActivityInjector extends MainActivity {
 
     @Override
     public void onCreate(Bundle savedInstance) {

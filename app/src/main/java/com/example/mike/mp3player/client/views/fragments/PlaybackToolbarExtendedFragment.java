@@ -8,19 +8,25 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.views.LinearLayoutWithImageView;
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
+import com.example.mike.mp3player.client.views.SkipToNextButton;
+import com.example.mike.mp3player.client.views.SkipToPreviousButton;
+
+import javax.inject.Inject;
+
 
 public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
 
-    protected LinearLayoutWithImageView skipToPreviousButton;
-    protected LinearLayoutWithImageView skipToNextButton;
+    protected SkipToPreviousButton skipToPreviousButton;
+    protected SkipToNextButton skipToNextButton;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        initialiseDependencies();
         super.onCreateView(inflater, container, savedInstanceState);
         LinearLayout root = new LinearLayout(getContext());
         return inflater.inflate(R.layout.fragment_playback_toolbar, root, true);
@@ -29,44 +35,32 @@ public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-        this.skipToPreviousButton = LinearLayoutWithImageView.create(getContext(),
-                R.drawable.ic_baseline_skip_previous_24px, (View v) -> skipToPrevious());
-        this.skipToNextButton = LinearLayoutWithImageView.create(getContext(),
-                R.drawable.ic_baseline_skip_next_24px, (View v) -> skipToNext());
-    }
-
-    public void init(MediaControllerAdapter mediaControllerAdapter) {
-        super.init(mediaControllerAdapter, true);
-    }
-
-    public void skipToNext() {
-        mediaControllerAdapter.skipToNext();
-    }
-
-    public void skipToPrevious() {
-        mediaControllerAdapter.skipToPrevious();
-    }
-
-    @Override
-    public void displayButtons() {
         if (null != innerPlaybackToolbarLayout) {
+            innerPlaybackToolbarLayout.removeAllViews();
             skipToPreviousButton.setLayoutParams(getLinearLayoutParams(skipToPreviousButton.getLayoutParams()));
             innerPlaybackToolbarLayout.addView(skipToPreviousButton);
-
-            super.displayButtons();
+            innerPlaybackToolbarLayout.addView(playPauseButton);
             skipToNextButton.setLayoutParams(getLinearLayoutParams(skipToNextButton.getLayoutParams()));
             innerPlaybackToolbarLayout.addView(skipToNextButton);
         }
     }
 
-    @Deprecated // no need to make empty views in the toolbar anymore
-    private View getEmptyViewForToolbar(int widthOfDivision, int layoutHeight) {
-        View view = new View(getContext());
-        view.setLayoutParams(new LinearLayout.LayoutParams(widthOfDivision, layoutHeight));
-        view.setBackgroundColor(getResources().getColor(android.R.color.holo_purple, null));
-        view.setVisibility(View.INVISIBLE);
-        return view;
+    @Inject
+    public void setSkipToPreviousButton(SkipToPreviousButton skipToPreviousButton) {
+        this.skipToPreviousButton = skipToPreviousButton;
     }
 
+    @Inject
+    public void setSkipToNextButton(SkipToNextButton skipToNextButton) {
+        this.skipToNextButton = skipToNextButton;
+    }
 
+    private void initialiseDependencies() {
+        FragmentActivity activity = getActivity();
+        if (null != activity && activity instanceof MediaActivityCompat) {
+            MediaActivityCompat mediaPlayerActivity = (MediaActivityCompat) getActivity();
+            mediaPlayerActivity.getMediaActivityCompatComponent().playbackToolbarSubcomponent()
+                    .inject(this);
+        }
+    }
 }

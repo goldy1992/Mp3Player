@@ -60,7 +60,6 @@ public class ViewPagerFragmentTest extends FragmentTestBase<ViewPagerFragment> {
     }
 
     private void callInitFragment(ViewPagerFragment fragment) {
-        fragment.init(mediaBrowserAdapter);
         myPagerAdapter.pagerItems = new HashMap<>();
         myPagerAdapter.menuCategories = new HashMap<>();
         fragment.setMyPageAdapter(myPagerAdapter);
