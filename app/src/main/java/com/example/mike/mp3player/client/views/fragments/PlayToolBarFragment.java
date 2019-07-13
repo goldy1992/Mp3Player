@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
@@ -125,8 +126,11 @@ public class PlayToolBarFragment extends Fragment {
     }
 
     private void initialiseDependencies() {
-        MediaActivityCompat mediaPlayerActivity = (MediaActivityCompat) getActivity();
-        mediaPlayerActivity.getMediaActivityCompatComponent()
-        .inject(this);
+        FragmentActivity activity = getActivity();
+        if (null != activity && activity instanceof MediaActivityCompat) {
+            MediaActivityCompat mediaPlayerActivity = (MediaActivityCompat) getActivity();
+            mediaPlayerActivity.getMediaActivityCompatComponent()
+                    .inject(this);
+        }
     }
 }

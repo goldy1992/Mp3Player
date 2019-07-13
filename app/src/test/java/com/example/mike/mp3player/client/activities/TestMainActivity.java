@@ -2,7 +2,8 @@ package com.example.mike.mp3player.client.activities;
 
 import android.os.Bundle;
 
-import com.example.mike.mp3player.dagger.components.DaggerTestMainActivityComponent;
+import com.example.mike.mp3player.dagger.components.DaggerTestMediaActivityCompatComponent;
+import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 
 public class TestMainActivity extends MainActivity {
 
@@ -14,9 +15,10 @@ public class TestMainActivity extends MainActivity {
 
     @Override
     void initialiseDependencies() {
-        DaggerTestMainActivityComponent
+        MediaActivityCompatComponent component = DaggerTestMediaActivityCompatComponent
                 .factory()
-                .create(getApplicationContext(), getWorkerId(), getSubscriptionType(), this)
-                .inject(this);
+                .create(getApplicationContext(), getWorkerId(), getSubscriptionType(), this);
+        this.setMediaActivityCompatComponent(component);
+        component.inject(this);
     }
 }
