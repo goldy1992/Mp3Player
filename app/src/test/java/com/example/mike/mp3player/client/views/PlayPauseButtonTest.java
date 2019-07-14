@@ -6,6 +6,8 @@ import android.view.View;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.example.mike.mp3player.client.MediaControllerAdapter;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +31,7 @@ public class PlayPauseButtonTest {
      * mock onClickListener used for setup
      */
     @Mock
-    private View.OnClickListener onClickListener;
+    private MediaControllerAdapter mediaControllerAdapter;
     /**
      * setup
      */
@@ -37,7 +39,7 @@ public class PlayPauseButtonTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        playPauseButton = PlayPauseButton.create(context, onClickListener);
+        playPauseButton = new PlayPauseButton(context, null, 0, mediaControllerAdapter);
     }
 
     /**

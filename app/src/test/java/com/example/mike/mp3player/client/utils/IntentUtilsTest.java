@@ -22,7 +22,7 @@ public class IntentUtilsTest {
     public void testCreateGoToMediaPlayerActivity() {
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
         MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
-        Intent result = IntentUtils.createGoToMediaPlayerActivity(context, mediaSessionCompat.getSessionToken());
+        Intent result = IntentUtils.createGoToMediaPlayerActivity(context);
         assertNotNull(result);
         assertEquals(mediaSessionCompat.getSessionToken(), result.getParcelableExtra(MEDIA_SESSION));
     }

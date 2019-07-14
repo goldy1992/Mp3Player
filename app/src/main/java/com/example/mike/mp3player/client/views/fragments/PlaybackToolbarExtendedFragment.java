@@ -17,7 +17,6 @@ import com.example.mike.mp3player.client.views.SkipToPreviousButton;
 
 import javax.inject.Inject;
 
-
 public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
 
     protected SkipToPreviousButton skipToPreviousButton;
