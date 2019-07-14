@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
@@ -47,7 +48,8 @@ public class PlayPauseButton extends LinearLayoutWithImageView implements Playba
         getView().setOnClickListener(this::playPause);
     }
 
-    private void playPause(View view) {
+    @VisibleForTesting()
+    public void playPause(View view) {
         if (getState() == PlaybackStateCompat.STATE_PLAYING) {
             Log.d(LOG_TAG, "calling pause");
             mediaControllerAdapter.pause();
@@ -83,6 +85,11 @@ public class PlayPauseButton extends LinearLayoutWithImageView implements Playba
     @PlaybackStateCompat.State
     public int getState() {
         return state;
+    }
+
+    @VisibleForTesting
+    public void setState(int state) {
+        this.state = state;
     }
 
     @Override

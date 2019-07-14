@@ -19,6 +19,8 @@ import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -80,6 +82,28 @@ public class PlayPauseButtonTest {
         @PlaybackStateCompat.State int originalState = playPauseButton.getState();
         playPauseButton.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_ERROR));
         assertEquals(originalState, playPauseButton.getState());
+    }
+    /**
+     * GIVEN: a PlayPauseButton in state paused
+     * WHEN: the PlayPauseButton is clicked i.e. playPause(View view) is invoked
+     * THEN: the mediaControllerAdapter play() method is invoked
+     */
+    @Test
+    public void testClickPlayWhenPaused() {
+        playPauseButton.setState(STATE_PAUSED);
+        playPauseButton.playPause(null);
+        verify(mediaControllerAdapter, times(1)).play();
+    }
+    /**
+     * GIVEN: a PlayPauseButton in state playing
+     * WHEN: the PlayPauseButton is clicked i.e. playPause(View view) is invoked
+     * THEN: the mediaControllerAdapter pause() method is invoked
+     */
+    @Test
+    public void testClickPauseWhenPlaying() {
+        playPauseButton.setState(STATE_PLAYING);
+        playPauseButton.playPause(null);
+        verify(mediaControllerAdapter, times(1)).pause();
     }
     /**
      *  util method to create a PlaybackStateCompat
