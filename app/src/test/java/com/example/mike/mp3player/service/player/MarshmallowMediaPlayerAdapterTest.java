@@ -20,6 +20,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowMediaPlayer;
 import org.robolectric.shadows.util.DataSource;
 
+import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -91,6 +92,13 @@ public class MarshmallowMediaPlayerAdapterTest {
     @Test
     public void testDecreaseSpeed() {
         expectedSpeedChange(1.50f, 0.05f, 1.45f);
+    }
+
+    @Test
+    public void testChangeSpeedWhilePlaying() throws IllegalAccessException {
+        FieldUtils.writeField(mediaPlayerAdapter, "currentState", STATE_PLAYING, true);
+        expectedSpeedChange(1.50f, 0.05f, 1.55f);
+        assertEquals(STATE_PLAYING, mediaPlayerAdapter.getCurrentState());
     }
 
     @Test

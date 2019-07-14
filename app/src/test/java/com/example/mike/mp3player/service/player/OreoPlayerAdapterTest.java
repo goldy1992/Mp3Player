@@ -21,6 +21,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowMediaPlayer;
 import org.robolectric.shadows.util.DataSource;
 
+import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.spy;
@@ -83,11 +84,19 @@ public class OreoPlayerAdapterTest {
     }
 
     @Test
+    public void testChangeSpeedWhilePlaying() throws IllegalAccessException {
+        FieldUtils.writeField(mediaPlayerAdapter, "currentState", STATE_PLAYING, true);
+        expectedSpeedChange(1.50f, 0.05f, 1.55f);
+        assertEquals(STATE_PLAYING, mediaPlayerAdapter.getCurrentState());
+    }
+
+
+    @Test
     public void testPlay() throws IllegalAccessException {
         FieldUtils.writeField( mediaPlayerAdapter, "audioFocusManager", audioFocusManager, true);
         when(audioFocusManager.requestAudioFocus()).thenReturn(true);
         mediaPlayerAdapter.play();
-        assertEquals(PlaybackStateCompat.STATE_PLAYING, mediaPlayerAdapter.getCurrentState());
+        assertEquals(STATE_PLAYING, mediaPlayerAdapter.getCurrentState());
     }
 
     @Test
@@ -116,7 +125,7 @@ public class OreoPlayerAdapterTest {
 
     @Test
     public void testPauseWhilePlaying() throws Exception {
-        FieldUtils.writeField(mediaPlayerAdapter, "currentState", PlaybackStateCompat.STATE_PLAYING, true);
+        FieldUtils.writeField(mediaPlayerAdapter, "currentState", STATE_PLAYING, true);
         mediaPlayerAdapter.pause();
         assertEquals("playback should be paused but state is" + Constants.playbackStateDebugMap.get(mediaPlayerAdapter.getCurrentState()), PlaybackStateCompat.STATE_PAUSED, mediaPlayerAdapter.getCurrentState());
     }
