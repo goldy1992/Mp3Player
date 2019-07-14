@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.service;
+package com.example.mike.mp3player.service.player;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -8,6 +8,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.commons.Constants;
+import com.example.mike.mp3player.service.AudioFocusManager;
 import com.example.mike.mp3player.service.player.OreoPlayerAdapter;
 
 import org.apache.commons.lang3.reflect.FieldUtils;

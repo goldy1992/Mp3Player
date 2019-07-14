@@ -21,7 +21,6 @@ public class IntentUtilsTest {
     @Test
     public void testCreateGoToMediaPlayerActivity() {
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
         Intent result = IntentUtils.createGoToMediaPlayerActivity(context);
         assertNotNull(result);
     }
