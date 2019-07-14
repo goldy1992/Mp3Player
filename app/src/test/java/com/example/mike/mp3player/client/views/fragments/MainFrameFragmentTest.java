@@ -38,53 +38,49 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricTestRunner.class)
 public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
     private static final String LOG_TAG = "MAIN_FRM_FRGMT_TST";
-    @Mock
-    private MediaBrowserAdapter mediaBrowserAdapter;
-    @Mock
-    private MediaControllerAdapter mediaControllerAdapter;
-    @Mock
-    private SongSearchActionListener songSearchActionListener;
+
     @Before
     public void setup() {
+
         super.setup(MainFrameFragment.class);
         FragmentScenario.FragmentAction<MainFrameFragment> init = this::initFragment;
-        fragmentScenario.onFragment(init);
+        performAction(init);
     }
 
     @Test
     public void testOnOptionsItemSelectedOpenDrawer() {
         FragmentScenario.FragmentAction<MainFrameFragment> clickAndroidOptionMenu = this::clickAndroidOptionsMenu;
-        fragmentScenario.onFragment(clickAndroidOptionMenu);
+        performAction(clickAndroidOptionMenu);
     }
 
     @Test
     public void testOnOptionsItemSelectedFragmentNotEnabled() {
         FragmentScenario.FragmentAction<MainFrameFragment> onOptionsItemSelected = this::onOptionsItemSelectedNonEnabledFragment;
-        fragmentScenario.onFragment(onOptionsItemSelected);
+        performAction(onOptionsItemSelected);
     }
 
     @Test
     public void testOnOptionsItemSelectedFragmentEnabled() {
         FragmentScenario.FragmentAction<MainFrameFragment> onOptionsItemSelected = this::onOptionsItemSelectedEnabledFragment;
-        fragmentScenario.onFragment(onOptionsItemSelected);
+        performAction(onOptionsItemSelected);
     }
 
     @Test
     public void testNavigationItemSelected() {
         FragmentScenario.FragmentAction<MainFrameFragment> navigationViewSelected = this::navigationViewSelected;
-        fragmentScenario.onFragment(navigationViewSelected);
+        performAction(navigationViewSelected);
     }
 
     @Test
     public void testEnable() {
         FragmentScenario.FragmentAction<MainFrameFragment> enable = this::enable;
-        fragmentScenario.onFragment(enable);
+        performAction(enable);
     }
 
     @Test
     public void testDisable() {
         FragmentScenario.FragmentAction<MainFrameFragment> disable = this::disable;
-        fragmentScenario.onFragment(disable);
+        performAction(disable);
     }
     private void onOptionsItemSelectedNonEnabledFragment(MainFrameFragment fragment) {
         try {

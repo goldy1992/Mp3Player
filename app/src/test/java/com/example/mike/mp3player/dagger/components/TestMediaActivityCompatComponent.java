@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.dagger.components;
 
+import com.example.mike.mp3player.client.activities.EmptyMediaActivityCompatFragmentActivity;
 import com.example.mike.mp3player.dagger.modules.MainHandlerModule;
 import com.example.mike.mp3player.dagger.modules.MediaBrowserAdapterModule;
 import com.example.mike.mp3player.dagger.modules.MediaControllerCallbackModule;
@@ -16,6 +17,9 @@ import dagger.Component;
         MediaControllerCallbackModule.class,
         MockMediaControllerAdapterModule.class})
 public interface TestMediaActivityCompatComponent extends MediaActivityCompatComponent {
+
+    void inject(EmptyMediaActivityCompatFragmentActivity emptyMediaActivityCompatFragmentActivity);
+
     @Component.Factory
     interface Factory extends MediaActivityCompatComponent.Factory{ }
 }
