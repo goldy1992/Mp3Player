@@ -24,6 +24,5 @@ public class IntentUtilsTest {
         MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
         Intent result = IntentUtils.createGoToMediaPlayerActivity(context);
         assertNotNull(result);
-        assertEquals(mediaSessionCompat.getSessionToken(), result.getParcelableExtra(MEDIA_SESSION));
     }
 }
