@@ -20,6 +20,7 @@ import org.robolectric.shadows.util.DataSource;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -126,6 +127,14 @@ public abstract class MediaPlayerAdapterTestBase {
         assertEquals("playback should be paused but state is" + Constants.playbackStateDebugMap.get(mediaPlayerAdapter.getCurrentState()), PlaybackStateCompat.STATE_PAUSED, mediaPlayerAdapter.getCurrentState());
     }
 
+    @Test
+    public void testOnComplete() throws IllegalAccessException {
+        Uri followingUri = mock(Uri.class);
+        MediaPlayer mediaPlayerSpied = spy(mediaPlayerAdapter.getCurrentMediaPlayer());
+        FieldUtils.writeField(mediaPlayerAdapter, "currentMediaPlayer", mediaPlayerSpied, true);
+        mediaPlayerAdapter.onComplete(followingUri);
+        verify(mediaPlayerSpied, times(1)).release();
+    }
     private void expectedSpeedChange(float originalSpeed, float changeInSpeed, float expectedNewSpeed) {
 
         if (originalSpeed < expectedNewSpeed) {
