@@ -3,10 +3,11 @@ package com.example.mike.mp3player.client.callbacks.playback;
 import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
 
+import androidx.annotation.VisibleForTesting;
+
 import com.example.mike.mp3player.client.callbacks.AsyncCallback;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,81 +15,56 @@ import javax.inject.Inject;
 
 public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> {
     private static final String LOG_TAG = "MY_PLYBK_ST_CLLBK";
-    private Map<ListenerType, Set<PlaybackStateListener>> listeners;
+    private final Map<PlaybackStateListener, Long> listenerToActionMap;
 
     @Inject
     public MyPlaybackStateCallback(Handler handler) {
         super(handler);
-        this.listeners = new HashMap<>();
+        this.listenerToActionMap = new HashMap<>();
     }
 
     public void updateAll(PlaybackStateCompat state) {
-        for (ListenerType listenerType : listeners.keySet()) {
-            notifyListenersOfType(listenerType, state);
+        for (PlaybackStateListener listener : listenerToActionMap.keySet()) {
+            listener.onPlaybackStateChanged(state);
         }
     }
 
     @Override
     public void processCallback(PlaybackStateCompat data) {
-        // TODO: make use of the actions in state to direct updates to the relevant listeners only
-        //logPlaybackStateCompat(data, LOG_TAG);
         long actions = data.getActions();
 
-        if (containsAction(actions, ListenerType.PLAYBACK)) {
-            notifyListenersOfType(ListenerType.PLAYBACK, data);
-        }
-
-        if (containsAction(actions, ListenerType.REPEAT)) {
-            notifyListenersOfType(ListenerType.REPEAT, data);
-        }
-
-        if (containsAction(actions, ListenerType.SHUFFLE)) {
-            notifyListenersOfType(ListenerType.SHUFFLE, data);
-        }
-
-        if (containsAction(actions, ListenerType.PLAYBACK_SPEED)) {
-            notifyListenersOfType(ListenerType.PLAYBACK_SPEED, data);
+        for (PlaybackStateListener listener : listenerToActionMap.keySet()) {
+            Long listenerActions = listenerToActionMap.get(listener);
+            boolean notifyListener = listenerActions != null && (actions & listenerActions) != 0;
+            if (notifyListener) {
+                listener.onPlaybackStateChanged(data);
+            }
         }
     }
 
     public synchronized void registerPlaybackStateListener(PlaybackStateListener listener, Set<ListenerType> listenerTypes) {
+        long actions = 0;
         for (ListenerType listenerType : listenerTypes) {
-            if (!listeners.containsKey(listenerType)) {
-                listeners.put(listenerType, new HashSet<>());
-            }
-            listeners.get(listenerType).add(listener);
+            actions |= listenerType.getActions();
         }
+        listenerToActionMap.put(listener, actions);
         //Log.i(LOG_TAG, "registerPlaybackListener" + listener.getClass());
     }
-
-
-    public synchronized boolean removePlaybackStateListener(PlaybackStateListener listener, ListenerType listenerType) {
+    /**
+     * @param listener the PlaybackStateListener to be removed
+     * @return true if the listener was removed successfully
+     */
+    public synchronized boolean removePlaybackStateListener(PlaybackStateListener listener) {
         boolean result = false;
-        if (listeners.containsKey(listenerType)) {
-            Set<PlaybackStateListener> listenersValue = listeners.get(listenerType);
-            result = listenersValue.remove(listener);
-            if (listenersValue.isEmpty()) {
-                listeners.remove(listenerType);
+        if (listenerToActionMap.containsKey(listener)) {
+                listenerToActionMap.remove(listener);
+                result = true;
             }
-        }
         return result;
     }
-
-    private boolean containsAction(long actions, ListenerType listenerType) {
-        return (actions & listenerType.getActions()) != 0;
-    }
-
-    private void notifyListenersOfType(ListenerType listenerType, PlaybackStateCompat state) {
-        if (null != state) {
-            Set<PlaybackStateListener> listenersSet = listeners.get(listenerType);
-            StringBuilder sb = new StringBuilder();
-            if (listenersSet != null) {
-                for (PlaybackStateListener listener : listenersSet) {
-                    listener.onPlaybackStateChanged(state);
-                    sb.append(listener.getClass());
-                }
-            }
-        }
-        //Log.i(LOG_TAG, "hit playback state changed with status " + Constants.playbackStateDebugMap.get(state.getState()) + ", listeners " + listenersSet.size() + ", " + sb.toString());
+    /** @return the listenerToActionMap */
+    @VisibleForTesting
+    public Map<PlaybackStateListener, Long> getListenerToActionMap() {
+        return listenerToActionMap;
     }
 }

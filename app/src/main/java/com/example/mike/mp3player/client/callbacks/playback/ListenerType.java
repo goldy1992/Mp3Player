@@ -32,7 +32,7 @@ public enum ListenerType {
      * @return the shuffle actions
      */
     private static long shuffleActions() {
-        return ACTION_SET_REPEAT_MODE;
+        return ACTION_SET_SHUFFLE_MODE;
     }
     /**
      * @return the playback actions

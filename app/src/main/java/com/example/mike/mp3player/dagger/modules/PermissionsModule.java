@@ -4,8 +4,6 @@ import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
 import com.example.mike.mp3player.client.activities.SplashScreenEntryActivity;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 
