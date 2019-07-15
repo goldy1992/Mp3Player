@@ -116,12 +116,6 @@ public class MediaControllerAdapter {
         return 0;
     }
 
-    public PlaybackStateCompat getPlaybackStateAsCompat() {
-        if (mediaControllerCompat != null ) {
-            return mediaControllerCompat.getPlaybackState();
-        }
-        return null;
-    }
 
     public MediaSessionCompat.Token getToken() {
         return token;
