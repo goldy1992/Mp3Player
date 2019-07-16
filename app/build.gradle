@@ -151,9 +151,9 @@ dependencies {
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: JUNIT5_VERSION
     //testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.25.1'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
+// https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy
+    testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: '1.9.14'
 
-    // https://mvnrepository.com/artifact/org.mockito/mockito-android
-    testImplementation group: 'org.mockito', name: 'mockito-android', version: '2.6.1'
 
     testImplementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
     testImplementation group: 'org.robolectric', name: 'robolectric', version: ROBOELECTRIC_VERSION// https://mvnrepository.com/artifact/org.robolectric/shadows-support-v4
