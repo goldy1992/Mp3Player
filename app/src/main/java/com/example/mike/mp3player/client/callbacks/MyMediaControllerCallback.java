@@ -27,12 +27,12 @@ public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
 
     @Override
     public void onMetadataChanged(MediaMetadataCompat metadata) {
-        this.getMyMetaDataCallback().onStateChanged(metadata);
+        this.myMetaDataCallback.onStateChanged(metadata);
     }
 
     @Override
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
-        this.getMyPlaybackStateCallback().onStateChanged(state);
+        this.myPlaybackStateCallback.onStateChanged(state);
     }
 
     public MyPlaybackStateCallback getMyPlaybackStateCallback() {

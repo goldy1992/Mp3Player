@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -12,7 +13,9 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 import com.example.mike.mp3player.client.callbacks.MyMetaDataCallback;
+import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.MyPlaybackStateCallback;
+import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,9 +24,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
+import java.util.Collections;
+import java.util.Set;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -37,7 +44,11 @@ public class MediaControllerAdapterTest {
 
     private MediaControllerAdapter mediaControllerAdapter;
     @Mock
-    private Handler handler;
+    private MyMetaDataCallback myMetaDataCallback;
+    @Mock
+    private MyPlaybackStateCallback playbackStateCallback;
+
+    private MyMediaControllerCallback myMediaControllerCallback;
     private Context context;
 
     @Before
@@ -45,6 +56,8 @@ public class MediaControllerAdapterTest {
         MockitoAnnotations.initMocks(this);
 
         this.context = InstrumentationRegistry.getInstrumentation().getContext();
+        this.myMediaControllerCallback = spy(new MyMediaControllerCallback(myMetaDataCallback, playbackStateCallback));
+
         MediaSessionCompat.Token token = getMediaSessionCompatToken();
         this.mediaControllerAdapter = initialiseMediaControllerAdapter(token);
     }
@@ -150,11 +163,66 @@ public class MediaControllerAdapterTest {
         assertEquals(state, result);
     }
 
+    @Test
+    public void testRegisterMetaDataListener() {
+        MetaDataListener expected = mock(MetaDataListener.class);
+        mediaControllerAdapter.registerMetaDataListener(expected);
+        verify(myMetaDataCallback, times(1)).registerMetaDataListener(expected);
+    }
+
+    @Test
+    public void testUnregisterMetaDataListener() {
+        MetaDataListener expected = mock(MetaDataListener.class);
+        mediaControllerAdapter.unregisterMetaDataListener(expected);
+        verify(myMetaDataCallback, times(1)).removeMetaDataListener(expected);
+    }
+
+    @Test
+    public void testUnregisterPlaybackStateListener() {
+        PlaybackStateListener expected = mock(PlaybackStateListener.class);
+        mediaControllerAdapter.unregisterPlaybackStateListener(expected);
+        verify(playbackStateCallback, times(1)).removePlaybackStateListener(expected);
+    }
+
+    @Test
+    public void testRegisterPlaybackListener() {
+        PlaybackStateListener expected = mock(PlaybackStateListener.class);
+        Set<ListenerType> listenerTypeSet = Collections.singleton(ListenerType.PLAYBACK);
+        mediaControllerAdapter.registerPlaybackStateListener(expected, listenerTypeSet);
+        verify(playbackStateCallback, times(1)).registerPlaybackStateListener(expected, listenerTypeSet);
+    }
+
+    @Test
+    public void testDisconnect() {
+        mediaControllerAdapter.disconnect();
+        verify(mediaControllerAdapter.getMediaController(), times(1)).unregisterCallback(myMediaControllerCallback);
+    }
+
+    @Test
+    public void testUpdateUiStateWhenInitialised() {
+        when(mediaControllerAdapter.isInitialized()).thenReturn(true);
+        MediaControllerCompat mediaController = mediaControllerAdapter.getMediaController();
+        final MediaMetadataCompat expectedMetadataCompat = mediaController.getMetadata();
+        final PlaybackStateCompat expectedPlaybackStateCompat = mediaController.getPlaybackState();
+        mediaControllerAdapter.updateUiState();
+        verify(myMediaControllerCallback).onMetadataChanged(expectedMetadataCompat);
+        verify(playbackStateCallback).updateAll(expectedPlaybackStateCompat);
+    }
+
+    @Test
+    public void testUpdateUiStateWhenNotInitialised() {
+        when(mediaControllerAdapter.isInitialized()).thenReturn(false);
+        MediaControllerCompat mediaController = mediaControllerAdapter.getMediaController();
+        final MediaMetadataCompat expectedMetadataCompat = mediaController.getMetadata();
+        final PlaybackStateCompat expectedPlaybackStateCompat = mediaController.getPlaybackState();
+        mediaControllerAdapter.updateUiState();
+        verify(myMediaControllerCallback, never()).onMetadataChanged(expectedMetadataCompat);
+        verify(myMediaControllerCallback, never()).onPlaybackStateChanged(expectedPlaybackStateCompat);
+    }
+
+
     private MediaControllerAdapter initialiseMediaControllerAdapter(MediaSessionCompat.Token token) {
-        MyMetaDataCallback myMetaDataCallback = new MyMetaDataCallback(handler);
-        MyPlaybackStateCallback myPlaybackStateCallback = new MyPlaybackStateCallback(handler);
-        MyMediaControllerCallback myMediaControllerCallback = new MyMediaControllerCallback(myMetaDataCallback, myPlaybackStateCallback);
-        MediaControllerAdapter spiedMediaControllerAdapter = spy(new MediaControllerAdapter(context, myMediaControllerCallback));
+             MediaControllerAdapter spiedMediaControllerAdapter = spy(new MediaControllerAdapter(context, myMediaControllerCallback));
         assertFalse(spiedMediaControllerAdapter.isInitialized());
         spiedMediaControllerAdapter.setMediaToken(token);
         assertEquals(token, spiedMediaControllerAdapter.getToken());

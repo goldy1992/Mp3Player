@@ -104,7 +104,7 @@ public class MediaControllerAdapter {
         myMediaControllerCallback.getMyPlaybackStateCallback().registerPlaybackStateListener(playbackStateListener, listenerTypes);
     }
 
-    public void unregisterPlaybackStateListener(PlaybackStateListener playbackStateListener, ListenerType listenerType) {
+    public void unregisterPlaybackStateListener(PlaybackStateListener playbackStateListener) {
         myMediaControllerCallback.getMyPlaybackStateCallback().removePlaybackStateListener(playbackStateListener);
     }
 
