@@ -48,7 +48,12 @@ public class PlaybackSpeedControlsFragment extends AsyncFragment implements Play
         this.increasePlaybackSpeedButton = view.findViewById(R.id.increasePlaybackSpeed);
         this.increasePlaybackSpeedButton.setOnClickListener((View v) -> increasePlaybackSpeed());
         this.playbackSpeed = view.findViewById(R.id.playbackSpeedValue);
+
+        // register listeners
         this.mediaControllerAdapter.registerPlaybackStateListener(this, Collections.singleton(ListenerType.PLAYBACK_SPEED));
+
+        //update GUI
+        this.onPlaybackStateChanged(mediaControllerAdapter.getPlaybackStateObject());
     }
 
     private void updatePlaybackSpeedText(float speed) {

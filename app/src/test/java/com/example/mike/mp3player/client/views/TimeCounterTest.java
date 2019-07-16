@@ -42,13 +42,13 @@ public class TimeCounterTest {
         this.handler = new Handler(Looper.getMainLooper());
         MockitoAnnotations.initMocks(this);
         timeCounter = new TimeCounter(handler);
-        timeCounter.setTextView(view);
+        timeCounter.init(view);
     }
     @Test
     public void testNotInitialised() {
         final long expectedPosition = 0L;
         final int expectedState = STATE_PLAYING;
-        timeCounter.setTextView(null);
+        timeCounter.init(null);
         timeCounter.updateState(createState(expectedState, 5L));
         assertEquals(expectedState, timeCounter.getCurrentState());
 

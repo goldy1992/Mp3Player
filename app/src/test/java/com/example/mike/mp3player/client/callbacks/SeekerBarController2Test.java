@@ -19,9 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowSeekBar;
 import org.robolectric.shadows.ShadowValueAnimator;
@@ -52,7 +50,7 @@ public class SeekerBarController2Test {
         timeCounter = new TimeCounter(new Handler(Looper.getMainLooper()));
         m_seekerBar = new SeekerBar(m_context);
         m_seekerBarController2 = new SeekerBarController2(m_mediaControllerAdapter, timeCounter);
-        m_seekerBarController2.setSeekerBar(m_seekerBar);
+        m_seekerBarController2.init(m_seekerBar);
         // set default metadata
         m_seekerBarController2.onMetadataChanged(createMetaData(DEFAULT_DURATION));
     }

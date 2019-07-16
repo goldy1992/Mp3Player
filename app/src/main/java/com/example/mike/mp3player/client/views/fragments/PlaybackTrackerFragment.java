@@ -46,28 +46,31 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
     @Override
     public void onViewCreated(@NonNull View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
+        // init counter
         TextView counterView = view.findViewById(R.id.timer);
-        this.counter.setTextView(counterView);
+        this.counter.init(counterView);
+
+        // init seeker bar
         SeekerBar seekerBar = view.findViewById(R.id.seekBar);
-        this.seekerBarController.setSeekerBar(seekerBar);
+        this.seekerBarController.init(seekerBar);
+
+        // init duration
         this.duration = view.findViewById(R.id.duration);
-        init();
+
+        // init MediaController listeners
+        registerMediaControllerListeners();
+
+        // update GUI state
+        onMetadataChanged(mediaControllerAdapter.getMetadata());
+        onPlaybackStateChanged(mediaControllerAdapter.getPlaybackStateObject());
     }
 
-    private void init() {
+    private void registerMediaControllerListeners() {
         Set<ListenerType> listenForSet = new HashSet<>();
         listenForSet.add(ListenerType.PLAYBACK);
         listenForSet.add(ListenerType.REPEAT);
         this.mediaControllerAdapter.registerPlaybackStateListener(this, listenForSet);
         this.mediaControllerAdapter.registerMetaDataListener(this);
-    }
-
-    public TimeCounter getCounter() {
-        return counter;
-    }
-
-    public SeekerBarController2 getSeekerBarController() {
-        return seekerBarController;
     }
 
     @Override

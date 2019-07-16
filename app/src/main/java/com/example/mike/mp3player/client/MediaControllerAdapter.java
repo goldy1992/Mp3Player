@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -115,6 +116,19 @@ public class MediaControllerAdapter {
         return 0;
     }
 
+    public PlaybackStateCompat getPlaybackStateObject() {
+        if (mediaController != null && mediaController.getPlaybackState() != null) {
+            return mediaController.getPlaybackState();
+        }
+        return null;
+    }
+
+    public MediaMetadataCompat getMetadata() {
+        if (mediaController != null && mediaController.getPlaybackState() != null) {
+            return mediaController.getMetadata();
+        }
+        return null;
+    }
 
     public MediaSessionCompat.Token getToken() {
         return token;

@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.activities;
 
 import android.content.Intent;
-import android.os.Bundle;
 
 import androidx.annotation.VisibleForTesting;
 
@@ -43,28 +42,13 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
         return true;
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initialiseView(R.layout.activity_media_player);
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        getMediaControllerAdapter().updateUiState();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        // (see "stay in sync with the MediaSession")
-    }
     /**
      * Callback method for when the activity connects to the MediaPlaybackService
      */
     @Override
     public void onConnected() {
         super.onConnected();
+        initialiseView(R.layout.activity_media_player);
         LibraryRequest libraryRequest = (LibraryRequest) retrieveIntentInfo(Constants.REQUEST_OBJECT);
         if (libraryRequest != null) { // if RQ came with an media id it's a song request
             String mediaId = libraryRequest.getId();

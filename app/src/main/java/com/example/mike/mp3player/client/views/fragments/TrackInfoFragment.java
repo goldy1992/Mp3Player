@@ -35,18 +35,13 @@ public class TrackInfoFragment extends AsyncFragment implements MetaDataListener
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
+        // init GUI
         this.artist = view.findViewById(R.id.artistName);
         this.track = view.findViewById(R.id.trackName);
+        // register listeners
         this.mediaControllerAdapter.registerMetaDataListener(this);
-    }
-
-
-    public TextView getArtist() {
-        return artist;
-    }
-
-    public TextView getTrack() {
-        return track;
+        // update GUI
+        this.onMetadataChanged(mediaControllerAdapter.getMetadata());
     }
 
     public void setArtist(String artist) {

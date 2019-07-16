@@ -44,9 +44,9 @@ public final class Constants {
 
     public static final SparseArray<String> repeatModeDebugMap = new SparseArray<>();
     static {
-        playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ALL, "REPEAT_MODE_ALL"); // 2
-        playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_NONE, "REPEAT_MODE_NONE"); // 0
-        playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ONE, "REPEAT_MODE_ONE"); // 1
+        repeatModeDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ALL, "REPEAT_MODE_ALL"); // 2
+        repeatModeDebugMap.put(PlaybackStateCompat.REPEAT_MODE_NONE, "REPEAT_MODE_NONE"); // 0
+        repeatModeDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ONE, "REPEAT_MODE_ONE"); // 1
     };
 
     /* LIBRARY CONSTANTS */

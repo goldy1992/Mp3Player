@@ -60,10 +60,11 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
             this.currentPlaybackSpeed = speed;
         }
 
-        if (null == valueAnimator || speedChanged) {
-            Log.i(LOG_TAG, "recreate animator");
-            createAnimator();
-        }
+//        if (null == valueAnimator || speedChanged) {
+//            Log.i(LOG_TAG, "recreate animator");
+//            createAnimator();
+//        }
+        createAnimator();
         updateValueAnimator();
     }
 
@@ -73,6 +74,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
      */
     public void onMetadataChanged(MediaMetadataCompat metadata) {
         Log.i(LOG_TAG, "meta data change");
+        LoggingUtils.logMetaData(metadata, LOG_TAG);
         final int max = metadata != null
                 ? (int) metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
                 : 0;
@@ -83,7 +85,9 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
     }
 
     private void updateValueAnimator() {
-        valueAnimator.setCurrentFraction(getPositionAsFraction());
+        float newPosition = getPositionAsFraction();
+        Log.d(LOG_TAG, "new fraction: " + newPosition);
+        valueAnimator.setCurrentFraction(newPosition);
         if (!valueAnimator.isStarted()) {
             valueAnimator.start();
         }
@@ -178,10 +182,13 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
      * maximum value of the current seeker bar
      */
     private boolean validPosition(long position) {
-        return position >= 0 && position <= seekerBar.getMax();
+        boolean valid = position >= 0 && position <= seekerBar.getMax();
+        Log.i(LOG_TAG, "position: " + position + ", valid: " + valid);
+        return valid;
     }
 
     private float getPositionAsFraction() {
+        Log.e(LOG_TAG, "current pos: " + currentPosition + ", seekerbar max" + seekerBar.getMax());
         return currentPosition / (float) seekerBar.getMax();
     }
 
@@ -217,7 +224,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
      * and therefore cannot be null
      * @param seekerBar the seeker bar
      */
-    public void setSeekerBar(@NonNull SeekerBar seekerBar) {
+    public void init(@NonNull SeekerBar seekerBar) {
         this.seekerBar = seekerBar;
         this.seekerBar.setOnSeekBarChangeListener(this);
     }

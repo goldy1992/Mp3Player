@@ -174,7 +174,7 @@ public class TimeCounter {
         this.repeating = repeating;
     }
 
-    public void setTextView(TextView textView) {
+    public void init(TextView textView) {
         this.textView = textView;
     }
 }
