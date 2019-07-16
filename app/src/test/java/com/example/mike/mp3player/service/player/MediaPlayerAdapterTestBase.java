@@ -17,10 +17,13 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.shadows.ShadowMediaPlayer;
 import org.robolectric.shadows.util.DataSource;
 
+import static android.media.MediaPlayer.MEDIA_INFO_STARTED_AS_NEXT;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -134,6 +137,27 @@ public abstract class MediaPlayerAdapterTestBase {
         FieldUtils.writeField(mediaPlayerAdapter, "currentMediaPlayer", mediaPlayerSpied, true);
         mediaPlayerAdapter.onComplete(followingUri);
         verify(mediaPlayerSpied, times(1)).release();
+    }
+    @Test
+    public void testOnInfoMediaInfoStartedAsNext() {
+        MediaPlayer currentMediaPlayer = mediaPlayerAdapter.getCurrentMediaPlayer();
+        MediaPlayerAdapter spiedMediaPlayerAdapter = spy(mediaPlayerAdapter);
+        boolean result = spiedMediaPlayerAdapter.onInfo(currentMediaPlayer, MEDIA_INFO_STARTED_AS_NEXT, 0);
+        assertTrue(result);
+        verify(spiedMediaPlayerAdapter).setPlaybackParams(currentMediaPlayer);
+    }
+
+    @Test
+    public void testOnError() {
+        assertTrue(mediaPlayerAdapter.onError(mediaPlayerAdapter.getCurrentMediaPlayer(), 0, 0));
+    }
+    @Test
+    public void testOnInfoNotMediaInfoStartedAsNext() {
+        MediaPlayer currentMediaPlayer = mediaPlayerAdapter.getCurrentMediaPlayer();
+        MediaPlayerAdapter spiedMediaPlayerAdapter = spy(mediaPlayerAdapter);
+        boolean result = spiedMediaPlayerAdapter.onInfo(currentMediaPlayer, 0, 0);
+        assertTrue(result);
+        verify(spiedMediaPlayerAdapter, never()).setPlaybackParams(currentMediaPlayer);
     }
     private void expectedSpeedChange(float originalSpeed, float changeInSpeed, float expectedNewSpeed) {
 

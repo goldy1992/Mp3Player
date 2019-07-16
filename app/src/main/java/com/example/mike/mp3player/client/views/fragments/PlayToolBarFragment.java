@@ -88,7 +88,7 @@ public class PlayToolBarFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void initialiseDependencies() {
+    protected void initialiseDependencies() {
         FragmentActivity activity = getActivity();
         if (null != activity && activity instanceof MediaActivityCompat) {
             MediaActivityCompat mediaPlayerActivity = (MediaActivityCompat) getActivity();

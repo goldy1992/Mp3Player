@@ -130,22 +130,6 @@ public abstract class MediaPlayerAdapter implements MediaPlayer.OnErrorListener,
         return setListeners(mediaPlayer);
     }
 
-    /**
-     * we never _want to use stop when calling the player,
-     * because we can just reset the mediaplayer and when a song is
-     * prepared we can put it into the paused state.
-     */
-    @Deprecated
-    public void stop() {
-        if (!isPrepared()) {
-            return;
-        }
-        currentState= PlaybackStateCompat.STATE_STOPPED;
-        isPrepared = false;
-        //getCurrentMediaPlayer().stop();
-        // Take the service out of the foreground
-    }
-
     public void seekTo(long position) {
         if (isInitialised()) {
             if (!prepare()) {
