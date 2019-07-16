@@ -5,8 +5,11 @@ import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import com.example.mike.mp3player.service.AudioFocusManager;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.LoggingUtils.logPlaybackParams;
@@ -42,7 +45,7 @@ public class NougatMediaPlayerAdapter extends MediaPlayerAdapter {
                 currentMediaPlayer.setLooping(isLooping());
                 currentState = PlaybackStateCompat.STATE_PLAYING;
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(LOG_TAG, ExceptionUtils.getStackTrace(e));
                 return false;
             }
             return true;
