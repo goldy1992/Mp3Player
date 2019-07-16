@@ -53,4 +53,14 @@ public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
     public void setSkipToNextButton(SkipToNextButton skipToNextButton) {
         this.skipToNextButton = skipToNextButton;
     }
+
+    @Override
+    void initialiseDependencies() {
+        FragmentActivity activity = getActivity();
+        if (null != activity && activity instanceof MediaActivityCompat) {
+            MediaActivityCompat mediaPlayerActivity = (MediaActivityCompat) getActivity();
+            mediaPlayerActivity.getMediaActivityCompatComponent().playbackToolbarSubcomponent()
+                    .inject(this);
+        }
+    }
 }
