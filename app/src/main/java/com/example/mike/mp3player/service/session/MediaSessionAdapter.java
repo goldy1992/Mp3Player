@@ -63,11 +63,6 @@ public class MediaSessionAdapter {
         updatePlaybackState(actions);
         updateMetaData();
     }
-    @Deprecated
-    public void updateAll() {
-        updateAll(NO_ACTION);
-    }
-
     public MediaMetadataCompat getCurrentMetaData() {
         MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
         builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayerAdapter.getCurrentDuration());

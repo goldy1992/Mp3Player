@@ -60,10 +60,6 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
             this.currentPlaybackSpeed = speed;
         }
 
-//        if (null == valueAnimator || speedChanged) {
-//            Log.i(LOG_TAG, "recreate animator");
-//            createAnimator();
-//        }
         createAnimator();
         updateValueAnimator();
     }
@@ -74,7 +70,6 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
      */
     public void onMetadataChanged(MediaMetadataCompat metadata) {
         Log.i(LOG_TAG, "meta data change");
-//        LoggingUtils.logMetaData(metadata, LOG_TAG);
         final int max = metadata != null
                 ? (int) metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
                 : 0;
