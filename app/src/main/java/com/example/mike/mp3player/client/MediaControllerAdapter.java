@@ -109,21 +109,19 @@ public class MediaControllerAdapter {
     }
 
     public int getPlaybackState() {
-        if (mediaController != null && mediaController.getPlaybackState() != null) {
-            return mediaController.getPlaybackState().getState();
-        }
-        return 0;
+        PlaybackStateCompat playbackStateCompat = getPlaybackStateCompat();
+        return null == playbackStateCompat ? 0 : playbackStateCompat.getState();
     }
 
-    public PlaybackStateCompat getPlaybackStateObject() {
-        if (mediaController != null && mediaController.getPlaybackState() != null) {
+    public PlaybackStateCompat getPlaybackStateCompat() {
+        if (mediaController != null) {
             return mediaController.getPlaybackState();
         }
         return null;
     }
 
     public MediaMetadataCompat getMetadata() {
-        if (mediaController != null && mediaController.getPlaybackState() != null) {
+        if (mediaController != null) {
             return mediaController.getMetadata();
         }
         return null;
@@ -143,13 +141,6 @@ public class MediaControllerAdapter {
         return mediaController != null && mediaController.isSessionReady();
     }
 
-    @Deprecated
-    public void updateUiState() {
-        if (isInitialized()) {
-            myMediaControllerCallback.onMetadataChanged(mediaController.getMetadata());
-            myMediaControllerCallback.getMyPlaybackStateCallback().updateAll(mediaController.getPlaybackState());
-        }
-    }
 
     public void sendCustomAction(String customAction, Bundle args) {
         getController().sendCustomAction(customAction, args);

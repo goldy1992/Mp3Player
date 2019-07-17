@@ -88,7 +88,7 @@ public class MockMediaControllerAdapter extends MediaControllerAdapter {
     }
 
     @Override
-    public PlaybackStateCompat getPlaybackStateObject() {
+    public PlaybackStateCompat getPlaybackStateCompat() {
         return new PlaybackStateCompat.Builder().setState(getPlaybackState(), 0L, 0F).build();
     }
     @Override

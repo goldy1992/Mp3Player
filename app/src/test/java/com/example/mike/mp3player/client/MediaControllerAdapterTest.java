@@ -29,6 +29,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -164,6 +165,27 @@ public class MediaControllerAdapterTest {
     }
 
     @Test
+    public void testGetPlaybackStateCompatWhenNull() {
+        mediaControllerAdapter.setMediaController(null);
+        assertNull(mediaControllerAdapter.getPlaybackStateCompat());
+    }
+
+    @Test
+    public void testGetMetadataNullController() {
+        mediaControllerAdapter.setMediaController(null);
+        assertNull(mediaControllerAdapter.getMetadata());
+    }
+
+    @Test
+    public void testGetMetadata() {
+        MediaMetadataCompat metadata = mock(MediaMetadataCompat.class);
+        MediaControllerCompat mockMediaController = mock(MediaControllerCompat.class);
+        when(mockMediaController.getMetadata()).thenReturn(metadata);
+        mediaControllerAdapter.setMediaController(mockMediaController);
+        assertEquals(metadata, mediaControllerAdapter.getMetadata());
+
+    }
+    @Test
     public void testRegisterMetaDataListener() {
         MetaDataListener expected = mock(MetaDataListener.class);
         mediaControllerAdapter.registerMetaDataListener(expected);
@@ -197,29 +219,6 @@ public class MediaControllerAdapterTest {
         mediaControllerAdapter.disconnect();
         verify(mediaControllerAdapter.getMediaController(), times(1)).unregisterCallback(myMediaControllerCallback);
     }
-
-    @Test
-    public void testUpdateUiStateWhenInitialised() {
-        when(mediaControllerAdapter.isInitialized()).thenReturn(true);
-        MediaControllerCompat mediaController = mediaControllerAdapter.getMediaController();
-        final MediaMetadataCompat expectedMetadataCompat = mediaController.getMetadata();
-        final PlaybackStateCompat expectedPlaybackStateCompat = mediaController.getPlaybackState();
-        mediaControllerAdapter.updateUiState();
-        verify(myMediaControllerCallback).onMetadataChanged(expectedMetadataCompat);
-        verify(playbackStateCallback).updateAll(expectedPlaybackStateCompat);
-    }
-
-    @Test
-    public void testUpdateUiStateWhenNotInitialised() {
-        when(mediaControllerAdapter.isInitialized()).thenReturn(false);
-        MediaControllerCompat mediaController = mediaControllerAdapter.getMediaController();
-        final MediaMetadataCompat expectedMetadataCompat = mediaController.getMetadata();
-        final PlaybackStateCompat expectedPlaybackStateCompat = mediaController.getPlaybackState();
-        mediaControllerAdapter.updateUiState();
-        verify(myMediaControllerCallback, never()).onMetadataChanged(expectedMetadataCompat);
-        verify(myMediaControllerCallback, never()).onPlaybackStateChanged(expectedPlaybackStateCompat);
-    }
-
 
     private MediaControllerAdapter initialiseMediaControllerAdapter(MediaSessionCompat.Token token) {
              MediaControllerAdapter spiedMediaControllerAdapter = spy(new MediaControllerAdapter(context, myMediaControllerCallback));

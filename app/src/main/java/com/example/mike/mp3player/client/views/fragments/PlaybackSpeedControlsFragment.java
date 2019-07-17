@@ -53,7 +53,7 @@ public class PlaybackSpeedControlsFragment extends AsyncFragment implements Play
         this.mediaControllerAdapter.registerPlaybackStateListener(this, Collections.singleton(ListenerType.PLAYBACK_SPEED));
 
         //update GUI
-        this.onPlaybackStateChanged(mediaControllerAdapter.getPlaybackStateObject());
+        this.onPlaybackStateChanged(mediaControllerAdapter.getPlaybackStateCompat());
     }
 
     private void updatePlaybackSpeedText(float speed) {

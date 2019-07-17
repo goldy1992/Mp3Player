@@ -50,24 +50,11 @@ public abstract class FolderActivity extends MediaActivityCompat {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        // TODO: remove call to update GUI state, fragments can initialise themselves
-        if (getMediaControllerAdapter() != null) {
-            getMediaControllerAdapter().updateUiState();
-        }
-        // If it is null it will initialised when the MediaBrowserAdapter has connected
-    }
-
-    @Override
     public void onConnected() {
         super.onConnected();
-
         this.viewPageFragment = ChildViewPagerFragment.createViewPageFragment(Category.SONGS, parentId, getMediaBrowserAdapter());
         getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
         getSupportActionBar().setTitle(getString(R.string.FOLDER_NAME, this.folderName));
-        // TODO: remove call to update GUI state, fragments can initialise themselves
-        getMediaControllerAdapter().updateUiState();
     }
 
     @Override

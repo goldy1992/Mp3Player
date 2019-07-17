@@ -62,7 +62,7 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
 
         // update GUI state
         onMetadataChanged(mediaControllerAdapter.getMetadata());
-        onPlaybackStateChanged(mediaControllerAdapter.getPlaybackStateObject());
+        onPlaybackStateChanged(mediaControllerAdapter.getPlaybackStateCompat());
     }
 
     private void registerMediaControllerListeners() {
