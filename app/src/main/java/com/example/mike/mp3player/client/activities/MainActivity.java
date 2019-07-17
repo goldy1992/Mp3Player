@@ -41,17 +41,6 @@ public abstract class MainActivity extends MediaActivityCompat {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        // TODO: remove call to update GUI state, fragments can initialise themselves
-        if (getMediaControllerAdapter() != null) {
-            getMediaControllerAdapter().updateUiState();
-        }
-        // If it is null it will initialised when the MediaBrowserAdapter has connected
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean selected = rootFragment.getMainFrameFragment().onOptionsItemSelected(item);
         return selected || super.onOptionsItemSelected(item);
