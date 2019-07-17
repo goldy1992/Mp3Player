@@ -43,6 +43,8 @@ public abstract class MainActivity extends MediaActivityCompat {
     @Override
     protected void onStart() {
         super.onStart();
+
+        // TODO: remove call to update GUI state, fragments can initialise themselves
         if (getMediaControllerAdapter() != null) {
             getMediaControllerAdapter().updateUiState();
         }

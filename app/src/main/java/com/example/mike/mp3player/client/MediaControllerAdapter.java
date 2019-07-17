@@ -53,7 +53,6 @@ public class MediaControllerAdapter {
             Log.e(LOG_TAG, ExceptionUtils.getStackTrace(ex));
         }
         this.token = token;
-        updateUiState();
     }
 
     public void prepareFromMediaId(String mediaId, Bundle extras) {
@@ -144,6 +143,7 @@ public class MediaControllerAdapter {
         return mediaController != null && mediaController.isSessionReady();
     }
 
+    @Deprecated
     public void updateUiState() {
         if (isInitialized()) {
             myMediaControllerCallback.onMetadataChanged(mediaController.getMetadata());
