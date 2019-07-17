@@ -49,16 +49,6 @@ public class MainFrameFragment extends Fragment {
 
         MyDrawerListener myDrawerListener = new MyDrawerListener();
         getDrawerLayout().addDrawerListener(myDrawerListener);
-
-        /* TODO: consider different implementation of this functionality */
-        if (getActivity() instanceof AppCompatActivity) {
-            AppCompatActivity activity = (AppCompatActivity) getActivity();
-
-            activity.setSupportActionBar(titleBarFragment.getTitleToolbar());
-            ActionBar actionBar = activity.getSupportActionBar();
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-        }
     }
 
     @Override
