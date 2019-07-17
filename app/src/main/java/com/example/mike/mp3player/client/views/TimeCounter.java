@@ -2,7 +2,10 @@ package com.example.mike.mp3player.client.views;
 
 import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.widget.TextView;
+
+import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.client.utils.TimerUtils;
 
@@ -86,7 +89,7 @@ public class TimeCounter {
     }
 
     private void haltTimer(long currentTime) {
-        //Log.d(LOG_TAG, "halt timer");
+        Log.i(LOG_TAG, "halt timer");
         cancelTimer();
         this.currentPosition = currentTime;
         updateTimerText();
@@ -101,7 +104,7 @@ public class TimeCounter {
 
     private void cancelTimer() {
         //Log.d(LOG_TAG, "Cancel timer");
-        if (timer != null && isRunning()) {
+        if (timer != null) {
             // cancel timer and make new one
             timer.shutdown();
         }
@@ -139,8 +142,6 @@ public class TimeCounter {
         }
         //Log.d(LOG_TAG, "finished run call");
     } // run
-    
-    
 
     public boolean isRunning() {
         return currentState == STATE_PLAYING;
@@ -176,6 +177,16 @@ public class TimeCounter {
 
     public void init(TextView textView) {
         this.textView = textView;
+    }
+
+    @VisibleForTesting
+    public ScheduledExecutorService getTimer() {
+        return timer;
+    }
+
+    @VisibleForTesting
+    public void setTimer(ScheduledExecutorService timer) {
+        this.timer = timer;
     }
 }
 

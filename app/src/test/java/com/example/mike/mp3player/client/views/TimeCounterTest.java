@@ -15,6 +15,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
+import java.util.concurrent.ScheduledExecutorService;
+
 import static android.support.v4.media.session.PlaybackStateCompat.Builder;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
@@ -68,8 +70,11 @@ public class TimeCounterTest {
     @Test
     public void updateStateHaltTimerTest() {
         setStatePlaying();
+        ScheduledExecutorService spiedTimer = spy(timeCounter.getTimer());
+        timeCounter.setTimer(spiedTimer);
         PlaybackStateCompat state = createState(STATE_PAUSED, POSITION);
         timeCounter.updateState(state);
+        verify(spiedTimer).shutdown();
         assertFalse("TimerCounter should not be running", timeCounter.isRunning());
         assertEquals("currentTime should be equal to the position parameter", POSITION, timeCounter.getCurrentPosition());
     }

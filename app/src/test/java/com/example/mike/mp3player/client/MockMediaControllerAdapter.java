@@ -2,6 +2,7 @@ package com.example.mike.mp3player.client;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
@@ -14,6 +15,9 @@ import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListene
 import java.util.Set;
 
 import javax.inject.Inject;
+
+import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
+import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_TITLE;
 
 public class MockMediaControllerAdapter extends MediaControllerAdapter {
 
@@ -29,64 +33,70 @@ public class MockMediaControllerAdapter extends MediaControllerAdapter {
     }
 
 
-
+    @Override
     public void prepareFromMediaId(String mediaId, Bundle extras) {
         // DO NOTHING
     }
-
+    @Override
     public void play() {
         // DO NOTHING
     }
-
+    @Override
     public void setRepeatMode(@PlaybackStateCompat.RepeatMode int repeatMode) {
         // DO NOTHING
     }
-
+    @Override
     public void pause() {
         // DO NOTHING
     }
-
+    @Override
     public void seekTo(long position) {
         // DO NOTHING
     }
-
+    @Override
     public void stop() {
         // DO NOTHING
     }
-
+    @Override
     public void skipToNext() {
         // DO NOTHING
     }
-
+    @Override
     public void skipToPrevious() {
         // DO NOTHING
     }
-
+    @Override
     public void setShuffleMode(@PlaybackStateCompat.ShuffleMode int shuffleMode) {
         // DO NOTHING
     }
-
+    @Override
     public void registerMetaDataListener(MetaDataListener metaDataListener) {
         // DO NOTHING
     }
-
+    @Override
     public void unregisterMetaDataListener(MetaDataListener metaDataListener) {
         // DO NOTHING
     }
-
+    @Override
     public void registerPlaybackStateListener(PlaybackStateListener playbackStateListener, Set<ListenerType> listenerTypes) {
         // DO NOTHING
     }
 
-    public void unregisterPlaybackStateListener(PlaybackStateListener playbackStateListener, ListenerType listenerType) {
-        // DO NOTHING
-    }
+    @Override
     public int getPlaybackState() {
         return PlaybackStateCompat.STATE_NONE;
     }
 
-    public PlaybackStateCompat getPlaybackStateAsCompat() {
+    @Override
+    public PlaybackStateCompat getPlaybackStateObject() {
         return new PlaybackStateCompat.Builder().setState(getPlaybackState(), 0L, 0F).build();
+    }
+    @Override
+    public MediaMetadataCompat getMetadata() {
+        return new MediaMetadataCompat.Builder()
+            .putString(METADATA_KEY_ARTIST, "artist")
+            .putString(METADATA_KEY_TITLE, "title")
+            .build();
     }
 
     public MediaSessionCompat.Token getToken() {
@@ -101,7 +111,6 @@ public class MockMediaControllerAdapter extends MediaControllerAdapter {
         return true;
     }
 
-    public void updateUiState() { /* DO NOTING */ }
 
     public void sendCustomAction(String customAction, Bundle args) {
         // DO NOTHING
