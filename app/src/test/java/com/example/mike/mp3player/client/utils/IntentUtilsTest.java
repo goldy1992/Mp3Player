@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.media.session.MediaSessionCompat;
 
-
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Test;
@@ -22,9 +21,7 @@ public class IntentUtilsTest {
     @Test
     public void testCreateGoToMediaPlayerActivity() {
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
-        Intent result = IntentUtils.createGoToMediaPlayerActivity(context, mediaSessionCompat.getSessionToken());
+        Intent result = IntentUtils.createGoToMediaPlayerActivity(context);
         assertNotNull(result);
-        assertEquals(mediaSessionCompat.getSessionToken(), result.getParcelableExtra(MEDIA_SESSION));
     }
 }

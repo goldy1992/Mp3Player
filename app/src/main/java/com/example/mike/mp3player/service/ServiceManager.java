@@ -1,29 +1,35 @@
 package com.example.mike.mp3player.service;
 
 import android.app.Notification;
-import android.content.Context;
 import android.content.Intent;
 
 import androidx.core.content.ContextCompat;
 
 import com.example.mike.mp3player.service.session.MediaSessionAdapter;
 
+import javax.inject.Inject;
+
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 
 public class ServiceManager {
 
     private MediaPlaybackService service;
-    private Context context;
     private MediaSessionAdapter mediaSession;
     private MyNotificationManager notificationManager;
     private boolean serviceStarted = false;
 
+    @Inject
     public ServiceManager(MediaPlaybackService service,
-                          MediaSessionAdapter mediaSession) {
+                          MediaSessionAdapter mediaSession,
+                          MyNotificationManager myNotificationManager) {
+
         this.service = service;
-        this.context = service.getApplicationContext();
         this.mediaSession = mediaSession;
-        this.notificationManager = new MyNotificationManager(context, mediaSession.getMediaSessionToken());
+        this.notificationManager = myNotificationManager;
+    }
+
+    public void init(MediaPlaybackService mediaPlaybackService) {
+        this.service = mediaPlaybackService;
     }
 
     public void startService(Notification notification) {
@@ -38,9 +44,9 @@ public class ServiceManager {
 
     private void createServiceIfNotStarted() {
         if (!serviceStarted) {
-            Intent startServiceIntent = new Intent(context, MediaPlaybackService.class);
+            Intent startServiceIntent = new Intent(service, MediaPlaybackService.class);
             startServiceIntent.setAction("com.example.mike.mp3player.service.MediaPlaybackService");
-            ContextCompat.startForegroundService(context, startServiceIntent);
+            ContextCompat.startForegroundService(service, startServiceIntent);
             service.startService(startServiceIntent);
             serviceStarted = true;
         }

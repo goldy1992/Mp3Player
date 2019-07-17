@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.service.library;
 
-import android.content.Context;
 import android.net.Uri;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
@@ -14,7 +13,6 @@ import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;

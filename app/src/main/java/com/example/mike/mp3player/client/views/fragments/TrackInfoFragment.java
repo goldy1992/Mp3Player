@@ -13,6 +13,10 @@ import androidx.annotation.Nullable;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MetaDataListener;
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
+import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
+
+import javax.inject.Inject;
 
 public class TrackInfoFragment extends AsyncFragment implements MetaDataListener {
 
@@ -23,6 +27,7 @@ public class TrackInfoFragment extends AsyncFragment implements MetaDataListener
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        initialiseDependencies();
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_track_info, container, true);
     }
@@ -30,21 +35,13 @@ public class TrackInfoFragment extends AsyncFragment implements MetaDataListener
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
+        // init GUI
         this.artist = view.findViewById(R.id.artistName);
         this.track = view.findViewById(R.id.trackName);
-    }
-
-    public void init(MediaControllerAdapter adapter) {
-        this.mediaControllerAdapter = adapter;
+        // register listeners
         this.mediaControllerAdapter.registerMetaDataListener(this);
-    }
-
-    public TextView getArtist() {
-        return artist;
-    }
-
-    public TextView getTrack() {
-        return track;
+        // update GUI
+        this.onMetadataChanged(mediaControllerAdapter.getMetadata());
     }
 
     public void setArtist(String artist) {
@@ -63,5 +60,15 @@ public class TrackInfoFragment extends AsyncFragment implements MetaDataListener
     public void onMetadataChanged(MediaMetadataCompat metaData) {
         setArtist(metaData.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
         setTrack(metaData.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
+    }
+    @Inject
+    public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
+        this.mediaControllerAdapter = mediaControllerAdapter;
+    }
+
+    public void initialiseDependencies() {
+        MediaActivityCompatComponent component = ((MediaActivityCompat)getActivity())
+                .getMediaActivityCompatComponent();
+        component.inject(this);
     }
 }

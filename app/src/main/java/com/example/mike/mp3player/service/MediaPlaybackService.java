@@ -11,7 +11,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.media.MediaBrowserServiceCompat;
 
-import com.example.mike.mp3player.MikesMp3PlayerBase;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.commons.library.LibraryResponse;
 import com.example.mike.mp3player.service.library.MediaLibrary;
@@ -32,32 +31,25 @@ import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
 /**
  * Created by Mike on 24/09/2017.
  */
-public class MediaPlaybackService extends MediaBrowserServiceCompat {
-    private MediaSessionCompat mediaSession;
-    private MediaSessionCallback mediaSessionCallback;
+public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
+
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
-    private static final String WORKER_ID = "MDIA_PLYBK_SRVC_WKR";
+
     private MediaLibrary mediaLibrary;
     private HandlerThread worker;
+    private MediaSessionCompat mediaSession;
+    private MediaSessionCallback mediaSessionCallback;
+    abstract void initialiseDependencies();
 
     @Override
     public void onCreate() {
         super.onCreate();
-        ((MikesMp3PlayerBase)getApplication()).getMediaLibraryComponent().inject(this);
-
-        this.worker = new HandlerThread(WORKER_ID);
-        this.worker.start();
-        this.worker.getLooper().setMessageLogging((String x) -> {
-            //Log.i(WORKER_ID, x);
-        });
-
         this.mediaLibrary.buildMediaLibrary();
-        this.mediaSession = new MediaSessionCompat(getApplicationContext(), LOG_TAG);
-        setSessionToken(getMediaSession().getSessionToken());
-        this.mediaSessionCallback = new MediaSessionCallback(this, getMediaSession(), mediaLibrary, worker.getLooper());
-        // MySessionCallback() has methods that handle callbacks from a media controller
-        getMediaSession().setCallback(mediaSessionCallback);
+        this.mediaSessionCallback.init();
+        setSessionToken(mediaSession.getSessionToken());
+        mediaSession.setCallback(mediaSessionCallback);
     }
+
 
     @Override
     public BrowserRoot onGetRoot(String clientPackageName, int clientUid,
@@ -79,8 +71,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     /**
      * onLoadChildren(String, Result, Bundle) :- onLoadChildren should always be called with a LibraryObject item as a bundle option. Searching for
      * a MediaItem's children is now deprecated as it wasted
-     * @param parentId
-     * @param result
+     * @param parentId the parent ID
+     * @param result the result object used by the MediaBrowserServiceCompat
      */
     @Deprecated
     @Override
@@ -135,7 +127,11 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
     }
 
     private boolean allowBrowsing(String clientPackageName, int clientUid) {
-        return clientPackageName.equals(PACKAGE_NAME);
+        return clientPackageName.contains(PACKAGE_NAME);
+    }
+
+    public MediaSessionCompat getMediaSession() {
+        return mediaSession;
     }
 
     @Inject
@@ -143,7 +139,21 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         this.mediaLibrary = mediaLibrary;
     }
 
-    public MediaSessionCompat getMediaSession() {
-        return mediaSession;
+    @Inject
+    public void setMediaSession(MediaSessionCompat mediaSession) {
+        this.mediaSession = mediaSession;
+    }
+
+    @Inject
+    public void setMediaSessionCallback(MediaSessionCallback mediaSessionCallback) {
+        this.mediaSessionCallback = mediaSessionCallback;
+    }
+    @Inject
+    public void setWorker(HandlerThread handlerThread) {
+        this.worker = handlerThread;
+    }
+
+    public HandlerThread getWorker() {
+        return worker;
     }
 }

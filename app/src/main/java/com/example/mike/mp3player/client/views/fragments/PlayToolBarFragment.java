@@ -14,9 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.utils.IntentUtils;
@@ -24,13 +26,16 @@ import com.example.mike.mp3player.client.views.PlayPauseButton;
 
 import java.util.Collections;
 
+import javax.inject.Inject;
+
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class PlayToolBarFragment extends Fragment {
 
     private static final String LOG_TAG = "PLY_PAUSE_BTN";
-    MediaControllerAdapter mediaControllerAdapter;
+
     PlayPauseButton playPauseButton;
+
     protected Toolbar toolbar;
     LinearLayout innerPlaybackToolbarLayout;
     boolean attachToRoot;
@@ -38,6 +43,7 @@ public class PlayToolBarFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        initialiseDependencies();
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_playback_toolbar, container, attachToRoot );
     }
@@ -50,46 +56,13 @@ public class PlayToolBarFragment extends Fragment {
             toolbar.setOnClickListener((View v) -> goToMediaPlayerActivity());
         }
         this.innerPlaybackToolbarLayout = view.findViewById(R.id.innerPlaybackToolbarLayout);
-        if (this.playPauseButton == null) {
-            this.playPauseButton = PlayPauseButton.create(getContext(), (View v) -> playPause());
-        }
-    }
 
-    public void init(MediaControllerAdapter mediaControllerAdapter, boolean attachToRoot) {
-        this.mediaControllerAdapter = mediaControllerAdapter;
-        if (this.playPauseButton == null) {
-            this.playPauseButton = PlayPauseButton.create(mediaControllerAdapter.getContext(), (View v) -> playPause());
-        }
-        this.mediaControllerAdapter.registerPlaybackStateListener(playPauseButton, Collections.singleton(ListenerType.PLAYBACK));
-        this.attachToRoot = attachToRoot;
-    }
-
-    void playPause() {
-        int currentPlaybackState = playPauseButton.getState();
-        if (currentPlaybackState == PlaybackStateCompat.STATE_PLAYING) {
-            Log.d(LOG_TAG, "calling pause");
-            mediaControllerAdapter.pause();
-        } else {
-            Log.d(LOG_TAG, "calling play");
-            mediaControllerAdapter.play();
-        }
-    }
-
-    public void displayButtons() {
         if (null != innerPlaybackToolbarLayout) {
             playPauseButton.setLayoutParams(getLinearLayoutParams(playPauseButton.getLayoutParams()));
             innerPlaybackToolbarLayout.addView(playPauseButton);
         }
-    }
 
-    public PlayPauseButton getPlayPauseButton() {
-        return playPauseButton;
     }
-
-    public void setPlayPauseButton(PlayPauseButton playPauseButton) {
-        this.playPauseButton = playPauseButton;
-    }
-
 
     LinearLayout.LayoutParams getLinearLayoutParams(ViewGroup.LayoutParams params) {
         if (params != null) {
@@ -100,14 +73,9 @@ public class PlayToolBarFragment extends Fragment {
                 WRAP_CONTENT, 1.0f);
     }
 
-    public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
-        this.mediaControllerAdapter = mediaControllerAdapter;
-    }
-
-    public static PlayToolBarFragment createAndInitialisePlayToolbarFragment(MediaControllerAdapter mediaControllerAdapter, boolean attachToRoot) {
-        PlayToolBarFragment playToolBarFragment = new PlayToolBarFragment();
-        playToolBarFragment.init(mediaControllerAdapter, attachToRoot);
-        return playToolBarFragment;
+    @Inject
+    public void setPlayPauseButton(PlayPauseButton playPauseButton) {
+        this.playPauseButton = playPauseButton;
     }
 
     private boolean isMediaPlayerActivity() {
@@ -116,7 +84,17 @@ public class PlayToolBarFragment extends Fragment {
     }
 
     private void goToMediaPlayerActivity() {
-        Intent intent = IntentUtils.createGoToMediaPlayerActivity(getContext(), mediaControllerAdapter.getToken());
+        Intent intent = IntentUtils.createGoToMediaPlayerActivity(getContext());
         startActivity(intent);
+    }
+
+
+    void initialiseDependencies() {
+        FragmentActivity activity = getActivity();
+        if (null != activity && activity instanceof MediaActivityCompat) {
+            MediaActivityCompat mediaPlayerActivity = (MediaActivityCompat) getActivity();
+            mediaPlayerActivity.getMediaActivityCompatComponent().playbackToolbarSubcomponent()
+                    .inject(this);
+        }
     }
 }

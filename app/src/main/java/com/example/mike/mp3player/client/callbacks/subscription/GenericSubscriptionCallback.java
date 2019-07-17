@@ -7,7 +7,6 @@ import android.support.v4.media.MediaBrowserCompat;
 
 import androidx.annotation.NonNull;
 
-import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 
 import java.util.Collection;
@@ -23,14 +22,13 @@ public abstract class GenericSubscriptionCallback<K> extends MediaBrowserCompat.
     Handler handler;
     Map<K, Set<MediaBrowserResponseListener>> mediaBrowserResponseListeners;
     Context context;
-    MediaBrowserAdapter mediaBrowserAdapter;
 
-    public GenericSubscriptionCallback(MediaBrowserAdapter mediaBrowserAdapter) {
+    public GenericSubscriptionCallback(Handler handler) {
         super();
-        this.context = mediaBrowserAdapter.getContext();
+        this.context = context;
         this.mediaBrowserResponseListeners = new HashMap<>();
-        this.handler = new Handler(mediaBrowserAdapter.getLooper());
-        this.mediaBrowserAdapter = mediaBrowserAdapter;
+        this.handler = handler;
+
     }
 
     @Override

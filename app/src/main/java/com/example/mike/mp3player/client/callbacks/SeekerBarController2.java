@@ -7,11 +7,15 @@ import android.util.Log;
 import android.view.animation.LinearInterpolator;
 import android.widget.SeekBar;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.SeekerBar;
+import com.example.mike.mp3player.client.views.TimeCounter;
 import com.example.mike.mp3player.commons.LoggingUtils;
+
+import javax.inject.Inject;
 
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
@@ -24,7 +28,7 @@ import static com.example.mike.mp3player.commons.PlaybackStateUtil.getRepeatMode
 public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListener, SeekBar.OnSeekBarChangeListener {
 
     private static final String LOG_TAG = "SKR_MDIA_CNTRLR_CLBK";
-    private final SeekerBar seekerBar;
+    private SeekerBar seekerBar;
     @PlaybackStateCompat.State
     private int currentState = STATE_PAUSED;
     private float currentPlaybackSpeed = DEFAULT_SPEED;
@@ -33,10 +37,12 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
     private boolean looping = false;
     private ValueAnimator valueAnimator = null;
     private final MediaControllerAdapter mediaControllerAdapter;
+    private final TimeCounter timeCounter;
 
-    public SeekerBarController2(SeekerBar seekerBar, MediaControllerAdapter mediaControllerAdapter) {
-        this.seekerBar = seekerBar;
+    @Inject
+    public SeekerBarController2(MediaControllerAdapter mediaControllerAdapter, TimeCounter timeCounter) {
         this.mediaControllerAdapter = mediaControllerAdapter;
+        this.timeCounter = timeCounter;
     }
 
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
@@ -54,16 +60,13 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
             this.currentPlaybackSpeed = speed;
         }
 
-        if (null == valueAnimator || speedChanged) {
-            Log.i(LOG_TAG, "recreate animator");
-            createAnimator();
-        }
+        createAnimator();
         updateValueAnimator();
     }
 
     /**
      *
-     * @param metadata
+     * @param metadata the metadata object
      */
     public void onMetadataChanged(MediaMetadataCompat metadata) {
         Log.i(LOG_TAG, "meta data change");
@@ -77,7 +80,9 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
     }
 
     private void updateValueAnimator() {
-        valueAnimator.setCurrentFraction(getPositionAsFraction());
+        float newPosition = getPositionAsFraction();
+        Log.d(LOG_TAG, "new fraction: " + newPosition);
+        valueAnimator.setCurrentFraction(newPosition);
         if (!valueAnimator.isStarted()) {
             valueAnimator.start();
         }
@@ -95,16 +100,15 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
 
     @Override
     public void onAnimationUpdate(final ValueAnimator valueAnimator) {
-        Log.i(LOG_TAG, "animation update");
+   //     Log.i(LOG_TAG, "animation update from: " + valueAnimator);
         final int animatedIntValue = (int) valueAnimator.getAnimatedValue();
         seekerBar.setProgress(animatedIntValue);
     }
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        //Log.i(LOG_TAG, "START TRACKING");
-        SeekerBar seekerBar = (SeekerBar) seekBar;
-        seekerBar.getTimeCounter().cancelTimerDuringTracking();
+        Log.i(LOG_TAG, "START TRACKING");
+        timeCounter.cancelTimerDuringTracking();
         removeValueAnimator();
         setTracking(seekBar, true);
     }
@@ -129,7 +133,6 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
     }
 
     private void createAnimator() {
-        removeValueAnimator();
         try {
             int duration = (int) (seekerBar.getMax() / currentPlaybackSpeed);
             ValueAnimator valueAnimator = ValueAnimator.ofInt(0, seekerBar.getMax());
@@ -141,6 +144,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
             if (currentPosition >= 0 && seekerBar.getMax() > currentPosition) {
                 valueAnimator.setCurrentFraction(getPositionAsFraction());
             }
+            removeValueAnimator();
             seekerBar.setValueAnimator(valueAnimator);
             this.valueAnimator = valueAnimator;
         } catch (IllegalArgumentException ex) {
@@ -167,11 +171,19 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
         }
     }
 
+    /**
+     * @param position the position to be compared
+     * @return true if the position is greater than or equal to zero and less than or equal to the
+     * maximum value of the current seeker bar
+     */
     private boolean validPosition(long position) {
-        return position >= 0 && position <= seekerBar.getMax();
+        boolean valid = position >= 0 && position <= seekerBar.getMax();
+        Log.i(LOG_TAG, "position: " + position + ", valid: " + valid);
+        return valid;
     }
 
     private float getPositionAsFraction() {
+        Log.e(LOG_TAG, "current pos: " + currentPosition + ", seekerbar max" + seekerBar.getMax());
         return currentPosition / (float) seekerBar.getMax();
     }
 
@@ -181,18 +193,34 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (seekBar != null) {
-            if (seekBar instanceof SeekerBar) {
-                SeekerBar seekerBar = (SeekerBar) seekBar;
-                if (seekerBar.isTracking()) {
-                    seekerBar.setTimerCounterProgress(progress);
-                }
-            }
+        boolean updateTimer = seekBar != null && seekBar instanceof SeekerBar && ((SeekerBar) seekBar).isTracking();
+        if (updateTimer) {
+            Log.i(LOG_TAG, "PROGRESS CHANGED");
+            timeCounter.seekTo(progress);
         }
+    }
+
+    /**
+     *
+     * @return true if the controller has been initialised correctly
+     */
+    public boolean isInitialised() {
+        return mediaControllerAdapter != null && mediaControllerAdapter.isInitialized() &&
+                seekerBar != null;
     }
 
     @VisibleForTesting
     public ValueAnimator getValueAnimator() {
         return this.valueAnimator;
+    }
+
+    /**
+     * setter method automatically associates the on seeker bar change listener to be the controller
+     * and therefore cannot be null
+     * @param seekerBar the seeker bar
+     */
+    public void init(@NonNull SeekerBar seekerBar) {
+        this.seekerBar = seekerBar;
+        this.seekerBar.setOnSeekBarChangeListener(this);
     }
 }

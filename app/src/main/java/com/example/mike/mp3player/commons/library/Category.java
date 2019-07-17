@@ -1,8 +1,10 @@
 package com.example.mike.mp3player.commons.library;
 
 import com.example.mike.mp3player.client.activities.FolderActivity;
+import com.example.mike.mp3player.client.activities.FolderActivityInjector;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
+import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjector;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
@@ -42,8 +44,9 @@ public enum Category implements Comparator<Category> {
     private static final BiMap<Category, Class<? extends MediaActivityCompat>> CATEGORY_TO_ACTIVITY_MAP = HashBiMap.create();
     private static final BiMap<Class<? extends MediaActivityCompat>, Category> ACTIVITY_TO_CATEGORY_MAP;
     static {
-        CATEGORY_TO_ACTIVITY_MAP.put(Category.SONGS, MediaPlayerActivity.class);
-        CATEGORY_TO_ACTIVITY_MAP.put(Category.FOLDERS, FolderActivity.class);
+        // TODO: change this code to accommodate test implementations. Intents should be made in Dagger
+        CATEGORY_TO_ACTIVITY_MAP.put(Category.SONGS, MediaPlayerActivityInjector.class);
+        CATEGORY_TO_ACTIVITY_MAP.put(Category.FOLDERS, FolderActivityInjector.class);
         ACTIVITY_TO_CATEGORY_MAP = CATEGORY_TO_ACTIVITY_MAP.inverse();
     }
 

@@ -1,12 +1,12 @@
 package com.example.mike.mp3player.client.callbacks.subscription;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 
 import java.util.ArrayList;
@@ -27,8 +27,8 @@ public class NotifyAllSubscriptionCallback extends GenericSubscriptionCallback<O
         return SubscriptionType.NOTIFY_ALL;
     }
 
-    public NotifyAllSubscriptionCallback(MediaBrowserAdapter mediaBrowserAdapter) {
-        super(mediaBrowserAdapter);
+    public NotifyAllSubscriptionCallback(Handler handler) {
+        super(handler);
 
         this.mediaBrowserResponseListeners = Collections.singletonMap(SINGLETON_KEY, SUBSCRIBER_MAP);
     }
@@ -38,7 +38,7 @@ public class NotifyAllSubscriptionCallback extends GenericSubscriptionCallback<O
                                  @NonNull Bundle options) {
         ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>(children);
         for (MediaBrowserResponseListener m : SUBSCRIBER_MAP) {
-            m.onChildrenLoaded(parentId, childrenArrayList, options, context);
+            m.onChildrenLoaded(parentId, childrenArrayList, options);
         }
     }
 

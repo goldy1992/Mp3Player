@@ -1,57 +1,53 @@
 package com.example.mike.mp3player.client;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
-import com.example.mike.mp3player.client.callbacks.subscription.CategorySubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.GenericSubscriptionCallback;
-import com.example.mike.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback;
-import com.example.mike.mp3player.client.callbacks.subscription.NotifyAllSubscriptionCallback;
-import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
-import com.example.mike.mp3player.service.MediaPlaybackService;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
+@Singleton
 public class MediaBrowserAdapter {
 
     private static final String LOG_TAG = "MDIA_BRWSR_ADPTR";
-    private MediaBrowserCompat mMediaBrowser;
-    private MyConnectionCallback mConnectionCallbacks;
+    private MediaBrowserCompat mediaBrowser;
+    private MyConnectionCallback connectionCallback;
     private GenericSubscriptionCallback mySubscriptionCallback;
-    private Context context;
-    private final MediaBrowserConnectorCallback mediaBrowserConnectorCallback;
-    private Looper looper;
 
-    public MediaBrowserAdapter(Context context, MediaBrowserConnectorCallback mediaBrowserConnectorCallback, Looper looper, SubscriptionType subscriptionType) {
-        this.context = context;
-        this.mediaBrowserConnectorCallback = mediaBrowserConnectorCallback;
-        this.looper = looper;
-        this.mySubscriptionCallback = createSubscriptionCallback(subscriptionType);
+    @Inject
+    public MediaBrowserAdapter(MediaBrowserCompat mediaBrowser,
+                                MyConnectionCallback myConnectionCallback,
+                                GenericSubscriptionCallback mySubscriptionCallback) {
+        this.mediaBrowser = mediaBrowser;
+        this.connectionCallback = myConnectionCallback;
+        this.mySubscriptionCallback = mySubscriptionCallback;
     }
 
     public void init() {
-        mConnectionCallbacks = new MyConnectionCallback(mediaBrowserConnectorCallback);
-        ComponentName componentName = new ComponentName(getContext(), MediaPlaybackService.class);
         // Create MediaBrowserServiceCompat
-        mMediaBrowser = new MediaBrowserCompat(getContext(), componentName, mConnectionCallbacks, null);
-
+        mediaBrowser.connect();
         //Log.i(LOG_TAG, "calling connect");
-        getmMediaBrowser().connect();
     }
 
-    public MediaBrowserCompat getmMediaBrowser() {
-        return mMediaBrowser;
-    }
-
+    /**
+     * Disconnects from the media browser service
+     */
     public void disconnect() {
-        getmMediaBrowser().disconnect();
+        mediaBrowser.disconnect();
+    }
+    /**
+     * Connects to the media browser service
+     */
+    public void connect() {
+        mediaBrowser.connect();
     }
 
     /**
@@ -62,19 +58,19 @@ public class MediaBrowserAdapter {
     public void subscribe(LibraryRequest libraryRequest) {
         Bundle options = new Bundle();
         options.putParcelable(REQUEST_OBJECT, libraryRequest);
-        getmMediaBrowser().subscribe(libraryRequest.getId(), options, getMySubscriptionCallback());
+        mediaBrowser.subscribe(libraryRequest.getId(), options, getMySubscriptionCallback());
     }
 
     public MediaSessionCompat.Token getMediaSessionToken() {
-        return mMediaBrowser.getSessionToken();
+        return mediaBrowser.getSessionToken();
     }
 
     public String getRootId() {
-        return mMediaBrowser.getRoot();
+        return mediaBrowser.getRoot();
     }
 
     public boolean isConnected() {
-        return mMediaBrowser != null && mMediaBrowser.isConnected();
+        return mediaBrowser != null && mediaBrowser.isConnected();
     }
 
     public void registerListener(Object parentId, MediaBrowserResponseListener mediaBrowserResponseListener) {
@@ -91,26 +87,12 @@ public class MediaBrowserAdapter {
         getMySubscriptionCallback().removeMediaBrowserResponseListener(category, mediaBrowserResponseListener);
     }
 
-    public Context getContext() {
-        return context;
-    }
-
-    public Looper getLooper() {
-        return looper;
-    }
-
-    private GenericSubscriptionCallback createSubscriptionCallback(SubscriptionType subscriptionType) {
-        if (null != subscriptionType) {
-            switch (subscriptionType) {
-                case CATEGORY: return new CategorySubscriptionCallback(this);
-                case MEDIA_ID: return new MediaIdSubscriptionCallback(this);
-                default: return new NotifyAllSubscriptionCallback(this);
-            }
-        }
-        return null;
-    }
 
     public GenericSubscriptionCallback getMySubscriptionCallback() {
         return mySubscriptionCallback;
+    }
+
+    public MyConnectionCallback getConnectionCallback() {
+        return connectionCallback;
     }
 }

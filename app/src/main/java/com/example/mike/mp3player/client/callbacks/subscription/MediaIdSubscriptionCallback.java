@@ -1,11 +1,11 @@
 package com.example.mike.mp3player.client.callbacks.subscription;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 
 import androidx.annotation.NonNull;
 
-import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ import java.util.Set;
 
 public class MediaIdSubscriptionCallback extends GenericSubscriptionCallback<String> {
 
-    public MediaIdSubscriptionCallback(MediaBrowserAdapter mediaBrowserAdapter) {
-        super(mediaBrowserAdapter);
+    public MediaIdSubscriptionCallback(Handler handler) {
+        super(handler);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class MediaIdSubscriptionCallback extends GenericSubscriptionCallback<Str
         Set<MediaBrowserResponseListener> listenersToNotify = mediaBrowserResponseListeners.get(parentId);
         if (null != listenersToNotify) {
             for (MediaBrowserResponseListener listener : listenersToNotify) {
-                listener.onChildrenLoaded(parentId, childrenArrayList, options, context);
+                listener.onChildrenLoaded(parentId, childrenArrayList, options);
             }
         }
     }

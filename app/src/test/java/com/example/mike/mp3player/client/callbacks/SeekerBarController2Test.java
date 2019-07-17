@@ -2,8 +2,12 @@ package com.example.mike.mp3player.client.callbacks;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.SeekerBar;
@@ -16,7 +20,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowSeekBar;
 import org.robolectric.shadows.ShadowValueAnimator;
@@ -35,7 +38,7 @@ public class SeekerBarController2Test {
     private Context m_context;
     @Mock
     private MediaControllerAdapter m_mediaControllerAdapter;
-
+    private TimeCounter timeCounter;
     private SeekerBarController2 m_seekerBarController2;
     private SeekerBar m_seekerBar;
     private final long DEFAULT_DURATION = 3000;
@@ -43,9 +46,11 @@ public class SeekerBarController2Test {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        m_context = RuntimeEnvironment.systemContext;
+        m_context = InstrumentationRegistry.getInstrumentation().getContext();
+        timeCounter = new TimeCounter(new Handler(Looper.getMainLooper()));
         m_seekerBar = new SeekerBar(m_context);
-        m_seekerBarController2 = new SeekerBarController2(m_seekerBar, m_mediaControllerAdapter);
+        m_seekerBarController2 = new SeekerBarController2(m_mediaControllerAdapter, timeCounter);
+        m_seekerBarController2.init(m_seekerBar);
         // set default metadata
         m_seekerBarController2.onMetadataChanged(createMetaData(DEFAULT_DURATION));
     }
@@ -73,7 +78,7 @@ public class SeekerBarController2Test {
     @Test
     public void testStartTracking() {
         TimeCounter timeCounter = mock(TimeCounter.class);
-        m_seekerBar.setTimeCounter(timeCounter);
+    //    m_seekerBar.setTimeCounter(timeCounter);
         m_seekerBarController2.onStartTrackingTouch(m_seekerBar);
         assertTrue(m_seekerBar.isTracking());
     }

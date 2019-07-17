@@ -45,7 +45,7 @@ public class ServiceManagerTest {
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
         when(mediaPlaybackService.getApplicationContext()).thenReturn(context);
         when(notificationManager.getNotificationManager()).thenReturn(mock(NotificationManager.class));
-        this.serviceManager = new ServiceManager(mediaPlaybackService, mediaSession);
+        this.serviceManager = new ServiceManager(mediaPlaybackService, mediaSession, notificationManager);
         FieldUtils.writeField(serviceManager, "notificationManager", notificationManager, true);
         assertServiceStarted(false);
     }

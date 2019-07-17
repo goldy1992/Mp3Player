@@ -14,19 +14,18 @@ import com.example.mike.mp3player.client.views.fragments.MainActivityRootFragmen
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
-public class MainActivity extends MediaBrowserSubscriberActivityCompat {
+public abstract class MainActivity extends MediaActivityCompat {
 
     private static final String LOG_TAG = "MAIN_ACTIVITY";
     private static final int READ_REQUEST_CODE = 42;
     private MainActivityRootFragment rootFragment;
     private InputMethodManager inputMethodManager;
-    private boolean viewInitialised = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        this.viewInitialised = initialiseView(R.layout.activity_main);
+        initialiseView(R.layout.activity_main);
     }
 
     @Override
@@ -38,18 +37,7 @@ public class MainActivity extends MediaBrowserSubscriberActivityCompat {
     boolean initialiseView(@LayoutRes int layoutRes) {
         setContentView(layoutRes);
         this.rootFragment = (MainActivityRootFragment) getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
-        this.rootFragment.init(inputMethodManager, getMediaBrowserAdapter(), getMediaControllerAdapter());
         return true;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (getMediaControllerAdapter() != null) {
-            getMediaControllerAdapter().updateUiState();
-     //       setPlaybackState(mediaControllerAdapter.getCurrentPlaybackState());
-        }
-        // If it is null it will initialised when the MediaBrowserAdapter has connected
     }
 
     @Override
@@ -68,5 +56,11 @@ public class MainActivity extends MediaBrowserSubscriberActivityCompat {
     @Override
     SubscriptionType getSubscriptionType() {
         return SubscriptionType.MEDIA_ID;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    String getWorkerId() {
+        return "MAIN_ACTVTY_WRKR";
     }
 }

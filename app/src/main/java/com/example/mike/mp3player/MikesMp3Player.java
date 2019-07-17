@@ -1,17 +1,14 @@
 package com.example.mike.mp3player;
 
-import com.example.mike.mp3player.service.library.mediaretriever.ContentResolverMediaRetriever;
-import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
+import android.app.Application;
 
-public class MikesMp3Player extends MikesMp3PlayerBase {
+public class MikesMp3Player extends Application {
     /**
-     * Use this method to set up all of the dagger dependencies before the main activity is created
+     * Declared in case need in the future
      */
     @Override
     public void onCreate() {
         super.onCreate();
-        MediaRetriever contentResolverMediaRetriever = new ContentResolverMediaRetriever(getApplicationContext());
-        setupMediaLibrary(contentResolverMediaRetriever);
     }
 
 
