@@ -84,19 +84,39 @@ public class MediaSessionCallbackTest {
     }
 
     @Test
-    public void testPlay() {
+    public void testPlayReturnTrue() {
         when(mediaPlayerAdapter.play()).thenReturn(true);
         mediaSessionCallback.onPlay();
         verify(mediaPlayerAdapter, times(1)).play();
         verify(broadcastReceiver, times(1)).registerAudioNoisyReceiver();
         verify(serviceManager, times(1)).startService();
     }
+
     @Test
-    public void testPause() {
+    public void testPlayReturnFalse() {
+        when(mediaPlayerAdapter.play()).thenReturn(false);
+        mediaSessionCallback.onPlay();
+        verify(mediaPlayerAdapter, times(1)).play();
+        verify(broadcastReceiver, never()).registerAudioNoisyReceiver();
+        verify(serviceManager, never()).startService();
+    }
+
+    @Test
+    public void testPauseReturnTrue() {
+        when(mediaPlayerAdapter.pause()).thenReturn(true);
         mediaSessionCallback.onPause();
         verify(mediaPlayerAdapter, times(1)).pause();
         verify(broadcastReceiver, times(1)).unregisterAudioNoisyReceiver();
         verify(serviceManager, times(1)).pauseService();
+    }
+
+    @Test
+    public void testPauseReturnFalse() {
+        when(mediaPlayerAdapter.pause()).thenReturn(false);
+        mediaSessionCallback.onPause();
+        verify(mediaPlayerAdapter, times(1)).pause();
+        verify(broadcastReceiver, never()).registerAudioNoisyReceiver();
+        verify(serviceManager, never()).startService();
     }
     @Test
     public void testSkipToNext() {

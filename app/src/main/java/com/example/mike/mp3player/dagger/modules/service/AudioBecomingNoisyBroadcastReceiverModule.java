@@ -18,9 +18,7 @@ public class AudioBecomingNoisyBroadcastReceiverModule {
     @Provides
     @Singleton
     public AudioBecomingNoisyBroadcastReceiver providesAudioBecomingNoisyBroadcastReceiver(
-            Context context, MediaPlayerAdapter mediaPlayerAdapter,
-            MediaSessionAdapter mediaSessionAdapter, ServiceManager serviceManager) {
-        return new AudioBecomingNoisyBroadcastReceiver(context, mediaSessionAdapter,
-                mediaPlayerAdapter, serviceManager);
+            Context context) {
+        return new AudioBecomingNoisyBroadcastReceiver(context);
     }
 }

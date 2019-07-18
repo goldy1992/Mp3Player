@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client.activities;
 
 import android.content.Intent;
+import android.view.View;
 
 import androidx.annotation.VisibleForTesting;
 

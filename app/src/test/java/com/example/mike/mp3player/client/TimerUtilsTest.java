@@ -14,9 +14,8 @@ import org.robolectric.shadows.ShadowSystemClock;
 
 import static org.junit.Assert.assertEquals;
 
-
 /**
- * In order to use Powermockito, used old Test tag so that the class runs with JUnit4.
+ * Test class for the TimerUtils class
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest=Config.NONE, sdk = 26, shadows = {ShadowSystemClock.class})

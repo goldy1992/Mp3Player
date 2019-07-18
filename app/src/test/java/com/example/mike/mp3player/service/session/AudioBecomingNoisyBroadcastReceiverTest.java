@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.robolectric.RobolectricTestRunner;
 
+import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PAUSE;
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -32,9 +33,7 @@ public class AudioBecomingNoisyBroadcastReceiverTest {
     @Mock
     private MediaPlayerAdapter mediaPlayerAdapter;
     @Mock
-    private MediaSessionAdapter mediaSessionAdapter;
-    @Mock
-    private ServiceManager serviceManager;
+    private MediaSessionCallback mediaSessionCallback;
     @Spy
     private Context context = InstrumentationRegistry.getInstrumentation().getContext();
     /** audio becoming noisy receiver */
@@ -43,8 +42,8 @@ public class AudioBecomingNoisyBroadcastReceiverTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        this.audioBecomingNoisyBroadcastReceiver = new AudioBecomingNoisyBroadcastReceiver(context,
-                mediaSessionAdapter, mediaPlayerAdapter, serviceManager);
+        this.audioBecomingNoisyBroadcastReceiver = new AudioBecomingNoisyBroadcastReceiver(context);
+        this.audioBecomingNoisyBroadcastReceiver.setMediaSessionCallback(mediaSessionCallback);
     }
 
     @Test
@@ -53,7 +52,9 @@ public class AudioBecomingNoisyBroadcastReceiverTest {
         intent.setAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         when(mediaPlayerAdapter.isPlaying()).thenReturn(true);
         audioBecomingNoisyBroadcastReceiver.onReceive(context, intent);
-        verify(mediaSessionAdapter, times(1)).updateAll(NO_ACTION);
+        /* Issue 64: we just want to update the playback state in this scenario, scpeifically to
+         * state PAUSED */
+        verify(mediaSessionCallback, times(1)).onPause();
     }
 
     @Test

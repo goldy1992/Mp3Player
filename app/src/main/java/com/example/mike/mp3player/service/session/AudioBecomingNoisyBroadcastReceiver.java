@@ -13,35 +13,28 @@ import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 import javax.inject.Inject;
 
+import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PAUSE;
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 
 public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
 
-    private MediaPlayerAdapter mediaPlayerAdapter;
-    private final MediaSessionAdapter mediaSessionAdapter;
+    private MediaSessionCallback mediaSessionCallback;
     private final Context context;
-    private ServiceManager serviceManager;
     private boolean audioNoisyReceiverRegistered = false;
 
-    /**
+    /**O
      * Constructor
      */
     @Inject
-    public AudioBecomingNoisyBroadcastReceiver(Context context, MediaSessionAdapter mediaSessionAdapter,
-                                               MediaPlayerAdapter mediaPlayerAdapter, ServiceManager serviceManager) {
+    public AudioBecomingNoisyBroadcastReceiver(Context context) {
         this.context = context;
-        this.mediaSessionAdapter = mediaSessionAdapter;
-        this.serviceManager = serviceManager;
-        this.mediaPlayerAdapter = mediaPlayerAdapter;
     }
     @Override
     public synchronized void onReceive(Context context, Intent intent) {
-        if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
-            if (mediaPlayerAdapter.isPlaying()) {
-                mediaPlayerAdapter.pause();
-                mediaSessionAdapter.updateAll(NO_ACTION);
-                serviceManager.notifyService();
-            }
+        final boolean intentIsAudioBecomingNoisy =
+                AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction());
+        if (intentIsAudioBecomingNoisy) {
+            mediaSessionCallback.onPause();
         }
     }
 
@@ -59,6 +52,10 @@ public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
             context.unregisterReceiver(this);
             audioNoisyReceiverRegistered = false;
         }
+    }
+
+    public void setMediaSessionCallback(MediaSessionCallback mediaSessionCallback) {
+        this.mediaSessionCallback = mediaSessionCallback;
     }
     @VisibleForTesting
     public boolean isAudioNoisyReceiverRegistered() {
