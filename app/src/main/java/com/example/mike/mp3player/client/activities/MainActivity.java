@@ -24,7 +24,7 @@ public abstract class MainActivity extends MediaActivityCompat {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+      /*  NOT NEEDED YETthis.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE); */
         initialiseView(R.layout.activity_main);
     }
 

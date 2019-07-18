@@ -10,6 +10,8 @@ import android.util.Log;
 
 import com.example.mike.mp3player.service.AudioFocusManager;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import java.io.IOException;
 
 import javax.inject.Singleton;
@@ -55,7 +57,27 @@ public abstract class MediaPlayerAdapter implements MediaPlayer.OnErrorListener,
     }
 
     public abstract boolean play();
-    public abstract void pause();
+
+    public boolean pause() {
+        if (!isPrepared() || isPaused()) {
+            return false;
+        }
+
+        try {
+            if (null != getCurrentMediaPlayer()) {
+                this.currentPlaybackSpeed = getCurrentMediaPlayer().getPlaybackParams().getSpeed();
+            }
+
+            // Update metadata and state
+            currentMediaPlayer.pause();
+            audioFocusManager.playbackPaused();
+            currentState = PlaybackStateCompat.STATE_PAUSED;
+        } catch (Exception ex) {
+            Log.e(LOG_TAG, ExceptionUtils.getStackTrace(ex));
+            return false;
+        }
+        return true;
+    }
     abstract void changeSpeed(float newSpeed);
 
     public final void increaseSpeed(float by) {

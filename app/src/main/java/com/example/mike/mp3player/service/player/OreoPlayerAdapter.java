@@ -41,20 +41,6 @@ public class OreoPlayerAdapter extends MediaPlayerAdapter {
     }
 
     @Override
-    public void pause() {
-        if (isPaused()) {
-            return;
-        }
-        if (null != getCurrentMediaPlayer() && null != getCurrentMediaPlayer().getPlaybackParams()) {
-            this.currentPlaybackSpeed = getCurrentMediaPlayer().getPlaybackParams().getSpeed();
-        }
-        // Update metadata and state
-        getCurrentMediaPlayer().pause();
-        audioFocusManager.playbackPaused();
-        currentState = PlaybackStateCompat.STATE_PAUSED;
-    }
-
-    @Override
     public void changeSpeed(float newSpeed) {
         if (validSpeed(newSpeed)) {
             this.currentPlaybackSpeed = newSpeed;

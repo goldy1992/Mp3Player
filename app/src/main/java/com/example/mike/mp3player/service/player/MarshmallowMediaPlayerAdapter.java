@@ -73,19 +73,6 @@ public class MarshmallowMediaPlayerAdapter extends MediaPlayerAdapter {
     }
 
     @Override
-    public void pause() {
-        if (!isPrepared() || isPaused()) {
-            return;
-        }
-        this.currentPlaybackSpeed = currentMediaPlayer.getPlaybackParams().getSpeed();
-        // Update metadata and state
-        currentMediaPlayer.pause();
-        audioFocusManager.playbackPaused();
-        currentState = PlaybackStateCompat.STATE_PAUSED;
-        logPlaybackParams(currentMediaPlayer.getPlaybackParams(), LOG_TAG);
-    }
-
-    @Override
     public void onComplete(Uri nextUriToPrepare) {
         if (null != nextMediaPlayer) {
             setPlaybackParams(nextMediaPlayer);

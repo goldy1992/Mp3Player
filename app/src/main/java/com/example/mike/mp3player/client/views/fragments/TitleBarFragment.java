@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -37,7 +36,7 @@ public class TitleBarFragment extends Fragment {
     public void onViewCreated(View view, Bundle bundle) {
         titleToolbar = view.findViewById(R.id.titleToolbar);
         searchFilterButton = view.findViewById(R.id.searchFilter);
-        searchFilterButton.setOnClickListener((View v) -> songSearchActionListener.onStartSearch());
+        //searchFilterButton.setOnClickListener((View v) -> songSearchActionListener.onStartSearch());
 
         /* TODO: consider different implementation of this functionality */
         if (getActivity() instanceof AppCompatActivity) {
