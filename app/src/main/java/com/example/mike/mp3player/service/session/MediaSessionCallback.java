@@ -94,6 +94,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
         this.mediaPlayerAdapter.setOnCompletionListener(this::onCompletion);
         this.mediaPlayerAdapter.setOnSeekCompleteListener(this::onSeekComplete);
+        this.broadcastReceiver.setMediaSessionCallback(this);
         this.playbackManager.createNewPlaylist(queueItems);
         Uri firstSongUri = this.getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getCurrentMediaId());
         Uri nextSongUri = this.getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getNext());
@@ -223,10 +224,11 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
     private void pause() {
         //Log.i(LOG_TAG, "onPause");
-        broadcastReceiver.unregisterAudioNoisyReceiver();
-        mediaPlayerAdapter.pause();
-        mediaSessionAdapter.updateAll(ACTION_PAUSE);
-        getServiceManager().pauseService();
+        if (mediaPlayerAdapter.pause()) {
+            broadcastReceiver.unregisterAudioNoisyReceiver();
+            mediaSessionAdapter.updateAll(ACTION_PAUSE);
+            serviceManager.pauseService();
+        }
         //Log.i(LOG_TAG, "onPause finished");
     }
 

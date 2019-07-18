@@ -18,35 +18,23 @@ import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 
 public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
 
-    /** TODO: to avoid duplication of code, use MediaSessionCallback here and call mediaSessionCallback.onPause()
-     * instead of duplication of code... This will make both mediaPlayerAdapter and ServiceManager redundant
-
-     */
-    private MediaPlayerAdapter mediaPlayerAdapter;
-    private final MediaSessionAdapter mediaSessionAdapter;
+    private MediaSessionCallback mediaSessionCallback;
     private final Context context;
-    private ServiceManager serviceManager;
     private boolean audioNoisyReceiverRegistered = false;
 
     /**
      * Constructor
      */
     @Inject
-    public AudioBecomingNoisyBroadcastReceiver(Context context, MediaSessionAdapter mediaSessionAdapter,
-                                               MediaPlayerAdapter mediaPlayerAdapter, ServiceManager serviceManager) {
+    public AudioBecomingNoisyBroadcastReceiver(Context context) {
         this.context = context;
-        this.mediaSessionAdapter = mediaSessionAdapter;
-        this.serviceManager = serviceManager;
-        this.mediaPlayerAdapter = mediaPlayerAdapter;
     }
     @Override
     public synchronized void onReceive(Context context, Intent intent) {
         final boolean intentIsAudioBecomingNoisy =
                 AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction());
-        if (intentIsAudioBecomingNoisy && mediaPlayerAdapter.isPlaying()) {
-            mediaPlayerAdapter.pause();
-            mediaSessionAdapter.updatePlaybackState(ACTION_PAUSE);
-            serviceManager.notifyService();
+        if (intentIsAudioBecomingNoisy) {
+            mediaSessionCallback.onPause();
         }
     }
 
@@ -64,6 +52,10 @@ public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
             context.unregisterReceiver(this);
             audioNoisyReceiverRegistered = false;
         }
+    }
+
+    public void setMediaSessionCallback(MediaSessionCallback mediaSessionCallback) {
+        this.mediaSessionCallback = mediaSessionCallback;
     }
     @VisibleForTesting
     public boolean isAudioNoisyReceiverRegistered() {

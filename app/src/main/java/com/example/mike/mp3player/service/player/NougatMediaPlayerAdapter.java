@@ -11,7 +11,6 @@ import com.example.mike.mp3player.service.AudioFocusManager;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.LoggingUtils.logPlaybackParams;
 
 public class NougatMediaPlayerAdapter extends MediaPlayerAdapter {
@@ -54,16 +53,22 @@ public class NougatMediaPlayerAdapter extends MediaPlayerAdapter {
     }
 
     @Override
-    public void pause() {
+    public boolean pause() {
         if (!isPrepared() || isPaused()) {
-            return;
+            return false;
         }
-        this.currentPlaybackSpeed = currentMediaPlayer.getPlaybackParams().getSpeed();
-        // Update metadata and state
-        currentMediaPlayer.pause();
-        audioFocusManager.playbackPaused();
-        currentState = PlaybackStateCompat.STATE_PAUSED;
-        logPlaybackParams(currentMediaPlayer.getPlaybackParams(), LOG_TAG);
+        try {
+            this.currentPlaybackSpeed = currentMediaPlayer.getPlaybackParams().getSpeed();
+            // Update metadata and state
+            currentMediaPlayer.pause();
+            audioFocusManager.playbackPaused();
+            currentState = PlaybackStateCompat.STATE_PAUSED;
+            //logPlaybackParams(currentMediaPlayer.getPlaybackParams(), LOG_TAG);
+        } catch (Exception ex) {
+            Log.e(LOG_TAG, ExceptionUtils.getStackTrace(ex));
+            return false;
+        }
+        return true;
     }
 
     @Override

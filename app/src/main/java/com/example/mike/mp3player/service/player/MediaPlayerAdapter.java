@@ -55,7 +55,7 @@ public abstract class MediaPlayerAdapter implements MediaPlayer.OnErrorListener,
     }
 
     public abstract boolean play();
-    public abstract void pause();
+    public abstract boolean pause();
     abstract void changeSpeed(float newSpeed);
 
     public final void increaseSpeed(float by) {
