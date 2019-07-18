@@ -34,19 +34,19 @@ public class RepeatOneRepeatAllButton extends LinearLayoutWithImageView implemen
     }
 
     public RepeatOneRepeatAllButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(context, attrs, defStyleAttr, 0, R.drawable.ic_baseline_repeat_24px, 1);
         this.context = context;
     }
 
     public void updateState(@PlaybackStateCompat.RepeatMode int newState) {
         switch (newState) {
-            case REPEAT_MODE_ALL: this.mainUpdater.post(() -> setRepeatAllIcon());
+            case REPEAT_MODE_ALL: this.mainUpdater.post(this::setRepeatAllIcon);
                 this.repeatMode = REPEAT_MODE_ALL;
                 break;
-            case REPEAT_MODE_ONE: this.mainUpdater.post(() -> setRepeatOneIcon());
+            case REPEAT_MODE_ONE: this.mainUpdater.post(this::setRepeatOneIcon);
                 this.repeatMode = REPEAT_MODE_ONE;
                 break;
-            case REPEAT_MODE_NONE: this.mainUpdater.post(() -> setRepeatNoneIcon());
+            case REPEAT_MODE_NONE: this.mainUpdater.post(this::setRepeatNoneIcon);
                 this.repeatMode = REPEAT_MODE_NONE;
                 break;
             default:

@@ -6,6 +6,8 @@ import android.view.View;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.example.mike.mp3player.client.MediaControllerAdapter;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +19,8 @@ import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -29,7 +33,7 @@ public class PlayPauseButtonTest {
      * mock onClickListener used for setup
      */
     @Mock
-    private View.OnClickListener onClickListener;
+    private MediaControllerAdapter mediaControllerAdapter;
     /**
      * setup
      */
@@ -37,7 +41,7 @@ public class PlayPauseButtonTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        playPauseButton = PlayPauseButton.create(context, onClickListener);
+        playPauseButton = new PlayPauseButton(context, null, 0, mediaControllerAdapter);
     }
 
     /**
@@ -78,6 +82,28 @@ public class PlayPauseButtonTest {
         @PlaybackStateCompat.State int originalState = playPauseButton.getState();
         playPauseButton.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_ERROR));
         assertEquals(originalState, playPauseButton.getState());
+    }
+    /**
+     * GIVEN: a PlayPauseButton in state paused
+     * WHEN: the PlayPauseButton is clicked i.e. playPause(View view) is invoked
+     * THEN: the mediaControllerAdapter play() method is invoked
+     */
+    @Test
+    public void testClickPlayWhenPaused() {
+        playPauseButton.setState(STATE_PAUSED);
+        playPauseButton.playPause(null);
+        verify(mediaControllerAdapter, times(1)).play();
+    }
+    /**
+     * GIVEN: a PlayPauseButton in state playing
+     * WHEN: the PlayPauseButton is clicked i.e. playPause(View view) is invoked
+     * THEN: the mediaControllerAdapter pause() method is invoked
+     */
+    @Test
+    public void testClickPauseWhenPlaying() {
+        playPauseButton.setState(STATE_PLAYING);
+        playPauseButton.playPause(null);
+        verify(mediaControllerAdapter, times(1)).pause();
     }
     /**
      *  util method to create a PlaybackStateCompat

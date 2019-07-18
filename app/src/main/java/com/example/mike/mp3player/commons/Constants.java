@@ -25,6 +25,7 @@ public final class Constants {
     public static final int DEFAULT_POSITION = 0;
     public static final String THEME = "THEME";
 
+    public static final long ACTION_PLAYBACK_SPEED_CHANGED = 1 << 22;
     public static final SparseArray<String> playbackStateDebugMap = new SparseArray<>();
     static {
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_NONE, "STATE_NONE"); // 0
@@ -43,9 +44,9 @@ public final class Constants {
 
     public static final SparseArray<String> repeatModeDebugMap = new SparseArray<>();
     static {
-        playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ALL, "REPEAT_MODE_ALL"); // 2
-        playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_NONE, "REPEAT_MODE_NONE"); // 0
-        playbackStateDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ONE, "REPEAT_MODE_ONE"); // 1
+        repeatModeDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ALL, "REPEAT_MODE_ALL"); // 2
+        repeatModeDebugMap.put(PlaybackStateCompat.REPEAT_MODE_NONE, "REPEAT_MODE_NONE"); // 0
+        repeatModeDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ONE, "REPEAT_MODE_ONE"); // 1
     };
 
     /* LIBRARY CONSTANTS */

@@ -24,21 +24,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".client.activities.MainActivity"
+            android:name=".client.activities.MainActivityInjector"
             android:label="@string/app_name"
 
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".client.activities.MediaPlayerActivity"
+            android:name=".client.activities.MediaPlayerActivityInjector"
             android:label="@string/app_name"
-            android:parentActivityName=".client.activities.MainActivity" />
+            android:parentActivityName=".client.activities.MainActivityInjector" />
         <activity
-            android:name=".client.activities.FolderActivity"
+            android:name=".client.activities.FolderActivityInjector"
             android:label="@string/FOLDER_NAME"
-            android:parentActivityName=".client.activities.MainActivity" />
+            android:parentActivityName=".client.activities.MainActivityInjector" />
 
         <service
-            android:name=".service.MediaPlaybackService"
+            android:name=".service.MediaPlaybackServiceInjector"
             android:enabled="true"
             android:exported="false">
             <intent-filter>

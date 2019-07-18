@@ -2,52 +2,57 @@ package com.example.mike.mp3player.client;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.RemoteException;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import java.util.Set;
+
+import javax.inject.Inject;
 
 public class MediaControllerAdapter {
 
     private static final String LOG_TAG = "MDIA_CNTRLLR_ADPTR";
-    private MediaControllerCompat mediaControllerCompat;
+    private MediaControllerCompat mediaController;
     private MyMediaControllerCallback myMediaControllerCallback;
     private MediaSessionCompat.Token token = null;
-    private boolean isInitialized = false;
-    private Context context;
+    private final Context context;
 
-    public MediaControllerAdapter(Context context, Looper looper) {
+    @Inject
+    public MediaControllerAdapter(Context context, MyMediaControllerCallback myMediaControllerCallback) {
         this.context = context;
-        this.myMediaControllerCallback = new MyMediaControllerCallback(looper);
+        this.myMediaControllerCallback = myMediaControllerCallback;
     }
 
-    public MediaControllerAdapter(Context context, MediaSessionCompat.Token token, Looper looper) {
-        this(context, looper);
-        init(token);
-    }
-
-    public void setMediaToken(MediaSessionCompat.Token token) {
-        init(token);
-    }
-
-    private void init(MediaSessionCompat.Token token) {
-        boolean result = true;
-        try {
-            this.mediaControllerCompat = new MediaControllerCompat(context, token);
-            this.mediaControllerCompat.registerCallback(myMediaControllerCallback);
-        } catch (RemoteException ex) {
-            result = false;
+    public void setMediaToken(@NonNull MediaSessionCompat.Token token) {
+        if (!isInitialized()) {
+            init(token);
+        } else {
+            Log.e(LOG_TAG, "MediaControllerAdapter already initialised");
         }
-        this.isInitialized = result;
+    }
+
+    @VisibleForTesting
+    public void init(@NonNull MediaSessionCompat.Token token) {
+        try {
+            this.mediaController = new MediaControllerCompat(context, token);
+            this.mediaController.registerCallback(myMediaControllerCallback);
+        } catch (RemoteException ex) {
+            Log.e(LOG_TAG, ExceptionUtils.getStackTrace(ex));
+        }
         this.token = token;
-        updateUiState();
     }
 
     public void prepareFromMediaId(String mediaId, Bundle extras) {
@@ -60,10 +65,6 @@ public class MediaControllerAdapter {
 
     public void setRepeatMode(@PlaybackStateCompat.RepeatMode int repeatMode) {
         getController().setRepeatMode(repeatMode);
-    }
-
-    public Context getContext() {
-        return context;
     }
 
     public void pause() {
@@ -103,20 +104,25 @@ public class MediaControllerAdapter {
         myMediaControllerCallback.getMyPlaybackStateCallback().registerPlaybackStateListener(playbackStateListener, listenerTypes);
     }
 
-    public void unregisterPlaybackStateListener(PlaybackStateListener playbackStateListener, ListenerType listenerType) {
-        myMediaControllerCallback.getMyPlaybackStateCallback().removePlaybackStateListener(playbackStateListener, listenerType);
+    public void unregisterPlaybackStateListener(PlaybackStateListener playbackStateListener) {
+        myMediaControllerCallback.getMyPlaybackStateCallback().removePlaybackStateListener(playbackStateListener);
     }
 
     public int getPlaybackState() {
-        if (mediaControllerCompat != null && mediaControllerCompat.getPlaybackState() != null) {
-            return mediaControllerCompat.getPlaybackState().getState();
-        }
-        return 0;
+        PlaybackStateCompat playbackStateCompat = getPlaybackStateCompat();
+        return null == playbackStateCompat ? 0 : playbackStateCompat.getState();
     }
 
-    public PlaybackStateCompat getPlaybackStateAsCompat() {
-        if (mediaControllerCompat != null ) {
-            return mediaControllerCompat.getPlaybackState();
+    public PlaybackStateCompat getPlaybackStateCompat() {
+        if (mediaController != null) {
+            return mediaController.getPlaybackState();
+        }
+        return null;
+    }
+
+    public MediaMetadataCompat getMetadata() {
+        if (mediaController != null) {
+            return mediaController.getMetadata();
         }
         return null;
     }
@@ -126,23 +132,32 @@ public class MediaControllerAdapter {
     }
 
     public void disconnect() {
-        if (mediaControllerCompat != null && myMediaControllerCallback != null) {
-            mediaControllerCompat.unregisterCallback(myMediaControllerCallback);
+        if (mediaController != null && myMediaControllerCallback != null) {
+            mediaController.unregisterCallback(myMediaControllerCallback);
         }
     }
 
-    public void updateUiState() {
-        if (isInitialized) {
-            myMediaControllerCallback.onMetadataChanged(mediaControllerCompat.getMetadata());
-            myMediaControllerCallback.getMyPlaybackStateCallback().updateAll(mediaControllerCompat.getPlaybackState());
-        }
+    public boolean isInitialized() {
+        return mediaController != null && mediaController.isSessionReady();
     }
+
 
     public void sendCustomAction(String customAction, Bundle args) {
         getController().sendCustomAction(customAction, args);
     }
-    
-    private MediaControllerCompat.TransportControls getController() {
-        return mediaControllerCompat.getTransportControls();
+
+    @VisibleForTesting
+    public MediaControllerCompat.TransportControls getController() {
+        return mediaController.getTransportControls();
+    }
+
+    @VisibleForTesting
+    public MediaControllerCompat getMediaController() {
+        return mediaController;
+    }
+
+    @VisibleForTesting
+    public void setMediaController(MediaControllerCompat mediaController) {
+        this.mediaController = mediaController;
     }
 }

@@ -17,7 +17,7 @@ import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.activities.MainActivity;
-import com.example.mike.mp3player.client.activities.MediaActivityCompat;
+import com.example.mike.mp3player.client.activities.MainActivityInjector;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
@@ -86,7 +86,7 @@ public class ThemeSpinnerController implements AdapterView.OnItemSelectedListene
             Log.d(LOG_TAG, "select count > 1");
             setThemePreference(res);
             activity.finish();
-            Intent intent = new Intent(context, MainActivity.class);
+            Intent intent = new Intent(context, MainActivityInjector.class);
             intent.putExtra(THEME, res);
             activity.startActivity(intent);
         }

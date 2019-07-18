@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
@@ -19,7 +20,7 @@ import com.example.mike.mp3player.service.MediaPlaybackService;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
-import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +32,7 @@ import org.robolectric.RobolectricTestRunner;
 import java.util.Collections;
 import java.util.List;
 
+import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS;
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ALL;
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_NONE;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
@@ -64,7 +66,7 @@ public class MediaSessionCallbackTest {
     @Mock
     private PlaybackManager playbackManager;
     @Mock
-    private MediaPlayerAdapterBase mediaPlayerAdapter;
+    private MediaPlayerAdapter mediaPlayerAdapter;
     @Mock
     private ServiceManager serviceManager;
     @Mock
@@ -75,8 +77,8 @@ public class MediaSessionCallbackTest {
         MockitoAnnotations.initMocks(this);
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
         when(mediaPlaybackService.getApplicationContext()).thenReturn(context);
-        this.mediaSessionCallback = new MediaSessionCallback(mediaPlaybackService, mediaLibrary,
-                playbackManager, mediaPlayerAdapter, mediaSessionAdapter, serviceManager, broadcastReceiver, Looper.myLooper());
+        this.mediaSessionCallback = new MediaSessionCallback(mediaLibrary,
+                playbackManager, mediaPlayerAdapter, mediaSessionAdapter, serviceManager, broadcastReceiver, new Handler(Looper.myLooper()));
         reset(mediaSessionAdapter);
         reset(mediaPlayerAdapter);
     }
@@ -119,7 +121,7 @@ public class MediaSessionCallbackTest {
         verify(mediaPlayerAdapter, times(1)).seekTo(1);
         verify(playbackManager, never()).skipToPrevious();
         verify(serviceManager, never()).notifyService();
-        verify(mediaSessionAdapter, never()).updateAll();
+        verify(mediaSessionAdapter, never()).updateAll(ACTION_SKIP_TO_PREVIOUS);
     }
     @Test
     public void testSkipToPreviousPositionLessThanOneSecond() {
@@ -131,7 +133,7 @@ public class MediaSessionCallbackTest {
         verify(mediaPlayerAdapter, never()).seekTo(anyLong());
         verify(playbackManager, times(1)).skipToPrevious();
         verify(serviceManager, times(1)).notifyService();
-        verify(mediaSessionAdapter, times(1)).updateAll();
+        verify(mediaSessionAdapter, times(1)).updateAll(ACTION_SKIP_TO_PREVIOUS);
     }
     @Test
     public void testMediaButtonEventNullIntent() {

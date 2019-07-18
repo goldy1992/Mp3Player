@@ -1,7 +1,7 @@
 package com.example.mike.mp3player.client.callbacks;
 
 import android.media.MediaMetadata;
-import android.os.Looper;
+import android.os.Handler;
 import android.support.v4.media.MediaMetadataCompat;
 import android.util.Log;
 
@@ -11,14 +11,16 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 public class MyMetaDataCallback extends AsyncCallback<MediaMetadataCompat> {
     private static final String LOG_TAG = "MY_META_DTA_CLLBK";
     private String currentMediaId = null;
     private Set<MetaDataListener> metaDataListeners;
 
-
-    public MyMetaDataCallback(Looper looper) {
-        super(looper);
+    @Inject
+    public MyMetaDataCallback(Handler handler) {
+        super(handler);
         this.metaDataListeners = new HashSet<>();
     }
 

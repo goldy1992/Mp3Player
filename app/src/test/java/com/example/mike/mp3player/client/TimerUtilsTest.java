@@ -2,7 +2,6 @@ package com.example.mike.mp3player.client;
 
 import android.os.SystemClock;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import com.example.mike.mp3player.client.utils.TimerUtils;
 

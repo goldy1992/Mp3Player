@@ -22,7 +22,7 @@ public class MockMediaRetriever extends MediaRetriever {
     @Override
     public List<MediaItem> retrieveMedia() {
         List<MediaItem> mediaItems = new ArrayList<>();
-        IntStream.rangeClosed(1, NUM_OF_SONGS).parallel().forEach(i -> {
+        IntStream.rangeClosed(1, NUM_OF_SONGS).forEach(i -> {
             String id = String.valueOf(i);
             mediaItems.add(
                     createMediaItem(id, id, id));

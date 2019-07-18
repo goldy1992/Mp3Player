@@ -23,7 +23,8 @@ public class PlaybackManagerTest {
     @BeforeEach
     public void setup() {
         List<QueueItem> queueItems = new ArrayList<>();
-        playbackManager = new PlaybackManager(queueItems);
+        playbackManager = new PlaybackManager();
+        playbackManager.createNewPlaylist(queueItems);
     }
     /**
      * GIVEN: a Playback manager with an empty playlist
@@ -197,7 +198,7 @@ public class PlaybackManagerTest {
     }
     /**
      * GIVEN: a playlist of 2 items where the current position is the first in the queue
-     * WHEN: skipToNext() is called
+     * WHEN: skipToPrevious() is called
      * THEN: the current item is the second in the queue
      */
     @Test
@@ -212,7 +213,7 @@ public class PlaybackManagerTest {
     }
     /**
      * GIVEN: a playlist of 2 items where the current position is the last in the queue
-     * WHEN: skipToNext() is called
+     * WHEN: skipToPrevious() is called
      * THEN: the current item is the first in the queue
      */
     @Test
@@ -229,7 +230,7 @@ public class PlaybackManagerTest {
     }
     /**
      * GIVEN: a playlist of 2 items where the current position is the last in the queue
-     * WHEN: skipToNext() is called
+     * WHEN: skipToPrevious() is called
      * THEN: the current item is unchanged and still the last in the queue
      */
     @Test
@@ -327,7 +328,8 @@ public class PlaybackManagerTest {
         for (int i = 1; i <= QUEUE_SIZE; i++) {
             queueItemList.add(mock(QueueItem.class));
         }
-        PlaybackManager playbackManager = new PlaybackManager(queueItemList);
+        PlaybackManager playbackManager = new PlaybackManager();
+        playbackManager.createNewPlaylist(queueItemList);
         int result = playbackManager.shuffleNewIndex();
         System.out.println("number generated: " + result);
         assertTrue(result >= 0);

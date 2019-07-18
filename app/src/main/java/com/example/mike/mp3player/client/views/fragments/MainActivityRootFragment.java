@@ -34,15 +34,13 @@ public class MainActivityRootFragment extends Fragment implements SongSearchActi
         this.songFilterFragment = (SongFilterFragment) getChildFragmentManager().findFragmentById(R.id.searchSongViewFragment);
     }
 
-    public void init(InputMethodManager inputMethodManager, MediaBrowserAdapter mediaBrowserAdapter,
-                     MediaControllerAdapter mediaControllerAdapter) {
+    public void init(InputMethodManager inputMethodManager) {
         setInputMethodManager(inputMethodManager);
         View view = getView();
         if (null != view) {
             view.setFocusableInTouchMode(true);
             view.requestFocus();
         }
-        this.mainFrameFragment.init(this, mediaBrowserAdapter, mediaControllerAdapter);
         this.songFilterFragment.init(this);
     }
 

@@ -29,7 +29,7 @@ public class ShuffleButton extends LinearLayoutWithImageView implements Playback
     }
 
     public ShuffleButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(context, attrs, defStyleAttr, 0, R.drawable.ic_baseline_shuffle_24px, 1);
         this.context = context;
     }
 
@@ -37,11 +37,11 @@ public class ShuffleButton extends LinearLayoutWithImageView implements Playback
         switch (newState) {
             case SHUFFLE_MODE_ALL:
                 this.shuffleMode = SHUFFLE_MODE_ALL;
-                mainUpdater.post(() -> setShuffleOn());
+                mainUpdater.post(this::setShuffleOn);
                 break;
             default:
                 this.shuffleMode = SHUFFLE_MODE_NONE;
-                mainUpdater.post(() -> setShuffleOff());
+                mainUpdater.post(this::setShuffleOff);
                 break;
         }
     }

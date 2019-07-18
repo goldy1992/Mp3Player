@@ -63,7 +63,7 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
     }
 
     @Override
-    public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaItem> children, @NonNull Bundle options, Context context) {
+    public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaItem> children, @NonNull Bundle options) {
         if (!isInitialised && children.isEmpty()) {
             addNoChildrenFoundItem();
         }

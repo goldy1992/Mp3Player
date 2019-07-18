@@ -8,7 +8,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
-import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
 import com.example.mike.mp3player.service.library.mediaretriever.MockMediaRetriever;
 
 import org.codehaus.plexus.util.ExceptionUtils;
@@ -51,7 +50,6 @@ public class MediaLibraryTest {
      */
     @Test
     public void testBuildMediaLibrary() {
-
         Set<Category> categories = mediaLibrary.getCategories().keySet();
         assertTrue(categories.contains(Category.FOLDERS));
         assertTrue(mediaLibrary.getCategories().get(Category.FOLDERS) instanceof FolderLibraryCollection);

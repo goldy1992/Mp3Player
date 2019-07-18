@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client.callbacks.subscription;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 
 import androidx.annotation.NonNull;
@@ -41,12 +42,12 @@ class CategorySubscriptionCallbackTest {
     private CategorySubscriptionCallback categorySubscriptionCallback;
     /** MediaBrowserAdapter */
     @Mock
-    private MediaBrowserAdapter mediaBrowserAdapter;
+    private Handler handler;
     /** setup method */
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
-        categorySubscriptionCallback = new CategorySubscriptionCallback(mediaBrowserAdapter);
+        categorySubscriptionCallback = new CategorySubscriptionCallback(handler);
     }
     /**
      * verifies the SubscriptionType for this class is SubscriptionType.CATEGORY
@@ -88,7 +89,7 @@ class CategorySubscriptionCallbackTest {
         // call on children loaded
         categorySubscriptionCallback.onChildrenLoaded(parentId, mediaItems, options);
         // verify it is called once
-        Mockito.verify(spiedListener, times(1)).onChildrenLoaded(any(), any(), any(), any());
+        Mockito.verify(spiedListener, times(1)).onChildrenLoaded(any(), any(), any());
     }
 
     /**
@@ -98,7 +99,7 @@ class CategorySubscriptionCallbackTest {
     private static class MediaBrowserResponseListenerTestImpl implements MediaBrowserResponseListener {
 
         @Override
-        public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options, Context context) {
+        public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options) {
 
         }
     }

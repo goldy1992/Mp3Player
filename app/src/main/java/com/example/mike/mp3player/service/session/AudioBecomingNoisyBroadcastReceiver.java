@@ -9,13 +9,15 @@ import android.media.AudioManager;
 import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.service.ServiceManager;
-import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
+
+import javax.inject.Inject;
 
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 
 public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
 
-    private MediaPlayerAdapterBase mediaPlayerAdapter;
+    private MediaPlayerAdapter mediaPlayerAdapter;
     private final MediaSessionAdapter mediaSessionAdapter;
     private final Context context;
     private ServiceManager serviceManager;
@@ -24,8 +26,9 @@ public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
     /**
      * Constructor
      */
+    @Inject
     public AudioBecomingNoisyBroadcastReceiver(Context context, MediaSessionAdapter mediaSessionAdapter,
-                           MediaPlayerAdapterBase mediaPlayerAdapter, ServiceManager serviceManager) {
+                                               MediaPlayerAdapter mediaPlayerAdapter, ServiceManager serviceManager) {
         this.context = context;
         this.mediaSessionAdapter = mediaSessionAdapter;
         this.serviceManager = serviceManager;

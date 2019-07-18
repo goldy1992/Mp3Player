@@ -9,7 +9,9 @@ import androidx.annotation.NonNull;
 
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
-import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
+
+import javax.inject.Inject;
 
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
@@ -21,13 +23,14 @@ public class MediaSessionAdapter {
 
     private final MediaSessionCompat mediaSession;
     private final PlaybackManager playbackManager;
-    private final MediaPlayerAdapterBase mediaPlayerAdapter;
+    private final MediaPlayerAdapter mediaPlayerAdapter;
 
+    @Inject
     public MediaSessionAdapter(@NonNull MediaSessionCompat mediaSession, PlaybackManager playbackManager,
-                               MediaPlayerAdapterBase mediaPlayerAdapterBase) {
+                               MediaPlayerAdapter mediaPlayerAdapter) {
         this.mediaSession = mediaSession;
         this.playbackManager = playbackManager;
-        this.mediaPlayerAdapter = mediaPlayerAdapterBase;
+        this.mediaPlayerAdapter = mediaPlayerAdapter;
     }
 
     public void updatePlaybackState(long actions) {
@@ -60,10 +63,6 @@ public class MediaSessionAdapter {
         updatePlaybackState(actions);
         updateMetaData();
     }
-    public void updateAll() {
-        updateAll(NO_ACTION);
-    }
-
     public MediaMetadataCompat getCurrentMetaData() {
         MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
         builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayerAdapter.getCurrentDuration());

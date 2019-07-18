@@ -7,22 +7,30 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
+import com.example.mike.mp3player.dagger.components.DaggerMediaActivityCompatComponent;
+import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
+import com.example.mike.mp3player.dagger.components.SplashScreenEntryActivityComponent;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import javax.inject.Inject;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
 
-public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
+public class SplashScreenEntryActivity extends AppCompatActivity
     implements  MediaBrowserConnectorCallback,
                 PermissionGranted {
 
+    private MediaBrowserAdapter mediaBrowserAdapter;
     private static final String LOG_TAG = "SPLSH_SCRN_ENTRY_ACTVTY";
     private static final long WAIT_TIME = 3000L;
     private PermissionsProcessor permissionsProcessor;
@@ -33,23 +41,13 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
     private Thread thread = new Thread(() -> init());
 
     @Override
-    SubscriptionType getSubscriptionType() {
-        return SubscriptionType.NOTIFY_ALL;
-    }
-
-    @Override
-    boolean initialiseView(int layoutId) {
-        setContentView(layoutId);
-        return true;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        initialiseDependencies();
         super.onCreate(savedInstanceState);
-        mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
-        initialiseView(R.layout.splash_screen);
+        // TODO: have this injected so that a test implementation can be provided
+        mainActivityIntent = new Intent(getApplicationContext(), MainActivityInjector.class);
+        setContentView(R.layout.splash_screen);
         thread.start();
-
     }
 
     @Override
@@ -128,8 +126,8 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == APP_TERMINATED) {
-            if (getMediaBrowserAdapter() != null) {
-                getMediaBrowserAdapter().disconnect();
+            if (mediaBrowserAdapter != null) {
+                mediaBrowserAdapter.disconnect();
             }
             finish();
         }
@@ -139,13 +137,12 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
     public void onPermissionGranted() {
         Log.i(LOG_TAG, "permission granted");
         setPermissionGranted(true);
-        Runnable r = new Thread(() -> initMediaBrowserService());
+        Runnable r = new Thread(() -> mediaBrowserAdapter.connect());
         runOnUiThread(r);
     }
 
     public void init() {
         Log.i(LOG_TAG, "reset");
-        permissionsProcessor = new PermissionsProcessor(this, this);
         permissionsProcessor.requestPermission(WRITE_EXTERNAL_STORAGE);
         Thread splashScreenWaitThread = new Thread(() -> splashScreenRun());
         splashScreenWaitThread.start();
@@ -172,5 +169,25 @@ public class SplashScreenEntryActivity extends MediaBrowserCreatorActivityCompat
     @VisibleForTesting
     public void setPermissionGranted(boolean permissionGranted) {
         this.permissionGranted = permissionGranted;
+    }
+
+    @Inject
+    public void setPermissionsProcessor(PermissionsProcessor permissionsProcessor) {
+        this.permissionsProcessor = permissionsProcessor;
+    }
+
+    @Inject
+    public void setMediaBrowserAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
+        this.mediaBrowserAdapter = mediaBrowserAdapter;
+    }
+
+    private void initialiseDependencies() {
+        MediaActivityCompatComponent component = DaggerMediaActivityCompatComponent
+            .factory()
+            .create(getApplicationContext(),"SPSH_SCRN_ACTVTY_WRKR",
+                    SubscriptionType.NOTIFY_ALL, this);
+        SplashScreenEntryActivityComponent splashScreenEntryActivityComponent =
+                component.splashScreenEntryActivity().create(this, this);
+        splashScreenEntryActivityComponent.inject(this);
     }
 }

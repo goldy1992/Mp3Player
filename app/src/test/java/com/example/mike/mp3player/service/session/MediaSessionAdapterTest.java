@@ -9,7 +9,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.service.PlaybackManager;
-import com.example.mike.mp3player.service.player.MediaPlayerAdapterBase;
+import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Before;
@@ -36,7 +36,7 @@ public class MediaSessionAdapterTest {
     private final static String ID = "ID";
 
     @Mock
-    MediaPlayerAdapterBase mediaPlayerAdapter;
+    MediaPlayerAdapter mediaPlayerAdapter;
     @Mock
     PlaybackManager playbackManager;
     @Spy
@@ -114,7 +114,7 @@ public class MediaSessionAdapterTest {
     }
     @Test
     public void testUpdateAll() {
-        mediaSessionAdapter.updateAll();
+        mediaSessionAdapter.updateAll(NO_ACTION);
         verify(mediaSession, times(1)).setPlaybackState(any());
         verify(mediaSession, times(1)).setMetadata(any());
     }
