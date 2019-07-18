@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LegacyMediaRetriever extends MediaRetriever {
+
     private static final String LOG_TAG = "LECY_MDIA_RTVR";
     private MusicFileFilter musicFileFilter = new MusicFileFilter();
     private IsDirectoryFilter isDirectoryFilter = new IsDirectoryFilter();
