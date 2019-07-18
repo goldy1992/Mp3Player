@@ -22,7 +22,7 @@ public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
     private final Context context;
     private boolean audioNoisyReceiverRegistered = false;
 
-    /**
+    /**O
      * Constructor
      */
     @Inject
