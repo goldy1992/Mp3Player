@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.robolectric.RobolectricTestRunner;
 
+import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PAUSE;
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -53,7 +54,9 @@ public class AudioBecomingNoisyBroadcastReceiverTest {
         intent.setAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         when(mediaPlayerAdapter.isPlaying()).thenReturn(true);
         audioBecomingNoisyBroadcastReceiver.onReceive(context, intent);
-        verify(mediaSessionAdapter, times(1)).updateAll(NO_ACTION);
+        /* Issue 64: we just want to update the playback state in this scenario, scpeifically to
+         * state PAUSED */
+        verify(mediaSessionAdapter, times(1)).updatePlaybackState(ACTION_PAUSE);
     }
 
     @Test

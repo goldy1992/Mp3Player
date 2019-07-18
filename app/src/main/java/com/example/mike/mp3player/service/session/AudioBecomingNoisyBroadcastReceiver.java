@@ -13,10 +13,15 @@ import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 import javax.inject.Inject;
 
+import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PAUSE;
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 
 public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
 
+    /** TODO: to avoid duplication of code, use MediaSessionCallback here and call mediaSessionCallback.onPause()
+     * instead of duplication of code... This will make both mediaPlayerAdapter and ServiceManager redundant
+
+     */
     private MediaPlayerAdapter mediaPlayerAdapter;
     private final MediaSessionAdapter mediaSessionAdapter;
     private final Context context;
@@ -36,12 +41,12 @@ public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
     }
     @Override
     public synchronized void onReceive(Context context, Intent intent) {
-        if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
-            if (mediaPlayerAdapter.isPlaying()) {
-                mediaPlayerAdapter.pause();
-                mediaSessionAdapter.updateAll(NO_ACTION);
-                serviceManager.notifyService();
-            }
+        final boolean intentIsAudioBecomingNoisy =
+                AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction());
+        if (intentIsAudioBecomingNoisy && mediaPlayerAdapter.isPlaying()) {
+            mediaPlayerAdapter.pause();
+            mediaSessionAdapter.updatePlaybackState(ACTION_PAUSE);
+            serviceManager.notifyService();
         }
     }
 
