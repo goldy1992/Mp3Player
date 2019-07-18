@@ -40,9 +40,9 @@ public class SongFilterFragment extends Fragment implements TextWatcher, KeyImeC
     public void onViewCreated(View view, Bundle bundle) {
         this.searchText = view.findViewById(R.id.searchText);
         this.scrim = view.findViewById(R.id.mainActivityScrim);
-        searchText.addTextChangedListener(this);
-        searchText.setOnEditorActionListener((TextView v, int actionId, KeyEvent event) -> onEditorAction(v , actionId, event));
-        searchText.setKeyImeChangeListener(this);
+        //searchText.addTextChangedListener(this);
+        //searchText.setOnEditorActionListener((TextView v, int actionId, KeyEvent event) -> onEditorAction(v , actionId, event));
+       // searchText.setKeyImeChangeListener(this);
     }
 
     public void init(SongSearchActionListener songSearchActionListener) {

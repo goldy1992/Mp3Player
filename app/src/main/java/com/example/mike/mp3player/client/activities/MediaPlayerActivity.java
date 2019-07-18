@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client.activities;
 
 import android.content.Intent;
+import android.view.View;
 
 import androidx.annotation.VisibleForTesting;
 
@@ -39,6 +40,7 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
         this.playbackTrackerFragment = (PlaybackTrackerFragment) getSupportFragmentManager().findFragmentById(R.id.playbackTrackerFragment);
         this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) getSupportFragmentManager().findFragmentById(R.id.playbackToolbarExtendedFragment);
         this.shuffleRepeatFragment = (ShuffleRepeatFragment) getSupportFragmentManager().findFragmentById(R.id.shuffleRepeatFragment);
+        View view = getCurrentFocus();
         return true;
     }
 
