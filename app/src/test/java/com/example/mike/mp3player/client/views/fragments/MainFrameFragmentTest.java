@@ -7,18 +7,11 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.testing.FragmentScenario;
 
-import com.example.mike.mp3player.client.MediaBrowserAdapter;
-import com.example.mike.mp3player.client.MediaBrowserResponseListener;
-import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.views.SongSearchActionListener;
-import com.example.mike.mp3player.client.views.fragments.viewpager.ViewPagerFragment;
-
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.robolectric.RobolectricTestRunner;
 
 import java.lang.reflect.InvocationTargetException;
@@ -28,7 +21,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -142,13 +134,10 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
     private void enable(MainFrameFragment fragment) {
         try {
             DrawerLayout drawerLayoutSpy = spy(fragment.getDrawerLayout());
-            ViewPagerFragment viewPagerFragmentSpy = spy(fragment.getViewPagerFragment());
             FieldUtils.writeField(fragment, "drawerLayout", drawerLayoutSpy, true);
-            FieldUtils.writeField(fragment, "viewPagerFragment", viewPagerFragmentSpy, true);
             fragment.enable();
             boolean enabled = (boolean) FieldUtils.readField(fragment, "enabled", true);
             assertTrue(enabled);
-            verify(viewPagerFragmentSpy, times(1)).enable();
             verify(drawerLayoutSpy, times(1)).setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         } catch (IllegalAccessException ex) {
             Log.e(LOG_TAG, ExceptionUtils.readStackTrace(ex));

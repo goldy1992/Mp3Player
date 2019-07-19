@@ -23,14 +23,15 @@
                 android:fitsSystemWindows="true"
                 >
 
-                <com.google.android.material.appbar.CollapsingToolbarLayout
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/titleToolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
+                    app:popupTheme="@style/AppTheme"
+                    android:background="?attr/colorPrimary"
+                    app:layout_scrollFlags="scroll|enterAlways"
                     app:titleTextColor="?attr/textColorPrimary"
-                    app:expandedTitleGravity="top"
-                    app:contentScrim="?attr/colorPrimary"
-                    app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
-                >
+                    app:title="@string/APP_TITLE">
 
                         <ImageButton
                             android:id="@+id/searchFilter"
@@ -42,8 +43,7 @@
                             android:background="@android:color/transparent"
                             android:contentDescription="@string/SEARCH_BUTTON_DESCRIPT"
                             app:srcCompat="@drawable/ic_search_black_24dp" />
-
-                </com.google.android.material.appbar.CollapsingToolbarLayout>
+                </androidx.appcompat.widget.Toolbar>
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabs"

@@ -18,8 +18,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerTabStrip;
 import androidx.viewpager.widget.ViewPager;
 
@@ -31,17 +29,13 @@ import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.views.MyPagerAdapter;
 import com.example.mike.mp3player.client.views.ThemeSpinnerController;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
-import com.example.mike.mp3player.client.views.fragments.viewpager.ViewPagerFragment;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.inject.Inject;
@@ -76,7 +70,7 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
     public void onViewCreated(@NonNull View view, Bundle bundle) {
         this.drawerLayout = view.findViewById(R.id.drawer_layout);
         this.playToolBarFragment = (PlayToolBarFragment) getChildFragmentManager().findFragmentById(R.id.playToolbarFragment);
-     //   this.titleToolbar = view.findViewById(R.id.titleToolbar);
+        this.titleToolbar = view.findViewById(R.id.titleToolbar);
         this.navigationView = view.findViewById(R.id.nav_view);
         this.rootMenuItemsPager = view.findViewById(R.id.rootItemsPager);
         this.tabLayout = view.findViewById(R.id.tabs);
@@ -84,15 +78,15 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
         this.adapter = new MyPagerAdapter(getFragmentManager());
         this.rootMenuItemsPager.setAdapter(adapter);
 
-//        /* TODO: consider different implementation of this functionality */
-//        if (getActivity() instanceof AppCompatActivity) {
-//            AppCompatActivity activity = (AppCompatActivity) getActivity();
-//
-//            activity.setSupportActionBar(titleToolbar);
-//            ActionBar actionBar = activity.getSupportActionBar();
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-//        }
+        /* TODO: consider different implementation of this functionality */
+        if (getActivity() instanceof AppCompatActivity) {
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
+
+            activity.setSupportActionBar(titleToolbar);
+            ActionBar actionBar = activity.getSupportActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        }
 
         if (null != mediaBrowserAdapter) {
             this.mediaBrowserAdapter.registerListener(Category.ROOT.name(), this);
