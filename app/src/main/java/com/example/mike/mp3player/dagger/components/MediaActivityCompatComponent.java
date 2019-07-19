@@ -7,6 +7,7 @@ import com.example.mike.mp3player.client.activities.FolderActivity;
 import com.example.mike.mp3player.client.activities.MainActivity;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
+import com.example.mike.mp3player.client.views.fragments.MainFrameFragment;
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.ShuffleRepeatFragment;
@@ -43,7 +44,7 @@ public interface MediaActivityCompatComponent {
     void inject(PlaybackSpeedControlsFragment playbackSpeedControlsFragment);
     void inject(TrackInfoFragment trackInfoFragment);
     void inject(ShuffleRepeatFragment shuffleRepeatFragment);
-    void inject(ViewPagerFragment viewPagerFragment);
+    void inject(MainFrameFragment mainFrameFragment);
 
     // sub components
     PlaybackTrackerFragmentSubcomponent playbackTrackerSubcomponent();
