@@ -28,40 +28,46 @@ public class FragmentTestBase<F extends Fragment> {
     private static final String FRAGMENT_TAG = "FragmentScenario_Fragment_Tag";
     protected Context context;
     protected FragmentScenario<F> fragmentScenario;
+    protected Fragment fragment;
     protected ActivityController<EmptyMediaActivityCompatFragmentActivity> activityScenario;
+    private EmptyMediaActivityCompatFragmentActivity activity;
     Class<F> fragmentClass;
 
-    protected void setup(Class<F> fragmentClass) {
+    protected void setup(Class<F> fragmentClass, boolean addFragmentToActivity) {
         this.context = InstrumentationRegistry.getInstrumentation().getContext();
         this.fragmentClass = fragmentClass;
         MockitoAnnotations.initMocks(this);
-        //  Robolectric.buildActivity(EmptyMediaActivityCompatFragmentActivity.class).get();
         activityScenario =
-        Robolectric.buildActivity(EmptyMediaActivityCompatFragmentActivity.class).setup();
-        EmptyMediaActivityCompatFragmentActivity activity = activityScenario.get();
+                Robolectric.buildActivity(EmptyMediaActivityCompatFragmentActivity.class).setup();
+        this.activity = activityScenario.get();
 
         Bundle fragmentArgs = new Bundle();
-            Fragment fragment = activity.getSupportFragmentManager()
-                    .getFragmentFactory().instantiate(
-                            Preconditions.checkNotNull(fragmentClass.getClassLoader()),
-                            fragmentClass.getName());
-            fragment.setArguments(fragmentArgs);
-            activity.getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(0, fragment, FRAGMENT_TAG)
-                    .commitNow();
+        this.fragment = activity.getSupportFragmentManager()
+                .getFragmentFactory().instantiate(
+                        Preconditions.checkNotNull(fragmentClass.getClassLoader()),
+                        fragmentClass.getName());
+        fragment.setArguments(fragmentArgs);
+        if (addFragmentToActivity) {
+            addFragmentToActivity();
+        }
 
-        this.context = InstrumentationRegistry.getInstrumentation().getContext();
 
     }
 
-     void performAction(FragmentScenario.FragmentAction<F> action) {
-         Fragment fragment = activityScenario.get().getSupportFragmentManager().findFragmentByTag(
+    public void addFragmentToActivity() {
+        activity.getSupportFragmentManager()
+                .beginTransaction()
+                .add(0, fragment, FRAGMENT_TAG)
+                .commitNow();
+    }
+
+    protected void performAction(FragmentScenario.FragmentAction<F> action) {
+        Fragment fragment = activityScenario.get().getSupportFragmentManager().findFragmentByTag(
                 FRAGMENT_TAG);
-         checkNotNull(fragment,
-                 "The fragment has been removed from FragmentManager already.");
-         checkState(fragmentClass.isInstance(fragment));
-         action.perform(Preconditions.checkNotNull(fragmentClass.cast(fragment)));
+        checkNotNull(fragment,
+                "The fragment has been removed from FragmentManager already.");
+        checkState(fragmentClass.isInstance(fragment));
+        action.perform(Preconditions.checkNotNull(fragmentClass.cast(fragment)));
 
     }
 

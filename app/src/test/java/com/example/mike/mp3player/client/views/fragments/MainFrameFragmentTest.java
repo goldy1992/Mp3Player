@@ -41,7 +41,7 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
 
     @Before
     public void setup() {
-        super.setup(MainFrameFragment.class);
+        super.setup(MainFrameFragment.class, true);
     }
 
     @Test
