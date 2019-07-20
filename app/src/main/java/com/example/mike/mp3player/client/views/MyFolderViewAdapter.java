@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.commons.library.Category;
@@ -23,12 +25,12 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
         return Category.FOLDERS;
     }
 
-    public MyFolderViewAdapter(MediaBrowserAdapter mediaBrowserAdapter, LibraryObject parent) {
-        super(mediaBrowserAdapter, parent);
+    public MyFolderViewAdapter() {
+        super();
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         MyViewHolder vh = super.onCreateViewHolder(parent, viewType);
         if (vh == null) {
             // create a new views

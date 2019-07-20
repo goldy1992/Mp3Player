@@ -45,12 +45,9 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
     private boolean isInitialised = false;
     private final MediaItem EMPTY_LIST_ITEM = buildEmptyListMediaItem();
 
-    public MyGenericRecycleViewAdapter(MediaBrowserAdapter mediaBrowserAdapter, LibraryObject parent) {
+    public MyGenericRecycleViewAdapter() {
         super();
-        this.mediaBrowserAdapter = mediaBrowserAdapter;
         filter = new MySongFilter();
-        mediaBrowserAdapter.registerListener(parent.getId(), this);
-        mediaBrowserAdapter.subscribe(new LibraryRequest(parent));
     }
 
     @Override
