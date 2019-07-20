@@ -11,6 +11,7 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -46,7 +47,6 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
 
     private DrawerLayout drawerLayout;
     private Toolbar titleToolbar;
-    private PlayToolBarFragment playToolBarFragment;
     private ViewPager rootMenuItemsPager;
     private TabLayout tabLayout;
     private Provider<ChildViewPagerFragment> childFragmentProvider;
@@ -68,14 +68,13 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
     @Override
     public void onViewCreated(@NonNull View view, Bundle bundle) {
         this.drawerLayout = view.findViewById(R.id.drawer_layout);
-        this.playToolBarFragment = (PlayToolBarFragment) getChildFragmentManager().findFragmentById(R.id.playToolbarFragment);
         this.titleToolbar = view.findViewById(R.id.titleToolbar);
         this.navigationView = view.findViewById(R.id.nav_view);
         this.rootMenuItemsPager = view.findViewById(R.id.rootItemsPager);
         this.tabLayout = view.findViewById(R.id.tabs);
         this.tabLayout.setupWithViewPager(rootMenuItemsPager);
         this.adapter = new MyPagerAdapter(getFragmentManager());
-        this.rootMenuItemsPager.setAdapter(adapter);
+        this.rootMenuItemsPager.setAdapter(this.adapter);
 
         /* TODO: consider different implementation of this functionality */
         if (getActivity() instanceof AppCompatActivity) {
@@ -101,6 +100,7 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
                 case android.R.id.home:
                     getDrawerLayout().openDrawer(GravityCompat.START);
                     return true;
+                default: break;
             }
             return super.onOptionsItemSelected(item);
         }
@@ -137,11 +137,6 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
         this.enabled = false;
 
     }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
 
     public DrawerLayout getDrawerLayout() {
         return drawerLayout;
@@ -194,5 +189,13 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
         this.childFragmentProvider = childFragmentProvider;
     }
 
+    @VisibleForTesting
+    public MyPagerAdapter getAdapter() {
+        return adapter;
+    }
 
+    @VisibleForTesting
+    public Provider<ChildViewPagerFragment> getChildFragmentProvider() {
+        return childFragmentProvider;
+    }
 }
