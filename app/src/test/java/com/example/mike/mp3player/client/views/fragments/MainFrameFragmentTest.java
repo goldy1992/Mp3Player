@@ -11,7 +11,6 @@ import androidx.fragment.app.testing.FragmentScenario;
 
 import com.example.mike.mp3player.TestUtils;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
-import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -24,15 +23,12 @@ import org.robolectric.RobolectricTestRunner;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.inject.Provider;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -45,10 +41,7 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
 
     @Before
     public void setup() {
-
         super.setup(MainFrameFragment.class);
-        FragmentScenario.FragmentAction<MainFrameFragment> init = this::initFragment;
-        performAction(init);
     }
 
     @Test
@@ -141,11 +134,6 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
         }
         fragment.onOptionsItemSelected(menuItem);
         verify(drawerLayoutSpy, times(1)).openDrawer(GravityCompat.START);
-    }
-
-    private void initFragment(MainFrameFragment fragment) {
-//        doNothing().when(mediaBrowserAdapter).registerListener(any(Object.class), any(MediaBrowserResponseListener.class));
-//  //      fragment.init(songSearchActionListener, mediaBrowserAdapter, mediaControllerAdapter);
     }
 
     private void navigationViewSelected(MainFrameFragment fragment) {
