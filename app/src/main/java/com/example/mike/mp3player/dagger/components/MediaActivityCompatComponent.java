@@ -11,8 +11,10 @@ import com.example.mike.mp3player.client.views.fragments.MainFrameFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.ShuffleRepeatFragment;
 import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
+import com.example.mike.mp3player.dagger.components.fragments.MainFrameFragmentSubcomponent;
 import com.example.mike.mp3player.dagger.components.fragments.PlaybackToolbarFragmentSubComponent;
 import com.example.mike.mp3player.dagger.components.fragments.PlaybackTrackerFragmentSubcomponent;
+import com.example.mike.mp3player.dagger.modules.ChildViewPagerFragmentModule;
 import com.example.mike.mp3player.dagger.modules.MainHandlerModule;
 import com.example.mike.mp3player.dagger.modules.MediaBrowserAdapterModule;
 import com.example.mike.mp3player.dagger.modules.MediaControllerAdapterModule;
@@ -25,6 +27,7 @@ import dagger.Component;
 
 @ComponentScope
 @Component(modules = {
+        ChildViewPagerFragmentModule.class,
         HandlerThreadModule.class,
         MainHandlerModule.class,
         MediaBrowserAdapterModule.class,
@@ -41,13 +44,12 @@ public interface MediaActivityCompatComponent {
     void inject(PlaybackSpeedControlsFragment playbackSpeedControlsFragment);
     void inject(TrackInfoFragment trackInfoFragment);
     void inject(ShuffleRepeatFragment shuffleRepeatFragment);
-    void inject(MainFrameFragment mainFrameFragment);
 
     // sub components
+    MainFrameFragmentSubcomponent mainFrameFragmentSubcomponent();
     PlaybackTrackerFragmentSubcomponent playbackTrackerSubcomponent();
     PlaybackToolbarFragmentSubComponent playbackToolbarSubcomponent();
     SplashScreenEntryActivityComponent.Factory splashScreenEntryActivity();
-
 
     @Component.Factory
     interface Factory {

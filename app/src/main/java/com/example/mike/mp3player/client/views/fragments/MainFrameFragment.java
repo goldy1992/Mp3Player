@@ -18,7 +18,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.viewpager.widget.PagerTabStrip;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mike.mp3player.R;
@@ -39,8 +38,8 @@ import java.util.ArrayList;
 import java.util.TreeSet;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
-import static com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment.createViewPageFragment;
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
 
 public class MainFrameFragment extends Fragment  implements MediaBrowserResponseListener {
@@ -50,13 +49,13 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
     private PlayToolBarFragment playToolBarFragment;
     private ViewPager rootMenuItemsPager;
     private TabLayout tabLayout;
-    private PagerTabStrip pagerTabStrip;
+    private Provider<ChildViewPagerFragment> childFragmentProvider;
     private MediaBrowserAdapter mediaBrowserAdapter;
     private MyPagerAdapter adapter;
     private static final String LOG_TAG = "VIEW_PAGER_FRAGMENT";
     private NavigationView navigationView;
+    private MyDrawerListener myDrawerListener;
     private boolean enabled = true;
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -74,7 +73,7 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
         this.navigationView = view.findViewById(R.id.nav_view);
         this.rootMenuItemsPager = view.findViewById(R.id.rootItemsPager);
         this.tabLayout = view.findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(rootMenuItemsPager);
+        this.tabLayout.setupWithViewPager(rootMenuItemsPager);
         this.adapter = new MyPagerAdapter(getFragmentManager());
         this.rootMenuItemsPager.setAdapter(adapter);
 
@@ -92,9 +91,7 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
             this.mediaBrowserAdapter.registerListener(Category.ROOT.name(), this);
         }
         initNavigationView();
-
-        MyDrawerListener myDrawerListener = new MyDrawerListener();
-        getDrawerLayout().addDrawerListener(myDrawerListener);
+        this.drawerLayout.addDrawerListener(myDrawerListener);
     }
 
     @Override
@@ -110,9 +107,6 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
         return false;
     }
 
-    public PlayToolBarFragment getPlayToolBarFragment() {
-        return playToolBarFragment;
-    }
 
     private boolean onNavigationItemSelected(MenuItem menuItem) {
         // set item as selected to persist highlight
@@ -126,17 +120,14 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
     }
 
     private void initNavigationView() {
-        getNavigationView().setNavigationItemSelectedListener((MenuItem menuItem) -> onNavigationItemSelected(menuItem));
-
+        this.navigationView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
         Spinner spinner = (Spinner) getNavigationView().getMenu().findItem(R.id.themes_menu_item).getActionView();
-
         ThemeSpinnerController themeSpinnerController = new ThemeSpinnerController(getContext(), spinner, getActivity());
     }
 
 
     public void enable() {
         this.enabled = true;
-
         getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 
@@ -169,8 +160,9 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
             Log.i(LOG_TAG, "media id: " + id);
             Category category = Category.valueOf(id);
             LibraryObject libraryObject = new LibraryObject(category, id);
-            ChildViewPagerFragment viewPageFragment = createViewPageFragment(category, libraryObject, mediaBrowserAdapter);
-            adapter.getPagerItems().put(category, viewPageFragment);
+            ChildViewPagerFragment childViewPagerFragment = childFragmentProvider.get();
+            childViewPagerFragment.init(category, libraryObject);
+            adapter.getPagerItems().put(category, childViewPagerFragment);
             adapter.getMenuCategories().put(category, mediaItem);
             adapter.notifyDataSetChanged();
         }
@@ -182,13 +174,25 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
         this.mediaBrowserAdapter = mediaBrowserAdapter;
     }
 
+    @Inject
+    public void setMyDrawerListener(MyDrawerListener myDrawerListener) {
+        this.myDrawerListener = myDrawerListener;
+    }
 
     private void initialiseDependencies() {
         FragmentActivity activity = getActivity();
         if (null != activity && activity instanceof MediaActivityCompat) {
             MediaActivityCompat mediaPlayerActivity = (MediaActivityCompat) getActivity();
             mediaPlayerActivity.getMediaActivityCompatComponent()
+                    .mainFrameFragmentSubcomponent()
                     .inject(this);
         }
     }
+
+    @Inject
+    public void setChildFragmentProvider(Provider<ChildViewPagerFragment> childFragmentProvider) {
+        this.childFragmentProvider = childFragmentProvider;
+    }
+
+
 }

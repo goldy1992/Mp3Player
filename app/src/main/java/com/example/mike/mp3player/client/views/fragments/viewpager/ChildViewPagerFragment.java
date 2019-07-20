@@ -58,13 +58,12 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         this.recyclerView = view.findViewById(R.id.myRecyclerView);
-        this.recyclerView.initRecyclerView(parent, mediaBrowserAdapter, this.category, this);
+        this.recyclerView.initRecyclerView(parent, getMediaBrowserAdapter(), this.category, this);
     }
 
-    public void init(Category category, LibraryObject parent, MediaBrowserAdapter mediaBrowserAdapter) {
+    public void init(Category category, LibraryObject parent) {
         this.category = category;
         this.parent = parent;
-        this.mediaBrowserAdapter = mediaBrowserAdapter;
     }
 
     @Override
@@ -77,7 +76,7 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         Intent intent = new Intent(getContext(), Category.getActivityClassForCategory(category));
         intent.putExtra(PARENT_OBJECT, parent);
         intent.putExtra(REQUEST_OBJECT, libraryRequest);
-        intent.putExtra(MEDIA_SESSION, mediaBrowserAdapter.getMediaSessionToken());
+        intent.putExtra(MEDIA_SESSION, getMediaBrowserAdapter().getMediaSessionToken());
         startActivity(intent);
     }
 
@@ -89,16 +88,20 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         return mediaBrowserAdapter;
     }
 
-    /**
-     *
-     * @param category the category of the view, this will help to know which activity should be called.
-     * @param parent to know which MediaItem needs to be subscribed to.
-     * @param mediaBrowserAdapter used to register the appropriate listeners
-     * @return a new generuc
-     */
-    public static ChildViewPagerFragment createViewPageFragment(Category category, LibraryObject parent, MediaBrowserAdapter mediaBrowserAdapter) {
-        ChildViewPagerFragment viewPageFragment = new ChildViewPagerFragment();
-        viewPageFragment.init(category, parent, mediaBrowserAdapter);
-        return viewPageFragment;
+//    /**
+//     *
+//     * @param category the category of the view, this will help to know which activity should be called.
+//     * @param parent to know which MediaItem needs to be subscribed to.
+//     * @param mediaBrowserAdapter used to register the appropriate listeners
+//     * @return a new generuc
+//     */
+//    public static ChildViewPagerFragment createViewPageFragment(Category category, LibraryObject parent, MediaBrowserAdapter mediaBrowserAdapter) {
+//        ChildViewPagerFragment viewPageFragment = new ChildViewPagerFragment();
+//        viewPageFragment.init(category, parent, mediaBrowserAdapter);
+//        return viewPageFragment;
+//    }
+
+    public void setMediaBrowserAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
+        this.mediaBrowserAdapter = mediaBrowserAdapter;
     }
 }
