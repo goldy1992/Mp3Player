@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MyFolderItemTouchListener;
@@ -16,8 +15,9 @@ import com.example.mike.mp3player.client.MySongItemTouchListener;
 import com.example.mike.mp3player.client.MySongViewAdapter;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
-public class MyRecyclerView extends RecyclerView {
+public class MyRecyclerView extends FastScrollRecyclerView {
     private Context context;
     private MyGenericItemTouchListener myGenericItemTouchListener;
     private MyGenericRecycleViewAdapter myViewAdapter;
