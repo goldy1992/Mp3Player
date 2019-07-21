@@ -28,10 +28,6 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
         return Category.SONGS;
     }
 
-    public MySongViewAdapter() {
-        super();
-    }
-
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         MyViewHolder vh = super.onCreateViewHolder(parent, viewType);
