@@ -23,19 +23,25 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KE
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_DURATION;
 
 public class ContentResolverMediaRetriever extends MediaRetriever {
-    private ContentResolver m_contentResolver;
+    private ContentResolver contentResolver;
 
     @Inject
     public ContentResolverMediaRetriever(Context context) {
         super(context);
-        this.m_contentResolver = context.getContentResolver();
+        this.contentResolver = context.getContentResolver();
     }
 
-    final String[] PROJECTION = {Media.DATA, Media.DURATION, Media.ARTIST, Media.TITLE};
+    private static final String[] PROJECTION = {
+            Media.DATA,
+            Media.DURATION,
+            Media.ARTIST,
+            Media.TITLE,
+            Media.ALBUM,
+            Media.ALBUM_ID};
     @Override
     public List<MediaBrowserCompat.MediaItem> retrieveMedia() {
         List<MediaBrowserCompat.MediaItem> listToReturn = new ArrayList<>();
-        Cursor cursor = m_contentResolver.query(Media.EXTERNAL_CONTENT_URI ,PROJECTION,
+        Cursor cursor = contentResolver.query(Media.EXTERNAL_CONTENT_URI ,PROJECTION,
                 null, null, null);
         cursor.getCount();
         while (cursor.moveToNext()) {
@@ -49,6 +55,8 @@ public class ContentResolverMediaRetriever extends MediaRetriever {
         long duration = c.getLong(c.getColumnIndex(Media.DURATION));
         String artist = c.getString(c.getColumnIndex(Media.ARTIST));
         String title = c.getString(c.getColumnIndex(Media.TITLE));
+        String album = c.getString(c.getColumnIndex(Media.ALBUM));
+        long albumId = c.getLong(c.getColumnIndex(Media.ALBUM_ID));
         File file =  new File(path);
         File directory = file.getParentFile();
 
