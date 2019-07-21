@@ -51,7 +51,7 @@ public class MySongViewAdapterTest {
         MockitoAnnotations.initMocks(this);
         this.context = InstrumentationRegistry.getInstrumentation().getContext();
         LibraryObject parent = new LibraryObject(Category.SONGS, "id");
-        this.mySongViewAdapter = new MySongViewAdapter(this.mediaBrowserAdapter, parent);
+        this.mySongViewAdapter = new MySongViewAdapter();
 
     }
 

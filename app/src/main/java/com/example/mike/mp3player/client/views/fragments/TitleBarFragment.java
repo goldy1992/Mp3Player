@@ -38,15 +38,7 @@ public class TitleBarFragment extends Fragment {
         searchFilterButton = view.findViewById(R.id.searchFilter);
         //searchFilterButton.setOnClickListener((View v) -> songSearchActionListener.onStartSearch());
 
-        /* TODO: consider different implementation of this functionality */
-        if (getActivity() instanceof AppCompatActivity) {
-            AppCompatActivity activity = (AppCompatActivity) getActivity();
 
-            activity.setSupportActionBar(titleToolbar);
-            ActionBar actionBar = activity.getSupportActionBar();
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-        }
     }
 
     public Toolbar getTitleToolbar() {

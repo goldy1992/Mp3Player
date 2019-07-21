@@ -78,6 +78,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
      //   this.onLoadChildren(parentId, result, null);
+        result.sendResult(null);
         Log.e(LOG_TAG, "onLoadChildren called without bundle");
     }
 

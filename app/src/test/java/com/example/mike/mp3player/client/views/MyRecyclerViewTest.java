@@ -39,7 +39,7 @@ public class MyRecyclerViewTest {
         MediaBrowserAdapter mediaBrowserAdapter = mock(MediaBrowserAdapter.class);
         Category category = Category.SONGS;
         MyGenericItemTouchListener.ItemSelectedListener listener = mock(MyGenericItemTouchListener.ItemSelectedListener.class);
-        myRecyclerView.initRecyclerView(parent, mediaBrowserAdapter, category, listener);
+        myRecyclerView.initRecyclerView(category, listener);
         RecyclerView.Adapter adapter = myRecyclerView.getAdapter();
         assertNotNull(myRecyclerView.getAdapter());
         assertTrue(adapter instanceof MySongViewAdapter);
@@ -54,7 +54,7 @@ public class MyRecyclerViewTest {
         MediaBrowserAdapter mediaBrowserAdapter = mock(MediaBrowserAdapter.class);
         Category category = Category.FOLDERS;
         MyGenericItemTouchListener.ItemSelectedListener listener = mock(MyGenericItemTouchListener.ItemSelectedListener.class);
-        myRecyclerView.initRecyclerView(parent, mediaBrowserAdapter, category, listener);
+        myRecyclerView.initRecyclerView(category, listener);
         RecyclerView.Adapter adapter = myRecyclerView.getAdapter();
         assertNotNull(myRecyclerView.getAdapter());
         assertTrue(adapter instanceof MyFolderViewAdapter);

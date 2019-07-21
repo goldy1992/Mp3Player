@@ -11,6 +11,8 @@ import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPage
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
+import javax.inject.Inject;
+
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
 public abstract class FolderActivity extends MediaActivityCompat {
@@ -52,7 +54,7 @@ public abstract class FolderActivity extends MediaActivityCompat {
     @Override
     public void onConnected() {
         super.onConnected();
-        this.viewPageFragment = ChildViewPagerFragment.createViewPageFragment(Category.SONGS, parentId, getMediaBrowserAdapter());
+        this.viewPageFragment.init(Category.SONGS, parentId);
         getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
         getSupportActionBar().setTitle(getString(R.string.FOLDER_NAME, this.folderName));
     }
@@ -60,6 +62,11 @@ public abstract class FolderActivity extends MediaActivityCompat {
     @Override
     public void onBackPressed() {
         this.finish();
+    }
+
+    @Inject
+    public void setViewPageFragment(ChildViewPagerFragment childViewPagerFragment) {
+        this.viewPageFragment = childViewPagerFragment;
     }
 
 

@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.dagger.components;
 
 import com.example.mike.mp3player.client.activities.EmptyMediaActivityCompatFragmentActivity;
+import com.example.mike.mp3player.dagger.modules.ChildViewPagerFragmentModule;
 import com.example.mike.mp3player.dagger.modules.MainHandlerModule;
 import com.example.mike.mp3player.dagger.modules.MediaBrowserAdapterModule;
 import com.example.mike.mp3player.dagger.modules.MediaControllerCallbackModule;
@@ -11,7 +12,9 @@ import com.example.mike.mp3player.dagger.scopes.ComponentScope;
 import dagger.Component;
 
 @ComponentScope
-@Component(modules = {HandlerThreadModule.class,
+@Component(modules = {
+        ChildViewPagerFragmentModule.class,
+        HandlerThreadModule.class,
         MainHandlerModule.class,
         MediaBrowserAdapterModule.class,
         MediaControllerCallbackModule.class,
