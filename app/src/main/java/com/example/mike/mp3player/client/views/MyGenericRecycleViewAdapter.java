@@ -19,6 +19,7 @@ import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,7 +33,7 @@ import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 import static com.example.mike.mp3player.commons.MediaItemUtils.hasTitle;
 
 public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements
-        Filterable, MediaBrowserResponseListener {
+        Filterable, MediaBrowserResponseListener, FastScrollRecyclerView.SectionedAdapter {
     final String LOG_TAG = "MY_VIEW_ADAPTER";
     private static final String EMPTY_MEDIA_ID = "EMPTY_MEDIA_ID";
     final int EMPTY_VIEW_TYPE = -1;
@@ -44,12 +45,9 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
     private boolean isInitialised = false;
     private final MediaItem EMPTY_LIST_ITEM = buildEmptyListMediaItem();
 
-    public MyGenericRecycleViewAdapter(MediaBrowserAdapter mediaBrowserAdapter, LibraryObject parent) {
+    public MyGenericRecycleViewAdapter() {
         super();
-        this.mediaBrowserAdapter = mediaBrowserAdapter;
         filter = new MySongFilter();
-        mediaBrowserAdapter.registerListener(parent.getId(), this);
-        mediaBrowserAdapter.subscribe(new LibraryRequest(parent));
     }
 
     @Override
@@ -126,6 +124,11 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
     @VisibleForTesting
     public void setItems(List<MediaItem> items) {
         this.items = items;
+    }
+
+    @Override
+    public String getSectionName(int position) {
+        return getFilteredSongs().get(position).getDescription().getTitle().toString().substring(0, 1);
     }
 
     protected class MySongFilter extends Filter {

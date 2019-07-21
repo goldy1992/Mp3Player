@@ -14,7 +14,6 @@ import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
 import com.example.mike.mp3player.client.views.MyViewHolder;
 import com.example.mike.mp3player.commons.MetaDataKeys;
 import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -29,8 +28,8 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
         return Category.SONGS;
     }
 
-    public MySongViewAdapter(MediaBrowserAdapter mediaBrowserAdapter, LibraryObject parent) {
-        super(mediaBrowserAdapter, parent);
+    public MySongViewAdapter() {
+        super();
     }
 
     @Override
