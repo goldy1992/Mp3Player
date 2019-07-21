@@ -121,6 +121,7 @@ dependencies {
     def COORDINATOR_LAYOUT_VERSION = '1.0.0'
     def TEST_UI_AUTOMATOR_VERSION= '2.2.0'
     def FRAGMENT_TESTING_VERSION = '1.1.0-alpha07'
+    def FAST_SCROLL_VERSION = '2.0.0'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation group: 'androidx.constraintlayout', name: 'constraintlayout', version: CONSTRAINT_LAYOUT_VERSION
@@ -138,7 +139,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.guava/guava
     implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
     implementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
-    implementation 'com.simplecityapps:recyclerview-fastscroll:2.0.0'
+    implementation group: 'com.simplecityapps', name: 'recyclerview-fastscroll', version: FAST_SCROLL_VERSION
 
     implementation 'com.google.dagger:dagger:2.23.1'
     implementation 'com.google.dagger:dagger-android:2.23'

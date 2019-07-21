@@ -25,10 +25,6 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
         return Category.FOLDERS;
     }
 
-    public MyFolderViewAdapter() {
-        super();
-    }
-
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         MyViewHolder vh = super.onCreateViewHolder(parent, viewType);
