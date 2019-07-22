@@ -11,6 +11,7 @@ import com.example.mike.mp3player.client.views.fragments.MainFrameFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.ShuffleRepeatFragment;
 import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
+import com.example.mike.mp3player.dagger.components.fragments.ChildViewPagerFragmentSubcomponent;
 import com.example.mike.mp3player.dagger.components.fragments.MainFrameFragmentSubcomponent;
 import com.example.mike.mp3player.dagger.components.fragments.PlaybackToolbarFragmentSubComponent;
 import com.example.mike.mp3player.dagger.components.fragments.PlaybackTrackerFragmentSubcomponent;
@@ -46,6 +47,7 @@ public interface MediaActivityCompatComponent {
     void inject(ShuffleRepeatFragment shuffleRepeatFragment);
 
     // sub components
+    ChildViewPagerFragmentSubcomponent childViewPagerFragmentSubcomponent();
     MainFrameFragmentSubcomponent mainFrameFragmentSubcomponent();
     PlaybackTrackerFragmentSubcomponent playbackTrackerSubcomponent();
     PlaybackToolbarFragmentSubComponent playbackToolbarSubcomponent();

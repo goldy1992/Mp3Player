@@ -10,10 +10,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
+import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
 import com.example.mike.mp3player.client.views.MyRecyclerView;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
@@ -40,10 +43,13 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
     private MyRecyclerView recyclerView;
     private Category category;
     private MediaBrowserAdapter mediaBrowserAdapter;
+    private MyGenericRecycleViewAdapter myViewAdapter;
+    private MyGenericItemTouchListener myGenericItemTouchListener;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        injectDependencies();
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_view_page, container, false);
     }
@@ -51,8 +57,13 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         this.recyclerView = view.findViewById(R.id.myRecyclerView);
-        this.recyclerView.initRecyclerView(this.category, this);
-        this.mediaBrowserAdapter.registerListener(parent.getId(), this.recyclerView.getMyViewAdapter());
+        this.recyclerView.setAdapter(myViewAdapter);
+        this.recyclerView.addOnItemTouchListener(myGenericItemTouchListener);
+        this.recyclerView.setItemAnimator(new DefaultItemAnimator());
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+      //  this.recyclerView.initRecyclerView(this.category, this);
+        this.mediaBrowserAdapter.registerListener(parent.getId(), myViewAdapter);
         this.mediaBrowserAdapter.subscribe(new LibraryRequest(parent));
     }
 
@@ -80,5 +91,9 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
 
     public void setMediaBrowserAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
         this.mediaBrowserAdapter = mediaBrowserAdapter;
+    }
+
+    private void injectDependencies() {
+
     }
 }

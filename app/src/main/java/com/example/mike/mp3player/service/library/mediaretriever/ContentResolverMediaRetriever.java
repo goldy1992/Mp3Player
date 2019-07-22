@@ -16,6 +16,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_ALBUM_ART_URI;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
@@ -77,16 +78,15 @@ public class ContentResolverMediaRetriever extends MediaRetriever {
         extras.putString(META_DATA_KEY_FILE_NAME, fileName);
         extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directory.getName());
         extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directory.getAbsolutePath());
+        extras.putParcelable(META_DATA_ALBUM_ART_URI, albumArtUri);
 
         // TODO: add code to fetch album art also
         MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()
                 .setMediaId(mediaId)
                 .setMediaUri(uri)
-                .setIconUri(albumArtUri)
                 .setTitle(title)
                 .setExtras(extras);
 
-        MediaBrowserCompat.MediaItem mediaItem = new MediaBrowserCompat.MediaItem(mediaDescriptionCompatBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
-        return mediaItem;
+        return new MediaBrowserCompat.MediaItem(mediaDescriptionCompatBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
     }
 }

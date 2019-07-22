@@ -10,6 +10,11 @@
     android:columnOrderPreserved="false"
     android:columnCount="3">
 
+    <ImageView
+        android:id="@+id/song_item_album_art"
+        android:contentDescription="content description"
+        android:layout_rowSpan="2"/>
+
     <TextView android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
