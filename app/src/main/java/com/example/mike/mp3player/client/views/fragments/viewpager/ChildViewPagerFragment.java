@@ -109,7 +109,7 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
 
     private void injectDependencies() {
         FragmentActivity activity = getActivity();
-        if (null != activity && activity instanceof MediaActivityCompat) {
+        if (activity instanceof MediaActivityCompat) {
             MediaActivityCompat mediaPlayerActivity = (MediaActivityCompat) getActivity();
             MediaActivityCompatComponent component = mediaPlayerActivity.getMediaActivityCompatComponent();
             component.childViewPagerFragmentSubcomponentFactory()

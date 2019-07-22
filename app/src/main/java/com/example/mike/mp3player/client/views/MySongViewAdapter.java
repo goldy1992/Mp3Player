@@ -1,8 +1,6 @@
 package com.example.mike.mp3player.client.views;
 
-import android.content.Context;
 import android.net.Uri;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -12,8 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.bumptech.glide.Glide;
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.commons.MetaDataKeys;
 import com.example.mike.mp3player.commons.library.Category;
@@ -26,9 +24,10 @@ import static com.example.mike.mp3player.commons.MediaItemUtils.hasExtras;
 public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     private final String LOG_TAG = "MY_VIEW_ADAPTER";
 
-    public MySongViewAdapter() {
-
+    public MySongViewAdapter(AlbumArtPainter albumArtPainter) {
+        super(albumArtPainter);
     }
+
     @Override
     public Category getSubscriptionCategory() {
         return Category.SONGS;

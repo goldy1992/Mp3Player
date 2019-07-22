@@ -2,6 +2,7 @@ package com.example.mike.mp3player.dagger.modules;
 
 import android.content.Context;
 
+import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.MyFolderItemTouchListener;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.MySongItemTouchListener;
@@ -17,10 +18,10 @@ import dagger.Provides;
 public class MyRecycleViewModule {
 
     @Provides
-    public MyGenericRecycleViewAdapter provideRecycleViewAdapter(Category category) {
+    public MyGenericRecycleViewAdapter provideRecycleViewAdapter(Category category, AlbumArtPainter albumArtPainter) {
         switch (category) {
-            case SONGS: return new MySongViewAdapter();
-            case FOLDERS: return new MyFolderViewAdapter();
+            case SONGS: return new MySongViewAdapter(albumArtPainter);
+            case FOLDERS: return new MyFolderViewAdapter(albumArtPainter);
             default: return null;
         }
     }
