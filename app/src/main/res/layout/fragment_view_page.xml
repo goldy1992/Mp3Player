@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.example.mike.mp3player.client.views.MyRecyclerView
+    <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
         android:id="@+id/myRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,10 +13,6 @@
         android:visibility="visible"
         app:fastScrollPopupBgColor="?themeColorPrimary"
         app:fastScrollPopupTextColor="@android:color/primary_text_dark"
-        app:fastScrollThumbColor="?themeColorPrimary">
-
-    </com.example.mike.mp3player.client.views.MyRecyclerView>
-
-
+        app:fastScrollThumbColor="?themeColorPrimary" />
 
 </LinearLayout>

@@ -19,12 +19,12 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
-import com.example.mike.mp3player.client.views.MyRecyclerView;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import javax.inject.Inject;
 
@@ -45,7 +45,7 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
      * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
      */
     private LibraryObject parent;
-    private MyRecyclerView recyclerView;
+    private FastScrollRecyclerView recyclerView;
     private Category category;
     private MediaBrowserAdapter mediaBrowserAdapter;
     private MyGenericRecycleViewAdapter myViewAdapter;
@@ -60,14 +60,12 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
     }
 
     @Override
-    public void onViewCreated(View view, Bundle bundle) {
+    public void onViewCreated(@NonNull View view, Bundle bundle) {
         this.recyclerView = view.findViewById(R.id.myRecyclerView);
         this.recyclerView.setAdapter(myViewAdapter);
         this.recyclerView.addOnItemTouchListener(myGenericItemTouchListener);
         this.recyclerView.setItemAnimator(new DefaultItemAnimator());
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-      //  this.recyclerView.initRecyclerView(this.category, this);
         this.mediaBrowserAdapter.registerListener(parent.getId(), myViewAdapter);
         this.mediaBrowserAdapter.subscribe(new LibraryRequest(parent));
     }
