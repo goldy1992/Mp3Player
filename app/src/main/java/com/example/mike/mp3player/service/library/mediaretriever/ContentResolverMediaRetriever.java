@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.service.library.mediaretriever;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -66,6 +67,9 @@ public class ContentResolverMediaRetriever extends MediaRetriever {
         String parentPath = file.getParentFile().getAbsolutePath();
         String fileName = file.getName();
 
+        Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+        Uri albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId);
+
         Bundle extras = new Bundle();
         extras.putString(STRING_METADATA_KEY_DURATION, String.valueOf(duration));
         extras.putString(STRING_METADATA_KEY_ARTIST, artist);
@@ -78,6 +82,7 @@ public class ContentResolverMediaRetriever extends MediaRetriever {
         MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()
                 .setMediaId(mediaId)
                 .setMediaUri(uri)
+                .setIconUri(albumArtUri)
                 .setTitle(title)
                 .setExtras(extras);
 
