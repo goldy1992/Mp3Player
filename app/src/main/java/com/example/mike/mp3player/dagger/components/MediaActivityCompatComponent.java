@@ -47,11 +47,12 @@ public interface MediaActivityCompatComponent {
     void inject(ShuffleRepeatFragment shuffleRepeatFragment);
 
     // sub components
-    ChildViewPagerFragmentSubcomponent childViewPagerFragmentSubcomponent();
+    ChildViewPagerFragmentSubcomponent.Factory childViewPagerFragmentSubcomponentFactory();
     MainFrameFragmentSubcomponent mainFrameFragmentSubcomponent();
     PlaybackTrackerFragmentSubcomponent playbackTrackerSubcomponent();
     PlaybackToolbarFragmentSubComponent playbackToolbarSubcomponent();
     SplashScreenEntryActivityComponent.Factory splashScreenEntryActivity();
+
 
     @Component.Factory
     interface Factory {
