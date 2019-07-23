@@ -20,6 +20,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import static com.example.mike.mp3player.commons.MediaItemUtils.getExtra;
 import static com.example.mike.mp3player.commons.MediaItemUtils.hasExtras;
+import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_ALBUM_ART_URI;
 
 public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     private final String LOG_TAG = "MY_VIEW_ADAPTER";
@@ -69,12 +70,14 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
             durationText.setText(duration);
 
             ImageView albumArt = holder.getView().findViewById(R.id.song_item_album_art);
+            Uri uri = getAlbumArtUri(song);
+            albumArtPainter.paintOnView(albumArt, uri);
         }
     }
 
     private Uri getAlbumArtUri(MediaItem song) {
-        Uri iconUri = song.getDescription().getIconUri();
-        return iconUri;
+        Uri albumUri = (Uri) song.getDescription().getExtras().get(META_DATA_ALBUM_ART_URI);
+        return albumUri;
     }
 
     private String extractTitle(MediaItem song) {

@@ -40,7 +40,7 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
     private static final String EMPTY_MEDIA_ID = "EMPTY_MEDIA_ID";
     final int EMPTY_VIEW_TYPE = -1;
     public abstract Category getSubscriptionCategory();
-    private final AlbumArtPainter albumArtPainter;
+    final AlbumArtPainter albumArtPainter;
 
     private List<MediaItem> items = new ArrayList<>();
     private List<MediaItem> filteredSongs = new ArrayList<>();
