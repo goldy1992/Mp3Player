@@ -18,6 +18,6 @@ public class AlbumArtPainter {
     }
 
     public void paintOnView(ImageView imageView, Uri uri) {
-        Glide.with(context).load(uri).centerInside().into(imageView);
+        Glide.with(context).load(uri).centerCrop().into(imageView);
     }
 }
