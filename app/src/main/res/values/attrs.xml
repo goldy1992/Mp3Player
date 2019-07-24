@@ -3,6 +3,14 @@
     <declare-styleable name="LinearLayoutWithImageView">
         <attr name="imgSrc" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="SquareImageView">
+        <attr name="useWidthOrHeight" format="enum" >
+            <enum name="X" value="0"/>
+            <enum name="Y" value="1" />
+        </attr>
+    </declare-styleable>
+
     <attr name="textColorPrimary" format="reference" />
     <attr name="textColorSecondary" format="reference" />
     <attr name="themeColorPrimary" format="reference"/>
