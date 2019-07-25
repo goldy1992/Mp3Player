@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:weightSum="5"
->
+    >
 
     <com.example.mike.mp3player.client.views.SquareImageView
         android:layout_height="wrap_content"
@@ -15,16 +15,17 @@
         android:id="@+id/song_item_album_art"
         app:useWidthOrHeight="X"
         android:adjustViewBounds="true"
+        android:layout_margin="@dimen/default_gap"
         android:contentDescription="content description"
         app:layout_constraintDimensionRatio="1:1"
         android:background="@android:color/white" />
 
     <GridLayout
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_gap"
         android:layout_width="0dp"
         android:layout_weight="4"
         android:alignmentMode="alignBounds"
-        android:columnCount="3"
         android:rowCount="2"
         android:useDefaultMargins="true">
 
@@ -33,41 +34,53 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:layout_row="0"
             android:layout_column="0"
-            android:layout_columnSpan="3"
             android:layout_gravity="start"
             android:textSize="16sp"
             android:textStyle="bold" />
 
-
-        <TextView
-            android:id="@+id/artist"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_row="1"
             android:layout_column="0"
-            android:layout_gravity="start"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:weightSum="6">
+
+            <TextView
+                android:id="@+id/artist"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_gravity="start"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
 
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_row="1"
-            android:layout_column="1"
-            android:layout_gravity="start"
-            android:text="@string/TITLE_ARTIST_SEPARATOR"
-            android:textSize="14sp"
-            android:textStyle="normal" />
+            <!--<TextView-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_row="1"-->
+            <!--android:layout_column="1"-->
+            <!--android:layout_gravity="start"-->
+            <!--android:text="@string/TITLE_ARTIST_SEPARATOR"-->
+            <!--android:textSize="14sp"-->
+            <!--android:textStyle="normal" />-->
 
-        <TextView
-            android:id="@+id/duration"
-            android:layout_height="wrap_content"
-            android:layout_row="1"
-            android:layout_column="2"
-            android:layout_gravity="start"
-            android:textSize="14sp"
-            android:textStyle="normal" />
+            <TextView
+                android:id="@+id/duration"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_gravity="start"
+                android:textSize="14sp"
+                android:textStyle="normal" />
+
+        </LinearLayout>
 
     </GridLayout>
 
