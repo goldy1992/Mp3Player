@@ -5,6 +5,7 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.IdRes;
@@ -42,6 +43,8 @@ public class MySongViewAdapterTest {
 
     private MySongViewAdapter mySongViewAdapter;
     @Mock
+    private AlbumArtPainter albumArtPainter;
+    @Mock
     private MediaBrowserAdapter mediaBrowserAdapter;
     private Context context;
 
@@ -50,7 +53,7 @@ public class MySongViewAdapterTest {
         MockitoAnnotations.initMocks(this);
         this.context = InstrumentationRegistry.getInstrumentation().getContext();
         LibraryObject parent = new LibraryObject(Category.SONGS, "id");
-        this.mySongViewAdapter = new MySongViewAdapter();
+        this.mySongViewAdapter = new MySongViewAdapter(albumArtPainter);
 
     }
 
@@ -62,7 +65,7 @@ public class MySongViewAdapterTest {
         when(group.getContext()).thenReturn(this.context);
         MyViewHolder result = mySongViewAdapter.onCreateViewHolder(group, 0);
         assertNotNull(result);
-        assertTrue(result.getView() instanceof GridLayout);
+        assertTrue(result.getView() instanceof LinearLayout);
     }
 
     @Test

@@ -61,16 +61,6 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
-
-            <!--<TextView-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_row="1"-->
-            <!--android:layout_column="1"-->
-            <!--android:layout_gravity="start"-->
-            <!--android:text="@string/TITLE_ARTIST_SEPARATOR"-->
-            <!--android:textSize="14sp"-->
-            <!--android:textStyle="normal" />-->
-
             <TextView
                 android:id="@+id/duration"
                 android:layout_height="wrap_content"
