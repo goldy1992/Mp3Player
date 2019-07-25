@@ -13,16 +13,20 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
+import static com.example.mike.mp3player.client.views.SquareImageView.USE_HEIGHT;
 import static com.example.mike.mp3player.client.views.SquareImageView.USE_WIDTH;
-import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 public class SquareImageViewTest {
 
-    private int useWidthOrHeight =  USE_WIDTH;
     private Context context;
-    private int width;
-    private  int height;
+    private static final int TEST_WIDTH = 6;
+    private static final int TEST_HEIGHT = 7;
 
     @Before
     public void setup() {
@@ -31,25 +35,37 @@ public class SquareImageViewTest {
 
     @Test
     public void testOnMeasureUsingWidth() {
-        this.width = 7;
-        this.height = 6;
         SquareImageView squareImageView = createSquareImageView(USE_WIDTH);
-        squareImageView.measure(width, height);
-        squareImageView.onMeasure(width, height);
-        assertEquals(width, squareImageView.getWidth());
-        assertEquals(width, squareImageView.getHeight());
+        squareImageView.onMeasure(TEST_WIDTH, TEST_HEIGHT);
+        verify(squareImageView).setDimensions(TEST_WIDTH);
     }
+
+    @Test
+    public void testOnMeasureUsingHeight() {
+        SquareImageView squareImageView = createSquareImageView(USE_HEIGHT);
+        squareImageView.onMeasure(TEST_WIDTH, TEST_HEIGHT);
+        verify(squareImageView).setDimensions(TEST_HEIGHT);
+    }
+
+    @Test
+    public void testOnMeasureUsingInvalidValue() {
+        final int invalidValue = 2230;
+        SquareImageView squareImageView = createSquareImageView(invalidValue);
+        squareImageView.onMeasure(TEST_WIDTH, TEST_HEIGHT);
+        verify(squareImageView, never()).setDimensions(any());
+    }
+
 
     private SquareImageView createSquareImageView(final int useWidthOrHeight) {
 
         AttributeSet attributeSet = Robolectric.buildAttributeSet()
-            .addAttribute(R.attr.useWidthOrHeight, String.valueOf(useWidthOrHeight))
+            .addAttribute(R.attr.useWidthOrHeight, "" + useWidthOrHeight)
             .build();
         SquareImageView squareImageView = new SquareImageView(context, attributeSet, 0);
-     //   SquareImageView spiedSquareImageView = spy(squareImageView);
-//        when(spiedSquareImageView.getMeasuredHeight()).thenReturn(height);
-//        when(spiedSquareImageView.getMeasuredWidth()).thenReturn(width);
+        SquareImageView spiedSquareImageView = spy(squareImageView);
+        when(spiedSquareImageView.getMeasuredHeight()).thenReturn(TEST_HEIGHT);
+        when(spiedSquareImageView.getMeasuredWidth()).thenReturn(TEST_WIDTH);
 
-        return squareImageView;
+        return spiedSquareImageView;
     }
 }

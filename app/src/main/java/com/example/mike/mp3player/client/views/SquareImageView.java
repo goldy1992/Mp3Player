@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client.views;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.example.mike.mp3player.R;
@@ -30,17 +31,19 @@ public class SquareImageView extends AppCompatImageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int squareLength = 0;
         switch (useWidthOrHeight) {
             case USE_WIDTH:
-                squareLength = getMeasuredWidth();
-                setMeasuredDimension(squareLength, squareLength);
+                setDimensions(getMeasuredWidth());
                 break;
             case USE_HEIGHT:
-                squareLength = getMeasuredHeight();
-                setMeasuredDimension(squareLength, squareLength);
+                setDimensions(getMeasuredHeight());
                 break;
             default: setMeasuredDimension(getMeasuredWidth(), getMeasuredHeight());
         }
+    }
+
+    @VisibleForTesting
+    public void setDimensions(int length) {
+        setMeasuredDimension(length, length);
     }
 }
