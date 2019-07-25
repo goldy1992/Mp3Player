@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,10 +39,10 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
         if (vh == null) {
             // create a new views
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-            GridLayout t = (GridLayout) layoutInflater
+            ViewGroup v = (ViewGroup) layoutInflater
                     .inflate(R.layout.song_item_menu, parent, false);
 
-            vh = new MyViewHolder(t);
+            vh = new MyViewHolder(v);
         }
         return vh;
     }
