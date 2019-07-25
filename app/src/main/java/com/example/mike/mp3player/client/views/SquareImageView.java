@@ -9,8 +9,8 @@ import com.example.mike.mp3player.R;
 
 public class SquareImageView extends AppCompatImageView {
 
-    private static final int USE_WIDTH = 0;
-    private static final int USE_HEIGHT = 1;
+    public static final int USE_WIDTH = 0;
+    public static final int USE_HEIGHT = 1;
 
     private final int useWidthOrHeight;
 
@@ -40,7 +40,7 @@ public class SquareImageView extends AppCompatImageView {
                 squareLength = getMeasuredHeight();
                 setMeasuredDimension(squareLength, squareLength);
                 break;
-            default:setMeasuredDimension(getMeasuredWidth(), getMeasuredHeight());
+            default: setMeasuredDimension(getMeasuredWidth(), getMeasuredHeight());
         }
     }
 }
