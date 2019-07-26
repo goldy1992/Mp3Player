@@ -10,6 +10,8 @@ import android.provider.MediaStore.Audio.Media;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,6 @@ public class ContentResolverMediaRetriever extends MediaRetriever {
         List<MediaBrowserCompat.MediaItem> listToReturn = new ArrayList<>();
         Cursor cursor = contentResolver.query(Media.EXTERNAL_CONTENT_URI ,PROJECTION,
                 null, null, null);
-        cursor.getCount();
         while (cursor.moveToNext()) {
             listToReturn.add(createPlayableMediaItemFromCursor(cursor));
         }
@@ -88,5 +89,15 @@ public class ContentResolverMediaRetriever extends MediaRetriever {
                 .setExtras(extras);
 
         return new MediaBrowserCompat.MediaItem(mediaDescriptionCompatBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
+    }
+
+    @VisibleForTesting
+    public ContentResolver getContentResolver() {
+        return this.contentResolver;
+    }
+
+    @VisibleForTesting
+    public static String[] getProjection() {
+        return PROJECTION;
     }
 }

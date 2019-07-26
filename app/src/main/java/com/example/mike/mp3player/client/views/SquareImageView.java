@@ -26,8 +26,12 @@ public class SquareImageView extends AppCompatImageView {
 
     public SquareImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.SquareImageView);
-        this.useWidthOrHeight = typedArray.getInteger(R.styleable.SquareImageView_useWidthOrHeight, USE_WIDTH);
+        if (null != attrs) {
+            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.SquareImageView);
+            this.useWidthOrHeight = typedArray.getInteger(R.styleable.SquareImageView_useWidthOrHeight, USE_WIDTH);
+        } else {
+            this.useWidthOrHeight = USE_WIDTH;
+        }
     }
 
     @Override
