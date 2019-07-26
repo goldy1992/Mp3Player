@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client.views;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 
 import androidx.annotation.VisibleForTesting;
@@ -25,7 +26,8 @@ public class SquareImageView extends AppCompatImageView {
 
     public SquareImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.useWidthOrHeight = attrs.getAttributeResourceValue(R.attr.useWidthOrHeight, USE_WIDTH);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.SquareImageView);
+        this.useWidthOrHeight = typedArray.getInteger(R.styleable.SquareImageView_useWidthOrHeight, USE_WIDTH);
     }
 
     @Override

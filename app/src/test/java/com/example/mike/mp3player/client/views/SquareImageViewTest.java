@@ -10,13 +10,9 @@ import com.example.mike.mp3player.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.android.AttributeSetBuilderImpl;
 
-import static com.example.mike.mp3player.client.views.SquareImageView.USE_HEIGHT;
-import static com.example.mike.mp3player.client.views.SquareImageView.USE_WIDTH;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,32 +31,23 @@ public class SquareImageViewTest {
 
     @Test
     public void testOnMeasureUsingWidth() {
-        SquareImageView squareImageView = createSquareImageView(USE_WIDTH);
+        SquareImageView squareImageView = createSquareImageView("X");
         squareImageView.onMeasure(TEST_WIDTH, TEST_HEIGHT);
         verify(squareImageView).setDimensions(TEST_WIDTH);
     }
 
     @Test
     public void testOnMeasureUsingHeight() {
-        SquareImageView squareImageView = createSquareImageView(USE_HEIGHT);
+        SquareImageView squareImageView = createSquareImageView("Y");
         squareImageView.onMeasure(TEST_WIDTH, TEST_HEIGHT);
         verify(squareImageView).setDimensions(TEST_HEIGHT);
     }
 
-    @Test
-    public void testOnMeasureUsingInvalidValue() {
-        final int invalidValue = 2230;
-        SquareImageView squareImageView = createSquareImageView(invalidValue);
-        squareImageView.onMeasure(TEST_WIDTH, TEST_HEIGHT);
-        verify(squareImageView, never()).setDimensions(any());
-    }
-
-
-    private SquareImageView createSquareImageView(final int useWidthOrHeight) {
-
-        AttributeSet attributeSet = Robolectric.buildAttributeSet()
-            .addAttribute(R.attr.useWidthOrHeight, "" + useWidthOrHeight)
-            .build();
+    private SquareImageView createSquareImageView(String useWidthOrHeight) {
+        AttributeSetBuilderImpl.ArscResourceResolver resourceResolver = new AttributeSetBuilderImpl.ArscResourceResolver(context);
+        MyAttributeSetBuilderImpl myAttributeSetBuilder = new MyAttributeSetBuilderImpl(resourceResolver);
+        myAttributeSetBuilder.addAttribute(R.attr.useWidthOrHeight, useWidthOrHeight);
+        AttributeSet attributeSet = myAttributeSetBuilder.build();
         SquareImageView squareImageView = new SquareImageView(context, attributeSet, 0);
         SquareImageView spiedSquareImageView = spy(squareImageView);
         when(spiedSquareImageView.getMeasuredHeight()).thenReturn(TEST_HEIGHT);
