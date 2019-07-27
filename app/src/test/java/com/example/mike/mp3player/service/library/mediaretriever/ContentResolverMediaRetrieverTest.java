@@ -20,36 +20,44 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 public class ContentResolverMediaRetrieverTest {
 
     private ContentResolverMediaRetriever mediaRetriever;
+    private RoboCursor cursor;
 
     @Before
     public void setup() {
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
         this.mediaRetriever = new ContentResolverMediaRetriever(context);
-
-
+        this.cursor = new RoboCursor();
+        cursor.projection = ContentResolverMediaRetriever.getProjection();
+        cursor.setColumnNames(Arrays.asList(cursor.projection));
+        ShadowContentResolver shadowContentResolver = shadowOf(mediaRetriever.getContentResolver());
+        shadowContentResolver.setCursor(cursor);
     }
 
     @Test
-    public void testQuery() {
-        RoboCursor roboCursor = new RoboCursor();
-        roboCursor.projection = ContentResolverMediaRetriever.getProjection();
-        roboCursor.setColumnNames(Arrays.asList(roboCursor.projection));
-     //   roboCursor.setResults();
+    public void testEmptyCursorGivesEmptyResult() {
+        List<MediaItem> result = mediaRetriever.retrieveMedia();
+        assertTrue(result.isEmpty());
+    }
 
-        ShadowContentResolver shadowContentResolver = shadowOf(mediaRetriever.getContentResolver());
-        shadowContentResolver.setCursor(new RoboCursor());
+    @Test
+    public void testPopulatedQuery() {
+        this.cursor.setResults(testData());
         List<MediaItem> result = mediaRetriever.retrieveMedia();
         assertNotNull(result);
     }
 
     private Object[][] testData() {
-        return null;
+        Object[] val1 = {"path1", "735443", "artist1", "title1", "album1", 100L};
+        Object[] val2 = {"path2", "923383", "artist2", "title2", "album2", 101L};
+        Object[][] testData = {val1, val2};
+        return testData;
     }
 
 }

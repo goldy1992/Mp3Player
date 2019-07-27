@@ -66,7 +66,10 @@ public class ContentResolverMediaRetriever extends MediaRetriever {
 
         Uri uri = Uri.fromFile(file);
         String mediaId = String.valueOf(uri.getPath().hashCode());
-        String parentPath = file.getParentFile().getAbsolutePath();
+        String parentPath = null;
+        if (null!= file && null != file.getParent()) {
+            file.getParentFile().getAbsolutePath();
+        }
         String fileName = file.getName();
 
         Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
