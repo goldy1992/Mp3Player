@@ -17,6 +17,7 @@ import com.example.mike.mp3player.commons.library.Category;
 
 import org.apache.commons.io.FilenameUtils;
 
+import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getExtra;
 import static com.example.mike.mp3player.commons.MediaItemUtils.hasExtras;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_ALBUM_ART_URI;
@@ -97,10 +98,10 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
         try {
             artist = song.getDescription().getExtras().getString(MetaDataKeys.STRING_METADATA_KEY_ARTIST);
             if (null == artist) {
-                artist = "Unknown";
+                artist = UNKNOWN;
             }
         } catch (NullPointerException ex) {
-            artist = "Unknown";
+            artist = UNKNOWN;
         }
         return artist;
     }
