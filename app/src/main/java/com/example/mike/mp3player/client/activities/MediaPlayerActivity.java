@@ -1,9 +1,9 @@
 package com.example.mike.mp3player.client.activities;
 
 import android.content.Intent;
-import android.view.View;
 
 import androidx.annotation.VisibleForTesting;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
@@ -13,6 +13,7 @@ import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment
 import com.example.mike.mp3player.client.views.fragments.ShuffleRepeatFragment;
 import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
+import com.example.mike.mp3player.client.views.fragments.AlbumArtFragment;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
@@ -29,17 +30,19 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
     private PlaybackSpeedControlsFragment playbackSpeedControlsFragment;
     private SimpleTitleBarFragment simpleTitleBarFragment;
     private ShuffleRepeatFragment shuffleRepeatFragment;
-    private LibraryRequest initialLibraryRequest;
+    private AlbumArtFragment albumArtFragment;
 
     @Override
     boolean initialiseView(int layoutId) {
         setContentView(layoutId);
-        this.simpleTitleBarFragment = (SimpleTitleBarFragment) getSupportFragmentManager().findFragmentById(R.id.simpleTitleBarFragment);
-        this.trackInfoFragment = (TrackInfoFragment) getSupportFragmentManager().findFragmentById(R.id.trackInfoFragment);
-        this.playbackSpeedControlsFragment = (PlaybackSpeedControlsFragment) getSupportFragmentManager().findFragmentById(R.id.playbackSpeedControlsFragment);
-        this.playbackTrackerFragment = (PlaybackTrackerFragment) getSupportFragmentManager().findFragmentById(R.id.playbackTrackerFragment);
-        this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) getSupportFragmentManager().findFragmentById(R.id.playbackToolbarExtendedFragment);
-        this.shuffleRepeatFragment = (ShuffleRepeatFragment) getSupportFragmentManager().findFragmentById(R.id.shuffleRepeatFragment);
+        FragmentManager fm = getSupportFragmentManager();
+        this.simpleTitleBarFragment = (SimpleTitleBarFragment) fm.findFragmentById(R.id.simpleTitleBarFragment);
+        this.trackInfoFragment = (TrackInfoFragment) fm.findFragmentById(R.id.trackInfoFragment);
+        this.playbackSpeedControlsFragment = (PlaybackSpeedControlsFragment) fm.findFragmentById(R.id.playbackSpeedControlsFragment);
+        this.playbackTrackerFragment = (PlaybackTrackerFragment) fm.findFragmentById(R.id.playbackTrackerFragment);
+        this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) fm.findFragmentById(R.id.playbackToolbarExtendedFragment);
+        this.shuffleRepeatFragment = (ShuffleRepeatFragment) fm.findFragmentById(R.id.shuffleRepeatFragment);
+        this.albumArtFragment = (AlbumArtFragment) fm.findFragmentById(R.id.albumArtFragment);
         return true;
     }
 

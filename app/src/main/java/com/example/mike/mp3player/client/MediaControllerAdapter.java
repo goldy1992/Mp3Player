@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v4.media.MediaMetadataCompat;
@@ -10,6 +11,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
@@ -21,6 +23,8 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import java.util.Set;
 
 import javax.inject.Inject;
+
+import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_ALBUM_ART_URI;
 
 public class MediaControllerAdapter {
 
@@ -123,6 +127,18 @@ public class MediaControllerAdapter {
     public MediaMetadataCompat getMetadata() {
         if (mediaController != null) {
             return mediaController.getMetadata();
+        }
+        return null;
+    }
+
+    @Nullable
+    public Uri getCurrentSongAlbumArtUri() {
+        MediaMetadataCompat currentMetaData = getMetadata();
+        if (currentMetaData != null) {
+            Bundle extras = currentMetaData.getBundle();
+            if (null != extras) {
+                return (Uri) extras.get(META_DATA_ALBUM_ART_URI);
+            }
         }
         return null;
     }

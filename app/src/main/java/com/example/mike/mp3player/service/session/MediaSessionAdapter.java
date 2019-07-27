@@ -17,6 +17,7 @@ import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 import static com.example.mike.mp3player.commons.Constants.SHUFFLE_MODE;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
+import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_ALBUM_ART_URI;
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
 
 public class MediaSessionAdapter {
@@ -86,7 +87,11 @@ public class MediaSessionAdapter {
         } else {
             builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, UNKNOWN);
         }
-        return builder.build();
+
+        MediaMetadataCompat metadata = builder.build();
+        //metadata.getMediaMetadata()
+
+        return metadata;
     }
 
     public void setQueue(MediaSessionCompat.QueueItem item) {
