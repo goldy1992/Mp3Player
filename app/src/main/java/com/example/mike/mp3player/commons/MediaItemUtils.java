@@ -64,22 +64,22 @@ public final class MediaItemUtils {
         return null;
     }
 
-    public static List<MediaItem> orderMediaItemSetByCategory(Set<MediaItem> mediaItemSet) {
-        List<MediaItem> mediaItemList = new ArrayList<>(mediaItemSet);
-        Collections.sort(mediaItemList, ComparatorUtils.compareRootMediaItemsByCategory);
-        return mediaItemList;
-    }
-
-    public static final MediaItem findMediaItemInSet(LibraryObject requestedId, Set<MediaItem> itemSet) {
-        if (requestedId == null || requestedId.getId() == null || itemSet == null || itemSet.isEmpty()) {
-            return null;
-        }
-        for (MediaItem i : itemSet) {
-            String itemId = getMediaId(i);
-            if ( requestedId.getId().equals(itemId)) {
-                return i;
-            }
-        }
-        return null;
-    }
+//    public static List<MediaItem> orderMediaItemSetByCategory(Set<MediaItem> mediaItemSet) {
+//        List<MediaItem> mediaItemList = new ArrayList<>(mediaItemSet);
+//        Collections.sort(mediaItemList, ComparatorUtils.compareRootMediaItemsByCategory);
+//        return mediaItemList;
+//    }
+//
+//    public static final MediaItem findMediaItemInSet(LibraryObject requestedId, Set<MediaItem> itemSet) {
+//        if (requestedId == null || requestedId.getId() == null || itemSet == null || itemSet.isEmpty()) {
+//            return null;
+//        }
+//        for (MediaItem i : itemSet) {
+//            String itemId = getMediaId(i);
+//            if ( requestedId.getId().equals(itemId)) {
+//                return i;
+//            }
+//        }
+//        return null;
+//    }
 }

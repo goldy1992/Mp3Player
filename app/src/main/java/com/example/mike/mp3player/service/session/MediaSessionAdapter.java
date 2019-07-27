@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.service.session;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -7,6 +8,8 @@ import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.annotation.NonNull;
 
+import com.example.mike.mp3player.commons.MediaItemUtils;
+import com.example.mike.mp3player.commons.QueueItemUtils;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
@@ -19,6 +22,7 @@ import static com.example.mike.mp3player.commons.Constants.SHUFFLE_MODE;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_ALBUM_ART_URI;
 import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
+import static com.example.mike.mp3player.commons.QueueItemUtils.*;
 
 public class MediaSessionAdapter {
 
@@ -69,29 +73,19 @@ public class MediaSessionAdapter {
         builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayerAdapter.getCurrentDuration());
 
         MediaSessionCompat.QueueItem currentItem = playbackManager.getCurrentItem();
-        if(ValidMetaDataUtil.validMediaId(currentItem)) {
-            builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, currentItem.getDescription()
-                    .getMediaId());
-        }
 
-        if (ValidMetaDataUtil.validTitle(currentItem)) {
-            builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, currentItem.getDescription()
-                    .getTitle().toString());
-        } else {
-            builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, UNKNOWN);
-        }
+        String mediaId = getMediaId(currentItem);
+        builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaId);
 
-        if (ValidMetaDataUtil.validArtist(currentItem)) {
-            builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, currentItem.getDescription()
-                    .getExtras().getString(STRING_METADATA_KEY_ARTIST));
-        } else {
-            builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, UNKNOWN);
-        }
+        String title = getTitle(currentItem);
+        builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, null != title ? title : UNKNOWN);
 
-        MediaMetadataCompat metadata = builder.build();
-        //metadata.getMediaMetadata()
+        String artist = getArtist(currentItem);
+        builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, null != artist ? artist : UNKNOWN);
 
-        return metadata;
+        String albumArt = getAlbumArtPath(currentItem);
+        builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, albumArt);
+        return builder.build();
     }
 
     public void setQueue(MediaSessionCompat.QueueItem item) {
