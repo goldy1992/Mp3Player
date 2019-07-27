@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client.views.fragments;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +22,8 @@ import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent
 
 import javax.inject.Inject;
 
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_ALBUM_ART_URI;
-
 public class AlbumArtFragment extends AsyncFragment implements MetaDataListener {
-
+    private static final String LOG_TAG = "ALBM_ART_FRGMNT";
     private AlbumArtPainter albumArtPainter;
     private MediaControllerAdapter mediaControllerAdapter;
     private ImageView albumArt;
@@ -42,6 +41,8 @@ public class AlbumArtFragment extends AsyncFragment implements MetaDataListener 
     @Override
     public void onViewCreated(@NonNull View view, Bundle bundle) {
         this.albumArt = view.findViewById(R.id.albumArt);
+        // register listeners
+        this.mediaControllerAdapter.registerMetaDataListener(this);
         albumArtPainter.paintOnView(albumArt, mediaControllerAdapter.getCurrentSongAlbumArtUri());
     }
 
@@ -66,13 +67,18 @@ public class AlbumArtFragment extends AsyncFragment implements MetaDataListener 
 
     @Override
     public void onMetadataChanged(@NonNull MediaMetadataCompat metadata) {
-        Bundle extras = metadata.getDescription().getExtras();
-        if (null != extras) {
-            Uri newUri = (Uri) extras.get(META_DATA_ALBUM_ART_URI);
-            if (null != newUri && !newUri.equals(currentUri)) {
-                this.currentUri = newUri;
-                albumArtPainter.paintOnView(albumArt, currentUri);
-            }
+        String albumArtUriPath = metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI);
+        Uri newUri = null;
+        try {
+            newUri = Uri.parse(albumArtUriPath);
+        } catch (NullPointerException ex) {
+            Log.e(LOG_TAG, albumArtUriPath + ": is an invalid Uri");
+            return;
         }
+        if (!newUri.equals(currentUri)) {
+            this.currentUri = newUri;
+            albumArtPainter.paintOnView(albumArt, currentUri);
+        }
+
     }
 }

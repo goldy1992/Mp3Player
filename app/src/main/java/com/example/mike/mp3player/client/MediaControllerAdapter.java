@@ -24,7 +24,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_ALBUM_ART_URI;
 
 public class MediaControllerAdapter {
 
@@ -134,11 +133,16 @@ public class MediaControllerAdapter {
     @Nullable
     public Uri getCurrentSongAlbumArtUri() {
         MediaMetadataCompat currentMetaData = getMetadata();
-        if (currentMetaData != null) {
-            Bundle extras = currentMetaData.getBundle();
-            if (null != extras) {
-                return (Uri) extras.get(META_DATA_ALBUM_ART_URI);
+        String albumArtUriPath = currentMetaData.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI);
+        if (albumArtUriPath != null) {
+            Uri albumArtUri = null;
+            try {
+                 albumArtUri = Uri.parse(albumArtUriPath);
+            } catch (NullPointerException ex) {
+                Log.e(LOG_TAG, albumArtUriPath + ": is an invalid Uri");
+                return null;
             }
+            return  albumArtUri;
         }
         return null;
     }

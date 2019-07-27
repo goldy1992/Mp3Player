@@ -2,6 +2,7 @@ package com.example.mike.mp3player.client.views;
 
 import android.net.Uri;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
+import android.support.v4.media.MediaMetadataCompat;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,7 +21,7 @@ import org.apache.commons.io.FilenameUtils;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getExtra;
 import static com.example.mike.mp3player.commons.MediaItemUtils.hasExtras;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_ALBUM_ART_URI;
+
 
 public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     private final String LOG_TAG = "MY_VIEW_ADAPTER";
@@ -76,7 +77,7 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     }
 
     private Uri getAlbumArtUri(MediaItem song) {
-        Uri albumUri = (Uri) song.getDescription().getExtras().get(META_DATA_ALBUM_ART_URI);
+        Uri albumUri = (Uri) song.getDescription().getExtras().get(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI);
         return albumUri;
     }
 
@@ -96,7 +97,7 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     private String extractArtist(MediaItem song) {
         String artist = null;
         try {
-            artist = song.getDescription().getExtras().getString(MetaDataKeys.STRING_METADATA_KEY_ARTIST);
+            artist = song.getDescription().getExtras().getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
             if (null == artist) {
                 artist = UNKNOWN;
             }
@@ -107,7 +108,7 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     }
 
     private String extractDuration(MediaItem song) {
-        String durationString = song.getDescription().getExtras().getString(MetaDataKeys.STRING_METADATA_KEY_DURATION);
+        String durationString = song.getDescription().getExtras().getString(MediaMetadataCompat.METADATA_KEY_DURATION);
         long duration = Long.parseLong(durationString);
         return TimerUtils.formatTime(duration);
     }

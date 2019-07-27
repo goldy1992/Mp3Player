@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.service.session;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -8,21 +7,18 @@ import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.annotation.NonNull;
 
-import com.example.mike.mp3player.commons.MediaItemUtils;
-import com.example.mike.mp3player.commons.QueueItemUtils;
 import com.example.mike.mp3player.service.PlaybackManager;
-import com.example.mike.mp3player.service.library.utils.ValidMetaDataUtil;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 import javax.inject.Inject;
 
-import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 import static com.example.mike.mp3player.commons.Constants.SHUFFLE_MODE;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_ALBUM_ART_URI;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
-import static com.example.mike.mp3player.commons.QueueItemUtils.*;
+import static com.example.mike.mp3player.commons.QueueItemUtils.getAlbumArtPath;
+import static com.example.mike.mp3player.commons.QueueItemUtils.getArtist;
+import static com.example.mike.mp3player.commons.QueueItemUtils.getMediaId;
+import static com.example.mike.mp3player.commons.QueueItemUtils.getTitle;
 
 public class MediaSessionAdapter {
 

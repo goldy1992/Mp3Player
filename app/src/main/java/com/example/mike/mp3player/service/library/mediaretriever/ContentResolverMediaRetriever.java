@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore.Audio.Media;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
+import android.support.v4.media.MediaMetadataCompat;
 
 import androidx.annotation.VisibleForTesting;
 
@@ -18,13 +19,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_ALBUM_ART_URI;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_DURATION;
 
 public class ContentResolverMediaRetriever extends MediaRetriever {
     private ContentResolver contentResolver;
@@ -84,13 +82,13 @@ public class ContentResolverMediaRetriever extends MediaRetriever {
         Uri albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId);
 
         Bundle extras = new Bundle();
-        extras.putString(STRING_METADATA_KEY_DURATION, String.valueOf(duration));
-        extras.putString(STRING_METADATA_KEY_ARTIST, artist);
+        extras.putString(MediaMetadataCompat.METADATA_KEY_DURATION, String.valueOf(duration));
+        extras.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist);
         extras.putString(META_DATA_KEY_PARENT_PATH, parentPath);
         extras.putString(META_DATA_KEY_FILE_NAME, fileName);
         extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directoryName);
         extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directoryPath);
-        extras.putParcelable(META_DATA_ALBUM_ART_URI, albumArtUri);
+        extras.putParcelable(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, albumArtUri);
 
         // TODO: add code to fetch album art also
         MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()

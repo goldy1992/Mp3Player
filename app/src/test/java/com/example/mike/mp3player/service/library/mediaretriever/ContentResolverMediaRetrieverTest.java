@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.Media;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
+import android.support.v4.media.MediaMetadataCompat;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -21,10 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_DURATION;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -62,7 +60,7 @@ public class ContentResolverMediaRetrieverTest {
             Bundle extras = item.getDescription().getExtras();
 
             // assert duration
-            String duration = extras.getString(STRING_METADATA_KEY_DURATION);
+            String duration = extras.getString(MediaMetadataCompat.METADATA_KEY_DURATION);
             assertEquals(testData.get(i).get(Media.DURATION), duration);
 
             // assert title
@@ -70,7 +68,7 @@ public class ContentResolverMediaRetrieverTest {
             assertEquals(testData.get(i).get(Media.TITLE), title);
 
             // assert artist
-            String artist = extras.getString(STRING_METADATA_KEY_ARTIST);
+            String artist = extras.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
             assertEquals(testData.get(i).get(Media.ARTIST), artist);
 
         }
