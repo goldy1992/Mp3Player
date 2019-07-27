@@ -63,12 +63,20 @@ public class ContentResolverMediaRetriever extends MediaRetriever {
         File file =  new File(path);
         File directory = file.getParentFile();
 
+        String directoryName = null;
+        String  directoryPath = null;
+
+        if (null != directory) {
+            directoryName = directory.getName();
+            directoryPath = directory.getAbsolutePath();
+        }
 
         Uri uri = Uri.fromFile(file);
         String mediaId = String.valueOf(uri.getPath().hashCode());
         String parentPath = null;
-        if (null!= file && null != file.getParent()) {
-            file.getParentFile().getAbsolutePath();
+
+        if (null != file.getParent()) {
+            parentPath = file.getParentFile().getAbsolutePath();
         }
         String fileName = file.getName();
 
@@ -80,8 +88,8 @@ public class ContentResolverMediaRetriever extends MediaRetriever {
         extras.putString(STRING_METADATA_KEY_ARTIST, artist);
         extras.putString(META_DATA_KEY_PARENT_PATH, parentPath);
         extras.putString(META_DATA_KEY_FILE_NAME, fileName);
-        extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directory.getName());
-        extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directory.getAbsolutePath());
+        extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directoryName);
+        extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directoryPath);
         extras.putParcelable(META_DATA_ALBUM_ART_URI, albumArtUri);
 
         // TODO: add code to fetch album art also
