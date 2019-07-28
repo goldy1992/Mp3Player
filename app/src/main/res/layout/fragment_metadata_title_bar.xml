@@ -16,19 +16,18 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            android:theme="@style/AppTheme.ActionBar"
+
             >
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/AppTheme"
                 android:layout_marginRight="@dimen/default_gap">
 
                 <TextView
                     android:id="@+id/songTitle"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
                     android:layout_width="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
                     android:scrollHorizontally="true"

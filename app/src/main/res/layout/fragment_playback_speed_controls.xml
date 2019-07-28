@@ -4,33 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@+id/trackName"
-    android:orientation="horizontal">
-
-    <TextView
-        android:id="@+id/playbackSpeedTitle"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_height="wrap_content"
-        android:text="@string/PLAYBACK_SPEED" />
+    android:orientation="horizontal"
+    android:gravity="center" >
 
     <androidx.appcompat.widget.AppCompatImageButton
+        android:background="@null"
         android:id="@+id/decreasePlaybackSpeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_baseline_remove_circle_24px" />
 
+    <TextView
+        android:background="@null"
+        android:id="@+id/playbackSpeedValue"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/default_gap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/PLAYBACK_SPEED_DEFAULT_VALUE" />
+
     <androidx.appcompat.widget.AppCompatImageButton
+        android:background="@null"
         android:id="@+id/increasePlaybackSpeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_baseline_add_circle_24px"
         />
 
-    <TextView
-        android:id="@+id/playbackSpeedValue"
-        android:layout_gravity="center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/PLAYBACK_SPEED_DEFAULT_VALUE" />
+
 
 </LinearLayout>
