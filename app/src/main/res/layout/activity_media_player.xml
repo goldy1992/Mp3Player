@@ -3,33 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.example.mike.mp3player.client.activities.MediaPlayerActivity">
 
     <fragment
-        android:id="@+id/simpleTitleBarFragment"
+        android:id="@+id/metadataTitleBarFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        class="com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment"
-        tools:layout="@layout/fragment_simple_title_bar"/>
-
-    <fragment
-        android:id="@+id/trackInfoFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/simpleTitleBarFragment"
-        android:layout_gravity="top"
-        class="com.example.mike.mp3player.client.views.fragments.TrackInfoFragment"
-        tools:layout="@layout/fragment_track_info"/>
-
+        class="com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragment"
+        tools:layout="@layout/fragment_metadata_title_bar"/>
 
     <fragment
         android:id="@+id/playbackSpeedControlsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/trackInfoFragment"
+        android:layout_below="@+id/metadataTitleBarFragment"
         class="com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment"
         tools:layout="@layout/fragment_playback_speed_controls"/>
 
