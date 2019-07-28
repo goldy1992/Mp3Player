@@ -6,7 +6,6 @@ import android.os.Handler;
 import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.dagger.scopes.FragmentScope;
 
-
 import javax.inject.Named;
 
 import dagger.Module;

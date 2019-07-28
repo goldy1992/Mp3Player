@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ALL;
@@ -24,6 +26,7 @@ public class RepeatOneRepeatAllButton extends LinearLayoutWithImageView implemen
     private Context context;
     @PlaybackStateCompat.RepeatMode
     private int repeatMode;
+    private MediaControllerAdapter mediaControllerAdapter;
 
     public RepeatOneRepeatAllButton(Context context) {
         this(context, null);
@@ -36,6 +39,19 @@ public class RepeatOneRepeatAllButton extends LinearLayoutWithImageView implemen
     public RepeatOneRepeatAllButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr, 0, R.drawable.ic_baseline_repeat_24px, 1);
         this.context = context;
+    }
+
+    public void init(MediaControllerAdapter mediaControllerAdapter) {
+        this.mediaControllerAdapter = mediaControllerAdapter;
+        this.setOnClickListener(this::setRepeatOneRepeatAllButtonMode);
+        this.updateState(mediaControllerAdapter.getShuffleMode());
+    }
+
+    private void setRepeatOneRepeatAllButtonMode(View view) {
+        int nextState = getNextState();
+        mediaControllerAdapter.setRepeatMode(nextState);
+        updateState(mediaControllerAdapter.getRepeatMode());
+        updateState(nextState);
     }
 
     public void updateState(@PlaybackStateCompat.RepeatMode int newState) {

@@ -8,9 +8,9 @@ import com.example.mike.mp3player.client.activities.MainActivity;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.fragments.AlbumArtFragment;
-import com.example.mike.mp3player.client.views.fragments.MainFrameFragment;
+import com.example.mike.mp3player.client.views.fragments.MediaControlsFragment;
+import com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
-import com.example.mike.mp3player.client.views.fragments.ShuffleRepeatFragment;
 import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.dagger.components.fragments.ChildViewPagerFragmentSubcomponent;
 import com.example.mike.mp3player.dagger.components.fragments.MainFrameFragmentSubcomponent;
@@ -48,8 +48,9 @@ public interface MediaActivityCompatComponent {
     // fragments
     void inject(PlaybackSpeedControlsFragment playbackSpeedControlsFragment);
     void inject(TrackInfoFragment trackInfoFragment);
-    void inject(ShuffleRepeatFragment shuffleRepeatFragment);
+    void inject(MediaControlsFragment mediaControlsFragment);
     void inject(AlbumArtFragment albumArtFragment);
+    void inject(MetadataTitleBarFragment metadataTitleBarFragment);
 
     // sub components
     ChildViewPagerFragmentSubcomponent.Factory childViewPagerFragmentSubcomponentFactory();

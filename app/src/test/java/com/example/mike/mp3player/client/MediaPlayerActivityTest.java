@@ -7,21 +7,11 @@ import android.support.v4.media.session.MediaSessionCompat;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
-import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjector;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjectorTestImpl;
-import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
-import com.example.mike.mp3player.client.views.fragments.PlaybackToolbarExtendedFragment;
-import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
-import com.example.mike.mp3player.client.views.fragments.ShuffleRepeatFragment;
-import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
-import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
-import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,12 +61,11 @@ public class MediaPlayerActivityTest {
      */
     @Test
     public void testInitialisation()  {
-        assertNotNull(mediaPlayerActivity.getSimpleTitleBarFragment());
-        assertNotNull(mediaPlayerActivity.getTrackInfoFragment());
-        assertNotNull(mediaPlayerActivity.getPlaybackSpeedControlsFragment());
+        assertNotNull(mediaPlayerActivity.getMetadataTitleBarFragment());
         assertNotNull(mediaPlayerActivity.getPlaybackTrackerFragment());
         assertNotNull(mediaPlayerActivity.getPlaybackToolbarExtendedFragment());
-        assertNotNull(mediaPlayerActivity.getShuffleRepeatFragment());
+        assertNotNull(mediaPlayerActivity.getMediaControlsFragment());
+        assertNotNull(mediaPlayerActivity.getAlbumArtFragment());
     }
 
     /**

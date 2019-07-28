@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.activities.MainActivity;
 import com.example.mike.mp3player.client.activities.MainActivityInjector;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;

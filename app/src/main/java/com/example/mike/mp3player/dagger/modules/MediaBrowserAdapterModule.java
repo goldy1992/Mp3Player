@@ -3,7 +3,6 @@ package com.example.mike.mp3player.dagger.modules;
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
@@ -15,10 +14,7 @@ import com.example.mike.mp3player.client.callbacks.subscription.MediaIdSubscript
 import com.example.mike.mp3player.client.callbacks.subscription.NotifyAllSubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.dagger.scopes.ComponentScope;
-import com.example.mike.mp3player.service.MediaPlaybackService;
 import com.example.mike.mp3player.service.MediaPlaybackServiceInjector;
-
-import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;

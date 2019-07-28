@@ -3,11 +3,11 @@ package com.example.mike.mp3player.dagger.modules.service;
 import android.content.Context;
 import android.os.Build;
 
+import com.example.mike.mp3player.service.AudioFocusManager;
 import com.example.mike.mp3player.service.player.MarshmallowMediaPlayerAdapter;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 import com.example.mike.mp3player.service.player.NougatMediaPlayerAdapter;
 import com.example.mike.mp3player.service.player.OreoPlayerAdapter;
-import com.example.mike.mp3player.service.AudioFocusManager;
 
 import javax.inject.Singleton;
 

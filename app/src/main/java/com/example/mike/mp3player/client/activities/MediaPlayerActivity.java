@@ -7,13 +7,11 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
-import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
+import com.example.mike.mp3player.client.views.fragments.AlbumArtFragment;
+import com.example.mike.mp3player.client.views.fragments.MediaControlsFragment;
+import com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackToolbarExtendedFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
-import com.example.mike.mp3player.client.views.fragments.ShuffleRepeatFragment;
-import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
-import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
-import com.example.mike.mp3player.client.views.fragments.AlbumArtFragment;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
@@ -24,24 +22,20 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
 
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
 
-    private TrackInfoFragment trackInfoFragment;
     private PlaybackTrackerFragment playbackTrackerFragment;
     private PlaybackToolbarExtendedFragment playbackToolbarExtendedFragment;
-    private PlaybackSpeedControlsFragment playbackSpeedControlsFragment;
-    private SimpleTitleBarFragment simpleTitleBarFragment;
-    private ShuffleRepeatFragment shuffleRepeatFragment;
+    private MetadataTitleBarFragment metadataTitleBarFragment;
+    private MediaControlsFragment mediaControlsFragment;
     private AlbumArtFragment albumArtFragment;
 
     @Override
     boolean initialiseView(int layoutId) {
         setContentView(layoutId);
         FragmentManager fm = getSupportFragmentManager();
-        this.simpleTitleBarFragment = (SimpleTitleBarFragment) fm.findFragmentById(R.id.simpleTitleBarFragment);
-        this.trackInfoFragment = (TrackInfoFragment) fm.findFragmentById(R.id.trackInfoFragment);
-        this.playbackSpeedControlsFragment = (PlaybackSpeedControlsFragment) fm.findFragmentById(R.id.playbackSpeedControlsFragment);
+        this.metadataTitleBarFragment = (MetadataTitleBarFragment) fm.findFragmentById(R.id.metadataTitleBarFragment);
         this.playbackTrackerFragment = (PlaybackTrackerFragment) fm.findFragmentById(R.id.playbackTrackerFragment);
         this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) fm.findFragmentById(R.id.playbackToolbarExtendedFragment);
-        this.shuffleRepeatFragment = (ShuffleRepeatFragment) fm.findFragmentById(R.id.shuffleRepeatFragment);
+        this.mediaControlsFragment = (MediaControlsFragment) fm.findFragmentById(R.id.mediaControlsFragment);
         this.albumArtFragment = (AlbumArtFragment) fm.findFragmentById(R.id.albumArtFragment);
         return true;
     }
@@ -97,13 +91,11 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
     @VisibleForTesting
     public PlaybackToolbarExtendedFragment getPlaybackToolbarExtendedFragment() { return playbackToolbarExtendedFragment; }
     @VisibleForTesting
-    public TrackInfoFragment getTrackInfoFragment() { return trackInfoFragment; }
-    @VisibleForTesting
     public PlaybackTrackerFragment getPlaybackTrackerFragment() { return playbackTrackerFragment; }
     @VisibleForTesting
-    public PlaybackSpeedControlsFragment getPlaybackSpeedControlsFragment() { return playbackSpeedControlsFragment; }
+    public MetadataTitleBarFragment getMetadataTitleBarFragment() { return metadataTitleBarFragment; }
     @VisibleForTesting
-    public SimpleTitleBarFragment getSimpleTitleBarFragment() { return simpleTitleBarFragment; }
+    public MediaControlsFragment getMediaControlsFragment() { return mediaControlsFragment; }
     @VisibleForTesting
-    public ShuffleRepeatFragment getShuffleRepeatFragment() { return shuffleRepeatFragment; }
+    public AlbumArtFragment getAlbumArtFragment() { return albumArtFragment;}
 }

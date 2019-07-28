@@ -130,6 +130,14 @@ public class MediaControllerAdapter {
         return null;
     }
 
+    public @PlaybackStateCompat.ShuffleMode int getShuffleMode() {
+        return mediaController.getShuffleMode();
+    }
+
+    public @PlaybackStateCompat.RepeatMode int getRepeatMode() {
+        return mediaController.getRepeatMode();
+    }
+
     @Nullable
     public Uri getCurrentSongAlbumArtUri() {
         MediaMetadataCompat currentMetaData = getMetadata();

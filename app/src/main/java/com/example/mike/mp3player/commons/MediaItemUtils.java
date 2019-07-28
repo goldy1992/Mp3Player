@@ -2,13 +2,6 @@ package com.example.mike.mp3player.commons;
 
 import android.os.Bundle;
 
-import com.example.mike.mp3player.commons.library.LibraryObject;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 public final class MediaItemUtils {

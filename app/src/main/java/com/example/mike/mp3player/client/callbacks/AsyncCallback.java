@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.callbacks;
 
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Parcelable;
 
 public abstract class AsyncCallback<P extends Parcelable> {
