@@ -14,14 +14,6 @@
         class="com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragment"
         tools:layout="@layout/fragment_metadata_title_bar"/>
 
-    <!--<fragment-->
-        <!--android:id="@+id/playbackSpeedControlsFragment"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/metadataTitleBarFragment"-->
-        <!--class="com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment"-->
-        <!--tools:layout="@layout/fragment_playback_speed_controls"/>-->
-
     <fragment
         android:id="@+id/albumArtFragment"
         android:layout_margin="@dimen/default_gap"
