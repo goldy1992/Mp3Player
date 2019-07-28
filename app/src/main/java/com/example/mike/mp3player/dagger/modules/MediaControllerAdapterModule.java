@@ -6,7 +6,6 @@ import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 import com.example.mike.mp3player.dagger.scopes.ComponentScope;
 
-
 import dagger.Module;
 import dagger.Provides;
 

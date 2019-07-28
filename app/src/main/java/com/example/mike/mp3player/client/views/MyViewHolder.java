@@ -2,7 +2,6 @@ package com.example.mike.mp3player.client.views;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,7 +9,7 @@ import com.example.mike.mp3player.R;
 
 public class MyViewHolder extends RecyclerView.ViewHolder {
 
-    private GridLayout menuItem;
+    private ViewGroup menuItem;
 
     public MyViewHolder(View view) {
         super(view);

@@ -2,13 +2,6 @@ package com.example.mike.mp3player.commons;
 
 import android.os.Bundle;
 
-import com.example.mike.mp3player.commons.library.LibraryObject;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 public final class MediaItemUtils {
@@ -64,22 +57,22 @@ public final class MediaItemUtils {
         return null;
     }
 
-    public static List<MediaItem> orderMediaItemSetByCategory(Set<MediaItem> mediaItemSet) {
-        List<MediaItem> mediaItemList = new ArrayList<>(mediaItemSet);
-        Collections.sort(mediaItemList, ComparatorUtils.compareRootMediaItemsByCategory);
-        return mediaItemList;
-    }
-
-    public static final MediaItem findMediaItemInSet(LibraryObject requestedId, Set<MediaItem> itemSet) {
-        if (requestedId == null || requestedId.getId() == null || itemSet == null || itemSet.isEmpty()) {
-            return null;
-        }
-        for (MediaItem i : itemSet) {
-            String itemId = getMediaId(i);
-            if ( requestedId.getId().equals(itemId)) {
-                return i;
-            }
-        }
-        return null;
-    }
+//    public static List<MediaItem> orderMediaItemSetByCategory(Set<MediaItem> mediaItemSet) {
+//        List<MediaItem> mediaItemList = new ArrayList<>(mediaItemSet);
+//        Collections.sort(mediaItemList, ComparatorUtils.compareRootMediaItemsByCategory);
+//        return mediaItemList;
+//    }
+//
+//    public static final MediaItem findMediaItemInSet(LibraryObject requestedId, Set<MediaItem> itemSet) {
+//        if (requestedId == null || requestedId.getId() == null || itemSet == null || itemSet.isEmpty()) {
+//            return null;
+//        }
+//        for (MediaItem i : itemSet) {
+//            String itemId = getMediaId(i);
+//            if ( requestedId.getId().equals(itemId)) {
+//                return i;
+//            }
+//        }
+//        return null;
+//    }
 }

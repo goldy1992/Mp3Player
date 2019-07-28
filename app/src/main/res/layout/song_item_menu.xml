@@ -1,45 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/menu_item"
-    android:background="@android:color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="5"
+    >
 
-    android:useDefaultMargins="true"
-    android:alignmentMode="alignBounds"
-    android:columnOrderPreserved="false"
-    android:columnCount="3">
+    <com.example.mike.mp3player.client.views.SquareImageView
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:id="@+id/song_item_album_art"
+        app:useWidthOrHeight="X"
+        android:adjustViewBounds="true"
+        android:layout_margin="@dimen/default_gap"
+        android:contentDescription="content description"
+        app:layout_constraintDimensionRatio="1:1"
+        android:background="@android:color/white" />
 
-    <TextView android:id="@+id/title"
+    <GridLayout
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_gap"
+        android:layout_width="0dp"
+        android:layout_weight="4"
+        android:alignmentMode="alignBounds"
+        android:rowCount="2"
+        android:useDefaultMargins="true">
+
+
+        <TextView
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_row="0"
+            android:layout_column="0"
             android:layout_gravity="start"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_columnSpan="3"/>
+            android:textStyle="bold" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:orientation="horizontal"
+            android:weightSum="6">
 
-    <TextView android:id="@+id/artist"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_column="0"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+            <TextView
+                android:id="@+id/artist"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_gravity="start"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_column="1"
-        android:textSize="14sp"
-        android:textStyle="normal"
-        android:text="@string/TITLE_ARTIST_SEPARATOR"/>
+            <TextView
+                android:id="@+id/duration"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_gravity="start"
+                android:textSize="14sp"
+                android:textStyle="normal" />
 
-    <TextView android:id="@+id/duration"
-        android:layout_height="wrap_content"
-        android:layout_column="2"
-        android:layout_gravity="start"
-        android:textSize="14sp"
-        android:textStyle="normal"
-            />
+        </LinearLayout>
 
-</GridLayout>
+    </GridLayout>
+
+</LinearLayout>

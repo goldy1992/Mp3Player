@@ -10,7 +10,6 @@ import com.example.mike.mp3player.service.session.MediaSessionAdapter;
 
 import javax.inject.Singleton;
 
-import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 

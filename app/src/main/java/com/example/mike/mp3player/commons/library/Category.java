@@ -1,9 +1,7 @@
 package com.example.mike.mp3player.commons.library;
 
-import com.example.mike.mp3player.client.activities.FolderActivity;
 import com.example.mike.mp3player.client.activities.FolderActivityInjector;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
-import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjector;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;

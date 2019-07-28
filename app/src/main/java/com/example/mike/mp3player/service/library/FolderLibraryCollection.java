@@ -10,7 +10,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
-import static com.example.mike.mp3player.commons.ComparatorUtils.compareMediaItemById;
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareMediaItemsByTitle;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getExtras;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getMediaId;
@@ -24,7 +23,7 @@ public class FolderLibraryCollection extends LibraryCollection {
     public static final String DESCRIPTION = Constants.CATEGORY_FOLDERS_DESCRIPTION;
 
     public FolderLibraryCollection() {
-        super(ID, TITLE, DESCRIPTION, compareMediaItemById, compareMediaItemById);
+        super(ID, TITLE, DESCRIPTION, compareMediaItemsByTitle, compareMediaItemsByTitle);
         this.collection = new TreeMap<>();
     }
 
@@ -32,20 +31,20 @@ public class FolderLibraryCollection extends LibraryCollection {
     public void index(List<MediaItem> items) {
         if (null != items) {
             for (MediaItem i : items) {
-                String parentDirectoryPath = null;
-                String parentDirectoryName = null;
+                String folderPath = null;
+                String folderName = null;
 
                 if (MediaItemUtils.hasExtras(i)) {
-                    parentDirectoryPath = getExtras(i).getString(META_DATA_PARENT_DIRECTORY_PATH);
-                    parentDirectoryName = getExtras(i).getString(META_DATA_PARENT_DIRECTORY_NAME);
+                    folderPath = getExtras(i).getString(META_DATA_PARENT_DIRECTORY_PATH);
+                    folderName = getExtras(i).getString(META_DATA_PARENT_DIRECTORY_NAME);
                 }
 
-                String key = parentDirectoryPath;
+                String key = folderPath;
                 if (null == key) {
                     break;
                 }
                 if (!collection.containsKey(key)) {
-                    MediaItem newFolder = createCollectionRootMediaItem(parentDirectoryPath, parentDirectoryName, parentDirectoryPath);
+                    MediaItem newFolder = createCollectionRootMediaItem(folderPath, folderName, folderPath);
                     getKeys().add(newFolder);
                     collection.put(key, new TreeSet<>(compareMediaItemsByTitle));
                 }

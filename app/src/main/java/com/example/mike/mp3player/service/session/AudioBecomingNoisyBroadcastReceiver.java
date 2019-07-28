@@ -8,13 +8,7 @@ import android.media.AudioManager;
 
 import androidx.annotation.VisibleForTesting;
 
-import com.example.mike.mp3player.service.ServiceManager;
-import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
-
 import javax.inject.Inject;
-
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PAUSE;
-import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 
 public class AudioBecomingNoisyBroadcastReceiver extends BroadcastReceiver {
 

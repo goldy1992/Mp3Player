@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
+import android.support.v4.media.MediaMetadataCompat;
 
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
@@ -22,9 +23,7 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ALBUM_ARTIST;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_DURATION;
+
 @Singleton
 public abstract class MediaRetriever {
     Context context;
@@ -43,9 +42,9 @@ public abstract class MediaRetriever {
         mmr.setDataSource(context, uri);
 
         Bundle extras = new Bundle();
-        extras.putString(STRING_METADATA_KEY_DURATION, mmr.extractMetadata(METADATA_KEY_DURATION));
-        extras.putString(STRING_METADATA_KEY_ARTIST, mmr.extractMetadata(METADATA_KEY_ARTIST));
-        extras.putString(STRING_METADATA_KEY_ALBUM_ARTIST, mmr.extractMetadata(METADATA_KEY_ALBUMARTIST));
+        extras.putString(MediaMetadataCompat.METADATA_KEY_DURATION, mmr.extractMetadata(METADATA_KEY_DURATION));
+        extras.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, mmr.extractMetadata(METADATA_KEY_ARTIST));
+        extras.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, mmr.extractMetadata(METADATA_KEY_ALBUMARTIST));
         extras.putString(META_DATA_KEY_PARENT_PATH, parentPath);
         extras.putString(META_DATA_KEY_FILE_NAME, fileName);
         extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directory.getName());

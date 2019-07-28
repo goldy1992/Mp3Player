@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaBrowserAdapter;
-import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.SongSearchActionListener;
 
 public class MainActivityRootFragment extends Fragment implements SongSearchActionListener {

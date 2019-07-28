@@ -11,9 +11,6 @@ import com.example.mike.mp3player.service.AudioFocusManager;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
-import static com.example.mike.mp3player.commons.LoggingUtils.logPlaybackParams;
-
 public class MarshmallowMediaPlayerAdapter extends MediaPlayerAdapter {
 
     private MediaPlayerPool mediaPlayerPool;

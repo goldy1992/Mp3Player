@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.views;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
@@ -51,10 +50,13 @@ public class LinearLayoutWithImageView extends LinearLayout {
         ImageView imageView = getView();
         imageView.setScaleX(scale);
         imageView.setScaleY(scale);
-        int imageHeight = imageView.getDrawable().getIntrinsicHeight();
-        long exactMarginSize =  imageHeight / 2;
-        int marginSize =  (int) exactMarginSize;
-        imageView.setPadding(marginSize, marginSize, marginSize, marginSize);
+        Drawable drawable = imageView.getDrawable();
+        if (null != drawable) {
+            int imageHeight = imageView.getDrawable().getIntrinsicHeight();
+            long exactMarginSize = imageHeight / 2;
+            int marginSize = (int) exactMarginSize;
+            imageView.setPadding(marginSize, marginSize, marginSize, marginSize);
+        }
         setGravity(Gravity.CENTER_HORIZONTAL);
     }
 
