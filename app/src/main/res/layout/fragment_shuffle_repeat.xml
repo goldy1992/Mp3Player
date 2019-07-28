@@ -3,18 +3,30 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_columnSpan="2"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:columnCount="3"
     android:orientation="horizontal">
 
     <com.example.mike.mp3player.client.views.RepeatOneRepeatAllButton
         android:id="@+id/repeatOneRepeatAllButton"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_column="0"
         android:paddingStart="@dimen/default_gap"
         android:paddingEnd="0dp"
         custom:imgSrc="@drawable/ic_baseline_repeat_24px" />
 
+    <fragment
+        android:id="@+id/playbackSpeedControlsFragment"
+        android:layout_width="wrap_content"
+        android:layout_column="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        class="com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment"
+        tools:layout="@layout/fragment_playback_speed_controls"/>
+
     <com.example.mike.mp3player.client.views.ShuffleButton
+        android:layout_column="2"
         android:id="@+id/shuffleButton"
         android:layout_width="wrap_content"
         android:layout_gravity="end"

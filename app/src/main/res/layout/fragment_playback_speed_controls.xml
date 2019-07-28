@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_below="@+id/trackName"
     android:orientation="horizontal"
+    android:layout_gravity="center"
     android:gravity="center" >
 
     <androidx.appcompat.widget.AppCompatImageButton

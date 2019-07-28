@@ -5,9 +5,11 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageButton;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
@@ -27,6 +29,7 @@ public class ShuffleRepeatFragment extends AsyncFragment {
     private RepeatOneRepeatAllButton repeatOneRepeatAllButton;
     private ShuffleButton shuffleButton;
 
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -39,26 +42,15 @@ public class ShuffleRepeatFragment extends AsyncFragment {
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         this.repeatOneRepeatAllButton = view.findViewById(R.id.repeatOneRepeatAllButton);
-        this.repeatOneRepeatAllButton.updateState(PlaybackStateCompat.REPEAT_MODE_ALL);
-        this.repeatOneRepeatAllButton.setOnClickListener(this::setRepeatOneRepeatAllButtonMode);
         this.shuffleButton = view.findViewById(R.id.shuffleButton);
-        this.shuffleButton.updateState(PlaybackStateCompat.SHUFFLE_MODE_NONE);
-        this.shuffleButton.setOnClickListener(this::setShuffleButtonMode);
+
         this.mediaControllerAdapter.registerPlaybackStateListener(repeatOneRepeatAllButton, Collections.singleton(ListenerType.REPEAT));
         this.mediaControllerAdapter.registerPlaybackStateListener(shuffleButton, Collections.singleton(ListenerType.SHUFFLE));
     }
 
-    private void setRepeatOneRepeatAllButtonMode(View view) {
-        int nextState = repeatOneRepeatAllButton.getNextState();
-        // TODO: activate statement when MediaPlaybackService is ready to consume repeat requests
-        mediaControllerAdapter.setRepeatMode(nextState);
-        repeatOneRepeatAllButton.updateState(repeatOneRepeatAllButton.getNextState());
-    }
 
-    private void setShuffleButtonMode(View view) {
-        @PlaybackStateCompat.ShuffleMode int newShuffleMode = shuffleButton.toggleShuffle();
-        mediaControllerAdapter.setShuffleMode(newShuffleMode);
-    }
+
+
 
     @Inject
     public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {

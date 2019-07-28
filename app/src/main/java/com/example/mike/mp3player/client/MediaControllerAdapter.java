@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client;
 
 import android.content.Context;
+import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -128,6 +129,14 @@ public class MediaControllerAdapter {
             return mediaController.getMetadata();
         }
         return null;
+    }
+
+    public @PlaybackStateCompat.ShuffleMode int getShuffleMode() {
+        return mediaController.getShuffleMode();
+    }
+
+    public @PlaybackStateCompat.RepeatMode int getRepeatMode() {
+        return mediaController.getRepeatMode();
     }
 
     @Nullable

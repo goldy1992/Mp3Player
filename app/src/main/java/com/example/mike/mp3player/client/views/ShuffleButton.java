@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
@@ -37,6 +38,13 @@ public class ShuffleButton extends LinearLayoutWithImageView implements Playback
         super(context, attrs, defStyleAttr, 0, R.drawable.ic_baseline_shuffle_24px, 1);
         this.context = context;
     }
+
+    public void init(MediaControllerAdapter mediaControllerAdapter) {
+        this.mediaControllerAdapter = mediaControllerAdapter;
+        this.setOnClickListener(this::toggleShuffle);
+        this.updateState(mediaControllerAdapter.getShuffleMode());
+    }
+
     public void updateState(@PlaybackStateCompat.ShuffleMode int newState) {
         switch (newState) {
             case SHUFFLE_MODE_ALL:
@@ -50,11 +58,14 @@ public class ShuffleButton extends LinearLayoutWithImageView implements Playback
         }
     }
 
-    public @PlaybackStateCompat.ShuffleMode int toggleShuffle() {
+    public @PlaybackStateCompat.ShuffleMode int toggleShuffle(View view) {
+        @PlaybackStateCompat.ShuffleMode int newShuffleMode = SHUFFLE_MODE_NONE;
         switch (shuffleMode) {
-            case SHUFFLE_MODE_ALL: updateState(SHUFFLE_MODE_NONE); break;
-            default: updateState(SHUFFLE_MODE_ALL); break;
+            case SHUFFLE_MODE_ALL: newShuffleMode = SHUFFLE_MODE_NONE; break;
+            default: newShuffleMode = SHUFFLE_MODE_ALL; break;
         }
+        updateState(newShuffleMode);
+        mediaControllerAdapter.setShuffleMode(newShuffleMode);
         return shuffleMode;
     }
 
