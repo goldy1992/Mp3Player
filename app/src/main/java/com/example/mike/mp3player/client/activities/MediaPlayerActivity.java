@@ -10,7 +10,6 @@ import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType
 import com.example.mike.mp3player.client.views.fragments.AlbumArtFragment;
 import com.example.mike.mp3player.client.views.fragments.MediaControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragment;
-import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackToolbarExtendedFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
 import com.example.mike.mp3player.commons.Constants;
@@ -25,7 +24,6 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
 
     private PlaybackTrackerFragment playbackTrackerFragment;
     private PlaybackToolbarExtendedFragment playbackToolbarExtendedFragment;
-    private PlaybackSpeedControlsFragment playbackSpeedControlsFragment;
     private MetadataTitleBarFragment metadataTitleBarFragment;
     private MediaControlsFragment mediaControlsFragment;
     private AlbumArtFragment albumArtFragment;
@@ -35,10 +33,9 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
         setContentView(layoutId);
         FragmentManager fm = getSupportFragmentManager();
         this.metadataTitleBarFragment = (MetadataTitleBarFragment) fm.findFragmentById(R.id.metadataTitleBarFragment);
-        this.playbackSpeedControlsFragment = (PlaybackSpeedControlsFragment) fm.findFragmentById(R.id.playbackSpeedControlsFragment);
         this.playbackTrackerFragment = (PlaybackTrackerFragment) fm.findFragmentById(R.id.playbackTrackerFragment);
         this.playbackToolbarExtendedFragment = (PlaybackToolbarExtendedFragment) fm.findFragmentById(R.id.playbackToolbarExtendedFragment);
-        this.mediaControlsFragment = (MediaControlsFragment) fm.findFragmentById(R.id.shuffleRepeatFragment);
+        this.mediaControlsFragment = (MediaControlsFragment) fm.findFragmentById(R.id.mediaControlsFragment);
         this.albumArtFragment = (AlbumArtFragment) fm.findFragmentById(R.id.albumArtFragment);
         return true;
     }
@@ -95,8 +92,6 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
     public PlaybackToolbarExtendedFragment getPlaybackToolbarExtendedFragment() { return playbackToolbarExtendedFragment; }
     @VisibleForTesting
     public PlaybackTrackerFragment getPlaybackTrackerFragment() { return playbackTrackerFragment; }
-    @VisibleForTesting
-    public PlaybackSpeedControlsFragment getPlaybackSpeedControlsFragment() { return playbackSpeedControlsFragment; }
     @VisibleForTesting
     public MetadataTitleBarFragment getMetadataTitleBarFragment() { return metadataTitleBarFragment; }
     @VisibleForTesting
