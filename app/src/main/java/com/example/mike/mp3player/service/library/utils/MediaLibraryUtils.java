@@ -22,8 +22,8 @@ public final class MediaLibraryUtils {
         return path + File.separator + toAppend;
     }
 
-    public static File appendToFilePath(File file, String toAPpend) {
-        return new File(file.getPath() +  File.separator + toAPpend);
+    public static File appendToFilePath(File file, String toAppend) {
+        return new File(file.getPath() +  File.separator + toAppend);
     }
 
     public static File getRootDirectory(){

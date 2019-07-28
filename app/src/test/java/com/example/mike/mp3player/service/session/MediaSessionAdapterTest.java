@@ -23,7 +23,6 @@ import org.robolectric.RobolectricTestRunner;
 import static android.support.v4.media.session.MediaSessionCompat.QueueItem;
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
-import static com.example.mike.mp3player.commons.MetaDataKeys.STRING_METADATA_KEY_ARTIST;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -104,7 +103,7 @@ public class MediaSessionAdapterTest {
     }
     private QueueItem createQueueItem(String id, String title, String artist) {
         Bundle extras = new Bundle();
-        extras.putString(STRING_METADATA_KEY_ARTIST, artist);
+        extras.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist);
         MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
                 .setMediaId(id)
                 .setTitle(title)

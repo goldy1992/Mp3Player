@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v4.media.MediaMetadataCompat;
@@ -10,6 +11,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
@@ -21,6 +23,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import java.util.Set;
 
 import javax.inject.Inject;
+
 
 public class MediaControllerAdapter {
 
@@ -123,6 +126,23 @@ public class MediaControllerAdapter {
     public MediaMetadataCompat getMetadata() {
         if (mediaController != null) {
             return mediaController.getMetadata();
+        }
+        return null;
+    }
+
+    @Nullable
+    public Uri getCurrentSongAlbumArtUri() {
+        MediaMetadataCompat currentMetaData = getMetadata();
+        String albumArtUriPath = currentMetaData.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI);
+        if (albumArtUriPath != null) {
+            Uri albumArtUri = null;
+            try {
+                 albumArtUri = Uri.parse(albumArtUriPath);
+            } catch (NullPointerException ex) {
+                Log.e(LOG_TAG, albumArtUriPath + ": is an invalid Uri");
+                return null;
+            }
+            return  albumArtUri;
         }
         return null;
     }

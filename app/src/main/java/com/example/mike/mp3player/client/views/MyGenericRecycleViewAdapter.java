@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.client.views;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.view.LayoutInflater;
@@ -14,6 +13,7 @@ import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.commons.library.Category;
@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 import static com.example.mike.mp3player.commons.Constants.FIRST;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
@@ -38,21 +40,21 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
     private static final String EMPTY_MEDIA_ID = "EMPTY_MEDIA_ID";
     final int EMPTY_VIEW_TYPE = -1;
     public abstract Category getSubscriptionCategory();
-    MediaBrowserAdapter mediaBrowserAdapter;
+    final AlbumArtPainter albumArtPainter;
+
     private List<MediaItem> items = new ArrayList<>();
     private List<MediaItem> filteredSongs = new ArrayList<>();
-    MySongFilter filter;
     private boolean isInitialised = false;
     private final MediaItem EMPTY_LIST_ITEM = buildEmptyListMediaItem();
 
-    public MyGenericRecycleViewAdapter() {
+    public MyGenericRecycleViewAdapter(AlbumArtPainter albumArtPainter) {
         super();
-        filter = new MySongFilter();
+        this.albumArtPainter = albumArtPainter;
     }
 
     @Override
     public Filter getFilter() {
-        return filter;
+        return null;
     }
 
     @Override

@@ -10,15 +10,23 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
-import com.example.mike.mp3player.client.views.MyRecyclerView;
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
+import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
+
+import javax.inject.Inject;
 
 import static com.example.mike.mp3player.commons.Constants.PARENT_OBJECT;
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
@@ -37,22 +45,28 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
      * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
      */
     private LibraryObject parent;
-    private MyRecyclerView recyclerView;
+    private FastScrollRecyclerView recyclerView;
     private Category category;
     private MediaBrowserAdapter mediaBrowserAdapter;
+    private MyGenericRecycleViewAdapter myViewAdapter;
+    private MyGenericItemTouchListener myGenericItemTouchListener;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        injectDependencies();
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_view_page, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle bundle) {
+    public void onViewCreated(@NonNull View view, Bundle bundle) {
         this.recyclerView = view.findViewById(R.id.myRecyclerView);
-        this.recyclerView.initRecyclerView(this.category, this);
-        this.mediaBrowserAdapter.registerListener(parent.getId(), this.recyclerView.getMyViewAdapter());
+        this.recyclerView.setAdapter(myViewAdapter);
+        this.recyclerView.addOnItemTouchListener(myGenericItemTouchListener);
+        this.recyclerView.setItemAnimator(new DefaultItemAnimator());
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        this.mediaBrowserAdapter.registerListener(parent.getId(), myViewAdapter);
         this.mediaBrowserAdapter.subscribe(new LibraryRequest(parent));
     }
 
@@ -78,7 +92,29 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         startActivity(intent);
     }
 
+    @Inject
     public void setMediaBrowserAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
         this.mediaBrowserAdapter = mediaBrowserAdapter;
+    }
+
+    @Inject
+    public void setMyGenericRecycleViewAdapter(MyGenericRecycleViewAdapter adapter) {
+        this.myViewAdapter = adapter;
+    }
+
+    @Inject
+    public void setMyGenericItemTouchListener(MyGenericItemTouchListener listener) {
+        this.myGenericItemTouchListener = listener;
+    }
+
+    private void injectDependencies() {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof MediaActivityCompat) {
+            MediaActivityCompat mediaPlayerActivity = (MediaActivityCompat) getActivity();
+            MediaActivityCompatComponent component = mediaPlayerActivity.getMediaActivityCompatComponent();
+            component.childViewPagerFragmentSubcomponentFactory()
+                .create(category, parent, this).
+                inject(this);
+        }
     }
 }
