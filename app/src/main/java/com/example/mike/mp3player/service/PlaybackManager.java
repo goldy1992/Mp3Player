@@ -3,7 +3,6 @@ package com.example.mike.mp3player.service;
 import android.support.v4.media.session.MediaSessionCompat.QueueItem;
 import android.support.v4.media.session.PlaybackStateCompat;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;

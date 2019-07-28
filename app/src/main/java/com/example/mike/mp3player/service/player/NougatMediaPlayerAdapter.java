@@ -11,8 +11,6 @@ import com.example.mike.mp3player.service.AudioFocusManager;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import static com.example.mike.mp3player.commons.LoggingUtils.logPlaybackParams;
-
 public class NougatMediaPlayerAdapter extends MediaPlayerAdapter {
     private MediaPlayerPool mediaPlayerPool;
     private static final String LOG_TAG = "MSHMLW_PLY_ADPR";

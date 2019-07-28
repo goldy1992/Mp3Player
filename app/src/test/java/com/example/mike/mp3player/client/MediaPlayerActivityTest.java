@@ -65,7 +65,7 @@ public class MediaPlayerActivityTest {
         assertNotNull(mediaPlayerActivity.getPlaybackSpeedControlsFragment());
         assertNotNull(mediaPlayerActivity.getPlaybackTrackerFragment());
         assertNotNull(mediaPlayerActivity.getPlaybackToolbarExtendedFragment());
-        assertNotNull(mediaPlayerActivity.getShuffleRepeatFragment());
+        assertNotNull(mediaPlayerActivity.getMediaControlsFragment());
         assertNotNull(mediaPlayerActivity.getAlbumArtFragment());
     }
 

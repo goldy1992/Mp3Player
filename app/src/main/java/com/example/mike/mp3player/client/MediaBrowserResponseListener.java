@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.client;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 

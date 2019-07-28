@@ -1,15 +1,12 @@
 package com.example.mike.mp3player.client.views.fragments;
 
 import android.os.Bundle;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageButton;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
@@ -23,7 +20,7 @@ import java.util.Collections;
 
 import javax.inject.Inject;
 
-public class ShuffleRepeatFragment extends AsyncFragment {
+public class MediaControlsFragment extends AsyncFragment {
     private static final String LOG_TAG = "PLY_PAUSE_BTN";
     private MediaControllerAdapter mediaControllerAdapter;
     private RepeatOneRepeatAllButton repeatOneRepeatAllButton;

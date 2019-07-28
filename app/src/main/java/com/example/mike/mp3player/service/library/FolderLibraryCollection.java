@@ -10,7 +10,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
-import static com.example.mike.mp3player.commons.ComparatorUtils.compareMediaItemById;
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareMediaItemsByTitle;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getExtras;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getMediaId;

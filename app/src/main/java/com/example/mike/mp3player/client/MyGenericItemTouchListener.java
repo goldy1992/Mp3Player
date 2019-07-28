@@ -9,8 +9,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
-
 public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleOnGestureListener
         implements RecyclerView.OnItemTouchListener  {
 

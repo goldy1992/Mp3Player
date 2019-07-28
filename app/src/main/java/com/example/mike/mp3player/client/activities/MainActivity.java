@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.client.activities;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
