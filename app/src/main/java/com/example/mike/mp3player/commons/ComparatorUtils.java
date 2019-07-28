@@ -2,6 +2,8 @@ package com.example.mike.mp3player.commons;
 
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.example.mike.mp3player.commons.library.Category;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -29,18 +31,9 @@ public final class ComparatorUtils {
         }
     }
     public static final Comparator<MediaItem> compareMediaItemsByTitle = ComparatorUtils::compareMediaItemsByTitle;
+
     private static int compareMediaItemsByTitle(MediaItem m1, MediaItem m2) {
-        String title1 = getTitle(m1);
-        String title2 = getTitle(m2);
-        if (title1 == null && title2 == null) {
-            return 0;
-        } else if (null == title1) {
-            return -1;
-        } else if (null == title2) {
-            return 1;
-        } else {
-            return title1.compareTo(title2);
-        }
+        return uppercaseStringCompare(getTitle(m1), getTitle(m2));
     }
 
     public static final Comparator<MediaItem> compareMediaItemById = ComparatorUtils::compareMediaItemById;
@@ -67,5 +60,17 @@ public final class ComparatorUtils {
             Log.e(LOG_TAG, ExceptionUtils.getMessage(ex));
         }
         return c;
+    }
+
+    private static int uppercaseStringCompare(@Nullable String string1, @Nullable String string2) {
+        if (string1 == null && string2 == null) {
+            return 0;
+        } else if (null == string1) {
+            return -1;
+        } else if (null == string2) {
+            return 1;
+        } else {
+            return string1.toUpperCase().compareTo(string2.toUpperCase());
+        }
     }
 }
