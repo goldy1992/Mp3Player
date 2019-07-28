@@ -6,6 +6,8 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.annotation.VisibleForTesting;
+
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
@@ -59,7 +61,7 @@ public class ShuffleButton extends LinearLayoutWithImageView implements Playback
     }
 
     public @PlaybackStateCompat.ShuffleMode int toggleShuffle(View view) {
-        @PlaybackStateCompat.ShuffleMode int newShuffleMode = SHUFFLE_MODE_NONE;
+        @PlaybackStateCompat.ShuffleMode int newShuffleMode;
         switch (shuffleMode) {
             case SHUFFLE_MODE_ALL: newShuffleMode = SHUFFLE_MODE_NONE; break;
             default: newShuffleMode = SHUFFLE_MODE_ALL; break;
@@ -82,9 +84,9 @@ public class ShuffleButton extends LinearLayoutWithImageView implements Playback
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
         Bundle extras = state.getExtras();
         if (null != extras) {
-            Integer repeatMode = extras.getInt(SHUFFLE_MODE);
-            if (null != repeatMode) {
-                updateState(repeatMode);
+            Integer shuffleMode = extras.getInt(SHUFFLE_MODE);
+            if (null != shuffleMode) {
+                updateState(shuffleMode);
             }
         }
     }
@@ -92,5 +94,15 @@ public class ShuffleButton extends LinearLayoutWithImageView implements Playback
     @Inject
     public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
         this.mediaControllerAdapter = mediaControllerAdapter;
+    }
+
+    @VisibleForTesting
+    public int getShuffleMode() {
+        return shuffleMode;
+    }
+
+    @VisibleForTesting
+    public void setShuffleMode(int shuffleMode) {
+        this.shuffleMode = shuffleMode;
     }
 }
