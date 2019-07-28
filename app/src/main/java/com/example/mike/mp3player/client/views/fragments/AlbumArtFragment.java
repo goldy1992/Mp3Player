@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.mike.mp3player.R;
@@ -75,10 +76,20 @@ public class AlbumArtFragment extends AsyncFragment implements MetaDataListener 
             Log.e(LOG_TAG, albumArtUriPath + ": is an invalid Uri");
             return;
         }
+        /* make a pre check to avoid an unnecessary call to an expensive operation */
         if (!newUri.equals(currentUri)) {
             this.currentUri = newUri;
             albumArtPainter.paintOnView(albumArt, currentUri);
         }
 
+    }
+
+    @VisibleForTesting
+    public AlbumArtPainter getAlbumArtPainter() {
+        return albumArtPainter;
+    }
+
+    public void setCurrentUri(Uri currentUri) {
+        this.currentUri = currentUri;
     }
 }
