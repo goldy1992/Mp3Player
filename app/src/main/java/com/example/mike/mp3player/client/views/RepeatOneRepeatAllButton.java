@@ -52,7 +52,7 @@ public class RepeatOneRepeatAllButton implements PlaybackStateListener {
         this.view.setOnClickListener(this::setRepeatOneRepeatAllButtonMode);
         this.mediaControllerAdapter.registerPlaybackStateListener(this,
                 Collections.singleton(ListenerType.REPEAT));
-        this.updateState(mediaControllerAdapter.getShuffleMode());
+        this.updateState(mediaControllerAdapter.getRepeatMode());
     }
 
     private void setRepeatOneRepeatAllButtonMode(View view) {

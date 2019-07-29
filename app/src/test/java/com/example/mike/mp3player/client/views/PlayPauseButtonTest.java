@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client.views;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.View;
 
@@ -34,6 +35,8 @@ public class PlayPauseButtonTest {
      */
     @Mock
     private MediaControllerAdapter mediaControllerAdapter;
+    @Mock
+    private Handler handler;
     /**
      * setup
      */
@@ -41,8 +44,7 @@ public class PlayPauseButtonTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        playPauseButton = new PlayPauseButton(context, null, 0, mediaControllerAdapter);
-    }
+        playPauseButton = new PlayPauseButton(mediaControllerAdapter, handler);    }
 
     /**
      * test for the create method.
@@ -79,9 +81,9 @@ public class PlayPauseButtonTest {
      */
     @Test
     public void testOnPlaybackStateChangedOtherState() {
-        @PlaybackStateCompat.State int originalState = playPauseButton.getState();
+        @PlaybackStateCompat.State int expectedState = STATE_PAUSED;
         playPauseButton.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_ERROR));
-        assertEquals(originalState, playPauseButton.getState());
+        assertEquals(expectedState, playPauseButton.getState());
     }
     /**
      * GIVEN: a PlayPauseButton in state paused

@@ -2,6 +2,7 @@ package com.example.mike.mp3player.client.views;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.View;
 
@@ -30,14 +31,15 @@ public class ShuffleButtonTest {
 
     @Mock
     private MediaControllerAdapter mediaControllerAdapter;
+    @Mock
+    private Handler handler;
     private ShuffleButton shuffleButton;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        this.shuffleButton = new ShuffleButton(context, null, 0);
-        this.shuffleButton.init(mediaControllerAdapter);
+        this.shuffleButton = new ShuffleButton(mediaControllerAdapter, handler);
     }
 
     @Test

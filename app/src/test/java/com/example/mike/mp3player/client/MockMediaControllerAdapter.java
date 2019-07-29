@@ -99,6 +99,14 @@ public class MockMediaControllerAdapter extends MediaControllerAdapter {
             .build();
     }
 
+    public @PlaybackStateCompat.ShuffleMode int getShuffleMode() {
+        return PlaybackStateCompat.SHUFFLE_MODE_ALL;
+    }
+
+    public @PlaybackStateCompat.RepeatMode int getRepeatMode() {
+        return PlaybackStateCompat.REPEAT_MODE_ALL;
+    }
+
     public MediaSessionCompat.Token getToken() {
         return null;
     }
