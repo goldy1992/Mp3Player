@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/playbackTrackerFragment"
         class="com.example.mike.mp3player.client.views.fragments.MediaControlsFragment"
-        tools:layout="@layout/fragment_shuffle_repeat"/>
+        tools:layout="@layout/fragment_media_controls"/>
 
 
     <fragment
@@ -50,7 +50,7 @@
         android:layout_gravity="bottom"
         android:layout_marginTop="5dp"
         android:minHeight="?attr/actionBarSize"
-        class="com.example.mike.mp3player.client.views.fragments.PlaybackToolbarExtendedFragment"
+        class="com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment"
         tools:layout="@layout/playback_toolbar_layout" />
 
 </RelativeLayout>

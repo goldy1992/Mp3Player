@@ -12,13 +12,15 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
+import com.example.mike.mp3player.client.views.PlayPauseButton;
 import com.example.mike.mp3player.client.views.SkipToNextButton;
 import com.example.mike.mp3player.client.views.SkipToPreviousButton;
 
-import javax.inject.Inject;
 
+@Deprecated
 public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
 
+    protected PlayPauseButton playPauseButton;
     protected SkipToPreviousButton skipToPreviousButton;
     protected SkipToNextButton skipToNextButton;
 
@@ -35,31 +37,21 @@ public class PlaybackToolbarExtendedFragment extends PlayToolBarFragment {
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         if (null != innerPlaybackToolbarLayout) {
-            innerPlaybackToolbarLayout.removeAllViews();
-            skipToPreviousButton.setLayoutParams(getLinearLayoutParams(skipToPreviousButton.getLayoutParams()));
-            innerPlaybackToolbarLayout.addView(skipToPreviousButton);
-            innerPlaybackToolbarLayout.addView(playPauseButton);
-            skipToNextButton.setLayoutParams(getLinearLayoutParams(skipToNextButton.getLayoutParams()));
-            innerPlaybackToolbarLayout.addView(skipToNextButton);
+//            innerPlaybackToolbarLayout.removeAllViews();
+//            innerPlaybackToolbarLayout.addView(skipToPreviousButton.getView());
+//            innerPlaybackToolbarLayout.addView(playPauseButton.getView());
+//            innerPlaybackToolbarLayout.addView(skipToNextButton.getView());
         }
     }
 
-    @Inject
-    public void setSkipToPreviousButton(SkipToPreviousButton skipToPreviousButton) {
-        this.skipToPreviousButton = skipToPreviousButton;
-    }
 
-    @Inject
-    public void setSkipToNextButton(SkipToNextButton skipToNextButton) {
-        this.skipToNextButton = skipToNextButton;
-    }
 
     @Override
     void initialiseDependencies() {
         FragmentActivity activity = getActivity();
         if (null != activity && activity instanceof MediaActivityCompat) {
             MediaActivityCompat mediaPlayerActivity = (MediaActivityCompat) getActivity();
-            mediaPlayerActivity.getMediaActivityCompatComponent().playbackToolbarSubcomponent()
+            mediaPlayerActivity.getMediaActivityCompatComponent().playbackButtonsSubcomponent()
                     .inject(this);
         }
     }

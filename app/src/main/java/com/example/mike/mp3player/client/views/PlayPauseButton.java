@@ -1,13 +1,13 @@
 package com.example.mike.mp3player.client.views;
 
-import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.DrawableRes;
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
@@ -19,38 +19,37 @@ import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListene
 import java.util.Collections;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 
-public class PlayPauseButton extends LinearLayoutWithImageView implements PlaybackStateListener {
+public class PlayPauseButton implements PlaybackStateListener {
 
     private static final String LOG_TAG = "PLAY_PAUSE_BUTTON";
     @PlaybackStateCompat.State
     private int state = PlaybackStateCompat.STATE_NONE;
-    private MediaControllerAdapter mediaControllerAdapter;
+    private final MediaControllerAdapter mediaControllerAdapter;
+    private final Handler mainUpdater;
 
-    public PlayPauseButton(Context context) { this(context, null); }
+    private ImageView view;
 
-    public PlayPauseButton(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public PlayPauseButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
 
     @Inject
-    public PlayPauseButton(Context context, AttributeSet attrs, int defStyleAttr,
-                           @NonNull MediaControllerAdapter mediaControllerAdapter) {
-        super(context, attrs, defStyleAttr, 0, 2);
-        this.state = mediaControllerAdapter.getPlaybackState();
-        @DrawableRes int initialImage = state == STATE_PLAYING ? R.drawable.ic_baseline_pause_24px : R.drawable.ic_baseline_play_arrow_24px;
-        init(initialImage);
+    public PlayPauseButton(@NonNull MediaControllerAdapter mediaControllerAdapter,
+                           @Named("main") Handler mainUpdater) {
         this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mediaControllerAdapter.registerPlaybackStateListener(this, Collections.singleton(ListenerType.PLAYBACK));
+        this.mainUpdater = mainUpdater;
+    }
 
-        getView().setOnClickListener(this::playPause);
+    public void init(ImageView view) {
+        this.view = view;
+//        this.view.init(getCurrentIcon(), 2);
+//        this.view.setLayoutParams(view.getLinearLayoutParams(view.getLayoutParams()));
+        this.view.setOnClickListener(this::playPause);
+        this.mediaControllerAdapter.registerPlaybackStateListener(this,
+                Collections.singleton(ListenerType.PLAYBACK));
+        this.updateState(mediaControllerAdapter.getPlaybackState());
     }
 
     @VisibleForTesting()
@@ -63,6 +62,12 @@ public class PlayPauseButton extends LinearLayoutWithImageView implements Playba
             mediaControllerAdapter.play();
         }
     }
+
+    private @DrawableRes int getCurrentIcon() {
+        return mediaControllerAdapter.getPlaybackState() == STATE_PLAYING ?
+            getPauseIcon() : getPlayIcon();
+    }
+
     private void updateState(int newState) {
         if (newState != getState()) {
             switch (newState) {
@@ -70,21 +75,30 @@ public class PlayPauseButton extends LinearLayoutWithImageView implements Playba
                     mainUpdater.post(this::setPauseIcon);
                     this.state = STATE_PLAYING;
                     break;
-                case STATE_PAUSED:
+                default:
                     mainUpdater.post(this::setPlayIcon);
                     this.state = STATE_PAUSED;
-                    break;
-                default:
-                    Log.e(LOG_TAG, "invalid state hit for PlayPauseButton state");
             } // switch
         }
     }
 
     private synchronized void setPlayIcon() {
-        setViewImage(R.drawable.ic_baseline_play_arrow_24px);
+        int resource = getPlayIcon();
+        Drawable drawable = mediaControllerAdapter.getContext().getDrawable(resource);
+        view.setImageDrawable(drawable);
     }
     private synchronized void setPauseIcon() {
-        setViewImage(R.drawable.ic_baseline_pause_24px);
+        int resource = getPauseIcon();
+        Drawable drawable = mediaControllerAdapter.getContext().getDrawable(resource);
+        view.setImageDrawable(drawable);
+    }
+
+    private @DrawableRes int getPlayIcon() {
+        return R.drawable.ic_baseline_play_arrow_24px;
+    }
+
+    private @DrawableRes int getPauseIcon() {
+        return R.drawable.ic_baseline_pause_24px;
     }
 
     @PlaybackStateCompat.State

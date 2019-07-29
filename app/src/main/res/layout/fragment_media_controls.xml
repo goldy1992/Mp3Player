@@ -6,13 +6,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal">
 
-    <com.example.mike.mp3player.client.views.RepeatOneRepeatAllButton
+    <com.example.mike.mp3player.client.views.LinearLayoutWithImageView
         android:id="@+id/repeatOneRepeatAllButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         custom:imgSrc="@drawable/ic_baseline_repeat_24px" />
 
+    <!-- It should be noted that playback speed controls was originally created as its own fragment
+        therefore it has been placed as a sub-fragment in this view -->
     <fragment
         android:id="@+id/playbackSpeedControlsFragment"
         android:layout_width="wrap_content"
@@ -21,7 +23,7 @@
         class="com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment"
         tools:layout="@layout/fragment_playback_speed_controls"/>
 
-    <com.example.mike.mp3player.client.views.ShuffleButton
+    <com.example.mike.mp3player.client.views.LinearLayoutWithImageView
         android:id="@+id/shuffleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

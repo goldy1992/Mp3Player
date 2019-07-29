@@ -9,20 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
-import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.views.RepeatOneRepeatAllButton;
 import com.example.mike.mp3player.client.views.ShuffleButton;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
-
-import java.util.Collections;
 
 import javax.inject.Inject;
 
 public class MediaControlsFragment extends AsyncFragment {
     private static final String LOG_TAG = "PLY_PAUSE_BTN";
-    private MediaControllerAdapter mediaControllerAdapter;
     private RepeatOneRepeatAllButton repeatOneRepeatAllButton;
     private ShuffleButton shuffleButton;
 
@@ -32,31 +27,31 @@ public class MediaControlsFragment extends AsyncFragment {
                              @Nullable Bundle savedInstanceState) {
         initialiseDependencies();
         super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.fragment_shuffle_repeat, container, true);
+        return inflater.inflate(R.layout.fragment_media_controls, container, true);
     }
 
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-        this.repeatOneRepeatAllButton = view.findViewById(R.id.repeatOneRepeatAllButton);
-        this.shuffleButton = view.findViewById(R.id.shuffleButton);
-
-        this.mediaControllerAdapter.registerPlaybackStateListener(repeatOneRepeatAllButton, Collections.singleton(ListenerType.REPEAT));
-        this.mediaControllerAdapter.registerPlaybackStateListener(shuffleButton, Collections.singleton(ListenerType.SHUFFLE));
+        this.repeatOneRepeatAllButton.init(view.findViewById(R.id.repeatOneRepeatAllButton));
+        this.shuffleButton.init(view.findViewById(R.id.shuffleButton));
     }
 
-
-
-
-
-    @Inject
-    public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
-        this.mediaControllerAdapter = mediaControllerAdapter;
-    }
 
     public void initialiseDependencies() {
         MediaActivityCompatComponent component = ((MediaActivityCompat)getActivity())
                 .getMediaActivityCompatComponent();
-        component.inject(this);
+        component.playbackButtonsSubcomponent()
+                .inject(this);
+    }
+
+    @Inject
+    public void setRepeatOneRepeatAllButton(RepeatOneRepeatAllButton repeatOneRepeatAllButton) {
+        this.repeatOneRepeatAllButton = repeatOneRepeatAllButton;
+    }
+
+    @Inject
+    public void setShuffleButton(ShuffleButton shuffleButton) {
+        this.shuffleButton = shuffleButton;
     }
 }

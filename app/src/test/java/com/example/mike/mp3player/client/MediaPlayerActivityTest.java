@@ -63,7 +63,7 @@ public class MediaPlayerActivityTest {
     public void testInitialisation()  {
         assertNotNull(mediaPlayerActivity.getMetadataTitleBarFragment());
         assertNotNull(mediaPlayerActivity.getPlaybackTrackerFragment());
-        assertNotNull(mediaPlayerActivity.getPlaybackToolbarExtendedFragment());
+        assertNotNull(mediaPlayerActivity.getPlayToolBarFragment());
         assertNotNull(mediaPlayerActivity.getMediaControlsFragment());
         assertNotNull(mediaPlayerActivity.getAlbumArtFragment());
     }

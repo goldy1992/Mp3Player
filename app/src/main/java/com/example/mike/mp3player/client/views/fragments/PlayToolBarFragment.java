@@ -19,16 +19,18 @@ import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.client.utils.IntentUtils;
 import com.example.mike.mp3player.client.views.PlayPauseButton;
+import com.example.mike.mp3player.client.views.SkipToNextButton;
+import com.example.mike.mp3player.client.views.SkipToPreviousButton;
 
 import javax.inject.Inject;
-
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class PlayToolBarFragment extends Fragment {
 
     private static final String LOG_TAG = "PLY_PAUSE_BTN";
 
-    PlayPauseButton playPauseButton;
+    private PlayPauseButton playPauseButton;
+    private SkipToPreviousButton skipToPreviousButton;
+    private SkipToNextButton skipToNextButton;
 
     protected Toolbar toolbar;
     LinearLayout innerPlaybackToolbarLayout;
@@ -46,30 +48,35 @@ public class PlayToolBarFragment extends Fragment {
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         toolbar = view.findViewById(R.id.playbackToolbar);
+        this.skipToPreviousButton.init( view.findViewById(R.id.skip_to_previous));
+        this.skipToNextButton.init(view.findViewById(R.id.skip_to_next));
+        this.playPauseButton.init(view.findViewById(R.id.playPauseButton));
         if (!isMediaPlayerActivity()) {
             toolbar.setOnClickListener((View v) -> goToMediaPlayerActivity());
         }
-        this.innerPlaybackToolbarLayout = view.findViewById(R.id.innerPlaybackToolbarLayout);
+        this.innerPlaybackToolbarLayout = null;
 
         if (null != innerPlaybackToolbarLayout) {
-            playPauseButton.setLayoutParams(getLinearLayoutParams(playPauseButton.getLayoutParams()));
-            innerPlaybackToolbarLayout.addView(playPauseButton);
+//            innerPlaybackToolbarLayout.addView(skipToPreviousButton.getView());
+//            innerPlaybackToolbarLayout.addView(playPauseButton.getView());
+//            innerPlaybackToolbarLayout.addView(skipToNextButton.getView());
         }
 
-    }
-
-    LinearLayout.LayoutParams getLinearLayoutParams(ViewGroup.LayoutParams params) {
-        if (params != null) {
-            return new LinearLayout.LayoutParams(params.width,
-                    params.height, 1.0f);
-        }
-        return new LinearLayout.LayoutParams(WRAP_CONTENT,
-                WRAP_CONTENT, 1.0f);
     }
 
     @Inject
     public void setPlayPauseButton(PlayPauseButton playPauseButton) {
         this.playPauseButton = playPauseButton;
+    }
+
+    @Inject
+    public void setSkipToPreviousButton(SkipToPreviousButton skipToPreviousButton) {
+        this.skipToPreviousButton = skipToPreviousButton;
+    }
+
+    @Inject
+    public void setSkipToNextButton(SkipToNextButton skipToNextButton) {
+        this.skipToNextButton = skipToNextButton;
     }
 
     private boolean isMediaPlayerActivity() {
@@ -87,7 +94,7 @@ public class PlayToolBarFragment extends Fragment {
         FragmentActivity activity = getActivity();
         if (null != activity && activity instanceof MediaActivityCompat) {
             MediaActivityCompat mediaPlayerActivity = (MediaActivityCompat) getActivity();
-            mediaPlayerActivity.getMediaActivityCompatComponent().playbackToolbarSubcomponent()
+            mediaPlayerActivity.getMediaActivityCompatComponent().playbackButtonsSubcomponent()
                     .inject(this);
         }
     }
