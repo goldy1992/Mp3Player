@@ -1,10 +1,12 @@
 package com.example.mike.mp3player.client.views;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
@@ -36,7 +38,7 @@ public class RepeatOneRepeatAllButton implements PlaybackStateListener {
     private int repeatMode;
     private final MediaControllerAdapter mediaControllerAdapter;
     private final Handler mainUpdater;
-    private LinearLayoutWithImageView view;
+    private ImageView view;
 
     @Inject
     public RepeatOneRepeatAllButton(MediaControllerAdapter mediaControllerAdapter,
@@ -45,7 +47,7 @@ public class RepeatOneRepeatAllButton implements PlaybackStateListener {
         this.mainUpdater = mainUpdater;
     }
 
-    public void init(LinearLayoutWithImageView view) {
+    public void init(ImageView view) {
         this.view = view;
         this.view.setOnClickListener(this::setRepeatOneRepeatAllButtonMode);
         this.mediaControllerAdapter.registerPlaybackStateListener(this,
@@ -78,15 +80,18 @@ public class RepeatOneRepeatAllButton implements PlaybackStateListener {
     }
 
     private void setRepeatAllIcon() {
-        view.setViewImage(R.drawable.ic_baseline_repeat_24px);
+        Drawable drawable = mediaControllerAdapter.getContext().getDrawable(R.drawable.ic_baseline_repeat_24px);
+        this.view.setImageDrawable(drawable);
         view.setImageAlpha(OPAQUE);
     }
     private void setRepeatOneIcon() {
-        view.setViewImage(R.drawable.ic_baseline_repeat_one_24px);
+        Drawable drawable = mediaControllerAdapter.getContext().getDrawable(R.drawable.ic_baseline_repeat_one_24px);
+        this.view.setImageDrawable(drawable);
         view.setImageAlpha(OPAQUE);
     }
     private void setRepeatNoneIcon() {
-        view.setViewImage(R.drawable.ic_baseline_repeat_24px);
+        Drawable drawable = mediaControllerAdapter.getContext().getDrawable(R.drawable.ic_baseline_repeat_24px);
+        this.view.setImageDrawable(drawable);
         view.setImageAlpha(TRANSLUCENT);
     }
 
