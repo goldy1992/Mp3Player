@@ -179,8 +179,8 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
         if (null != activity && activity instanceof MediaActivityCompat) {
             MediaActivityCompat mediaPlayerActivity = (MediaActivityCompat) getActivity();
             mediaPlayerActivity.getMediaActivityCompatComponent()
-                    .mainFrameFragmentSubcomponent()
-                    .inject(this);
+                .mainFrameFragmentSubcomponent()
+                .inject(this);
         }
     }
 
