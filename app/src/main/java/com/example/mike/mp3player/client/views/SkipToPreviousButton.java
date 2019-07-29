@@ -23,7 +23,7 @@ public class SkipToPreviousButton extends LinearLayoutWithImageView {
 
     @Inject
     public SkipToPreviousButton(Context context, AttributeSet attrs, int defStyleAttr, MediaControllerAdapter mediaControllerAdapter) {
-        super(context, attrs, defStyleAttr, 0, R.drawable.ic_baseline_skip_previous_24px, 2);
+        super(context, attrs, defStyleAttr, 0,2, R.drawable.ic_baseline_skip_previous_24px);
         this.mediaControllerAdapter = mediaControllerAdapter;
         setViewImage(R.drawable.ic_baseline_skip_previous_24px);
         getView().setOnClickListener(this::skipToPrevious);

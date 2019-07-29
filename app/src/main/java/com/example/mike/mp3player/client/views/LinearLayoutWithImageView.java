@@ -20,6 +20,7 @@ public class LinearLayoutWithImageView extends LinearLayout {
     private ImageView view;
     private LayoutInflater inflater;
     Handler mainUpdater;
+    int resource;
     private int scale;
 
     public LinearLayoutWithImageView(Context context) {
@@ -34,19 +35,27 @@ public class LinearLayoutWithImageView extends LinearLayout {
         this(context, attrs, defStyleAttr, 0, 0, 1);
     }
 
+
     public LinearLayoutWithImageView(Context context, AttributeSet attrs,
-                                     int defStyleAttr, int defStyleRes, int resource, int scale) {
+                                     int defStyleAttr, int defStyleRes, int scale) {
+        this(context, attrs, defStyleAttr, defStyleRes, scale, 0);
+    }
+
+    public LinearLayoutWithImageView(Context context, AttributeSet attrs,
+                                     int defStyleAttr, int defStyleRes, int scale, int resource) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        this.resource = resource;
         this.mainUpdater = new Handler(Looper.getMainLooper());
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_linear_layout_with_image_view, this);
-        this.view = this.findViewById(R.id.view);
-        this.view.setImageResource(resource);
         this.scale = scale;
         init();
     }
 
+
     private void init() {
+        this.view = this.findViewById(R.id.view);
+        this.view.setImageResource(resource);
         ImageView imageView = getView();
         imageView.setScaleX(scale);
         imageView.setScaleY(scale);
@@ -58,6 +67,11 @@ public class LinearLayoutWithImageView extends LinearLayout {
             imageView.setPadding(marginSize, marginSize, marginSize, marginSize);
         }
         setGravity(Gravity.CENTER_HORIZONTAL);
+    }
+
+    public void init(int resource) {
+        this.resource = resource;
+        init();
     }
 
     public ImageView getView() {

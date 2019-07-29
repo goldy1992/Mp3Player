@@ -6,6 +6,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
@@ -40,8 +42,11 @@ public class PlayPauseButton extends LinearLayoutWithImageView implements Playba
 
     @Inject
     public PlayPauseButton(Context context, AttributeSet attrs, int defStyleAttr,
-                           MediaControllerAdapter mediaControllerAdapter) {
-        super(context, attrs, defStyleAttr, 0, R.drawable.ic_baseline_play_arrow_24px, 2);
+                           @NonNull MediaControllerAdapter mediaControllerAdapter) {
+        super(context, attrs, defStyleAttr, 0, 2);
+        this.state = mediaControllerAdapter.getPlaybackState();
+        @DrawableRes int initialImage = state == STATE_PLAYING ? R.drawable.ic_baseline_pause_24px : R.drawable.ic_baseline_play_arrow_24px;
+        init(initialImage);
         this.mediaControllerAdapter = mediaControllerAdapter;
         this.mediaControllerAdapter.registerPlaybackStateListener(this, Collections.singleton(ListenerType.PLAYBACK));
 

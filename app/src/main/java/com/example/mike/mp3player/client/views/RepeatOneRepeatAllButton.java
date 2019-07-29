@@ -37,7 +37,7 @@ public class RepeatOneRepeatAllButton extends LinearLayoutWithImageView implemen
     }
 
     public RepeatOneRepeatAllButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr, 0, R.drawable.ic_baseline_repeat_24px, 1);
+        super(context, attrs, defStyleAttr, 0, 1, R.drawable.ic_baseline_repeat_24px);
         this.context = context;
     }
 

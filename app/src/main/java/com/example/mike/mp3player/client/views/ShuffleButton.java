@@ -37,7 +37,7 @@ public class ShuffleButton extends LinearLayoutWithImageView implements Playback
     }
 
     public ShuffleButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr, 0, R.drawable.ic_baseline_shuffle_24px, 1);
+        super(context, attrs, defStyleAttr, 0, 1, R.drawable.ic_baseline_shuffle_24px);
         this.context = context;
     }
 

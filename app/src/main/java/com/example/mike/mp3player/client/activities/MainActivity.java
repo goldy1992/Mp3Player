@@ -24,7 +24,7 @@ public abstract class MainActivity extends MediaActivityCompat {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
       /*  NOT NEEDED YETthis.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE); */
-        initialiseView(R.layout.activity_main);
+
     }
 
     @Override
@@ -48,6 +48,7 @@ public abstract class MainActivity extends MediaActivityCompat {
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
         super.onConnected();
+        initialiseView(R.layout.activity_main);
         LibraryRequest libraryRequest = new LibraryRequest(Category.ROOT, Category.ROOT.name());
         getMediaBrowserAdapter().subscribe(libraryRequest);
     }
