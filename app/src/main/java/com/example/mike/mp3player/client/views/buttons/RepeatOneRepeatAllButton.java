@@ -1,15 +1,25 @@
-package com.example.mike.mp3player.client.views;
+package com.example.mike.mp3player.client.views.buttons;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
+
+import java.util.Collections;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ALL;
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_NONE;
@@ -18,39 +28,35 @@ import static com.example.mike.mp3player.commons.Constants.OPAQUE;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 import static com.example.mike.mp3player.commons.Constants.TRANSLUCENT;
 
-
-public class RepeatOneRepeatAllButton extends LinearLayoutWithImageView implements PlaybackStateListener {
+/**
+ *
+ */
+public class RepeatOneRepeatAllButton extends MediaButton implements PlaybackStateListener {
 
     private static final String LOG_TAG = "RPT1_RPT_ALL_BTN";
 
-    private Context context;
     @PlaybackStateCompat.RepeatMode
     private int repeatMode;
-    private MediaControllerAdapter mediaControllerAdapter;
 
-    public RepeatOneRepeatAllButton(Context context) {
-        this(context, null);
+    @Inject
+    public RepeatOneRepeatAllButton(Context context, MediaControllerAdapter mediaControllerAdapter,
+                                    @Named("main") Handler mainUpdater) {
+        super(context, mediaControllerAdapter, mainUpdater);
+
     }
 
-    public RepeatOneRepeatAllButton(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    @Override
+    public void init(ImageView view) {
+        super.init(view);
+        this.mediaControllerAdapter.registerPlaybackStateListener(this,
+                Collections.singleton(ListenerType.REPEAT));
+        this.updateState(mediaControllerAdapter.getRepeatMode());
     }
 
-    public RepeatOneRepeatAllButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr, 0, R.drawable.ic_baseline_repeat_24px, 1);
-        this.context = context;
-    }
-
-    public void init(MediaControllerAdapter mediaControllerAdapter) {
-        this.mediaControllerAdapter = mediaControllerAdapter;
-        this.setOnClickListener(this::setRepeatOneRepeatAllButtonMode);
-        this.updateState(mediaControllerAdapter.getShuffleMode());
-    }
-
-    private void setRepeatOneRepeatAllButtonMode(View view) {
+    @VisibleForTesting
+    public void onClick(View view) {
         int nextState = getNextState();
         mediaControllerAdapter.setRepeatMode(nextState);
-        updateState(mediaControllerAdapter.getRepeatMode());
         updateState(nextState);
     }
 
@@ -72,23 +78,26 @@ public class RepeatOneRepeatAllButton extends LinearLayoutWithImageView implemen
     }
 
     private void setRepeatAllIcon() {
-        setViewImage(R.drawable.ic_baseline_repeat_24px);
-        getView().setImageAlpha(OPAQUE);
+        setImage(R.drawable.ic_baseline_repeat_24px, OPAQUE);
     }
     private void setRepeatOneIcon() {
-        setViewImage(R.drawable.ic_baseline_repeat_one_24px);
-        getView().setImageAlpha(OPAQUE);
+        setImage(R.drawable.ic_baseline_repeat_one_24px, OPAQUE);
     }
     private void setRepeatNoneIcon() {
-        setViewImage(R.drawable.ic_baseline_repeat_24px);
-        this.getView().setImageAlpha(TRANSLUCENT);
+        setImage(R.drawable.ic_baseline_repeat_24px, TRANSLUCENT);
     }
+
 
     public int getState() {
         return repeatMode;
     }
 
-    public int getNextState() {
+    @VisibleForTesting
+    public void setRepeatMode(@PlaybackStateCompat.RepeatMode int repeatMode) {
+        this.repeatMode = repeatMode;
+    }
+
+    private int getNextState() {
         switch (repeatMode) {
             case REPEAT_MODE_ALL:
                 return REPEAT_MODE_NONE;
@@ -96,24 +105,15 @@ public class RepeatOneRepeatAllButton extends LinearLayoutWithImageView implemen
                 return REPEAT_MODE_ONE;
             case REPEAT_MODE_ONE:
                 return REPEAT_MODE_ALL;
+            default: return REPEAT_MODE_NONE;
         }
-        return -1;
-    }
-
-    public static RepeatOneRepeatAllButton create(Context context) {
-        RepeatOneRepeatAllButton toReturn = new RepeatOneRepeatAllButton(context);
-        toReturn.updateState(REPEAT_MODE_ALL);
-        return toReturn;
     }
 
     @Override
-    public void onPlaybackStateChanged(PlaybackStateCompat state) {
+    public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
         Bundle extras = state.getExtras();
         if (null != extras) {
-            Integer repeatMode = extras.getInt(REPEAT_MODE);
-            if (null != repeatMode) {
-                updateState(repeatMode);
-            }
+            updateState(extras.getInt(REPEAT_MODE));
         }
     }
 }

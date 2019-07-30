@@ -1,18 +1,10 @@
-package com.example.mike.mp3player.client.views;
+package com.example.mike.mp3player.client.views.buttons;
 
-import android.content.Context;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.view.View;
-
-import androidx.test.platform.app.InstrumentationRegistry;
-
-import com.example.mike.mp3player.client.MediaControllerAdapter;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
@@ -24,24 +16,20 @@ import static org.mockito.Mockito.verify;
 
 
 @RunWith(RobolectricTestRunner.class)
-public class PlayPauseButtonTest {
+public class PlayPauseButtonTest extends MediaButtonTestBase {
+
     /**
      * Play Pause Button to test
      */
     private PlayPauseButton playPauseButton;
-    /**
-     * mock onClickListener used for setup
-     */
-    @Mock
-    private MediaControllerAdapter mediaControllerAdapter;
+
     /**
      * setup
      */
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        playPauseButton = new PlayPauseButton(context, null, 0, mediaControllerAdapter);
+        super.setup();
+        playPauseButton = new PlayPauseButton(context, mediaControllerAdapter, handler);
     }
 
     /**
@@ -79,9 +67,9 @@ public class PlayPauseButtonTest {
      */
     @Test
     public void testOnPlaybackStateChangedOtherState() {
-        @PlaybackStateCompat.State int originalState = playPauseButton.getState();
+        @PlaybackStateCompat.State int expectedState = STATE_PAUSED;
         playPauseButton.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_ERROR));
-        assertEquals(originalState, playPauseButton.getState());
+        assertEquals(expectedState, playPauseButton.getState());
     }
     /**
      * GIVEN: a PlayPauseButton in state paused
@@ -91,7 +79,7 @@ public class PlayPauseButtonTest {
     @Test
     public void testClickPlayWhenPaused() {
         playPauseButton.setState(STATE_PAUSED);
-        playPauseButton.playPause(null);
+        playPauseButton.onClick(null);
         verify(mediaControllerAdapter, times(1)).play();
     }
     /**
@@ -102,7 +90,7 @@ public class PlayPauseButtonTest {
     @Test
     public void testClickPauseWhenPlaying() {
         playPauseButton.setState(STATE_PLAYING);
-        playPauseButton.playPause(null);
+        playPauseButton.onClick(null);
         verify(mediaControllerAdapter, times(1)).pause();
     }
     /**

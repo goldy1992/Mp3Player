@@ -45,7 +45,6 @@ public abstract class FolderActivity extends MediaActivityCompat {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initialiseView(R.layout.activity_folder);
         Intent intent = getIntent();
         this.parentId = intent.getParcelableExtra(REQUEST_OBJECT);
         this.folderName = parentId.getTitle();
@@ -55,6 +54,7 @@ public abstract class FolderActivity extends MediaActivityCompat {
     public void onConnected() {
         super.onConnected();
         this.viewPageFragment.init(Category.SONGS, parentId);
+        initialiseView(R.layout.activity_folder);
         getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
         getSupportActionBar().setTitle(getString(R.string.FOLDER_NAME, this.folderName));
     }
@@ -68,6 +68,4 @@ public abstract class FolderActivity extends MediaActivityCompat {
     public void setViewPageFragment(ChildViewPagerFragment childViewPagerFragment) {
         this.viewPageFragment = childViewPagerFragment;
     }
-
-
 }

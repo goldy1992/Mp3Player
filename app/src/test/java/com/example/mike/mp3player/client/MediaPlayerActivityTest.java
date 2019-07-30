@@ -22,7 +22,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(RobolectricTestRunner.class)
@@ -63,7 +62,7 @@ public class MediaPlayerActivityTest {
     public void testInitialisation()  {
         assertNotNull(mediaPlayerActivity.getMetadataTitleBarFragment());
         assertNotNull(mediaPlayerActivity.getPlaybackTrackerFragment());
-        assertNotNull(mediaPlayerActivity.getPlaybackToolbarExtendedFragment());
+        assertNotNull(mediaPlayerActivity.getPlayToolBarFragment());
         assertNotNull(mediaPlayerActivity.getMediaControlsFragment());
         assertNotNull(mediaPlayerActivity.getAlbumArtFragment());
     }

@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.client.activities;
 
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
@@ -19,13 +18,6 @@ public abstract class MainActivity extends MediaActivityCompat {
     private static final int READ_REQUEST_CODE = 42;
     private MainActivityRootFragment rootFragment;
     private InputMethodManager inputMethodManager;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-      /*  NOT NEEDED YETthis.inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE); */
-        initialiseView(R.layout.activity_main);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -48,6 +40,7 @@ public abstract class MainActivity extends MediaActivityCompat {
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
         super.onConnected();
+        initialiseView(R.layout.activity_main);
         LibraryRequest libraryRequest = new LibraryRequest(Category.ROOT, Category.ROOT.name());
         getMediaBrowserAdapter().subscribe(libraryRequest);
     }

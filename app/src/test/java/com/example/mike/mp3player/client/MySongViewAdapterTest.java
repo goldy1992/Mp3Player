@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 

@@ -1,11 +1,5 @@
 package com.example.mike.mp3player.service.player;
 
-import android.content.Context;
-import android.media.MediaPlayer;
-import android.net.Uri;
-
-import com.example.mike.mp3player.service.AudioFocusManager;
-
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;

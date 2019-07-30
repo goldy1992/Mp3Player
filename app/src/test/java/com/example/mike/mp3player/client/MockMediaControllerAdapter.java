@@ -6,8 +6,6 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
-import androidx.annotation.NonNull;
-
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
@@ -97,6 +95,14 @@ public class MockMediaControllerAdapter extends MediaControllerAdapter {
             .putString(METADATA_KEY_ARTIST, "artist")
             .putString(METADATA_KEY_TITLE, "title")
             .build();
+    }
+
+    public @PlaybackStateCompat.ShuffleMode int getShuffleMode() {
+        return PlaybackStateCompat.SHUFFLE_MODE_ALL;
+    }
+
+    public @PlaybackStateCompat.RepeatMode int getRepeatMode() {
+        return PlaybackStateCompat.REPEAT_MODE_ALL;
     }
 
     public MediaSessionCompat.Token getToken() {

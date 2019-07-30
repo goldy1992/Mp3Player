@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="LinearLayoutWithImageView">
-        <attr name="imgSrc" format="reference" />
-    </declare-styleable>
 
     <declare-styleable name="SquareImageView">
         <attr name="useWidthOrHeight" format="enum" >

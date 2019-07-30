@@ -23,8 +23,6 @@ import static com.example.mike.mp3player.TestUtils.createMediaItem;
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 

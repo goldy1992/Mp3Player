@@ -1,20 +1,14 @@
-package com.example.mike.mp3player.client.views;
+package com.example.mike.mp3player.client.views.buttons;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.View;
 
-import androidx.test.platform.app.InstrumentationRegistry;
-
-import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.commons.Constants;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
 import static android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_ALL;
@@ -26,18 +20,14 @@ import static org.mockito.Mockito.verify;
 
 
 @RunWith(RobolectricTestRunner.class)
-public class ShuffleButtonTest {
+public class ShuffleButtonTest extends MediaButtonTestBase{
 
-    @Mock
-    private MediaControllerAdapter mediaControllerAdapter;
     private ShuffleButton shuffleButton;
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
-        Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        this.shuffleButton = new ShuffleButton(context, null, 0);
-        this.shuffleButton.init(mediaControllerAdapter);
+        super.setup();
+        this.shuffleButton = new ShuffleButton(context, mediaControllerAdapter, handler);
     }
 
     @Test
@@ -55,21 +45,21 @@ public class ShuffleButtonTest {
     }
 
     @Test
-    public void testToggleShuffleChangeToShuffleAll() {
+    public void testOnClickChangeToShuffleAll() {
         @PlaybackStateCompat.ShuffleMode final int currentShuffleMode = SHUFFLE_MODE_NONE;
         @PlaybackStateCompat.ShuffleMode final int expectedShuffleMode = SHUFFLE_MODE_ALL;
         shuffleButton.setShuffleMode(currentShuffleMode);
-        shuffleButton.toggleShuffle(mock(View.class));
+        shuffleButton.onClick(mock(View.class));
         verify(mediaControllerAdapter, times(1)).setShuffleMode(expectedShuffleMode);
         assertEquals(expectedShuffleMode, shuffleButton.getShuffleMode());
     }
 
     @Test
-    public void testToggleShuffleChangeToShuffleNone() {
+    public void testOnClickChangeToShuffleNone() {
         @PlaybackStateCompat.ShuffleMode final int currentShuffleMode = SHUFFLE_MODE_ALL;
         @PlaybackStateCompat.ShuffleMode final int expectedShuffleMode = SHUFFLE_MODE_NONE;
         shuffleButton.setShuffleMode(currentShuffleMode);
-        shuffleButton.toggleShuffle(mock(View.class));
+        shuffleButton.onClick(mock(View.class));
         verify(mediaControllerAdapter, times(1)).setShuffleMode(expectedShuffleMode);
         assertEquals(expectedShuffleMode, shuffleButton.getShuffleMode());
     }

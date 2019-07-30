@@ -1,18 +1,23 @@
-package com.example.mike.mp3player.client.views;
+package com.example.mike.mp3player.client.views.buttons;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 
+import java.util.Collections;
+
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import static android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_ALL;
 import static android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_NONE;
@@ -20,30 +25,23 @@ import static com.example.mike.mp3player.commons.Constants.OPAQUE;
 import static com.example.mike.mp3player.commons.Constants.SHUFFLE_MODE;
 import static com.example.mike.mp3player.commons.Constants.TRANSLUCENT;
 
-public class ShuffleButton extends LinearLayoutWithImageView implements PlaybackStateListener {
+public class ShuffleButton extends MediaButton implements PlaybackStateListener {
 
     private static final String LOG_TAG = "SHUFFLE_BTN";
-    private Context context;
     @PlaybackStateCompat.ShuffleMode
     private int shuffleMode;
-    private MediaControllerAdapter mediaControllerAdapter;
 
-    public ShuffleButton(Context context) {
-        this(context, null);
+    @Inject
+    public ShuffleButton(Context context, MediaControllerAdapter mediaControllerAdapter,
+                         @Named("main") Handler mainUpdater) {
+        super(context, mediaControllerAdapter, mainUpdater);
     }
 
-    public ShuffleButton(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public ShuffleButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr, 0, R.drawable.ic_baseline_shuffle_24px, 1);
-        this.context = context;
-    }
-
-    public void init(MediaControllerAdapter mediaControllerAdapter) {
-        this.mediaControllerAdapter = mediaControllerAdapter;
-        this.setOnClickListener(this::toggleShuffle);
+    @Override
+    public void init(ImageView view) {
+        super.init(view);
+        this.mediaControllerAdapter.registerPlaybackStateListener(this,
+                Collections.singleton(ListenerType.SHUFFLE));
         this.updateState(mediaControllerAdapter.getShuffleMode());
     }
 
@@ -60,7 +58,8 @@ public class ShuffleButton extends LinearLayoutWithImageView implements Playback
         }
     }
 
-    public @PlaybackStateCompat.ShuffleMode int toggleShuffle(View view) {
+    @Override
+    public void onClick(View view) {
         @PlaybackStateCompat.ShuffleMode int newShuffleMode;
         switch (shuffleMode) {
             case SHUFFLE_MODE_ALL: newShuffleMode = SHUFFLE_MODE_NONE; break;
@@ -68,16 +67,14 @@ public class ShuffleButton extends LinearLayoutWithImageView implements Playback
         }
         updateState(newShuffleMode);
         mediaControllerAdapter.setShuffleMode(newShuffleMode);
-        return shuffleMode;
     }
 
     private void setShuffleOn() {
-        setViewImage(R.drawable.ic_baseline_shuffle_24px);
-        getView().setImageAlpha(OPAQUE);
+        setImage(R.drawable.ic_baseline_shuffle_24px, OPAQUE);
     }
+
     private void setShuffleOff() {
-        setViewImage(R.drawable.ic_baseline_shuffle_24px);
-        getView().setImageAlpha(TRANSLUCENT);
+        setImage(R.drawable.ic_baseline_shuffle_24px, TRANSLUCENT);
     }
 
     @Override
@@ -85,15 +82,9 @@ public class ShuffleButton extends LinearLayoutWithImageView implements Playback
         Bundle extras = state.getExtras();
         if (null != extras) {
             Integer shuffleMode = extras.getInt(SHUFFLE_MODE);
-            if (null != shuffleMode) {
-                updateState(shuffleMode);
-            }
-        }
-    }
+            updateState(shuffleMode);
 
-    @Inject
-    public void setMediaControllerAdapter(MediaControllerAdapter mediaControllerAdapter) {
-        this.mediaControllerAdapter = mediaControllerAdapter;
+        }
     }
 
     @VisibleForTesting
