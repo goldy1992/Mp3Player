@@ -1,19 +1,10 @@
-package com.example.mike.mp3player.client.views;
+package com.example.mike.mp3player.client.views.buttons;
 
-import android.content.Context;
-import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
-
-import androidx.test.platform.app.InstrumentationRegistry;
-
-import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.views.buttons.PlayPauseButton;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
@@ -25,26 +16,21 @@ import static org.mockito.Mockito.verify;
 
 
 @RunWith(RobolectricTestRunner.class)
-public class PlayPauseButtonTest {
+public class PlayPauseButtonTest extends MediaButtonTestBase {
+
     /**
      * Play Pause Button to test
      */
     private PlayPauseButton playPauseButton;
-    /**
-     * mock onClickListener used for setup
-     */
-    @Mock
-    private MediaControllerAdapter mediaControllerAdapter;
-    @Mock
-    private Handler handler;
+
     /**
      * setup
      */
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        playPauseButton = new PlayPauseButton(context, mediaControllerAdapter, handler);    }
+        super.setup();
+        playPauseButton = new PlayPauseButton(context, mediaControllerAdapter, handler);
+    }
 
     /**
      * test for the create method.

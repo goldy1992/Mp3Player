@@ -2,7 +2,6 @@ package com.example.mike.mp3player.client.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.media.session.MediaSessionCompat;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -10,8 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-import static com.example.mike.mp3player.commons.Constants.MEDIA_SESSION;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 

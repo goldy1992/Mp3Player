@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.views.buttons;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -35,19 +34,19 @@ public class PlayPauseButton extends MediaButton implements PlaybackStateListene
     public PlayPauseButton(Context context, @NonNull MediaControllerAdapter mediaControllerAdapter,
                            @Named("main") Handler mainUpdater) {
         super(context, mediaControllerAdapter, mainUpdater);
-
     }
 
+    @Override
     public void init(ImageView view) {
-        this.view = view;
-        this.view.setOnClickListener(this::playPause);
+        super.init(view);
         this.mediaControllerAdapter.registerPlaybackStateListener(this,
                 Collections.singleton(ListenerType.PLAYBACK));
         this.updateState(mediaControllerAdapter.getPlaybackState());
     }
 
     @VisibleForTesting()
-    public void playPause(View view) {
+    @Override
+    public void onClick(View view) {
         if (getState() == PlaybackStateCompat.STATE_PLAYING) {
             Log.d(LOG_TAG, "calling pause");
             mediaControllerAdapter.pause();
@@ -55,11 +54,6 @@ public class PlayPauseButton extends MediaButton implements PlaybackStateListene
             Log.d(LOG_TAG, "calling play");
             mediaControllerAdapter.play();
         }
-    }
-
-    private @DrawableRes int getCurrentIcon() {
-        return mediaControllerAdapter.getPlaybackState() == STATE_PLAYING ?
-            getPauseIcon() : getPlayIcon();
     }
 
     private void updateState(int newState) {
@@ -77,14 +71,10 @@ public class PlayPauseButton extends MediaButton implements PlaybackStateListene
     }
 
     private synchronized void setPlayIcon() {
-        int resource = getPlayIcon();
-        Drawable drawable = context.getDrawable(resource);
-        view.setImageDrawable(drawable);
+        setImage(getPlayIcon());
     }
     private synchronized void setPauseIcon() {
-        int resource = getPauseIcon();
-        Drawable drawable = context.getDrawable(resource);
-        view.setImageDrawable(drawable);
+        setImage(getPauseIcon());
     }
 
     private @DrawableRes int getPlayIcon() {

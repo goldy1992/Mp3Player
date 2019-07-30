@@ -2,7 +2,6 @@ package com.example.mike.mp3player.service.library.mediaretriever;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.Media;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaMetadataCompat;

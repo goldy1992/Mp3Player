@@ -1,23 +1,17 @@
 package com.example.mike.mp3player.client.views.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.core.util.Preconditions;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentFactory;
 import androidx.fragment.app.testing.FragmentScenario;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.activities.EmptyMediaActivityCompatFragmentActivity;
 
 import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 
 import static androidx.core.util.Preconditions.checkNotNull;

@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.views.buttons;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,15 +18,14 @@ public class SkipToPreviousButton extends MediaButton {
         super(context, mediaControllerAdapter, mainUpdater);
     }
 
+    @Override
     public void init(ImageView view) {
-        this.view = view;
-        Drawable drawable = context.getDrawable(R.drawable.ic_baseline_skip_previous_24px);
-        this.view.setImageDrawable(drawable);
-//        this.view.init(R.drawable.ic_baseline_skip_previous_24px, 2);
-        this.view.setOnClickListener(this::skipToPrevious);
+        super.init(view);
+        setImage(R.drawable.ic_baseline_skip_previous_24px);
     }
 
-    public void skipToPrevious(View view) {
+    @Override
+    public void onClick(View view) {
         mediaControllerAdapter.skipToPrevious();
     }
 

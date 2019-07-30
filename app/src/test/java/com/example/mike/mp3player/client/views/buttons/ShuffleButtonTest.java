@@ -1,22 +1,14 @@
-package com.example.mike.mp3player.client.views;
+package com.example.mike.mp3player.client.views.buttons;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.View;
 
-import androidx.test.platform.app.InstrumentationRegistry;
-
-import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.views.buttons.ShuffleButton;
 import com.example.mike.mp3player.commons.Constants;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
 import static android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_ALL;
@@ -28,18 +20,13 @@ import static org.mockito.Mockito.verify;
 
 
 @RunWith(RobolectricTestRunner.class)
-public class ShuffleButtonTest {
+public class ShuffleButtonTest extends MediaButtonTestBase{
 
-    @Mock
-    private MediaControllerAdapter mediaControllerAdapter;
-    @Mock
-    private Handler handler;
     private ShuffleButton shuffleButton;
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
-        Context context = InstrumentationRegistry.getInstrumentation().getContext();
+        super.setup();
         this.shuffleButton = new ShuffleButton(context, mediaControllerAdapter, handler);
     }
 

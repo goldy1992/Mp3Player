@@ -11,7 +11,6 @@ import com.example.mike.mp3player.client.views.fragments.AlbumArtFragment;
 import com.example.mike.mp3player.client.views.fragments.MediaControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
-import com.example.mike.mp3player.client.views.fragments.PlaybackToolbarExtendedFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.LibraryRequest;

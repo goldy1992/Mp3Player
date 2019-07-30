@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.views.buttons;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -38,9 +37,9 @@ public class ShuffleButton extends MediaButton implements PlaybackStateListener 
         super(context, mediaControllerAdapter, mainUpdater);
     }
 
+    @Override
     public void init(ImageView view) {
-        this.view = view;
-        this.view.setOnClickListener(this::toggleShuffle);
+        super.init(view);
         this.mediaControllerAdapter.registerPlaybackStateListener(this,
                 Collections.singleton(ListenerType.SHUFFLE));
         this.updateState(mediaControllerAdapter.getShuffleMode());
@@ -59,7 +58,8 @@ public class ShuffleButton extends MediaButton implements PlaybackStateListener 
         }
     }
 
-    public @PlaybackStateCompat.ShuffleMode int toggleShuffle(View view) {
+    @Override
+    public void onClick(View view) {
         @PlaybackStateCompat.ShuffleMode int newShuffleMode;
         switch (shuffleMode) {
             case SHUFFLE_MODE_ALL: newShuffleMode = SHUFFLE_MODE_NONE; break;
@@ -67,18 +67,14 @@ public class ShuffleButton extends MediaButton implements PlaybackStateListener 
         }
         updateState(newShuffleMode);
         mediaControllerAdapter.setShuffleMode(newShuffleMode);
-        return shuffleMode;
     }
 
     private void setShuffleOn() {
-        Drawable drawable = context.getDrawable(R.drawable.ic_baseline_shuffle_24px);
-        this.view.setImageDrawable(drawable);
-        view.setImageAlpha(OPAQUE);
+        setImage(R.drawable.ic_baseline_shuffle_24px, OPAQUE);
     }
+
     private void setShuffleOff() {
-        Drawable drawable = context.getDrawable(R.drawable.ic_baseline_shuffle_24px);
-        this.view.setImageDrawable(drawable);
-        view.setImageAlpha(TRANSLUCENT);
+        setImage(R.drawable.ic_baseline_shuffle_24px, TRANSLUCENT);
     }
 
     @Override
@@ -86,9 +82,8 @@ public class ShuffleButton extends MediaButton implements PlaybackStateListener 
         Bundle extras = state.getExtras();
         if (null != extras) {
             Integer shuffleMode = extras.getInt(SHUFFLE_MODE);
-            if (null != shuffleMode) {
-                updateState(shuffleMode);
-            }
+            updateState(shuffleMode);
+
         }
     }
 
