@@ -12,7 +12,6 @@ import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
@@ -69,11 +68,4 @@ public abstract class FolderActivity extends MediaActivityCompat {
     public void setViewPageFragment(ChildViewPagerFragment childViewPagerFragment) {
         this.viewPageFragment = childViewPagerFragment;
     }
-
-    @Inject
-    public void setChildViewPagerFragment(Provider<ChildViewPagerFragment> provider) {
-        this.viewPageFragment = provider.get();
-    }
-
-
 }
