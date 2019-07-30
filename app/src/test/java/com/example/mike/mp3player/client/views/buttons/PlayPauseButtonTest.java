@@ -79,7 +79,7 @@ public class PlayPauseButtonTest extends MediaButtonTestBase {
     @Test
     public void testClickPlayWhenPaused() {
         playPauseButton.setState(STATE_PAUSED);
-        playPauseButton.playPause(null);
+        playPauseButton.onClick(null);
         verify(mediaControllerAdapter, times(1)).play();
     }
     /**
@@ -90,7 +90,7 @@ public class PlayPauseButtonTest extends MediaButtonTestBase {
     @Test
     public void testClickPauseWhenPlaying() {
         playPauseButton.setState(STATE_PLAYING);
-        playPauseButton.playPause(null);
+        playPauseButton.onClick(null);
         verify(mediaControllerAdapter, times(1)).pause();
     }
     /**

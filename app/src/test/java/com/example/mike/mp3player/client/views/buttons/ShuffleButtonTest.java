@@ -45,21 +45,21 @@ public class ShuffleButtonTest extends MediaButtonTestBase{
     }
 
     @Test
-    public void testToggleShuffleChangeToShuffleAll() {
+    public void testOnClickChangeToShuffleAll() {
         @PlaybackStateCompat.ShuffleMode final int currentShuffleMode = SHUFFLE_MODE_NONE;
         @PlaybackStateCompat.ShuffleMode final int expectedShuffleMode = SHUFFLE_MODE_ALL;
         shuffleButton.setShuffleMode(currentShuffleMode);
-        shuffleButton.toggleShuffle(mock(View.class));
+        shuffleButton.onClick(mock(View.class));
         verify(mediaControllerAdapter, times(1)).setShuffleMode(expectedShuffleMode);
         assertEquals(expectedShuffleMode, shuffleButton.getShuffleMode());
     }
 
     @Test
-    public void testToggleShuffleChangeToShuffleNone() {
+    public void testOnClickChangeToShuffleNone() {
         @PlaybackStateCompat.ShuffleMode final int currentShuffleMode = SHUFFLE_MODE_ALL;
         @PlaybackStateCompat.ShuffleMode final int expectedShuffleMode = SHUFFLE_MODE_NONE;
         shuffleButton.setShuffleMode(currentShuffleMode);
-        shuffleButton.toggleShuffle(mock(View.class));
+        shuffleButton.onClick(mock(View.class));
         verify(mediaControllerAdapter, times(1)).setShuffleMode(expectedShuffleMode);
         assertEquals(expectedShuffleMode, shuffleButton.getShuffleMode());
     }
