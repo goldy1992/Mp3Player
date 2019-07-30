@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -89,6 +91,12 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
         if (null != mediaBrowserAdapter) {
             this.mediaBrowserAdapter.registerListener(Category.ROOT.name(), this);
         }
+        ImageButton imageButton = view.findViewById(R.id.search_button);
+        Activity activity = getActivity();
+        imageButton.setOnClickListener((View v) ->
+        {
+            activity.onSearchRequested();
+        });
         initNavigationView();
         this.drawerLayout.addDrawerListener(myDrawerListener);
     }

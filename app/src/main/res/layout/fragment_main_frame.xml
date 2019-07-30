@@ -34,7 +34,7 @@
                     app:title="@string/APP_TITLE">
 
                         <ImageButton
-                            android:id="@+id/searchFilter"
+                            android:id="@+id/search_button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:theme="@style/AppTheme"
@@ -43,6 +43,7 @@
                             android:background="@android:color/transparent"
                             android:contentDescription="@string/SEARCH_BUTTON_DESCRIPT"
                             app:srcCompat="@drawable/ic_search_black_24dp" />
+
                 </androidx.appcompat.widget.Toolbar>
 
                 <com.google.android.material.tabs.TabLayout

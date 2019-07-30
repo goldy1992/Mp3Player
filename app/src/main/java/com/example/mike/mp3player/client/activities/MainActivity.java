@@ -25,6 +25,11 @@ public abstract class MainActivity extends MediaActivityCompat {
     }
 
     @Override
+    public boolean onSearchRequested() {
+        return super.onSearchRequested();
+    }
+
+    @Override
     boolean initialiseView(@LayoutRes int layoutRes) {
         setContentView(layoutRes);
         this.rootFragment = (MainActivityRootFragment) getSupportFragmentManager().findFragmentById(R.id.mainActivityRootFragment);
