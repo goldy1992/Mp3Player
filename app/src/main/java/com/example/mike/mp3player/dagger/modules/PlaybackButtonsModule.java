@@ -19,33 +19,33 @@ import dagger.Provides;
 public class PlaybackButtonsModule {
 
     @Provides
-    public SkipToPreviousButton provideSkipToPreviousButton(MediaControllerAdapter mediaControllerAdapter,
+    public SkipToPreviousButton provideSkipToPreviousButton(Context context, MediaControllerAdapter mediaControllerAdapter,
                                         @Named("main") Handler mainUpdater) {
-        return new SkipToPreviousButton( mediaControllerAdapter, mainUpdater);
+        return new SkipToPreviousButton(context, mediaControllerAdapter, mainUpdater);
     }
 
     @Provides
-    public SkipToNextButton provideSkipToNextButton(MediaControllerAdapter mediaControllerAdapter,
+    public SkipToNextButton provideSkipToNextButton(Context context, MediaControllerAdapter mediaControllerAdapter,
                                                     @Named("main") Handler mainUpdater) {
-        return new SkipToNextButton(mediaControllerAdapter, mainUpdater);
+        return new SkipToNextButton(context, mediaControllerAdapter, mainUpdater);
     }
 
     @Provides
-    public PlayPauseButton providePlayPauseButton(MediaControllerAdapter mediaControllerAdapter,
+    public PlayPauseButton providePlayPauseButton(Context context, MediaControllerAdapter mediaControllerAdapter,
                                                   @Named("main") Handler mainUpdater) {
-        return new PlayPauseButton(mediaControllerAdapter, mainUpdater);
+        return new PlayPauseButton(context, mediaControllerAdapter, mainUpdater);
     }
 
     @Provides
-    public ShuffleButton shuffleButton(MediaControllerAdapter mediaControllerAdapter,
+    public ShuffleButton shuffleButton(Context context, MediaControllerAdapter mediaControllerAdapter,
                                        @Named("main") Handler mainUpdater) {
-        return new ShuffleButton(mediaControllerAdapter, mainUpdater);
+        return new ShuffleButton(context, mediaControllerAdapter, mainUpdater);
     }
 
     @Provides
-    public RepeatOneRepeatAllButton repeatOneRepeatAllButton(MediaControllerAdapter mediaControllerAdapter,
+    public RepeatOneRepeatAllButton repeatOneRepeatAllButton(Context context, MediaControllerAdapter mediaControllerAdapter,
                                                              @Named("main") Handler mainUpdater) {
-        return new RepeatOneRepeatAllButton(mediaControllerAdapter, mainUpdater);
+        return new RepeatOneRepeatAllButton(context, mediaControllerAdapter, mainUpdater);
     }
 
 }

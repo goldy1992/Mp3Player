@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,13 +31,15 @@ public class ShuffleButton implements PlaybackStateListener {
     private static final String LOG_TAG = "SHUFFLE_BTN";
     @PlaybackStateCompat.ShuffleMode
     private int shuffleMode;
+    private final Context context;
     private final MediaControllerAdapter mediaControllerAdapter;
     private final Handler mainUpdater;
     private ImageView view;
 
     @Inject
-    public ShuffleButton(MediaControllerAdapter mediaControllerAdapter,
+    public ShuffleButton(Context context, MediaControllerAdapter mediaControllerAdapter,
                          @Named("main") Handler mainUpdater) {
+        this.context = context;
         this.mediaControllerAdapter = mediaControllerAdapter;
         this.mainUpdater = mainUpdater;
     }
@@ -74,12 +77,12 @@ public class ShuffleButton implements PlaybackStateListener {
     }
 
     private void setShuffleOn() {
-        Drawable drawable = mediaControllerAdapter.getContext().getDrawable(R.drawable.ic_baseline_shuffle_24px);
+        Drawable drawable = context.getDrawable(R.drawable.ic_baseline_shuffle_24px);
         this.view.setImageDrawable(drawable);
         view.setImageAlpha(OPAQUE);
     }
     private void setShuffleOff() {
-        Drawable drawable = mediaControllerAdapter.getContext().getDrawable(R.drawable.ic_baseline_shuffle_24px);
+        Drawable drawable = context.getDrawable(R.drawable.ic_baseline_shuffle_24px);
         this.view.setImageDrawable(drawable);
         view.setImageAlpha(TRANSLUCENT);
     }

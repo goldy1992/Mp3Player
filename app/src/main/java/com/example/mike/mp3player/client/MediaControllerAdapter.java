@@ -188,8 +188,4 @@ public class MediaControllerAdapter {
     public void setMediaController(MediaControllerCompat mediaController) {
         this.mediaController = mediaController;
     }
-
-    public Context getContext() {
-        return context;
-    }
 }

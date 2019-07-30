@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,13 +37,15 @@ public class RepeatOneRepeatAllButton implements PlaybackStateListener {
 
     @PlaybackStateCompat.RepeatMode
     private int repeatMode;
+    private final Context context;
     private final MediaControllerAdapter mediaControllerAdapter;
     private final Handler mainUpdater;
     private ImageView view;
 
     @Inject
-    public RepeatOneRepeatAllButton(MediaControllerAdapter mediaControllerAdapter,
+    public RepeatOneRepeatAllButton(Context context, MediaControllerAdapter mediaControllerAdapter,
                                     @Named("main") Handler mainUpdater) {
+        this.context = context;
         this.mediaControllerAdapter = mediaControllerAdapter;
         this.mainUpdater = mainUpdater;
     }
@@ -80,17 +83,17 @@ public class RepeatOneRepeatAllButton implements PlaybackStateListener {
     }
 
     private void setRepeatAllIcon() {
-        Drawable drawable = mediaControllerAdapter.getContext().getDrawable(R.drawable.ic_baseline_repeat_24px);
+        Drawable drawable = context.getDrawable(R.drawable.ic_baseline_repeat_24px);
         this.view.setImageDrawable(drawable);
         view.setImageAlpha(OPAQUE);
     }
     private void setRepeatOneIcon() {
-        Drawable drawable = mediaControllerAdapter.getContext().getDrawable(R.drawable.ic_baseline_repeat_one_24px);
+        Drawable drawable = context.getDrawable(R.drawable.ic_baseline_repeat_one_24px);
         this.view.setImageDrawable(drawable);
         view.setImageAlpha(OPAQUE);
     }
     private void setRepeatNoneIcon() {
-        Drawable drawable = mediaControllerAdapter.getContext().getDrawable(R.drawable.ic_baseline_repeat_24px);
+        Drawable drawable = context.getDrawable(R.drawable.ic_baseline_repeat_24px);
         this.view.setImageDrawable(drawable);
         view.setImageAlpha(TRANSLUCENT);
     }

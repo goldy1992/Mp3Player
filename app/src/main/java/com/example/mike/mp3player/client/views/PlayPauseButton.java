@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -29,6 +30,7 @@ public class PlayPauseButton implements PlaybackStateListener {
     private static final String LOG_TAG = "PLAY_PAUSE_BUTTON";
     @PlaybackStateCompat.State
     private int state = PlaybackStateCompat.STATE_NONE;
+    private final Context context;
     private final MediaControllerAdapter mediaControllerAdapter;
     private final Handler mainUpdater;
 
@@ -36,8 +38,9 @@ public class PlayPauseButton implements PlaybackStateListener {
 
 
     @Inject
-    public PlayPauseButton(@NonNull MediaControllerAdapter mediaControllerAdapter,
+    public PlayPauseButton(Context context, @NonNull MediaControllerAdapter mediaControllerAdapter,
                            @Named("main") Handler mainUpdater) {
+        this.context = context;
         this.mediaControllerAdapter = mediaControllerAdapter;
         this.mainUpdater = mainUpdater;
     }
@@ -84,12 +87,12 @@ public class PlayPauseButton implements PlaybackStateListener {
 
     private synchronized void setPlayIcon() {
         int resource = getPlayIcon();
-        Drawable drawable = mediaControllerAdapter.getContext().getDrawable(resource);
+        Drawable drawable = context.getDrawable(resource);
         view.setImageDrawable(drawable);
     }
     private synchronized void setPauseIcon() {
         int resource = getPauseIcon();
-        Drawable drawable = mediaControllerAdapter.getContext().getDrawable(resource);
+        Drawable drawable = context.getDrawable(resource);
         view.setImageDrawable(drawable);
     }
 
