@@ -24,10 +24,6 @@ public abstract class MainActivity extends MediaActivityCompat {
         return false;
     }
 
-    @Override
-    public boolean onSearchRequested() {
-        return super.onSearchRequested();
-    }
 
     @Override
     boolean initialiseView(@LayoutRes int layoutRes) {

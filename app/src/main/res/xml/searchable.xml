@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
-    android:label="app_label"
-    android:hint="hint">
+    android:label="@string/app_name"
+    android:hint="Search media">
 
 </searchable>

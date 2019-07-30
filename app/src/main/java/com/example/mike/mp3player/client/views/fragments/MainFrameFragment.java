@@ -1,14 +1,16 @@
 package com.example.mike.mp3player.client.views.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.SearchView;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -54,6 +56,7 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
     private Provider<ChildViewPagerFragment> childFragmentProvider;
     private MediaBrowserAdapter mediaBrowserAdapter;
     private MyPagerAdapter adapter;
+    private SearchView searchView;
     private static final String LOG_TAG = "VIEW_PAGER_FRAGMENT";
     private NavigationView navigationView;
     private MyDrawerListener myDrawerListener;
@@ -92,14 +95,19 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
             this.mediaBrowserAdapter.registerListener(Category.ROOT.name(), this);
         }
         ImageButton imageButton = view.findViewById(R.id.search_button);
-        Activity activity = getActivity();
-        imageButton.setOnClickListener((View v) ->
-        {
-            activity.onSearchRequested();
-        });
+       // SearchView searchView = imageButton.getActionView()
         initNavigationView();
         this.drawerLayout.addDrawerListener(myDrawerListener);
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+        MenuItem menuItem =  menu.findItem(R.id.action_search);
+        this.searchView = (SearchView) menuItem.getActionView();
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

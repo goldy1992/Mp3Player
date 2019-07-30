@@ -33,17 +33,6 @@
                     app:titleTextColor="?attr/textColorPrimary"
                     app:title="@string/APP_TITLE">
 
-                        <ImageButton
-                            android:id="@+id/search_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:theme="@style/AppTheme"
-                            android:layout_gravity="end"
-                            android:layout_marginEnd="@dimen/default_gap"
-                            android:background="@android:color/transparent"
-                            android:contentDescription="@string/SEARCH_BUTTON_DESCRIPT"
-                            app:srcCompat="@drawable/ic_search_black_24dp" />
-
                 </androidx.appcompat.widget.Toolbar>
 
                 <com.google.android.material.tabs.TabLayout
@@ -81,7 +70,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:menu="@menu/menu_main"
+        app:menu="@menu/themes_menu"
         app:headerLayout="@layout/nav_header"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
