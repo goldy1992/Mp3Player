@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.views;
+package com.example.mike.mp3player.client.views.buttons;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -31,23 +31,18 @@ import static com.example.mike.mp3player.commons.Constants.TRANSLUCENT;
 /**
  *
  */
-public class RepeatOneRepeatAllButton implements PlaybackStateListener {
+public class RepeatOneRepeatAllButton extends MediaButton implements PlaybackStateListener {
 
     private static final String LOG_TAG = "RPT1_RPT_ALL_BTN";
 
     @PlaybackStateCompat.RepeatMode
     private int repeatMode;
-    private final Context context;
-    private final MediaControllerAdapter mediaControllerAdapter;
-    private final Handler mainUpdater;
-    private ImageView view;
 
     @Inject
     public RepeatOneRepeatAllButton(Context context, MediaControllerAdapter mediaControllerAdapter,
                                     @Named("main") Handler mainUpdater) {
-        this.context = context;
-        this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mainUpdater = mainUpdater;
+        super(context, mediaControllerAdapter, mainUpdater);
+
     }
 
     public void init(ImageView view) {

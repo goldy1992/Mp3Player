@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.views;
+package com.example.mike.mp3player.client.views.buttons;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -26,22 +26,16 @@ import static com.example.mike.mp3player.commons.Constants.OPAQUE;
 import static com.example.mike.mp3player.commons.Constants.SHUFFLE_MODE;
 import static com.example.mike.mp3player.commons.Constants.TRANSLUCENT;
 
-public class ShuffleButton implements PlaybackStateListener {
+public class ShuffleButton extends MediaButton implements PlaybackStateListener {
 
     private static final String LOG_TAG = "SHUFFLE_BTN";
     @PlaybackStateCompat.ShuffleMode
     private int shuffleMode;
-    private final Context context;
-    private final MediaControllerAdapter mediaControllerAdapter;
-    private final Handler mainUpdater;
-    private ImageView view;
 
     @Inject
     public ShuffleButton(Context context, MediaControllerAdapter mediaControllerAdapter,
                          @Named("main") Handler mainUpdater) {
-        this.context = context;
-        this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mainUpdater = mainUpdater;
+        super(context, mediaControllerAdapter, mainUpdater);
     }
 
     public void init(ImageView view) {

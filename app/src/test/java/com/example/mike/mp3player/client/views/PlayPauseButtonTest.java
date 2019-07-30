@@ -3,11 +3,11 @@ package com.example.mike.mp3player.client.views;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.view.View;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.views.buttons.PlayPauseButton;
 
 import org.junit.Before;
 import org.junit.Test;

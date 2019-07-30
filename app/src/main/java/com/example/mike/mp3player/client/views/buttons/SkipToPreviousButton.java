@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.views;
+package com.example.mike.mp3player.client.views.buttons;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -12,18 +12,11 @@ import com.example.mike.mp3player.client.MediaControllerAdapter;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public class SkipToPreviousButton {
-
-    private final Context context;
-    private final MediaControllerAdapter mediaControllerAdapter;
-    private final Handler mainUpdater;
-    private ImageView view;
+public class SkipToPreviousButton extends MediaButton {
 
     @Inject
     public SkipToPreviousButton(Context context, MediaControllerAdapter mediaControllerAdapter, @Named("main") Handler mainUpdater) {
-        this.context = context;
-        this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mainUpdater = mainUpdater;
+        super(context, mediaControllerAdapter, mainUpdater);
     }
 
     public void init(ImageView view) {

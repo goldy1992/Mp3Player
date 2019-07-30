@@ -10,8 +10,8 @@ import androidx.annotation.Nullable;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
-import com.example.mike.mp3player.client.views.RepeatOneRepeatAllButton;
-import com.example.mike.mp3player.client.views.ShuffleButton;
+import com.example.mike.mp3player.client.views.buttons.RepeatOneRepeatAllButton;
+import com.example.mike.mp3player.client.views.buttons.ShuffleButton;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 
 import javax.inject.Inject;

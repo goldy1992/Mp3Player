@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.views;
+package com.example.mike.mp3player.client.views.buttons;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -25,30 +25,21 @@ import javax.inject.Named;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 
-public class PlayPauseButton implements PlaybackStateListener {
+public class PlayPauseButton extends MediaButton implements PlaybackStateListener {
 
     private static final String LOG_TAG = "PLAY_PAUSE_BUTTON";
     @PlaybackStateCompat.State
     private int state = PlaybackStateCompat.STATE_NONE;
-    private final Context context;
-    private final MediaControllerAdapter mediaControllerAdapter;
-    private final Handler mainUpdater;
-
-    private ImageView view;
-
 
     @Inject
     public PlayPauseButton(Context context, @NonNull MediaControllerAdapter mediaControllerAdapter,
                            @Named("main") Handler mainUpdater) {
-        this.context = context;
-        this.mediaControllerAdapter = mediaControllerAdapter;
-        this.mainUpdater = mainUpdater;
+        super(context, mediaControllerAdapter, mainUpdater);
+
     }
 
     public void init(ImageView view) {
         this.view = view;
-//        this.view.init(getCurrentIcon(), 2);
-//        this.view.setLayoutParams(view.getLinearLayoutParams(view.getLayoutParams()));
         this.view.setOnClickListener(this::playPause);
         this.mediaControllerAdapter.registerPlaybackStateListener(this,
                 Collections.singleton(ListenerType.PLAYBACK));

@@ -18,9 +18,9 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.client.utils.IntentUtils;
-import com.example.mike.mp3player.client.views.PlayPauseButton;
-import com.example.mike.mp3player.client.views.SkipToNextButton;
-import com.example.mike.mp3player.client.views.SkipToPreviousButton;
+import com.example.mike.mp3player.client.views.buttons.PlayPauseButton;
+import com.example.mike.mp3player.client.views.buttons.SkipToNextButton;
+import com.example.mike.mp3player.client.views.buttons.SkipToPreviousButton;
 
 import javax.inject.Inject;
 

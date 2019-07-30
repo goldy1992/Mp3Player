@@ -9,6 +9,7 @@ import android.view.View;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.views.buttons.ShuffleButton;
 import com.example.mike.mp3player.commons.Constants;
 
 import org.junit.Before;

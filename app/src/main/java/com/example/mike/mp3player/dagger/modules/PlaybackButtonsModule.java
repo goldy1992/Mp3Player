@@ -4,11 +4,11 @@ import android.content.Context;
 import android.os.Handler;
 
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.views.PlayPauseButton;
-import com.example.mike.mp3player.client.views.RepeatOneRepeatAllButton;
-import com.example.mike.mp3player.client.views.ShuffleButton;
-import com.example.mike.mp3player.client.views.SkipToNextButton;
-import com.example.mike.mp3player.client.views.SkipToPreviousButton;
+import com.example.mike.mp3player.client.views.buttons.PlayPauseButton;
+import com.example.mike.mp3player.client.views.buttons.RepeatOneRepeatAllButton;
+import com.example.mike.mp3player.client.views.buttons.ShuffleButton;
+import com.example.mike.mp3player.client.views.buttons.SkipToNextButton;
+import com.example.mike.mp3player.client.views.buttons.SkipToPreviousButton;
 
 import javax.inject.Named;
 
