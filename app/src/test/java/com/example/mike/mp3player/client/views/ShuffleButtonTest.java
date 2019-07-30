@@ -39,7 +39,7 @@ public class ShuffleButtonTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        this.shuffleButton = new ShuffleButton(mediaControllerAdapter, handler);
+        this.shuffleButton = new ShuffleButton(context, mediaControllerAdapter, handler);
     }
 
     @Test
