@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,15 +32,13 @@ public class PlayToolBarFragment extends Fragment {
     private SkipToNextButton skipToNextButton;
 
     protected Toolbar toolbar;
-    LinearLayout innerPlaybackToolbarLayout;
-    boolean attachToRoot;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         initialiseDependencies();
         super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.fragment_playback_toolbar, container, attachToRoot );
+        return inflater.inflate(R.layout.fragment_playback_toolbar, container, true);
     }
 
     @Override
@@ -54,14 +51,6 @@ public class PlayToolBarFragment extends Fragment {
         if (!isMediaPlayerActivity()) {
             toolbar.setOnClickListener((View v) -> goToMediaPlayerActivity());
         }
-        this.innerPlaybackToolbarLayout = null;
-
-        if (null != innerPlaybackToolbarLayout) {
-//            innerPlaybackToolbarLayout.addView(skipToPreviousButton.getView());
-//            innerPlaybackToolbarLayout.addView(playPauseButton.getView());
-//            innerPlaybackToolbarLayout.addView(skipToNextButton.getView());
-        }
-
     }
 
     @Inject
