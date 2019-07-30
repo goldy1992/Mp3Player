@@ -44,7 +44,7 @@ public class PlayPauseButtonTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        playPauseButton = new PlayPauseButton(mediaControllerAdapter, handler);    }
+        playPauseButton = new PlayPauseButton(context, mediaControllerAdapter, handler);    }
 
     /**
      * test for the create method.
