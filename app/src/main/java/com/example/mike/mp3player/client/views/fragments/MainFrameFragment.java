@@ -9,8 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.SearchView;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -18,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -25,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import com.arlib.floatingsearchview.FloatingSearchView;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
@@ -36,6 +36,7 @@ import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPage
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -56,10 +57,18 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
     private Provider<ChildViewPagerFragment> childFragmentProvider;
     private MediaBrowserAdapter mediaBrowserAdapter;
     private MyPagerAdapter adapter;
-    private SearchView searchView;
+
     private static final String LOG_TAG = "VIEW_PAGER_FRAGMENT";
     private NavigationView navigationView;
     private MyDrawerListener myDrawerListener;
+
+
+    // new
+    //FloatingSearchView mSearchView;
+    //    private com.arlib.floatingsearchview.FloatingSearchView searchView;
+    SearchView searchView;
+    AppBarLayout mAppBar;
+
     private boolean enabled = true;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -94,8 +103,7 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
         if (null != mediaBrowserAdapter) {
             this.mediaBrowserAdapter.registerListener(Category.ROOT.name(), this);
         }
-        ImageButton imageButton = view.findViewById(R.id.search_button);
-       // SearchView searchView = imageButton.getActionView()
+
         initNavigationView();
         this.drawerLayout.addDrawerListener(myDrawerListener);
     }
@@ -105,6 +113,14 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
         inflater.inflate(R.menu.menu_main, menu);
         MenuItem menuItem =  menu.findItem(R.id.action_search);
         this.searchView = (SearchView) menuItem.getActionView();
+//        this.searchView.set
+        // Get the SearchView and set the searchable configuration
+//        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        // Assumes current activity is the searchable activity
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+//        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+//        searchView.setSubmitButtonEnabled(true);
+
         super.onCreateOptionsMenu(menu,inflater);
     }
 

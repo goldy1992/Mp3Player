@@ -141,6 +141,7 @@ dependencies {
     implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
     implementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     implementation group: 'com.simplecityapps', name: 'recyclerview-fastscroll', version: FAST_SCROLL_VERSION
+    implementation  'com.github.arimorty:floatingsearchview:2.1.1'
 
     //dagger
     implementation 'com.google.dagger:dagger:2.23.1'
