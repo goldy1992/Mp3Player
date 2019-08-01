@@ -1,11 +1,11 @@
-package com.example.mike.mp3player.client.callbacks;
+package com.example.mike.mp3player.client.callbacks.metadata;
 
 import android.media.MediaMetadata;
 import android.os.Handler;
 import android.support.v4.media.MediaMetadataCompat;
 import android.util.Log;
 
-import com.example.mike.mp3player.client.MetaDataListener;
+import com.example.mike.mp3player.client.callbacks.AsyncCallback;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,15 +13,15 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-public class MyMetaDataCallback extends AsyncCallback<MediaMetadataCompat> {
+public class MyMetadataCallback extends AsyncCallback<MediaMetadataCompat> {
     private static final String LOG_TAG = "MY_META_DTA_CLLBK";
     private String currentMediaId = null;
-    private Set<MetaDataListener> metaDataListeners;
+    private Set<MetadataListener> metadataListeners;
 
     @Inject
-    public MyMetaDataCallback(Handler handler) {
+    public MyMetadataCallback(Handler handler) {
         super(handler);
-        this.metaDataListeners = new HashSet<>();
+        this.metadataListeners = new HashSet<>();
     }
 
     @Override
@@ -34,28 +34,28 @@ public class MyMetaDataCallback extends AsyncCallback<MediaMetadataCompat> {
                     this.currentMediaId = newMediaId;
                     //logMetaData(mediaMetadataCompat, LOG_TAG);
                     StringBuilder sb = new StringBuilder();
-                    for (MetaDataListener listener : metaDataListeners) {
+                    for (MetadataListener listener : metadataListeners) {
                         if (null != listener) {
                             listener.onMetadataChanged(mediaMetadataCompat);
                             sb.append(listener.getClass());
                         }
                     }
-                    // Log.i(LOG_TAG, "hit meta data changed " + ", listeners " + metaDataListeners.size() + ", " + sb.toString());
+                    // Log.i(LOG_TAG, "hit meta data changed " + ", listeners " + metadataListeners.size() + ", " + sb.toString());
                 }
             }
         }
     }
 
-    public synchronized void registerMetaDataListener(MetaDataListener listener) {
+    public synchronized void registerMetaDataListener(MetadataListener listener) {
         Log.i(LOG_TAG, "registerMetaDataListener" + listener.getClass());
-        metaDataListeners.add(listener);
+        metadataListeners.add(listener);
     }
 
-    public synchronized void registerMetaDataListeners(Collection<MetaDataListener> listeners) {
-        metaDataListeners.addAll(listeners);
+    public synchronized void registerMetaDataListeners(Collection<MetadataListener> listeners) {
+        metadataListeners.addAll(listeners);
     }
 
-    public synchronized boolean removeMetaDataListener(MetaDataListener listener) {
-        return metaDataListeners.remove(listener);
+    public synchronized boolean removeMetaDataListener(MetadataListener listener) {
+        return metadataListeners.remove(listener);
     }
 }

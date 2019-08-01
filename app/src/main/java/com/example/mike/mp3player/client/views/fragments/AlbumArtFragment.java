@@ -17,13 +17,13 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.MetaDataListener;
+import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 
 import javax.inject.Inject;
 
-public class AlbumArtFragment extends AsyncFragment implements MetaDataListener {
+public class AlbumArtFragment extends AsyncFragment implements MetadataListener {
     private static final String LOG_TAG = "ALBM_ART_FRGMNT";
     private AlbumArtPainter albumArtPainter;
     private MediaControllerAdapter mediaControllerAdapter;

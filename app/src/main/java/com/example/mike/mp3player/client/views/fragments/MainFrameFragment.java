@@ -1,5 +1,9 @@
 package com.example.mike.mp3player.client.views.fragments;
 
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.ComponentName;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
@@ -24,12 +28,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import com.arlib.floatingsearchview.FloatingSearchView;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.MyDrawerListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
+import com.example.mike.mp3player.client.activities.SearchResultActivity;
+import com.example.mike.mp3player.client.activities.SearchResultActivityInjector;
 import com.example.mike.mp3player.client.views.MyPagerAdapter;
 import com.example.mike.mp3player.client.views.ThemeSpinnerController;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
@@ -62,12 +67,7 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
     private NavigationView navigationView;
     private MyDrawerListener myDrawerListener;
 
-
-    // new
-    //FloatingSearchView mSearchView;
-    //    private com.arlib.floatingsearchview.FloatingSearchView searchView;
     SearchView searchView;
-    AppBarLayout mAppBar;
 
     private boolean enabled = true;
     @Override
@@ -113,13 +113,14 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
         inflater.inflate(R.menu.menu_main, menu);
         MenuItem menuItem =  menu.findItem(R.id.action_search);
         this.searchView = (SearchView) menuItem.getActionView();
-//        this.searchView.set
-        // Get the SearchView and set the searchable configuration
-//        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        // Assumes current activity is the searchable activity
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-//        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-//        searchView.setSubmitButtonEnabled(true);
+         // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        ComponentName componentName = new ComponentName(getContext(), SearchResultActivityInjector.class);
+        SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
+     //    Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchableInfo);
+     //   searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+        searchView.setSubmitButtonEnabled(true);
 
         super.onCreateOptionsMenu(menu,inflater);
     }

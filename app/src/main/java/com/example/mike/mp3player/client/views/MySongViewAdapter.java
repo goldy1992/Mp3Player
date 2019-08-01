@@ -54,7 +54,7 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
         if (!isEmptyRecycleView()) {
             // TODO: look into the use of holder.getAdapterPosition rather than the position parameter.
             //Log.i(LOG_TAG, "position: " + position);
-            MediaItem song = getFilteredSongs().get(holder.getAdapterPosition());
+            MediaItem song = getItems().get(holder.getAdapterPosition());
             // - get element from your dataset at this position
             // - replace the contents of the views with that element
             String title = extractTitle(song);

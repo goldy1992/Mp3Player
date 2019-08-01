@@ -12,13 +12,13 @@ import androidx.annotation.Nullable;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.MetaDataListener;
+import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 
 import javax.inject.Inject;
 
-public class TrackInfoFragment extends AsyncFragment implements MetaDataListener {
+public class TrackInfoFragment extends AsyncFragment implements MetadataListener {
 
     private TextView artist;
     private TextView track;

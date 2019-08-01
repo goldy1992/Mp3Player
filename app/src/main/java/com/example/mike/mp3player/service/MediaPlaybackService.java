@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.HandlerThread;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.session.MediaSessionCallback;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -112,6 +114,17 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
         }
         result.sendResult(toReturn);
     }
+
+    @Override
+    public void onSearch(@NonNull String query, Bundle extras,
+                         @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
+        Log.i(LOG_TAG, "hit the search function");
+        MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder().setMediaId("mediaId").build();
+        MediaBrowserCompat.MediaItem mediaItem = new MediaBrowserCompat.MediaItem(mediaDescriptionCompat, 0);
+
+        result.sendResult(Collections.singletonList(mediaItem));
+    }
+
 
     @Override
     public void onDestroy() {

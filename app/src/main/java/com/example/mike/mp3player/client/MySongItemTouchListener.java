@@ -17,7 +17,7 @@ public class MySongItemTouchListener extends MyGenericItemTouchListener {
         if (null != childView) {
             int childPosition = parentView.getChildAdapterPosition(childView);
             MySongViewAdapter myViewAdapter = (MySongViewAdapter) parentView.getAdapter();
-            this.itemSelectedListener.itemSelected(myViewAdapter.getFilteredSongs().get(childPosition));
+            this.itemSelectedListener.itemSelected(myViewAdapter.getItems().get(childPosition));
         }
         return false;
     }

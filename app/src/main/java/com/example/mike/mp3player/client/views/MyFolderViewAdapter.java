@@ -45,7 +45,7 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
     public void onBindViewHolder(MyViewHolder holder, int position) {
         if (!isEmptyRecycleView()) {
             //Log.i(LOG_TAG, "position: " + position);
-            MediaBrowserCompat.MediaItem song = getFilteredSongs().get(holder.getAdapterPosition());
+            MediaBrowserCompat.MediaItem song = getItems().get(holder.getAdapterPosition());
             // - get element from your dataset at this position
             // - replace the contents of the views with that element
             //song.getMediaId();

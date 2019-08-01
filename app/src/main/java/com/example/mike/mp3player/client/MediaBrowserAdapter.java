@@ -4,9 +4,10 @@ import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
-import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
+import com.example.mike.mp3player.client.callbacks.connection.MyConnectionCallback;
+import com.example.mike.mp3player.client.callbacks.search.MySearchCallback;
+import com.example.mike.mp3player.client.callbacks.search.SearchResultListener;
 import com.example.mike.mp3player.client.callbacks.subscription.GenericSubscriptionCallback;
-import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import javax.inject.Inject;
@@ -21,14 +22,17 @@ public class MediaBrowserAdapter {
     private MediaBrowserCompat mediaBrowser;
     private MyConnectionCallback connectionCallback;
     private GenericSubscriptionCallback mySubscriptionCallback;
+    private MySearchCallback mySearchCallback;
 
     @Inject
     public MediaBrowserAdapter(MediaBrowserCompat mediaBrowser,
-                                MyConnectionCallback myConnectionCallback,
-                                GenericSubscriptionCallback mySubscriptionCallback) {
+                               MyConnectionCallback myConnectionCallback,
+                               GenericSubscriptionCallback mySubscriptionCallback,
+                               MySearchCallback mySearchCallback) {
         this.mediaBrowser = mediaBrowser;
         this.connectionCallback = myConnectionCallback;
         this.mySubscriptionCallback = mySubscriptionCallback;
+        this.mySearchCallback = mySearchCallback;
     }
 
     public void init() {
@@ -42,6 +46,10 @@ public class MediaBrowserAdapter {
      */
     public void disconnect() {
         mediaBrowser.disconnect();
+    }
+
+    public void search(String query, Bundle extras) {
+        mediaBrowser.search(query, extras, mySearchCallback);
     }
     /**
      * Connects to the media browser service
@@ -58,7 +66,7 @@ public class MediaBrowserAdapter {
     public void subscribe(LibraryRequest libraryRequest) {
         Bundle options = new Bundle();
         options.putParcelable(REQUEST_OBJECT, libraryRequest);
-        mediaBrowser.subscribe(libraryRequest.getId(), options, getMySubscriptionCallback());
+        mediaBrowser.subscribe(libraryRequest.getId(), options, mySubscriptionCallback);
     }
 
     public MediaSessionCompat.Token getMediaSessionToken() {
@@ -74,19 +82,16 @@ public class MediaBrowserAdapter {
     }
 
     public void registerListener(Object parentId, MediaBrowserResponseListener mediaBrowserResponseListener) {
-        getMySubscriptionCallback().registerMediaBrowserResponseListener(parentId, mediaBrowserResponseListener);
+        mySubscriptionCallback.registerMediaBrowserResponseListener(parentId, mediaBrowserResponseListener);
     }
 
-    @Deprecated
-    public void registerListener(Category category, MediaBrowserResponseListener mediaBrowserResponseListener) {
-        getMySubscriptionCallback().registerMediaBrowserResponseListener(category, mediaBrowserResponseListener);
+    public void registerSearchResultListener(SearchResultListener searchResultListener) {
+        this.mySearchCallback.registerSearchResultListener(searchResultListener);
     }
 
-    @Deprecated
-    public void unregisterListener(Category category, MediaBrowserResponseListener mediaBrowserResponseListener) {
-        getMySubscriptionCallback().removeMediaBrowserResponseListener(category, mediaBrowserResponseListener);
+    public boolean unregisterSearchResultListener(SearchResultListener searchResultListener) {
+        return this.mySearchCallback.unregisterSearchResultListener(searchResultListener);
     }
-
 
     public GenericSubscriptionCallback getMySubscriptionCallback() {
         return mySubscriptionCallback;

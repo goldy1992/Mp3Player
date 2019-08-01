@@ -12,7 +12,10 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
-import com.example.mike.mp3player.client.callbacks.MyMetaDataCallback;
+
+
+import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
+import com.example.mike.mp3player.client.callbacks.metadata.MyMetadataCallback;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.MyPlaybackStateCallback;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
@@ -44,7 +47,7 @@ public class MediaControllerAdapterTest {
 
     private MediaControllerAdapter mediaControllerAdapter;
     @Mock
-    private MyMetaDataCallback myMetaDataCallback;
+    private MyMetadataCallback myMetaDataCallback;
     @Mock
     private MyPlaybackStateCallback playbackStateCallback;
 
@@ -213,14 +216,14 @@ public class MediaControllerAdapterTest {
     }
     @Test
     public void testRegisterMetaDataListener() {
-        MetaDataListener expected = mock(MetaDataListener.class);
+        MetadataListener expected = mock(MetadataListener.class);
         mediaControllerAdapter.registerMetaDataListener(expected);
         verify(myMetaDataCallback, times(1)).registerMetaDataListener(expected);
     }
 
     @Test
     public void testUnregisterMetaDataListener() {
-        MetaDataListener expected = mock(MetaDataListener.class);
+        MetadataListener expected = mock(MetadataListener.class);
         mediaControllerAdapter.unregisterMetaDataListener(expected);
         verify(myMetaDataCallback, times(1)).removeMetaDataListener(expected);
     }

@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.callbacks;
+package com.example.mike.mp3player.client.callbacks.connection;
 
 import android.support.v4.media.MediaBrowserCompat;
 

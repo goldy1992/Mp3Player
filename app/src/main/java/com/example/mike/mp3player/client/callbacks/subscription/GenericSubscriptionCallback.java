@@ -25,7 +25,6 @@ public abstract class GenericSubscriptionCallback<K> extends MediaBrowserCompat.
 
     public GenericSubscriptionCallback(Handler handler) {
         super();
-        this.context = context;
         this.mediaBrowserResponseListeners = new HashMap<>();
         this.handler = handler;
 
