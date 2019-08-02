@@ -6,6 +6,16 @@
     android:id="@+id/drawer_layout"
     android:fitsSystemWindows="true">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/search_fragment_container" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -64,6 +74,8 @@
 
     </RelativeLayout>
 
+    </FrameLayout>
+
     <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
@@ -73,5 +85,6 @@
         android:fitsSystemWindows="true"
         app:menu="@menu/themes_menu"
         app:headerLayout="@layout/nav_header"/>
+
 
 </androidx.drawerlayout.widget.DrawerLayout>

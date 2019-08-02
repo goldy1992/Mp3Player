@@ -1,9 +1,5 @@
 package com.example.mike.mp3player.client.views.fragments;
 
-import android.app.SearchManager;
-import android.app.SearchableInfo;
-import android.content.ComponentName;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
@@ -33,15 +29,12 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.MyDrawerListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
-import com.example.mike.mp3player.client.activities.SearchResultActivity;
-import com.example.mike.mp3player.client.activities.SearchResultActivityInjector;
 import com.example.mike.mp3player.client.views.MyPagerAdapter;
 import com.example.mike.mp3player.client.views.ThemeSpinnerController;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -62,12 +55,11 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
     private Provider<ChildViewPagerFragment> childFragmentProvider;
     private MediaBrowserAdapter mediaBrowserAdapter;
     private MyPagerAdapter adapter;
+    private ActionBar actionBar;
 
     private static final String LOG_TAG = "VIEW_PAGER_FRAGMENT";
     private NavigationView navigationView;
     private MyDrawerListener myDrawerListener;
-
-    SearchView searchView;
 
     private boolean enabled = true;
     @Override
@@ -95,7 +87,7 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
             AppCompatActivity activity = (AppCompatActivity) getActivity();
 
             activity.setSupportActionBar(titleToolbar);
-            ActionBar actionBar = activity.getSupportActionBar();
+            this.actionBar= activity.getSupportActionBar();
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
@@ -111,16 +103,6 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
-        MenuItem menuItem =  menu.findItem(R.id.action_search);
-        this.searchView = (SearchView) menuItem.getActionView();
-         // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        ComponentName componentName = new ComponentName(getContext(), SearchResultActivityInjector.class);
-        SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
-     //    Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(searchableInfo);
-     //   searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-        searchView.setSubmitButtonEnabled(true);
 
         super.onCreateOptionsMenu(menu,inflater);
     }
@@ -128,16 +110,23 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (enabled) {
-            switch (item.getItemId()) {
-                case android.R.id.home:
-                    getDrawerLayout().openDrawer(GravityCompat.START);
-                    return true;
-                default: break;
-            }
-            return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getDrawerLayout().openDrawer(GravityCompat.START);
+                return true;
+            case R.id.action_search:
+                Log.i(LOG_TAG, "hit action search");
+                SearchFragment searchFragment = new SearchFragment();
+                getView().findViewById(R.id.search_fragment_container).bringToFront();
+                getFragmentManager()
+                .beginTransaction()
+                .add(R.id.search_fragment_container, searchFragment, "SEARCH_FGMT")
+                        .addToBackStack(null)
+                .commit();
+                break;
+            default: return super.onOptionsItemSelected(item);
         }
-        return false;
+        return true;
     }
 
 
