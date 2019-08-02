@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,30 +51,36 @@ public class SearchFragment extends Fragment implements LogTagger {
         SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
      //    Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchableInfo);
-       searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+       searchView.setIconified(false); // Do not iconify the widget; expand it by default
         searchView.setSubmitButtonEnabled(true);
         searchView.setBackgroundColor(Color.WHITE);
-
 
 
         this.linearLayout = view.findViewById(R.id.search_fragment_layout);
         Drawable background = this.linearLayout.getBackground();
         background.setAlpha(200);
         linearLayout.setOnClickListener((View v) -> {
-
-            Log.i(getLogTag(), "hit on click listener");
-            getFragmentManager().popBackStack();
+            if (v.equals(searchView)) {
+                Log.e("log tag", "not exiting");
+            } else {
+                Log.i(getLogTag(), "hit on click listener");
+                getFragmentManager().popBackStack();
+            }
         });
 
         searchView.requestFocusFromTouch();
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        getFragmentManager().addOnBackStackChangedListener(this::onBackStackChanged);
-    }
 
-    private void onBackStackChanged() {
-//        getFragmentManager().popBackStack();
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean queryTextFocused) {
+                Log.i("tag", "focus changed: has focus: " + queryTextFocused);
+                if (!queryTextFocused) {
+                    getFragmentManager().popBackStack();
+                }
+            }
+        });
     }
-
 
 
     @Override
