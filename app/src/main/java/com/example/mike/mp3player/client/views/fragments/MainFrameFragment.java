@@ -121,7 +121,8 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
                 getFragmentManager()
                 .beginTransaction()
                 .add(R.id.search_fragment_container, searchFragment, "SEARCH_FGMT")
-                        .addToBackStack(null)
+                .addToBackStack(null)
+                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                 .commit();
                 break;
             default: return super.onOptionsItemSelected(item);

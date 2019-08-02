@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views.fragments;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.ComponentName;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -26,6 +28,8 @@ public class SearchFragment extends Fragment implements LogTagger {
 
     private LinearLayout linearLayout;
     private SearchView searchView;
+    private InputMethodManager inputMethodManager;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -36,8 +40,9 @@ public class SearchFragment extends Fragment implements LogTagger {
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle bundle) {
-        this.searchView = view.findViewById(R.id.search_view);
 
+        this.searchView = view.findViewById(R.id.search_view);
+        this.inputMethodManager = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
 
          // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
@@ -50,6 +55,7 @@ public class SearchFragment extends Fragment implements LogTagger {
         searchView.setBackgroundColor(Color.WHITE);
 
 
+
         this.linearLayout = view.findViewById(R.id.search_fragment_layout);
         Drawable background = this.linearLayout.getBackground();
         background.setAlpha(200);
@@ -57,10 +63,15 @@ public class SearchFragment extends Fragment implements LogTagger {
 
             Log.i(getLogTag(), "hit on click listener");
             getFragmentManager().popBackStack();
-//            getFragmentManager().beginTransaction()
-//                    .remove(this).commit();
-
         });
+
+        searchView.requestFocusFromTouch();
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        getFragmentManager().addOnBackStackChangedListener(this::onBackStackChanged);
+    }
+
+    private void onBackStackChanged() {
+//        getFragmentManager().popBackStack();
     }
 
 
