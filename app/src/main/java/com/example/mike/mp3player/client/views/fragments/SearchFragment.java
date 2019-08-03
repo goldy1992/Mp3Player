@@ -51,7 +51,7 @@ public class SearchFragment extends Fragment implements LogTagger {
         SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
      //    Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchableInfo);
-       searchView.setIconified(false); // Do not iconify the widget; expand it by default
+       searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
         searchView.setSubmitButtonEnabled(true);
         searchView.setBackgroundColor(Color.WHITE);
 
@@ -60,12 +60,13 @@ public class SearchFragment extends Fragment implements LogTagger {
         Drawable background = this.linearLayout.getBackground();
         background.setAlpha(200);
         linearLayout.setOnClickListener((View v) -> {
-            if (v.equals(searchView)) {
-                Log.e("log tag", "not exiting");
-            } else {
                 Log.i(getLogTag(), "hit on click listener");
-                getFragmentManager().popBackStack();
-            }
+            inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0 );                getFragmentManager().popBackStack();
+
+        });
+
+        searchView.setOnClickListener((View v) -> {
+            Log.i(getLogTag(), "hit search view");
         });
 
         searchView.requestFocusFromTouch();
