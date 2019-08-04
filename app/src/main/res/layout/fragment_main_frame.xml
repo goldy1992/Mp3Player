@@ -6,17 +6,9 @@
     android:id="@+id/drawer_layout"
     android:fitsSystemWindows="true">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/search_fragment_container" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
 
     <RelativeLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -73,8 +65,6 @@
             tools:layout="@layout/fragment_playback_toolbar" />
 
     </RelativeLayout>
-
-    </FrameLayout>
 
     <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
     <com.google.android.material.navigation.NavigationView

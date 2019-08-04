@@ -72,18 +72,16 @@ public class SearchFragment extends Fragment implements LogTagger {
         searchView.requestFocusFromTouch();
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
-        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean queryTextFocused) {
-                Log.i("tag", "focus changed: has focus: " + queryTextFocused);
-                if (!queryTextFocused) {
-                    getFragmentManager().popBackStack();
-                }
-            }
-        });
+        searchView.setOnQueryTextFocusChangeListener(this::onFocusChange);
     }
 
 
+    private void onFocusChange(View v, boolean queryTextFocused) {
+        Log.i("tag", "focus changed: has focus: " + queryTextFocused);
+        if (!queryTextFocused) {
+            getFragmentManager().popBackStack();
+        }
+    }
     @Override
     public String getLogTag() {
         return "SRCH_FRAGMENT";

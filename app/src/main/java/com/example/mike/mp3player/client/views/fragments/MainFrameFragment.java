@@ -16,12 +16,12 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mike.mp3player.R;
@@ -53,9 +53,12 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
     private ViewPager rootMenuItemsPager;
     private TabLayout tabLayout;
     private Provider<ChildViewPagerFragment> childFragmentProvider;
+    private ViewGroup container;
     private MediaBrowserAdapter mediaBrowserAdapter;
     private MyPagerAdapter adapter;
     private ActionBar actionBar;
+    private SearchFragment searchFragment;
+    private FragmentManager fragmentManager;
 
     private static final String LOG_TAG = "VIEW_PAGER_FRAGMENT";
     private NavigationView navigationView;
@@ -73,9 +76,12 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle bundle) {
+        this.fragmentManager = getFragmentManager();
+        this.searchFragment = new SearchFragment();
         this.drawerLayout = view.findViewById(R.id.drawer_layout);
         this.titleToolbar = view.findViewById(R.id.titleToolbar);
         this.navigationView = view.findViewById(R.id.nav_view);
+        this.container = view.findViewById(R.id.fragment_container);
         this.rootMenuItemsPager = view.findViewById(R.id.rootItemsPager);
         this.tabLayout = view.findViewById(R.id.tabs);
         this.tabLayout.setupWithViewPager(rootMenuItemsPager);
@@ -103,7 +109,6 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
-
         super.onCreateOptionsMenu(menu,inflater);
     }
 
@@ -116,14 +121,12 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
                 return true;
             case R.id.action_search:
                 Log.i(LOG_TAG, "hit action search");
-                SearchFragment searchFragment = new SearchFragment();
-                getView().findViewById(R.id.search_fragment_container).bringToFront();
-                getFragmentManager()
-                .beginTransaction()
-                .add(R.id.search_fragment_container, searchFragment, "SEARCH_FGMT")
-                .addToBackStack(null)
-                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                .commit();
+                fragmentManager
+                        .beginTransaction()
+                        .add(R.id.fragment_container, searchFragment, "SEARCH_FGMT")
+                        .addToBackStack(null)
+                        .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                        .commit();
                 break;
             default: return super.onOptionsItemSelected(item);
         }
