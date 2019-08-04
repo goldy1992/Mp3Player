@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Orange">
 
+        <provider android:name=".client.MySearchSuggestionsProvider"
+            android:authorities=".client.MySearchRecentSuggestionsProvider" />
+
 
         <activity
             android:name=".client.activities.SplashScreenEntryActivity"

@@ -48,6 +48,8 @@ public class ContentResolverMediaRetriever extends MediaRetriever {
         while (cursor.moveToNext()) {
             listToReturn.add(createPlayableMediaItemFromCursor(cursor));
         }
+
+        //contentResolver.query()
         return listToReturn;
     }
 

@@ -54,6 +54,11 @@ public class FolderLibraryCollection extends LibraryCollection {
     }
 
     @Override
+    public List<MediaItem> search(String query) {
+        return null;
+    }
+
+    @Override
     public TreeSet<MediaItem> getChildren(LibraryObject libraryObject) {
         if (getRootIdAsString().equals(libraryObject)) {
             return getKeys();

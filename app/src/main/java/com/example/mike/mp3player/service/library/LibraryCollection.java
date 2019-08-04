@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.TreeSet;
 
 public abstract class LibraryCollection {
-
     private Comparator<MediaItem> keyComparator;
     private Comparator<MediaItem> valueComparator;
     private final MediaItem root;
@@ -20,6 +19,7 @@ public abstract class LibraryCollection {
     protected Map<String, TreeSet<MediaItem>> collection;
     public abstract TreeSet<MediaItem> getChildren(LibraryObject id);
     public abstract void index(List<MediaItem> items);
+    public abstract List<MediaItem> search(String query);
     public abstract Category getRootId();
 
     @SuppressWarnings("unchecked")

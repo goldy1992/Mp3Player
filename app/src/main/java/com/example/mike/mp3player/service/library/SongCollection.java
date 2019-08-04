@@ -34,6 +34,11 @@ public class SongCollection extends LibraryCollection {
     }
 
     @Override
+    public List<MediaBrowserCompat.MediaItem> search(String query) {
+        return null;
+    }
+
+    @Override
     public Category getRootId() {
         return Category.SONGS;
     }

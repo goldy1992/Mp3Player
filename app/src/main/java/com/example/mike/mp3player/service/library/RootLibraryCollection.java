@@ -28,6 +28,11 @@ public class RootLibraryCollection extends LibraryCollection {
     }
 
     @Override
+    public List<MediaItem> search(String query) {
+        return null;
+    }
+
+    @Override
     public Category getRootId() {
         return Category.ROOT;
     }
