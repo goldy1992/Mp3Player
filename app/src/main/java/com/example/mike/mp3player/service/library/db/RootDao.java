@@ -10,7 +10,7 @@ import com.example.mike.mp3player.commons.library.Category;
 import java.util.List;
 
 @Dao
-public interface RootDao {
+public interface RootDao extends CategoryDao {
 
     @Query("SELECT * FROM root")
     List<Root> getAll();

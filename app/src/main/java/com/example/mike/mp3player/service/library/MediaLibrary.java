@@ -12,6 +12,7 @@ import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.library.db.AppDatabase;
+import com.example.mike.mp3player.service.library.db.CategoryDao;
 import com.example.mike.mp3player.service.library.db.Folder;
 import com.example.mike.mp3player.service.library.db.Root;
 import com.example.mike.mp3player.service.library.db.Song;
@@ -39,6 +40,7 @@ public class MediaLibrary {
     private final AppDatabase database;
 
     private Map<Category, LibraryCollection> categories;
+    private Map<Category, CategoryDao> categoryDaoMap;
     private TreeSet<MediaItem> rootItems = new TreeSet<>(compareRootMediaItemsByCategory);
     private final String LOG_TAG = "MEDIA_LIBRARY";
 
@@ -81,9 +83,7 @@ public class MediaLibrary {
             Song song = new Song();
             song.uri = m.getMediaId();
             song.folder = folder;
-           // song.id = m.getMediaId();
             m.getDescription().getExtras();
-        //    song.mediaItem = m;
             songs.add(song);
         }
 
@@ -104,10 +104,6 @@ public class MediaLibrary {
         RootLibraryCollection rootLibraryCollection = new RootLibraryCollection();
         rootLibraryCollection.index(rootCategoryMediaItems);
         getCategories().put(rootLibraryCollection.getRootId(), rootLibraryCollection);
-    }
-
-    public TreeSet<MediaItem> getRoot() {
-        return rootItems;
     }
 
     public TreeSet<MediaItem> getSongList() {

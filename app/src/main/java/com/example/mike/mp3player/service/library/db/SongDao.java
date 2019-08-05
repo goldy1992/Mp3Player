@@ -8,7 +8,7 @@ import androidx.room.Query;
 import java.util.List;
 
 @Dao
-public interface SongDao {
+public interface SongDao extends CategoryDao {
     @Query("SELECT * FROM song")
     List<Song> getAll();
 

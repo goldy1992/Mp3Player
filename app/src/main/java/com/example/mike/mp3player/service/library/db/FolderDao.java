@@ -8,7 +8,7 @@ import androidx.room.Query;
 import java.util.List;
 
 @Dao
-public interface FolderDao {
+public interface FolderDao extends CategoryDao{
     @Query("SELECT * FROM folder")
     List<Folder> getAll();
 
