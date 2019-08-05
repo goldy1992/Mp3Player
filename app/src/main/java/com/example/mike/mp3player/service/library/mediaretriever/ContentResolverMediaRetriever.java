@@ -13,6 +13,8 @@ import android.support.v4.media.MediaMetadataCompat;
 
 import androidx.annotation.VisibleForTesting;
 
+import com.example.mike.mp3player.service.library.db.AppDatabase;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,6 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_D
 
 public class ContentResolverMediaRetriever extends MediaRetriever {
     private ContentResolver contentResolver;
-
     @Inject
     public ContentResolverMediaRetriever(Context context) {
         super(context);
@@ -84,7 +85,7 @@ public class ContentResolverMediaRetriever extends MediaRetriever {
         Uri albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId);
 
         Bundle extras = new Bundle();
-        extras.putString(MediaMetadataCompat.METADATA_KEY_DURATION, String.valueOf(duration));
+        extras.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);
         extras.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist);
         extras.putString(META_DATA_KEY_PARENT_PATH, parentPath);
         extras.putString(META_DATA_KEY_FILE_NAME, fileName);

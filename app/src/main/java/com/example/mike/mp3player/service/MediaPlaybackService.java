@@ -2,6 +2,7 @@ package com.example.mike.mp3player.service;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
@@ -46,10 +47,12 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onCreate() {
         super.onCreate();
-        this.mediaLibrary.buildMediaLibrary();
-        this.mediaSessionCallback.init();
-        setSessionToken(mediaSession.getSessionToken());
-        mediaSession.setCallback(mediaSessionCallback);
+        new Handler(worker.getLooper()).post(() -> {
+            this.mediaLibrary.buildDbMediaLibrary();
+            this.mediaSessionCallback.init();
+            setSessionToken(mediaSession.getSessionToken());
+            mediaSession.setCallback(mediaSessionCallback);
+        });
     }
 
 

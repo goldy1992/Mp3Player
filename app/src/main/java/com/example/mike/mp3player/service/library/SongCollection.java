@@ -6,7 +6,10 @@ import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
+import com.example.mike.mp3player.service.library.db.AppDatabase;
+import com.example.mike.mp3player.service.library.db.Song;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -28,6 +31,17 @@ public class SongCollection extends LibraryCollection {
 
     @Override
     public void index(List<MediaBrowserCompat.MediaItem> items) {
+        AppDatabase database = null;
+        List<Song> songs = new ArrayList<>();
+        for (MediaBrowserCompat.MediaItem mediaItem : items) {
+            Song song = new Song();
+
+       //     song.mediaItem = mediaItem;
+            songs.add(song);
+        }
+        Song[] mediaItemsArray = new Song[items.size()];
+        mediaItemsArray = songs.toArray(mediaItemsArray);
+        database.songDao().insertAll(mediaItemsArray);
         if (items != null) {
             this.getKeys().addAll(items);
         }

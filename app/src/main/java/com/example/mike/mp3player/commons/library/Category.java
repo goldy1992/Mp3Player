@@ -1,13 +1,17 @@
 package com.example.mike.mp3player.commons.library;
 
+import androidx.room.TypeConverters;
+
 import com.example.mike.mp3player.client.activities.FolderActivityInjector;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjector;
+import com.example.mike.mp3player.service.library.db.CategoryConverter;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import java.util.Comparator;
 
+@TypeConverters(CategoryConverter.class)
 public enum Category implements Comparator<Category> {
     ROOT    (0, "Root", "The root item of the library"),
     SONGS   (1, "Songs", null),
@@ -62,5 +66,9 @@ public enum Category implements Comparator<Category> {
 
     public String getDescription() {
         return description;
+    }
+
+    public Integer getRank() {
+        return rank;
     }
 }

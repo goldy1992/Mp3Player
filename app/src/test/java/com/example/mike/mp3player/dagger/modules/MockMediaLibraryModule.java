@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.dagger.modules.service;
+package com.example.mike.mp3player.dagger.modules;
 
 import android.content.Context;
 
@@ -6,6 +6,7 @@ import androidx.room.Room;
 
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.db.AppDatabase;
+import com.example.mike.mp3player.service.library.mediaretriever.ContentResolverMediaRetriever;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
 
 import javax.inject.Singleton;
@@ -13,8 +14,10 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
+import static org.mockito.Mockito.mock;
+
 @Module
-public class MediaLibraryModule {
+public class MockMediaLibraryModule {
 
     @Provides
     @Singleton
@@ -25,7 +28,8 @@ public class MediaLibraryModule {
     @Provides
     @Singleton
     public AppDatabase provideDatabase(Context context) {
-        return Room.inMemoryDatabaseBuilder(context, AppDatabase.class).build();
+        return mock(AppDatabase.class);
     }
+
 
 }

@@ -118,7 +118,6 @@ public class MySongViewAdapterTest {
     }
 
     private void bindViewHolder() {
-        mySongViewAdapter.setFilteredSongs(mediaItems);
         mySongViewAdapter.setItems(mediaItems);
 
         MyViewHolder myViewHolder = mock(MyViewHolder.class);

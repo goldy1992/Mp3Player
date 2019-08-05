@@ -8,6 +8,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
+import com.example.mike.mp3player.service.library.db.AppDatabase;
 import com.example.mike.mp3player.service.library.mediaretriever.MockMediaRetriever;
 
 import org.codehaus.plexus.util.ExceptionUtils;
@@ -23,6 +24,7 @@ import static com.example.mike.mp3player.service.library.mediaretriever.MockMedi
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
  * Tests run using JUnit 4!
@@ -38,8 +40,9 @@ public class MediaLibraryTest {
     public void setup() {
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
         this.mediaRetriever = new MockMediaRetriever(context);
+        AppDatabase appDatabase = mock(AppDatabase.class);
         try {
-            mediaLibrary = new MediaLibrary(mediaRetriever);
+            mediaLibrary = new MediaLibrary(mediaRetriever, appDatabase);
             mediaLibrary.buildMediaLibrary();
         } catch (Exception ex) {
             Log.e("MEDIA_LIBRARY_TEST", "" + ExceptionUtils.getFullStackTrace(ex));

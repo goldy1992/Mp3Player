@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.commons;
 
+import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.SparseArray;
 
@@ -50,6 +51,8 @@ public final class Constants {
     }
 
     /* LIBRARY CONSTANTS */
+    public static final Uri ARTWORK_URI_PATH = Uri.parse("content://media/external/audio/albumart");
+
     public static final String CATEGORY_ROOT_ID = Category.ROOT.name();
 
     public static final String CATEGORY_SONGS_TITLE = "Songs";
