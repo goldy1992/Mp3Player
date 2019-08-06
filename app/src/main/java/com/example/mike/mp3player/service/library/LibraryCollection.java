@@ -3,6 +3,10 @@ package com.example.mike.mp3player.service.library;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
 
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 
@@ -11,10 +15,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+@Dao
 public abstract class LibraryCollection {
+
+
     private Comparator<MediaItem> keyComparator;
     private Comparator<MediaItem> valueComparator;
-    private final MediaItem root;
+    private MediaItem root;
     private TreeSet<MediaItem> keys;
     protected Map<String, TreeSet<MediaItem>> collection;
     public abstract TreeSet<MediaItem> getChildren(LibraryObject id);
@@ -22,12 +29,23 @@ public abstract class LibraryCollection {
     public abstract List<MediaItem> search(String query);
     public abstract Category getRootId();
 
+//    public TreeSet<>
+
+
+    public String tableName() {
+        return  null;
+    }
+
     @SuppressWarnings("unchecked")
     public LibraryCollection(String id, String title, String description, Comparator keyComparator, Comparator valueComparator) {
         this.root = createCollectionRootMediaItem(id, title, description);
         this.keyComparator = keyComparator;
         this.valueComparator = valueComparator;
         this.keys = new TreeSet<>(this.getKeyComparator());
+    }
+
+    public LibraryCollection() {
+
     }
 
     MediaItem createCollectionRootMediaItem(String id, String title, String description) {

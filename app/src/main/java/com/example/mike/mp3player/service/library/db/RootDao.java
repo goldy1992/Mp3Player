@@ -5,25 +5,30 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.service.library.LibraryCollection;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Dao
-public interface RootDao extends CategoryDao {
+public abstract class RootDao extends LibraryCollection {
 
-    @Query("SELECT * FROM root")
-    List<Root> getAll();
+    public RootDao(String id, String title, String description, Comparator keyComparator, Comparator valueComparator) {
+        super(id, title, description, keyComparator, valueComparator);
+    }
+
+    @Query("SELECT * FROM :tableName")
+    public abstract List<Root> getAll(String tableName);
 
     @Query("SELECT * FROM root WHERE category IN (:categories)")
-    List<Root> loadAllByIds(int[] categories);
+    abstract List<Root> loadAllByIds(int[] categories);
 
     @Query("SELECT * FROM Root WHERE category LIKE :title LIMIT 1")
-    List<Root> findByName(int title);
+    abstract List<Root> findByName(int title);
 
     @Insert
-    void insertAll(Root... roots);
+    public abstract void insertAll(Root... roots);
 
     @Delete
-    void delete(Root root);
+    abstract void delete(Root root);
 }

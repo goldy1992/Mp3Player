@@ -20,6 +20,7 @@ import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,6 @@ public class MediaLibrary {
     private final AppDatabase database;
 
     private Map<Category, LibraryCollection> categories;
-    private Map<Category, CategoryDao> categoryDaoMap;
     private TreeSet<MediaItem> rootItems = new TreeSet<>(compareRootMediaItemsByCategory);
     private final String LOG_TAG = "MEDIA_LIBRARY";
 
@@ -61,6 +61,12 @@ public class MediaLibrary {
     public void buildDbMediaLibrary() {
         List<Root> rootItems = new ArrayList<>();
         for (Category category : Category.values()) {
+            switch (category) {
+                case ROOT: categories.put(Category.ROOT, database.rootDao()); break;
+                case SONGS: categories.put(Category.SONGS, database.songDao()); break;
+                case FOLDERS: categories.put(Category.FOLDERS, database.folderDao()); break;
+                default: break;
+            }
             String categoryName = category.name();
             MediaItem m = createCollectionRootMediaItem(categoryName, categoryName, categoryName);
             Root root = new Root();
@@ -122,7 +128,7 @@ public class MediaLibrary {
     public TreeSet<MediaItem> getChildren(@NonNull LibraryRequest libraryRequest) {
 
         if (Category.isCategory(libraryRequest.getId())) {
-           // return database.rootDao()
+           return database.rootDao().getAll();
         } else {
             LibraryCollection libraryCollection = getCategories().get(libraryRequest.getCategory());
             if (null != libraryCollection) {
