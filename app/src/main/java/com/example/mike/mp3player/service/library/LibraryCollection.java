@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.TreeSet;
 
 @Dao
-public abstract class LibraryCollection< C extends CategoryEntity> {
+public abstract class LibraryCollection {
 
     protected final Context context;
     protected final CategoryDao dao;
@@ -36,8 +36,8 @@ public abstract class LibraryCollection< C extends CategoryEntity> {
     public abstract void index(List<MediaItem> items);
     public abstract List<MediaItem> search(String query);
     public abstract Category getRootId();
-    public abstract MediaItem build(C root);
-    public abstract TreeSet<MediaItem> convert(List<C> list);
+//    public abstract MediaItem build(C root);
+//    public abstract TreeSet<MediaItem> convert(List<C> list);
     protected ContentResolver contentResolver;
 
     @SuppressWarnings("unchecked")
@@ -61,13 +61,13 @@ public abstract class LibraryCollection< C extends CategoryEntity> {
     }
 
 
-    public TreeSet<MediaItem> convert(List<C> roots, Comparator<MediaItem> comparator) {
-        TreeSet<MediaItem> mediaItemTreeSet = new TreeSet<>(comparator);
-        for (C root : roots) {
-            mediaItemTreeSet.add(build(root));
-        }
-        return mediaItemTreeSet;
-    }
+//    public TreeSet<MediaItem> convert(List<C> roots, Comparator<MediaItem> comparator) {
+//        TreeSet<MediaItem> mediaItemTreeSet = new TreeSet<>(comparator);
+//        for (C root : roots) {
+//            mediaItemTreeSet.add(build(root));
+//        }
+//        return mediaItemTreeSet;
+//    }
 
     public TreeSet<MediaItem> convertMediaItems(List<MediaItem> roots, Comparator<MediaItem> comparator) {
         TreeSet<MediaItem> mediaItemTreeSet = new TreeSet<>(comparator);

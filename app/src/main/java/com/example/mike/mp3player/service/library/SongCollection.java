@@ -29,7 +29,7 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARE
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 
-public class SongCollection extends LibraryCollection<Song> {
+public class SongCollection extends LibraryCollection {
 
     private static final String[] PROJECTION = {
             MediaStore.Audio.Media.DATA,
@@ -103,28 +103,7 @@ public class SongCollection extends LibraryCollection<Song> {
         return Category.SONGS;
     }
 
-    @Override
-    public MediaBrowserCompat.MediaItem build(Song song) {
-        Bundle extras = new Bundle();
-        extras.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, song.artist);
-        extras.putLong(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, song.albumId);
-        extras.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.duration);
-        MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
-                .setMediaId(song.uri)
-                .setTitle(song.title)
-                .setExtras(extras)
-                .build();
-        return new MediaBrowserCompat.MediaItem(description, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
-    }
 
-    @Override
-    public TreeSet<MediaBrowserCompat.MediaItem> convert(List<Song> list) {
-        return super.convert(list, ComparatorUtils.compareMediaItemsByTitle);
-    }
-
-    public TreeSet<MediaBrowserCompat.MediaItem> getSongs() {
-        return getKeys();
-    }
 
 
 

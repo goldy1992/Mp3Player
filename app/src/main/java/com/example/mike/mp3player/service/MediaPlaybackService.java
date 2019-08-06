@@ -50,7 +50,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
         super.onCreate();
         this.handler = new Handler(worker.getLooper());
         handler.post(() -> {
-            this.mediaLibrary.buildDbMediaLibrary();
+           // this.mediaLibrary.buildDbMediaLibrary();
             this.mediaSessionCallback.init();
             setSessionToken(mediaSession.getSessionToken());
             mediaSession.setCallback(mediaSessionCallback);

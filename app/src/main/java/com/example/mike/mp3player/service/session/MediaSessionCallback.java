@@ -15,7 +15,9 @@ import android.view.KeyEvent;
 import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.commons.MediaItemUtils;
+import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
+import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
@@ -24,6 +26,7 @@ import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 
@@ -90,14 +93,14 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     public void init() {
-        List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.getMediaLibrary().getSongList());
+        List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.mediaLibrary.getChildren(new LibraryRequest(Category.SONGS, Category.SONGS.name())));
         List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
         this.mediaPlayerAdapter.setOnCompletionListener(this::onCompletion);
         this.mediaPlayerAdapter.setOnSeekCompleteListener(this::onSeekComplete);
         this.broadcastReceiver.setMediaSessionCallback(this);
         this.playbackManager.createNewPlaylist(queueItems);
-        Uri firstSongUri = this.getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getCurrentMediaId());
-        Uri nextSongUri = this.getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getNext());
+        Uri firstSongUri = Uri.parse(getPlaybackManager().getCurrentMediaId());
+        Uri nextSongUri = Uri.parse(getPlaybackManager().getNext());
         this.mediaPlayerAdapter.reset(firstSongUri, nextSongUri);
         mediaSessionAdapter.updateAll(NO_ACTION);
     }
@@ -185,8 +188,11 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         //Log.i(LOG_TAG, "prepareFromMediaId");
         super.onPrepareFromMediaId(mediaId, bundle);
         LibraryObject parent = (LibraryObject) bundle.get(PARENT_OBJECT);
-        List<MediaBrowserCompat.MediaItem> results = getMediaLibrary().getPlaylist(parent);
-        getPlaybackManager().createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(results));
+        LibraryRequest request = new LibraryRequest(parent);
+        TreeSet<MediaBrowserCompat.MediaItem> results = mediaLibrary.getChildren(request);
+        ArrayList<MediaBrowserCompat.MediaItem> resultsList = new ArrayList<>();
+        resultsList.addAll(results);
+        getPlaybackManager().createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(resultsList));
 
         if (mediaId == null) {
             Log.e(LOG_TAG, "received null mediaId");
@@ -198,9 +204,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         for (MediaBrowserCompat.MediaItem m : results) {
             String id = MediaItemUtils.getMediaId(m);
             if (id != null && id.equals(mediaId)) {
-                uriToPlay = getMediaLibrary().getMediaUriFromMediaId(id);
+                uriToPlay = Uri.parse(id);
                 getPlaybackManager().setCurrentItem(mediaId);
-                followingUri = getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getNext());
+                followingUri = Uri.parse(getPlaybackManager().getNext());
                 mediaPlayerAdapter.reset(uriToPlay, followingUri);
 
                 break;
@@ -294,7 +300,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         boolean shuffleOn = shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL;
         getPlaybackManager().setShuffle(shuffleOn);
         String nextSongId = getPlaybackManager().getNext();
-        Uri nextUri = getMediaLibrary().getMediaUriFromMediaId(nextSongId);
+        Uri nextUri = Uri.parse(nextSongId);
         mediaPlayerAdapter.setNextMediaPlayer(nextUri);
         mediaSessionAdapter.updateAll(ACTION_SET_SHUFFLE_MODE);
     }
@@ -316,7 +322,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                 getPlaybackManager().notifyPlaybackComplete(); // increments queue
                 String nextUriToPrepare = getPlaybackManager().getNext(); // gets uri after newly incremented index
                 if (null != nextUriToPrepare) {
-                    Uri nextItemUri = getMediaLibrary().getMediaUriFromMediaId(nextUriToPrepare);
+                    Uri nextItemUri = Uri.parse(nextUriToPrepare);
                     mediaPlayerAdapter.onComplete(nextItemUri);
                     mediaSessionAdapter.updateAll(ACTION_PLAY_FROM_MEDIA_ID);
                 }
@@ -344,8 +350,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void skipToNewMedia(String newMediaId) {
-        Uri newUri = getMediaLibrary().getMediaUriFromMediaId(newMediaId);
-        Uri followingUri = getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getNext());
+        Uri newUri = Uri.parse(newMediaId);
+        Uri followingUri = Uri.parse(getPlaybackManager().getNext());
         PlaybackStateCompat currentState = mediaSessionAdapter.getCurrentPlaybackState(ACTION_PLAY_FROM_MEDIA_ID);
         mediaPlayerAdapter.reset(newUri, followingUri);
         if (currentState.getState() == PlaybackStateCompat.STATE_PLAYING) {

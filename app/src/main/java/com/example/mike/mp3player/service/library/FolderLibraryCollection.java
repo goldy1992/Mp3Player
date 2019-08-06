@@ -33,7 +33,7 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARE
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 
-public class FolderLibraryCollection extends LibraryCollection<Folder> {
+public class FolderLibraryCollection extends LibraryCollection {
 
     private static final String[] PROJECTION = {
             "DISTINCT " + MediaStore.Audio.Media.DATA };
@@ -134,17 +134,6 @@ public class FolderLibraryCollection extends LibraryCollection<Folder> {
     public Category getRootId() {
         return Category.FOLDERS;
     }
-
-    @Override
-    public MediaItem build(Folder root) {
-        return null;
-    }
-
-    @Override
-    public TreeSet<MediaItem> convert(List<Folder> list) {
-        return null;
-    }
-
 
 
     private MediaBrowserCompat.MediaItem createFolderMediaItem(Cursor c){
