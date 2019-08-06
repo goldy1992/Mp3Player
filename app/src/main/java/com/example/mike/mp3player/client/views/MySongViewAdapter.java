@@ -108,8 +108,7 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     }
 
     private String extractDuration(MediaItem song) {
-        String durationString = song.getDescription().getExtras().getString(MediaMetadataCompat.METADATA_KEY_DURATION);
-        long duration = Long.parseLong(durationString);
+        long duration = song.getDescription().getExtras().getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
         return TimerUtils.formatTime(duration);
     }
 }

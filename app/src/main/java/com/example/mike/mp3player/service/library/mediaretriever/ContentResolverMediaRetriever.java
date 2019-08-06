@@ -38,6 +38,8 @@ public class ContentResolverMediaRetriever extends MediaRetriever {
             Media.DATA,
             Media.DURATION,
             Media.ARTIST,
+            Media.ARTIST_ID,
+            Media._ID,
             Media.TITLE,
             Media.ALBUM,
             Media.ALBUM_ID};

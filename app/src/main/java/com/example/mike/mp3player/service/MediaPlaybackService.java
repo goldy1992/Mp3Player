@@ -40,6 +40,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
 
     private MediaLibrary mediaLibrary;
     private HandlerThread worker;
+    private Handler handler;
     private MediaSessionCompat mediaSession;
     private MediaSessionCallback mediaSessionCallback;
     abstract void initialiseDependencies();
@@ -47,7 +48,8 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onCreate() {
         super.onCreate();
-        new Handler(worker.getLooper()).post(() -> {
+        this.handler = new Handler(worker.getLooper());
+        handler.post(() -> {
             this.mediaLibrary.buildDbMediaLibrary();
             this.mediaSessionCallback.init();
             setSessionToken(mediaSession.getSessionToken());
@@ -106,16 +108,19 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
             result.sendResult(null);
             return;
         }
+        result.detach();
+        handler.post(() -> {
+            // Assume for example that the music catalog is already loaded/cached.
+            TreeSet<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryRequest);
+            LibraryResponse libraryResponse = new LibraryResponse(libraryRequest);
+            options.putParcelable(RESPONSE_OBJECT, libraryResponse);
+            ArrayList<MediaBrowserCompat.MediaItem> toReturn = new ArrayList<>();
+            if (mediaItems != null) {
+                toReturn.addAll(mediaItems);
+            }
+            result.sendResult(toReturn);
+        });
 
-        // Assume for example that the music catalog is already loaded/cached.
-        TreeSet<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryRequest);
-        LibraryResponse libraryResponse = new LibraryResponse(libraryRequest);
-        options.putParcelable(RESPONSE_OBJECT, libraryResponse);
-        ArrayList<MediaBrowserCompat.MediaItem> toReturn = new ArrayList<>();
-        if (mediaItems != null) {
-            toReturn.addAll(mediaItems);
-        }
-        result.sendResult(toReturn);
     }
 
     @Override

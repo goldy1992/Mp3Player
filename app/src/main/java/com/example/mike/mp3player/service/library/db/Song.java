@@ -6,7 +6,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class Song {
+public class Song extends CategoryEntity{
 
     @NonNull
     @PrimaryKey

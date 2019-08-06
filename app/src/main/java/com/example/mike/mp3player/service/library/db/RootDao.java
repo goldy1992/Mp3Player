@@ -1,24 +1,20 @@
 package com.example.mike.mp3player.service.library.db;
 
+import android.support.v4.media.MediaBrowserCompat;
+
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.example.mike.mp3player.service.library.LibraryCollection;
-
-import java.util.Comparator;
 import java.util.List;
 
 @Dao
-public abstract class RootDao extends LibraryCollection {
+public abstract class RootDao implements CategoryDao {
 
-    public RootDao(String id, String title, String description, Comparator keyComparator, Comparator valueComparator) {
-        super(id, title, description, keyComparator, valueComparator);
-    }
-
-    @Query("SELECT * FROM :tableName")
-    public abstract List<Root> getAll(String tableName);
+    @Override
+    @Query("SELECT * FROM root where category = 1 or category = 2")
+    public abstract List<Root> getAll();
 
     @Query("SELECT * FROM root WHERE category IN (:categories)")
     abstract List<Root> loadAllByIds(int[] categories);

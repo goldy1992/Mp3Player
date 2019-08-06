@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
+import android.support.v4.media.MediaMetadataCompat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -12,15 +13,12 @@ import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.library.db.AppDatabase;
-import com.example.mike.mp3player.service.library.db.CategoryDao;
 import com.example.mike.mp3player.service.library.db.Folder;
-import com.example.mike.mp3player.service.library.db.Root;
 import com.example.mike.mp3player.service.library.db.Song;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -52,30 +50,18 @@ public class MediaLibrary {
         init();
     }
     private void init() {
-        SongCollection songs = new SongCollection();
-        FolderLibraryCollection folders = new FolderLibraryCollection();
+        SongCollection songs = new SongCollection(database.songDao(), mediaRetriever.getContext());
+        FolderLibraryCollection folders = new FolderLibraryCollection(database.folderDao(), mediaRetriever.getContext());
         getCategories().put(songs.getRootId(), songs);
         getCategories().put(folders.getRootId(), folders);
     }
 
     public void buildDbMediaLibrary() {
-        List<Root> rootItems = new ArrayList<>();
-        for (Category category : Category.values()) {
-            switch (category) {
-                case ROOT: categories.put(Category.ROOT, database.rootDao()); break;
-                case SONGS: categories.put(Category.SONGS, database.songDao()); break;
-                case FOLDERS: categories.put(Category.FOLDERS, database.folderDao()); break;
-                default: break;
-            }
-            String categoryName = category.name();
-            MediaItem m = createCollectionRootMediaItem(categoryName, categoryName, categoryName);
-            Root root = new Root();
-            root.category = category;
-            rootItems.add(root);
-        }
+        RootLibraryCollection rootLibraryCollection = new RootLibraryCollection(database.rootDao(), mediaRetriever.getContext());
+        categories.put(rootLibraryCollection.getRootId(), rootLibraryCollection);
 
-        database.rootDao().insertAll(rootItems.toArray(new Root[rootItems.size()]));
         List<MediaItem> songList = mediaRetriever.retrieveMedia();
+
         Set<Folder> folders = new HashSet<>();
         Set<Song> songs = new HashSet<>();
         for (MediaItem m : songList) {
@@ -88,6 +74,8 @@ public class MediaLibrary {
             folders.add(folder);
             Song song = new Song();
             song.uri = m.getMediaId();
+            song.duration = extras.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
+            song.artist = extras.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
             song.folder = folder;
             m.getDescription().getExtras();
             songs.add(song);
@@ -107,9 +95,9 @@ public class MediaLibrary {
         for (LibraryCollection collection : getCategories().values()) {
             rootCategoryMediaItems.add(collection.getRoot());
         }
-        RootLibraryCollection rootLibraryCollection = new RootLibraryCollection();
+        RootLibraryCollection rootLibraryCollection = new RootLibraryCollection(null, mediaRetriever.getContext());
         rootLibraryCollection.index(rootCategoryMediaItems);
-        getCategories().put(rootLibraryCollection.getRootId(), rootLibraryCollection);
+        categories.put(rootLibraryCollection.getRootId(), rootLibraryCollection);
     }
 
     public TreeSet<MediaItem> getSongList() {
@@ -127,10 +115,12 @@ public class MediaLibrary {
 
     public TreeSet<MediaItem> getChildren(@NonNull LibraryRequest libraryRequest) {
 
-        if (Category.isCategory(libraryRequest.getId())) {
-           return database.rootDao().getAll();
+        String id = libraryRequest.getId();
+        if (Category.isCategory(id)) {
+            Category category = Category.valueOf(id);
+            return categories.get(category).getAllChildren();
         } else {
-            LibraryCollection libraryCollection = getCategories().get(libraryRequest.getCategory());
+            LibraryCollection libraryCollection = categories.get(libraryRequest.getCategory());
             if (null != libraryCollection) {
                 return libraryCollection.getChildren(libraryRequest);
             }

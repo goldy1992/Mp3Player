@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 import com.example.mike.mp3player.commons.library.Category;
 
 @Entity
-public class Folder {
+public class Folder extends CategoryEntity {
 
     @PrimaryKey
     @NonNull

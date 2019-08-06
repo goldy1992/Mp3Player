@@ -12,10 +12,11 @@ import java.util.Comparator;
 import java.util.List;
 
 @Dao
-public abstract class SongDao extends LibraryCollection {
+public abstract class SongDao implements CategoryDao<Song> {
 
+    @Override
     @Query("SELECT * FROM song")
-    abstract List<Song> getAll();
+    public abstract List<Song> getAll();
 
     @Query("SELECT * FROM song WHERE uri IN (:userIds)")
     abstract List<Song> loadAllByIds(int[] userIds);
@@ -33,8 +34,4 @@ public abstract class SongDao extends LibraryCollection {
     @Delete
     abstract void delete(Song song);
 
-    @Override
-    public Category getRootId() {
-        return Category.SONGS;
-    }
 }
