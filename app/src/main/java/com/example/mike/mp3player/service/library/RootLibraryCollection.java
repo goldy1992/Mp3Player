@@ -1,17 +1,12 @@
 package com.example.mike.mp3player.service.library;
 
-import android.content.Context;
+import android.content.ContentResolver;
 import android.support.v4.media.MediaDescriptionCompat;
 
-import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
-import com.example.mike.mp3player.service.library.db.CategoryDao;
-import com.example.mike.mp3player.service.library.db.Root;
-import com.example.mike.mp3player.service.library.db.RootDao;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -23,9 +18,8 @@ public class RootLibraryCollection extends LibraryCollection {
     public static final String ID = Constants.CATEGORY_ROOT_ID;
 
 
-
-    public RootLibraryCollection(final RootDao dao, Context context) {
-        super(ID, ID, ID, compareRootMediaItemsByCategory, null, dao, context);
+    public RootLibraryCollection(ContentResolver contentResolver) {
+        super(contentResolver);
     }
 
     @Override
@@ -45,10 +39,6 @@ public class RootLibraryCollection extends LibraryCollection {
         return rootMediaItems;
     }
 
-    @Override
-    public void index(List<MediaItem> items) {
-        this.getKeys().addAll(items);
-    }
 
     @Override
     public List<MediaItem> search(String query) {

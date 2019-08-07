@@ -46,7 +46,7 @@ public class PlaybackManager {
 
     public void notifyPlaybackComplete() {
         if (isShuffleOn()) {
-            shufflePreviousStack.push(new Integer(queueIndex));
+            shufflePreviousStack.push(queueIndex);
             if (shuffleNextStack.empty()) {
                 queueIndex = nextShuffledIndex;
                 nextShuffledIndex = getNextShuffledIndex();
