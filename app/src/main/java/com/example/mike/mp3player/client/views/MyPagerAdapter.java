@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
-import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.service.library.Category;
 
 import java.util.ArrayList;
 import java.util.Map;

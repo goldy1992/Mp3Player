@@ -6,7 +6,6 @@ import android.util.Log;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.service.library.db.AppDatabase;
 import com.example.mike.mp3player.service.library.mediaretriever.MockMediaRetriever;
@@ -60,6 +59,14 @@ public class MediaLibraryTest {
         assertTrue(mediaLibrary.getCategories().get(Category.SONGS) instanceof SongCollection);
         assertTrue(categories.contains(Category.ROOT));
         assertTrue(mediaLibrary.getCategories().get(Category.ROOT) instanceof RootLibraryCollection);
+    }
+
+    @Test
+    public void mytest(){
+        String x = "sdfsdfsf";
+        String[] res = x.split("@");
+        System.out.println(res);
+        assertEquals(1, res.length);
     }
 
     @Test

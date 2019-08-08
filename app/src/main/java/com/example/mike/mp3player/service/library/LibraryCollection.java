@@ -2,7 +2,6 @@ package com.example.mike.mp3player.service.library;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
-import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,24 +14,14 @@ import android.support.v4.media.MediaMetadataCompat;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Dao;
-import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 
-import com.example.mike.mp3player.commons.ComparatorUtils;
-import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
-import com.example.mike.mp3player.service.library.db.CategoryDao;
-import com.example.mike.mp3player.service.library.db.CategoryEntity;
-import com.example.mike.mp3player.service.library.db.Root;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeSet;
 
-import static com.example.mike.mp3player.commons.ComparatorUtils.compareMediaItemsByTitle;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;

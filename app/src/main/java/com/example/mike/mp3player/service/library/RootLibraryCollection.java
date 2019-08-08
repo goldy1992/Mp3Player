@@ -4,7 +4,6 @@ import android.content.ContentResolver;
 import android.support.v4.media.MediaDescriptionCompat;
 
 import com.example.mike.mp3player.commons.Constants;
-import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import java.util.List;
@@ -20,6 +19,11 @@ public class RootLibraryCollection extends LibraryCollection {
 
     public RootLibraryCollection(ContentResolver contentResolver) {
         super(contentResolver);
+    }
+
+    @Override
+    public String[] getProjection() {
+        return new String[0];
     }
 
     @Override
@@ -47,7 +51,7 @@ public class RootLibraryCollection extends LibraryCollection {
 
     @Override
     public Category getRootId() {
-        return Category.ROOT;
+        return null;
     }
 
     /**

@@ -8,7 +8,6 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 
 import com.example.mike.mp3player.commons.ComparatorUtils;
-import com.example.mike.mp3player.commons.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import java.io.File;

@@ -2,7 +2,7 @@ package com.example.mike.mp3player.dagger.components.fragments;
 
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
-import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.service.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.dagger.modules.MyRecycleViewModule;
 

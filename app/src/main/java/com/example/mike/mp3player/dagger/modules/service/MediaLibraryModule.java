@@ -3,16 +3,13 @@ package com.example.mike.mp3player.dagger.modules.service;
 import android.content.ContentResolver;
 import android.content.Context;
 
-import androidx.room.Room;
-
-import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.service.library.Category;
 import com.example.mike.mp3player.service.library.FolderLibraryCollection;
 import com.example.mike.mp3player.service.library.LibraryCollection;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.RootLibraryCollection;
 import com.example.mike.mp3player.service.library.SongCollection;
 import com.example.mike.mp3player.service.library.db.AppDatabase;
-import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
 
 import java.util.EnumMap;
 import java.util.Map;

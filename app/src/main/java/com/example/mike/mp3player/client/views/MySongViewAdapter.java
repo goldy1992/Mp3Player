@@ -14,7 +14,7 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.commons.MetaDataKeys;
-import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.service.library.Category;
 
 import org.apache.commons.io.FilenameUtils;
 

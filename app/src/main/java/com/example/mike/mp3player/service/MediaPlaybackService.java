@@ -81,7 +81,6 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
      * @param parentId the parent ID
      * @param result the result object used by the MediaBrowserServiceCompat
      */
-    @Deprecated
     @Override
     public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
      //   this.onLoadChildren(parentId, result, null);

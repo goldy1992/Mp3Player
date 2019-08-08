@@ -9,7 +9,7 @@ import com.example.mike.mp3player.client.MySongItemTouchListener;
 import com.example.mike.mp3player.client.views.MyFolderViewAdapter;
 import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
 import com.example.mike.mp3player.client.views.MySongViewAdapter;
-import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.service.library.Category;
 
 import dagger.Module;
 import dagger.Provides;

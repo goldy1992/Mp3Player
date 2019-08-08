@@ -44,7 +44,6 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
 
     @Override // MediaBrowserConnectorCallback
     public void onConnected() {
-
         this.mediaControllerAdapter.setMediaToken(mediaBrowserAdapter.getMediaSessionToken());
     }
 

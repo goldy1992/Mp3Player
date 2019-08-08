@@ -5,6 +5,8 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.mike.mp3player.service.library.Category;
+
 public class LibraryRequest extends LibraryObject {
 
 

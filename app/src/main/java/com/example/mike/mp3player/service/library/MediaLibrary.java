@@ -4,58 +4,58 @@ import android.net.Uri;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
 
-import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.example.mike.mp3player.commons.MediaItemType;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static com.example.mike.mp3player.commons.MediaItemType.getMediaItemTypeById;
+
 @Singleton
 public class MediaLibrary {
+
     private boolean playlistRecursInSubDirectory = false;
-    private Map<Category, LibraryCollection> categories;
+    private Map<MediaItemType, ContentRetriever> contentRetrieverMap;
     private final String LOG_TAG = "MEDIA_LIBRARY";
 
     @Inject
-    public MediaLibrary(Map<Category, LibraryCollection> categoriesMap) {
-        this.categories = categoriesMap;
+    public MediaLibrary(Map<MediaItemType, ContentRetriever> contentRetrieverMap) {
+        this.contentRetrieverMap = contentRetrieverMap;
     }
 
-    public TreeSet<MediaItem> getChildren(@NonNull LibraryRequest libraryRequest) {
+    public List<MediaItem> getChildren(@NonNull String parentId) {
+        List<String> splitId = Arrays.asList(parentId.split("\\|"));
 
-        String id = libraryRequest.getId();
-        if (Category.isCategory(id)) {
-            Category category = Category.valueOf(id);
-            return categories.get(category).getAllChildren();
-        } else {
-            LibraryCollection libraryCollection = categories.get(libraryRequest.getCategory());
-            if (null != libraryCollection) {
-                return libraryCollection.getChildren(libraryRequest);
-            }
+        if (StringUtils.isEmpty(splitId.toString())) {
+            return null;
         }
-        return null;
+        String mediaItemTypeId = splitId.get(0);
+        MediaItemType mediaItemType = getMediaItemTypeById(mediaItemTypeId);
+
+        if (null == mediaItemType) {
+            return null;
+        }
+        String idSuffix = null;
+        if (splitId.size() > 1) {
+            idSuffix = splitId.get(1);
+        }
+
+        ContentRetriever contentRetriever = contentRetrieverMap.get(mediaItemType);
+        return contentRetriever != null ? contentRetriever.getChildren(idSuffix) : null;
+
     }
+
+
 
     public Uri getMediaUriFromMediaId(String mediaId){
-        for (MediaItem i : getSongList()) {
-            if (i.getDescription().getMediaId().equals(mediaId)) {
-                return i.getDescription().getMediaUri();
-            }
-        }
-        return null;
+        throw new UnsupportedOperationException();
     }
-
-
-    @VisibleForTesting
-    Map<Category, LibraryCollection> getCategories() {
-        return categories;
-    }
-
-
 
 }

@@ -1,24 +1,52 @@
-package com.example.mike.mp3player.commons.library;
-
-import androidx.room.TypeConverters;
+package com.example.mike.mp3player.service.library;
 
 import com.example.mike.mp3player.client.activities.FolderActivityInjector;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjector;
-import com.example.mike.mp3player.service.library.db.CategoryConverter;
+import com.example.mike.mp3player.commons.MediaItemType;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.util.Comparator;
 
-@TypeConverters(CategoryConverter.class)
+import static com.example.mike.mp3player.commons.MediaItemType.FOLDER;
+import static com.example.mike.mp3player.commons.MediaItemType.SONG;
+
 public enum Category implements Comparator<Category> {
-    ROOT    (0, "Root", "The root item of the library"),
-    SONGS   (1, "Songs", null),
-    FOLDERS (2, "Folders", null),
-    ALBUMS  (3, "Albums", null),
-    ARTISTS (4, "Artists", null),
-    GENRES  (5, "Genres", null);
+
+
+    SONGS   (RandomStringUtils.randomAlphanumeric(15),
+            1,
+            "Songs",
+            null,
+            SONG),
+
+    FOLDERS (RandomStringUtils.randomAlphanumeric(15),
+            2,
+            "Folders",
+            null,
+            FOLDER),
+
+    ALBUMS  (RandomStringUtils.randomAlphanumeric(15),
+            3,
+            "Albums",
+            null,
+            null),
+
+    ARTISTS (RandomStringUtils.randomAlphanumeric(15),
+            4,
+            "Artists",
+            null,
+            null),
+
+    GENRES  (RandomStringUtils.randomAlphanumeric(15),
+            5,
+            "Genres",
+            null,
+            null);
+
 
     public static boolean isCategory(String s) {
         for (Category c : Category.values()) {
@@ -28,11 +56,13 @@ public enum Category implements Comparator<Category> {
         }
         return false;
     }
+    private final String id;
     private final Integer rank;
     private final String title;
     private final String description;
 
-    Category(int rank, String title, String description) {
+    Category(String id, int rank, String title, String description, MediaItemType childType) {
+        this.id = id;
         this.rank = rank;
         this.title = title;
         this.description = description;
@@ -59,6 +89,18 @@ public enum Category implements Comparator<Category> {
     public static Category getCategoryForActivityClass(Class<? extends MediaActivityCompat> classKey) {
         return ACTIVITY_TO_CATEGORY_MAP.get(classKey);
     }
+
+    public static Category getCategoryById(String id) {
+        for (Category c : Category.values()) {
+            if (c.id.equals(id)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+
+    public String getId() { return id; }
 
     public String getTitle() {
         return title;

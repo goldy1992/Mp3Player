@@ -33,7 +33,7 @@ import com.example.mike.mp3player.client.views.MyPagerAdapter;
 import com.example.mike.mp3player.client.views.ThemeSpinnerController;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
 import com.example.mike.mp3player.commons.MediaItemUtils;
-import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.service.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;

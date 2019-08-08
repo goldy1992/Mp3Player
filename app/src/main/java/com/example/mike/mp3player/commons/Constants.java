@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.SparseArray;
 
-import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.service.library.Category;
 
 public final class Constants {
 
@@ -73,7 +73,7 @@ public final class Constants {
     // connection extras
     public static final String REJECTION = "REJECTION";
     public static final String PACKAGE_NAME = "com.example.mike.mp3player";
-    public static final String ACCEPTED_MEDIA_ROOT_ID = Category.ROOT.name();
+    public static final String ACCEPTED_MEDIA_ROOT_ID = Category.ROOT.getId();
     public static final String REJECTED_MEDIA_ROOT_ID = "empty_root_id";
 
     // connection rejections

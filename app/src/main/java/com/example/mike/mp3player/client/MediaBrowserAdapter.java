@@ -69,6 +69,14 @@ public class MediaBrowserAdapter {
         mediaBrowser.subscribe(libraryRequest.getId(), options, mySubscriptionCallback);
     }
 
+    /**
+     *
+     * @return
+     */
+    public void subscribe(String id) {
+        mediaBrowser.subscribe(id, mySubscriptionCallback);
+    }
+
     public MediaSessionCompat.Token getMediaSessionToken() {
         return mediaBrowser.getSessionToken();
     }

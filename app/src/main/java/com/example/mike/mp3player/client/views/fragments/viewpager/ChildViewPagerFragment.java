@@ -20,7 +20,7 @@ import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
 import com.example.mike.mp3player.commons.MediaItemUtils;
-import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.service.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
@@ -47,6 +47,7 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
     private LibraryObject parent;
     private FastScrollRecyclerView recyclerView;
     private Category category;
+    private String parentId;
     private MediaBrowserAdapter mediaBrowserAdapter;
     private MyGenericRecycleViewAdapter myViewAdapter;
     private MyGenericItemTouchListener myGenericItemTouchListener;
@@ -70,9 +71,8 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         this.mediaBrowserAdapter.subscribe(new LibraryRequest(parent));
     }
 
-    public void init(Category category, LibraryObject parent) {
-        this.category = category;
-        this.parent = parent;
+    public void init(String parentId) {
+        this.parentId = parentId;
     }
 
     @Override
