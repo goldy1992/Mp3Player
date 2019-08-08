@@ -37,7 +37,7 @@ public class FolderLibraryCollection extends LibraryCollection {
     }
 
     @Override
-    public String getProjection() {
+    public String[] getProjection() {
         return null;
     }
 
@@ -45,7 +45,7 @@ public class FolderLibraryCollection extends LibraryCollection {
     public TreeSet<MediaItem> getChildren(LibraryObject id) {
         String selection = MediaStore.Audio.Media.DATA + " LIKE ?";
         String[] selectionArgs = {id.getId() + "%"};
-        return querySongs(selection, selectionArgs);
+        return null; //querySongs(selection, selectionArgs);
     }
 
     @Override

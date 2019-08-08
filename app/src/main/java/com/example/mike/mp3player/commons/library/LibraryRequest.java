@@ -3,11 +3,12 @@ package com.example.mike.mp3player.commons.library;
 import android.os.Parcel;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class LibraryRequest extends LibraryObject {
 
 
-    public LibraryRequest(@NonNull Category category, @NonNull String id) {
+    public LibraryRequest(@NonNull Category category, @Nullable String id) {
         super(category, id);
     }
 

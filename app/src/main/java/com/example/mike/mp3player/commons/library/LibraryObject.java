@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.HashMap;
 
@@ -15,7 +16,7 @@ public class LibraryObject implements Parcelable {
     private HashMap<String, String> extras;
 
 
-    public LibraryObject(Category category, @NonNull String id) {
+    public LibraryObject(Category category, @Nullable String id) {
         this.category = category;
         this.id = id;
         this.setTitle(null);
