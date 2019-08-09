@@ -99,7 +99,7 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
         }
 
         if (null != mediaBrowserAdapter) {
-            this.mediaBrowserAdapter.registerListener(Category.ROOT.name(), this);
+            this.mediaBrowserAdapter.registerRootListener(this);
         }
 
         initNavigationView();
@@ -180,9 +180,8 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
             String id = MediaItemUtils.getMediaId(mediaItem);
             Log.i(LOG_TAG, "media id: " + id);
             Category category = Category.valueOf(id);
-            LibraryObject libraryObject = new LibraryObject(category, id);
             ChildViewPagerFragment childViewPagerFragment = childFragmentProvider.get();
-            childViewPagerFragment.init(category, libraryObject);
+            childViewPagerFragment.init(mediaItem.getMediaId());
             adapter.getPagerItems().put(category, childViewPagerFragment);
             adapter.getMenuCategories().put(category, mediaItem);
             adapter.notifyDataSetChanged();

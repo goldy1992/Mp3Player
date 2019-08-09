@@ -40,7 +40,7 @@ public abstract class MainActivity extends MediaActivityCompat {
     public void onConnected() {
         super.onConnected();
         initialiseView(R.layout.activity_main);
-        getMediaBrowserAdapter().subscribe(getMediaBrowserAdapter().getRootId());
+        mediaBrowserAdapter.subscribeToRoot();
     }
 
     @Override

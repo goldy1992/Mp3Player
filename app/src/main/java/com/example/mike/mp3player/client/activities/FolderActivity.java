@@ -9,9 +9,6 @@ import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
-import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.service.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import javax.inject.Inject;
 

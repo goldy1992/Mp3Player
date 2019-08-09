@@ -39,7 +39,7 @@ import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import static com.example.mike.mp3player.TestUtils.createMediaItem;
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
-import static com.example.mike.mp3player.commons.Constants.PARENT_OBJECT;
+import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 import static com.example.mike.mp3player.service.session.MediaSessionCallback.DEFAULT_PLAYBACK_SPEED_CHANGE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -199,7 +199,7 @@ public class MediaSessionCallbackTest {
         final String mediaId = "5452213";
         final Bundle bundle = new Bundle();
         LibraryObject parent = new LibraryObject(Category.ARTISTS, mediaId);
-        bundle.putParcelable(PARENT_OBJECT, parent);
+        bundle.putParcelable(PARENT_ID, parent);
         List<MediaItem> mediaItems = Collections.singletonList(createMediaItem(mediaId, null, null));
         when(mediaLibrary.getPlaylist(parent)).thenReturn(mediaItems);
         mediaSessionCallback.onPrepareFromMediaId(mediaId, bundle);

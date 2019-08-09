@@ -5,6 +5,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.SparseArray;
 
 import com.example.mike.mp3player.service.library.Category;
+import com.example.mike.mp3player.service.library.MediaItemType;
 
 public final class Constants {
 
@@ -53,29 +54,24 @@ public final class Constants {
     /* LIBRARY CONSTANTS */
     public static final Uri ARTWORK_URI_PATH = Uri.parse("content://media/external/audio/albumart");
 
-    public static final String CATEGORY_ROOT_ID = Category.ROOT.name();
-
-    public static final String CATEGORY_SONGS_TITLE = "Songs";
-    public static final String CATEGORY_SONGS_ID = Category.SONGS.name();
     public static final String CATEGORY_SONGS_DESCRIPTION = "A list of all songs in the library";
 
-    public static final String CATEGORY_FOLDERS_TITLE = "Folders";
-    public static final String CATEGORY_FOLDERS_ID = Category.FOLDERS.name();
+
     public static final String CATEGORY_FOLDERS_DESCRIPTION = "A list of all folders with music inside them";
-    public static final String FOLDER_CHILDREN = "FOLDER_CHILDREN";
-    public static final String FOLDER_NAME = "FOLDER_NAME";
+
     public static final String REQUEST_OBJECT = "REQUEST_OBJECT";
     public static final String RESPONSE_OBJECT = "RESPONSE_OBJECT";
-    public static final String PARENT_OBJECT = "PARENT_OBJECT";
+    public static final String PARENT_ID = "PARENT_ID";
     public static final String PARENT_MEDIA_ITEM = "PARENT_MEDIA_ITEM";
     public static final int NO_ACTION = 0;
 
     // connection extras
     public static final String REJECTION = "REJECTION";
     public static final String PACKAGE_NAME = "com.example.mike.mp3player";
-    public static final String ACCEPTED_MEDIA_ROOT_ID = Category.ROOT.getId();
+    public static final String ACCEPTED_MEDIA_ROOT_ID = MediaItemType.ROOT.getId();
     public static final String REJECTED_MEDIA_ROOT_ID = "empty_root_id";
 
+    public static final String MEDIA_ITEM_TYPE = "MEDIA_ITEM_TYPE";
     // connection rejections
     public static final String INVALID_PACKAGE = "INVALID_PACKAGE";
     public static final String EMPTY_LIBRARY = "EMPTY_LIBRARY";

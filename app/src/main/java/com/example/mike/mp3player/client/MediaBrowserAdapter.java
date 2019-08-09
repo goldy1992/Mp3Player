@@ -77,6 +77,10 @@ public class MediaBrowserAdapter {
         mediaBrowser.subscribe(id, mySubscriptionCallback);
     }
 
+    public void subscribeToRoot() {
+        mediaBrowser.subscribe(getRootId(), mySubscriptionCallback);
+    }
+
     public MediaSessionCompat.Token getMediaSessionToken() {
         return mediaBrowser.getSessionToken();
     }
@@ -87,6 +91,10 @@ public class MediaBrowserAdapter {
 
     public boolean isConnected() {
         return mediaBrowser != null && mediaBrowser.isConnected();
+    }
+
+    public void registerRootListener(MediaBrowserResponseListener mediaBrowserResponseListener) {
+        mySubscriptionCallback.registerMediaBrowserResponseListener(getRootId(), mediaBrowserResponseListener);
     }
 
     public void registerListener(Object parentId, MediaBrowserResponseListener mediaBrowserResponseListener) {

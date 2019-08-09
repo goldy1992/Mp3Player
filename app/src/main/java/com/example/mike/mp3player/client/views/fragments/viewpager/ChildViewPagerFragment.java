@@ -28,7 +28,7 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import javax.inject.Inject;
 
-import static com.example.mike.mp3player.commons.Constants.PARENT_OBJECT;
+import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
 /**
@@ -46,7 +46,6 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
      */
     private LibraryObject parent;
     private FastScrollRecyclerView recyclerView;
-    private Category category;
     private String parentId;
     private MediaBrowserAdapter mediaBrowserAdapter;
     private MyGenericRecycleViewAdapter myViewAdapter;
@@ -68,7 +67,7 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         this.recyclerView.setItemAnimator(new DefaultItemAnimator());
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         this.mediaBrowserAdapter.registerListener(parent.getId(), myViewAdapter);
-        this.mediaBrowserAdapter.subscribe(new LibraryRequest(parent));
+        this.mediaBrowserAdapter.subscribe(parentId);
     }
 
     public void init(String parentId) {
@@ -86,8 +85,8 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
             libraryRequest.setTitle(title);
         }
 
-        Intent intent = new Intent(getContext(), Category.getActivityClassForCategory(category));
-        intent.putExtra(PARENT_OBJECT, parent);
+        Intent intent = new Intent(getContext(), Category.getActivityClassForCategory(category)); // TODO: fix
+        intent.putExtra(PARENT_ID, parent);
         intent.putExtra(REQUEST_OBJECT, libraryRequest);
         startActivity(intent);
     }

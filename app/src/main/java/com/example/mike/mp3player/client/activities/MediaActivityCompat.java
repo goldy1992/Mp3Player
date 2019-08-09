@@ -25,9 +25,9 @@ import static com.example.mike.mp3player.commons.Constants.THEME;
 public abstract class MediaActivityCompat extends AppCompatActivity implements MediaBrowserConnectorCallback {
     private static final String LOG_TAG = "MEDIA_ACTIVITY_COMPAT";
     /** MediaBrowserAdapter */
-    private MediaBrowserAdapter mediaBrowserAdapter;
+    protected MediaBrowserAdapter mediaBrowserAdapter;
     /** MediaControllerAdapter */
-    private MediaControllerAdapter mediaControllerAdapter;
+    protected MediaControllerAdapter mediaControllerAdapter;
     /** Dependencies **/
     private MediaActivityCompatComponent mediaActivityCompatComponent;
     /** Thread used to deal with none UI tasks */

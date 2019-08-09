@@ -110,7 +110,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
         result.detach();
         handler.post(() -> {
             // Assume for example that the music catalog is already loaded/cached.
-            TreeSet<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(libraryRequest);
+            List<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(parentMediaId);
             LibraryResponse libraryResponse = new LibraryResponse(libraryRequest);
             options.putParcelable(RESPONSE_OBJECT, libraryResponse);
             ArrayList<MediaBrowserCompat.MediaItem> toReturn = new ArrayList<>();

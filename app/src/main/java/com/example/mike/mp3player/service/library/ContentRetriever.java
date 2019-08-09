@@ -3,8 +3,6 @@ package com.example.mike.mp3player.service.library;
 import android.content.ContentResolver;
 import android.support.v4.media.MediaBrowserCompat;
 
-import com.example.mike.mp3player.commons.MediaItemType;
-
 import java.util.List;
 
 public abstract class ContentRetriever {

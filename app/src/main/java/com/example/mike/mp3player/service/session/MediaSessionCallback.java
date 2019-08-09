@@ -44,7 +44,7 @@ import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPE
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
-import static com.example.mike.mp3player.commons.Constants.PARENT_OBJECT;
+import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 import static com.example.mike.mp3player.commons.LoggingUtils.logRepeatMode;
 import static com.example.mike.mp3player.commons.LoggingUtils.logShuffleMode;
@@ -187,7 +187,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private void prepareFromMediaId(String mediaId, Bundle bundle) {
         //Log.i(LOG_TAG, "prepareFromMediaId");
         super.onPrepareFromMediaId(mediaId, bundle);
-        LibraryObject parent = (LibraryObject) bundle.get(PARENT_OBJECT);
+        LibraryObject parent = (LibraryObject) bundle.get(PARENT_ID);
         LibraryRequest request = new LibraryRequest(parent);
         TreeSet<MediaBrowserCompat.MediaItem> results = mediaLibrary.getChildren(request);
         ArrayList<MediaBrowserCompat.MediaItem> resultsList = new ArrayList<>();

@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.commons;
+package com.example.mike.mp3player.service.library;
 
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -48,5 +48,21 @@ public enum MediaItemType {
             }
         }
         return null;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Integer getRank() {
+        return rank;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

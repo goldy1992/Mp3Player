@@ -3,7 +3,6 @@ package com.example.mike.mp3player.service.library;
 import com.example.mike.mp3player.client.activities.FolderActivityInjector;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjector;
-import com.example.mike.mp3player.commons.MediaItemType;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
@@ -11,8 +10,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Comparator;
 
-import static com.example.mike.mp3player.commons.MediaItemType.FOLDER;
-import static com.example.mike.mp3player.commons.MediaItemType.SONG;
+import static com.example.mike.mp3player.service.library.MediaItemType.FOLDER;
+import static com.example.mike.mp3player.service.library.MediaItemType.SONG;
 
 public enum Category implements Comparator<Category> {
 
