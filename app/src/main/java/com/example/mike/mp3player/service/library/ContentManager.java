@@ -21,13 +21,10 @@ public class ContentManager {
 
     private final Map<String, MediaItemType> idToMediaItemMap;
     private final Map<MediaItemType, ContentRetriever> contentRetrieverMap;
-    private final String rootId;
 
     @Inject
-    public ContentManager(String rootId,
-    Map<String, MediaItemType> mediaItemTypeStringBiMap,
+    public ContentManager(Map<String, MediaItemType> mediaItemTypeStringBiMap,
                           EnumMap<MediaItemType, ContentRetriever> contentRetrieverMap) {
-        this.rootId = rootId;
         this.idToMediaItemMap = mediaItemTypeStringBiMap;
         this.contentRetrieverMap = contentRetrieverMap;
 

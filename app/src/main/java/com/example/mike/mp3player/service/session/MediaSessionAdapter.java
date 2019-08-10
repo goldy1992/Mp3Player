@@ -1,7 +1,7 @@
 package com.example.mike.mp3player.service.session;
 
-import android.media.session.MediaSession;
 import android.os.Bundle;
+import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -16,10 +16,12 @@ import javax.inject.Inject;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 import static com.example.mike.mp3player.commons.Constants.SHUFFLE_MODE;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
-import static com.example.mike.mp3player.commons.QueueItemUtils.getAlbumArtPath;
-import static com.example.mike.mp3player.commons.QueueItemUtils.getArtist;
-import static com.example.mike.mp3player.commons.QueueItemUtils.getMediaId;
-import static com.example.mike.mp3player.commons.QueueItemUtils.getTitle;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getAlbumArtPath;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getArtist;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getMediaId;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
+
+
 
 public class MediaSessionAdapter {
 
@@ -69,7 +71,7 @@ public class MediaSessionAdapter {
         MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
         builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayerAdapter.getCurrentDuration());
 
-        MediaSessionCompat.QueueItem currentItem = playbackManager.getCurrentItem();
+        MediaBrowserCompat.MediaItem currentItem = playbackManager.getCurrentItem();
 
         String mediaId = getMediaId(currentItem);
         builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaId);
@@ -85,8 +87,9 @@ public class MediaSessionAdapter {
         return builder.build();
     }
 
-    public void setQueue(MediaSessionCompat.QueueItem item) {
-        mediaSession.setQueue(playbackManager.onAddQueueItem(item));
+    public void setQueue(MediaBrowserCompat.MediaItem item) {
+        // TODO: find a way to implement queue
+       // mediaSession.setQueue(playbackManager.onAddQueueItem(item));
     }
 
     public void setActive(boolean isActive) {

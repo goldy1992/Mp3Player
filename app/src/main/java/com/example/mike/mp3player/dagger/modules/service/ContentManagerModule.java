@@ -14,6 +14,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -28,34 +29,6 @@ public class ContentManagerModule {
 
     @Singleton
     @Provides
-    public BiMap<MediaItemType, String> mediaItemTypeToIdMap() {
-        BiMap<MediaItemType, String> map = HashBiMap.create();
-
-        for (MediaItemType mediaItemType : MediaItemType.values()) {
-            map.put(mediaItemType, IdGenerator.generateRootId(mediaItemType.name()));
-        }
-        return map;
-    }
-
-    @Singleton
-    @Provides
-    public EnumMap<MediaItemType, String> mediaItemTypeToIdEnupMap(BiMap<MediaItemType, String> biMap) {
-
-       EnumMap<MediaItemType, String> map = new EnumMap<>(MediaItemType.class);
-       map.putAll(biMap);
-        return map;
-    }
-
-    @Singleton
-    @Provides
-    public Map<String, MediaItemType> getMediaItemIdEnumMap(BiMap<MediaItemType, String> biMap) {
-        BiMap<MediaItemType, String> map = HashBiMap.create();
-        map.putAll(biMap);
-        return map.inverse();
-    }
-
-    @Singleton
-    @Provides
     public Set<ContentResolverRetriever> provideContentResolverRetrieverMap(ContentResolver contentResolver, EnumMap<MediaItemType, String> ids) {
         Set<ContentResolverRetriever> returnSet = new HashSet<>();
         SongsRetriever songsRetriever = new SongsRetriever(contentResolver, ids.get(MediaItemType.SONG));
@@ -67,7 +40,7 @@ public class ContentManagerModule {
 
     @Singleton
     @Provides
-    public RootRetriever provideRootRetriever( EnumMap<MediaItemType, String> ids) {
+    public RootRetriever provideRootRetriever(EnumMap<MediaItemType, String> ids) {
         Set<MediaItemType> rootIds = MediaItemType.PARENT_TO_CHILD_MAP.get(MediaItemType.ROOT);
         EnumMap<MediaItemType, String> childIds = new EnumMap<>(MediaItemType.class);
         for (MediaItemType m : rootIds) {
@@ -78,8 +51,23 @@ public class ContentManagerModule {
 
     @Singleton
     @Provides
+    public Set<ContentRetriever> provideContentRetrievers(RootRetriever rootRetriever, Set<ContentResolverRetriever> contentResolverRetrievers) {
+        Set<ContentRetriever> contentRetrievers = new HashSet<>();
+        contentRetrievers.add(rootRetriever);
+        contentRetrievers.addAll(contentResolverRetrievers);
+        return contentRetrievers;
+    }
+
+    @Provides
+    @Singleton
+    public ContentResolver provideContentResolver(Context context) {
+        return context.getContentResolver();
+    }
+
+    @Singleton
+    @Provides
     public EnumMap<MediaItemType, ContentRetriever> getContentRetrievers(RootRetriever rootRetriever, Set<ContentResolverRetriever> contentResolverRetrieverSet) {
-       EnumMap<MediaItemType, ContentRetriever> map = new EnumMap<>(MediaItemType.class);
+        EnumMap<MediaItemType, ContentRetriever> map = new EnumMap<>(MediaItemType.class);
         for (MediaItemType mediaItemType : MediaItemType.values()) {
             switch (mediaItemType) {
                 case FOLDER:
@@ -90,21 +78,16 @@ public class ContentManagerModule {
                 case FOLDERS: map.put(mediaItemType, getContentResolverRetrieverFromSet(MediaItemType.FOLDER, contentResolverRetrieverSet));
                     break;
                 case ROOT: map.put(mediaItemType, rootRetriever);
+                    break;
                 default:
                     break;
             }
         }
-       return map;
-    }
-
-    @Provides
-    @Singleton
-    public ContentResolver provideContentResolver(Context context) {
-        return context.getContentResolver();
+        return map;
     }
 
     private ContentResolverRetriever getContentResolverRetrieverFromSet(MediaItemType mediaItemType,
-                                    Set<ContentResolverRetriever> contentResolverRetrieverSet) {
+                                                                        Set<ContentResolverRetriever> contentResolverRetrieverSet) {
         for (ContentResolverRetriever contentResolverRetriever : contentResolverRetrieverSet) {
             if (contentResolverRetriever.getType() == mediaItemType) {
                 return contentResolverRetriever;
@@ -112,5 +95,7 @@ public class ContentManagerModule {
         }
         return null;
     }
+
+
 
 }

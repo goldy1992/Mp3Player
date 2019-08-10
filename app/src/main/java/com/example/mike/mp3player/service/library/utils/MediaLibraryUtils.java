@@ -2,6 +2,7 @@ package com.example.mike.mp3player.service.library.utils;
 
 import android.media.MediaMetadataRetriever;
 import android.os.Environment;
+import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.session.MediaSessionCompat;
 
@@ -54,13 +55,13 @@ public final class MediaLibraryUtils {
         return queueItemList;
     }
 
-    public static Integer findIndexOfTrackInPlaylist(List<MediaSessionCompat.QueueItem> queue, String mediaId) {
+    public static Integer findIndexOfTrackInPlaylist(List<MediaBrowserCompat.MediaItem> queue, String mediaId) {
         if (queue == null|| queue.isEmpty() || mediaId == null) {
             return null;
         }
 
         for (int currentIndex = 0; currentIndex < queue.size(); currentIndex++) {
-            MediaSessionCompat.QueueItem queueItem = queue.get(currentIndex);
+            MediaBrowserCompat.MediaItem queueItem = queue.get(currentIndex);
             if (queueItem == null || queueItem.getDescription() == null) {
                 continue;
             }

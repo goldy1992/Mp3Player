@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.service;
 
-import android.support.v4.media.session.MediaSessionCompat.QueueItem;
+import static android.support.v4.media.MediaBrowserCompat.MediaItem;
+
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.annotation.VisibleForTesting;
@@ -24,19 +25,19 @@ public class PlaybackManager {
     private int queueIndex = EMPTY_PLAYLIST_INDEX;
     private Random random = new Random();
     private boolean isRepeating = true;
-    private final List<QueueItem> playlist = new ArrayList<>();
+    private final List<MediaItem> playlist = new ArrayList<>();
     private boolean shuffleOn = false;
 
     @Inject
     public PlaybackManager() { }
 
-    public List<QueueItem> onAddQueueItem(QueueItem item) {
+    public List<MediaItem> onAddQueueItem(MediaItem item) {
         playlist.add(item);
         queueIndex = (queueIndex == -1) ? 0 : queueIndex;
         return playlist;
     }
 
-    public List<QueueItem> onRemoveQueueItem(QueueItem item) {
+    public List<MediaItem> onRemoveQueueItem(MediaItem item) {
         boolean removed = playlist.remove(item);
         if (removed) {
             queueIndex = (playlist.isEmpty()) ? -1 : queueIndex;
@@ -70,7 +71,7 @@ public class PlaybackManager {
                 newIndex = shuffleNextStack.peek();
             }
         } else {
-            newIndex = getNextQueueItemIndex();
+            newIndex = getNextMediaItemIndex();
         }
         return getPlaylistMediaId(newIndex);
     }
@@ -107,7 +108,7 @@ public class PlaybackManager {
     }
 
     private boolean incrementQueue() {
-        int newIndex = getNextQueueItemIndex();
+        int newIndex = getNextMediaItemIndex();
         if (validQueueIndex(newIndex)) {
             this.queueIndex = newIndex;
             return true;
@@ -116,7 +117,7 @@ public class PlaybackManager {
     }
 
     private boolean decrementQueue() {
-        int newIndex = getPreviousQueueItemIndex();
+        int newIndex = getPreviousMediaItemIndex();
         if (validQueueIndex(newIndex)) {
             this.queueIndex = newIndex;
             return true;
@@ -127,7 +128,7 @@ public class PlaybackManager {
      * ASSUMES shuffleON IS FALSE
      * @return
      */
-    private int getNextQueueItemIndex() {
+    private int getNextMediaItemIndex() {
         int newIndex = queueIndex + 1;
         boolean passedEndOfQueue = newIndex >= playlist.size();
         if (passedEndOfQueue) {
@@ -139,7 +140,7 @@ public class PlaybackManager {
      * ASSUMES shuffleON IS FALSE
      * @return
      */
-    private int getPreviousQueueItemIndex() {
+    private int getPreviousMediaItemIndex() {
         int newIndex = queueIndex - 1;
         boolean beforeStartOfQueue = newIndex < START_OF_PLAYLIST;
         if (beforeStartOfQueue) {
@@ -154,7 +155,7 @@ public class PlaybackManager {
 
     public String getPlaylistMediaId(int index) {
         if (validQueueIndex(index)) {
-            QueueItem queueItem = playlist.get(index);
+            MediaItem queueItem = playlist.get(index);
             if (queueItem != null) {
                 return playlist.get(index).getDescription().getMediaId();
             }
@@ -164,7 +165,7 @@ public class PlaybackManager {
 
     public String getCurrentMediaId() {
         if (playlist != null && !playlist.isEmpty() && playlist.get(queueIndex) != null) {
-            QueueItem currentItem = playlist.get(queueIndex);
+            MediaItem currentItem = playlist.get(queueIndex);
             if (currentItem.getDescription() != null) {
                 return  currentItem.getDescription().getMediaId();
             }
@@ -172,7 +173,7 @@ public class PlaybackManager {
         return null;
     }
 
-    public boolean createNewPlaylist(List<QueueItem> newList) {
+    public boolean createNewPlaylist(List<MediaItem> newList) {
         playlist.clear();
         boolean result = playlist.addAll(newList);
         queueIndex = playlist.isEmpty() ?  EMPTY_PLAYLIST_INDEX : START_OF_PLAYLIST;
@@ -188,7 +189,7 @@ public class PlaybackManager {
         }
     }
 
-    public QueueItem getCurrentItem() {
+    public MediaItem getCurrentItem() {
         if (validQueueIndex(queueIndex)) {
             return playlist.get(queueIndex);
         }

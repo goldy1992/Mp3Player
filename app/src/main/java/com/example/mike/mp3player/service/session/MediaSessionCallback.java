@@ -100,7 +100,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.mediaPlayerAdapter.setOnCompletionListener(this::onCompletion);
         this.mediaPlayerAdapter.setOnSeekCompleteListener(this::onSeekComplete);
         this.broadcastReceiver.setMediaSessionCallback(this);
-        this.playbackManager.createNewPlaylist(queueItems);
+        this.playbackManager.createNewPlaylist(songList);
         Uri firstSongUri = Uri.parse(playbackManager.getCurrentMediaId());
         Uri nextSongUri = Uri.parse(playbackManager.getNext());
         this.mediaPlayerAdapter.reset(firstSongUri, nextSongUri);
@@ -194,7 +194,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getChildren(mediaId);
         ArrayList<MediaBrowserCompat.MediaItem> resultsList = new ArrayList<>();
         resultsList.addAll(results);
-        getPlaybackManager().createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(resultsList));
+        getPlaybackManager().createNewPlaylist(resultsList);
 
         if (mediaId == null) {
             Log.e(LOG_TAG, "received null mediaId");
@@ -257,9 +257,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void addQueueItem(MediaDescriptionCompat description) {
-        //Log.i(LOG_TAG, "addQueueItem");
-        MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
-        mediaSessionAdapter.setQueue(item);
+//        //Log.i(LOG_TAG, "addQueueItem");
+//        MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
+//        mediaSessionAdapter.setQueue(item);
     }
 
     @Override
@@ -267,8 +267,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         worker.post(() -> this.removeQueueItem(description));
     }
     private void removeQueueItem(MediaDescriptionCompat description) {
-        MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
-        mediaSessionAdapter.setQueue(item);
+//        MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
+//        mediaSessionAdapter.setQueue(item);
     }
 
     @Override

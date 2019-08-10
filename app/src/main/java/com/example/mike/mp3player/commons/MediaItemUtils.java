@@ -1,6 +1,8 @@
 package com.example.mike.mp3player.commons;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.media.MediaMetadataCompat;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 
@@ -58,6 +60,18 @@ public final class MediaItemUtils {
     public static String getDescription(MediaItem item) {
         if (hasDescription(item)) {
             return item.getDescription().getDescription().toString();
+        }
+        return null;
+    }
+
+    public static String getArtist(MediaItem item) {
+        return (String) getExtra(MediaMetadataCompat.METADATA_KEY_ARTIST, item);
+    }
+
+    public static String getAlbumArtPath(MediaItem item) {
+        Uri uri = (Uri) getExtra(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, item);
+        if (uri != null) {
+            return uri.toString();
         }
         return null;
     }

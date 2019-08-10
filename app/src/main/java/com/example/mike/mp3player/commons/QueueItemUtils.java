@@ -60,17 +60,7 @@ public final class QueueItemUtils {
         return null;
     }
 
-    public static String getArtist(QueueItem item) {
-        return (String) getExtra(MediaMetadataCompat.METADATA_KEY_ARTIST, item);
-    }
 
-    public static String getAlbumArtPath(QueueItem item) {
-        Uri uri = (Uri) getExtra(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, item);
-        if (uri != null) {
-            return uri.toString();
-        }
-        return null;
-    }
 
     public static String getDescription(QueueItem item) {
         if (hasDescription(item)) {

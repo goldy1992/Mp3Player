@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.mike.mp3player.dagger.modules.service.ContentManagerModule;
 import com.example.mike.mp3player.dagger.modules.service.HandlerThreadModule;
+import com.example.mike.mp3player.dagger.modules.service.MediaItemTypeIdModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaLibraryModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaPlayerAdapterModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaRetrieverModule;
@@ -20,11 +21,13 @@ import dagger.Component;
 @Singleton
 @Component(modules = {
     ContentManagerModule.class,
+
     HandlerThreadModule.class,
     MediaPlayerAdapterModule.class,
     MediaRetrieverModule.class,
     MediaSessionCallbackModule.class,
     MediaSessionCompatModule.class,
+    MediaItemTypeIdModule.class,
     ServiceModule.class
 })
 public interface ServiceComponent {
