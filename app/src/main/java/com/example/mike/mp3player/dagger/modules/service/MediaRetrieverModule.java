@@ -2,9 +2,6 @@ package com.example.mike.mp3player.dagger.modules.service;
 
 import android.content.Context;
 
-import androidx.room.Room;
-
-import com.example.mike.mp3player.service.library.db.AppDatabase;
 import com.example.mike.mp3player.service.library.mediaretriever.ContentResolverMediaRetriever;
 import com.example.mike.mp3player.service.library.mediaretriever.MediaRetriever;
 

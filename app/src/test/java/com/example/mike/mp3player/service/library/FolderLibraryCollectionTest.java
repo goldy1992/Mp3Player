@@ -3,6 +3,7 @@ package com.example.mike.mp3player.service.library;
 import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompat;
 
+import com.example.mike.mp3player.client.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import org.junit.jupiter.api.BeforeEach;

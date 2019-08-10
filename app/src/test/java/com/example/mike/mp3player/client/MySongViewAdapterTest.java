@@ -14,7 +14,6 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.MySongViewAdapter;
 import com.example.mike.mp3player.client.views.MyViewHolder;
-import com.example.mike.mp3player.service.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import org.junit.Before;

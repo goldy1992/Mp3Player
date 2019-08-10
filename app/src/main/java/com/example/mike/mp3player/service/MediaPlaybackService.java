@@ -7,29 +7,21 @@ import android.os.HandlerThread;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.media.MediaBrowserServiceCompat;
 
-import com.example.mike.mp3player.commons.library.LibraryRequest;
-import com.example.mike.mp3player.commons.library.LibraryResponse;
-import com.example.mike.mp3player.service.library.MediaLibrary;
+import com.example.mike.mp3player.service.library.ContentManager;
 import com.example.mike.mp3player.service.session.MediaSessionCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.TreeSet;
 
 import javax.inject.Inject;
 
-import static com.example.mike.mp3player.commons.Constants.ACCEPTED_MEDIA_ROOT_ID;
 import static com.example.mike.mp3player.commons.Constants.PACKAGE_NAME;
-import static com.example.mike.mp3player.commons.Constants.REJECTED_MEDIA_ROOT_ID;
-import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
-import static com.example.mike.mp3player.commons.Constants.RESPONSE_OBJECT;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -38,11 +30,12 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
 
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
 
-    private MediaLibrary mediaLibrary;
+    private ContentManager mediaLibrary;
     private HandlerThread worker;
     private Handler handler;
     private MediaSessionCompat mediaSession;
     private MediaSessionCallback mediaSessionCallback;
+    private RootAuthenticator rootAuthenticator;
     abstract void initialiseDependencies();
 
     @Override
@@ -61,18 +54,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public BrowserRoot onGetRoot(String clientPackageName, int clientUid,
                                  Bundle rootHints) {
-        Bundle extras = new Bundle();
-        // (Optional) Control the level of access for the specified package name.
-        // You'll need to write your own logic to do this.
-        if (allowBrowsing(clientPackageName, clientUid)) {
-            // Returns a root ID that clients can use with onLoadChildren() to retrieve
-            // the content hierarchy.
-            return new BrowserRoot(ACCEPTED_MEDIA_ROOT_ID, extras);
-        } else {
-            // Clients can connect, but this BrowserRoot is an empty hierachy
-            // so onLoadChildren returns nothing. This disables the ability to browse for content.
-            return new BrowserRoot(REJECTED_MEDIA_ROOT_ID, extras);
-        }
+        return rootAuthenticator.authenticate(clientPackageName, clientUid, rootHints);
     }
 
     /**
@@ -83,36 +65,16 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
      */
     @Override
     public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
-     //   this.onLoadChildren(parentId, result, null);
-        result.sendResult(null);
-        Log.e(LOG_TAG, "onLoadChildren called without bundle");
-    }
-
-    @Override
-    public void onLoadChildren(@NonNull final String parentMediaId,
-                               final Result<List<MediaBrowserCompat.MediaItem>> result, Bundle options) {
         //  Browsing not allowed
-        if (TextUtils.equals(REJECTED_MEDIA_ROOT_ID, parentMediaId)) {
+        if (!rootAuthenticator.allowSubscription(parentId)) {
             result.sendResult(null);
             return;
         }
 
-        if (options == null) {
-            result.sendResult(null);
-            return;
-        }
-
-        LibraryRequest libraryRequest = (LibraryRequest) options.get(REQUEST_OBJECT);
-        if (libraryRequest == null) {
-            result.sendResult(null);
-            return;
-        }
         result.detach();
         handler.post(() -> {
             // Assume for example that the music catalog is already loaded/cached.
-            List<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(parentMediaId);
-            LibraryResponse libraryResponse = new LibraryResponse(libraryRequest);
-            options.putParcelable(RESPONSE_OBJECT, libraryResponse);
+            List<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(parentId);
             ArrayList<MediaBrowserCompat.MediaItem> toReturn = new ArrayList<>();
             if (mediaItems != null) {
                 toReturn.addAll(mediaItems);
@@ -147,16 +109,12 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
         stopSelf();
     }
 
-    private boolean allowBrowsing(String clientPackageName, int clientUid) {
-        return clientPackageName.contains(PACKAGE_NAME);
-    }
-
     public MediaSessionCompat getMediaSession() {
         return mediaSession;
     }
 
     @Inject
-    public void setMediaLibrary(MediaLibrary mediaLibrary) {
+    public void setMediaLibrary(ContentManager mediaLibrary) {
         this.mediaLibrary = mediaLibrary;
     }
 
@@ -172,6 +130,11 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Inject
     public void setWorker(HandlerThread handlerThread) {
         this.worker = handlerThread;
+    }
+
+    @Inject
+    public void setRootAuthenticator(RootAuthenticator rootAuthenticator) {
+        this.rootAuthenticator = rootAuthenticator;
     }
 
     public HandlerThread getWorker() {

@@ -9,7 +9,7 @@ import com.example.mike.mp3player.client.MySongItemTouchListener;
 import com.example.mike.mp3player.client.views.MyFolderViewAdapter;
 import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
 import com.example.mike.mp3player.client.views.MySongViewAdapter;
-import com.example.mike.mp3player.service.library.Category;
+import com.example.mike.mp3player.commons.MediaItemType;
 
 import dagger.Module;
 import dagger.Provides;
@@ -18,8 +18,8 @@ import dagger.Provides;
 public class MyRecycleViewModule {
 
     @Provides
-    public MyGenericRecycleViewAdapter provideRecycleViewAdapter(Category category, AlbumArtPainter albumArtPainter) {
-        switch (category) {
+    public MyGenericRecycleViewAdapter provideRecycleViewAdapter(AlbumArtPainter albumArtPainter, MediaItemType mediaItemType) {
+        switch (mediaItemType) {
             case SONGS: return new MySongViewAdapter(albumArtPainter);
             case FOLDERS: return new MyFolderViewAdapter(albumArtPainter);
             default: return null;
@@ -28,8 +28,8 @@ public class MyRecycleViewModule {
 
     @Provides
     public MyGenericItemTouchListener provideRecycleViewTouchListener(Context context,
-                    MyGenericItemTouchListener.ItemSelectedListener listener, Category category) {
-        switch (category) {
+                    MyGenericItemTouchListener.ItemSelectedListener listener, MediaItemType mediaItemType) {
+        switch (mediaItemType) {
             case SONGS: return new MySongItemTouchListener(context, listener);
             case FOLDERS: return new MyFolderItemTouchListener(context, listener);
             default: return null;

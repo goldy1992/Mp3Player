@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Dao;
 
+import com.example.mike.mp3player.client.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 
 import java.io.File;

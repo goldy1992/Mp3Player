@@ -6,7 +6,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 
 import androidx.media.MediaBrowserServiceCompat;
 
-import com.example.mike.mp3player.service.library.Category;
+import com.example.mike.mp3player.client.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import org.apache.commons.lang3.reflect.FieldUtils;

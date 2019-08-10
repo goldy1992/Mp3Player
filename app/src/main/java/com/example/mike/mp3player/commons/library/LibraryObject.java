@@ -5,70 +5,42 @@ import android.os.Parcelable;
 
 import androidx.annotation.Nullable;
 
-import com.example.mike.mp3player.service.library.Category;
+import com.example.mike.mp3player.client.Category;
+import com.example.mike.mp3player.commons.MediaItemType;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
-public class LibraryObject implements Parcelable {
+public class LibraryObject {
 
-    private final Category category;
+    private final MediaItemType parentType;
     private final String id;
     private String title;
     private HashMap<String, String> extras;
 
 
-    public LibraryObject(Category category, @Nullable String id) {
-        this.category = category;
+    public LibraryObject(MediaItemType mediaItemType, @Nullable String id) {
+        this.parentType = mediaItemType;
         this.id = id;
         this.setTitle(null);
         this.extras = new HashMap<>();
     }
 
-    @SuppressWarnings("unchecked")
-    protected LibraryObject(Parcel in) {
-        this.category = Category.values()[in.readInt()];
-        this.id = in.readString();
-        this.setTitle(in.readString());
-        this.extras = (HashMap) in.readSerializable();
-    }
 
-    public static final Creator<LibraryObject> CREATOR = new Creator<LibraryObject>() {
-        @Override
-        public LibraryObject createFromParcel(Parcel in) {
-            return new LibraryObject(in);
-        }
-
-        @Override
-        public LibraryObject[] newArray(int size) {
-            return new LibraryObject[size];
-        }
-    };
-
-    public Category getCategory() {
-        return category;
+    public MediaItemType getParentType() {
+        return parentType;
     }
 
     public String getId() {
         return id;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(category.ordinal());
-        dest.writeString(id);
-        dest.writeString(getTitle());
-        dest.writeSerializable(extras);
-    }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("id: ").append(id).append(", category: ").append(category);
+    //    sb.append("id: ").append(id).append(", category: ").append(category);
         return sb.toString();
     }
 
@@ -91,4 +63,5 @@ public class LibraryObject implements Parcelable {
     public void setTitle(String title) {
         this.title = title;
     }
+
 }

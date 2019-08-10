@@ -13,7 +13,6 @@ import android.support.v4.media.MediaMetadataCompat;
 
 import androidx.annotation.VisibleForTesting;
 
-import com.example.mike.mp3player.service.library.db.AppDatabase;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package com.example.mike.mp3player.commons;
 
-import com.example.mike.mp3player.service.library.Category;
+import com.example.mike.mp3player.client.Category;
 
 import org.junit.jupiter.api.Test;
 

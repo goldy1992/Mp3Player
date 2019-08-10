@@ -9,7 +9,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjectorTestImpl;
-import com.example.mike.mp3player.service.library.Category;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import org.junit.After;

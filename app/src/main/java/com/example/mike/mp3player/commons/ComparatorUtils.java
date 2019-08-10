@@ -4,8 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.example.mike.mp3player.service.library.Category;
-import com.example.mike.mp3player.service.library.db.Root;
+import com.example.mike.mp3player.client.Category;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -31,20 +30,20 @@ public final class ComparatorUtils {
            return c1.compareTo(c2);
         }
     }
-    public static final Comparator<Root> compareRootByCategory = ComparatorUtils::compareRootByCategory;
-    private static int compareRootByCategory(Root root1, Root root2) {
-        Category c1 = root1.category;
-        Category c2 = root2.category;
-        if (c1 == null && c2 == null) {
-            return 0;
-        } else if (c1 == null) {
-            return -1;
-        } else if (c2 == null) {
-            return 1;
-        } else {
-            return c1.compareTo(c2);
-        }
-    }
+//    public static final Comparator<Root> compareRootByCategory = ComparatorUtils::compareRootByCategory;
+//    private static int compareRootByCategory(Root root1, Root root2) {
+//        Category c1 = root1.category;
+//        Category c2 = root2.category;
+//        if (c1 == null && c2 == null) {
+//            return 0;
+//        } else if (c1 == null) {
+//            return -1;
+//        } else if (c2 == null) {
+//            return 1;
+//        } else {
+//            return c1.compareTo(c2);
+//        }
+//    }
 
     public static final Comparator<MediaItem> compareMediaItemsByTitle = ComparatorUtils::compareMediaItemsByTitle;
 

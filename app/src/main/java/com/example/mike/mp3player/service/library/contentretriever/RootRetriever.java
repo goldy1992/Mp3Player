@@ -1,27 +1,29 @@
-package com.example.mike.mp3player.service.library;
+package com.example.mike.mp3player.service.library.contentretriever;
 
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 
 import com.example.mike.mp3player.commons.ComparatorUtils;
-
-import org.apache.commons.lang3.RandomStringUtils;
+import com.example.mike.mp3player.commons.Constants;
+import com.example.mike.mp3player.commons.MediaItemType;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.TreeSet;
 
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
-import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM;
+import javax.inject.Inject;
 
-public final class Root {
+public class RootRetriever implements ContentRetriever {
 
-    private static final String ROOT_ID = "root" + RandomStringUtils.randomAlphanumeric(15);
+    private List<MediaBrowserCompat.MediaItem> CHILDREN;
+    private final EnumMap<MediaItemType, String> childIds;
 
-    private static List<MediaBrowserCompat.MediaItem> CHILDREN;
 
-    static {
+    @Inject
+    public RootRetriever(EnumMap<MediaItemType, String> childIds) {
+        this.childIds = childIds;
         TreeSet<MediaBrowserCompat.MediaItem> categorySet = new TreeSet<>(ComparatorUtils.compareRootMediaItemsByCategory);
         for (MediaItemType category : MediaItemType.PARENT_TO_CHILD_MAP.get(MediaItemType.ROOT)) {
             categorySet.add(createRootItem(category));
@@ -29,29 +31,29 @@ public final class Root {
         CHILDREN = new ArrayList<>(categorySet);
     }
 
-    private Root() {    }
+    @Override
+    public List<MediaBrowserCompat.MediaItem> getChildren(String id) {
+        return CHILDREN;
+    }
 
-    public static List<MediaBrowserCompat.MediaItem> getChildren(String id) {
-        if (ROOT_ID.equals(id)) {
-            return CHILDREN;
-        }
+    @Override
+    public List<MediaBrowserCompat.MediaItem> search(String query) {
         return null;
     }
 
     /**
      * @return a root category item
      */
-    private static MediaBrowserCompat.MediaItem createRootItem(MediaItemType category) {
-
+    private MediaBrowserCompat.MediaItem createRootItem(MediaItemType category) {
         Bundle extras = new Bundle();
-        extras.putSerializable(MEDIA_ITEM_TYPE, category);
-        extras.putLong(PARENT_MEDIA_ITEM);
-
+        extras.putSerializable(Constants.MEDIA_ITEM_TYPE, category);
         MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder()
                 .setDescription(category.getDescription())
                 .setTitle(category.getTitle())
-                .setMediaId(category.getId())
+                .setMediaId(childIds.get(category))
+                .setExtras(extras)
                 .build();
         return new MediaBrowserCompat.MediaItem(mediaDescriptionCompat, 0);
     }
+
 }

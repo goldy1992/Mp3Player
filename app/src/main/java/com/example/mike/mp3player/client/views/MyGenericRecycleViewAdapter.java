@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
-import com.example.mike.mp3player.service.library.Category;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
     final String LOG_TAG = "MY_VIEW_ADAPTER";
     private static final String EMPTY_MEDIA_ID = "EMPTY_MEDIA_ID";
     final int EMPTY_VIEW_TYPE = -1;
-    public abstract Category getSubscriptionCategory();
     final AlbumArtPainter albumArtPainter;
 
     private List<MediaItem> items = new ArrayList<>();

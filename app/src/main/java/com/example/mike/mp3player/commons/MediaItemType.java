@@ -1,4 +1,6 @@
-package com.example.mike.mp3player.service.library;
+package com.example.mike.mp3player.commons;
+
+import androidx.annotation.Nullable;
 
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -7,11 +9,11 @@ import static com.example.mike.mp3player.service.library.utils.IdGenerator.gener
 
 public enum MediaItemType {
 
-    ROOT(generateRootId("root"), 0),
-    SONGS(generateRootId("songs"), 1, "Songs", null),
-    SONG(generateRootId("song"), 2),
-    FOLDERS(generateRootId("folders"), 3, "Folders", null),
-    FOLDER(generateRootId("folder"), 4);
+    ROOT(0, "Root", null),
+    SONGS( 1, "Songs", null),
+    SONG(2, "Song", null),
+    FOLDERS( 3, "Folders", null),
+    FOLDER(4, "Folder", null);
 
     public static final EnumMap<MediaItemType, EnumSet<MediaItemType>> PARENT_TO_CHILD_MAP
             = new EnumMap<>(MediaItemType.class);
@@ -24,34 +26,14 @@ public enum MediaItemType {
         PARENT_TO_CHILD_MAP.put(FOLDER, EnumSet.of(SONG));
     }
 
-    private final String id;
     private final Integer rank;
-    private String title;
+    private final String title;
     private String description;
 
-    MediaItemType(String id, int rank, String title, String description) {
-        this.id = id;
+    MediaItemType(int rank, String title, @Nullable String description) {
         this.rank = rank;
         this.title = title;
         this.description = description;
-    }
-
-    MediaItemType(String id, int rank) {
-        this.id = id;
-        this.rank = rank;
-    }
-
-    public static MediaItemType getMediaItemTypeById(String id) {
-        for (MediaItemType mediaItemType : MediaItemType.values()) {
-            if (mediaItemType.id.equals(id)) {
-                return mediaItemType;
-            }
-        }
-        return null;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public Integer getRank() {

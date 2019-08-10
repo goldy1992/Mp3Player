@@ -22,6 +22,11 @@ public final class MediaItemUtils {
         return item != null && item.getDescription().getDescription() != null;
     }
 
+    public static boolean hasMediaItemType(MediaItem item) {
+        Bundle extras = getExtras(item);
+        return extras == null ? null : extras.containsKey(Constants.MEDIA_ITEM_TYPE);
+    }
+
     public static Bundle getExtras(MediaItem item) {
         if (!hasExtras(item)) {
             return null;

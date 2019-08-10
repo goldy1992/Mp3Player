@@ -3,6 +3,7 @@ package com.example.mike.mp3player.service.library;
 import android.content.ContentResolver;
 import android.support.v4.media.MediaDescriptionCompat;
 
+import com.example.mike.mp3player.client.Category;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 
@@ -14,7 +15,6 @@ import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMedi
 
 public class RootLibraryCollection extends LibraryCollection {
 
-    public static final String ID = Constants.CATEGORY_ROOT_ID;
 
 
     public RootLibraryCollection(ContentResolver contentResolver) {

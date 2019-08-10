@@ -9,6 +9,7 @@ import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
+import com.example.mike.mp3player.commons.MediaItemType;
 
 import javax.inject.Inject;
 
@@ -50,7 +51,7 @@ public abstract class FolderActivity extends MediaActivityCompat {
     @Override
     public void onConnected() {
         super.onConnected();
-        this.viewPageFragment.init(parent.getMediaId());
+        this.viewPageFragment.init(MediaItemType.FOLDERS, parent.getMediaId());
         initialiseView(R.layout.activity_folder);
         getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
         getSupportActionBar().setTitle(parent.getDescription().getTitle());

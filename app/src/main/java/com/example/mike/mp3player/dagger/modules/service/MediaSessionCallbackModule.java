@@ -4,6 +4,7 @@ import android.os.Handler;
 
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
+import com.example.mike.mp3player.service.library.ContentManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 import com.example.mike.mp3player.service.session.AudioBecomingNoisyBroadcastReceiver;
@@ -20,7 +21,7 @@ public class MediaSessionCallbackModule {
 
     @Singleton
     @Provides
-    public MediaSessionCallback provideMediaSessionCallback(MediaLibrary mediaLibrary,
+    public MediaSessionCallback provideMediaSessionCallback(ContentManager mediaLibrary,
                                                             PlaybackManager playbackManager,
                                                             MediaPlayerAdapter mediaPlayerAdapter,
                                                             MediaSessionAdapter mediaSessionAdapter,

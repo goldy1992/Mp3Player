@@ -61,17 +61,7 @@ public class MediaBrowserAdapter {
     /**
      * subscribes to a MediaItem via a libraryRequest. The id of the libraryRequest will be used for the parent
      * ID when communicating with the MediaPlaybackService.
-     * @param libraryRequest the libraryRequest
-     */
-    public void subscribe(LibraryRequest libraryRequest) {
-        Bundle options = new Bundle();
-        options.putParcelable(REQUEST_OBJECT, libraryRequest);
-        mediaBrowser.subscribe(libraryRequest.getId(), options, mySubscriptionCallback);
-    }
-
-    /**
-     *
-     * @return
+     * @param id the id of the media item to be subscribed to
      */
     public void subscribe(String id) {
         mediaBrowser.subscribe(id, mySubscriptionCallback);

@@ -5,50 +5,16 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.mike.mp3player.service.library.Category;
+import com.example.mike.mp3player.client.Category;
+import com.example.mike.mp3player.commons.MediaItemType;
 
 public class LibraryRequest extends LibraryObject {
 
 
-    public LibraryRequest(@NonNull Category category, @Nullable String id) {
+    public LibraryRequest(@NonNull MediaItemType category, @Nullable String id) {
         super(category, id);
     }
 
-    public LibraryRequest(@NonNull LibraryRequest libraryRequest) {
-        super(libraryRequest.getCategory(), libraryRequest.getId());
-    }
-
-    public LibraryRequest(@NonNull LibraryObject libraryRequest) {
-        super(libraryRequest.getCategory(), libraryRequest.getId());
-    }
-
-    @SuppressWarnings("unchecked")
-    protected LibraryRequest(Parcel in) {
-        super(in);
-
-    }
-
-    public static final Creator<LibraryRequest> CREATOR = new Creator<LibraryRequest>() {
-        @Override
-        public LibraryRequest createFromParcel(Parcel in) {
-            return new LibraryRequest(in);
-        }
-
-        @Override
-        public LibraryRequest[] newArray(int size) {
-            return new LibraryRequest[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-    }
 
     @Override
     public String toString() {

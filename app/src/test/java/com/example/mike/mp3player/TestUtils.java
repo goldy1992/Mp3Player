@@ -5,7 +5,7 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 
-import com.example.mike.mp3player.service.library.Category;
+import com.example.mike.mp3player.client.Category;
 
 public final class TestUtils {
     private TestUtils(){}

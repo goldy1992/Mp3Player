@@ -14,41 +14,9 @@ public class LibraryResponse extends LibraryRequest {
     private MediaItem mediaItem;
 
     public LibraryResponse(@NonNull LibraryRequest libraryRequest) {
-        super(libraryRequest.getCategory(), libraryRequest.getId());
+        super(libraryRequest.getParentType(), libraryRequest.getId());
     }
 
-    @SuppressWarnings("unchecked")
-    protected LibraryResponse(Parcel in) {
-        super(in);
-        this.resultSize = in.readInt();
-        this.totalNumberOfChildren = in.readInt();
-        this.setMediaItem(in.readParcelable(MediaItem.class.getClassLoader()));
-    }
-
-    public static final Creator<LibraryResponse> CREATOR = new Creator<LibraryResponse>() {
-        @Override
-        public LibraryResponse createFromParcel(Parcel in) {
-            return new LibraryResponse(in);
-        }
-
-        @Override
-        public LibraryResponse[] newArray(int size) {
-            return new LibraryResponse[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeInt(resultSize);
-        dest.writeInt(totalNumberOfChildren);
-        dest.writeParcelable(getMediaItem(), getMediaItem().getFlags());
-    }
 
     @Override
     public String toString() {

@@ -7,7 +7,7 @@ import androidx.fragment.app.testing.FragmentScenario;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.views.fragments.FragmentTestBase;
-import com.example.mike.mp3player.service.library.Category;
+import com.example.mike.mp3player.client.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 

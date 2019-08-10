@@ -11,7 +11,7 @@ import androidx.fragment.app.testing.FragmentScenario;
 
 import com.example.mike.mp3player.TestUtils;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
-import com.example.mike.mp3player.service.library.Category;
+import com.example.mike.mp3player.client.Category;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Before;

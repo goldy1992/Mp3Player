@@ -9,6 +9,7 @@ import android.provider.MediaStore.Audio.Media;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 
+import com.example.mike.mp3player.client.Category;
 import com.example.mike.mp3player.commons.ComparatorUtils;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 

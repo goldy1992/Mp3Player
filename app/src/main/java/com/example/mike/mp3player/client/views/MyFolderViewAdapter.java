@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
-import com.example.mike.mp3player.service.library.Category;
 
 import static com.example.mike.mp3player.commons.MediaItemUtils.getDescription;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
@@ -23,10 +22,6 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
         super(albumArtPainter);
     }
 
-    @Override
-    public Category getSubscriptionCategory() {
-        return Category.FOLDERS;
-    }
 
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

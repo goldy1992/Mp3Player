@@ -18,10 +18,10 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
+import com.example.mike.mp3player.client.activities.MediaItemTypeToActivityMap;
 import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
+import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
-import com.example.mike.mp3player.service.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
@@ -44,9 +44,9 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
     /**
      * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
      */
-    private LibraryObject parent;
     private FastScrollRecyclerView recyclerView;
-    private String parentId;
+    private MediaItemType mediaItemType;
+    private String mediaItemId;
     private MediaBrowserAdapter mediaBrowserAdapter;
     private MyGenericRecycleViewAdapter myViewAdapter;
     private MyGenericItemTouchListener myGenericItemTouchListener;
@@ -66,12 +66,13 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         this.recyclerView.addOnItemTouchListener(myGenericItemTouchListener);
         this.recyclerView.setItemAnimator(new DefaultItemAnimator());
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        this.mediaBrowserAdapter.registerListener(parent.getId(), myViewAdapter);
-        this.mediaBrowserAdapter.subscribe(parentId);
+        this.mediaBrowserAdapter.registerListener(mediaItemId, myViewAdapter);
+        this.mediaBrowserAdapter.subscribe(mediaItemId);
     }
 
-    public void init(String parentId) {
-        this.parentId = parentId;
+    public void init(MediaItemType mediaItemType, String mediaItemId) {
+        this.mediaItemType = mediaItemType;
+        this.mediaItemId = mediaItemId;
     }
 
     @Override
@@ -81,13 +82,10 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         LibraryRequest libraryRequest = null;
 
         if (null != id) {
-            libraryRequest = new LibraryRequest(parent.getCategory(), id);
-            libraryRequest.setTitle(title);
         }
 
-        Intent intent = new Intent(getContext(), Category.getActivityClassForCategory(category)); // TODO: fix
-        intent.putExtra(PARENT_ID, parent);
-        intent.putExtra(REQUEST_OBJECT, libraryRequest);
+        Intent intent = new Intent(getContext(), MediaItemTypeToActivityMap.getActivityClassForCategory(mediaItemType)); // TODO: make a media item to activity map
+        intent.putExtra(PARENT_ID, mediaItemId);
         startActivity(intent);
     }
 
@@ -112,7 +110,7 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
             MediaActivityCompat mediaPlayerActivity = (MediaActivityCompat) getActivity();
             MediaActivityCompatComponent component = mediaPlayerActivity.getMediaActivityCompatComponent();
             component.childViewPagerFragmentSubcomponentFactory()
-                .create(category, parent, this).
+                .create(mediaItemType, mediaItemId, this).
                 inject(this);
         }
     }

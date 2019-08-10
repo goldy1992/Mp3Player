@@ -15,11 +15,12 @@ import android.view.KeyEvent;
 import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.commons.MediaItemUtils;
-import com.example.mike.mp3player.service.library.Category;
+import com.example.mike.mp3player.client.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
+import com.example.mike.mp3player.service.library.ContentManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
@@ -56,7 +57,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private final ServiceManager serviceManager;
     private final PlaybackManager playbackManager;
     private final MediaPlayerAdapter mediaPlayerAdapter;
-    private final MediaLibrary mediaLibrary;
+    private final ContentManager mediaLibrary;
     private final MediaSessionAdapter mediaSessionAdapter;
     private final AudioBecomingNoisyBroadcastReceiver broadcastReceiver;
     private final Handler worker;
@@ -76,7 +77,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
      * @param handler handler
      */
     @Inject
-    public MediaSessionCallback(MediaLibrary mediaLibrary,
+    public MediaSessionCallback(ContentManager mediaLibrary,
                                 PlaybackManager playbackManager,
                                 MediaPlayerAdapter mediaPlayerAdapter,
                                 MediaSessionAdapter mediaSessionAdapter,
@@ -93,14 +94,15 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     public void init() {
-        List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.mediaLibrary.getChildren(new LibraryRequest(Category.SONGS, Category.SONGS.name())));
+        // TODO: get song list from media library
+        List<MediaBrowserCompat.MediaItem> songList = null; new ArrayList<>(this.mediaLibrary.getAllSongs());
         List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
         this.mediaPlayerAdapter.setOnCompletionListener(this::onCompletion);
         this.mediaPlayerAdapter.setOnSeekCompleteListener(this::onSeekComplete);
         this.broadcastReceiver.setMediaSessionCallback(this);
         this.playbackManager.createNewPlaylist(queueItems);
-        Uri firstSongUri = Uri.parse(getPlaybackManager().getCurrentMediaId());
-        Uri nextSongUri = Uri.parse(getPlaybackManager().getNext());
+        Uri firstSongUri = Uri.parse(playbackManager.getCurrentMediaId());
+        Uri nextSongUri = Uri.parse(playbackManager.getNext());
         this.mediaPlayerAdapter.reset(firstSongUri, nextSongUri);
         mediaSessionAdapter.updateAll(NO_ACTION);
     }
@@ -188,8 +190,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         //Log.i(LOG_TAG, "prepareFromMediaId");
         super.onPrepareFromMediaId(mediaId, bundle);
         LibraryObject parent = (LibraryObject) bundle.get(PARENT_ID);
-        LibraryRequest request = new LibraryRequest(parent);
-        TreeSet<MediaBrowserCompat.MediaItem> results = mediaLibrary.getChildren(request);
+        LibraryRequest request = null; // new LibraryRequest(parent); // TODO: fix
+        List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getChildren(mediaId);
         ArrayList<MediaBrowserCompat.MediaItem> resultsList = new ArrayList<>();
         resultsList.addAll(results);
         getPlaybackManager().createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(resultsList));
@@ -377,7 +379,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         return mediaPlayerAdapter;
     }
     @VisibleForTesting
-    public MediaLibrary getMediaLibrary() {
+    public ContentManager getMediaLibrary() {
         return mediaLibrary;
     }
     @VisibleForTesting

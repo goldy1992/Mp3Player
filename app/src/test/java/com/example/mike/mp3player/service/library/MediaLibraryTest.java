@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.example.mike.mp3player.client.Category;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.service.library.db.AppDatabase;
 import com.example.mike.mp3player.service.library.mediaretriever.MockMediaRetriever;

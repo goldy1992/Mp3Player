@@ -14,7 +14,6 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.commons.MetaDataKeys;
-import com.example.mike.mp3player.service.library.Category;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -28,11 +27,6 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
 
     public MySongViewAdapter(AlbumArtPainter albumArtPainter) {
         super(albumArtPainter);
-    }
-
-    @Override
-    public Category getSubscriptionCategory() {
-        return Category.SONGS;
     }
 
     @Override

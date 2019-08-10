@@ -1,8 +1,9 @@
-package com.example.mike.mp3player.service.library;
+package com.example.mike.mp3player.client;
 
 import com.example.mike.mp3player.client.activities.FolderActivityInjector;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjector;
+import com.example.mike.mp3player.commons.MediaItemType;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
@@ -10,8 +11,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Comparator;
 
-import static com.example.mike.mp3player.service.library.MediaItemType.FOLDER;
-import static com.example.mike.mp3player.service.library.MediaItemType.SONG;
+import static com.example.mike.mp3player.commons.MediaItemType.FOLDER;
+import static com.example.mike.mp3player.commons.MediaItemType.SONG;
 
 public enum Category implements Comparator<Category> {
 
@@ -72,22 +73,7 @@ public enum Category implements Comparator<Category> {
         return o1.rank.compareTo(o2.rank);
     }
 
-    private static final BiMap<Category, Class<? extends MediaActivityCompat>> CATEGORY_TO_ACTIVITY_MAP = HashBiMap.create();
-    private static final BiMap<Class<? extends MediaActivityCompat>, Category> ACTIVITY_TO_CATEGORY_MAP;
-    static {
-        // TODO: change this code to accommodate test implementations. Intents should be made in Dagger
-        CATEGORY_TO_ACTIVITY_MAP.put(Category.SONGS, MediaPlayerActivityInjector.class);
-        CATEGORY_TO_ACTIVITY_MAP.put(Category.FOLDERS, FolderActivityInjector.class);
-        ACTIVITY_TO_CATEGORY_MAP = CATEGORY_TO_ACTIVITY_MAP.inverse();
-    }
 
-    public static Class<? extends MediaActivityCompat> getActivityClassForCategory(Category category) {
-        return CATEGORY_TO_ACTIVITY_MAP.get(category);
-    }
-
-    public static Category getCategoryForActivityClass(Class<? extends MediaActivityCompat> classKey) {
-        return ACTIVITY_TO_CATEGORY_MAP.get(classKey);
-    }
 
     public static Category getCategoryById(String id) {
         for (Category c : Category.values()) {
