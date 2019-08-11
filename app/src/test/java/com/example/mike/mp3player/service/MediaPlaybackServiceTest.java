@@ -6,9 +6,6 @@ import android.support.v4.media.session.MediaSessionCompat;
 
 import androidx.media.MediaBrowserServiceCompat;
 
-import com.example.mike.mp3player.client.Category;
-import com.example.mike.mp3player.commons.library.LibraryRequest;
-
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,9 +16,9 @@ import org.robolectric.RobolectricTestRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.mike.mp3player.commons.Constants.ACCEPTED_MEDIA_ROOT_ID;
+
 import static com.example.mike.mp3player.commons.Constants.PACKAGE_NAME;
-import static com.example.mike.mp3player.commons.Constants.REJECTED_MEDIA_ROOT_ID;
+
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -33,6 +30,8 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
 public class MediaPlaybackServiceTest {
+    private static final String ACCEPTED_MEDIA_ROOT_ID = "";
+    private static final String REJECTED_MEDIA_ROOT_ID = "";
     /** object to test*/
     private TestMediaPlaybackServiceInjector mediaPlaybackService;
 
@@ -69,7 +68,7 @@ public class MediaPlaybackServiceTest {
     @Test
     public void testOnLoadChildrenRejectedMediaId() {
         MediaBrowserServiceCompat.Result<List<MediaBrowserCompat.MediaItem>> result = mock(MediaBrowserServiceCompat.Result.class);
-        mediaPlaybackService.onLoadChildren(REJECTED_MEDIA_ROOT_ID, result, null);
+        mediaPlaybackService.onLoadChildren(REJECTED_MEDIA_ROOT_ID, result);
         verify(result, times(1)).sendResult(null);
     }
 
@@ -87,10 +86,7 @@ public class MediaPlaybackServiceTest {
     public void testOnLoadChildrenValidLibraryRequest() {
         final String parentId = "abcd";
         MediaBrowserServiceCompat.Result<List<MediaBrowserCompat.MediaItem>> result = mock(MediaBrowserServiceCompat.Result.class);
-        Bundle extras = new Bundle();
-        LibraryRequest libraryRequest = new LibraryRequest(Category.ALBUMS, "an_id");
-        extras.putParcelable(REQUEST_OBJECT, libraryRequest);
-        mediaPlaybackService.onLoadChildren(parentId, result, extras);
+        mediaPlaybackService.onLoadChildren(parentId, result);
         verify(result, times(1)).sendResult(any(ArrayList.class));
     }
 

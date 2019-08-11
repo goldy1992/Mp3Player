@@ -4,6 +4,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 public final class IdGenerator {
 
+    public static final String ID_SEPARATOR = "\\|";
     public static final String generateRootId(String prefix) {
         return prefix + RandomStringUtils.randomAlphanumeric(15);
     }
@@ -11,7 +12,17 @@ public final class IdGenerator {
     public static String generateId(String parentId, String mediaId) {
         return new StringBuilder()
                 .append(parentId)
-                .append("\\|")
+                .append(ID_SEPARATOR)
+                .append(mediaId)
+                .toString();
+    }
+
+    public static String generatePrepareMediaId(String playlistId, String mediaItemTypeId, String mediaId) {
+        return new StringBuilder()
+                .append(playlistId)
+                .append(ID_SEPARATOR)
+                .append(mediaItemTypeId)
+                .append(ID_SEPARATOR)
                 .append(mediaId)
                 .toString();
     }

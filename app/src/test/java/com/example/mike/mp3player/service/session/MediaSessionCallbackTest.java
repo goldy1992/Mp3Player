@@ -15,10 +15,12 @@ import android.view.KeyEvent;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.client.Category;
+import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
+import com.example.mike.mp3player.service.library.ContentManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
@@ -62,7 +64,7 @@ public class MediaSessionCallbackTest {
     @Mock
     private MediaSessionAdapter mediaSessionAdapter;
     @Mock
-    private MediaLibrary mediaLibrary;
+    private ContentManager mediaLibrary;
     @Mock
     private PlaybackManager playbackManager;
     @Mock
@@ -128,7 +130,7 @@ public class MediaSessionCallbackTest {
 
     private void setUpSkipToNextTest() {
         final String newMediaId = "newMediaID";
-        when(playbackManager.skipToNext()).thenReturn(newMediaId);
+        when(playbackManager.skipToNext()).thenReturn(Uri.parse(newMediaId));
         when(mediaSessionAdapter.getCurrentPlaybackState(anyLong())).thenReturn(createState(STATE_PLAYING));
     }
 
@@ -197,12 +199,8 @@ public class MediaSessionCallbackTest {
     @Test
     public void testPrepareFromMediaId() {
         final String mediaId = "5452213";
-        final Bundle bundle = new Bundle();
-        LibraryObject parent = new LibraryObject(Category.ARTISTS, mediaId);
-        bundle.putParcelable(PARENT_ID, parent);
-        List<MediaItem> mediaItems = Collections.singletonList(createMediaItem(mediaId, null, null));
-        when(mediaLibrary.getPlaylist(parent)).thenReturn(mediaItems);
-        mediaSessionCallback.onPrepareFromMediaId(mediaId, bundle);
+        List<MediaItem> mediaItems = Collections.singletonList(createMediaItem(mediaId, null, null, MediaItemType.ROOT));
+        mediaSessionCallback.onPrepareFromMediaId(mediaId, null);
         verify(mediaPlayerAdapter, times(1)).reset(any(), any());
     }
 
@@ -250,10 +248,9 @@ public class MediaSessionCallbackTest {
         final String mediaId = "344234";
         MediaPlayer mediaPlayer = mock(MediaPlayer.class);
         Uri uri = mock(Uri.class);
-        when(mediaLibrary.getMediaUriFromMediaId(mediaId)).thenReturn(uri);
         when(mediaPlayerAdapter.getCurrentMediaPlayer()).thenReturn(mediaPlayer);
         when(mediaPlayer.isLooping()).thenReturn(false);
-        when(playbackManager.getNext()).thenReturn(mediaId);
+        when(playbackManager.getNext()).thenReturn(uri);
         mediaSessionCallback.onCompletion(mediaPlayer);
         verify(mediaPlayerAdapter, times(1)).onComplete(uri);
     }

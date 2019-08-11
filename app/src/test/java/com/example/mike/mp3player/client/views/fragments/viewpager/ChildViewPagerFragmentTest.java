@@ -8,6 +8,7 @@ import androidx.fragment.app.testing.FragmentScenario;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.views.fragments.FragmentTestBase;
 import com.example.mike.mp3player.client.Category;
+import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.commons.library.LibraryRequest;
 
@@ -37,10 +38,9 @@ public class ChildViewPagerFragmentTest extends FragmentTestBase<ChildViewPagerF
     public void setup() {
         MockitoAnnotations.initMocks(this);
         super.setup(ChildViewPagerFragment.class, false);
-        LibraryObject libraryObject = new LibraryObject(Category.ROOT, "ROOT");
         ChildViewPagerFragment childViewPagerFragment =
         ((ChildViewPagerFragment)fragment);
-        childViewPagerFragment.init(Category.FOLDERS, libraryObject);
+        childViewPagerFragment.init(MediaItemType.FOLDERS, "");
         childViewPagerFragment.setMediaBrowserAdapter(mediaBrowserAdapter);
         super.addFragmentToActivity();
     }
@@ -58,7 +58,7 @@ public class ChildViewPagerFragmentTest extends FragmentTestBase<ChildViewPagerF
         final String description = "description";
 
         MediaBrowserCompat.MediaItem mediaItem =
-                createMediaItem(id, title, description);
+                createMediaItem(id, title, description, MediaItemType.ROOT);
         spiedFragment.itemSelected(mediaItem);
         ArgumentCaptor<Intent> intentArgs = ArgumentCaptor.forClass(Intent.class);
         verify(spiedFragment).startActivity(intentArgs.capture());

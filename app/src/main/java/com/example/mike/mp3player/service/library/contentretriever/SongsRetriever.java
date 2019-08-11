@@ -20,6 +20,8 @@ import java.util.List;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_DURATION;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
@@ -103,6 +105,8 @@ public class SongsRetriever extends ContentResolverRetriever {
         extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directoryName);
         extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directoryPath);
         extras.putParcelable(METADATA_KEY_ALBUM_ART_URI, albumArtUri);
+        extras.putSerializable(MEDIA_ITEM_TYPE, getType());
+        extras.putString(MEDIA_ITEM_TYPE_ID, childId);
 
         // TODO: add code to fetch album art also
         MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()

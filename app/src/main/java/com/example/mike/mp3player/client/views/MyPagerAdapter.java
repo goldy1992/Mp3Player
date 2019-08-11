@@ -16,8 +16,8 @@ import java.util.TreeMap;
 
 public class MyPagerAdapter extends FragmentPagerAdapter {
 
-    private Map<MediaItemType, MediaBrowserCompat.MediaItem> menuCategories = new TreeMap<>();
-    private Map<MediaItemType, ChildViewPagerFragment> pagerItems = new TreeMap<>();
+    private final Map<MediaItemType, MediaBrowserCompat.MediaItem> menuCategories = new TreeMap<>();
+    private final Map<MediaItemType, ChildViewPagerFragment> pagerItems = new TreeMap<>();
 
     public MyPagerAdapter(FragmentManager fm) {
         super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);

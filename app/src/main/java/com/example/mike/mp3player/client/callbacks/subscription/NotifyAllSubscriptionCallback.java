@@ -16,10 +16,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class NotifyAllSubscriptionCallback extends GenericSubscriptionCallback<Object> {
+@Deprecated
+public class NotifyAllSubscriptionCallback extends GenericSubscriptionCallback {
 
     private static final String LOG_TAG = "NTFY_ALL_SBRPT_CLBK";
-    private final Object SINGLETON_KEY = new Object();
+    private final String SINGLETON_KEY = "SINGLETON_KEY";
     private final Set<MediaBrowserResponseListener> SUBSCRIBER_MAP = new HashSet<>();
 
     @Override
@@ -34,25 +35,24 @@ public class NotifyAllSubscriptionCallback extends GenericSubscriptionCallback<O
     }
 
     @Override
-    public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children,
-                                 @NonNull Bundle options) {
+    public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children) {
         ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>(children);
         for (MediaBrowserResponseListener m : SUBSCRIBER_MAP) {
-            m.onChildrenLoaded(parentId, childrenArrayList, options);
+            m.onChildrenLoaded(parentId, childrenArrayList);
         }
     }
 
     @Override
-    public synchronized void registerMediaBrowserResponseListener(@Nullable Object key , MediaBrowserResponseListener listener) {
+    public synchronized void registerMediaBrowserResponseListener(@Nullable String key , MediaBrowserResponseListener listener) {
         SUBSCRIBER_MAP.add(listener);
     }
 
-    public synchronized void registerMediaBrowserResponseListeners(@Nullable Object key, Collection<MediaBrowserResponseListener> listeners) {
+    public synchronized void registerMediaBrowserResponseListeners(@Nullable String key, Collection<MediaBrowserResponseListener> listeners) {
         SUBSCRIBER_MAP.addAll(listeners);
     }
 
     @Override
-    public synchronized boolean removeMediaBrowserResponseListener(@Nullable Object key, MediaBrowserResponseListener listener) {
+    public synchronized boolean removeMediaBrowserResponseListener(@Nullable String key, MediaBrowserResponseListener listener) {
         return SUBSCRIBER_MAP.remove(listener);
     }
 }

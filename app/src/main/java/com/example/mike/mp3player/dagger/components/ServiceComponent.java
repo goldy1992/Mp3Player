@@ -5,9 +5,7 @@ import android.content.Context;
 import com.example.mike.mp3player.dagger.modules.service.ContentManagerModule;
 import com.example.mike.mp3player.dagger.modules.service.HandlerThreadModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaItemTypeIdModule;
-import com.example.mike.mp3player.dagger.modules.service.MediaLibraryModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaPlayerAdapterModule;
-import com.example.mike.mp3player.dagger.modules.service.MediaRetrieverModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaSessionCallbackModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaSessionCompatModule;
 import com.example.mike.mp3player.dagger.modules.service.ServiceModule;
@@ -24,7 +22,6 @@ import dagger.Component;
 
     HandlerThreadModule.class,
     MediaPlayerAdapterModule.class,
-    MediaRetrieverModule.class,
     MediaSessionCallbackModule.class,
     MediaSessionCompatModule.class,
     MediaItemTypeIdModule.class,

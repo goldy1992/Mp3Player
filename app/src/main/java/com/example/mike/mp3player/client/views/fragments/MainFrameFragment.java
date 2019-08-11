@@ -34,7 +34,6 @@ import com.example.mike.mp3player.client.views.ThemeSpinnerController;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
-import com.example.mike.mp3player.client.Category;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -44,7 +43,7 @@ import java.util.TreeSet;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByCategory;
+import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByMediaItemType;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 
 public class MainFrameFragment extends Fragment  implements MediaBrowserResponseListener {
@@ -65,7 +64,6 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
     private NavigationView navigationView;
     private MyDrawerListener myDrawerListener;
 
-    private boolean enabled = true;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -115,10 +113,10 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                getDrawerLayout().openDrawer(GravityCompat.START);
+                drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             case R.id.action_search:
                 Log.i(LOG_TAG, "hit action search");
@@ -152,19 +150,6 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
         ThemeSpinnerController themeSpinnerController = new ThemeSpinnerController(getContext(), spinner, getActivity());
     }
 
-
-    public void enable() {
-        this.enabled = true;
-        getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-    }
-
-    public void disable() {
-        getDrawerLayout().closeDrawers();
-        getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        this.enabled = false;
-
-    }
-
     public DrawerLayout getDrawerLayout() {
         return drawerLayout;
     }
@@ -174,19 +159,20 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
     }
 
     @Override
-    public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options) {
-        TreeSet<MediaBrowserCompat.MediaItem> rootItemsOrdered = new TreeSet<>(compareRootMediaItemsByCategory);
+    public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaBrowserCompat.MediaItem> children) {
+        TreeSet<MediaBrowserCompat.MediaItem> rootItemsOrdered = new TreeSet<>(compareRootMediaItemsByMediaItemType);
         rootItemsOrdered.addAll(children);
         for (MediaBrowserCompat.MediaItem mediaItem : rootItemsOrdered) {
             String id = MediaItemUtils.getMediaId(mediaItem);
             Log.i(LOG_TAG, "media id: " + id);
             ChildViewPagerFragment childViewPagerFragment = childFragmentProvider.get();
             MediaItemType category = (MediaItemType) MediaItemUtils.getExtra(MEDIA_ITEM_TYPE, mediaItem);
-            childViewPagerFragment.init(category, mediaItem.getMediaId());
+            childViewPagerFragment.init(category, id);
             adapter.getPagerItems().put(category, childViewPagerFragment);
             adapter.getMenuCategories().put(category, mediaItem);
             adapter.notifyDataSetChanged();
         }
+
     }
 
 

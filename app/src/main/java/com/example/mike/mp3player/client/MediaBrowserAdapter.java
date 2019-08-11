@@ -87,7 +87,7 @@ public class MediaBrowserAdapter {
         mySubscriptionCallback.registerMediaBrowserResponseListener(getRootId(), mediaBrowserResponseListener);
     }
 
-    public void registerListener(Object parentId, MediaBrowserResponseListener mediaBrowserResponseListener) {
+    public void registerListener(String parentId, MediaBrowserResponseListener mediaBrowserResponseListener) {
         mySubscriptionCallback.registerMediaBrowserResponseListener(parentId, mediaBrowserResponseListener);
     }
 

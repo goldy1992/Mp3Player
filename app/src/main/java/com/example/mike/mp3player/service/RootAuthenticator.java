@@ -10,12 +10,20 @@ import com.example.mike.mp3player.service.library.utils.IdGenerator;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import static com.example.mike.mp3player.commons.Constants.PACKAGE_NAME;
 
 public class RootAuthenticator {
 
-    private final String ACCEPTED_MEDIA_ROOT_ID = IdGenerator.generateRootId(MediaItemType.ROOT.name());
+    private final String acceptedMediaId;
     private final String REJECTED_MEDIA_ROOT_ID = "empty_root_id";
+
+    @Inject
+    public RootAuthenticator(String acceptedMediaId) {
+        this.acceptedMediaId = acceptedMediaId;
+    }
 
     public MediaBrowserServiceCompat.BrowserRoot authenticate(String clientPackageName, int clientUid,
                                                               Bundle rootHints) {
@@ -25,7 +33,7 @@ public class RootAuthenticator {
         if (allowBrowsing(clientPackageName, clientUid)) {
             // Returns a root ID that clients can use with onLoadChildren() to retrieve
             // the content hierarchy.
-            return new MediaBrowserServiceCompat.BrowserRoot(ACCEPTED_MEDIA_ROOT_ID, extras);
+            return new MediaBrowserServiceCompat.BrowserRoot(acceptedMediaId, extras);
         } else {
             // Clients can connect, but this BrowserRoot is an empty hierachy
             // so onLoadChildren returns nothing. This disables the ability to browse for content.
@@ -41,7 +49,4 @@ public class RootAuthenticator {
         return clientPackageName.contains(PACKAGE_NAME);
     }
 
-    public String getAcceptedId() {
-        return ACCEPTED_MEDIA_ROOT_ID;
-    }
 }

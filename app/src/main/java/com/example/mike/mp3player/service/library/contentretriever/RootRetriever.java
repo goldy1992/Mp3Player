@@ -24,7 +24,7 @@ public class RootRetriever implements ContentRetriever {
     @Inject
     public RootRetriever(EnumMap<MediaItemType, String> childIds) {
         this.childIds = childIds;
-        TreeSet<MediaBrowserCompat.MediaItem> categorySet = new TreeSet<>(ComparatorUtils.compareRootMediaItemsByCategory);
+        TreeSet<MediaBrowserCompat.MediaItem> categorySet = new TreeSet<>(ComparatorUtils.compareRootMediaItemsByMediaItemType);
         for (MediaItemType category : MediaItemType.PARENT_TO_CHILD_MAP.get(MediaItemType.ROOT)) {
             categorySet.add(createRootItem(category));
         }

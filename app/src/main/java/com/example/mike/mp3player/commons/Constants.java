@@ -70,6 +70,8 @@ public final class Constants {
 
 
     public static final String MEDIA_ITEM_TYPE = "MEDIA_ITEM_TYPE";
+    public static final String MEDIA_ITEM_TYPE_ID = "MEDIA_ITEM_TYPE_ID";
+    public static final String PARENT_MEDIA_ITEM_TYPE_ID = "PARENT_MEDIA_ITEM_TYPE_ID";
     // connection rejections
     public static final String INVALID_PACKAGE = "INVALID_PACKAGE";
     public static final String EMPTY_LIBRARY = "EMPTY_LIBRARY";

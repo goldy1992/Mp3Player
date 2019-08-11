@@ -29,7 +29,8 @@ public class ContentManagerModule {
 
     @Singleton
     @Provides
-    public Set<ContentResolverRetriever> provideContentResolverRetrieverMap(ContentResolver contentResolver, EnumMap<MediaItemType, String> ids) {
+    public Set<ContentResolverRetriever> provideContentResolverRetrieverMap(ContentResolver contentResolver,
+                                                                            EnumMap<MediaItemType, String> ids) {
         Set<ContentResolverRetriever> returnSet = new HashSet<>();
         SongsRetriever songsRetriever = new SongsRetriever(contentResolver, ids.get(MediaItemType.SONG));
         FolderRetriever folderRetriever = new FolderRetriever(contentResolver, ids.get(MediaItemType.FOLDER));

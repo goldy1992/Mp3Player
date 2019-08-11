@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
 
 public final class MediaItemUtils {
 
@@ -26,7 +28,7 @@ public final class MediaItemUtils {
 
     public static boolean hasMediaItemType(MediaItem item) {
         Bundle extras = getExtras(item);
-        return extras == null ? null : extras.containsKey(Constants.MEDIA_ITEM_TYPE);
+        return extras == null ? null : extras.containsKey(MEDIA_ITEM_TYPE);
     }
 
     public static Bundle getExtras(MediaItem item) {
@@ -74,6 +76,14 @@ public final class MediaItemUtils {
             return uri.toString();
         }
         return null;
+    }
+
+    public static MediaItemType getMediaItemType(MediaItem item) {
+        return (MediaItemType)getExtra(MEDIA_ITEM_TYPE, item);
+    }
+
+    public static String getMediaItemTypeId(MediaItem item) {
+        return (String) getExtra(MEDIA_ITEM_TYPE_ID, item);
     }
 
 //    public static List<MediaItem> orderMediaItemSetByCategory(Set<MediaItem> mediaItemSet) {

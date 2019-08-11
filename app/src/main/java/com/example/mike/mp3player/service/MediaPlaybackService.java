@@ -75,11 +75,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
         handler.post(() -> {
             // Assume for example that the music catalog is already loaded/cached.
             List<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(parentId);
-            ArrayList<MediaBrowserCompat.MediaItem> toReturn = new ArrayList<>();
-            if (mediaItems != null) {
-                toReturn.addAll(mediaItems);
-            }
-            result.sendResult(toReturn);
+            result.sendResult(mediaItems);
         });
 
     }
@@ -90,7 +86,6 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
         Log.i(LOG_TAG, "hit the search function");
         MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder().setMediaId("mediaId").build();
         MediaBrowserCompat.MediaItem mediaItem = new MediaBrowserCompat.MediaItem(mediaDescriptionCompat, 0);
-
         result.sendResult(Collections.singletonList(mediaItem));
     }
 

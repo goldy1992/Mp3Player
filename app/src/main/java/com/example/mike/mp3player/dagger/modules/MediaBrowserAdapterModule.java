@@ -9,7 +9,6 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.callbacks.connection.MyConnectionCallback;
 import com.example.mike.mp3player.client.callbacks.search.MySearchCallback;
-import com.example.mike.mp3player.client.callbacks.subscription.CategorySubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.GenericSubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.NotifyAllSubscriptionCallback;
@@ -59,7 +58,6 @@ public class MediaBrowserAdapterModule {
             Handler handler) {
         if (null != subscriptionType) {
             switch (subscriptionType) {
-                case CATEGORY: return new CategorySubscriptionCallback(handler);
                 case MEDIA_ID: return new MediaIdSubscriptionCallback(handler);
                 default: return new NotifyAllSubscriptionCallback(handler);
             }

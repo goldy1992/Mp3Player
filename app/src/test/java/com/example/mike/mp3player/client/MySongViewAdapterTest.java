@@ -14,7 +14,7 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.MySongViewAdapter;
 import com.example.mike.mp3player.client.views.MyViewHolder;
-import com.example.mike.mp3player.commons.library.LibraryObject;
+import com.example.mike.mp3player.commons.MediaItemType;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +56,6 @@ public class MySongViewAdapterTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         this.context = InstrumentationRegistry.getInstrumentation().getContext();
-        LibraryObject parent = new LibraryObject(Category.SONGS, "id");
         this.mySongViewAdapter = new MySongViewAdapter(albumArtPainter);
         this.mediaItems = new ArrayList<>();
         this.viewGroup = mock(ViewGroup.class);
@@ -79,7 +78,7 @@ public class MySongViewAdapterTest {
     public void testOnBindViewHolderEmptyValues() {
         final String expectedArtist = UNKNOWN;
         final String expectedTitle = "";
-        this.mediaItems.add(createMediaItem("101", null, "description1", "45646", expectedArtist));
+        this.mediaItems.add(createMediaItem("101", null, "description1", MediaItemType.ROOT, 45646L, expectedArtist));
 
         bindViewHolder();
         verify(artistView, times(1)).setText(expectedArtist);
@@ -91,7 +90,7 @@ public class MySongViewAdapterTest {
         final String fileName = "FILE_NAME";
         final String extension = ".mp3";
         final String fullFileName = fileName + extension;
-        MediaItem mediaItem = createMediaItem("ID", null, "description", "32525");
+        MediaItem mediaItem = createMediaItem("ID", null, "description", MediaItemType.ROOT, 32525L);
         mediaItem.getDescription().getExtras().putString(META_DATA_KEY_FILE_NAME, fullFileName);
         this.mediaItems.add(mediaItem);
         bindViewHolder();
@@ -104,11 +103,11 @@ public class MySongViewAdapterTest {
 
         // TODO: refactor to have an OnBindViewHolder setup method and test for different list indices
         final String expectedArtist = "artist";
-        final String originalDuration = "34234";
+        final long originalDuration = 34234L;
         final String expectedDuration = TimerUtils.formatTime(Long.valueOf(originalDuration));
         final String expectedTitle = "title";
-        mediaItems.add(createMediaItem("101", expectedTitle, "description1", originalDuration, expectedArtist));
-        mediaItems.add(createMediaItem("102", "title2", "description2", "34234"));
+        mediaItems.add(createMediaItem("101", expectedTitle, "description1", MediaItemType.ROOT, originalDuration, expectedArtist));
+        mediaItems.add(createMediaItem("102", "title2", "description2",  MediaItemType.ROOT, 34234L));
 
         bindViewHolder();
         verify(artistView, times(1)).setText(expectedArtist);

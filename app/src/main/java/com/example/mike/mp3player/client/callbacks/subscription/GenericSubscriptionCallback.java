@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class GenericSubscriptionCallback<K> extends MediaBrowserCompat.SubscriptionCallback {
+public abstract class GenericSubscriptionCallback extends MediaBrowserCompat.SubscriptionCallback {
     public abstract SubscriptionType getType();
     private static final String LOG_TAG = "SUBSCRIPTION_CALLBACK";
     Handler handler;
-    Map<K, Set<MediaBrowserResponseListener>> mediaBrowserResponseListeners;
+    Map<String, Set<MediaBrowserResponseListener>> mediaBrowserResponseListeners;
     Context context;
 
     public GenericSubscriptionCallback(Handler handler) {
@@ -31,24 +31,23 @@ public abstract class GenericSubscriptionCallback<K> extends MediaBrowserCompat.
     }
 
     @Override
-    public abstract void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children,
-                                 @NonNull Bundle options);
+    public abstract void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children);
 
-    public synchronized void registerMediaBrowserResponseListener(K key , MediaBrowserResponseListener listener) {
+    public synchronized void registerMediaBrowserResponseListener(String key , MediaBrowserResponseListener listener) {
         if (mediaBrowserResponseListeners.get(key) == null) {
             mediaBrowserResponseListeners.put(key, new HashSet<>());
         }
         mediaBrowserResponseListeners.get(key).add(listener);
     }
 
-    public synchronized void registerMediaBrowserResponseListeners(K key, Collection<MediaBrowserResponseListener> listeners) {
+    public synchronized void registerMediaBrowserResponseListeners(String key, Collection<MediaBrowserResponseListener> listeners) {
         if (mediaBrowserResponseListeners.get(key) == null) {
             mediaBrowserResponseListeners.put(key, new HashSet<>());
         }
         mediaBrowserResponseListeners.get(key).addAll(listeners);
     }
 
-    public synchronized boolean removeMediaBrowserResponseListener(K key, MediaBrowserResponseListener listener) {
+    public synchronized boolean removeMediaBrowserResponseListener(String key, MediaBrowserResponseListener listener) {
         return mediaBrowserResponseListeners.get(key).remove(listener);
     }
 }

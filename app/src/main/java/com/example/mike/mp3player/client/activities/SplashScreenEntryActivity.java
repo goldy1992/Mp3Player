@@ -185,7 +185,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
         MediaActivityCompatComponent component = DaggerMediaActivityCompatComponent
             .factory()
             .create(getApplicationContext(),"SPSH_SCRN_ACTVTY_WRKR",
-                    SubscriptionType.NOTIFY_ALL, this);
+                    SubscriptionType.MEDIA_ID, this);
         SplashScreenEntryActivityComponent splashScreenEntryActivityComponent =
                 component.splashScreenEntryActivity().create(this, this);
         splashScreenEntryActivityComponent.inject(this);

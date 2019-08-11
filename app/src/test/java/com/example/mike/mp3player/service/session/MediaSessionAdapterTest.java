@@ -73,8 +73,8 @@ public class MediaSessionAdapterTest {
 
         final String title = "title";
         final String artist = "artist";
-        QueueItem queueItem = createQueueItem(ID, title, artist);
-        when(playbackManager.getCurrentItem()).thenReturn(queueItem);
+//        QueueItem queueItem = createQueueItem(ID, title, artist);
+//        when(playbackManager.getCurrentItem()).thenReturn(queueItem);
         MediaMetadataCompat mediaMetadata = mediaSessionAdapter.getCurrentMetaData();
         // assert correct ID is returned
         assertTrue(mediaMetadata.containsKey(MediaMetadataCompat.METADATA_KEY_MEDIA_ID));
@@ -91,8 +91,8 @@ public class MediaSessionAdapterTest {
      */
     @Test
     public void testGetCurrentMetaDataWithInvalidData() {
-        QueueItem queueItem = createQueueItem(ID, null, null);
-        when(playbackManager.getCurrentItem()).thenReturn(queueItem);
+//        QueueItem queueItem = createQueueItem(ID, null, null);
+//        when(playbackManager.getCurrentItem()).thenReturn(queueItem);
         MediaMetadataCompat mediaMetadata = mediaSessionAdapter.getCurrentMetaData();
         // assert UNKNOWN is returned for title
         assertTrue(mediaMetadata.containsKey(MediaMetadataCompat.METADATA_KEY_TITLE));
@@ -117,12 +117,12 @@ public class MediaSessionAdapterTest {
         verify(mediaSession, times(1)).setPlaybackState(any());
         verify(mediaSession, times(1)).setMetadata(any());
     }
-    @Test
-    public void testSetQueue() {
-        QueueItem queueItem = createQueueItem(ID, null, null);
-        mediaSessionAdapter.setQueue(queueItem);
-        verify(mediaSession, times(1)).setQueue(any());
-    }
+//    @Test
+//    public void testSetQueue() {
+//        QueueItem queueItem = createQueueItem(ID, null, null);
+//        mediaSessionAdapter.setQueue(queueItem);
+//        verify(mediaSession, times(1)).setQueue(any());
+//    }
     @Test
     public void testSetActive() {
         final boolean isActive = true;

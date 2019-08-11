@@ -45,7 +45,6 @@ public class MediaPlayerActivityTest {
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
         mediaSessionCompat = new MediaSessionCompat(context, "TAG");
         this.intent = new Intent(ApplicationProvider.getApplicationContext(), MediaPlayerActivity.class);
-        this.intent.putExtra(REQUEST_OBJECT, makeMockLibraryRequestObject());
         this.activityController = Robolectric.buildActivity(MediaPlayerActivityInjectorTestImpl.class, intent).setup();
         this.mediaPlayerActivity = activityController.get();
     }
@@ -66,10 +65,4 @@ public class MediaPlayerActivityTest {
         assertNotNull(mediaPlayerActivity.getAlbumArtFragment());
     }
 
-    /**
-     * @return a mock LibraryRequest object
-     */
-    private LibraryRequest makeMockLibraryRequestObject() {
-        return new LibraryRequest(Category.SONGS, "MOCK_ID" );
-    }
 }

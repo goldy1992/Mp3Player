@@ -9,6 +9,7 @@ import com.example.mike.mp3player.service.RootAuthenticator;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.session.MediaSessionAdapter;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -27,8 +28,8 @@ public class ServiceModule {
 
     @Singleton
     @Provides
-    public RootAuthenticator provideRootAuthenticator() {
-        return new RootAuthenticator();
+    public RootAuthenticator provideRootAuthenticator(@Named("rootId") String rootId) {
+        return new RootAuthenticator(rootId);
     }
 
     @Singleton

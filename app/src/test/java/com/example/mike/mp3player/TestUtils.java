@@ -6,6 +6,9 @@ import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 
 import com.example.mike.mp3player.client.Category;
+import com.example.mike.mp3player.commons.MediaItemType;
+
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 
 public final class TestUtils {
     private TestUtils(){}
@@ -31,7 +34,7 @@ public final class TestUtils {
      * @return a null category MediaItem
      */
     public static MediaItem createMediaItemWithNullCategory() {
-        return createMediaItem(null, null, null);
+        return createMediaItem(null, null, null, MediaItemType.ROOT);
     }
     /**
      * Utility class to make a media item
@@ -40,18 +43,19 @@ public final class TestUtils {
      * @param description the description
      * @return a new MediaItem
      */
-    public static MediaItem createMediaItem(final String id, final String title, final String description) {
-        return createMediaItem(id, title, description, null);
+    public static MediaItem createMediaItem(final String id, final String title, final String description, MediaItemType mediaItemType) {
+        return createMediaItem(id, title, description, mediaItemType,0L);
     }
 
-    public static MediaItem createMediaItem(final String id, final String title, final String description, final String duration) {
-        return createMediaItem(id, title, description, duration, null);
+    public static MediaItem createMediaItem(final String id, final String title, final String description, MediaItemType mediaItemType, final long duration) {
+        return createMediaItem(id, title, description, mediaItemType, duration, null);
     }
 
-    public static MediaItem createMediaItem(final String id, final String title, final String description, final String duration, String artist) {
+    public static MediaItem createMediaItem(final String id, final String title, final String description, MediaItemType mediaItemType, final long duration, String artist) {
         Bundle bundle = new Bundle();
-        bundle.putString(MediaMetadataCompat.METADATA_KEY_DURATION, duration);
+        bundle.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);
         bundle.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist);
+        bundle.putSerializable(MEDIA_ITEM_TYPE, mediaItemType);
         MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder()
                 .setDescription(description)
                 .setTitle(title)

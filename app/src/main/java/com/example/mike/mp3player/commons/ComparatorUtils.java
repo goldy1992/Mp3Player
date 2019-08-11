@@ -30,6 +30,22 @@ public final class ComparatorUtils {
            return c1.compareTo(c2);
         }
     }
+
+
+    public static final Comparator<MediaItem> compareRootMediaItemsByMediaItemType = ComparatorUtils::compareRootMediaItemsByMediaItemType;
+    private static int compareRootMediaItemsByMediaItemType(MediaItem m1, MediaItem m2) {
+        MediaItemType c1 = MediaItemUtils.getMediaItemType(m1);
+        MediaItemType c2 = MediaItemUtils.getMediaItemType(m2);
+        if (c1 == null && c2 == null) {
+            return 0;
+        } else if (c1 == null) {
+            return -1;
+        } else if (c2 == null) {
+            return 1;
+        } else {
+            return c1.compareTo(c2);
+        }
+    }
 //    public static final Comparator<Root> compareRootByCategory = ComparatorUtils::compareRootByCategory;
 //    private static int compareRootByCategory(Root root1, Root root2) {
 //        Category c1 = root1.category;
@@ -75,6 +91,16 @@ public final class ComparatorUtils {
             Log.e(LOG_TAG, ExceptionUtils.getMessage(ex));
         }
         return c;
+    }
+
+    private static MediaItemType parseMediaItemType(String categoryString) {
+        MediaItemType type = null;
+        try{
+            type = MediaItemType.valueOf(categoryString);
+        } catch (IllegalArgumentException | NullPointerException ex) {
+            Log.e(LOG_TAG, ExceptionUtils.getMessage(ex));
+        }
+        return type;
     }
 
     private static int uppercaseStringCompare(@Nullable String string1, @Nullable String string2) {
