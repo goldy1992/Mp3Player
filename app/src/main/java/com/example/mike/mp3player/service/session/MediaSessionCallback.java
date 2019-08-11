@@ -95,14 +95,14 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     public void init() {
         // TODO: get song list from media library
-        List<MediaBrowserCompat.MediaItem> songList = null; new ArrayList<>(this.mediaLibrary.getAllSongs());
+        List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.mediaLibrary.getAllSongs());
         List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
         this.mediaPlayerAdapter.setOnCompletionListener(this::onCompletion);
         this.mediaPlayerAdapter.setOnSeekCompleteListener(this::onSeekComplete);
         this.broadcastReceiver.setMediaSessionCallback(this);
         this.playbackManager.createNewPlaylist(songList);
-        Uri firstSongUri = Uri.parse(playbackManager.getCurrentMediaId());
-        Uri nextSongUri = Uri.parse(playbackManager.getNext());
+        Uri firstSongUri = playbackManager.getCurrentMediaUri();
+        Uri nextSongUri = playbackManager.getNext();
         this.mediaPlayerAdapter.reset(firstSongUri, nextSongUri);
         mediaSessionAdapter.updateAll(NO_ACTION);
     }
@@ -132,7 +132,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void skipToNext() {
-        String newMediaId = getPlaybackManager().skipToNext();
+        Uri newMediaId = getPlaybackManager().skipToNext();
         if (newMediaId != null) {
             skipToNewMedia(newMediaId);
             getServiceManager().notifyService();
@@ -152,7 +152,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             mediaPlayerAdapter.seekTo(1);
         } else {
             getPlaybackManager().skipToPrevious();
-            skipToNewMedia(getPlaybackManager().getCurrentMediaId());
+            skipToNewMedia(getPlaybackManager().getCurrentMediaUri());
             getServiceManager().notifyService();
             mediaSessionAdapter.updateAll(ACTION_SKIP_TO_PREVIOUS);
         }
@@ -194,7 +194,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getChildren(mediaId);
         ArrayList<MediaBrowserCompat.MediaItem> resultsList = new ArrayList<>();
         resultsList.addAll(results);
-        getPlaybackManager().createNewPlaylist(resultsList);
+        playbackManager.createNewPlaylist(resultsList);
 
         if (mediaId == null) {
             Log.e(LOG_TAG, "received null mediaId");
@@ -207,8 +207,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             String id = MediaItemUtils.getMediaId(m);
             if (id != null && id.equals(mediaId)) {
                 uriToPlay = Uri.parse(id);
-                getPlaybackManager().setCurrentItem(mediaId);
-                followingUri = Uri.parse(getPlaybackManager().getNext());
+                playbackManager.setCurrentItem(mediaId);
+                followingUri = getPlaybackManager().getNext();
                 mediaPlayerAdapter.reset(uriToPlay, followingUri);
 
                 break;
@@ -301,9 +301,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         // TODO: set shuffle mode and therefore set the next mediaplayers accordingly
         boolean shuffleOn = shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL;
         getPlaybackManager().setShuffle(shuffleOn);
-        String nextSongId = getPlaybackManager().getNext();
-        Uri nextUri = Uri.parse(nextSongId);
-        mediaPlayerAdapter.setNextMediaPlayer(nextUri);
+        Uri nextSongUri = getPlaybackManager().getNext();
+        mediaPlayerAdapter.setNextMediaPlayer(nextSongUri);
         mediaSessionAdapter.updateAll(ACTION_SET_SHUFFLE_MODE);
     }
     /**
@@ -322,10 +321,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             if (mediaPlayer.isLooping()) {
             } else {
                 getPlaybackManager().notifyPlaybackComplete(); // increments queue
-                String nextUriToPrepare = getPlaybackManager().getNext(); // gets uri after newly incremented index
+                Uri nextUriToPrepare = getPlaybackManager().getNext(); // gets uri after newly incremented index
                 if (null != nextUriToPrepare) {
-                    Uri nextItemUri = Uri.parse(nextUriToPrepare);
-                    mediaPlayerAdapter.onComplete(nextItemUri);
+                    mediaPlayerAdapter.onComplete(nextUriToPrepare);
                     mediaSessionAdapter.updateAll(ACTION_PLAY_FROM_MEDIA_ID);
                 }
             }
@@ -351,9 +349,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         mediaSessionAdapter.updateAll(ACTION_PLAYBACK_SPEED_CHANGED);
     }
 
-    private void skipToNewMedia(String newMediaId) {
-        Uri newUri = Uri.parse(newMediaId);
-        Uri followingUri = Uri.parse(getPlaybackManager().getNext());
+    private void skipToNewMedia(Uri newMediaUri) {
+        Uri newUri = newMediaUri;
+        Uri followingUri = getPlaybackManager().getNext();
         PlaybackStateCompat currentState = mediaSessionAdapter.getCurrentPlaybackState(ACTION_PLAY_FROM_MEDIA_ID);
         mediaPlayerAdapter.reset(newUri, followingUri);
         if (currentState.getState() == PlaybackStateCompat.STATE_PLAYING) {
