@@ -20,9 +20,11 @@ import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.activities.MediaItemTypeToActivityMap;
 import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
+import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
+import com.example.mike.mp3player.service.library.utils.IdGenerator;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import javax.inject.Inject;
@@ -83,8 +85,8 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         }
 
         Intent intent = new Intent(getContext(), MediaItemTypeToActivityMap.getActivityClassForCategory(mediaItemType)); // TODO: make a media item to activity map
-        intent.putExtra(PARENT_MEDIA_ITEM_TYPE_ID, mediaItemTypeId);
-        intent.putExtra(MEDIA_ITEM_TYPE_ID, itemId);
+        String mediaId = IdGenerator.generatePrepareMediaId(mediaItemTypeId, itemTypeId, itemId);
+        intent.putExtra(Constants.MEDIA_ID, mediaId);
         startActivity(intent);
     }
 
