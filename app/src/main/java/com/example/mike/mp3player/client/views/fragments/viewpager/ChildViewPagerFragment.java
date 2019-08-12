@@ -29,9 +29,6 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import javax.inject.Inject;
 
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
-import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE_ID;
-
 /**
  * Fragment to show a list of media items, has MediaBrowserAdapter injected into it using Dagger2
  * NOTE: MediaBrowserAdapter is not annotated with inject because:
@@ -81,9 +78,6 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         String itemId = MediaItemUtils.getMediaId(item);
         String itemTypeId = MediaItemUtils.getMediaItemTypeId(item);
 
-        if (null != itemId) {
-        }
-m
         Intent intent = new Intent(getContext(), MediaItemTypeToActivityMap.getActivityClassForCategory(mediaItemType)); // TODO: make a media item to activity map
         String mediaId = IdGenerator.generatePrepareMediaId(mediaItemTypeId, itemTypeId, itemId);
         intent.putExtra(Constants.MEDIA_ID, mediaId);

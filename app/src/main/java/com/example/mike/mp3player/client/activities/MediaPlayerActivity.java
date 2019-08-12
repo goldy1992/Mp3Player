@@ -49,7 +49,6 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
         super.onConnected();
         initialiseView(R.layout.activity_media_player);
         String mediaId = (String) retrieveIntentInfo(Constants.MEDIA_ID);
-        String parentMediaItemTypeId = (String) retrieveIntentInfo(PARENT_MEDIA_ITEM_TYPE_ID);
         if (null != mediaId) { // if RQ came with an media id it's a song request
             // Display the initial state
             // parent id will sure that the correct playlist is found in the media library
