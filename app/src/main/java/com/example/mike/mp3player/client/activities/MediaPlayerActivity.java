@@ -13,7 +13,6 @@ import com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragmen
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
 import com.example.mike.mp3player.commons.Constants;
-import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE_ID;
 

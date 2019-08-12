@@ -8,7 +8,6 @@ import com.example.mike.mp3player.client.callbacks.connection.MyConnectionCallba
 import com.example.mike.mp3player.client.callbacks.search.MySearchCallback;
 import com.example.mike.mp3player.client.callbacks.search.SearchResultListener;
 import com.example.mike.mp3player.client.callbacks.subscription.GenericSubscriptionCallback;
-import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

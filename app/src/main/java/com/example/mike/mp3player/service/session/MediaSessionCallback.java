@@ -15,19 +15,14 @@ import android.view.KeyEvent;
 import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.commons.MediaItemUtils;
-import com.example.mike.mp3player.client.Category;
-import com.example.mike.mp3player.commons.library.LibraryObject;
-import com.example.mike.mp3player.commons.library.LibraryRequest;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.ContentManager;
-import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 import javax.inject.Inject;
 
@@ -45,7 +40,6 @@ import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPE
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 import static com.example.mike.mp3player.commons.LoggingUtils.logRepeatMode;
 import static com.example.mike.mp3player.commons.LoggingUtils.logShuffleMode;
@@ -189,8 +183,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private void prepareFromMediaId(String mediaId, Bundle bundle) {
         //Log.i(LOG_TAG, "prepareFromMediaId");
         super.onPrepareFromMediaId(mediaId, bundle);
-        LibraryObject parent = (LibraryObject) bundle.get(PARENT_ID);
-        LibraryRequest request = null; // new LibraryRequest(parent); // TODO: fix
         List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getChildren(mediaId);
         ArrayList<MediaBrowserCompat.MediaItem> resultsList = new ArrayList<>();
         resultsList.addAll(results);

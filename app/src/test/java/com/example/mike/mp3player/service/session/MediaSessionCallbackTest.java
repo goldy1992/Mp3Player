@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
@@ -14,14 +13,11 @@ import android.view.KeyEvent;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.example.mike.mp3player.client.Category;
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.ContentManager;
-import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 import org.junit.Before;
@@ -41,7 +37,6 @@ import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import static com.example.mike.mp3player.TestUtils.createMediaItem;
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
-import static com.example.mike.mp3player.commons.Constants.PARENT_ID;
 import static com.example.mike.mp3player.service.session.MediaSessionCallback.DEFAULT_PLAYBACK_SPEED_CHANGE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

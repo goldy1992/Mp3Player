@@ -7,10 +7,7 @@ import androidx.fragment.app.testing.FragmentScenario;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.views.fragments.FragmentTestBase;
-import com.example.mike.mp3player.client.Category;
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.commons.library.LibraryObject;
-import com.example.mike.mp3player.commons.library.LibraryRequest;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -63,10 +60,7 @@ public class ChildViewPagerFragmentTest extends FragmentTestBase<ChildViewPagerF
         ArgumentCaptor<Intent> intentArgs = ArgumentCaptor.forClass(Intent.class);
         verify(spiedFragment).startActivity(intentArgs.capture());
         Intent intent = intentArgs.getValue();
-        LibraryRequest libraryRequest = intent.getExtras().getParcelable(REQUEST_OBJECT);
-        assertNotNull(libraryRequest);
-        assertEquals(id, libraryRequest.getId());
-        assertEquals(title, libraryRequest.getTitle());
+
     }
 
 }
