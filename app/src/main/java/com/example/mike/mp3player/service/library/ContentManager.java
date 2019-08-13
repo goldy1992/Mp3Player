@@ -30,6 +30,17 @@ public class ContentManager {
 
 
     }
+    /**
+     * The id is in the following format
+     * CATEGORY_ID | CHILD_ID where CHILD_ID is optional.
+     * e.g. ROOT_CATEGORY_ID
+     * FOLDER_CATEGORY_ID | FOLDER_ID
+     * where X_CATEGORY_ID is a unique id defined by the service to ensure that the subscriber has
+     * gained authority to access the parent category and also tells the method which category to
+     * look in for the data.
+     * @param parentId the id of the children to get
+     * @return all the children of the id specified by the parentId parameter
+     */
     public List<MediaItem> getChildren(String parentId) {
         List<String> splitId = Arrays.asList(parentId.split("\\|"));
         if (StringUtils.isEmpty(splitId.toString())) {

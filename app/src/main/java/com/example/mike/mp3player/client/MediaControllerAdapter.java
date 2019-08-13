@@ -25,7 +25,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-
 public class MediaControllerAdapter {
 
     private static final String LOG_TAG = "MDIA_CNTRLLR_ADPTR";

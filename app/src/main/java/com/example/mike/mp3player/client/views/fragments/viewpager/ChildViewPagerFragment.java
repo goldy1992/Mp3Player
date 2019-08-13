@@ -79,6 +79,7 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         String itemTypeId = MediaItemUtils.getMediaItemTypeId(item);
 
         Intent intent = new Intent(getContext(), MediaItemTypeToActivityMap.getActivityClassForCategory(mediaItemType)); // TODO: make a media item to activity map
+        // TODO: generate different id if going to media player
         String mediaId = IdGenerator.generatePrepareMediaId(mediaItemTypeId, itemTypeId, itemId);
         intent.putExtra(Constants.MEDIA_ID, mediaId);
         startActivity(intent);

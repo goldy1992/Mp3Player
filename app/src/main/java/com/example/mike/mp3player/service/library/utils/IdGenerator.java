@@ -4,7 +4,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 public final class IdGenerator {
 
-    public static final String ID_SEPARATOR = "\\|";
+    public static final String ID_SEPARATOR = "|";
+    public static final String PLAYLIST_SEPARATOR = "^";
     public static final String generateRootId(String prefix) {
         return prefix + RandomStringUtils.randomAlphanumeric(15);
     }
