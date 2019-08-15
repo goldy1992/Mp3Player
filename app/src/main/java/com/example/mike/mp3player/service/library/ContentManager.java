@@ -65,8 +65,8 @@ public class ContentManager {
         ContentRetriever contentRetriever = contentRetrieverMap.get(mediaItemType);
         return contentRetriever == null ? null : contentRetriever.getChildren(idSuffix);
     }
-    public void getPlaylist(String id) {
-
+    public List<MediaItem> getPlaylist(String id) {
+        return null;
     }
 
     public List<MediaItem> getAllSongs() {

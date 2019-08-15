@@ -183,7 +183,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private void prepareFromMediaId(String mediaId, Bundle bundle) {
         //Log.i(LOG_TAG, "prepareFromMediaId");
         super.onPrepareFromMediaId(mediaId, bundle);
-        List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getChildren(mediaId);
+        List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getPlaylist(mediaId);
         ArrayList<MediaBrowserCompat.MediaItem> resultsList = new ArrayList<>();
         resultsList.addAll(results);
         playbackManager.createNewPlaylist(resultsList);
