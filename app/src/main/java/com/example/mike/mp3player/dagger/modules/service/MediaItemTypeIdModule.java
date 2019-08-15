@@ -31,10 +31,22 @@ public class MediaItemTypeIdModule {
 
     @Singleton
     @Provides
+    @Named("all_media_item_types")
     public Map<String, MediaItemType> provideInverseIdMap(BiMap<MediaItemType, String> biMap) {
         Map<String, MediaItemType> map = new HashMap<>();
         map.putAll(biMap.inverse());
         return map;
+    }
+
+    @Singleton
+    @Provides
+    @Named("playable_media_item_types")
+    public Map<String, MediaItemType> provideInversePlayableIdMap(BiMap<MediaItemType, String> biMap) {
+
+        Map<String, MediaItemType> mapToReturn = new HashMap<>();
+        mapToReturn.put(biMap.get(MediaItemType.SONGS), MediaItemType.SONGS);
+        mapToReturn.put(biMap.get(MediaItemType.FOLDERS), MediaItemType.FOLDERS);
+        return mapToReturn;
     }
 
     @Singleton

@@ -14,18 +14,22 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import static android.support.v4.media.MediaBrowserCompat.*;
 
 public class ContentManager {
 
     private final Map<String, MediaItemType> idToMediaItemMap;
+    private final Map<String, MediaItemType> idToPlayableMediaItemMap;
     private final Map<MediaItemType, ContentRetriever> contentRetrieverMap;
 
     @Inject
-    public ContentManager(Map<String, MediaItemType> mediaItemTypeStringBiMap,
+    public ContentManager(@Named("all_media_item_types") Map<String, MediaItemType> mediaItemTypeStringBiMap,
+                          @Named("playable_media_item_types") Map<String, MediaItemType> idToPlayableMediaItemMap,
                           EnumMap<MediaItemType, ContentRetriever> contentRetrieverMap) {
         this.idToMediaItemMap = mediaItemTypeStringBiMap;
+        this.idToPlayableMediaItemMap = idToPlayableMediaItemMap;
         this.contentRetrieverMap = contentRetrieverMap;
 
 
@@ -60,6 +64,9 @@ public class ContentManager {
 
         ContentRetriever contentRetriever = contentRetrieverMap.get(mediaItemType);
         return contentRetriever == null ? null : contentRetriever.getChildren(idSuffix);
+    }
+    public void getPlaylist(String id) {
+
     }
 
     public List<MediaItem> getAllSongs() {
