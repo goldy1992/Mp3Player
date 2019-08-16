@@ -17,6 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 
@@ -85,6 +87,8 @@ public class FolderRetriever extends ContentResolverRetriever {
         Bundle extras = new Bundle();
         extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directoryName);
         extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directoryPath);
+        extras.putSerializable(MEDIA_ITEM_TYPE, getType());
+        extras.putString(MEDIA_ITEM_TYPE_ID, childId);
 
 
         // TODO: add code to fetch album art also

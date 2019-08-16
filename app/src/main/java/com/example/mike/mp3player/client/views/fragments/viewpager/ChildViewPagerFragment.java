@@ -43,8 +43,17 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
      * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
      */
     private FastScrollRecyclerView recyclerView;
-    private MediaItemType mediaItemType;
-    private String mediaItemTypeId;
+
+
+    private MediaItemType parentItemType;
+    private String parentItemTypeId;
+
+    /** possibly redundant */
+    private MediaItemType childMediaItemsType;
+    /** possibly redundant */
+    private String childMediaItemsTypeId;
+
+
     private MediaBrowserAdapter mediaBrowserAdapter;
     private MyGenericRecycleViewAdapter myViewAdapter;
     private MyGenericItemTouchListener myGenericItemTouchListener;
@@ -64,13 +73,13 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         this.recyclerView.addOnItemTouchListener(myGenericItemTouchListener);
         this.recyclerView.setItemAnimator(new DefaultItemAnimator());
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        this.mediaBrowserAdapter.registerListener(mediaItemTypeId, myViewAdapter);
-        this.mediaBrowserAdapter.subscribe(mediaItemTypeId);
+        this.mediaBrowserAdapter.registerListener(parentItemTypeId, myViewAdapter);
+        this.mediaBrowserAdapter.subscribe(parentItemTypeId);
     }
 
-    public void init(MediaItemType mediaItemType, String mediaItemId) {
-        this.mediaItemType = mediaItemType;
-        this.mediaItemTypeId = mediaItemId;
+    public void init(MediaItemType parentMediaItemType, String parentMediaItemId) {
+        this.parentItemType = parentMediaItemType;
+        this.parentItemTypeId = parentMediaItemId;
     }
 
     @Override
@@ -78,10 +87,11 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         String itemId = MediaItemUtils.getMediaId(item);
         String itemTypeId = MediaItemUtils.getMediaItemTypeId(item);
 
-        Intent intent = new Intent(getContext(), MediaItemTypeToActivityMap.getActivityClassForCategory(mediaItemType)); // TODO: make a media item to activity map
+        Intent intent = new Intent(getContext(), MediaItemTypeToActivityMap.getActivityClassForCategory(parentItemType)); // TODO: make a media item to activity map
         // TODO: generate different id if going to media player
-        String mediaId = IdGenerator.generatePrepareMediaId(mediaItemTypeId, itemTypeId, itemId);
+        String mediaId = IdGenerator.generatePrepareMediaId(parentItemTypeId, itemTypeId, itemId);
         intent.putExtra(Constants.MEDIA_ID, mediaId);
+        intent.putExtra(Constants.MEDIA_ITEM, item);
         startActivity(intent);
     }
 
@@ -106,7 +116,7 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
             MediaActivityCompat mediaPlayerActivity = (MediaActivityCompat) getActivity();
             MediaActivityCompatComponent component = mediaPlayerActivity.getMediaActivityCompatComponent();
             component.childViewPagerFragmentSubcomponentFactory()
-                .create(mediaItemType, mediaItemTypeId, this).
+                .create(parentItemType, parentItemTypeId, this).
                 inject(this);
         }
     }

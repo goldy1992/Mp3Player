@@ -10,7 +10,7 @@ public final class IdGenerator {
         return prefix + RandomStringUtils.randomAlphanumeric(15);
     }
 
-    public static String generateId(String parentId, String mediaId) {
+    public static String generateGetChildrenId(String parentId, String mediaId) {
         return new StringBuilder()
                 .append(parentId)
                 .append(ID_SEPARATOR)

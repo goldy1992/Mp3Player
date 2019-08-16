@@ -1,9 +1,6 @@
 package com.example.mike.mp3player.service.library;
 
-import android.support.v4.media.MediaBrowserCompat;
-
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.service.library.contentretriever.ContentResolverRetriever;
 import com.example.mike.mp3player.service.library.contentretriever.ContentRetriever;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +13,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import static android.support.v4.media.MediaBrowserCompat.*;
+import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 public class ContentManager {
 
@@ -31,8 +28,6 @@ public class ContentManager {
         this.idToMediaItemMap = mediaItemTypeStringBiMap;
         this.idToPlayableMediaItemMap = idToPlayableMediaItemMap;
         this.contentRetrieverMap = contentRetrieverMap;
-
-
     }
     /**
      * The id is in the following format
@@ -66,7 +61,24 @@ public class ContentManager {
         return contentRetriever == null ? null : contentRetriever.getChildren(idSuffix);
     }
     public List<MediaItem> getPlaylist(String id) {
-        return null;
+        List<String> splitId = Arrays.asList(id.split("\\|"));
+        if (StringUtils.isEmpty(splitId.toString())) {
+            return null;
+        }
+        String mediaItemTypeId = splitId.get(0);
+
+        MediaItemType mediaItemType = idToPlayableMediaItemMap.get(mediaItemTypeId);
+        if (null == mediaItemType) {
+            return null;
+        }
+
+        String idSuffix = null;
+        if (splitId.size() > 1) {
+            idSuffix = splitId.get(1);
+        }
+
+        ContentRetriever contentRetriever = contentRetrieverMap.get(mediaItemType);
+        return contentRetriever == null ? null : contentRetriever.getChildren(idSuffix);
     }
 
     public List<MediaItem> getAllSongs() {
