@@ -19,6 +19,7 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.activities.MediaItemTypeToActivityMap;
+import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
 import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.MediaItemType;
@@ -87,9 +88,14 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         String itemId = MediaItemUtils.getMediaId(item);
         String itemTypeId = MediaItemUtils.getMediaItemTypeId(item);
 
-        Intent intent = new Intent(getContext(), MediaItemTypeToActivityMap.getActivityClassForCategory(parentItemType)); // TODO: make a media item to activity map
+        Class<?> activityClass = MediaItemTypeToActivityMap.getActivityClassForCategory(parentItemType);
+        String mediaId = IdGenerator.generateGetChildrenId(parentItemTypeId, itemTypeId);
+
+        if (activityClass == MediaPlayerActivity.class) {
+            mediaId = IdGenerator.generatePrepareMediaId(mediaId, itemId);
+        }
+        Intent intent = new Intent(getContext(), activityClass); // TODO: make a media item to activity map
         // TODO: generate different id if going to media player
-        String mediaId = IdGenerator.generatePrepareMediaId(parentItemTypeId, itemTypeId, itemId);
         intent.putExtra(Constants.MEDIA_ID, mediaId);
         intent.putExtra(Constants.MEDIA_ITEM, item);
         startActivity(intent);

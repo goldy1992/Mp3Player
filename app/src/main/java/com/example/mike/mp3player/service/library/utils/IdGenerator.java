@@ -28,5 +28,13 @@ public final class IdGenerator {
                 .toString();
     }
 
+    public static String generatePrepareMediaId(String getChildrenId, String mediaId) {
+        return new StringBuilder()
+                .append(getChildrenId)
+                .append(PLAYLIST_SEPARATOR)
+                .append(mediaId)
+                .toString();
+    }
+
 
 }
