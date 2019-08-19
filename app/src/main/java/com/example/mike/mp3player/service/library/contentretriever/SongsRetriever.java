@@ -48,6 +48,12 @@ public class SongsRetriever extends ContentResolverRetriever {
     }
 
     @Override
+    Cursor getResults(String id) {
+        // TODO: implement
+        return null;
+    }
+
+    @Override
     public String[] getProjection() {
         return PROJECTION;
     }

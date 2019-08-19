@@ -89,7 +89,7 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         String itemId = MediaItemUtils.getMediaId(item);
         String itemTypeId = MediaItemUtils.getMediaItemTypeId(item);
         // TODO: ensure to send in the correct type to get the right results from the content retriever
-        String mediaId = IdGenerator.generateGetChildrenId(parentItemTypeId, itemTypeId);
+        String mediaId = IdGenerator.generateGetChildrenId(itemTypeId, itemId);
 
         if (intentClass == MediaPlayerActivity.class) {
             mediaId = IdGenerator.generatePrepareMediaId(mediaId, itemId);

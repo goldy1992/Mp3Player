@@ -1,13 +1,14 @@
 package com.example.mike.mp3player.service.library.contentretriever;
 
 import android.content.ContentResolver;
+import android.database.Cursor;
 import android.support.v4.media.MediaBrowserCompat;
 
 import androidx.annotation.NonNull;
 
 import com.example.mike.mp3player.commons.MediaItemType;
 
-public abstract class ContentResolverRetriever implements ContentRetriever{
+public abstract class ContentResolverRetriever implements ContentRetriever {
 
     final ContentResolver contentResolver;
     final String childId;
@@ -20,6 +21,7 @@ public abstract class ContentResolverRetriever implements ContentRetriever{
     }
 
     public abstract MediaItemType getType();
+    abstract Cursor getResults(String id);
     public abstract String[] getProjection();
 
 
