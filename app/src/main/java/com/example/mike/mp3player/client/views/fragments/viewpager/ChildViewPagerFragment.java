@@ -47,6 +47,7 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
 
 
     private MediaItemType parentItemType;
+    private Class<? extends MediaActivityCompat> intentClass;
     private String parentItemTypeId;
 
     /** possibly redundant */
@@ -87,14 +88,13 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
     public void itemSelected(MediaBrowserCompat.MediaItem item) {
         String itemId = MediaItemUtils.getMediaId(item);
         String itemTypeId = MediaItemUtils.getMediaItemTypeId(item);
-
-        Class<?> activityClass = MediaItemTypeToActivityMap.getActivityClassForCategory(parentItemType);
+        // TODO: ensure to send in the correct type to get the right results from the content retriever
         String mediaId = IdGenerator.generateGetChildrenId(parentItemTypeId, itemTypeId);
 
-        if (activityClass == MediaPlayerActivity.class) {
+        if (intentClass == MediaPlayerActivity.class) {
             mediaId = IdGenerator.generatePrepareMediaId(mediaId, itemId);
         }
-        Intent intent = new Intent(getContext(), activityClass); // TODO: make a media item to activity map
+        Intent intent = new Intent(getContext(), intentClass); // TODO: make a media item to activity map
         // TODO: generate different id if going to media player
         intent.putExtra(Constants.MEDIA_ID, mediaId);
         intent.putExtra(Constants.MEDIA_ITEM, item);
@@ -114,6 +114,11 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
     @Inject
     public void setMyGenericItemTouchListener(MyGenericItemTouchListener listener) {
         this.myGenericItemTouchListener = listener;
+    }
+
+    @Inject
+    public void setIntentClass(Class<? extends MediaActivityCompat> intentClass) {
+        this.intentClass = intentClass;
     }
 
     private void injectDependencies() {

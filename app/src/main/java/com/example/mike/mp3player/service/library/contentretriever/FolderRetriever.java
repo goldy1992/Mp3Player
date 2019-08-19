@@ -43,7 +43,6 @@ public class FolderRetriever extends ContentResolverRetriever {
 
     @Override
     public List<MediaBrowserCompat.MediaItem> getChildren(@NonNull String id) {
-        List<MediaBrowserCompat.MediaItem> listToReturn = new ArrayList<>();
         Cursor cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,PROJECTION,
                 null, null, null);
 
