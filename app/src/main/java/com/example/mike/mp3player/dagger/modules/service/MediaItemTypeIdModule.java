@@ -55,6 +55,7 @@ public class MediaItemTypeIdModule {
 
         Map<String, MediaItemType> mapToReturn = new HashMap<>();
         mapToReturn.put(biMap.get(MediaItemType.SONGS), MediaItemType.SONGS);
+        mapToReturn.put(biMap.get(MediaItemType.SONG), MediaItemType.SONG);
         mapToReturn.put(biMap.get(MediaItemType.FOLDERS), MediaItemType.FOLDERS);
         return mapToReturn;
     }
