@@ -8,6 +8,10 @@ import androidx.annotation.NonNull;
 
 import com.example.mike.mp3player.commons.MediaItemType;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeSet;
+
 public abstract class ContentResolverRetriever implements ContentRetriever {
 
     final ContentResolver contentResolver;
@@ -23,6 +27,21 @@ public abstract class ContentResolverRetriever implements ContentRetriever {
     public abstract MediaItemType getType();
     abstract Cursor getResults(String id);
     abstract String[] getProjection();
+    abstract MediaBrowserCompat.MediaItem buildMediaItem(Cursor cursor);
+
+    @Override
+    public List<MediaBrowserCompat.MediaItem> getChildren(String id) {
+        Cursor cursor = getResults(id);
+        TreeSet<MediaBrowserCompat.MediaItem> listToReturn = new TreeSet<>(this);
+        while (cursor.moveToNext()) {
+            MediaBrowserCompat.MediaItem mediaItem = buildMediaItem(cursor);
+            if (null != mediaItem) {
+                listToReturn.add(mediaItem);
+            }
+        }
+
+        return new ArrayList<>(listToReturn);
+    }
 
 
 }

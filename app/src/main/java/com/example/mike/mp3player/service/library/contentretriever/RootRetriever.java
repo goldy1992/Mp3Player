@@ -15,6 +15,8 @@ import java.util.TreeSet;
 
 import javax.inject.Inject;
 
+import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByMediaItemType;
+
 public class RootRetriever implements ContentRetriever {
 
     private List<MediaBrowserCompat.MediaItem> CHILDREN;
@@ -24,7 +26,7 @@ public class RootRetriever implements ContentRetriever {
     @Inject
     public RootRetriever(EnumMap<MediaItemType, String> childIds) {
         this.childIds = childIds;
-        TreeSet<MediaBrowserCompat.MediaItem> categorySet = new TreeSet<>(ComparatorUtils.compareRootMediaItemsByMediaItemType);
+        TreeSet<MediaBrowserCompat.MediaItem> categorySet = new TreeSet<>(this);
         for (MediaItemType category : MediaItemType.PARENT_TO_CHILD_MAP.get(MediaItemType.ROOT)) {
             categorySet.add(createRootItem(category));
         }
@@ -56,4 +58,8 @@ public class RootRetriever implements ContentRetriever {
         return new MediaBrowserCompat.MediaItem(mediaDescriptionCompat, 0);
     }
 
+    @Override
+    public int compare(MediaBrowserCompat.MediaItem o1, MediaBrowserCompat.MediaItem o2) {
+        return compareRootMediaItemsByMediaItemType(o1, o2);
+    }
 }

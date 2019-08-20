@@ -17,17 +17,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.example.mike.mp3player.commons.ComparatorUtils.uppercaseStringCompare;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 
-public class FolderRetriever extends ContentResolverRetriever {
+public class FoldersRetriever extends ContentResolverRetriever {
 
     private static final String[] PROJECTION = {
             "DISTINCT " + MediaStore.Audio.Media.DATA };
 
-    public FolderRetriever(ContentResolver contentResolver, String typeId) {
+    Set<String> directoryPathSet = new HashSet<>();
+
+    public FoldersRetriever(ContentResolver contentResolver, String typeId) {
         super(contentResolver, typeId);
     }
 
@@ -38,8 +42,8 @@ public class FolderRetriever extends ContentResolverRetriever {
 
     @Override
     Cursor getResults(String id) {
-        // TODO: implement
-        return null;
+        return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,PROJECTION,
+                null, null, null);
     }
 
     @Override
@@ -48,12 +52,23 @@ public class FolderRetriever extends ContentResolverRetriever {
     }
 
     @Override
-    public List<MediaBrowserCompat.MediaItem> getChildren(@NonNull String id) {
-        Cursor cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,PROJECTION,
-                null, null, null);
+    MediaBrowserCompat.MediaItem buildMediaItem(Cursor cursor) {
+        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+        File file = new File(path);
+        File directory = file.getParentFile();
 
-        return createResultList(cursor);
+        String directoryName = null;
+        String directoryPath = null;
 
+        if (null != directory) {
+            directoryName = directory.getName();
+            directoryPath = directory.getAbsolutePath();
+
+            if (directoryPathSet.add(directoryPath)) {
+                return createFolderMediaItem(directoryName, directoryPath);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -61,42 +76,13 @@ public class FolderRetriever extends ContentResolverRetriever {
         return null;
     }
 
-    private List<MediaBrowserCompat.MediaItem> createResultList(Cursor cursor) {
-        List<MediaBrowserCompat.MediaItem> listToReturn = new ArrayList<>();
-        Set<String> directoryPathSet = new HashSet<>();
-
-        while (cursor.moveToNext()) {
-            String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-            File file = new File(path);
-            File directory = file.getParentFile();
-
-            String directoryName = null;
-            String directoryPath = null;
-
-            if (null != directory) {
-                directoryName = directory.getName();
-                directoryPath = directory.getAbsolutePath();
-
-                if (directoryPathSet.add(directoryPath)) {
-                    listToReturn.add(createFolderMediaItem(directoryName, directoryPath));
-                }
-            }
-
-        }
-        return listToReturn;
-    }
-
     private MediaBrowserCompat.MediaItem createFolderMediaItem(String directoryName, String directoryPath){
-
-
         Bundle extras = new Bundle();
         extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directoryName);
         extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directoryPath);
         extras.putSerializable(MEDIA_ITEM_TYPE, getType());
         extras.putString(MEDIA_ITEM_TYPE_ID, childId);
 
-
-        // TODO: add code to fetch album art also
         MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()
                 .setMediaId(directoryPath)
                 .setTitle(directoryName)
@@ -104,5 +90,10 @@ public class FolderRetriever extends ContentResolverRetriever {
                 .setExtras(extras);
 
         return new MediaBrowserCompat.MediaItem(mediaDescriptionCompatBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
+    }
+
+    @Override
+    public int compare(MediaBrowserCompat.MediaItem m1, MediaBrowserCompat.MediaItem m2) {
+        return uppercaseStringCompare(getTitle(m1), getTitle(m2));
     }
 }

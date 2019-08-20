@@ -20,6 +20,7 @@ import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.activities.MediaItemTypeToActivityMap;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
+import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjector;
 import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.MediaItemType;
@@ -91,7 +92,7 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         // TODO: ensure to send in the correct type to get the right results from the content retriever
         String mediaId = IdGenerator.generateGetChildrenId(itemTypeId, itemId);
 
-        if (intentClass == MediaPlayerActivity.class) {
+        if (intentClass == MediaPlayerActivityInjector.class) {
             mediaId = IdGenerator.generatePrepareMediaId(mediaId, itemId);
         }
         Intent intent = new Intent(getContext(), intentClass); // TODO: make a media item to activity map

@@ -33,7 +33,7 @@ public final class ComparatorUtils {
 
 
     public static final Comparator<MediaItem> compareRootMediaItemsByMediaItemType = ComparatorUtils::compareRootMediaItemsByMediaItemType;
-    private static int compareRootMediaItemsByMediaItemType(MediaItem m1, MediaItem m2) {
+    public static int compareRootMediaItemsByMediaItemType(MediaItem m1, MediaItem m2) {
         MediaItemType c1 = MediaItemUtils.getMediaItemType(m1);
         MediaItemType c2 = MediaItemUtils.getMediaItemType(m2);
         if (c1 == null && c2 == null) {
@@ -103,7 +103,7 @@ public final class ComparatorUtils {
         return type;
     }
 
-    private static int uppercaseStringCompare(@Nullable String string1, @Nullable String string2) {
+    public static int uppercaseStringCompare(@Nullable String string1, @Nullable String string2) {
         if (string1 == null && string2 == null) {
             return 0;
         } else if (null == string1) {

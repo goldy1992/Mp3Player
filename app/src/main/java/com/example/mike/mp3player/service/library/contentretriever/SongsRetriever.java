@@ -20,8 +20,10 @@ import java.util.List;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_DURATION;
+import static com.example.mike.mp3player.commons.ComparatorUtils.uppercaseStringCompare;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
@@ -59,21 +61,12 @@ public class SongsRetriever extends ContentResolverRetriever {
     }
 
     @Override
-    public List<MediaBrowserCompat.MediaItem> getChildren(@NonNull String id) {
-        List<MediaBrowserCompat.MediaItem> listToReturn = new ArrayList<>();
-        Cursor cursor = getResults(id);
-        while (cursor.moveToNext()) {
-            listToReturn.add(createPlayableMediaItemFromCursor(cursor));
-        }
-        return listToReturn;
-    }
-
-    @Override
     public List<MediaBrowserCompat.MediaItem> search(@NonNull String query) {
         return null;
     }
 
-    private MediaBrowserCompat.MediaItem createPlayableMediaItemFromCursor(Cursor c){
+    @Override
+    MediaBrowserCompat.MediaItem buildMediaItem(Cursor c){
         final String mediaId = c.getString(c.getColumnIndex(MediaStore.Audio.Media._ID));
         final String mediaFilePath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
         final long duration = c.getLong(c.getColumnIndex(MediaStore.Audio.Media.DURATION));
@@ -121,5 +114,10 @@ public class SongsRetriever extends ContentResolverRetriever {
                 .setExtras(extras);
 
         return new MediaBrowserCompat.MediaItem(mediaDescriptionCompatBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
+    }
+
+    @Override
+    public int compare(MediaBrowserCompat.MediaItem m1, MediaBrowserCompat.MediaItem m2) {
+        return uppercaseStringCompare(getTitle(m1), getTitle(m2));
     }
 }
