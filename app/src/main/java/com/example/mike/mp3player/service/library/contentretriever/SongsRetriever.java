@@ -49,8 +49,8 @@ public class SongsRetriever extends ContentResolverRetriever {
 
     @Override
     Cursor getResults(String id) {
-        // TODO: implement
-        return null;
+        return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,PROJECTION,
+                null, null, null);
     }
 
     @Override
@@ -61,8 +61,7 @@ public class SongsRetriever extends ContentResolverRetriever {
     @Override
     public List<MediaBrowserCompat.MediaItem> getChildren(@NonNull String id) {
         List<MediaBrowserCompat.MediaItem> listToReturn = new ArrayList<>();
-        Cursor cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,PROJECTION,
-                null, null, null);
+        Cursor cursor = getResults(id);
         while (cursor.moveToNext()) {
             listToReturn.add(createPlayableMediaItemFromCursor(cursor));
         }

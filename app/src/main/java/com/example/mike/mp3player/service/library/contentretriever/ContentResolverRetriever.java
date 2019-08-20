@@ -22,7 +22,7 @@ public abstract class ContentResolverRetriever implements ContentRetriever {
 
     public abstract MediaItemType getType();
     abstract Cursor getResults(String id);
-    public abstract String[] getProjection();
+    abstract String[] getProjection();
 
 
 }

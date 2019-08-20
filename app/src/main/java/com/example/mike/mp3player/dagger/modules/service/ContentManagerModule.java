@@ -67,13 +67,15 @@ public class ContentManagerModule {
 
     @Singleton
     @Provides
-    public EnumMap<MediaItemType, ContentRetriever> getContentRetrievers(RootRetriever rootRetriever, Set<ContentResolverRetriever> contentResolverRetrieverSet) {
+    public EnumMap<MediaItemType, ContentRetriever> getContentRetrievers(RootRetriever rootRetriever, Set<ContentResolverRetriever> contentResolverRetrieverSet, ContentResolver contentResolver) {
         EnumMap<MediaItemType, ContentRetriever> map = new EnumMap<>(MediaItemType.class);
         for (MediaItemType mediaItemType : MediaItemType.values()) {
             switch (mediaItemType) {
-                case FOLDER:
                 case SONGS:
                 case SONG:
+                    map.put(mediaItemType, getContentResolverRetrieverFromSet(MediaItemType.SONG, contentResolverRetrieverSet));
+                    break;
+                case FOLDER:
                     map.put(mediaItemType, getContentResolverRetrieverFromSet(MediaItemType.SONG, contentResolverRetrieverSet));
                     break;
                 case FOLDERS: map.put(mediaItemType, getContentResolverRetrieverFromSet(MediaItemType.FOLDER, contentResolverRetrieverSet));

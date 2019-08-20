@@ -7,6 +7,7 @@ import com.google.common.collect.HashBiMap;
 
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import javax.inject.Named;
@@ -23,8 +24,17 @@ public class MediaItemTypeIdModule {
     public BiMap<MediaItemType, String> provideIdBiMap() {
         BiMap<MediaItemType, String> map = HashBiMap.create();
 
+        // ensure unique ids
+        HashSet<String> idSet = new HashSet<>();
+
         for (MediaItemType mediaItemType : MediaItemType.values()) {
-            map.put(mediaItemType, IdGenerator.generateRootId(mediaItemType.name()));
+            boolean added = false;
+            String id = null;
+             while (!added) {
+                 id = IdGenerator.generateRootId(mediaItemType.name());
+                 added = idSet.add(id);
+             }
+            map.put(mediaItemType, id);
         }
         return map;
     }
