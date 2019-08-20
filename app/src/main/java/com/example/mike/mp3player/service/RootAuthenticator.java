@@ -3,6 +3,7 @@ package com.example.mike.mp3player.service;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.example.mike.mp3player.commons.MediaItemType;
@@ -18,7 +19,8 @@ import static com.example.mike.mp3player.commons.Constants.PACKAGE_NAME;
 public class RootAuthenticator {
 
     private final String acceptedMediaId;
-    private final String REJECTED_MEDIA_ROOT_ID = "empty_root_id";
+    @VisibleForTesting
+    public final String REJECTED_MEDIA_ROOT_ID = "empty_root_id";
 
     @Inject
     public RootAuthenticator(String acceptedMediaId) {
@@ -43,6 +45,10 @@ public class RootAuthenticator {
 
     public boolean allowSubscription(String id) {
         return !TextUtils.equals(REJECTED_MEDIA_ROOT_ID, id);
+    }
+
+    public boolean rejectRootSubscription(String id) {
+        return REJECTED_MEDIA_ROOT_ID.equals(id);
     }
 
     private boolean allowBrowsing(String clientPackageName, int clientUid) {

@@ -10,18 +10,16 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.example.mike.mp3player.service.library.ContentManager;
 import com.example.mike.mp3player.service.session.MediaSessionCallback;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import static com.example.mike.mp3player.commons.Constants.PACKAGE_NAME;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -30,7 +28,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
 
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
 
-    private ContentManager mediaLibrary;
+    private ContentManager contentManager;
     private HandlerThread worker;
     private Handler handler;
     private MediaSessionCompat mediaSession;
@@ -43,7 +41,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
         super.onCreate();
         this.handler = new Handler(worker.getLooper());
         handler.post(() -> {
-           // this.mediaLibrary.buildDbMediaLibrary();
+           // this.contentManager.buildDbMediaLibrary();
             this.mediaSessionCallback.init();
             setSessionToken(mediaSession.getSessionToken());
             mediaSession.setCallback(mediaSessionCallback);
@@ -66,7 +64,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
         //  Browsing not allowed
-        if (!rootAuthenticator.allowSubscription(parentId)) {
+        if (rootAuthenticator.rejectRootSubscription(parentId)) {
             result.sendResult(null);
             return;
         }
@@ -74,7 +72,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
         result.detach();
         handler.post(() -> {
             // Assume for example that the music catalog is already loaded/cached.
-            List<MediaBrowserCompat.MediaItem> mediaItems = mediaLibrary.getChildren(parentId);
+            List<MediaBrowserCompat.MediaItem> mediaItems = contentManager.getChildren(parentId);
             result.sendResult(mediaItems);
         });
 
@@ -93,14 +91,14 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getMediaSession().release();
+        mediaSession.release();
         worker.quitSafely();
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        getMediaSession().release();
+        mediaSession.release();
         stopSelf();
     }
 
@@ -109,8 +107,8 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     }
 
     @Inject
-    public void setMediaLibrary(ContentManager mediaLibrary) {
-        this.mediaLibrary = mediaLibrary;
+    public void setContentManager(ContentManager contentManager) {
+        this.contentManager = contentManager;
     }
 
     @Inject
@@ -132,7 +130,13 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
         this.rootAuthenticator = rootAuthenticator;
     }
 
+    @VisibleForTesting
     public HandlerThread getWorker() {
         return worker;
+    }
+
+    @VisibleForTesting
+    public ContentManager getContentManager() {
+        return contentManager;
     }
 }

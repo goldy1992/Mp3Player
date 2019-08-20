@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.dagger.components;
 
+import com.example.mike.mp3player.dagger.modules.MockContentManagerModule;
 import com.example.mike.mp3player.dagger.modules.service.ContentManagerModule;
 import com.example.mike.mp3player.dagger.modules.service.HandlerThreadModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaItemTypeIdModule;
@@ -14,7 +15,7 @@ import dagger.Component;
 
 @Singleton
 @Component(modules = {
-        ContentManagerModule.class,
+        MockContentManagerModule.class,
         HandlerThreadModule.class,
         MediaItemTypeIdModule.class,
         MediaPlayerAdapterModule.class,
