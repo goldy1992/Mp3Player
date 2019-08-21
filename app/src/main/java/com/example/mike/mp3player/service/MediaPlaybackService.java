@@ -39,7 +39,6 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onCreate() {
         super.onCreate();
-        this.handler = new Handler(worker.getLooper());
         handler.post(() -> {
            // this.contentManager.buildDbMediaLibrary();
             this.mediaSessionCallback.init();
@@ -75,7 +74,6 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
             List<MediaBrowserCompat.MediaItem> mediaItems = contentManager.getChildren(parentId);
             result.sendResult(mediaItems);
         });
-
     }
 
     @Override
@@ -123,6 +121,11 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Inject
     public void setWorker(HandlerThread handlerThread) {
         this.worker = handlerThread;
+    }
+
+    @Inject
+    public void setHandler(Handler handler) {
+        this.handler = handler;
     }
 
     @Inject

@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.service;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
@@ -26,7 +27,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -47,6 +47,7 @@ public class MediaPlaybackServiceTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         this.mediaPlaybackService = Robolectric.buildService(TestMediaPlaybackServiceInjector.class).create().get();
+        mediaPlaybackService.setHandler(new Handler(getMainLooper()));
         shadowOf(mediaPlaybackService.getWorker().getLooper()).idle();
         mediaPlaybackService.setRootAuthenticator(rootAuthenticator);
     }
