@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.service.session;
 
 import android.os.Bundle;
+import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -73,8 +74,8 @@ public class MediaSessionAdapterTest {
 
         final String title = "title";
         final String artist = "artist";
-//        QueueItem queueItem = createQueueItem(ID, title, artist);
-//        when(playbackManager.getCurrentItem()).thenReturn(queueItem);
+        MediaBrowserCompat.MediaItem queueItem = createQueueItem(ID, title, artist);
+        when(playbackManager.getCurrentItem()).thenReturn(queueItem);
         MediaMetadataCompat mediaMetadata = mediaSessionAdapter.getCurrentMetaData();
         // assert correct ID is returned
         assertTrue(mediaMetadata.containsKey(MediaMetadataCompat.METADATA_KEY_MEDIA_ID));
@@ -91,8 +92,8 @@ public class MediaSessionAdapterTest {
      */
     @Test
     public void testGetCurrentMetaDataWithInvalidData() {
-//        QueueItem queueItem = createQueueItem(ID, null, null);
-//        when(playbackManager.getCurrentItem()).thenReturn(queueItem);
+        MediaBrowserCompat.MediaItem queueItem = createQueueItem(ID, null, null);
+        when(playbackManager.getCurrentItem()).thenReturn(queueItem);
         MediaMetadataCompat mediaMetadata = mediaSessionAdapter.getCurrentMetaData();
         // assert UNKNOWN is returned for title
         assertTrue(mediaMetadata.containsKey(MediaMetadataCompat.METADATA_KEY_TITLE));
@@ -101,7 +102,7 @@ public class MediaSessionAdapterTest {
         assertTrue(mediaMetadata.containsKey(MediaMetadataCompat.METADATA_KEY_ARTIST));
         assertEquals(UNKNOWN, mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
     }
-    private QueueItem createQueueItem(String id, String title, String artist) {
+    private MediaBrowserCompat.MediaItem createQueueItem(String id, String title, String artist) {
         Bundle extras = new Bundle();
         extras.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist);
         MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
@@ -109,7 +110,7 @@ public class MediaSessionAdapterTest {
                 .setTitle(title)
                 .setExtras(extras)
                 .build();
-        return new QueueItem(description, 0L);
+        return new MediaBrowserCompat.MediaItem(description, 0);
     }
     @Test
     public void testUpdateAll() {

@@ -82,13 +82,13 @@ public class PlaybackManagerTest {
     public void getPlaylistMediaId() {
         MediaItem queueItem = MOCK_QUEUE_ITEM;
         final int QUEUE_ITEM_INDEX = 0;
-        final String EXPECTED_MEDIA_ID = "EXPECTED_MEDIA_ID";
+        final Uri EXPECTED_MEDIA_URI = mock(Uri.class);
         MediaDescriptionCompat description = mock(MediaDescriptionCompat.class);
-        when(description.getMediaId()).thenReturn(EXPECTED_MEDIA_ID);
+        when(description.getMediaUri()).thenReturn(EXPECTED_MEDIA_URI);
         when(queueItem.getDescription()).thenReturn(description);
         playbackManager.onAddQueueItem(queueItem);
         Uri result = playbackManager.getPlaylistMediaUri(QUEUE_ITEM_INDEX);
-        assertEquals(EXPECTED_MEDIA_ID, result);
+        assertEquals(EXPECTED_MEDIA_URI, result);
     }
     /**
      * GIVEN: a playlist of 2 items and the playlist is repeating
@@ -178,14 +178,14 @@ public class PlaybackManagerTest {
      */
     @Test
     public void testGetCurrentMediaId() {
-        final String MEDIA_ID = "MEDIA_ID";
+        final Uri MEDIA_URI = mock(Uri.class);
         final MediaItem ITEM1 = MOCK_QUEUE_ITEM;
         MediaDescriptionCompat description = mock(MediaDescriptionCompat.class);
-        when(description.getMediaId()).thenReturn(MEDIA_ID);
+        when(description.getMediaUri()).thenReturn(MEDIA_URI);
         when(ITEM1.getDescription()).thenReturn(description);
         playbackManager.onAddQueueItem(ITEM1);
         final Uri result = playbackManager.getCurrentMediaUri();
-        assertEquals(MEDIA_ID, result);
+        assertEquals(MEDIA_URI, result);
     }
     /**
      * GIVEN: an empty playlist
