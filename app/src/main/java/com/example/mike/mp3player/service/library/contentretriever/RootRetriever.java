@@ -15,9 +15,7 @@ import java.util.TreeSet;
 
 import javax.inject.Inject;
 
-import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByMediaItemType;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
 import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE_ID;
