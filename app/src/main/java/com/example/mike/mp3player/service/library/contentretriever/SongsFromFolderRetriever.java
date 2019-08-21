@@ -4,9 +4,16 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
+import com.example.mike.mp3player.commons.MediaItemType;
+
 public class SongsFromFolderRetriever extends SongsRetriever {
-    public SongsFromFolderRetriever(ContentResolver contentResolver, String typeId) {
-        super(contentResolver, typeId);
+    public SongsFromFolderRetriever(ContentResolver contentResolver, String typeId, String parentId) {
+        super(contentResolver, typeId, parentId);
+    }
+
+    @Override
+    public MediaItemType getParentType() {
+        return MediaItemType.FOLDER;
     }
 
     @Override

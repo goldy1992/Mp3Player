@@ -10,11 +10,16 @@ import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
 import com.example.mike.mp3player.commons.MediaItemType;
+import com.example.mike.mp3player.commons.MediaItemUtils;
 
 import javax.inject.Inject;
 
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
+import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE;
+import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE_ID;
 import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
 public abstract class FolderActivity extends MediaActivityCompat {
@@ -55,7 +60,12 @@ public abstract class FolderActivity extends MediaActivityCompat {
     @Override
     public void onConnected() {
         super.onConnected();
-        this.viewPageFragment.init(MediaItemType.FOLDER, requestId);
+        String childMediaItemsTypeId = getIntent().getStringExtra(MEDIA_ITEM_TYPE_ID);
+        MediaItemType childMediaItemsType = (MediaItemType) getIntent().getSerializableExtra(MEDIA_ITEM_TYPE);
+        String parentMediaItemTypeId = getIntent().getStringExtra(PARENT_MEDIA_ITEM_TYPE_ID);
+        MediaItemType parentMediaItemType = (MediaItemType) getIntent().getSerializableExtra(PARENT_MEDIA_ITEM_TYPE);
+        String itemId = getIntent().getStringExtra(MEDIA_ID);
+        this.viewPageFragment.init(MediaItemType.FOLDER, parentMediaItemTypeId, childMediaItemsType, childMediaItemsTypeId);
         initialiseView(R.layout.activity_folder);
         getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
         getSupportActionBar().setTitle(parent.getDescription().getTitle());

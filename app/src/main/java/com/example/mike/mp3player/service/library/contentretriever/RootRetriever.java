@@ -15,9 +15,14 @@ import java.util.TreeSet;
 
 import javax.inject.Inject;
 
+import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByMediaItemType;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
+import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE;
+import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE_ID;
 
-public class RootRetriever implements ContentRetriever {
+public class RootRetriever extends ContentRetriever {
 
     private List<MediaBrowserCompat.MediaItem> CHILDREN;
     private final EnumMap<MediaItemType, String> childIds;
@@ -25,6 +30,7 @@ public class RootRetriever implements ContentRetriever {
 
     @Inject
     public RootRetriever(EnumMap<MediaItemType, String> childIds) {
+        super(childIds.get(MediaItemType.ROOT));
         this.childIds = childIds;
         TreeSet<MediaBrowserCompat.MediaItem> categorySet = new TreeSet<>(this);
         for (MediaItemType category : MediaItemType.PARENT_TO_CHILD_MAP.get(MediaItemType.ROOT)) {
@@ -43,12 +49,27 @@ public class RootRetriever implements ContentRetriever {
         return null;
     }
 
+    @Override
+    public MediaItemType getType() {
+        return MediaItemType.ROOT;
+    }
+
+    @Override
+    public MediaItemType getParentType() {
+        return null;
+    }
+
     /**
      * @return a root category item
      */
     private MediaBrowserCompat.MediaItem createRootItem(MediaItemType category) {
+
+       // MediaItemType childType =  MediaItemType.PARENT_TO_CHILD_MAP.get(category);
         Bundle extras = new Bundle();
-        extras.putSerializable(Constants.MEDIA_ITEM_TYPE, category);
+        //extras.putSerializable(MEDIA_ITEM_TYPE,);
+        extras.putString(MEDIA_ITEM_TYPE_ID, null);
+        extras.putSerializable(PARENT_MEDIA_ITEM_TYPE, getType());
+        extras.putString(PARENT_MEDIA_ITEM_TYPE_ID, childIds.get(category));
         MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder()
                 .setDescription(category.getDescription())
                 .setTitle(category.getTitle())

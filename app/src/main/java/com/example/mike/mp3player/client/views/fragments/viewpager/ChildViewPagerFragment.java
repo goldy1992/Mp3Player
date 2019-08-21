@@ -31,6 +31,12 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import javax.inject.Inject;
 
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
+import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE;
+import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE_ID;
+
 /**
  * Fragment to show a list of media items, has MediaBrowserAdapter injected into it using Dagger2
  * NOTE: MediaBrowserAdapter is not annotated with inject because:
@@ -45,12 +51,11 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
      * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
      */
     private FastScrollRecyclerView recyclerView;
-
+    private Class<? extends MediaActivityCompat> intentClass;
 
     private MediaItemType parentItemType;
-    private Class<? extends MediaActivityCompat> intentClass;
-    private String parentItemTypeId;
 
+    private String parentItemTypeId;
     /** possibly redundant */
     private MediaItemType childMediaItemsType;
     /** possibly redundant */
@@ -80,25 +85,22 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         this.mediaBrowserAdapter.subscribe(parentItemTypeId);
     }
 
-    public void init(MediaItemType parentMediaItemType, String parentMediaItemId) {
+    public void init(MediaItemType parentMediaItemType, String parentMediaItemId,
+                     MediaItemType childMediaItemsType, String childMediaItemsTypeId) {
         this.parentItemType = parentMediaItemType;
         this.parentItemTypeId = parentMediaItemId;
+        this.childMediaItemsType = childMediaItemsType;
+        this.childMediaItemsTypeId = childMediaItemsTypeId;
     }
 
     @Override
     public void itemSelected(MediaBrowserCompat.MediaItem item) {
-        String itemId = MediaItemUtils.getMediaId(item);
-        String itemTypeId = MediaItemUtils.getMediaItemTypeId(item);
-        // TODO: ensure to send in the correct type to get the right results from the content retriever
-        String mediaId = IdGenerator.generateGetChildrenId(itemTypeId, itemId);
-
-        if (intentClass == MediaPlayerActivityInjector.class) {
-            mediaId = IdGenerator.generatePrepareMediaId(mediaId, itemId);
-        }
         Intent intent = new Intent(getContext(), intentClass); // TODO: make a media item to activity map
-        // TODO: generate different id if going to media player
-        intent.putExtra(Constants.MEDIA_ID, mediaId);
-        intent.putExtra(Constants.MEDIA_ITEM, item);
+        intent.putExtra(PARENT_MEDIA_ITEM_TYPE_ID, childMediaItemsTypeId);
+        intent.putExtra(PARENT_MEDIA_ITEM_TYPE, childMediaItemsType);
+        intent.putExtra(MEDIA_ITEM_TYPE_ID, MediaItemUtils.getMediaItemTypeId(item));
+        intent.putExtra(MEDIA_ITEM_TYPE, MediaItemUtils.getMediaItemType(item));
+        intent.putExtra(MEDIA_ID, MediaItemUtils.getMediaId(item));
         startActivity(intent);
     }
 

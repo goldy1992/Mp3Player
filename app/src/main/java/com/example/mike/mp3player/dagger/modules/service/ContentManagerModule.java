@@ -30,11 +30,11 @@ public class ContentManagerModule {
     public Map<Class<? extends ContentResolverRetriever>, ContentResolverRetriever> provideContentResolverRetrieverMap(ContentResolver contentResolver,
                                                                             EnumMap<MediaItemType, String> ids) {
         Map<Class<? extends ContentResolverRetriever>, ContentResolverRetriever> mapToReturn = new HashMap<>();
-        SongsRetriever songsRetriever = new SongsRetriever(contentResolver, ids.get(MediaItemType.SONG));
+        SongsRetriever songsRetriever = new SongsRetriever(contentResolver, ids.get(MediaItemType.SONG), ids.get(MediaItemType.SONGS));
         mapToReturn.put(SongsRetriever.class, songsRetriever);
-        FoldersRetriever foldersRetriever = new FoldersRetriever(contentResolver, ids.get(MediaItemType.FOLDER));
+        FoldersRetriever foldersRetriever = new FoldersRetriever(contentResolver, ids.get(MediaItemType.FOLDER), ids.get(MediaItemType.FOLDERS));
         mapToReturn.put(FoldersRetriever.class, foldersRetriever);
-        SongsFromFolderRetriever songsFromFolderRetriever = new SongsFromFolderRetriever(contentResolver, ids.get(MediaItemType.SONG));
+        SongsFromFolderRetriever songsFromFolderRetriever = new SongsFromFolderRetriever(contentResolver, ids.get(MediaItemType.SONG), ids.get(MediaItemType.FOLDER));
         mapToReturn.put(SongsFromFolderRetriever.class, songsFromFolderRetriever);
         return mapToReturn;
     }
@@ -42,12 +42,7 @@ public class ContentManagerModule {
     @Singleton
     @Provides
     public RootRetriever provideRootRetriever(EnumMap<MediaItemType, String> ids) {
-        Set<MediaItemType> rootIds = MediaItemType.PARENT_TO_CHILD_MAP.get(MediaItemType.ROOT);
-        EnumMap<MediaItemType, String> childIds = new EnumMap<>(MediaItemType.class);
-        for (MediaItemType m : rootIds) {
-            childIds.put(m, ids.get(m));
-        }
-        return new RootRetriever(childIds);
+        return new RootRetriever(ids);
     }
 
     @Singleton

@@ -50,7 +50,6 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
 
         if (!children.isEmpty()) {
             this.items.addAll(children);
-            this.getItems().addAll(children);
             notifyDataSetChanged();
         }
         this.isInitialised = true;

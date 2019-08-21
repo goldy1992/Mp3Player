@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import com.example.mike.mp3player.commons.MediaItemType;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
@@ -23,6 +22,8 @@ import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_DURATION
 import static com.example.mike.mp3player.commons.ComparatorUtils.uppercaseStringCompare;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
+import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE;
+import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE_ID;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
@@ -40,13 +41,18 @@ public class SongsRetriever extends ContentResolverRetriever {
             MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.ALBUM_ID};
 
-    public SongsRetriever(ContentResolver contentResolver, String typeId) {
-        super(contentResolver, typeId);
+    public SongsRetriever(ContentResolver contentResolver, String typeId, String parentId) {
+        super(contentResolver, typeId, parentId);
     }
 
     @Override
     public MediaItemType getType() {
         return MediaItemType.SONG;
+    }
+
+    @Override
+    public MediaItemType getParentType() {
+        return MediaItemType.SONGS;
     }
 
     @Override
@@ -104,7 +110,9 @@ public class SongsRetriever extends ContentResolverRetriever {
         extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directoryPath);
         extras.putParcelable(METADATA_KEY_ALBUM_ART_URI, albumArtUri);
         extras.putSerializable(MEDIA_ITEM_TYPE, getType());
+        extras.putSerializable(PARENT_MEDIA_ITEM_TYPE, getParentType());
         extras.putString(MEDIA_ITEM_TYPE_ID, childId);
+        extras.putString(PARENT_MEDIA_ITEM_TYPE_ID, parentId);
 
         // TODO: add code to fetch album art also
         MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()

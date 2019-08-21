@@ -12,19 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
-public abstract class ContentResolverRetriever implements ContentRetriever {
+public abstract class ContentResolverRetriever extends ContentRetriever {
 
     final ContentResolver contentResolver;
     final String childId;
 
-
-    public ContentResolverRetriever(ContentResolver contentResolver, String childId) {
+    public ContentResolverRetriever(ContentResolver contentResolver, String childId, String parentId) {
+        super(parentId);
         this.contentResolver = contentResolver;
         this.childId = childId;
-
     }
 
-    public abstract MediaItemType getType();
     abstract Cursor getResults(String id);
     abstract String[] getProjection();
     abstract MediaBrowserCompat.MediaItem buildMediaItem(Cursor cursor);

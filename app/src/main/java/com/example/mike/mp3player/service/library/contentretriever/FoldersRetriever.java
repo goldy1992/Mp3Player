@@ -31,13 +31,18 @@ public class FoldersRetriever extends ContentResolverRetriever {
 
     Set<String> directoryPathSet = new HashSet<>();
 
-    public FoldersRetriever(ContentResolver contentResolver, String typeId) {
-        super(contentResolver, typeId);
+    public FoldersRetriever(ContentResolver contentResolver, String typeId, String parentId) {
+        super(contentResolver, typeId, parentId);
     }
 
     @Override
     public MediaItemType getType() {
         return MediaItemType.FOLDER;
+    }
+
+    @Override
+    public MediaItemType getParentType() {
+        return MediaItemType.FOLDERS;
     }
 
     @Override
