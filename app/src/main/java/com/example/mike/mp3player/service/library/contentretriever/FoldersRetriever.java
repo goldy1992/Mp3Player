@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import com.example.mike.mp3player.commons.MediaItemType;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,8 +30,8 @@ public class FoldersRetriever extends ContentResolverRetriever {
 
     Set<String> directoryPathSet = new HashSet<>();
 
-    public FoldersRetriever(ContentResolver contentResolver, String typeId, String parentId) {
-        super(contentResolver, typeId, parentId);
+    public FoldersRetriever(ContentResolver contentResolver, String idPrefix) {
+        super(contentResolver, idPrefix);
     }
 
     @Override
@@ -85,11 +84,9 @@ public class FoldersRetriever extends ContentResolverRetriever {
         Bundle extras = new Bundle();
         extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directoryName);
         extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directoryPath);
-        extras.putSerializable(MEDIA_ITEM_TYPE, getType());
-        extras.putString(MEDIA_ITEM_TYPE_ID, childId);
 
         MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()
-                .setMediaId(directoryPath)
+                .setMediaId(idPrefix + directoryPath)
                 .setTitle(directoryName)
                 .setDescription(directoryPath)
                 .setExtras(extras);

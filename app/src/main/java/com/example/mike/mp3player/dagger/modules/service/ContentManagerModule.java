@@ -28,22 +28,18 @@ public class ContentManagerModule {
 
     @Singleton
     @Provides
-    public Map<Class<? extends ContentResolverRetriever>, ContentResolverRetriever> provideContentResolverRetrieverMap(ContentResolver contentResolver,
+    public Map<Class<? extends ContentRetriever>, ContentRetriever> provideContentResolverRetrieverMap(ContentResolver contentResolver,
                                                                             EnumMap<MediaItemType, String> ids) {
-        Map<Class<? extends ContentResolverRetriever>, ContentResolverRetriever> mapToReturn = new HashMap<>();
-        SongsRetriever songsRetriever = new SongsRetriever(contentResolver, ids.get(MediaItemType.SONG), ids.get(MediaItemType.SONGS));
+        Map<Class<? extends ContentRetriever>, ContentRetriever> mapToReturn = new HashMap<>();
+        RootRetriever rootRetriever = new RootRetriever(ids);
+        mapToReturn.put(RootRetriever.class, rootRetriever);
+        SongsRetriever songsRetriever = new SongsRetriever(contentResolver, ids.get(MediaItemType.SONGS));
         mapToReturn.put(SongsRetriever.class, songsRetriever);
-        FoldersRetriever foldersRetriever = new FoldersRetriever(contentResolver, ids.get(MediaItemType.FOLDER), ids.get(MediaItemType.FOLDERS));
+        FoldersRetriever foldersRetriever = new FoldersRetriever(contentResolver, ids.get(MediaItemType.FOLDERS));
         mapToReturn.put(FoldersRetriever.class, foldersRetriever);
-        SongsFromFolderRetriever songsFromFolderRetriever = new SongsFromFolderRetriever(contentResolver, ids.get(MediaItemType.SONG), ids.get(MediaItemType.FOLDER));
+        SongsFromFolderRetriever songsFromFolderRetriever = new SongsFromFolderRetriever(contentResolver, ids.get(MediaItemType.FOLDER));
         mapToReturn.put(SongsFromFolderRetriever.class, songsFromFolderRetriever);
         return mapToReturn;
-    }
-
-    @Singleton
-    @Provides
-    public RootRetriever provideRootRetriever(EnumMap<MediaItemType, String> ids) {
-        return new RootRetriever(ids);
     }
 
     @Singleton
@@ -63,22 +59,22 @@ public class ContentManagerModule {
 
     @Provides
     @Singleton
-    public Map<String, ContentRetriever> provideContentRetrieverMap(Set<MediaItemTypeInfo> mediaItemTypeInfos,
-            Map<Class<? extends ContentResolverRetriever>, ContentRetriever> contentRetrieverMap) {
+    public Map<String, ContentRetriever> provideContentRetrieverMap(
+            Map<Class<? extends ContentRetriever>, ContentRetriever> contentRetrieverMap,
+            EnumMap<MediaItemType, String> idMap) {
         Map<String, ContentRetriever> map = new HashMap<>();
-        for (MediaItemTypeInfo mediaItemTypeInfo : mediaItemTypeInfos) {
-            String id = mediaItemTypeInfo.getTypeId();
-            switch (mediaItemTypeInfo.getMediaItemType()) {
+        for (MediaItemType mediaItemTypeInfo : idMap.keySet()) {
+            switch (mediaItemTypeInfo) {
                 case SONGS:
                 case SONG:
-                    map.put(id, contentRetrieverMap.get(SongsRetriever.class));
+                    map.put(idMap.get(MediaItemType.SONGS), contentRetrieverMap.get(SongsRetriever.class));
                     break;
                 case FOLDER:
-                    map.put(id, contentRetrieverMap.get(SongsFromFolderRetriever.class));
+                    map.put(idMap.get(MediaItemType.FOLDER), contentRetrieverMap.get(SongsFromFolderRetriever.class));
                     break;
-                case FOLDERS: map.put(id, contentRetrieverMap.get(FoldersRetriever.class));
+                case FOLDERS: map.put(idMap.get(MediaItemType.FOLDERS), contentRetrieverMap.get(FoldersRetriever.class));
                     break;
-                case ROOT: map.put(id, contentRetrieverMap.get(RootRetriever.class));
+                case ROOT: map.put(idMap.get(MediaItemType.ROOT), contentRetrieverMap.get(RootRetriever.class));
                     break;
                 default:
                     break;

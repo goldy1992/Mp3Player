@@ -24,44 +24,6 @@ public class MediaItemTypeIdModule {
 
     @Singleton
     @Provides
-    public Map<MediaItemType, MediaItemTypeInfo> provideListOfMediaItemTypeInfo(EnumSet<MediaItemType> mediaItemTypes) {
-        Map<MediaItemType, MediaItemTypeInfo> toReturn = new HashMap<>();
-        // ensure unique ids
-        HashSet<String> idSet = new HashSet<>();
-
-        for (MediaItemType mediaItemType : MediaItemType.values()) {
-            boolean added = false;
-            String id = null;
-            while (!added) {
-                id = IdGenerator.generateRootId(mediaItemType.name());
-                added = idSet.add(id);
-            }
-            toReturn.put(mediaItemType, new MediaItemTypeInfo(mediaItemType, id));
-        }
-        return toReturn;
-    }
-
-    @Singleton
-    @Provides
-    public Set<MediaItemTypeInfo> provideSetOfMediaItemTypeInfo(EnumSet<MediaItemType> mediaItemTypes) {
-        Set<MediaItemTypeInfo> toReturn = new HashSet<>();
-        // ensure unique ids
-        HashSet<String> idSet = new HashSet<>();
-
-        for (MediaItemType mediaItemType : MediaItemType.values()) {
-            boolean added = false;
-            String id = null;
-            while (!added) {
-                id = IdGenerator.generateRootId(mediaItemType.name());
-                added = idSet.add(id);
-            }
-            toReturn.add(new MediaItemTypeInfo(mediaItemType, id));
-        }
-        return toReturn;
-    }
-
-    @Singleton
-    @Provides
     public BiMap<MediaItemType, String> provideIdBiMap() {
         BiMap<MediaItemType, String> map = HashBiMap.create();
 

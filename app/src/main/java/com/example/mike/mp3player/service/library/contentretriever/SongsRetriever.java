@@ -41,8 +41,8 @@ public class SongsRetriever extends ContentResolverRetriever {
             MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.ALBUM_ID};
 
-    public SongsRetriever(ContentResolver contentResolver, String typeId, String parentId) {
-        super(contentResolver, typeId, parentId);
+    public SongsRetriever(ContentResolver contentResolver, String idPrefix) {
+        super(contentResolver, idPrefix);
     }
 
     @Override
@@ -109,10 +109,6 @@ public class SongsRetriever extends ContentResolverRetriever {
         extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directoryName);
         extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directoryPath);
         extras.putParcelable(METADATA_KEY_ALBUM_ART_URI, albumArtUri);
-        extras.putSerializable(MEDIA_ITEM_TYPE, getType());
-        extras.putSerializable(PARENT_MEDIA_ITEM_TYPE, getParentType());
-        extras.putString(MEDIA_ITEM_TYPE_ID, childId);
-        extras.putString(PARENT_MEDIA_ITEM_TYPE_ID, parentId);
 
         // TODO: add code to fetch album art also
         MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()

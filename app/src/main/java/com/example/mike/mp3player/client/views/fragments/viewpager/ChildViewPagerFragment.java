@@ -96,10 +96,6 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
     @Override
     public void itemSelected(MediaBrowserCompat.MediaItem item) {
         Intent intent = new Intent(getContext(), intentClass); // TODO: make a media item to activity map
-        intent.putExtra(PARENT_MEDIA_ITEM_TYPE_ID, childMediaItemsTypeId);
-        intent.putExtra(PARENT_MEDIA_ITEM_TYPE, childMediaItemsType);
-        intent.putExtra(MEDIA_ITEM_TYPE_ID, MediaItemUtils.getMediaItemTypeId(item));
-        intent.putExtra(MEDIA_ITEM_TYPE, MediaItemUtils.getMediaItemType(item));
         intent.putExtra(MEDIA_ID, MediaItemUtils.getMediaId(item));
         startActivity(intent);
     }

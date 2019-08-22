@@ -4,28 +4,17 @@ import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 
-import com.example.mike.mp3player.commons.ComparatorUtils;
-import com.example.mike.mp3player.commons.Constants;
-import com.example.mike.mp3player.commons.MediaItemLibraryInfo;
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.commons.MediaItemTypeInfo;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.TreeSet;
 
 import javax.inject.Inject;
 
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByMediaItemType;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_LIBRARY_INFO;
-import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE;
-import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE_ID;
-import static com.example.mike.mp3player.commons.MediaItemType.PARENT_TO_CHILD_MAP;
 import static com.example.mike.mp3player.commons.MediaItemType.ROOT;
 
 public class RootRetriever extends ContentRetriever {
@@ -35,9 +24,8 @@ public class RootRetriever extends ContentRetriever {
 
 
     @Inject
-    public RootRetriever(Map<MediaItemTypeInfo, String> childInfos) {
-        super(childInfos);
-        this.childIds = childIds;
+    public RootRetriever(EnumMap<MediaItemType, String> childInfos) {
+        this.childIds = childInfos;
         TreeSet<MediaBrowserCompat.MediaItem> categorySet = new TreeSet<>(this);
         for (MediaItemType category : MediaItemType.PARENT_TO_CHILD_MAP.get(ROOT)) {
             categorySet.add(createRootItem(category));
@@ -68,7 +56,7 @@ public class RootRetriever extends ContentRetriever {
     /**
      * @return a root category item
      */
-    private MediaBrowserCompat.MediaItem createRootItem(MediaItemTypeInfo category) {
+    private MediaBrowserCompat.MediaItem createRootItem(MediaItemType category) {
         Bundle extras = new Bundle();
         //extras.putSerializable(MEDIA_ITEM_TYPE,);
         extras.putSerializable(MEDIA_LIBRARY_INFO, childIds.get(category));

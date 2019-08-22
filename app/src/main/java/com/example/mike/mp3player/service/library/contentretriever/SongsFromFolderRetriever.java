@@ -7,8 +7,8 @@ import android.provider.MediaStore;
 import com.example.mike.mp3player.commons.MediaItemType;
 
 public class SongsFromFolderRetriever extends SongsRetriever {
-    public SongsFromFolderRetriever(ContentResolver contentResolver, String typeId, String parentId) {
-        super(contentResolver, typeId, parentId);
+    public SongsFromFolderRetriever(ContentResolver contentResolver, String idPrefix) {
+        super(contentResolver, idPrefix);
     }
 
     @Override
