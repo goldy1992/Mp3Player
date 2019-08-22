@@ -6,28 +6,21 @@ import com.example.mike.mp3player.service.library.contentretriever.ContentRetrie
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 public class ContentManager {
 
-    private final Map<String, MediaItemType> idToMediaItemMap;
-    private final Map<String, MediaItemType> idToPlayableMediaItemMap;
-    private final Map<MediaItemType, ContentRetriever> contentRetrieverMap;
+    private final Map<String, ContentRetriever> contentRetrieverMap;
 
     @Inject
-    public ContentManager(@Named("all_media_item_types") Map<String, MediaItemType> mediaItemTypeStringBiMap,
-                          @Named("playable_media_item_types") Map<String, MediaItemType> idToPlayableMediaItemMap,
-                          EnumMap<MediaItemType, ContentRetriever> contentRetrieverMap) {
-        this.idToMediaItemMap = mediaItemTypeStringBiMap;
-        this.idToPlayableMediaItemMap = idToPlayableMediaItemMap;
-        this.contentRetrieverMap = contentRetrieverMap;
+    public ContentManager(Map<String, ContentRetriever> contentRetrieverMap) {
+
+       this.contentRetrieverMap = contentRetrieverMap;
     }
     /**
      * The id is in the following format
@@ -47,17 +40,12 @@ public class ContentManager {
         }
         String mediaItemTypeId = splitId.get(0);
 
-        MediaItemType mediaItemType = idToMediaItemMap.get(mediaItemTypeId);
-        if (null == mediaItemType) {
-            return null;
-        }
-
         String idSuffix = null;
         if (splitId.size() > 1) {
             idSuffix = splitId.get(1);
         }
 
-        ContentRetriever contentRetriever = contentRetrieverMap.get(mediaItemType);
+        ContentRetriever contentRetriever = contentRetrieverMap.get(mediaItemTypeId);
         return contentRetriever == null ? null : contentRetriever.getChildren(idSuffix);
     }
     public List<MediaItem> getPlaylist(String id) {
@@ -67,17 +55,12 @@ public class ContentManager {
         }
         String mediaItemTypeId = splitId.get(0);
 
-        MediaItemType mediaItemType = idToPlayableMediaItemMap.get(mediaItemTypeId);
-        if (null == mediaItemType) {
-            return null;
-        }
-
         String idSuffix = null;
         if (splitId.size() > 1) {
             idSuffix = splitId.get(1);
         }
 
-        ContentRetriever contentRetriever = contentRetrieverMap.get(mediaItemType);
+        ContentRetriever contentRetriever = contentRetrieverMap.get(mediaItemTypeId);
         return contentRetriever == null ? null : contentRetriever.getChildren(idSuffix);
     }
 

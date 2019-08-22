@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 
 import com.example.mike.mp3player.commons.MediaItemType;
+import com.example.mike.mp3player.commons.MediaItemTypeInfo;
 import com.example.mike.mp3player.service.library.contentretriever.ContentResolverRetriever;
 import com.example.mike.mp3player.service.library.contentretriever.ContentRetriever;
 import com.example.mike.mp3player.service.library.contentretriever.FoldersRetriever;
@@ -60,23 +61,24 @@ public class ContentManagerModule {
         return context.getContentResolver();
     }
 
-    @Singleton
     @Provides
-    public EnumMap<MediaItemType, ContentRetriever> getContentRetrievers(RootRetriever rootRetriever,
-        Map<Class<? extends ContentResolverRetriever>, ContentResolverRetriever> contentResolverRetrieverMap) {
-        EnumMap<MediaItemType, ContentRetriever> map = new EnumMap<>(MediaItemType.class);
-        for (MediaItemType mediaItemType : MediaItemType.values()) {
-            switch (mediaItemType) {
+    @Singleton
+    public Map<String, ContentRetriever> provideContentRetrieverMap(Set<MediaItemTypeInfo> mediaItemTypeInfos,
+            Map<Class<? extends ContentResolverRetriever>, ContentRetriever> contentRetrieverMap) {
+        Map<String, ContentRetriever> map = new HashMap<>();
+        for (MediaItemTypeInfo mediaItemTypeInfo : mediaItemTypeInfos) {
+            String id = mediaItemTypeInfo.getTypeId();
+            switch (mediaItemTypeInfo.getMediaItemType()) {
                 case SONGS:
                 case SONG:
-                    map.put(mediaItemType, contentResolverRetrieverMap.get(SongsRetriever.class));
+                    map.put(id, contentRetrieverMap.get(SongsRetriever.class));
                     break;
                 case FOLDER:
-                    map.put(mediaItemType, contentResolverRetrieverMap.get(SongsFromFolderRetriever.class));
+                    map.put(id, contentRetrieverMap.get(SongsFromFolderRetriever.class));
                     break;
-                case FOLDERS: map.put(mediaItemType, contentResolverRetrieverMap.get(FoldersRetriever.class));
+                case FOLDERS: map.put(id, contentRetrieverMap.get(FoldersRetriever.class));
                     break;
-                case ROOT: map.put(mediaItemType, rootRetriever);
+                case ROOT: map.put(id, contentRetrieverMap.get(RootRetriever.class));
                     break;
                 default:
                     break;
@@ -84,17 +86,5 @@ public class ContentManagerModule {
         }
         return map;
     }
-
-    private ContentResolverRetriever getContentResolverRetrieverFromSet(MediaItemType mediaItemType,
-                                                                        Set<ContentResolverRetriever> contentResolverRetrieverSet) {
-        for (ContentResolverRetriever contentResolverRetriever : contentResolverRetrieverSet) {
-            if (contentResolverRetriever.getType() == mediaItemType) {
-                return contentResolverRetriever;
-            }
-        }
-        return null;
-    }
-
-
 
 }

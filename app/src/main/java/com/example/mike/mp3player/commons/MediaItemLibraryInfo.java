@@ -5,27 +5,27 @@ import java.util.Set;
 
 public final class MediaItemLibraryInfo implements Serializable {
 
-    private final MediaItemTypeWrapper parent;
-    private final MediaItemTypeWrapper mediaItemType;
-    private final Set<MediaItemTypeWrapper> childTypes;
+    private final MediaItemTypeInfo parent;
+    private final MediaItemTypeInfo mediaItemType;
+    private final Set<MediaItemTypeInfo> childTypes;
 
-    public MediaItemLibraryInfo(MediaItemTypeWrapper parent,
-                                MediaItemTypeWrapper mediaItemType,
-                                Set<MediaItemTypeWrapper> childTypes) {
+    public MediaItemLibraryInfo(MediaItemTypeInfo parent,
+                                MediaItemTypeInfo mediaItemType,
+                                Set<MediaItemTypeInfo> childTypes) {
         this.parent = parent;
         this.mediaItemType = mediaItemType;
         this.childTypes = childTypes;
     }
 
-    public MediaItemTypeWrapper getParent() {
+    public MediaItemTypeInfo getParent() {
         return parent;
     }
 
-    public MediaItemTypeWrapper getMediaItemType() {
+    public MediaItemTypeInfo getMediaItemType() {
         return mediaItemType;
     }
 
-    public Set<MediaItemTypeWrapper> getChildTypes() {
+    public Set<MediaItemTypeInfo> getChildTypes() {
         return childTypes;
     }
 }

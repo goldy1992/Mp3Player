@@ -69,6 +69,7 @@ public final class Constants {
     public static final String REJECTION = "REJECTION";
     public static final String PACKAGE_NAME = "com.example.mike.mp3player";
 
+    public static final String MEDIA_LIBRARY_INFO = "MEDIA_LIBRARY_INFO";
     public static final String MEDIA_ITEM_TYPE = "MEDIA_ITEM_TYPE";
     public static final String MEDIA_ITEM_TYPE_ID = "MEDIA_ITEM_TYPE_ID";
     public static final String PARENT_MEDIA_ITEM_TYPE = "PARENT_MEDIA_ITEM_TYPE";

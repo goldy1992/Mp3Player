@@ -1,14 +1,17 @@
 package com.example.mike.mp3player.dagger.modules.service;
 
 import com.example.mike.mp3player.commons.MediaItemType;
+import com.example.mike.mp3player.commons.MediaItemTypeInfo;
 import com.example.mike.mp3player.service.library.utils.IdGenerator;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -18,6 +21,44 @@ import dagger.Provides;
 
 @Module
 public class MediaItemTypeIdModule {
+
+    @Singleton
+    @Provides
+    public Map<MediaItemType, MediaItemTypeInfo> provideListOfMediaItemTypeInfo(EnumSet<MediaItemType> mediaItemTypes) {
+        Map<MediaItemType, MediaItemTypeInfo> toReturn = new HashMap<>();
+        // ensure unique ids
+        HashSet<String> idSet = new HashSet<>();
+
+        for (MediaItemType mediaItemType : MediaItemType.values()) {
+            boolean added = false;
+            String id = null;
+            while (!added) {
+                id = IdGenerator.generateRootId(mediaItemType.name());
+                added = idSet.add(id);
+            }
+            toReturn.put(mediaItemType, new MediaItemTypeInfo(mediaItemType, id));
+        }
+        return toReturn;
+    }
+
+    @Singleton
+    @Provides
+    public Set<MediaItemTypeInfo> provideSetOfMediaItemTypeInfo(EnumSet<MediaItemType> mediaItemTypes) {
+        Set<MediaItemTypeInfo> toReturn = new HashSet<>();
+        // ensure unique ids
+        HashSet<String> idSet = new HashSet<>();
+
+        for (MediaItemType mediaItemType : MediaItemType.values()) {
+            boolean added = false;
+            String id = null;
+            while (!added) {
+                id = IdGenerator.generateRootId(mediaItemType.name());
+                added = idSet.add(id);
+            }
+            toReturn.add(new MediaItemTypeInfo(mediaItemType, id));
+        }
+        return toReturn;
+    }
 
     @Singleton
     @Provides
