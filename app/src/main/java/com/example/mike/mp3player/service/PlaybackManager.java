@@ -5,11 +5,11 @@ import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
@@ -26,11 +26,14 @@ public class PlaybackManager {
     private int queueIndex = EMPTY_PLAYLIST_INDEX;
     private Random random = new Random();
     private boolean isRepeating = true;
-    private final List<MediaItem> playlist = new ArrayList<>();
+    private final List<MediaItem> playlist;
     private boolean shuffleOn = false;
 
     @Inject
-    public PlaybackManager() { }
+    public PlaybackManager(@NonNull List<MediaItem> initialPlayList, @NonNull int startIndex) {
+        this.playlist = initialPlayList;
+        this.queueIndex = startIndex;
+    }
 
     public List<MediaItem> onAddQueueItem(MediaItem item) {
         playlist.add(item);

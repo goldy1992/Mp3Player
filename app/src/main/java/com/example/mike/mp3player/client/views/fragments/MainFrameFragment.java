@@ -166,12 +166,10 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
         rootItemsOrdered.addAll(children);
         for (MediaBrowserCompat.MediaItem mediaItem : rootItemsOrdered) {
             String id = MediaItemUtils.getMediaId(mediaItem);
-            String parentTypeId = (String) MediaItemUtils.getExtra(PARENT_MEDIA_ITEM_TYPE_ID, mediaItem);
             Log.i(LOG_TAG, "media id: " + id);
             ChildViewPagerFragment childViewPagerFragment = childFragmentProvider.get();
-            MediaItemType parentCategory = (MediaItemType) MediaItemUtils.getExtra(PARENT_MEDIA_ITEM_TYPE, mediaItem);
             MediaItemType category = (MediaItemType) MediaItemUtils.getExtra(MEDIA_ITEM_TYPE, mediaItem);
-            childViewPagerFragment.init(parentCategory, parentTypeId, category, id);
+            childViewPagerFragment.init(category, id);
             adapter.getPagerItems().put(category, childViewPagerFragment);
             adapter.getMenuCategories().put(category, mediaItem);
             adapter.notifyDataSetChanged();

@@ -14,6 +14,7 @@ import java.util.TreeSet;
 import javax.inject.Inject;
 
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByMediaItemType;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_LIBRARY_INFO;
 import static com.example.mike.mp3player.commons.MediaItemType.ROOT;
 
@@ -58,8 +59,7 @@ public class RootRetriever extends ContentRetriever {
      */
     private MediaBrowserCompat.MediaItem createRootItem(MediaItemType category) {
         Bundle extras = new Bundle();
-        //extras.putSerializable(MEDIA_ITEM_TYPE,);
-        extras.putSerializable(MEDIA_LIBRARY_INFO, childIds.get(category));
+        extras.putSerializable(MEDIA_ITEM_TYPE, category);
         MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder()
                 .setDescription(category.getDescription())
                 .setTitle(category.getTitle())

@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
@@ -26,7 +27,7 @@ public abstract class FolderActivity extends MediaActivityCompat {
 
     private static final String LOG_TAG = "FOLDER_ACTIVITY";
     private ChildViewPagerFragment viewPageFragment;
-    private MediaBrowserCompat.MediaItem parent;
+    private MediaItem parent;
     private String requestId;
     private PlayToolBarFragment playToolBarFragment;
     private SimpleTitleBarFragment simpleTitleBarFragment;
@@ -60,15 +61,12 @@ public abstract class FolderActivity extends MediaActivityCompat {
     @Override
     public void onConnected() {
         super.onConnected();
-        String childMediaItemsTypeId = getIntent().getStringExtra(MEDIA_ITEM_TYPE_ID);
-        MediaItemType childMediaItemsType = (MediaItemType) getIntent().getSerializableExtra(MEDIA_ITEM_TYPE);
-        String parentMediaItemTypeId = getIntent().getStringExtra(PARENT_MEDIA_ITEM_TYPE_ID);
-        MediaItemType parentMediaItemType = (MediaItemType) getIntent().getSerializableExtra(PARENT_MEDIA_ITEM_TYPE);
+        MediaItem mediaItem = (MediaItem) getIntent().getParcelableExtra(MEDIA_ITEM);
         String itemId = getIntent().getStringExtra(MEDIA_ID);
-        this.viewPageFragment.init(MediaItemType.FOLDER, parentMediaItemTypeId, childMediaItemsType, childMediaItemsTypeId);
+        this.viewPageFragment.init(MediaItemType.FOLDER, itemId);
         initialiseView(R.layout.activity_folder);
         getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
-        getSupportActionBar().setTitle(parent.getDescription().getTitle());
+        getSupportActionBar().setTitle(MediaItemUtils.getTitle(mediaItem));
     }
 
     @Override

@@ -6,6 +6,8 @@ import com.example.mike.mp3player.service.library.contentretriever.ContentRetrie
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,12 +17,14 @@ import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 public class ContentManager {
 
-    private final Map<String, ContentRetriever> contentRetrieverMap;
+    private final Map<String, ContentRetriever> idToContentRetrieverMap;
+    private final EnumMap<MediaItemType, ContentRetriever> typeToContentRetrieverMap;
 
     @Inject
-    public ContentManager(Map<String, ContentRetriever> contentRetrieverMap) {
-
-       this.contentRetrieverMap = contentRetrieverMap;
+    public ContentManager(Map<String, ContentRetriever> idToContentRetrieverMap,
+                          EnumMap<MediaItemType, ContentRetriever> typeContentRetrieverMap) {
+       this.idToContentRetrieverMap = idToContentRetrieverMap;
+       this.typeToContentRetrieverMap = typeContentRetrieverMap;
     }
     /**
      * The id is in the following format
@@ -34,38 +38,31 @@ public class ContentManager {
      * @return all the children of the id specified by the parentId parameter
      */
     public List<MediaItem> getChildren(String parentId) {
-        List<String> splitId = Arrays.asList(parentId.split("\\|"));
-        if (StringUtils.isEmpty(splitId.toString())) {
-            return null;
-        }
-        String mediaItemTypeId = splitId.get(0);
-
-        String idSuffix = null;
-        if (splitId.size() > 1) {
-            idSuffix = splitId.get(1);
-        }
-
-        ContentRetriever contentRetriever = contentRetrieverMap.get(mediaItemTypeId);
-        return contentRetriever == null ? null : contentRetriever.getChildren(idSuffix);
+        ContentRetriever contentRetriever = getContentRetrieverFromId(parentId);
+        return contentRetriever == null ? null : contentRetriever.getChildren(parentId);
     }
     public List<MediaItem> getPlaylist(String id) {
+       return getChildren(id);
+    }
+
+    public List<MediaItem> getPlaylist(MediaItemType mediaItemType) {
+        return typeToContentRetrieverMap.get(mediaItemType).getChildren(null);
+    }
+
+    private ContentRetriever getContentRetrieverFromId(String id) {
         List<String> splitId = Arrays.asList(id.split("\\|"));
         if (StringUtils.isEmpty(splitId.toString())) {
             return null;
         }
-        String mediaItemTypeId = splitId.get(0);
-
-        String idSuffix = null;
-        if (splitId.size() > 1) {
-            idSuffix = splitId.get(1);
+        Collections.reverse(splitId);
+        ContentRetriever contentRetriever = null;
+        for (String s : splitId) {
+            contentRetriever = idToContentRetrieverMap.get(s);
+            if (contentRetriever != null) {
+                return contentRetriever;
+            }
         }
-
-        ContentRetriever contentRetriever = contentRetrieverMap.get(mediaItemTypeId);
-        return contentRetriever == null ? null : contentRetriever.getChildren(idSuffix);
-    }
-
-    public List<MediaItem> getAllSongs() {
-        return contentRetrieverMap.get(MediaItemType.SONG).getChildren(null);
+        return null;
     }
 
 

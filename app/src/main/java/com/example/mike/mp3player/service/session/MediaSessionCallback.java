@@ -18,7 +18,6 @@ import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.ContentManager;
-import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 import java.util.ArrayList;
@@ -57,7 +56,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private final Handler worker;
     private static final String LOG_TAG = "MEDIA_SESSION_CALLBACK";
     public static final float DEFAULT_PLAYBACK_SPEED_CHANGE = 0.05f;
-    private boolean isInitialised = false;
 
     /**
      * new constructor to be used for testing and also for future use with dagger2 via the @Inject
@@ -88,13 +86,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     public void init() {
-        // TODO: get song list from media library
-        List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.mediaLibrary.getAllSongs());
-        List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
         this.mediaPlayerAdapter.setOnCompletionListener(this::onCompletion);
         this.mediaPlayerAdapter.setOnSeekCompleteListener(this::onSeekComplete);
         this.broadcastReceiver.setMediaSessionCallback(this);
-        this.playbackManager.createNewPlaylist(songList);
         Uri firstSongUri = playbackManager.getCurrentMediaUri();
         Uri nextSongUri = playbackManager.getNext();
         this.mediaPlayerAdapter.reset(firstSongUri, nextSongUri);
@@ -184,33 +178,33 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         //Log.i(LOG_TAG, "prepareFromMediaId");
         super.onPrepareFromMediaId(mediaId, bundle);
         List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getPlaylist(mediaId);
-        ArrayList<MediaBrowserCompat.MediaItem> resultsList = new ArrayList<>();
-        resultsList.addAll(results);
-        playbackManager.createNewPlaylist(resultsList);
+        if (null != results) {
+            playbackManager.createNewPlaylist(results);
 
-        if (mediaId == null) {
-            Log.e(LOG_TAG, "received null mediaId");
-            return;
-        }
-
-        Uri uriToPlay = null;
-        Uri followingUri = null;
-        for (MediaBrowserCompat.MediaItem m : results) {
-            String id = MediaItemUtils.getMediaId(m);
-            if (id != null && id.equals(mediaId)) {
-                uriToPlay = Uri.parse(id);
-                playbackManager.setCurrentItem(mediaId);
-                followingUri = getPlaybackManager().getNext();
-                mediaPlayerAdapter.reset(uriToPlay, followingUri);
-
-                break;
+            if (mediaId == null) {
+                Log.e(LOG_TAG, "received null mediaId");
+                return;
             }
+
+            Uri uriToPlay = null;
+            Uri followingUri = null;
+            for (MediaBrowserCompat.MediaItem m : results) {
+                String id = MediaItemUtils.getMediaId(m);
+                if (id != null && id.equals(mediaId)) {
+                    uriToPlay = Uri.parse(id);
+                    playbackManager.setCurrentItem(mediaId);
+                    followingUri = getPlaybackManager().getNext();
+                    mediaPlayerAdapter.reset(uriToPlay, followingUri);
+
+                    break;
+                }
+            }
+            if (uriToPlay == null) {
+                Log.e(LOG_TAG, "failed to find requested uri in collection");
+                return;
+            }
+            mediaSessionAdapter.updateAll(ACTION_PREPARE_FROM_MEDIA_ID);
         }
-        if (uriToPlay == null) {
-            Log.e(LOG_TAG, "failed to find requested uri in collection");
-            return;
-        }
-        mediaSessionAdapter.updateAll(ACTION_PREPARE_FROM_MEDIA_ID);
     }
 
     @Override

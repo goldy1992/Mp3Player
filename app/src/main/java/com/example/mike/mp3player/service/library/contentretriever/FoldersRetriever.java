@@ -30,8 +30,8 @@ public class FoldersRetriever extends ContentResolverRetriever {
 
     Set<String> directoryPathSet = new HashSet<>();
 
-    public FoldersRetriever(ContentResolver contentResolver, String idPrefix) {
-        super(contentResolver, idPrefix);
+    public FoldersRetriever(ContentResolver contentResolver) {
+        super(contentResolver);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class FoldersRetriever extends ContentResolverRetriever {
     }
 
     @Override
-    MediaBrowserCompat.MediaItem buildMediaItem(Cursor cursor) {
+    MediaBrowserCompat.MediaItem buildMediaItem(Cursor cursor, String id) {
         String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
         File file = new File(path);
         File directory = file.getParentFile();
@@ -69,7 +69,7 @@ public class FoldersRetriever extends ContentResolverRetriever {
             directoryPath = directory.getAbsolutePath();
 
             if (directoryPathSet.add(directoryPath)) {
-                return createFolderMediaItem(directoryName, directoryPath);
+                return createFolderMediaItem(directoryName, directoryPath, id);
             }
         }
         return null;
@@ -80,13 +80,13 @@ public class FoldersRetriever extends ContentResolverRetriever {
         return null;
     }
 
-    private MediaBrowserCompat.MediaItem createFolderMediaItem(String directoryName, String directoryPath){
+    private MediaBrowserCompat.MediaItem createFolderMediaItem(String directoryName, String directoryPath, String id){
         Bundle extras = new Bundle();
         extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directoryName);
         extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directoryPath);
 
         MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()
-                .setMediaId(idPrefix + directoryPath)
+                .setMediaId(buildMediaId(id, directoryPath))
                 .setTitle(directoryName)
                 .setDescription(directoryPath)
                 .setExtras(extras);

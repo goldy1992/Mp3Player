@@ -20,10 +20,6 @@ import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_AR
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_DURATION;
 import static com.example.mike.mp3player.commons.ComparatorUtils.uppercaseStringCompare;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
-import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE;
-import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE_ID;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
@@ -41,8 +37,8 @@ public class SongsRetriever extends ContentResolverRetriever {
             MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.ALBUM_ID};
 
-    public SongsRetriever(ContentResolver contentResolver, String idPrefix) {
-        super(contentResolver, idPrefix);
+    public SongsRetriever(ContentResolver contentResolver) {
+        super(contentResolver);
     }
 
     @Override
@@ -72,7 +68,7 @@ public class SongsRetriever extends ContentResolverRetriever {
     }
 
     @Override
-    MediaBrowserCompat.MediaItem buildMediaItem(Cursor c){
+    MediaBrowserCompat.MediaItem buildMediaItem(Cursor c, String id){
         final String mediaId = c.getString(c.getColumnIndex(MediaStore.Audio.Media._ID));
         final String mediaFilePath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
         final long duration = c.getLong(c.getColumnIndex(MediaStore.Audio.Media.DURATION));
@@ -112,7 +108,7 @@ public class SongsRetriever extends ContentResolverRetriever {
 
         // TODO: add code to fetch album art also
         MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()
-                .setMediaId(mediaId)
+                .setMediaId(buildMediaId(id, mediaId))
                 .setMediaUri(mediaUri)
                 .setTitle(title)
                 .setExtras(extras);

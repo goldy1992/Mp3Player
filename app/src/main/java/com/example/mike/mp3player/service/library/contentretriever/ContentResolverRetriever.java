@@ -11,29 +11,25 @@ import java.util.TreeSet;
 public abstract class ContentResolverRetriever extends ContentRetriever {
 
     final ContentResolver contentResolver;
-    final String idPrefix;
-
-    public ContentResolverRetriever(ContentResolver contentResolver, String idPrefix) {
+    public ContentResolverRetriever(ContentResolver contentResolver) {
         super();
         this.contentResolver = contentResolver;
-        this.idPrefix = idPrefix;
     }
 
     abstract Cursor getResults(String id);
     abstract String[] getProjection();
-    abstract MediaBrowserCompat.MediaItem buildMediaItem(Cursor cursor);
+    abstract MediaBrowserCompat.MediaItem buildMediaItem(Cursor cursor, String id);
 
     @Override
     public List<MediaBrowserCompat.MediaItem> getChildren(String id) {
         Cursor cursor = getResults(id);
         TreeSet<MediaBrowserCompat.MediaItem> listToReturn = new TreeSet<>(this);
         while (cursor.moveToNext()) {
-            MediaBrowserCompat.MediaItem mediaItem = buildMediaItem(cursor);
+            MediaBrowserCompat.MediaItem mediaItem = buildMediaItem(cursor, id);
             if (null != mediaItem) {
                 listToReturn.add(mediaItem);
             }
         }
-
         return new ArrayList<>(listToReturn);
     }
 

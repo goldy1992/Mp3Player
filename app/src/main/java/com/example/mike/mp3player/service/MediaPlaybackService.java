@@ -40,7 +40,6 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     public void onCreate() {
         super.onCreate();
         handler.post(() -> {
-           // this.contentManager.buildDbMediaLibrary();
             this.mediaSessionCallback.init();
             setSessionToken(mediaSession.getSessionToken());
             mediaSession.setCallback(mediaSessionCallback);

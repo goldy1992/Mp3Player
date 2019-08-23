@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client.views.fragments.viewpager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +19,6 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
-import com.example.mike.mp3player.client.activities.MediaItemTypeToActivityMap;
-import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
-import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjector;
 import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
 import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.MediaItemType;
@@ -32,6 +30,7 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 import javax.inject.Inject;
 
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
 import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE;
@@ -54,12 +53,7 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
     private Class<? extends MediaActivityCompat> intentClass;
 
     private MediaItemType parentItemType;
-
     private String parentItemTypeId;
-    /** possibly redundant */
-    private MediaItemType childMediaItemsType;
-    /** possibly redundant */
-    private String childMediaItemsTypeId;
 
 
     private MediaBrowserAdapter mediaBrowserAdapter;
@@ -85,18 +79,16 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         this.mediaBrowserAdapter.subscribe(parentItemTypeId);
     }
 
-    public void init(MediaItemType parentMediaItemType, String parentMediaItemId,
-                     MediaItemType childMediaItemsType, String childMediaItemsTypeId) {
-        this.parentItemType = parentMediaItemType;
-        this.parentItemTypeId = parentMediaItemId;
-        this.childMediaItemsType = childMediaItemsType;
-        this.childMediaItemsTypeId = childMediaItemsTypeId;
+    public void init(MediaItemType mediaItemType, String id) {
+        this.parentItemType = mediaItemType;
+        this.parentItemTypeId = id;
     }
 
     @Override
-    public void itemSelected(MediaBrowserCompat.MediaItem item) {
+    public void itemSelected(MediaItem item) {
         Intent intent = new Intent(getContext(), intentClass); // TODO: make a media item to activity map
         intent.putExtra(MEDIA_ID, MediaItemUtils.getMediaId(item));
+        intent.putExtra(MEDIA_ITEM, item);
         startActivity(intent);
     }
 
