@@ -4,6 +4,8 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.support.v4.media.MediaBrowserCompat;
 
+import com.example.mike.mp3player.service.library.utils.IdGenerator;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
@@ -11,21 +13,24 @@ import java.util.TreeSet;
 public abstract class ContentResolverRetriever extends ContentRetriever {
 
     final ContentResolver contentResolver;
-    public ContentResolverRetriever(ContentResolver contentResolver) {
+    final String idPrefix;
+
+    public ContentResolverRetriever(ContentResolver contentResolver, String idPrefix) {
         super();
         this.contentResolver = contentResolver;
+        this.idPrefix = idPrefix;
     }
 
     abstract Cursor getResults(String id);
     abstract String[] getProjection();
-    abstract MediaBrowserCompat.MediaItem buildMediaItem(Cursor cursor, String id);
+    abstract MediaBrowserCompat.MediaItem buildMediaItem(Cursor cursor);
 
     @Override
     public List<MediaBrowserCompat.MediaItem> getChildren(String id) {
         Cursor cursor = getResults(id);
         TreeSet<MediaBrowserCompat.MediaItem> listToReturn = new TreeSet<>(this);
         while (cursor.moveToNext()) {
-            MediaBrowserCompat.MediaItem mediaItem = buildMediaItem(cursor, id);
+            MediaBrowserCompat.MediaItem mediaItem = buildMediaItem(cursor);
             if (null != mediaItem) {
                 listToReturn.add(mediaItem);
             }
@@ -33,5 +38,8 @@ public abstract class ContentResolverRetriever extends ContentRetriever {
         return new ArrayList<>(listToReturn);
     }
 
+    protected String buildMediaId(String childItemId) {
+        return super.buildMediaId(idPrefix, childItemId);
+    }
 
 }

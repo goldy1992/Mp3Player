@@ -37,8 +37,8 @@ public class SongsRetriever extends ContentResolverRetriever {
             MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.ALBUM_ID};
 
-    public SongsRetriever(ContentResolver contentResolver) {
-        super(contentResolver);
+    public SongsRetriever(ContentResolver contentResolver, String idPrefix) {
+        super(contentResolver, idPrefix);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class SongsRetriever extends ContentResolverRetriever {
     }
 
     @Override
-    MediaBrowserCompat.MediaItem buildMediaItem(Cursor c, String id){
+    MediaBrowserCompat.MediaItem buildMediaItem(Cursor c){
         final String mediaId = c.getString(c.getColumnIndex(MediaStore.Audio.Media._ID));
         final String mediaFilePath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
         final long duration = c.getLong(c.getColumnIndex(MediaStore.Audio.Media.DURATION));
@@ -108,7 +108,7 @@ public class SongsRetriever extends ContentResolverRetriever {
 
         // TODO: add code to fetch album art also
         MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()
-                .setMediaId(buildMediaId(id, mediaId))
+                .setMediaId(buildMediaId(mediaId))
                 .setMediaUri(mediaUri)
                 .setTitle(title)
                 .setExtras(extras);

@@ -38,8 +38,10 @@ public class ContentManager {
      * @return all the children of the id specified by the parentId parameter
      */
     public List<MediaItem> getChildren(String parentId) {
-        ContentRetriever contentRetriever = getContentRetrieverFromId(parentId);
-        return contentRetriever == null ? null : contentRetriever.getChildren(parentId);
+        List<String> splitId = Arrays.asList(parentId.split("\\|"));
+        Collections.reverse(splitId);
+        ContentRetriever contentRetriever = getContentRetrieverFromId(splitId);
+        return contentRetriever == null ? null : contentRetriever.getChildren(splitId.get(0));
     }
     public List<MediaItem> getPlaylist(String id) {
        return getChildren(id);
@@ -49,12 +51,10 @@ public class ContentManager {
         return typeToContentRetrieverMap.get(mediaItemType).getChildren(null);
     }
 
-    private ContentRetriever getContentRetrieverFromId(String id) {
-        List<String> splitId = Arrays.asList(id.split("\\|"));
+    private ContentRetriever getContentRetrieverFromId(List<String> splitId) {
         if (StringUtils.isEmpty(splitId.toString())) {
             return null;
         }
-        Collections.reverse(splitId);
         ContentRetriever contentRetriever = null;
         for (String s : splitId) {
             contentRetriever = idToContentRetrieverMap.get(s);
