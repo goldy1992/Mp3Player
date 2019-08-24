@@ -13,6 +13,7 @@ import com.example.mike.mp3player.service.session.AudioBecomingNoisyBroadcastRec
 import com.example.mike.mp3player.service.session.MediaSessionAdapter;
 import com.example.mike.mp3player.service.session.MediaSessionCallback;
 
+import java.util.EnumMap;
 import java.util.List;
 
 import javax.inject.Singleton;
@@ -43,8 +44,8 @@ public class MediaSessionCallbackModule {
 
     @Singleton
     @Provides
-    public PlaybackManager providePlaybackManager(ContentManager contentManager) {
-        List<MediaBrowserCompat.MediaItem> items = contentManager.getPlaylist(MediaItemType.SONGS);
+    public PlaybackManager providePlaybackManager(ContentManager contentManager, EnumMap<MediaItemType, String> ids) {
+        List<MediaBrowserCompat.MediaItem> items = contentManager.getPlaylist(ids.get(MediaItemType.SONGS));
         return new PlaybackManager(items, 0);
     }
 

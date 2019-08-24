@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.support.v4.media.MediaBrowserCompat;
 
+import com.example.mike.mp3player.service.library.ContentRequest;
 import com.example.mike.mp3player.service.library.utils.IdGenerator;
 
 import java.util.ArrayList;
@@ -28,11 +29,11 @@ public abstract class ContentResolverRetriever extends ContentRetriever {
     abstract MediaBrowserCompat.MediaItem buildMediaItem(Cursor cursor, @Nullable String parentId);
 
     @Override
-    public List<MediaBrowserCompat.MediaItem> getChildren(String fullId, String searchId) {
-        Cursor cursor = getResults(searchId);
+    public List<MediaBrowserCompat.MediaItem> getChildren(ContentRequest request) {
+        Cursor cursor = getResults(request.getSearchString());
         TreeSet<MediaBrowserCompat.MediaItem> listToReturn = new TreeSet<>(this);
         while (cursor.moveToNext()) {
-            MediaBrowserCompat.MediaItem mediaItem = buildMediaItem(cursor, fullId);
+            MediaBrowserCompat.MediaItem mediaItem = buildMediaItem(cursor, request.getFullId());
             if (null != mediaItem) {
                 listToReturn.add(mediaItem);
             }

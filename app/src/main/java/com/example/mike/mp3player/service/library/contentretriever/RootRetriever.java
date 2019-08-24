@@ -5,6 +5,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 
 import com.example.mike.mp3player.commons.MediaItemType;
+import com.example.mike.mp3player.service.library.ContentRequest;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -35,7 +36,7 @@ public class RootRetriever extends ContentRetriever {
     }
 
     @Override
-    public List<MediaBrowserCompat.MediaItem> getChildren(String fullId, String searchId) {
+    public List<MediaBrowserCompat.MediaItem> getChildren(ContentRequest request) {
         return CHILDREN;
     }
 

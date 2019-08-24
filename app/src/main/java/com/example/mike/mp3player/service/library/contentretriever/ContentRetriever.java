@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.mike.mp3player.commons.MediaItemType;
+import com.example.mike.mp3player.service.library.ContentRequest;
 import com.example.mike.mp3player.service.library.utils.IdGenerator;
 
 import java.util.Comparator;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public abstract class ContentRetriever implements Comparator<MediaBrowserCompat.MediaItem> {
 
-    public abstract List<MediaBrowserCompat.MediaItem> getChildren(@Nullable String fullId, String searchId);
+    public abstract List<MediaBrowserCompat.MediaItem> getChildren(ContentRequest request);
     public abstract List<MediaBrowserCompat.MediaItem> search(@NonNull String query);
     public abstract MediaItemType getType();
     public abstract MediaItemType getParentType();
