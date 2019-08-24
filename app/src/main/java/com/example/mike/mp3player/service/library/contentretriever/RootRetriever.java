@@ -35,7 +35,7 @@ public class RootRetriever extends ContentRetriever {
     }
 
     @Override
-    public List<MediaBrowserCompat.MediaItem> getChildren(String id) {
+    public List<MediaBrowserCompat.MediaItem> getChildren(String fullId, String searchId) {
         return CHILDREN;
     }
 

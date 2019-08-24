@@ -39,16 +39,15 @@ public class ContentManager {
      */
     public List<MediaItem> getChildren(String parentId) {
         List<String> splitId = Arrays.asList(parentId.split("\\|"));
-        Collections.reverse(splitId);
         ContentRetriever contentRetriever = getContentRetrieverFromId(splitId);
-        return contentRetriever == null ? null : contentRetriever.getChildren(splitId.get(0));
+        return contentRetriever == null ? null : contentRetriever.getChildren(parentId, splitId.get(0));
     }
     public List<MediaItem> getPlaylist(String id) {
        return getChildren(id);
     }
 
     public List<MediaItem> getPlaylist(MediaItemType mediaItemType) {
-        return typeToContentRetrieverMap.get(mediaItemType).getChildren(null);
+        return typeToContentRetrieverMap.get(mediaItemType).getChildren(null, null);
     }
 
     private ContentRetriever getContentRetrieverFromId(List<String> splitId) {

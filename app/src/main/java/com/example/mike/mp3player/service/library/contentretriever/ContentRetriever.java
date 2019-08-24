@@ -13,7 +13,7 @@ import java.util.List;
 
 public abstract class ContentRetriever implements Comparator<MediaBrowserCompat.MediaItem> {
 
-    public abstract List<MediaBrowserCompat.MediaItem> getChildren(@Nullable String id);
+    public abstract List<MediaBrowserCompat.MediaItem> getChildren(@Nullable String fullId, String searchId);
     public abstract List<MediaBrowserCompat.MediaItem> search(@NonNull String query);
     public abstract MediaItemType getType();
     public abstract MediaItemType getParentType();

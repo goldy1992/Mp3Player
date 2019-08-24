@@ -56,7 +56,7 @@ public class FoldersRetriever extends ContentResolverRetriever {
     }
 
     @Override
-    MediaBrowserCompat.MediaItem buildMediaItem(Cursor cursor) {
+    MediaBrowserCompat.MediaItem buildMediaItem(Cursor cursor, String parentId) {
         String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
         File file = new File(path);
         File directory = file.getParentFile();
@@ -69,7 +69,7 @@ public class FoldersRetriever extends ContentResolverRetriever {
             directoryPath = directory.getAbsolutePath();
 
             if (directoryPathSet.add(directoryPath)) {
-                return createFolderMediaItem(directoryName, directoryPath);
+                return createFolderMediaItem(directoryName, directoryPath, parentId);
             }
         }
         return null;
@@ -80,13 +80,13 @@ public class FoldersRetriever extends ContentResolverRetriever {
         return null;
     }
 
-    private MediaBrowserCompat.MediaItem createFolderMediaItem(String directoryName, String directoryPath){
+    private MediaBrowserCompat.MediaItem createFolderMediaItem(String directoryName, String directoryPath, String parentId){
         Bundle extras = new Bundle();
         extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directoryName);
         extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directoryPath);
 
         MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()
-                .setMediaId(buildMediaId(directoryPath))
+                .setMediaId(buildMediaId(parentId, directoryPath))
                 .setTitle(directoryName)
                 .setDescription(directoryPath)
                 .setExtras(extras);

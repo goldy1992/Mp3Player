@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
+import javax.annotation.Nullable;
+
 public abstract class ContentResolverRetriever extends ContentRetriever {
 
     final ContentResolver contentResolver;
@@ -23,14 +25,14 @@ public abstract class ContentResolverRetriever extends ContentRetriever {
 
     abstract Cursor getResults(String id);
     abstract String[] getProjection();
-    abstract MediaBrowserCompat.MediaItem buildMediaItem(Cursor cursor);
+    abstract MediaBrowserCompat.MediaItem buildMediaItem(Cursor cursor, @Nullable String parentId);
 
     @Override
-    public List<MediaBrowserCompat.MediaItem> getChildren(String id) {
-        Cursor cursor = getResults(id);
+    public List<MediaBrowserCompat.MediaItem> getChildren(String fullId, String searchId) {
+        Cursor cursor = getResults(searchId);
         TreeSet<MediaBrowserCompat.MediaItem> listToReturn = new TreeSet<>(this);
         while (cursor.moveToNext()) {
-            MediaBrowserCompat.MediaItem mediaItem = buildMediaItem(cursor);
+            MediaBrowserCompat.MediaItem mediaItem = buildMediaItem(cursor, fullId);
             if (null != mediaItem) {
                 listToReturn.add(mediaItem);
             }
@@ -38,8 +40,8 @@ public abstract class ContentResolverRetriever extends ContentRetriever {
         return new ArrayList<>(listToReturn);
     }
 
-    protected String buildMediaId(String childItemId) {
-        return super.buildMediaId(idPrefix, childItemId);
+    protected String buildMediaId(String customIdPrefix, String childItemId) {
+        return super.buildMediaId(this.idPrefix == null ? customIdPrefix : this.idPrefix, childItemId);
     }
 
 }
