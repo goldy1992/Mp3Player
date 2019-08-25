@@ -17,7 +17,7 @@ public class SongsFromFolderRetriever extends SongsRetriever {
     }
 
     @Override
-    Cursor getResults(String id) {
+    Cursor performGetChildrenQuery(String id) {
         // TODO: implement
         String WHERE_CLAUSE = MediaStore.Audio.Media.DATA + " LIKE ? ";
         String[] WHERE_ARGS = {id + "%"};

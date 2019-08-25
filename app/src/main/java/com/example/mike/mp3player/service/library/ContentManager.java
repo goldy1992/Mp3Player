@@ -5,8 +5,7 @@ import com.example.mike.mp3player.service.library.contentretriever.ContentRetrie
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +40,17 @@ public class ContentManager {
         ContentRequest request = ContentRequest.parse(parentId);
         ContentRetriever contentRetriever = idToContentRetrieverMap.get(request.getContentRetrieverKey());
         return contentRetriever == null ? null : contentRetriever.getChildren(request);
+    }
+    /**
+     * @param query the search query
+     * @return a list of media items which match the search query
+     */
+    public List<MediaItem> search(String query) {
+        List<MediaItem> results = new ArrayList<>();
+        for (ContentRetriever contentRetriever : idToContentRetrieverMap.values()) {
+            results.addAll(contentRetriever.search(query));
+        }
+        return results;
     }
     public List<MediaItem> getPlaylist(String id) {
        return getChildren(id);

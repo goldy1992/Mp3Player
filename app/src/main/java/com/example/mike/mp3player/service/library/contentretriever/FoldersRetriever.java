@@ -45,9 +45,14 @@ public class FoldersRetriever extends ContentResolverRetriever {
     }
 
     @Override
-    Cursor getResults(String id) {
+    Cursor performGetChildrenQuery(String id) {
         return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,PROJECTION,
                 null, null, null);
+    }
+
+    @Override
+    Cursor performSearchQuery(String query) {
+        return null;
     }
 
     @Override
