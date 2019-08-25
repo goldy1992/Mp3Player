@@ -18,6 +18,7 @@ import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.ContentManager;
+import com.example.mike.mp3player.service.library.ContentRequest;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 import java.util.ArrayList;
@@ -191,7 +192,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             for (MediaBrowserCompat.MediaItem m : results) {
                 String id = MediaItemUtils.getMediaId(m);
                 if (id != null && id.equals(mediaId)) {
-                    uriToPlay = Uri.parse(id);
+                    uriToPlay = m.getDescription().getMediaUri();
                     playbackManager.setCurrentItem(mediaId);
                     followingUri = getPlaybackManager().getNext();
                     mediaPlayerAdapter.reset(uriToPlay, followingUri);
