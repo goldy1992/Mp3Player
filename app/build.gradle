@@ -7,7 +7,7 @@ android {
     def PIE = 28
     def OREO = 26
     def MARSHMALLOW = 23
-    def BUILD_TOOLS_VERSION = '28.0.3'
+    def BUILD_TOOLS_VERSION = '29.0.2'
 
     compileSdkVersion PIE
 	buildToolsVersion BUILD_TOOLS_VERSION
