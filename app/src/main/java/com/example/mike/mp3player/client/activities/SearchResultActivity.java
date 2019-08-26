@@ -7,11 +7,13 @@ import android.util.Log;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.LogTagger;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.callbacks.search.SearchResultListener;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
+import com.example.mike.mp3player.client.views.SearchResultAdapter;
 
 import java.util.List;
 
@@ -19,6 +21,8 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
 
     private String currentQuery;
     private Toolbar toolbar;
+    private RecyclerView recyclerView;
+    private SearchResultAdapter searchResultAdapter;
 
     @Override
     SubscriptionType getSubscriptionType() {
@@ -41,10 +45,9 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
     @Override
     boolean initialiseView(int layoutId) {
         setContentView(layoutId);
-        this.toolbar = findViewById(R.id.titleToolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        this.searchResultAdapter = new SearchResultAdapter(getApplicationContext());
+        this.recyclerView = findViewById(R.id.result_recycle_view);
+        this.recyclerView.setAdapter(searchResultAdapter);
         return true;
     }
 
@@ -70,6 +73,8 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
 
     @Override
     public void onSearchResult(List<MediaItem> searchResults) {
+        searchResultAdapter.items.addAll(searchResults);
+        searchResultAdapter.notifyDataSetChanged();
         Log.i(getLogTag(), "received search results");
     }
 

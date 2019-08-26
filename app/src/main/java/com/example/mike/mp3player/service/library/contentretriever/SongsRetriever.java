@@ -9,12 +9,9 @@ import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 
-import androidx.annotation.NonNull;
-
 import com.example.mike.mp3player.commons.MediaItemType;
 
 import java.io.File;
-import java.util.List;
 
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
@@ -70,10 +67,6 @@ public class SongsRetriever extends ContentResolverRetriever {
         return PROJECTION;
     }
 
-    @Override
-    public List<MediaBrowserCompat.MediaItem> search(@NonNull String query) {
-        return null;
-    }
 
     @Override
     MediaBrowserCompat.MediaItem buildMediaItem(Cursor c, String parentId){
@@ -116,10 +109,10 @@ public class SongsRetriever extends ContentResolverRetriever {
 
         // TODO: add code to fetch album art also
         MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()
-                .setMediaId(buildMediaId(parentId, mediaId))
-                .setMediaUri(mediaUri)
-                .setTitle(title)
-                .setExtras(extras);
+            .setMediaId(buildMediaId(parentId, mediaId))
+            .setMediaUri(mediaUri)
+            .setTitle(title)
+            .setExtras(extras);
 
         return new MediaBrowserCompat.MediaItem(mediaDescriptionCompatBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
     }

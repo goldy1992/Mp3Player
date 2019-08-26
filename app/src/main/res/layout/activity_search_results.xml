@@ -18,32 +18,35 @@
             android:id="@+id/appbar"
             >
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/titleToolbar"
+            <androidx.appcompat.widget.SearchView
+                android:layout_margin="@dimen/default_gap"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                android:background="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:titleTextColor="?attr/textColorPrimary"
-                app:title="Results">
+                android:layout_height="wrap_content"
+                android:id="@+id/search_view"
+                android:background="@color/accent_orange"
+                />
 
-            </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/result_recycle_view"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-  >
+            android:layout_above="@id/playToolbarFragment"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Search Results"/>
-        </LinearLayout>
+            />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <fragment
+        android:id="@+id/playToolbarFragment"
+        class="com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        tools:layout="@layout/fragment_playback_toolbar" />
 
 
 

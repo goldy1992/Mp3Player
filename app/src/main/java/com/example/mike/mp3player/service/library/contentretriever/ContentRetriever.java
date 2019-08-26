@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.service.library.contentretriever;
 
+import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,8 @@ import com.example.mike.mp3player.service.library.utils.IdGenerator;
 
 import java.util.Comparator;
 import java.util.List;
+
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 
 public abstract class ContentRetriever implements Comparator<MediaBrowserCompat.MediaItem> {
 
@@ -25,5 +28,11 @@ public abstract class ContentRetriever implements Comparator<MediaBrowserCompat.
                 .append(IdGenerator.ID_SEPARATOR)
                 .append(childItemId)
                 .toString();
+    }
+
+    protected Bundle getExtras() {
+        Bundle extras = new Bundle();
+        extras.putSerializable(MEDIA_ITEM_TYPE, getType());
+        return extras;
     }
 }

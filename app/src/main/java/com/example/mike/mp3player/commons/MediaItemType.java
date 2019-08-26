@@ -40,6 +40,10 @@ public enum MediaItemType {
         return rank;
     }
 
+    public int getValue() {
+        return this.ordinal();
+    }
+
     public String getTitle() {
         return title;
     }

@@ -51,11 +51,8 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
      */
     private FastScrollRecyclerView recyclerView;
     private Class<? extends MediaActivityCompat> intentClass;
-
     private MediaItemType parentItemType;
     private String parentItemTypeId;
-
-
     private MediaBrowserAdapter mediaBrowserAdapter;
     private MyGenericRecycleViewAdapter myViewAdapter;
     private MyGenericItemTouchListener myGenericItemTouchListener;

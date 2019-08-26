@@ -12,9 +12,11 @@ import androidx.annotation.NonNull;
 import com.example.mike.mp3player.commons.MediaItemType;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static com.example.mike.mp3player.commons.ComparatorUtils.uppercaseStringCompare;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
@@ -52,7 +54,10 @@ public class FoldersRetriever extends ContentResolverRetriever {
 
     @Override
     Cursor performSearchQuery(String query) {
-        return null;
+        final String WHERE = MediaStore.Audio.Media.DATA + " LIKE ?";
+        final String[] WHERE_ARGS = {query};
+        return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,PROJECTION,
+                WHERE, WHERE_ARGS, null);
     }
 
     @Override
@@ -82,11 +87,23 @@ public class FoldersRetriever extends ContentResolverRetriever {
 
     @Override
     public List<MediaBrowserCompat.MediaItem> search(@NonNull String query) {
-        return null;
+        Cursor cursor = performSearchQuery(query);
+        TreeSet<MediaBrowserCompat.MediaItem> listToReturn = new TreeSet<>(this);
+        while (cursor.moveToNext()) {
+            MediaBrowserCompat.MediaItem mediaItem = buildMediaItem(cursor, null);
+            if (null != mediaItem) {
+                Bundle extras = mediaItem.getDescription().getExtras();
+                 String directoryName = extras.getString(META_DATA_PARENT_DIRECTORY_NAME);
+                 if (null != directoryName && directoryName.contains(query)) {
+                     listToReturn.add(mediaItem);
+                 }
+            }
+        }
+        return new ArrayList<>(listToReturn);
     }
 
     private MediaBrowserCompat.MediaItem createFolderMediaItem(String directoryName, String directoryPath, String parentId){
-        Bundle extras = new Bundle();
+        Bundle extras = getExtras();
         extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directoryName);
         extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directoryPath);
 

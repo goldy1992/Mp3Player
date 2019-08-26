@@ -3,6 +3,7 @@ package com.example.mike.mp3player.service.library.contentretriever;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.example.mike.mp3player.service.library.ContentRequest;
 
@@ -26,14 +27,27 @@ public abstract class ContentResolverRetriever extends ContentRetriever {
     abstract Cursor performGetChildrenQuery(String id);
     abstract Cursor performSearchQuery(String query);
     abstract String[] getProjection();
-    abstract MediaBrowserCompat.MediaItem buildMediaItem(Cursor cursor, @Nullable String parentId);
+    abstract MediaItem buildMediaItem(Cursor cursor, @Nullable String parentId);
 
     @Override
-    public List<MediaBrowserCompat.MediaItem> getChildren(ContentRequest request) {
+    public List<MediaItem> getChildren(ContentRequest request) {
         Cursor cursor = performGetChildrenQuery(request.getSearchString());
-        TreeSet<MediaBrowserCompat.MediaItem> listToReturn = new TreeSet<>(this);
+        TreeSet<MediaItem> listToReturn = new TreeSet<>(this);
         while (cursor.moveToNext()) {
-            MediaBrowserCompat.MediaItem mediaItem = buildMediaItem(cursor, request.getFullId());
+            MediaItem mediaItem = buildMediaItem(cursor, request.getFullId());
+            if (null != mediaItem) {
+                listToReturn.add(mediaItem);
+            }
+        }
+        return new ArrayList<>(listToReturn);
+    }
+
+    @Override
+    public List<MediaItem> search(String query) {
+        Cursor cursor = performSearchQuery(query);
+        TreeSet<MediaItem> listToReturn = new TreeSet<>(this);
+        while (cursor!= null && cursor.moveToNext()) {
+            MediaItem mediaItem = buildMediaItem(cursor, null);
             if (null != mediaItem) {
                 listToReturn.add(mediaItem);
             }

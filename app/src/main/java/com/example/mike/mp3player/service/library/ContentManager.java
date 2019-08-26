@@ -46,11 +46,12 @@ public class ContentManager {
      * @return a list of media items which match the search query
      */
     public List<MediaItem> search(String query) {
+        query = query.trim();
         List<MediaItem> results = new ArrayList<>();
         for (ContentRetriever contentRetriever : idToContentRetrieverMap.values()) {
-            List<MediaItem> searchResults = new ArrayList<>();
+            List<MediaItem> searchResults = contentRetriever.search(query);
             if (null != searchResults) {
-                results.addAll(contentRetriever.search(query));
+                results.addAll(searchResults);
             }
         }
         return results;
