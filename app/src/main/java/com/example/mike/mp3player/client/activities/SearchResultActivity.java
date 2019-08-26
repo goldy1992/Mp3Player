@@ -1,12 +1,14 @@
 package com.example.mike.mp3player.client.activities;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.util.Log;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.LogTagger;
@@ -48,6 +50,7 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
         this.searchResultAdapter = new SearchResultAdapter(getApplicationContext());
         this.recyclerView = findViewById(R.id.result_recycle_view);
         this.recyclerView.setAdapter(searchResultAdapter);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         return true;
     }
 

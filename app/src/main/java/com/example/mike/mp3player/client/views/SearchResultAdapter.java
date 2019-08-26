@@ -6,12 +6,16 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.commons.MediaItemType;
@@ -43,7 +47,11 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == MediaItemType.SONG.getValue()) {
-            return new MySongViewHolder(parent);
+            // create a new views
+            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+            ViewGroup v = (ViewGroup) layoutInflater
+                    .inflate(R.layout.song_item_menu, parent, false);
+            return new MySongViewHolder(v);
         }
         return null;
     }
@@ -75,7 +83,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
         if (null != mediaItemType) {
             return mediaItemType.getValue();
         }
-        return -1;
+        return super.getItemViewType(position);
     }
 
     @Override

@@ -98,7 +98,7 @@ public class SongsRetriever extends ContentResolverRetriever {
         Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
         Uri albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId);
 
-        Bundle extras = new Bundle();
+        Bundle extras = getExtras();
         extras.putLong(METADATA_KEY_DURATION, duration);
         extras.putString(METADATA_KEY_ARTIST, artist);
         extras.putString(META_DATA_KEY_PARENT_PATH, parentPath);
