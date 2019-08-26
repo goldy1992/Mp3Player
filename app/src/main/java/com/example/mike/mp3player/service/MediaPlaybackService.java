@@ -78,10 +78,12 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onSearch(@NonNull String query, Bundle extras,
                          @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
-        Log.i(LOG_TAG, "hit the search function");
-        MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder().setMediaId("mediaId").build();
-        MediaBrowserCompat.MediaItem mediaItem = new MediaBrowserCompat.MediaItem(mediaDescriptionCompat, 0);
-        result.sendResult(Collections.singletonList(mediaItem));
+        result.detach();
+        handler.post(() -> {
+            // Assume for example that the music catalog is already loaded/cached.
+            List<MediaBrowserCompat.MediaItem> mediaItems = contentManager.search(query);
+            result.sendResult(mediaItems);
+        });
     }
 
 

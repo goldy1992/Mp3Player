@@ -18,10 +18,14 @@ public class SongsFromFolderRetriever extends SongsRetriever {
 
     @Override
     Cursor performGetChildrenQuery(String id) {
-        // TODO: implement
         String WHERE_CLAUSE = MediaStore.Audio.Media.DATA + " LIKE ? ";
         String[] WHERE_ARGS = {id + "%"};
         return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,getProjection(),
                 WHERE_CLAUSE , WHERE_ARGS, null);
+    }
+
+    @Override
+    Cursor performSearchQuery(String query) {
+        return null;
     }
 }
