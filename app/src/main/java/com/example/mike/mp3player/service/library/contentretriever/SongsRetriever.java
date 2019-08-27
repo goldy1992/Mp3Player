@@ -12,6 +12,9 @@ import android.support.v4.media.MediaDescriptionCompat;
 import com.example.mike.mp3player.commons.MediaItemType;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeSet;
 
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
@@ -23,9 +26,9 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARE
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 
-public class SongsRetriever extends ContentResolverRetriever {
+public class SongsRetriever extends ContentResolverRetriever implements SearchableRetriever {
 
-    private static final String[] PROJECTION = {
+    public static final String[] PROJECTION = {
             MediaStore.Audio.Media.DATA,
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.ARTIST,
@@ -44,7 +47,7 @@ public class SongsRetriever extends ContentResolverRetriever {
     }
 
     @Override
-    public MediaItemType getParentType() {
+    public MediaItemType getSearchCategory() {
         return MediaItemType.SONGS;
     }
 
@@ -55,7 +58,7 @@ public class SongsRetriever extends ContentResolverRetriever {
     }
 
     @Override
-    Cursor performSearchQuery(String query) {
+    public Cursor performSearchQuery(String query) {
         String WHERE_CLAUSE = MediaStore.Audio.Media.TITLE + " LIKE ? ";
         String[] WHERE_ARGS = {"%" + query + "%"};
         return  contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,PROJECTION,
@@ -116,6 +119,20 @@ public class SongsRetriever extends ContentResolverRetriever {
 
         return new MediaBrowserCompat.MediaItem(mediaDescriptionCompatBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
     }
+
+    @Override
+    public List<MediaBrowserCompat.MediaItem> search(String query) {
+        Cursor cursor = performSearchQuery(query);
+        TreeSet<MediaBrowserCompat.MediaItem> listToReturn = new TreeSet<>(this);
+        while (cursor!= null && cursor.moveToNext()) {
+            MediaBrowserCompat.MediaItem mediaItem = buildMediaItem(cursor, null);
+            if (null != mediaItem) {
+                listToReturn.add(mediaItem);
+            }
+        }
+        return new ArrayList<>(listToReturn);
+    }
+
 
     @Override
     public int compare(MediaBrowserCompat.MediaItem m1, MediaBrowserCompat.MediaItem m2) {

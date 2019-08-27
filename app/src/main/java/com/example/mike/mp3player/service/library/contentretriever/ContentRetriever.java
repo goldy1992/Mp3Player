@@ -18,9 +18,7 @@ import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 public abstract class ContentRetriever implements Comparator<MediaBrowserCompat.MediaItem> {
 
     public abstract List<MediaBrowserCompat.MediaItem> getChildren(ContentRequest request);
-    public abstract List<MediaBrowserCompat.MediaItem> search(@NonNull String query);
     public abstract MediaItemType getType();
-    public abstract MediaItemType getParentType();
 
     protected String buildMediaId(String prefix, String childItemId) {
         return new StringBuilder()

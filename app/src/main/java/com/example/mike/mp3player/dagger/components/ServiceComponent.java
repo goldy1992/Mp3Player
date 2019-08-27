@@ -19,7 +19,6 @@ import dagger.Component;
 @Singleton
 @Component(modules = {
     ContentManagerModule.class,
-
     HandlerThreadModule.class,
     MediaPlayerAdapterModule.class,
     MediaSessionCallbackModule.class,

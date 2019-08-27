@@ -10,6 +10,7 @@ import android.support.v4.media.MediaDescriptionCompat;
 import androidx.annotation.NonNull;
 
 import com.example.mike.mp3player.commons.MediaItemType;
+import com.example.mike.mp3player.service.library.ContentRequest;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,18 +20,14 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static com.example.mike.mp3player.commons.ComparatorUtils.uppercaseStringCompare;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 
-public class FoldersRetriever extends ContentResolverRetriever {
+public class FoldersRetriever extends ContentResolverRetriever implements SearchableRetriever {
 
     private static final String[] PROJECTION = {
             "DISTINCT " + MediaStore.Audio.Media.DATA };
-
-    Set<String> directoryPathSet = new HashSet<>();
 
     public FoldersRetriever(ContentResolver contentResolver, String idPrefix) {
         super(contentResolver, idPrefix);
@@ -42,7 +39,7 @@ public class FoldersRetriever extends ContentResolverRetriever {
     }
 
     @Override
-    public MediaItemType getParentType() {
+    public MediaItemType getSearchCategory() {
         return MediaItemType.FOLDERS;
     }
 
@@ -53,9 +50,9 @@ public class FoldersRetriever extends ContentResolverRetriever {
     }
 
     @Override
-    Cursor performSearchQuery(String query) {
-        final String WHERE = MediaStore.Audio.Media.DATA + " LIKE ?";
-        final String[] WHERE_ARGS = {query};
+    public Cursor performSearchQuery(String query) {
+        final String WHERE = MediaStore.Audio.Media.DATA + " LIKE ? COLLATE NOCASE";
+        final String[] WHERE_ARGS = { "%" + query + "%"};
         return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,PROJECTION,
                 WHERE, WHERE_ARGS, null);
     }
@@ -67,41 +64,43 @@ public class FoldersRetriever extends ContentResolverRetriever {
 
     @Override
     MediaBrowserCompat.MediaItem buildMediaItem(Cursor cursor, String parentId) {
-        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-        File file = new File(path);
-        File directory = file.getParentFile();
-
-        String directoryName = null;
-        String directoryPath = null;
-
-        if (null != directory) {
-            directoryName = directory.getName();
-            directoryPath = directory.getAbsolutePath();
-
-            if (directoryPathSet.add(directoryPath)) {
-                return createFolderMediaItem(directoryName, directoryPath, parentId);
-            }
-        }
         return null;
+    }
+
+    @Override
+    public List<MediaBrowserCompat.MediaItem> getChildren(ContentRequest request) {
+        Cursor cursor = performGetChildrenQuery(request.getSearchString());
+        return accumulateResults(cursor);
     }
 
     @Override
     public List<MediaBrowserCompat.MediaItem> search(@NonNull String query) {
         Cursor cursor = performSearchQuery(query);
+        return accumulateResults(cursor);
+    }
+
+    private List<MediaBrowserCompat.MediaItem> accumulateResults(Cursor cursor)
+    {
         TreeSet<MediaBrowserCompat.MediaItem> listToReturn = new TreeSet<>(this);
+        Set<String> directoryPathSet = new HashSet<>();
         while (cursor.moveToNext()) {
-            MediaBrowserCompat.MediaItem mediaItem = buildMediaItem(cursor, null);
-            if (null != mediaItem) {
-                Bundle extras = mediaItem.getDescription().getExtras();
-                 String directoryName = extras.getString(META_DATA_PARENT_DIRECTORY_NAME);
-                 if (null != directoryName && directoryName.contains(query)) {
-                     listToReturn.add(mediaItem);
-                 }
+            String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+            File file = new File(path);
+            File directory = file.getParentFile();
+            String directoryName;
+            String directoryPath;
+
+            if (null != directory) {
+                directoryName = directory.getName();
+                directoryPath = directory.getAbsolutePath();
+                if (directoryPathSet.add(directoryPath)) {
+                    MediaBrowserCompat.MediaItem mediaItem = createFolderMediaItem(directoryName, directoryPath, null);
+                    listToReturn.add(mediaItem);
+                }
             }
         }
         return new ArrayList<>(listToReturn);
     }
-
     private MediaBrowserCompat.MediaItem createFolderMediaItem(String directoryName, String directoryPath, String parentId){
         Bundle extras = getExtras();
         extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directoryName);

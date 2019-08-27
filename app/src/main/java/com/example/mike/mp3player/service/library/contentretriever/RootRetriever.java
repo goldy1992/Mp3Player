@@ -2,6 +2,7 @@ package com.example.mike.mp3player.service.library.contentretriever;
 
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
 
 import com.example.mike.mp3player.commons.MediaItemType;
@@ -12,47 +13,48 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.TreeSet;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByMediaItemType;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_LIBRARY_INFO;
+import static com.example.mike.mp3player.commons.Constants.ROOT_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.MediaItemType.ROOT;
 
 public class RootRetriever extends ContentRetriever {
 
-    private List<MediaBrowserCompat.MediaItem> CHILDREN;
+    private final List<MediaItem> CHILDREN;
     private final EnumMap<MediaItemType, String> childIds;
+    private final EnumMap<MediaItemType, MediaItem> typeToMediaItemMap;
 
 
     @Inject
     public RootRetriever(EnumMap<MediaItemType, String> childInfos) {
         this.childIds = childInfos;
-        TreeSet<MediaBrowserCompat.MediaItem> categorySet = new TreeSet<>(this);
+        TreeSet<MediaItem> categorySet = new TreeSet<>(this);
+        typeToMediaItemMap = new EnumMap<>(MediaItemType.class);
         for (MediaItemType category : MediaItemType.PARENT_TO_CHILD_MAP.get(ROOT)) {
-            categorySet.add(createRootItem(category));
+            MediaItem mediaItem = createRootItem(category);
+            categorySet.add(mediaItem);
+            typeToMediaItemMap.put(category, mediaItem);
         }
         CHILDREN = new ArrayList<>(categorySet);
     }
 
     @Override
-    public List<MediaBrowserCompat.MediaItem> getChildren(ContentRequest request) {
+    public List<MediaItem> getChildren(ContentRequest request) {
         return CHILDREN;
     }
 
-    @Override
-    public List<MediaBrowserCompat.MediaItem> search(String query) {
-        return null;
+    @Nullable
+    public MediaItem getRootItem(MediaItemType mediaItemType) {
+        return typeToMediaItemMap.get(mediaItemType);
     }
 
     @Override
     public MediaItemType getType() {
         return ROOT;
-    }
-
-    @Override
-    public MediaItemType getParentType() {
-        return null;
     }
 
     /**
@@ -67,11 +69,11 @@ public class RootRetriever extends ContentRetriever {
                 .setMediaId(childIds.get(category))
                 .setExtras(extras)
                 .build();
-        return new MediaBrowserCompat.MediaItem(mediaDescriptionCompat, 0);
+        return new MediaItem(mediaDescriptionCompat, 0);
     }
 
     @Override
-    public int compare(MediaBrowserCompat.MediaItem o1, MediaBrowserCompat.MediaItem o2) {
+    public int compare(MediaItem o1, MediaItem o2) {
         return compareRootMediaItemsByMediaItemType(o1, o2);
     }
 }

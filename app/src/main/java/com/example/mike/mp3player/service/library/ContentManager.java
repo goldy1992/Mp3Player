@@ -2,7 +2,10 @@ package com.example.mike.mp3player.service.library;
 
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.service.library.contentretriever.ContentRetriever;
+import com.example.mike.mp3player.service.library.contentretriever.RootRetriever;
+import com.example.mike.mp3player.service.library.contentretriever.SearchableRetriever;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -17,13 +20,16 @@ import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 public class ContentManager {
 
     private final Map<String, ContentRetriever> idToContentRetrieverMap;
-    private final EnumMap<MediaItemType, ContentRetriever> typeToContentRetrieverMap;
+    private final EnumMap<MediaItemType, SearchableRetriever> searchContentRetrieverMap;
+    private final RootRetriever rootRetriever;
 
     @Inject
     public ContentManager(Map<String, ContentRetriever> idToContentRetrieverMap,
-                          EnumMap<MediaItemType, ContentRetriever> typeContentRetrieverMap) {
+                          EnumMap<MediaItemType, SearchableRetriever> searchContentRetrieverMap,
+                          RootRetriever rootRetriever) {
        this.idToContentRetrieverMap = idToContentRetrieverMap;
-       this.typeToContentRetrieverMap = typeContentRetrieverMap;
+       this.searchContentRetrieverMap = searchContentRetrieverMap;
+       this.rootRetriever = rootRetriever;
     }
     /**
      * The id is in the following format
@@ -48,9 +54,11 @@ public class ContentManager {
     public List<MediaItem> search(String query) {
         query = query.trim();
         List<MediaItem> results = new ArrayList<>();
-        for (ContentRetriever contentRetriever : idToContentRetrieverMap.values()) {
+        for (SearchableRetriever contentRetriever : searchContentRetrieverMap.values()) {
             List<MediaItem> searchResults = contentRetriever.search(query);
-            if (null != searchResults) {
+            if (CollectionUtils.isNotEmpty(searchResults)) {
+                final MediaItemType searchCategory = contentRetriever.getSearchCategory();
+                results.add(rootRetriever.getRootItem(searchCategory));
                 results.addAll(searchResults);
             }
         }

@@ -25,7 +25,6 @@ public abstract class ContentResolverRetriever extends ContentRetriever {
     }
 
     abstract Cursor performGetChildrenQuery(String id);
-    abstract Cursor performSearchQuery(String query);
     abstract String[] getProjection();
     abstract MediaItem buildMediaItem(Cursor cursor, @Nullable String parentId);
 
@@ -35,19 +34,6 @@ public abstract class ContentResolverRetriever extends ContentRetriever {
         TreeSet<MediaItem> listToReturn = new TreeSet<>(this);
         while (cursor.moveToNext()) {
             MediaItem mediaItem = buildMediaItem(cursor, request.getFullId());
-            if (null != mediaItem) {
-                listToReturn.add(mediaItem);
-            }
-        }
-        return new ArrayList<>(listToReturn);
-    }
-
-    @Override
-    public List<MediaItem> search(String query) {
-        Cursor cursor = performSearchQuery(query);
-        TreeSet<MediaItem> listToReturn = new TreeSet<>(this);
-        while (cursor!= null && cursor.moveToNext()) {
-            MediaItem mediaItem = buildMediaItem(cursor, null);
             if (null != mediaItem) {
                 listToReturn.add(mediaItem);
             }

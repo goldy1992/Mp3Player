@@ -92,4 +92,6 @@ public final class Constants {
     // PRODUCT FLAVORS
     public static final String FULL = "full";
     public static final String AUTOMATION = "automation";
+
+    public static final String ROOT_ITEM_TYPE = "ROOT_ITEM_TYPE";
 }

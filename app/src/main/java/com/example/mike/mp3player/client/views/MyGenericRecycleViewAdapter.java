@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.client.views;
 
-import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;

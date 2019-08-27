@@ -8,6 +8,7 @@ import com.example.mike.mp3player.service.library.contentretriever.ContentResolv
 import com.example.mike.mp3player.service.library.contentretriever.ContentRetriever;
 import com.example.mike.mp3player.service.library.contentretriever.FoldersRetriever;
 import com.example.mike.mp3player.service.library.contentretriever.RootRetriever;
+import com.example.mike.mp3player.service.library.contentretriever.SearchableRetriever;
 import com.example.mike.mp3player.service.library.contentretriever.SongsFromFolderRetriever;
 import com.example.mike.mp3player.service.library.contentretriever.SongsRetriever;
 
@@ -43,10 +44,15 @@ public class ContentManagerModule {
 
     @Singleton
     @Provides
-    public Set<ContentRetriever> provideContentRetrievers(RootRetriever rootRetriever, Set<ContentResolverRetriever> contentResolverRetrievers) {
+    public RootRetriever providesRootRetriever(Map<Class<? extends ContentRetriever>, ContentRetriever> contentRetrieverMap) {
+        return (RootRetriever) contentRetrieverMap.get(RootRetriever.class);
+    }
+
+    @Singleton
+    @Provides
+    public Set<ContentRetriever> provideContentRetrievers(Map<Class<? extends ContentRetriever>, ContentRetriever> contentRetrieverMap) {
         Set<ContentRetriever> contentRetrievers = new HashSet<>();
-        contentRetrievers.add(rootRetriever);
-        contentRetrievers.addAll(contentResolverRetrievers);
+        contentRetrievers.addAll(contentRetrieverMap.values());
         return contentRetrievers;
     }
 
@@ -84,26 +90,13 @@ public class ContentManagerModule {
 
     @Provides
     @Singleton
-    public EnumMap<MediaItemType, ContentRetriever> provideTypeToContentRetrieverMap(
-            Map<Class<? extends ContentRetriever>, ContentRetriever> contentRetrieverMap) {
-        EnumMap<MediaItemType, ContentRetriever> map = new EnumMap<>(MediaItemType.class);
-        for (MediaItemType mediaItemType  :MediaItemType.values()) {
-            switch (mediaItemType) {
-                case SONG:
-                case SONGS:
-                    map.put(mediaItemType, contentRetrieverMap.get(SongsRetriever.class));
-                    break;
-                case FOLDER:
-                    map.put(mediaItemType, contentRetrieverMap.get(SongsFromFolderRetriever.class));
-                    break;
-                case FOLDERS:
-                    map.put(mediaItemType, contentRetrieverMap.get(FoldersRetriever.class));
-                    break;
-                case ROOT:
-                    map.put(mediaItemType, contentRetrieverMap.get(RootRetriever.class));
-                    break;
-                default:
-                    break;
+    public EnumMap<MediaItemType, SearchableRetriever> provideSearchToContentRetrieverMap(
+            Set<ContentRetriever> contentRetrieverSet) {
+        EnumMap<MediaItemType, SearchableRetriever> map = new EnumMap<>(MediaItemType.class);
+        for (ContentRetriever contentRetriever : contentRetrieverSet) {
+            if (contentRetriever instanceof SearchableRetriever) {
+                SearchableRetriever searchableRetriever = (SearchableRetriever) contentRetriever;
+                map.put(contentRetriever.getType(), searchableRetriever);
             }
         }
         return map;
