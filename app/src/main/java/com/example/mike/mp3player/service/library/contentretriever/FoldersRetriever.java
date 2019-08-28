@@ -76,7 +76,7 @@ public class FoldersRetriever extends ContentResolverRetriever implements Search
     @Override
     public List<MediaBrowserCompat.MediaItem> search(@NonNull String query) {
         Cursor cursor = performSearchQuery(query);
-        return accumulateResults(cursor);
+        return accumulateSearchResults(cursor, query);
     }
 
     private List<MediaBrowserCompat.MediaItem> accumulateResults(Cursor cursor)
@@ -98,6 +98,31 @@ public class FoldersRetriever extends ContentResolverRetriever implements Search
                     listToReturn.add(mediaItem);
                 }
             }
+        }
+        return new ArrayList<>(listToReturn);
+    }
+
+    private List<MediaBrowserCompat.MediaItem> accumulateSearchResults(Cursor cursor, String query) {
+        TreeSet<MediaBrowserCompat.MediaItem> listToReturn = new TreeSet<>(this);
+        Set<String> directoryPathSet = new HashSet<>();
+        while (cursor.moveToNext()) {
+            String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+            File file = new File(path);
+            File directory = file.getParentFile();
+            String directoryName;
+            String directoryPath;
+
+            if (null != directory) {
+                directoryName = directory.getName();
+                if (null != directoryName && directoryName.contains(query)) {
+                    directoryPath = directory.getAbsolutePath();
+                    if (directoryPathSet.add(directoryPath)) {
+                        MediaBrowserCompat.MediaItem mediaItem = createFolderMediaItem(directoryName, directoryPath, null);
+                        listToReturn.add(mediaItem);
+                    }
+                }
+            }
+
         }
         return new ArrayList<>(listToReturn);
     }

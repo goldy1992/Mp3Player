@@ -34,8 +34,8 @@ public final class ComparatorUtils {
 
     public static final Comparator<MediaItem> compareRootMediaItemsByMediaItemType = ComparatorUtils::compareRootMediaItemsByMediaItemType;
     public static int compareRootMediaItemsByMediaItemType(MediaItem m1, MediaItem m2) {
-        MediaItemType c1 = MediaItemUtils.getMediaItemType(m1);
-        MediaItemType c2 = MediaItemUtils.getMediaItemType(m2);
+        MediaItemType c1 = MediaItemUtils.getRootMediaItemType(m1);
+        MediaItemType c2 = MediaItemUtils.getRootMediaItemType(m2);
         if (c1 == null && c2 == null) {
             return 0;
         } else if (c1 == null) {

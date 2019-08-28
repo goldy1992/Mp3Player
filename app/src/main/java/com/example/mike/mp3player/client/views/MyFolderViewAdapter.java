@@ -10,9 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
+import com.example.mike.mp3player.client.views.viewholders.MyFolderViewHolder;
 
-import static com.example.mike.mp3player.commons.MediaItemUtils.getDescription;
-import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
+import static com.example.mike.mp3player.commons.MediaItemUtils.extractFolderName;
+import static com.example.mike.mp3player.commons.MediaItemUtils.extractFolderPath;
 
 public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
 
@@ -46,17 +47,9 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
             // - get element from your dataset at this position
             // - replace the contents of the views with that element
             String folderName = extractFolderName(song);
-            folderViewHolder.folderName.setText(folderName);
+            folderViewHolder.getFolderName().setText(folderName);
             String folderPath = extractFolderPath(song);
-            folderViewHolder.folderPath.setText(folderPath);
+            folderViewHolder.getFolderPath().setText(folderPath);
         }
-    }
-
-    private String extractFolderName(MediaBrowserCompat.MediaItem song) {
-        return getTitle(song);
-    }
-
-    private String extractFolderPath(MediaBrowserCompat.MediaItem song) {
-        return getDescription(song);
     }
 }

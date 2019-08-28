@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.views;
+package com.example.mike.mp3player.client.views.viewholders;
 
 import android.view.View;
 

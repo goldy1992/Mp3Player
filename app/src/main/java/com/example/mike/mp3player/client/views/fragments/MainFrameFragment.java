@@ -44,9 +44,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByMediaItemType;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
-import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE;
-import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE_ID;
+import static com.example.mike.mp3player.commons.Constants.ROOT_ITEM_TYPE;
 
 public class MainFrameFragment extends Fragment  implements MediaBrowserResponseListener {
 
@@ -168,7 +166,7 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
             String id = MediaItemUtils.getMediaId(mediaItem);
             Log.i(LOG_TAG, "media id: " + id);
             ChildViewPagerFragment childViewPagerFragment = childFragmentProvider.get();
-            MediaItemType category = (MediaItemType) MediaItemUtils.getExtra(MEDIA_ITEM_TYPE, mediaItem);
+            MediaItemType category = (MediaItemType) MediaItemUtils.getExtra(ROOT_ITEM_TYPE, mediaItem);
             childViewPagerFragment.init(category, id);
             adapter.getPagerItems().put(category, childViewPagerFragment);
             adapter.getMenuCategories().put(category, mediaItem);

@@ -2,26 +2,22 @@ package com.example.mike.mp3player.client.views;
 
 import android.net.Uri;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
-import android.support.v4.media.MediaMetadataCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
-import com.example.mike.mp3player.client.utils.TimerUtils;
-import com.example.mike.mp3player.commons.MetaDataKeys;
+import com.example.mike.mp3player.client.views.viewholders.MySongViewHolder;
 
-import org.apache.commons.io.FilenameUtils;
-
-import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
-import static com.example.mike.mp3player.commons.MediaItemUtils.getExtra;
-import static com.example.mike.mp3player.commons.MediaItemUtils.hasExtras;
+import static com.example.mike.mp3player.commons.MediaItemUtils.extractArtist;
+import static com.example.mike.mp3player.commons.MediaItemUtils.extractDuration;
+import static com.example.mike.mp3player.commons.MediaItemUtils.extractTitle;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getAlbumArtUri;
 
 
 public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
@@ -58,48 +54,13 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
             String artist = extractArtist(song);
             String duration = extractDuration(song);
 
-            songViewHolder.titleArtistView.setText(artist);
-            songViewHolder.titleTextView.setText(title);
-            songViewHolder.titleDurationView.setText(duration);
-            ImageView albumArt = songViewHolder.albumArt;
+            songViewHolder.getArtist().setText(artist);
+            songViewHolder.getTitle().setText(title);
+            songViewHolder.getDuration().setText(duration);
+            ImageView albumArt = songViewHolder.getAlbumArt();
             Uri uri = getAlbumArtUri(song);
             albumArtPainter.paintOnView(albumArt, uri);
         }
     }
 
-    private Uri getAlbumArtUri(MediaItem song) {
-        Uri albumUri = (Uri) song.getDescription().getExtras().get(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI);
-        return albumUri;
-    }
-
-    private String extractTitle(MediaItem song) {
-        CharSequence charSequence = song.getDescription().getTitle();
-        if (null == charSequence) {
-            String fileName = hasExtras(song) ? (String) getExtra(MetaDataKeys.META_DATA_KEY_FILE_NAME, song) : null;
-            if (fileName != null) {
-                return FilenameUtils.removeExtension(fileName);
-            }
-        } else {
-            return charSequence.toString();
-        }
-        return "";
-    }
-
-    private String extractArtist(MediaItem song) {
-        String artist = null;
-        try {
-            artist = song.getDescription().getExtras().getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
-            if (null == artist) {
-                artist = UNKNOWN;
-            }
-        } catch (NullPointerException ex) {
-            artist = UNKNOWN;
-        }
-        return artist;
-    }
-
-    private String extractDuration(MediaItem song) {
-        long duration = song.getDescription().getExtras().getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
-        return TimerUtils.formatTime(duration);
-    }
 }
