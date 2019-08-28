@@ -7,15 +7,18 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/overview_coordinator_layout"
+        android:layout_above="@id/playToolbarFragment"
+        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.example.mike.mp3player.client.activities.MainActivity">
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:fitsSystemWindows="true"
-            android:id="@+id/appbar"
             >
 
             <androidx.appcompat.widget.SearchView
@@ -33,6 +36,7 @@
             android:id="@+id/result_recycle_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/appbar"
             android:layout_above="@id/playToolbarFragment"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
 

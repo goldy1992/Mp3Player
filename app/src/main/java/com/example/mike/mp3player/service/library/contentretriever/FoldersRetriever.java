@@ -114,7 +114,7 @@ public class FoldersRetriever extends ContentResolverRetriever implements Search
 
             if (null != directory) {
                 directoryName = directory.getName();
-                if (null != directoryName && directoryName.contains(query)) {
+                if (null != directoryName && directoryName.toUpperCase().contains(query.toUpperCase())) {
                     directoryPath = directory.getAbsolutePath();
                     if (directoryPathSet.add(directoryPath)) {
                         MediaBrowserCompat.MediaItem mediaItem = createFolderMediaItem(directoryName, directoryPath, null);

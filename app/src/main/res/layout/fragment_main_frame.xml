@@ -51,6 +51,7 @@
                 android:id="@+id/rootItemsPager"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/appbar"
                 android:layout_above="@+id/playToolbarFragment"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

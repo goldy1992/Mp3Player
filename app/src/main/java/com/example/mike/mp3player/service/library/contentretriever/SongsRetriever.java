@@ -59,7 +59,7 @@ public class SongsRetriever extends ContentResolverRetriever implements Searchab
 
     @Override
     public Cursor performSearchQuery(String query) {
-        String WHERE_CLAUSE = MediaStore.Audio.Media.TITLE + " LIKE ? ";
+        String WHERE_CLAUSE = MediaStore.Audio.Media.TITLE + " LIKE ? COLLATE NOCASE";
         String[] WHERE_ARGS = {"%" + query + "%"};
         return  contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,PROJECTION,
                 WHERE_CLAUSE, WHERE_ARGS, null);
