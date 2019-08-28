@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.IdRes;
@@ -13,7 +12,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.MySongViewAdapter;
-import com.example.mike.mp3player.client.views.MyViewHolder;
+import com.example.mike.mp3player.client.views.MySongViewHolder;
 import com.example.mike.mp3player.commons.MediaItemType;
 
 import org.junit.Before;
@@ -31,7 +30,6 @@ import static com.example.mike.mp3player.TestUtils.createMediaItem;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -69,9 +67,8 @@ public class MySongViewAdapterTest {
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT);
         when(viewGroup.generateLayoutParams(any(AttributeSet.class))).thenReturn(layoutParams);
         when(viewGroup.getContext()).thenReturn(this.context);
-        MyViewHolder result = mySongViewAdapter.onCreateViewHolder(viewGroup, 0);
+        MySongViewHolder result = (MySongViewHolder) mySongViewAdapter.onCreateViewHolder(viewGroup, 0);
         assertNotNull(result);
-        assertTrue(result.getView() instanceof LinearLayout);
     }
 
     @Test
@@ -118,9 +115,8 @@ public class MySongViewAdapterTest {
     private void bindViewHolder() {
         mySongViewAdapter.setItems(mediaItems);
 
-        MyViewHolder myViewHolder = mock(MyViewHolder.class);
+        MySongViewHolder myViewHolder = mock(MySongViewHolder.class);
         when(myViewHolder.getAdapterPosition()).thenReturn(0);
-        when(myViewHolder.getView()).thenReturn(viewGroup);
         mySongViewAdapter.onBindViewHolder(myViewHolder, 0);
     }
     private TextView addMockTextViewToViewGroup(ViewGroup view, @IdRes int res) {

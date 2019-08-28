@@ -2,6 +2,7 @@ package com.example.mike.mp3player.client.views;
 
 import android.support.v4.media.MediaDescriptionCompat;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 
@@ -20,7 +21,7 @@ import java.util.List;
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 import static com.example.mike.mp3player.commons.Constants.FIRST;
 
-public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements
+public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
         MediaBrowserResponseListener, FastScrollRecyclerView.SectionedAdapter {
     final String LOG_TAG = "MY_VIEW_ADAPTER";
     private static final String EMPTY_MEDIA_ID = "EMPTY_MEDIA_ID";
@@ -54,11 +55,11 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<M
         this.isInitialised = true;
     }
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == EMPTY_VIEW_TYPE) {
-            GridLayout t = (GridLayout) LayoutInflater.from(parent.getContext())
+            View view =  LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.empty_item_menu, parent, false);
-            return new MyViewHolder(t);
+            return new EmptyListViewHolder(view);
         }
         return null;
     }

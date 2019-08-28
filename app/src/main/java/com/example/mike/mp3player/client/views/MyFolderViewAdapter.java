@@ -2,11 +2,11 @@ package com.example.mike.mp3player.client.views;
 
 import android.support.v4.media.MediaBrowserCompat;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
@@ -24,33 +24,31 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
 
 
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        MyViewHolder vh = super.onCreateViewHolder(parent, viewType);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder vh = super.onCreateViewHolder(parent, viewType);
         if (vh == null) {
             // create a new views
-            GridLayout t = (GridLayout) LayoutInflater.from(parent.getContext())
+            View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.folder_item_menu, parent, false);
 
-            vh = new MyViewHolder(t);
+            vh = new MyFolderViewHolder(view);
         }
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        if (!isEmptyRecycleView()) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        final boolean isFolderHolder = holder instanceof MyFolderViewHolder;
+        if (isFolderHolder && !isEmptyRecycleView()) {
+            MyFolderViewHolder folderViewHolder = (MyFolderViewHolder) holder;
             //Log.i(LOG_TAG, "position: " + position);
             MediaBrowserCompat.MediaItem song = getItems().get(holder.getAdapterPosition());
             // - get element from your dataset at this position
             // - replace the contents of the views with that element
-            //song.getMediaId();
             String folderName = extractFolderName(song);
-            TextView folderNameText = holder.getView().findViewById(R.id.folderName);
-            folderNameText.setText(folderName);
-
+            folderViewHolder.folderName.setText(folderName);
             String folderPath = extractFolderPath(song);
-            TextView folderPathText = holder.getView().findViewById(R.id.folderPath);
-            folderPathText.setText(folderPath);
+            folderViewHolder.folderPath.setText(folderPath);
         }
     }
 
