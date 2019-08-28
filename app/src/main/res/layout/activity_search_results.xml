@@ -20,14 +20,18 @@
             android:layout_alignParentTop="true"
             android:fitsSystemWindows="true"
             >
-
-            <androidx.appcompat.widget.SearchView
-                android:layout_margin="@dimen/default_gap"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/search_view"
-                android:background="@color/white"
-                />
+                android:layout_height="wrap_content" >
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    />
+            </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
 

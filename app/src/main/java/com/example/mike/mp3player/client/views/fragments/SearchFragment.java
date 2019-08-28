@@ -49,9 +49,9 @@ public class SearchFragment extends Fragment implements LogTagger {
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         ComponentName componentName = new ComponentName(getContext(), SearchResultActivityInjector.class);
         SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
-     //    Assumes current activity is the searchable activity
+        // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchableInfo);
-       searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
         searchView.setSubmitButtonEnabled(true);
         searchView.setBackgroundColor(Color.WHITE);
 
