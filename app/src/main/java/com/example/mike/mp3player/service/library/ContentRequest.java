@@ -5,11 +5,16 @@ import android.text.TextUtils;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 public final class ContentRequest {
 
     private final String fullId;
     private final String searchString;
     private final String contentRetrieverKey;
+    // TODO: populate media ID prefix
+    @Nullable
+    private String mediaIdPrefix;
 
     private ContentRequest(String fullId, String searchString,
                            String contentRetrieverKey) {
@@ -43,5 +48,9 @@ public final class ContentRequest {
 
     public String getContentRetrieverKey() {
         return contentRetrieverKey;
+    }
+
+    public String getMediaIdPrefix() {
+        return mediaIdPrefix;
     }
 }

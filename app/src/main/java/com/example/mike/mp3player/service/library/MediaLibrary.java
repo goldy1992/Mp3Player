@@ -6,11 +6,8 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import androidx.annotation.NonNull;
 
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.service.library.contentretriever.ContentResolverRetriever;
+import com.example.mike.mp3player.service.library.content.retriever.ContentResolverRetriever;
 
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 

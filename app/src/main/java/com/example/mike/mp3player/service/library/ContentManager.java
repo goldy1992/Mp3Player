@@ -1,15 +1,14 @@
 package com.example.mike.mp3player.service.library;
 
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.service.library.contentretriever.ContentRetriever;
-import com.example.mike.mp3player.service.library.contentretriever.RootRetriever;
-import com.example.mike.mp3player.service.library.contentretriever.SearchableRetriever;
+import com.example.mike.mp3player.service.library.content.retriever.ContentRetriever;
+import com.example.mike.mp3player.service.library.content.retriever.RootRetriever;
+import com.example.mike.mp3player.service.library.content.searcher.ContentSearcher;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,12 +19,12 @@ import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 public class ContentManager {
 
     private final Map<String, ContentRetriever> idToContentRetrieverMap;
-    private final EnumMap<MediaItemType, SearchableRetriever> searchContentRetrieverMap;
+    private final Map<MediaItemType, ContentSearcher> searchContentRetrieverMap;
     private final RootRetriever rootRetriever;
 
     @Inject
     public ContentManager(Map<String, ContentRetriever> idToContentRetrieverMap,
-                          EnumMap<MediaItemType, SearchableRetriever> searchContentRetrieverMap,
+                          Map<MediaItemType, ContentSearcher> searchContentRetrieverMap,
                           RootRetriever rootRetriever) {
        this.idToContentRetrieverMap = idToContentRetrieverMap;
        this.searchContentRetrieverMap = searchContentRetrieverMap;
@@ -54,10 +53,10 @@ public class ContentManager {
     public List<MediaItem> search(String query) {
         query = query.trim();
         List<MediaItem> results = new ArrayList<>();
-        for (SearchableRetriever contentRetriever : searchContentRetrieverMap.values()) {
-            List<MediaItem> searchResults = contentRetriever.search(query);
+        for (ContentSearcher contentSearcher : searchContentRetrieverMap.values()) {
+            List<MediaItem> searchResults = contentSearcher.search(query);
             if (CollectionUtils.isNotEmpty(searchResults)) {
-                final MediaItemType searchCategory = contentRetriever.getSearchCategory();
+                final MediaItemType searchCategory = contentSearcher.getSearchCategory();
                 results.add(rootRetriever.getRootItem(searchCategory));
                 results.addAll(searchResults);
             }

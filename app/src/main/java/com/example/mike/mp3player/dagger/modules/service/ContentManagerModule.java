@@ -4,13 +4,14 @@ import android.content.ContentResolver;
 import android.content.Context;
 
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.service.library.contentretriever.ContentResolverRetriever;
-import com.example.mike.mp3player.service.library.contentretriever.ContentRetriever;
-import com.example.mike.mp3player.service.library.contentretriever.FoldersRetriever;
-import com.example.mike.mp3player.service.library.contentretriever.RootRetriever;
-import com.example.mike.mp3player.service.library.contentretriever.SearchableRetriever;
-import com.example.mike.mp3player.service.library.contentretriever.SongsFromFolderRetriever;
-import com.example.mike.mp3player.service.library.contentretriever.SongsRetriever;
+import com.example.mike.mp3player.service.library.content.retriever.ContentRetriever;
+import com.example.mike.mp3player.service.library.content.retriever.FoldersRetriever;
+import com.example.mike.mp3player.service.library.content.retriever.RootRetriever;
+import com.example.mike.mp3player.service.library.content.retriever.SongsFromFolderRetriever;
+import com.example.mike.mp3player.service.library.content.retriever.SongsRetriever;
+import com.example.mike.mp3player.service.library.content.searcher.ContentSearcher;
+import com.example.mike.mp3player.service.library.content.searcher.FolderSearcher;
+import com.example.mike.mp3player.service.library.content.searcher.SongSearcher;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -90,15 +91,11 @@ public class ContentManagerModule {
 
     @Provides
     @Singleton
-    public EnumMap<MediaItemType, SearchableRetriever> provideSearchToContentRetrieverMap(
-            Set<ContentRetriever> contentRetrieverSet) {
-        EnumMap<MediaItemType, SearchableRetriever> map = new EnumMap<>(MediaItemType.class);
-        for (ContentRetriever contentRetriever : contentRetrieverSet) {
-            if (contentRetriever instanceof SearchableRetriever) {
-                SearchableRetriever searchableRetriever = (SearchableRetriever) contentRetriever;
-                map.put(contentRetriever.getType(), searchableRetriever);
-            }
-        }
+    public EnumMap<MediaItemType, ContentSearcher> provideSearchSearcherMap(ContentResolver contentResolver,
+                                                                            EnumMap<MediaItemType, String> idMap) {
+        EnumMap<MediaItemType, ContentSearcher> map = new EnumMap<>(MediaItemType.class);
+        map.put(MediaItemType.SONG, new SongSearcher(contentResolver, idMap.get(MediaItemType.SONG)));
+        map.put(MediaItemType.FOLDER, new FolderSearcher(contentResolver, idMap.get(MediaItemType.FOLDER)));
         return map;
     }
 

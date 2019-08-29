@@ -1,10 +1,9 @@
 package com.example.mike.mp3player.dagger.modules.service;
 
 import android.content.ContentResolver;
-import android.content.Context;
 
 import com.example.mike.mp3player.service.library.ContentManager;
-import com.example.mike.mp3player.service.library.contentretriever.ContentResolverRetriever;
+import com.example.mike.mp3player.service.library.content.retriever.ContentResolverRetriever;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 

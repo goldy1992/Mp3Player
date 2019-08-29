@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.service.library.contentretriever;
+package com.example.mike.mp3player.service.library.content.retriever;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -10,11 +10,9 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 
 import com.example.mike.mp3player.commons.MediaItemType;
+import com.example.mike.mp3player.service.library.content.retriever.ContentResolverRetriever;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeSet;
 
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
@@ -25,17 +23,11 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
+import static com.example.mike.mp3player.service.library.content.Projections.SONG_PROJECTION;
 
-public class SongsRetriever extends ContentResolverRetriever implements SearchableRetriever {
+public class SongsRetriever extends ContentResolverRetriever {
 
-    public static final String[] PROJECTION = {
-            MediaStore.Audio.Media.DATA,
-            MediaStore.Audio.Media.DURATION,
-            MediaStore.Audio.Media.ARTIST,
-            MediaStore.Audio.Media.ARTIST_ID,
-            MediaStore.Audio.Media._ID,
-            MediaStore.Audio.Media.TITLE,
-            MediaStore.Audio.Media.ALBUM_ID};
+
 
     public SongsRetriever(ContentResolver contentResolver, String idPrefix) {
         super(contentResolver, idPrefix);
@@ -47,27 +39,14 @@ public class SongsRetriever extends ContentResolverRetriever implements Searchab
     }
 
     @Override
-    public MediaItemType getSearchCategory() {
-        return MediaItemType.SONGS;
-    }
-
-    @Override
     Cursor performGetChildrenQuery(String id) {
-        return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,PROJECTION,
+        return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, getProjection(),
                 null, null, null);
     }
 
     @Override
-    public Cursor performSearchQuery(String query) {
-        String WHERE_CLAUSE = MediaStore.Audio.Media.TITLE + " LIKE ? COLLATE NOCASE";
-        String[] WHERE_ARGS = {"%" + query + "%"};
-        return  contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,PROJECTION,
-                WHERE_CLAUSE, WHERE_ARGS, null);
-    }
-
-    @Override
     public String[] getProjection() {
-        return PROJECTION;
+        return SONG_PROJECTION;
     }
 
 
@@ -120,18 +99,7 @@ public class SongsRetriever extends ContentResolverRetriever implements Searchab
         return new MediaBrowserCompat.MediaItem(mediaDescriptionCompatBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
     }
 
-    @Override
-    public List<MediaBrowserCompat.MediaItem> search(String query) {
-        Cursor cursor = performSearchQuery(query);
-        TreeSet<MediaBrowserCompat.MediaItem> listToReturn = new TreeSet<>(this);
-        while (cursor!= null && cursor.moveToNext()) {
-            MediaBrowserCompat.MediaItem mediaItem = buildMediaItem(cursor, null);
-            if (null != mediaItem) {
-                listToReturn.add(mediaItem);
-            }
-        }
-        return new ArrayList<>(listToReturn);
-    }
+
 
 
     @Override

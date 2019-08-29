@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.service.library.contentretriever;
+package com.example.mike.mp3player.service.library.content.retriever;
 
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
