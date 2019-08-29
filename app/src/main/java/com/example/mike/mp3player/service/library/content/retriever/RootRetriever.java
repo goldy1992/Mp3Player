@@ -9,26 +9,29 @@ import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.service.library.ContentRequest;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByMediaItemType;
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.ROOT_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.MediaItemType.ROOT;
 
-public class RootRetriever extends ContentRetriever {
+public class RootRetriever extends ContentRetriever implements Comparator<MediaItem> {
 
     private final List<MediaItem> CHILDREN;
-    private final EnumMap<MediaItemType, String> childIds;
-    private final EnumMap<MediaItemType, MediaItem> typeToMediaItemMap;
+    private final Map<MediaItemType, String> childIds;
+    private final Map<MediaItemType, MediaItem> typeToMediaItemMap;
 
 
     @Inject
-    public RootRetriever(EnumMap<MediaItemType, String> childInfos) {
+    public RootRetriever(Map<MediaItemType, String> childInfos) {
         this.childIds = childInfos;
         TreeSet<MediaItem> categorySet = new TreeSet<>(this);
         typeToMediaItemMap = new EnumMap<>(MediaItemType.class);
@@ -59,7 +62,8 @@ public class RootRetriever extends ContentRetriever {
      * @return a root category item
      */
     private MediaBrowserCompat.MediaItem createRootItem(MediaItemType category) {
-        Bundle extras = getExtras();
+        Bundle extras = new Bundle();
+        extras.putSerializable(MEDIA_ITEM_TYPE, ROOT);
         extras.putSerializable(ROOT_ITEM_TYPE, category);
         MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder()
                 .setDescription(category.getDescription())

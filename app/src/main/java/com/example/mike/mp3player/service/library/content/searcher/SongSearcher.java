@@ -39,23 +39,4 @@ public class SongSearcher extends ContentResolverSearcher {
                 getProjection(),
                 WHERE_CLAUSE, WHERE_ARGS, null);
     }
-
-    @Override
-    MediaItem buildMediaItem(Cursor cursor, String idPrefix) {
-        return null;
-    }
-
-    @Override
-    public List<MediaItem> search(String query) {
-        Cursor cursor = performSearchQuery(query);
-        TreeSet<MediaItem> listToReturn = new TreeSet<>();
-        while (cursor!= null && cursor.moveToNext()) {
-            MediaItem mediaItem = buildMediaItem(cursor, null);
-            if (null != mediaItem) {
-                listToReturn.add(mediaItem);
-            }
-        }
-        return new ArrayList<>(listToReturn);
-    }
-
 }

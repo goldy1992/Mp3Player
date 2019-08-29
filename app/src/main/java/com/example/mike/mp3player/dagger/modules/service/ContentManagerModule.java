@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 
 import com.example.mike.mp3player.commons.MediaItemType;
+import com.example.mike.mp3player.service.library.content.builder.MediaItemBuilder;
 import com.example.mike.mp3player.service.library.content.retriever.ContentRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.FoldersRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.RootRetriever;
@@ -24,21 +25,25 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
+import static com.example.mike.mp3player.commons.MediaItemType.FOLDER;
+import static com.example.mike.mp3player.commons.MediaItemType.SONG;
+
 @Module
 public class ContentManagerModule {
 
     @Singleton
     @Provides
     public Map<Class<? extends ContentRetriever>, ContentRetriever> provideContentResolverRetrieverMap(ContentResolver contentResolver,
-                                                                            EnumMap<MediaItemType, String> ids) {
+                                                                            Map<MediaItemType, String> ids,
+                                                                           Map<MediaItemType, MediaItemBuilder> mediaItemBuilderMap) {
         Map<Class<? extends ContentRetriever>, ContentRetriever> mapToReturn = new HashMap<>();
         RootRetriever rootRetriever = new RootRetriever(ids);
         mapToReturn.put(RootRetriever.class, rootRetriever);
-        SongsRetriever songsRetriever = new SongsRetriever(contentResolver, ids.get(MediaItemType.SONGS));
+        SongsRetriever songsRetriever = new SongsRetriever(contentResolver, mediaItemBuilderMap.get(MediaItemType.SONG), ids.get(MediaItemType.SONGS));
         mapToReturn.put(SongsRetriever.class, songsRetriever);
-        FoldersRetriever foldersRetriever = new FoldersRetriever(contentResolver, ids.get(MediaItemType.FOLDER));
+        FoldersRetriever foldersRetriever = new FoldersRetriever(contentResolver, mediaItemBuilderMap.get(FOLDER), ids.get(FOLDER));
         mapToReturn.put(FoldersRetriever.class, foldersRetriever);
-        SongsFromFolderRetriever songsFromFolderRetriever = new SongsFromFolderRetriever(contentResolver, null);
+        SongsFromFolderRetriever songsFromFolderRetriever = new SongsFromFolderRetriever(contentResolver, mediaItemBuilderMap.get(SONG), null);
         mapToReturn.put(SongsFromFolderRetriever.class, songsFromFolderRetriever);
         return mapToReturn;
     }
@@ -76,7 +81,7 @@ public class ContentManagerModule {
                     map.put(idMap.get(MediaItemType.SONGS), contentRetrieverMap.get(SongsRetriever.class));
                     break;
                 case FOLDER:
-                    map.put(idMap.get(MediaItemType.FOLDER), contentRetrieverMap.get(SongsFromFolderRetriever.class));
+                    map.put(idMap.get(FOLDER), contentRetrieverMap.get(SongsFromFolderRetriever.class));
                     break;
                 case FOLDERS: map.put(idMap.get(MediaItemType.FOLDERS), contentRetrieverMap.get(FoldersRetriever.class));
                     break;
@@ -91,11 +96,12 @@ public class ContentManagerModule {
 
     @Provides
     @Singleton
-    public EnumMap<MediaItemType, ContentSearcher> provideSearchSearcherMap(ContentResolver contentResolver,
-                                                                            EnumMap<MediaItemType, String> idMap) {
+    public Map<MediaItemType, ContentSearcher> provideSearchSearcherMap(ContentResolver contentResolver,
+                                                                        Map<MediaItemType, String> idMap,
+                                                                        Map<MediaItemType, MediaItemBuilder> mediaItemBuilderMap) {
         EnumMap<MediaItemType, ContentSearcher> map = new EnumMap<>(MediaItemType.class);
-        map.put(MediaItemType.SONG, new SongSearcher(contentResolver, idMap.get(MediaItemType.SONG)));
-        map.put(MediaItemType.FOLDER, new FolderSearcher(contentResolver, idMap.get(MediaItemType.FOLDER)));
+        map.put(MediaItemType.SONG, new SongSearcher(contentResolver, mediaItemBuilderMap.get(MediaItemType.SONG), idMap.get(MediaItemType.SONG)));
+        map.put(FOLDER, new FolderSearcher(contentResolver, mediaItemBuilderMap.get(FOLDER), idMap.get(FOLDER)));
         return map;
     }
 
