@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.util.Log;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,12 +18,13 @@ import com.example.mike.mp3player.LogTagger;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.callbacks.search.SearchResultListener;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
+import com.example.mike.mp3player.client.views.SearchAdapterTouchListener;
 import com.example.mike.mp3player.client.views.SearchResultAdapter;
 
 import java.util.List;
 
-public abstract class SearchResultActivity extends MediaActivityCompat implements SearchResultListener, LogTagger {
-
+public abstract class SearchResultActivity extends MediaActivityCompat implements SearchResultListener, LogTagger,
+    SearchAdapterTouchListener.ItemSelectedListener {
     private String currentQuery;
     private RecyclerView recyclerView;
     private SearchResultAdapter searchResultAdapter;
@@ -58,6 +58,7 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
         this.searchView = findViewById(R.id.search_view);
         this.recyclerView = findViewById(R.id.result_recycle_view);
         this.recyclerView.setAdapter(searchResultAdapter);
+        this.recyclerView.addOnItemTouchListener(new SearchAdapterTouchListener(getApplicationContext(), this));
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         // Get the SearchView and set the searchable configuration
@@ -77,6 +78,11 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         handleIntent(intent);
+    }
+
+    @Override
+    public void itemSelected(MediaItem item) {
+
     }
 
     private void handleIntent(Intent intent) {

@@ -2,7 +2,6 @@ package com.example.mike.mp3player.client.views.fragments.viewpager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,21 +19,15 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
-import com.example.mike.mp3player.commons.Constants;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
-import com.example.mike.mp3player.service.library.utils.IdGenerator;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import javax.inject.Inject;
 
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
-import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE;
-import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE_ID;
 
 /**
  * Fragment to show a list of media items, has MediaBrowserAdapter injected into it using Dagger2
@@ -70,6 +63,7 @@ public class ChildViewPagerFragment extends Fragment implements MyGenericItemTou
         this.recyclerView = view.findViewById(R.id.myRecyclerView);
         this.recyclerView.setAdapter(myViewAdapter);
         this.recyclerView.addOnItemTouchListener(myGenericItemTouchListener);
+        this.myGenericItemTouchListener.setParentView(recyclerView);
         this.recyclerView.setItemAnimator(new DefaultItemAnimator());
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         this.mediaBrowserAdapter.registerListener(parentItemTypeId, myViewAdapter);

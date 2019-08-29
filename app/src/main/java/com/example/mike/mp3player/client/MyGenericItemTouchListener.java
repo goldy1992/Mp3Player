@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.media.MediaBrowserCompat;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,39 +12,29 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
         implements RecyclerView.OnItemTouchListener  {
 
     private static final String LOG_TAG = "MY_ITEM_TOUCH_LISTENER";
-    private GestureDetector gestureDetector;
+    private final GestureDetector gestureDetector;
+    final ItemSelectedListener itemSelectedListener;
     RecyclerView parentView;
-    View childView;
-    ItemSelectedListener itemSelectedListener = null;
-
-
 
     public MyGenericItemTouchListener(Context context, ItemSelectedListener itemSelectedListener) {
         this.gestureDetector = new GestureDetector(context, this);
         this.itemSelectedListener = itemSelectedListener;
     }
 
+    /**
+     * @param view the RecyclerView
+     * @param e the motion event object
+     * @return false in order to keep dispatching event, true so message is not re-dispatched
+     */
     @Override
     public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
-            parentView = view;
-            childView = view.findChildViewUnder(e.getX(), e.getY());
-            gestureDetector.onTouchEvent(e);
-            // return false in order to keep dispatching event
-            return false;
-        // return true so message is not re-dispatched
-
+        parentView = view;
+        gestureDetector.onTouchEvent(e);
+        return false;
     }
 
     @Override
-    public boolean onSingleTapConfirmed(MotionEvent e) {
-        return super.onSingleTapConfirmed(e);
-    }
-
-    @Override
-    public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-            childView = rv.findChildViewUnder(e.getX(), e.getY());
-
-    }
+    public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {    }
 
     @Override
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {  }
@@ -55,6 +44,10 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
                             float distanceX, float distanceY) {
         super.onScroll(e1, e2, distanceX, distanceY);
         return false;
+    }
+
+    public void setParentView(RecyclerView parentView) {
+        this.parentView = parentView;
     }
 
     public interface ItemSelectedListener {
