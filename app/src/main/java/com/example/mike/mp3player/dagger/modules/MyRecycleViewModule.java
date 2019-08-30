@@ -3,9 +3,7 @@ package com.example.mike.mp3player.dagger.modules;
 import android.content.Context;
 
 import com.example.mike.mp3player.client.AlbumArtPainter;
-import com.example.mike.mp3player.client.MyFolderItemTouchListener;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
-import com.example.mike.mp3player.client.MySongItemTouchListener;
 import com.example.mike.mp3player.client.activities.FolderActivityInjector;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjector;
@@ -13,8 +11,6 @@ import com.example.mike.mp3player.client.views.MyFolderViewAdapter;
 import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
 import com.example.mike.mp3player.client.views.MySongViewAdapter;
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,11 +47,6 @@ public class MyRecycleViewModule {
     @Provides
     public MyGenericItemTouchListener provideRecycleViewTouchListener(Context context,
                     MyGenericItemTouchListener.ItemSelectedListener listener, MediaItemType mediaItemType) {
-        switch (mediaItemType) {
-            case FOLDER:
-            case SONGS: return new MySongItemTouchListener(context, listener);
-            case FOLDERS: return new MyFolderItemTouchListener(context, listener);
-            default: return null;
-        }
+        return new MyGenericItemTouchListener(context, listener);
     }
 }

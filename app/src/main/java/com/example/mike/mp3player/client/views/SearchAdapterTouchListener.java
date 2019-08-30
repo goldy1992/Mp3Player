@@ -1,40 +1,15 @@
 package com.example.mike.mp3player.client.views;
 
 import android.content.Context;
-import android.support.v4.media.MediaBrowserCompat;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 
-public class SearchAdapterTouchListener extends GestureDetector.SimpleOnGestureListener
-        implements RecyclerView.OnItemTouchListener {
-
-    private final GestureDetector gestureDetector;
-    private final ItemSelectedListener itemSelectedListener;
+public class SearchAdapterTouchListener extends MyGenericItemTouchListener {
 
     public SearchAdapterTouchListener(Context context, ItemSelectedListener itemSelectedListener) {
-        this.gestureDetector = new GestureDetector(context, this);
-        this.itemSelectedListener = itemSelectedListener;
-    }
-    @Override
-    public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-        return false;
-    }
-
-    @Override
-    public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-
-    }
-
-    @Override
-    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
+        super(context, itemSelectedListener);
     }
 
 
-    public interface ItemSelectedListener {
-        void itemSelected(MediaBrowserCompat.MediaItem item);
-    }
+
 }

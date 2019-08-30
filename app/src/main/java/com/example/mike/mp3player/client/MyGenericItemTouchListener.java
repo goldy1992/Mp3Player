@@ -4,11 +4,15 @@ import android.content.Context;
 import android.support.v4.media.MediaBrowserCompat;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleOnGestureListener
+import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
+import com.example.mike.mp3player.client.views.MySongViewAdapter;
+
+public class MyGenericItemTouchListener extends GestureDetector.SimpleOnGestureListener
         implements RecyclerView.OnItemTouchListener  {
 
     private static final String LOG_TAG = "MY_ITEM_TOUCH_LISTENER";
@@ -28,7 +32,6 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
      */
     @Override
     public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
-        parentView = view;
         gestureDetector.onTouchEvent(e);
         return false;
     }
@@ -43,6 +46,21 @@ public abstract class MyGenericItemTouchListener extends GestureDetector.SimpleO
     public boolean onScroll(MotionEvent e1, MotionEvent e2,
                             float distanceX, float distanceY) {
         super.onScroll(e1, e2, distanceX, distanceY);
+        return false;
+    }
+
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
+        super.onSingleTapConfirmed(e);
+        View childView = parentView.findChildViewUnder(e.getX(), e.getY());
+        if (null != childView) {
+            int childPosition = parentView.getChildAdapterPosition(childView);
+            MyGenericRecycleViewAdapter myViewAdapter = (MyGenericRecycleViewAdapter) parentView.getAdapter();
+            if (null != myViewAdapter) {
+                this.itemSelectedListener.itemSelected(myViewAdapter.getItems().get(childPosition));
+            }
+        }
         return false;
     }
 
