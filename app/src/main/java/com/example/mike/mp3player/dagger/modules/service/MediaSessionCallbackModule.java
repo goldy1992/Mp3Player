@@ -15,6 +15,7 @@ import com.example.mike.mp3player.service.session.MediaSessionCallback;
 
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Singleton;
 
@@ -44,7 +45,7 @@ public class MediaSessionCallbackModule {
 
     @Singleton
     @Provides
-    public PlaybackManager providePlaybackManager(ContentManager contentManager, EnumMap<MediaItemType, String> ids) {
+    public PlaybackManager providePlaybackManager(ContentManager contentManager, Map<MediaItemType, String> ids) {
         List<MediaBrowserCompat.MediaItem> items = contentManager.getPlaylist(ids.get(MediaItemType.SONGS));
         return new PlaybackManager(items, 0);
     }

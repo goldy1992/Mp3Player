@@ -21,6 +21,7 @@ import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_AR
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_DURATION;
 import static com.example.mike.mp3player.commons.ComparatorUtils.uppercaseStringCompare;
+import static com.example.mike.mp3player.commons.Constants.LIBRARY_ID;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
@@ -30,10 +31,10 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_D
 public class SongItemBuilder extends MediaItemBuilder {
 
     @Override
-    public List<MediaItem> build(Cursor cursor, String mediaIdPrefix) {
+    public List<MediaItem> build(Cursor cursor, String libraryIdPrefix) {
         TreeSet<MediaItem> listToReturn = new TreeSet<>(this);
         while (cursor!= null && cursor.moveToNext()) {
-            MediaItem mediaItem = buildMediaItem(cursor, mediaIdPrefix);
+            MediaItem mediaItem = buildMediaItem(cursor, libraryIdPrefix);
             if (null != mediaItem) {
                 listToReturn.add(mediaItem);
             }
@@ -46,7 +47,7 @@ public class SongItemBuilder extends MediaItemBuilder {
         return MediaItemType.SONG;
     }
 
-    private MediaItem buildMediaItem(Cursor c, String mediaIdPrefix) {
+    private MediaItem buildMediaItem(Cursor c, String libraryIdPrefix) {
         final String mediaId = c.getString(c.getColumnIndex(MediaStore.Audio.Media._ID));
         final String mediaFilePath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
         final long duration = c.getLong(c.getColumnIndex(MediaStore.Audio.Media.DURATION));
@@ -76,6 +77,7 @@ public class SongItemBuilder extends MediaItemBuilder {
         Uri albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId);
 
         Bundle extras = getExtras();
+        extras.putString(LIBRARY_ID, buildLibraryId(libraryIdPrefix, mediaId));
         extras.putLong(METADATA_KEY_DURATION, duration);
         extras.putString(METADATA_KEY_ARTIST, artist);
         extras.putString(META_DATA_KEY_PARENT_PATH, parentPath);
@@ -86,7 +88,7 @@ public class SongItemBuilder extends MediaItemBuilder {
 
         // TODO: add code to fetch album art also
         MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()
-                .setMediaId(buildMediaId(mediaIdPrefix, mediaId))
+                .setMediaId(mediaId)
                 .setMediaUri(mediaUri)
                 .setTitle(title)
                 .setExtras(extras);
@@ -99,7 +101,7 @@ public class SongItemBuilder extends MediaItemBuilder {
         return uppercaseStringCompare(getTitle(m1), getTitle(m2));
     }
 
-    private String buildMediaId(@Nullable String mediaIdPrefix, String mediaIdSuffix) {
+    private String buildLibraryId(@Nullable String mediaIdPrefix, String mediaIdSuffix) {
         if (mediaIdPrefix == null) {
             return mediaIdSuffix;
         } else {

@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.Map;
 
 import static com.example.mike.mp3player.service.library.utils.IdGenerator.generateRootId;
 
@@ -15,7 +16,10 @@ public enum MediaItemType {
     FOLDERS( 3, "Folders", null),
     FOLDER(4, "Folder", null);
 
-    public static final EnumMap<MediaItemType, EnumSet<MediaItemType>> PARENT_TO_CHILD_MAP
+    public static final Map<MediaItemType, EnumSet<MediaItemType>> PARENT_TO_CHILD_MAP
+            = new EnumMap<>(MediaItemType.class);
+
+    public static final Map<MediaItemType, MediaItemType> SINGLETON_PARENT_TO_CHILD_MAP
             = new EnumMap<>(MediaItemType.class);
 
     static {
@@ -24,6 +28,12 @@ public enum MediaItemType {
         PARENT_TO_CHILD_MAP.put(SONG, EnumSet.noneOf(MediaItemType.class));
         PARENT_TO_CHILD_MAP.put(FOLDERS, EnumSet.of(FOLDER));
         PARENT_TO_CHILD_MAP.put(FOLDER, EnumSet.of(SONG));
+
+
+        SINGLETON_PARENT_TO_CHILD_MAP.put(SONGS, SONG);
+        SINGLETON_PARENT_TO_CHILD_MAP.put(SONG, null);
+        SINGLETON_PARENT_TO_CHILD_MAP.put(FOLDERS, FOLDER);
+        SINGLETON_PARENT_TO_CHILD_MAP.put(FOLDER, SONG);
     }
 
     private final Integer rank;

@@ -10,9 +10,8 @@ import com.example.mike.mp3player.service.library.content.builder.MediaItemBuild
 import static com.example.mike.mp3player.service.library.content.Projections.SONG_PROJECTION;
 
 public class SongsFromFolderRetriever extends ContentResolverRetriever {
-    public SongsFromFolderRetriever(ContentResolver contentResolver, MediaItemBuilder mediaItemBuilder,
-                                    String idPrefix) {
-        super(contentResolver, mediaItemBuilder, idPrefix);
+    public SongsFromFolderRetriever(ContentResolver contentResolver, MediaItemBuilder mediaItemBuilder) {
+        super(contentResolver, mediaItemBuilder);
     }
 
     @Override

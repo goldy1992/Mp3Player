@@ -12,9 +12,8 @@ import static com.example.mike.mp3player.service.library.content.Projections.SON
 public class SongsRetriever extends ContentResolverRetriever {
 
     public SongsRetriever(ContentResolver contentResolver,
-                          MediaItemBuilder mediaItemBuilder,
-                          String idPrefix) {
-        super(contentResolver, mediaItemBuilder, idPrefix);
+                          MediaItemBuilder mediaItemBuilder) {
+        super(contentResolver, mediaItemBuilder);
     }
 
     @Override

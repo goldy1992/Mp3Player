@@ -11,9 +11,8 @@ import static com.example.mike.mp3player.service.library.content.Projections.FOL
 
 public class FoldersRetriever extends ContentResolverRetriever {
 
-    public FoldersRetriever(ContentResolver contentResolver, MediaItemBuilder mediaItemBuilder,
-                            String idPrefix) {
-        super(contentResolver, mediaItemBuilder, idPrefix);
+    public FoldersRetriever(ContentResolver contentResolver, MediaItemBuilder mediaItemBuilder) {
+        super(contentResolver, mediaItemBuilder);
     }
 
     @Override

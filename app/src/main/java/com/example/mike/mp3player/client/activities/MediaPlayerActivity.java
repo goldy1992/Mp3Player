@@ -1,6 +1,8 @@
 package com.example.mike.mp3player.client.activities;
 
 import android.content.Intent;
+import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.FragmentManager;
@@ -13,7 +15,9 @@ import com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragmen
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
 import com.example.mike.mp3player.commons.Constants;
+import com.example.mike.mp3player.commons.MediaItemUtils;
 
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM;
 import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE_ID;
 
 /**
@@ -48,7 +52,8 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
     public void onConnected() {
         super.onConnected();
         initialiseView(R.layout.activity_media_player);
-        String mediaId = (String) retrieveIntentInfo(Constants.MEDIA_ID);
+        MediaItem mediaItem = (MediaItem) retrieveIntentInfo(MEDIA_ITEM);
+        String mediaId = MediaItemUtils.getLibraryId(mediaItem);
         if (null != mediaId) { // if RQ came with an media id it's a song request
             // Display the initial state
             // parent id will sure that the correct playlist is found in the media library

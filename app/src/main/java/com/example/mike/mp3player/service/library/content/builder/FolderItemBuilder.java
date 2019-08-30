@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static com.example.mike.mp3player.commons.ComparatorUtils.uppercaseStringCompare;
+import static com.example.mike.mp3player.commons.Constants.LIBRARY_ID;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
@@ -54,11 +55,12 @@ public class FolderItemBuilder extends MediaItemBuilder {
 
     private MediaBrowserCompat.MediaItem createFolderMediaItem(String directoryName, String directoryPath, String parentId){
         Bundle extras = getExtras();
+        extras.putString(LIBRARY_ID, buildLibraryId(parentId, directoryPath));
         extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directoryName);
         extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directoryPath);
 
         MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()
-                .setMediaId(buildMediaId(parentId, directoryPath))
+                .setMediaId(directoryPath)
                 .setTitle(directoryName)
                 .setDescription(directoryPath)
                 .setExtras(extras);
@@ -71,7 +73,7 @@ public class FolderItemBuilder extends MediaItemBuilder {
         return uppercaseStringCompare(getTitle(m1), getTitle(m2));
     }
 
-    private String buildMediaId(String prefix, String childItemId) {
+    private String buildLibraryId(String prefix, String childItemId) {
         return new StringBuilder()
                 .append(prefix)
                 .append(IdGenerator.ID_SEPARATOR)

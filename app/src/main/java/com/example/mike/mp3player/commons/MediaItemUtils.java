@@ -12,6 +12,7 @@ import com.example.mike.mp3player.client.utils.TimerUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
+import static com.example.mike.mp3player.commons.Constants.LIBRARY_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
 import static com.example.mike.mp3player.commons.Constants.ROOT_ITEM_TYPE;
@@ -89,6 +90,10 @@ public final class MediaItemUtils {
 
     public static MediaItemType getMediaItemType(MediaItem item) {
         return (MediaItemType)getExtra(MEDIA_ITEM_TYPE, item);
+    }
+
+    public static String getLibraryId(MediaItem item) {
+        return (String) getExtra(LIBRARY_ID, item);
     }
 
     public static MediaItemType getRootMediaItemType(MediaItem item) {

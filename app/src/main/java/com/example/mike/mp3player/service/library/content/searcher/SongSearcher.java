@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import static com.example.mike.mp3player.service.library.content.Projections.FOLDER_PROJECTION;
+import static com.example.mike.mp3player.service.library.content.Projections.SONG_PROJECTION;
 
 public class SongSearcher extends ContentResolverSearcher {
 
@@ -23,7 +24,7 @@ public class SongSearcher extends ContentResolverSearcher {
 
     @Override
     String[] getProjection() {
-        return FOLDER_PROJECTION;
+        return SONG_PROJECTION;
     }
 
     @Override

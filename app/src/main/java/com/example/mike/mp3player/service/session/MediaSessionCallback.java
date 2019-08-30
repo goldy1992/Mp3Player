@@ -18,10 +18,9 @@ import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.ContentManager;
-import com.example.mike.mp3player.service.library.ContentRequest;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -176,35 +175,39 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void prepareFromMediaId(String mediaId, Bundle bundle) {
+
         //Log.i(LOG_TAG, "prepareFromMediaId");
         super.onPrepareFromMediaId(mediaId, bundle);
-        List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getPlaylist(mediaId);
-        if (null != results) {
-            playbackManager.createNewPlaylist(results);
+        String trackId = extractTrackId(mediaId);
+        if (null != trackId) {
+            List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getPlaylist(mediaId);
+            if (null != results) {
+                playbackManager.createNewPlaylist(results);
 
-            if (mediaId == null) {
-                Log.e(LOG_TAG, "received null mediaId");
-                return;
-            }
-
-            Uri uriToPlay = null;
-            Uri followingUri = null;
-            for (MediaBrowserCompat.MediaItem m : results) {
-                String id = MediaItemUtils.getMediaId(m);
-                if (id != null && id.equals(mediaId)) {
-                    uriToPlay = m.getDescription().getMediaUri();
-                    playbackManager.setCurrentItem(mediaId);
-                    followingUri = getPlaybackManager().getNext();
-                    mediaPlayerAdapter.reset(uriToPlay, followingUri);
-
-                    break;
+                if (mediaId == null) {
+                    Log.e(LOG_TAG, "received null mediaId");
+                    return;
                 }
+
+                Uri uriToPlay = null;
+                Uri followingUri = null;
+                for (MediaBrowserCompat.MediaItem m : results) {
+                    String id = MediaItemUtils.getMediaId(m);
+                    if (id != null && id.equals(trackId)) {
+                        uriToPlay = m.getDescription().getMediaUri();
+                        playbackManager.setCurrentItem(trackId);
+                        followingUri = getPlaybackManager().getNext();
+                        mediaPlayerAdapter.reset(uriToPlay, followingUri);
+
+                        break;
+                    }
+                }
+                if (uriToPlay == null) {
+                    Log.e(LOG_TAG, "failed to find requested uri in collection");
+                    return;
+                }
+                mediaSessionAdapter.updateAll(ACTION_PREPARE_FROM_MEDIA_ID);
             }
-            if (uriToPlay == null) {
-                Log.e(LOG_TAG, "failed to find requested uri in collection");
-                return;
-            }
-            mediaSessionAdapter.updateAll(ACTION_PREPARE_FROM_MEDIA_ID);
         }
     }
 
@@ -375,5 +378,15 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     @VisibleForTesting
     public AudioBecomingNoisyBroadcastReceiver getBroadcastReceiver() {
         return broadcastReceiver;
+    }
+
+    private String extractTrackId(String mediaId) {
+        if (null != mediaId) {
+            List<String> splitId = Arrays.asList(mediaId.split("\\|"));
+            if (!splitId.isEmpty()) {
+                return splitId.get(splitId.size() - 1);
+            }
+        }
+        return null;
     }
 }

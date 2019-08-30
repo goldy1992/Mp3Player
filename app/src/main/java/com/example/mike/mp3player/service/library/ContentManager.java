@@ -1,6 +1,8 @@
 package com.example.mike.mp3player.service.library;
 
 import com.example.mike.mp3player.commons.MediaItemType;
+import com.example.mike.mp3player.service.library.content.request.ContentRequest;
+import com.example.mike.mp3player.service.library.content.request.ContentRequestParser;
 import com.example.mike.mp3player.service.library.content.retriever.ContentRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.RootRetriever;
 import com.example.mike.mp3player.service.library.content.searcher.ContentSearcher;
@@ -21,13 +23,16 @@ public class ContentManager {
     private final Map<String, ContentRetriever> idToContentRetrieverMap;
     private final Map<MediaItemType, ContentSearcher> searchContentRetrieverMap;
     private final RootRetriever rootRetriever;
+    private final ContentRequestParser contentRequestParser;
 
     @Inject
     public ContentManager(Map<String, ContentRetriever> idToContentRetrieverMap,
                           Map<MediaItemType, ContentSearcher> searchContentRetrieverMap,
+                          ContentRequestParser contentRequestParser,
                           RootRetriever rootRetriever) {
        this.idToContentRetrieverMap = idToContentRetrieverMap;
        this.searchContentRetrieverMap = searchContentRetrieverMap;
+       this.contentRequestParser = contentRequestParser;
        this.rootRetriever = rootRetriever;
     }
     /**
@@ -42,7 +47,7 @@ public class ContentManager {
      * @return all the children of the id specified by the parentId parameter
      */
     public List<MediaItem> getChildren(String parentId) {
-        ContentRequest request = ContentRequest.parse(parentId);
+        ContentRequest request = this.contentRequestParser.parse(parentId);
         ContentRetriever contentRetriever = idToContentRetrieverMap.get(request.getContentRetrieverKey());
         return contentRetriever == null ? null : contentRetriever.getChildren(request);
     }

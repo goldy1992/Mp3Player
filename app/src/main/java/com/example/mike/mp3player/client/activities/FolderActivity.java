@@ -15,6 +15,7 @@ import com.example.mike.mp3player.commons.MediaItemUtils;
 
 import javax.inject.Inject;
 
+import static com.example.mike.mp3player.commons.Constants.LIBRARY_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
@@ -27,8 +28,6 @@ public abstract class FolderActivity extends MediaActivityCompat {
 
     private static final String LOG_TAG = "FOLDER_ACTIVITY";
     private ChildViewPagerFragment viewPageFragment;
-    private MediaItem parent;
-    private String requestId;
     private PlayToolBarFragment playToolBarFragment;
     private SimpleTitleBarFragment simpleTitleBarFragment;
 
@@ -51,19 +50,11 @@ public abstract class FolderActivity extends MediaActivityCompat {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
-        this.requestId = intent.getStringExtra(MEDIA_ID);
-        this.parent = intent.getParcelableExtra(MEDIA_ITEM);
-    }
-
-    @Override
     public void onConnected() {
         super.onConnected();
-        MediaItem mediaItem = (MediaItem) getIntent().getParcelableExtra(MEDIA_ITEM);
-        String itemId = getIntent().getStringExtra(MEDIA_ID);
-        this.viewPageFragment.init(MediaItemType.FOLDER, itemId);
+        MediaItem mediaItem = getIntent().getParcelableExtra(MEDIA_ITEM);
+        String itemLibraryId = MediaItemUtils.getLibraryId(mediaItem);
+        this.viewPageFragment.init(MediaItemType.FOLDER, itemLibraryId);
         initialiseView(R.layout.activity_folder);
         getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
         getSupportActionBar().setTitle(MediaItemUtils.getTitle(mediaItem));

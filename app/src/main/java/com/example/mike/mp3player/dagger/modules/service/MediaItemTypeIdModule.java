@@ -44,7 +44,6 @@ public class MediaItemTypeIdModule {
 
     @Singleton
     @Provides
-    @Named("all_media_item_types")
     public Map<String, MediaItemType> provideInverseIdMap(BiMap<MediaItemType, String> biMap) {
         Map<String, MediaItemType> map = new HashMap<>();
         map.putAll(biMap.inverse());
@@ -53,19 +52,7 @@ public class MediaItemTypeIdModule {
 
     @Singleton
     @Provides
-    @Named("playable_media_item_types")
-    public Map<String, MediaItemType> provideInversePlayableIdMap(BiMap<MediaItemType, String> biMap) {
-
-        Map<String, MediaItemType> mapToReturn = new HashMap<>();
-        mapToReturn.put(biMap.get(MediaItemType.SONGS), MediaItemType.SONGS);
-        mapToReturn.put(biMap.get(MediaItemType.SONG), MediaItemType.SONG);
-        mapToReturn.put(biMap.get(MediaItemType.FOLDERS), MediaItemType.FOLDERS);
-        return mapToReturn;
-    }
-
-    @Singleton
-    @Provides
-    public EnumMap<MediaItemType, String> provideIdMap(BiMap<MediaItemType, String> biMap) {
+    public Map<MediaItemType, String> provideIdMap(BiMap<MediaItemType, String> biMap) {
         EnumMap<MediaItemType, String> map = new EnumMap<>(MediaItemType.class);
         map.putAll(biMap);
         return map;
@@ -73,7 +60,7 @@ public class MediaItemTypeIdModule {
 
     @Singleton
     @Provides
-    public @Named("rootId") String provideRootId(EnumMap<MediaItemType, String> enumMap) {
+    public @Named("rootId") String provideRootId(Map<MediaItemType, String> enumMap) {
         return enumMap.get(MediaItemType.ROOT);
     }
 }
