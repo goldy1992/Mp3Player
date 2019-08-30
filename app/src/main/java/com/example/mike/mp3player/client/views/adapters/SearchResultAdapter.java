@@ -1,10 +1,7 @@
 package com.example.mike.mp3player.client.views.adapters;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -21,9 +18,6 @@ import com.example.mike.mp3player.client.views.viewholders.MySongViewHolder;
 import com.example.mike.mp3player.client.views.viewholders.RootItemViewHolder;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.MediaItemUtils.extractArtist;

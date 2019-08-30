@@ -120,14 +120,8 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
             if (null != searchView) {
                 this.searchView.setQuery(currentQuery, false);
             }
-            getMediaBrowserAdapter().search(currentQuery, null);
-//            showResults(query);
+            mediaBrowserAdapter.search(currentQuery, null);
         }
-    }
-
-    private void showResults(String query) {
-        // Query your data set and show results
-        // ...
     }
 
     @Override

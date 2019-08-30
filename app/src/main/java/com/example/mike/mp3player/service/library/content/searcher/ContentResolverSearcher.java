@@ -25,7 +25,7 @@ public abstract class ContentResolverSearcher extends ContentSearcher {
 
     public List<MediaBrowserCompat.MediaItem> search(@NonNull String query) {
         Cursor cursor = performSearchQuery(query);
-        return mediaItemBuilder.build(cursor, query);
+        return mediaItemBuilder.build(cursor, idPrefix);
     }
 
     abstract String[] getProjection();
