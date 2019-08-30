@@ -7,9 +7,9 @@ import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.activities.FolderActivityInjector;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjector;
-import com.example.mike.mp3player.client.views.MyFolderViewAdapter;
-import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
-import com.example.mike.mp3player.client.views.MySongViewAdapter;
+import com.example.mike.mp3player.client.views.adapters.MyFolderViewAdapter;
+import com.example.mike.mp3player.client.views.adapters.MyGenericRecycleViewAdapter;
+import com.example.mike.mp3player.client.views.adapters.MySongViewAdapter;
 import com.example.mike.mp3player.commons.MediaItemType;
 
 import java.util.HashMap;

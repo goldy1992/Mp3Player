@@ -6,6 +6,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.util.Log;
 
@@ -16,15 +18,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.LogTagger;
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.AlbumArtPainter;
+import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.callbacks.search.SearchResultListener;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
-import com.example.mike.mp3player.client.views.SearchAdapterTouchListener;
-import com.example.mike.mp3player.client.views.SearchResultAdapter;
+import com.example.mike.mp3player.client.views.adapters.SearchResultAdapter;
+import com.example.mike.mp3player.commons.MediaItemType;
+import com.example.mike.mp3player.commons.MediaItemUtils;
 
 import java.util.List;
 
+import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM;
+
 public abstract class SearchResultActivity extends MediaActivityCompat implements SearchResultListener, LogTagger,
-    SearchAdapterTouchListener.ItemSelectedListener {
+    MyGenericItemTouchListener.ItemSelectedListener {
     private String currentQuery;
     private RecyclerView recyclerView;
     private SearchResultAdapter searchResultAdapter;
@@ -54,11 +61,15 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
         setContentView(layoutId);
         this.toolbar = findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
-        this.searchResultAdapter = new SearchResultAdapter(getApplicationContext());
+        AlbumArtPainter albumArtPainter = new AlbumArtPainter(getApplicationContext(), new Handler(Looper.getMainLooper()));
+        this.searchResultAdapter = new SearchResultAdapter(albumArtPainter);
         this.searchView = findViewById(R.id.search_view);
         this.recyclerView = findViewById(R.id.result_recycle_view);
         this.recyclerView.setAdapter(searchResultAdapter);
-        this.recyclerView.addOnItemTouchListener(new SearchAdapterTouchListener(getApplicationContext(), this));
+        MyGenericItemTouchListener itemTouchListener =
+            new MyGenericItemTouchListener(getApplicationContext(), this);
+        this.recyclerView.addOnItemTouchListener(itemTouchListener);
+        itemTouchListener.setParentView(recyclerView);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         // Get the SearchView and set the searchable configuration
@@ -82,6 +93,24 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
 
     @Override
     public void itemSelected(MediaItem item) {
+        if (null != item) {
+            Class<?> intentClass = null;
+            MediaItemType mediaItemType = MediaItemUtils.getMediaItemType(item);
+            switch (mediaItemType) {
+                case SONG:
+                case SONGS: intentClass = MediaPlayerActivityInjector.class;
+                    break;
+                case FOLDER:
+                case FOLDERS:intentClass = FolderActivityInjector.class;
+                default:
+                    break;
+            }
+            if (null != intentClass) {
+                Intent intent = new Intent(getApplicationContext(), intentClass); // TODO: make a media item to activity map
+                intent.putExtra(MEDIA_ITEM, item);
+                startActivity(intent);
+            }
+        }
 
     }
 
@@ -103,7 +132,7 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
 
     @Override
     public void onSearchResult(List<MediaItem> searchResults) {
-        searchResultAdapter.items.addAll(searchResults);
+        searchResultAdapter.getItems().addAll(searchResults);
         searchResultAdapter.notifyDataSetChanged();
         Log.i(getLogTag(), "received search results");
     }

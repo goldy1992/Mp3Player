@@ -9,8 +9,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
-import com.example.mike.mp3player.client.views.MySongViewAdapter;
+import com.example.mike.mp3player.client.views.adapters.MediaItemRecyclerViewAdapter;
+import com.example.mike.mp3player.client.views.adapters.MyGenericRecycleViewAdapter;
 
 public class MyGenericItemTouchListener extends GestureDetector.SimpleOnGestureListener
         implements RecyclerView.OnItemTouchListener  {
@@ -56,7 +56,7 @@ public class MyGenericItemTouchListener extends GestureDetector.SimpleOnGestureL
         View childView = parentView.findChildViewUnder(e.getX(), e.getY());
         if (null != childView) {
             int childPosition = parentView.getChildAdapterPosition(childView);
-            MyGenericRecycleViewAdapter myViewAdapter = (MyGenericRecycleViewAdapter) parentView.getAdapter();
+            MediaItemRecyclerViewAdapter myViewAdapter = (MediaItemRecyclerViewAdapter) parentView.getAdapter();
             if (null != myViewAdapter) {
                 this.itemSelectedListener.itemSelected(myViewAdapter.getItems().get(childPosition));
             }

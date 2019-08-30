@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.views;
+package com.example.mike.mp3player.client.views.adapters;
 
 import android.support.v4.media.MediaBrowserCompat;
 import android.view.LayoutInflater;

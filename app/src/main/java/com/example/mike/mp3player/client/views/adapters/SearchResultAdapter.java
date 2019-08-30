@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.views;
+package com.example.mike.mp3player.client.views.adapters;
 
 import android.content.Context;
 import android.net.Uri;
@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
+import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.views.viewholders.MyFolderViewHolder;
 import com.example.mike.mp3player.client.views.viewholders.MySongViewHolder;
 import com.example.mike.mp3player.client.views.viewholders.RootItemViewHolder;
@@ -33,13 +34,10 @@ import static com.example.mike.mp3player.commons.MediaItemUtils.extractTitle;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getAlbumArtUri;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getRootTitle;
 
-public class SearchResultAdapter extends RecyclerView.Adapter {
+public class SearchResultAdapter extends MediaItemRecyclerViewAdapter implements MyGenericItemTouchListener.ItemSelectedListener {
 
-    public List<MediaBrowserCompat.MediaItem> items = new ArrayList<>();
-    private AlbumArtPainter albumArtPainter;
-    public SearchResultAdapter(Context context) {
-        Handler handler = new Handler(Looper.getMainLooper());
-        this.albumArtPainter = new AlbumArtPainter(context, handler);
+    public SearchResultAdapter(AlbumArtPainter albumArtPainter) {
+        super(albumArtPainter);
     }
 
     @NonNull
@@ -124,5 +122,10 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    @Override
+    public void itemSelected(MediaBrowserCompat.MediaItem item) {
+
     }
 }

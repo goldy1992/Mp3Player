@@ -29,7 +29,7 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.MyDrawerListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
-import com.example.mike.mp3player.client.views.MyPagerAdapter;
+import com.example.mike.mp3player.client.views.adapters.MyPagerAdapter;
 import com.example.mike.mp3player.client.views.ThemeSpinnerController;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
 import com.example.mike.mp3player.commons.MediaItemType;

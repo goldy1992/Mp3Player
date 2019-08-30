@@ -11,7 +11,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.utils.TimerUtils;
-import com.example.mike.mp3player.client.views.MySongViewAdapter;
+import com.example.mike.mp3player.client.views.adapters.MySongViewAdapter;
 import com.example.mike.mp3player.client.views.viewholders.MySongViewHolder;
 import com.example.mike.mp3player.commons.MediaItemType;
 

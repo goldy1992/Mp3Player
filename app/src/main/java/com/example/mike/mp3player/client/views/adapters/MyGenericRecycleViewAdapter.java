@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client.views;
+package com.example.mike.mp3player.client.views.adapters;
 
 import android.support.v4.media.MediaDescriptionCompat;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.views.viewholders.EmptyListViewHolder;
+import com.example.mike.mp3player.client.views.adapters.MediaItemRecyclerViewAdapter;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
@@ -21,20 +22,19 @@ import java.util.List;
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 import static com.example.mike.mp3player.commons.Constants.FIRST;
 
-public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
+public abstract class MyGenericRecycleViewAdapter extends MediaItemRecyclerViewAdapter implements
         MediaBrowserResponseListener, FastScrollRecyclerView.SectionedAdapter {
     final String LOG_TAG = "MY_VIEW_ADAPTER";
     private static final String EMPTY_MEDIA_ID = "EMPTY_MEDIA_ID";
     final int EMPTY_VIEW_TYPE = -1;
-    final AlbumArtPainter albumArtPainter;
 
-    private List<MediaItem> items = new ArrayList<>();
+
+
     private boolean isInitialised = false;
     private final MediaItem EMPTY_LIST_ITEM = buildEmptyListMediaItem();
 
     public MyGenericRecycleViewAdapter(AlbumArtPainter albumArtPainter) {
-        super();
-        this.albumArtPainter = albumArtPainter;
+        super(albumArtPainter);
     }
 
     @Override
@@ -82,10 +82,6 @@ public abstract class MyGenericRecycleViewAdapter extends RecyclerView.Adapter<R
                 .setMediaId(EMPTY_MEDIA_ID)
                 .build();
         return new MediaItem(mediaDescriptionCompat, MediaItem.FLAG_PLAYABLE);
-    }
-
-    public List<MediaItem> getItems() {
-        return items;
     }
 
     protected boolean isEmptyRecycleView() {

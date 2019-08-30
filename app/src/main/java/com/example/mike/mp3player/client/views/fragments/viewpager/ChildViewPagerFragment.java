@@ -18,15 +18,13 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
-import com.example.mike.mp3player.client.views.MyGenericRecycleViewAdapter;
+import com.example.mike.mp3player.client.views.adapters.MyGenericRecycleViewAdapter;
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import javax.inject.Inject;
 
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM;
 
 /**
