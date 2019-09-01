@@ -19,6 +19,8 @@ import com.example.mike.mp3player.client.views.viewholders.RootItemViewHolder;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 
+import javax.inject.Inject;
+
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.MediaItemUtils.extractArtist;
 import static com.example.mike.mp3player.commons.MediaItemUtils.extractDuration;
@@ -30,6 +32,7 @@ import static com.example.mike.mp3player.commons.MediaItemUtils.getRootTitle;
 
 public class SearchResultAdapter extends MediaItemRecyclerViewAdapter implements MyGenericItemTouchListener.ItemSelectedListener {
 
+    @Inject
     public SearchResultAdapter(AlbumArtPainter albumArtPainter) {
         super(albumArtPainter);
     }

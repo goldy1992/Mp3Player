@@ -19,6 +19,6 @@ public class SearchResultActivityInjector extends SearchResultActivity {
                 .factory()
                 .create(getApplicationContext(), getWorkerId(), getSubscriptionType(), this);
         this.setMediaActivityCompatComponent(component);
-        component.inject(this);
+        component.searchResultActivitySubComponent().inject(this);
     }
 }

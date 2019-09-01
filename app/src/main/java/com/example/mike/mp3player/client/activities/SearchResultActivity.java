@@ -28,6 +28,8 @@ import com.example.mike.mp3player.commons.MediaItemUtils;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM;
 
 public abstract class SearchResultActivity extends MediaActivityCompat implements SearchResultListener, LogTagger,
@@ -61,8 +63,6 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
         setContentView(layoutId);
         this.toolbar = findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
-        AlbumArtPainter albumArtPainter = new AlbumArtPainter(getApplicationContext(), new Handler(Looper.getMainLooper()));
-        this.searchResultAdapter = new SearchResultAdapter(albumArtPainter);
         this.searchView = findViewById(R.id.search_view);
         this.recyclerView = findViewById(R.id.result_recycle_view);
         this.recyclerView.setAdapter(searchResultAdapter);
@@ -134,5 +134,10 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
     @Override
     public String getLogTag() {
         return "SRCH_RSLT_ACTVTY";
+    }
+
+    @Inject
+    public void setSearchResultAdapter(SearchResultAdapter searchResultAdapter) {
+        this.searchResultAdapter = searchResultAdapter;
     }
 }

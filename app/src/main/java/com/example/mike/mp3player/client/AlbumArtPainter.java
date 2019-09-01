@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Debug;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
@@ -38,6 +39,7 @@ public class AlbumArtPainter {
         try {
             RequestBuilder<Drawable> drawableRequestBuilder = requestManager.load(uri);
             mainHandler.post(() -> drawableRequestBuilder.centerCrop().into(imageView));
+            Debug.stopMethodTracing();
         } catch (Exception ex) {
             // TODO: load a default image when the album art if not found
             Log.e(LOG_TAG, ExceptionUtils.getStackTrace(ex));
