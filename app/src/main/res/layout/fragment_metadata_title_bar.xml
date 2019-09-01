@@ -33,14 +33,14 @@
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:marqueeRepeatLimit="marquee_forever"
-                    android:text="track name" />
+                />
 
                 <TextView
                     android:id="@+id/songArtist"
                     android:singleLine="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="artist name"/>
+                />
 
             </LinearLayout>
             <!--app:title="@string/FOLDER_NAME">-->

@@ -12,7 +12,6 @@ import com.example.mike.mp3player.client.views.fragments.AlbumArtFragment;
 import com.example.mike.mp3player.client.views.fragments.MediaControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
-import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.dagger.components.fragments.ChildViewPagerFragmentSubcomponent;
 import com.example.mike.mp3player.dagger.components.fragments.MainFrameFragmentSubcomponent;
 import com.example.mike.mp3player.dagger.components.fragments.PlaybackButtonsSubComponent;
@@ -50,7 +49,6 @@ public interface MediaActivityCompatComponent {
 
     // fragments
     void inject(PlaybackSpeedControlsFragment playbackSpeedControlsFragment);
-    void inject(TrackInfoFragment trackInfoFragment);
     void inject(MediaControlsFragment mediaControlsFragment);
     void inject(AlbumArtFragment albumArtFragment);
     void inject(MetadataTitleBarFragment metadataTitleBarFragment);

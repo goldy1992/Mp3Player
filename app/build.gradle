@@ -124,6 +124,7 @@ dependencies {
     def FAST_SCROLL_VERSION = '2.0.0'
     def GLIDE_VERSION = '4.9.0'
     def ROOM_VERSION = '2.1.0'
+    def DAGGER_VERSION = '2.24'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation group: 'androidx.constraintlayout', name: 'constraintlayout', version: CONSTRAINT_LAYOUT_VERSION
@@ -146,11 +147,11 @@ dependencies {
     annotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
     //dagger
-    implementation 'com.google.dagger:dagger:2.23.1'
-    implementation 'com.google.dagger:dagger-android:2.23'
-    annotationProcessor 'com.google.dagger:dagger-android-processor:2.23'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.23'
-    testAnnotationProcessor 'com.google.dagger:dagger-compiler:2.23'
+    implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
+    implementation group: 'com.google.dagger', name: 'dagger-android', version: DAGGER_VERSION
+    annotationProcessor  group: 'com.google.dagger', name: 'dagger-android-processor', version: DAGGER_VERSION
+    annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
 
     // Glide
     implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION
