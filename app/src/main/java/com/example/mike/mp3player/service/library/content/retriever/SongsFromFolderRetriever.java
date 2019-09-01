@@ -5,13 +5,13 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.service.library.content.builder.MediaItemCreator;
+import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
 
 import static com.example.mike.mp3player.service.library.content.Projections.SONG_PROJECTION;
 
 public class SongsFromFolderRetriever extends ContentResolverRetriever {
-    public SongsFromFolderRetriever(ContentResolver contentResolver, MediaItemCreator mediaItemCreator) {
-        super(contentResolver, mediaItemCreator);
+    public SongsFromFolderRetriever(ContentResolver contentResolver, ResultsParser resultsParser) {
+        super(contentResolver, resultsParser);
     }
 
     @Override

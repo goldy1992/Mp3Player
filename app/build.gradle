@@ -171,7 +171,6 @@ dependencies {
     testImplementation group: 'org.robolectric', name: 'robolectric', version: ROBOELECTRIC_VERSION// https://mvnrepository.com/artifact/org.robolectric/shadows-support-v4
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: '4.3'
 
-
     debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_TESTING_VERSION
     androidTestImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION

@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.service.library.content.builder;
+package com.example.mike.mp3player.service.library.content.parser;
 
 import android.content.ContentUris;
 import android.database.Cursor;
@@ -28,10 +28,10 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARE
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 
-public class SongItemCreator extends MediaItemCreator {
+public class SongResultsParser extends ResultsParser {
 
     @Override
-    public List<MediaItem> build(Cursor cursor, String libraryIdPrefix) {
+    public List<MediaItem> create(Cursor cursor, String libraryIdPrefix) {
         TreeSet<MediaItem> listToReturn = new TreeSet<>(this);
         while (cursor!= null && cursor.moveToNext()) {
             MediaItem mediaItem = buildMediaItem(cursor, libraryIdPrefix);

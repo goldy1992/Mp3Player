@@ -5,14 +5,14 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.service.library.content.builder.MediaItemCreator;
+import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
 
 import static com.example.mike.mp3player.service.library.content.Projections.SONG_PROJECTION;
 
 public class SongSearcher extends ContentResolverSearcher {
 
-    public SongSearcher(ContentResolver contentResolver, MediaItemCreator mediaItemCreator, String idPrefix) {
-        super(contentResolver, mediaItemCreator, idPrefix);
+    public SongSearcher(ContentResolver contentResolver, ResultsParser resultsParser, String idPrefix) {
+        super(contentResolver, resultsParser, idPrefix);
     }
 
     @Override

@@ -6,26 +6,26 @@ import android.support.v4.media.MediaBrowserCompat;
 
 import androidx.annotation.NonNull;
 
-import com.example.mike.mp3player.service.library.content.builder.MediaItemCreator;
+import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
 
 import java.util.List;
 
 public abstract class ContentResolverSearcher extends ContentSearcher {
     final ContentResolver contentResolver;
-    final MediaItemCreator mediaItemCreator;
+    final ResultsParser resultsParser;
     final String idPrefix;
 
     public ContentResolverSearcher(ContentResolver contentResolver,
-                                   MediaItemCreator mediaItemCreator,
+                                   ResultsParser resultsParser,
                                    String idPrefix) {
         this.contentResolver = contentResolver;
-        this.mediaItemCreator = mediaItemCreator;
+        this.resultsParser = resultsParser;
         this.idPrefix = idPrefix;
     }
 
     public List<MediaBrowserCompat.MediaItem> search(@NonNull String query) {
         Cursor cursor = performSearchQuery(query);
-        return mediaItemCreator.build(cursor, idPrefix);
+        return resultsParser.create(cursor, idPrefix);
     }
 
     abstract String[] getProjection();

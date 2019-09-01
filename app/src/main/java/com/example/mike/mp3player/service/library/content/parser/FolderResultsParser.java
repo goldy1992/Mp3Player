@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.service.library.content.builder;
+package com.example.mike.mp3player.service.library.content.parser;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -22,10 +22,10 @@ import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 
-public class FolderItemCreator extends MediaItemCreator {
+public class FolderResultsParser extends ResultsParser {
 
     @Override
-    public List<MediaBrowserCompat.MediaItem> build(Cursor cursor, String mediaIdPrefix) {
+    public List<MediaBrowserCompat.MediaItem> create(Cursor cursor, String mediaIdPrefix) {
         TreeSet<MediaBrowserCompat.MediaItem> listToReturn = new TreeSet<>(this);
         Set<String> directoryPathSet = new HashSet<>();
         while (cursor.moveToNext()) {

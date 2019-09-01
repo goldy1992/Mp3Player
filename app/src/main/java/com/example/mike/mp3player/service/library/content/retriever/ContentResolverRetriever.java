@@ -4,20 +4,20 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
+import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
 import com.example.mike.mp3player.service.library.content.request.ContentRequest;
-import com.example.mike.mp3player.service.library.content.builder.MediaItemCreator;
 
 import java.util.List;
 
 public abstract class ContentResolverRetriever extends ContentRetriever {
 
     final ContentResolver contentResolver;
-    final MediaItemCreator mediaItemCreator;
+    final ResultsParser resultsParser;
 
-    public ContentResolverRetriever(ContentResolver contentResolver, MediaItemCreator mediaItemCreator) {
+    public ContentResolverRetriever(ContentResolver contentResolver, ResultsParser resultsParser) {
         super();
         this.contentResolver = contentResolver;
-        this.mediaItemCreator = mediaItemCreator;
+        this.resultsParser = resultsParser;
     }
 
     abstract Cursor performGetChildrenQuery(String id);
@@ -26,6 +26,6 @@ public abstract class ContentResolverRetriever extends ContentRetriever {
     @Override
     public List<MediaItem> getChildren(ContentRequest request) {
         Cursor cursor = performGetChildrenQuery(request.getQueryString());
-        return mediaItemCreator.build(cursor, request.getMediaIdPrefix());
+        return resultsParser.create(cursor, request.getMediaIdPrefix());
     }
 }

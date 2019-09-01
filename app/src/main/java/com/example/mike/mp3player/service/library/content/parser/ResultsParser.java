@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.service.library.content.builder;
+package com.example.mike.mp3player.service.library.content.parser;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -11,12 +11,11 @@ import java.util.List;
 
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 
-public abstract class MediaItemCreator implements Comparator<MediaItem> {
+public abstract class ResultsParser implements Comparator<MediaItem> {
 
+    public ResultsParser() { }
 
-    public MediaItemCreator() { }
-
-    public abstract List<MediaItem> build(Cursor cursor, String mediaIdPrefix);
+    public abstract List<MediaItem> create(Cursor cursor, String mediaIdPrefix);
     public abstract MediaItemType getType();
 
     protected Bundle getExtras() {

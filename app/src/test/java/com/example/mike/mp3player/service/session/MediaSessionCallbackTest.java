@@ -258,7 +258,7 @@ public class MediaSessionCallbackTest {
     public void testAddQueueItem() {
         assertTrue(true);
 
-//        MediaDescriptionCompat description = new MediaDescriptionCompat.Builder().build();
+//        MediaDescriptionCompat description = new MediaDescriptionCompat.Builder().create();
 //        mediaSessionCallback.onAddQueueItem(description);
 //        verify(mediaSessionAdapter, times(1)).setQueue(any());
     }
@@ -269,7 +269,7 @@ public class MediaSessionCallbackTest {
     @Test
     public void testRemoveQueueItem() {
         assertTrue(true);
-//        MediaDescriptionCompat description = new MediaDescriptionCompat.Builder().build();
+//        MediaDescriptionCompat description = new MediaDescriptionCompat.Builder().create();
 //        mediaSessionCallback.onRemoveQueueItem(description);
 //        verify(mediaSessionAdapter, times(1)).setQueue(any());
     }
