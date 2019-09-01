@@ -9,11 +9,8 @@ import com.example.mike.mp3player.service.library.content.filter.FoldersResultFi
 import com.example.mike.mp3player.service.library.content.parser.FolderResultsParser;
 
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-
-import java.sql.SQLException;
 
 @RunWith(RobolectricTestRunner.class)
 public class FolderSearcherTest {
@@ -26,11 +23,6 @@ public class FolderSearcherTest {
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
         this.contentResolver = context.getContentResolver();
         this.folderSearcher = new FolderSearcher(contentResolver, new FolderResultsParser(), "", new FoldersResultFilter());
-    }
-
-    @Test
-    public void firstTest() {
-
     }
 
 

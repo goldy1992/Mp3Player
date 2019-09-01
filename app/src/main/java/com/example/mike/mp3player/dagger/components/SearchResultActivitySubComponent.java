@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.dagger.components.fragments;
+package com.example.mike.mp3player.dagger.components;
 
 import com.example.mike.mp3player.client.activities.SearchResultActivityInjector;
 import com.example.mike.mp3player.dagger.modules.SearchResultAdapterModule;

@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client;
+package com.example.mike.mp3player.client.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -43,7 +43,7 @@ public class MediaPlayerActivityTest {
         MockitoAnnotations.initMocks(this);
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
         mediaSessionCompat = new MediaSessionCompat(context, "TAG");
-        this.intent = new Intent(ApplicationProvider.getApplicationContext(), MediaPlayerActivity.class);
+        this.intent = new Intent(ApplicationProvider.getApplicationContext(), SearchResultActivity.class);
         this.activityController = Robolectric.buildActivity(MediaPlayerActivityInjectorTestImpl.class, intent).setup();
         this.mediaPlayerActivity = activityController.get();
     }
