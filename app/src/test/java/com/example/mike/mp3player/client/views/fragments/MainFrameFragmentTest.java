@@ -12,6 +12,7 @@ import androidx.fragment.app.testing.FragmentScenario;
 import com.example.mike.mp3player.TestUtils;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
 import com.example.mike.mp3player.client.Category;
+import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemType;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -24,6 +25,7 @@ import org.robolectric.RobolectricTestRunner;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Set;
 
 import javax.inject.Provider;
 
@@ -70,26 +72,23 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
         fragment.setChildFragmentProvider(fragmentProviderSpied);
         final String parentId = "parentId";
         final ArrayList<MediaBrowserCompat.MediaItem> children = new ArrayList<>();
+        final Set<MediaItemType> rootItemsSet = MediaItemType.PARENT_TO_CHILD_MAP.get(MediaItemType.ROOT);
 
-        for (MediaItemType category : MediaItemType.values()) {
-            MediaBrowserCompat.MediaItem mediaItem = TestUtils.createMediaItem(category.name(), category.getTitle(), category.getDescription(), category);
+        for (MediaItemType category : rootItemsSet){
+            MediaBrowserCompat.MediaItem mediaItem =
+                new MediaItemBuilder("id1")
+                    .setTitle(category.getTitle())
+                    .setDescription(category.getDescription())
+                        .setRootItemType(category)
+                    .setMediaItemType(MediaItemType.ROOT)
+                    .build();
             children.add(mediaItem);
         }
-        final int expectedNumOfFragmentsCreated = Category.values().length;
+        final int expectedNumOfFragmentsCreated = rootItemsSet.size();
         fragment.onChildrenLoaded(parentId, children);
         verify(fragmentProviderSpied, times(expectedNumOfFragmentsCreated)).get();
     }
 
-    private void onOptionsItemSelectedEnabledFragment(MainFrameFragment fragment) {
-        try {
-            FieldUtils.writeField(fragment, "enabled", true, true);
-        } catch (IllegalAccessException ex) {
-            ExceptionUtils.readStackTrace(ex);
-            fail();
-        }
-        MenuItem menuItem = mock(MenuItem.class);
-        assertFalse(fragment.onOptionsItemSelected(menuItem));
-    }
     private void clickAndroidOptionsMenu(MainFrameFragment fragment) {
         MenuItem menuItem = mock(MenuItem.class);
         when(menuItem.getItemId()).thenReturn(android.R.id.home);

@@ -58,7 +58,7 @@ public final class TestUtils {
         bundle.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);
         bundle.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist);
         bundle.putSerializable(MEDIA_ITEM_TYPE, mediaItemType);
-        bundle.putSerializable(ROOT_ITEM_TYPE, SONGS) ;
+        bundle.putSerializable(ROOT_ITEM_TYPE, SONGS);
         MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder()
                 .setDescription(description)
                 .setTitle(title)

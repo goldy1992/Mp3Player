@@ -28,7 +28,7 @@ import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARE
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 
-public class SongItemBuilder extends MediaItemBuilder {
+public class SongItemCreator extends MediaItemCreator {
 
     @Override
     public List<MediaItem> build(Cursor cursor, String libraryIdPrefix) {

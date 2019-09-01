@@ -4,15 +4,13 @@ import android.content.Context;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.IdRes;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.adapters.MySongViewAdapter;
 import com.example.mike.mp3player.client.views.viewholders.MySongViewHolder;
+import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemType;
 
 import org.junit.Before;
@@ -42,11 +40,8 @@ public class MySongViewAdapterTest {
     private MySongViewAdapter mySongViewAdapter;
     @Mock
     private AlbumArtPainter albumArtPainter;
-
-    private TextView titleView;
-    private TextView artistView;
-    private TextView durationView;
-    private ViewGroup viewGroup;
+    @Mock
+    private MySongViewHolder mySongViewHolder;
     private List<MediaItem> mediaItems;
     private Context context;
 
@@ -56,14 +51,11 @@ public class MySongViewAdapterTest {
         this.context = InstrumentationRegistry.getInstrumentation().getContext();
         this.mySongViewAdapter = new MySongViewAdapter(albumArtPainter);
         this.mediaItems = new ArrayList<>();
-        this.viewGroup = mock(ViewGroup.class);
-        this.artistView = addMockTextViewToViewGroup(viewGroup, R.id.artist);
-        this.titleView = addMockTextViewToViewGroup(viewGroup, R.id.title);
-        this.durationView = addMockTextViewToViewGroup(viewGroup, R.id.duration);
     }
 
     @Test
     public void testOnCreateViewHolder() {
+        ViewGroup viewGroup = mock(ViewGroup.class);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT);
         when(viewGroup.generateLayoutParams(any(AttributeSet.class))).thenReturn(layoutParams);
         when(viewGroup.getContext()).thenReturn(this.context);
@@ -75,11 +67,18 @@ public class MySongViewAdapterTest {
     public void testOnBindViewHolderEmptyValues() {
         final String expectedArtist = UNKNOWN;
         final String expectedTitle = "";
-        this.mediaItems.add(createMediaItem("101", null, "description1", MediaItemType.ROOT, 45646L, expectedArtist));
-
+        this.mediaItems.add(
+                new MediaItemBuilder("101")
+                .setDescription("description1")
+                .setMediaItemType(MediaItemType.SONG)
+                .setDuration(45646L)
+                .setArtist(expectedArtist)
+                .build()
+        );
+        this.mySongViewAdapter.notifyDataSetChanged();
         bindViewHolder();
-        verify(artistView, times(1)).setText(expectedArtist);
-        verify(titleView, times(1)).setText(expectedTitle);
+        verify(mySongViewHolder, times(1)).setArtist(expectedArtist);
+        verify(mySongViewHolder, times(1)).setTitle(expectedTitle);
     }
 
     @Test
@@ -91,37 +90,40 @@ public class MySongViewAdapterTest {
         mediaItem.getDescription().getExtras().putString(META_DATA_KEY_FILE_NAME, fullFileName);
         this.mediaItems.add(mediaItem);
         bindViewHolder();
-        verify(titleView, times(1)).setText(fileName);
-
+        verify(mySongViewHolder, times(1)).setTitle(fileName);
     }
 
     @Test
     public void testOnBindViewHolder() {
-
         // TODO: refactor to have an OnBindViewHolder setup method and test for different list indices
         final String expectedArtist = "artist";
         final long originalDuration = 34234L;
         final String expectedDuration = TimerUtils.formatTime(Long.valueOf(originalDuration));
         final String expectedTitle = "title";
-        mediaItems.add(createMediaItem("101", expectedTitle, "description1", MediaItemType.ROOT, originalDuration, expectedArtist));
-        mediaItems.add(createMediaItem("102", "title2", "description2",  MediaItemType.ROOT, 34234L));
+        mediaItems.add(
+            new MediaItemBuilder("101")
+            .setTitle(expectedTitle)
+            .setDescription("description1")
+            .setMediaItemType(MediaItemType.ROOT)
+            .setDuration(originalDuration)
+            .setArtist(expectedArtist)
+            .build());
+        mediaItems.add(
+            new MediaItemBuilder("102")
+            .setTitle("title2")
+            .setDescription("description2")
+            .setMediaItemType(MediaItemType.ROOT)
+            .setDuration(34234L)
+            .build());
 
         bindViewHolder();
-        verify(artistView, times(1)).setText(expectedArtist);
-        verify(titleView, times(1)).setText(expectedTitle);
-        verify(durationView, times(1)).setText(expectedDuration);
+        verify(mySongViewHolder, times(1)).setArtist(expectedArtist);
+        verify(mySongViewHolder, times(1)).setTitle(expectedTitle);
+        verify(mySongViewHolder, times(1)).setDuration(expectedDuration);
     }
 
     private void bindViewHolder() {
         mySongViewAdapter.setItems(mediaItems);
-
-        MySongViewHolder myViewHolder = mock(MySongViewHolder.class);
-        when(myViewHolder.getAdapterPosition()).thenReturn(0);
-        mySongViewAdapter.onBindViewHolder(myViewHolder, 0);
-    }
-    private TextView addMockTextViewToViewGroup(ViewGroup view, @IdRes int res) {
-        TextView textView = mock(TextView.class);
-        when(view.findViewById(res)).thenReturn(textView);
-        return textView;
+        mySongViewAdapter.onBindViewHolder(mySongViewHolder, 0);
     }
 }

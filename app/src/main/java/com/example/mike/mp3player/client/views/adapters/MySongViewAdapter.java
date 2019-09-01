@@ -54,9 +54,9 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
             String artist = extractArtist(song);
             String duration = extractDuration(song);
 
-            songViewHolder.getArtist().setText(artist);
-            songViewHolder.getTitle().setText(title);
-            songViewHolder.getDuration().setText(duration);
+            songViewHolder.setArtist(artist);
+            songViewHolder.setTitle(title);
+            songViewHolder.setDuration(duration);
             ImageView albumArt = songViewHolder.getAlbumArt();
             Uri uri = getAlbumArtUri(song);
             albumArtPainter.paintOnView(albumArt, uri);
@@ -64,3 +64,4 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     }
 
 }
+

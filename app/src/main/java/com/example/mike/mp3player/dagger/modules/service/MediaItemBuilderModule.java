@@ -1,9 +1,9 @@
 package com.example.mike.mp3player.dagger.modules.service;
 
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.service.library.content.builder.FolderItemBuilder;
-import com.example.mike.mp3player.service.library.content.builder.MediaItemBuilder;
-import com.example.mike.mp3player.service.library.content.builder.SongItemBuilder;
+import com.example.mike.mp3player.service.library.content.builder.FolderItemCreator;
+import com.example.mike.mp3player.service.library.content.builder.MediaItemCreator;
+import com.example.mike.mp3player.service.library.content.builder.SongItemCreator;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -18,10 +18,10 @@ public class MediaItemBuilderModule {
 
     @Provides
     @Singleton
-    public Map<MediaItemType, MediaItemBuilder> providesMediaItemBuilderMap() {
-        Map<MediaItemType, MediaItemBuilder> map = new EnumMap<>(MediaItemType.class);
-        map.put(MediaItemType.SONG, new SongItemBuilder());
-        map.put(MediaItemType.FOLDER, new FolderItemBuilder());
+    public Map<MediaItemType, MediaItemCreator> providesMediaItemBuilderMap() {
+        Map<MediaItemType, MediaItemCreator> map = new EnumMap<>(MediaItemType.class);
+        map.put(MediaItemType.SONG, new SongItemCreator());
+        map.put(MediaItemType.FOLDER, new FolderItemCreator());
         return map;
     }
 }

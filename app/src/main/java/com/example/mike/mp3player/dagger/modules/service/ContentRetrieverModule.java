@@ -5,7 +5,7 @@ import android.content.ContentResolver;
 import androidx.annotation.NonNull;
 
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.service.library.content.builder.MediaItemBuilder;
+import com.example.mike.mp3player.service.library.content.builder.MediaItemCreator;
 import com.example.mike.mp3player.service.library.content.retriever.ContentRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.FoldersRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.RootRetriever;
@@ -78,7 +78,7 @@ public class ContentRetrieverModule {
     @Provides
     public Map<Class<? extends ContentRetriever>, ContentRetriever> provideContentResolverRetrieverMap(ContentResolver contentResolver,
                                                                                                        Map<MediaItemType, String> ids,
-                                                                                                       Map<MediaItemType, MediaItemBuilder> mediaItemBuilderMap) {
+                                                                                                       Map<MediaItemType, MediaItemCreator> mediaItemBuilderMap) {
         Map<Class<? extends ContentRetriever>, ContentRetriever> mapToReturn = new HashMap<>();
         RootRetriever rootRetriever = new RootRetriever(ids);
         mapToReturn.put(RootRetriever.class, rootRetriever);

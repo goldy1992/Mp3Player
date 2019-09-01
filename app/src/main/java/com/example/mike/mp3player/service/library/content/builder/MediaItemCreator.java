@@ -11,13 +11,10 @@ import java.util.List;
 
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 
-public abstract class MediaItemBuilder implements Comparator<MediaItem> {
+public abstract class MediaItemCreator implements Comparator<MediaItem> {
 
-    //private final String idPrefix;
 
-    public MediaItemBuilder() {
-       // this.idPrefix = idPrefix;
-    }
+    public MediaItemCreator() { }
 
     public abstract List<MediaItem> build(Cursor cursor, String mediaIdPrefix);
     public abstract MediaItemType getType();

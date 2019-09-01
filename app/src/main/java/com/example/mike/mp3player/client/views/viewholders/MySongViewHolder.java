@@ -28,15 +28,29 @@ public class MySongViewHolder extends RecyclerView.ViewHolder {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title.setText(title);
+    }
+
     public TextView getArtist() {
         return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist.setText(artist);
     }
 
     public TextView getDuration() {
         return duration;
     }
 
+    public void setDuration(String duration) {
+        this.duration.setText(duration);
+    }
+
     public ImageView getAlbumArt() {
         return albumArt;
     }
+
+
 }

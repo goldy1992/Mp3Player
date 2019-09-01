@@ -22,7 +22,7 @@ import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 
-public class FolderItemBuilder extends MediaItemBuilder {
+public class FolderItemCreator extends MediaItemCreator {
 
     @Override
     public List<MediaBrowserCompat.MediaItem> build(Cursor cursor, String mediaIdPrefix) {
