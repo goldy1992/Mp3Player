@@ -5,6 +5,7 @@ import android.content.Context;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.example.mike.mp3player.service.library.content.filter.FoldersResultFilter;
 import com.example.mike.mp3player.service.library.content.parser.FolderResultsParser;
 
 import org.junit.Before;
@@ -21,10 +22,10 @@ public class FolderSearcherTest {
     private ContentResolver contentResolver;
 
     @Before
-    public void setup() throws SQLException {
+    public void setup() {
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
         this.contentResolver = context.getContentResolver();
-        this.folderSearcher = new FolderSearcher(contentResolver, new FolderResultsParser(), "");
+        this.folderSearcher = new FolderSearcher(contentResolver, new FolderResultsParser(), "", new FoldersResultFilter());
     }
 
     @Test

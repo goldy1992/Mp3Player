@@ -12,11 +12,14 @@ import com.example.mike.mp3player.client.utils.TimerUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
+import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
+import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
 import static com.example.mike.mp3player.commons.Constants.LIBRARY_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
 import static com.example.mike.mp3player.commons.Constants.ROOT_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
+import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 
 public final class MediaItemUtils {
 
@@ -34,11 +37,6 @@ public final class MediaItemUtils {
 
     public static boolean hasDescription(MediaItem item) {
         return item != null && item.getDescription().getDescription() != null;
-    }
-
-    public static boolean hasMediaItemType(MediaItem item) {
-        Bundle extras = getExtras(item);
-        return extras == null ? null : extras.containsKey(MEDIA_ITEM_TYPE);
     }
 
     public static Bundle getExtras(MediaItem item) {
@@ -76,14 +74,30 @@ public final class MediaItemUtils {
         return null;
     }
 
+    public static boolean hasExtra(String key, MediaItem item) {
+        return hasExtras(item) && item.getDescription().getExtras().containsKey(key);
+    }
+
     public static String getArtist(MediaItem item) {
-        return (String) getExtra(MediaMetadataCompat.METADATA_KEY_ARTIST, item);
+        if (hasExtra(METADATA_KEY_ARTIST, item)) {
+            return (String) getExtra(METADATA_KEY_ARTIST, item);
+        }
+        return null;
     }
 
     public static String getAlbumArtPath(MediaItem item) {
-        Uri uri = (Uri) getExtra(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, item);
-        if (uri != null) {
-            return uri.toString();
+        if (hasExtra(METADATA_KEY_ALBUM_ART_URI, item)) {
+            Uri uri = (Uri) getExtra(METADATA_KEY_ALBUM_ART_URI, item);
+            if (uri != null) {
+                return uri.toString();
+            }
+        }
+        return null;
+    }
+
+    public static String getDirectoryName(MediaItem item) {
+        if (hasExtra(META_DATA_PARENT_DIRECTORY_NAME, item)) {
+            return  (String) getExtra(META_DATA_PARENT_DIRECTORY_NAME, item);
         }
         return null;
     }
@@ -128,7 +142,7 @@ public final class MediaItemUtils {
     public static String extractArtist(MediaItem song) {
         String artist = null;
         try {
-            artist = song.getDescription().getExtras().getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
+            artist = song.getDescription().getExtras().getString(METADATA_KEY_ARTIST);
             if (null == artist) {
                 artist = UNKNOWN;
             }
@@ -150,7 +164,7 @@ public final class MediaItemUtils {
     public static Uri getAlbumArtUri(@NonNull MediaItem song) {
         Bundle extras = song.getDescription().getExtras();
         if (null != extras) {
-            return  (Uri) extras.get(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI);
+            return  (Uri) extras.get(METADATA_KEY_ALBUM_ART_URI);
         }
         return null;
     }
