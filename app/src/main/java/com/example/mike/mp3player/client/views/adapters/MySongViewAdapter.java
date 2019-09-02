@@ -14,10 +14,6 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.views.viewholders.MySongViewHolder;
 
-import static com.example.mike.mp3player.commons.MediaItemUtils.extractArtist;
-import static com.example.mike.mp3player.commons.MediaItemUtils.extractDuration;
-import static com.example.mike.mp3player.commons.MediaItemUtils.extractTitle;
-import static com.example.mike.mp3player.commons.MediaItemUtils.getAlbumArtUri;
 
 
 public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
@@ -35,7 +31,7 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
             View v = layoutInflater
                     .inflate(R.layout.song_item_menu, parent, false);
-            vh = new MySongViewHolder(v);
+            vh = new MySongViewHolder(v, albumArtPainter);
         }
         return vh;
     }
@@ -47,19 +43,8 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
             MySongViewHolder songViewHolder = (MySongViewHolder) holder;
             // TODO: look into the use of holder.getAdapterPosition rather than the position parameter.
             //Log.i(LOG_TAG, "position: " + position);
-            MediaItem song = getItems().get(holder.getAdapterPosition());
-            // - get element from your dataset at this position
-            // - replace the contents of the views with that element
-            String title = extractTitle(song);
-            String artist = extractArtist(song);
-            String duration = extractDuration(song);
-
-            songViewHolder.setArtist(artist);
-            songViewHolder.setTitle(title);
-            songViewHolder.setDuration(duration);
-            ImageView albumArt = songViewHolder.getAlbumArt();
-            Uri uri = getAlbumArtUri(song);
-            albumArtPainter.paintOnView(albumArt, uri);
+            MediaItem song = items.get(holder.getAdapterPosition());
+            songViewHolder.bindMediaItem(song);
         }
     }
 

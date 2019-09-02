@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.service.library.content.filter;
 
-import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.annotation.NonNull;
@@ -21,7 +20,7 @@ public class FoldersResultFilter extends ResultsFilter {
         while(iterator.hasNext()) {
             MediaItem currentItem = iterator.next();
             String directoryName = MediaItemUtils.getDirectoryName(currentItem);
-            if (!StringUtils.contains(directoryName.toUpperCase(), query.toUpperCase())) {
+            if (null != directoryName && !StringUtils.contains(directoryName.toUpperCase(), query.toUpperCase())) {
                  iterator.remove();
             }
         }

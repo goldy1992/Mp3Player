@@ -23,7 +23,6 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
         super(albumArtPainter);
     }
 
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder vh = super.onCreateViewHolder(parent, viewType);
@@ -32,7 +31,7 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.folder_item_menu, parent, false);
 
-            vh = new MyFolderViewHolder(view);
+            vh = new MyFolderViewHolder(view, albumArtPainter);
         }
         return vh;
     }
@@ -44,12 +43,7 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
             MyFolderViewHolder folderViewHolder = (MyFolderViewHolder) holder;
             //Log.i(LOG_TAG, "position: " + position);
             MediaBrowserCompat.MediaItem song = getItems().get(holder.getAdapterPosition());
-            // - get element from your dataset at this position
-            // - replace the contents of the views with that element
-            String folderName = extractFolderName(song);
-            folderViewHolder.getFolderName().setText(folderName);
-            String folderPath = extractFolderPath(song);
-            folderViewHolder.getFolderPath().setText(folderPath);
+            folderViewHolder.bindMediaItem(song);
         }
     }
 }

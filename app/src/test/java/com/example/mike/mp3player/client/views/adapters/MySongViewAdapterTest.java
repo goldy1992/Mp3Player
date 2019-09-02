@@ -1,56 +1,46 @@
 package com.example.mike.mp3player.client.views.adapters;
 
-import android.content.Context;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
-import android.util.AttributeSet;
-import android.view.ViewGroup;
 
-import androidx.test.platform.app.InstrumentationRegistry;
-
-import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.utils.TimerUtils;
-import com.example.mike.mp3player.client.views.adapters.MySongViewAdapter;
 import com.example.mike.mp3player.client.views.viewholders.MySongViewHolder;
 import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemType;
+import com.example.mike.mp3player.commons.MediaItemUtils;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static com.example.mike.mp3player.TestUtils.createMediaItem;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-public class MySongViewAdapterTest extends RecyclerViewAdapterTestBase {
+public class MySongViewAdapterTest extends MediaItemRecyclerViewAdapterTestBase {
 
     private MySongViewAdapter mySongViewAdapter;
-    @Mock
-    private AlbumArtPainter albumArtPainter;
+    @Captor
+    private ArgumentCaptor<MediaItem> captor;
     @Mock
     private MySongViewHolder mySongViewHolder;
-    private List<MediaItem> mediaItems;
-    private Context context;
 
     @Before
     public void setup() {
         super.setup();
         MockitoAnnotations.initMocks(this);
-        this.context = InstrumentationRegistry.getInstrumentation().getContext();
         this.mySongViewAdapter = new MySongViewAdapter(albumArtPainter);
         this.mediaItems = new ArrayList<>();
     }
@@ -71,13 +61,16 @@ public class MySongViewAdapterTest extends RecyclerViewAdapterTestBase {
                 .setDescription("description1")
                 .setMediaItemType(MediaItemType.SONG)
                 .setDuration(45646L)
+                .setTitle(expectedTitle)
                 .setArtist(expectedArtist)
                 .build()
         );
         this.mySongViewAdapter.notifyDataSetChanged();
         bindViewHolder();
-        verify(mySongViewHolder, times(1)).setArtist(expectedArtist);
-        verify(mySongViewHolder, times(1)).setTitle(expectedTitle);
+        verify(mySongViewHolder, times(1)).bindMediaItem(captor.capture());
+        MediaItem result = captor.getValue();
+        assertEquals(expectedArtist, MediaItemUtils.getArtist(result));
+        assertEquals(expectedTitle, MediaItemUtils.getTitle(result));
     }
 
     @Test
@@ -89,7 +82,9 @@ public class MySongViewAdapterTest extends RecyclerViewAdapterTestBase {
         mediaItem.getDescription().getExtras().putString(META_DATA_KEY_FILE_NAME, fullFileName);
         this.mediaItems.add(mediaItem);
         bindViewHolder();
-        verify(mySongViewHolder, times(1)).setTitle(fileName);
+        verify(mySongViewHolder, times(1)).bindMediaItem(captor.capture());
+        MediaItem result = captor.getValue();
+        assertNull(MediaItemUtils.getTitle(result));
     }
 
     @Test
@@ -116,9 +111,11 @@ public class MySongViewAdapterTest extends RecyclerViewAdapterTestBase {
             .build());
 
         bindViewHolder();
-        verify(mySongViewHolder, times(1)).setArtist(expectedArtist);
-        verify(mySongViewHolder, times(1)).setTitle(expectedTitle);
-        verify(mySongViewHolder, times(1)).setDuration(expectedDuration);
+        verify(mySongViewHolder, times(1)).bindMediaItem(captor.capture());
+        MediaItem result = captor.getValue();
+        assertEquals(expectedArtist, MediaItemUtils.getArtist(result));
+        assertEquals(expectedTitle, MediaItemUtils.getTitle(result));
+        assertEquals(expectedDuration, MediaItemUtils.extractDuration(result));
     }
 
     private void bindViewHolder() {
