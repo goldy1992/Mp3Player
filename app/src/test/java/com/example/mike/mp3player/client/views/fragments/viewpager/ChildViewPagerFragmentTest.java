@@ -18,9 +18,7 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
 import static com.example.mike.mp3player.TestUtils.createMediaItem;
-import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -57,9 +55,7 @@ public class ChildViewPagerFragmentTest extends FragmentTestBase<ChildViewPagerF
         MediaBrowserCompat.MediaItem mediaItem =
                 createMediaItem(id, title, description, MediaItemType.ROOT);
         spiedFragment.itemSelected(mediaItem);
-        ArgumentCaptor<Intent> intentArgs = ArgumentCaptor.forClass(Intent.class);
-        verify(spiedFragment).startActivity(intentArgs.capture());
-        Intent intent = intentArgs.getValue();
+        verify(spiedFragment).startActivity(any());
 
     }
 
