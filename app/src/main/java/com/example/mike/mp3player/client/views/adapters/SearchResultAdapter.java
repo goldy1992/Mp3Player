@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
-import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.views.viewholders.MyFolderViewHolder;
 import com.example.mike.mp3player.client.views.viewholders.MySongViewHolder;
 import com.example.mike.mp3player.client.views.viewholders.RootItemViewHolder;
@@ -30,7 +29,7 @@ import static com.example.mike.mp3player.commons.MediaItemUtils.extractTitle;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getAlbumArtUri;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getRootTitle;
 
-public class SearchResultAdapter extends MediaItemRecyclerViewAdapter implements MyGenericItemTouchListener.ItemSelectedListener {
+public class SearchResultAdapter extends MediaItemRecyclerViewAdapter {
 
     @Inject
     public SearchResultAdapter(AlbumArtPainter albumArtPainter) {
@@ -121,8 +120,4 @@ public class SearchResultAdapter extends MediaItemRecyclerViewAdapter implements
         return items.size();
     }
 
-    @Override
-    public void itemSelected(MediaBrowserCompat.MediaItem item) {
-
-    }
 }

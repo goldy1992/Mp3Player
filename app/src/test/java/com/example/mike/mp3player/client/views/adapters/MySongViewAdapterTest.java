@@ -1,4 +1,4 @@
-package com.example.mike.mp3player.client;
+package com.example.mike.mp3player.client.views.adapters;
 
 import android.content.Context;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.adapters.MySongViewAdapter;
 import com.example.mike.mp3player.client.views.viewholders.MySongViewHolder;
@@ -35,7 +36,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-public class MySongViewAdapterTest {
+public class MySongViewAdapterTest extends RecyclerViewAdapterTestBase {
 
     private MySongViewAdapter mySongViewAdapter;
     @Mock
@@ -47,6 +48,7 @@ public class MySongViewAdapterTest {
 
     @Before
     public void setup() {
+        super.setup();
         MockitoAnnotations.initMocks(this);
         this.context = InstrumentationRegistry.getInstrumentation().getContext();
         this.mySongViewAdapter = new MySongViewAdapter(albumArtPainter);
@@ -55,11 +57,8 @@ public class MySongViewAdapterTest {
 
     @Test
     public void testOnCreateViewHolder() {
-        ViewGroup viewGroup = mock(ViewGroup.class);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT);
-        when(viewGroup.generateLayoutParams(any(AttributeSet.class))).thenReturn(layoutParams);
-        when(viewGroup.getContext()).thenReturn(this.context);
-        MySongViewHolder result = (MySongViewHolder) mySongViewAdapter.onCreateViewHolder(viewGroup, 0);
+
+        MySongViewHolder result = (MySongViewHolder) mySongViewAdapter.onCreateViewHolder(this.viewGroup, 0);
         assertNotNull(result);
     }
 

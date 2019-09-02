@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.LogTagger;
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.callbacks.search.SearchResultListener;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
