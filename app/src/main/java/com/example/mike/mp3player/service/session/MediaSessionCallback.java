@@ -175,7 +175,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void prepareFromMediaId(String mediaId, Bundle bundle) {
-
         //Log.i(LOG_TAG, "prepareFromMediaId");
         super.onPrepareFromMediaId(mediaId, bundle);
         String trackId = extractTrackId(mediaId);
@@ -183,11 +182,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getPlaylist(mediaId);
             if (null != results) {
                 playbackManager.createNewPlaylist(results);
-
-                if (mediaId == null) {
-                    Log.e(LOG_TAG, "received null mediaId");
-                    return;
-                }
 
                 Uri uriToPlay = null;
                 Uri followingUri = null;
@@ -386,6 +380,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             if (!splitId.isEmpty()) {
                 return splitId.get(splitId.size() - 1);
             }
+        }
+        else {
+            Log.e(LOG_TAG, "received null mediaId");
         }
         return null;
     }

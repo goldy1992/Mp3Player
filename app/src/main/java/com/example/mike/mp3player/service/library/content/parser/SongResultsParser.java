@@ -35,9 +35,7 @@ public class SongResultsParser extends ResultsParser {
         TreeSet<MediaItem> listToReturn = new TreeSet<>(this);
         while (cursor!= null && cursor.moveToNext()) {
             MediaItem mediaItem = buildMediaItem(cursor, libraryIdPrefix);
-            if (null != mediaItem) {
-                listToReturn.add(mediaItem);
-            }
+            listToReturn.add(mediaItem);
         }
         return new ArrayList<>(listToReturn);
     }
