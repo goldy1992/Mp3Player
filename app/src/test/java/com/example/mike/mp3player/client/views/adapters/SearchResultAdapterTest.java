@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
-public class SearchResultAdapterTestMediaItem extends MediaItemRecyclerViewAdapterTestBase {
+public class SearchResultAdapterTest extends MediaItemRecyclerViewAdapterTestBase {
 
     private SearchResultAdapter searchResultAdapter;
 

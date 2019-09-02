@@ -42,7 +42,6 @@ public class MySongViewAdapterTest extends MediaItemRecyclerViewAdapterTestBase 
         super.setup();
         MockitoAnnotations.initMocks(this);
         this.mySongViewAdapter = new MySongViewAdapter(albumArtPainter);
-        this.mediaItems = new ArrayList<>();
     }
 
     @Test

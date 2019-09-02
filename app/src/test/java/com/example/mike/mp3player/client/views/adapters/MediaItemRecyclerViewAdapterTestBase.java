@@ -11,6 +11,7 @@ import com.example.mike.mp3player.client.AlbumArtPainter;
 
 import org.mockito.Mock;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -29,6 +30,7 @@ public class MediaItemRecyclerViewAdapterTestBase {
     public void setup() {
         this.context = InstrumentationRegistry.getInstrumentation().getContext();
         this.viewGroup = getMockViewGroup();
+        this.mediaItems = new ArrayList<>();
     }
 
     private ViewGroup getMockViewGroup() {
