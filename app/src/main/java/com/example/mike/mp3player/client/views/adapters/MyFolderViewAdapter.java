@@ -12,9 +12,6 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.views.viewholders.MyFolderViewHolder;
 
-import static com.example.mike.mp3player.commons.MediaItemUtils.extractFolderName;
-import static com.example.mike.mp3player.commons.MediaItemUtils.extractFolderPath;
-
 public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
 
     private final String LOG_TAG = "FOLDER_VIEW_ADAPTER";

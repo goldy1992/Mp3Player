@@ -114,7 +114,7 @@ public class MySongViewAdapterTest extends MediaItemRecyclerViewAdapterTestBase 
         MediaItem result = captor.getValue();
         assertEquals(expectedArtist, MediaItemUtils.getArtist(result));
         assertEquals(expectedTitle, MediaItemUtils.getTitle(result));
-        assertEquals(expectedDuration, MediaItemUtils.extractDuration(result));
+        assertEquals(expectedDuration, MediaItemUtils.getDuration(result));
     }
 
     private void bindViewHolder() {

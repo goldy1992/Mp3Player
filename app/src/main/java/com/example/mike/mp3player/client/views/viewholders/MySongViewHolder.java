@@ -1,21 +1,28 @@
 package com.example.mike.mp3player.client.views.viewholders;
 
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaMetadataCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
+import com.example.mike.mp3player.client.utils.TimerUtils;
+import com.example.mike.mp3player.commons.MetaDataKeys;
 
-import static com.example.mike.mp3player.commons.MediaItemUtils.extractArtist;
-import static com.example.mike.mp3player.commons.MediaItemUtils.extractDuration;
-import static com.example.mike.mp3player.commons.MediaItemUtils.extractTitle;
+import org.apache.commons.io.FilenameUtils;
+
+import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getAlbumArtUri;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getArtist;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getExtra;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
+import static com.example.mike.mp3player.commons.MediaItemUtils.hasExtras;
 
 public class MySongViewHolder extends MediaItemViewHolder {
 
@@ -46,6 +53,40 @@ public class MySongViewHolder extends MediaItemViewHolder {
         albumArtPainter.paintOnView(albumArt, uri);
     }
 
+    private String extractTitle(MediaBrowserCompat.MediaItem song) {
+        CharSequence charSequence = getTitle(song);
+        if (null == charSequence) {
+            String fileName = hasExtras(song) ? (String) getExtra(MetaDataKeys.META_DATA_KEY_FILE_NAME, song) : null;
+            if (fileName != null) {
+                return FilenameUtils.removeExtension(fileName);
+            }
+        } else {
+            return charSequence.toString();
+        }
+        return UNKNOWN;
+    }
+
+    private String extractDuration(@NonNull MediaBrowserCompat.MediaItem song) {
+        Bundle extras =  song.getDescription().getExtras();
+        if (null != extras) {
+            long duration = extras.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
+            return TimerUtils.formatTime(duration);
+        }
+        return null;
+    }
+
+    private String extractArtist(MediaBrowserCompat.MediaItem song) {
+        String artist = null;
+        try {
+            artist = getArtist(song);
+            if (null == artist) {
+                artist = UNKNOWN;
+            }
+        } catch (NullPointerException ex) {
+            artist = UNKNOWN;
+        }
+        return artist;
+    }
 
 
 }

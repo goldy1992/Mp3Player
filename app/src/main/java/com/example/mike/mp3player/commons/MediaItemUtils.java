@@ -118,49 +118,6 @@ public final class MediaItemUtils {
         return (MediaItemType)getExtra(ROOT_ITEM_TYPE, item);
     }
 
-    public static String extractFolderName(MediaItem song) {
-        return getTitle(song);
-    }
-
-    public static String extractFolderPath(MediaItem song) {
-        return getDescription(song);
-    }
-
-    public static String extractTitle(MediaItem song) {
-        CharSequence charSequence = song.getDescription().getTitle();
-        if (null == charSequence) {
-            String fileName = hasExtras(song) ? (String) getExtra(MetaDataKeys.META_DATA_KEY_FILE_NAME, song) : null;
-            if (fileName != null) {
-                return FilenameUtils.removeExtension(fileName);
-            }
-        } else {
-            return charSequence.toString();
-        }
-        return UNKNOWN;
-    }
-
-    public static String extractArtist(MediaItem song) {
-        String artist = null;
-        try {
-            artist = song.getDescription().getExtras().getString(METADATA_KEY_ARTIST);
-            if (null == artist) {
-                artist = UNKNOWN;
-            }
-        } catch (NullPointerException ex) {
-            artist = UNKNOWN;
-        }
-        return artist;
-    }
-
-    public static String extractDuration(@NonNull MediaItem song) {
-        Bundle extras =  song.getDescription().getExtras();
-        if (null != extras) {
-            long duration = extras.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
-            return TimerUtils.formatTime(duration);
-        }
-        return null;
-    }
-
     public static Uri getAlbumArtUri(@NonNull MediaItem song) {
         Bundle extras = song.getDescription().getExtras();
         if (null != extras) {
