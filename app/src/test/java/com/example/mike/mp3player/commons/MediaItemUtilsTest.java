@@ -3,71 +3,76 @@ package com.example.mike.mp3player.commons;
 import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompat;
 
-import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class MediaItemUtilsTest {
+@RunWith(RobolectricTestRunner.class)
+public class MediaItemUtilsTest {
 
     @Test
-    void testGetExtrasNull() {
-        MediaDescriptionCompat mediaDescription = new MediaDescriptionCompat.Builder().build();
+    public void testGetExtrasNull() {
+        MediaDescriptionCompat mediaDescription = new MediaDescriptionCompat.Builder()
+                .setMediaId("anId")
+                .build();
         MediaItem mediaItem = new MediaItem(mediaDescription, 0);
         assertNull(MediaItemUtils.getExtras(mediaItem));
     }
 
     @Test
-    void testGetExtrasNotNull() {
-        final Bundle bundle = new Bundle();
-        MediaDescriptionCompat mediaDescription = new MediaDescriptionCompat.Builder().setExtras(bundle).build();
-        MediaItem mediaItem = new MediaItem(mediaDescription, 0);
-        assertEquals(bundle, MediaItemUtils.getExtras(mediaItem));
+    public void testGetExtrasNotNull() {
+        MediaItem mediaItem = new MediaItemBuilder("id")
+                .setTitle("algo") // sets an extra
+                .build();
+        Bundle result = MediaItemUtils.getExtras(mediaItem);
+        assertNotNull(result);
     }
 
     @Test
-    void testGetMediaIdNull() {
-        MediaDescriptionCompat mediaDescription = new MediaDescriptionCompat.Builder().build();
-        MediaItem mediaItem = new MediaItem(mediaDescription, 0);
-        assertNull(MediaItemUtils.getMediaId(mediaItem));
-    }
-
-    @Test
-    void testGetMediaIdNotNull() {
+    public void testGetMediaIdNotNull() {
         final String mediaId = "MEDIA_ID";
-        MediaDescriptionCompat mediaDescription = new MediaDescriptionCompat.Builder().setMediaId(mediaId).build();
-        MediaItem mediaItem = new MediaItem(mediaDescription, 0);
+        MediaItem mediaItem = new MediaItemBuilder(mediaId).build();
         assertEquals(mediaId, MediaItemUtils.getMediaId(mediaItem));
     }
 
     @Test
-    void testGetTitleNull() {
-        MediaDescriptionCompat mediaDescription = new MediaDescriptionCompat.Builder().build();
-        MediaItem mediaItem = new MediaItem(mediaDescription, 0);
+    public void testGetTitleNull() {
+        MediaItem mediaItem = new MediaItemBuilder("id")
+                .setTitle(null)
+                .build();
         assertNull(MediaItemUtils.getTitle(mediaItem));
     }
 
     @Test
-    void testGetTitleNotNull() {
+    public void testGetTitleNotNull() {
         final String title = "TITLE";
-        MediaDescriptionCompat mediaDescription = new MediaDescriptionCompat.Builder().setTitle(title).build();
-        MediaItem mediaItem = new MediaItem(mediaDescription, 0);
+        MediaItem mediaItem = new MediaItemBuilder("id")
+                .setTitle(title)
+                .build();
         assertEquals(title, MediaItemUtils.getTitle(mediaItem));
     }
 
     @Test
-    void testGetDescriptionNull() {
-        MediaDescriptionCompat mediaDescription = new MediaDescriptionCompat.Builder().build();
-        MediaItem mediaItem = new MediaItem(mediaDescription, 0);
+    public void testGetDescriptionNull() {
+
+        MediaItem mediaItem = new MediaItemBuilder("id")
+                .setDescription(null)
+                .build();
         assertNull(MediaItemUtils.getDescription(mediaItem));
     }
 
     @Test
-    void testGetDescriptionNotNull() {
+    public void testGetDescriptionNotNull() {
         final String description = "description";
-        MediaDescriptionCompat mediaDescription = new MediaDescriptionCompat.Builder().setDescription(description).build();
-        MediaItem mediaItem = new MediaItem(mediaDescription, 0);
+        MediaItem mediaItem = new MediaItemBuilder("id")
+                .setDescription(description)
+                .build();
         assertEquals(description, MediaItemUtils.getDescription(mediaItem));
     }
 
