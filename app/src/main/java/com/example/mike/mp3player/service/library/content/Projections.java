@@ -12,6 +12,5 @@ public final class Projections {
             MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.ALBUM_ID};
 
-    public static final String[] FOLDER_PROJECTION = {
-            "DISTINCT " + MediaStore.Audio.Media.DATA };
+    public static final String[] FOLDER_PROJECTION = { MediaStore.Audio.Media.DATA };
 }

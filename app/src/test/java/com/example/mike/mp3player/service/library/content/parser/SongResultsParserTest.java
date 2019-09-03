@@ -10,11 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.fakes.RoboCursor;
 
 import java.util.List;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 import static com.example.mike.mp3player.commons.MediaItemType.SONG;
 import static com.example.mike.mp3player.service.library.content.Projections.SONG_PROJECTION;
@@ -24,9 +21,7 @@ import static org.junit.Assert.assertEquals;
  * SongResultsParser test
  */
 @RunWith(RobolectricTestRunner.class)
-public class SongResultsParserTest {
-
-    private SongResultsParser songResultsParser;
+public class SongResultsParserTest extends ResultsParserTestBase {
 
     private static final String COMMON_TITLE = "a common title";
     private static final MediaItem EXPECTED_MEDIA_ITEM_1;
@@ -61,12 +56,13 @@ public class SongResultsParserTest {
 
     @Before
     public void setup() {
-        this.songResultsParser = new SongResultsParser();
+        this.resultsParser = new SongResultsParser();
     }
 
+    @Override
     @Test
     public void testGetType() {
-        assertEquals(SONG, songResultsParser.getType());
+        assertEquals(SONG, resultsParser.getType());
     }
 
     /**
@@ -78,11 +74,7 @@ public class SongResultsParserTest {
      */
     @Test
     public void testCreate() {
-        RoboCursor cursor = new RoboCursor();
-        cursor.setColumnNames(Arrays.asList(SONG_PROJECTION));
-        cursor.setResults(createDataSet());
-
-        List<MediaItem> mediaItems = songResultsParser.create(cursor, ID_PREFIX);
+        List<MediaItem> mediaItems = getResultsForProjection(SONG_PROJECTION, ID_PREFIX);
         assertEquals(MediaItemUtils.getTitle(EXPECTED_MEDIA_ITEM_1), MediaItemUtils.extractTitle(mediaItems.get(0)));
         assertEquals(MediaItemUtils.getArtist(EXPECTED_MEDIA_ITEM_1), MediaItemUtils.extractArtist(mediaItems.get(0)));
         assertEquals(MediaItemUtils.extractDuration(EXPECTED_MEDIA_ITEM_1), MediaItemUtils.extractDuration(mediaItems.get(0)));
@@ -93,9 +85,10 @@ public class SongResultsParserTest {
         assertEquals(MediaItemUtils.extractDuration(EXPECTED_MEDIA_ITEM_2), MediaItemUtils.extractDuration(mediaItems.get(1)));
         assertEquals(MediaItemUtils.getAlbumArtUri(EXPECTED_MEDIA_ITEM_2), MediaItemUtils.getAlbumArtUri(mediaItems.get(1)));
         assertEquals(MediaItemUtils.getLibraryId(EXPECTED_MEDIA_ITEM_2), MediaItemUtils.getLibraryId(mediaItems.get(1)));
-
     }
-    private Object[][] createDataSet() {
+
+    @Override
+    Object[][] createDataSet() {
         Object[][] dataSet = new Object[2][];
         dataSet[0] = new Object[] {MediaItemUtils.getMediaUri(EXPECTED_MEDIA_ITEM_1),
                 MediaItemUtils.getDuration(EXPECTED_MEDIA_ITEM_1),
