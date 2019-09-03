@@ -56,9 +56,6 @@ public class FolderResultsParser extends ResultsParser {
     private MediaBrowserCompat.MediaItem createFolderMediaItem(String directoryName, String directoryPath, String parentId){
         Bundle extras = getExtras();
         extras.putString(LIBRARY_ID, buildLibraryId(parentId, directoryPath));
-        extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directoryName);
-        extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directoryPath);
-
         MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()
                 .setMediaId(directoryPath)
                 .setTitle(directoryName)

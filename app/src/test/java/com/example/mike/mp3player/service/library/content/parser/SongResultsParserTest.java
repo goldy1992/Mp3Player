@@ -1,9 +1,9 @@
 package com.example.mike.mp3player.service.library.content.parser;
 
-import android.database.Cursor;
-import android.support.v4.media.MediaBrowserCompat;
+import android.net.Uri;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
+import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 
 import org.junit.Before;
@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.fakes.RoboCursor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
@@ -29,6 +28,37 @@ public class SongResultsParserTest {
 
     private SongResultsParser songResultsParser;
 
+    private static final String COMMON_TITLE = "a common title";
+    private static final MediaItem EXPECTED_MEDIA_ITEM_1;
+    private static final long ALBUM_ID_1 = 2334L;
+    private static final String MEDIA_ID_1 = "id1";
+    private static final MediaItem EXPECTED_MEDIA_ITEM_2;
+    private static final long ALBUM_ID_2 = 9268L;
+    private static final String ID_PREFIX = "sdfa";
+    private static final String MEDIA_ID_2 = "id2";
+
+    static {
+        EXPECTED_MEDIA_ITEM_1 = new MediaItemBuilder(MEDIA_ID_1)
+            .setMediaUri(Uri.parse("uri1"))
+            .setLibraryId(ID_PREFIX + "|" + MEDIA_ID_1)
+            .setDuration(23423L)
+            .setArtist("artist1")
+            .setTitle(COMMON_TITLE)
+            .setFileName("fileName1")
+            .setAlbumArtUri(ALBUM_ID_1)
+            .build();
+
+        EXPECTED_MEDIA_ITEM_2 = new MediaItemBuilder(MEDIA_ID_2)
+                .setMediaUri(Uri.parse("uri2"))
+                .setLibraryId(ID_PREFIX + "|" + MEDIA_ID_2)
+                .setDuration(96406L)
+                .setArtist("artist1")
+                .setTitle(COMMON_TITLE)
+                .setFileName("fileName2")
+                .setAlbumArtUri(ALBUM_ID_2)
+                .build();
+    }
+
     @Before
     public void setup() {
         this.songResultsParser = new SongResultsParser();
@@ -39,21 +69,48 @@ public class SongResultsParserTest {
         assertEquals(SONG, songResultsParser.getType());
     }
 
+    /**
+     * GIVEN: a cursor with 2 results
+     * AND: given that both results have the same title
+     * WHEN: the parser is run
+     * THEN: a list of MediaItems is returned with the expected values
+     * AND: the list is of size 2
+     */
     @Test
     public void testCreate() {
         RoboCursor cursor = new RoboCursor();
-
         cursor.setColumnNames(Arrays.asList(SONG_PROJECTION));
         cursor.setResults(createDataSet());
 
-        List<MediaItem> mediaItems = songResultsParser.create(cursor, "xyz");
-        // TODO: complete rest of assertions
-        assertEquals("artist1", MediaItemUtils.extractArtist(mediaItems.get(0)));
+        List<MediaItem> mediaItems = songResultsParser.create(cursor, ID_PREFIX);
+        assertEquals(MediaItemUtils.getTitle(EXPECTED_MEDIA_ITEM_1), MediaItemUtils.extractTitle(mediaItems.get(0)));
+        assertEquals(MediaItemUtils.getArtist(EXPECTED_MEDIA_ITEM_1), MediaItemUtils.extractArtist(mediaItems.get(0)));
+        assertEquals(MediaItemUtils.extractDuration(EXPECTED_MEDIA_ITEM_1), MediaItemUtils.extractDuration(mediaItems.get(0)));
+        assertEquals(MediaItemUtils.getAlbumArtUri(EXPECTED_MEDIA_ITEM_1), MediaItemUtils.getAlbumArtUri(mediaItems.get(0)));
+        assertEquals(MediaItemUtils.getLibraryId(EXPECTED_MEDIA_ITEM_1), MediaItemUtils.getLibraryId(mediaItems.get(0)));
+        assertEquals(MediaItemUtils.getTitle(EXPECTED_MEDIA_ITEM_2), MediaItemUtils.extractTitle(mediaItems.get(1)));
+        assertEquals(MediaItemUtils.getArtist(EXPECTED_MEDIA_ITEM_2), MediaItemUtils.extractArtist(mediaItems.get(1)));
+        assertEquals(MediaItemUtils.extractDuration(EXPECTED_MEDIA_ITEM_2), MediaItemUtils.extractDuration(mediaItems.get(1)));
+        assertEquals(MediaItemUtils.getAlbumArtUri(EXPECTED_MEDIA_ITEM_2), MediaItemUtils.getAlbumArtUri(mediaItems.get(1)));
+        assertEquals(MediaItemUtils.getLibraryId(EXPECTED_MEDIA_ITEM_2), MediaItemUtils.getLibraryId(mediaItems.get(1)));
 
     }
     private Object[][] createDataSet() {
-        Object[][] dataSet = new Object[1][];
-        dataSet[0] = new Object[] {"/a/b/c", 423L, "artist1", "id1", "title1", 24234L};
+        Object[][] dataSet = new Object[2][];
+        dataSet[0] = new Object[] {MediaItemUtils.getMediaUri(EXPECTED_MEDIA_ITEM_1),
+                MediaItemUtils.getDuration(EXPECTED_MEDIA_ITEM_1),
+                MediaItemUtils.getArtist(EXPECTED_MEDIA_ITEM_1),
+                MediaItemUtils.getMediaId(EXPECTED_MEDIA_ITEM_1),
+                MediaItemUtils.getTitle(EXPECTED_MEDIA_ITEM_1),
+                ALBUM_ID_1};
+
+        dataSet[1] = new Object[] {MediaItemUtils.getMediaUri(EXPECTED_MEDIA_ITEM_2),
+                MediaItemUtils.getDuration(EXPECTED_MEDIA_ITEM_2),
+                MediaItemUtils.getArtist(EXPECTED_MEDIA_ITEM_2),
+                MediaItemUtils.getMediaId(EXPECTED_MEDIA_ITEM_2),
+                MediaItemUtils.getTitle(EXPECTED_MEDIA_ITEM_2),
+                ALBUM_ID_2};
+
         return dataSet;
     }
 }

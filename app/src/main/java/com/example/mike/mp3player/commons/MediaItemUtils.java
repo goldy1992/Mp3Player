@@ -12,8 +12,10 @@ import com.example.mike.mp3player.client.utils.TimerUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
+import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
+import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_DURATION;
 import static com.example.mike.mp3player.commons.Constants.LIBRARY_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
@@ -100,6 +102,14 @@ public final class MediaItemUtils {
             return  (String) getExtra(META_DATA_PARENT_DIRECTORY_NAME, item);
         }
         return null;
+    }
+
+    public static Uri getMediaUri(MediaItem item) {
+        return item.getDescription().getMediaUri();
+    }
+
+    public static long getDuration(MediaItem item) {
+        return (Long) getExtra(METADATA_KEY_DURATION, item);
     }
 
     public static MediaItemType getMediaItemType(MediaItem item) {

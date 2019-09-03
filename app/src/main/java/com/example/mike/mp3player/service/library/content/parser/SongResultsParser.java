@@ -1,13 +1,11 @@
 package com.example.mike.mp3player.service.library.content.parser;
 
-import android.content.ContentUris;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
-import android.support.v4.media.MediaDescriptionCompat;
 
+import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemType;
 
 import java.io.File;
@@ -17,18 +15,14 @@ import java.util.TreeSet;
 
 import javax.annotation.Nullable;
 
-import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
-import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
-import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_DURATION;
+import static android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE;
 import static com.example.mike.mp3player.commons.ComparatorUtils.uppercaseStringCompare;
-import static com.example.mike.mp3player.commons.Constants.LIBRARY_ID;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getMediaUri;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_PARENT_PATH;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 
 public class SongResultsParser extends ResultsParser {
+
+    public static final String ALBUM_ART_URI_PREFIX = "content://media/external/audio/albumart";
 
     @Override
     public List<MediaItem> create(Cursor cursor, String libraryIdPrefix) {
@@ -53,50 +47,25 @@ public class SongResultsParser extends ResultsParser {
         final String title = c.getString(c.getColumnIndex(MediaStore.Audio.Media.TITLE));
         final long albumId = c.getLong(c.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
         final File mediaFile =  new File(mediaFilePath);
-        final File mediaDirectory = mediaFile.getParentFile();
         final Uri mediaUri = Uri.fromFile(mediaFile);
+        final String fileName = mediaFile.getName();
 
-        String directoryName = null;
-        String  directoryPath = null;
-
-        if (null != mediaDirectory) {
-            directoryName = mediaDirectory.getName();
-            directoryPath = mediaDirectory.getAbsolutePath();
-        }
-
-        String parentPath = null;
-
-        if (null != mediaFile.getParent()) {
-            parentPath = mediaFile.getParentFile().getAbsolutePath();
-        }
-        String fileName = mediaFile.getName();
-
-        Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
-        Uri albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId);
-
-        Bundle extras = getExtras();
-        extras.putString(LIBRARY_ID, buildLibraryId(libraryIdPrefix, mediaId));
-        extras.putLong(METADATA_KEY_DURATION, duration);
-        extras.putString(METADATA_KEY_ARTIST, artist);
-        extras.putString(META_DATA_KEY_PARENT_PATH, parentPath);
-        extras.putString(META_DATA_KEY_FILE_NAME, fileName);
-        extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directoryName);
-        extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directoryPath);
-        extras.putParcelable(METADATA_KEY_ALBUM_ART_URI, albumArtUri);
-
-        // TODO: add code to fetch album art also
-        MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()
-                .setMediaId(mediaId)
+        return new MediaItemBuilder(mediaId)
                 .setMediaUri(mediaUri)
                 .setTitle(title)
-                .setExtras(extras);
-
-        return new MediaItem(mediaDescriptionCompatBuilder.build(), MediaItem.FLAG_PLAYABLE);
+                .setLibraryId(buildLibraryId(libraryIdPrefix, mediaId))
+                .setDuration(duration)
+                .setFileName(fileName)
+                .setArtist(artist)
+                .setAlbumArtUri(albumId)
+                .setFlags(FLAG_PLAYABLE)
+                .build();
     }
 
     @Override
     public int compare(MediaItem m1, MediaItem m2) {
-        return uppercaseStringCompare(getTitle(m1), getTitle(m2));
+        int result = uppercaseStringCompare(getTitle(m1), getTitle(m2));
+        return result == 0 ? getMediaUri(m1).compareTo(getMediaUri(m2)) : result;
     }
 
     private String buildLibraryId(@Nullable String mediaIdPrefix, String mediaIdSuffix) {
