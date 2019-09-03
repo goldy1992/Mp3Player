@@ -45,6 +45,9 @@ public final class MediaItemUtils {
     }
 
     public static Object getExtra(String key, MediaItem item) {
+        if (item == null ) {
+            return null;
+        }
         final Bundle extras = item.getDescription().getExtras();
         return null == extras ? null : extras.get(key);
     }
