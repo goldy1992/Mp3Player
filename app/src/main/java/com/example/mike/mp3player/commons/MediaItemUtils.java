@@ -12,7 +12,6 @@ import com.example.mike.mp3player.client.utils.TimerUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
-import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_DURATION;
@@ -29,9 +28,6 @@ public final class MediaItemUtils {
         return item != null && item.getDescription().getExtras() != null;
     }
 
-    public static boolean hasMediaId(MediaItem item) {
-        return item != null && item.getDescription().getMediaId() != null;
-    }
 
     public static boolean hasTitle(MediaItem item) {
         return item != null && item.getDescription().getTitle() != null;
@@ -49,14 +45,15 @@ public final class MediaItemUtils {
     }
 
     public static Object getExtra(String key, MediaItem item) {
-        if (!hasExtras(item)) {
-            return null;
-        }
-        return item.getDescription().getExtras().get(key);
+        final Bundle extras = item.getDescription().getExtras();
+        return null == extras ? null : extras.get(key);
     }
 
     public static String getMediaId(MediaItem item) {
-        return item.getDescription().getMediaId();
+        if (null != item) {
+            return item.getDescription().getMediaId();
+        }
+        return null;
     }
 
     public static String getTitle(MediaItem i) {
@@ -78,10 +75,7 @@ public final class MediaItemUtils {
     }
 
     public static String getArtist(MediaItem item) {
-        if (hasExtra(METADATA_KEY_ARTIST, item)) {
-            return (String) getExtra(METADATA_KEY_ARTIST, item);
-        }
-        return null;
+         return (String) getExtra(METADATA_KEY_ARTIST, item);
     }
 
     public static String getAlbumArtPath(MediaItem item) {
@@ -106,7 +100,7 @@ public final class MediaItemUtils {
     }
 
     public static long getDuration(MediaItem item) {
-        return (Long) getExtra(METADATA_KEY_DURATION, item);
+        return (long) getExtra(METADATA_KEY_DURATION, item);
     }
 
     public static MediaItemType getMediaItemType(MediaItem item) {
@@ -119,10 +113,6 @@ public final class MediaItemUtils {
 
     public static MediaItemType getRootMediaItemType(MediaItem item) {
         return (MediaItemType)getExtra(ROOT_ITEM_TYPE, item);
-    }
-
-    public static String getMediaItemTypeId(MediaItem item) {
-        return (String) getExtra(MEDIA_ITEM_TYPE_ID, item);
     }
 
     public static String extractFolderName(MediaItem song) {
@@ -143,7 +133,7 @@ public final class MediaItemUtils {
         } else {
             return charSequence.toString();
         }
-        return "";
+        return UNKNOWN;
     }
 
     public static String extractArtist(MediaItem song) {
