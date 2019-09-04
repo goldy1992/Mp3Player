@@ -91,7 +91,7 @@ public class MySongViewAdapterTest extends MediaItemRecyclerViewAdapterTestBase 
         // TODO: refactor to have an OnBindViewHolder setup method and test for different list indices
         final String expectedArtist = "artist";
         final long originalDuration = 34234L;
-        final String expectedDuration = TimerUtils.formatTime(Long.valueOf(originalDuration));
+//        final String expectedDuration = TimerUtils.formatTime(Long.valueOf(originalDuration));
         final String expectedTitle = "title";
         mediaItems.add(
             new MediaItemBuilder("101")
@@ -106,7 +106,7 @@ public class MySongViewAdapterTest extends MediaItemRecyclerViewAdapterTestBase 
             .setTitle("title2")
             .setDescription("description2")
             .setMediaItemType(MediaItemType.ROOT)
-            .setDuration(34234L)
+            .setDuration(3424L)
             .build());
 
         bindViewHolder();
@@ -114,7 +114,7 @@ public class MySongViewAdapterTest extends MediaItemRecyclerViewAdapterTestBase 
         MediaItem result = captor.getValue();
         assertEquals(expectedArtist, MediaItemUtils.getArtist(result));
         assertEquals(expectedTitle, MediaItemUtils.getTitle(result));
-        assertEquals(expectedDuration, MediaItemUtils.getDuration(result));
+        assertEquals(originalDuration, MediaItemUtils.getDuration(result));
     }
 
     private void bindViewHolder() {
