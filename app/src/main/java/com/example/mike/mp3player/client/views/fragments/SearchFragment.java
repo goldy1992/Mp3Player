@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
@@ -59,11 +60,7 @@ public class SearchFragment extends Fragment implements LogTagger {
         this.linearLayout = view.findViewById(R.id.search_fragment_layout);
         Drawable background = this.linearLayout.getBackground();
         background.setAlpha(200);
-        linearLayout.setOnClickListener((View v) -> {
-                Log.i(getLogTag(), "hit on click listener");
-            inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0 );                getFragmentManager().popBackStack();
-
-        });
+        linearLayout.setOnClickListener(this::onClickOnLayout);
 
         searchView.setOnClickListener((View v) -> {
             Log.i(getLogTag(), "hit search view");
@@ -75,8 +72,16 @@ public class SearchFragment extends Fragment implements LogTagger {
         searchView.setOnQueryTextFocusChangeListener(this::onFocusChange);
     }
 
+    @VisibleForTesting
+    public void onClickOnLayout(View view) {
+        Log.i(getLogTag(), "hit on click listener");
+        inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0 );
+        getFragmentManager().popBackStack();
+    }
 
-    private void onFocusChange(View v, boolean queryTextFocused) {
+
+    @VisibleForTesting
+    public void onFocusChange(View v, boolean queryTextFocused) {
         Log.i("tag", "focus changed: has focus: " + queryTextFocused);
         if (!queryTextFocused) {
             getFragmentManager().popBackStack();
