@@ -23,6 +23,7 @@ public enum MediaItemType {
             = new EnumMap<>(MediaItemType.class);
 
     static {
+        // TODO: move these maps to somewhere more appropriate
         PARENT_TO_CHILD_MAP.put(ROOT, EnumSet.of(SONGS, FOLDERS));
         PARENT_TO_CHILD_MAP.put(SONGS, EnumSet.of(SONG));
         PARENT_TO_CHILD_MAP.put(SONG, EnumSet.noneOf(MediaItemType.class));
