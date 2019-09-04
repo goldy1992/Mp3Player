@@ -6,14 +6,14 @@ import com.example.mike.mp3player.client.AlbumArtPainter;
 
 import org.mockito.Mock;
 
-public class MediaItemViewHolderTestBase {
+public abstract class MediaItemViewHolderTestBase<V extends MediaItemViewHolder> {
 
     @Mock
     View view;
     @Mock
     AlbumArtPainter albumArtPainter;
 
-    MediaItemViewHolder mediaItemViewHolder;
+    V mediaItemViewHolder;
 
 
 }

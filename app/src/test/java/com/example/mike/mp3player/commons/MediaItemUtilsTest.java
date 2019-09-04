@@ -162,47 +162,6 @@ public class MediaItemUtilsTest {
         assertEquals(expectedLibraryId, result);
     }
 
-//    @Test
-//    public void testExtractTitleValidTitle() {
-//        final String expectedTitle = "title";
-//        MediaItem mediaItem = new MediaItemBuilder("id")
-//                .setTitle(expectedTitle)
-//                .build();
-//        assertEquals(expectedTitle, MediaItemUtils.extractTitle(mediaItem));
-//
-//    }
-//
-//    @Test
-//    public void testExtractTitleNullTitleNoFileName() {
-//        final String expectedTitle = UNKNOWN;
-//        MediaItem mediaItem = new MediaItemBuilder("id")
-//                .setTitle(null)
-//                .build();
-//        assertEquals(expectedTitle, MediaItemUtils.extractTitle(mediaItem));
-//    }
-//
-//    @Test
-//    public void testExtractTitleNullTitleFileNameNoExtension() {
-//        final String expectedTitle = "no_extension";
-//        MediaItem mediaItem = new MediaItemBuilder("id")
-//                .setTitle(null)
-//                .setFileName(expectedTitle)
-//                .build();
-//        assertEquals(expectedTitle, MediaItemUtils.extractTitle(mediaItem));
-//    }
-//
-//    @Test
-//    public void testExtractTitleNullTitleFileNameWithExtension() {
-//
-//        final String expectedTitle = "file_with_extension";
-//        final String fileName =  expectedTitle + ".mp3";
-//                MediaItem mediaItem = new MediaItemBuilder("id")
-//                .setTitle(null)
-//                .setFileName(fileName)
-//                .build();
-//        assertEquals(expectedTitle, MediaItemUtils.extractTitle(mediaItem));
-//    }
-
     @Test
     public void testGetDescriptionNull() {
         MediaItem mediaItem = new MediaItemBuilder("id")
