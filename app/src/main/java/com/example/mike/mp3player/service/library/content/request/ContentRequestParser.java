@@ -14,8 +14,8 @@ import static com.example.mike.mp3player.commons.MediaItemType.SINGLETON_PARENT_
 
 public class ContentRequestParser {
 
-    private static final String DELIMITER = "\\|";
-    private static final String SEPARATOR = "|";
+    public static final String DELIMITER = "\\|";
+    public static final String SEPARATOR = "|";
 
     private final Map<MediaItemType, String> mediaItemTypeToIdMap;
     private final Map<String, MediaItemType> idToMediaItemTypeMap;
@@ -30,18 +30,18 @@ public class ContentRequestParser {
     public ContentRequest parse(String id) {
         List<String> splitId = Arrays.asList(id.split(DELIMITER));
         String mediaIdPrefix = calculateMediaIdPrefix(splitId);
-        final int splidIdSize = splitId.size();
-        if (splidIdSize == 1) {
+        final int splitIdSize = splitId.size();
+        if (splitIdSize == 1) {
             return new ContentRequest(splitId.get(0), splitId.get(0), mediaIdPrefix);
-        } else if (splidIdSize >= 2) {
+        } else if (splitIdSize >= 2) {
             return new ContentRequest(splitId.get(1), splitId.get(0), mediaIdPrefix);
         }
         return null;
     }
 
     private String calculateMediaIdPrefix(List<String> splitId) {
-        final int splidIdSize = splitId.size();
-        if (splidIdSize == 1) {
+        final int splitIdSize = splitId.size();
+        if (splitIdSize == 1) {
             MediaItemType mediaItemType = getMediaItemTypeFromId(splitId.get(0));
             if (mediaItemType != null) {
                 MediaItemType typeToReturn = SINGLETON_PARENT_TO_CHILD_MAP.get(mediaItemType);
@@ -49,7 +49,7 @@ public class ContentRequestParser {
                     return mediaItemTypeToIdMap.get(typeToReturn);
                 }
             }
-        } else if (splidIdSize >= 2) {
+        } else if (splitIdSize >= 2) {
             return splitId.get(0) + SEPARATOR + splitId.get(1);
         }
         return null;
