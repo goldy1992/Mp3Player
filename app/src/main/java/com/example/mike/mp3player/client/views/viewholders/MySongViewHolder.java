@@ -9,19 +9,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.utils.TimerUtils;
+import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.commons.MetaDataKeys;
 
 import org.apache.commons.io.FilenameUtils;
 
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getAlbumArtUri;
-import static com.example.mike.mp3player.commons.MediaItemUtils.getArtist;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getExtra;
-import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
+
 import static com.example.mike.mp3player.commons.MediaItemUtils.hasExtras;
 
 public class MySongViewHolder extends MediaItemViewHolder {
@@ -54,7 +55,7 @@ public class MySongViewHolder extends MediaItemViewHolder {
     }
 
     private String extractTitle(MediaBrowserCompat.MediaItem song) {
-        CharSequence charSequence = getTitle(song);
+        CharSequence charSequence = MediaItemUtils.getTitle(song);
         if (null == charSequence) {
             String fileName = hasExtras(song) ? (String) getExtra(MetaDataKeys.META_DATA_KEY_FILE_NAME, song) : null;
             if (fileName != null) {
@@ -78,7 +79,7 @@ public class MySongViewHolder extends MediaItemViewHolder {
     private String extractArtist(MediaBrowserCompat.MediaItem song) {
         String artist = null;
         try {
-            artist = getArtist(song);
+            artist = MediaItemUtils.getArtist(song);
             if (null == artist) {
                 artist = UNKNOWN;
             }
@@ -88,5 +89,12 @@ public class MySongViewHolder extends MediaItemViewHolder {
         return artist;
     }
 
-
+    @VisibleForTesting
+    public TextView getTitle() { return title; }
+    @VisibleForTesting
+    public TextView getArtist() { return artist; }
+    @VisibleForTesting
+    public TextView getDuration() { return duration; }
+    @VisibleForTesting
+    public ImageView getAlbumArt() { return albumArt; }
 }
