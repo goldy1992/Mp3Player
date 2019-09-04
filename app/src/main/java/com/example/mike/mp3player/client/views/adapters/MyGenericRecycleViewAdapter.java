@@ -7,13 +7,12 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.views.viewholders.EmptyListViewHolder;
-import com.example.mike.mp3player.client.views.adapters.MediaItemRecyclerViewAdapter;
+import com.example.mike.mp3player.client.views.viewholders.MediaItemViewHolder;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
@@ -55,11 +54,11 @@ public abstract class MyGenericRecycleViewAdapter extends MediaItemRecyclerViewA
         this.isInitialised = true;
     }
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MediaItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == EMPTY_VIEW_TYPE) {
             View view =  LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.empty_item_menu, parent, false);
-            return new EmptyListViewHolder(view);
+            return new EmptyListViewHolder(view, albumArtPainter);
         }
         return null;
     }

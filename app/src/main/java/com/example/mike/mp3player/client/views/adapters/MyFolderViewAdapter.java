@@ -6,10 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
+import com.example.mike.mp3player.client.views.viewholders.MediaItemViewHolder;
 import com.example.mike.mp3player.client.views.viewholders.MyFolderViewHolder;
 
 public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
@@ -21,8 +21,8 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerView.ViewHolder vh = super.onCreateViewHolder(parent, viewType);
+    public MediaItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        MediaItemViewHolder vh = super.onCreateViewHolder(parent, viewType);
         if (vh == null) {
             // create a new views
             View view = LayoutInflater.from(parent.getContext())
@@ -34,7 +34,7 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(MediaItemViewHolder holder, int position) {
         final boolean isFolderHolder = holder instanceof MyFolderViewHolder;
         if (isFolderHolder && !isEmptyRecycleView()) {
             MyFolderViewHolder folderViewHolder = (MyFolderViewHolder) holder;

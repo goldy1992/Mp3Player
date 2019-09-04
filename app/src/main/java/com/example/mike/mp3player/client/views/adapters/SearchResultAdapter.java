@@ -2,13 +2,15 @@ package com.example.mike.mp3player.client.views.adapters;
 
 import android.support.v4.media.MediaBrowserCompat;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
+import com.example.mike.mp3player.client.views.viewholders.EmptyListViewHolder;
+import com.example.mike.mp3player.client.views.viewholders.MediaItemViewHolder;
 import com.example.mike.mp3player.client.views.viewholders.MyFolderViewHolder;
 import com.example.mike.mp3player.client.views.viewholders.MySongViewHolder;
 import com.example.mike.mp3player.client.views.viewholders.RootItemViewHolder;
@@ -28,7 +30,7 @@ public class SearchResultAdapter extends MediaItemRecyclerViewAdapter {
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MediaItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = null;
         if (viewType == MediaItemType.SONG.getValue()) {
             // create a new views
@@ -50,32 +52,20 @@ public class SearchResultAdapter extends MediaItemRecyclerViewAdapter {
                     .inflate(R.layout.folder_item_menu, parent, false);
             return new MyFolderViewHolder(v, albumArtPainter);
         }
-        return null;
+        else {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.empty_item_menu, parent, false);
+            return new EmptyListViewHolder(view, albumArtPainter);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MediaItemViewHolder holder, int position) {
         MediaBrowserCompat.MediaItem item = items.get(holder.getAdapterPosition());
-        if (null == item) {
-            return;
+        if (null != item) {
+            holder.bindMediaItem(item);
         }
-        MediaItemType mediaItemType = MediaItemUtils.getMediaItemType(item);
-        if (null != mediaItemType) {
-            switch (mediaItemType) {
-                case SONG:
-                    MySongViewHolder mySongViewHolder = (MySongViewHolder) holder;
-                    mySongViewHolder.bindMediaItem(item);
-                    break;
-                case FOLDER:
-                    MyFolderViewHolder folderViewHolder = (MyFolderViewHolder) holder;
-                    folderViewHolder.bindMediaItem(item);
-                    break;
-                case ROOT:
-                    RootItemViewHolder rootItemViewHolder = (RootItemViewHolder) holder;
-                    rootItemViewHolder.bindMediaItem(item);
-                    break;
-            } // switch
-        } // if MediaItemType not null
+
     }
 
     @Override
