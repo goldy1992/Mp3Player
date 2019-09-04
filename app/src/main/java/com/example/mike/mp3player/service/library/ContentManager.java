@@ -8,7 +8,6 @@ import com.example.mike.mp3player.service.library.content.retriever.RootRetrieve
 import com.example.mike.mp3player.service.library.content.searcher.ContentSearcher;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,21 +70,5 @@ public class ContentManager {
     public List<MediaItem> getPlaylist(String id) {
        return getChildren(id);
     }
-
-    private ContentRetriever getContentRetrieverFromId(List<String> splitId) {
-        if (StringUtils.isEmpty(splitId.toString())) {
-            return null;
-        }
-        ContentRetriever contentRetriever = null;
-        for (String s : splitId) {
-            contentRetriever = idToContentRetrieverMap.get(s);
-            if (contentRetriever != null) {
-                return contentRetriever;
-            }
-        }
-        return null;
-    }
-
-
 
 }

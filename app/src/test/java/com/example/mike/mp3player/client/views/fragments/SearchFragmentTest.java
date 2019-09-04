@@ -4,16 +4,12 @@ import android.view.View;
 
 import androidx.fragment.app.testing.FragmentScenario;
 
-import com.example.mike.mp3player.client.MediaBrowserAdapter;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)

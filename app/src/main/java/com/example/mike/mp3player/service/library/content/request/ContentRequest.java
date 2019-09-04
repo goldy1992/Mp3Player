@@ -1,5 +1,7 @@
 package com.example.mike.mp3player.service.library.content.request;
 
+import androidx.annotation.VisibleForTesting;
+
 import javax.annotation.Nullable;
 
 public final class ContentRequest {
@@ -9,7 +11,8 @@ public final class ContentRequest {
     @Nullable
     private String mediaIdPrefix;
 
-    ContentRequest(String queryString,
+    @VisibleForTesting
+    public ContentRequest(String queryString,
                            String contentRetrieverKey,
                            String mediaIdPrefix) {
         this.queryString = queryString;
