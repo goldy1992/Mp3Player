@@ -1,17 +1,14 @@
 package com.example.mike.mp3player.dagger.modules.service;
 
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.commons.MediaItemTypeInfo;
 import com.example.mike.mp3player.service.library.utils.IdGenerator;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
