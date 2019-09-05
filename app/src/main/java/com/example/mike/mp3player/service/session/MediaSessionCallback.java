@@ -36,6 +36,7 @@ import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_T
 import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS;
 import static com.example.mike.mp3player.commons.Constants.ACTION_PLAYBACK_SPEED_CHANGED;
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
+import static com.example.mike.mp3player.commons.Constants.ID_DELIMITER;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
@@ -376,7 +377,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
 
     private String extractTrackId(String mediaId) {
         if (null != mediaId) {
-            List<String> splitId = Arrays.asList(mediaId.split("\\|"));
+            List<String> splitId = Arrays.asList(mediaId.split(ID_DELIMITER));
             if (!splitId.isEmpty()) {
                 return splitId.get(splitId.size() - 1);
             }

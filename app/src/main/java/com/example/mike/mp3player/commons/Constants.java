@@ -56,8 +56,6 @@ public final class Constants {
     public static final Uri ARTWORK_URI_PATH = Uri.parse("content://media/external/audio/albumart");
 
     public static final String CATEGORY_SONGS_DESCRIPTION = "A list of all songs in the library";
-
-
     public static final String CATEGORY_FOLDERS_DESCRIPTION = "A list of all folders with music inside them";
 
     public static final String REQUEST_OBJECT = "REQUEST_OBJECT";
@@ -75,9 +73,8 @@ public final class Constants {
     public static final String MEDIA_ITEM_TYPE_ID = "MEDIA_ITEM_TYPE_ID";
     public static final String PARENT_MEDIA_ITEM_TYPE = "PARENT_MEDIA_ITEM_TYPE";
     public static final String PARENT_MEDIA_ITEM_TYPE_ID = "PARENT_MEDIA_ITEM_TYPE_ID";
-    // connection rejections
-    public static final String INVALID_PACKAGE = "INVALID_PACKAGE";
-    public static final String EMPTY_LIBRARY = "EMPTY_LIBRARY";
+
+
 
     public static final String EXTRA = "EXTRA";
     public static final int FIRST = 0;
@@ -85,14 +82,8 @@ public final class Constants {
     public static final int OPAQUE = 255;
     public static final int TRANSLUCENT = 100;
 
-    /* BUILD CONFIG */
-    // BUILD TYPES
-    public static final String DEBUG = "debug";
-    public static final String RELEASE = "release";
-
-    // PRODUCT FLAVORS
-    public static final String FULL = "full";
-    public static final String AUTOMATION = "automation";
 
     public static final String ROOT_ITEM_TYPE = "ROOT_ITEM_TYPE";
+    public static final String ID_SEPARATOR = "|";
+    public static final String ID_DELIMITER = "\\|";
 }

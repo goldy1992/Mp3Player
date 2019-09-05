@@ -13,6 +13,7 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.util.List;
 
+import static com.example.mike.mp3player.commons.Constants.ID_SEPARATOR;
 import static com.example.mike.mp3player.commons.MediaItemType.SONG;
 import static com.example.mike.mp3player.service.library.content.Projections.SONG_PROJECTION;
 import static org.junit.Assert.assertEquals;
@@ -35,7 +36,7 @@ public class SongResultsParserTest extends ResultsParserTestBase {
     static {
         EXPECTED_MEDIA_ITEM_1 = new MediaItemBuilder(MEDIA_ID_1)
             .setMediaUri(Uri.parse("uri1"))
-            .setLibraryId(ID_PREFIX + "|" + MEDIA_ID_1)
+            .setLibraryId(ID_PREFIX + ID_SEPARATOR + MEDIA_ID_1)
             .setDuration(23423L)
             .setArtist("artist1")
             .setTitle(COMMON_TITLE)
@@ -45,7 +46,7 @@ public class SongResultsParserTest extends ResultsParserTestBase {
 
         EXPECTED_MEDIA_ITEM_2 = new MediaItemBuilder(MEDIA_ID_2)
                 .setMediaUri(Uri.parse("uri2"))
-                .setLibraryId(ID_PREFIX + "|" + MEDIA_ID_2)
+                .setLibraryId(ID_PREFIX + ID_SEPARATOR + MEDIA_ID_2)
                 .setDuration(96406L)
                 .setArtist("artist1")
                 .setTitle(COMMON_TITLE)

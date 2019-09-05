@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
+import static com.example.mike.mp3player.commons.Constants.ID_SEPARATOR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -49,7 +50,7 @@ class ContentRequestParserTest {
     @Test
     void testGetFolderSongs() {
         final String path = "/a/b/mediaPath";
-        String id = FOLDER_ID + ContentRequestParser.SEPARATOR + path;
+        String id = FOLDER_ID + ID_SEPARATOR + path;
         ContentRequest contentRequest = contentRequestParser.parse(id);
         assertEquals(FOLDER_ID, contentRequest.getContentRetrieverKey());
         assertEquals(id, contentRequest.getMediaIdPrefix());

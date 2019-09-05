@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static com.example.mike.mp3player.commons.ComparatorUtils.uppercaseStringCompare;
+import static com.example.mike.mp3player.commons.Constants.ID_SEPARATOR;
 import static com.example.mike.mp3player.commons.Constants.LIBRARY_ID;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
@@ -73,7 +74,7 @@ public class FolderResultsParser extends ResultsParser {
     private String buildLibraryId(String prefix, String childItemId) {
         return new StringBuilder()
                 .append(prefix)
-                .append(IdGenerator.ID_SEPARATOR)
+                .append(ID_SEPARATOR)
                 .append(childItemId)
                 .toString();
     }

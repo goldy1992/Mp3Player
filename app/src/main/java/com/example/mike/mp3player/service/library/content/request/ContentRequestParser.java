@@ -10,12 +10,12 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import static com.example.mike.mp3player.commons.Constants.ID_DELIMITER;
+import static com.example.mike.mp3player.commons.Constants.ID_SEPARATOR;
 import static com.example.mike.mp3player.commons.MediaItemType.SINGLETON_PARENT_TO_CHILD_MAP;
 
 public class ContentRequestParser {
 
-    public static final String DELIMITER = "\\|";
-    public static final String SEPARATOR = "|";
 
     private final Map<MediaItemType, String> mediaItemTypeToIdMap;
     private final Map<String, MediaItemType> idToMediaItemTypeMap;
@@ -28,7 +28,7 @@ public class ContentRequestParser {
     }
 
     public ContentRequest parse(String id) {
-        List<String> splitId = Arrays.asList(id.split(DELIMITER));
+        List<String> splitId = Arrays.asList(id.split(ID_DELIMITER));
         String mediaIdPrefix = calculateMediaIdPrefix(splitId);
         final int splitIdSize = splitId.size();
         if (splitIdSize == 1) {
@@ -50,7 +50,7 @@ public class ContentRequestParser {
                 }
             }
         } else if (splitIdSize >= 2) {
-            return splitId.get(0) + SEPARATOR + splitId.get(1);
+            return splitId.get(0) + ID_SEPARATOR + splitId.get(1);
         }
         return null;
     }

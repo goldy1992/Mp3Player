@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE;
 import static com.example.mike.mp3player.commons.ComparatorUtils.uppercaseStringCompare;
+import static com.example.mike.mp3player.commons.Constants.ID_SEPARATOR;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getMediaUri;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 
@@ -72,7 +73,7 @@ public class SongResultsParser extends ResultsParser {
         if (mediaIdPrefix == null) {
             return mediaIdSuffix;
         } else {
-            return mediaIdPrefix + "|" + mediaIdSuffix;
+            return mediaIdPrefix + ID_SEPARATOR + mediaIdSuffix;
         }
     }
 }
