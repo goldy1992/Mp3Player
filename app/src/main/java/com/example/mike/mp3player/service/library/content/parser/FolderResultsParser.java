@@ -7,7 +7,6 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.service.library.utils.IdGenerator;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,8 +19,6 @@ import static com.example.mike.mp3player.commons.ComparatorUtils.uppercaseString
 import static com.example.mike.mp3player.commons.Constants.ID_SEPARATOR;
 import static com.example.mike.mp3player.commons.Constants.LIBRARY_ID;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 
 public class FolderResultsParser extends ResultsParser {
 
