@@ -1,13 +1,16 @@
 package com.example.mike.mp3player.client.activities;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemType;
 
@@ -19,7 +22,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
@@ -55,7 +57,21 @@ public class SearchResultActivityTest {
                 .build();
         searchResultActivitySpied.itemSelected(mediaItem);
         verify(searchResultActivitySpied, times(1)).startActivity(any());
+    }
 
+    @Test
+    public void testHandleNewIntent() {
+        SearchView spiedSearchView = spy(searchResultActivity.getSearchView());
+        this.searchResultActivity.setSearchView(spiedSearchView);
+        MediaBrowserAdapter mediaBrowserAdapterSpied = spy(searchResultActivity.mediaBrowserAdapter);
+        this.searchResultActivity.setMediaBrowserAdapter(mediaBrowserAdapterSpied);
+        final String expectedQuery = "QUERY";
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEARCH);
+        intent.putExtra(SearchManager.QUERY, expectedQuery);
+        searchResultActivity.onNewIntent(intent);
+        verify(spiedSearchView, times(1)).setQuery(expectedQuery, false);
+        verify(mediaBrowserAdapterSpied, times(1)).search(expectedQuery, null);
     }
 
 

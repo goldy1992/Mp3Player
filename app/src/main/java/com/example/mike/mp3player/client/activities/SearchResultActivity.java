@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.util.Log;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -99,11 +100,12 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
                     break;
                 case FOLDER:
                 case FOLDERS:intentClass = FolderActivityInjector.class;
+                    break;
                 default:
                     break;
             }
             if (null != intentClass) {
-                Intent intent = new Intent(getApplicationContext(), intentClass); // TODO: make a media item to activity map
+                Intent intent = new Intent(getApplicationContext(), intentClass);
                 intent.putExtra(MEDIA_ITEM, item);
                 startActivity(intent);
             }
@@ -137,4 +139,13 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
     public void setSearchResultAdapter(SearchResultAdapter searchResultAdapter) {
         this.searchResultAdapter = searchResultAdapter;
     }
+
+    @VisibleForTesting
+    public SearchView getSearchView() {
+        return searchView;
+    }
+
+    @VisibleForTesting
+    public void setSearchView(SearchView searchView) {
+        this.searchView = searchView;    }
 }
