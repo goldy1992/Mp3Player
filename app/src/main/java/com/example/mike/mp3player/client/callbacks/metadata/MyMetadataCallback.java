@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.callbacks.metadata;
 
+import android.media.MediaDescription;
 import android.media.MediaMetadata;
 import android.os.Handler;
 import android.support.v4.media.MediaMetadataCompat;
@@ -26,33 +27,38 @@ public class MyMetadataCallback extends AsyncCallback<MediaMetadataCompat> {
 
     @Override
     public void processCallback(MediaMetadataCompat mediaMetadataCompat) {
-        if (mediaMetadataCompat != null) {
-            MediaMetadata mediaMetadata = (MediaMetadata) mediaMetadataCompat.getMediaMetadata();
-            if (null != mediaMetadata && mediaMetadata.getDescription() != null) {
-                String newMediaId = mediaMetadata.getDescription().getMediaId();
-                if (newMediaId != null && !newMediaId.equals(currentMediaId)) {
-                    this.currentMediaId = newMediaId;
-                    //logMetaData(mediaMetadataCompat, LOG_TAG);
-                    StringBuilder sb = new StringBuilder();
-                    for (MetadataListener listener : metadataListeners) {
-                        if (null != listener) {
-                            listener.onMetadataChanged(mediaMetadataCompat);
-                            sb.append(listener.getClass());
-                        }
-                    }
-                    // Log.i(LOG_TAG, "hit meta data changed " + ", listeners " + metadataListeners.size() + ", " + sb.toString());
-                }
-            }
+
+        if (mediaMetadataCompat == null || mediaMetadataCompat.getMediaMetadata() == null) {
+            return;
+        }
+        MediaMetadata mediaMetadata = (MediaMetadata) mediaMetadataCompat.getMediaMetadata();
+        if (null == mediaMetadata) {
+            return;
+        }
+
+        String newMediaId = mediaMetadata.getDescription().getMediaId();
+        if (newMediaId != null && !newMediaId.equals(currentMediaId)) {
+            this.currentMediaId = newMediaId;
+            notifyListeners(mediaMetadataCompat);
+
         }
     }
+
+    private void notifyListeners(MediaMetadataCompat metadata) {
+        //StringBuilder sb = new StringBuilder();
+        for (MetadataListener listener : metadataListeners) {
+            if (null != listener) {
+                listener.onMetadataChanged(metadata);
+                //sb.append(listener.getClass());
+            }
+        }
+        // Log.i(LOG_TAG, "hit meta data changed " + ", listeners " + metadataListeners.size() + ", " + sb.toString());
+    }
+
 
     public synchronized void registerMetaDataListener(MetadataListener listener) {
         Log.i(LOG_TAG, "registerMetaDataListener" + listener.getClass());
         metadataListeners.add(listener);
-    }
-
-    public synchronized void registerMetaDataListeners(Collection<MetadataListener> listeners) {
-        metadataListeners.addAll(listeners);
     }
 
     public synchronized boolean removeMetaDataListener(MetadataListener listener) {
