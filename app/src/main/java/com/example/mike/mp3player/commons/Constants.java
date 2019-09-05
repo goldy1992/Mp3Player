@@ -4,10 +4,10 @@ import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.SparseArray;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 public final class Constants {
 
+    // ensure that an instance of Constants cannot be instantiated
+    private Constants() { }
     public static final String MEDIA_SESSION = "mediaSession";
     public static final String MEDIA_ID = "mediaId";
     public static final String MEDIA_ITEM = "MEDIA_ITEM";
@@ -81,7 +81,6 @@ public final class Constants {
 
     public static final int OPAQUE = 255;
     public static final int TRANSLUCENT = 100;
-
 
     public static final String ROOT_ITEM_TYPE = "ROOT_ITEM_TYPE";
     public static final String ID_SEPARATOR = "|";
