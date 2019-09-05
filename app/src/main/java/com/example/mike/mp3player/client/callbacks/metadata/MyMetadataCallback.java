@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.client.callbacks.metadata;
 
-import android.media.MediaDescription;
 import android.media.MediaMetadata;
 import android.os.Handler;
 import android.support.v4.media.MediaMetadataCompat;
@@ -8,7 +7,6 @@ import android.util.Log;
 
 import com.example.mike.mp3player.client.callbacks.AsyncCallback;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 

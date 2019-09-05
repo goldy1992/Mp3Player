@@ -5,11 +5,12 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 
-import com.example.mike.mp3player.client.Category;
+import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemType;
 
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.ROOT_ITEM_TYPE;
+import static com.example.mike.mp3player.commons.MediaItemType.ROOT;
 import static com.example.mike.mp3player.commons.MediaItemType.SONGS;
 
 public final class TestUtils {
@@ -22,21 +23,13 @@ public final class TestUtils {
     }
 
     /**
-     * @return a root category item
-     */
-    public static MediaItem createRootItem(Category category) {
-        MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder()
-                .setDescription(category.getDescription())
-                .setTitle(category.getTitle())
-                .setMediaId(category.name())
-                .build();
-        return new MediaItem(mediaDescriptionCompat, 0);
-    }
-    /**
      * @return a null category MediaItem
      */
     public static MediaItem createMediaItemWithNullCategory() {
-        return createMediaItem(null, null, null, MediaItemType.ROOT);
+        return new MediaItemBuilder("anId")
+                .setRootItemType(null)
+                .setMediaItemType(ROOT)
+                .build();
     }
     /**
      * Utility class to make a media item

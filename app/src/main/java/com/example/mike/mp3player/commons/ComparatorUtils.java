@@ -1,12 +1,6 @@
 package com.example.mike.mp3player.commons;
 
-import android.util.Log;
-
 import androidx.annotation.Nullable;
-
-import com.example.mike.mp3player.client.Category;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.Comparator;
 
@@ -16,20 +10,6 @@ import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 public final class ComparatorUtils {
 
     private static final String LOG_TAG = "COMPARATOR_UTILS";
-    public static final Comparator<MediaItem> compareRootMediaItemsByCategory = ComparatorUtils::compareRootMediaItemsByCategory;
-    private static int compareRootMediaItemsByCategory(MediaItem m1, MediaItem m2) {
-        Category c1 = parseCategory(MediaItemUtils.getMediaId(m1));
-        Category c2 = parseCategory(MediaItemUtils.getMediaId(m2));
-        if (c1 == null && c2 == null) {
-            return 0;
-        } else if (c1 == null) {
-            return -1;
-        } else if (c2 == null) {
-            return 1;
-        } else {
-           return c1.compareTo(c2);
-        }
-    }
 
 
     public static final Comparator<MediaItem> compareRootMediaItemsByMediaItemType = ComparatorUtils::compareRootMediaItemsByMediaItemType;
@@ -43,23 +23,9 @@ public final class ComparatorUtils {
         } else if (c2 == null) {
             return 1;
         } else {
-            return c1.compareTo(c2);
+            return c1.getRank() - c2.getRank();
         }
     }
-//    public static final Comparator<Root> compareRootByCategory = ComparatorUtils::compareRootByCategory;
-//    private static int compareRootByCategory(Root root1, Root root2) {
-//        Category c1 = root1.category;
-//        Category c2 = root2.category;
-//        if (c1 == null && c2 == null) {
-//            return 0;
-//        } else if (c1 == null) {
-//            return -1;
-//        } else if (c2 == null) {
-//            return 1;
-//        } else {
-//            return c1.compareTo(c2);
-//        }
-//    }
 
     public static final Comparator<MediaItem> compareMediaItemsByTitle = ComparatorUtils::compareMediaItemsByTitle;
 
@@ -80,27 +46,6 @@ public final class ComparatorUtils {
         } else {
             return m1.compareTo(m2);
         }
-    }
-
-
-    private static Category parseCategory(String categoryString) {
-        Category c = null;
-        try{
-            c = Category.valueOf(categoryString);
-        } catch (IllegalArgumentException | NullPointerException ex) {
-            Log.e(LOG_TAG, ExceptionUtils.getMessage(ex));
-        }
-        return c;
-    }
-
-    private static MediaItemType parseMediaItemType(String categoryString) {
-        MediaItemType type = null;
-        try{
-            type = MediaItemType.valueOf(categoryString);
-        } catch (IllegalArgumentException | NullPointerException ex) {
-            Log.e(LOG_TAG, ExceptionUtils.getMessage(ex));
-        }
-        return type;
     }
 
     public static int uppercaseStringCompare(@Nullable String string1, @Nullable String string2) {

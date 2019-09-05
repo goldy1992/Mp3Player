@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.client.views.fragments;
 
-import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
 import android.view.MenuItem;
@@ -9,9 +8,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.testing.FragmentScenario;
 
-import com.example.mike.mp3player.TestUtils;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
-import com.example.mike.mp3player.client.Category;
 import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemType;
 
@@ -29,8 +26,6 @@ import java.util.Set;
 
 import javax.inject.Provider;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
