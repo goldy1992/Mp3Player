@@ -29,7 +29,7 @@ public class FoldersRetriever extends ContentResolverRetriever {
 
     @Override
     public String[] getProjection() {
-        return FOLDER_PROJECTION;
+        return FOLDER_PROJECTION.toArray(new String[0]);
     }
 
 }

@@ -75,7 +75,7 @@ public class SongResultsParserTest extends ResultsParserTestBase {
      */
     @Test
     public void testCreate() {
-        List<MediaItem> mediaItems = getResultsForProjection(SONG_PROJECTION, ID_PREFIX);
+        List<MediaItem> mediaItems = getResultsForProjection(SONG_PROJECTION.toArray(new String[0]), ID_PREFIX);
         assertEquals(MediaItemUtils.getTitle(EXPECTED_MEDIA_ITEM_1), MediaItemUtils.getTitle(mediaItems.get(0)));
 //        assertEquals(MediaItemUtils.getArtist(EXPECTED_MEDIA_ITEM_1), MediaItemUtils.extractArtist(mediaItems.get(0)));
 //        assertEquals(MediaItemUtils.extractDuration(EXPECTED_MEDIA_ITEM_1), MediaItemUtils.extractDuration(mediaItems.get(0)));

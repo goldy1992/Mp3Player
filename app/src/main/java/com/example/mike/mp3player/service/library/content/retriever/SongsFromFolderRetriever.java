@@ -29,7 +29,7 @@ public class SongsFromFolderRetriever extends ContentResolverRetriever {
 
     @Override
     String[] getProjection() {
-        return SONG_PROJECTION;
+        return SONG_PROJECTION.toArray(new String[0]);
     }
 
 }

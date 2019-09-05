@@ -17,7 +17,7 @@ public class SongSearcher extends ContentResolverSearcher {
 
     @Override
     String[] getProjection() {
-        return SONG_PROJECTION;
+        return SONG_PROJECTION.toArray(new String[0]);
     }
 
     @Override

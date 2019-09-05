@@ -29,6 +29,6 @@ public class SongsRetriever extends ContentResolverRetriever {
 
     @Override
     public String[] getProjection() {
-        return SONG_PROJECTION;
+        return SONG_PROJECTION.toArray(new String[0]);
     }
 }

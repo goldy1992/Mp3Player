@@ -46,7 +46,7 @@ public class FolderResultsParserTest extends ResultsParserTestBase {
 
     @Test
     public void testCreate() {
-        List<MediaItem> results = getResultsForProjection(FOLDER_PROJECTION, ID_PREFIX);
+        List<MediaItem> results = getResultsForProjection(FOLDER_PROJECTION.toArray(new String[0]), ID_PREFIX);
         // I.e one of the items is removed because it is in the same folder as a previous song
         final int expectedResultsSize = 2;
         assertEquals(expectedResultsSize, results.size());

@@ -7,8 +7,6 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.Map;
 
-import static com.example.mike.mp3player.service.library.utils.IdGenerator.generateRootId;
-
 public enum MediaItemType {
 
     ROOT(0, "Root", null),

@@ -31,6 +31,6 @@ public class FolderSearcher extends ContentResolverSearcher {
 
     @Override
     public String[] getProjection() {
-        return FOLDER_PROJECTION;
+        return FOLDER_PROJECTION.toArray(new String[0]);
     }
 }
