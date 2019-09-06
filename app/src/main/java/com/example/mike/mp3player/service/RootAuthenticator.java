@@ -20,7 +20,7 @@ public class RootAuthenticator {
 
     private final String acceptedMediaId;
     @VisibleForTesting
-    public final String REJECTED_MEDIA_ROOT_ID = "empty_root_id";
+    public static final String REJECTED_MEDIA_ROOT_ID = "empty_root_id";
 
     @Inject
     public RootAuthenticator(String acceptedMediaId) {
@@ -41,10 +41,6 @@ public class RootAuthenticator {
             // so onLoadChildren returns nothing. This disables the ability to browse for content.
             return new MediaBrowserServiceCompat.BrowserRoot(REJECTED_MEDIA_ROOT_ID, extras);
         }
-    }
-
-    public boolean allowSubscription(String id) {
-        return !TextUtils.equals(REJECTED_MEDIA_ROOT_ID, id);
     }
 
     public boolean rejectRootSubscription(String id) {
