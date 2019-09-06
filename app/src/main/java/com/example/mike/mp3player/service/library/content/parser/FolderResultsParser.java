@@ -1,11 +1,10 @@
 package com.example.mike.mp3player.service.library.content.parser;
 
 import android.database.Cursor;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.MediaDescriptionCompat;
 
+import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemType;
 
 import java.io.File;
@@ -15,10 +14,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static com.example.mike.mp3player.commons.ComparatorUtils.uppercaseStringCompare;
+import static android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_BROWSABLE;
+import static com.example.mike.mp3player.commons.ComparatorUtils.caseSensitiveStringCompare;
 import static com.example.mike.mp3player.commons.Constants.ID_SEPARATOR;
-import static com.example.mike.mp3player.commons.Constants.LIBRARY_ID;
-import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getDirectoryPath;
 
 public class FolderResultsParser extends ResultsParser {
 
@@ -30,14 +29,12 @@ public class FolderResultsParser extends ResultsParser {
             String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
             File file = new File(path);
             File directory = file.getParentFile();
-            String directoryName;
             String directoryPath;
 
             if (null != directory) {
-                directoryName = directory.getName();
                 directoryPath = directory.getAbsolutePath();
                 if (directoryPathSet.add(directoryPath)) {
-                    MediaBrowserCompat.MediaItem mediaItem = createFolderMediaItem(directoryName, directoryPath, mediaIdPrefix);
+                    MediaBrowserCompat.MediaItem mediaItem = createFolderMediaItem(directory, mediaIdPrefix);
                     listToReturn.add(mediaItem);
                 }
             }
@@ -51,21 +48,19 @@ public class FolderResultsParser extends ResultsParser {
     }
 
 
-    private MediaBrowserCompat.MediaItem createFolderMediaItem(String directoryName, String directoryPath, String parentId){
-        Bundle extras = getExtras();
-        extras.putString(LIBRARY_ID, buildLibraryId(parentId, directoryPath));
-        MediaDescriptionCompat.Builder mediaDescriptionCompatBuilder = new MediaDescriptionCompat.Builder()
-                .setMediaId(directoryPath)
-                .setTitle(directoryName)
-                .setDescription(directoryPath)
-                .setExtras(extras);
-
-        return new MediaBrowserCompat.MediaItem(mediaDescriptionCompatBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
+    private MediaBrowserCompat.MediaItem createFolderMediaItem(File file, String parentId) {
+        String filePath = file.getAbsolutePath();
+        return new MediaItemBuilder(filePath)
+        .setMediaItemType(MediaItemType.FOLDER)
+        .setLibraryId(buildLibraryId(parentId, filePath))
+        .setFile(file)
+        .setFlags(FLAG_BROWSABLE)
+        .build();
     }
 
     @Override
     public int compare(MediaBrowserCompat.MediaItem m1, MediaBrowserCompat.MediaItem m2) {
-        return uppercaseStringCompare(getTitle(m1), getTitle(m2));
+        return caseSensitiveStringCompare(getDirectoryPath(m1), getDirectoryPath(m2));
     }
 
     private String buildLibraryId(String prefix, String childItemId) {

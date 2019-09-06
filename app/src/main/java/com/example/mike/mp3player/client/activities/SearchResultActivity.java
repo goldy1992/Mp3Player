@@ -125,6 +125,7 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
 
     @Override
     public void onSearchResult(List<MediaItem> searchResults) {
+        searchResultAdapter.getItems().clear();
         searchResultAdapter.getItems().addAll(searchResults);
         searchResultAdapter.notifyDataSetChanged();
         Log.i(getLogTag(), "received search results");

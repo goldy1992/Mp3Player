@@ -106,6 +106,18 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (null != searchFragment && searchFragment.isAdded() && searchFragment.isVisible()) {
+            fragmentManager
+            .beginTransaction()
+            .remove(searchFragment)
+            .commit();
+        }
+        Log.i(LOG_TAG, "hit resume");
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu,inflater);

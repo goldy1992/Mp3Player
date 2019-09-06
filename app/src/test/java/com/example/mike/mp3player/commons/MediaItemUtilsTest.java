@@ -106,11 +106,11 @@ public class MediaItemUtilsTest {
 
     @Test
     public void testGetDirectoryNameNotNull() {
-        final String expectedPath = "sdsad";
+        final String directoryName = "directoryName";
         MediaItem mediaItem = new MediaItemBuilder("id")
-                .setFile(new File("/"+expectedPath + "/child"))
+                .setFile(new File("/sdsad/" + directoryName ))
                 .build();
-        assertEquals(expectedPath, MediaItemUtils.getDirectoryName(mediaItem));
+        assertEquals(directoryName, MediaItemUtils.getDirectoryName(mediaItem));
     }
 
     @Test

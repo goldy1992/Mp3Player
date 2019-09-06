@@ -8,8 +8,11 @@ import androidx.annotation.NonNull;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
+import com.example.mike.mp3player.commons.MediaItemUtils;
 
 import static com.example.mike.mp3player.commons.MediaItemUtils.getDescription;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getDirectoryName;
+import static com.example.mike.mp3player.commons.MediaItemUtils.getDirectoryPath;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 
 public class MyFolderViewHolder extends MediaItemViewHolder {
@@ -32,10 +35,10 @@ public class MyFolderViewHolder extends MediaItemViewHolder {
     }
 
     private String extractFolderName(MediaBrowserCompat.MediaItem song) {
-        return getTitle(song);
+        return getDirectoryName(song);
     }
 
     private String extractFolderPath(MediaBrowserCompat.MediaItem song) {
-        return getDescription(song);
+        return getDirectoryPath(song);
     }
 }

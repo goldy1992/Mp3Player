@@ -59,6 +59,7 @@ public class SongResultsParser extends ResultsParser {
                 .setFileName(fileName)
                 .setArtist(artist)
                 .setAlbumArtUri(albumId)
+                .setMediaItemType(MediaItemType.SONG)
                 .setFlags(FLAG_PLAYABLE)
                 .build();
     }

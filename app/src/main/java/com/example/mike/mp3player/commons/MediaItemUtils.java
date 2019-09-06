@@ -2,14 +2,9 @@ package com.example.mike.mp3player.commons;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.media.MediaMetadataCompat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.example.mike.mp3player.client.utils.TimerUtils;
-
-import org.apache.commons.io.FilenameUtils;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
@@ -17,10 +12,9 @@ import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_DURATION;
 import static com.example.mike.mp3player.commons.Constants.LIBRARY_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
 import static com.example.mike.mp3player.commons.Constants.ROOT_ITEM_TYPE;
-import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
+import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 
 public final class MediaItemUtils {
 
@@ -94,6 +88,13 @@ public final class MediaItemUtils {
     public static String getDirectoryName(MediaItem item) {
         if (hasExtra(META_DATA_PARENT_DIRECTORY_NAME, item)) {
             return  (String) getExtra(META_DATA_PARENT_DIRECTORY_NAME, item);
+        }
+        return null;
+    }
+
+    public static String getDirectoryPath(MediaItem item) {
+        if (hasExtra(META_DATA_PARENT_DIRECTORY_PATH, item)) {
+            return  (String) getExtra(META_DATA_PARENT_DIRECTORY_PATH, item);
         }
         return null;
     }

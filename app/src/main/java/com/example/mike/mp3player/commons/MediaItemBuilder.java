@@ -90,13 +90,12 @@ public class MediaItemBuilder {
     }
 
     public MediaItemBuilder setFile(File file) {
-        File mediaDirectory = file.getParentFile();
         String directoryName = null;
         String  directoryPath = null;
 
-        if (null != mediaDirectory) {
-            directoryName = mediaDirectory.getName();
-            directoryPath = mediaDirectory.getAbsolutePath();
+        if (null != file) {
+            directoryName = file.getName();
+            directoryPath = file.getAbsolutePath();
         }
         extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directoryName);
         extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directoryPath);

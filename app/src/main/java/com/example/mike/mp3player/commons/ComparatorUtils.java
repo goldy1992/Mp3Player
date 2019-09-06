@@ -59,4 +59,16 @@ public final class ComparatorUtils {
             return string1.toUpperCase().compareTo(string2.toUpperCase());
         }
     }
+
+    public static int caseSensitiveStringCompare(@Nullable String string1, @Nullable String string2) {
+        if (string1 == null && string2 == null) {
+            return 0;
+        } else if (null == string1) {
+            return -1;
+        } else if (null == string2) {
+            return 1;
+        } else {
+            return string1.compareTo(string2);
+        }
+    }
 }
