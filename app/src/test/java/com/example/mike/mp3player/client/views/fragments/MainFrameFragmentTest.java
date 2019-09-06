@@ -35,6 +35,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
+
     private static final String LOG_TAG = "MAIN_FRM_FRGMT_TST";
 
     @Before
@@ -48,13 +49,11 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
         performAction(clickAndroidOptionMenu);
     }
 
-
     @Test
     public void testNavigationItemSelected() {
         FragmentScenario.FragmentAction<MainFrameFragment> navigationViewSelected = this::navigationViewSelected;
         performAction(navigationViewSelected);
     }
-
 
     @Test
     public void testOnChildrenLoadedForRootCategory() {
@@ -69,7 +68,7 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
         final ArrayList<MediaBrowserCompat.MediaItem> children = new ArrayList<>();
         final Set<MediaItemType> rootItemsSet = MediaItemType.PARENT_TO_CHILD_MAP.get(MediaItemType.ROOT);
 
-        for (MediaItemType category : rootItemsSet){
+        for (MediaItemType category : rootItemsSet) {
             MediaBrowserCompat.MediaItem mediaItem =
                 new MediaItemBuilder("id1")
                     .setTitle(category.getTitle())

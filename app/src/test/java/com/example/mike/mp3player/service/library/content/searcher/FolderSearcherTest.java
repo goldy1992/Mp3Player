@@ -1,37 +1,37 @@
 package com.example.mike.mp3player.service.library.content.searcher;
 
-import android.content.ContentResolver;
-import android.content.Context;
-
-import androidx.test.platform.app.InstrumentationRegistry;
-
+import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.service.library.content.filter.FoldersResultFilter;
-import com.example.mike.mp3player.service.library.content.parser.FolderResultsParser;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-public class FolderSearcherTest {
+public class FolderSearcherTest extends ContentResolverSearcherTestBase<FolderSearcher> {
 
-    private FolderSearcher folderSearcher;
-    private ContentResolver contentResolver;
+    private FoldersResultFilter filter;
 
     @Before
     public void setup() {
-        Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        this.contentResolver = context.getContentResolver();
-        this.folderSearcher = new FolderSearcher(contentResolver, new FolderResultsParser(), "", new FoldersResultFilter());
+        super.setup();
+        this.filter = mock(FoldersResultFilter.class);
+        when(filter.filter(VALID_QUERY, expectedResult)).thenReturn(expectedResult);
+        this.searcher = spy(new FolderSearcher(contentResolver, resultsParser, idPrefix, filter));
     }
 
     @Test
-    public void firstTest() {
-        assertTrue(true);
+    @Override
+    public void testGetMediaType() {
+        assertEquals(MediaItemType.FOLDERS, searcher.getSearchCategory());
     }
+
 
 
 }
