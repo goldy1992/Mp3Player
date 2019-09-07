@@ -18,13 +18,13 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.MetaDataListener;
+import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 
 import javax.inject.Inject;
 
-public class MetadataTitleBarFragment extends AsyncFragment implements MetaDataListener {
+public class MetadataTitleBarFragment extends AsyncFragment implements MetadataListener {
 
     private Toolbar titleBar;
     private MediaControllerAdapter mediaControllerAdapter;
@@ -50,8 +50,6 @@ public class MetadataTitleBarFragment extends AsyncFragment implements MetaDataL
         // register listeners
         this.mediaControllerAdapter.registerMetaDataListener(this);
 
-        // update views
-        this.onMetadataChanged(mediaControllerAdapter.getMetadata());
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(titleBar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -4,21 +4,11 @@
     tools:context="com.example.mike.mp3player.client.activities.MainActivity"
     >
 
-    <group android:checkableBehavior="single" android:menuCategory="container"
-        android:orderInCategory="1">
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_black_24dp"
+        app:showAsAction="ifRoom|collapseActionView"
+        android:title="Search"
+    />
 
-        <item android:id="@+id/action_settings"
-            android:orderInCategory="1"
-            android:title="@string/action_settings"
-            app:showAsAction="never" />
-
-        <item android:id="@+id/themes_menu_item"
-            android:title="Themes"
-            app:showAsAction="always"
-            android:orderInCategory="2"
-            app:actionViewClass="android.widget.Spinner"
-            android:icon="@android:drawable/ic_menu_share"
-            android:actionLayout="@layout/layout_theme_spinner"
-            />
-    </group>
 </menu>

@@ -1,13 +1,15 @@
 package com.example.mike.mp3player.service;
 
-import android.support.v4.media.session.MediaSessionCompat.QueueItem;
+import static android.support.v4.media.MediaBrowserCompat.MediaItem;
+
+import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
@@ -24,19 +26,22 @@ public class PlaybackManager {
     private int queueIndex = EMPTY_PLAYLIST_INDEX;
     private Random random = new Random();
     private boolean isRepeating = true;
-    private final List<QueueItem> playlist = new ArrayList<>();
+    private final List<MediaItem> playlist;
     private boolean shuffleOn = false;
 
     @Inject
-    public PlaybackManager() { }
+    public PlaybackManager(@NonNull List<MediaItem> initialPlayList, @NonNull int startIndex) {
+        this.playlist = initialPlayList;
+        this.queueIndex = startIndex;
+    }
 
-    public List<QueueItem> onAddQueueItem(QueueItem item) {
+    public List<MediaItem> onAddQueueItem(MediaItem item) {
         playlist.add(item);
         queueIndex = (queueIndex == -1) ? 0 : queueIndex;
         return playlist;
     }
 
-    public List<QueueItem> onRemoveQueueItem(QueueItem item) {
+    public List<MediaItem> onRemoveQueueItem(MediaItem item) {
         boolean removed = playlist.remove(item);
         if (removed) {
             queueIndex = (playlist.isEmpty()) ? -1 : queueIndex;
@@ -46,7 +51,7 @@ public class PlaybackManager {
 
     public void notifyPlaybackComplete() {
         if (isShuffleOn()) {
-            shufflePreviousStack.push(new Integer(queueIndex));
+            shufflePreviousStack.push(queueIndex);
             if (shuffleNextStack.empty()) {
                 queueIndex = nextShuffledIndex;
                 nextShuffledIndex = getNextShuffledIndex();
@@ -61,7 +66,7 @@ public class PlaybackManager {
         }
     }
 
-    public String getNext() {
+    public Uri getNext() {
         int newIndex;
         if (isShuffleOn()) {
             if (shuffleNextStack.empty()) {
@@ -70,44 +75,44 @@ public class PlaybackManager {
                 newIndex = shuffleNextStack.peek();
             }
         } else {
-            newIndex = getNextQueueItemIndex();
+            newIndex = getNextMediaItemIndex();
         }
-        return getPlaylistMediaId(newIndex);
+        return getPlaylistMediaUri(newIndex);
     }
 
-    public String skipToNext() {
+    public Uri skipToNext() {
         if (isShuffleOn()) {
             shufflePreviousStack.push(new Integer(queueIndex));
             if (shuffleNextStack.empty()) {
-                String toReturn = getPlaylistMediaId(this.nextShuffledIndex);
+                Uri toReturn = getPlaylistMediaUri(this.nextShuffledIndex);
                 this.queueIndex = this.nextShuffledIndex;
                 this.nextShuffledIndex = getNextShuffledIndex();
                 return toReturn;
             } else {
                 this.queueIndex = shuffleNextStack.pop();
-                return  getPlaylistMediaId(this.queueIndex);
+                return  getPlaylistMediaUri(this.queueIndex);
             }
         } else {
-            return incrementQueue() ? getCurrentMediaId() : null;
+            return incrementQueue() ? getCurrentMediaUri() : null;
         }
     }
 
-    public String skipToPrevious() {
+    public Uri skipToPrevious() {
         if (isShuffleOn()) {
             if (shufflePreviousStack.empty()) { // there's no previous available so keep same track
-                return getPlaylistMediaId(queueIndex);
+                return getPlaylistMediaUri(queueIndex);
             } else { // get prevo=ious and add to the next stack;
                 shuffleNextStack.push(new Integer(queueIndex));
                 queueIndex = shufflePreviousStack.pop();
-                return getPlaylistMediaId(queueIndex);
+                return getPlaylistMediaUri(queueIndex);
             }
         } else {
-            return decrementQueue() ? getCurrentMediaId() : null;
+            return decrementQueue() ? getCurrentMediaUri() : null;
         }
     }
 
     private boolean incrementQueue() {
-        int newIndex = getNextQueueItemIndex();
+        int newIndex = getNextMediaItemIndex();
         if (validQueueIndex(newIndex)) {
             this.queueIndex = newIndex;
             return true;
@@ -116,7 +121,7 @@ public class PlaybackManager {
     }
 
     private boolean decrementQueue() {
-        int newIndex = getPreviousQueueItemIndex();
+        int newIndex = getPreviousMediaItemIndex();
         if (validQueueIndex(newIndex)) {
             this.queueIndex = newIndex;
             return true;
@@ -127,7 +132,7 @@ public class PlaybackManager {
      * ASSUMES shuffleON IS FALSE
      * @return
      */
-    private int getNextQueueItemIndex() {
+    private int getNextMediaItemIndex() {
         int newIndex = queueIndex + 1;
         boolean passedEndOfQueue = newIndex >= playlist.size();
         if (passedEndOfQueue) {
@@ -139,7 +144,7 @@ public class PlaybackManager {
      * ASSUMES shuffleON IS FALSE
      * @return
      */
-    private int getPreviousQueueItemIndex() {
+    private int getPreviousMediaItemIndex() {
         int newIndex = queueIndex - 1;
         boolean beforeStartOfQueue = newIndex < START_OF_PLAYLIST;
         if (beforeStartOfQueue) {
@@ -152,27 +157,27 @@ public class PlaybackManager {
         return newQueueIndex < playlist.size() && newQueueIndex >= 0;
     }
 
-    public String getPlaylistMediaId(int index) {
+    public Uri getPlaylistMediaUri(int index) {
         if (validQueueIndex(index)) {
-            QueueItem queueItem = playlist.get(index);
+            MediaItem queueItem = playlist.get(index);
             if (queueItem != null) {
-                return playlist.get(index).getDescription().getMediaId();
+                return playlist.get(index).getDescription().getMediaUri();
             }
         }
         return null;
     }
 
-    public String getCurrentMediaId() {
+    public Uri getCurrentMediaUri() {
         if (playlist != null && !playlist.isEmpty() && playlist.get(queueIndex) != null) {
-            QueueItem currentItem = playlist.get(queueIndex);
+            MediaItem currentItem = playlist.get(queueIndex);
             if (currentItem.getDescription() != null) {
-                return  currentItem.getDescription().getMediaId();
+                return  currentItem.getDescription().getMediaUri();
             }
         }
         return null;
     }
 
-    public boolean createNewPlaylist(List<QueueItem> newList) {
+    public boolean createNewPlaylist(List<MediaItem> newList) {
         playlist.clear();
         boolean result = playlist.addAll(newList);
         queueIndex = playlist.isEmpty() ?  EMPTY_PLAYLIST_INDEX : START_OF_PLAYLIST;
@@ -188,7 +193,7 @@ public class PlaybackManager {
         }
     }
 
-    public QueueItem getCurrentItem() {
+    public MediaItem getCurrentItem() {
         if (validQueueIndex(queueIndex)) {
             return playlist.get(queueIndex);
         }

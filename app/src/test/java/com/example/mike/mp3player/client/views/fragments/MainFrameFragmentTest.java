@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.client.views.fragments;
 
-import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
 import android.view.MenuItem;
@@ -9,9 +8,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.testing.FragmentScenario;
 
-import com.example.mike.mp3player.TestUtils;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
-import com.example.mike.mp3player.commons.library.Category;
+import com.example.mike.mp3player.commons.MediaItemBuilder;
+import com.example.mike.mp3player.commons.MediaItemType;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Before;
@@ -23,11 +22,10 @@ import org.robolectric.RobolectricTestRunner;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Set;
 
 import javax.inject.Provider;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -37,6 +35,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
+
     private static final String LOG_TAG = "MAIN_FRM_FRGMT_TST";
 
     @Before
@@ -51,33 +50,9 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
     }
 
     @Test
-    public void testOnOptionsItemSelectedFragmentNotEnabled() {
-        FragmentScenario.FragmentAction<MainFrameFragment> onOptionsItemSelected = this::onOptionsItemSelectedNonEnabledFragment;
-        performAction(onOptionsItemSelected);
-    }
-
-    @Test
-    public void testOnOptionsItemSelectedFragmentEnabled() {
-        FragmentScenario.FragmentAction<MainFrameFragment> onOptionsItemSelected = this::onOptionsItemSelectedEnabledFragment;
-        performAction(onOptionsItemSelected);
-    }
-
-    @Test
     public void testNavigationItemSelected() {
         FragmentScenario.FragmentAction<MainFrameFragment> navigationViewSelected = this::navigationViewSelected;
         performAction(navigationViewSelected);
-    }
-
-    @Test
-    public void testEnable() {
-        FragmentScenario.FragmentAction<MainFrameFragment> enable = this::enable;
-        performAction(enable);
-    }
-
-    @Test
-    public void testDisable() {
-        FragmentScenario.FragmentAction<MainFrameFragment> disable = this::disable;
-        performAction(disable);
     }
 
     @Test
@@ -86,42 +61,28 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
         performAction(loadRootItems);
     }
 
-    private void onOptionsItemSelectedNonEnabledFragment(MainFrameFragment fragment) {
-        try {
-            FieldUtils.writeField(fragment, "enabled", false, true);
-        } catch (IllegalAccessException ex) {
-            ExceptionUtils.readStackTrace(ex);
-            fail();
-        }
-        assertFalse(fragment.onOptionsItemSelected(null));
-    }
-
     private void onChildrenLoadedRootItems(MainFrameFragment fragment) {
         final Provider<ChildViewPagerFragment> fragmentProviderSpied = spy(fragment.getChildFragmentProvider());
         fragment.setChildFragmentProvider(fragmentProviderSpied);
-        final String parentId = Category.ROOT.name();
+        final String parentId = "parentId";
         final ArrayList<MediaBrowserCompat.MediaItem> children = new ArrayList<>();
-        final Bundle options = new Bundle();
+        final Set<MediaItemType> rootItemsSet = MediaItemType.PARENT_TO_CHILD_MAP.get(MediaItemType.ROOT);
 
-        for (Category category : Category.values()) {
-            MediaBrowserCompat.MediaItem mediaItem = TestUtils.createMediaItem(category.name(), category.getTitle(), category.getDescription());
+        for (MediaItemType category : rootItemsSet) {
+            MediaBrowserCompat.MediaItem mediaItem =
+                new MediaItemBuilder("id1")
+                    .setTitle(category.getTitle())
+                    .setDescription(category.getDescription())
+                        .setRootItemType(category)
+                    .setMediaItemType(MediaItemType.ROOT)
+                    .build();
             children.add(mediaItem);
         }
-        final int expectedNumOfFragmentsCreated = Category.values().length;
-        fragment.onChildrenLoaded(parentId, children, options);
+        final int expectedNumOfFragmentsCreated = rootItemsSet.size();
+        fragment.onChildrenLoaded(parentId, children);
         verify(fragmentProviderSpied, times(expectedNumOfFragmentsCreated)).get();
     }
 
-    private void onOptionsItemSelectedEnabledFragment(MainFrameFragment fragment) {
-        try {
-            FieldUtils.writeField(fragment, "enabled", true, true);
-        } catch (IllegalAccessException ex) {
-            ExceptionUtils.readStackTrace(ex);
-            fail();
-        }
-        MenuItem menuItem = mock(MenuItem.class);
-        assertFalse(fragment.onOptionsItemSelected(menuItem));
-    }
     private void clickAndroidOptionsMenu(MainFrameFragment fragment) {
         MenuItem menuItem = mock(MenuItem.class);
         when(menuItem.getItemId()).thenReturn(android.R.id.home);
@@ -154,33 +115,5 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
         verify(drawerLayoutSpy, times(1)).closeDrawers();
     }
 
-    private void enable(MainFrameFragment fragment) {
-        try {
-            DrawerLayout drawerLayoutSpy = spy(fragment.getDrawerLayout());
-            FieldUtils.writeField(fragment, "drawerLayout", drawerLayoutSpy, true);
-            fragment.enable();
-            boolean enabled = (boolean) FieldUtils.readField(fragment, "enabled", true);
-            assertTrue(enabled);
-            verify(drawerLayoutSpy, times(1)).setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        } catch (IllegalAccessException ex) {
-            Log.e(LOG_TAG, ExceptionUtils.readStackTrace(ex));
-            fail();
-        }
-    }
 
-    private void disable(MainFrameFragment fragment) {
-        try {
-            DrawerLayout drawerLayoutSpy = spy(fragment.getDrawerLayout());
-            FieldUtils.writeField(fragment, "drawerLayout", drawerLayoutSpy, true);
-            fragment.disable();
-            boolean enabled = (boolean) FieldUtils.readField(fragment, "enabled", true);
-            assertFalse(enabled);
-            verify(drawerLayoutSpy, times(1)).closeDrawers();
-            verify(drawerLayoutSpy, times(1)).setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-
-        } catch (IllegalAccessException ex) {
-            Log.e(LOG_TAG, ExceptionUtils.readStackTrace(ex));
-            fail();
-        }
-    }
 }

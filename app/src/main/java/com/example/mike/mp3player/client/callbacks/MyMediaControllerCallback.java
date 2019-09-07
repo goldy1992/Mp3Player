@@ -4,6 +4,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
+import com.example.mike.mp3player.client.callbacks.metadata.MyMetadataCallback;
 import com.example.mike.mp3player.client.callbacks.playback.MyPlaybackStateCallback;
 
 import javax.inject.Inject;
@@ -16,10 +17,10 @@ public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
 
     private static final String LOG_TAG = "MY_MDIA_CNTLR_CLLBCK";
     private final MyPlaybackStateCallback myPlaybackStateCallback;
-    private final MyMetaDataCallback myMetaDataCallback;
+    private final MyMetadataCallback myMetaDataCallback;
 
     @Inject
-    public MyMediaControllerCallback(MyMetaDataCallback myMetaDataCallback,
+    public MyMediaControllerCallback(MyMetadataCallback myMetaDataCallback,
                                      MyPlaybackStateCallback myPlaybackStateCallback) {
         this.myMetaDataCallback = myMetaDataCallback;
         this.myPlaybackStateCallback = myPlaybackStateCallback;
@@ -39,7 +40,7 @@ public class MyMediaControllerCallback extends MediaControllerCompat.Callback {
         return myPlaybackStateCallback;
     }
 
-    public MyMetaDataCallback getMyMetaDataCallback() {
+    public MyMetadataCallback getMyMetaDataCallback() {
         return myMetaDataCallback;
     }
 }

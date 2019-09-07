@@ -2,8 +2,7 @@ package com.example.mike.mp3player.dagger.components.fragments;
 
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
-import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryObject;
+import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.dagger.modules.MyRecycleViewModule;
 
 import dagger.BindsInstance;
@@ -18,8 +17,8 @@ public interface ChildViewPagerFragmentSubcomponent {
     @Subcomponent.Factory
     interface Factory {
         ChildViewPagerFragmentSubcomponent create(
-                                                  @BindsInstance Category category,
-                                                  @BindsInstance LibraryObject libraryObject,
-                                                  @BindsInstance MyGenericItemTouchListener.ItemSelectedListener listener);
+          @BindsInstance MediaItemType mediaItemType,
+          @BindsInstance String parentId,
+          @BindsInstance MyGenericItemTouchListener.ItemSelectedListener listener);
     }
 }

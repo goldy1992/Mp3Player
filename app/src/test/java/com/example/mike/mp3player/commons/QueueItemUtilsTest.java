@@ -2,11 +2,10 @@ package com.example.mike.mp3player.commons;
 
 import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompat;
-import static android.support.v4.media.session.MediaSessionCompat.QueueItem;
 
 import org.junit.jupiter.api.Test;
 
-
+import static android.support.v4.media.session.MediaSessionCompat.QueueItem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 

@@ -1,12 +1,6 @@
 package com.example.mike.mp3player.commons;
 
-import android.util.Log;
-
 import androidx.annotation.Nullable;
-
-import com.example.mike.mp3player.commons.library.Category;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.Comparator;
 
@@ -16,10 +10,12 @@ import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 public final class ComparatorUtils {
 
     private static final String LOG_TAG = "COMPARATOR_UTILS";
-    public static final Comparator<MediaItem> compareRootMediaItemsByCategory = ComparatorUtils::compareRootMediaItemsByCategory;
-    private static int compareRootMediaItemsByCategory(MediaItem m1, MediaItem m2) {
-        Category c1 = parseCategory(MediaItemUtils.getMediaId(m1));
-        Category c2 = parseCategory(MediaItemUtils.getMediaId(m2));
+
+
+    public static final Comparator<MediaItem> compareRootMediaItemsByMediaItemType = ComparatorUtils::compareRootMediaItemsByMediaItemType;
+    public static int compareRootMediaItemsByMediaItemType(MediaItem m1, MediaItem m2) {
+        MediaItemType c1 = MediaItemUtils.getRootMediaItemType(m1);
+        MediaItemType c2 = MediaItemUtils.getRootMediaItemType(m2);
         if (c1 == null && c2 == null) {
             return 0;
         } else if (c1 == null) {
@@ -27,9 +23,10 @@ public final class ComparatorUtils {
         } else if (c2 == null) {
             return 1;
         } else {
-           return c1.compareTo(c2);
+            return c1.getRank() - c2.getRank();
         }
     }
+
     public static final Comparator<MediaItem> compareMediaItemsByTitle = ComparatorUtils::compareMediaItemsByTitle;
 
     private static int compareMediaItemsByTitle(MediaItem m1, MediaItem m2) {
@@ -51,18 +48,7 @@ public final class ComparatorUtils {
         }
     }
 
-
-    private static Category parseCategory(String categoryString) {
-        Category c = null;
-        try{
-            c = Category.valueOf(categoryString);
-        } catch (IllegalArgumentException | NullPointerException ex) {
-            Log.e(LOG_TAG, ExceptionUtils.getMessage(ex));
-        }
-        return c;
-    }
-
-    private static int uppercaseStringCompare(@Nullable String string1, @Nullable String string2) {
+    public static int uppercaseStringCompare(@Nullable String string1, @Nullable String string2) {
         if (string1 == null && string2 == null) {
             return 0;
         } else if (null == string1) {
@@ -71,6 +57,18 @@ public final class ComparatorUtils {
             return 1;
         } else {
             return string1.toUpperCase().compareTo(string2.toUpperCase());
+        }
+    }
+
+    public static int caseSensitiveStringCompare(@Nullable String string1, @Nullable String string2) {
+        if (string1 == null && string2 == null) {
+            return 0;
+        } else if (null == string1) {
+            return -1;
+        } else if (null == string2) {
+            return 1;
+        } else {
+            return string1.compareTo(string2);
         }
     }
 }

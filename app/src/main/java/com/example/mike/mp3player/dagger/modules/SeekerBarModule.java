@@ -1,7 +1,7 @@
 package com.example.mike.mp3player.dagger.modules;
 
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.callbacks.SeekerBarController2;
+import com.example.mike.mp3player.client.SeekerBarController2;
 import com.example.mike.mp3player.client.views.TimeCounter;
 import com.example.mike.mp3player.dagger.scopes.FragmentScope;
 

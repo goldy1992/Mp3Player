@@ -34,7 +34,6 @@ public class SimpleTitleBarFragment extends Fragment {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        activity.getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         TypedValue typedValue = new TypedValue();
         Resources.Theme theme = getContext().getTheme();

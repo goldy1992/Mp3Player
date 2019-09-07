@@ -7,23 +7,16 @@ import androidx.fragment.app.testing.FragmentScenario;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.views.fragments.FragmentTestBase;
-import com.example.mike.mp3player.commons.library.Category;
-import com.example.mike.mp3player.commons.library.LibraryObject;
-import com.example.mike.mp3player.commons.library.LibraryRequest;
+import com.example.mike.mp3player.commons.MediaItemType;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
 import static com.example.mike.mp3player.TestUtils.createMediaItem;
-import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -39,10 +32,9 @@ public class ChildViewPagerFragmentTest extends FragmentTestBase<ChildViewPagerF
     public void setup() {
         MockitoAnnotations.initMocks(this);
         super.setup(ChildViewPagerFragment.class, false);
-        LibraryObject libraryObject = new LibraryObject(Category.ROOT, "ROOT");
         ChildViewPagerFragment childViewPagerFragment =
         ((ChildViewPagerFragment)fragment);
-        childViewPagerFragment.init(Category.FOLDERS, libraryObject);
+        childViewPagerFragment.init(MediaItemType.FOLDERS, "");
         childViewPagerFragment.setMediaBrowserAdapter(mediaBrowserAdapter);
         super.addFragmentToActivity();
     }
@@ -60,15 +52,10 @@ public class ChildViewPagerFragmentTest extends FragmentTestBase<ChildViewPagerF
         final String description = "description";
 
         MediaBrowserCompat.MediaItem mediaItem =
-                createMediaItem(id, title, description);
+                createMediaItem(id, title, description, MediaItemType.ROOT);
         spiedFragment.itemSelected(mediaItem);
-        ArgumentCaptor<Intent> intentArgs = ArgumentCaptor.forClass(Intent.class);
-        verify(spiedFragment).startActivity(intentArgs.capture());
-        Intent intent = intentArgs.getValue();
-        LibraryRequest libraryRequest = intent.getExtras().getParcelable(REQUEST_OBJECT);
-        assertNotNull(libraryRequest);
-        assertEquals(id, libraryRequest.getId());
-        assertEquals(title, libraryRequest.getTitle());
+        verify(spiedFragment).startActivity(any());
+
     }
 
 }

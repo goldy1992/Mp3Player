@@ -2,8 +2,8 @@ package com.example.mike.mp3player.client;
 
 import android.content.Context;
 import android.media.session.MediaSession;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -12,7 +12,10 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
-import com.example.mike.mp3player.client.callbacks.MyMetaDataCallback;
+
+
+import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
+import com.example.mike.mp3player.client.callbacks.metadata.MyMetadataCallback;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.MyPlaybackStateCallback;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
@@ -31,7 +34,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -45,7 +47,7 @@ public class MediaControllerAdapterTest {
 
     private MediaControllerAdapter mediaControllerAdapter;
     @Mock
-    private MyMetaDataCallback myMetaDataCallback;
+    private MyMetadataCallback myMetaDataCallback;
     @Mock
     private MyPlaybackStateCallback playbackStateCallback;
 
@@ -124,10 +126,37 @@ public class MediaControllerAdapterTest {
     }
 
     @Test
-    public void testRepeatMode() {
+    public void testSetRepeatMode() {
         @PlaybackStateCompat.State final int repeatMode = PlaybackStateCompat.REPEAT_MODE_ALL;
         mediaControllerAdapter.setRepeatMode(repeatMode);
         verify(mediaControllerAdapter, times(1)).setRepeatMode(repeatMode);
+    }
+
+    @Test
+    public void testGetRepeatMode() {
+        final int expected = PlaybackStateCompat.REPEAT_MODE_ALL;
+        when(mediaControllerAdapter.getMediaController().getRepeatMode()).thenReturn(expected);
+        int result = mediaControllerAdapter.getRepeatMode();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testGetShuffleMode() {
+        final int expected = PlaybackStateCompat.SHUFFLE_MODE_ALL;
+        when(mediaControllerAdapter.getMediaController().getShuffleMode()).thenReturn(expected);
+        int result = mediaControllerAdapter.getShuffleMode();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testGetAlbumArtValidUri() {
+        String expectedPath = "mockUriPath";
+        MediaMetadataCompat metadata = new MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, expectedPath)
+                .build();
+        when(mediaControllerAdapter.getMetadata()).thenReturn(metadata);
+        Uri result = mediaControllerAdapter.getCurrentSongAlbumArtUri();
+        assertEquals(result.getPath(), expectedPath);
     }
 
     @Test
@@ -187,14 +216,14 @@ public class MediaControllerAdapterTest {
     }
     @Test
     public void testRegisterMetaDataListener() {
-        MetaDataListener expected = mock(MetaDataListener.class);
+        MetadataListener expected = mock(MetadataListener.class);
         mediaControllerAdapter.registerMetaDataListener(expected);
         verify(myMetaDataCallback, times(1)).registerMetaDataListener(expected);
     }
 
     @Test
     public void testUnregisterMetaDataListener() {
-        MetaDataListener expected = mock(MetaDataListener.class);
+        MetadataListener expected = mock(MetadataListener.class);
         mediaControllerAdapter.unregisterMetaDataListener(expected);
         verify(myMetaDataCallback, times(1)).removeMetaDataListener(expected);
     }

@@ -3,8 +3,6 @@ package com.example.mike.mp3player.client.callbacks.playback;
 import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
 
-import com.example.mike.mp3player.commons.Constants;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -2,39 +2,17 @@ package com.example.mike.mp3player.service;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
-import android.view.KeyEvent;
 
-import com.example.mike.mp3player.commons.MediaItemUtils;
-import com.example.mike.mp3player.commons.library.LibraryObject;
+import com.example.mike.mp3player.service.library.ContentManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
-import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 import com.example.mike.mp3player.service.session.AudioBecomingNoisyBroadcastReceiver;
 import com.example.mike.mp3player.service.session.MediaSessionAdapter;
 import com.example.mike.mp3player.service.session.MediaSessionCallback;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SEEK_TO;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SET_REPEAT_MODE;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SET_SHUFFLE_MODE;
-import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
-import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
-import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
-import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
-import static com.example.mike.mp3player.commons.Constants.PARENT_OBJECT;
-import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
-import static com.example.mike.mp3player.commons.LoggingUtils.logRepeatMode;
-import static com.example.mike.mp3player.commons.LoggingUtils.logShuffleMode;
 
 public class MockMediaSessionCallback extends MediaSessionCallback {
     /**
@@ -49,7 +27,7 @@ public class MockMediaSessionCallback extends MediaSessionCallback {
      * @param broadcastReceiver   broadcast receiver
      * @param handler             handler
      */
-    public MockMediaSessionCallback(MediaLibrary mediaLibrary, PlaybackManager playbackManager, MediaPlayerAdapter mediaPlayerAdapter, MediaSessionAdapter mediaSessionAdapter, ServiceManager serviceManager, AudioBecomingNoisyBroadcastReceiver broadcastReceiver, Handler handler) {
+    public MockMediaSessionCallback(ContentManager mediaLibrary, PlaybackManager playbackManager, MediaPlayerAdapter mediaPlayerAdapter, MediaSessionAdapter mediaSessionAdapter, ServiceManager serviceManager, AudioBecomingNoisyBroadcastReceiver broadcastReceiver, Handler handler) {
         super(mediaLibrary, playbackManager, mediaPlayerAdapter, mediaSessionAdapter, serviceManager, broadcastReceiver, handler);
     }
 

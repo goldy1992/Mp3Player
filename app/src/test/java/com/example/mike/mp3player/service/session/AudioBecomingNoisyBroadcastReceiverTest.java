@@ -6,7 +6,6 @@ import android.media.AudioManager;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 import org.junit.Before;
@@ -17,8 +16,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.robolectric.RobolectricTestRunner;
 
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PAUSE;
-import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;

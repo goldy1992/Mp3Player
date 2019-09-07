@@ -15,14 +15,12 @@ import android.view.KeyEvent;
 import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.commons.MediaItemUtils;
-import com.example.mike.mp3player.commons.library.LibraryObject;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
-import com.example.mike.mp3player.service.library.MediaLibrary;
-import com.example.mike.mp3player.service.library.utils.MediaLibraryUtils;
+import com.example.mike.mp3player.service.library.ContentManager;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,10 +36,10 @@ import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_T
 import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS;
 import static com.example.mike.mp3player.commons.Constants.ACTION_PLAYBACK_SPEED_CHANGED;
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
+import static com.example.mike.mp3player.commons.Constants.ID_DELIMITER;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.NO_ACTION;
 import static com.example.mike.mp3player.commons.Constants.ONE_SECOND;
-import static com.example.mike.mp3player.commons.Constants.PARENT_OBJECT;
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 import static com.example.mike.mp3player.commons.LoggingUtils.logRepeatMode;
 import static com.example.mike.mp3player.commons.LoggingUtils.logShuffleMode;
@@ -53,13 +51,12 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private final ServiceManager serviceManager;
     private final PlaybackManager playbackManager;
     private final MediaPlayerAdapter mediaPlayerAdapter;
-    private final MediaLibrary mediaLibrary;
+    private final ContentManager mediaLibrary;
     private final MediaSessionAdapter mediaSessionAdapter;
     private final AudioBecomingNoisyBroadcastReceiver broadcastReceiver;
     private final Handler worker;
     private static final String LOG_TAG = "MEDIA_SESSION_CALLBACK";
     public static final float DEFAULT_PLAYBACK_SPEED_CHANGE = 0.05f;
-    private boolean isInitialised = false;
 
     /**
      * new constructor to be used for testing and also for future use with dagger2 via the @Inject
@@ -73,7 +70,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
      * @param handler handler
      */
     @Inject
-    public MediaSessionCallback(MediaLibrary mediaLibrary,
+    public MediaSessionCallback(ContentManager mediaLibrary,
                                 PlaybackManager playbackManager,
                                 MediaPlayerAdapter mediaPlayerAdapter,
                                 MediaSessionAdapter mediaSessionAdapter,
@@ -90,14 +87,11 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     public void init() {
-        List<MediaBrowserCompat.MediaItem> songList = new ArrayList<>(this.getMediaLibrary().getSongList());
-        List<MediaSessionCompat.QueueItem> queueItems = MediaLibraryUtils.convertMediaItemsToQueueItem(songList);
         this.mediaPlayerAdapter.setOnCompletionListener(this::onCompletion);
         this.mediaPlayerAdapter.setOnSeekCompleteListener(this::onSeekComplete);
         this.broadcastReceiver.setMediaSessionCallback(this);
-        this.playbackManager.createNewPlaylist(queueItems);
-        Uri firstSongUri = this.getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getCurrentMediaId());
-        Uri nextSongUri = this.getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getNext());
+        Uri firstSongUri = playbackManager.getCurrentMediaUri();
+        Uri nextSongUri = playbackManager.getNext();
         this.mediaPlayerAdapter.reset(firstSongUri, nextSongUri);
         mediaSessionAdapter.updateAll(NO_ACTION);
     }
@@ -127,7 +121,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void skipToNext() {
-        String newMediaId = getPlaybackManager().skipToNext();
+        Uri newMediaId = getPlaybackManager().skipToNext();
         if (newMediaId != null) {
             skipToNewMedia(newMediaId);
             getServiceManager().notifyService();
@@ -147,7 +141,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             mediaPlayerAdapter.seekTo(1);
         } else {
             getPlaybackManager().skipToPrevious();
-            skipToNewMedia(getPlaybackManager().getCurrentMediaId());
+            skipToNewMedia(getPlaybackManager().getCurrentMediaUri());
             getServiceManager().notifyService();
             mediaSessionAdapter.updateAll(ACTION_SKIP_TO_PREVIOUS);
         }
@@ -184,33 +178,32 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     private void prepareFromMediaId(String mediaId, Bundle bundle) {
         //Log.i(LOG_TAG, "prepareFromMediaId");
         super.onPrepareFromMediaId(mediaId, bundle);
-        LibraryObject parent = (LibraryObject) bundle.get(PARENT_OBJECT);
-        List<MediaBrowserCompat.MediaItem> results = getMediaLibrary().getPlaylist(parent);
-        getPlaybackManager().createNewPlaylist(MediaLibraryUtils.convertMediaItemsToQueueItem(results));
+        String trackId = extractTrackId(mediaId);
+        if (null != trackId) {
+            List<MediaBrowserCompat.MediaItem> results = mediaLibrary.getPlaylist(mediaId);
+            if (null != results) {
+                playbackManager.createNewPlaylist(results);
 
-        if (mediaId == null) {
-            Log.e(LOG_TAG, "received null mediaId");
-            return;
-        }
+                Uri uriToPlay = null;
+                Uri followingUri = null;
+                for (MediaBrowserCompat.MediaItem m : results) {
+                    String id = MediaItemUtils.getMediaId(m);
+                    if (id != null && id.equals(trackId)) {
+                        uriToPlay = m.getDescription().getMediaUri();
+                        playbackManager.setCurrentItem(trackId);
+                        followingUri = getPlaybackManager().getNext();
+                        mediaPlayerAdapter.reset(uriToPlay, followingUri);
 
-        Uri uriToPlay = null;
-        Uri followingUri = null;
-        for (MediaBrowserCompat.MediaItem m : results) {
-            String id = MediaItemUtils.getMediaId(m);
-            if (id != null && id.equals(mediaId)) {
-                uriToPlay = getMediaLibrary().getMediaUriFromMediaId(id);
-                getPlaybackManager().setCurrentItem(mediaId);
-                followingUri = getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getNext());
-                mediaPlayerAdapter.reset(uriToPlay, followingUri);
-
-                break;
+                        break;
+                    }
+                }
+                if (uriToPlay == null) {
+                    Log.e(LOG_TAG, "failed to find requested uri in collection");
+                    return;
+                }
+                mediaSessionAdapter.updateAll(ACTION_PREPARE_FROM_MEDIA_ID);
             }
         }
-        if (uriToPlay == null) {
-            Log.e(LOG_TAG, "failed to find requested uri in collection");
-            return;
-        }
-        mediaSessionAdapter.updateAll(ACTION_PREPARE_FROM_MEDIA_ID);
     }
 
     @Override
@@ -249,9 +242,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     }
 
     private void addQueueItem(MediaDescriptionCompat description) {
-        //Log.i(LOG_TAG, "addQueueItem");
-        MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
-        mediaSessionAdapter.setQueue(item);
+//        //Log.i(LOG_TAG, "addQueueItem");
+//        MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
+//        mediaSessionAdapter.setQueue(item);
     }
 
     @Override
@@ -259,8 +252,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         worker.post(() -> this.removeQueueItem(description));
     }
     private void removeQueueItem(MediaDescriptionCompat description) {
-        MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
-        mediaSessionAdapter.setQueue(item);
+//        MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, description.hashCode());
+//        mediaSessionAdapter.setQueue(item);
     }
 
     @Override
@@ -293,9 +286,8 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         // TODO: set shuffle mode and therefore set the next mediaplayers accordingly
         boolean shuffleOn = shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL;
         getPlaybackManager().setShuffle(shuffleOn);
-        String nextSongId = getPlaybackManager().getNext();
-        Uri nextUri = getMediaLibrary().getMediaUriFromMediaId(nextSongId);
-        mediaPlayerAdapter.setNextMediaPlayer(nextUri);
+        Uri nextSongUri = getPlaybackManager().getNext();
+        mediaPlayerAdapter.setNextMediaPlayer(nextSongUri);
         mediaSessionAdapter.updateAll(ACTION_SET_SHUFFLE_MODE);
     }
     /**
@@ -314,10 +306,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             if (mediaPlayer.isLooping()) {
             } else {
                 getPlaybackManager().notifyPlaybackComplete(); // increments queue
-                String nextUriToPrepare = getPlaybackManager().getNext(); // gets uri after newly incremented index
+                Uri nextUriToPrepare = getPlaybackManager().getNext(); // gets uri after newly incremented index
                 if (null != nextUriToPrepare) {
-                    Uri nextItemUri = getMediaLibrary().getMediaUriFromMediaId(nextUriToPrepare);
-                    mediaPlayerAdapter.onComplete(nextItemUri);
+                    mediaPlayerAdapter.onComplete(nextUriToPrepare);
                     mediaSessionAdapter.updateAll(ACTION_PLAY_FROM_MEDIA_ID);
                 }
             }
@@ -343,9 +334,9 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         mediaSessionAdapter.updateAll(ACTION_PLAYBACK_SPEED_CHANGED);
     }
 
-    private void skipToNewMedia(String newMediaId) {
-        Uri newUri = getMediaLibrary().getMediaUriFromMediaId(newMediaId);
-        Uri followingUri = getMediaLibrary().getMediaUriFromMediaId(getPlaybackManager().getNext());
+    private void skipToNewMedia(Uri newMediaUri) {
+        Uri newUri = newMediaUri;
+        Uri followingUri = getPlaybackManager().getNext();
         PlaybackStateCompat currentState = mediaSessionAdapter.getCurrentPlaybackState(ACTION_PLAY_FROM_MEDIA_ID);
         mediaPlayerAdapter.reset(newUri, followingUri);
         if (currentState.getState() == PlaybackStateCompat.STATE_PLAYING) {
@@ -371,7 +362,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         return mediaPlayerAdapter;
     }
     @VisibleForTesting
-    public MediaLibrary getMediaLibrary() {
+    public ContentManager getMediaLibrary() {
         return mediaLibrary;
     }
     @VisibleForTesting
@@ -382,5 +373,18 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     @VisibleForTesting
     public AudioBecomingNoisyBroadcastReceiver getBroadcastReceiver() {
         return broadcastReceiver;
+    }
+
+    private String extractTrackId(String mediaId) {
+        if (null != mediaId) {
+            List<String> splitId = Arrays.asList(mediaId.split(ID_DELIMITER));
+            if (!splitId.isEmpty()) {
+                return splitId.get(splitId.size() - 1);
+            }
+        }
+        else {
+            Log.e(LOG_TAG, "received null mediaId");
+        }
+        return null;
     }
 }

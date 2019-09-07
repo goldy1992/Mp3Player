@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/playbackToolbar"
@@ -18,31 +16,30 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:weightSum="3">
+            >
 
-            <com.example.mike.mp3player.client.views.LinearLayoutWithImageView
+            <ImageView
+                android:background="@color/accent_pink"
                 android:id="@+id/skip_to_previous"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                custom:imgSrc="@drawable/ic_baseline_skip_previous_24px"
-                tools:showIn="@layout/fragment_playback_toolbar_extended" />
+                android:layout_height="wrap_content"
+                android:contentDescription="put" />
 
 
-            <com.example.mike.mp3player.client.views.PlayPauseButton
+            <ImageView
+                android:background="@color/accent_orange"
                 android:id="@+id/playPauseButton"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                custom:imgSrc="@drawable/ic_baseline_play_arrow_24px" />
+                android:layout_height="wrap_content"
 
-            <com.example.mike.mp3player.client.views.LinearLayoutWithImageView
+                android:contentDescription="TODO: put" />
+
+            <ImageView
+                android:background="@color/accent_pink"
                 android:id="@+id/skip_to_next"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                custom:imgSrc="@drawable/ic_baseline_skip_next_24px"
-                tools:showIn="@layout/fragment_playback_toolbar_extended" />
+                android:layout_height="wrap_content"
+                android:contentDescription="TODO: put" />
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
