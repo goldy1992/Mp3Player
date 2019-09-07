@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.File;
+
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
@@ -13,6 +15,7 @@ import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_DURATION
 import static com.example.mike.mp3player.commons.Constants.LIBRARY_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.ROOT_ITEM_TYPE;
+import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_DIRECTORY;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 
@@ -86,15 +89,21 @@ public final class MediaItemUtils {
     }
 
     public static String getDirectoryName(MediaItem item) {
-        if (hasExtra(META_DATA_PARENT_DIRECTORY_NAME, item)) {
-            return  (String) getExtra(META_DATA_PARENT_DIRECTORY_NAME, item);
+        if (hasExtra(META_DATA_DIRECTORY, item)) {
+            File directory = (File) getExtra(META_DATA_DIRECTORY, item);
+            if (null != directory) {
+                return directory.getName();
+            }
         }
         return null;
     }
 
     public static String getDirectoryPath(MediaItem item) {
-        if (hasExtra(META_DATA_PARENT_DIRECTORY_PATH, item)) {
-            return  (String) getExtra(META_DATA_PARENT_DIRECTORY_PATH, item);
+        if (hasExtra(META_DATA_DIRECTORY, item)) {
+            File directory = (File) getExtra(META_DATA_DIRECTORY, item);
+            if (null != directory) {
+                return directory.getAbsolutePath();
+            }
         }
         return null;
     }

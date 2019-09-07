@@ -14,6 +14,7 @@ import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_DURATION
 import static com.example.mike.mp3player.commons.Constants.LIBRARY_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.ROOT_ITEM_TYPE;
+import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_DIRECTORY;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
@@ -90,15 +91,7 @@ public class MediaItemBuilder {
     }
 
     public MediaItemBuilder setFile(File file) {
-        String directoryName = null;
-        String  directoryPath = null;
-
-        if (null != file) {
-            directoryName = file.getName();
-            directoryPath = file.getAbsolutePath();
-        }
-        extras.putString(META_DATA_PARENT_DIRECTORY_NAME, directoryName);
-        extras.putString(META_DATA_PARENT_DIRECTORY_PATH, directoryPath);
+        extras.putSerializable(META_DATA_DIRECTORY, file);
         return this;
     }
 

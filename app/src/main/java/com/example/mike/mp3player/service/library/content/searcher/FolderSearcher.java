@@ -12,8 +12,8 @@ import static com.example.mike.mp3player.service.library.content.Projections.FOL
 
 public class FolderSearcher extends ContentResolverSearcher {
 
-    public FolderSearcher(ContentResolver contentResolver, ResultsParser resultsParser, String idPrefix, FoldersResultFilter foldersResultFilter) {
-        super(contentResolver, resultsParser, idPrefix, foldersResultFilter);
+    public FolderSearcher(ContentResolver contentResolver, ResultsParser resultsParser, FoldersResultFilter foldersResultFilter, String idPrefix) {
+        super(contentResolver, resultsParser,  foldersResultFilter, idPrefix);
     }
 
     @Override

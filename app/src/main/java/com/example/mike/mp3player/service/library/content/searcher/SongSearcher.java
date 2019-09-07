@@ -11,8 +11,8 @@ import static com.example.mike.mp3player.service.library.content.Projections.SON
 
 public class SongSearcher extends ContentResolverSearcher {
 
-    public SongSearcher(ContentResolver contentResolver, ResultsParser resultsParser, String idPrefix) {
-        super(contentResolver, resultsParser, idPrefix);
+    public SongSearcher(ContentResolver contentResolver, ResultsParser resultsParser,  String idPrefix) {
+        super(contentResolver, resultsParser, null, idPrefix);
     }
 
     @Override

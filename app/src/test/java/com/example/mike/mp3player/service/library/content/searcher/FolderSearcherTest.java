@@ -23,7 +23,7 @@ public class FolderSearcherTest extends ContentResolverSearcherTestBase<FolderSe
         super.setup();
         this.filter = mock(FoldersResultFilter.class);
         when(filter.filter(VALID_QUERY, expectedResult)).thenReturn(expectedResult);
-        this.searcher = spy(new FolderSearcher(contentResolver, resultsParser, idPrefix, filter));
+        this.searcher = spy(new FolderSearcher(contentResolver, resultsParser, filter, idPrefix));
     }
 
     @Test
