@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
+import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
 import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 
@@ -23,7 +24,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import java.util.Set;
 
 import javax.inject.Inject;
-
 
 public class MediaControllerAdapter {
 
@@ -95,11 +95,11 @@ public class MediaControllerAdapter {
         getController().setShuffleMode(shuffleMode);
     }
 
-    public void registerMetaDataListener(MetaDataListener metaDataListener) {
+    public void registerMetaDataListener(MetadataListener metaDataListener) {
         myMediaControllerCallback.getMyMetaDataCallback().registerMetaDataListener(metaDataListener);
     }
 
-    public void unregisterMetaDataListener(MetaDataListener metaDataListener) {
+    public void unregisterMetaDataListener(MetadataListener metaDataListener) {
         myMediaControllerCallback.getMyMetaDataCallback().removeMetaDataListener(metaDataListener);
     }
 

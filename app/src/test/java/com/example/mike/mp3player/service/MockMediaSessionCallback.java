@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
+import com.example.mike.mp3player.service.library.ContentManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 import com.example.mike.mp3player.service.session.AudioBecomingNoisyBroadcastReceiver;
@@ -26,7 +27,7 @@ public class MockMediaSessionCallback extends MediaSessionCallback {
      * @param broadcastReceiver   broadcast receiver
      * @param handler             handler
      */
-    public MockMediaSessionCallback(MediaLibrary mediaLibrary, PlaybackManager playbackManager, MediaPlayerAdapter mediaPlayerAdapter, MediaSessionAdapter mediaSessionAdapter, ServiceManager serviceManager, AudioBecomingNoisyBroadcastReceiver broadcastReceiver, Handler handler) {
+    public MockMediaSessionCallback(ContentManager mediaLibrary, PlaybackManager playbackManager, MediaPlayerAdapter mediaPlayerAdapter, MediaSessionAdapter mediaSessionAdapter, ServiceManager serviceManager, AudioBecomingNoisyBroadcastReceiver broadcastReceiver, Handler handler) {
         super(mediaLibrary, playbackManager, mediaPlayerAdapter, mediaSessionAdapter, serviceManager, broadcastReceiver, handler);
     }
 

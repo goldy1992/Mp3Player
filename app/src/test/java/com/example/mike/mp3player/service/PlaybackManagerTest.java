@@ -1,7 +1,7 @@
 package com.example.mike.mp3player.service;
 
+import android.net.Uri;
 import android.support.v4.media.MediaDescriptionCompat;
-import android.support.v4.media.session.MediaSessionCompat.QueueItem;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,14 +18,13 @@ import static org.mockito.Mockito.when;
 
 public class PlaybackManagerTest {
     private PlaybackManager playbackManager;
-    private static final QueueItem MOCK_QUEUE_ITEM = mock(QueueItem.class);
+    private static final MediaItem MOCK_QUEUE_ITEM = mock(MediaItem.class);
 
 
     @BeforeEach
     public void setup() {
-        List<QueueItem> queueItems = new ArrayList<>();
-        playbackManager = new PlaybackManager();
-        playbackManager.createNewPlaylist(queueItems);
+        List<MediaItem> queueItems = new ArrayList<>();
+        playbackManager = new PlaybackManager(queueItems, -1);
     }
     /**
      * GIVEN: a Playback manager with an empty playlist
@@ -79,15 +79,15 @@ public class PlaybackManagerTest {
      */
     @Test
     public void getPlaylistMediaId() {
-        QueueItem queueItem = MOCK_QUEUE_ITEM;
+        MediaItem queueItem = MOCK_QUEUE_ITEM;
         final int QUEUE_ITEM_INDEX = 0;
-        final String EXPECTED_MEDIA_ID = "EXPECTED_MEDIA_ID";
+        final Uri EXPECTED_MEDIA_URI = mock(Uri.class);
         MediaDescriptionCompat description = mock(MediaDescriptionCompat.class);
-        when(description.getMediaId()).thenReturn(EXPECTED_MEDIA_ID);
+        when(description.getMediaUri()).thenReturn(EXPECTED_MEDIA_URI);
         when(queueItem.getDescription()).thenReturn(description);
         playbackManager.onAddQueueItem(queueItem);
-        String result = playbackManager.getPlaylistMediaId(QUEUE_ITEM_INDEX);
-        assertEquals(EXPECTED_MEDIA_ID, result);
+        Uri result = playbackManager.getPlaylistMediaUri(QUEUE_ITEM_INDEX);
+        assertEquals(EXPECTED_MEDIA_URI, result);
     }
     /**
      * GIVEN: a playlist of 2 items and the playlist is repeating
@@ -97,12 +97,12 @@ public class PlaybackManagerTest {
      */
     @Test
     public void testNotifyPlaybackCompleteNotLastItem() {
-        final QueueItem ITEM1 = MOCK_QUEUE_ITEM;
-        final QueueItem ITEM2 = mock(QueueItem.class);
+        final MediaItem ITEM1 = MOCK_QUEUE_ITEM;
+        final MediaItem ITEM2 = mock(MediaItem.class);
         playbackManager.onAddQueueItem(ITEM1);
         playbackManager.onAddQueueItem(ITEM2);
         playbackManager.setRepeating(true);
-        QueueItem currentItem = playbackManager.getCurrentItem();
+        MediaItem currentItem = playbackManager.getCurrentItem();
         assertEquals(ITEM1, currentItem);
         playbackManager.notifyPlaybackComplete();
         currentItem = playbackManager.getCurrentItem();
@@ -119,14 +119,14 @@ public class PlaybackManagerTest {
      */
     @Test
     public void testNotifyPlaybackCompleteLastItemRepeating() {
-        final QueueItem ITEM1 = MOCK_QUEUE_ITEM;
-        final QueueItem ITEM2 = mock(QueueItem.class);
+        final MediaItem ITEM1 = MOCK_QUEUE_ITEM;
+        final MediaItem ITEM2 = mock(MediaItem.class);
         playbackManager.onAddQueueItem(ITEM1);
         playbackManager.onAddQueueItem(ITEM2);
         playbackManager.setRepeating(true);
         playbackManager.notifyPlaybackComplete(); //increment to the last item
         playbackManager.notifyPlaybackComplete(); // incrementation on the last item
-        QueueItem currentItem = playbackManager.getCurrentItem();
+        MediaItem currentItem = playbackManager.getCurrentItem();
         assertEquals(ITEM1, currentItem);
     }
     /**
@@ -138,14 +138,14 @@ public class PlaybackManagerTest {
      */
     @Test
     public void testNotifyPlaybackCompleteLastItemNotRepeating() {
-        final QueueItem ITEM1 = MOCK_QUEUE_ITEM;
-        final QueueItem ITEM2 = mock(QueueItem.class);
+        final MediaItem ITEM1 = MOCK_QUEUE_ITEM;
+        final MediaItem ITEM2 = mock(MediaItem.class);
         playbackManager.onAddQueueItem(ITEM1);
         playbackManager.onAddQueueItem(ITEM2);
         playbackManager.setRepeating(false);
         playbackManager.notifyPlaybackComplete(); //increment to the last item
         playbackManager.notifyPlaybackComplete(); // incrementation on the last item
-        QueueItem currentItem = playbackManager.getCurrentItem();
+        MediaItem currentItem = playbackManager.getCurrentItem();
         assertNull(currentItem);
     }
     /**
@@ -156,9 +156,9 @@ public class PlaybackManagerTest {
     @Test
     public void testGetCurrentItem() {
         final String MEDIA_ID = "MEDIA_ID";
-        final QueueItem ITEM1 = MOCK_QUEUE_ITEM;
-        final QueueItem ITEM2 = mock(QueueItem.class);
-        final QueueItem LAST_ITEM = mock(QueueItem.class);
+        final MediaItem ITEM1 = MOCK_QUEUE_ITEM;
+        final MediaItem ITEM2 = mock(MediaItem.class);
+        final MediaItem LAST_ITEM = mock(MediaItem.class);
         MediaDescriptionCompat description = mock(MediaDescriptionCompat.class);
         when(description.getMediaId()).thenReturn(MEDIA_ID);
         when(LAST_ITEM.getDescription()).thenReturn(description);
@@ -167,7 +167,7 @@ public class PlaybackManagerTest {
         playbackManager.onAddQueueItem(LAST_ITEM);
         playbackManager.setCurrentItem(MEDIA_ID);
 
-        QueueItem result = playbackManager.getCurrentItem();
+        MediaItem result = playbackManager.getCurrentItem();
         assertEquals(LAST_ITEM, result);
     }
     /**
@@ -177,14 +177,14 @@ public class PlaybackManagerTest {
      */
     @Test
     public void testGetCurrentMediaId() {
-        final String MEDIA_ID = "MEDIA_ID";
-        final QueueItem ITEM1 = MOCK_QUEUE_ITEM;
+        final Uri MEDIA_URI = mock(Uri.class);
+        final MediaItem ITEM1 = MOCK_QUEUE_ITEM;
         MediaDescriptionCompat description = mock(MediaDescriptionCompat.class);
-        when(description.getMediaId()).thenReturn(MEDIA_ID);
+        when(description.getMediaUri()).thenReturn(MEDIA_URI);
         when(ITEM1.getDescription()).thenReturn(description);
         playbackManager.onAddQueueItem(ITEM1);
-        final String result = playbackManager.getCurrentMediaId();
-        assertEquals(MEDIA_ID, result);
+        final Uri result = playbackManager.getCurrentMediaUri();
+        assertEquals(MEDIA_URI, result);
     }
     /**
      * GIVEN: an empty playlist
@@ -193,7 +193,7 @@ public class PlaybackManagerTest {
      */
     @Test
     public void testGetCurrentMediaIdWithNullPlaylist() {
-        final String result = playbackManager.getCurrentMediaId();
+        final Uri result = playbackManager.getCurrentMediaUri();
         assertNull(result);
     }
     /**
@@ -203,12 +203,12 @@ public class PlaybackManagerTest {
      */
     @Test
     public void testSkipToNext() {
-        QueueItem ITEM1 = MOCK_QUEUE_ITEM;
-        QueueItem ITEM2 = mock(QueueItem.class);
+        MediaItem ITEM1 = MOCK_QUEUE_ITEM;
+        MediaItem ITEM2 = mock(MediaItem.class);
         playbackManager.onAddQueueItem(ITEM1);
         playbackManager.onAddQueueItem(ITEM2);
         playbackManager.skipToNext();
-        QueueItem result = playbackManager.getCurrentItem();
+        MediaItem result = playbackManager.getCurrentItem();
         assertEquals(ITEM2, result);
     }
     /**
@@ -218,14 +218,14 @@ public class PlaybackManagerTest {
      */
     @Test
     public void testSkipToNextLastItemWhenRepeating() {
-        QueueItem ITEM1 = MOCK_QUEUE_ITEM;
-        QueueItem ITEM2 = mock(QueueItem.class);
+        MediaItem ITEM1 = MOCK_QUEUE_ITEM;
+        MediaItem ITEM2 = mock(MediaItem.class);
         playbackManager.setRepeating(true);
         playbackManager.onAddQueueItem(ITEM1);
         playbackManager.onAddQueueItem(ITEM2);
         playbackManager.notifyPlaybackComplete(); // make current item the last item
         playbackManager.skipToNext();
-        QueueItem result = playbackManager.getCurrentItem();
+        MediaItem result = playbackManager.getCurrentItem();
         assertEquals(ITEM1, result);
     }
     /**
@@ -235,14 +235,14 @@ public class PlaybackManagerTest {
      */
     @Test
     public void testSkipToNextLastItemWhenNotRepeating() {
-        QueueItem ITEM1 = MOCK_QUEUE_ITEM;
-        QueueItem ITEM2 = mock(QueueItem.class);
+        MediaItem ITEM1 = MOCK_QUEUE_ITEM;
+        MediaItem ITEM2 = mock(MediaItem.class);
         playbackManager.setRepeating(false);
         playbackManager.onAddQueueItem(ITEM1);
         playbackManager.onAddQueueItem(ITEM2);
         playbackManager.notifyPlaybackComplete(); // make current item the last item
         playbackManager.skipToNext();
-        QueueItem result = playbackManager.getCurrentItem();
+        MediaItem result = playbackManager.getCurrentItem();
         assertEquals(ITEM2, result);
     }
     /**
@@ -252,13 +252,13 @@ public class PlaybackManagerTest {
      */
     @Test
     public void testSkipToPrevious() {
-        QueueItem ITEM1 = MOCK_QUEUE_ITEM;
-        QueueItem ITEM2 = mock(QueueItem.class);
+        MediaItem ITEM1 = MOCK_QUEUE_ITEM;
+        MediaItem ITEM2 = mock(MediaItem.class);
         playbackManager.onAddQueueItem(ITEM1);
         playbackManager.onAddQueueItem(ITEM2);
         playbackManager.notifyPlaybackComplete(); // make current item the second in the queue
         playbackManager.skipToPrevious();
-        QueueItem result = playbackManager.getCurrentItem();
+        MediaItem result = playbackManager.getCurrentItem();
         assertEquals(ITEM1, result);
     }
     /**
@@ -268,13 +268,13 @@ public class PlaybackManagerTest {
      */
     @Test
     public void testSkipToPreviousFirstItemWhenRepeating() {
-        QueueItem ITEM1 = MOCK_QUEUE_ITEM;
-        QueueItem ITEM2 = mock(QueueItem.class);
+        MediaItem ITEM1 = MOCK_QUEUE_ITEM;
+        MediaItem ITEM2 = mock(MediaItem.class);
         playbackManager.setRepeating(true);
         playbackManager.onAddQueueItem(ITEM1);
         playbackManager.onAddQueueItem(ITEM2);
         playbackManager.skipToPrevious();
-        QueueItem result = playbackManager.getCurrentItem();
+        MediaItem result = playbackManager.getCurrentItem();
         assertEquals(ITEM2, result);
     }
     /**
@@ -284,13 +284,13 @@ public class PlaybackManagerTest {
      */
     @Test
     public void testSkipToPreviousFirstItemWhenNotRepeating() {
-        QueueItem ITEM1 = MOCK_QUEUE_ITEM;
-        QueueItem ITEM2 = mock(QueueItem.class);
+        MediaItem ITEM1 = MOCK_QUEUE_ITEM;
+        MediaItem ITEM2 = mock(MediaItem.class);
         playbackManager.setRepeating(false);
         playbackManager.onAddQueueItem(ITEM1);
         playbackManager.onAddQueueItem(ITEM2);
         playbackManager.skipToPrevious();
-        QueueItem result = playbackManager.getCurrentItem();
+        MediaItem result = playbackManager.getCurrentItem();
         assertEquals(ITEM1, result);
     }
     /**
@@ -302,18 +302,18 @@ public class PlaybackManagerTest {
     public void testCreateNewPlaylist()
     {
         final int OLD_QUEUE_SIZE = 2;
-        QueueItem OLD_ITEM1 = MOCK_QUEUE_ITEM;
-        QueueItem OLD_ITEM2 = mock(QueueItem.class);
+        MediaItem OLD_ITEM1 = MOCK_QUEUE_ITEM;
+        MediaItem OLD_ITEM2 = mock(MediaItem.class);
         playbackManager.onAddQueueItem(OLD_ITEM1);
         playbackManager.onAddQueueItem(OLD_ITEM2);
         assertEquals(OLD_QUEUE_SIZE, playbackManager.getQueueSize());
         final int NEW_QUEUE_SIZE = 1;
-        QueueItem NEW_ITEM = mock(QueueItem.class);
-        List<QueueItem> newList = new ArrayList<>();
+        MediaItem NEW_ITEM = mock(MediaItem.class);
+        List<MediaItem> newList = new ArrayList<>();
         newList.add(NEW_ITEM);
         playbackManager.createNewPlaylist(newList);
         assertEquals(NEW_QUEUE_SIZE, playbackManager.getQueueSize());
-        QueueItem result = playbackManager.getCurrentItem();
+        MediaItem result = playbackManager.getCurrentItem();
         assertEquals(NEW_ITEM, result);
     }
     /**
@@ -323,13 +323,12 @@ public class PlaybackManagerTest {
      */
     @Test
     public void testShuffleNewIndex() {
-        List<QueueItem> queueItemList = new ArrayList<>();
+        List<MediaItem> queueItemList = new ArrayList<>();
         final int QUEUE_SIZE = 11;
         for (int i = 1; i <= QUEUE_SIZE; i++) {
-            queueItemList.add(mock(QueueItem.class));
+            queueItemList.add(mock(MediaItem.class));
         }
-        PlaybackManager playbackManager = new PlaybackManager();
-        playbackManager.createNewPlaylist(queueItemList);
+        PlaybackManager playbackManager = new PlaybackManager(queueItemList, 0);
         int result = playbackManager.shuffleNewIndex();
         System.out.println("number generated: " + result);
         assertTrue(result >= 0);

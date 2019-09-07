@@ -5,9 +5,11 @@ import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.service.MediaPlaybackService;
 import com.example.mike.mp3player.service.MyNotificationManager;
+import com.example.mike.mp3player.service.RootAuthenticator;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.session.MediaSessionAdapter;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -22,6 +24,12 @@ public class ServiceModule {
                                          MediaSessionAdapter mediaSessionAdapter,
                                          MyNotificationManager myNotificationManager) {
         return new ServiceManager(service, mediaSessionAdapter, myNotificationManager);
+    }
+
+    @Singleton
+    @Provides
+    public RootAuthenticator provideRootAuthenticator(@Named("rootId") String rootId) {
+        return new RootAuthenticator(rootId);
     }
 
     @Singleton

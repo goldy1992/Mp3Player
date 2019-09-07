@@ -6,12 +6,12 @@ import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.activities.FolderActivity;
 import com.example.mike.mp3player.client.activities.MainActivity;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
+import com.example.mike.mp3player.client.activities.SearchResultActivity;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.fragments.AlbumArtFragment;
 import com.example.mike.mp3player.client.views.fragments.MediaControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
-import com.example.mike.mp3player.client.views.fragments.TrackInfoFragment;
 import com.example.mike.mp3player.dagger.components.fragments.ChildViewPagerFragmentSubcomponent;
 import com.example.mike.mp3player.dagger.components.fragments.MainFrameFragmentSubcomponent;
 import com.example.mike.mp3player.dagger.components.fragments.PlaybackButtonsSubComponent;
@@ -44,10 +44,10 @@ public interface MediaActivityCompatComponent {
     void inject(MainActivity mainActivity);
     void inject(MediaPlayerActivity mediaPlayerActivity);
     void inject(FolderActivity folderActivity);
+    void inject(SearchResultActivity searchResultActivity);
 
     // fragments
     void inject(PlaybackSpeedControlsFragment playbackSpeedControlsFragment);
-    void inject(TrackInfoFragment trackInfoFragment);
     void inject(MediaControlsFragment mediaControlsFragment);
     void inject(AlbumArtFragment albumArtFragment);
     void inject(MetadataTitleBarFragment metadataTitleBarFragment);
@@ -57,6 +57,7 @@ public interface MediaActivityCompatComponent {
     MainFrameFragmentSubcomponent mainFrameFragmentSubcomponent();
     PlaybackTrackerFragmentSubcomponent playbackTrackerSubcomponent();
     PlaybackButtonsSubComponent playbackButtonsSubcomponent();
+    SearchResultActivitySubComponent searchResultActivitySubComponent();
     SplashScreenEntryActivityComponent.Factory splashScreenEntryActivity();
 
 

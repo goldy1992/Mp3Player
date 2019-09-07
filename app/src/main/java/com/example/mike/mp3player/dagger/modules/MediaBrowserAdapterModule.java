@@ -7,11 +7,10 @@ import android.support.v4.media.MediaBrowserCompat;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
-import com.example.mike.mp3player.client.callbacks.MyConnectionCallback;
-import com.example.mike.mp3player.client.callbacks.subscription.CategorySubscriptionCallback;
+import com.example.mike.mp3player.client.callbacks.connection.MyConnectionCallback;
+import com.example.mike.mp3player.client.callbacks.search.MySearchCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.GenericSubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback;
-import com.example.mike.mp3player.client.callbacks.subscription.NotifyAllSubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.dagger.scopes.ComponentScope;
 import com.example.mike.mp3player.service.MediaPlaybackServiceInjector;
@@ -26,8 +25,14 @@ public class MediaBrowserAdapterModule {
     @Provides
     public MediaBrowserAdapter provideMediaBrowserAdapter(MediaBrowserCompat mediaBrowser,
                                                           MyConnectionCallback myConnectionCallback,
-                                                          GenericSubscriptionCallback mySubscriptionCallback) {
-        return new MediaBrowserAdapter(mediaBrowser, myConnectionCallback, mySubscriptionCallback);
+                                                          GenericSubscriptionCallback mySubscriptionCallback,
+                                                          MySearchCallback mySearchCallback) {
+        return new MediaBrowserAdapter(mediaBrowser, myConnectionCallback, mySubscriptionCallback, mySearchCallback);
+    }
+
+    @Provides
+    public MySearchCallback provideMySearchCallback() {
+        return new MySearchCallback();
     }
 
     @Provides
@@ -51,11 +56,7 @@ public class MediaBrowserAdapterModule {
             SubscriptionType subscriptionType,
             Handler handler) {
         if (null != subscriptionType) {
-            switch (subscriptionType) {
-                case CATEGORY: return new CategorySubscriptionCallback(handler);
-                case MEDIA_ID: return new MediaIdSubscriptionCallback(handler);
-                default: return new NotifyAllSubscriptionCallback(handler);
-            }
+            return new MediaIdSubscriptionCallback(handler);
         }
         return null;
     }
