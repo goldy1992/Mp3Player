@@ -186,10 +186,12 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
                 break;
                 default: break;
             }
-            childViewPagerFragment.init(category, id);
-            adapter.getPagerItems().put(category, childViewPagerFragment);
-            adapter.getMenuCategories().put(category, mediaItem);
-            adapter.notifyDataSetChanged();
+            if (null != childViewPagerFragment) {
+                childViewPagerFragment.init(category, id);
+                adapter.getPagerItems().put(category, childViewPagerFragment);
+                adapter.getMenuCategories().put(category, mediaItem);
+                adapter.notifyDataSetChanged();
+            }
         }
 
     }

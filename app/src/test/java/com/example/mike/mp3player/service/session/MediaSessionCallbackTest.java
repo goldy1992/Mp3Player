@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 import com.example.mike.mp3player.service.PlaybackManager;
@@ -115,6 +116,16 @@ public class MediaSessionCallbackTest {
         verify(broadcastReceiver, never()).registerAudioNoisyReceiver();
         verify(serviceManager, never()).startService();
     }
+
+    // TODO: complete test
+    @Test
+    public void testOnPlayFromMediaId() {
+        MediaItem itemOfIdToBePrepared; //new MediaItemBuilder("")
+        //when(mediaPlayerAdapter.)
+        //final String mediaId = "xyz";
+        //mediaSessionCallback.onPlayFromMediaId(mediaId, null);
+    }
+
     @Test
     public void testSkipToNext() {
         setUpSkipToNextTest();
