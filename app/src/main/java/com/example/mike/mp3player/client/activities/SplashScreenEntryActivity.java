@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -42,6 +43,16 @@ public class SplashScreenEntryActivity extends AppCompatActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        if (!isTaskRoot()
+                && getIntent().hasCategory(Intent.CATEGORY_LAUNCHER)
+                && getIntent().getAction() != null
+                && getIntent().getAction().equals(Intent.ACTION_MAIN)) {
+
+            finish();
+            return;
+        }
+
         initialiseDependencies();
         super.onCreate(savedInstanceState);
         // TODO: have this injected so that a test implementation can be provided
@@ -72,18 +83,20 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-     //   Log.i(LOG_TAG, "permission result");
-        String permission = permissionsProcessor.getPermissionFromRequestCode(requestCode);
-        if (null != permission) {
-            if (permission.equals(WRITE_EXTERNAL_STORAGE)) {
-                // Request for camera permission.
-                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission has been granted. Start camera preview Activity.
-                    Log.i(LOG_TAG, "permission granted from request");
-                    onPermissionGranted();
+        //   Log.i(LOG_TAG, "permission result");
+        boolean permissionIsGranted = false;
+        if (permissions.length > 0 && grantResults.length > 0) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (WRITE_EXTERNAL_STORAGE.equals(permissions[i]) &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    permissionIsGranted = true;
                 }
             }
+        }
+        if (permissionIsGranted) {
+            onPermissionGranted();
         } else {
+            Toast.makeText(getApplicationContext(), "Permission denied, please enable Storage permissions in settings in order to uer the app", Toast.LENGTH_LONG).show();
             finish();
         }
     }

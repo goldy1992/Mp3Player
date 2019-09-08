@@ -2,7 +2,10 @@ package com.example.mike.mp3player.client;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -35,19 +38,9 @@ public class PermissionsProcessor {
         if (ContextCompat.checkSelfPermission(parentActivity,
                 permission)
                 != PackageManager.PERMISSION_GRANTED) {
-
-            // Permission is not granted
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(parentActivity, permission)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-            } else {
-                // No explanation needed; request the permission
-
                 ActivityCompat.requestPermissions(parentActivity,
                         new String[]{permission},PERMISSION_RQ_CODE_MAP.get(permission));
-            }
+
         } else {
             // Permission has already been granted
             Log.i(LOG_TAG, "Permission has already been granted");

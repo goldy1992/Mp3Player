@@ -27,6 +27,7 @@ import androidx.media.session.MediaButtonReceiver;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
+import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjector;
 import com.example.mike.mp3player.commons.AndroidUtils;
 
 import javax.inject.Inject;
@@ -192,7 +193,7 @@ public class MyNotificationManager {
     }
 
     private PendingIntent createContentIntent(Token token) {
-        Intent openUI = new Intent(context, MediaPlayerActivity.class);
+        Intent openUI = new Intent(context, MediaPlayerActivityInjector.class);
         openUI.putExtra(MEDIA_SESSION, token);
         openUI.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return PendingIntent.getActivity(
