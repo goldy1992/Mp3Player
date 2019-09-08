@@ -29,9 +29,11 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.MyDrawerListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
-import com.example.mike.mp3player.client.views.adapters.MyPagerAdapter;
 import com.example.mike.mp3player.client.views.ThemeSpinnerController;
+import com.example.mike.mp3player.client.views.adapters.MyPagerAdapter;
 import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
+import com.example.mike.mp3player.client.views.fragments.viewpager.FolderViewPagerFragment;
+import com.example.mike.mp3player.client.views.fragments.viewpager.SongViewPagerFragment;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.google.android.material.navigation.NavigationView;
@@ -41,7 +43,6 @@ import java.util.ArrayList;
 import java.util.TreeSet;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import static com.example.mike.mp3player.commons.ComparatorUtils.compareRootMediaItemsByMediaItemType;
 import static com.example.mike.mp3player.commons.Constants.ROOT_ITEM_TYPE;
@@ -52,7 +53,6 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
     private Toolbar titleToolbar;
     private ViewPager rootMenuItemsPager;
     private TabLayout tabLayout;
-    private Provider<ChildViewPagerFragment> childFragmentProvider;
     private ViewGroup container;
     private MediaBrowserAdapter mediaBrowserAdapter;
     private MyPagerAdapter adapter;
@@ -177,8 +177,15 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
         for (MediaBrowserCompat.MediaItem mediaItem : rootItemsOrdered) {
             String id = MediaItemUtils.getMediaId(mediaItem);
             Log.i(LOG_TAG, "media id: " + id);
-            ChildViewPagerFragment childViewPagerFragment = childFragmentProvider.get();
             MediaItemType category = (MediaItemType) MediaItemUtils.getExtra(ROOT_ITEM_TYPE, mediaItem);
+            ChildViewPagerFragment childViewPagerFragment = null;
+            switch (category) {
+                case SONGS: childViewPagerFragment = new SongViewPagerFragment();
+                break;
+                case FOLDERS: childViewPagerFragment = new FolderViewPagerFragment();
+                break;
+                default: break;
+            }
             childViewPagerFragment.init(category, id);
             adapter.getPagerItems().put(category, childViewPagerFragment);
             adapter.getMenuCategories().put(category, mediaItem);
@@ -208,18 +215,8 @@ public class MainFrameFragment extends Fragment  implements MediaBrowserResponse
         }
     }
 
-    @Inject
-    public void setChildFragmentProvider(Provider<ChildViewPagerFragment> childFragmentProvider) {
-        this.childFragmentProvider = childFragmentProvider;
-    }
-
     @VisibleForTesting
     public MyPagerAdapter getAdapter() {
         return adapter;
-    }
-
-    @VisibleForTesting
-    public Provider<ChildViewPagerFragment> getChildFragmentProvider() {
-        return childFragmentProvider;
     }
 }

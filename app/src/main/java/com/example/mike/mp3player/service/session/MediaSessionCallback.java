@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.RemoteException;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -110,9 +111,19 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             mediaSessionAdapter.updateAll(ACTION_PLAY
             );
             //Log.i(LOG_TAG, "onPlay mediasession updated");
-            getServiceManager().startService();
+            serviceManager.startService();
 
         }
+    }
+
+    @Override
+    public void onPlayFromMediaId(String mediaId, Bundle extras) {
+        worker.post(() -> this.playFromMediaId(mediaId, extras));
+    }
+
+    private void playFromMediaId(String mediaId, Bundle extras) {
+        prepareFromMediaId(mediaId, extras);
+        play();
     }
 
     @Override
