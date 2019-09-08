@@ -83,13 +83,17 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-     //   Log.i(LOG_TAG, "permission result");
-        String permission = permissionsProcessor.getPermissionFromRequestCode(requestCode);
-        final boolean hasExternalStoragePermission = WRITE_EXTERNAL_STORAGE.equals(permission)
-                && grantResults.length == 1
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED;
-
-        if (hasExternalStoragePermission) {
+        //   Log.i(LOG_TAG, "permission result");
+        boolean permissionIsGranted = false;
+        if (permissions.length > 0 && grantResults.length > 0) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (WRITE_EXTERNAL_STORAGE.equals(permissions[i]) &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    permissionIsGranted = true;
+                }
+            }
+        }
+        if (permissionIsGranted) {
             onPermissionGranted();
         } else {
             Toast.makeText(getApplicationContext(), "Permission denied, please enable Storage permissions in settings in order to uer the app", Toast.LENGTH_LONG).show();
