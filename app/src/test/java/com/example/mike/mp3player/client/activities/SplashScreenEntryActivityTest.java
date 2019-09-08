@@ -1,9 +1,11 @@
 package com.example.mike.mp3player.client.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,17 +22,33 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 public class SplashScreenEntryActivityTest {
-
 
     private ActivityScenario<SplashScreenEntryActivity> scenario;
 
     @Before
     public void setup() {
         this.scenario = ActivityScenario.launch(SplashScreenEntryActivity.class);
-  //      this.splashScreenEntryActivity = Robolectric.buildActivity(SplashScreenEntryActivity.class).setup().get();
+    }
+
+    @Test
+    public void testNonRootTask() {
+        scenario.onActivity((SplashScreenEntryActivity splashActivity) -> {
+            SplashScreenEntryActivity spiedActivity = spy(splashActivity);
+            Context context = InstrumentationRegistry.getInstrumentation().getContext();
+            Intent intent = new Intent(context, SplashScreenEntryActivity.class);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            intent.setAction(Intent.ACTION_MAIN);
+            when(spiedActivity.getIntent()).thenReturn(intent);
+            when(spiedActivity.isTaskRoot()).thenReturn(false);
+            spiedActivity.onCreate(null);
+            assertTrue(splashActivity.isFinishing());
+        });
+
+
     }
 
     @Test
