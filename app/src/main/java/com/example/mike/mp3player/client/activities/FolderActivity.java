@@ -10,8 +10,6 @@ import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPage
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 
-import javax.inject.Inject;
-
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM;
 
 public abstract class FolderActivity extends MediaActivityCompat {

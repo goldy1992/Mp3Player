@@ -8,7 +8,7 @@ import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM;
 public class FolderViewPagerFragment extends ChildViewPagerFragment {
     @Override
     public void itemSelected(MediaBrowserCompat.MediaItem item) {
-        Intent intent = new Intent(getContext(), intentClass); // TODO: make a media item to activity map
+        Intent intent = new Intent(getContext(), intentClass);
         intent.putExtra(MEDIA_ITEM, item);
         startActivity(intent);
     }

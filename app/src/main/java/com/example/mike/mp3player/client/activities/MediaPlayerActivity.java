@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.activities;
 
 import android.content.Intent;
-import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.FragmentManager;
@@ -13,9 +12,6 @@ import com.example.mike.mp3player.client.views.fragments.MediaControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
-import com.example.mike.mp3player.commons.MediaItemUtils;
-
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM;
 
 /**
  * Created by Mike on 24/09/2017.

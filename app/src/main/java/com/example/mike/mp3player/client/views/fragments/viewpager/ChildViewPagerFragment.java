@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.views.fragments.viewpager;
 
 import android.os.Bundle;
-import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
