@@ -71,14 +71,6 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
         getMediaControllerAdapter().disconnect();
     }
 
-    private Object retrieveIntentInfo(String key) {
-        Intent intent = getIntent();
-        if (intent != null && intent.getExtras() != null) {
-            return getIntent().getExtras().get(key);
-        }
-        return null;
-    }
-
     @VisibleForTesting
     public PlayToolBarFragment getPlayToolBarFragment() { return playToolBarFragment; }
     @VisibleForTesting
