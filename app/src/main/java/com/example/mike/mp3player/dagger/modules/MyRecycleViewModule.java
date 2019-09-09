@@ -46,7 +46,7 @@ public class MyRecycleViewModule {
 
     @Provides
     public MyGenericItemTouchListener provideRecycleViewTouchListener(Context context,
-                    MyGenericItemTouchListener.ItemSelectedListener listener, MediaItemType mediaItemType) {
+                    MyGenericItemTouchListener.ItemSelectedListener listener) {
         return new MyGenericItemTouchListener(context, listener);
     }
 }

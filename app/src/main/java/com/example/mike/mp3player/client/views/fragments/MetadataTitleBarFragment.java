@@ -49,6 +49,8 @@ public class MetadataTitleBarFragment extends AsyncFragment implements MetadataL
 
         // register listeners
         this.mediaControllerAdapter.registerMetaDataListener(this);
+        // update views
+        this.onMetadataChanged(mediaControllerAdapter.getMetadata());
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(titleBar);

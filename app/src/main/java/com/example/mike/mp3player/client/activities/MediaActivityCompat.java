@@ -14,11 +14,9 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
-import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import static com.example.mike.mp3player.commons.Constants.THEME;
 
@@ -32,8 +30,6 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     private MediaActivityCompatComponent mediaActivityCompatComponent;
     /** Thread used to deal with none UI tasks */
     private HandlerThread worker;
-    @Inject
-    Provider<ChildViewPagerFragment> childFragmentProvider;
     /** @return The subscription type of the MediaActivityCompat */
     abstract SubscriptionType getSubscriptionType();
     /** @return The unique name of the HandlerThread used by the activity */
@@ -111,9 +107,5 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     /** @return the mediaActivityCompatComponent **/
     public MediaActivityCompatComponent getMediaActivityCompatComponent() {
         return mediaActivityCompatComponent;
-    }
-    /** */
-    public Provider<ChildViewPagerFragment> getChildFragmentProvider() {
-        return childFragmentProvider;
     }
 }

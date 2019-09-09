@@ -126,8 +126,9 @@ public abstract class MediaPlayerAdapter implements MediaPlayer.OnErrorListener,
         }
 
         if (this.currentMediaPlayer != null) {
+            currentMediaPlayer.reset();
             currentMediaPlayer.release();
-           //Log.i(LOG_TAG,"current mediaplayer released");
+            //Log.i(LOG_TAG,"current mediaplayer released");
             currentMediaPlayer = null;
         }
 

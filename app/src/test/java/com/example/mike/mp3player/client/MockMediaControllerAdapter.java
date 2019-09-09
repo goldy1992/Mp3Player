@@ -31,11 +31,16 @@ public class MockMediaControllerAdapter extends MediaControllerAdapter {
         // DO NOTHING
     }
 
-
     @Override
     public void prepareFromMediaId(String mediaId, Bundle extras) {
         // DO NOTHING
     }
+
+    @Override
+    public void playFromMediaId(String mediaId, Bundle extras) {
+        // DO NOTHING
+    }
+
     @Override
     public void play() {
         // DO NOTHING

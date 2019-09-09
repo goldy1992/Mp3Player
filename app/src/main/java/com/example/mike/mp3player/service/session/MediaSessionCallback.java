@@ -110,9 +110,18 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
             mediaSessionAdapter.updateAll(ACTION_PLAY
             );
             //Log.i(LOG_TAG, "onPlay mediasession updated");
-            getServiceManager().startService();
-
+            serviceManager.startService();
         }
+    }
+
+    @Override
+    public void onPlayFromMediaId(String mediaId, Bundle extras) {
+        worker.post(() -> this.playFromMediaId(mediaId, extras));
+    }
+
+    private void playFromMediaId(String mediaId, Bundle extras) {
+        prepareFromMediaId(mediaId, extras);
+        play();
     }
 
     @Override

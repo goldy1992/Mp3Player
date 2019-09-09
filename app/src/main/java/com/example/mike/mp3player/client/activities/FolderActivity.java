@@ -1,8 +1,5 @@
 package com.example.mike.mp3player.client.activities;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.example.mike.mp3player.R;
@@ -13,16 +10,7 @@ import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPage
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 
-import javax.inject.Inject;
-
-import static com.example.mike.mp3player.commons.Constants.LIBRARY_ID;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
-import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE_ID;
-import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE;
-import static com.example.mike.mp3player.commons.Constants.PARENT_MEDIA_ITEM_TYPE_ID;
-import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 
 public abstract class FolderActivity extends MediaActivityCompat {
 
@@ -65,8 +53,4 @@ public abstract class FolderActivity extends MediaActivityCompat {
         this.finish();
     }
 
-    @Inject
-    public void setViewPageFragment(ChildViewPagerFragment childViewPagerFragment) {
-        this.viewPageFragment = childViewPagerFragment;
-    }
 }

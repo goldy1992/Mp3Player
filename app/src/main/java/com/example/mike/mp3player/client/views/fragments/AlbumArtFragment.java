@@ -44,6 +44,8 @@ public class AlbumArtFragment extends AsyncFragment implements MetadataListener 
         this.albumArt = view.findViewById(R.id.albumArt);
         // register listeners
         this.mediaControllerAdapter.registerMetaDataListener(this);
+        albumArtPainter.paintOnView(albumArt, mediaControllerAdapter.getCurrentSongAlbumArtUri());
+
     }
 
     private void injectDependencies() {

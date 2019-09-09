@@ -26,6 +26,7 @@ import java.util.Set;
 
 import javax.inject.Provider;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -62,8 +63,6 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
     }
 
     private void onChildrenLoadedRootItems(MainFrameFragment fragment) {
-        final Provider<ChildViewPagerFragment> fragmentProviderSpied = spy(fragment.getChildFragmentProvider());
-        fragment.setChildFragmentProvider(fragmentProviderSpied);
         final String parentId = "parentId";
         final ArrayList<MediaBrowserCompat.MediaItem> children = new ArrayList<>();
         final Set<MediaItemType> rootItemsSet = MediaItemType.PARENT_TO_CHILD_MAP.get(MediaItemType.ROOT);
@@ -80,7 +79,8 @@ public class MainFrameFragmentTest extends FragmentTestBase<MainFrameFragment> {
         }
         final int expectedNumOfFragmentsCreated = rootItemsSet.size();
         fragment.onChildrenLoaded(parentId, children);
-        verify(fragmentProviderSpied, times(expectedNumOfFragmentsCreated)).get();
+        int numberOfChildFragments = fragment.getAdapter().getCount();
+        assertEquals(expectedNumOfFragmentsCreated, numberOfChildFragments);
     }
 
     private void clickAndroidOptionsMenu(MainFrameFragment fragment) {
