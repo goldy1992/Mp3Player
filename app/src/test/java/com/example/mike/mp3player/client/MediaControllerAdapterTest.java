@@ -119,6 +119,14 @@ public class MediaControllerAdapterTest {
     }
 
     @Test
+    public void testPlayFromMediaId() {
+        final String mediaId = "MEDIA_ID";
+        final Bundle extras = new Bundle();
+        mediaControllerAdapter.playFromMediaId(mediaId, extras);
+        verify(mediaControllerAdapter, times(1)).playFromMediaId(mediaId, extras);
+    }
+
+    @Test
     public void testSeekTo() {
         final long position = 23542L;
         mediaControllerAdapter.seekTo(position);
