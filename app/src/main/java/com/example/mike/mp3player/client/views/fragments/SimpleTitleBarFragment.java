@@ -19,7 +19,7 @@ import com.example.mike.mp3player.R;
 
 public class SimpleTitleBarFragment extends Fragment {
 
-
+    private Toolbar toolbar;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -30,7 +30,7 @@ public class SimpleTitleBarFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle bundle) {
-        Toolbar toolbar = view.findViewById(R.id.titleToolbar);
+        this.toolbar = view.findViewById(R.id.titleToolbar);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -43,4 +43,7 @@ public class SimpleTitleBarFragment extends Fragment {
         toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
 }
