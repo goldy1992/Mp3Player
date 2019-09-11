@@ -123,6 +123,7 @@ dependencies {
     def FRAGMENT_TESTING_VERSION = '1.1.0-alpha07'
     def FAST_SCROLL_VERSION = '2.0.0'
     def GLIDE_VERSION = '4.9.0'
+    def ROOM_VERSION = '2.1.0'
     def DAGGER_VERSION = '2.24'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -141,6 +142,8 @@ dependencies {
     implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
     implementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     implementation group: 'com.simplecityapps', name: 'recyclerview-fastscroll', version: FAST_SCROLL_VERSION
+    implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
+    annotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
     //dagger
     implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
