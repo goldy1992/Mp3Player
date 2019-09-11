@@ -12,7 +12,14 @@
             app:popupTheme="@style/AppTheme"
             android:background="?attr/colorPrimary"
             app:titleTextColor="?attr/textColorPrimary"
-            app:title="@string/APP_TITLE">
+            app:title="@string/APP_TITLE"
+            android:ellipsize="marquee"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            >
 
             <ImageButton
                 android:id="@+id/searchFilter"
