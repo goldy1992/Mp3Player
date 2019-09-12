@@ -2,6 +2,7 @@ package com.example.mike.mp3player.service.library.content.retriever;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
 
@@ -14,8 +15,8 @@ import java.util.List;
 import static com.example.mike.mp3player.service.library.content.Projections.SONG_PROJECTION;
 
 public class SongsFromFolderRetriever extends ContentResolverRetriever {
-    public SongsFromFolderRetriever(ContentResolver contentResolver, ResultsParser resultsParser, SearchDatabase searchDatabase) {
-        super(contentResolver, resultsParser, searchDatabase);
+    public SongsFromFolderRetriever(ContentResolver contentResolver, ResultsParser resultsParser, SearchDatabase searchDatabase, Handler handler) {
+        super(contentResolver, resultsParser, searchDatabase, handler);
     }
 
     @Override

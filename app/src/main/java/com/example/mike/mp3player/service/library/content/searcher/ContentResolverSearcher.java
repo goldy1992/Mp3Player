@@ -34,7 +34,7 @@ public abstract class ContentResolverSearcher extends ContentSearcher {
         Cursor cursor = performSearchQuery(query);
         List<MediaItem> results = resultsParser.create(cursor, idPrefix);
         if (isFilterable()) {
-            return resultsFilter.filter(query, results);
+            //return resultsFilter.filter(query, results);
         }
         return results;
     }

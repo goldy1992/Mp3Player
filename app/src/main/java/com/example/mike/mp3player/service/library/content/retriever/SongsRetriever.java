@@ -2,8 +2,8 @@ package com.example.mike.mp3player.service.library.content.retriever;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.example.mike.mp3player.commons.MediaItemType;
@@ -22,8 +22,8 @@ import static com.example.mike.mp3player.service.library.content.Projections.SON
 public class SongsRetriever extends ContentResolverRetriever {
 
     public SongsRetriever(ContentResolver contentResolver,
-                          ResultsParser resultsParser, SearchDatabase searchDatabase) {
-        super(contentResolver, resultsParser, searchDatabase);
+                          ResultsParser resultsParser, SearchDatabase searchDatabase, Handler handler) {
+        super(contentResolver, resultsParser, searchDatabase, handler);
     }
 
     @Override
@@ -39,20 +39,22 @@ public class SongsRetriever extends ContentResolverRetriever {
 
     @Override
     void updateSearchDatabase(List<MediaItem> results) {
-        final int resultsSize = results.size();
-        final int count = searchDatabase.songDao().getCount();
+        handler.post(() -> {
+            final int resultsSize = results.size();
+            final int count = searchDatabase.songDao().getCount();
 
-        if (count != resultsSize) { // INSERT NORMALISED VALUES
-            List<Song> songs = new ArrayList<>();
-            for (MediaItem mediaItem : results) {
-                Song song = new Song(MediaItemUtils.getMediaId(mediaItem));
-                song.setTitle(StringUtils.stripAccents(MediaItemUtils.getTitle(mediaItem)));
-
+            if (count != resultsSize) { // INSERT NORMALISED VALUES
+                List<Song> songs = new ArrayList<>();
+                for (MediaItem mediaItem : results) {
+                    Song song = new Song(MediaItemUtils.getMediaId(mediaItem));
+                    song.setTitle(StringUtils.stripAccents(MediaItemUtils.getTitle(mediaItem)));
+                    songs.add(song);
+                }
+                searchDatabase.songDao().insertAll(songs);
             }
-            searchDatabase.songDao().insertAll(songs);
-        }
-
+        });
     }
+
 
     @Override
     public String[] getProjection() {
