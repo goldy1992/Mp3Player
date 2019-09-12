@@ -11,6 +11,7 @@ import com.example.mike.mp3player.service.library.content.retriever.FoldersRetri
 import com.example.mike.mp3player.service.library.content.retriever.RootRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.SongsFromFolderRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.SongsRetriever;
+import com.example.mike.mp3player.service.library.search.SearchDatabase;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -78,15 +79,16 @@ public class ContentRetrieverModule {
     @Provides
     public Map<Class<? extends ContentRetriever>, ContentRetriever> provideContentResolverRetrieverMap(ContentResolver contentResolver,
                                                                                                        Map<MediaItemType, String> ids,
-                                                                                                       Map<MediaItemType, ResultsParser> mediaItemBuilderMap) {
+                                                                                                       Map<MediaItemType, ResultsParser> mediaItemBuilderMap,
+                                                                                                       SearchDatabase searchDatabase) {
         Map<Class<? extends ContentRetriever>, ContentRetriever> mapToReturn = new HashMap<>();
         RootRetriever rootRetriever = new RootRetriever(ids);
         mapToReturn.put(RootRetriever.class, rootRetriever);
-        SongsRetriever songsRetriever = new SongsRetriever(contentResolver, mediaItemBuilderMap.get(MediaItemType.SONG));
+        SongsRetriever songsRetriever = new SongsRetriever(contentResolver, mediaItemBuilderMap.get(MediaItemType.SONG), searchDatabase);
         mapToReturn.put(SongsRetriever.class, songsRetriever);
-        FoldersRetriever foldersRetriever = new FoldersRetriever(contentResolver, mediaItemBuilderMap.get(FOLDER));
+        FoldersRetriever foldersRetriever = new FoldersRetriever(contentResolver, mediaItemBuilderMap.get(FOLDER), searchDatabase);
         mapToReturn.put(FoldersRetriever.class, foldersRetriever);
-        SongsFromFolderRetriever songsFromFolderRetriever = new SongsFromFolderRetriever(contentResolver, mediaItemBuilderMap.get(SONG));
+        SongsFromFolderRetriever songsFromFolderRetriever = new SongsFromFolderRetriever(contentResolver, mediaItemBuilderMap.get(SONG), searchDatabase);
         mapToReturn.put(SongsFromFolderRetriever.class, songsFromFolderRetriever);
         return mapToReturn;
     }

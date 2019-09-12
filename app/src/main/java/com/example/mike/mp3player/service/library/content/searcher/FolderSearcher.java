@@ -7,13 +7,14 @@ import android.provider.MediaStore;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.service.library.content.filter.FoldersResultFilter;
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
+import com.example.mike.mp3player.service.library.search.SearchDatabase;
 
 import static com.example.mike.mp3player.service.library.content.Projections.FOLDER_PROJECTION;
 
 public class FolderSearcher extends ContentResolverSearcher {
 
-    public FolderSearcher(ContentResolver contentResolver, ResultsParser resultsParser, FoldersResultFilter foldersResultFilter, String idPrefix) {
-        super(contentResolver, resultsParser,  foldersResultFilter, idPrefix);
+    public FolderSearcher(ContentResolver contentResolver, ResultsParser resultsParser, FoldersResultFilter foldersResultFilter, String idPrefix, SearchDatabase searchDatabase) {
+        super(contentResolver, resultsParser,  foldersResultFilter, idPrefix, searchDatabase);
     }
 
     @Override

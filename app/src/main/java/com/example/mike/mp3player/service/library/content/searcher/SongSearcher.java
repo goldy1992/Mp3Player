@@ -6,13 +6,20 @@ import android.provider.MediaStore;
 
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
+import com.example.mike.mp3player.service.library.search.SearchDatabase;
+import com.example.mike.mp3player.service.library.search.Song;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.mike.mp3player.service.library.content.Projections.SONG_PROJECTION;
 
 public class SongSearcher extends ContentResolverSearcher {
 
-    public SongSearcher(ContentResolver contentResolver, ResultsParser resultsParser,  String idPrefix) {
-        super(contentResolver, resultsParser, null, idPrefix);
+    public SongSearcher(ContentResolver contentResolver, ResultsParser resultsParser, String idPrefix, SearchDatabase searchDatabase) {
+        super(contentResolver, resultsParser, null, idPrefix, searchDatabase);
     }
 
     @Override
@@ -27,8 +34,17 @@ public class SongSearcher extends ContentResolverSearcher {
 
     @Override
     public Cursor performSearchQuery(String query) {
-        String WHERE_CLAUSE = MediaStore.Audio.Media.TITLE + " LIKE ? COLLATE NOCASE";
-        String[] WHERE_ARGS = {"%" + query + "%"};
+        String searchQuery = StringUtils.stripAccents(query);
+        List<Song> results =  searchDatabase.songDao().query(searchQuery);
+        List<String> ids = new ArrayList<>();
+        if (results != null && !results.isEmpty()) {
+            for (Song song : results) {
+                ids.add(song.getId());
+            }
+
+        }
+        String WHERE_CLAUSE = MediaStore.Audio.Media._ID + " IN(?) COLLATE NOCASE";
+        String[] WHERE_ARGS = {StringUtils.join(ids, ", ")};
         return  contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 getProjection(),
                 WHERE_CLAUSE, WHERE_ARGS, null);

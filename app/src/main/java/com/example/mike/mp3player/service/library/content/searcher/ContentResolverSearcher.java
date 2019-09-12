@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.example.mike.mp3player.service.library.content.filter.ResultsFilter;
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
+import com.example.mike.mp3player.service.library.search.SearchDatabase;
 
 import java.util.List;
 
@@ -15,15 +16,18 @@ public abstract class ContentResolverSearcher extends ContentSearcher {
     final ContentResolver contentResolver;
     final ResultsParser resultsParser;
     final String idPrefix;
+    final SearchDatabase searchDatabase;
 
     public ContentResolverSearcher(ContentResolver contentResolver,
                                    ResultsParser resultsParser,
                                    ResultsFilter resultsFilter,
-                                   String idPrefix) {
+                                   String idPrefix,
+                                   SearchDatabase searchDatabase) {
         super(resultsFilter);
         this.contentResolver = contentResolver;
         this.resultsParser = resultsParser;
         this.idPrefix = idPrefix;
+        this.searchDatabase = searchDatabase;
     }
 
     public List<MediaItem> search(@NonNull String query) {

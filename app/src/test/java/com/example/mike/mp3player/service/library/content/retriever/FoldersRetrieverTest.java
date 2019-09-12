@@ -17,7 +17,7 @@ public class FoldersRetrieverTest extends ContentResolverRetrieverTestBase<Folde
     public void setup() {
         MockitoAnnotations.initMocks(this);
         super.setup();
-        this.retriever = spy(new FoldersRetriever(contentResolver, resultsParser));
+        this.retriever = spy(new FoldersRetriever(contentResolver, resultsParser, searchDatabase));
     }
 
     @Test

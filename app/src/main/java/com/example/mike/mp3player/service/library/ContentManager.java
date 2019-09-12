@@ -6,6 +6,7 @@ import com.example.mike.mp3player.service.library.content.request.ContentRequest
 import com.example.mike.mp3player.service.library.content.retriever.ContentRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.RootRetriever;
 import com.example.mike.mp3player.service.library.content.searcher.ContentSearcher;
+import com.example.mike.mp3player.service.library.search.SearchDatabase;
 
 import org.apache.commons.collections4.CollectionUtils;
 

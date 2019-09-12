@@ -6,6 +6,7 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
 import com.example.mike.mp3player.service.library.content.request.ContentRequest;
+import com.example.mike.mp3player.service.library.search.SearchDatabase;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -25,6 +26,8 @@ public abstract class ContentResolverRetrieverTestBase<T extends ContentResolver
 
     T retriever;
 
+    @Mock
+    SearchDatabase searchDatabase;
     @Mock
     ContentResolver contentResolver;
     @Mock

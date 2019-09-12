@@ -13,7 +13,7 @@ public abstract class SearchDatabase extends RoomDatabase {
 
     public static volatile SearchDatabase INSTANCE;
 
-    static SearchDatabase getDatabase(final Context context) {
+    public static SearchDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (SearchDatabase.class) {
                 if (INSTANCE == null) {
