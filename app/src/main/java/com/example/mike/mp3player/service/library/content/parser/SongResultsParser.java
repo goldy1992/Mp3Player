@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
+import androidx.annotation.NonNull;
+
 import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemType;
 
@@ -40,7 +42,7 @@ public class SongResultsParser extends ResultsParser {
         return MediaItemType.SONG;
     }
 
-    private MediaItem buildMediaItem(Cursor c, String libraryIdPrefix) {
+    private MediaItem buildMediaItem(@NonNull Cursor c, String libraryIdPrefix) {
         final String mediaId = c.getString(c.getColumnIndex(MediaStore.Audio.Media._ID));
         final String mediaFilePath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
         final long duration = c.getLong(c.getColumnIndex(MediaStore.Audio.Media.DURATION));

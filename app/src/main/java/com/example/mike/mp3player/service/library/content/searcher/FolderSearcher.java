@@ -29,27 +29,27 @@ public class FolderSearcher extends ContentResolverSearcher {
     public Cursor performSearchQuery(String query) {
         String searchQuery = StringUtils.stripAccents(query);
         List<Folder> results =  searchDatabase.folderDao().query(searchQuery);
-        List<String> ids = new ArrayList<>();
         if (results != null && !results.isEmpty()) {
+
+            List<String> ids = new ArrayList<>();
+            List<String> likeList = new ArrayList<>();
+            List<String> whereArgs = new ArrayList<>();
             for (Folder folder : results) {
                 ids.add(folder.getId());
+                likeList.add(LIKE_STATEMENT);
+
             }
-        }
-        List<String> likeList = new ArrayList<>();
-        for (int i = 0; i < results.size(); i++) {
-            likeList.add(LIKE_STATEMENT);
-        }
+            final String WHERE = StringUtils.join(likeList, " OR ") + " COLLATE NOCASE";
 
-        final String WHERE = StringUtils.join(likeList, " OR ") + " COLLATE NOCASE";
+            for (int i = 0; i < results.size(); i++) {
+                whereArgs.add("%" + ids.get(i) + "%");
+            }
 
-
-        List<String> whereArgs = new ArrayList<>();
-        for (int i = 0; i < results.size(); i++) {
-            whereArgs.add("%" + ids.get(i) + "%");
+            final String[] WHERE_ARGS = whereArgs.toArray(new String[ids.size()]);
+            return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, getProjection(),
+                    WHERE, WHERE_ARGS, null);
         }
-        final String[] WHERE_ARGS = whereArgs.toArray(new String[ids.size()]);
-        return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, getProjection(),
-                WHERE, WHERE_ARGS, null);
+        return null;
     }
 
     @Override

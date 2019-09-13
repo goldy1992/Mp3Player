@@ -9,8 +9,8 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
-import com.example.mike.mp3player.service.library.search.SearchDatabase;
 import com.example.mike.mp3player.service.library.search.Song;
+import com.example.mike.mp3player.service.library.search.SongDao;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -22,8 +22,8 @@ import static com.example.mike.mp3player.service.library.content.Projections.SON
 public class SongsRetriever extends ContentResolverRetriever {
 
     public SongsRetriever(ContentResolver contentResolver,
-                          ResultsParser resultsParser, SearchDatabase searchDatabase, Handler handler) {
-        super(contentResolver, resultsParser, searchDatabase, handler);
+                          ResultsParser resultsParser, SongDao songDao, Handler handler) {
+        super(contentResolver, resultsParser, songDao, handler);
     }
 
     @Override
@@ -41,16 +41,16 @@ public class SongsRetriever extends ContentResolverRetriever {
     void updateSearchDatabase(List<MediaItem> results) {
         handler.post(() -> {
             final int resultsSize = results.size();
-            final int count = searchDatabase.songDao().getCount();
+            final int count = dao.getCount();
 
             if (count != resultsSize) { // INSERT NORMALISED VALUES
                 List<Song> songs = new ArrayList<>();
                 for (MediaItem mediaItem : results) {
                     Song song = new Song(MediaItemUtils.getMediaId(mediaItem));
-                    song.setTitle(StringUtils.stripAccents(MediaItemUtils.getTitle(mediaItem)));
+                    song.setValue(StringUtils.stripAccents(MediaItemUtils.getTitle(mediaItem)));
                     songs.add(song);
                 }
-                searchDatabase.songDao().insertAll(songs);
+                dao.insertAll(songs);
             }
         });
     }

@@ -18,6 +18,8 @@ import static com.example.mike.mp3player.service.library.content.Projections.SON
 
 public class SongSearcher extends ContentResolverSearcher {
 
+    private static final String PARAMETER = "?";
+
     public SongSearcher(ContentResolver contentResolver, ResultsParser resultsParser, String idPrefix, SearchDatabase searchDatabase) {
         super(contentResolver, resultsParser, null, idPrefix, searchDatabase);
     }
@@ -37,14 +39,18 @@ public class SongSearcher extends ContentResolverSearcher {
         String searchQuery = StringUtils.stripAccents(query);
         List<Song> results =  searchDatabase.songDao().query(searchQuery);
         List<String> ids = new ArrayList<>();
+        List<String> parameters = new ArrayList<>();
         if (results != null && !results.isEmpty()) {
             for (Song song : results) {
                 ids.add(song.getId());
+                parameters.add(PARAMETER);
             }
 
         }
-        String WHERE_CLAUSE = MediaStore.Audio.Media._ID + " IN(?) COLLATE NOCASE";
-        String[] WHERE_ARGS = {StringUtils.join(ids, ", ")};
+
+
+        String WHERE_CLAUSE = MediaStore.Audio.Media._ID + " IN(" + StringUtils.join(parameters, ", ") + ") COLLATE NOCASE";
+        String[] WHERE_ARGS = ids.toArray(new String[ids.size()]);
         return  contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 getProjection(),
                 WHERE_CLAUSE, WHERE_ARGS, null);

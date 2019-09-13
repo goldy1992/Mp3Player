@@ -4,7 +4,9 @@ import android.content.Context;
 
 import androidx.room.Room;
 
+import com.example.mike.mp3player.service.library.search.FolderDao;
 import com.example.mike.mp3player.service.library.search.SearchDatabase;
+import com.example.mike.mp3player.service.library.search.SongDao;
 
 import javax.inject.Singleton;
 
@@ -21,5 +23,17 @@ public class SearchDatabaseModule {
     public SearchDatabase providesSearchDb(Context context) {
         Room.databaseBuilder(context, SearchDatabase.class, DATABASE_NAME).build();
         return SearchDatabase.getDatabase(context);
+    }
+
+    @Provides
+    @Singleton
+    public SongDao provideSongDao(SearchDatabase searchDatabase) {
+        return searchDatabase.songDao();
+    }
+
+    @Provides
+    @Singleton
+    public FolderDao provideFolderDao(SearchDatabase searchDatabase) {
+        return searchDatabase.folderDao();
     }
 }

@@ -4,6 +4,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
+import androidx.annotation.NonNull;
+
 import com.example.mike.mp3player.commons.MediaItemType;
 
 import java.util.Comparator;
@@ -15,7 +17,7 @@ public abstract class ResultsParser implements Comparator<MediaItem> {
 
     public ResultsParser() { }
 
-    public abstract List<MediaItem> create(Cursor cursor, String mediaIdPrefix);
+    public abstract List<MediaItem> create(@NonNull Cursor cursor, String mediaIdPrefix);
     public abstract MediaItemType getType();
 
     protected Bundle getExtras() {

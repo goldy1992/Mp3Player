@@ -4,6 +4,8 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
 
+import androidx.annotation.NonNull;
+
 import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemType;
 
@@ -22,7 +24,7 @@ import static com.example.mike.mp3player.commons.MediaItemUtils.getDirectoryPath
 public class FolderResultsParser extends ResultsParser {
 
     @Override
-    public List<MediaBrowserCompat.MediaItem> create(Cursor cursor, String mediaIdPrefix) {
+    public List<MediaBrowserCompat.MediaItem> create(@NonNull Cursor cursor, String mediaIdPrefix) {
         TreeSet<MediaBrowserCompat.MediaItem> listToReturn = new TreeSet<>(this);
         Set<String> directoryPathSet = new HashSet<>();
         while (cursor.moveToNext()) {
@@ -48,12 +50,15 @@ public class FolderResultsParser extends ResultsParser {
     }
 
 
-    private MediaBrowserCompat.MediaItem createFolderMediaItem(File file, String parentId) {
-        String filePath = file.getAbsolutePath();
+    private MediaBrowserCompat.MediaItem createFolderMediaItem(File folder, String parentId) {
+        /* append a file separator so that folders with an "extended" name are discarded...
+         * e.g. Folder to accept: 'folder1'
+         *      Folder to reject: 'folder1extended' */
+        String filePath = folder.getAbsolutePath() + File.separator;
         return new MediaItemBuilder(filePath)
         .setMediaItemType(MediaItemType.FOLDER)
         .setLibraryId(buildLibraryId(parentId, filePath))
-        .setFile(file)
+        .setFile(folder)
         .setFlags(FLAG_BROWSABLE)
         .build();
     }

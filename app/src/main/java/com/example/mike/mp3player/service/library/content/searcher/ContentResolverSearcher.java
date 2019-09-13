@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.mike.mp3player.service.library.content.filter.ResultsFilter;
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
@@ -30,8 +31,13 @@ public abstract class ContentResolverSearcher extends ContentSearcher {
         this.searchDatabase = searchDatabase;
     }
 
+    @Nullable
     public List<MediaItem> search(@NonNull String query) {
         Cursor cursor = performSearchQuery(query);
+
+        if(cursor == null) {
+            return null;
+        }
         List<MediaItem> results = resultsParser.create(cursor, idPrefix);
         if (isFilterable()) {
             //return resultsFilter.filter(query, results);
