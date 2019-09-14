@@ -40,35 +40,35 @@ public class EndToEndTest {
             GrantPermissionRule.grant(
                     "android.permission.WRITE_EXTERNAL_STORAGE");
 
-    @Test
-    public void splashScreenEntryActivityTest() {
-        ViewInteraction textView = onView(
-                allOf(withText("Songs"),
-                        childAtPosition(
-                                allOf(withId(R.id.pagerTabStrip),
-                                        withParent(withId(R.id.rootItemsPager))),
-                                1),
-                        isDisplayed()));
-        textView.check(matches(withText("Songs")));
-
-        ViewInteraction textView2 = onView(
-                allOf(withText("Folders"),
-                        childAtPosition(
-                                allOf(withId(R.id.pagerTabStrip),
-                                        withParent(withId(R.id.rootItemsPager))),
-                                2),
-                        isDisplayed()));
-        textView2.check(matches(withText("Folders")));
-
-        ViewInteraction textView3 = onView(
-                allOf(withText("Folders"),
-                        childAtPosition(
-                                allOf(withId(R.id.pagerTabStrip),
-                                        withParent(withId(R.id.rootItemsPager))),
-                                2),
-                        isDisplayed()));
-        textView3.perform(click());
-    }
+//    @Test
+//    public void splashScreenEntryActivityTest() {
+//        ViewInteraction textView = onView(
+//                allOf(withText("Songs"),
+//                        childAtPosition(
+//                                allOf(withId(R.id.pagerTabStrip),
+//                                        withParent(withId(R.id.rootItemsPager))),
+//                                1),
+//                        isDisplayed()));
+//        textView.check(matches(withText("Songs")));
+//
+//        ViewInteraction textView2 = onView(
+//                allOf(withText("Folders"),
+//                        childAtPosition(
+//                                allOf(withId(R.id.pagerTabStrip),
+//                                        withParent(withId(R.id.rootItemsPager))),
+//                                2),
+//                        isDisplayed()));
+//        textView2.check(matches(withText("Folders")));
+//
+//        ViewInteraction textView3 = onView(
+//                allOf(withText("Folders"),
+//                        childAtPosition(
+//                                allOf(withId(R.id.pagerTabStrip),
+//                                        withParent(withId(R.id.rootItemsPager))),
+//                                2),
+//                        isDisplayed()));
+//        textView3.perform(click());
+//    }
 
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
