@@ -1,14 +1,16 @@
 package com.example.mike.mp3player.service.library;
 
+import androidx.annotation.NonNull;
+
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.service.library.content.request.ContentRequest;
 import com.example.mike.mp3player.service.library.content.request.ContentRequestParser;
 import com.example.mike.mp3player.service.library.content.retriever.ContentRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.RootRetriever;
 import com.example.mike.mp3player.service.library.content.searcher.ContentSearcher;
-import com.example.mike.mp3player.service.library.search.SearchDatabase;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +57,8 @@ public class ContentManager {
      * @param query the search query
      * @return a list of media items which match the search query
      */
-    public List<MediaItem> search(String query) {
-        query = query.trim();
+    public List<MediaItem> search(@NonNull String query) {
+        query = normalise(query);
         List<MediaItem> results = new ArrayList<>();
         for (ContentSearcher contentSearcher : searchContentRetrieverMap.values()) {
             List<MediaItem> searchResults = contentSearcher.search(query);
@@ -70,6 +72,11 @@ public class ContentManager {
     }
     public List<MediaItem> getPlaylist(String id) {
        return getChildren(id);
+    }
+
+    private String normalise(@NonNull String query) {
+        query = StringUtils.stripAccents(query);
+        return query.trim().toUpperCase();
     }
 
 }

@@ -15,7 +15,7 @@ public class SongsFromFolderRetrieverTest extends ContentResolverRetrieverTestBa
     @Before
     public void setup() {
         super.setup();
-        this.retriever = spy(new SongsFromFolderRetriever(contentResolver, resultsParser, searchDatabase));
+        this.retriever = spy(new SongsFromFolderRetriever(contentResolver, resultsParser, null, handler));
     }
 
     @Test

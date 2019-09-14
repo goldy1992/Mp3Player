@@ -6,8 +6,8 @@ import android.provider.MediaStore;
 
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
-import com.example.mike.mp3player.service.library.search.SearchDatabase;
 import com.example.mike.mp3player.service.library.search.Song;
+import com.example.mike.mp3player.service.library.search.SongDao;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,8 +20,8 @@ public class SongSearcher extends ContentResolverSearcher {
 
     private static final String PARAMETER = "?";
 
-    public SongSearcher(ContentResolver contentResolver, ResultsParser resultsParser, String idPrefix, SearchDatabase searchDatabase) {
-        super(contentResolver, resultsParser, null, idPrefix, searchDatabase);
+    public SongSearcher(ContentResolver contentResolver, ResultsParser resultsParser, String idPrefix, SongDao songDao) {
+        super(contentResolver, resultsParser, null, idPrefix, songDao);
     }
 
     @Override
@@ -36,8 +36,7 @@ public class SongSearcher extends ContentResolverSearcher {
 
     @Override
     public Cursor performSearchQuery(String query) {
-        String searchQuery = StringUtils.stripAccents(query);
-        List<Song> results =  searchDatabase.songDao().query(searchQuery);
+        List<Song> results =  searchDatabase.query(query);
         List<String> ids = new ArrayList<>();
         List<String> parameters = new ArrayList<>();
         if (results != null && !results.isEmpty()) {

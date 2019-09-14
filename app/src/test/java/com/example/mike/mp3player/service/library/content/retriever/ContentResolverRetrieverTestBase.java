@@ -1,11 +1,13 @@
 package com.example.mike.mp3player.service.library.content.retriever;
 
 import android.content.ContentResolver;
+import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
 import com.example.mike.mp3player.service.library.content.request.ContentRequest;
+import com.example.mike.mp3player.service.library.search.SearchDao;
 import com.example.mike.mp3player.service.library.search.SearchDatabase;
 
 import org.junit.Test;
@@ -27,11 +29,11 @@ public abstract class ContentResolverRetrieverTestBase<T extends ContentResolver
     T retriever;
 
     @Mock
-    SearchDatabase searchDatabase;
-    @Mock
     ContentResolver contentResolver;
     @Mock
     ResultsParser resultsParser;
+    @Mock
+    Handler handler;
 
     ContentRequest contentRequest;
 

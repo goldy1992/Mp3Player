@@ -30,8 +30,8 @@ public class ContentSearcherModule {
                                                                         Map<MediaItemType, ResultsParser> mediaItemBuilderMap,
                                                                         SearchDatabase searchDatabase) {
         EnumMap<MediaItemType, ContentSearcher> map = new EnumMap<>(MediaItemType.class);
-        map.put(MediaItemType.SONG, new SongSearcher(contentResolver, mediaItemBuilderMap.get(MediaItemType.SONG), idMap.get(MediaItemType.SONG), searchDatabase));
-        map.put(FOLDER, new FolderSearcher(contentResolver, mediaItemBuilderMap.get(FOLDER), new FoldersResultFilter(), idMap.get(FOLDER), searchDatabase));
+        map.put(MediaItemType.SONG, new SongSearcher(contentResolver, mediaItemBuilderMap.get(MediaItemType.SONG), idMap.get(MediaItemType.SONG), searchDatabase.songDao()));
+        map.put(FOLDER, new FolderSearcher(contentResolver, mediaItemBuilderMap.get(FOLDER), new FoldersResultFilter(), idMap.get(FOLDER), searchDatabase.folderDao()));
         return map;
     }
 }

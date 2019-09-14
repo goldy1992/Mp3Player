@@ -23,6 +23,6 @@ public interface FolderDao extends SearchDao<Folder> {
     public void insertAll(List<Folder> folders);
 
     @Override
-    @Query("SELECT * FROM folders WHERE name like '%' || :name || '%'")
-    List<Folder> query(String name);
+    @Query("SELECT * FROM folders WHERE value like '%' || :value || '%'")
+    List<Folder> query(String value);
 }

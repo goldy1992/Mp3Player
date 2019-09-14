@@ -6,12 +6,12 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
 
+import androidx.annotation.NonNull;
+
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
 import com.example.mike.mp3player.service.library.search.SearchDao;
-
-import java.util.List;
+import com.example.mike.mp3player.service.library.search.SearchEntity;
 
 import static com.example.mike.mp3player.service.library.content.Projections.SONG_PROJECTION;
 
@@ -34,24 +34,12 @@ public class SongsFromFolderRetriever extends ContentResolverRetriever {
     }
 
     @Override
-    void updateSearchDatabase(List<MediaBrowserCompat.MediaItem> results) {
-
-    }
-
-    @Override
     String[] getProjection() {
         return SONG_PROJECTION.toArray(new String[0]);
     }
 
     @Override
-    String extractIdFromMediaItem(MediaBrowserCompat.MediaItem mediaItem) {
-        return MediaItemUtils.getMediaId(mediaItem);
+    SearchEntity createFromMediaItem(@NonNull MediaBrowserCompat.MediaItem item) {
+        return null;
     }
-
-    @Override
-    String extractValueFromMediaItem(MediaBrowserCompat.MediaItem mediaItem) {
-        return MediaItemUtils.getTitle(mediaItem);
-    }
-
-
 }

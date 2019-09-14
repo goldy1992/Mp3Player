@@ -5,25 +5,25 @@ import android.database.Cursor;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.example.mike.mp3player.service.library.content.filter.ResultsFilter;
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
-import com.example.mike.mp3player.service.library.search.SearchDatabase;
+import com.example.mike.mp3player.service.library.search.SearchDao;
 
+import java.util.Collections;
 import java.util.List;
 
 public abstract class ContentResolverSearcher extends ContentSearcher {
     final ContentResolver contentResolver;
     final ResultsParser resultsParser;
     final String idPrefix;
-    final SearchDatabase searchDatabase;
+    final SearchDao searchDatabase;
 
     public ContentResolverSearcher(ContentResolver contentResolver,
                                    ResultsParser resultsParser,
                                    ResultsFilter resultsFilter,
                                    String idPrefix,
-                                   SearchDatabase searchDatabase) {
+                                   SearchDao searchDatabase) {
         super(resultsFilter);
         this.contentResolver = contentResolver;
         this.resultsParser = resultsParser;
@@ -31,16 +31,21 @@ public abstract class ContentResolverSearcher extends ContentSearcher {
         this.searchDatabase = searchDatabase;
     }
 
-    @Nullable
+    /**
+     * @param query the query to search for... assumes that the query as already been normalised
+     * @return a list of MediaItem search results
+     */
     public List<MediaItem> search(@NonNull String query) {
         Cursor cursor = performSearchQuery(query);
 
         if(cursor == null) {
-            return null;
+            return Collections.emptyList();
         }
         List<MediaItem> results = resultsParser.create(cursor, idPrefix);
         if (isFilterable()) {
-            //return resultsFilter.filter(query, results);
+            /*
+             keep in case we need to filter in the future.
+             */
         }
         return results;
     }

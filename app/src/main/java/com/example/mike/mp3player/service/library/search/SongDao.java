@@ -23,6 +23,6 @@ public interface SongDao extends SearchDao<Song> {
     public void insertAll(List<Song> songs);
 
     @Override
-    @Query("SELECT * FROM songs WHERE title like '%' || :title || '%'")
-    List<Song> query(String title);
+    @Query("SELECT * FROM songs WHERE value like '%' || :value || '%'")
+    List<Song> query(String value);
 }

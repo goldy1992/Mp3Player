@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.support.v4.media.MediaBrowserCompat;
 
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
+import com.example.mike.mp3player.service.library.search.SearchDao;
+import com.example.mike.mp3player.service.library.search.SearchEntity;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -42,30 +44,19 @@ public abstract class ContentResolverSearcherTestBase<T extends ContentResolverS
 
     static List<MediaBrowserCompat.MediaItem> expectedResult = new ArrayList<>();
 
+
     static {
         expectedResult.add(mock(MediaBrowserCompat.MediaItem.class));
     }
 
-    public void setup(){
-        MockitoAnnotations.initMocks(this);
-
-    }
-
     public abstract void testGetMediaType();
 
-    @Test
-    public void testSearchValid() {
-        when(resultsParser.create(null, idPrefix)).thenReturn(expectedResult);
-        List<MediaBrowserCompat.MediaItem> result = searcher.search(VALID_QUERY);
-        verify(searcher, times(1)).getProjection();
-        assertEquals(expectedResult, result);
-    }
+    public abstract void testSearchValidMultipleArguments();
 
     @Test
     public void testSearchInvalid() {
         when(searcher.resultsParser.create(eq(any()), idPrefix)).thenReturn(expectedResult);
         List<MediaBrowserCompat.MediaItem> result = searcher.search(INVALID_QUERY);
-        verify(searcher, times(1)).getProjection();
         assertNotEquals(expectedResult, result);
     }
 

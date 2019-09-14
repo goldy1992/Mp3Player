@@ -6,20 +6,17 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
+import androidx.annotation.NonNull;
+
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
 import com.example.mike.mp3player.service.library.search.Song;
 import com.example.mike.mp3player.service.library.search.SongDao;
 
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.example.mike.mp3player.service.library.content.Projections.SONG_PROJECTION;
 
-public class SongsRetriever extends ContentResolverRetriever {
+public class SongsRetriever extends ContentResolverRetriever<Song> {
 
     public SongsRetriever(ContentResolver contentResolver,
                           ResultsParser resultsParser, SongDao songDao, Handler handler) {
@@ -37,27 +34,17 @@ public class SongsRetriever extends ContentResolverRetriever {
                 null, null, null);
     }
 
-    @Override
-    void updateSearchDatabase(List<MediaItem> results) {
-        handler.post(() -> {
-            final int resultsSize = results.size();
-            final int count = dao.getCount();
-
-            if (count != resultsSize) { // INSERT NORMALISED VALUES
-                List<Song> songs = new ArrayList<>();
-                for (MediaItem mediaItem : results) {
-                    Song song = new Song(MediaItemUtils.getMediaId(mediaItem));
-                    song.setValue(StringUtils.stripAccents(MediaItemUtils.getTitle(mediaItem)));
-                    songs.add(song);
-                }
-                dao.insertAll(songs);
-            }
-        });
-    }
-
 
     @Override
     public String[] getProjection() {
         return SONG_PROJECTION.toArray(new String[0]);
     }
+
+    @Override
+    Song createFromMediaItem(@NonNull MediaItem item) {
+        final String id = MediaItemUtils.getMediaId(item);
+        final String value = MediaItemUtils.getTitle(item);
+        return new Song(id, value);
+    }
+
 }
