@@ -39,7 +39,7 @@ public class EndToEndTest {
     public GrantPermissionRule mGrantPermissionRule =
             GrantPermissionRule.grant(
                     "android.permission.WRITE_EXTERNAL_STORAGE");
-
+// TODO: rewrite test
 //    @Test
 //    public void splashScreenEntryActivityTest() {
 //        ViewInteraction textView = onView(
