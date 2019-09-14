@@ -11,20 +11,16 @@ public abstract class SearchDatabase extends RoomDatabase {
     public abstract SongDao songDao();
     public abstract FolderDao folderDao();
 
-    public static final String DATABASE_NAME = "normalised_search_db";
+    private static final String DATABASE_NAME = "normalised_search_db";
 
-    public static volatile SearchDatabase INSTANCE;
+    private static SearchDatabase instance;
 
-    public static SearchDatabase getDatabase(final Context context) {
-        if (INSTANCE == null) {
-            synchronized (SearchDatabase.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+    public synchronized static SearchDatabase getDatabase(final Context context) {
+        if (instance == null) {
+                     instance = Room.databaseBuilder(context.getApplicationContext(),
                             SearchDatabase.class, DATABASE_NAME)
                             .build();
                 }
-            }
-        }
-        return INSTANCE;
+        return instance;
     }
 }

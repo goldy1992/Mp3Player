@@ -2,6 +2,7 @@ package com.example.mike.mp3player.service.library.content.searcher;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.provider.BaseColumns;
 import android.provider.MediaStore;
 
 import com.example.mike.mp3player.commons.MediaItemType;
@@ -48,7 +49,7 @@ public class SongSearcher extends ContentResolverSearcher {
         }
 
 
-        String WHERE_CLAUSE = MediaStore.Audio.Media._ID + " IN(" + StringUtils.join(parameters, ", ") + ") COLLATE NOCASE";
+        String WHERE_CLAUSE = BaseColumns._ID + " IN(" + StringUtils.join(parameters, ", ") + ") COLLATE NOCASE";
         String[] WHERE_ARGS = ids.toArray(new String[ids.size()]);
         return  contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 getProjection(),
