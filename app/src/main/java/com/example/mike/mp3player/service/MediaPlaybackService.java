@@ -15,6 +15,7 @@ import androidx.media.MediaBrowserServiceCompat;
 
 import com.example.mike.mp3player.service.library.ContentManager;
 import com.example.mike.mp3player.service.session.MediaSessionCallback;
+import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +33,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     private HandlerThread worker;
     private Handler handler;
     private MediaSessionCompat mediaSession;
+    private MediaSessionConnector mediaSessionConnector;
     private MediaSessionCallback mediaSessionCallback;
     private RootAuthenticator rootAuthenticator;
     abstract void initialiseDependencies();
@@ -41,6 +43,8 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
         super.onCreate();
         handler.post(() -> {
             this.mediaSessionCallback.init();
+            this.mediaSessionConnector = new MediaSessionConnector(mediaSession);
+            this.mediaSessionConnector.setPlaybackPreparer();
             setSessionToken(mediaSession.getSessionToken());
             mediaSession.setCallback(mediaSessionCallback);
         });
