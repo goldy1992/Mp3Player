@@ -47,4 +47,9 @@ public class SongsRetriever extends ContentResolverRetriever<Song> {
         return new Song(id, value);
     }
 
+    @Override
+    boolean isSearchable() {
+        return true;
+    }
+
 }

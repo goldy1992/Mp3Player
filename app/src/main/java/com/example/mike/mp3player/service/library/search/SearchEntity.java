@@ -3,10 +3,6 @@ package com.example.mike.mp3player.service.library.search;
 import androidx.annotation.NonNull;
 import androidx.room.PrimaryKey;
 
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Locale;
-
 public abstract class SearchEntity {
 
     @PrimaryKey
@@ -18,7 +14,7 @@ public abstract class SearchEntity {
 
     public SearchEntity(final String id, final String value) {
         this.id = id;
-        this.value = normalise(value);
+        this.value = value;
     }
 
     public String getValue() {
@@ -29,8 +25,4 @@ public abstract class SearchEntity {
         return id;
     }
 
-    private String normalise(String value) {
-        String toReturn = StringUtils.stripAccents(value);
-        return toReturn.toUpperCase(Locale.getDefault());
-    }
 }

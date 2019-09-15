@@ -33,22 +33,25 @@ public abstract class ContentResolverRetriever<T extends SearchEntity> extends C
 
     abstract Cursor performGetChildrenQuery(String id);
     void updateSearchDatabase(List<MediaItem> results) {
-        handler.post(() -> {
-            final int resultsSize = results.size();
-            final int count = dao.getCount();
+        if (isSearchable()) {
+            handler.post(() -> {
+                final int resultsSize = results.size();
+                final int count = dao.getCount();
 
-            if (count != resultsSize) { // INSERT NORMALISED VALUES
-                List<T> entries = new ArrayList<>();
-                for (MediaBrowserCompat.MediaItem mediaItem : results) {
-                    T entry = createFromMediaItem(mediaItem);
-                    entries.add(entry);
+                if (count != resultsSize) { // INSERT NORMALISED VALUES
+                    List<T> entries = new ArrayList<>();
+                    for (MediaBrowserCompat.MediaItem mediaItem : results) {
+                        T entry = createFromMediaItem(mediaItem);
+                        entries.add(entry);
+                    }
+                    dao.insertAll(entries);
                 }
-                dao.insertAll(entries);
-            }
-        });
+            });
+        }
     }
     abstract String[] getProjection();
     abstract T createFromMediaItem(@NonNull MediaItem item);
+    abstract boolean isSearchable();
 
     @Override
     public List<MediaItem> getChildren(ContentRequest request) {

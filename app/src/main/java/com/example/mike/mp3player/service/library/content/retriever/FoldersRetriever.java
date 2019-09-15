@@ -47,4 +47,9 @@ public class FoldersRetriever extends ContentResolverRetriever<Folder> {
         final String value = MediaItemUtils.getDirectoryName(item);
         return new Folder(id, value);
     }
+
+    @Override
+    boolean isSearchable() {
+        return true;
+    }
 }

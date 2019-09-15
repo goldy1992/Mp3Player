@@ -42,4 +42,9 @@ public class SongsFromFolderRetriever extends ContentResolverRetriever {
     SearchEntity createFromMediaItem(@NonNull MediaBrowserCompat.MediaItem item) {
         return null;
     }
+
+    @Override
+    boolean isSearchable() {
+        return false;
+    }
 }
