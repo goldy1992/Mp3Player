@@ -18,7 +18,6 @@ import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.ServiceManager;
 import com.example.mike.mp3player.service.library.ContentManager;
-import com.example.mike.mp3player.service.player.ExoPlayerAdapter;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
 
 import java.util.Arrays;
@@ -51,7 +50,7 @@ import static com.example.mike.mp3player.commons.LoggingUtils.logShuffleMode;
 public class MediaSessionCallback extends MediaSessionCompat.Callback implements MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
     private final ServiceManager serviceManager;
     private final PlaybackManager playbackManager;
-    private final ExoPlayerAdapter mediaPlayerAdapter;
+    private final MediaPlayerAdapter mediaPlayerAdapter;
     private final ContentManager mediaLibrary;
     private final MediaSessionAdapter mediaSessionAdapter;
     private final AudioBecomingNoisyBroadcastReceiver broadcastReceiver;
@@ -73,7 +72,7 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
     @Inject
     public MediaSessionCallback(ContentManager mediaLibrary,
                                 PlaybackManager playbackManager,
-                                ExoPlayerAdapter mediaPlayerAdapter,
+                                MediaPlayerAdapter mediaPlayerAdapter,
                                 MediaSessionAdapter mediaSessionAdapter,
                                 ServiceManager serviceManager,
                                 AudioBecomingNoisyBroadcastReceiver broadcastReceiver,
@@ -93,7 +92,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
         this.broadcastReceiver.setMediaSessionCallback(this);
         Uri firstSongUri = playbackManager.getCurrentMediaUri();
         Uri nextSongUri = playbackManager.getNext();
-        this.e
         this.mediaPlayerAdapter.reset(firstSongUri, nextSongUri);
         mediaSessionAdapter.updateAll(NO_ACTION);
     }

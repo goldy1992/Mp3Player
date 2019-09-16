@@ -5,19 +5,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.example.mike.mp3player.service.library.ContentManager;
+import com.example.mike.mp3player.service.player.MyMediaButtonEventHandler;
+import com.example.mike.mp3player.service.player.MyPlaybackPreparer;
 import com.example.mike.mp3player.service.session.MediaSessionCallback;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -43,8 +44,13 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
         super.onCreate();
         handler.post(() -> {
             this.mediaSessionCallback.init();
+            MyPlaybackPreparer myPlaybackPreparer = new MyPlaybackPreparer(contentManager);
+            MyMediaButtonEventHandler myMediaButtonEventHandler = new MyMediaButtonEventHandler();
+            ExoPlayer exoPlayer = ExoPlayerFactory.newSimpleInstance(getApplicationContext());
             this.mediaSessionConnector = new MediaSessionConnector(mediaSession);
-            this.mediaSessionConnector.setPlaybackPreparer();
+            this.mediaSessionConnector.setPlayer(exoPlayer);
+            this.mediaSessionConnector.setPlaybackPreparer(myPlaybackPreparer);
+            this.mediaSessionConnector.setMediaButtonEventHandler(myMediaButtonEventHandler);
             setSessionToken(mediaSession.getSessionToken());
             mediaSession.setCallback(mediaSessionCallback);
         });
