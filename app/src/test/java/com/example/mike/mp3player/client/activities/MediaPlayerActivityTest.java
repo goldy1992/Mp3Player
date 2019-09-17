@@ -7,9 +7,6 @@ import android.support.v4.media.session.MediaSessionCompat;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
-import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjectorTestImpl;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +16,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 
-import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(RobolectricTestRunner.class)

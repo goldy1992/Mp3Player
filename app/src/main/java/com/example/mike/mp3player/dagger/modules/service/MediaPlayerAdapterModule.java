@@ -23,7 +23,6 @@ public class MediaPlayerAdapterModule {
             audioFocusManager) {
         return createMediaPlayerAdapter(context, audioFocusManager);
     }
-
     /**
      * @return the appropriate Media Player object
      */

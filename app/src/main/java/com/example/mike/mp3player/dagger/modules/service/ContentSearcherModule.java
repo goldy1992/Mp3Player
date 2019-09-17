@@ -8,6 +8,7 @@ import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
 import com.example.mike.mp3player.service.library.content.searcher.ContentSearcher;
 import com.example.mike.mp3player.service.library.content.searcher.FolderSearcher;
 import com.example.mike.mp3player.service.library.content.searcher.SongSearcher;
+import com.example.mike.mp3player.service.library.search.SearchDatabase;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -26,10 +27,11 @@ public class ContentSearcherModule {
     @Singleton
     public Map<MediaItemType, ContentSearcher> provideSearchSearcherMap(ContentResolver contentResolver,
                                                                         Map<MediaItemType, String> idMap,
-                                                                        Map<MediaItemType, ResultsParser> mediaItemBuilderMap) {
+                                                                        Map<MediaItemType, ResultsParser> mediaItemBuilderMap,
+                                                                        SearchDatabase searchDatabase) {
         EnumMap<MediaItemType, ContentSearcher> map = new EnumMap<>(MediaItemType.class);
-        map.put(MediaItemType.SONG, new SongSearcher(contentResolver, mediaItemBuilderMap.get(MediaItemType.SONG), idMap.get(MediaItemType.SONG)));
-        map.put(FOLDER, new FolderSearcher(contentResolver, mediaItemBuilderMap.get(FOLDER), new FoldersResultFilter(), idMap.get(FOLDER)));
+        map.put(MediaItemType.SONG, new SongSearcher(contentResolver, mediaItemBuilderMap.get(MediaItemType.SONG), idMap.get(MediaItemType.SONG), searchDatabase.songDao()));
+        map.put(FOLDER, new FolderSearcher(contentResolver, mediaItemBuilderMap.get(FOLDER), new FoldersResultFilter(), idMap.get(FOLDER), searchDatabase.folderDao()));
         return map;
     }
 }
