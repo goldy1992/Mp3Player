@@ -11,6 +11,7 @@ import com.example.mike.mp3player.dagger.modules.service.MediaItemTypeIdModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaPlayerAdapterModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaSessionCallbackModule;
 import com.example.mike.mp3player.dagger.modules.service.MediaSessionCompatModule;
+import com.example.mike.mp3player.dagger.modules.service.SearchDatabaseModule;
 import com.example.mike.mp3player.dagger.modules.service.ServiceModule;
 import com.example.mike.mp3player.service.MediaPlaybackService;
 
@@ -30,6 +31,7 @@ import dagger.Component;
     MediaSessionCallbackModule.class,
     MediaSessionCompatModule.class,
     MediaItemTypeIdModule.class,
+    SearchDatabaseModule.class,
     ServiceModule.class
 })
 public interface ServiceComponent {

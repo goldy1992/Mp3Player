@@ -33,7 +33,9 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricTestRunner.class)
 public class ContentManagerTest {
 
-    private static final String VALID_QUERY = "query";
+    private static final String VALID_QUERY = "QUERY";
+
+    private static final String LOWER_CASE_VALID_QUERY = "query";
 
     private ContentManager contentManager;
 
@@ -113,7 +115,7 @@ public class ContentManagerTest {
      */
     @Test
     public void testValidSearchQuery() {
-        testSearch(VALID_QUERY, 5);
+        testSearch(LOWER_CASE_VALID_QUERY, 5);
     }
 
     @Test
