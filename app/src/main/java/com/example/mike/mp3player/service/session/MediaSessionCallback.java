@@ -202,7 +202,6 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback implements
                         playbackManager.setCurrentItem(trackId);
                         followingUri = getPlaybackManager().getNext();
                         mediaPlayerAdapter.reset(uriToPlay, followingUri);
-
                         break;
                     }
                 }
