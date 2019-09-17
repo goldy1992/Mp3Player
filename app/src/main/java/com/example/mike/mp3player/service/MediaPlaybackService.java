@@ -12,6 +12,7 @@ import androidx.annotation.VisibleForTesting;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.example.mike.mp3player.service.library.ContentManager;
+import com.example.mike.mp3player.service.player.MyCustomActionProvider;
 import com.example.mike.mp3player.service.player.MyMediaButtonEventHandler;
 import com.example.mike.mp3player.service.player.MyPlaybackPreparer;
 import com.example.mike.mp3player.service.player.MyTimelineQueueNavigator;
@@ -65,6 +66,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
             this.mediaSessionConnector.setPlaybackPreparer(myPlaybackPreparer);
             this.mediaSessionConnector.setControlDispatcher(new DefaultControlDispatcher());
             this.mediaSessionConnector.setQueueNavigator(new MyTimelineQueueNavigator(mediaSession));
+            this.mediaSessionConnector.setCustomActionProviders(new MyCustomActionProvider());
             this.mediaSessionConnector.setMediaButtonEventHandler(myMediaButtonEventHandler);
             this.mediaSessionConnector.setEnabledPlaybackActions(SUPPORTED_PLAYBACK_ACTIONS);
 

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
+import com.example.mike.mp3player.R;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -36,7 +37,7 @@ public class MyCustomActionProvider implements MediaSessionConnector.CustomActio
 
     @Override
     public PlaybackStateCompat.CustomAction getCustomAction(Player player) {
-        return null;
+        return new PlaybackStateCompat.CustomAction.Builder(INCREASE_PLAYBACK_SPEED, INCREASE_PLAYBACK_SPEED, R.drawable.border).build();
     }
 
     /**
