@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.service;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -9,8 +10,10 @@ import android.support.v4.media.session.MediaSessionCompat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import androidx.core.app.NotificationCompat;
 import androidx.media.MediaBrowserServiceCompat;
 
+import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.service.library.ContentManager;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
@@ -25,10 +28,10 @@ import javax.inject.Inject;
 public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
 
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
-
-    private ContentManager contentManager;
+     private ContentManager contentManager;
     private HandlerThread worker;
     private Handler handler;
+    private PlayerNotificationManager playerNotificationManager;
     private MediaSessionCompat mediaSession;
     private MediaSessionConnector mediaSessionConnector;
     private RootAuthenticator rootAuthenticator;
@@ -38,7 +41,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     public void onCreate() {
         super.onCreate();
         setSessionToken(mediaSession.getSessionToken());
-        PlayerNotificationManager manager = new PlayerNotificationManager();
+        playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
     }
 
 
@@ -128,6 +131,11 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Inject
     public void setMediaSessionConnector(MediaSessionConnector mediaSessionConnector) {
         this.mediaSessionConnector = mediaSessionConnector;
+    }
+
+    @Inject
+    public void setPlayerNotificationManager(PlayerNotificationManager playerNotificationManager) {
+        this.playerNotificationManager = playerNotificationManager;
     }
 
     @VisibleForTesting

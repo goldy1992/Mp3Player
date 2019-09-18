@@ -2,6 +2,7 @@ package com.example.mike.mp3player.dagger.components;
 
 import android.content.Context;
 
+import com.example.mike.mp3player.dagger.modules.PlaybackNotificationManagerModule;
 import com.example.mike.mp3player.dagger.modules.service.ContentManagerModule;
 import com.example.mike.mp3player.dagger.modules.service.ContentRetrieverModule;
 import com.example.mike.mp3player.dagger.modules.service.ContentSearcherModule;
@@ -33,6 +34,7 @@ import dagger.Component;
     MediaSessionCompatModule.class,
     MediaSessionConnectorModule.class,
     PlaybackManagerModule.class,
+    PlaybackNotificationManagerModule.class,
     SearchDatabaseModule.class,
     ServiceModule.class
 })
