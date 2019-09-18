@@ -29,11 +29,9 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
     private static final String LOG_TAG = "PLAYBACK_PREPARER";
 
     private final ContentManager contentManager;
-    private final Context context;
     private final ExoPlayer exoPlayer;
 
-    public MyPlaybackPreparer(Context context, ExoPlayer exoPlayer, ContentManager contentManager) {
-        this.context = context;
+    public MyPlaybackPreparer(ExoPlayer exoPlayer, ContentManager contentManager) {
         this.exoPlayer = exoPlayer;
         this.contentManager = contentManager;
     }

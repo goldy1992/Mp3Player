@@ -43,12 +43,7 @@ public class MediaSessionCallbackModule {
                 handler);
     }
 
-    @Singleton
-    @Provides
-    public PlaybackManager providePlaybackManager(ContentManager contentManager, Map<MediaItemType, String> ids) {
-        List<MediaBrowserCompat.MediaItem> items = contentManager.getPlaylist(ids.get(MediaItemType.SONGS));
-        return new PlaybackManager(items, 0);
-    }
+
 
 
 }

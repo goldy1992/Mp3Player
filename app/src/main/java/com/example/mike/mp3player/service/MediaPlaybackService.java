@@ -12,34 +12,16 @@ import androidx.annotation.VisibleForTesting;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.example.mike.mp3player.service.library.ContentManager;
-import com.example.mike.mp3player.service.player.MyCustomActionProvider;
-import com.example.mike.mp3player.service.player.MyMediaButtonEventHandler;
-import com.example.mike.mp3player.service.player.MyPlaybackPreparer;
-import com.example.mike.mp3player.service.player.MyTimelineQueueNavigator;
-import com.example.mike.mp3player.service.session.MediaSessionCallback;
-import com.google.android.exoplayer2.DefaultControlDispatcher;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PAUSE;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PLAY;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SET_REPEAT_MODE;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SET_SHUFFLE_MODE;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_STOP;
-
 /**
  * Created by Mike on 24/09/2017.
  */
 public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
-
-    @MediaSessionConnector.PlaybackActions
-    private static final long SUPPORTED_PLAYBACK_ACTIONS = ACTION_STOP | ACTION_PAUSE | ACTION_PLAY |
-            ACTION_SET_REPEAT_MODE | ACTION_SET_SHUFFLE_MODE;
 
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
 
@@ -48,31 +30,13 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     private Handler handler;
     private MediaSessionCompat mediaSession;
     private MediaSessionConnector mediaSessionConnector;
-    private MediaSessionCallback mediaSessionCallback;
     private RootAuthenticator rootAuthenticator;
     abstract void initialiseDependencies();
 
     @Override
     public void onCreate() {
         super.onCreate();
-        handler.post(() -> {
-            this.mediaSessionCallback.init();
-            ExoPlayer exoPlayer = ExoPlayerFactory.newSimpleInstance(getApplicationContext());
-            MyPlaybackPreparer myPlaybackPreparer = new MyPlaybackPreparer(getApplicationContext(), exoPlayer, contentManager);
-            MyMediaButtonEventHandler myMediaButtonEventHandler = new MyMediaButtonEventHandler();
-
-            this.mediaSessionConnector = new MediaSessionConnector(mediaSession);
-            this.mediaSessionConnector.setPlayer(exoPlayer);
-            this.mediaSessionConnector.setPlaybackPreparer(myPlaybackPreparer);
-            this.mediaSessionConnector.setControlDispatcher(new DefaultControlDispatcher());
-            this.mediaSessionConnector.setQueueNavigator(new MyTimelineQueueNavigator(mediaSession));
-            this.mediaSessionConnector.setCustomActionProviders(new MyCustomActionProvider());
-            this.mediaSessionConnector.setMediaButtonEventHandler(myMediaButtonEventHandler);
-            this.mediaSessionConnector.setEnabledPlaybackActions(SUPPORTED_PLAYBACK_ACTIONS);
-
-            setSessionToken(mediaSession.getSessionToken());
-            //mediaSession.setCallback(mediaSessionCallback);
-        });
+        setSessionToken(mediaSession.getSessionToken());
     }
 
 
@@ -145,10 +109,6 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     }
 
     @Inject
-    public void setMediaSessionCallback(MediaSessionCallback mediaSessionCallback) {
-        this.mediaSessionCallback = mediaSessionCallback;
-    }
-    @Inject
     public void setWorker(HandlerThread handlerThread) {
         this.worker = handlerThread;
     }
@@ -161,6 +121,11 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Inject
     public void setRootAuthenticator(RootAuthenticator rootAuthenticator) {
         this.rootAuthenticator = rootAuthenticator;
+    }
+
+    @Inject
+    public void setMediaSessionConnector(MediaSessionConnector mediaSessionConnector) {
+        this.mediaSessionConnector = mediaSessionConnector;
     }
 
     @VisibleForTesting

@@ -4,7 +4,10 @@ import android.content.Context;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.service.PlaybackManager;
+import com.example.mike.mp3player.service.player.DecreaseSpeedProvider;
+import com.example.mike.mp3player.service.player.IncreaseSpeedProvider;
 import com.example.mike.mp3player.service.player.MediaPlayerAdapter;
+import com.example.mike.mp3player.service.player.MyMediaButtonEventHandler;
 import com.example.mike.mp3player.service.session.MediaSessionAdapter;
 
 import javax.inject.Singleton;
@@ -36,4 +39,21 @@ public class MediaSessionCompatModule {
         return new MediaSessionAdapter(mediaSession, playbackManager, mediaPlayerAdapter);
     }
 
+    @Provides
+    @Singleton
+    public IncreaseSpeedProvider providesIncreaseSpeedProvider() {
+        return new IncreaseSpeedProvider();
+    }
+
+    @Provides
+    @Singleton
+    public DecreaseSpeedProvider providesDecreaseSpeedProvider() {
+        return new DecreaseSpeedProvider();
+    }
+
+    @Provides
+    @Singleton
+    public MyMediaButtonEventHandler myMediaButtonEventHandler() {
+        return new MyMediaButtonEventHandler();
+    }
 }

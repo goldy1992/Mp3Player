@@ -35,13 +35,13 @@ public class PlaybackManager {
         this.queueIndex = startIndex;
     }
 
-    public List<MediaItem> onAddQueueItem(MediaItem item) {
+    public synchronized List<MediaItem> onAddQueueItem(MediaItem item) {
         playlist.add(item);
         queueIndex = (queueIndex == -1) ? 0 : queueIndex;
         return playlist;
     }
 
-    public List<MediaItem> onRemoveQueueItem(MediaItem item) {
+    public synchronized List<MediaItem> onRemoveQueueItem(MediaItem item) {
         boolean removed = playlist.remove(item);
         if (removed) {
             queueIndex = (playlist.isEmpty()) ? -1 : queueIndex;
@@ -49,7 +49,7 @@ public class PlaybackManager {
         return playlist;
     }
 
-    public void notifyPlaybackComplete() {
+    public synchronized void notifyPlaybackComplete() {
         if (isShuffleOn()) {
             shufflePreviousStack.push(queueIndex);
             if (shuffleNextStack.empty()) {
@@ -66,7 +66,7 @@ public class PlaybackManager {
         }
     }
 
-    public Uri getNext() {
+    public synchronized Uri getNext() {
         int newIndex;
         if (isShuffleOn()) {
             if (shuffleNextStack.empty()) {
@@ -80,7 +80,7 @@ public class PlaybackManager {
         return getPlaylistMediaUri(newIndex);
     }
 
-    public Uri skipToNext() {
+    public synchronized Uri skipToNext() {
         if (isShuffleOn()) {
             shufflePreviousStack.push(new Integer(queueIndex));
             if (shuffleNextStack.empty()) {
@@ -97,7 +97,7 @@ public class PlaybackManager {
         }
     }
 
-    public Uri skipToPrevious() {
+    public synchronized Uri skipToPrevious() {
         if (isShuffleOn()) {
             if (shufflePreviousStack.empty()) { // there's no previous available so keep same track
                 return getPlaylistMediaUri(queueIndex);
@@ -153,11 +153,11 @@ public class PlaybackManager {
         return newIndex;
     }
 
-    public boolean validQueueIndex(int newQueueIndex) {
+    public synchronized boolean validQueueIndex(int newQueueIndex) {
         return newQueueIndex < playlist.size() && newQueueIndex >= 0;
     }
 
-    public Uri getPlaylistMediaUri(int index) {
+    public synchronized Uri getPlaylistMediaUri(int index) {
         if (validQueueIndex(index)) {
             MediaItem queueItem = playlist.get(index);
             if (queueItem != null) {
@@ -167,7 +167,7 @@ public class PlaybackManager {
         return null;
     }
 
-    public Uri getCurrentMediaUri() {
+    public synchronized Uri getCurrentMediaUri() {
         if (playlist != null && !playlist.isEmpty() && playlist.get(queueIndex) != null) {
             MediaItem currentItem = playlist.get(queueIndex);
             if (currentItem.getDescription() != null) {
@@ -177,14 +177,14 @@ public class PlaybackManager {
         return null;
     }
 
-    public boolean createNewPlaylist(List<MediaItem> newList) {
+    public synchronized boolean createNewPlaylist(List<MediaItem> newList) {
         playlist.clear();
         boolean result = playlist.addAll(newList);
         queueIndex = playlist.isEmpty() ?  EMPTY_PLAYLIST_INDEX : START_OF_PLAYLIST;
         return result;
     }
 
-    public void setCurrentItem(String mediaId) {
+    public synchronized void setCurrentItem(String mediaId) {
         Integer integerQueueIndex = MediaLibraryUtils.findIndexOfTrackInPlaylist(playlist, mediaId);
         if (integerQueueIndex == null) {
             queueIndex = -1;
@@ -193,24 +193,32 @@ public class PlaybackManager {
         }
     }
 
-    public MediaItem getCurrentItem() {
+    public synchronized MediaItem getItemAtIndex(int index) {
+        if (validQueueIndex(index)) {
+            return playlist.get(index);
+        }
+        return null;
+    }
+
+
+    public synchronized MediaItem getCurrentItem() {
         if (validQueueIndex(queueIndex)) {
             return playlist.get(queueIndex);
         }
         return  null;
     }
 
-    private int getNextShuffledIndex() {
+    private synchronized int getNextShuffledIndex() {
         this.nextShuffledIndex = shuffleNextStack.empty() ? shuffleNewIndex() : shuffleNextStack.pop();
         return this.nextShuffledIndex;
     }
 
     @VisibleForTesting()
-    public int shuffleNewIndex() {
+    public synchronized int shuffleNewIndex() {
         return random.nextInt(getQueueSize());
     }
 
-    public void setShuffle(boolean shuffleOn) {
+    public synchronized void setShuffle(boolean shuffleOn) {
         if (shuffleOn == this.isShuffleOn()) {
             return;
         }
@@ -223,7 +231,7 @@ public class PlaybackManager {
     }
 
     @PlaybackStateCompat.ShuffleMode
-    public int getShuffleMode() {
+    public synchronized int getShuffleMode() {
         if (shuffleOn)
         {
             return PlaybackStateCompat.SHUFFLE_MODE_ALL;
@@ -231,19 +239,19 @@ public class PlaybackManager {
         return PlaybackStateCompat.SHUFFLE_MODE_NONE;
     }
 
-    public int getLastIndex() {
+    public synchronized int getLastIndex() {
         return playlist.size() - 1;
     }
 
-    public void setRepeating(boolean repeating) {
+    public synchronized void setRepeating(boolean repeating) {
         isRepeating = repeating;
     }
 
-    public int getQueueSize() {
+    public synchronized int getQueueSize() {
         return playlist.size();
     }
 
-    public boolean isShuffleOn() { return shuffleOn; }
+    public synchronized boolean isShuffleOn() { return shuffleOn; }
 
     public boolean isInitialised() {
         return !playlist.isEmpty();
