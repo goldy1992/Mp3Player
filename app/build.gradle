@@ -143,6 +143,7 @@ dependencies {
     implementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     implementation group: 'com.simplecityapps', name: 'recyclerview-fastscroll', version: FAST_SCROLL_VERSION
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: '2.10.4'
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: '2.10.4'
     implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: '2.10.4'
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
     annotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION

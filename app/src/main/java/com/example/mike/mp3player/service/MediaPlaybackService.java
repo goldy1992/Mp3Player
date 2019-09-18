@@ -13,6 +13,7 @@ import androidx.media.MediaBrowserServiceCompat;
 
 import com.example.mike.mp3player.service.library.ContentManager;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
+import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     public void onCreate() {
         super.onCreate();
         setSessionToken(mediaSession.getSessionToken());
+        PlayerNotificationManager manager = new PlayerNotificationManager();
     }
 
 
