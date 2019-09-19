@@ -3,6 +3,7 @@ package com.example.mike.mp3player.service.player;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 
+import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.example.mike.mp3player.service.PlaybackManager;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
@@ -23,23 +24,24 @@ public class MyMetadataProvider implements MediaSessionConnector.MediaMetadataPr
 
     @Override
     public MediaMetadataCompat getMetadata(Player player) {
-            MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
-            builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, player.getContentDuration());
 
-            final int currentIndex = player.getCurrentWindowIndex();
-            MediaBrowserCompat.MediaItem currentItem = playbackManager.getItemAtIndex(currentIndex);
+        final int currentIndex = player.getCurrentWindowIndex();
+        MediaBrowserCompat.MediaItem currentItem = playbackManager.getItemAtIndex(currentIndex);
 
-            String mediaId = getMediaId(currentItem);
-            builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaId);
+        MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
+        builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, MediaItemUtils.getDuration(currentItem));
 
-            String title = getTitle(currentItem);
-            builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, null != title ? title : UNKNOWN);
+        String mediaId = getMediaId(currentItem);
+        builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaId);
 
-            String artist = getArtist(currentItem);
-            builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, null != artist ? artist : UNKNOWN);
+        String title = getTitle(currentItem);
+        builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, null != title ? title : UNKNOWN);
 
-            String albumArt = getAlbumArtPath(currentItem);
-            builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, albumArt);
-            return builder.build();
+        String artist = getArtist(currentItem);
+        builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, null != artist ? artist : UNKNOWN);
+
+        String albumArt = getAlbumArtPath(currentItem);
+        builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, albumArt);
+        return builder.build();
     }
 }

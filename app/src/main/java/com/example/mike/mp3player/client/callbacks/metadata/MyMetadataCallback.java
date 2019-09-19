@@ -43,14 +43,11 @@ public class MyMetadataCallback extends AsyncCallback<MediaMetadataCompat> {
     }
 
     private void notifyListeners(MediaMetadataCompat metadata) {
-        //StringBuilder sb = new StringBuilder();
         for (MetadataListener listener : metadataListeners) {
             if (null != listener) {
                 listener.onMetadataChanged(metadata);
-                //sb.append(listener.getClass());
             }
         }
-        // Log.i(LOG_TAG, "hit meta data changed " + ", listeners " + metadataListeners.size() + ", " + sb.toString());
     }
 
 
