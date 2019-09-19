@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.service;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -10,10 +9,8 @@ import android.support.v4.media.session.MediaSessionCompat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-import androidx.core.app.NotificationCompat;
 import androidx.media.MediaBrowserServiceCompat;
 
-import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.service.library.ContentManager;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;

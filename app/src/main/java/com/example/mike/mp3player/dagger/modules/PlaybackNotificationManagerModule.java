@@ -2,6 +2,7 @@ package com.example.mike.mp3player.dagger.modules;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.media.session.MediaSessionCompat;
 
 import androidx.core.app.NotificationCompat;
 
@@ -20,6 +21,7 @@ import dagger.Provides;
 public class PlaybackNotificationManagerModule {
 
     public static final int NOTIFICATION_ID = 512;
+    private static final int CHANNEL_D = 704;
     private static final String CHANNEL_ID = "com.example.mike.mp3player.context";
 
     @Provides
@@ -27,14 +29,12 @@ public class PlaybackNotificationManagerModule {
     public PlayerNotificationManager providesPlayerNotificationManager(
             Context context, MyDescriptionAdapter myDescriptionAdapter, ExoPlayer exoPlayer)
     {
-        PlayerNotificationManager playerNotificationManager =  new PlayerNotificationManager(
-                context,
-                CHANNEL_ID,
-                NOTIFICATION_ID,
-                myDescriptionAdapter);
+        PlayerNotificationManager playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(context,
+                CHANNEL_ID, R.string.notification_channel_name, R.string.channel_description, NOTIFICATION_ID, myDescriptionAdapter);
         playerNotificationManager.setPlayer(exoPlayer);
-        //playerNotificationManager.setOngoing(false);
         playerNotificationManager.setColor(Color.BLACK);
+        playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_LOW);
         playerNotificationManager.setColorized(true);
         playerNotificationManager.setUseChronometer(true);
         playerNotificationManager.setSmallIcon(R.drawable.exo_notification_small_icon);
@@ -45,7 +45,9 @@ public class PlaybackNotificationManagerModule {
 
     @Provides
     @Singleton
-    public MyDescriptionAdapter providesMyDescriptionAdapter(PlaybackManager playbackManager) {
-        return new MyDescriptionAdapter(playbackManager);
+    public MyDescriptionAdapter providesMyDescriptionAdapter(Context context,
+                                                             MediaSessionCompat.Token token,
+                                                             PlaybackManager playbackManager) {
+        return new MyDescriptionAdapter(context, token, playbackManager);
     }
 }
