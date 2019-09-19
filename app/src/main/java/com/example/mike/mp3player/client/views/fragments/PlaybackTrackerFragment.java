@@ -66,10 +66,7 @@ public class PlaybackTrackerFragment extends AsyncFragment implements PlaybackSt
     }
 
     private void registerMediaControllerListeners() {
-        Set<ListenerType> listenForSet = new HashSet<>();
-        listenForSet.add(ListenerType.PLAYBACK);
-        listenForSet.add(ListenerType.REPEAT);
-        this.mediaControllerAdapter.registerPlaybackStateListener(this, listenForSet);
+        this.mediaControllerAdapter.registerPlaybackStateListener(this);
         this.mediaControllerAdapter.registerMetaDataListener(this);
     }
 

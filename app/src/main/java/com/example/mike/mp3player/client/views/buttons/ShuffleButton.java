@@ -40,8 +40,7 @@ public class ShuffleButton extends MediaButton implements PlaybackStateListener 
     @Override
     public void init(ImageView view) {
         super.init(view);
-        this.mediaControllerAdapter.registerPlaybackStateListener(this,
-                Collections.singleton(ListenerType.SHUFFLE));
+        this.mediaControllerAdapter.registerPlaybackStateListener(this);
         this.updateState(mediaControllerAdapter.getShuffleMode());
     }
 

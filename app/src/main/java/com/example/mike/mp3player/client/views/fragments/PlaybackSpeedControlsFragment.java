@@ -50,7 +50,7 @@ public class PlaybackSpeedControlsFragment extends AsyncFragment implements Play
         this.playbackSpeed = view.findViewById(R.id.playbackSpeedValue);
 
         // register listeners
-        this.mediaControllerAdapter.registerPlaybackStateListener(this, Collections.singleton(ListenerType.PLAYBACK_SPEED));
+        this.mediaControllerAdapter.registerPlaybackStateListener(this);
 
         //update GUI
         this.onPlaybackStateChanged(mediaControllerAdapter.getPlaybackStateCompat());

@@ -107,8 +107,8 @@ public class MediaControllerAdapter {
         myMediaControllerCallback.getMyMetaDataCallback().removeMetaDataListener(metaDataListener);
     }
 
-    public void registerPlaybackStateListener(PlaybackStateListener playbackStateListener, Set<ListenerType> listenerTypes) {
-        myMediaControllerCallback.getMyPlaybackStateCallback().registerPlaybackStateListener(playbackStateListener, listenerTypes);
+    public void registerPlaybackStateListener(PlaybackStateListener playbackStateListener) {
+        myMediaControllerCallback.getMyPlaybackStateCallback().registerPlaybackStateListener(playbackStateListener);
     }
 
     public void unregisterPlaybackStateListener(PlaybackStateListener playbackStateListener) {

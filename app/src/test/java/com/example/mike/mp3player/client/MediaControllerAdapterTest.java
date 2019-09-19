@@ -246,9 +246,8 @@ public class MediaControllerAdapterTest {
     @Test
     public void testRegisterPlaybackListener() {
         PlaybackStateListener expected = mock(PlaybackStateListener.class);
-        Set<ListenerType> listenerTypeSet = Collections.singleton(ListenerType.PLAYBACK);
-        mediaControllerAdapter.registerPlaybackStateListener(expected, listenerTypeSet);
-        verify(playbackStateCallback, times(1)).registerPlaybackStateListener(expected, listenerTypeSet);
+        mediaControllerAdapter.registerPlaybackStateListener(expected);
+        verify(playbackStateCallback, times(1)).registerPlaybackStateListener(expected);
     }
 
     @Test

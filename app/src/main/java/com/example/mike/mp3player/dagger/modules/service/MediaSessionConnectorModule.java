@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.dagger.modules.service;
 
+import android.content.Context;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
@@ -14,6 +15,7 @@ import com.example.mike.mp3player.service.player.MyTimelineQueueNavigator;
 import com.google.android.exoplayer2.DefaultControlDispatcher;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
+import com.google.android.exoplayer2.ext.mediasession.RepeatModeActionProvider;
 
 import java.util.List;
 
@@ -39,14 +41,15 @@ public class MediaSessionConnectorModule {
             MyTimelineQueueNavigator myTimelineQueueNavigator,
             IncreaseSpeedProvider increaseSpeedProvider,
             DecreaseSpeedProvider decreaseSpeedProvider,
-            MyMediaButtonEventHandler myMediaButtonEventHandler) {
+            MyMediaButtonEventHandler myMediaButtonEventHandler,
+            RepeatModeActionProvider repeatModeActionProvider) {
         MediaSessionConnector mediaSessionConnector = new MediaSessionConnector(mediaSessionCompat);
         mediaSessionConnector.setPlayer(exoPlayer);
         mediaSessionConnector.setPlaybackPreparer(myPlaybackPreparer);
         mediaSessionConnector.setControlDispatcher(defaultControlDispatcher);
         mediaSessionConnector.setMediaMetadataProvider(myMetadataProvider);
         mediaSessionConnector.setQueueNavigator(myTimelineQueueNavigator);
-        mediaSessionConnector.setCustomActionProviders(increaseSpeedProvider, decreaseSpeedProvider);
+        mediaSessionConnector.setCustomActionProviders(increaseSpeedProvider, decreaseSpeedProvider, repeatModeActionProvider);
         mediaSessionConnector.setMediaButtonEventHandler(myMediaButtonEventHandler);
         mediaSessionConnector.setEnabledPlaybackActions(SUPPORTED_PLAYBACK_ACTIONS);
         return mediaSessionConnector;
@@ -77,4 +80,9 @@ public class MediaSessionConnectorModule {
         return new DefaultControlDispatcher();
     }
 
+    @Provides
+    @Singleton
+    public RepeatModeActionProvider providesRepeatModeActionProvider(Context context) {
+        return new RepeatModeActionProvider(context);
+    }
 }

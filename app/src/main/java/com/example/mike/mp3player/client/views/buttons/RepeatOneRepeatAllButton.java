@@ -48,8 +48,7 @@ public class RepeatOneRepeatAllButton extends MediaButton implements PlaybackSta
     @Override
     public void init(ImageView view) {
         super.init(view);
-        this.mediaControllerAdapter.registerPlaybackStateListener(this,
-                Collections.singleton(ListenerType.REPEAT));
+        this.mediaControllerAdapter.registerPlaybackStateListener(this);
         this.updateState(mediaControllerAdapter.getRepeatMode());
     }
 
@@ -57,7 +56,7 @@ public class RepeatOneRepeatAllButton extends MediaButton implements PlaybackSta
     public void onClick(View view) {
         int nextState = getNextState();
         mediaControllerAdapter.setRepeatMode(nextState);
-        updateState(nextState);
+        //updateState(nextState);
     }
 
     public void updateState(@PlaybackStateCompat.RepeatMode int newState) {

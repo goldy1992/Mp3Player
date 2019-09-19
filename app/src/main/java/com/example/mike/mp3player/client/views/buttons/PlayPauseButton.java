@@ -40,8 +40,7 @@ public class PlayPauseButton extends MediaButton implements PlaybackStateListene
     @Override
     public void init(ImageView view) {
         super.init(view);
-        this.mediaControllerAdapter.registerPlaybackStateListener(this,
-                Collections.singleton(ListenerType.PLAYBACK));
+        this.mediaControllerAdapter.registerPlaybackStateListener(this);
     }
 
     @VisibleForTesting()
