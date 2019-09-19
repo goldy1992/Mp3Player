@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.dagger.modules.service;
 
+import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.service.PlaybackManager;
@@ -14,6 +15,9 @@ import com.google.android.exoplayer2.DefaultControlDispatcher;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 
+import java.util.List;
+
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -50,8 +54,9 @@ public class MediaSessionConnectorModule {
 
     @Provides
     @Singleton
-    public MyPlaybackPreparer provideMyPlaybackPreparer(ExoPlayer exoPlayer, ContentManager contentManager) {
-        return new MyPlaybackPreparer(exoPlayer, contentManager);
+    public MyPlaybackPreparer provideMyPlaybackPreparer(ExoPlayer exoPlayer, ContentManager contentManager,
+                                                        @Named("starting_playlist") List<MediaBrowserCompat.MediaItem> items) {
+        return new MyPlaybackPreparer(exoPlayer, contentManager, items);
     }
 
     @Provides

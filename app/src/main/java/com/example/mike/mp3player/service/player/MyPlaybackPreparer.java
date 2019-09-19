@@ -19,6 +19,8 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.FileDataSource;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,9 +33,13 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
     private final ContentManager contentManager;
     private final ExoPlayer exoPlayer;
 
-    public MyPlaybackPreparer(ExoPlayer exoPlayer, ContentManager contentManager) {
+    public MyPlaybackPreparer(ExoPlayer exoPlayer, ContentManager contentManager, List<MediaBrowserCompat.MediaItem> items) {
         this.exoPlayer = exoPlayer;
         this.contentManager = contentManager;
+        if (CollectionUtils.isNotEmpty(items)) {
+            String trackId = MediaItemUtils.getMediaId(items.get(0));
+            preparePlaylist(false, trackId, items);
+        }
     }
 
     @Override
@@ -51,35 +57,39 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
         String trackId = extractTrackId(mediaId);
         if (null != trackId) {
             List<MediaBrowserCompat.MediaItem> results = contentManager.getPlaylist(mediaId);
-            if (null != results) {
-                ConcatenatingMediaSource concatenatingMediaSource = new ConcatenatingMediaSource();
-                int uriToPlayIndex = 0;
-                for (int i = 0; i < results.size(); i++) {
-                    MediaBrowserCompat.MediaItem currentMediaItem = results.get(i);
-                    String id = MediaItemUtils.getMediaId(currentMediaItem);
-                    Uri currentUri = MediaItemUtils.getMediaUri(currentMediaItem);
-
-                    if (id != null && id.equals(trackId)) {
-                        uriToPlayIndex = i;
-                    } // if
-                    DataSpec dataSpec = new DataSpec(currentUri);
-                    FileDataSource fileDataSource = new FileDataSource();
-                    try {
-                        fileDataSource.open(dataSpec);
-
-                        MyDataSourceFactory dataSrcFactory = new MyDataSourceFactory(fileDataSource);
-                        ProgressiveMediaSource.Factory factory = new ProgressiveMediaSource.Factory(dataSrcFactory);
-                        MediaSource src = factory.createMediaSource(currentUri);
-                        concatenatingMediaSource.addMediaSource(src);
-                    } catch (FileDataSource.FileDataSourceException ex) {
-                        Log.e(LOG_TAG, "error adding song to playlist");
-                    }
-                } // for
-                this.exoPlayer.prepare(concatenatingMediaSource);
-                this.exoPlayer.seekTo(uriToPlayIndex, 0L);
-                this.exoPlayer.setPlayWhenReady(playWhenReady);
-            } // for
+            preparePlaylist(playWhenReady, trackId, results);
         }
+    }
+
+    private void preparePlaylist(boolean playWhenReady, String trackId, List<MediaBrowserCompat.MediaItem> results) {
+        if (null != results) {
+            ConcatenatingMediaSource concatenatingMediaSource = new ConcatenatingMediaSource();
+            int uriToPlayIndex = 0;
+            for (int i = 0; i < results.size(); i++) {
+                MediaBrowserCompat.MediaItem currentMediaItem = results.get(i);
+                String id = MediaItemUtils.getMediaId(currentMediaItem);
+                Uri currentUri = MediaItemUtils.getMediaUri(currentMediaItem);
+
+                if (id != null && id.equals(trackId)) {
+                    uriToPlayIndex = i;
+                } // if
+                DataSpec dataSpec = new DataSpec(currentUri);
+                FileDataSource fileDataSource = new FileDataSource();
+                try {
+                    fileDataSource.open(dataSpec);
+
+                    MyDataSourceFactory dataSrcFactory = new MyDataSourceFactory(fileDataSource);
+                    ProgressiveMediaSource.Factory factory = new ProgressiveMediaSource.Factory(dataSrcFactory);
+                    MediaSource src = factory.createMediaSource(currentUri);
+                    concatenatingMediaSource.addMediaSource(src);
+                } catch (FileDataSource.FileDataSourceException ex) {
+                    Log.e(LOG_TAG, "error adding song to playlist");
+                }
+            } // for
+            this.exoPlayer.prepare(concatenatingMediaSource);
+            this.exoPlayer.seekTo(uriToPlayIndex, 0L);
+            this.exoPlayer.setPlayWhenReady(playWhenReady);
+        } // if
     }
 
     @Override
