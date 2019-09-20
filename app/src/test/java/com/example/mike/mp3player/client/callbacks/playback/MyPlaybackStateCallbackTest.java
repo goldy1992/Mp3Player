@@ -51,8 +51,8 @@ public class MyPlaybackStateCallbackTest {
      */
     @Test
     public void testNotifyPlaybackListener() {
-        myPlaybackStateCallback.registerPlaybackStateListener(mockPlaybackStateListener1, Collections.singleton(ListenerType.PLAYBACK));
-        myPlaybackStateCallback.registerPlaybackStateListener(mockPlaybackStateListener2, Collections.singleton(ListenerType.SHUFFLE));
+        myPlaybackStateCallback.registerPlaybackStateListener(mockPlaybackStateListener1);
+        myPlaybackStateCallback.registerPlaybackStateListener(mockPlaybackStateListener2);
         long actions = PlaybackStateCompat.ACTION_PLAY;
         PlaybackStateCompat state = createPlaybackStateCompat(actions);
         myPlaybackStateCallback.processCallback(state);
@@ -69,11 +69,11 @@ public class MyPlaybackStateCallbackTest {
         Set<ListenerType> listenerSet1 = new HashSet<>();
         listenerSet1.add(ListenerType.PLAYBACK);
         listenerSet1.add(ListenerType.REPEAT);
-        myPlaybackStateCallback.registerPlaybackStateListener(mockPlaybackStateListener1, listenerSet1);
-        myPlaybackStateCallback.registerPlaybackStateListener(mockPlaybackStateListener2, Collections.singleton(ListenerType.SHUFFLE));
+        myPlaybackStateCallback.registerPlaybackStateListener(mockPlaybackStateListener1);
+        myPlaybackStateCallback.registerPlaybackStateListener(mockPlaybackStateListener2);
 
         PlaybackStateListener extraListener = mock(PlaybackStateListener.class);
-        myPlaybackStateCallback.registerPlaybackStateListener(extraListener, Collections.singleton(ListenerType.PLAYBACK_SPEED));
+        myPlaybackStateCallback.registerPlaybackStateListener(extraListener);
 
         long actions =
                 PlaybackStateCompat.ACTION_PAUSE |
@@ -88,33 +88,18 @@ public class MyPlaybackStateCallbackTest {
         verify(extraListener, times(1)).onPlaybackStateChanged(state);
     }
     /**
-     * GIVEN: 1) a multi
-     */
-    @Test
-    public void testUpdateAll() {
-        myPlaybackStateCallback.registerPlaybackStateListener(mockPlaybackStateListener1, Collections.singleton(ListenerType.PLAYBACK_SPEED));
-        Set<ListenerType> listenerSet1 = new HashSet<>();
-        listenerSet1.add(ListenerType.PLAYBACK);
-        listenerSet1.add(ListenerType.REPEAT);
-        myPlaybackStateCallback.registerPlaybackStateListener(mockPlaybackStateListener2, listenerSet1);
-        PlaybackStateCompat state = createPlaybackStateCompat(0L);
-        myPlaybackStateCallback.updateAll(state);
-        verify(mockPlaybackStateListener1, times(1)).onPlaybackStateChanged(state);
-        verify(mockPlaybackStateListener2, times(1)).onPlaybackStateChanged(state);
-    }
-    /**
      * GIVEN: a registered PlaybackStateListener 'L'
      * WHEN: removePlaybackStateListener is invoked with 'L' as the parameter
      * THEN: the result is true
      */
     @Test
     public void testRemovePlaybackStateListener() {
-        myPlaybackStateCallback.registerPlaybackStateListener(mockPlaybackStateListener1, Collections.singleton(ListenerType.PLAYBACK));
-        final int originalSize = myPlaybackStateCallback.getListenerToActionMap().keySet().size();
+        myPlaybackStateCallback.registerPlaybackStateListener(mockPlaybackStateListener1);
+        final int originalSize = myPlaybackStateCallback.getListeners().size();
         boolean result = myPlaybackStateCallback.removePlaybackStateListener(mockPlaybackStateListener1);
         assertTrue(result);
         final int expectedNewSize = originalSize - 1;
-        assertEquals(expectedNewSize, myPlaybackStateCallback.getListenerToActionMap().size());
+        assertEquals(expectedNewSize, myPlaybackStateCallback.getListeners().size());
     }
     /**
      * GIVEN: an empty PlaybackStateListener set

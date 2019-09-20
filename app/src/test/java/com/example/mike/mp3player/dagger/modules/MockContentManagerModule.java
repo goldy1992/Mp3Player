@@ -1,7 +1,14 @@
 package com.example.mike.mp3player.dagger.modules;
 
+import android.support.v4.media.MediaBrowserCompat;
+
+import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.service.library.ContentManager;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -16,6 +23,13 @@ public class MockContentManagerModule {
     @Singleton
     public ContentManager provideContentManager() {
         return mock(ContentManager.class);
+    }
+
+    @Provides
+    @Singleton
+    @Named("starting_playlist")
+    public List<MediaBrowserCompat.MediaItem> providesInitialPlaylist(ContentManager contentManager, Map<MediaItemType, String> ids) {
+        return contentManager.getPlaylist(ids.get(MediaItemType.SONGS));
     }
 
 }

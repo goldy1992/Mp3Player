@@ -110,6 +110,7 @@ public class RepeatOneRepeatAllButton extends MediaButton implements PlaybackSta
 
     @Override
     public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
+        // TODO: integrate this method with exoplayer
         Bundle extras = state.getExtras();
         if (null != extras) {
             updateState(extras.getInt(REPEAT_MODE));

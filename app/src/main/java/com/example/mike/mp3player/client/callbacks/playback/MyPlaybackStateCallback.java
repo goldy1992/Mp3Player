@@ -3,13 +3,9 @@ package com.example.mike.mp3player.client.callbacks.playback;
 import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
 
-import androidx.annotation.VisibleForTesting;
-
 import com.example.mike.mp3player.client.callbacks.AsyncCallback;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -40,5 +36,9 @@ public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> 
      */
     public synchronized boolean removePlaybackStateListener(PlaybackStateListener listener) {
         return listeners.remove(listener);
+    }
+
+    public Set<PlaybackStateListener> getListeners() {
+        return listeners;
     }
 }
