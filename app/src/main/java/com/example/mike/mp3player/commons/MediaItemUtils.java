@@ -16,8 +16,6 @@ import static com.example.mike.mp3player.commons.Constants.LIBRARY_ID;
 import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.ROOT_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_DIRECTORY;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 
 public final class MediaItemUtils {
 

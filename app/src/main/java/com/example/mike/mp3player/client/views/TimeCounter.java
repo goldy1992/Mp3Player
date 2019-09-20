@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import androidx.annotation.VisibleForTesting;
 
+import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 
 import java.util.concurrent.Executors;
@@ -33,12 +34,14 @@ public class TimeCounter {
     private int currentState = STATE_NONE;
     private float currentSpeed;
     private ScheduledExecutorService timer;
-    private Handler mainHandler;
+    private final Handler mainHandler;
+    private final MediaControllerAdapter mediaControllerAdapter;
     private boolean repeating = false;
 
     @Inject
-    public TimeCounter(@Named("main") Handler mainHandler) {
+    public TimeCounter(@Named("main") Handler mainHandler, MediaControllerAdapter mediaControllerAdapter) {
         this.mainHandler = mainHandler;
+        this.mediaControllerAdapter = mediaControllerAdapter;
     }
 
     public boolean isInitialised() {
@@ -62,7 +65,7 @@ public class TimeCounter {
         //Log.d(LOG_TAG, "new state");
         this.currentState = state.getState();
         this.currentSpeed = state.getPlaybackSpeed();
-        Integer repeatMode = getRepeatModeFromPlaybackStateCompat(state);
+        Integer repeatMode = mediaControllerAdapter.getRepeatMode();
         this.repeating = repeatMode != null && repeatMode == REPEAT_MODE_ONE;
         long latestPosition = TimerUtils.calculateCurrentPlaybackPosition(state);
 

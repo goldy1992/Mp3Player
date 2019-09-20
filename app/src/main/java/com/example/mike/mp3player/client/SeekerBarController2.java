@@ -10,7 +10,6 @@ import android.widget.SeekBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
-import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.client.views.TimeCounter;
 import com.example.mike.mp3player.commons.LoggingUtils;
@@ -20,7 +19,6 @@ import javax.inject.Inject;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_SPEED;
-import static com.example.mike.mp3player.commons.PlaybackStateUtil.getRepeatModeFromPlaybackStateCompat;
 
 /**
  *
@@ -154,7 +152,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
     }
 
     public void setLooping(PlaybackStateCompat state) {
-        Integer repeatMode = getRepeatModeFromPlaybackStateCompat(state);
+        Integer repeatMode = mediaControllerAdapter.getRepeatMode();
         if (null != repeatMode) {
             this.looping = repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE;
             if (null != valueAnimator) {

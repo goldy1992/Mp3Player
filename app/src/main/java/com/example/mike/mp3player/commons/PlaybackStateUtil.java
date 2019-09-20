@@ -7,6 +7,7 @@ import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 
 public final class PlaybackStateUtil {
 
+    @Deprecated
     public static Integer getRepeatModeFromPlaybackStateCompat(PlaybackStateCompat playbackStateCompat) {
         if (playbackStateCompat == null || playbackStateCompat.getExtras() == null) {
             return null;
