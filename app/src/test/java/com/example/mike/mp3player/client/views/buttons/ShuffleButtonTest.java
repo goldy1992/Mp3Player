@@ -51,7 +51,6 @@ public class ShuffleButtonTest extends MediaButtonTestBase{
         shuffleButton.setShuffleMode(currentShuffleMode);
         shuffleButton.onClick(mock(View.class));
         verify(mediaControllerAdapter, times(1)).setShuffleMode(expectedShuffleMode);
-        assertEquals(expectedShuffleMode, shuffleButton.getShuffleMode());
     }
 
     @Test
@@ -61,7 +60,6 @@ public class ShuffleButtonTest extends MediaButtonTestBase{
         shuffleButton.setShuffleMode(currentShuffleMode);
         shuffleButton.onClick(mock(View.class));
         verify(mediaControllerAdapter, times(1)).setShuffleMode(expectedShuffleMode);
-        assertEquals(expectedShuffleMode, shuffleButton.getShuffleMode());
     }
 
     @Test

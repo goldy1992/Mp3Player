@@ -44,22 +44,6 @@ public class MyPlaybackStateCallbackTest {
         this.myPlaybackStateCallback = new MyPlaybackStateCallback(handler);
     }
     /**
-     * GIVEN: 1) A playback listener, 2) A shuffle listener
-     * WHEN: the callback is invoked with an action of ACTION_PLAY
-     * THEN: 1) the playback listener in notified
-     * 2) the shuffle listener is NOT notified
-     */
-    @Test
-    public void testNotifyPlaybackListener() {
-        myPlaybackStateCallback.registerPlaybackStateListener(mockPlaybackStateListener1);
-        myPlaybackStateCallback.registerPlaybackStateListener(mockPlaybackStateListener2);
-        long actions = PlaybackStateCompat.ACTION_PLAY;
-        PlaybackStateCompat state = createPlaybackStateCompat(actions);
-        myPlaybackStateCallback.processCallback(state);
-        verify(mockPlaybackStateListener1, times(1)).onPlaybackStateChanged(state);
-        verify(mockPlaybackStateListener2, never()).onPlaybackStateChanged(any());
-    }
-    /**
      * GIVEN: 1) A playback AND repeat listener, 2) A shuffle listener, 3) a playback speed listener
      * WHEN: the callback is invoked with an action of each type
      * THEN: 1) each listener is invoked once

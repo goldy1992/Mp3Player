@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.dagger.components;
 
 import com.example.mike.mp3player.dagger.modules.MockContentManagerModule;
+import com.example.mike.mp3player.dagger.modules.MockMediaSessionConnectorModule;
 import com.example.mike.mp3player.dagger.modules.PlaybackNotificationManagerModule;
 import com.example.mike.mp3player.dagger.modules.service.ContentManagerModule;
 import com.example.mike.mp3player.dagger.modules.service.ContentRetrieverModule;
@@ -28,7 +29,7 @@ import dagger.Component;
         HandlerThreadModule.class,
         MediaItemTypeIdModule.class,
         MediaPlayerAdapterModule.class,
-        MediaSessionConnectorModule.class,
+        MockMediaSessionConnectorModule.class,
         MediaSessionCompatModule.class,
         PlaybackManagerModule.class,
         PlaybackNotificationManagerModule.class,
