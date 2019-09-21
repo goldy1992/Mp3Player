@@ -1,10 +1,9 @@
 package com.example.mike.mp3player.service.player;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
-import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.util.Log;
 
 import com.example.mike.mp3player.commons.MediaItemUtils;
@@ -32,16 +31,17 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
 
     private final ContentManager contentManager;
     private final ExoPlayer exoPlayer;
+    private final FileDataSource fileDataSource;
 
-    public MyPlaybackPreparer(ExoPlayer exoPlayer, ContentManager contentManager, List<MediaBrowserCompat.MediaItem> items) {
+    public MyPlaybackPreparer(ExoPlayer exoPlayer, ContentManager contentManager, List<MediaItem> items, FileDataSource fileDataSource) {
         this.exoPlayer = exoPlayer;
         this.contentManager = contentManager;
+        this.fileDataSource = fileDataSource;
         if (CollectionUtils.isNotEmpty(items)) {
             String trackId = MediaItemUtils.getMediaId(items.get(0));
             preparePlaylist(false, trackId, items);
         }
     }
-
     @Override
     public long getSupportedPrepareActions() {
         return MediaSessionConnector.PlaybackPreparer.ACTIONS;
@@ -56,17 +56,17 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
     public void onPrepareFromMediaId(String mediaId, boolean playWhenReady, Bundle extras) {
         String trackId = extractTrackId(mediaId);
         if (null != trackId) {
-            List<MediaBrowserCompat.MediaItem> results = contentManager.getPlaylist(mediaId);
+            List<MediaItem> results = contentManager.getPlaylist(mediaId);
             preparePlaylist(playWhenReady, trackId, results);
         }
     }
 
-    private void preparePlaylist(boolean playWhenReady, String trackId, List<MediaBrowserCompat.MediaItem> results) {
+    private void preparePlaylist(boolean playWhenReady, String trackId, List<MediaItem> results) {
         if (null != results) {
             ConcatenatingMediaSource concatenatingMediaSource = new ConcatenatingMediaSource();
             int uriToPlayIndex = 0;
             for (int i = 0; i < results.size(); i++) {
-                MediaBrowserCompat.MediaItem currentMediaItem = results.get(i);
+                MediaItem currentMediaItem = results.get(i);
                 String id = MediaItemUtils.getMediaId(currentMediaItem);
                 Uri currentUri = MediaItemUtils.getMediaUri(currentMediaItem);
 
@@ -74,7 +74,6 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
                     uriToPlayIndex = i;
                 } // if
                 DataSpec dataSpec = new DataSpec(currentUri);
-                FileDataSource fileDataSource = new FileDataSource();
                 try {
                     fileDataSource.open(dataSpec);
 

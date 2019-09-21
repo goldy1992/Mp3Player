@@ -14,6 +14,7 @@ import com.example.mike.mp3player.service.player.MyTimelineQueueNavigator;
 import com.google.android.exoplayer2.DefaultControlDispatcher;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
+import com.google.android.exoplayer2.upstream.FileDataSource;
 
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class MediaSessionConnectorModule {
     @Singleton
     public MyPlaybackPreparer provideMyPlaybackPreparer(ExoPlayer exoPlayer, ContentManager contentManager,
                                                         @Named("starting_playlist") List<MediaBrowserCompat.MediaItem> items) {
-        return new MyPlaybackPreparer(exoPlayer, contentManager, items);
+        return new MyPlaybackPreparer(exoPlayer, contentManager, items, new FileDataSource());
     }
 
     @Provides
