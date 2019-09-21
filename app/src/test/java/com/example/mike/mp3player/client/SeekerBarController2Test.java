@@ -48,7 +48,7 @@ public class SeekerBarController2Test {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         m_context = InstrumentationRegistry.getInstrumentation().getContext();
-        timeCounter = new TimeCounter(new Handler(Looper.getMainLooper()));
+        timeCounter = new TimeCounter(new Handler(Looper.getMainLooper()), m_mediaControllerAdapter);
         m_seekerBar = new SeekerBar(m_context);
         m_seekerBarController2 = new SeekerBarController2(m_mediaControllerAdapter, timeCounter);
         m_seekerBarController2.init(m_seekerBar);

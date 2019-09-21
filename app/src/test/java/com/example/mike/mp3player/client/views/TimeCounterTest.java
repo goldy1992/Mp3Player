@@ -5,6 +5,8 @@ import android.os.Looper;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.TextView;
 
+import com.example.mike.mp3player.client.MediaControllerAdapter;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +32,9 @@ import static org.mockito.Mockito.verify;
 public class TimeCounterTest {
     @Mock
     private TextView view;
-    private  Handler handler;
+    @Mock
+    private MediaControllerAdapter mediaControllerAdapter;
+    private Handler handler;
     private TimeCounter timeCounter;
     final long POSITION = 3424L;
     final long DURATION = 100000L;
@@ -39,7 +43,7 @@ public class TimeCounterTest {
     public void setup() {
         this.handler = new Handler(Looper.getMainLooper());
         MockitoAnnotations.initMocks(this);
-        timeCounter = new TimeCounter(handler);
+        timeCounter = new TimeCounter(handler, mediaControllerAdapter);
         timeCounter.init(view);
     }
     @Test
