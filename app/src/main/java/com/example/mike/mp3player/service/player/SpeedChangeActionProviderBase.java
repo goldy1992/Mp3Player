@@ -1,8 +1,6 @@
 package com.example.mike.mp3player.service.player;
 
 import android.os.Bundle;
-import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
 import com.google.android.exoplayer2.ControlDispatcher;

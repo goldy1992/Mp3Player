@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.service.player;
 
-import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.R;
