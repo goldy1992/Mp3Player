@@ -1,9 +1,12 @@
 package com.example.mike.mp3player;
 
+import android.content.Context;
+import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemType;
@@ -59,5 +62,11 @@ public final class TestUtils {
                 .setExtras(bundle)
                 .build();
         return new MediaItem(mediaDescriptionCompat, 0);
+    }
+
+    public static MediaSessionCompat.Token getMediaSessionCompatToken(Context context) {
+        MediaSession mediaSession = new MediaSession(context, "sd");
+        MediaSession.Token sessionToken = mediaSession.getSessionToken();
+        return MediaSessionCompat.Token.fromToken(sessionToken);
     }
 }
