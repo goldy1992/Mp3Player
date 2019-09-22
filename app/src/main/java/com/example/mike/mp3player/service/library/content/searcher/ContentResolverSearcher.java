@@ -9,21 +9,22 @@ import androidx.annotation.NonNull;
 import com.example.mike.mp3player.service.library.content.filter.ResultsFilter;
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
 import com.example.mike.mp3player.service.library.search.SearchDao;
+import com.example.mike.mp3player.service.library.search.SearchEntity;
 
 import java.util.Collections;
 import java.util.List;
 
-public abstract class ContentResolverSearcher extends ContentSearcher {
+public abstract class ContentResolverSearcher<T extends SearchEntity> extends ContentSearcher {
     final ContentResolver contentResolver;
     final ResultsParser resultsParser;
     final String idPrefix;
-    final SearchDao searchDatabase;
+    final SearchDao<T> searchDatabase;
 
     public ContentResolverSearcher(ContentResolver contentResolver,
                                    ResultsParser resultsParser,
                                    ResultsFilter resultsFilter,
                                    String idPrefix,
-                                   SearchDao searchDatabase) {
+                                   SearchDao<T> searchDatabase) {
         super(resultsFilter);
         this.contentResolver = contentResolver;
         this.resultsParser = resultsParser;

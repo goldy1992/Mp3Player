@@ -70,6 +70,7 @@ public class ContentManagerTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testGetChildren() {
         final String id = "id";

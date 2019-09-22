@@ -20,7 +20,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+                arguments = ["room.schemaLocation":"$projectDir/schemas".toString()]
             }
         }
     }
@@ -153,12 +153,17 @@ dependencies {
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
     annotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
+    // added to remove compile time warning
+    testAnnotationProcessor group: 'com.google.auto.service', name: 'auto-service', version: '1.0-rc4'
+
     //dagger
     implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
     implementation group: 'com.google.dagger', name: 'dagger-android', version: DAGGER_VERSION
     annotationProcessor  group: 'com.google.dagger', name: 'dagger-android-processor', version: DAGGER_VERSION
     annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+
+    testAnnotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
     // Glide
     implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION

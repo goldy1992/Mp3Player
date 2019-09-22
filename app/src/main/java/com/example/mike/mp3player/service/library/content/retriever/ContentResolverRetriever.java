@@ -20,10 +20,10 @@ public abstract class ContentResolverRetriever<T extends SearchEntity> extends C
 
     final ContentResolver contentResolver;
     final ResultsParser resultsParser;
-    final SearchDao dao;
+    final SearchDao<T> dao;
     final Handler handler;
 
-    public ContentResolverRetriever(ContentResolver contentResolver, ResultsParser resultsParser, SearchDao dao, Handler handler) {
+    public ContentResolverRetriever(ContentResolver contentResolver, ResultsParser resultsParser, SearchDao<T> dao, Handler handler) {
         super();
         this.contentResolver = contentResolver;
         this.resultsParser = resultsParser;

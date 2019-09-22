@@ -33,10 +33,7 @@ public final class LoggingUtils {
         StringBuilder sb = new StringBuilder();
         String state = "State: " + Constants.playbackStateDebugMap.get(stateCompat.getState());
         String position = "Position: " + stateCompat.getPosition();
-        Integer repeatMode = getRepeatModeFromPlaybackStateCompat(stateCompat);
-        String repeatModeString =  repeatMode == null ? "null" : Constants.repeatModeDebugMap.get(repeatMode);
-        String repeatModeOutput = "RepeatMode: " + repeatModeString;
-        String log = sb.append(state).append("\n").append(position).append("\n").append(repeatModeOutput).toString();
+        String log = sb.append(state).append("\n").append(position).toString();
         Log.i(LOG_TAG, log);
     }
 

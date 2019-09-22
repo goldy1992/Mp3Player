@@ -11,12 +11,12 @@ import androidx.annotation.NonNull;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
 import com.example.mike.mp3player.service.library.search.SearchDao;
-import com.example.mike.mp3player.service.library.search.SearchEntity;
+import com.example.mike.mp3player.service.library.search.Song;
 
 import static com.example.mike.mp3player.service.library.content.Projections.SONG_PROJECTION;
 
-public class SongsFromFolderRetriever extends ContentResolverRetriever {
-    public SongsFromFolderRetriever(ContentResolver contentResolver, ResultsParser resultsParser, SearchDao dao, Handler handler) {
+public class SongsFromFolderRetriever extends ContentResolverRetriever<Song> {
+    public SongsFromFolderRetriever(ContentResolver contentResolver, ResultsParser resultsParser, SearchDao<Song> dao, Handler handler) {
         super(contentResolver, resultsParser, dao, handler);
     }
 
@@ -39,7 +39,7 @@ public class SongsFromFolderRetriever extends ContentResolverRetriever {
     }
 
     @Override
-    SearchEntity createFromMediaItem(@NonNull MediaBrowserCompat.MediaItem item) {
+    Song createFromMediaItem(@NonNull MediaBrowserCompat.MediaItem item) {
         return null;
     }
 

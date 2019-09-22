@@ -19,7 +19,7 @@ import java.util.List;
 
 import static com.example.mike.mp3player.service.library.content.Projections.FOLDER_PROJECTION;
 
-public class FolderSearcher extends ContentResolverSearcher {
+public class FolderSearcher extends ContentResolverSearcher<Folder> {
 
     private static final String LIKE_STATEMENT = MediaStore.Audio.Media.DATA + " LIKE ?";
     public FolderSearcher(ContentResolver contentResolver, ResultsParser resultsParser, FoldersResultFilter foldersResultFilter, String idPrefix, FolderDao folderDao) {
