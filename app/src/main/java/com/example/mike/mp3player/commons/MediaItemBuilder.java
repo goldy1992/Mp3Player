@@ -16,8 +16,6 @@ import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.ROOT_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_DIRECTORY;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_NAME;
-import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_PARENT_DIRECTORY_PATH;
 import static com.example.mike.mp3player.service.library.content.parser.SongResultsParser.ALBUM_ART_URI_PREFIX;
 
 public class MediaItemBuilder {

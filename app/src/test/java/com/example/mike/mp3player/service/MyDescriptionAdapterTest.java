@@ -1,15 +1,12 @@
 package com.example.mike.mp3player.service;
 
-import android.app.PendingIntent;
 import android.content.Context;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.TestUtils;
-import com.example.mike.mp3player.client.activities.MediaPlayerActivityInjector;
 import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.google.android.exoplayer2.ExoPlayer;
 
@@ -18,14 +15,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.android.controller.ActivityController;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)

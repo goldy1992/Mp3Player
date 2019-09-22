@@ -12,11 +12,8 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
-
-
 import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
 import com.example.mike.mp3player.client.callbacks.metadata.MyMetadataCallback;
-import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.MyPlaybackStateCallback;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 
@@ -26,9 +23,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
-
-import java.util.Collections;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

@@ -2,10 +2,10 @@ package com.example.mike.mp3player.dagger.modules.service;
 
 import android.content.ContentResolver;
 
-import com.example.mike.mp3player.service.library.ContentManager;
-import com.example.mike.mp3player.service.library.content.retriever.ContentResolverRetriever;
 import com.example.mike.mp3player.commons.MediaItemType;
+import com.example.mike.mp3player.service.library.ContentManager;
 import com.example.mike.mp3player.service.library.MediaLibrary;
+import com.example.mike.mp3player.service.library.content.retriever.ContentResolverRetriever;
 
 import java.util.EnumMap;
 import java.util.Map;

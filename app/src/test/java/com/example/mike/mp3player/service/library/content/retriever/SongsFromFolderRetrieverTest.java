@@ -4,7 +4,6 @@ import android.support.v4.media.MediaBrowserCompat;
 
 import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.service.library.content.request.ContentRequest;
-import com.example.mike.mp3player.service.library.search.Song;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,15 +14,11 @@ import org.robolectric.RobolectricTestRunner;
 import java.util.List;
 
 import static android.os.Looper.getMainLooper;
-import static android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 import static com.example.mike.mp3player.commons.MediaItemType.SONG;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 

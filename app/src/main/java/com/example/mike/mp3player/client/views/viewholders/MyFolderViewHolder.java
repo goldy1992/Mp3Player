@@ -8,12 +8,9 @@ import androidx.annotation.NonNull;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
-import com.example.mike.mp3player.commons.MediaItemUtils;
 
-import static com.example.mike.mp3player.commons.MediaItemUtils.getDescription;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getDirectoryName;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getDirectoryPath;
-import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 
 public class MyFolderViewHolder extends MediaItemViewHolder {
 

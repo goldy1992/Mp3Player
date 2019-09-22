@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.client.views.adapters.MediaItemRecyclerViewAdapter;
-import com.example.mike.mp3player.client.views.adapters.MyGenericRecycleViewAdapter;
 
 public class MyGenericItemTouchListener extends GestureDetector.SimpleOnGestureListener
         implements RecyclerView.OnItemTouchListener  {

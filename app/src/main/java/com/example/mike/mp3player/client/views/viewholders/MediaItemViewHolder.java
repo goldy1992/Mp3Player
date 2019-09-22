@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.client.views.viewholders;
 
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.view.View;
 

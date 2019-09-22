@@ -16,7 +16,6 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
-import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;

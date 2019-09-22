@@ -7,7 +7,6 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_DURATION;
-import static com.example.mike.mp3player.commons.PlaybackStateUtil.getRepeatModeFromPlaybackStateCompat;
 
 public final class LoggingUtils {
 

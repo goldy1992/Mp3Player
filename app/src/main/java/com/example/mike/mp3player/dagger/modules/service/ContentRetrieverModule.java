@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;

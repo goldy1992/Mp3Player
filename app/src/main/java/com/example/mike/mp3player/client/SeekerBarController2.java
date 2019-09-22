@@ -12,7 +12,6 @@ import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.client.views.TimeCounter;
-import com.example.mike.mp3player.commons.LoggingUtils;
 
 import javax.inject.Inject;
 

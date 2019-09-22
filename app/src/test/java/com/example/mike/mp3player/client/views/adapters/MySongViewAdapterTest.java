@@ -2,7 +2,6 @@ package com.example.mike.mp3player.client.views.adapters;
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
-import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.viewholders.MySongViewHolder;
 import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemType;
@@ -16,8 +15,6 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
-
-import java.util.ArrayList;
 
 import static com.example.mike.mp3player.TestUtils.createMediaItem;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;

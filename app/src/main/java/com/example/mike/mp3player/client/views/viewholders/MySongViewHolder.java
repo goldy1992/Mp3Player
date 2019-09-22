@@ -22,7 +22,6 @@ import org.apache.commons.io.FilenameUtils;
 import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getAlbumArtUri;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getExtra;
-
 import static com.example.mike.mp3player.commons.MediaItemUtils.hasExtras;
 
 public class MySongViewHolder extends MediaItemViewHolder {

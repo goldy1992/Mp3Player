@@ -1,16 +1,12 @@
 package com.example.mike.mp3player.client.callbacks.metadata;
 
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.media.MediaMetadataCompat;
 
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_MEDIA_ID;

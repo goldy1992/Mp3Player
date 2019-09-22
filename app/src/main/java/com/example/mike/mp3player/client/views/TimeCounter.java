@@ -23,7 +23,6 @@ import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import static com.example.mike.mp3player.client.utils.TimerUtils.ONE_SECOND;
 import static com.example.mike.mp3player.client.utils.TimerUtils.formatTime;
 import static com.example.mike.mp3player.commons.Constants.DEFAULT_POSITION;
-import static com.example.mike.mp3player.commons.PlaybackStateUtil.getRepeatModeFromPlaybackStateCompat;
 
 public class TimeCounter {
     private static final long START = 0L;

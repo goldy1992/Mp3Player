@@ -8,10 +8,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
-import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
-
-import java.util.Set;
 
 import javax.inject.Inject;
 
