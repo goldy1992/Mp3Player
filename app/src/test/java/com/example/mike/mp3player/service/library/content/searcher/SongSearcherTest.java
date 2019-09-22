@@ -3,7 +3,6 @@ package com.example.mike.mp3player.service.library.content.searcher;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
 
-import com.example.mike.mp3player.service.library.search.SearchEntity;
 import com.example.mike.mp3player.service.library.search.Song;
 import com.example.mike.mp3player.service.library.search.SongDao;
 
@@ -20,13 +19,7 @@ import java.util.List;
 import static android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 import static com.example.mike.mp3player.commons.MediaItemType.SONGS;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)

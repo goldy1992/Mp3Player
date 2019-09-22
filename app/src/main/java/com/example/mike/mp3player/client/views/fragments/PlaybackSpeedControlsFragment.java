@@ -14,11 +14,8 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
-import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
-
-import java.util.Collections;
 
 import javax.inject.Inject;
 

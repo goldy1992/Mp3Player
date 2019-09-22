@@ -13,10 +13,7 @@ import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
-
-import java.util.Collections;
 
 import javax.inject.Inject;
 import javax.inject.Named;

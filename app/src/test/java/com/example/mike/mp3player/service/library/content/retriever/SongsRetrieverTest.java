@@ -1,14 +1,12 @@
 package com.example.mike.mp3player.service.library.content.retriever;
 
 import android.support.v4.media.MediaBrowserCompat;
-import android.util.Log;
 
 import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.service.library.content.request.ContentRequest;
 import com.example.mike.mp3player.service.library.search.Song;
 import com.example.mike.mp3player.service.library.search.SongDao;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
-import java.text.Normalizer;
 import java.util.List;
 
 import static android.os.Looper.getMainLooper;

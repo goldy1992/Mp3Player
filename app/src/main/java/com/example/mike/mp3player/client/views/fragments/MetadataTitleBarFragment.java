@@ -18,8 +18,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
 import com.example.mike.mp3player.client.activities.MediaActivityCompat;
+import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 
 import javax.inject.Inject;

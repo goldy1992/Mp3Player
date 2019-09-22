@@ -1,18 +1,11 @@
 package com.example.mike.mp3player.service;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import androidx.annotation.VisibleForTesting;
 import androidx.media.MediaBrowserServiceCompat;
 
-import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.service.library.utils.IdGenerator;
-
-import org.apache.commons.lang3.RandomStringUtils;
-
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import static com.example.mike.mp3player.commons.Constants.PACKAGE_NAME;
 

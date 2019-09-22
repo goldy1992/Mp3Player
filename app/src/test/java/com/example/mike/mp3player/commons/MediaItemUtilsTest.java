@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompat;
 
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -12,7 +11,6 @@ import org.robolectric.RobolectricTestRunner;
 import java.io.File;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
-import static com.example.mike.mp3player.commons.Constants.UNKNOWN;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;

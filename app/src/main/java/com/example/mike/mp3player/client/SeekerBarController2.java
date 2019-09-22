@@ -12,7 +12,6 @@ import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.client.views.TimeCounter;
-import com.example.mike.mp3player.commons.LoggingUtils;
 
 import javax.inject.Inject;
 
@@ -44,7 +43,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
     }
 
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
-        LoggingUtils.logPlaybackStateCompat(state, LOG_TAG);
+        //LoggingUtils.logPlaybackStateCompat(state, LOG_TAG);
         setLooping(state);
         this.currentState = state.getState();
         long position = state.getPosition();
@@ -193,7 +192,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         boolean updateTimer = seekBar != null && seekBar instanceof SeekerBar && ((SeekerBar) seekBar).isTracking();
         if (updateTimer) {
-            Log.i(LOG_TAG, "PROGRESS CHANGED");
+            //Log.i(LOG_TAG, "PROGRESS CHANGED");
             timeCounter.seekTo(progress);
         }
     }

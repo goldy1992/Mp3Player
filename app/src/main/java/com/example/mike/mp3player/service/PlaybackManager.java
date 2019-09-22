@@ -1,7 +1,5 @@
 package com.example.mike.mp3player.service;
 
-import static android.support.v4.media.MediaBrowserCompat.MediaItem;
-
 import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
 
@@ -15,6 +13,8 @@ import java.util.Random;
 import java.util.Stack;
 
 import javax.inject.Inject;
+
+import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 public class PlaybackManager {
 

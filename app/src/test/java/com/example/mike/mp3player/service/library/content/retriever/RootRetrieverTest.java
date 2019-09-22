@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.service.library.content.retriever;
 
 
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.example.mike.mp3player.commons.MediaItemType;

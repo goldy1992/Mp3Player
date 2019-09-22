@@ -17,7 +17,7 @@ import java.util.List;
 
 import static com.example.mike.mp3player.service.library.content.Projections.SONG_PROJECTION;
 
-public class SongSearcher extends ContentResolverSearcher {
+public class SongSearcher extends ContentResolverSearcher<Song> {
 
     private static final String PARAMETER = "?";
 

@@ -12,8 +12,6 @@ import com.example.mike.mp3player.client.callbacks.subscription.GenericSubscript
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static com.example.mike.mp3player.commons.Constants.REQUEST_OBJECT;
-
 @Singleton
 public class MediaBrowserAdapter {
 

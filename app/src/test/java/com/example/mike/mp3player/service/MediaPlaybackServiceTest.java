@@ -35,6 +35,7 @@ import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 @LooperMode(LooperMode.Mode.PAUSED)
+@SuppressWarnings("unchecked")
 public class MediaPlaybackServiceTest {
     private static final String ACCEPTED_MEDIA_ROOT_ID = "ACCEPTED";
     private static final String REJECTED_MEDIA_ROOT_ID = "REJECTED";

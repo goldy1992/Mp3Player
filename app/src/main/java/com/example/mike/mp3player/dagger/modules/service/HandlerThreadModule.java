@@ -3,8 +3,6 @@ package com.example.mike.mp3player.dagger.modules.service;
 import android.os.Handler;
 import android.os.HandlerThread;
 
-import javax.inject.Named;
-
 import dagger.Module;
 import dagger.Provides;
 

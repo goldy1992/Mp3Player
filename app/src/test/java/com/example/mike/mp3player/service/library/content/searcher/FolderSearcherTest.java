@@ -7,7 +7,6 @@ import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.service.library.content.filter.FoldersResultFilter;
 import com.example.mike.mp3player.service.library.search.Folder;
 import com.example.mike.mp3player.service.library.search.FolderDao;
-import com.example.mike.mp3player.service.library.search.Song;
 
 import org.junit.Before;
 import org.junit.Test;

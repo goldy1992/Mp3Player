@@ -13,18 +13,14 @@ import androidx.annotation.Nullable;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
-import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.SeekerBarController2;
-import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
+import com.example.mike.mp3player.client.activities.MediaActivityCompat;
+import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 import com.example.mike.mp3player.client.utils.TimerUtils;
 import com.example.mike.mp3player.client.views.SeekerBar;
 import com.example.mike.mp3player.client.views.TimeCounter;
 import com.example.mike.mp3player.dagger.components.fragments.PlaybackTrackerFragmentSubcomponent;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.inject.Inject;
 
