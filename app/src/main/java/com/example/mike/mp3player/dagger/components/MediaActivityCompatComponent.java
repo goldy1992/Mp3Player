@@ -42,11 +42,9 @@ public interface MediaActivityCompatComponent {
     void inject(MainActivity mainActivity);
     void inject(MediaPlayerActivity mediaPlayerActivity);
     void inject(FolderActivity folderActivity);
-    void inject(SearchResultActivity searchResultActivity);
 
     // fragments
     void inject(PlaybackSpeedControlsFragment playbackSpeedControlsFragment);
-    void inject(MediaControlsFragment mediaControlsFragment);
     void inject(AlbumArtFragment albumArtFragment);
     void inject(MetadataTitleBarFragment metadataTitleBarFragment);
 
