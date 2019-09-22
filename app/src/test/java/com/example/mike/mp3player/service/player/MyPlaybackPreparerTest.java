@@ -6,6 +6,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.service.library.ContentManager;
+import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.upstream.FileDataSource;
 
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -70,6 +72,21 @@ public class MyPlaybackPreparerTest {
         verify(exoPlayer, times(1)).setPlayWhenReady(false);
         // should seek to the first index, position 0
         verify(exoPlayer, times(1)).seekTo(0, 0);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testOnPrepareFromSearch() {
+        myPlaybackPreparer.onPrepareFromSearch("query", true, null);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testOnPrepareFromUri() {
+        myPlaybackPreparer.onPrepareFromUri(Uri.parse("query"), true, null);
+    }
+
+    @Test
+    public void testOnCommand() {
+        assertFalse(myPlaybackPreparer.onCommand(exoPlayer, mock(ControlDispatcher.class), "query", null, null));
     }
 
     @Test

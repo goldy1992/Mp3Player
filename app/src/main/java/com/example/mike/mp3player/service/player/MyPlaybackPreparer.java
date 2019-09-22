@@ -49,7 +49,7 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
 
     @Override
     public void onPrepare(boolean playWhenReady) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -93,12 +93,12 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
 
     @Override
     public void onPrepareFromSearch(String query, boolean playWhenReady, Bundle extras) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void onPrepareFromUri(Uri uri, boolean playWhenReady, Bundle extras) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
