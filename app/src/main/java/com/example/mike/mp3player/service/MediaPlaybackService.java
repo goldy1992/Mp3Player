@@ -5,18 +5,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.example.mike.mp3player.service.library.ContentManager;
-import com.example.mike.mp3player.service.session.MediaSessionCallback;
+import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
+import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -27,23 +25,20 @@ import javax.inject.Inject;
 public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
 
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
-
-    private ContentManager contentManager;
+     private ContentManager contentManager;
     private HandlerThread worker;
     private Handler handler;
+    private PlayerNotificationManager playerNotificationManager;
     private MediaSessionCompat mediaSession;
-    private MediaSessionCallback mediaSessionCallback;
+    private MediaSessionConnector mediaSessionConnector;
     private RootAuthenticator rootAuthenticator;
     abstract void initialiseDependencies();
 
     @Override
     public void onCreate() {
         super.onCreate();
-        handler.post(() -> {
-            this.mediaSessionCallback.init();
-            setSessionToken(mediaSession.getSessionToken());
-            mediaSession.setCallback(mediaSessionCallback);
-        });
+        setSessionToken(mediaSession.getSessionToken());
+        playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
     }
 
 
@@ -116,10 +111,6 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     }
 
     @Inject
-    public void setMediaSessionCallback(MediaSessionCallback mediaSessionCallback) {
-        this.mediaSessionCallback = mediaSessionCallback;
-    }
-    @Inject
     public void setWorker(HandlerThread handlerThread) {
         this.worker = handlerThread;
     }
@@ -132,6 +123,16 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Inject
     public void setRootAuthenticator(RootAuthenticator rootAuthenticator) {
         this.rootAuthenticator = rootAuthenticator;
+    }
+
+    @Inject
+    public void setMediaSessionConnector(MediaSessionConnector mediaSessionConnector) {
+        this.mediaSessionConnector = mediaSessionConnector;
+    }
+
+    @Inject
+    public void setPlayerNotificationManager(PlayerNotificationManager playerNotificationManager) {
+        this.playerNotificationManager = playerNotificationManager;
     }
 
     @VisibleForTesting

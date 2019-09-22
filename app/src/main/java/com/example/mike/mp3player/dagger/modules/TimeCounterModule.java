@@ -2,6 +2,7 @@ package com.example.mike.mp3player.dagger.modules;
 
 import android.os.Handler;
 
+import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.TimeCounter;
 import com.example.mike.mp3player.dagger.scopes.FragmentScope;
 
@@ -15,7 +16,7 @@ public class TimeCounterModule {
 
     @FragmentScope
     @Provides
-    TimeCounter provideTimeCounter(@Named("main") Handler handler) {
-        return new TimeCounter(handler);
+    TimeCounter provideTimeCounter(@Named("main") Handler handler, MediaControllerAdapter mediaControllerAdapter) {
+        return new TimeCounter(handler, mediaControllerAdapter);
     }
 }

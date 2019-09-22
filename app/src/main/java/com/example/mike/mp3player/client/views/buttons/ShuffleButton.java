@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.views.buttons;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.View;
@@ -11,10 +10,7 @@ import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
-
-import java.util.Collections;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -22,7 +18,6 @@ import javax.inject.Named;
 import static android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_ALL;
 import static android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_NONE;
 import static com.example.mike.mp3player.commons.Constants.OPAQUE;
-import static com.example.mike.mp3player.commons.Constants.SHUFFLE_MODE;
 import static com.example.mike.mp3player.commons.Constants.TRANSLUCENT;
 
 public class ShuffleButton extends MediaButton implements PlaybackStateListener {
@@ -40,8 +35,7 @@ public class ShuffleButton extends MediaButton implements PlaybackStateListener 
     @Override
     public void init(ImageView view) {
         super.init(view);
-        this.mediaControllerAdapter.registerPlaybackStateListener(this,
-                Collections.singleton(ListenerType.SHUFFLE));
+        this.mediaControllerAdapter.registerPlaybackStateListener(this);
         this.updateState(mediaControllerAdapter.getShuffleMode());
     }
 
@@ -65,7 +59,6 @@ public class ShuffleButton extends MediaButton implements PlaybackStateListener 
             case SHUFFLE_MODE_ALL: newShuffleMode = SHUFFLE_MODE_NONE; break;
             default: newShuffleMode = SHUFFLE_MODE_ALL; break;
         }
-        updateState(newShuffleMode);
         mediaControllerAdapter.setShuffleMode(newShuffleMode);
     }
 
@@ -79,11 +72,9 @@ public class ShuffleButton extends MediaButton implements PlaybackStateListener 
 
     @Override
     public void onPlaybackStateChanged(PlaybackStateCompat state) {
-        Bundle extras = state.getExtras();
-        if (null != extras) {
-            Integer shuffleMode = extras.getInt(SHUFFLE_MODE);
-            updateState(shuffleMode);
-
+        final int newShuffleMode = mediaControllerAdapter.getShuffleMode();
+        if (this.shuffleMode != newShuffleMode) {
+            updateState(newShuffleMode);
         }
     }
 

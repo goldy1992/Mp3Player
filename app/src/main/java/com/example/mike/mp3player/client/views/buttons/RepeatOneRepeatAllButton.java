@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.views.buttons;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -13,10 +12,7 @@ import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.callbacks.playback.ListenerType;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
-
-import java.util.Collections;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -25,7 +21,6 @@ import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_A
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_NONE;
 import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ONE;
 import static com.example.mike.mp3player.commons.Constants.OPAQUE;
-import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 import static com.example.mike.mp3player.commons.Constants.TRANSLUCENT;
 
 /**
@@ -48,8 +43,7 @@ public class RepeatOneRepeatAllButton extends MediaButton implements PlaybackSta
     @Override
     public void init(ImageView view) {
         super.init(view);
-        this.mediaControllerAdapter.registerPlaybackStateListener(this,
-                Collections.singleton(ListenerType.REPEAT));
+        this.mediaControllerAdapter.registerPlaybackStateListener(this);
         this.updateState(mediaControllerAdapter.getRepeatMode());
     }
 
@@ -57,7 +51,6 @@ public class RepeatOneRepeatAllButton extends MediaButton implements PlaybackSta
     public void onClick(View view) {
         int nextState = getNextState();
         mediaControllerAdapter.setRepeatMode(nextState);
-        updateState(nextState);
     }
 
     public void updateState(@PlaybackStateCompat.RepeatMode int newState) {
@@ -111,9 +104,9 @@ public class RepeatOneRepeatAllButton extends MediaButton implements PlaybackSta
 
     @Override
     public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
-        Bundle extras = state.getExtras();
-        if (null != extras) {
-            updateState(extras.getInt(REPEAT_MODE));
+        final int newRepeatMode = mediaControllerAdapter.getRepeatMode();
+        if (this.repeatMode != newRepeatMode) {
+            updateState(newRepeatMode);
         }
     }
 }

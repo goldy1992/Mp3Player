@@ -142,6 +142,9 @@ dependencies {
     implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
     implementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     implementation group: 'com.simplecityapps', name: 'recyclerview-fastscroll', version: FAST_SCROLL_VERSION
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: '2.10.4'
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: '2.10.4'
+    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: '2.10.4'
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
     annotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
@@ -155,7 +158,7 @@ dependencies {
     // Glide
     implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION
 
-    //vintage
+    // vintage
     testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
     // (Optional) If you also have JUnit 4-based tests
     testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: JUNIT5_VERSION

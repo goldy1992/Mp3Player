@@ -1,13 +1,6 @@
 package com.example.mike.mp3player.dagger.modules.service;
 
-import android.content.Context;
-import android.support.v4.media.session.MediaSessionCompat;
-
-import com.example.mike.mp3player.service.MediaPlaybackService;
-import com.example.mike.mp3player.service.MyNotificationManager;
 import com.example.mike.mp3player.service.RootAuthenticator;
-import com.example.mike.mp3player.service.ServiceManager;
-import com.example.mike.mp3player.service.session.MediaSessionAdapter;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -20,22 +13,9 @@ public class ServiceModule {
 
     @Singleton
     @Provides
-    ServiceManager provideServiceManager(MediaPlaybackService service,
-                                         MediaSessionAdapter mediaSessionAdapter,
-                                         MyNotificationManager myNotificationManager) {
-        return new ServiceManager(service, mediaSessionAdapter, myNotificationManager);
-    }
-
-    @Singleton
-    @Provides
     public RootAuthenticator provideRootAuthenticator(@Named("rootId") String rootId) {
         return new RootAuthenticator(rootId);
     }
 
-    @Singleton
-    @Provides
-    MyNotificationManager provideMyNotificationManager(Context context, MediaSessionCompat.Token token) {
-        return new MyNotificationManager(context, token);
-    }
 
 }

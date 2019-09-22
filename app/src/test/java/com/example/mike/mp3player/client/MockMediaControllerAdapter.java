@@ -82,7 +82,7 @@ public class MockMediaControllerAdapter extends MediaControllerAdapter {
         // DO NOTHING
     }
     @Override
-    public void registerPlaybackStateListener(PlaybackStateListener playbackStateListener, Set<ListenerType> listenerTypes) {
+    public void registerPlaybackStateListener(PlaybackStateListener playbackStateListener) {
         // DO NOTHING
     }
 

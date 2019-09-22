@@ -11,6 +11,8 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
+import com.example.mike.mp3player.client.MediaControllerAdapter;
+import com.example.mike.mp3player.client.MockMediaControllerAdapter;
 import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemType;
 
@@ -24,6 +26,7 @@ import org.robolectric.android.controller.ActivityController;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -50,13 +53,33 @@ public class SearchResultActivityTest {
     }
 
     @Test
-    public void testOnItemSelected() {
+    public void testOnSongItemSelected() {
         final SearchResultActivity searchResultActivitySpied = spy(searchResultActivity);
+        final MediaControllerAdapter spiedMediaControllerAdapter = spy(searchResultActivitySpied.mediaControllerAdapter);
+        searchResultActivitySpied.setMediaControllerAdapter(spiedMediaControllerAdapter);
+        final String libraryId = "libId";
         MediaBrowserCompat.MediaItem mediaItem = new MediaItemBuilder("id")
                 .setMediaItemType(MediaItemType.SONGS)
+                .setLibraryId(libraryId)
+                .build();
+        searchResultActivitySpied.itemSelected(mediaItem);
+        verify(searchResultActivitySpied, never()).startActivity(any());
+        verify(spiedMediaControllerAdapter, times(1)).playFromMediaId(libraryId, null);
+    }
+
+    @Test
+    public void testOnFolderItemSelected() {
+        final SearchResultActivity searchResultActivitySpied = spy(searchResultActivity);
+        final MediaControllerAdapter spiedMediaControllerAdapter = spy(searchResultActivitySpied.mediaControllerAdapter);
+        searchResultActivitySpied.setMediaControllerAdapter(spiedMediaControllerAdapter);
+        final String libraryId = "libId";
+        MediaBrowserCompat.MediaItem mediaItem = new MediaItemBuilder("id")
+                .setMediaItemType(MediaItemType.FOLDERS)
+                .setLibraryId(libraryId)
                 .build();
         searchResultActivitySpied.itemSelected(mediaItem);
         verify(searchResultActivitySpied, times(1)).startActivity(any());
+        verify(spiedMediaControllerAdapter, never()).playFromMediaId(libraryId, null);
     }
 
     @Test

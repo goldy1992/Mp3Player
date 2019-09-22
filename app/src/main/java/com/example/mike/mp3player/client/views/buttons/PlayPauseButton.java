@@ -34,14 +34,13 @@ public class PlayPauseButton extends MediaButton implements PlaybackStateListene
     public PlayPauseButton(Context context, @NonNull MediaControllerAdapter mediaControllerAdapter,
                            @Named("main") Handler mainUpdater) {
         super(context, mediaControllerAdapter, mainUpdater);
+        updateState(mediaControllerAdapter.getPlaybackState())  ;
     }
 
     @Override
     public void init(ImageView view) {
         super.init(view);
-        this.mediaControllerAdapter.registerPlaybackStateListener(this,
-                Collections.singleton(ListenerType.PLAYBACK));
-        this.updateState(mediaControllerAdapter.getPlaybackState());
+        this.mediaControllerAdapter.registerPlaybackStateListener(this);
     }
 
     @VisibleForTesting()
@@ -60,14 +59,22 @@ public class PlayPauseButton extends MediaButton implements PlaybackStateListene
         if (newState != getState()) {
             switch (newState) {
                 case STATE_PLAYING:
-                    mainUpdater.post(this::setPauseIcon);
-                    this.state = STATE_PLAYING;
+                    setStatePlaying();
                     break;
                 default:
-                    mainUpdater.post(this::setPlayIcon);
-                    this.state = STATE_PAUSED;
+                    setStatePaused();
             } // switch
         }
+    }
+
+    private void setStatePlaying() {
+        mainUpdater.post(this::setPauseIcon);
+        this.state = STATE_PLAYING;
+    }
+
+    private void setStatePaused() {
+        mainUpdater.post(this::setPlayIcon);
+        this.state = STATE_PAUSED;
     }
 
     private synchronized void setPlayIcon() {

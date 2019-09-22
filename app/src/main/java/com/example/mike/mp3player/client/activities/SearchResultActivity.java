@@ -96,7 +96,8 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
             MediaItemType mediaItemType = MediaItemUtils.getMediaItemType(item);
             switch (mediaItemType) {
                 case SONG:
-                case SONGS: intentClass = MediaPlayerActivityInjector.class;
+                case SONGS:
+                    mediaControllerAdapter.playFromMediaId(MediaItemUtils.getLibraryId(item), null);
                     break;
                 case FOLDER:
                 case FOLDERS:intentClass = FolderActivityInjector.class;

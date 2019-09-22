@@ -16,6 +16,8 @@ import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_O
 import static com.example.mike.mp3player.commons.Constants.REPEAT_MODE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
@@ -70,12 +72,15 @@ public class RepeatOneRepeatAllButtonTest extends MediaButtonTestBase {
     @Test
     public void testOnPlaybackStateChangedWithValidRepeatMode() {
         final int expectedState = REPEAT_MODE_ONE;
+        repeatOneRepeatAllButton.setRepeatMode(REPEAT_MODE_NONE);
         Bundle extras = new Bundle();
         extras.putInt(REPEAT_MODE, expectedState);
         PlaybackStateCompat state = new PlaybackStateCompat.Builder()
                 .setExtras(extras)
                 .build();
+        when(mediaControllerAdapter.getRepeatMode()).thenReturn(expectedState);
         repeatOneRepeatAllButton.onPlaybackStateChanged(state);
+
         assertEquals(expectedState, repeatOneRepeatAllButton.getState());
     }
 
@@ -84,7 +89,7 @@ public class RepeatOneRepeatAllButtonTest extends MediaButtonTestBase {
         ImageView imageView = mock(ImageView.class);
         repeatOneRepeatAllButton.setRepeatMode(originalRepeatMode);
         repeatOneRepeatAllButton.onClick(imageView);
-        assertEquals(expectedRepeatMode, repeatOneRepeatAllButton.getState());
+        verify(mediaControllerAdapter, times(1)).setRepeatMode(expectedRepeatMode);
     }
 
 
