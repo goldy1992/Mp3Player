@@ -11,10 +11,12 @@ import javax.inject.Named;
 public abstract class AsyncFragment extends Fragment {
 
     Handler mainUpdater;
+    Handler worker;
 
     @Inject
-    public void setMainUpdater(@Named("main") Handler mainUpdater) {
+    public void setMainUpdater(@Named("main") Handler mainUpdater, @Named("worker") Handler worker) {
         this.mainUpdater = mainUpdater;
+        this.worker = worker;
     }
 
     public AsyncFragment() {

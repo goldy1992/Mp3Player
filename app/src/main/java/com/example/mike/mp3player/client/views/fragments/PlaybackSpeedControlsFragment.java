@@ -60,17 +60,17 @@ public class PlaybackSpeedControlsFragment extends AsyncFragment implements Play
     }
 
     public void increasePlaybackSpeed() {
-        Bundle extras = new Bundle();
-        this.speed += 0.05f;
-        this.updatePlaybackSpeedText(speed);
-        mediaControllerAdapter.sendCustomAction(INCREASE_PLAYBACK_SPEED, extras);
+        worker.post(() -> {
+            Bundle extras = new Bundle();
+            mediaControllerAdapter.sendCustomAction(INCREASE_PLAYBACK_SPEED, extras);
+        });
     }
 
     public void decreasePlaybackSpeed() {
-        Bundle extras = new Bundle();
-        this.speed -= 0.05f;
-        this.updatePlaybackSpeedText(speed);
-        this.mediaControllerAdapter.sendCustomAction(DECREASE_PLAYBACK_SPEED, extras);
+        worker.post(() -> {
+            Bundle extras = new Bundle();
+            this.mediaControllerAdapter.sendCustomAction(DECREASE_PLAYBACK_SPEED, extras);
+        });
     }
 
 
