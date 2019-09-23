@@ -3,6 +3,8 @@ package com.example.mike.mp3player.dagger.modules.service;
 import android.os.Handler;
 import android.os.HandlerThread;
 
+import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -19,6 +21,7 @@ public class HandlerThreadModule {
         return handlerThread;
     }
 
+    @Named("worker")
     @Provides
     public Handler providesHandler(HandlerThread handlerThread) {
         return new Handler(handlerThread.getLooper());

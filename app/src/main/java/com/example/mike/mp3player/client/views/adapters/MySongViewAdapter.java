@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views.adapters;
 
+import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +18,8 @@ import com.example.mike.mp3player.client.views.viewholders.MySongViewHolder;
 public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     private final String LOG_TAG = "MY_VIEW_ADAPTER";
 
-    public MySongViewAdapter(AlbumArtPainter albumArtPainter) {
-        super(albumArtPainter);
+    public MySongViewAdapter(AlbumArtPainter albumArtPainter, Handler mainHandler) {
+        super(albumArtPainter, mainHandler);
     }
 
     @Override

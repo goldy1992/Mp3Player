@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views.adapters;
 
+import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,8 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
 
     private final String LOG_TAG = "FOLDER_VIEW_ADAPTER";
 
-    public MyFolderViewAdapter(AlbumArtPainter albumArtPainter) {
-        super(albumArtPainter);
+    public MyFolderViewAdapter(AlbumArtPainter albumArtPainter, Handler mainHandler) {
+        super(albumArtPainter, mainHandler);
     }
 
     @Override

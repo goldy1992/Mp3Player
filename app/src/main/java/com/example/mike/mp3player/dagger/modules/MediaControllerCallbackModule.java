@@ -6,6 +6,8 @@ import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 import com.example.mike.mp3player.client.callbacks.metadata.MyMetadataCallback;
 import com.example.mike.mp3player.client.callbacks.playback.MyPlaybackStateCallback;
 
+import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -19,12 +21,12 @@ public class MediaControllerCallbackModule {
     }
 
     @Provides
-    MyMetadataCallback provideMetadataCallback(Handler handler) {
+    MyMetadataCallback provideMetadataCallback(@Named("main") Handler handler) {
         return new MyMetadataCallback(handler);
     }
 
     @Provides
-    MyPlaybackStateCallback providePlaybackStateCallback(Handler handler) {
+    MyPlaybackStateCallback providePlaybackStateCallback(@Named("main") Handler handler) {
         return new MyPlaybackStateCallback(handler);
     }
 }

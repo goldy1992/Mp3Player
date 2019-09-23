@@ -25,13 +25,15 @@ public class MediaIdSubscriptionCallback extends GenericSubscriptionCallback {
 
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children) {
-        ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>(children);
-        Set<MediaBrowserResponseListener> listenersToNotify = mediaBrowserResponseListeners.get(parentId);
-        if (null != listenersToNotify) {
-            for (MediaBrowserResponseListener listener : listenersToNotify) {
-                listener.onChildrenLoaded(parentId, childrenArrayList);
+        handler.post( () -> {
+            ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>(children);
+            Set<MediaBrowserResponseListener> listenersToNotify = mediaBrowserResponseListeners.get(parentId);
+            if (null != listenersToNotify) {
+                for (MediaBrowserResponseListener listener : listenersToNotify) {
+                    listener.onChildrenLoaded(parentId, childrenArrayList);
+                }
             }
-        }
+        });
     }
 
     @Override

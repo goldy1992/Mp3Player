@@ -28,6 +28,7 @@ public class PlaybackSpeedControlsFragment extends AsyncFragment implements Play
     private AppCompatImageButton increasePlaybackSpeedButton;
     private AppCompatImageButton decreasePlaybackSpeedButton;
     private MediaControllerAdapter mediaControllerAdapter;
+    private float speed = 1.0f;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -60,18 +61,22 @@ public class PlaybackSpeedControlsFragment extends AsyncFragment implements Play
 
     public void increasePlaybackSpeed() {
         Bundle extras = new Bundle();
+        this.speed += 0.05f;
+        this.updatePlaybackSpeedText(speed);
         mediaControllerAdapter.sendCustomAction(INCREASE_PLAYBACK_SPEED, extras);
     }
 
     public void decreasePlaybackSpeed() {
         Bundle extras = new Bundle();
+        this.speed -= 0.05f;
+        this.updatePlaybackSpeedText(speed);
         this.mediaControllerAdapter.sendCustomAction(DECREASE_PLAYBACK_SPEED, extras);
     }
 
 
     @Override
     public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
-        float speed = state.getPlaybackSpeed();
+        this.speed = state.getPlaybackSpeed();
         if (speed > 0) {
             updatePlaybackSpeedText(speed);
         }

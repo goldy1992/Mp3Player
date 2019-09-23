@@ -18,6 +18,7 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * Created by Mike on 24/09/2017.
@@ -116,7 +117,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     }
 
     @Inject
-    public void setHandler(Handler handler) {
+    public void setHandler(@Named("worker") Handler handler) {
         this.handler = handler;
     }
 

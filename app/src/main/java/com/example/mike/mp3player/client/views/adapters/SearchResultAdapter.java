@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views.adapters;
 
+import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +25,8 @@ import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 public class SearchResultAdapter extends MediaItemRecyclerViewAdapter {
 
     @Inject
-    public SearchResultAdapter(AlbumArtPainter albumArtPainter) {
-        super(albumArtPainter);
+    public SearchResultAdapter(AlbumArtPainter albumArtPainter, Handler mainHandler) {
+        super(albumArtPainter, mainHandler);
     }
 
     @NonNull

@@ -15,6 +15,8 @@ import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType
 import com.example.mike.mp3player.dagger.scopes.ComponentScope;
 import com.example.mike.mp3player.service.MediaPlaybackServiceInjector;
 
+import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -47,14 +49,14 @@ public class MediaBrowserAdapterModule {
 
     @Provides
     public MediaBrowserCompat provideMediaBrowserCompat(Context context, ComponentName componentName,
-                                                        MyConnectionCallback myConnectionCallback, Handler handler) {
+                                                        MyConnectionCallback myConnectionCallback) {
         return new MediaBrowserCompat(context, componentName, myConnectionCallback, null);
     }
 
     @Provides
     public GenericSubscriptionCallback provideGenericSubscriptionCallback(
             SubscriptionType subscriptionType,
-            Handler handler) {
+            @Named("worker") Handler handler) {
         if (null != subscriptionType) {
             return new MediaIdSubscriptionCallback(handler);
         }

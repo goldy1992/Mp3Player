@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views.adapters;
 
+import android.os.Handler;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +33,8 @@ public abstract class MyGenericRecycleViewAdapter extends MediaItemRecyclerViewA
     private boolean isInitialised = false;
     private final MediaItem EMPTY_LIST_ITEM = buildEmptyListMediaItem();
 
-    public MyGenericRecycleViewAdapter(AlbumArtPainter albumArtPainter) {
-        super(albumArtPainter);
+    public MyGenericRecycleViewAdapter(AlbumArtPainter albumArtPainter, Handler mainHandler) {
+        super(albumArtPainter, mainHandler);
     }
 
     @Override
@@ -49,7 +50,7 @@ public abstract class MyGenericRecycleViewAdapter extends MediaItemRecyclerViewA
 
         if (!children.isEmpty()) {
             this.items.addAll(children);
-            notifyDataSetChanged();
+            mainHandler.post(this::notifyDataSetChanged);
         }
         this.isInitialised = true;
     }
