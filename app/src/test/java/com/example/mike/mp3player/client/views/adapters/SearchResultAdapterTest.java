@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views.adapters;
 
+import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +16,7 @@ import com.example.mike.mp3player.commons.MediaItemType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
@@ -26,12 +28,15 @@ public class SearchResultAdapterTest extends MediaItemRecyclerViewAdapterTestBas
 
     private SearchResultAdapter searchResultAdapter;
 
+    @Mock
+    private Handler handler;
+
     @Before
     public void setup() {
         super.setup();
         MockitoAnnotations.initMocks(this);
         this.context = InstrumentationRegistry.getInstrumentation().getContext();
-        this.searchResultAdapter = new SearchResultAdapter(albumArtPainter);
+        this.searchResultAdapter = new SearchResultAdapter(albumArtPainter, handler);
     }
     /**
      * Test creation of RootItemViewHolder

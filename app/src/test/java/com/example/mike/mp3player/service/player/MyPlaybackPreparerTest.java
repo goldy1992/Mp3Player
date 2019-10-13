@@ -6,6 +6,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.service.MyControlDispatcher;
+import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.library.ContentManager;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -43,6 +44,8 @@ public class MyPlaybackPreparerTest {
     private FileDataSource fileDataSource;
     @Mock
     private MyControlDispatcher myControlDispatcher;
+    @Mock
+    private PlaybackManager playbackManager;
 
     private MyPlaybackPreparer myPlaybackPreparer;
 
@@ -53,13 +56,13 @@ public class MyPlaybackPreparerTest {
         List<MediaItem> items = Collections.singletonList(testItem);
         Answer<Long> answer = (InvocationOnMock invocation) -> { return 0L; };
         when(fileDataSource.open(any())).then(answer);
-        this.myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource, myControlDispatcher);
+        this.myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource, myControlDispatcher, playbackManager);
     }
 
     @Test
     public void testSupportedActions() {
         List<MediaItem> items = new ArrayList<>();
-        myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource, myControlDispatcher);
+        myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource, myControlDispatcher, playbackManager);
         assertContainsAction(PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID);
         assertContainsAction(PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH);
     }
