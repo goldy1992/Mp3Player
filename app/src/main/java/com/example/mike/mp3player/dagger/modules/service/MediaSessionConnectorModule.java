@@ -60,8 +60,9 @@ public class MediaSessionConnectorModule {
     public MyPlaybackPreparer provideMyPlaybackPreparer(ExoPlayer exoPlayer,
                                                         ContentManager contentManager,
                                                         @Named("starting_playlist") List<MediaBrowserCompat.MediaItem> items,
-                                                        MyControlDispatcher myControlDispatcher) {
-        return new MyPlaybackPreparer(exoPlayer, contentManager, items, new FileDataSource(), myControlDispatcher);
+                                                        MyControlDispatcher myControlDispatcher,
+                                                        PlaybackManager playbackManager) {
+        return new MyPlaybackPreparer(exoPlayer, contentManager, items, new FileDataSource(), myControlDispatcher, playbackManager);
     }
 
     @Provides
