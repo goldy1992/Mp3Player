@@ -4,14 +4,6 @@ apply plugin: "de.mannodermaus.android-junit5"
 apply plugin: 'com.github.ben-manes.versions'
 
 android {
-    signingConfigs {
-        release {
-            storeFile file('C:\\Users\\goldy\\androidStudioKeyStore\\mikeKey.jks')
-            keyAlias = 'key0'
-            storePassword 'tdpadmin'
-            keyPassword 'tdpadmin'
-        }
-    }
     def PIE = 28
     def OREO = 26
     def MARSHMALLOW = 23
