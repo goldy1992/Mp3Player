@@ -5,6 +5,7 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.commons.MediaItemBuilder;
+import com.example.mike.mp3player.service.MyControlDispatcher;
 import com.example.mike.mp3player.service.library.ContentManager;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -40,6 +41,8 @@ public class MyPlaybackPreparerTest {
     private ExoPlayer exoPlayer;
     @Mock
     private FileDataSource fileDataSource;
+    @Mock
+    private MyControlDispatcher myControlDispatcher;
 
     private MyPlaybackPreparer myPlaybackPreparer;
 
@@ -50,13 +53,13 @@ public class MyPlaybackPreparerTest {
         List<MediaItem> items = Collections.singletonList(testItem);
         Answer<Long> answer = (InvocationOnMock invocation) -> { return 0L; };
         when(fileDataSource.open(any())).then(answer);
-        this.myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource);
+        this.myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource, myControlDispatcher);
     }
 
     @Test
     public void testSupportedActions() {
         List<MediaItem> items = new ArrayList<>();
-        myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource);
+        myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource, myControlDispatcher);
         assertContainsAction(PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID);
         assertContainsAction(PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH);
     }
@@ -101,7 +104,7 @@ public class MyPlaybackPreparerTest {
         items.add(testItem3);
         when(contentManager.getPlaylist(mediaId)).thenReturn(items);
         myPlaybackPreparer.onPrepareFromMediaId(mediaId, true, null);
-        verify(exoPlayer, times(1)).seekTo(1, 0);
+        verify(myControlDispatcher, times(1)).dispatchSeekTo(exoPlayer, 1, 0);
     }
 
     private void assertContainsAction(@PlaybackStateCompat.Actions long action) {

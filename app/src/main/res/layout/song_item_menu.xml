@@ -15,7 +15,6 @@
         android:id="@+id/song_item_album_art"
         app:useWidthOrHeight="X"
         android:adjustViewBounds="true"
-        android:layout_margin="@dimen/default_gap"
         android:contentDescription="content description"
         app:layout_constraintDimensionRatio="1:1"
         android:background="@android:color/white" />

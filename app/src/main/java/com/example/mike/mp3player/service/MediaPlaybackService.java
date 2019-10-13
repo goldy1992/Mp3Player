@@ -26,7 +26,7 @@ import javax.inject.Named;
 public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
 
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
-     private ContentManager contentManager;
+    private ContentManager contentManager;
     private HandlerThread worker;
     private Handler handler;
     private PlayerNotificationManager playerNotificationManager;

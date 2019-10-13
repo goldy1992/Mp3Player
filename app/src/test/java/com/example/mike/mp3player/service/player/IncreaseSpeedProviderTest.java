@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.service.player;
 
+import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.google.android.exoplayer2.ControlDispatcher;
@@ -29,6 +30,9 @@ public class IncreaseSpeedProviderTest {
     @Mock
     private ExoPlayer exoPlayer;
 
+    @Mock
+    private Handler handler;
+
     @Captor
     ArgumentCaptor<PlaybackParameters> captor;
 
@@ -40,7 +44,7 @@ public class IncreaseSpeedProviderTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        this.increaseSpeedProvider = new IncreaseSpeedProvider();
+        this.increaseSpeedProvider = new IncreaseSpeedProvider(handler);
     }
 
     @Test

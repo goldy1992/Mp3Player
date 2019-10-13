@@ -18,6 +18,6 @@ public class AlbumArtPainterModule {
     @Provides
     public AlbumArtPainter provideAlbumArtPainter(Context context, @Named("main") Handler handler) {
         RequestManager requestManager = Glide.with(context);
-        return new AlbumArtPainter(requestManager, handler);
+        return new AlbumArtPainter(context, requestManager, handler);
     }
 }

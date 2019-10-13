@@ -3,6 +3,9 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven {
+            url  "https://bintray.com/goldy1992/recyclerView-FastScroll"
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.0'
@@ -15,6 +18,7 @@ buildscript {
 
 plugins {
     id "org.sonarqube" version "2.7"
+    id "com.jfrog.bintray" version "1.8.4"
 }
 
 allprojects {

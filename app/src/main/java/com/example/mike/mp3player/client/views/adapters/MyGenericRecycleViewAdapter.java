@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
+import com.bumptech.glide.ListPreloader;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
@@ -23,7 +24,7 @@ import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 import static com.example.mike.mp3player.commons.Constants.FIRST;
 
 public abstract class MyGenericRecycleViewAdapter extends MediaItemRecyclerViewAdapter implements
-        MediaBrowserResponseListener, FastScrollRecyclerView.SectionedAdapter {
+        MediaBrowserResponseListener, FastScrollRecyclerView.SectionedAdapter, ListPreloader.PreloadModelProvider<MediaItem> {
     final String LOG_TAG = "MY_VIEW_ADAPTER";
     private static final String EMPTY_MEDIA_ID = "EMPTY_MEDIA_ID";
     final int EMPTY_VIEW_TYPE = -1;
@@ -92,10 +93,4 @@ public abstract class MyGenericRecycleViewAdapter extends MediaItemRecyclerViewA
     public void setItems(List<MediaItem> items) {
         this.items = items;
     }
-
-    @Override
-    public String getSectionName(int position) {
-        return items.get(position).getDescription().getTitle().toString().substring(0, 1);
-    }
-
 }

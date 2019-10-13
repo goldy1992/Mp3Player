@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views.adapters;
 
+import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 
 import com.example.mike.mp3player.client.views.viewholders.MyFolderViewHolder;
@@ -27,13 +28,15 @@ public class MyFolderViewAdapterTest extends MediaItemRecyclerViewAdapterTestBas
 
     @Mock
     private MyFolderViewHolder myFolderViewHolder;
+    @Mock
+    private Handler handler;
     @Captor
     private ArgumentCaptor<MediaBrowserCompat.MediaItem> captor;
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         super.setup();
-        this.myFolderViewAdapter = new MyFolderViewAdapter(albumArtPainter);
+        this.myFolderViewAdapter = new MyFolderViewAdapter(albumArtPainter, handler);
     }
 
     @Test

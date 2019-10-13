@@ -19,12 +19,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.CollapseListener;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.MyDrawerListener;
@@ -36,6 +36,7 @@ import com.example.mike.mp3player.client.views.fragments.viewpager.FolderViewPag
 import com.example.mike.mp3player.client.views.fragments.viewpager.SongViewPagerFragment;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -49,6 +50,8 @@ import static com.example.mike.mp3player.commons.Constants.ROOT_ITEM_TYPE;
 
 public class MainFrameFragment extends AsyncFragment  implements MediaBrowserResponseListener {
 
+    private static final String LOG_TAG = "VIEW_PAGER_FRAGMENT";
+
     private DrawerLayout drawerLayout;
     private Toolbar titleToolbar;
     private ViewPager rootMenuItemsPager;
@@ -59,8 +62,10 @@ public class MainFrameFragment extends AsyncFragment  implements MediaBrowserRes
     private ActionBar actionBar;
     private SearchFragment searchFragment;
     private FragmentManager fragmentManager;
+    private AppBarLayout appBarLayout;
+    private CollapseListener collapseListener = new CollapseListener();
 
-    private static final String LOG_TAG = "VIEW_PAGER_FRAGMENT";
+
     private NavigationView navigationView;
     private MyDrawerListener myDrawerListener;
 
@@ -81,11 +86,15 @@ public class MainFrameFragment extends AsyncFragment  implements MediaBrowserRes
         this.titleToolbar = view.findViewById(R.id.titleToolbar);
         this.navigationView = view.findViewById(R.id.nav_view);
         this.container = view.findViewById(R.id.fragment_container);
+        this.appBarLayout = view.findViewById(R.id.appbar);
         this.rootMenuItemsPager = view.findViewById(R.id.rootItemsPager);
         this.tabLayout = view.findViewById(R.id.tabs);
+
         this.tabLayout.setupWithViewPager(rootMenuItemsPager);
         this.adapter = new MyPagerAdapter(getFragmentManager());
         this.rootMenuItemsPager.setAdapter(this.adapter);
+
+        this.appBarLayout.addOnOffsetChangedListener(collapseListener);
 
         /* TODO: consider different implementation of this functionality */
         if (getActivity() instanceof AppCompatActivity) {
