@@ -3,6 +3,7 @@ package com.example.mike.mp3player.commons;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 
@@ -79,12 +80,6 @@ public class MediaItemBuilder {
 
     public MediaItemBuilder setMediaUri(Uri mediaUri) {
         this.mediaUri = mediaUri;
-        return this;
-    }
-    public MediaItemBuilder setAlbumArtUri(long albumId) {
-        Uri sArtworkUri = Uri.parse(ALBUM_ART_URI_PREFIX);
-        Uri albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId);
-        this.extras.putParcelable(METADATA_KEY_ALBUM_ART_URI, albumArtUri);
         return this;
     }
 

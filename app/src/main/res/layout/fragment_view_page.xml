@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    >
 
     <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
         android:id="@+id/myRecyclerView"
@@ -17,6 +17,7 @@
         app:fastScrollAutoHideDelay="1500"
         app:fastScrollPopupBgColor="?themeColorPrimary"
         app:fastScrollPopupTextColor="@android:color/primary_text_dark"
-        app:fastScrollThumbColor="?themeColorPrimary" />
+        app:fastScrollThumbColor="?themeColorPrimary"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </LinearLayout>

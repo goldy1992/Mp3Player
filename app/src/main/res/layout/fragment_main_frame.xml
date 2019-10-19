@@ -6,7 +6,6 @@
     android:id="@+id/drawer_layout"
     android:fitsSystemWindows="true">
 
-
     <RelativeLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
@@ -51,8 +50,6 @@
                 android:id="@+id/rootItemsPager"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/appbar"
-                android:layout_above="@+id/playToolbarFragment"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

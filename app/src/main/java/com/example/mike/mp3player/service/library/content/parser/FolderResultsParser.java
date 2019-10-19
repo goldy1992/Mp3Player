@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.service.library.content.parser;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
@@ -22,6 +23,10 @@ import static com.example.mike.mp3player.commons.Constants.ID_SEPARATOR;
 import static com.example.mike.mp3player.commons.MediaItemUtils.getDirectoryPath;
 
 public class FolderResultsParser extends ResultsParser {
+
+    public FolderResultsParser(Context context) {
+        super(context);
+    }
 
     @Override
     public List<MediaBrowserCompat.MediaItem> create(@NonNull Cursor cursor, String mediaIdPrefix) {

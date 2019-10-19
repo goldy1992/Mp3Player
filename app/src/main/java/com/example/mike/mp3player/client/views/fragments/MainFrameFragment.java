@@ -24,7 +24,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.CollapseListener;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.MyDrawerListener;
@@ -63,9 +62,6 @@ public class MainFrameFragment extends AsyncFragment  implements MediaBrowserRes
     private SearchFragment searchFragment;
     private FragmentManager fragmentManager;
     private AppBarLayout appBarLayout;
-    private CollapseListener collapseListener = new CollapseListener();
-
-
     private NavigationView navigationView;
     private MyDrawerListener myDrawerListener;
 
@@ -93,8 +89,6 @@ public class MainFrameFragment extends AsyncFragment  implements MediaBrowserRes
         this.tabLayout.setupWithViewPager(rootMenuItemsPager);
         this.adapter = new MyPagerAdapter(getFragmentManager());
         this.rootMenuItemsPager.setAdapter(this.adapter);
-
-        this.appBarLayout.addOnOffsetChangedListener(collapseListener);
 
         /* TODO: consider different implementation of this functionality */
         if (getActivity() instanceof AppCompatActivity) {
@@ -196,7 +190,7 @@ public class MainFrameFragment extends AsyncFragment  implements MediaBrowserRes
                 default: break;
             }
             if (null != childViewPagerFragment) {
-                childViewPagerFragment.init(category, id);
+                childViewPagerFragment.init(category, id, appBarLayout);
                 adapter.getPagerItems().put(category, childViewPagerFragment);
                 adapter.getMenuCategories().put(category, mediaItem);
                 mainUpdater.post( () -> {adapter.notifyDataSetChanged();});

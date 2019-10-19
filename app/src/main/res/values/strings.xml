@@ -24,4 +24,5 @@
     <!-- THEME NAMES !-->
     <string name="THEME_BLUE">Blue</string>
     <string name="THEME_ORANGE">Orange</string>
+    <string name="content_description">content description</string>
 </resources>

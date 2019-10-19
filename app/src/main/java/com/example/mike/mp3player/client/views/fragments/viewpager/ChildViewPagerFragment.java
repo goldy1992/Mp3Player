@@ -12,14 +12,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.bumptech.glide.util.FixedPreloadSizeProvider;
-import com.bumptech.glide.util.ViewPreloadSizeProvider;
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.CollapseListener;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
@@ -27,6 +24,7 @@ import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.views.adapters.MyGenericRecycleViewAdapter;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
+import com.google.android.material.appbar.AppBarLayout;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import javax.inject.Inject;
@@ -53,7 +51,7 @@ public abstract class ChildViewPagerFragment extends Fragment implements MyGener
     protected MediaControllerAdapter mediaControllerAdapter;
     private MyGenericRecycleViewAdapter myViewAdapter;
     private MyGenericItemTouchListener myGenericItemTouchListener;
-    private CollapseListener collapseListener = null;
+    private AppBarLayout appBarLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -71,24 +69,13 @@ public abstract class ChildViewPagerFragment extends Fragment implements MyGener
         this.myGenericItemTouchListener.setParentView(recyclerView);
         this.recyclerView.setItemAnimator(new DefaultItemAnimator());
         this.recyclerView.setLayoutManager(linearLayoutManager);
-        FixedPreloadSizeProvider<MediaBrowserCompat.MediaItem> preloadSizeProvider = new FixedPreloadSizeProvider<>(50, 50);
+        this.recyclerView.setAppBarLayout(appBarLayout);
+        FixedPreloadSizeProvider<MediaBrowserCompat.MediaItem> preloadSizeProvider = new FixedPreloadSizeProvider<>(20, 20);
         RecyclerViewPreloader<MediaBrowserCompat.MediaItem> preloader =
                 new RecyclerViewPreloader<>(
                         Glide.with(this), myViewAdapter, preloadSizeProvider, 10 /*maxPreload*/);
 
         this.recyclerView.addOnScrollListener(preloader);
-
-//        if (null != collapseListener) {
-//            this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy){
-//                    // If AppBar is fully expanded, revert the scroll.
-//                    if (!collapseListener.isShouldScroll()) {
-//                        recyclerView.scrollTo(0,0);
-//                    }
-//                }
-//
-//            });
-//        }
 
         this.mediaBrowserAdapter.registerListener(parentItemTypeId, myViewAdapter);
         this.mediaBrowserAdapter.subscribe(parentItemTypeId);
@@ -98,9 +85,10 @@ public abstract class ChildViewPagerFragment extends Fragment implements MyGener
         init(mediaItemType, id, null);
     }
 
-    public void init(MediaItemType mediaItemType, String id, CollapseListener collapseListener) {
+    public void init(MediaItemType mediaItemType, String id, AppBarLayout appBarLayout) {
         this.parentItemType = mediaItemType;
         this.parentItemTypeId = id;
+        this.appBarLayout = appBarLayout;
     }
 
     @Inject

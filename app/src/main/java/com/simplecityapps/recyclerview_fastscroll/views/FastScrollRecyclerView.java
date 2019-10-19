@@ -27,12 +27,15 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.mike.mp3player.R;
+import com.google.android.material.appbar.AppBarLayout;
 import com.simplecityapps.recyclerview_fastscroll.interfaces.OnFastScrollStateChangeListener;
 import com.simplecityapps.recyclerview_fastscroll.utils.Utils;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,6 +47,10 @@ public class FastScrollRecyclerView extends RecyclerView implements RecyclerView
     private FastScroller mScrollbar;
 
     private boolean mFastScrollEnabled = true;
+
+    public void setAppBarLayout(AppBarLayout appBarLayout) {
+        this.appBarLayout = appBarLayout;
+    }
 
     /**
      * The current scroll state of the recycler view.  We use this in onUpdateScrollbar()
@@ -67,6 +74,8 @@ public class FastScrollRecyclerView extends RecyclerView implements RecyclerView
     private int mLastY;
 
     private SparseIntArray mScrollOffsets;
+
+    private AppBarLayout appBarLayout = null;
 
     private ScrollOffsetInvalidator mScrollOffsetInvalidator;
     private OnFastScrollStateChangeListener mStateChangeListener;
@@ -131,6 +140,13 @@ public class FastScrollRecyclerView extends RecyclerView implements RecyclerView
         return handleTouchEvent(ev);
     }
 
+
+    @Override
+    public boolean fling(int velocityX, int velocityY) {
+        int fasterYVelocity = (int) (velocityY * 2);
+        return super.fling(velocityX, fasterYVelocity);
+    }
+
     @Override
     public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent ev) {
         handleTouchEvent(ev);
@@ -160,7 +176,11 @@ public class FastScrollRecyclerView extends RecyclerView implements RecyclerView
                 mScrollbar.handleTouchEvent(ev, mDownX, mDownY, mLastY, mStateChangeListener);
                 break;
         }
-        return mScrollbar.isDragging();
+
+        if (mScrollbar.isDragging()) {
+            return true;
+        }
+        return false;
     }
 
     @Override

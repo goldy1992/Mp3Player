@@ -75,7 +75,9 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     @Override
     public RequestBuilder<?> getPreloadRequestBuilder(@NonNull MediaItem item) {
         Uri uri = getAlbumArtUri(item);
-        return Glide.with(albumArtPainter.getContext()).load(uri).centerCrop();
+        return uri != null
+            ? Glide.with(albumArtPainter.getContext()).load(uri).fitCenter()
+            : null;
     }
 }
 

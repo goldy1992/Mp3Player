@@ -1,7 +1,10 @@
 package com.example.mike.mp3player.service.library.content.parser;
 
+import android.content.ContentUris;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
@@ -11,6 +14,7 @@ import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemType;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
@@ -26,6 +30,10 @@ import static com.example.mike.mp3player.commons.MediaItemUtils.getTitle;
 public class SongResultsParser extends ResultsParser {
 
     public static final String ALBUM_ART_URI_PREFIX = "content://media/external/audio/albumart";
+
+    public SongResultsParser(Context context) {
+        super(context);
+    }
 
     @Override
     public List<MediaItem> create(Cursor cursor, String libraryIdPrefix) {
@@ -53,6 +61,9 @@ public class SongResultsParser extends ResultsParser {
         final Uri mediaUri = Uri.fromFile(mediaFile);
         final String fileName = mediaFile.getName();
 
+        Uri sArtworkUri = Uri.parse(ALBUM_ART_URI_PREFIX);
+        Uri albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId);
+
         return new MediaItemBuilder(mediaId)
                 .setMediaUri(mediaUri)
                 .setTitle(title)
@@ -60,10 +71,11 @@ public class SongResultsParser extends ResultsParser {
                 .setDuration(duration)
                 .setFileName(fileName)
                 .setArtist(artist)
-                .setAlbumArtUri(albumId)
                 .setMediaItemType(MediaItemType.SONG)
                 .setFlags(FLAG_PLAYABLE)
+                .setAlbumArtUri(albumArtUri)
                 .build();
+
     }
 
     @Override
