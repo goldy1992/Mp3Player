@@ -25,7 +25,7 @@ import com.example.mike.mp3player.client.views.adapters.MyGenericRecycleViewAdap
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 import com.google.android.material.appbar.AppBarLayout;
-import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
+import com.l4digital.fastscroll.FastScrollRecyclerView;
 
 import javax.inject.Inject;
 
@@ -53,42 +53,36 @@ public abstract class ChildViewPagerFragment extends Fragment implements MyGener
     private MyGenericItemTouchListener myGenericItemTouchListener;
     private AppBarLayout appBarLayout;
 
+    public ChildViewPagerFragment(MediaItemType mediaItemType, String id, MediaActivityCompatComponent component) {
+        this.parentItemType = mediaItemType;
+        this.parentItemTypeId = id;
+        injectDependencies(component);
+        this.mediaBrowserAdapter.registerListener(parentItemTypeId, myViewAdapter);
+        this.mediaBrowserAdapter.subscribe(parentItemTypeId);
+    }
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        injectDependencies();
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_view_page, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle bundle) {
-        this.recyclerView = view.findViewById(R.id.myRecyclerView);
+        this.recyclerView = view.findViewById(R.id.recycler_view);
         this.recyclerView.setAdapter(myViewAdapter);
         this.recyclerView.addOnItemTouchListener(myGenericItemTouchListener);
         this.myGenericItemTouchListener.setParentView(recyclerView);
         this.recyclerView.setItemAnimator(new DefaultItemAnimator());
         this.recyclerView.setLayoutManager(linearLayoutManager);
-        this.recyclerView.setAppBarLayout(appBarLayout);
         FixedPreloadSizeProvider<MediaBrowserCompat.MediaItem> preloadSizeProvider = new FixedPreloadSizeProvider<>(20, 20);
         RecyclerViewPreloader<MediaBrowserCompat.MediaItem> preloader =
                 new RecyclerViewPreloader<>(
                         Glide.with(this), myViewAdapter, preloadSizeProvider, 10 /*maxPreload*/);
 
         this.recyclerView.addOnScrollListener(preloader);
-
-        this.mediaBrowserAdapter.registerListener(parentItemTypeId, myViewAdapter);
-        this.mediaBrowserAdapter.subscribe(parentItemTypeId);
-    }
-
-    public void init(MediaItemType mediaItemType, String id) {
-        init(mediaItemType, id, null);
-    }
-
-    public void init(MediaItemType mediaItemType, String id, AppBarLayout appBarLayout) {
-        this.parentItemType = mediaItemType;
-        this.parentItemTypeId = id;
-        this.appBarLayout = appBarLayout;
     }
 
     @Inject
@@ -116,14 +110,9 @@ public abstract class ChildViewPagerFragment extends Fragment implements MyGener
         this.intentClass = intentClass;
     }
 
-    private void injectDependencies() {
-        FragmentActivity activity = getActivity();
-        if (activity instanceof MediaActivityCompat) {
-            MediaActivityCompat mediaPlayerActivity = (MediaActivityCompat) getActivity();
-            MediaActivityCompatComponent component = mediaPlayerActivity.getMediaActivityCompatComponent();
-            component.childViewPagerFragmentSubcomponentFactory()
-                .create(parentItemType, parentItemTypeId, this).
-                inject(this);
-        }
+    private void injectDependencies(MediaActivityCompatComponent component) {
+        component.childViewPagerFragmentSubcomponentFactory()
+            .create(parentItemType, parentItemTypeId, this).
+            inject(this);
     }
 }

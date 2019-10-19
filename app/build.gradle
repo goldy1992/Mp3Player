@@ -160,6 +160,9 @@ dependencies {
     //dagger
     implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
     implementation group: 'com.google.dagger', name: 'dagger-android', version: DAGGER_VERSION
+
+    implementation 'com.l4digital.fastscroll:fastscroll:2.0.1'
+
     annotationProcessor  group: 'com.google.dagger', name: 'dagger-android-processor', version: DAGGER_VERSION
     annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION

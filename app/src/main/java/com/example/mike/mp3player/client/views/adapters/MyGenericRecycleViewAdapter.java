@@ -15,7 +15,7 @@ import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.views.viewholders.EmptyListViewHolder;
 import com.example.mike.mp3player.client.views.viewholders.MediaItemViewHolder;
-import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
+import com.l4digital.fastscroll.FastScroller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 import static com.example.mike.mp3player.commons.Constants.FIRST;
 
 public abstract class MyGenericRecycleViewAdapter extends MediaItemRecyclerViewAdapter implements
-        MediaBrowserResponseListener, FastScrollRecyclerView.SectionedAdapter, ListPreloader.PreloadModelProvider<MediaItem> {
+        MediaBrowserResponseListener, FastScroller.SectionIndexer, ListPreloader.PreloadModelProvider<MediaItem> {
     final String LOG_TAG = "MY_VIEW_ADAPTER";
     private static final String EMPTY_MEDIA_ID = "EMPTY_MEDIA_ID";
     final int EMPTY_VIEW_TYPE = -1;

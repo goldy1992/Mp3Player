@@ -1,23 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    android:orientation="vertical"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    >-->
+
+<!--    <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView-->
+<!--        android:id="@+id/myRecyclerView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:fadeScrollbars="false"-->
+<!--        app:fastScrollThumbInactiveColor="@color/accent_pink"-->
+<!--        app:fastScrollThumbEnabled="true"-->
+<!--        app:fastScrollAutoHide="true"-->
+<!--        app:fastScrollAutoHideDelay="1500"-->
+<!--        app:fastScrollPopupBgColor="?themeColorPrimary"-->
+<!--        app:fastScrollPopupTextColor="@android:color/primary_text_dark"-->
+<!--        app:fastScrollThumbColor="?themeColorPrimary"-->
+<!--        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>-->
+
+<!--</LinearLayout>-->
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
-    <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
-        android:id="@+id/myRecyclerView"
+    <com.l4digital.fastscroll.FastScrollRecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fadeScrollbars="false"
-        app:fastScrollThumbInactiveColor="@color/accent_pink"
-        app:fastScrollThumbEnabled="true"
-        app:fastScrollAutoHide="true"
-        app:fastScrollAutoHideDelay="1500"
-        app:fastScrollPopupBgColor="?themeColorPrimary"
-        app:fastScrollPopupTextColor="@android:color/primary_text_dark"
-        app:fastScrollThumbColor="?themeColorPrimary"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        android:layout_height="match_parent"
+        app:bubbleColor="?colorPrimary"
+        app:bubbleTextColor="#ffffff"
+        app:handleColor="?colorPrimary" />
 
-</LinearLayout>
+</FrameLayout>

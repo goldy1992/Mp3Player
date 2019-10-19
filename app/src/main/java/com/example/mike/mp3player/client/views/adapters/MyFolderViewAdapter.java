@@ -60,7 +60,7 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
 
     @NonNull
     @Override
-    public String getSectionName(int position) {
+    public String getSectionText(int position) {
         Bundle extras = items.get(position).getDescription().getExtras();
 
         if (null != extras) {

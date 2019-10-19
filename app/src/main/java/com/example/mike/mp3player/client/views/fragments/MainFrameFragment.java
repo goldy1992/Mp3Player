@@ -108,23 +108,7 @@ public class MainFrameFragment extends AsyncFragment  implements MediaBrowserRes
         this.drawerLayout.addDrawerListener(myDrawerListener);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (null != searchFragment && searchFragment.isAdded() && searchFragment.isVisible()) {
-            fragmentManager
-            .beginTransaction()
-            .remove(searchFragment)
-            .commit();
-        }
-        Log.i(LOG_TAG, "hit resume");
-    }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
-        super.onCreateOptionsMenu(menu,inflater);
-    }
 
 
     @Override
@@ -183,14 +167,14 @@ public class MainFrameFragment extends AsyncFragment  implements MediaBrowserRes
             MediaItemType category = (MediaItemType) MediaItemUtils.getExtra(ROOT_ITEM_TYPE, mediaItem);
             ChildViewPagerFragment childViewPagerFragment = null;
             switch (category) {
-                case SONGS: childViewPagerFragment = new SongViewPagerFragment();
-                break;
-                case FOLDERS: childViewPagerFragment = new FolderViewPagerFragment();
-                break;
+       //         case SONGS: childViewPagerFragment = new SongViewPagerFragment();
+         //       break;
+      //          case FOLDERS: childViewPagerFragment = new FolderViewPagerFragment();
+            //    break;
                 default: break;
             }
             if (null != childViewPagerFragment) {
-                childViewPagerFragment.init(category, id, appBarLayout);
+          //      childViewPagerFragment.init(category, id, appBarLayout);
                 adapter.getPagerItems().put(category, childViewPagerFragment);
                 adapter.getMenuCategories().put(category, mediaItem);
                 mainUpdater.post( () -> {adapter.notifyDataSetChanged();});

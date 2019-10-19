@@ -5,6 +5,8 @@ import android.view.View;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 public class MyDrawerListener implements DrawerLayout.DrawerListener {
+
+
     @Override
     public void onDrawerSlide(View drawerView, float slideOffset) {
 

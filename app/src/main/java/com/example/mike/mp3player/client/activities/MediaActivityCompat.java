@@ -30,6 +30,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     private MediaActivityCompatComponent mediaActivityCompatComponent;
     /** Thread used to deal with none UI tasks */
     private HandlerThread worker;
+
     /** @return The subscription type of the MediaActivityCompat */
     abstract SubscriptionType getSubscriptionType();
     /** @return The unique name of the HandlerThread used by the activity */

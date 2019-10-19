@@ -58,7 +58,7 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
 
     @NonNull
     @Override
-    public String getSectionName(int position) {
+    public String getSectionText(int position) {
         return items.get(position).getDescription().getTitle().toString().substring(0, 1);
     }
 
