@@ -178,20 +178,22 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
             String id = MediaItemUtils.getMediaId(mediaItem);
             Log.i(LOG_TAG, "media id: " + id);
             MediaItemType category = (MediaItemType) MediaItemUtils.getExtra(ROOT_ITEM_TYPE, mediaItem);
-            ChildViewPagerFragment childViewPagerFragment = null;
+            ChildViewPagerFragment childViewPagerFragment;
             switch (category) {
                 case SONGS: childViewPagerFragment = new SongViewPagerFragment(category, id, getMediaActivityCompatComponent());
                     break;
                 case FOLDERS: childViewPagerFragment = new FolderViewPagerFragment(category, id, getMediaActivityCompatComponent());
                     break;
-                default: break;
+                default:
+                    childViewPagerFragment = null;
+                    break;
             }
             if (null != childViewPagerFragment) {
-               // childViewPagerFragment.init(category, id, appBarLayout);
-                adapter.getPagerItems().put(category, childViewPagerFragment);
-                adapter.getMenuCategories().put(category, mediaItem);
                 Handler handler = new Handler(getMainLooper());
-                handler.post(() -> {adapter.notifyDataSetChanged();});
+                handler.post(() -> {
+                    adapter.getPagerItems().put(category, childViewPagerFragment);
+                    adapter.getMenuCategories().put(category, mediaItem);
+                    adapter.notifyDataSetChanged();});
 
             }
         }
