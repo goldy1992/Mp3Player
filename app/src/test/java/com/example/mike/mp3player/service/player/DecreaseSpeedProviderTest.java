@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
+import static android.os.Looper.getMainLooper;
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,27 +24,18 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
-public class DecreaseSpeedProviderTest {
+public class DecreaseSpeedProviderTest extends SpeedProviderTestBase{
 
-    @Mock
-    private ExoPlayer exoPlayer;
-
-    @Mock
-    private Handler handler;
-
-    @Captor
-    ArgumentCaptor<PlaybackParameters> captor;
-
-    @Mock
-    private ControlDispatcher controlDispatcher;
 
     private DecreaseSpeedProvider decreaseSpeedProvider;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        super.setup();
         this.decreaseSpeedProvider = new DecreaseSpeedProvider(handler);
     }
 
@@ -60,6 +52,7 @@ public class DecreaseSpeedProviderTest {
         final float expectedSpeed = 0.95f;
         when(exoPlayer.getPlaybackParameters()).thenReturn(new PlaybackParameters(currentSpeed));
         decreaseSpeedProvider.onCustomAction(exoPlayer, controlDispatcher, DECREASE_PLAYBACK_SPEED, null);
+        shadowOf(getMainLooper()).idle();
         verify(exoPlayer, times(1)).setPlaybackParameters(captor.capture());
 
         PlaybackParameters playbackParameters = captor.getValue();

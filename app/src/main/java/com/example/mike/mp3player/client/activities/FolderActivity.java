@@ -9,8 +9,8 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
-import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
-import com.example.mike.mp3player.client.views.fragments.viewpager.SongViewPagerFragment;
+import com.example.mike.mp3player.client.views.fragments.viewpager.MediaItemListFragment;
+import com.example.mike.mp3player.client.views.fragments.viewpager.SongListFragment;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 
@@ -23,7 +23,7 @@ import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM;
 public abstract class FolderActivity extends MediaActivityCompat {
 
     private static final String LOG_TAG = "FOLDER_ACTIVITY";
-    private ChildViewPagerFragment viewPageFragment;
+    private MediaItemListFragment viewPageFragment;
     private PlayToolBarFragment playToolBarFragment;
     private SimpleTitleBarFragment simpleTitleBarFragment;
 
@@ -50,7 +50,7 @@ public abstract class FolderActivity extends MediaActivityCompat {
         super.onConnected();
         MediaItem mediaItem = getIntent().getParcelableExtra(MEDIA_ITEM);
         String itemLibraryId = MediaItemUtils.getLibraryId(mediaItem);
-        this.viewPageFragment = new SongViewPagerFragment(MediaItemType.FOLDER, itemLibraryId, getMediaActivityCompatComponent());
+        this.viewPageFragment = new SongListFragment(MediaItemType.FOLDER, itemLibraryId, getMediaActivityCompatComponent());
         initialiseView(R.layout.activity_folder);
         getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
         getSupportActionBar().setTitle(MediaItemUtils.getDirectoryName(mediaItem));

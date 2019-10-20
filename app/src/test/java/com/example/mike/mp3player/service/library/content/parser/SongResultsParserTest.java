@@ -41,7 +41,7 @@ public class SongResultsParserTest extends ResultsParserTestBase {
             .setArtist("artist1")
             .setTitle(COMMON_TITLE)
             .setFileName("fileName1")
-            .setAlbumArtUri(ALBUM_ID_1)
+            .setAlbumArtUri(Uri.parse(ALBUM_ID_1 + ""))
             .build();
 
         EXPECTED_MEDIA_ITEM_2 = new MediaItemBuilder(MEDIA_ID_2)
@@ -51,7 +51,7 @@ public class SongResultsParserTest extends ResultsParserTestBase {
                 .setArtist("artist1")
                 .setTitle(COMMON_TITLE)
                 .setFileName("fileName2")
-                .setAlbumArtUri(ALBUM_ID_2)
+                .setAlbumArtUri(Uri.parse(ALBUM_ID_2 + ""))
                 .build();
     }
 

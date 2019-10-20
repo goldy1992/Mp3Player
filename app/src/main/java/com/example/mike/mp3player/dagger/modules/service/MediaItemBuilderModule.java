@@ -20,10 +20,10 @@ public class MediaItemBuilderModule {
 
     @Provides
     @Singleton
-    public Map<MediaItemType, ResultsParser> providesMediaItemBuilderMap(Context context) {
+    public Map<MediaItemType, ResultsParser> providesMediaItemBuilderMap() {
         Map<MediaItemType, ResultsParser> map = new EnumMap<>(MediaItemType.class);
-        map.put(MediaItemType.SONG, new SongResultsParser(context));
-        map.put(MediaItemType.FOLDER, new FolderResultsParser(context));
+        map.put(MediaItemType.SONG, new SongResultsParser());
+        map.put(MediaItemType.FOLDER, new FolderResultsParser());
         return map;
     }
 }

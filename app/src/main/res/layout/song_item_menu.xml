@@ -32,7 +32,6 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:maxLength="30"
             android:layout_gravity="start"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -51,16 +50,15 @@
 
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
-                android:layout_weight="8"
+                android:layout_weight="9"
                 android:ellipsize="end"
-                android:maxLength="20"
                 android:maxLines="1"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
             <TextView android:id="@+id/duration"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:maxLines="1"
                 android:textAlignment="viewEnd"
                 android:layout_toEndOf="@id/artist"

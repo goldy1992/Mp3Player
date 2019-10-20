@@ -126,10 +126,11 @@ dependencies {
     def COORDINATOR_LAYOUT_VERSION = '1.0.0'
     def TEST_UI_AUTOMATOR_VERSION= '2.2.0'
     def FRAGMENT_TESTING_VERSION = '1.1.0-alpha07'
-    def FAST_SCROLL_VERSION = '1.0.18'
+    def FAST_SCROLL_VERSION = '2.0.1'
     def GLIDE_VERSION = '4.9.0'
     def ROOM_VERSION = '2.1.0'
     def DAGGER_VERSION = '2.24'
+    def EXO_PLAYER_VERSION = '2.10.4'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation group: 'androidx.constraintlayout', name: 'constraintlayout', version: CONSTRAINT_LAYOUT_VERSION
@@ -146,11 +147,9 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
     implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
     implementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
-    //implementation group: 'com.simplecityapps', name: 'recyclerview-fastscroll', version: FAST_SCROLL_VERSION
-    //implementation group: 'goldy1992', name: 'recyclerview-FastScroll', version: 'V2.0.1'
-    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: '2.10.4'
-    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: '2.10.4'
-    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: '2.10.4'
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: EXO_PLAYER_VERSION
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
+    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
     annotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
@@ -161,7 +160,7 @@ dependencies {
     implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
     implementation group: 'com.google.dagger', name: 'dagger-android', version: DAGGER_VERSION
 
-    implementation 'com.l4digital.fastscroll:fastscroll:2.0.1'
+    implementation group: 'com.l4digital.fastscroll', name: 'fastscroll', version: FAST_SCROLL_VERSION
 
     annotationProcessor  group: 'com.google.dagger', name: 'dagger-android-processor', version: DAGGER_VERSION
     annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION

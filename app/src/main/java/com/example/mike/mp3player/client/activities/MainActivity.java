@@ -4,35 +4,28 @@ import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Spinner;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.MyDrawerListener;
 import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.ThemeSpinnerController;
 import com.example.mike.mp3player.client.views.adapters.MyPagerAdapter;
-import com.example.mike.mp3player.client.views.fragments.MainFrameFragment;
 import com.example.mike.mp3player.client.views.fragments.SearchFragment;
-import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
-import com.example.mike.mp3player.client.views.fragments.viewpager.FolderViewPagerFragment;
-import com.example.mike.mp3player.client.views.fragments.viewpager.SongViewPagerFragment;
+import com.example.mike.mp3player.client.views.fragments.viewpager.MediaItemListFragment;
+import com.example.mike.mp3player.client.views.fragments.viewpager.FolderListFragment;
+import com.example.mike.mp3player.client.views.fragments.viewpager.SongListFragment;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.google.android.material.appbar.AppBarLayout;
@@ -178,20 +171,20 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
             String id = MediaItemUtils.getMediaId(mediaItem);
             Log.i(LOG_TAG, "media id: " + id);
             MediaItemType category = (MediaItemType) MediaItemUtils.getExtra(ROOT_ITEM_TYPE, mediaItem);
-            ChildViewPagerFragment childViewPagerFragment;
+            MediaItemListFragment mediaItemListFragment;
             switch (category) {
-                case SONGS: childViewPagerFragment = new SongViewPagerFragment(category, id, getMediaActivityCompatComponent());
+                case SONGS: mediaItemListFragment = new SongListFragment(category, id, getMediaActivityCompatComponent());
                     break;
-                case FOLDERS: childViewPagerFragment = new FolderViewPagerFragment(category, id, getMediaActivityCompatComponent());
+                case FOLDERS: mediaItemListFragment = new FolderListFragment(category, id, getMediaActivityCompatComponent());
                     break;
                 default:
-                    childViewPagerFragment = null;
+                    mediaItemListFragment = null;
                     break;
             }
-            if (null != childViewPagerFragment) {
+            if (null != mediaItemListFragment) {
                 Handler handler = new Handler(getMainLooper());
                 handler.post(() -> {
-                    adapter.getPagerItems().put(category, childViewPagerFragment);
+                    adapter.getPagerItems().put(category, mediaItemListFragment);
                     adapter.getMenuCategories().put(category, mediaItem);
                     adapter.notifyDataSetChanged();});
 

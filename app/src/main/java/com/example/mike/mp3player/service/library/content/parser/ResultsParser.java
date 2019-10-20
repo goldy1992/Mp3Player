@@ -16,10 +16,6 @@ import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 
 public abstract class ResultsParser implements Comparator<MediaItem> {
 
-    Context context;
-
-    public ResultsParser(Context context) { this.context = context; }
-
     public abstract List<MediaItem> create(@NonNull Cursor cursor, String mediaIdPrefix);
     public abstract MediaItemType getType();
 

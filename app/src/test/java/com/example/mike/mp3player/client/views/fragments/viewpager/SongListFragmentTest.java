@@ -16,20 +16,20 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
-public class SongViewPagerFragmentTest extends ChildViewPagerFragmentTestBase<SongViewPagerFragment> {
+public class SongListFragmentTest extends ChildViewPagerFragmentTestBase<SongListFragment> {
 
     @Before
     public void setup() {
-        super.setup(SongViewPagerFragment.class);
+        super.setup(SongListFragment.class);
     }
 
     @Test
     public void testItemSelected() {
-        FragmentScenario.FragmentAction<SongViewPagerFragment> action = this::itemSelected;
+        FragmentScenario.FragmentAction<SongListFragment> action = this::itemSelected;
         performAction(action);
     }
 
-    private void itemSelected(ChildViewPagerFragment fragment) {
+    private void itemSelected(MediaItemListFragment fragment) {
         MediaControllerAdapter mediaControllerAdapter = mock(MediaControllerAdapter.class);
         fragment.setMediaControllerAdapter(mediaControllerAdapter);
         final String expectedLibraryId = "ID";

@@ -9,6 +9,7 @@ import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.client.activities.EmptyMediaActivityCompatFragmentActivity;
+import com.example.mike.mp3player.client.activities.TestMainActivity;
 
 import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
@@ -21,10 +22,9 @@ public class FragmentTestBase<F extends Fragment> {
 
     private static final String FRAGMENT_TAG = "FragmentScenario_Fragment_Tag";
     protected Context context;
-    protected FragmentScenario<F> fragmentScenario;
     protected Fragment fragment;
-    protected ActivityController<EmptyMediaActivityCompatFragmentActivity> activityScenario;
-    private EmptyMediaActivityCompatFragmentActivity activity;
+    protected ActivityController<TestMainActivity> activityScenario;
+    private TestMainActivity activity;
     Class<F> fragmentClass;
 
     protected void setup(Class<F> fragmentClass, boolean addFragmentToActivity) {
@@ -32,7 +32,7 @@ public class FragmentTestBase<F extends Fragment> {
         this.fragmentClass = fragmentClass;
         MockitoAnnotations.initMocks(this);
         activityScenario =
-                Robolectric.buildActivity(EmptyMediaActivityCompatFragmentActivity.class).setup();
+                Robolectric.buildActivity(TestMainActivity.class).setup();
         this.activity = activityScenario.get();
 
         Bundle fragmentArgs = new Bundle();
@@ -44,7 +44,17 @@ public class FragmentTestBase<F extends Fragment> {
         if (addFragmentToActivity) {
             addFragmentToActivity();
         }
+    }
 
+    protected void setup(Fragment fragment, Class<F> fragmentClass) {
+        this.fragmentClass = fragmentClass;
+        this.context = InstrumentationRegistry.getInstrumentation().getContext();
+        this.fragment = fragment;
+        MockitoAnnotations.initMocks(this);
+        activityScenario =
+                Robolectric.buildActivity(TestMainActivity.class).setup();
+        this.activity = activityScenario.get();
+        addFragmentToActivity();
 
     }
 

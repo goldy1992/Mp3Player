@@ -36,7 +36,8 @@ import javax.inject.Inject;
  * 1) we don't want to override the constructor for compatibility purposes
  * 2) This ChildViewFragment will be provided after the main injection is done
  */
-public abstract class ChildViewPagerFragment extends Fragment implements MyGenericItemTouchListener.ItemSelectedListener {
+public abstract class MediaItemListFragment extends Fragment implements MyGenericItemTouchListener.ItemSelectedListener {
+
     private static final String LOG_TAG = "GENRC_VIW_PGE_FRGMNT";
 
     /**
@@ -51,9 +52,8 @@ public abstract class ChildViewPagerFragment extends Fragment implements MyGener
     protected MediaControllerAdapter mediaControllerAdapter;
     private MyGenericRecycleViewAdapter myViewAdapter;
     private MyGenericItemTouchListener myGenericItemTouchListener;
-    private AppBarLayout appBarLayout;
 
-    public ChildViewPagerFragment(MediaItemType mediaItemType, String id, MediaActivityCompatComponent component) {
+    public MediaItemListFragment(MediaItemType mediaItemType, String id, MediaActivityCompatComponent component) {
         this.parentItemType = mediaItemType;
         this.parentItemTypeId = id;
         injectDependencies(component);
@@ -73,6 +73,7 @@ public abstract class ChildViewPagerFragment extends Fragment implements MyGener
     public void onViewCreated(@NonNull View view, Bundle bundle) {
         this.recyclerView = view.findViewById(R.id.recycler_view);
         this.recyclerView.setAdapter(myViewAdapter);
+        recyclerView.setHideScrollbar(true);
         this.recyclerView.addOnItemTouchListener(myGenericItemTouchListener);
         this.myGenericItemTouchListener.setParentView(recyclerView);
         this.recyclerView.setItemAnimator(new DefaultItemAnimator());

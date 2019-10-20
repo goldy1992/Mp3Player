@@ -11,7 +11,6 @@ import com.example.mike.mp3player.client.views.fragments.AlbumArtFragment;
 import com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
 import com.example.mike.mp3player.dagger.components.fragments.ChildViewPagerFragmentSubcomponent;
-import com.example.mike.mp3player.dagger.components.fragments.MainFrameFragmentSubcomponent;
 import com.example.mike.mp3player.dagger.components.fragments.PlaybackButtonsSubComponent;
 import com.example.mike.mp3player.dagger.components.fragments.PlaybackTrackerFragmentSubcomponent;
 import com.example.mike.mp3player.dagger.modules.AlbumArtPainterModule;
@@ -50,7 +49,6 @@ public interface MediaActivityCompatComponent {
 
     // sub components
     ChildViewPagerFragmentSubcomponent.Factory childViewPagerFragmentSubcomponentFactory();
-    MainFrameFragmentSubcomponent mainFrameFragmentSubcomponent();
     PlaybackTrackerFragmentSubcomponent playbackTrackerSubcomponent();
     PlaybackButtonsSubComponent playbackButtonsSubcomponent();
     SearchResultActivitySubComponent searchResultActivitySubComponent();

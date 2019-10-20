@@ -6,9 +6,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
 
-import com.example.mike.mp3player.client.views.fragments.viewpager.ChildViewPagerFragment;
+import com.example.mike.mp3player.client.views.fragments.viewpager.MediaItemListFragment;
 import com.example.mike.mp3player.commons.MediaItemType;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.TreeMap;
 public class MyPagerAdapter extends FragmentPagerAdapter {
 
     private final Map<MediaItemType, MediaBrowserCompat.MediaItem> menuCategories = new TreeMap<>();
-    private final Map<MediaItemType, ChildViewPagerFragment> pagerItems = new TreeMap<>();
+    private final Map<MediaItemType, MediaItemListFragment> pagerItems = new TreeMap<>();
 
     public MyPagerAdapter(FragmentManager fm) {
         super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
@@ -30,14 +29,14 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public ChildViewPagerFragment getItem(int position) {
+    public MediaItemListFragment getItem(int position) {
         MediaItemType category = getMediaItemTypeFromPosition(position);
         return pagerItems.get(category);
     }
 
     @Override
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        ChildViewPagerFragment v = (ChildViewPagerFragment) object;
+        MediaItemListFragment v = (MediaItemListFragment) object;
         return v.getView() == view;
     }
 
@@ -55,7 +54,7 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
         return categoryArrayList.get(position);
     }
 
-    public Map<MediaItemType, ChildViewPagerFragment> getPagerItems() {
+    public Map<MediaItemType, MediaItemListFragment> getPagerItems() {
         return pagerItems;
     }
 
