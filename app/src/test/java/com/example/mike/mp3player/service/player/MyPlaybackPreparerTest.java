@@ -74,9 +74,9 @@ public class MyPlaybackPreparerTest {
     @Test
     public void testPreparePlaylistOnConstruct() throws FileDataSource.FileDataSourceException {
         // don't play when being constructed
-        verify(exoPlayer, times(1)).setPlayWhenReady(false);
+        verify(myControlDispatcher, times(1)).dispatchSetPlayWhenReady(exoPlayer, false);
         // should seek to the first index, position 0
-        verify(exoPlayer, times(1)).seekTo(0, 0);
+        verify(myControlDispatcher, times(1)).dispatchSeekTo(exoPlayer, 0, 0);
     }
 
     @Test(expected = UnsupportedOperationException.class)

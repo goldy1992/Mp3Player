@@ -1,7 +1,6 @@
 package com.example.mike.mp3player.client.views.fragments.viewpager;
 
 import android.os.Bundle;
-import android.support.v4.media.MediaBrowserCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +8,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
-import com.bumptech.glide.util.FixedPreloadSizeProvider;
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
@@ -24,7 +20,6 @@ import com.example.mike.mp3player.client.activities.MediaActivityCompat;
 import com.example.mike.mp3player.client.views.adapters.MyGenericRecycleViewAdapter;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
-import com.google.android.material.appbar.AppBarLayout;
 import com.l4digital.fastscroll.FastScrollRecyclerView;
 
 import javax.inject.Inject;
@@ -51,6 +46,7 @@ public abstract class MediaItemListFragment extends Fragment implements MyGeneri
     protected MediaBrowserAdapter mediaBrowserAdapter;
     protected MediaControllerAdapter mediaControllerAdapter;
     private MyGenericRecycleViewAdapter myViewAdapter;
+    private AlbumArtPainter albumArtPainter;
     private MyGenericItemTouchListener myGenericItemTouchListener;
 
     public MediaItemListFragment(MediaItemType mediaItemType, String id, MediaActivityCompatComponent component) {
@@ -73,22 +69,22 @@ public abstract class MediaItemListFragment extends Fragment implements MyGeneri
     public void onViewCreated(@NonNull View view, Bundle bundle) {
         this.recyclerView = view.findViewById(R.id.recycler_view);
         this.recyclerView.setAdapter(myViewAdapter);
-        recyclerView.setHideScrollbar(true);
+        this.recyclerView.setHideScrollbar(true);
         this.recyclerView.addOnItemTouchListener(myGenericItemTouchListener);
         this.myGenericItemTouchListener.setParentView(recyclerView);
         this.recyclerView.setItemAnimator(new DefaultItemAnimator());
         this.recyclerView.setLayoutManager(linearLayoutManager);
-        FixedPreloadSizeProvider<MediaBrowserCompat.MediaItem> preloadSizeProvider = new FixedPreloadSizeProvider<>(20, 20);
-        RecyclerViewPreloader<MediaBrowserCompat.MediaItem> preloader =
-                new RecyclerViewPreloader<>(
-                        Glide.with(this), myViewAdapter, preloadSizeProvider, 10 /*maxPreload*/);
-
-        this.recyclerView.addOnScrollListener(preloader);
+        this.recyclerView.addOnScrollListener(albumArtPainter.createPreloader(myViewAdapter));
     }
 
     @Inject
     public void setMediaBrowserAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
         this.mediaBrowserAdapter = mediaBrowserAdapter;
+    }
+
+    @Inject
+    public void setAlbumArtPainter(AlbumArtPainter albumArtPainter) {
+        this.albumArtPainter = albumArtPainter;
     }
 
     @Inject
