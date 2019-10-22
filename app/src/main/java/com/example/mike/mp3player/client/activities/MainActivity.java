@@ -60,7 +60,7 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
     boolean initialiseView(@LayoutRes int layoutRes) {
         setContentView(layoutRes);
         this.searchFragment = new SearchFragment();
-        this.drawerLayout = findViewById(R.id.drawer_layout);
+        this.setDrawerLayout(findViewById(R.id.drawer_layout));
         this.titleToolbar = findViewById(R.id.titleToolbar);
         this.navigationView = findViewById(R.id.nav_view);
         this.appBarLayout = findViewById(R.id.appbar);
@@ -138,7 +138,8 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
         initialiseView(R.layout.activity_main);
     }
 
-    private boolean onNavigationItemSelected(MenuItem menuItem) {
+    @VisibleForTesting
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
         // set item as selected to persist highlight
         menuItem.setChecked(true);
         // close drawer when item is tapped
@@ -190,7 +191,6 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
 
             }
         }
-
     }
 
     @Inject
@@ -211,5 +211,10 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
     @Override
     String getWorkerId() {
         return "MAIN_ACTVTY_WRKR";
+    }
+
+    @VisibleForTesting
+    public void setDrawerLayout(DrawerLayout drawerLayout) {
+        this.drawerLayout = drawerLayout;
     }
 }
