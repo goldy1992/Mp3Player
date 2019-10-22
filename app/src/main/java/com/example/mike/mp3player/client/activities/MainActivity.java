@@ -94,13 +94,12 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
     @Override
     public void onResume() {
         super.onResume();
-        if (null != searchFragment && searchFragment.isAdded() && searchFragment.isVisible()) {
+        if (null != getSearchFragment() && getSearchFragment().isAdded() && getSearchFragment().isVisible()) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .remove(searchFragment)
+                    .remove(getSearchFragment())
                     .commit();
         }
-        Log.i(LOG_TAG, "hit resume");
     }
 
     @Override
@@ -119,7 +118,7 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
                 Log.i(LOG_TAG, "hit action search");
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .add(R.id.fragment_container, searchFragment, "SEARCH_FGMT")
+                        .add(R.id.fragment_container, getSearchFragment(), "SEARCH_FGMT")
                         .addToBackStack(null)
                         .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                         .commit();
@@ -211,5 +210,10 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
     @VisibleForTesting
     public void setDrawerLayout(DrawerLayout drawerLayout) {
         this.drawerLayout = drawerLayout;
+    }
+
+    @VisibleForTesting
+    public SearchFragment getSearchFragment() {
+        return searchFragment;
     }
 }

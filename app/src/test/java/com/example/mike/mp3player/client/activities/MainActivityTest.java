@@ -5,8 +5,9 @@ import android.view.MenuItem;
 
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.test.core.app.ActivityScenario;
 
+import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.views.fragments.SearchFragment;
 import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.example.mike.mp3player.commons.MediaItemType;
 
@@ -72,6 +73,26 @@ public class MainActivityTest {
         mainActivity.onOptionsItemSelected(menuItem);
         verify(drawerLayoutSpy, times(1)).openDrawer(GravityCompat.START);
     }
+
+    @Test
+    public void testOnOptionsItemSelectedSearch() {
+        final SearchFragment searchFragment = mainActivity.getSearchFragment();
+        // assert the search fragment is NOT already added
+        assertFalse(searchFragment.isAdded());
+        MenuItem menuItem = mock(MenuItem.class);
+        when(menuItem.getItemId()).thenReturn(R.id.action_search);
+
+        // select the search option item
+        mainActivity.onOptionsItemSelected(menuItem);
+
+        // assert the search fragment IS now added
+        assertTrue(searchFragment.isAdded());
+        // post test remove the added fragment
+        mainActivity.getSupportFragmentManager().
+                beginTransaction().remove(mainActivity.getSearchFragment())
+                .commit();
+    }
+
 
     @Test
     public void testNavigationItemSelected() {
