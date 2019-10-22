@@ -2,7 +2,6 @@ package com.example.mike.mp3player.client.activities;
 
 import android.os.Bundle;
 
-import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.dagger.components.DaggerTestMediaActivityCompatComponent;
 import com.example.mike.mp3player.dagger.components.TestMediaActivityCompatComponent;
 
@@ -12,10 +11,6 @@ public class EmptyMediaActivityCompatFragmentActivity extends MediaActivityCompa
     protected void onCreate(Bundle savedInstanceState) {
         initialiseDependencies();
         super.onCreate(savedInstanceState);
-    }
-    @Override
-    SubscriptionType getSubscriptionType() {
-        return SubscriptionType.NONE;
     }
 
     @Override
@@ -29,7 +24,7 @@ public class EmptyMediaActivityCompatFragmentActivity extends MediaActivityCompa
             (TestMediaActivityCompatComponent)
             DaggerTestMediaActivityCompatComponent
                 .factory()
-                .create(getApplicationContext(), getWorkerId(), getSubscriptionType(), this);
+                .create(getApplicationContext(), getWorkerId(), this);
         component.inject(this);
         setMediaActivityCompatComponent(component);
     }

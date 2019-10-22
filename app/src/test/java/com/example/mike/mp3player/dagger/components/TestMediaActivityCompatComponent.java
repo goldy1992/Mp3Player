@@ -3,10 +3,7 @@ package com.example.mike.mp3player.dagger.components;
 import android.content.Context;
 
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
-import com.example.mike.mp3player.client.MyDrawerListener;
 import com.example.mike.mp3player.client.activities.EmptyMediaActivityCompatFragmentActivity;
-import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
-import com.example.mike.mp3player.dagger.modules.AlbumArtPainterModule;
 import com.example.mike.mp3player.dagger.modules.MainHandlerModule;
 import com.example.mike.mp3player.dagger.modules.MediaBrowserAdapterModule;
 import com.example.mike.mp3player.dagger.modules.MediaControllerCallbackModule;
@@ -36,7 +33,6 @@ public interface TestMediaActivityCompatComponent extends MediaActivityCompatCom
     interface Factory extends MediaActivityCompatComponent.Factory{
         TestMediaActivityCompatComponent create(@BindsInstance Context context,
                                             @BindsInstance String workerId,
-                                            @BindsInstance SubscriptionType subscriptionType,
                                             @BindsInstance MediaBrowserConnectorCallback callback);
 
     }

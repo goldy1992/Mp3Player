@@ -19,12 +19,11 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 import com.example.mike.mp3player.client.MyDrawerListener;
-import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.ThemeSpinnerController;
 import com.example.mike.mp3player.client.views.adapters.MyPagerAdapter;
 import com.example.mike.mp3player.client.views.fragments.SearchFragment;
-import com.example.mike.mp3player.client.views.fragments.viewpager.MediaItemListFragment;
 import com.example.mike.mp3player.client.views.fragments.viewpager.FolderListFragment;
+import com.example.mike.mp3player.client.views.fragments.viewpager.MediaItemListFragment;
 import com.example.mike.mp3player.client.views.fragments.viewpager.SongListFragment;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
@@ -201,10 +200,6 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
     @VisibleForTesting
     public MyPagerAdapter getAdapter() {
         return adapter;
-    }
-    @Override
-    SubscriptionType getSubscriptionType() {
-        return SubscriptionType.MEDIA_ID;
     }
 
     /** {@inheritDoc} */

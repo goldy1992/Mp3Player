@@ -16,7 +16,7 @@ public class FolderActivityInjector extends FolderActivity {
     void initialiseDependencies() {
         MediaActivityCompatComponent component = DaggerMediaActivityCompatComponent
                 .factory()
-                .create(getApplicationContext(), getWorkerId(), getSubscriptionType(), this);
+                .create(getApplicationContext(), getWorkerId(), this);
         this.setMediaActivityCompatComponent(component);
         component.inject(this);
 

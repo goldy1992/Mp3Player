@@ -4,7 +4,6 @@ import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.fragments.AlbumArtFragment;
 import com.example.mike.mp3player.client.views.fragments.MediaControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragment;
@@ -43,16 +42,6 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
     public void onConnected() {
         super.onConnected();
         initialiseView(R.layout.activity_media_player);
-    }
-
-    /**
-     * The MediaActivity does not subscribe to any type of media, but is the interface to connect
-     * to the control the playback on the MediaPlaybackService
-     * @return the subscription type
-     */
-    @Override
-    SubscriptionType getSubscriptionType() {
-        return SubscriptionType.NONE;
     }
 
     /**

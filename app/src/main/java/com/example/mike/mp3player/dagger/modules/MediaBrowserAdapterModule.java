@@ -9,9 +9,7 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.callbacks.connection.MyConnectionCallback;
 import com.example.mike.mp3player.client.callbacks.search.MySearchCallback;
-import com.example.mike.mp3player.client.callbacks.subscription.GenericSubscriptionCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback;
-import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.dagger.scopes.ComponentScope;
 import com.example.mike.mp3player.service.MediaPlaybackServiceInjector;
 
@@ -27,7 +25,7 @@ public class MediaBrowserAdapterModule {
     @Provides
     public MediaBrowserAdapter provideMediaBrowserAdapter(MediaBrowserCompat mediaBrowser,
                                                           MyConnectionCallback myConnectionCallback,
-                                                          GenericSubscriptionCallback mySubscriptionCallback,
+                                                          MediaIdSubscriptionCallback mySubscriptionCallback,
                                                           MySearchCallback mySearchCallback) {
         return new MediaBrowserAdapter(mediaBrowser, myConnectionCallback, mySubscriptionCallback, mySearchCallback);
     }
@@ -54,12 +52,9 @@ public class MediaBrowserAdapterModule {
     }
 
     @Provides
-    public GenericSubscriptionCallback provideGenericSubscriptionCallback(
-            SubscriptionType subscriptionType,
+    public MediaIdSubscriptionCallback provideGenericSubscriptionCallback(
             @Named("worker") Handler handler) {
-        if (null != subscriptionType) {
-            return new MediaIdSubscriptionCallback(handler);
-        }
-        return null;
+               return new MediaIdSubscriptionCallback(handler);
+
     }
 }

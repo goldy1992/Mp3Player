@@ -6,7 +6,6 @@ import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.activities.FolderActivity;
 import com.example.mike.mp3player.client.activities.MainActivity;
 import com.example.mike.mp3player.client.activities.MediaPlayerActivity;
-import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.fragments.AlbumArtFragment;
 import com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
@@ -59,7 +58,6 @@ public interface MediaActivityCompatComponent {
     interface Factory {
         MediaActivityCompatComponent create(@BindsInstance Context context,
                                             @BindsInstance String workerId,
-                                            @BindsInstance SubscriptionType subscriptionType,
                                             @BindsInstance MediaBrowserConnectorCallback callback);
     }
 }

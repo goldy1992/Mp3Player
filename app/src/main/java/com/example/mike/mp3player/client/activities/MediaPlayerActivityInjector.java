@@ -19,7 +19,7 @@ public class MediaPlayerActivityInjector extends MediaPlayerActivity {
     void initialiseDependencies() {
         MediaActivityCompatComponent mediaActivityCompatComponent = DaggerMediaActivityCompatComponent
                 .factory()
-                .create(getApplicationContext(), getWorkerId(), getSubscriptionType(), this);
+                .create(getApplicationContext(), getWorkerId(), this);
                 mediaActivityCompatComponent.inject(this);
         this.setMediaActivityCompatComponent(mediaActivityCompatComponent);
     }

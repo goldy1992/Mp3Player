@@ -6,7 +6,6 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.example.mike.mp3player.R;
-import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.SimpleTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.viewpager.MediaItemListFragment;
@@ -26,11 +25,6 @@ public abstract class FolderActivity extends MediaActivityCompat {
     private MediaItemListFragment viewPageFragment;
     private PlayToolBarFragment playToolBarFragment;
     private SimpleTitleBarFragment simpleTitleBarFragment;
-
-    @Override
-    SubscriptionType getSubscriptionType() {
-        return SubscriptionType.MEDIA_ID;
-    }
 
     @Override
     String getWorkerId() {
