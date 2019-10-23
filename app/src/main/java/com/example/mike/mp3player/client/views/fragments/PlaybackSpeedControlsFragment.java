@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.widget.AppCompatImageButton;
 
 import com.example.mike.mp3player.R;
@@ -59,6 +60,7 @@ public class PlaybackSpeedControlsFragment extends AsyncFragment implements Play
         this.mainUpdater.post(r);
     }
 
+    @VisibleForTesting
     public void increasePlaybackSpeed() {
         worker.post(() -> {
             Bundle extras = new Bundle();
@@ -66,6 +68,7 @@ public class PlaybackSpeedControlsFragment extends AsyncFragment implements Play
         });
     }
 
+    @VisibleForTesting
     public void decreasePlaybackSpeed() {
         worker.post(() -> {
             Bundle extras = new Bundle();
