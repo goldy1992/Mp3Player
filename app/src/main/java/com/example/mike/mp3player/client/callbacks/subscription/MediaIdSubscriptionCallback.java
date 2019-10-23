@@ -1,10 +1,10 @@
 package com.example.mike.mp3player.client.callbacks.subscription;
 
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
 
@@ -28,11 +28,6 @@ public class MediaIdSubscriptionCallback extends MediaBrowserCompat.Subscription
     }
 
     @Override
-    public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children, @NonNull Bundle options) {
-
-    }
-
-    @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children) {
         handler.post( () -> {
             ArrayList<MediaBrowserCompat.MediaItem> childrenArrayList = new ArrayList<>(children);
@@ -52,4 +47,8 @@ public class MediaIdSubscriptionCallback extends MediaBrowserCompat.Subscription
         mediaBrowserResponseListeners.get(key).add(listener);
     }
 
+    @VisibleForTesting
+    public Map<String, Set<MediaBrowserResponseListener>> getMediaBrowserResponseListeners() {
+        return mediaBrowserResponseListeners;
+    }
 }
