@@ -20,6 +20,8 @@ import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListene
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 public class MediaControllerAdapter {
@@ -178,6 +180,10 @@ public class MediaControllerAdapter {
     @VisibleForTesting
     public MediaControllerCompat.TransportControls getController() {
         return mediaController.getTransportControls();
+    }
+
+    public List<MediaSessionCompat.QueueItem> getQueue() {
+        return mediaController.getQueue();
     }
 
     @VisibleForTesting

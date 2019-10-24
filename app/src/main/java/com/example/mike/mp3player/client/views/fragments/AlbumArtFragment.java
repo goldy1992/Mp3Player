@@ -1,10 +1,12 @@
 package com.example.mike.mp3player.client.views.fragments;
 
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,12 +25,21 @@ import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent
 
 import javax.inject.Inject;
 
+import static android.view.MotionEvent.ACTION_DOWN;
+import static android.view.MotionEvent.ACTION_MOVE;
+
 public class AlbumArtFragment extends AsyncFragment implements MetadataListener {
     private static final String LOG_TAG = "ALBM_ART_FRGMNT";
     private AlbumArtPainter albumArtPainter;
     private MediaControllerAdapter mediaControllerAdapter;
     private ImageView albumArt;
     private Uri currentUri;
+    
+    
+    // slide params
+    Rect initBounds;
+    float initPos;
+    ViewGroup.LayoutParams params;
 
 
     @Override
@@ -44,6 +55,31 @@ public class AlbumArtFragment extends AsyncFragment implements MetadataListener 
         this.albumArt = view.findViewById(R.id.albumArt);
         // register listeners
         this.mediaControllerAdapter.registerMetaDataListener(this);
+        //this.albumArt.setFocusable(true);
+        this.albumArt.setClickable(true);
+        this.albumArt.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(params == null){
+                    params = albumArt.getLayoutParams();
+                }
+                switch (event.getAction()){
+                    case ACTION_DOWN: //get initial state
+                        initBounds = albumArt.getDrawable().getBounds();
+                        initPos = event.getRawX();
+                        break;
+                    case ACTION_MOVE: //do the sliding
+                        float dPos = initPos + event.getRawX();
+                        albumArt.getDrawable().getBounds().offset((int)dPos, 0);
+
+                        //params.t = Math.round(initHeight + dPos);
+                        albumArt.requestLayout(); //refresh layout
+                        break;
+                }
+
+                return false;
+            }
+        });
         Uri albumArtUri = mediaControllerAdapter.getCurrentSongAlbumArtUri();
         if (albumArtUri != null) {
             albumArtPainter.paintOnView(albumArt, albumArtUri);
