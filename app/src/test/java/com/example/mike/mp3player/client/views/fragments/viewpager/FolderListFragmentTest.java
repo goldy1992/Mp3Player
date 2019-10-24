@@ -2,8 +2,6 @@ package com.example.mike.mp3player.client.views.fragments.viewpager;
 
 import android.support.v4.media.MediaBrowserCompat;
 
-import androidx.core.util.Preconditions;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.testing.FragmentScenario;
 
 import com.example.mike.mp3player.client.activities.TestMainActivity;
@@ -18,8 +16,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 
-import static androidx.core.util.Preconditions.checkNotNull;
-import static androidx.core.util.Preconditions.checkState;
 import static com.example.mike.mp3player.TestUtils.createMediaItem;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;

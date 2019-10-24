@@ -9,15 +9,12 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestBuilder;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.views.viewholders.MediaItemViewHolder;
 import com.example.mike.mp3player.client.views.viewholders.MyFolderViewHolder;
-import com.example.mike.mp3player.commons.Constants;
-import com.example.mike.mp3player.commons.MetaDataKeys;
 
 import java.io.File;
 import java.util.Collections;

@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
-import static android.os.Looper.getMainLooper;
 import static com.example.mike.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.example.mike.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
 import static org.mockito.ArgumentMatchers.any;

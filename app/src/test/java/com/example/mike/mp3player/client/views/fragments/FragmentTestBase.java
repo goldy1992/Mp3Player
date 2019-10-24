@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.example.mike.mp3player.client.activities.EmptyMediaActivityCompatFragmentActivity;
 import com.example.mike.mp3player.client.activities.TestMainActivity;
 
 import org.mockito.MockitoAnnotations;

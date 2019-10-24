@@ -13,7 +13,6 @@ import com.example.mike.mp3player.service.player.MyMediaButtonEventHandler;
 import com.example.mike.mp3player.service.player.MyMetadataProvider;
 import com.example.mike.mp3player.service.player.MyPlaybackPreparer;
 import com.example.mike.mp3player.service.player.MyTimelineQueueNavigator;
-import com.google.android.exoplayer2.DefaultControlDispatcher;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.upstream.FileDataSource;

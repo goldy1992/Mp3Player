@@ -1,9 +1,7 @@
 package com.example.mike.mp3player.commons;
 
-import android.content.ContentUris;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 
@@ -17,7 +15,6 @@ import static com.example.mike.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.Constants.ROOT_ITEM_TYPE;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_DIRECTORY;
 import static com.example.mike.mp3player.commons.MetaDataKeys.META_DATA_KEY_FILE_NAME;
-import static com.example.mike.mp3player.service.library.content.parser.SongResultsParser.ALBUM_ART_URI_PREFIX;
 
 public class MediaItemBuilder {
 

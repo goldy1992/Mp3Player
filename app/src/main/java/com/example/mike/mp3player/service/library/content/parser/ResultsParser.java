@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.service.library.content.parser;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;

@@ -2,7 +2,6 @@ package com.example.mike.mp3player.client.callbacks.subscription;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
