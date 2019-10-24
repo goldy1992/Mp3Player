@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client.views.adapters;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
@@ -21,6 +22,8 @@ import static org.mockito.Mockito.when;
 
 public class MediaItemRecyclerViewAdapterTestBase {
 
+    @Mock
+    Handler handler;
     @Mock
     AlbumArtPainter albumArtPainter;
     Context context;

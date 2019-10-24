@@ -7,7 +7,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import com.example.mike.mp3player.client.callbacks.connection.MyConnectionCallback;
 import com.example.mike.mp3player.client.callbacks.search.MySearchCallback;
 import com.example.mike.mp3player.client.callbacks.search.SearchResultListener;
-import com.example.mike.mp3player.client.callbacks.subscription.GenericSubscriptionCallback;
+import com.example.mike.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -18,13 +18,13 @@ public class MediaBrowserAdapter {
     private static final String LOG_TAG = "MDIA_BRWSR_ADPTR";
     private MediaBrowserCompat mediaBrowser;
     private MyConnectionCallback connectionCallback;
-    private GenericSubscriptionCallback mySubscriptionCallback;
+    private MediaIdSubscriptionCallback mySubscriptionCallback;
     private MySearchCallback mySearchCallback;
 
     @Inject
     public MediaBrowserAdapter(MediaBrowserCompat mediaBrowser,
                                MyConnectionCallback myConnectionCallback,
-                               GenericSubscriptionCallback mySubscriptionCallback,
+                               MediaIdSubscriptionCallback mySubscriptionCallback,
                                MySearchCallback mySearchCallback) {
         this.mediaBrowser = mediaBrowser;
         this.connectionCallback = myConnectionCallback;
@@ -96,7 +96,7 @@ public class MediaBrowserAdapter {
         return this.mySearchCallback.unregisterSearchResultListener(searchResultListener);
     }
 
-    public GenericSubscriptionCallback getMySubscriptionCallback() {
+    public MediaIdSubscriptionCallback getMySubscriptionCallback() {
         return mySubscriptionCallback;
     }
 

@@ -5,6 +5,8 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.mike.mp3player.commons.MediaItemBuilder;
+import com.example.mike.mp3player.service.MyControlDispatcher;
+import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.library.ContentManager;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -40,6 +42,10 @@ public class MyPlaybackPreparerTest {
     private ExoPlayer exoPlayer;
     @Mock
     private FileDataSource fileDataSource;
+    @Mock
+    private MyControlDispatcher myControlDispatcher;
+    @Mock
+    private PlaybackManager playbackManager;
 
     private MyPlaybackPreparer myPlaybackPreparer;
 
@@ -50,13 +56,13 @@ public class MyPlaybackPreparerTest {
         List<MediaItem> items = Collections.singletonList(testItem);
         Answer<Long> answer = (InvocationOnMock invocation) -> { return 0L; };
         when(fileDataSource.open(any())).then(answer);
-        this.myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource);
+        this.myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource, myControlDispatcher, playbackManager);
     }
 
     @Test
     public void testSupportedActions() {
         List<MediaItem> items = new ArrayList<>();
-        myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource);
+        myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource, myControlDispatcher, playbackManager);
         assertContainsAction(PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID);
         assertContainsAction(PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH);
     }
@@ -68,9 +74,9 @@ public class MyPlaybackPreparerTest {
     @Test
     public void testPreparePlaylistOnConstruct() throws FileDataSource.FileDataSourceException {
         // don't play when being constructed
-        verify(exoPlayer, times(1)).setPlayWhenReady(false);
+        verify(myControlDispatcher, times(1)).dispatchSetPlayWhenReady(exoPlayer, false);
         // should seek to the first index, position 0
-        verify(exoPlayer, times(1)).seekTo(0, 0);
+        verify(myControlDispatcher, times(1)).dispatchSeekTo(exoPlayer, 0, 0);
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -101,7 +107,7 @@ public class MyPlaybackPreparerTest {
         items.add(testItem3);
         when(contentManager.getPlaylist(mediaId)).thenReturn(items);
         myPlaybackPreparer.onPrepareFromMediaId(mediaId, true, null);
-        verify(exoPlayer, times(1)).seekTo(1, 0);
+        verify(myControlDispatcher, times(1)).dispatchSeekTo(exoPlayer, 1, 0);
     }
 
     private void assertContainsAction(@PlaybackStateCompat.Actions long action) {

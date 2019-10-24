@@ -131,6 +131,7 @@ public final class MediaItemUtils {
         if (null != extras) {
             return  (Uri) extras.get(METADATA_KEY_ALBUM_ART_URI);
         }
+
         return null;
     }
 

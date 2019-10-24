@@ -1,13 +1,10 @@
 package com.example.mike.mp3player.dagger.modules;
 
 import android.content.Context;
-import android.os.Handler;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.example.mike.mp3player.client.AlbumArtPainter;
-
-import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
@@ -16,8 +13,8 @@ import dagger.Provides;
 public class AlbumArtPainterModule {
 
     @Provides
-    public AlbumArtPainter provideAlbumArtPainter(Context context, @Named("main") Handler handler) {
+    public AlbumArtPainter provideAlbumArtPainter(Context context) {
         RequestManager requestManager = Glide.with(context);
-        return new AlbumArtPainter(requestManager, handler);
+        return new AlbumArtPainter(context, requestManager);
     }
 }

@@ -44,8 +44,10 @@ public class AlbumArtFragment extends AsyncFragment implements MetadataListener 
         this.albumArt = view.findViewById(R.id.albumArt);
         // register listeners
         this.mediaControllerAdapter.registerMetaDataListener(this);
-        albumArtPainter.paintOnView(albumArt, mediaControllerAdapter.getCurrentSongAlbumArtUri());
-
+        Uri albumArtUri = mediaControllerAdapter.getCurrentSongAlbumArtUri();
+        if (albumArtUri != null) {
+            albumArtPainter.paintOnView(albumArt, albumArtUri);
+        }
     }
 
     private void injectDependencies() {
@@ -70,19 +72,21 @@ public class AlbumArtFragment extends AsyncFragment implements MetadataListener 
     @Override
     public void onMetadataChanged(@NonNull MediaMetadataCompat metadata) {
         String albumArtUriPath = metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI);
-        Uri newUri = null;
-        try {
-            newUri = Uri.parse(albumArtUriPath);
-        } catch (NullPointerException ex) {
-            Log.e(LOG_TAG, albumArtUriPath + ": is an invalid Uri");
-            return;
+        if (albumArtUriPath != null) {
+            Uri newUri = null;
+            try {
+                newUri = Uri.parse(albumArtUriPath);
+            } catch (NullPointerException ex) {
+                Log.e(LOG_TAG, albumArtUriPath + ": is an invalid Uri");
+                this.currentUri = null;
+                albumArtPainter.clearView(albumArt);
+            }
+            /* make a pre check to avoid an unnecessary call to an expensive operation */
+            if (!newUri.equals(currentUri)) {
+                this.currentUri = newUri;
+                albumArtPainter.paintOnView(albumArt, currentUri);
+            }
         }
-        /* make a pre check to avoid an unnecessary call to an expensive operation */
-        if (!newUri.equals(currentUri)) {
-            this.currentUri = newUri;
-            albumArtPainter.paintOnView(albumArt, currentUri);
-        }
-
     }
 
     @VisibleForTesting

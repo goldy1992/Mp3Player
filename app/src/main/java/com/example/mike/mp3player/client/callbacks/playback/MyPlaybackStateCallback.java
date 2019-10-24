@@ -9,13 +9,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 public class MyPlaybackStateCallback extends AsyncCallback<PlaybackStateCompat> {
     private static final String LOG_TAG = "MY_PLYBK_ST_CLLBK";
     private final Set<PlaybackStateListener> listeners;
 
     @Inject
-    public MyPlaybackStateCallback(Handler handler) {
+    public MyPlaybackStateCallback(@Named("main") Handler handler) {
         super(handler);
         this.listeners = new HashSet<>();
     }

@@ -15,7 +15,6 @@ import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.PermissionGranted;
 import com.example.mike.mp3player.client.PermissionsProcessor;
-import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.dagger.components.DaggerMediaActivityCompatComponent;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 import com.example.mike.mp3player.dagger.components.SplashScreenEntryActivityComponent;
@@ -197,8 +196,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     private void initialiseDependencies() {
         MediaActivityCompatComponent component = DaggerMediaActivityCompatComponent
             .factory()
-            .create(getApplicationContext(),"SPSH_SCRN_ACTVTY_WRKR",
-                    SubscriptionType.MEDIA_ID, this);
+            .create(getApplicationContext(),"SPSH_SCRN_ACTVTY_WRKR", this);
         SplashScreenEntryActivityComponent splashScreenEntryActivityComponent =
                 component.splashScreenEntryActivity().create(this, this);
         splashScreenEntryActivityComponent.inject(this);

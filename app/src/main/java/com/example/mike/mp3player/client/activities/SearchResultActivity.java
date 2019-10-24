@@ -19,7 +19,6 @@ import com.example.mike.mp3player.LogTagger;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MyGenericItemTouchListener;
 import com.example.mike.mp3player.client.callbacks.search.SearchResultListener;
-import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.client.views.adapters.SearchResultAdapter;
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.commons.MediaItemUtils;
@@ -37,11 +36,6 @@ public abstract class SearchResultActivity extends MediaActivityCompat implement
     private SearchResultAdapter searchResultAdapter;
     private SearchView searchView;
     private Toolbar toolbar;
-
-    @Override
-    SubscriptionType getSubscriptionType() {
-        return SubscriptionType.NONE;
-    }
 
     @Override
     String getWorkerId() {

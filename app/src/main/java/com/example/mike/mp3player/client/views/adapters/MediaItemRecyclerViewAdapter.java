@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views.adapters;
 
+import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,10 +15,12 @@ public abstract class MediaItemRecyclerViewAdapter extends RecyclerView.Adapter<
 
     final AlbumArtPainter albumArtPainter;
     List<MediaBrowserCompat.MediaItem> items = new ArrayList<>();
+    final Handler mainHandler;
 
-    public MediaItemRecyclerViewAdapter(AlbumArtPainter albumArtPainter) {
+    public MediaItemRecyclerViewAdapter(AlbumArtPainter albumArtPainter, Handler handler) {
         super();
         this.albumArtPainter = albumArtPainter;
+        this.mainHandler = handler;
     }
 
     public List<MediaBrowserCompat.MediaItem> getItems() {

@@ -13,7 +13,6 @@ import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserAdapter;
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 
 import javax.inject.Inject;
@@ -30,8 +29,7 @@ public abstract class MediaActivityCompat extends AppCompatActivity implements M
     private MediaActivityCompatComponent mediaActivityCompatComponent;
     /** Thread used to deal with none UI tasks */
     private HandlerThread worker;
-    /** @return The subscription type of the MediaActivityCompat */
-    abstract SubscriptionType getSubscriptionType();
+
     /** @return The unique name of the HandlerThread used by the activity */
     abstract String getWorkerId();
     /** Utility method used to initialise the dependencies set up by Dagger2. DOES NOT need to be

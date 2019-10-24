@@ -2,7 +2,6 @@ package com.example.mike.mp3player.client.activities;
 
 import android.os.Bundle;
 
-import com.example.mike.mp3player.client.callbacks.subscription.SubscriptionType;
 import com.example.mike.mp3player.dagger.components.DaggerMediaActivityCompatComponent;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 
@@ -20,7 +19,7 @@ public class MainActivityInjector extends MainActivity {
         MediaActivityCompatComponent mediaActivityCompatComponent =
             DaggerMediaActivityCompatComponent
                 .factory()
-                .create(getApplicationContext(),getWorkerId(), SubscriptionType.MEDIA_ID, this);
+                .create(getApplicationContext(),getWorkerId(), this);
         this.setMediaActivityCompatComponent(mediaActivityCompatComponent);
         mediaActivityCompatComponent.inject(this);
 

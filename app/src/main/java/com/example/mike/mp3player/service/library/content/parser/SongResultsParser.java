@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.service.library.content.parser;
 
+import android.content.ContentUris;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -53,6 +54,9 @@ public class SongResultsParser extends ResultsParser {
         final Uri mediaUri = Uri.fromFile(mediaFile);
         final String fileName = mediaFile.getName();
 
+        Uri sArtworkUri = Uri.parse(ALBUM_ART_URI_PREFIX);
+        Uri albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId);
+
         return new MediaItemBuilder(mediaId)
                 .setMediaUri(mediaUri)
                 .setTitle(title)
@@ -60,10 +64,11 @@ public class SongResultsParser extends ResultsParser {
                 .setDuration(duration)
                 .setFileName(fileName)
                 .setArtist(artist)
-                .setAlbumArtUri(albumId)
                 .setMediaItemType(MediaItemType.SONG)
                 .setFlags(FLAG_PLAYABLE)
+                .setAlbumArtUri(albumArtUri)
                 .build();
+
     }
 
     @Override

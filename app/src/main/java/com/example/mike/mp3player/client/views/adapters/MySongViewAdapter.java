@@ -1,24 +1,33 @@
 package com.example.mike.mp3player.client.views.adapters;
 
+import android.net.Uri;
+import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.views.viewholders.MediaItemViewHolder;
 import com.example.mike.mp3player.client.views.viewholders.MySongViewHolder;
 
+import java.util.Collections;
+import java.util.List;
+
+import static com.example.mike.mp3player.commons.MediaItemUtils.getAlbumArtUri;
 
 
 public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     private final String LOG_TAG = "MY_VIEW_ADAPTER";
 
-    public MySongViewAdapter(AlbumArtPainter albumArtPainter) {
-        super(albumArtPainter);
+    public MySongViewAdapter(AlbumArtPainter albumArtPainter, Handler mainHandler) {
+        super(albumArtPainter, mainHandler);
     }
 
     @Override
@@ -46,5 +55,28 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
         }
     }
 
+    @NonNull
+    @Override
+    public String getSectionText(int position) {
+        return items.get(position).getDescription().getTitle().toString().substring(0, 1);
+    }
+
+    @NonNull
+    @Override
+    public List<MediaItem> getPreloadItems(int position) {
+        if (position >= items.size()) {
+            return Collections.emptyList();
+        }
+        return Collections.singletonList(items.get(position));
+    }
+
+    @Nullable
+    @Override
+    public RequestBuilder<?> getPreloadRequestBuilder(@NonNull MediaItem item) {
+        Uri uri = getAlbumArtUri(item);
+        return uri != null
+            ? Glide.with(albumArtPainter.getContext()).load(uri).fitCenter()
+            : null;
+    }
 }
 

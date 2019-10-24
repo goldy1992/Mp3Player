@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.widget.AppCompatImageButton;
 
 import com.example.mike.mp3player.R;
@@ -28,6 +29,7 @@ public class PlaybackSpeedControlsFragment extends AsyncFragment implements Play
     private AppCompatImageButton increasePlaybackSpeedButton;
     private AppCompatImageButton decreasePlaybackSpeedButton;
     private MediaControllerAdapter mediaControllerAdapter;
+    private float speed = 1.0f;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -58,20 +60,26 @@ public class PlaybackSpeedControlsFragment extends AsyncFragment implements Play
         this.mainUpdater.post(r);
     }
 
+    @VisibleForTesting
     public void increasePlaybackSpeed() {
-        Bundle extras = new Bundle();
-        mediaControllerAdapter.sendCustomAction(INCREASE_PLAYBACK_SPEED, extras);
+        worker.post(() -> {
+            Bundle extras = new Bundle();
+            mediaControllerAdapter.sendCustomAction(INCREASE_PLAYBACK_SPEED, extras);
+        });
     }
 
+    @VisibleForTesting
     public void decreasePlaybackSpeed() {
-        Bundle extras = new Bundle();
-        this.mediaControllerAdapter.sendCustomAction(DECREASE_PLAYBACK_SPEED, extras);
+        worker.post(() -> {
+            Bundle extras = new Bundle();
+            this.mediaControllerAdapter.sendCustomAction(DECREASE_PLAYBACK_SPEED, extras);
+        });
     }
 
 
     @Override
     public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
-        float speed = state.getPlaybackSpeed();
+        this.speed = state.getPlaybackSpeed();
         if (speed > 0) {
             updatePlaybackSpeedText(speed);
         }

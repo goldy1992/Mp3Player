@@ -7,6 +7,8 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.util.Log;
 
 import com.example.mike.mp3player.commons.MediaItemUtils;
+import com.example.mike.mp3player.service.MyControlDispatcher;
+import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.library.ContentManager;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -31,12 +33,21 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
 
     private final ContentManager contentManager;
     private final ExoPlayer exoPlayer;
+    private final MyControlDispatcher myControlDispatcher;
     private final FileDataSource fileDataSource;
+    private final PlaybackManager playbackManager;
 
-    public MyPlaybackPreparer(ExoPlayer exoPlayer, ContentManager contentManager, List<MediaItem> items, FileDataSource fileDataSource) {
+    public MyPlaybackPreparer(ExoPlayer exoPlayer,
+                              ContentManager contentManager,
+                              List<MediaItem> items,
+                              FileDataSource fileDataSource,
+                              MyControlDispatcher myControlDispatcher,
+                              PlaybackManager playbackManager) {
         this.exoPlayer = exoPlayer;
         this.contentManager = contentManager;
+        this.myControlDispatcher = myControlDispatcher;
         this.fileDataSource = fileDataSource;
+        this.playbackManager = playbackManager;
         if (CollectionUtils.isNotEmpty(items)) {
             String trackId = MediaItemUtils.getMediaId(items.get(0));
             preparePlaylist(false, trackId, items);
@@ -57,6 +68,7 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
         String trackId = extractTrackId(mediaId);
         if (null != trackId) {
             List<MediaItem> results = contentManager.getPlaylist(mediaId);
+            this.playbackManager.createNewPlaylist(results);
             preparePlaylist(playWhenReady, trackId, results);
         }
     }
@@ -86,8 +98,8 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
                 }
             } // for
             this.exoPlayer.prepare(concatenatingMediaSource);
-            this.exoPlayer.seekTo(uriToPlayIndex, 0L);
-            this.exoPlayer.setPlayWhenReady(playWhenReady);
+            this.myControlDispatcher.dispatchSeekTo(exoPlayer, uriToPlayIndex, 0L);
+            this.myControlDispatcher.dispatchSetPlayWhenReady(exoPlayer, playWhenReady);
         } // if
     }
 

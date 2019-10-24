@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -81,7 +82,7 @@ public class ContentRetrieverModule {
     public Map<Class<? extends ContentRetriever>, ContentRetriever> provideContentResolverRetrieverMap(ContentResolver contentResolver,
                                                                                                        Map<MediaItemType, String> ids,
                                                                                                        Map<MediaItemType, ResultsParser> mediaItemBuilderMap,SearchDatabase searchDatabase,
-                                                                                                       Handler handler) {
+                                                                                                       @Named("worker") Handler handler) {
         Map<Class<? extends ContentRetriever>, ContentRetriever> mapToReturn = new HashMap<>();
         RootRetriever rootRetriever = new RootRetriever(ids);
         mapToReturn.put(RootRetriever.class, rootRetriever);
