@@ -14,7 +14,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.MediaBrowserResponseListener;
@@ -30,6 +30,7 @@ import com.example.mike.mp3player.commons.MediaItemUtils;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
@@ -46,8 +47,9 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
 
     private DrawerLayout drawerLayout;
     private Toolbar titleToolbar;
-    private ViewPager rootMenuItemsPager;
+    private ViewPager2 rootMenuItemsPager;
     private TabLayout tabLayout;
+    private TabLayoutMediator tabLayoutMediator;
     private MyPagerAdapter adapter;
     private ActionBar actionBar;
     private SearchFragment searchFragment;
@@ -76,8 +78,10 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
 
         this.rootMenuItemsPager = findViewById(R.id.rootItemsPager);
         this.tabLayout = findViewById(R.id.tabs);
-        this.tabLayout.setupWithViewPager(rootMenuItemsPager);
-        this.adapter = new MyPagerAdapter(getSupportFragmentManager());
+        this.adapter = new MyPagerAdapter(getSupportFragmentManager(), getLifecycle());
+        this.rootMenuItemsPager.setAdapter(adapter);
+        tabLayoutMediator = new TabLayoutMediator(tabLayout, rootMenuItemsPager, adapter);
+        tabLayoutMediator.attach();
         this.rootMenuItemsPager.setAdapter(this.adapter);
         this.setSupportActionBar(titleToolbar);
         this.actionBar= getSupportActionBar();
