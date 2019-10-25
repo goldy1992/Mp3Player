@@ -47,7 +47,7 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
-            <androidx.viewpager.widget.ViewPager
+            <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/rootItemsPager"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
