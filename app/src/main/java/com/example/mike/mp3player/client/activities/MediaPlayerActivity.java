@@ -1,9 +1,16 @@
 package com.example.mike.mp3player.client.activities;
 
+import android.content.Context;
+import android.os.Handler;
+
 import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.FragmentManager;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.AlbumArtPainter;
+import com.example.mike.mp3player.client.views.adapters.TrackViewAdapter;
 import com.example.mike.mp3player.client.views.fragments.AlbumArtFragment;
 import com.example.mike.mp3player.client.views.fragments.MediaControlsFragment;
 import com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragment;
@@ -23,15 +30,23 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
     private MediaControlsFragment mediaControlsFragment;
     private AlbumArtFragment albumArtFragment;
 
+    private ViewPager2 viewPager2;
+
     @Override
     boolean initialiseView(int layoutId) {
         setContentView(layoutId);
         FragmentManager fm = getSupportFragmentManager();
-        this.metadataTitleBarFragment = (MetadataTitleBarFragment) fm.findFragmentById(R.id.metadataTitleBarFragment);
+        this.viewPager2 = findViewById(R.id.track_view_pager);
+        final Context context = getApplicationContext();
+        AlbumArtPainter albumArtPainter = new AlbumArtPainter(context, Glide.with(context));
+        TrackViewAdapter trackViewAdapter = new TrackViewAdapter(mediaControllerAdapter, albumArtPainter, new Handler(getMainLooper()));
+        mediaControllerAdapter.registerMetaDataListener(trackViewAdapter);
+        this.viewPager2.setAdapter(trackViewAdapter);
+ //       this.metadataTitleBarFragment = (MetadataTitleBarFragment) fm.findFragmentById(R.id.metadataTitleBarFragment);
         this.playbackTrackerFragment = (PlaybackTrackerFragment) fm.findFragmentById(R.id.playbackTrackerFragment);
         this.playToolBarFragment = (PlayToolBarFragment) fm.findFragmentById(R.id.playbackToolbarExtendedFragment);
         this.mediaControlsFragment = (MediaControlsFragment) fm.findFragmentById(R.id.mediaControlsFragment);
-        this.albumArtFragment = (AlbumArtFragment) fm.findFragmentById(R.id.albumArtFragment);
+   //     this.albumArtFragment = (AlbumArtFragment) fm.findFragmentById(R.id.albumArtFragment);
         return true;
     }
 
