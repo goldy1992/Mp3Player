@@ -27,10 +27,14 @@ public class TrackViewPagerChangeCallback extends ViewPager2.OnPageChangeCallbac
     @Override
     public void onPageSelected(int position) {
 
+        if (this.currentPosition == position) {
+            return;
+        }
         if (isSkipToNext(position)) {
             mediaControllerAdapter.skipToNext();
         }
         else if (isSkipToPrevious(position)) {
+            mediaControllerAdapter.seekTo(0);
             mediaControllerAdapter.skipToPrevious();
         }
 
