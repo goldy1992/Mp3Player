@@ -10,6 +10,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.bumptech.glide.Glide;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
+import com.example.mike.mp3player.client.callbacks.TrackViewPagerChangeCallback;
 import com.example.mike.mp3player.client.views.adapters.TrackViewAdapter;
 import com.example.mike.mp3player.client.views.fragments.AlbumArtFragment;
 import com.example.mike.mp3player.client.views.fragments.MediaControlsFragment;
@@ -40,8 +41,10 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
         final Context context = getApplicationContext();
         AlbumArtPainter albumArtPainter = new AlbumArtPainter(context, Glide.with(context));
         TrackViewAdapter trackViewAdapter = new TrackViewAdapter(mediaControllerAdapter, albumArtPainter, new Handler(getMainLooper()));
+        TrackViewPagerChangeCallback pagerChangeCallback = new TrackViewPagerChangeCallback(trackViewAdapter, mediaControllerAdapter);
         mediaControllerAdapter.registerMetaDataListener(trackViewAdapter);
         this.viewPager2.setAdapter(trackViewAdapter);
+        this.viewPager2.registerOnPageChangeCallback(pagerChangeCallback);
  //       this.metadataTitleBarFragment = (MetadataTitleBarFragment) fm.findFragmentById(R.id.metadataTitleBarFragment);
         this.playbackTrackerFragment = (PlaybackTrackerFragment) fm.findFragmentById(R.id.playbackTrackerFragment);
         this.playToolBarFragment = (PlayToolBarFragment) fm.findFragmentById(R.id.playbackToolbarExtendedFragment);

@@ -7,6 +7,7 @@
 
     <com.l4digital.fastscroll.FastScrollRecyclerView
         android:id="@+id/recycler_view"
+        app:fastScrollAutoHide="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:bubbleColor="?colorPrimary"

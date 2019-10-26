@@ -1,12 +1,10 @@
 package com.example.mike.mp3player.client.views.adapters;
 
 import android.support.v4.media.MediaBrowserCompat;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 

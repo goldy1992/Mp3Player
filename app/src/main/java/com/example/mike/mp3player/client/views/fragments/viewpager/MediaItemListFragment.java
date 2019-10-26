@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.client.views.fragments.viewpager;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +70,7 @@ public abstract class MediaItemListFragment extends Fragment implements MyGeneri
     public void onViewCreated(@NonNull View view, Bundle bundle) {
         this.recyclerView = view.findViewById(R.id.recycler_view);
         this.recyclerView.setAdapter(myViewAdapter);
-        this.recyclerView.setHideScrollbar(true);
+        this.recyclerView.setHideScrollbar(false);
         this.recyclerView.addOnItemTouchListener(myGenericItemTouchListener);
         this.myGenericItemTouchListener.setParentView(recyclerView);
         this.recyclerView.setItemAnimator(new DefaultItemAnimator());

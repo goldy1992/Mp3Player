@@ -65,10 +65,13 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
         this.titleToolbar = findViewById(R.id.titleToolbar);
         this.navigationView = findViewById(R.id.nav_view);
         this.appBarLayout = findViewById(R.id.appbar);
+
         this.appBarLayout.addOnOffsetChangedListener((AppBarLayout app, int offset) -> {
+            Log.i(LOG_TAG, "offset: " + offset + ", scroll range: " + app.getTotalScrollRange());
             if (null != app) {
                 offset += app.getTotalScrollRange();
             }
+
             rootMenuItemsPager.setPadding(
                     rootMenuItemsPager.getPaddingLeft(),
                     rootMenuItemsPager.getPaddingTop(),

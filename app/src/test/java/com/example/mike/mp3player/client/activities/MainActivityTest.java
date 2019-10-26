@@ -122,7 +122,7 @@ public class MainActivityTest {
         }
         final int expectedNumOfFragmentsCreated = rootItemsSet.size();
         mainActivity.onChildrenLoaded(parentId, children);
-        int numberOfChildFragments = mainActivity.getAdapter().getCount();
+        int numberOfChildFragments = mainActivity.getAdapter().getItemCount();
         assertEquals(expectedNumOfFragmentsCreated, numberOfChildFragments);
     }
 

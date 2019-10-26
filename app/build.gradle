@@ -153,6 +153,7 @@ dependencies {
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
     annotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
+    implementation 'androidx.viewpager2:viewpager2:1.0.0-rc01'
     // added to remove compile time warning
     testAnnotationProcessor group: 'com.google.auto.service', name: 'auto-service', version: '1.0-rc4'
 

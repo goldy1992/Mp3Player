@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.client.views.adapters;
 
-import android.media.session.MediaSession;
 import android.os.Handler;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -10,15 +9,16 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.mike.mp3player.R;
+import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
 import com.example.mike.mp3player.client.views.viewholders.MediaItemViewHolder;
 import com.example.mike.mp3player.client.views.viewholders.MediaPlayerTrackViewHolder;
-import com.example.mike.mp3player.client.AlbumArtPainter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TrackViewAdapter extends RecyclerView.Adapter<MediaPlayerTrackViewHolder> implements MetadataListener {
