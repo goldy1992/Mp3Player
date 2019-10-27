@@ -3,22 +3,18 @@ package com.example.mike.mp3player.client.callbacks;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.mike.mp3player.client.MediaControllerAdapter;
-import com.example.mike.mp3player.client.views.adapters.TrackViewAdapter;
 
 public class TrackViewPagerChangeCallback extends ViewPager2.OnPageChangeCallback {
 
     /** */
-    private final TrackViewAdapter trackViewAdapter;
-    /** */
     private final MediaControllerAdapter mediaControllerAdapter;
 
-    private int currentPosition = 0;
+    private int currentPosition;
 
     /** Constructor */
-    public TrackViewPagerChangeCallback(TrackViewAdapter trackViewAdapter,
-                                        MediaControllerAdapter mediaControllerAdapter) {
-        this.trackViewAdapter = trackViewAdapter;
+    public TrackViewPagerChangeCallback(MediaControllerAdapter mediaControllerAdapter) {
         this.mediaControllerAdapter = mediaControllerAdapter;
+        this.currentPosition = mediaControllerAdapter.getCurrentQueuePosition();
     }
     /**
      *
@@ -47,5 +43,14 @@ public class TrackViewPagerChangeCallback extends ViewPager2.OnPageChangeCallbac
 
     private boolean isSkipToPrevious(int position) {
         return position == (currentPosition - 1);
+    }
+
+    /** */
+    public void setCurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
     }
 }

@@ -2,7 +2,10 @@ package com.example.mike.mp3player.client.activities;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
@@ -11,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.callbacks.TrackViewPagerChangeCallback;
+import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
 import com.example.mike.mp3player.client.views.adapters.TrackViewAdapter;
 import com.example.mike.mp3player.client.views.fragments.AlbumArtFragment;
 import com.example.mike.mp3player.client.views.fragments.MediaControlsFragment;
@@ -18,10 +22,12 @@ import com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragmen
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
 
+import java.util.List;
+
 /**
  * Created by Mike on 24/09/2017.
  */
-public abstract class MediaPlayerActivity extends MediaActivityCompat {
+public abstract class MediaPlayerActivity extends MediaActivityCompat implements MetadataListener {
 
     private final String LOG_TAG = "MEDIA_PLAYER_ACTIVITY";
 
@@ -30,8 +36,9 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
     private MetadataTitleBarFragment metadataTitleBarFragment;
     private MediaControlsFragment mediaControlsFragment;
     private AlbumArtFragment albumArtFragment;
-
     private ViewPager2 viewPager2;
+    private TrackViewAdapter trackViewAdapter;
+    private TrackViewPagerChangeCallback trackViewPagerChangeCallback;
 
     @Override
     boolean initialiseView(int layoutId) {
@@ -40,16 +47,15 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
         this.viewPager2 = findViewById(R.id.track_view_pager);
         final Context context = getApplicationContext();
         AlbumArtPainter albumArtPainter = new AlbumArtPainter(context, Glide.with(context));
-        TrackViewAdapter trackViewAdapter = new TrackViewAdapter(mediaControllerAdapter, albumArtPainter, new Handler(getMainLooper()));
-        TrackViewPagerChangeCallback pagerChangeCallback = new TrackViewPagerChangeCallback(trackViewAdapter, mediaControllerAdapter);
-        mediaControllerAdapter.registerMetaDataListener(trackViewAdapter);
+        this.trackViewPagerChangeCallback = new TrackViewPagerChangeCallback(mediaControllerAdapter);
+        this.trackViewAdapter = new TrackViewAdapter(albumArtPainter, new Handler(getMainLooper()), mediaControllerAdapter.getQueue());
+        this.mediaControllerAdapter.registerMetaDataListener(this);
         this.viewPager2.setAdapter(trackViewAdapter);
-        this.viewPager2.registerOnPageChangeCallback(pagerChangeCallback);
- //       this.metadataTitleBarFragment = (MetadataTitleBarFragment) fm.findFragmentById(R.id.metadataTitleBarFragment);
+        this.viewPager2.registerOnPageChangeCallback(trackViewPagerChangeCallback);
+        this.viewPager2.setCurrentItem(mediaControllerAdapter.getCurrentQueuePosition());
         this.playbackTrackerFragment = (PlaybackTrackerFragment) fm.findFragmentById(R.id.playbackTrackerFragment);
         this.playToolBarFragment = (PlayToolBarFragment) fm.findFragmentById(R.id.playbackToolbarExtendedFragment);
         this.mediaControlsFragment = (MediaControlsFragment) fm.findFragmentById(R.id.mediaControlsFragment);
-   //     this.albumArtFragment = (AlbumArtFragment) fm.findFragmentById(R.id.albumArtFragment);
         return true;
     }
 
@@ -62,6 +68,14 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat {
         initialiseView(R.layout.activity_media_player);
     }
 
+    @Override
+    public void onMetadataChanged(@NonNull MediaMetadataCompat metadata) {
+        List<MediaSessionCompat.QueueItem> queueItems = mediaControllerAdapter.getQueue();
+        int currentPosition  = mediaControllerAdapter.getCurrentQueuePosition();
+        this.viewPager2.setCurrentItem(currentPosition);
+        this.trackViewPagerChangeCallback.setCurrentPosition(currentPosition);
+        this.trackViewAdapter.setQueue(queueItems);
+    }
     /**
      * {@inheritDoc}
      */

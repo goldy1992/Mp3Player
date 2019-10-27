@@ -195,4 +195,24 @@ public class MediaControllerAdapter {
     public void setMediaController(MediaControllerCompat mediaController) {
         this.mediaController = mediaController;
     }
+
+    public long getActiveQueueItemId() {
+        return mediaController.getPlaybackState().getActiveQueueItemId();
+    }
+
+    public int getCurrentQueuePosition() {
+        List<MediaSessionCompat.QueueItem> queue = getQueue();
+        long id = getActiveQueueItemId();
+
+        for (int i = 0; i < queue.size(); i++) {
+            MediaSessionCompat.QueueItem queueItem = queue.get(i);
+            if (queueItem.getQueueId() == id) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+
 }
