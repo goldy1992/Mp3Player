@@ -72,10 +72,11 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat implements
     public void onMetadataChanged(@NonNull MediaMetadataCompat metadata) {
         List<MediaSessionCompat.QueueItem> queueItems = mediaControllerAdapter.getQueue();
         int currentPosition  = mediaControllerAdapter.getCurrentQueuePosition();
-        this.viewPager2.setCurrentItem(currentPosition);
         this.trackViewPagerChangeCallback.setCurrentPosition(currentPosition);
+        this.viewPager2.setCurrentItem(currentPosition);
         this.trackViewAdapter.setQueue(queueItems);
     }
+
     /**
      * {@inheritDoc}
      */
