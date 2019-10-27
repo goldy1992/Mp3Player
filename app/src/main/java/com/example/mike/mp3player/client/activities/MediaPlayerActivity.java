@@ -52,7 +52,7 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat implements
         this.mediaControllerAdapter.registerMetaDataListener(this);
         this.viewPager2.setAdapter(trackViewAdapter);
         this.viewPager2.registerOnPageChangeCallback(trackViewPagerChangeCallback);
-        this.viewPager2.setCurrentItem(mediaControllerAdapter.getCurrentQueuePosition());
+        this.viewPager2.setCurrentItem(mediaControllerAdapter.getCurrentQueuePosition(), false);
         this.playbackTrackerFragment = (PlaybackTrackerFragment) fm.findFragmentById(R.id.playbackTrackerFragment);
         this.playToolBarFragment = (PlayToolBarFragment) fm.findFragmentById(R.id.playbackToolbarExtendedFragment);
         this.mediaControlsFragment = (MediaControlsFragment) fm.findFragmentById(R.id.mediaControlsFragment);
@@ -73,7 +73,7 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat implements
         List<MediaSessionCompat.QueueItem> queueItems = mediaControllerAdapter.getQueue();
         int currentPosition  = mediaControllerAdapter.getCurrentQueuePosition();
         this.trackViewPagerChangeCallback.setCurrentPosition(currentPosition);
-        this.viewPager2.setCurrentItem(currentPosition);
+        this.viewPager2.setCurrentItem(currentPosition, false);
         this.trackViewAdapter.setQueue(queueItems);
     }
 

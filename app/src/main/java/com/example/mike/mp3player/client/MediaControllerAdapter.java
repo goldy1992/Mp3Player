@@ -7,6 +7,7 @@ import android.os.RemoteException;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.MediaSessionCompat.QueueItem;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
@@ -182,7 +183,7 @@ public class MediaControllerAdapter {
         return mediaController.getTransportControls();
     }
 
-    public List<MediaSessionCompat.QueueItem> getQueue() {
+    public List<QueueItem> getQueue() {
         return mediaController.getQueue();
     }
 
@@ -201,11 +202,11 @@ public class MediaControllerAdapter {
     }
 
     public int getCurrentQueuePosition() {
-        List<MediaSessionCompat.QueueItem> queue = getQueue();
+        List<QueueItem> queue = getQueue();
         long id = getActiveQueueItemId();
 
         for (int i = 0; i < queue.size(); i++) {
-            MediaSessionCompat.QueueItem queueItem = queue.get(i);
+            QueueItem queueItem = queue.get(i);
             if (queueItem.getQueueId() == id) {
                 return i;
             }

@@ -10,6 +10,9 @@ import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
@@ -98,6 +101,16 @@ public class MockMediaControllerAdapter extends MediaControllerAdapter {
             .putString(METADATA_KEY_ARTIST, "artist")
             .putString(METADATA_KEY_TITLE, "title")
             .build();
+    }
+
+    @Override
+    public List<MediaSessionCompat.QueueItem> getQueue() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public long getActiveQueueItemId() {
+        return 0L;
     }
 
     public @PlaybackStateCompat.ShuffleMode int getShuffleMode() {
