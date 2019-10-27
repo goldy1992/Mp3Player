@@ -16,9 +16,7 @@ import com.example.mike.mp3player.client.AlbumArtPainter;
 import com.example.mike.mp3player.client.callbacks.TrackViewPagerChangeCallback;
 import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
 import com.example.mike.mp3player.client.views.adapters.TrackViewAdapter;
-import com.example.mike.mp3player.client.views.fragments.AlbumArtFragment;
 import com.example.mike.mp3player.client.views.fragments.MediaControlsFragment;
-import com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragment;
 import com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment;
 import com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment;
 
@@ -33,9 +31,7 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat implements
 
     private PlaybackTrackerFragment playbackTrackerFragment;
     private PlayToolBarFragment playToolBarFragment;
-    private MetadataTitleBarFragment metadataTitleBarFragment;
     private MediaControlsFragment mediaControlsFragment;
-    private AlbumArtFragment albumArtFragment;
     private ViewPager2 viewPager2;
     private TrackViewAdapter trackViewAdapter;
     private TrackViewPagerChangeCallback trackViewPagerChangeCallback;
@@ -96,9 +92,5 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat implements
     @VisibleForTesting
     public PlaybackTrackerFragment getPlaybackTrackerFragment() { return playbackTrackerFragment; }
     @VisibleForTesting
-    public MetadataTitleBarFragment getMetadataTitleBarFragment() { return metadataTitleBarFragment; }
-    @VisibleForTesting
     public MediaControlsFragment getMediaControlsFragment() { return mediaControlsFragment; }
-    @VisibleForTesting
-    public AlbumArtFragment getAlbumArtFragment() { return albumArtFragment;}
 }

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
-import com.example.mike.mp3player.client.MediaControllerAdapter;
 import com.example.mike.mp3player.client.views.viewholders.MediaItemViewHolder;
 import com.example.mike.mp3player.client.views.viewholders.MediaPlayerTrackViewHolder;
 
@@ -35,7 +34,6 @@ public class TrackViewAdapter extends RecyclerView.Adapter<MediaPlayerTrackViewH
     @NonNull
     @Override
     public MediaPlayerTrackViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        MediaItemViewHolder vh = null;
         // create a new views
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View v = layoutInflater

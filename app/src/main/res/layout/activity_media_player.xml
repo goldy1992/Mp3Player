@@ -13,23 +13,6 @@
         android:layout_alignParentTop="true"
         android:layout_above="@id/mediaControlsFragment"
         android:layout_height="wrap_content" />
-<!--    <fragment-->
-<!--        android:id="@+id/metadataTitleBarFragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentTop="true"-->
-<!--        class="com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragment"-->
-<!--        tools:layout="@layout/fragment_metadata_title_bar"/>-->
-
-<!--    <fragment-->
-<!--        android:id="@+id/albumArtFragment"-->
-<!--        android:layout_margin="@dimen/default_gap"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@+id/metadataTitleBarFragment"-->
-<!--        android:layout_above="@+id/mediaControlsFragment"-->
-<!--        class="com.example.mike.mp3player.client.views.fragments.AlbumArtFragment"-->
-<!--        tools:layout="@layout/fragment_playback_speed_controls"/>-->
 
     <fragment
         android:id="@+id/mediaControlsFragment"
