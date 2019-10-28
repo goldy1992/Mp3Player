@@ -41,11 +41,6 @@ public class MediaBrowserAdapterModule {
     }
 
     @Provides
-    public ComponentName provideComponentName(Context context) {
-        return new ComponentName(context, MediaPlaybackServiceInjector.class);
-    }
-
-    @Provides
     public MediaBrowserCompat provideMediaBrowserCompat(Context context, ComponentName componentName,
                                                         MyConnectionCallback myConnectionCallback) {
         return new MediaBrowserCompat(context, componentName, myConnectionCallback, null);

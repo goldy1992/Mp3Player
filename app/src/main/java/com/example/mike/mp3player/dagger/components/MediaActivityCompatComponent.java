@@ -11,6 +11,7 @@ import com.example.mike.mp3player.dagger.components.fragments.ChildViewPagerFrag
 import com.example.mike.mp3player.dagger.components.fragments.PlaybackButtonsSubComponent;
 import com.example.mike.mp3player.dagger.components.fragments.PlaybackTrackerFragmentSubcomponent;
 import com.example.mike.mp3player.dagger.modules.AlbumArtPainterModule;
+import com.example.mike.mp3player.dagger.modules.ComponentNameModule;
 import com.example.mike.mp3player.dagger.modules.MainHandlerModule;
 import com.example.mike.mp3player.dagger.modules.MediaBrowserAdapterModule;
 import com.example.mike.mp3player.dagger.modules.MediaControllerAdapterModule;
@@ -25,6 +26,7 @@ import dagger.Component;
 @ComponentScope
 @Component(modules = {
         AlbumArtPainterModule.class,
+        ComponentNameModule.class,
         HandlerThreadModule.class,
         MainHandlerModule.class,
         MediaBrowserAdapterModule.class,

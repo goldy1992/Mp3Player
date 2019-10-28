@@ -72,20 +72,20 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
                 offset += app.getTotalScrollRange();
             }
 
-            rootMenuItemsPager.setPadding(
-                    rootMenuItemsPager.getPaddingLeft(),
-                    rootMenuItemsPager.getPaddingTop(),
-                    rootMenuItemsPager.getPaddingRight(),
+            getRootMenuItemsPager().setPadding(
+                    getRootMenuItemsPager().getPaddingLeft(),
+                    getRootMenuItemsPager().getPaddingTop(),
+                    getRootMenuItemsPager().getPaddingRight(),
                     offset);
         });
 
         this.rootMenuItemsPager = findViewById(R.id.rootItemsPager);
         this.tabLayout = findViewById(R.id.tabs);
         this.adapter = new MyPagerAdapter(getSupportFragmentManager(), getLifecycle());
-        this.rootMenuItemsPager.setAdapter(adapter);
-        tabLayoutMediator = new TabLayoutMediator(tabLayout, rootMenuItemsPager, adapter);
+        this.getRootMenuItemsPager().setAdapter(adapter);
+        tabLayoutMediator = new TabLayoutMediator(tabLayout, getRootMenuItemsPager(), adapter);
         tabLayoutMediator.attach();
-        this.rootMenuItemsPager.setAdapter(this.adapter);
+        this.getRootMenuItemsPager().setAdapter(this.adapter);
         this.setSupportActionBar(titleToolbar);
         this.actionBar= getSupportActionBar();
         this.actionBar.setDisplayHomeAsUpEnabled(true);
@@ -222,5 +222,9 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
     @VisibleForTesting
     public SearchFragment getSearchFragment() {
         return searchFragment;
+    }
+
+    public ViewPager2 getRootMenuItemsPager() {
+        return rootMenuItemsPager;
     }
 }

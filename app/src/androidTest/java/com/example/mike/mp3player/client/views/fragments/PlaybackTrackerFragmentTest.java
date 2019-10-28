@@ -76,8 +76,8 @@ public class PlaybackTrackerFragmentTest {
     private void initFragment(PlaybackTrackerFragment fragment) {
         HandlerThread worker = new HandlerThread(HANDLER_THREAD_ID);
         worker.start();
-        MediaControllerAdapter mediaControllerAdapter = new MediaControllerAdapter(getApplicationContext(), worker.getLooper());
-        fragment.init(mediaControllerAdapter);
+//        MediaControllerAdapter mediaControllerAdapter = new MediaControllerAdapter(getApplicationContext(), worker.getLooper());
+//        fragment.init(mediaControllerAdapter);
     }
 
     private void changeMetaData(@NonNull PlaybackTrackerFragment fragment){

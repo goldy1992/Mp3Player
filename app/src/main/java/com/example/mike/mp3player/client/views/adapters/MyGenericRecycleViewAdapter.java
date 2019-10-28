@@ -75,7 +75,7 @@ public abstract class MyGenericRecycleViewAdapter extends MediaItemRecyclerViewA
 
     private void addNoChildrenFoundItem() {
         items.add(EMPTY_LIST_ITEM);
-        notifyDataSetChanged();
+        mainHandler.post(this::notifyDataSetChanged);
     }
 
     private MediaItem buildEmptyListMediaItem() {
