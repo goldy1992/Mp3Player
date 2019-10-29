@@ -86,6 +86,8 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        playerNotificationManager.invalidate();
+        //stopForeground(true);
         mediaSession.release();
         worker.quitSafely();
     }
