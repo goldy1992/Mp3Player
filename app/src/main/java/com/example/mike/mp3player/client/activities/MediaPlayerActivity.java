@@ -1,6 +1,9 @@
 package com.example.mike.mp3player.client.activities;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -35,6 +38,17 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat implements
     private ViewPager2 viewPager2;
     private TrackViewAdapter trackViewAdapter;
     private TrackViewPagerChangeCallback trackViewPagerChangeCallback;
+    private Uri trackToPlay = null;
+
+    @Override
+    public void onCreate(Bundle savedInstance) {
+        super.onCreate(savedInstance);
+
+        Intent intent = getIntent();
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            this.trackToPlay = intent.getData();
+        }
+    }
 
     @Override
     boolean initialiseView(int layoutId) {
@@ -61,6 +75,9 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat implements
     @Override
     public void onConnected() {
         super.onConnected();
+        if (null != trackToPlay) {
+            mediaControllerAdapter.playFromUri(trackToPlay, null);
+        }
         initialiseView(R.layout.activity_media_player);
     }
 

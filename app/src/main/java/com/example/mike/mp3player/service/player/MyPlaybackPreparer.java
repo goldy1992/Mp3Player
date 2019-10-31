@@ -17,11 +17,14 @@ import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.upstream.BaseDataSource;
+import com.google.android.exoplayer2.upstream.ContentDataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.FileDataSource;
 
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,23 +33,28 @@ import static com.example.mike.mp3player.commons.Constants.ID_DELIMITER;
 public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPreparer {
 
     private static final String LOG_TAG = "PLAYBACK_PREPARER";
+    public static final String CONTENT_SCHEME = "content";
+    public static final String FILE_SCHEME = "file";
 
     private final ContentManager contentManager;
     private final ExoPlayer exoPlayer;
     private final MyControlDispatcher myControlDispatcher;
     private final FileDataSource fileDataSource;
+    private final ContentDataSource contentDataSource;
     private final PlaybackManager playbackManager;
 
     public MyPlaybackPreparer(ExoPlayer exoPlayer,
                               ContentManager contentManager,
                               List<MediaItem> items,
                               FileDataSource fileDataSource,
+                              ContentDataSource contentDataSource,
                               MyControlDispatcher myControlDispatcher,
                               PlaybackManager playbackManager) {
         this.exoPlayer = exoPlayer;
         this.contentManager = contentManager;
         this.myControlDispatcher = myControlDispatcher;
         this.fileDataSource = fileDataSource;
+        this.contentDataSource = contentDataSource;
         this.playbackManager = playbackManager;
         if (CollectionUtils.isNotEmpty(items)) {
             String trackId = MediaItemUtils.getMediaId(items.get(0));
@@ -110,7 +118,31 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
 
     @Override
     public void onPrepareFromUri(Uri uri, boolean playWhenReady, Bundle extras) {
-        throw new UnsupportedOperationException();
+        ConcatenatingMediaSource concatenatingMediaSource = new ConcatenatingMediaSource();
+        DataSpec dataSpec = new DataSpec(uri);
+        try {
+            BaseDataSource baseDataSource;
+            switch (uri.getScheme()) {
+                case CONTENT_SCHEME:
+                    baseDataSource = contentDataSource;
+                    break;
+                case FILE_SCHEME:
+                    baseDataSource = fileDataSource;
+                    break;
+                default: baseDataSource = fileDataSource;
+            }
+            baseDataSource.open(dataSpec);
+            MyDataSourceFactory dataSrcFactory = new MyDataSourceFactory(baseDataSource);
+            ProgressiveMediaSource.Factory factory = new ProgressiveMediaSource.Factory(dataSrcFactory);
+            MediaSource src = factory.createMediaSource(uri);
+            concatenatingMediaSource.addMediaSource(src);
+        } catch (IOException  ex) {
+            Log.e(LOG_TAG, "error adding song to playlist");
+            return;
+        }
+        this.exoPlayer.prepare(concatenatingMediaSource);
+        this.myControlDispatcher.dispatchSeekTo(exoPlayer, 0, 0L);
+        this.myControlDispatcher.dispatchSetPlayWhenReady(exoPlayer, playWhenReady);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.dagger.modules.service;
 
+import android.content.Context;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
@@ -15,6 +16,7 @@ import com.example.mike.mp3player.service.player.MyPlaybackPreparer;
 import com.example.mike.mp3player.service.player.MyTimelineQueueNavigator;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
+import com.google.android.exoplayer2.upstream.ContentDataSource;
 import com.google.android.exoplayer2.upstream.FileDataSource;
 
 import java.util.List;
@@ -60,8 +62,15 @@ public class MediaSessionConnectorModule {
                                                         ContentManager contentManager,
                                                         @Named("starting_playlist") List<MediaBrowserCompat.MediaItem> items,
                                                         MyControlDispatcher myControlDispatcher,
+                                                        ContentDataSource contentDataSource,
                                                         PlaybackManager playbackManager) {
-        return new MyPlaybackPreparer(exoPlayer, contentManager, items, new FileDataSource(), myControlDispatcher, playbackManager);
+        return new MyPlaybackPreparer(exoPlayer, contentManager, items, new FileDataSource(), contentDataSource, myControlDispatcher, playbackManager);
+    }
+
+    @Provides
+    @Singleton
+    public ContentDataSource providesContentDataSource(Context context) {
+        return new ContentDataSource(context);
     }
 
     @Provides

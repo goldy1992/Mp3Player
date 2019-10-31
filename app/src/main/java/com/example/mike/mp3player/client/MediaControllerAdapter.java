@@ -66,6 +66,10 @@ public class MediaControllerAdapter {
         getController().playFromMediaId(mediaId, extras);
     }
 
+    public void playFromUri(Uri uri, Bundle extras) {
+        this.getController().playFromUri(uri, extras);
+    }
+
     public void play() {
         getController().play();
     }
