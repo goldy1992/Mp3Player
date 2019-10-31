@@ -72,6 +72,8 @@
             </intent-filter>
         </service>
 
+        <service android:name=".service.KillNotificationService"/>
+
         <receiver android:name="androidx.media.session.MediaButtonReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
