@@ -1,5 +1,6 @@
 package com.example.mike.mp3player.service.player;
 
+import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
@@ -17,14 +18,13 @@ import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.upstream.BaseDataSource;
 import com.google.android.exoplayer2.upstream.ContentDataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.FileDataSource;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,8 +33,6 @@ import static com.example.mike.mp3player.commons.Constants.ID_DELIMITER;
 public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPreparer {
 
     private static final String LOG_TAG = "PLAYBACK_PREPARER";
-    public static final String CONTENT_SCHEME = "content";
-    public static final String FILE_SCHEME = "file";
 
     private final ContentManager contentManager;
     private final ExoPlayer exoPlayer;
@@ -94,14 +92,19 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
                     uriToPlayIndex = i;
                 } // if
                 DataSpec dataSpec = new DataSpec(currentUri);
+                MyDataSourceFactory dataSrcFactory = null;
                 try {
-                    fileDataSource.open(dataSpec);
-
-                    MyDataSourceFactory dataSrcFactory = new MyDataSourceFactory(fileDataSource);
+                    if (ContentResolver.SCHEME_FILE.equals(currentUri.getScheme())) {
+                        fileDataSource.open(dataSpec);
+                        dataSrcFactory = new MyDataSourceFactory(fileDataSource);
+                    } else {
+                        contentDataSource.open(dataSpec);
+                        dataSrcFactory = new MyDataSourceFactory(contentDataSource);
+                    }
                     ProgressiveMediaSource.Factory factory = new ProgressiveMediaSource.Factory(dataSrcFactory);
                     MediaSource src = factory.createMediaSource(currentUri);
                     concatenatingMediaSource.addMediaSource(src);
-                } catch (FileDataSource.FileDataSourceException ex) {
+                } catch (FileDataSource.FileDataSourceException | ContentDataSource.ContentDataSourceException  ex) {
                     Log.e(LOG_TAG, "error adding song to playlist");
                 }
             } // for
@@ -118,31 +121,14 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
 
     @Override
     public void onPrepareFromUri(Uri uri, boolean playWhenReady, Bundle extras) {
-        ConcatenatingMediaSource concatenatingMediaSource = new ConcatenatingMediaSource();
-        DataSpec dataSpec = new DataSpec(uri);
-        try {
-            BaseDataSource baseDataSource;
-            switch (uri.getScheme()) {
-                case CONTENT_SCHEME:
-                    baseDataSource = contentDataSource;
-                    break;
-                case FILE_SCHEME:
-                    baseDataSource = fileDataSource;
-                    break;
-                default: baseDataSource = fileDataSource;
-            }
-            baseDataSource.open(dataSpec);
-            MyDataSourceFactory dataSrcFactory = new MyDataSourceFactory(baseDataSource);
-            ProgressiveMediaSource.Factory factory = new ProgressiveMediaSource.Factory(dataSrcFactory);
-            MediaSource src = factory.createMediaSource(uri);
-            concatenatingMediaSource.addMediaSource(src);
-        } catch (IOException  ex) {
-            Log.e(LOG_TAG, "error adding song to playlist");
-            return;
-        }
-        this.exoPlayer.prepare(concatenatingMediaSource);
-        this.myControlDispatcher.dispatchSeekTo(exoPlayer, 0, 0L);
-        this.myControlDispatcher.dispatchSetPlayWhenReady(exoPlayer, playWhenReady);
+
+        MediaItem result = contentManager.getItem(uri);
+        List<MediaItem> playlist = new ArrayList<>();
+        playlist.add(result);
+        this.playbackManager.createNewPlaylist(playlist);
+
+        preparePlaylist(playWhenReady, MediaItemUtils.getMediaId(result), playlist);
+
     }
 
     @Override

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;
 
+import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
 
@@ -39,7 +40,12 @@ public class MediaPlayerTrackViewHolder extends RecyclerView.ViewHolder {
         final String artistText = extras.getString(METADATA_KEY_ARTIST);
         this.artist.setText(artistText);
 
-        final Uri albumArtUri = (Uri) extras.get(METADATA_KEY_ALBUM_ART_URI);
-        this.albumArtPainter.paintOnView(albumArt, albumArtUri);
+        Uri albumArtUri = (Uri) extras.get(METADATA_KEY_ALBUM_ART_URI);
+        if (null != albumArtUri) {
+            this.albumArtPainter.paintOnView(albumArt, albumArtUri);
+        } else {
+            byte[] image = (byte[]) extras.getSerializable(METADATA_KEY_ALBUM_ART);
+            this.albumArtPainter.paintOnView(albumArt, image);
+        }
     }
 }

@@ -1,12 +1,16 @@
 package com.example.mike.mp3player.service.library;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.service.library.content.request.ContentRequest;
 import com.example.mike.mp3player.service.library.content.request.ContentRequestParser;
 import com.example.mike.mp3player.service.library.content.retriever.ContentRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.RootRetriever;
+import com.example.mike.mp3player.service.library.content.retriever.SongFromUriRetriever;
 import com.example.mike.mp3player.service.library.content.searcher.ContentSearcher;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -22,20 +26,26 @@ import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 public class ContentManager {
 
+    public static final String CONTENT_SCHEME = "content";
+    public static final String FILE_SCHEME = "file";
+
     private final Map<String, ContentRetriever> idToContentRetrieverMap;
     private final Map<MediaItemType, ContentSearcher> searchContentRetrieverMap;
     private final RootRetriever rootRetriever;
     private final ContentRequestParser contentRequestParser;
+    private final SongFromUriRetriever songFromUriRetriever;
 
     @Inject
     public ContentManager(Map<String, ContentRetriever> idToContentRetrieverMap,
                           Map<MediaItemType, ContentSearcher> searchContentRetrieverMap,
                           ContentRequestParser contentRequestParser,
-                          RootRetriever rootRetriever) {
+                          RootRetriever rootRetriever,
+                          SongFromUriRetriever songFromUriRetriever) {
        this.idToContentRetrieverMap = idToContentRetrieverMap;
        this.searchContentRetrieverMap = searchContentRetrieverMap;
        this.contentRequestParser = contentRequestParser;
        this.rootRetriever = rootRetriever;
+       this.songFromUriRetriever = songFromUriRetriever;
     }
     /**
      * The id is in the following format
@@ -70,6 +80,18 @@ public class ContentManager {
         }
         return results;
     }
+    /**
+     *
+     */
+    @Nullable
+    public MediaItem getItem(@NonNull Uri uri) {
+        return songFromUriRetriever.getSong(uri);
+    }
+    /**
+     *
+     * @param id
+     * @return
+     */
     public List<MediaItem> getPlaylist(String id) {
        return getChildren(id);
     }

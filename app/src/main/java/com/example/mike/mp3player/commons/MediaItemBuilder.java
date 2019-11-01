@@ -7,6 +7,7 @@ import android.support.v4.media.MediaDescriptionCompat;
 
 import java.io.File;
 
+import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_DURATION;
@@ -72,6 +73,11 @@ public class MediaItemBuilder {
 
     public MediaItemBuilder setAlbumArtUri(Uri albumArtUri) {
         this.extras.putParcelable(METADATA_KEY_ALBUM_ART_URI, albumArtUri);
+        return this;
+    }
+
+    public MediaItemBuilder setAlbumArtImage(byte[] bitmap) {
+        this.extras.putSerializable(METADATA_KEY_ALBUM_ART, bitmap);
         return this;
     }
 

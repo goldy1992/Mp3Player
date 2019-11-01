@@ -1,32 +1,30 @@
 package com.example.mike.mp3player.dagger.modules.service;
 
 import android.content.ContentResolver;
-import android.os.Handler;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
+import com.example.mike.mp3player.service.library.content.parser.SongResultsParser;
 import com.example.mike.mp3player.service.library.content.retriever.ContentRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.FoldersRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.RootRetriever;
+import com.example.mike.mp3player.service.library.content.retriever.SongFromUriRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.SongsFromFolderRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.SongsRetriever;
-import com.example.mike.mp3player.service.library.search.SearchDatabase;
+import com.google.common.collect.BiMap;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-
-import static com.example.mike.mp3player.commons.MediaItemType.FOLDER;
-import static com.example.mike.mp3player.commons.MediaItemType.SONG;
 
 @Module
 public class ContentRetrieverModule {
@@ -75,5 +73,14 @@ public class ContentRetrieverModule {
             }
         }
         return map;
+    }
+
+    @Provides
+    @Singleton
+    public SongFromUriRetriever providesSongFromUriRetriever(Context context,
+                                                             ContentResolver contentResolver,
+                                                             Map<MediaItemType, ResultsParser> resultsParserMap,
+                                                             BiMap<MediaItemType, String> ids) {
+        return new SongFromUriRetriever(context, contentResolver, (SongResultsParser) resultsParserMap.get(MediaItemType.SONGS), ids.get(MediaItemType.SONGS));
     }
 }

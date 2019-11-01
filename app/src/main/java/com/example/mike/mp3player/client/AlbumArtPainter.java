@@ -45,6 +45,16 @@ public class AlbumArtPainter {
         }
     }
 
+
+    public void paintOnView(ImageView imageView, @NonNull byte[] image) {
+        try {
+            requestManager.load(image).apply(requestOptions).fitCenter().into(imageView);
+        } catch (Exception ex) {
+            // TODO: load a default image when the album art if not found
+//            Log.e(LOG_TAG, ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
     public RecyclerViewPreloader<MediaItem> createPreloader(ListPreloader.PreloadModelProvider<MediaItem> preloadModelProvider) {
         FixedPreloadSizeProvider<MediaItem> preloadSizeProvider = new FixedPreloadSizeProvider<>(20, 20);
         return new RecyclerViewPreloader<>(
