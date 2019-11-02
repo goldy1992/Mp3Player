@@ -7,6 +7,7 @@ import com.example.mike.mp3player.service.library.content.request.ContentRequest
 import com.example.mike.mp3player.service.library.content.request.ContentRequestParser;
 import com.example.mike.mp3player.service.library.content.retriever.ContentRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.RootRetriever;
+import com.example.mike.mp3player.service.library.content.retriever.SongFromUriRetriever;
 import com.example.mike.mp3player.service.library.content.searcher.ContentSearcher;
 
 import org.junit.Before;
@@ -44,6 +45,9 @@ public class ContentManagerTest {
 
     @Mock
     private RootRetriever rootRetriever;
+
+    @Mock
+    private SongFromUriRetriever songFromUriRetriever;
 
     private static Map<MediaItemType, ContentSearcher> contentSearcherMap;
 
@@ -84,7 +88,8 @@ public class ContentManagerTest {
         this.contentManager = new ContentManager(idToContentRetrieverMap,
                 null,
                 contentRequestParser,
-                rootRetriever);
+                rootRetriever,
+                songFromUriRetriever);
 
         List<MediaItem> result =  contentManager.getChildren(id);
         assertEquals(expectedList, result);
@@ -99,7 +104,8 @@ public class ContentManagerTest {
         this.contentManager = new ContentManager(idToContentRetrieverMap,
                 null,
                 contentRequestParser,
-                rootRetriever);
+                rootRetriever,
+                songFromUriRetriever);
 
         List<MediaItem> result =  contentManager.getChildren(incorrectId);
         assertNull(result);
@@ -129,7 +135,8 @@ public class ContentManagerTest {
         this.contentManager = new ContentManager(null,
                 contentSearcherMap,
                 contentRequestParser,
-                rootRetriever);
+                rootRetriever,
+                songFromUriRetriever);
 
         List<MediaItem> result =  contentManager.search(query);
         assertNotNull(result);
