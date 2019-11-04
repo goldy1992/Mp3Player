@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.mike.mp3player.client.MediaBrowserConnectorCallback;
 import com.example.mike.mp3player.client.activities.EmptyMediaActivityCompatFragmentActivity;
+import com.example.mike.mp3player.dagger.modules.ComponentNameModule;
 import com.example.mike.mp3player.dagger.modules.MainHandlerModule;
 import com.example.mike.mp3player.dagger.modules.MediaBrowserAdapterModule;
 import com.example.mike.mp3player.dagger.modules.MediaControllerCallbackModule;
@@ -18,6 +19,7 @@ import dagger.Component;
 
 @ComponentScope
 @Component(modules = {
+        ComponentNameModule.class,
         MockAlbumArtPainterModule.class,
         HandlerThreadModule.class,
         MainHandlerModule.class,

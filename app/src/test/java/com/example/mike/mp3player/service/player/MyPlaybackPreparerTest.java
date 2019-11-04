@@ -10,6 +10,7 @@ import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.library.ContentManager;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.upstream.ContentDataSource;
 import com.google.android.exoplayer2.upstream.FileDataSource;
 
 import org.junit.Before;
@@ -43,6 +44,8 @@ public class MyPlaybackPreparerTest {
     @Mock
     private FileDataSource fileDataSource;
     @Mock
+    private ContentDataSource contentDataSource;
+    @Mock
     private MyControlDispatcher myControlDispatcher;
     @Mock
     private PlaybackManager playbackManager;
@@ -56,13 +59,13 @@ public class MyPlaybackPreparerTest {
         List<MediaItem> items = Collections.singletonList(testItem);
         Answer<Long> answer = (InvocationOnMock invocation) -> { return 0L; };
         when(fileDataSource.open(any())).then(answer);
-        this.myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource, myControlDispatcher, playbackManager);
+        this.myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource, contentDataSource, myControlDispatcher, playbackManager);
     }
 
     @Test
     public void testSupportedActions() {
         List<MediaItem> items = new ArrayList<>();
-        myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource, myControlDispatcher, playbackManager);
+        myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource, contentDataSource, myControlDispatcher, playbackManager);
         assertContainsAction(PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID);
         assertContainsAction(PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH);
     }
@@ -84,9 +87,13 @@ public class MyPlaybackPreparerTest {
         myPlaybackPreparer.onPrepareFromSearch("query", true, null);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testOnPrepareFromUri() {
-        myPlaybackPreparer.onPrepareFromUri(Uri.parse("query"), true, null);
+        Uri testUri = Uri.parse("query");
+        MediaItem testItem = new MediaItemBuilder("id1").setMediaUri(Uri.parse("string")).build();
+        when(contentManager.getItem(testUri)).thenReturn(testItem);
+
+        myPlaybackPreparer.onPrepareFromUri(testUri, true, null);
     }
 
     @Test

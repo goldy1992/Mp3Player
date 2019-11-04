@@ -51,6 +51,16 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat implements
     }
 
     @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            this.trackToPlay = intent.getData();
+            mediaControllerAdapter.playFromUri(trackToPlay, null);
+        }
+    }
+
+    @Override
     boolean initialiseView(int layoutId) {
         setContentView(layoutId);
         FragmentManager fm = getSupportFragmentManager();
