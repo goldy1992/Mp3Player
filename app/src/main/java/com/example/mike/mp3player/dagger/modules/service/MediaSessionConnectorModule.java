@@ -10,6 +10,7 @@ import com.example.mike.mp3player.service.library.ContentManager;
 import com.example.mike.mp3player.service.player.AudioBecomingNoisyBroadcastReceiver;
 import com.example.mike.mp3player.service.player.DecreaseSpeedProvider;
 import com.example.mike.mp3player.service.player.IncreaseSpeedProvider;
+import com.example.mike.mp3player.service.player.MediaSourceFactory;
 import com.example.mike.mp3player.service.player.MyMediaButtonEventHandler;
 import com.example.mike.mp3player.service.player.MyMetadataProvider;
 import com.example.mike.mp3player.service.player.MyPlaybackPreparer;
@@ -62,9 +63,15 @@ public class MediaSessionConnectorModule {
                                                         ContentManager contentManager,
                                                         @Named("starting_playlist") List<MediaBrowserCompat.MediaItem> items,
                                                         MyControlDispatcher myControlDispatcher,
-                                                        ContentDataSource contentDataSource,
+                                                        MediaSourceFactory mediaSourceFactory,
                                                         PlaybackManager playbackManager) {
-        return new MyPlaybackPreparer(exoPlayer, contentManager, items, new FileDataSource(), contentDataSource, myControlDispatcher, playbackManager);
+        return new MyPlaybackPreparer(exoPlayer, contentManager, items, mediaSourceFactory, myControlDispatcher, playbackManager);
+    }
+
+    @Provides
+    @Singleton
+    public MediaSourceFactory providesMediaSourceFactory(Context context) {
+        return new MediaSourceFactory(new FileDataSource(), new ContentDataSource(context));
     }
 
     @Provides

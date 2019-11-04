@@ -1,6 +1,5 @@
 package com.example.mike.mp3player.service.player;
 
-import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
@@ -17,10 +16,6 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.upstream.ContentDataSource;
-import com.google.android.exoplayer2.upstream.DataSpec;
-import com.google.android.exoplayer2.upstream.FileDataSource;
 
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -37,22 +32,20 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
     private final ContentManager contentManager;
     private final ExoPlayer exoPlayer;
     private final MyControlDispatcher myControlDispatcher;
-    private final FileDataSource fileDataSource;
-    private final ContentDataSource contentDataSource;
+    private final MediaSourceFactory mediaSourceFactory;
     private final PlaybackManager playbackManager;
 
     public MyPlaybackPreparer(ExoPlayer exoPlayer,
                               ContentManager contentManager,
                               List<MediaItem> items,
-                              FileDataSource fileDataSource,
-                              ContentDataSource contentDataSource,
+                              MediaSourceFactory mediaSourceFactory,
                               MyControlDispatcher myControlDispatcher,
                               PlaybackManager playbackManager) {
         this.exoPlayer = exoPlayer;
         this.contentManager = contentManager;
         this.myControlDispatcher = myControlDispatcher;
-        this.fileDataSource = fileDataSource;
-        this.contentDataSource = contentDataSource;
+        this.mediaSourceFactory = mediaSourceFactory;
+
         this.playbackManager = playbackManager;
         if (CollectionUtils.isNotEmpty(items)) {
             String trackId = MediaItemUtils.getMediaId(items.get(0));
@@ -86,27 +79,12 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
             for (int i = 0; i < results.size(); i++) {
                 MediaItem currentMediaItem = results.get(i);
                 String id = MediaItemUtils.getMediaId(currentMediaItem);
-                Uri currentUri = MediaItemUtils.getMediaUri(currentMediaItem);
-
                 if (id != null && id.equals(trackId)) {
                     uriToPlayIndex = i;
                 } // if
-                DataSpec dataSpec = new DataSpec(currentUri);
-                MyDataSourceFactory dataSrcFactory = null;
-                try {
-                    if (ContentResolver.SCHEME_FILE.equals(currentUri.getScheme())) {
-                        fileDataSource.open(dataSpec);
-                        dataSrcFactory = new MyDataSourceFactory(fileDataSource);
-                    } else {
-                        contentDataSource.open(dataSpec);
-                        dataSrcFactory = new MyDataSourceFactory(contentDataSource);
-                    }
-                    ProgressiveMediaSource.Factory factory = new ProgressiveMediaSource.Factory(dataSrcFactory);
-                    MediaSource src = factory.createMediaSource(currentUri);
-                    concatenatingMediaSource.addMediaSource(src);
-                } catch (FileDataSource.FileDataSourceException | ContentDataSource.ContentDataSourceException  ex) {
-                    Log.e(LOG_TAG, "error adding song to playlist");
-                }
+                Uri currentUri = MediaItemUtils.getMediaUri(currentMediaItem);
+                MediaSource src = mediaSourceFactory.createMediaSource(currentUri);
+                concatenatingMediaSource.addMediaSource(src);
             } // for
             this.exoPlayer.prepare(concatenatingMediaSource);
             this.myControlDispatcher.dispatchSeekTo(exoPlayer, uriToPlayIndex, 0L);
