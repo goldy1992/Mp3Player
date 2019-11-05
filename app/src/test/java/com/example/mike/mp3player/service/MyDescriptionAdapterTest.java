@@ -6,7 +6,6 @@ import android.support.v4.media.session.MediaSessionCompat;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.example.mike.mp3player.TestUtils;
 import com.example.mike.mp3player.commons.MediaItemBuilder;
 import com.google.android.exoplayer2.ExoPlayer;
 

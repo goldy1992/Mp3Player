@@ -8,6 +8,7 @@ import android.view.ViewParent;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
@@ -26,7 +27,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.example.mike.mp3player.TestUtils.assertTabName;
+import static com.example.mike.mp3player.TestUtils.withRecyclerView;
+import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertEquals;
 
 @LargeTest
@@ -65,6 +75,26 @@ public class EndToEndTest {
 
         assertTabName(tabLayout, 0, MediaItemType.SONGS.getTitle());
         assertTabName(tabLayout, 1, MediaItemType.FOLDERS.getTitle());
+
+        onView(allOf(
+                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                withId(R.id.recycler_view)))
+                .check(matches(isDisplayed()));
+
+        onView(withRecyclerView(R.id.recycler_view)
+                .atPositionOnView(0, R.id.title))
+                .check(matches(withText("#Dprimera")))
+
+                .perform(scrollToPosition(14));
+
+
+        onView(withRecyclerView(R.id.recycler_view)
+                .atPositionOnView(14, R.id.title))
+                .check(matches(withText("Yuya")));
+
+
+
+
 
     }
 
