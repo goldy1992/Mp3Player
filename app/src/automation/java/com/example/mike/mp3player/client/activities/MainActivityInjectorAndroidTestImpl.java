@@ -9,9 +9,9 @@ import com.example.mike.mp3player.client.PermissionsProcessor;
 import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 import com.example.mike.mp3player.dagger.components.DaggerAndroidTestMediaActivityCompatComponent;
 
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-
 public class MainActivityInjectorAndroidTestImpl extends MainActivity implements IdlingResource {
+
+    private ResourceCallback resourceCallback;
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -39,7 +39,11 @@ public class MainActivityInjectorAndroidTestImpl extends MainActivity implements
         if (this.getRootMenuItemsPager() != null) {
             ViewPager2 viewPager2 = this.getRootMenuItemsPager();
             if (viewPager2.getAdapter() != null) {
-                return viewPager2.getAdapter().getItemCount() >= 2;
+                boolean isIdle = viewPager2.getAdapter().getItemCount() >= 2;
+                if (isIdle) {
+                    this.resourceCallback.onTransitionToIdle();
+                }
+                return isIdle;
             }
         }
 
@@ -48,6 +52,6 @@ public class MainActivityInjectorAndroidTestImpl extends MainActivity implements
 
     @Override
     public void registerIdleTransitionCallback(ResourceCallback callback) {
-
+        this.resourceCallback = callback;
     }
 }

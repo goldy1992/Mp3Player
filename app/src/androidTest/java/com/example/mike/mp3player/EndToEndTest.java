@@ -5,18 +5,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
+import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import com.example.mike.mp3player.client.activities.MainActivityInjectorAndroidTestImpl;
+import com.google.android.material.tabs.TabLayout;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,16 +32,19 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.example.mike.mp3player.R.id.tabs;
 import static org.hamcrest.core.AllOf.allOf;
+import static org.junit.Assert.assertTrue;
 
 @LargeTest
 @RunWith(androidx.test.ext.junit.runners.AndroidJUnit4.class)
 public class EndToEndTest {
 
+    IdlingResource idlingResource;
     @Rule
     public ActivityTestRule<MainActivityInjectorAndroidTestImpl> mActivityTestRule = new ActivityTestRule<>(MainActivityInjectorAndroidTestImpl.class);
 
@@ -47,40 +56,29 @@ public class EndToEndTest {
 
     @Before
     public void setup() {
-        IdlingResource idlingResource = mActivityTestRule.getActivity();
+        this.idlingResource = mActivityTestRule.getActivity();
         IdlingRegistry.getInstance().register(idlingResource);
     }
 
     @Test
     public void splashScreenEntryActivityTest() {
+        Espresso.onIdle();
        // mActivityTestRule.getActivity().
        // mActivityTestRule.getScenario();
-        ViewInteraction textView = onView(
-                allOf(withText("Songs"),
-                        childAtPosition(
-                                allOf(withId(tabs),
-                                        withParent(withId(R.id.rootItemsPager))),
-                                1),
-                        isDisplayed()));
-        textView.check(matches(withText("SONGS")));
-
-        ViewInteraction textView2 = onView(
-                allOf(withText("Folders"),
-                        childAtPosition(
-                                allOf(withId(tabs),
-                                        withParent(withId(R.id.rootItemsPager))),
-                                2),
-                        isDisplayed()));
-        textView2.check(matches(withText("FOLDERS")));
-
-        ViewInteraction textView3 = onView(
-                allOf(withText("Folders"),
-                        childAtPosition(
-                                allOf(withId(tabs),
-                                        withParent(withId(R.id.rootItemsPager))),
-                                2),
-                        isDisplayed()));
-        textView3.perform(click());
+        onView(withId(R.id.tabs)).check(new ViewAssertion() {
+            @Override
+            public void check(View view, NoMatchingViewException noViewFoundException) {
+                if (view instanceof TabLayout) {
+                    TabLayout tabLayout = (TabLayout) view;
+                    TabLayout.Tab tab = tabLayout.getTabAt(0);
+                    assertTrue(tab.getText().equals("Songs"));
+                }
+                else
+                {
+                    throw noViewFoundException;
+                }
+            }
+        });
     }
 
     private static Matcher<View> childAtPosition(
