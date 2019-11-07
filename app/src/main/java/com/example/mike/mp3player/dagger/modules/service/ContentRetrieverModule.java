@@ -2,6 +2,7 @@ package com.example.mike.mp3player.dagger.modules.service;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.media.MediaMetadataRetriever;
 
 import androidx.annotation.NonNull;
 
@@ -81,6 +82,6 @@ public class ContentRetrieverModule {
                                                              ContentResolver contentResolver,
                                                              Map<MediaItemType, ResultsParser> resultsParserMap,
                                                              BiMap<MediaItemType, String> ids) {
-        return new SongFromUriRetriever(context, contentResolver, (SongResultsParser) resultsParserMap.get(MediaItemType.SONGS), ids.get(MediaItemType.SONGS));
+        return new SongFromUriRetriever(context, contentResolver, (SongResultsParser) resultsParserMap.get(MediaItemType.SONGS), new MediaMetadataRetriever(), ids.get(MediaItemType.SONGS));
     }
 }

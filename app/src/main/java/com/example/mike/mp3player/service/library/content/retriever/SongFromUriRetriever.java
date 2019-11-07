@@ -13,7 +13,6 @@ import com.example.mike.mp3player.service.library.content.parser.SongResultsPars
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import java.io.File;
 import java.util.List;
 
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ARTIST;
@@ -28,11 +27,17 @@ public class SongFromUriRetriever  {
     private final SongResultsParser songResultsParser;
     private final String idPrefix;
     private final Context context;
+    private final MediaMetadataRetriever mmr;
 
-    public SongFromUriRetriever(Context context, ContentResolver contentResolver, SongResultsParser resultsParser, String idPrefix) {
+    public SongFromUriRetriever(Context context,
+                                ContentResolver contentResolver,
+                                SongResultsParser resultsParser,
+                                MediaMetadataRetriever mediaMetadataRetriever,
+                                String idPrefix) {
         this.context = context;
         this.contentResolver = contentResolver;
         this.songResultsParser = resultsParser;
+        this.mmr = mediaMetadataRetriever;
         this.idPrefix = idPrefix;
     }
 
@@ -40,7 +45,6 @@ public class SongFromUriRetriever  {
 
         if (uri != null && uri.getScheme() != null) {
             if (ContentResolver.SCHEME_CONTENT.equals(uri.getScheme())) {
-                MediaMetadataRetriever mmr = new MediaMetadataRetriever();
                 mmr.setDataSource(context, uri);
                 MediaItemBuilder mediaItemBuilder = new MediaItemBuilder("1");
                 mediaItemBuilder.setMediaUri(uri);
@@ -48,11 +52,11 @@ public class SongFromUriRetriever  {
                 mediaItemBuilder.setTitle(mmr.extractMetadata(METADATA_KEY_TITLE));
                 mediaItemBuilder.setArtist(mmr.extractMetadata(METADATA_KEY_ARTIST));
                 mediaItemBuilder.setDuration(Long.parseLong(mmr.extractMetadata(METADATA_KEY_DURATION)));
+                mmr.release();
                 return mediaItemBuilder.build();
             } else {
                 Cursor cursor =  contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                        SONG_PROJECTION.toArray(new String[0]),
-                        null, null, null);
+                        PROJECTION, null, null, null);
 
                 if (null != cursor) {
                     List<MediaItem> results = songResultsParser.create(cursor, idPrefix);
@@ -63,10 +67,5 @@ public class SongFromUriRetriever  {
             }
         }
         return null;
-    }
-
-    private String getAbsolutePathFromUri(Uri uri) {
-        File file = new File(uri.getPath());
-        return file.getAbsolutePath();
     }
 }
