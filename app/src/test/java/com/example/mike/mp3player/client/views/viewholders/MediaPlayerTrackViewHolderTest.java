@@ -1,17 +1,12 @@
 package com.example.mike.mp3player.client.views.viewholders;
 
 
-import android.content.Context;
-import android.media.MediaDescription;
-import android.media.session.MediaSession;
 import android.net.Uri;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.mike.mp3player.R;
 import com.example.mike.mp3player.client.AlbumArtPainter;

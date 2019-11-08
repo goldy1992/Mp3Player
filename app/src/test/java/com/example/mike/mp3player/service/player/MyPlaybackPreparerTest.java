@@ -11,7 +11,6 @@ import com.example.mike.mp3player.service.library.ContentManager;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.upstream.ContentDataSource;
 import com.google.android.exoplayer2.upstream.FileDataSource;
 
 import org.junit.Before;
@@ -19,8 +18,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
@@ -94,6 +91,7 @@ public class MyPlaybackPreparerTest {
         when(contentManager.getItem(testUri)).thenReturn(testItem);
 
         myPlaybackPreparer.onPrepareFromUri(testUri, true, null);
+        verify(playbackManager, times(1)).createNewPlaylist(any());
     }
 
     @Test

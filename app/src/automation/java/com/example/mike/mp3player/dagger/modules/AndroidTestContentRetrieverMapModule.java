@@ -3,10 +3,7 @@ package com.example.mike.mp3player.dagger.modules;
 import android.content.ContentResolver;
 import android.os.Handler;
 
-import androidx.annotation.NonNull;
-
 import com.example.mike.mp3player.commons.MediaItemType;
-import com.example.mike.mp3player.dagger.modules.service.ContentRetrieverModule;
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
 import com.example.mike.mp3player.service.library.content.retriever.ContentRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.FoldersRetriever;
@@ -17,9 +14,7 @@ import com.example.mike.mp3player.service.library.content.retriever.SongsRetriev
 import com.example.mike.mp3player.service.library.search.SearchDatabase;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Named;
 import javax.inject.Singleton;

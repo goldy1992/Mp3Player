@@ -5,9 +5,8 @@ import android.os.Bundle;
 import androidx.test.espresso.IdlingResource;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.mike.mp3player.client.PermissionsProcessor;
-import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 import com.example.mike.mp3player.dagger.components.DaggerAndroidTestMediaActivityCompatComponent;
+import com.example.mike.mp3player.dagger.components.MediaActivityCompatComponent;
 
 public class MainActivityInjectorAndroidTestImpl extends MainActivity implements IdlingResource {
 
