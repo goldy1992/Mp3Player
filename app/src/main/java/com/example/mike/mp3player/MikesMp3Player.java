@@ -15,10 +15,4 @@ public class MikesMp3Player extends Application {
         startService(new Intent(this, KillNotificationService.class));
     }
 
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-    }
-
-
 }
