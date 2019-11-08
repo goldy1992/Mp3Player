@@ -7,6 +7,8 @@ import android.support.v4.media.session.MediaSessionCompat;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.example.mike.mp3player.client.MediaControllerAdapter;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +21,10 @@ import org.robolectric.android.controller.ActivityController;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
 public class MediaPlayerActivityTest {
@@ -72,6 +78,37 @@ public class MediaPlayerActivityTest {
         createAndStartActivity();
         MediaPlayerActivity mediaPlayerActivity = activityController.get();
         assertEquals(expectedUri, mediaPlayerActivity.getTrackToPlay());
+    }
+
+    @Test
+    public void testOnNewIntentWithoutViewAction() {
+        createAndStartActivity();
+        Intent newIntent = new Intent(context, MediaPlayerActivity.class);
+        Uri testUri = mock(Uri.class);
+        newIntent.setData(testUri);
+
+
+        MediaPlayerActivity mediaPlayerActivity = this.activityController.get();
+        MediaControllerAdapter spiedMediaControllerAdapter = spy(mediaPlayerActivity.getMediaControllerAdapter());
+        mediaPlayerActivity.setMediaControllerAdapter(spiedMediaControllerAdapter);
+        mediaPlayerActivity.onNewIntent(newIntent);
+        verify(spiedMediaControllerAdapter, never()).playFromUri(testUri, null);
+    }
+
+    @Test
+    public void testOnNewIntentWithViewAction() {
+        createAndStartActivity();
+        Intent newIntent = new Intent(context, MediaPlayerActivity.class);
+        Uri testUri = mock(Uri.class);
+        newIntent.setData(testUri);
+        newIntent.setAction(Intent.ACTION_VIEW);
+
+
+        MediaPlayerActivity mediaPlayerActivity = this.activityController.get();
+        MediaControllerAdapter spiedMediaControllerAdapter = spy(mediaPlayerActivity.getMediaControllerAdapter());
+        mediaPlayerActivity.setMediaControllerAdapter(spiedMediaControllerAdapter);
+        mediaPlayerActivity.onNewIntent(newIntent);
+        verify(spiedMediaControllerAdapter, times(1)).playFromUri(testUri, null);
     }
 
 }
