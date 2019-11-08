@@ -120,4 +120,8 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat implements
     public PlaybackTrackerFragment getPlaybackTrackerFragment() { return playbackTrackerFragment; }
     @VisibleForTesting
     public MediaControlsFragment getMediaControlsFragment() { return mediaControlsFragment; }
+    @VisibleForTesting
+    public Uri getTrackToPlay() {
+        return trackToPlay;
+    }
 }

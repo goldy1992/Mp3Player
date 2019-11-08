@@ -2,9 +2,9 @@ package com.example.mike.mp3player.client.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.media.session.MediaSessionCompat;
 
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.After;
@@ -16,7 +16,9 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
 public class MediaPlayerActivityTest {
@@ -27,21 +29,19 @@ public class MediaPlayerActivityTest {
     /** Activity controller */
     ActivityController<MediaPlayerActivityInjectorTestImpl> activityController;
     /**
-     *
-     */
-    private MediaPlayerActivity mediaPlayerActivity;
-    /**
      */
     private MediaSessionCompat mediaSessionCompat;
+    /**
+     *
+     */
+    private Context context;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        mediaSessionCompat = new MediaSessionCompat(context, "TAG");
-        this.intent = new Intent(ApplicationProvider.getApplicationContext(), SearchResultActivity.class);
-        this.activityController = Robolectric.buildActivity(MediaPlayerActivityInjectorTestImpl.class, intent).setup();
-        this.mediaPlayerActivity = activityController.get();
+        this.context = InstrumentationRegistry.getInstrumentation().getContext();
+        this.mediaSessionCompat = new MediaSessionCompat(context, "TAG");
+        this.intent = new Intent(context, MediaPlayerActivity.class);
     }
 
     @After
@@ -52,12 +52,26 @@ public class MediaPlayerActivityTest {
      * Asserts that all the items are created successfully
      */
     @Test
-    public void testInitialisation()  {
-//        assertNotNull(mediaPlayerActivity.getMetadataTitleBarFragment());
+    public void testInitialisationWithNormalIntent()  {
+        createAndStartActivity();
+        MediaPlayerActivity mediaPlayerActivity = activityController.get();
         assertNotNull(mediaPlayerActivity.getPlaybackTrackerFragment());
         assertNotNull(mediaPlayerActivity.getPlayToolBarFragment());
         assertNotNull(mediaPlayerActivity.getMediaControlsFragment());
-//        assertNotNull(mediaPlayerActivity.getAlbumArtFragment());
+    }
+
+    private void createAndStartActivity() {
+        this.activityController = Robolectric.buildActivity(MediaPlayerActivityInjectorTestImpl.class, intent).setup();
+    }
+
+    @Test
+    public void testOnCreateViewIntent() {
+        this.intent.setAction(Intent.ACTION_VIEW);
+        Uri expectedUri = mock(Uri.class);
+        this.intent.setData(expectedUri);
+        createAndStartActivity();
+        MediaPlayerActivity mediaPlayerActivity = activityController.get();
+        assertEquals(expectedUri, mediaPlayerActivity.getTrackToPlay());
     }
 
 }
