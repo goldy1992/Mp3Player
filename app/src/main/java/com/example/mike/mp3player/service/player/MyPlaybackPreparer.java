@@ -16,12 +16,10 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.upstream.DataSpec;
-import com.google.android.exoplayer2.upstream.FileDataSource;
 
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,19 +32,20 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
     private final ContentManager contentManager;
     private final ExoPlayer exoPlayer;
     private final MyControlDispatcher myControlDispatcher;
-    private final FileDataSource fileDataSource;
+    private final MediaSourceFactory mediaSourceFactory;
     private final PlaybackManager playbackManager;
 
     public MyPlaybackPreparer(ExoPlayer exoPlayer,
                               ContentManager contentManager,
                               List<MediaItem> items,
-                              FileDataSource fileDataSource,
+                              MediaSourceFactory mediaSourceFactory,
                               MyControlDispatcher myControlDispatcher,
                               PlaybackManager playbackManager) {
         this.exoPlayer = exoPlayer;
         this.contentManager = contentManager;
         this.myControlDispatcher = myControlDispatcher;
-        this.fileDataSource = fileDataSource;
+        this.mediaSourceFactory = mediaSourceFactory;
+
         this.playbackManager = playbackManager;
         if (CollectionUtils.isNotEmpty(items)) {
             String trackId = MediaItemUtils.getMediaId(items.get(0));
@@ -80,22 +79,12 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
             for (int i = 0; i < results.size(); i++) {
                 MediaItem currentMediaItem = results.get(i);
                 String id = MediaItemUtils.getMediaId(currentMediaItem);
-                Uri currentUri = MediaItemUtils.getMediaUri(currentMediaItem);
-
                 if (id != null && id.equals(trackId)) {
                     uriToPlayIndex = i;
                 } // if
-                DataSpec dataSpec = new DataSpec(currentUri);
-                try {
-                    fileDataSource.open(dataSpec);
-
-                    MyDataSourceFactory dataSrcFactory = new MyDataSourceFactory(fileDataSource);
-                    ProgressiveMediaSource.Factory factory = new ProgressiveMediaSource.Factory(dataSrcFactory);
-                    MediaSource src = factory.createMediaSource(currentUri);
-                    concatenatingMediaSource.addMediaSource(src);
-                } catch (FileDataSource.FileDataSourceException ex) {
-                    Log.e(LOG_TAG, "error adding song to playlist");
-                }
+                Uri currentUri = MediaItemUtils.getMediaUri(currentMediaItem);
+                MediaSource src = mediaSourceFactory.createMediaSource(currentUri);
+                concatenatingMediaSource.addMediaSource(src);
             } // for
             this.exoPlayer.prepare(concatenatingMediaSource);
             this.myControlDispatcher.dispatchSeekTo(exoPlayer, uriToPlayIndex, 0L);
@@ -110,7 +99,14 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
 
     @Override
     public void onPrepareFromUri(Uri uri, boolean playWhenReady, Bundle extras) {
-        throw new UnsupportedOperationException();
+
+        MediaItem result = contentManager.getItem(uri);
+        List<MediaItem> playlist = new ArrayList<>();
+        playlist.add(result);
+        this.playbackManager.createNewPlaylist(playlist);
+
+        preparePlaylist(playWhenReady, MediaItemUtils.getMediaId(result), playlist);
+
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.os.RemoteException;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.MediaSessionCompat.QueueItem;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
@@ -19,6 +20,8 @@ import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -61,6 +64,10 @@ public class MediaControllerAdapter {
 
     public void playFromMediaId(String mediaId, Bundle extras) {
         getController().playFromMediaId(mediaId, extras);
+    }
+
+    public void playFromUri(Uri uri, Bundle extras) {
+        this.getController().playFromUri(uri, extras);
     }
 
     public void play() {
@@ -180,6 +187,10 @@ public class MediaControllerAdapter {
         return mediaController.getTransportControls();
     }
 
+    public List<QueueItem> getQueue() {
+        return mediaController.getQueue();
+    }
+
     @VisibleForTesting
     public MediaControllerCompat getMediaController() {
         return mediaController;
@@ -189,4 +200,24 @@ public class MediaControllerAdapter {
     public void setMediaController(MediaControllerCompat mediaController) {
         this.mediaController = mediaController;
     }
+
+    public long getActiveQueueItemId() {
+        return mediaController.getPlaybackState().getActiveQueueItemId();
+    }
+
+    public int getCurrentQueuePosition() {
+        List<QueueItem> queue = getQueue();
+        long id = getActiveQueueItemId();
+
+        for (int i = 0; i < queue.size(); i++) {
+            QueueItem queueItem = queue.get(i);
+            if (queueItem.getQueueId() == id) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+
 }

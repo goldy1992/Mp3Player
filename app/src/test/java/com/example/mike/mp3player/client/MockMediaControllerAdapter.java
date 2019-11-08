@@ -1,6 +1,7 @@
 package com.example.mike.mp3player.client;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -9,6 +10,9 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import com.example.mike.mp3player.client.callbacks.MyMediaControllerCallback;
 import com.example.mike.mp3player.client.callbacks.metadata.MetadataListener;
 import com.example.mike.mp3player.client.callbacks.playback.PlaybackStateListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -35,6 +39,11 @@ public class MockMediaControllerAdapter extends MediaControllerAdapter {
 
     @Override
     public void playFromMediaId(String mediaId, Bundle extras) {
+        // DO NOTHING
+    }
+
+    @Override
+    public void playFromUri(Uri uri, Bundle extras) {
         // DO NOTHING
     }
 
@@ -98,6 +107,16 @@ public class MockMediaControllerAdapter extends MediaControllerAdapter {
             .putString(METADATA_KEY_ARTIST, "artist")
             .putString(METADATA_KEY_TITLE, "title")
             .build();
+    }
+
+    @Override
+    public List<MediaSessionCompat.QueueItem> getQueue() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public long getActiveQueueItemId() {
+        return 0L;
     }
 
     public @PlaybackStateCompat.ShuffleMode int getShuffleMode() {

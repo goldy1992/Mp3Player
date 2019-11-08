@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.mike.mp3player.dagger.modules.PlaybackNotificationManagerModule;
 import com.example.mike.mp3player.dagger.modules.service.ContentManagerModule;
+import com.example.mike.mp3player.dagger.modules.service.ContentRetrieverMapModule;
 import com.example.mike.mp3player.dagger.modules.service.ContentRetrieverModule;
 import com.example.mike.mp3player.dagger.modules.service.ContentSearcherModule;
 import com.example.mike.mp3player.dagger.modules.service.ExoPlayerModule;
@@ -25,6 +26,7 @@ import dagger.Component;
 @Singleton
 @Component(modules = {
     ContentManagerModule.class,
+    ContentRetrieverMapModule.class,
     ContentRetrieverModule.class,
     ContentSearcherModule.class,
     ExoPlayerModule.class,

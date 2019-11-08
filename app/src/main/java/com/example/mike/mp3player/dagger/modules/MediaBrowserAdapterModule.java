@@ -11,7 +11,6 @@ import com.example.mike.mp3player.client.callbacks.connection.MyConnectionCallba
 import com.example.mike.mp3player.client.callbacks.search.MySearchCallback;
 import com.example.mike.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback;
 import com.example.mike.mp3player.dagger.scopes.ComponentScope;
-import com.example.mike.mp3player.service.MediaPlaybackServiceInjector;
 
 import javax.inject.Named;
 
@@ -38,11 +37,6 @@ public class MediaBrowserAdapterModule {
     @Provides
     public MyConnectionCallback provideMyConnectionCallback(MediaBrowserConnectorCallback mediaBrowserConnectorCallback) {
         return new MyConnectionCallback(mediaBrowserConnectorCallback);
-    }
-
-    @Provides
-    public ComponentName provideComponentName(Context context) {
-        return new ComponentName(context, MediaPlaybackServiceInjector.class);
     }
 
     @Provides

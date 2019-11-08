@@ -28,6 +28,9 @@ public class MyMetadataProvider implements MediaSessionConnector.MediaMetadataPr
         final int currentIndex = player.getCurrentWindowIndex();
         MediaBrowserCompat.MediaItem currentItem = playbackManager.getItemAtIndex(currentIndex);
 
+        if (null == currentItem) {
+            return null;
+        }
         MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
         builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, MediaItemUtils.getDuration(currentItem));
 

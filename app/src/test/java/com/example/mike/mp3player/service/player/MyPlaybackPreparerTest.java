@@ -10,6 +10,7 @@ import com.example.mike.mp3player.service.PlaybackManager;
 import com.example.mike.mp3player.service.library.ContentManager;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.upstream.FileDataSource;
 
 import org.junit.Before;
@@ -17,8 +18,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
@@ -41,11 +40,13 @@ public class MyPlaybackPreparerTest {
     @Mock
     private ExoPlayer exoPlayer;
     @Mock
-    private FileDataSource fileDataSource;
+    private MediaSourceFactory mediaSourceFactory;
     @Mock
     private MyControlDispatcher myControlDispatcher;
     @Mock
     private PlaybackManager playbackManager;
+    @Mock
+    private MediaSource mediaSource;
 
     private MyPlaybackPreparer myPlaybackPreparer;
 
@@ -54,15 +55,14 @@ public class MyPlaybackPreparerTest {
         MockitoAnnotations.initMocks(this);
         MediaItem testItem = new MediaItemBuilder("id1").setMediaUri(Uri.parse("string")).build();
         List<MediaItem> items = Collections.singletonList(testItem);
-        Answer<Long> answer = (InvocationOnMock invocation) -> { return 0L; };
-        when(fileDataSource.open(any())).then(answer);
-        this.myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource, myControlDispatcher, playbackManager);
+        when(mediaSourceFactory.createMediaSource(any())).thenReturn(mediaSource);
+        this.myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, mediaSourceFactory, myControlDispatcher, playbackManager);
     }
 
     @Test
     public void testSupportedActions() {
         List<MediaItem> items = new ArrayList<>();
-        myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, fileDataSource, myControlDispatcher, playbackManager);
+        myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, mediaSourceFactory, myControlDispatcher, playbackManager);
         assertContainsAction(PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID);
         assertContainsAction(PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH);
     }
@@ -84,9 +84,14 @@ public class MyPlaybackPreparerTest {
         myPlaybackPreparer.onPrepareFromSearch("query", true, null);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testOnPrepareFromUri() {
-        myPlaybackPreparer.onPrepareFromUri(Uri.parse("query"), true, null);
+        Uri testUri = Uri.parse("query");
+        MediaItem testItem = new MediaItemBuilder("id1").setMediaUri(Uri.parse("string")).build();
+        when(contentManager.getItem(testUri)).thenReturn(testItem);
+
+        myPlaybackPreparer.onPrepareFromUri(testUri, true, null);
+        verify(playbackManager, times(1)).createNewPlaylist(any());
     }
 
     @Test

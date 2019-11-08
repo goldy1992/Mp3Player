@@ -55,7 +55,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
         initialiseDependencies();
         super.onCreate(savedInstanceState);
         // TODO: have this injected so that a test implementation can be provided
-        mainActivityIntent = new Intent(getApplicationContext(), MainActivityInjector.class);
+        mainActivityIntent = new Intent(getApplicationContext(), getMainActivityClass());
         setContentView(R.layout.splash_screen);
         thread.start();
     }
@@ -200,5 +200,9 @@ public class SplashScreenEntryActivity extends AppCompatActivity
         SplashScreenEntryActivityComponent splashScreenEntryActivityComponent =
                 component.splashScreenEntryActivity().create(this, this);
         splashScreenEntryActivityComponent.inject(this);
+    }
+
+    Class<?> getMainActivityClass() {
+        return MainActivityInjector.class;
     }
 }

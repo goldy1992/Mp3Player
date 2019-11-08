@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import java.io.File;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
+import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST;
 import static android.support.v4.media.MediaMetadataCompat.METADATA_KEY_DURATION;
@@ -133,6 +134,14 @@ public final class MediaItemUtils {
         }
 
         return null;
+    }
+
+    public static byte[] getAlbumArtImage(@NonNull MediaItem song) {
+        Bundle extras = song.getDescription().getExtras();
+        if (null != extras) {
+         return (byte[]) extras.getSerializable(METADATA_KEY_ALBUM_ART);
+        }
+        return new byte[0];
     }
 
     @Nullable

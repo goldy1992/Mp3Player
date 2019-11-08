@@ -1,32 +1,31 @@
 package com.example.mike.mp3player.dagger.modules.service;
 
 import android.content.ContentResolver;
-import android.os.Handler;
+import android.content.Context;
+import android.media.MediaMetadataRetriever;
 
 import androidx.annotation.NonNull;
 
 import com.example.mike.mp3player.commons.MediaItemType;
 import com.example.mike.mp3player.service.library.content.parser.ResultsParser;
+import com.example.mike.mp3player.service.library.content.parser.SongResultsParser;
 import com.example.mike.mp3player.service.library.content.retriever.ContentRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.FoldersRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.RootRetriever;
+import com.example.mike.mp3player.service.library.content.retriever.SongFromUriRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.SongsFromFolderRetriever;
 import com.example.mike.mp3player.service.library.content.retriever.SongsRetriever;
-import com.example.mike.mp3player.service.library.search.SearchDatabase;
+import com.google.common.collect.BiMap;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-
-import static com.example.mike.mp3player.commons.MediaItemType.FOLDER;
-import static com.example.mike.mp3player.commons.MediaItemType.SONG;
 
 @Module
 public class ContentRetrieverModule {
@@ -77,21 +76,12 @@ public class ContentRetrieverModule {
         return map;
     }
 
-    @Singleton
     @Provides
-    public Map<Class<? extends ContentRetriever>, ContentRetriever> provideContentResolverRetrieverMap(ContentResolver contentResolver,
-                                                                                                       Map<MediaItemType, String> ids,
-                                                                                                       Map<MediaItemType, ResultsParser> mediaItemBuilderMap,SearchDatabase searchDatabase,
-                                                                                                       @Named("worker") Handler handler) {
-        Map<Class<? extends ContentRetriever>, ContentRetriever> mapToReturn = new HashMap<>();
-        RootRetriever rootRetriever = new RootRetriever(ids);
-        mapToReturn.put(RootRetriever.class, rootRetriever);
-        SongsRetriever songsRetriever = new SongsRetriever(contentResolver, mediaItemBuilderMap.get(MediaItemType.SONG), searchDatabase.songDao(), handler);
-        mapToReturn.put(SongsRetriever.class, songsRetriever);
-        FoldersRetriever foldersRetriever = new FoldersRetriever(contentResolver, mediaItemBuilderMap.get(FOLDER), searchDatabase.folderDao(), handler);
-        mapToReturn.put(FoldersRetriever.class, foldersRetriever);
-        SongsFromFolderRetriever songsFromFolderRetriever = new SongsFromFolderRetriever(contentResolver, mediaItemBuilderMap.get(SONG), searchDatabase.songDao(), handler);
-        mapToReturn.put(SongsFromFolderRetriever.class, songsFromFolderRetriever);
-        return mapToReturn;
+    @Singleton
+    public SongFromUriRetriever providesSongFromUriRetriever(Context context,
+                                                             ContentResolver contentResolver,
+                                                             Map<MediaItemType, ResultsParser> resultsParserMap,
+                                                             BiMap<MediaItemType, String> ids) {
+        return new SongFromUriRetriever(context, contentResolver, (SongResultsParser) resultsParserMap.get(MediaItemType.SONGS), new MediaMetadataRetriever(), ids.get(MediaItemType.SONGS));
     }
 }
