@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
  >
 
-    <com.example.mike.mp3player.client.views.SquareImageView
+    <com.github.goldy1992.mp3player.client.views.SquareImageView
         android:id="@+id/albumArt"
         app:useWidthOrHeight="Y"
         android:layout_gravity="center"

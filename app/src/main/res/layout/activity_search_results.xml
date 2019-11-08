@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.mike.mp3player.client.activities.MainActivity">
+        tools:context="com.github.goldy1992.mp3player.client.activities.MainActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
@@ -51,7 +51,7 @@
 
     <fragment
         android:id="@+id/playToolbarFragment"
-        class="com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment"
+        class="com.github.goldy1992.mp3player.client.views.fragments.PlayToolBarFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

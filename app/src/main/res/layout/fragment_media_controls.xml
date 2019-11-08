@@ -35,7 +35,7 @@
             android:id="@+id/playbackSpeedControlsFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            class="com.example.mike.mp3player.client.views.fragments.PlaybackSpeedControlsFragment"
+            class="com.github.goldy1992.mp3player.client.views.fragments.PlaybackSpeedControlsFragment"
             tools:layout="@layout/fragment_playback_speed_controls"/>
     </LinearLayout>
 

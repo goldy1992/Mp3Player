@@ -3370,7 +3370,7 @@ Merging uses-sdk with lower [androidx.arch.core:core-runtime:2.0.0] AndroidManif
 Merging result: SUCCESS
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-3    package="com.example.mike.mp3player"
+3    package="com.github.goldy1992.mp3player"
 4    android:versionCode="1"
 5    android:versionName="1.0" >
 6
@@ -3409,7 +3409,7 @@ Merging result: SUCCESS
 23-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:14:9-65
 24        <activity
 24-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:15:9-22:20
-25            android:name="com.example.mike.mp3player.client.activities.SplashScreenEntryActivity"
+25            android:name="com.github.goldy1992.mp3player.client.activities.SplashScreenEntryActivity"
 25-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:16:13-72
 26            android:label="@string/app_name" >
 26-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:17:13-45
@@ -3426,7 +3426,7 @@ Merging result: SUCCESS
 32        </activity>
 33        <activity
 33-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:23:9-28:20
-34            android:name="com.example.mike.mp3player.client.activities.MainActivity"
+34            android:name="com.github.goldy1992.mp3player.client.activities.MainActivity"
 34-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:24:13-59
 35            android:label="@string/app_name"
 35-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:26:13-45
@@ -3437,22 +3437,22 @@ Merging result: SUCCESS
 38        </activity>
 39        <activity
 39-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:29:9-34:20
-40            android:name="com.example.mike.mp3player.client.activities.MediaPlayerActivity"
+40            android:name="com.github.goldy1992.mp3player.client.activities.MediaPlayerActivity"
 40-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:30:13-66
 41            android:label="@string/app_name"
 41-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:31:13-45
-42            android:parentActivityName="com.example.mike.mp3player.client.activities.MainActivity"
+42            android:parentActivityName="com.github.goldy1992.mp3player.client.activities.MainActivity"
 42-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:32:13-73
 43            android:theme="@style/AppTheme.NoActionBar" >
 43-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:33:13-56
 44        </activity>
 45        <activity
 45-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:35:9-40:20
-46            android:name="com.example.mike.mp3player.client.activities.FolderActivity"
+46            android:name="com.github.goldy1992.mp3player.client.activities.FolderActivity"
 46-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:36:13-61
 47            android:label="@string/FOLDER_NAME"
 47-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:37:13-48
-48            android:parentActivityName="com.example.mike.mp3player.client.activities.MainActivity"
+48            android:parentActivityName="com.github.goldy1992.mp3player.client.activities.MainActivity"
 48-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:38:13-73
 49            android:theme="@style/AppTheme.NoActionBar" >
 49-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:39:13-56
@@ -3460,7 +3460,7 @@ Merging result: SUCCESS
 51
 52        <service
 52-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:42:9-49:19
-53            android:name="com.example.mike.mp3player.service.MediaPlaybackService"
+53            android:name="com.github.goldy1992.mp3player.service.MediaPlaybackService"
 53-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:42:18-62
 54            android:enabled="true"
 54-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:43:13-35
@@ -7641,7 +7641,7 @@ Merging uses-sdk with lower [androidx.arch.core:core-runtime:2.0.0] AndroidManif
 Merging result: SUCCESS
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-3    package="com.example.mike.mp3player"
+3    package="com.github.goldy1992.mp3player"
 4    android:versionCode="1"
 5    android:versionName="1.0" >
 6
@@ -7679,7 +7679,7 @@ Merging result: SUCCESS
 22-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:14:9-65
 23        <activity
 23-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:15:9-22:20
-24            android:name="com.example.mike.mp3player.client.activities.SplashScreenEntryActivity"
+24            android:name="com.github.goldy1992.mp3player.client.activities.SplashScreenEntryActivity"
 24-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:16:13-72
 25            android:label="@string/app_name" >
 25-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:17:13-45
@@ -7696,7 +7696,7 @@ Merging result: SUCCESS
 31        </activity>
 32        <activity
 32-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:23:9-28:20
-33            android:name="com.example.mike.mp3player.client.activities.MainActivity"
+33            android:name="com.github.goldy1992.mp3player.client.activities.MainActivity"
 33-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:24:13-59
 34            android:label="@string/app_name"
 34-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:26:13-45
@@ -7707,22 +7707,22 @@ Merging result: SUCCESS
 37        </activity>
 38        <activity
 38-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:29:9-34:20
-39            android:name="com.example.mike.mp3player.client.activities.MediaPlayerActivity"
+39            android:name="com.github.goldy1992.mp3player.client.activities.MediaPlayerActivity"
 39-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:30:13-66
 40            android:label="@string/app_name"
 40-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:31:13-45
-41            android:parentActivityName="com.example.mike.mp3player.client.activities.MainActivity"
+41            android:parentActivityName="com.github.goldy1992.mp3player.client.activities.MainActivity"
 41-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:32:13-73
 42            android:theme="@style/AppTheme.NoActionBar" >
 42-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:33:13-56
 43        </activity>
 44        <activity
 44-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:35:9-40:20
-45            android:name="com.example.mike.mp3player.client.activities.FolderActivity"
+45            android:name="com.github.goldy1992.mp3player.client.activities.FolderActivity"
 45-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:36:13-61
 46            android:label="@string/FOLDER_NAME"
 46-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:37:13-48
-47            android:parentActivityName="com.example.mike.mp3player.client.activities.MainActivity"
+47            android:parentActivityName="com.github.goldy1992.mp3player.client.activities.MainActivity"
 47-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:38:13-73
 48            android:theme="@style/AppTheme.NoActionBar" >
 48-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:39:13-56
@@ -7730,7 +7730,7 @@ Merging result: SUCCESS
 50
 51        <service
 51-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:42:9-49:19
-52            android:name="com.example.mike.mp3player.service.MediaPlaybackService"
+52            android:name="com.github.goldy1992.mp3player.service.MediaPlaybackService"
 52-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:42:18-62
 53            android:enabled="true"
 53-->C:\Dev\Workspace\android\Mp3Player\app\src\main\AndroidManifest.xml:43:13-35
