@@ -3,6 +3,7 @@ package com.example.mike.mp3player.client.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -109,6 +110,19 @@ public class MediaPlayerActivityTest {
         mediaPlayerActivity.setMediaControllerAdapter(spiedMediaControllerAdapter);
         mediaPlayerActivity.onNewIntent(newIntent);
         verify(spiedMediaControllerAdapter, times(1)).playFromUri(testUri, null);
+    }
+
+    @Test
+    public void onMetadataChanged() {
+        createAndStartActivity();
+        MediaPlayerActivity mediaPlayerActivity = this.activityController.get();
+        MediaControllerAdapter spiedMediaControllerAdapter = spy(mediaPlayerActivity.getMediaControllerAdapter());
+        mediaPlayerActivity.setMediaControllerAdapter(spiedMediaControllerAdapter);
+
+        MediaMetadataCompat mediaMetadataCompat = new MediaMetadataCompat.Builder().build();
+        mediaPlayerActivity.onMetadataChanged(mediaMetadataCompat);
+
+        verify(spiedMediaControllerAdapter, times(1)).getCurrentQueuePosition();
     }
 
 }

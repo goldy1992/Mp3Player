@@ -93,6 +93,7 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat implements
 
     @Override
     public void onMetadataChanged(@NonNull MediaMetadataCompat metadata) {
+        // TODO: in future this should be a listener for when the queue has changed
         List<MediaSessionCompat.QueueItem> queueItems = mediaControllerAdapter.getQueue();
         int currentPosition  = mediaControllerAdapter.getCurrentQueuePosition();
         this.trackViewPagerChangeCallback.setCurrentPosition(currentPosition);
