@@ -3,12 +3,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.example.mike.mp3player.client.views.SeekerBar
+    <com.github.goldy1992.mp3player.client.views.SeekerBar
         android:id="@+id/testSeekBar"
         android:layout_width="match_parent"
         android:layout_height="100dp" />
 
-    <com.example.mike.mp3player.client.views.buttons.PlayPauseButton
+    <com.github.goldy1992.mp3player.client.views.buttons.PlayPauseButton
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/ppButton"/>

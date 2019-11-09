@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mike.mp3player"
+    package="com.github.goldy1992.mp3player"
     android:installLocation="preferExternal">
 
     <application
