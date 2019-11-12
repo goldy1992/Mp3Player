@@ -22,6 +22,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 
 import static com.github.goldy1992.mp3player.commons.Constants.ID_DELIMITER;
 
@@ -79,20 +80,25 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
     private void preparePlaylist(boolean playWhenReady, String trackId, List<MediaItem> results) {
         if (null != results) {
             ConcatenatingMediaSource concatenatingMediaSource = new ConcatenatingMediaSource();
-            int uriToPlayIndex = 0;
-            for (int i = 0; i < results.size(); i++) {
-                MediaItem currentMediaItem = results.get(i);
-                String id = MediaItemUtils.getMediaId(currentMediaItem);
-                if (id != null && id.equals(trackId)) {
-                    uriToPlayIndex = i;
-                } // if
+            ListIterator<MediaItem> resultsIterator = results.listIterator();
+
+            while(resultsIterator.hasNext()) {
+                MediaItem currentMediaItem = resultsIterator.next();
                 Uri currentUri = MediaItemUtils.getMediaUri(currentMediaItem);
                 MediaSource src = mediaSourceFactory.createMediaSource(currentUri);
-                concatenatingMediaSource.addMediaSource(src);
-            } // for
-            this.exoPlayer.prepare(concatenatingMediaSource);
-            this.myControlDispatcher.dispatchSeekTo(exoPlayer, uriToPlayIndex, 0L);
-            this.myControlDispatcher.dispatchSetPlayWhenReady(exoPlayer, playWhenReady);
+                if (null != src) {
+                    concatenatingMediaSource.addMediaSource(src);
+                } else {
+                    resultsIterator.remove();
+                }
+            }
+            int uriToPlayIndex = getIndexOfCurrentTrack(trackId, results);
+
+            if (concatenatingMediaSource.getSize() > 0) {
+                this.exoPlayer.prepare(concatenatingMediaSource);
+                this.myControlDispatcher.dispatchSeekTo(exoPlayer, uriToPlayIndex, 0L);
+                this.myControlDispatcher.dispatchSetPlayWhenReady(exoPlayer, playWhenReady);
+            }
         } // if
     }
 
@@ -129,5 +135,16 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
             Log.e(LOG_TAG, "received null mediaId");
         }
         return null;
+    }
+
+    private int getIndexOfCurrentTrack(String trackId, List<MediaItem> items) {
+        for (int i = 0; i < items.size(); i++) {
+            MediaItem currentMediaItem = items.get(i);
+            String id = MediaItemUtils.getMediaId(currentMediaItem);
+            if (id != null && id.equals(trackId)) {
+                return i;
+            } // if
+        } // for
+        return 0;
     }
 }
