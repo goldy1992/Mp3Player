@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.github.goldy1992.mp3player.commons.MediaItemUtils.getAlbumArtUri;
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 
 public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
@@ -58,7 +59,13 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     @NonNull
     @Override
     public String getSectionText(int position) {
-        return items.get(position).getDescription().getTitle().toString().substring(0, 1);
+        if (isNotEmpty(items)) {
+            CharSequence title = items.get(position).getDescription().getTitle();
+            if (null != title) {
+                return title.toString().substring(0, 1);
+            }
+        }
+        return "";
     }
 
     @NonNull
