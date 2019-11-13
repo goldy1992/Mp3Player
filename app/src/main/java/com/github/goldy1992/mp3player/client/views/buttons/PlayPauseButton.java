@@ -25,7 +25,7 @@ public class PlayPauseButton extends MediaButton implements PlaybackStateListene
 
     private static final String LOG_TAG = "PLAY_PAUSE_BUTTON";
     @PlaybackStateCompat.State
-    private int state = PlaybackStateCompat.STATE_NONE;
+    private int state = PlaybackStateCompat.STATE_STOPPED;
 
     @Inject
     public PlayPauseButton(Context context, @NonNull MediaControllerAdapter mediaControllerAdapter,

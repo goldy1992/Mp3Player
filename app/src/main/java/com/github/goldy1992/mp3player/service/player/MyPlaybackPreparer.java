@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import static com.github.goldy1992.mp3player.commons.Constants.ID_DELIMITER;
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPreparer {
 
@@ -48,7 +49,7 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
         this.mediaSourceFactory = mediaSourceFactory;
 
         this.playbackManager = playbackManager;
-        if (CollectionUtils.isNotEmpty(items)) {
+        if (isNotEmpty(items)) {
             String trackId = MediaItemUtils.getMediaId(items.get(0));
             preparePlaylist(false, trackId, items);
         }
@@ -62,9 +63,13 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
     public void onPrepare(boolean playWhenReady) {
         Log.i(LOG_TAG, "called onPrepare, play when ready: " + playWhenReady);
         List<MediaItem> mediaItems = playbackManager.getPlaylist();
-        MediaItem currentMediaItem = playbackManager.getCurrentItem();
-        String currentId = currentMediaItem.getMediaId();
-        preparePlaylist(playWhenReady, currentId, mediaItems);
+        if (isNotEmpty(mediaItems)) {
+            MediaItem currentMediaItem = playbackManager.getCurrentItem();
+            if (null != currentMediaItem) {
+                String currentId = currentMediaItem.getMediaId();
+                preparePlaylist(playWhenReady, currentId, mediaItems);
+            }
+        }
     }
 
     @Override

@@ -207,15 +207,16 @@ public class MediaControllerAdapter {
 
     public int getCurrentQueuePosition() {
         List<QueueItem> queue = getQueue();
-        long id = getActiveQueueItemId();
+        if (queue != null) {
+            long id = getActiveQueueItemId();
 
-        for (int i = 0; i < queue.size(); i++) {
-            QueueItem queueItem = queue.get(i);
-            if (queueItem.getQueueId() == id) {
-                return i;
+            for (int i = 0; i < queue.size(); i++) {
+                QueueItem queueItem = queue.get(i);
+                if (queueItem.getQueueId() == id) {
+                    return i;
+                }
             }
         }
-
         return -1;
     }
 

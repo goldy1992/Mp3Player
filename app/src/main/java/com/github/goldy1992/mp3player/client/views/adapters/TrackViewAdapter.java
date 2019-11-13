@@ -26,6 +26,7 @@ public class TrackViewAdapter extends RecyclerView.Adapter<MediaPlayerTrackViewH
                             List<QueueItem> queue) {
         super();
         this.queue = queue;
+        // TODO: if there is no queue make an empty view holder
         this.albumArtPainter = albumArtPainter;
         this.mainHandler = mainHandler;
     }
@@ -48,7 +49,10 @@ public class TrackViewAdapter extends RecyclerView.Adapter<MediaPlayerTrackViewH
 
     @Override
     public int getItemCount() {
-        return queue.size();
+        if (null != queue) {
+            return queue.size();
+        }
+        return -1;
     }
 
     /**
