@@ -9,6 +9,7 @@ import org.robolectric.RobolectricTestRunner;
 
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
+import static com.github.goldy1992.mp3player.client.views.buttons.PlayPauseButton.INITIAL_PLAYBACK_STATE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.times;
@@ -38,7 +39,7 @@ public class PlayPauseButtonTest extends MediaButtonTestBase {
     @Test
     public void testCreate() {
         assertNotNull(playPauseButton);
-        assertEquals(PlaybackStateCompat.STATE_NONE, playPauseButton.getState());
+        assertEquals(INITIAL_PLAYBACK_STATE, playPauseButton.getState());
     }
     /**
      * GIVEN: a playPauseButton
