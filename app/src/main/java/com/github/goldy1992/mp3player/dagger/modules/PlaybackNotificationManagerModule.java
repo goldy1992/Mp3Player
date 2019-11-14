@@ -8,7 +8,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.github.goldy1992.mp3player.R;
 import com.github.goldy1992.mp3player.service.MyDescriptionAdapter;
-import com.github.goldy1992.mp3player.service.PlaybackManager;
+import com.github.goldy1992.mp3player.service.PlaylistManager;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 
@@ -47,7 +47,7 @@ public class PlaybackNotificationManagerModule {
     @Singleton
     public MyDescriptionAdapter providesMyDescriptionAdapter(Context context,
                                                              MediaSessionCompat.Token token,
-                                                             PlaybackManager playbackManager) {
-        return new MyDescriptionAdapter(context, token, playbackManager);
+                                                             PlaylistManager playlistManager) {
+        return new MyDescriptionAdapter(context, token, playlistManager);
     }
 }

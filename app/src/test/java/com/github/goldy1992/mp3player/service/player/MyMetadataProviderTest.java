@@ -5,7 +5,7 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaMetadataCompat;
 
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder;
-import com.github.goldy1992.mp3player.service.PlaybackManager;
+import com.github.goldy1992.mp3player.service.PlaylistManager;
 import com.google.android.exoplayer2.ExoPlayer;
 
 import org.junit.Before;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 public class MyMetadataProviderTest {
 
     @Mock
-    private PlaybackManager playbackManager;
+    private PlaylistManager playlistManager;
     @Mock
     private ExoPlayer exoPlayer;
 
@@ -36,7 +36,7 @@ public class MyMetadataProviderTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        this.myMetadataProvider = new MyMetadataProvider(playbackManager);
+        this.myMetadataProvider = new MyMetadataProvider(playlistManager);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class MyMetadataProviderTest {
                 .build();
         final int index = 7;
         when(exoPlayer.getCurrentWindowIndex()).thenReturn(index);
-        when(playbackManager.getItemAtIndex(index)).thenReturn(mediaItem);
+        when(playlistManager.getItemAtIndex(index)).thenReturn(mediaItem);
         MediaMetadataCompat result = myMetadataProvider.getMetadata(exoPlayer);
 
         final String actualId = result.getString(METADATA_KEY_MEDIA_ID);

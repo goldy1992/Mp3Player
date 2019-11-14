@@ -19,17 +19,17 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import static com.github.goldy1992.mp3player.commons.Constants.MEDIA_SESSION;
 
 public class MyDescriptionAdapter implements PlayerNotificationManager.MediaDescriptionAdapter {
-    private final PlaybackManager playbackManager;
+    private final PlaylistManager playlistManager;
     private final Context context;
     private final Token token;
     private static final int REQUEST_CODE = 501;
 
     public MyDescriptionAdapter(Context context,
                                 Token token,
-                                PlaybackManager playbackManager) {
+                                PlaylistManager playlistManager) {
         this.context = context;
         this.token = token;
-        this.playbackManager = playbackManager;
+        this.playlistManager = playlistManager;
     }
 
     @Override
@@ -63,6 +63,6 @@ public class MyDescriptionAdapter implements PlayerNotificationManager.MediaDesc
 
     private final MediaItem getCurrentMediaItem(Player player) {
         int position = player.getCurrentWindowIndex();
-        return playbackManager.getItemAtIndex(position);
+        return playlistManager.getItemAtIndex(position);
     }
 }

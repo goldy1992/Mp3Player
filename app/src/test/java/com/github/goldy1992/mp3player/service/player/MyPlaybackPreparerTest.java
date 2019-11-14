@@ -6,7 +6,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder;
 import com.github.goldy1992.mp3player.service.MyControlDispatcher;
-import com.github.goldy1992.mp3player.service.PlaybackManager;
+import com.github.goldy1992.mp3player.service.PlaylistManager;
 import com.github.goldy1992.mp3player.service.library.ContentManager;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -44,7 +44,7 @@ public class MyPlaybackPreparerTest {
     @Mock
     private MyControlDispatcher myControlDispatcher;
     @Mock
-    private PlaybackManager playbackManager;
+    private PlaylistManager playlistManager;
     @Mock
     private MediaSource mediaSource;
 
@@ -56,13 +56,13 @@ public class MyPlaybackPreparerTest {
         MediaItem testItem = new MediaItemBuilder("id1").setMediaUri(Uri.parse("string")).build();
         List<MediaItem> items = Collections.singletonList(testItem);
         when(mediaSourceFactory.createMediaSource(any())).thenReturn(mediaSource);
-        this.myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, mediaSourceFactory, myControlDispatcher, playbackManager);
+        this.myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, mediaSourceFactory, myControlDispatcher, playlistManager);
     }
 
     @Test
     public void testSupportedActions() {
         List<MediaItem> items = new ArrayList<>();
-        myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, mediaSourceFactory, myControlDispatcher, playbackManager);
+        myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, mediaSourceFactory, myControlDispatcher, playlistManager);
         assertContainsAction(PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID);
         assertContainsAction(PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH);
     }
@@ -91,7 +91,7 @@ public class MyPlaybackPreparerTest {
         when(contentManager.getItem(testUri)).thenReturn(testItem);
 
         myPlaybackPreparer.onPrepareFromUri(testUri, true, null);
-        verify(playbackManager, times(1)).createNewPlaylist(any());
+        verify(playlistManager, times(1)).createNewPlaylist(any());
     }
 
     @Test
