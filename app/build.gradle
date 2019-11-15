@@ -31,8 +31,7 @@ android {
 
     buildTypes {
         release {
-            testCoverageEnabled = true
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -46,12 +45,12 @@ android {
         full {
             applicationIdSuffix ".full"
             versionNameSuffix "-full"
-            resValue "string", "app_name", "MP3 Player"
+            resValue "string", "app_name", "Music Player"
         }
         automation {
             applicationIdSuffix ".automation"
             versionNameSuffix "-automation"
-            resValue "string", "app_name", "Test Mp3 Player"
+            resValue "string", "app_name", "Test Music Player"
 
         }
     }
