@@ -23,20 +23,23 @@ import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 
 public class PlayPauseButton extends MediaButton implements PlaybackStateListener {
 
+    @PlaybackStateCompat.State
+    public static final int INITIAL_PLAYBACK_STATE = PlaybackStateCompat.STATE_STOPPED;
+
     private static final String LOG_TAG = "PLAY_PAUSE_BUTTON";
     @PlaybackStateCompat.State
-    private int state = PlaybackStateCompat.STATE_NONE;
+    private int state = INITIAL_PLAYBACK_STATE;
 
     @Inject
     public PlayPauseButton(Context context, @NonNull MediaControllerAdapter mediaControllerAdapter,
                            @Named("main") Handler mainUpdater) {
         super(context, mediaControllerAdapter, mainUpdater);
-        updateState(mediaControllerAdapter.getPlaybackState())  ;
     }
 
     @Override
     public void init(ImageView view) {
         super.init(view);
+        updateState(this.mediaControllerAdapter.getPlaybackState());
         this.mediaControllerAdapter.registerPlaybackStateListener(this);
     }
 

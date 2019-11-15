@@ -69,12 +69,12 @@ public abstract class MediaItemListFragment extends Fragment implements MyGeneri
     public void onViewCreated(@NonNull View view, Bundle bundle) {
         this.recyclerView = view.findViewById(R.id.recycler_view);
         this.recyclerView.setAdapter(myViewAdapter);
-        this.recyclerView.setHideScrollbar(false);
         this.recyclerView.addOnItemTouchListener(myGenericItemTouchListener);
         this.myGenericItemTouchListener.setParentView(recyclerView);
         this.recyclerView.setItemAnimator(new DefaultItemAnimator());
         this.recyclerView.setLayoutManager(linearLayoutManager);
         this.recyclerView.addOnScrollListener(albumArtPainter.createPreloader(myViewAdapter));
+        this.recyclerView.setHideScrollbar(true);
     }
 
     @Inject

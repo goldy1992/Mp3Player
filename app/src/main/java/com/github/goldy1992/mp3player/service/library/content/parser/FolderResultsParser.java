@@ -30,14 +30,16 @@ public class FolderResultsParser extends ResultsParser {
         while (cursor.moveToNext()) {
             String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
             File file = new File(path);
-            File directory = file.getParentFile();
-            String directoryPath;
+            if (file.exists()) {
+                File directory = file.getParentFile();
+                String directoryPath;
 
-            if (null != directory) {
-                directoryPath = directory.getAbsolutePath();
-                if (directoryPathSet.add(directoryPath)) {
-                    MediaBrowserCompat.MediaItem mediaItem = createFolderMediaItem(directory, mediaIdPrefix);
-                    listToReturn.add(mediaItem);
+                if (null != directory) {
+                    directoryPath = directory.getAbsolutePath();
+                    if (directoryPathSet.add(directoryPath)) {
+                        MediaBrowserCompat.MediaItem mediaItem = createFolderMediaItem(directory, mediaIdPrefix);
+                        listToReturn.add(mediaItem);
+                    }
                 }
             }
         }

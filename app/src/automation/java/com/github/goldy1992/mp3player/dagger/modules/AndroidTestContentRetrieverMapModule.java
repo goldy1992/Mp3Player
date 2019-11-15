@@ -7,6 +7,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemType;
 import com.github.goldy1992.mp3player.service.library.content.parser.ResultsParser;
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetriever;
 import com.github.goldy1992.mp3player.service.library.content.retriever.FoldersRetriever;
+import com.github.goldy1992.mp3player.service.library.content.retriever.FoldersRetrieverTestImpl;
 import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever;
 import com.github.goldy1992.mp3player.service.library.content.retriever.SongsFromFolderRetriever;
 import com.github.goldy1992.mp3player.service.library.content.retriever.SongsRetriever;
@@ -39,7 +40,7 @@ public class AndroidTestContentRetrieverMapModule {
         mapToReturn.put(RootRetriever.class, rootRetriever);
         SongsRetriever songsRetriever = new SongsRetrieverTestImpl(contentResolver, mediaItemBuilderMap.get(MediaItemType.SONG), searchDatabase.songDao(), handler);
         mapToReturn.put(SongsRetriever.class, songsRetriever);
-        FoldersRetriever foldersRetriever = new FoldersRetriever(contentResolver, mediaItemBuilderMap.get(FOLDER), searchDatabase.folderDao(), handler);
+        FoldersRetriever foldersRetriever = new FoldersRetrieverTestImpl(contentResolver, mediaItemBuilderMap.get(FOLDER), searchDatabase.folderDao(), handler);
         mapToReturn.put(FoldersRetriever.class, foldersRetriever);
         SongsFromFolderRetriever songsFromFolderRetriever = new SongsFromFolderRetriever(contentResolver, mediaItemBuilderMap.get(SONG), searchDatabase.songDao(), handler);
         mapToReturn.put(SongsFromFolderRetriever.class, songsFromFolderRetriever);

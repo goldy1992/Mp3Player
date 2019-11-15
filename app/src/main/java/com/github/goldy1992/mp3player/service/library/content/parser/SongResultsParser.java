@@ -33,7 +33,9 @@ public class SongResultsParser extends ResultsParser {
         TreeSet<MediaItem> listToReturn = new TreeSet<>(this);
         while (cursor!= null && cursor.moveToNext()) {
             MediaItem mediaItem = buildMediaItem(cursor, libraryIdPrefix);
-            listToReturn.add(mediaItem);
+            if (null != mediaItem) {
+                listToReturn.add(mediaItem);
+            }
         }
         return new ArrayList<>(listToReturn);
     }
@@ -46,12 +48,15 @@ public class SongResultsParser extends ResultsParser {
     private MediaItem buildMediaItem(@NonNull Cursor c, String libraryIdPrefix) {
         final String mediaId = c.getString(c.getColumnIndex(MediaStore.Audio.Media._ID));
         final String mediaFilePath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
+        final File mediaFile =  new File(mediaFilePath);
+        if (!mediaFile.exists()) {
+            return null;
+        }
+        final Uri mediaUri = Uri.fromFile(mediaFile);
         final long duration = c.getLong(c.getColumnIndex(MediaStore.Audio.Media.DURATION));
         final String artist = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
         final String title = c.getString(c.getColumnIndex(MediaStore.Audio.Media.TITLE));
         final long albumId = c.getLong(c.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-        final File mediaFile =  new File(mediaFilePath);
-        final Uri mediaUri = Uri.fromFile(mediaFile);
         final String fileName = mediaFile.getName();
 
         Uri sArtworkUri = Uri.parse(ALBUM_ART_URI_PREFIX);

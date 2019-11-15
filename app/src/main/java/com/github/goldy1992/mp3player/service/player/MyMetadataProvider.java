@@ -4,7 +4,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 
 import com.github.goldy1992.mp3player.commons.MediaItemUtils;
-import com.github.goldy1992.mp3player.service.PlaybackManager;
+import com.github.goldy1992.mp3player.service.PlaylistManager;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 
@@ -16,17 +16,17 @@ import static com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle;
 
 public class MyMetadataProvider implements MediaSessionConnector.MediaMetadataProvider {
 
-    private final PlaybackManager playbackManager;
+    private final PlaylistManager playlistManager;
 
-    public MyMetadataProvider(PlaybackManager playbackManager) {
-        this.playbackManager = playbackManager;
+    public MyMetadataProvider(PlaylistManager playlistManager) {
+        this.playlistManager = playlistManager;
     }
 
     @Override
     public MediaMetadataCompat getMetadata(Player player) {
 
         final int currentIndex = player.getCurrentWindowIndex();
-        MediaBrowserCompat.MediaItem currentItem = playbackManager.getItemAtIndex(currentIndex);
+        MediaBrowserCompat.MediaItem currentItem = playlistManager.getItemAtIndex(currentIndex);
 
         if (null == currentItem) {
             return null;

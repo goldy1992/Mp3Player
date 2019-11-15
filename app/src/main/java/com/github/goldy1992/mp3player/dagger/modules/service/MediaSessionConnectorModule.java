@@ -5,7 +5,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.github.goldy1992.mp3player.service.MyControlDispatcher;
-import com.github.goldy1992.mp3player.service.PlaybackManager;
+import com.github.goldy1992.mp3player.service.PlaylistManager;
 import com.github.goldy1992.mp3player.service.library.ContentManager;
 import com.github.goldy1992.mp3player.service.player.AudioBecomingNoisyBroadcastReceiver;
 import com.github.goldy1992.mp3player.service.player.DecreaseSpeedProvider;
@@ -64,8 +64,8 @@ public class MediaSessionConnectorModule {
                                                         @Named("starting_playlist") List<MediaBrowserCompat.MediaItem> items,
                                                         MyControlDispatcher myControlDispatcher,
                                                         MediaSourceFactory mediaSourceFactory,
-                                                        PlaybackManager playbackManager) {
-        return new MyPlaybackPreparer(exoPlayer, contentManager, items, mediaSourceFactory, myControlDispatcher, playbackManager);
+                                                        PlaylistManager playlistManager) {
+        return new MyPlaybackPreparer(exoPlayer, contentManager, items, mediaSourceFactory, myControlDispatcher, playlistManager);
     }
 
     @Provides
@@ -82,15 +82,15 @@ public class MediaSessionConnectorModule {
 
     @Provides
     @Singleton
-    public MyMetadataProvider providesMyMetadataProvider(PlaybackManager playbackManager) {
-        return new MyMetadataProvider(playbackManager);
+    public MyMetadataProvider providesMyMetadataProvider(PlaylistManager playlistManager) {
+        return new MyMetadataProvider(playlistManager);
     }
 
     @Provides
     @Singleton
     public MyTimelineQueueNavigator providesMyTimelineQueueNavigator(MediaSessionCompat mediaSessionCompat,
-                                                                     PlaybackManager playbackManager) {
-        return new MyTimelineQueueNavigator(mediaSessionCompat, playbackManager);
+                                                                     PlaylistManager playlistManager) {
+        return new MyTimelineQueueNavigator(mediaSessionCompat, playlistManager);
     }
 
     @Provides

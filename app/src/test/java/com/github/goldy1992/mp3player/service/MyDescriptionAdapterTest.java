@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 public class MyDescriptionAdapterTest {
 
     @Mock
-    private PlaybackManager playbackManager;
+    private PlaylistManager playlistManager;
     @Mock
     private ExoPlayer player;
 
@@ -34,7 +34,7 @@ public class MyDescriptionAdapterTest {
         MockitoAnnotations.initMocks(this);
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
         MediaSessionCompat.Token token = TestUtils.getMediaSessionCompatToken(context);
-        this.myDescriptionAdapter = new MyDescriptionAdapter(context, token, playbackManager);
+        this.myDescriptionAdapter = new MyDescriptionAdapter(context, token, playlistManager);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class MyDescriptionAdapterTest {
                 .build();
         final int index = 7;
         when(player.getCurrentWindowIndex()).thenReturn(index);
-        when(playbackManager.getItemAtIndex(index)).thenReturn(testItem);
+        when(playlistManager.getItemAtIndex(index)).thenReturn(testItem);
 
         final String result = myDescriptionAdapter.getCurrentContentTitle(player);
         assertEquals(expectedTitle, result);
