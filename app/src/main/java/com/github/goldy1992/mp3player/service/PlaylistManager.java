@@ -21,10 +21,6 @@ public class PlaylistManager {
         this.queueIndex = startIndex;
     }
 
-
-
-
-
     public synchronized boolean createNewPlaylist(List<MediaItem> newList) {
         playlist.clear();
         boolean result = playlist.addAll(newList);
