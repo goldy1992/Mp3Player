@@ -46,7 +46,6 @@ android {
             applicationIdSuffix ".full"
             versionNameSuffix "-full"
             resValue "string", "app_name", "Music Player"
-            signingConfig signingConfigs.testRelease
         }
         automation {
             applicationIdSuffix ".automation"
