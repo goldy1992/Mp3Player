@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:contentDescription="@string/LOGO_DESCRIPTION"
         android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/my_app_icon" />
+        app:srcCompat="@mipmap/headphone_icon" />
 
     <TextView
         android:paddingTop="@dimen/default_gap"
