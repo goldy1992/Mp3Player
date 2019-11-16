@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.github.goldy1992.mp3player.LogTagger;
 import com.github.goldy1992.mp3player.R;
@@ -83,7 +84,10 @@ public class SearchFragment extends Fragment implements LogTagger {
     public void onFocusChange(View v, boolean queryTextFocused) {
         Log.i("tag", "focus changed: has focus: " + queryTextFocused);
         if (!queryTextFocused) {
-            getFragmentManager().popBackStack();
+            FragmentManager fragmentManager = getFragmentManager();
+            if (null != fragmentManager && !fragmentManager.isDestroyed()) {
+                fragmentManager.popBackStack();
+            }
         }
     }
     @Override

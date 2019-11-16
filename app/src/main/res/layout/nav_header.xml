@@ -2,17 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="192dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Light"
     android:orientation="vertical"
-    android:gravity="bottom"
+    android:gravity="center"
     android:background="?themeColorPrimary">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:contentDescription="@string/LOGO_DESCRIPTION"
+        android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/headphone_icon" />
 
     <TextView
+        android:paddingTop="@dimen/default_gap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        />
+        android:text="@string/menu"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
 </LinearLayout>

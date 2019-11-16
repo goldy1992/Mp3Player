@@ -6,10 +6,10 @@
     <group android:checkableBehavior="single" android:menuCategory="container"
         android:orderInCategory="1">
 
-        <item android:id="@+id/action_settings"
-            android:orderInCategory="1"
-            android:title="@string/action_settings"
-            app:showAsAction="never" />
+<!--        <item android:id="@+id/action_settings"-->
+<!--            android:orderInCategory="1"-->
+<!--            android:title="@string/action_settings"-->
+<!--            app:showAsAction="never" />-->
 
         <item android:id="@+id/themes_menu_item"
             android:title="Themes"
