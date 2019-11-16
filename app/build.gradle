@@ -46,6 +46,7 @@ android {
             applicationIdSuffix ".full"
             versionNameSuffix "-full"
             resValue "string", "app_name", "Music Player"
+            signingConfig signingConfigs.testRelease
         }
         automation {
             applicationIdSuffix ".automation"
@@ -145,7 +146,6 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
     implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
-    implementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: EXO_PLAYER_VERSION
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
     implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
