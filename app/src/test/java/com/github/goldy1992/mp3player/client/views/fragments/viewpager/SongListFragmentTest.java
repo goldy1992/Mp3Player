@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.views.fragments.viewpager;
 
+import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat;
 
 import androidx.fragment.app.testing.FragmentScenario;
@@ -17,11 +18,14 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
+import org.robolectric.annotation.LooperMode;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
+@LooperMode(LooperMode.Mode.PAUSED)
 public class SongListFragmentTest extends FragmentTestBase<SongListFragment> {
 
     private SongListFragment folderListFragment;
@@ -48,6 +52,7 @@ public class SongListFragmentTest extends FragmentTestBase<SongListFragment> {
             .setLibraryId(expectedLibraryId)
             .build();
         fragment.itemSelected(mediaItem);
+        shadowOf(Looper.getMainLooper()).idle();
         verify(mediaControllerAdapter).playFromMediaId(expectedLibraryId, null);
 
     }

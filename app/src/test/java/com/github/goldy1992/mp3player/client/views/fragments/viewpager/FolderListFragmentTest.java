@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.views.fragments.viewpager;
 
+import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat;
 
 import androidx.fragment.app.testing.FragmentScenario;
@@ -15,13 +16,16 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
+import org.robolectric.annotation.LooperMode;
 
 import static com.github.goldy1992.mp3player.TestUtils.createMediaItem;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
+@LooperMode(LooperMode.Mode.PAUSED)
 public class FolderListFragmentTest extends FragmentTestBase<FolderListFragment> {
     private static final String FRAGMENT_TAG = "FragmentScenario_Fragment_Tag";
 
@@ -51,6 +55,7 @@ public class FolderListFragmentTest extends FragmentTestBase<FolderListFragment>
         MediaBrowserCompat.MediaItem mediaItem =
                 createMediaItem(id, title, description, MediaItemType.ROOT);
         spiedFragment.itemSelected(mediaItem);
+        shadowOf(Looper.getMainLooper()).idle();
         verify(spiedFragment).startActivity(any());
 
     }
