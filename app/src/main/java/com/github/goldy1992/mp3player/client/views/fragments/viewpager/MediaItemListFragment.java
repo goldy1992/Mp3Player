@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.views.fragments.viewpager;
 
 import android.os.Bundle;
+import android.support.v4.media.MediaBrowserCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.github.goldy1992.mp3player.R;
 import com.github.goldy1992.mp3player.client.AlbumArtPainter;
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter;
@@ -73,7 +75,10 @@ public abstract class MediaItemListFragment extends Fragment implements MyGeneri
         this.myGenericItemTouchListener.setParentView(recyclerView);
         this.recyclerView.setItemAnimator(new DefaultItemAnimator());
         this.recyclerView.setLayoutManager(linearLayoutManager);
-        this.recyclerView.addOnScrollListener(albumArtPainter.createPreloader(myViewAdapter));
+        RecyclerViewPreloader<MediaBrowserCompat.MediaItem> preloader = albumArtPainter.createPreloader(myViewAdapter);
+        if (null != preloader) {
+            this.recyclerView.addOnScrollListener(albumArtPainter.createPreloader(myViewAdapter));
+        }
         this.recyclerView.setHideScrollbar(true);
     }
 
