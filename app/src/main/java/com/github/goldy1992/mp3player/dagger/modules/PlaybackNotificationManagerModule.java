@@ -2,13 +2,11 @@ package com.github.goldy1992.mp3player.dagger.modules;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.media.session.MediaSessionCompat;
 
 import androidx.core.app.NotificationCompat;
 
 import com.github.goldy1992.mp3player.R;
 import com.github.goldy1992.mp3player.service.MyDescriptionAdapter;
-import com.github.goldy1992.mp3player.service.PlaylistManager;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 
@@ -43,11 +41,11 @@ public class PlaybackNotificationManagerModule {
         return playerNotificationManager;
     }
 
-    @Provides
-    @Singleton
-    public MyDescriptionAdapter providesMyDescriptionAdapter(Context context,
-                                                             MediaSessionCompat.Token token,
-                                                             PlaylistManager playlistManager) {
-        return new MyDescriptionAdapter(context, token, playlistManager);
-    }
+//    @Provides
+//    @Singleton
+//    public MyDescriptionAdapter providesMyDescriptionAdapter(Context context,
+//                                                             MediaSessionCompat.Token token,
+//                                                             PlaylistManager playlistManager) {
+//        return new MyDescriptionAdapter(context, token, playlistManager);
+//    }
 }

@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.dagger.components;
 
 import android.content.Context;
 
-import com.github.goldy1992.mp3player.dagger.modules.PlaybackNotificationManagerModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.ContentManagerModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.ContentRetrieverMapModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.ContentRetrieverModule;
@@ -13,7 +12,6 @@ import com.github.goldy1992.mp3player.dagger.modules.service.MediaItemBuilderMod
 import com.github.goldy1992.mp3player.dagger.modules.service.MediaItemTypeIdModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.MediaSessionCompatModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.MediaSessionConnectorModule;
-import com.github.goldy1992.mp3player.dagger.modules.service.PlaybackManagerModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.SearchDatabaseModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.ServiceModule;
 import com.github.goldy1992.mp3player.service.MediaPlaybackService;
@@ -35,8 +33,6 @@ import dagger.Component;
     MediaItemTypeIdModule.class,
     MediaSessionCompatModule.class,
     MediaSessionConnectorModule.class,
-    PlaybackManagerModule.class,
-    PlaybackNotificationManagerModule.class,
     SearchDatabaseModule.class,
     ServiceModule.class
 })
