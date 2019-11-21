@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.dagger.modules.service;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
-import com.github.goldy1992.mp3player.service.library.utils.IdGenerator;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
@@ -31,7 +30,7 @@ public class MediaItemTypeIdModule {
             boolean added = false;
             String id = null;
              while (!added) {
-                 id = IdGenerator.generateRootId(mediaItemType.name());
+                 id = generateRootId(mediaItemType.name());
                  added = idSet.add(id);
              }
             map.put(mediaItemType, id);
