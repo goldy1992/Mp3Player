@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.service.library.content.request;
 
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
+import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
@@ -35,7 +36,7 @@ class ContentRequestParserTest {
 
     @BeforeEach
     public void setup() {
-        this.contentRequestParser = new ContentRequestParser(mediaItemToIdMap, idToMediaItemMap);
+        this.contentRequestParser = new ContentRequestParser(new MediaItemTypeIds());
     }
 
     @Test

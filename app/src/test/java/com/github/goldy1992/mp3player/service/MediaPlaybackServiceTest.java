@@ -80,9 +80,10 @@ public class MediaPlaybackServiceTest {
     public void testOnLoadChildrenWithAcceptedMediaId() {
         final String parentId = "aUniqueId";
         MediaBrowserServiceCompat.Result<List<MediaBrowserCompat.MediaItem>> result = mock(MediaBrowserServiceCompat.Result.class);
-        ContentManager contentManager = mediaPlaybackService.getContentManager();
+        ContentManager mockContentManager = mock(ContentManager.class);
+        mediaPlaybackService.setContentManager(mockContentManager);
         List<MediaBrowserCompat.MediaItem> mediaItemList = new ArrayList<>();
-        when(contentManager.getChildren(any())).thenReturn(mediaItemList);
+        when(mockContentManager.getChildren(any())).thenReturn(mediaItemList);
         mediaPlaybackService.onLoadChildren(parentId, result);
         shadowOf(getMainLooper()).idle();
         verify(result, times(1)).sendResult(mediaItemList);

@@ -33,9 +33,6 @@ public abstract class ContentResolverSearcherTestBase<T extends ContentResolverS
     @Mock
     Cursor cursor;
 
-    @Mock
-    ResultsParser resultsParser;
-
     static List<MediaItem> expectedResult = new ArrayList<>();
 
 

@@ -20,8 +20,7 @@ public abstract class ContentResolverRetrieverTestBase<T extends ContentResolver
 
     @Mock
     ContentResolver contentResolver;
-    @Mock
-    ResultsParser resultsParser;
+
     @Mock
     Cursor cursor;
 

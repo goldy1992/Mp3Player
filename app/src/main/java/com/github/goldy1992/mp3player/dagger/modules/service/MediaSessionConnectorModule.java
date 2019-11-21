@@ -32,47 +32,6 @@ import static com.github.goldy1992.mp3player.commons.Constants.SUPPORTED_PLAYBAC
 
 @Module
 public class MediaSessionConnectorModule {
-    
-    @Singleton
-    @Provides
-    public MediaSessionConnector providesMediaSessionConnector(
-            MediaSessionCompat mediaSessionCompat,
-            ExoPlayer exoPlayer,
-            MyPlaybackPreparer myPlaybackPreparer,
-            MyControlDispatcher myControlDispatcher,
-            MyMetadataProvider myMetadataProvider,
-            MyTimelineQueueNavigator myTimelineQueueNavigator,
-            IncreaseSpeedProvider increaseSpeedProvider,
-            DecreaseSpeedProvider decreaseSpeedProvider,
-            MyMediaButtonEventHandler myMediaButtonEventHandler) {
-        MediaSessionConnector mediaSessionConnector = new MediaSessionConnector(mediaSessionCompat);
-        mediaSessionConnector.setPlayer(exoPlayer);
-        mediaSessionConnector.setPlaybackPreparer(myPlaybackPreparer);
-        mediaSessionConnector.setControlDispatcher(myControlDispatcher);
-        mediaSessionConnector.setMediaMetadataProvider(myMetadataProvider);
-        mediaSessionConnector.setQueueNavigator(myTimelineQueueNavigator);
-        mediaSessionConnector.setCustomActionProviders(increaseSpeedProvider, decreaseSpeedProvider);
-        mediaSessionConnector.setMediaButtonEventHandler(myMediaButtonEventHandler);
-        mediaSessionConnector.setEnabledPlaybackActions(SUPPORTED_PLAYBACK_ACTIONS);
-        return mediaSessionConnector;
-    }
-
-//    @Provides
-//    @Singleton
-//    public MyPlaybackPreparer provideMyPlaybackPreparer(ExoPlayer exoPlayer,
-//                                                        ContentManager contentManager,
-//                                                        @Named("starting_playlist") List<MediaBrowserCompat.MediaItem> items,
-//                                                        MyControlDispatcher myControlDispatcher,
-//                                                        MediaSourceFactory mediaSourceFactory,
-//                                                        PlaylistManager playlistManager) {
-//        return new MyPlaybackPreparer(exoPlayer, contentManager, items, mediaSourceFactory, myControlDispatcher, playlistManager);
-//    }
-
-    @Provides
-    @Singleton
-    public MediaSourceFactory providesMediaSourceFactory(Context context) {
-        return new MediaSourceFactory(new FileDataSource(), new ContentDataSource(context));
-    }
 
     @Provides
     @Singleton
@@ -82,21 +41,8 @@ public class MediaSessionConnectorModule {
 
     @Provides
     @Singleton
-    public MyMetadataProvider providesMyMetadataProvider(PlaylistManager playlistManager) {
-        return new MyMetadataProvider(playlistManager);
+    public FileDataSource provideFileDataSource() {
+        return new FileDataSource();
     }
-
-    @Provides
-    @Singleton
-    public MyTimelineQueueNavigator providesMyTimelineQueueNavigator(MediaSessionCompat mediaSessionCompat,
-                                                                     PlaylistManager playlistManager) {
-        return new MyTimelineQueueNavigator(mediaSessionCompat, playlistManager);
-    }
-
-    @Provides
-    public MyControlDispatcher providesMyControlDispatcher(AudioBecomingNoisyBroadcastReceiver audioBecomingNoisyBroadcastReceiver) {
-        return new MyControlDispatcher(audioBecomingNoisyBroadcastReceiver);
-    }
-
 
 }

@@ -9,6 +9,7 @@ import android.net.Uri;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.github.goldy1992.mp3player.commons.MediaItemUtils;
+import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser;
 
 import org.junit.Before;
@@ -54,7 +55,7 @@ public class SongFromUriRetrieverTest {
         MockitoAnnotations.initMocks(this);
 
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        this.songFromUriRetriever = new SongFromUriRetriever(context, contentResolver, songResultsParser, mmr, ID);
+        this.songFromUriRetriever = new SongFromUriRetriever(context, contentResolver, songResultsParser, mmr, new MediaItemTypeIds());
     }
 
     @Test

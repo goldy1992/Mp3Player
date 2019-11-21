@@ -54,15 +54,14 @@ public class MyPlaybackPreparerTest {
     public void setup() throws FileDataSource.FileDataSourceException {
         MockitoAnnotations.initMocks(this);
         MediaItem testItem = new MediaItemBuilder("id1").setMediaUri(Uri.parse("string")).build();
-        List<MediaItem> items = Collections.singletonList(testItem);
         when(mediaSourceFactory.createMediaSource(any())).thenReturn(mediaSource);
-        this.myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, mediaSourceFactory, myControlDispatcher, playlistManager);
+        this.myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, mediaSourceFactory, myControlDispatcher, playlistManager);
     }
 
     @Test
     public void testSupportedActions() {
         List<MediaItem> items = new ArrayList<>();
-        myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, items, mediaSourceFactory, myControlDispatcher, playlistManager);
+        myPlaybackPreparer = new MyPlaybackPreparer(exoPlayer, contentManager, mediaSourceFactory, myControlDispatcher, playlistManager);
         assertContainsAction(PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID);
         assertContainsAction(PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH);
     }

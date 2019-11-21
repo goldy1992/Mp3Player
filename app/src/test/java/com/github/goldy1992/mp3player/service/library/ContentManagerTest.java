@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.service.library;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
+import com.github.goldy1992.mp3player.service.library.content.ContentRetrievers;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequestParser;
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetriever;
@@ -85,10 +86,9 @@ public class ContentManagerTest {
         when(contentRetriever.getChildren(contentRequest)).thenReturn(expectedList);
 
         Map<String, ContentRetriever> idToContentRetrieverMap = Collections.singletonMap(id, contentRetriever);
-        this.contentManager = new ContentManager(idToContentRetrieverMap,
-                null,
+        this.contentManager = new ContentManager(mock(ContentRetrievers.class),
+                mock(ContentSearchers.class),
                 contentRequestParser,
-                rootRetriever,
                 songFromUriRetriever);
 
         List<MediaItem> result =  contentManager.getChildren(id);
@@ -101,10 +101,9 @@ public class ContentManagerTest {
         ContentRequest contentRequest = new ContentRequest(null, incorrectId, null);
         when(contentRequestParser.parse(incorrectId)).thenReturn(contentRequest);
         Map<String, ContentRetriever> idToContentRetrieverMap = new HashMap<>();
-        this.contentManager = new ContentManager(idToContentRetrieverMap,
-                null,
+        this.contentManager = new ContentManager(mock(ContentRetrievers.class),
+                mock(ContentSearchers.class),
                 contentRequestParser,
-                rootRetriever,
                 songFromUriRetriever);
 
         List<MediaItem> result =  contentManager.getChildren(incorrectId);
@@ -132,10 +131,9 @@ public class ContentManagerTest {
     }
 
     private void testSearch(String query, int expectedResultsSize) {
-        this.contentManager = new ContentManager(null,
-                contentSearcherMap,
+        this.contentManager = new ContentManager(mock(ContentRetrievers.class),
+                mock(ContentSearchers.class),
                 contentRequestParser,
-                rootRetriever,
                 songFromUriRetriever);
 
         List<MediaItem> result =  contentManager.search(query);

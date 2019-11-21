@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.service.library.content.searcher;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
 
+import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser;
 import com.github.goldy1992.mp3player.service.library.search.Song;
 import com.github.goldy1992.mp3player.service.library.search.SongDao;
 
@@ -27,6 +28,10 @@ public class SongSearcherTest extends ContentResolverSearcherTestBase<SongSearch
 
     @Mock
     SongDao songDao;
+
+    @Mock
+    SongResultsParser resultsParser;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
