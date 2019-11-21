@@ -10,16 +10,25 @@ import androidx.annotation.NonNull;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
 import com.github.goldy1992.mp3player.commons.MediaItemUtils;
+import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser;
 import com.github.goldy1992.mp3player.service.library.content.parser.ResultsParser;
 import com.github.goldy1992.mp3player.service.library.search.Folder;
 import com.github.goldy1992.mp3player.service.library.search.FolderDao;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import static com.github.goldy1992.mp3player.service.library.content.Projections.FOLDER_PROJECTION;
 
+@Singleton
 public class FoldersRetriever extends ContentResolverRetriever<Folder> {
 
-    public FoldersRetriever(ContentResolver contentResolver, ResultsParser resultsParser,
-                            FolderDao folderDao, Handler handler) {
+    @Inject
+    public FoldersRetriever(ContentResolver contentResolver,
+                            FolderResultsParser resultsParser,
+                            FolderDao folderDao,
+                            @Named("worker") Handler handler) {
         super(contentResolver, resultsParser, folderDao, handler);
     }
 

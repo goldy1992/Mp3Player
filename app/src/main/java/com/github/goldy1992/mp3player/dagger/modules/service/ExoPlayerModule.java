@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.dagger.modules.service;
 
 import android.content.Context;
+import android.media.MediaMetadataRetriever;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -26,5 +27,10 @@ public class ExoPlayerModule {
                 .build();
         simpleExoPlayer.setAudioAttributes(audioAttributes, true);
         return simpleExoPlayer;
+    }
+
+    @Provides
+    public MediaMetadataRetriever providesMediaMetadataRetriever() {
+        return new MediaMetadataRetriever();
     }
 }

@@ -1,5 +1,7 @@
 package com.github.goldy1992.mp3player.service;
 
+import com.github.goldy1992.mp3player.service.library.ContentManager;
+
 import java.util.List;
 
 import javax.inject.Inject;

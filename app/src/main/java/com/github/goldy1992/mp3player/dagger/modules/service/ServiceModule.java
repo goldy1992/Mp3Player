@@ -11,11 +11,11 @@ import dagger.Provides;
 @Module
 public class ServiceModule {
 
-    @Singleton
-    @Provides
-    public RootAuthenticator provideRootAuthenticator(@Named("rootId") String rootId) {
-        return new RootAuthenticator(rootId);
-    }
+//    @Singleton
+//    @Provides
+//    public RootAuthenticator provideRootAuthenticator(@Named("rootId") String rootId) {
+//        return new RootAuthenticator(rootId);
+//    }
 
 
 }

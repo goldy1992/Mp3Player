@@ -13,11 +13,14 @@ import com.google.android.exoplayer2.upstream.FileDataSource;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import javax.inject.Inject;
+
 public class MediaSourceFactory implements LogTagger {
 
     private final FileDataSource fileDataSource;
     private final ContentDataSource contentDataSource;
 
+    @Inject
     public MediaSourceFactory(FileDataSource fileDataSource,
                               ContentDataSource contentDataSource) {
         this.fileDataSource = fileDataSource;

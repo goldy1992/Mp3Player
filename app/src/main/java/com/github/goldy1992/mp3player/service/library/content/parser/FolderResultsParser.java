@@ -16,12 +16,20 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
+
 import static android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_BROWSABLE;
 import static com.github.goldy1992.mp3player.commons.ComparatorUtils.caseSensitiveStringCompare;
 import static com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR;
 import static com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryPath;
 
 public class FolderResultsParser extends ResultsParser {
+
+
+    @Inject
+    public FolderResultsParser() {
+        super();
+    }
 
     @Override
     public List<MediaBrowserCompat.MediaItem> create(@NonNull Cursor cursor, String mediaIdPrefix) {

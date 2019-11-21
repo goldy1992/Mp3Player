@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
 import android.provider.MediaStore;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
-import com.github.goldy1992.mp3player.service.library.content.parser.ResultsParser;
+import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser;
 import com.github.goldy1992.mp3player.service.library.search.Song;
 import com.github.goldy1992.mp3player.service.library.search.SongDao;
 
@@ -15,13 +15,16 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static com.github.goldy1992.mp3player.service.library.content.Projections.SONG_PROJECTION;
 
 public class SongSearcher extends ContentResolverSearcher<Song> {
 
     private static final String PARAMETER = "?";
 
-    public SongSearcher(ContentResolver contentResolver, ResultsParser resultsParser, String idPrefix, SongDao songDao) {
+    @Inject
+    public SongSearcher(ContentResolver contentResolver, SongResultsParser resultsParser, String idPrefix, SongDao songDao) {
         super(contentResolver, resultsParser, null, idPrefix, songDao);
     }
 

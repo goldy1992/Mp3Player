@@ -6,6 +6,7 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
 import com.github.goldy1992.mp3player.service.library.ContentManager;
+import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,8 @@ public class ContentManagerModule {
     @Provides
     @Singleton
     @Named("starting_playlist")
-    public List<MediaItem> providesInitialPlaylist(ContentManager contentManager, Map<MediaItemType, String> ids) {
-        return contentManager.getPlaylist(ids.get(MediaItemType.SONGS));
+    public List<MediaItem> providesInitialPlaylist(ContentManager contentManager, MediaItemTypeIds ids) {
+        return contentManager.getPlaylist(ids.getId(MediaItemType.SONGS));
     }
 
 

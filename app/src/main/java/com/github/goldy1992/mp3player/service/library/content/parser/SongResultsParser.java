@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE;
 import static com.github.goldy1992.mp3player.commons.ComparatorUtils.uppercaseStringCompare;
@@ -27,6 +28,11 @@ import static com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle;
 public class SongResultsParser extends ResultsParser {
 
     public static final String ALBUM_ART_URI_PREFIX = "content://media/external/audio/albumart";
+
+    @Inject
+    public SongResultsParser() {
+        super();
+    }
 
     @Override
     public List<MediaItem> create(Cursor cursor, String libraryIdPrefix) {

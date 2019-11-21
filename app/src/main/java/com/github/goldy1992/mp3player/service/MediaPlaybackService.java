@@ -30,6 +30,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     private HandlerThread worker;
     private Handler handler;
     private PlayerNotificationManagerCreator playerNotificationManagerCreator;
+    private MediaSessionConnectorCreator mediaSessionConnectorCreator;
     private MediaSessionCompat mediaSession;
     private MediaSessionConnector mediaSessionConnector;
     private RootAuthenticator rootAuthenticator;
@@ -41,6 +42,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
         super.onCreate();
   //      nManager = (NotificationManager) getApplicationContext().getSystemService(NOTIFICATION_SERVICE);
         this.playerNotificationManagerCreator.create();
+        this.mediaSessionConnectorCreator.create();
         setSessionToken(mediaSession.getSessionToken());
 
     }
@@ -131,8 +133,8 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     }
 
     @Inject
-    public void setMediaSessionConnector(MediaSessionConnector mediaSessionConnector) {
-        this.mediaSessionConnector = mediaSessionConnector;
+    public void setMediaSessionConnectorCreator(MediaSessionConnectorCreator mediaSessionConnectorCreator) {
+        this.mediaSessionConnectorCreator = mediaSessionConnectorCreator;
     }
 
     @Inject

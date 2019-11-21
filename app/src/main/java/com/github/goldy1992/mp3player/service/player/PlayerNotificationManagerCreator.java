@@ -22,11 +22,11 @@ public class PlayerNotificationManagerCreator {
 
     private static final String CHANNEL_ID = "com.github.goldy1992.mp3player.context";
 
-    private PlayerNotificationManager playbackNotificationManager;
+    private PlayerNotificationManager playbackNotificationManager = null;
     
-    private ExoPlayer exoPlayer;
-    private Context context;
-    private MyDescriptionAdapter myDescriptionAdapter;
+    private final ExoPlayer exoPlayer;
+    private final Context context;
+    private final MyDescriptionAdapter myDescriptionAdapter;
 
     @Inject
     public PlayerNotificationManagerCreator(Context context, MyDescriptionAdapter myDescriptionAdapter, ExoPlayer exoPlayer) {

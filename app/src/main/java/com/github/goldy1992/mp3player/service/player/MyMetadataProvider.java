@@ -8,16 +8,21 @@ import com.github.goldy1992.mp3player.service.PlaylistManager;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import static com.github.goldy1992.mp3player.commons.Constants.UNKNOWN;
 import static com.github.goldy1992.mp3player.commons.MediaItemUtils.getAlbumArtPath;
 import static com.github.goldy1992.mp3player.commons.MediaItemUtils.getArtist;
 import static com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaId;
 import static com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle;
 
+@Singleton
 public class MyMetadataProvider implements MediaSessionConnector.MediaMetadataProvider {
 
     private final PlaylistManager playlistManager;
 
+    @Inject
     public MyMetadataProvider(PlaylistManager playlistManager) {
         this.playlistManager = playlistManager;
     }

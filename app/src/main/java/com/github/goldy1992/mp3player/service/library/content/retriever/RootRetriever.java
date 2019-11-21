@@ -6,6 +6,7 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
+import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest;
 
 import java.util.ArrayList;
@@ -26,13 +27,13 @@ import static com.github.goldy1992.mp3player.commons.MediaItemType.ROOT;
 public class RootRetriever extends ContentRetriever implements Comparator<MediaItem> {
 
     private final List<MediaItem> CHILDREN;
-    private final Map<MediaItemType, String> childIds;
+    private final MediaItemTypeIds mediaItemTypeIds;
     private final Map<MediaItemType, MediaItem> typeToMediaItemMap;
 
 
     @Inject
-    public RootRetriever(Map<MediaItemType, String> childInfos) {
-        this.childIds = childInfos;
+    public RootRetriever(MediaItemTypeIds mediaItemTypeIds) {
+        this.mediaItemTypeIds = mediaItemTypeIds;
         TreeSet<MediaItem> categorySet = new TreeSet<>(this);
         typeToMediaItemMap = new EnumMap<>(MediaItemType.class);
         for (MediaItemType category : MediaItemType.PARENT_TO_CHILD_MAP.get(ROOT)) {
@@ -68,7 +69,7 @@ public class RootRetriever extends ContentRetriever implements Comparator<MediaI
         MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder()
                 .setDescription(category.getDescription())
                 .setTitle(category.getTitle())
-                .setMediaId(childIds.get(category))
+                .setMediaId(mediaItemTypeIds.getId(category))
                 .setExtras(extras)
                 .build();
         return new MediaItem(mediaDescriptionCompat, 0);

@@ -8,6 +8,7 @@ import androidx.annotation.VisibleForTesting;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
 import com.github.goldy1992.mp3player.service.library.content.filter.FoldersResultFilter;
+import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser;
 import com.github.goldy1992.mp3player.service.library.content.parser.ResultsParser;
 import com.github.goldy1992.mp3player.service.library.search.Folder;
 import com.github.goldy1992.mp3player.service.library.search.FolderDao;
@@ -17,12 +18,20 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static com.github.goldy1992.mp3player.service.library.content.Projections.FOLDER_PROJECTION;
 
 public class FolderSearcher extends ContentResolverSearcher<Folder> {
 
     private static final String LIKE_STATEMENT = MediaStore.Audio.Media.DATA + " LIKE ?";
-    public FolderSearcher(ContentResolver contentResolver, ResultsParser resultsParser, FoldersResultFilter foldersResultFilter, String idPrefix, FolderDao folderDao) {
+
+    @Inject
+    public FolderSearcher(ContentResolver contentResolver,
+                          FolderResultsParser resultsParser,
+                          FoldersResultFilter foldersResultFilter,
+                          String idPrefix,
+                          FolderDao folderDao) {
         super(contentResolver, resultsParser,  foldersResultFilter, idPrefix, folderDao);
     }
 

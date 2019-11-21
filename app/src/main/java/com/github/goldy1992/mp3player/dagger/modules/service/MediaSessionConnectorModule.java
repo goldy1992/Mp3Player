@@ -57,16 +57,16 @@ public class MediaSessionConnectorModule {
         return mediaSessionConnector;
     }
 
-    @Provides
-    @Singleton
-    public MyPlaybackPreparer provideMyPlaybackPreparer(ExoPlayer exoPlayer,
-                                                        ContentManager contentManager,
-                                                        @Named("starting_playlist") List<MediaBrowserCompat.MediaItem> items,
-                                                        MyControlDispatcher myControlDispatcher,
-                                                        MediaSourceFactory mediaSourceFactory,
-                                                        PlaylistManager playlistManager) {
-        return new MyPlaybackPreparer(exoPlayer, contentManager, items, mediaSourceFactory, myControlDispatcher, playlistManager);
-    }
+//    @Provides
+//    @Singleton
+//    public MyPlaybackPreparer provideMyPlaybackPreparer(ExoPlayer exoPlayer,
+//                                                        ContentManager contentManager,
+//                                                        @Named("starting_playlist") List<MediaBrowserCompat.MediaItem> items,
+//                                                        MyControlDispatcher myControlDispatcher,
+//                                                        MediaSourceFactory mediaSourceFactory,
+//                                                        PlaylistManager playlistManager) {
+//        return new MyPlaybackPreparer(exoPlayer, contentManager, items, mediaSourceFactory, myControlDispatcher, playlistManager);
+//    }
 
     @Provides
     @Singleton

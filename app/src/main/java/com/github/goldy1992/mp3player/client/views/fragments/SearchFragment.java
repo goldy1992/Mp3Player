@@ -76,16 +76,16 @@ public class SearchFragment extends Fragment implements LogTagger {
     public void onClickOnLayout(View view) {
         Log.i(getLogTag(), "hit on click listener");
         inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0 );
-        getFragmentManager().popBackStack();
-    }
+        this.getParentFragmentManager().popBackStack();
+}
 
 
     @VisibleForTesting
     public void onFocusChange(View v, boolean queryTextFocused) {
         Log.i("tag", "focus changed: has focus: " + queryTextFocused);
         if (!queryTextFocused) {
-            FragmentManager fragmentManager = getFragmentManager();
-            if (null != fragmentManager && !fragmentManager.isDestroyed()) {
+            FragmentManager fragmentManager = getParentFragmentManager();
+            if (!fragmentManager.isDestroyed()) {
                 fragmentManager.popBackStack();
             }
         }

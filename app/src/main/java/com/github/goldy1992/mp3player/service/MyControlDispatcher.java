@@ -4,10 +4,13 @@ import com.github.goldy1992.mp3player.service.player.AudioBecomingNoisyBroadcast
 import com.google.android.exoplayer2.DefaultControlDispatcher;
 import com.google.android.exoplayer2.Player;
 
+import javax.inject.Inject;
+
 public class MyControlDispatcher extends DefaultControlDispatcher {
 
     private final AudioBecomingNoisyBroadcastReceiver audioBecomingNoisyBroadcastReceiver;
 
+    @Inject
     public MyControlDispatcher(AudioBecomingNoisyBroadcastReceiver audioBecomingNoisyBroadcastReceiver) {
         this.audioBecomingNoisyBroadcastReceiver = audioBecomingNoisyBroadcastReceiver;
     }

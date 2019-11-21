@@ -5,6 +5,9 @@ import android.os.Bundle;
 import androidx.annotation.VisibleForTesting;
 import androidx.media.MediaBrowserServiceCompat;
 
+import com.github.goldy1992.mp3player.commons.MediaItemType;
+import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
+
 import javax.inject.Inject;
 
 import static com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME;
@@ -12,16 +15,17 @@ import static com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME;
 public class RootAuthenticator {
 
     private final String acceptedMediaId;
+
     @VisibleForTesting
     public static final String REJECTED_MEDIA_ROOT_ID = "empty_root_id";
 
     @Inject
-    public RootAuthenticator(String acceptedMediaId) {
-        this.acceptedMediaId = acceptedMediaId;
+    public RootAuthenticator(MediaItemTypeIds ids) {
+        this.acceptedMediaId = ids.getId(MediaItemType.ROOT);
     }
 
     public MediaBrowserServiceCompat.BrowserRoot authenticate(String clientPackageName, int clientUid,
-                                                              Bundle rootHints) {
+                                                               Bundle rootHints) {
         Bundle extras = new Bundle();
         // (Optional) Control the level of access for the specified package name.
         // You'll need to write your own logic to do this.

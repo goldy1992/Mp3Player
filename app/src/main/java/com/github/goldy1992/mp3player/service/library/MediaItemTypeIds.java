@@ -52,11 +52,11 @@ public final class MediaItemTypeIds {
         this.mediaItemTypeToIdMap = enumMap;
     }
 
-    public String getMediaItemTypeId(MediaItemType mediaItemType) {
+    public String getId(MediaItemType mediaItemType) {
         return mediaItemTypeToIdMap.get(mediaItemType);
     }
 
-    public MediaItemType getMediaItemTypeForId(String id) {
+    public MediaItemType getMediaItemType(String id) {
         return idToMediaItemTypeMap.get(id);
     }
 

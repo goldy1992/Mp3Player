@@ -9,11 +9,15 @@ import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder;
+import com.github.goldy1992.mp3player.commons.MediaItemType;
+import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser;
 
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import static android.media.MediaMetadataRetriever.METADATA_KEY_ARTIST;
 import static android.media.MediaMetadataRetriever.METADATA_KEY_DURATION;
@@ -29,16 +33,17 @@ public class SongFromUriRetriever  {
     private final Context context;
     private final MediaMetadataRetriever mmr;
 
+    @Inject
     public SongFromUriRetriever(Context context,
                                 ContentResolver contentResolver,
                                 SongResultsParser resultsParser,
                                 MediaMetadataRetriever mediaMetadataRetriever,
-                                String idPrefix) {
+                                MediaItemTypeIds mediaItemTypeIds) {
         this.context = context;
         this.contentResolver = contentResolver;
         this.songResultsParser = resultsParser;
         this.mmr = mediaMetadataRetriever;
-        this.idPrefix = idPrefix;
+        this.idPrefix = mediaItemTypeIds.getId(MediaItemType.SONGS);
     }
 
     public MediaItem getSong(Uri uri) {
