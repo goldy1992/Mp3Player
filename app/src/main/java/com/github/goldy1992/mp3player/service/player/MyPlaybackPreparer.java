@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.inject.Inject;
+
 import static com.github.goldy1992.mp3player.commons.Constants.ID_DELIMITER;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
@@ -35,9 +37,9 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
     private final MediaSourceFactory mediaSourceFactory;
     private final PlaylistManager playlistManager;
 
+    @Inject
     public MyPlaybackPreparer(ExoPlayer exoPlayer,
                               ContentManager contentManager,
-                              List<MediaItem> items,
                               MediaSourceFactory mediaSourceFactory,
                               MyControlDispatcher myControlDispatcher,
                               PlaylistManager playlistManager) {
@@ -47,9 +49,10 @@ public class MyPlaybackPreparer implements MediaSessionConnector.PlaybackPrepare
         this.mediaSourceFactory = mediaSourceFactory;
 
         this.playlistManager = playlistManager;
-        if (isNotEmpty(items)) {
-            String trackId = MediaItemUtils.getMediaId(items.get(0));
-            preparePlaylist(false, trackId, items);
+        List<MediaItem> currentPlaylist = playlistManager.getPlaylist();
+        if (isNotEmpty(currentPlaylist)) {
+            String trackId = MediaItemUtils.getMediaId(currentPlaylist.get(0));
+            preparePlaylist(false, trackId, currentPlaylist);
         }
     }
     @Override

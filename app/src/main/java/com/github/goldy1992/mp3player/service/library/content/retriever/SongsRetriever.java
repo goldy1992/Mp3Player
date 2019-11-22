@@ -10,16 +10,24 @@ import androidx.annotation.NonNull;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
 import com.github.goldy1992.mp3player.commons.MediaItemUtils;
-import com.github.goldy1992.mp3player.service.library.content.parser.ResultsParser;
+import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser;
 import com.github.goldy1992.mp3player.service.library.search.Song;
 import com.github.goldy1992.mp3player.service.library.search.SongDao;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import static com.github.goldy1992.mp3player.service.library.content.Projections.SONG_PROJECTION;
 
+@Singleton
 public class SongsRetriever extends ContentResolverRetriever<Song> {
 
+    @Inject
     public SongsRetriever(ContentResolver contentResolver,
-                          ResultsParser resultsParser, SongDao songDao, Handler handler) {
+                          SongResultsParser resultsParser,
+                          SongDao songDao,
+                          @Named("worker") Handler handler) {
         super(contentResolver, resultsParser, songDao, handler);
     }
 

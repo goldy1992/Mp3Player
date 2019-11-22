@@ -66,7 +66,7 @@ public abstract class MediaPlayerActivity extends MediaActivityCompat implements
         FragmentManager fm = getSupportFragmentManager();
         this.viewPager2 = findViewById(R.id.track_view_pager);
         final Context context = getApplicationContext();
-        AlbumArtPainter albumArtPainter = new AlbumArtPainter(context, Glide.with(context));
+        AlbumArtPainter albumArtPainter = new AlbumArtPainter(Glide.with(context));
         this.trackViewPagerChangeCallback = new TrackViewPagerChangeCallback(mediaControllerAdapter);
         this.trackViewAdapter = new TrackViewAdapter(albumArtPainter, new Handler(getMainLooper()), mediaControllerAdapter.getQueue());
         this.mediaControllerAdapter.registerMetaDataListener(this);

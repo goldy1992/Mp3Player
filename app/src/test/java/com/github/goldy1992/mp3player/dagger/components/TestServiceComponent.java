@@ -1,16 +1,11 @@
 package com.github.goldy1992.mp3player.dagger.components;
 
-import com.github.goldy1992.mp3player.dagger.modules.MockContentManagerModule;
-import com.github.goldy1992.mp3player.dagger.modules.MockMediaSessionConnectorModule;
-import com.github.goldy1992.mp3player.dagger.modules.PlaybackNotificationManagerModule;
-import com.github.goldy1992.mp3player.dagger.modules.service.ContentRetrieverModule;
-import com.github.goldy1992.mp3player.dagger.modules.service.ContentSearcherModule;
+import com.github.goldy1992.mp3player.dagger.modules.MockSearchDatabaseModule;
+import com.github.goldy1992.mp3player.dagger.modules.service.ContentManagerModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.ExoPlayerModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.HandlerThreadModule;
-import com.github.goldy1992.mp3player.dagger.modules.service.MediaItemTypeIdModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.MediaSessionCompatModule;
-import com.github.goldy1992.mp3player.dagger.modules.service.PlaybackManagerModule;
-import com.github.goldy1992.mp3player.dagger.modules.service.ServiceModule;
+import com.github.goldy1992.mp3player.dagger.modules.service.MediaSessionConnectorModule;
 
 import javax.inject.Singleton;
 
@@ -18,17 +13,12 @@ import dagger.Component;
 
 @Singleton
 @Component(modules = {
-        MockContentManagerModule.class,
-        ContentRetrieverModule.class,
-        ContentSearcherModule.class,
+        ContentManagerModule.class,
         ExoPlayerModule.class,
         HandlerThreadModule.class,
-        MediaItemTypeIdModule.class,
-        MockMediaSessionConnectorModule.class,
+        MediaSessionConnectorModule.class,
         MediaSessionCompatModule.class,
-        PlaybackManagerModule.class,
-        PlaybackNotificationManagerModule.class,
-        ServiceModule.class })
+        MockSearchDatabaseModule.class })
 public interface TestServiceComponent extends ServiceComponent {
     @Component.Factory
     interface Factory extends ServiceComponent.Factory {}

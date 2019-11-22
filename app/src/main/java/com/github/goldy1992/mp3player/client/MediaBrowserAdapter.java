@@ -8,11 +8,11 @@ import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCa
 import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback;
 import com.github.goldy1992.mp3player.client.callbacks.search.SearchResultListener;
 import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback;
+import com.github.goldy1992.mp3player.dagger.scopes.ComponentScope;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-@Singleton
+@ComponentScope
 public class MediaBrowserAdapter {
 
     private static final String LOG_TAG = "MDIA_BRWSR_ADPTR";

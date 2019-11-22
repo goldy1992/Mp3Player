@@ -15,9 +15,6 @@ public class HandlerThreadModule {
     public HandlerThread provideHandlerThread(String workerId) {
         HandlerThread handlerThread = new HandlerThread(workerId);
         handlerThread.start();
-//        handlerThread.getLooper().setMessageLogging((String x) -> {
-//            Log.i(workerId, x);
-//        });
         return handlerThread;
     }
 

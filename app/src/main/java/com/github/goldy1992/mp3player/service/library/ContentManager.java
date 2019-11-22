@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
+import com.github.goldy1992.mp3player.service.library.content.ContentRetrievers;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequestParser;
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetriever;
@@ -18,7 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -29,23 +29,22 @@ public class ContentManager {
     public static final String CONTENT_SCHEME = "content";
     public static final String FILE_SCHEME = "file";
 
-    private final Map<String, ContentRetriever> idToContentRetrieverMap;
-    private final Map<MediaItemType, ContentSearcher> searchContentRetrieverMap;
+    private final ContentSearchers contentSearchers;
+    private final ContentRetrievers contentRetrievers;
     private final RootRetriever rootRetriever;
     private final ContentRequestParser contentRequestParser;
     private final SongFromUriRetriever songFromUriRetriever;
 
     @Inject
-    public ContentManager(Map<String, ContentRetriever> idToContentRetrieverMap,
-                          Map<MediaItemType, ContentSearcher> searchContentRetrieverMap,
+    public ContentManager(ContentRetrievers contentRetrievers,
+                          ContentSearchers contentSearchers,
                           ContentRequestParser contentRequestParser,
-                          RootRetriever rootRetriever,
                           SongFromUriRetriever songFromUriRetriever) {
-       this.idToContentRetrieverMap = idToContentRetrieverMap;
-       this.searchContentRetrieverMap = searchContentRetrieverMap;
-       this.contentRequestParser = contentRequestParser;
-       this.rootRetriever = rootRetriever;
-       this.songFromUriRetriever = songFromUriRetriever;
+        this.contentSearchers = contentSearchers;
+        this.contentRetrievers = contentRetrievers;
+        this.contentRequestParser = contentRequestParser;
+        this.rootRetriever = contentRetrievers.getRoot();
+        this.songFromUriRetriever = songFromUriRetriever;
     }
     /**
      * The id is in the following format
@@ -60,7 +59,7 @@ public class ContentManager {
      */
     public List<MediaItem> getChildren(String parentId) {
         ContentRequest request = this.contentRequestParser.parse(parentId);
-        ContentRetriever contentRetriever = idToContentRetrieverMap.get(request.getContentRetrieverKey());
+        ContentRetriever contentRetriever = contentRetrievers.get(request.getContentRetrieverKey());
         return contentRetriever == null ? null : contentRetriever.getChildren(request);
     }
     /**
@@ -70,7 +69,7 @@ public class ContentManager {
     public List<MediaItem> search(@NonNull String query) {
         query = normalise(query);
         List<MediaItem> results = new ArrayList<>();
-        for (ContentSearcher contentSearcher : searchContentRetrieverMap.values()) {
+        for (ContentSearcher contentSearcher : contentSearchers.getAll()) {
             List<MediaItem> searchResults = contentSearcher.search(query);
             if (CollectionUtils.isNotEmpty(searchResults)) {
                 final MediaItemType searchCategory = contentSearcher.getSearchCategory();

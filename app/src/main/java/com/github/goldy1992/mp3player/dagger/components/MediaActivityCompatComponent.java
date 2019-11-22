@@ -10,12 +10,10 @@ import com.github.goldy1992.mp3player.client.views.fragments.PlaybackSpeedContro
 import com.github.goldy1992.mp3player.dagger.components.fragments.ChildViewPagerFragmentSubcomponent;
 import com.github.goldy1992.mp3player.dagger.components.fragments.PlaybackButtonsSubComponent;
 import com.github.goldy1992.mp3player.dagger.components.fragments.PlaybackTrackerFragmentSubcomponent;
-import com.github.goldy1992.mp3player.dagger.modules.AlbumArtPainterModule;
 import com.github.goldy1992.mp3player.dagger.modules.ComponentNameModule;
+import com.github.goldy1992.mp3player.dagger.modules.GlideModule;
 import com.github.goldy1992.mp3player.dagger.modules.MainHandlerModule;
-import com.github.goldy1992.mp3player.dagger.modules.MediaBrowserAdapterModule;
-import com.github.goldy1992.mp3player.dagger.modules.MediaControllerAdapterModule;
-import com.github.goldy1992.mp3player.dagger.modules.MediaControllerCallbackModule;
+import com.github.goldy1992.mp3player.dagger.modules.MediaBrowserCompatModule;
 import com.github.goldy1992.mp3player.dagger.modules.MyDrawerListenerModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.HandlerThreadModule;
 import com.github.goldy1992.mp3player.dagger.scopes.ComponentScope;
@@ -25,13 +23,11 @@ import dagger.Component;
 
 @ComponentScope
 @Component(modules = {
-        AlbumArtPainterModule.class,
+        GlideModule.class,
         ComponentNameModule.class,
         HandlerThreadModule.class,
         MainHandlerModule.class,
-        MediaBrowserAdapterModule.class,
-        MediaControllerAdapterModule.class,
-        MediaControllerCallbackModule.class,
+        MediaBrowserCompatModule.class,
         MyDrawerListenerModule.class
         })
 public interface MediaActivityCompatComponent {

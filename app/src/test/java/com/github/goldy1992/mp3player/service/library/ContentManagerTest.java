@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.service.library;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
+import com.github.goldy1992.mp3player.service.library.content.ContentRetrievers;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequestParser;
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetriever;
@@ -11,7 +12,6 @@ import com.github.goldy1992.mp3player.service.library.content.retriever.SongFrom
 import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearcher;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -19,15 +19,13 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -44,54 +42,44 @@ public class ContentManagerTest {
     private ContentRequestParser contentRequestParser;
 
     @Mock
+    private ContentRetrievers contentRetrievers;
+
+    @Mock
+    private ContentSearchers contentSearchers;
+
+    @Mock
     private RootRetriever rootRetriever;
+    @Mock
+    private MediaItem rootItem;
 
     @Mock
     private SongFromUriRetriever songFromUriRetriever;
 
     private static Map<MediaItemType, ContentSearcher> contentSearcherMap;
 
-    @BeforeClass
-    public static void setupClass() {
-        MediaItem song1 = mock(MediaItem.class);
-        MediaItem song2 = mock(MediaItem.class);
-        List<MediaItem> songs = new ArrayList<>();
-        ContentSearcher songSearcher = getContentSearch(MediaItemType.SONG, songs);
-        songs.add(song1);
-        songs.add(song2);
-        MediaItem folder1 = mock(MediaItem.class);
-        List<MediaItem> folders = new ArrayList<>();
-        folders.add(folder1);
-        ContentSearcher folderSearcher = getContentSearch(MediaItemType.FOLDER, folders);
-
-        contentSearcherMap = new HashMap<>();
-        contentSearcherMap.put(songSearcher.getSearchCategory(), songSearcher);
-        contentSearcherMap.put(folderSearcher.getSearchCategory(), folderSearcher);
-    }
-
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        when(contentRetrievers.getRoot()).thenReturn(rootRetriever);
+        when(rootRetriever.getRootItem(any())).thenReturn(rootItem);
+        this.contentManager = new ContentManager(contentRetrievers,
+                contentSearchers,
+                contentRequestParser,
+                songFromUriRetriever);
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void testGetChildren() {
-        final String id = "id";
+        final String contentRetrieverId = "id";
         final List<MediaItem> expectedList = new ArrayList<>();
         final ContentRetriever contentRetriever = mock(ContentRetriever.class);
-        ContentRequest contentRequest = new ContentRequest(null, id, null);
-        when(contentRequestParser.parse(id)).thenReturn(contentRequest);
+        when(contentRetrievers.get(contentRetrieverId)).thenReturn(contentRetriever);
+        ContentRequest contentRequest = new ContentRequest(null, contentRetrieverId, null);
+        when(contentRequestParser.parse(contentRetrieverId)).thenReturn(contentRequest);
         when(contentRetriever.getChildren(contentRequest)).thenReturn(expectedList);
 
-        Map<String, ContentRetriever> idToContentRetrieverMap = Collections.singletonMap(id, contentRetriever);
-        this.contentManager = new ContentManager(idToContentRetrieverMap,
-                null,
-                contentRequestParser,
-                rootRetriever,
-                songFromUriRetriever);
-
-        List<MediaItem> result =  contentManager.getChildren(id);
+        List<MediaItem> result =  contentManager.getChildren(contentRetrieverId);
         assertEquals(expectedList, result);
     }
 
@@ -100,13 +88,6 @@ public class ContentManagerTest {
         final String incorrectId = "incorrectId";
         ContentRequest contentRequest = new ContentRequest(null, incorrectId, null);
         when(contentRequestParser.parse(incorrectId)).thenReturn(contentRequest);
-        Map<String, ContentRetriever> idToContentRetrieverMap = new HashMap<>();
-        this.contentManager = new ContentManager(idToContentRetrieverMap,
-                null,
-                contentRequestParser,
-                rootRetriever,
-                songFromUriRetriever);
-
         List<MediaItem> result =  contentManager.getChildren(incorrectId);
         assertNull(result);
     }
@@ -132,19 +113,35 @@ public class ContentManagerTest {
     }
 
     private void testSearch(String query, int expectedResultsSize) {
-        this.contentManager = new ContentManager(null,
-                contentSearcherMap,
-                contentRequestParser,
-                rootRetriever,
-                songFromUriRetriever);
+        MediaItem song1 = mock(MediaItem.class);
+        MediaItem song2 = mock(MediaItem.class);
 
+        List<MediaItem> songs = new ArrayList<>();
+        songs.add(song1);
+        songs.add(song2);
+
+        ContentSearcher songSearcher = getContentSearch(MediaItemType.SONGS,songs);
+        MediaItem folder1 = mock(MediaItem.class);
+        List<MediaItem> folders = new ArrayList<>();
+        folders.add(folder1);
+
+        ContentSearcher folderSearcher = getContentSearch(MediaItemType.FOLDER, folders);
+        List<ContentSearcher> contentSearcherList = new ArrayList<>();
+        contentSearcherList.add(songSearcher);
+        contentSearcherList.add(folderSearcher);
+
+        when(contentSearchers.getAll()).thenReturn(contentSearcherList);
+
+
+        when(contentSearchers.get(songSearcher.getSearchCategory())).thenReturn(songSearcher);
+        when(contentSearchers.get(folderSearcher.getSearchCategory())).thenReturn(folderSearcher);
         List<MediaItem> result =  contentManager.search(query);
         assertNotNull(result);
         int resultSize = result.size();
         assertEquals(expectedResultsSize, resultSize);
     }
 
-    private static ContentSearcher getContentSearch(MediaItemType type, List<MediaItem> result) {
+    private ContentSearcher getContentSearch(MediaItemType type, List<MediaItem> result) {
         ContentSearcher contentSearcher = mock(ContentSearcher.class);
         when(contentSearcher.getSearchCategory()).thenReturn(type);
         when(contentSearcher.search(VALID_QUERY)).thenReturn(result);

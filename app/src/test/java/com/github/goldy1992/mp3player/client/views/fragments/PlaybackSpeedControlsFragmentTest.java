@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.LooperMode;
 
 import static com.github.goldy1992.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED;
 import static com.github.goldy1992.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED;
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
+@LooperMode(LooperMode.Mode.PAUSED)
 public class PlaybackSpeedControlsFragmentTest extends FragmentTestBase<PlaybackSpeedControlsFragment> {
 
     @Mock
@@ -53,6 +55,7 @@ public class PlaybackSpeedControlsFragmentTest extends FragmentTestBase<Playback
         playbackSpeedControlsFragment.mainUpdater = new Handler(Looper.getMainLooper());
         playbackSpeedControlsFragment.increasePlaybackSpeed();
         shadowOf(playbackSpeedControlsFragment.worker.getLooper()).idle();
+        shadowOf(Looper.getMainLooper()).idle();
         verify(mediaControllerAdapter, times(1)).sendCustomAction(eq(INCREASE_PLAYBACK_SPEED), any());
     }
 
@@ -61,6 +64,7 @@ public class PlaybackSpeedControlsFragmentTest extends FragmentTestBase<Playback
         playbackSpeedControlsFragment.mainUpdater = new Handler(Looper.getMainLooper());
         playbackSpeedControlsFragment.decreasePlaybackSpeed();
         shadowOf(playbackSpeedControlsFragment.worker.getLooper()).idle();
+        shadowOf(Looper.getMainLooper()).idle();
         verify(mediaControllerAdapter, times(1)).sendCustomAction(eq(DECREASE_PLAYBACK_SPEED), any());
     }
 }

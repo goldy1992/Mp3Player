@@ -18,10 +18,12 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
+import org.robolectric.annotation.LooperMode;
 
 import java.util.ArrayList;
 import java.util.Set;
 
+import static android.os.Looper.getMainLooper;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -30,8 +32,10 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
+@LooperMode(LooperMode.Mode.PAUSED)
 public class MainActivityTest {
 
     private ActivityController<TestMainActivity> mainActivityTestActivityController;
@@ -84,7 +88,7 @@ public class MainActivityTest {
 
         // select the search option item
         mainActivity.onOptionsItemSelected(menuItem);
-
+        shadowOf(getMainLooper()).idle();
         // assert the search fragment IS now added
         assertTrue(searchFragment.isAdded());
         // post test remove the added fragment
@@ -122,6 +126,7 @@ public class MainActivityTest {
         }
         final int expectedNumOfFragmentsCreated = rootItemsSet.size();
         mainActivity.onChildrenLoaded(parentId, children);
+        shadowOf(getMainLooper()).idle();
         int numberOfChildFragments = mainActivity.getAdapter().getItemCount();
         assertEquals(expectedNumOfFragmentsCreated, numberOfChildFragments);
     }

@@ -1,13 +1,14 @@
 package com.github.goldy1992.mp3player.service;
 
-import androidx.annotation.NonNull;
-
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 
+@Singleton
 public class PlaylistManager {
 
     private static final int START_OF_PLAYLIST = 0;
@@ -15,10 +16,11 @@ public class PlaylistManager {
     private int queueIndex = EMPTY_PLAYLIST_INDEX;
     private final List<MediaItem> playlist;
 
+
     @Inject
-    public PlaylistManager(@NonNull List<MediaItem> initialPlayList, @NonNull int startIndex) {
-        this.playlist = initialPlayList;
-        this.queueIndex = startIndex;
+    public PlaylistManager(@Named("starting_playlist")List<MediaItem> items) {
+        this.playlist = items;
+        this.queueIndex = START_OF_PLAYLIST;
     }
 
     public synchronized boolean createNewPlaylist(List<MediaItem> newList) {

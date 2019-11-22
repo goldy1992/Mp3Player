@@ -1,14 +1,10 @@
 package com.github.goldy1992.mp3player.dagger.modules.service;
 
 import android.content.Context;
-import android.os.Handler;
 import android.support.v4.media.session.MediaSessionCompat;
 
-import com.github.goldy1992.mp3player.service.player.DecreaseSpeedProvider;
-import com.github.goldy1992.mp3player.service.player.IncreaseSpeedProvider;
 import com.github.goldy1992.mp3player.service.player.MyMediaButtonEventHandler;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -29,18 +25,6 @@ public class MediaSessionCompatModule {
     @Provides
     public MediaSessionCompat.Token provideMediaSessionToken(MediaSessionCompat mediaSessionCompat) {
         return mediaSessionCompat.getSessionToken();
-    }
-
-    @Provides
-    @Singleton
-    public IncreaseSpeedProvider providesIncreaseSpeedProvider(@Named("worker") Handler handler) {
-        return new IncreaseSpeedProvider(handler);
-    }
-
-    @Provides
-    @Singleton
-    public DecreaseSpeedProvider providesDecreaseSpeedProvider(@Named("worker") Handler handler) {
-        return new DecreaseSpeedProvider(handler);
     }
 
     @Provides

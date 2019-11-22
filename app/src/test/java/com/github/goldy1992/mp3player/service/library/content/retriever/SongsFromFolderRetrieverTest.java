@@ -3,11 +3,14 @@ package com.github.goldy1992.mp3player.service.library.content.retriever;
 import android.support.v4.media.MediaBrowserCompat;
 
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder;
+import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest;
+import com.github.goldy1992.mp3player.service.library.search.SongDao;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
@@ -25,10 +28,17 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricTestRunner.class)
 public class SongsFromFolderRetrieverTest extends ContentResolverRetrieverTestBase<SongsFromFolderRetriever> {
 
+    @Mock
+    SongResultsParser resultsParser;
+
+    @Mock
+    SongDao songDao;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        this.retriever = spy(new SongsFromFolderRetriever(contentResolver, resultsParser, null, handler));
+        when(searchDatabase.songDao()).thenReturn(songDao);
+        this.retriever = spy(new SongsFromFolderRetriever(contentResolver, resultsParser, searchDatabase, handler));
     }
 
     @Test

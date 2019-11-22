@@ -16,14 +16,20 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import static com.github.goldy1992.mp3player.commons.Constants.MEDIA_SESSION;
 
+@Singleton
 public class MyDescriptionAdapter implements PlayerNotificationManager.MediaDescriptionAdapter {
+
     private final PlaylistManager playlistManager;
     private final Context context;
     private final Token token;
     private static final int REQUEST_CODE = 501;
 
+    @Inject
     public MyDescriptionAdapter(Context context,
                                 Token token,
                                 PlaylistManager playlistManager) {

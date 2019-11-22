@@ -22,7 +22,7 @@ public abstract class ContentResolverSearcherTestBase<T extends ContentResolverS
 
     T searcher;
 
-    static final String idPrefix = "idPrefix";
+    String idPrefix;
 
     static final String VALID_QUERY = "VALID_QUERY";
     static final String INVALID_QUERY = "INVALID_QUERY";
@@ -32,9 +32,6 @@ public abstract class ContentResolverSearcherTestBase<T extends ContentResolverS
 
     @Mock
     Cursor cursor;
-
-    @Mock
-    ResultsParser resultsParser;
 
     static List<MediaItem> expectedResult = new ArrayList<>();
 

@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.service.library.content.retriever;
 import android.support.v4.media.MediaBrowserCompat;
 
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder;
+import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest;
 import com.github.goldy1992.mp3player.service.library.search.Song;
 import com.github.goldy1992.mp3player.service.library.search.SongDao;
@@ -33,6 +34,9 @@ public class SongsRetrieverTest extends ContentResolverRetrieverTestBase<SongsRe
 
     @Mock
     SongDao songDao;
+
+    @Mock
+    SongResultsParser resultsParser;
 
     @Captor
     ArgumentCaptor<List<Song>> captor;

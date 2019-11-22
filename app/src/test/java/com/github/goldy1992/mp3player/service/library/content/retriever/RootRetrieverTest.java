@@ -5,6 +5,7 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
 import com.github.goldy1992.mp3player.commons.MediaItemUtils;
+import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest;
 
 import org.junit.Before;
@@ -38,7 +39,7 @@ public class RootRetrieverTest {
 
     @Before
     public void setup() {
-        this.rootRetriever = new RootRetriever(testRootItemMap);
+        this.rootRetriever = new RootRetriever(new MediaItemTypeIds());
     }
 
     @Test

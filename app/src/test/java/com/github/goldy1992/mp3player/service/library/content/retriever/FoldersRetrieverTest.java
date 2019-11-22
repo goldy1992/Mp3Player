@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.service.library.content.retriever;
 import android.support.v4.media.MediaBrowserCompat;
 
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder;
+import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest;
 import com.github.goldy1992.mp3player.service.library.search.Folder;
 import com.github.goldy1992.mp3player.service.library.search.FolderDao;
@@ -37,6 +38,9 @@ public class FoldersRetrieverTest extends ContentResolverRetrieverTestBase<Folde
 
     @Mock
     FolderDao folderDao;
+
+    @Mock
+    FolderResultsParser resultsParser;
 
     @Captor
     ArgumentCaptor<List<Folder>> captor;

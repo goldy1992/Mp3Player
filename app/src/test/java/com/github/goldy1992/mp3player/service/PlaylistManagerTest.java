@@ -23,13 +23,14 @@ public class PlaylistManagerTest {
     @Before
     public void setup() {
         List<MediaItem> queueItems = new ArrayList<>();
-        playlistManager = new PlaylistManager(queueItems, -1);
+        playlistManager = new PlaylistManager(queueItems);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testCreateNewPlaylist() {
         List<MediaItem> originalPlaylist = Collections.emptyList();
-        playlistManager = new PlaylistManager(originalPlaylist, -1);
+        playlistManager = new PlaylistManager(originalPlaylist);
         assertEquals(originalPlaylist, playlistManager.getPlaylist());
 
         List<MediaItem> newPlaylist = java.util.Collections.emptyList();

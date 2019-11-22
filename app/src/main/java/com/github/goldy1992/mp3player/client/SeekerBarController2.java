@@ -12,6 +12,7 @@ import androidx.annotation.VisibleForTesting;
 
 import com.github.goldy1992.mp3player.client.views.SeekerBar;
 import com.github.goldy1992.mp3player.client.views.TimeCounter;
+import com.github.goldy1992.mp3player.dagger.scopes.FragmentScope;
 
 import javax.inject.Inject;
 
@@ -22,6 +23,7 @@ import static com.github.goldy1992.mp3player.commons.Constants.DEFAULT_SPEED;
 /**
  *
  */
+@FragmentScope
 public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListener, SeekBar.OnSeekBarChangeListener {
 
     private static final String LOG_TAG = "SKR_MDIA_CNTRLR_CLBK";

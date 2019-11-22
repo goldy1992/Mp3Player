@@ -7,8 +7,12 @@ import android.util.Log;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.github.goldy1992.mp3player.client.activities.SplashScreenEntryActivity;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -24,7 +28,8 @@ public class PermissionsProcessor {
     private Activity parentActivity;
     private static final String LOG_TAG = "PERMISSIONS_PROCESSOR";
 
-    public PermissionsProcessor(Activity parentActivity, PermissionGranted permissionGranted) {
+    @Inject
+    public PermissionsProcessor(SplashScreenEntryActivity parentActivity, PermissionGranted permissionGranted) {
         this.parentActivity = parentActivity;
         this.permissionGranted = permissionGranted;
     }

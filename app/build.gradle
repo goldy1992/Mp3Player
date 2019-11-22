@@ -150,6 +150,7 @@ dependencies {
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
     implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
+    implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_TESTING_VERSION
     annotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
     implementation 'androidx.viewpager2:viewpager2:1.0.0-rc01'

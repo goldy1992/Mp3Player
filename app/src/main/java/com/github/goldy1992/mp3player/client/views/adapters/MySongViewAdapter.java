@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.views.adapters;
 
-import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.github.goldy1992.mp3player.R;
 import com.github.goldy1992.mp3player.client.AlbumArtPainter;
@@ -20,14 +18,18 @@ import com.github.goldy1992.mp3player.client.views.viewholders.MySongViewHolder;
 import java.util.Collections;
 import java.util.List;
 
-import static com.github.goldy1992.mp3player.commons.MediaItemUtils.getAlbumArtUri;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 
 public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
+
     private final String LOG_TAG = "MY_VIEW_ADAPTER";
 
-    public MySongViewAdapter(AlbumArtPainter albumArtPainter, Handler mainHandler) {
+    @Inject
+    public MySongViewAdapter(AlbumArtPainter albumArtPainter, @Named("main") Handler mainHandler) {
         super(albumArtPainter, mainHandler);
     }
 
@@ -80,10 +82,7 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     @Nullable
     @Override
     public RequestBuilder<?> getPreloadRequestBuilder(@NonNull MediaItem item) {
-        Uri uri = getAlbumArtUri(item);
-        return uri != null
-            ? Glide.with(albumArtPainter.getContext()).load(uri).fitCenter()
-            : null;
+        return albumArtPainter.createPreloadRequestBuilder(item);
     }
 }
 

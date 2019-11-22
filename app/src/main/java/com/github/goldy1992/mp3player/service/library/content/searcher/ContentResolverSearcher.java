@@ -17,20 +17,19 @@ import java.util.List;
 public abstract class ContentResolverSearcher<T extends SearchEntity> extends ContentSearcher {
     final ContentResolver contentResolver;
     final ResultsParser resultsParser;
-    final String idPrefix;
     final SearchDao<T> searchDatabase;
 
     public ContentResolverSearcher(ContentResolver contentResolver,
                                    ResultsParser resultsParser,
                                    ResultsFilter resultsFilter,
-                                   String idPrefix,
                                    SearchDao<T> searchDatabase) {
         super(resultsFilter);
         this.contentResolver = contentResolver;
         this.resultsParser = resultsParser;
-        this.idPrefix = idPrefix;
         this.searchDatabase = searchDatabase;
     }
+
+    abstract String getIdPrefix();
 
     /**
      * @param query the query to search for... assumes that the query as already been normalised
@@ -42,7 +41,7 @@ public abstract class ContentResolverSearcher<T extends SearchEntity> extends Co
         if(cursor == null) {
             return Collections.emptyList();
         }
-        List<MediaItem> results = resultsParser.create(cursor, idPrefix);
+        List<MediaItem> results = resultsParser.create(cursor, getIdPrefix());
         if (isFilterable()) {
             /*
              keep in case we need to filter in the future.

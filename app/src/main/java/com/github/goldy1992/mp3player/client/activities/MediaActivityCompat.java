@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import static com.github.goldy1992.mp3player.commons.Constants.THEME;
 
 public abstract class MediaActivityCompat extends AppCompatActivity implements MediaBrowserConnectorCallback {
+
     private static final String LOG_TAG = "MEDIA_ACTIVITY_COMPAT";
     /** MediaBrowserAdapter */
     protected MediaBrowserAdapter mediaBrowserAdapter;

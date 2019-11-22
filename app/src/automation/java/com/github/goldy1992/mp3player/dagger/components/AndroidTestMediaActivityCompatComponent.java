@@ -7,7 +7,6 @@ import com.github.goldy1992.mp3player.dagger.modules.AlbumArtPainterModule;
 import com.github.goldy1992.mp3player.dagger.modules.AndroidTestComponentNameModule;
 import com.github.goldy1992.mp3player.dagger.modules.MainHandlerModule;
 import com.github.goldy1992.mp3player.dagger.modules.MediaBrowserAdapterModule;
-import com.github.goldy1992.mp3player.dagger.modules.MediaControllerAdapterModule;
 import com.github.goldy1992.mp3player.dagger.modules.MediaControllerCallbackModule;
 import com.github.goldy1992.mp3player.dagger.modules.MyDrawerListenerModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.HandlerThreadModule;

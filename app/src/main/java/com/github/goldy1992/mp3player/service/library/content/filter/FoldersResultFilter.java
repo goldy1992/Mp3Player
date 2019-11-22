@@ -11,7 +11,14 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class FoldersResultFilter extends ResultsFilter {
+
+    @Inject
+    public FoldersResultFilter() {
+        super();
+    }
 
     @Override
     public List<MediaItem> filter(@NonNull String query, @NonNull List<MediaItem> results) {

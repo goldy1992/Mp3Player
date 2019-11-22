@@ -3,10 +3,10 @@ package com.github.goldy1992.mp3player.service.library.content.request;
 import androidx.annotation.Nullable;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
+import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -17,14 +17,11 @@ import static com.github.goldy1992.mp3player.commons.MediaItemType.SINGLETON_PAR
 public class ContentRequestParser {
 
 
-    private final Map<MediaItemType, String> mediaItemTypeToIdMap;
-    private final Map<String, MediaItemType> idToMediaItemTypeMap;
+    private final MediaItemTypeIds mediaItemTypeIds;
 
     @Inject
-    public ContentRequestParser(Map<MediaItemType, String> mediaItemTypeToIdMap,
-                                Map<String, MediaItemType> idToMediaItemTypeMap) {
-        this.mediaItemTypeToIdMap = mediaItemTypeToIdMap;
-        this.idToMediaItemTypeMap = idToMediaItemTypeMap;
+    public ContentRequestParser(MediaItemTypeIds mediaItemTypeIds) {
+        this.mediaItemTypeIds = mediaItemTypeIds;
     }
 
     public ContentRequest parse(String id) {
@@ -46,7 +43,7 @@ public class ContentRequestParser {
             if (mediaItemType != null) {
                 MediaItemType typeToReturn = SINGLETON_PARENT_TO_CHILD_MAP.get(mediaItemType);
                 if (null != typeToReturn) {
-                    return mediaItemTypeToIdMap.get(typeToReturn);
+                    return mediaItemTypeIds.getId(typeToReturn);
                 }
             }
         } else if (splitIdSize >= 2) {
@@ -57,6 +54,6 @@ public class ContentRequestParser {
 
     @Nullable
     private MediaItemType getMediaItemTypeFromId(String id) {
-        return idToMediaItemTypeMap.get(id);
+        return mediaItemTypeIds.getMediaItemType(id);
     }
 }

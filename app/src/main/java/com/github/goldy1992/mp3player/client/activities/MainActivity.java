@@ -96,7 +96,8 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
         }
 
         initNavigationView();
-        this.drawerLayout.addDrawerListener(myDrawerListener);        return true;
+        this.drawerLayout.addDrawerListener(myDrawerListener);
+        return true;
     }
     @Override
     public void onResume() {

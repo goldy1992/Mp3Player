@@ -8,10 +8,15 @@ import com.github.goldy1992.mp3player.service.PlaylistManager;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class MyTimelineQueueNavigator extends TimelineQueueNavigator {
 
     final PlaylistManager playlistManager;
 
+    @Inject
     public MyTimelineQueueNavigator(MediaSessionCompat mediaSession, PlaylistManager playlistManager) {
         super(mediaSession);
         this.playlistManager = playlistManager;

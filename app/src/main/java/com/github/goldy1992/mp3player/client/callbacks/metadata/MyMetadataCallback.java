@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 public class MyMetadataCallback extends AsyncCallback<MediaMetadataCompat> {
     private static final String LOG_TAG = "MY_META_DTA_CLLBK";
@@ -18,7 +19,7 @@ public class MyMetadataCallback extends AsyncCallback<MediaMetadataCompat> {
     private Set<MetadataListener> metadataListeners;
 
     @Inject
-    public MyMetadataCallback(Handler handler) {
+    public MyMetadataCallback(@Named("main") Handler handler) {
         super(handler);
         this.metadataListeners = new HashSet<>();
     }
