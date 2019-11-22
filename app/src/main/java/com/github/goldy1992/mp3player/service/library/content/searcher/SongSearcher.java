@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 import android.provider.MediaStore;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
+import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser;
 import com.github.goldy1992.mp3player.service.library.search.Song;
 import com.github.goldy1992.mp3player.service.library.search.SongDao;
@@ -22,10 +23,20 @@ import static com.github.goldy1992.mp3player.service.library.content.Projections
 public class SongSearcher extends ContentResolverSearcher<Song> {
 
     private static final String PARAMETER = "?";
+    private MediaItemTypeIds mediaItemTypeIds;
 
     @Inject
-    public SongSearcher(ContentResolver contentResolver, SongResultsParser resultsParser, String idPrefix, SongDao songDao) {
-        super(contentResolver, resultsParser, null, idPrefix, songDao);
+    public SongSearcher(ContentResolver contentResolver,
+                        SongResultsParser resultsParser,
+                        MediaItemTypeIds mediaItemTypeIds,
+                        SongDao songDao) {
+        super(contentResolver, resultsParser, null, songDao);
+        this.mediaItemTypeIds = mediaItemTypeIds;
+    }
+
+    @Override
+    String getIdPrefix() {
+        return mediaItemTypeIds.getId(MediaItemType.SONG);
     }
 
     @Override
