@@ -22,7 +22,7 @@ public abstract class ContentResolverSearcherTestBase<T extends ContentResolverS
 
     T searcher;
 
-    static final String idPrefix = "idPrefix";
+    String idPrefix;
 
     static final String VALID_QUERY = "VALID_QUERY";
     static final String INVALID_QUERY = "INVALID_QUERY";

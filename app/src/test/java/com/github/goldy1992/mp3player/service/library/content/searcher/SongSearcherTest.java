@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.service.library.content.searcher;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
 
+import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser;
 import com.github.goldy1992.mp3player.service.library.search.Song;
 import com.github.goldy1992.mp3player.service.library.search.SongDao;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+import static com.github.goldy1992.mp3player.commons.MediaItemType.SONG;
 import static com.github.goldy1992.mp3player.commons.MediaItemType.SONGS;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.spy;
@@ -25,6 +27,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 public class SongSearcherTest extends ContentResolverSearcherTestBase<SongSearcher> {
+
+    private MediaItemTypeIds mediaItemTypeIds;
 
     @Mock
     SongDao songDao;
@@ -35,7 +39,9 @@ public class SongSearcherTest extends ContentResolverSearcherTestBase<SongSearch
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        this.searcher = spy(new SongSearcher(contentResolver, resultsParser, idPrefix, songDao));
+        this.mediaItemTypeIds = new MediaItemTypeIds();
+        this.idPrefix = mediaItemTypeIds.getId(SONG);
+        this.searcher = spy(new SongSearcher(contentResolver, resultsParser, mediaItemTypeIds, songDao));
     }
 
     @Override

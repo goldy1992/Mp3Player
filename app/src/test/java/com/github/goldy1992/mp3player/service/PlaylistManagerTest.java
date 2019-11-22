@@ -26,6 +26,7 @@ public class PlaylistManagerTest {
         playlistManager = new PlaylistManager(queueItems);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testCreateNewPlaylist() {
         List<MediaItem> originalPlaylist = Collections.emptyList();

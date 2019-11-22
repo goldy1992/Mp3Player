@@ -4,6 +4,7 @@ import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
+import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 import com.github.goldy1992.mp3player.service.library.content.filter.FoldersResultFilter;
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser;
 import com.github.goldy1992.mp3player.service.library.search.Folder;
@@ -33,15 +34,19 @@ public class FolderSearcherTest extends ContentResolverSearcherTestBase<FolderSe
     @Mock
     FolderResultsParser resultsParser;
 
+    private MediaItemTypeIds mediaItemTypeIds;
+
     @Mock
     FolderDao folderDao;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        this.mediaItemTypeIds = new MediaItemTypeIds();
+        this.idPrefix = mediaItemTypeIds.getId(MediaItemType.FOLDER);
         this.filter = mock(FoldersResultFilter.class);
         when(filter.filter(VALID_QUERY, expectedResult)).thenReturn(expectedResult);
-        this.searcher = spy(new FolderSearcher(contentResolver, resultsParser, filter, idPrefix, folderDao));
+        this.searcher = spy(new FolderSearcher(contentResolver, resultsParser, filter, mediaItemTypeIds, folderDao));
     }
 
     @Override
