@@ -9,6 +9,7 @@ import androidx.annotation.VisibleForTesting;
 
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter;
 import com.github.goldy1992.mp3player.client.utils.TimerUtils;
+import com.github.goldy1992.mp3player.dagger.scopes.FragmentScope;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -24,6 +25,7 @@ import static com.github.goldy1992.mp3player.client.utils.TimerUtils.ONE_SECOND;
 import static com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime;
 import static com.github.goldy1992.mp3player.commons.Constants.DEFAULT_POSITION;
 
+@FragmentScope
 public class TimeCounter {
     private static final long START = 0L;
     public static final String LOG_TAG = "TimeCounter";

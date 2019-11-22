@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.goldy1992.mp3player.client.views.adapters.MediaItemRecyclerViewAdapter;
 
+import javax.inject.Inject;
+
 public class MyGenericItemTouchListener extends GestureDetector.SimpleOnGestureListener
         implements RecyclerView.OnItemTouchListener  {
 
@@ -19,6 +21,7 @@ public class MyGenericItemTouchListener extends GestureDetector.SimpleOnGestureL
     final ItemSelectedListener itemSelectedListener;
     RecyclerView parentView;
 
+    @Inject
     public MyGenericItemTouchListener(Context context, ItemSelectedListener itemSelectedListener) {
         this.gestureDetector = new GestureDetector(context, this);
         this.itemSelectedListener = itemSelectedListener;

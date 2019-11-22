@@ -18,6 +18,7 @@ import androidx.annotation.VisibleForTesting;
 import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback;
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener;
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener;
+import com.github.goldy1992.mp3player.dagger.scopes.ComponentScope;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -25,6 +26,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+@ComponentScope
 public class MediaControllerAdapter {
 
     private static final String LOG_TAG = "MDIA_CNTRLLR_ADPTR";

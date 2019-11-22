@@ -15,13 +15,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 public class MediaIdSubscriptionCallback extends MediaBrowserCompat.SubscriptionCallback {
 
     private static final String LOG_TAG = "SUBSCRIPTION_CALLBACK";
     private Handler handler;
     private final Map<String, Set<MediaBrowserResponseListener>> mediaBrowserResponseListeners;
 
-    public MediaIdSubscriptionCallback(Handler handler) {
+    @Inject
+    public MediaIdSubscriptionCallback(@Named("worker") Handler handler) {
         this.mediaBrowserResponseListeners = new HashMap<>();
         this.handler = handler;
 

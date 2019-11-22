@@ -51,7 +51,7 @@ public class MyPlaybackPreparerTest {
     private MyPlaybackPreparer myPlaybackPreparer;
 
     @Before
-    public void setup() throws FileDataSource.FileDataSourceException {
+    public void setup() {
         MockitoAnnotations.initMocks(this);
         MediaItem testItem = new MediaItemBuilder("id1").setMediaUri(Uri.parse("string")).build();
         when(playlistManager.getPlaylist()).thenReturn(Collections.singletonList(testItem));
