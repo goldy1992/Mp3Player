@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.dagger.components;
 
 import android.content.Context;
 
-import com.github.goldy1992.mp3player.dagger.modules.AndroidTestContentRetrieverMapModule;
 import com.github.goldy1992.mp3player.dagger.modules.PlaybackNotificationManagerModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.ContentManagerModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.ExoPlayerModule;
@@ -20,17 +19,11 @@ import dagger.Component;
 
 @Singleton
 @Component(modules = {
-        AndroidTestContentRetrieverMapModule.class,
         ContentManagerModule.class,
-        ContentRetrieverModule.class,
-        ContentSearcherModule.class,
         ExoPlayerModule.class,
         HandlerThreadModule.class,
-        MediaItemBuilderModule.class,
-        MediaItemTypeIdModule.class,
         MediaSessionCompatModule.class,
         MediaSessionConnectorModule.class,
-        PlaybackManagerModule.class,
         PlaybackNotificationManagerModule.class,
         SearchDatabaseModule.class,
         ServiceModule.class

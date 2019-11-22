@@ -5,13 +5,13 @@ import android.database.Cursor;
 import android.os.Handler;
 import android.provider.MediaStore;
 
-import com.github.goldy1992.mp3player.service.library.content.parser.ResultsParser;
+import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser;
 import com.github.goldy1992.mp3player.service.library.search.FolderDao;
 
 import static com.github.goldy1992.mp3player.TestConstants.TEST_DATA_DIR;
 
 public class FoldersRetrieverTestImpl extends FoldersRetriever {
-    public FoldersRetrieverTestImpl(ContentResolver contentResolver, ResultsParser resultsParser, FolderDao folderDao, Handler handler) {
+    public FoldersRetrieverTestImpl(ContentResolver contentResolver, FolderResultsParser resultsParser, FolderDao folderDao, Handler handler) {
         super(contentResolver, resultsParser, folderDao, handler);
     }
 

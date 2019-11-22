@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.service;
 
 import androidx.media.MediaBrowserServiceCompat;
 
+import com.github.goldy1992.mp3player.commons.MediaItemType;
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 
 import org.junit.Before;
@@ -19,7 +20,6 @@ public class RootAuthenticatorTest {
 
     private MediaItemTypeIds mediaItemTypeIds;
     private RootAuthenticator rootAuthenticator;
-    private final String ACCEPTED_MEDIA_ID = "ACCEPTED_MEDIA_ID";
 
     @Before
     public void setup() {
@@ -29,12 +29,13 @@ public class RootAuthenticatorTest {
 
     @Test
     public void testGetAcceptedId() {
+        final String expectedMediaId = mediaItemTypeIds.getId(MediaItemType.ROOT);
         String packageNameToAccept = new StringBuilder()
                 .append("myPackage")
                 .append(PACKAGE_NAME)
                 .toString();
         MediaBrowserServiceCompat.BrowserRoot result = rootAuthenticator.authenticate(packageNameToAccept, 0, null);
-        assertEquals(ACCEPTED_MEDIA_ID, result.getRootId());
+        assertEquals(expectedMediaId, result.getRootId());
     }
 
     @Test
