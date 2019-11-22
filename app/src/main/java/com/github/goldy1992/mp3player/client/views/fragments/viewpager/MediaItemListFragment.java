@@ -15,11 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.github.goldy1992.mp3player.R;
 import com.github.goldy1992.mp3player.client.AlbumArtPainter;
+import com.github.goldy1992.mp3player.client.IntentMapper;
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter;
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter;
 import com.github.goldy1992.mp3player.client.MyGenericItemTouchListener;
 import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat;
 import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecycleViewAdapter;
+import com.github.goldy1992.mp3player.client.views.adapters.RecyclerViewAdapters;
 import com.github.goldy1992.mp3player.commons.MediaItemType;
 import com.github.goldy1992.mp3player.dagger.components.MediaActivityCompatComponent;
 import com.l4digital.fastscroll.FastScrollRecyclerView;
@@ -41,12 +43,13 @@ public abstract class MediaItemListFragment extends Fragment implements MyGeneri
      * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
      */
     private FastScrollRecyclerView recyclerView;
-    protected Class<? extends MediaActivityCompat> intentClass;
+    protected IntentMapper intentMapper;
     private LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-    private MediaItemType parentItemType;
+    MediaItemType parentItemType;
     private String parentItemTypeId;
     protected MediaBrowserAdapter mediaBrowserAdapter;
     protected MediaControllerAdapter mediaControllerAdapter;
+    private RecyclerViewAdapters recyclerViewAdapters;
     private MyGenericRecycleViewAdapter myViewAdapter;
     private AlbumArtPainter albumArtPainter;
     private MyGenericItemTouchListener myGenericItemTouchListener;
@@ -55,6 +58,7 @@ public abstract class MediaItemListFragment extends Fragment implements MyGeneri
         this.parentItemType = mediaItemType;
         this.parentItemTypeId = id;
         injectDependencies(component);
+        this.myViewAdapter = recyclerViewAdapters.getAdapter(mediaItemType);
         this.mediaBrowserAdapter.registerListener(parentItemTypeId, myViewAdapter);
         this.mediaBrowserAdapter.subscribe(parentItemTypeId);
     }
@@ -98,8 +102,8 @@ public abstract class MediaItemListFragment extends Fragment implements MyGeneri
     }
 
     @Inject
-    public void setMyGenericRecycleViewAdapter(MyGenericRecycleViewAdapter adapter) {
-        this.myViewAdapter = adapter;
+    public void setRecyclerViewAdapters(RecyclerViewAdapters adapters) {
+        this.recyclerViewAdapters = adapters;
     }
 
     @Inject
@@ -108,8 +112,8 @@ public abstract class MediaItemListFragment extends Fragment implements MyGeneri
     }
 
     @Inject
-    public void setIntentClass(Class<? extends MediaActivityCompat> intentClass) {
-        this.intentClass = intentClass;
+    public void setIntentMapper(IntentMapper intentMapper) {
+        this.intentMapper = intentMapper;
     }
 
     private void injectDependencies(MediaActivityCompatComponent component) {

@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
@@ -28,7 +29,7 @@ public class MySongViewAdapter extends MyGenericRecycleViewAdapter {
     private final String LOG_TAG = "MY_VIEW_ADAPTER";
 
     @Inject
-    public MySongViewAdapter(AlbumArtPainter albumArtPainter, Handler mainHandler) {
+    public MySongViewAdapter(AlbumArtPainter albumArtPainter, @Named("main") Handler mainHandler) {
         super(albumArtPainter, mainHandler);
     }
 

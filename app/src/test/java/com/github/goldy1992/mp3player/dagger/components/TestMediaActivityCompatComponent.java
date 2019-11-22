@@ -7,7 +7,6 @@ import com.github.goldy1992.mp3player.client.activities.EmptyMediaActivityCompat
 import com.github.goldy1992.mp3player.dagger.modules.ComponentNameModule;
 import com.github.goldy1992.mp3player.dagger.modules.MainHandlerModule;
 import com.github.goldy1992.mp3player.dagger.modules.MediaBrowserCompatModule;
-import com.github.goldy1992.mp3player.dagger.modules.MediaControllerCallbackModule;
 import com.github.goldy1992.mp3player.dagger.modules.MockAlbumArtPainterModule;
 import com.github.goldy1992.mp3player.dagger.modules.MockMediaControllerAdapterModule;
 import com.github.goldy1992.mp3player.dagger.modules.MyDrawerListenerModule;
@@ -24,7 +23,6 @@ import dagger.Component;
         HandlerThreadModule.class,
         MainHandlerModule.class,
         MediaBrowserCompatModule.class,
-        MediaControllerCallbackModule.class,
         MockMediaControllerAdapterModule.class,
         MyDrawerListenerModule.class})
 public interface TestMediaActivityCompatComponent extends MediaActivityCompatComponent {

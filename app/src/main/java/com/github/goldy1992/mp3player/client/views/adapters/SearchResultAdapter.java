@@ -19,13 +19,14 @@ import com.github.goldy1992.mp3player.commons.MediaItemType;
 import com.github.goldy1992.mp3player.commons.MediaItemUtils;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import static com.github.goldy1992.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 
 public class SearchResultAdapter extends MediaItemRecyclerViewAdapter {
 
     @Inject
-    public SearchResultAdapter(AlbumArtPainter albumArtPainter, Handler mainHandler) {
+    public SearchResultAdapter(AlbumArtPainter albumArtPainter, @Named("main") Handler mainHandler) {
         super(albumArtPainter, mainHandler);
     }
 

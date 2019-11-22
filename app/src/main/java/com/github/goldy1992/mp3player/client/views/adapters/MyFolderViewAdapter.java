@@ -20,6 +20,9 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import static com.github.goldy1992.mp3player.commons.Constants.UNKNOWN;
 import static com.github.goldy1992.mp3player.commons.MetaDataKeys.META_DATA_DIRECTORY;
 
@@ -27,7 +30,8 @@ public class MyFolderViewAdapter extends MyGenericRecycleViewAdapter {
 
     private final String LOG_TAG = "FOLDER_VIEW_ADAPTER";
 
-    public MyFolderViewAdapter(AlbumArtPainter albumArtPainter, Handler mainHandler) {
+    @Inject
+    public MyFolderViewAdapter(AlbumArtPainter albumArtPainter, @Named("main") Handler mainHandler) {
         super(albumArtPainter, mainHandler);
     }
 

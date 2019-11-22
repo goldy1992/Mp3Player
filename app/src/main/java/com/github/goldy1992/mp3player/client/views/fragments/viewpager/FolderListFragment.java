@@ -19,8 +19,10 @@ public class FolderListFragment extends MediaItemListFragment {
 
     @Override
     public void itemSelected(MediaBrowserCompat.MediaItem item) {
-        Intent intent = new Intent(getContext(), intentClass);
-        intent.putExtra(MEDIA_ITEM, item);
-        startActivity(intent);
+        Intent intent = intentMapper.getIntent(this.parentItemType);
+        if (null != intent) {
+            intent.putExtra(MEDIA_ITEM, item);
+            startActivity(intent);
+        }
     }
 }
