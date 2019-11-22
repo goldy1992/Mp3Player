@@ -8,6 +8,7 @@ import android.net.Uri;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.github.goldy1992.mp3player.commons.MediaItemType;
 import com.github.goldy1992.mp3player.commons.MediaItemUtils;
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser;
@@ -48,14 +49,14 @@ public class SongFromUriRetrieverTest {
     @Mock
     private MediaMetadataRetriever mmr;
 
-    private static final String ID = "id";
+    private MediaItemTypeIds mediaItemTypeIds;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-
+        this.mediaItemTypeIds = new MediaItemTypeIds();
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        this.songFromUriRetriever = new SongFromUriRetriever(context, contentResolver, songResultsParser, mmr, new MediaItemTypeIds());
+        this.songFromUriRetriever = new SongFromUriRetriever(context, contentResolver, songResultsParser, mmr, mediaItemTypeIds);
     }
 
     @Test
@@ -101,7 +102,8 @@ public class SongFromUriRetrieverTest {
         when(contentResolver.query(any(), any(), any(), any(), any()))
                 .thenReturn(cursor);
 
-        when(songResultsParser.create(cursor, ID)).thenReturn(Collections.singletonList(expectedMediaItem));
+        final String id = mediaItemTypeIds.getId(MediaItemType.SONGS);
+        when(songResultsParser.create(cursor, id)).thenReturn(Collections.singletonList(expectedMediaItem));
         when(testUri.getScheme()).thenReturn(ContentResolver.SCHEME_FILE);
 
         MediaItem result = songFromUriRetriever.getSong(testUri);

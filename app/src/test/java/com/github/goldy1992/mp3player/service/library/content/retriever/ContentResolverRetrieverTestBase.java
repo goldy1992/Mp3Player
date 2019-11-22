@@ -6,8 +6,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
-import com.github.goldy1992.mp3player.service.library.content.parser.ResultsParser;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest;
+import com.github.goldy1992.mp3player.service.library.search.SearchDatabase;
 
 import org.mockito.Mock;
 
@@ -20,6 +20,9 @@ public abstract class ContentResolverRetrieverTestBase<T extends ContentResolver
 
     @Mock
     ContentResolver contentResolver;
+
+    @Mock
+    SearchDatabase searchDatabase;
 
     @Mock
     Cursor cursor;
