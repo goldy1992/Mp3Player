@@ -10,7 +10,6 @@ import com.github.goldy1992.mp3player.commons.MediaItemType;
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 import com.github.goldy1992.mp3player.service.library.content.filter.FoldersResultFilter;
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser;
-import com.github.goldy1992.mp3player.service.library.content.parser.ResultsParser;
 import com.github.goldy1992.mp3player.service.library.search.Folder;
 import com.github.goldy1992.mp3player.service.library.search.FolderDao;
 

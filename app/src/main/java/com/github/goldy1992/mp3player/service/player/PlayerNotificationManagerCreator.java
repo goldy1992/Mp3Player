@@ -5,6 +5,7 @@ import android.graphics.Color;
 
 import androidx.core.app.NotificationCompat;
 
+import com.github.goldy1992.mp3player.LogTagger;
 import com.github.goldy1992.mp3player.R;
 import com.github.goldy1992.mp3player.service.MyDescriptionAdapter;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -14,11 +15,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class PlayerNotificationManagerCreator {
+public class PlayerNotificationManagerCreator implements LogTagger {
 
-    private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
     private static final int NOTIFICATION_ID = 512;
-    private static final int CHANNEL_D = 704;
 
     private static final String CHANNEL_ID = "com.github.goldy1992.mp3player.context";
 
@@ -53,5 +52,10 @@ public class PlayerNotificationManagerCreator {
             this.playbackNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PRIVATE);
         }
         return playbackNotificationManager;
+    }
+
+    @Override
+    public String getLogTag() {
+        return "MEDIA_PLAYBACK_SERVICE";
     }
 }

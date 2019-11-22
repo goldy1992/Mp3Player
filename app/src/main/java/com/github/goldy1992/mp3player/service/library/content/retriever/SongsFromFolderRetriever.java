@@ -9,9 +9,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import androidx.annotation.NonNull;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
-import com.github.goldy1992.mp3player.service.library.content.parser.ResultsParser;
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser;
-import com.github.goldy1992.mp3player.service.library.search.SearchDao;
 import com.github.goldy1992.mp3player.service.library.search.SearchDatabase;
 import com.github.goldy1992.mp3player.service.library.search.Song;
 

@@ -7,7 +7,6 @@ import com.github.goldy1992.mp3player.service.library.content.searcher.SongSearc
 
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

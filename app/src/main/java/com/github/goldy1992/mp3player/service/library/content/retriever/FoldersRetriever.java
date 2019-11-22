@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import com.github.goldy1992.mp3player.commons.MediaItemType;
 import com.github.goldy1992.mp3player.commons.MediaItemUtils;
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser;
-import com.github.goldy1992.mp3player.service.library.content.parser.ResultsParser;
 import com.github.goldy1992.mp3player.service.library.search.Folder;
 import com.github.goldy1992.mp3player.service.library.search.FolderDao;
 

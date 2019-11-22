@@ -30,7 +30,6 @@ public class IntentMapper {
     }
 
     private void init() {
-        // TODO: change this code to accommodate test implementations. Intents should be made in Dagger
         categoryToActivityMap.put(MediaItemType.FOLDER, MediaPlayerActivityInjector.class);
         categoryToActivityMap.put(MediaItemType.SONGS, MediaPlayerActivityInjector.class);
         categoryToActivityMap.put(MediaItemType.FOLDERS, FolderActivityInjector.class);

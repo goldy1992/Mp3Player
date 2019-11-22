@@ -19,7 +19,6 @@ import com.github.goldy1992.mp3player.client.IntentMapper;
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter;
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter;
 import com.github.goldy1992.mp3player.client.MyGenericItemTouchListener;
-import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat;
 import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecycleViewAdapter;
 import com.github.goldy1992.mp3player.client.views.adapters.RecyclerViewAdapters;
 import com.github.goldy1992.mp3player.commons.MediaItemType;

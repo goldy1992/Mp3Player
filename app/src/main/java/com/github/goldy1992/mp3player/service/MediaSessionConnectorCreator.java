@@ -53,17 +53,17 @@ public final class MediaSessionConnectorCreator {
     }
 
     public MediaSessionConnector create() {
-        if (null == mediaSessionConnector) {
-            MediaSessionConnector mediaSessionConnector = new MediaSessionConnector(mediaSessionCompat);
-            mediaSessionConnector.setPlayer(exoPlayer);
-            mediaSessionConnector.setPlaybackPreparer(myPlaybackPreparer);
-            mediaSessionConnector.setControlDispatcher(myControlDispatcher);
-            mediaSessionConnector.setMediaMetadataProvider(myMetadataProvider);
-            mediaSessionConnector.setQueueNavigator(myTimelineQueueNavigator);
-            mediaSessionConnector.setCustomActionProviders(increaseSpeedProvider, decreaseSpeedProvider);
-            mediaSessionConnector.setMediaButtonEventHandler(myMediaButtonEventHandler);
-            mediaSessionConnector.setEnabledPlaybackActions(SUPPORTED_PLAYBACK_ACTIONS);
-            this.mediaSessionConnector = mediaSessionConnector;
+        if (null == this.mediaSessionConnector) {
+            MediaSessionConnector newMediaSessionConnector = new MediaSessionConnector(mediaSessionCompat);
+            newMediaSessionConnector.setPlayer(exoPlayer);
+            newMediaSessionConnector.setPlaybackPreparer(myPlaybackPreparer);
+            newMediaSessionConnector.setControlDispatcher(myControlDispatcher);
+            newMediaSessionConnector.setMediaMetadataProvider(myMetadataProvider);
+            newMediaSessionConnector.setQueueNavigator(myTimelineQueueNavigator);
+            newMediaSessionConnector.setCustomActionProviders(increaseSpeedProvider, decreaseSpeedProvider);
+            newMediaSessionConnector.setMediaButtonEventHandler(myMediaButtonEventHandler);
+            newMediaSessionConnector.setEnabledPlaybackActions(SUPPORTED_PLAYBACK_ACTIONS);
+            this.mediaSessionConnector = newMediaSessionConnector;
         }
         return this.mediaSessionConnector;
     }

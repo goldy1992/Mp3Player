@@ -38,7 +38,6 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onCreate() {
         super.onCreate();
-  //      nManager = (NotificationManager) getApplicationContext().getSystemService(NOTIFICATION_SERVICE);
         this.playerNotificationManagerCreator.create();
         this.mediaSessionConnectorCreator.create();
         setSessionToken(mediaSession.getSessionToken());
