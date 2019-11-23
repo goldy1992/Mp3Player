@@ -11,6 +11,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.media.MediaBrowserServiceCompat;
 
@@ -55,8 +56,8 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
 
 
     @Override
-    public BrowserRoot onGetRoot(String clientPackageName, int clientUid,
-                                 Bundle rootHints) {
+    public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid,
+                                 @Nullable Bundle rootHints) {
         return rootAuthenticator.authenticate(clientPackageName, clientUid, rootHints);
     }
 
@@ -95,9 +96,13 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
     @Override
     public void onNotificationPosted(
             int notificationId, Notification notification, boolean ongoing) {
-
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            //startForeground(notificationId, notification);
+            // fix to make notifications removable on versions < oreo.
+            if (!ongoing) {
+                stopForeground(false);
+            } else {
+                startForeground(notificationId, notification);
+            }
         }
     }
 
