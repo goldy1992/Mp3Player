@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.service.player;
 import android.content.Context;
 import android.graphics.Color;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.core.app.NotificationCompat;
 
 import com.github.goldy1992.mp3player.LogTagger;
@@ -82,5 +83,15 @@ public class MyPlayerNotificationManager implements LogTagger {
     @Override
     public String getLogTag() {
         return "MEDIA_PLAYBACK_SERVICE";
+    }
+
+    @VisibleForTesting
+    public PlayerNotificationManager getPlaybackNotificationManager() {
+        return playbackNotificationManager;
+    }
+
+    @VisibleForTesting
+    public void setPlayerNotificationManager(PlayerNotificationManager playerNotificationManager) {
+        this.playbackNotificationManager = playerNotificationManager;
     }
 }
