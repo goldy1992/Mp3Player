@@ -6,13 +6,14 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.github.goldy1992.mp3player.service.library.ContentManager;
-import com.github.goldy1992.mp3player.service.player.PlayerNotificationManagerCreator;
+import com.github.goldy1992.mp3player.service.player.MyPlayerNotificationManager;
 
 import java.util.List;
 
@@ -28,7 +29,6 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     private ContentManager contentManager;
     private HandlerThread worker;
     private Handler handler;
-    private PlayerNotificationManagerCreator playerNotificationManagerCreator;
     private MediaSessionConnectorCreator mediaSessionConnectorCreator;
     private MediaSessionCompat mediaSession;
     private RootAuthenticator rootAuthenticator;
@@ -38,10 +38,17 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onCreate() {
         super.onCreate();
-        this.playerNotificationManagerCreator.create();
         this.mediaSessionConnectorCreator.create();
         setSessionToken(mediaSession.getSessionToken());
+    }
 
+    @Override
+    public int onStartCommand (Intent intent,
+                                      int flags,
+                                      int startId) {
+
+        Log.i(LOG_TAG, "breakpoint, on start command called");
+        return START_STICKY;
     }
 
 
@@ -84,22 +91,6 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
         });
     }
 
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        stopForeground(true);
-        mediaSession.release();
-        worker.quitSafely();
-    }
-
-    @Override
-    public void onTaskRemoved(Intent rootIntent) {
-        super.onTaskRemoved(rootIntent);
-        mediaSession.release();
-        stopSelf();
-    }
-
     public MediaSessionCompat getMediaSession() {
         return mediaSession;
     }
@@ -132,11 +123,6 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
     @Inject
     public void setMediaSessionConnectorCreator(MediaSessionConnectorCreator mediaSessionConnectorCreator) {
         this.mediaSessionConnectorCreator = mediaSessionConnectorCreator;
-    }
-
-    @Inject
-    public void setPlayerNotificationManagerCreator(PlayerNotificationManagerCreator playerNotificationManagerCreator) {
-        this.playerNotificationManagerCreator = playerNotificationManagerCreator;
     }
 
     @VisibleForTesting

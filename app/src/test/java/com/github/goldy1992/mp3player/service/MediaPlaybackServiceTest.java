@@ -102,13 +102,4 @@ public class MediaPlaybackServiceTest {
         //shadowOf(mediaPlaybackService.getWorker().getLooper()).idle();
         verify(result, times(1)).sendResult(any());
     }
-
-    @Test
-    public void testOnDestroy() throws IllegalAccessException {
-        MediaSessionCompat mediaSessionSpy = spy(mediaPlaybackService.getMediaSession());
-        FieldUtils.writeField(mediaPlaybackService, "mediaSession", mediaSessionSpy, true);
-        mediaPlaybackService.onDestroy();
-        verify(mediaSessionSpy, times(1)).release();
-    }
-
 }

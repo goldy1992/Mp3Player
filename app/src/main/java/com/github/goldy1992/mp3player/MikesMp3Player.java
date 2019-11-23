@@ -1,6 +1,10 @@
 package com.github.goldy1992.mp3player;
 
 import android.app.Application;
+import android.content.Intent;
+import android.os.Build;
+
+import com.github.goldy1992.mp3player.service.MediaPlaybackServiceInjector;
 
 public class MikesMp3Player extends Application {
     /**
@@ -9,7 +13,11 @@ public class MikesMp3Player extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-//         startService(new Intent(this, KillNotificationService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(new Intent(getApplicationContext(), MediaPlaybackServiceInjector.class));
+        } else {
+            startService(new Intent(getApplicationContext(), MediaPlaybackServiceInjector.class));
+        }
     }
 
 }

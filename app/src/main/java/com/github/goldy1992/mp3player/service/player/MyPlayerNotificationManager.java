@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class PlayerNotificationManagerCreator implements LogTagger {
+public class MyPlayerNotificationManager implements LogTagger {
 
     private static final int NOTIFICATION_ID = 512;
 
@@ -26,22 +26,21 @@ public class PlayerNotificationManagerCreator implements LogTagger {
     private final ExoPlayer exoPlayer;
     private final Context context;
     private final MyDescriptionAdapter myDescriptionAdapter;
+    private boolean isActive = false;
 
     @Inject
-    public PlayerNotificationManagerCreator(Context context, MyDescriptionAdapter myDescriptionAdapter, ExoPlayer exoPlayer) {
+    public MyPlayerNotificationManager(Context context, MyDescriptionAdapter myDescriptionAdapter, ExoPlayer exoPlayer) {
         this.context = context;
         this.myDescriptionAdapter = myDescriptionAdapter;
         this.exoPlayer = exoPlayer;
-
-
+        create();
     }
 
     public PlayerNotificationManager create() {
         if (null == playbackNotificationManager) {
             this.playbackNotificationManager = PlayerNotificationManager.createWithNotificationChannel(context,
                     CHANNEL_ID, R.string.notification_channel_name, R.string.channel_description, NOTIFICATION_ID, myDescriptionAdapter);
-
-            this.playbackNotificationManager.setPlayer(exoPlayer);
+            this.playbackNotificationManager.setPlayer(null);
             this.playbackNotificationManager.setColor(Color.BLACK);
             this.playbackNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
             this.playbackNotificationManager.setPriority(NotificationCompat.PRIORITY_LOW);
@@ -52,6 +51,20 @@ public class PlayerNotificationManagerCreator implements LogTagger {
             this.playbackNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PRIVATE);
         }
         return playbackNotificationManager;
+    }
+
+    public void activate() {
+        this.playbackNotificationManager.setPlayer(exoPlayer);
+        this.isActive = true;
+    }
+
+    public void deactivate() {
+        this.playbackNotificationManager.setPlayer(null);
+        this.isActive = false;
+    }
+
+    public boolean isActive() {
+        return isActive;
     }
 
     @Override
