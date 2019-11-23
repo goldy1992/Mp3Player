@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.client.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import com.github.goldy1992.mp3player.client.PermissionsProcessor;
 import com.github.goldy1992.mp3player.dagger.components.DaggerMediaActivityCompatComponent;
 import com.github.goldy1992.mp3player.dagger.components.MediaActivityCompatComponent;
 import com.github.goldy1992.mp3player.dagger.components.SplashScreenEntryActivityComponent;
+import com.github.goldy1992.mp3player.service.MediaPlaybackServiceInjector;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -149,6 +151,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     public void onPermissionGranted() {
         Log.i(LOG_TAG, "permission granted");
         setPermissionGranted(true);
+        createService();
         Runnable r = new Thread(() -> mediaBrowserAdapter.connect());
         runOnUiThread(r);
     }
@@ -191,6 +194,14 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     @Inject
     public void setMediaBrowserAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
         this.mediaBrowserAdapter = mediaBrowserAdapter;
+    }
+
+    private void createService() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(new Intent(getApplicationContext(), MediaPlaybackServiceInjector.class));
+        } else {
+            startService(new Intent(getApplicationContext(), MediaPlaybackServiceInjector.class));
+        }
     }
 
     private void initialiseDependencies() {

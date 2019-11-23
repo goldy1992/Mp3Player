@@ -1,6 +1,8 @@
 package com.github.goldy1992.mp3player.service;
 
+import android.app.Notification;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -13,7 +15,7 @@ import androidx.annotation.VisibleForTesting;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.github.goldy1992.mp3player.service.library.ContentManager;
-import com.github.goldy1992.mp3player.service.player.MyPlayerNotificationManager;
+import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener;
 
 import java.util.List;
 
@@ -23,7 +25,7 @@ import javax.inject.Named;
 /**
  * Created by Mike on 24/09/2017.
  */
-public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
+public abstract class MediaPlaybackService extends MediaBrowserServiceCompat implements NotificationListener {
 
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
     private ContentManager contentManager;
@@ -78,6 +80,25 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat {
             List<MediaBrowserCompat.MediaItem> mediaItems = contentManager.getChildren(parentId);
             result.sendResult(mediaItems);
         });
+    }
+
+    /**
+     * Called each time after the notification has been posted.
+     *
+     * <p>For a service, the {@code ongoing} flag can be used as an indicator as to whether it
+     * should be in the foreground.
+     *
+     * @param notificationId The id of the notification which has been posted.
+     * @param notification The {@link Notification}.
+     * @param ongoing Whether the notification is ongoing.
+     */
+    @Override
+    public void onNotificationPosted(
+            int notificationId, Notification notification, boolean ongoing) {
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            //startForeground(notificationId, notification);
+        }
     }
 
     @Override
