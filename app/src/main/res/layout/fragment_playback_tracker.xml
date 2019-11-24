@@ -8,7 +8,7 @@
     android:paddingBottom="@dimen/default_gap"
     >
 
-    <com.example.mike.mp3player.client.views.SeekerBar
+    <com.github.goldy1992.mp3player.client.views.SeekerBar
         android:id="@+id/seekBar"
         android:layout_width="match_parent"
         android:layout_below="@id/timerLayout"

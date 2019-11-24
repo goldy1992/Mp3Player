@@ -4,32 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.mike.mp3player.client.activities.MediaPlayerActivity">
+    tools:context="com.github.goldy1992.mp3player.client.activities.MediaPlayerActivity">
 
-    <fragment
-        android:id="@+id/metadataTitleBarFragment"
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_alignParentStart="true"
+        android:id="@+id/track_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        class="com.example.mike.mp3player.client.views.fragments.MetadataTitleBarFragment"
-        tools:layout="@layout/fragment_metadata_title_bar"/>
-
-    <fragment
-        android:id="@+id/albumArtFragment"
-        android:layout_margin="@dimen/default_gap"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/metadataTitleBarFragment"
-        android:layout_above="@+id/mediaControlsFragment"
-        class="com.example.mike.mp3player.client.views.fragments.AlbumArtFragment"
-        tools:layout="@layout/fragment_playback_speed_controls"/>
+        android:layout_above="@id/mediaControlsFragment"
+        android:layout_height="wrap_content" />
 
     <fragment
         android:id="@+id/mediaControlsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/playbackTrackerFragment"
-        class="com.example.mike.mp3player.client.views.fragments.MediaControlsFragment"
+        class="com.github.goldy1992.mp3player.client.views.fragments.MediaControlsFragment"
         tools:layout="@layout/fragment_media_controls"/>
 
 
@@ -38,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/playbackToolbarExtendedFragment"
-        class="com.example.mike.mp3player.client.views.fragments.PlaybackTrackerFragment"
+        class="com.github.goldy1992.mp3player.client.views.fragments.PlaybackTrackerFragment"
         tools:layout="@layout/fragment_playback_tracker"/>
 
     <fragment
@@ -50,7 +40,7 @@
         android:layout_gravity="bottom"
         android:layout_marginTop="5dp"
         android:minHeight="?attr/actionBarSize"
-        class="com.example.mike.mp3player.client.views.fragments.PlayToolBarFragment"
+        class="com.github.goldy1992.mp3player.client.views.fragments.PlayToolBarFragment"
         tools:layout="@layout/playback_toolbar_layout" />
 
 </RelativeLayout>

@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mike.mp3player"
+    package="com.github.goldy1992.mp3player"
     android:installLocation="preferExternal">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".MikesMp3Player"
         android:allowBackup="true"
         android:fullBackupContent="true"
-        android:icon="@mipmap/my_app_icon"
+        android:icon="@mipmap/headphone_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Orange">
@@ -39,7 +42,17 @@
         <activity
             android:name=".client.activities.MediaPlayerActivityInjector"
             android:label="@string/app_name"
-            android:parentActivityName=".client.activities.MainActivityInjector" />
+            android:parentActivityName=".client.activities.MainActivityInjector"
+            android:launchMode="singleTask" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content"/>
+                <data android:scheme="file"/>
+                <data android:mimeType="audio/*"/>
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".client.activities.FolderActivityInjector"
