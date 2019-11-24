@@ -9,6 +9,7 @@ import com.github.goldy1992.mp3player.dagger.modules.service.MediaSessionCompatM
 import com.github.goldy1992.mp3player.dagger.modules.service.MediaSessionConnectorModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.SearchDatabaseModule;
 import com.github.goldy1992.mp3player.service.MediaPlaybackService;
+import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener;
 
 import javax.inject.Singleton;
 
@@ -31,7 +32,7 @@ public interface ServiceComponent {
     @Component.Factory
     interface Factory {
         ServiceComponent create(@BindsInstance Context context,
-                                @BindsInstance MediaPlaybackService mediaPlaybackService,
+                                @BindsInstance NotificationListener notificationListener,
                                 @BindsInstance String workerId);
     }
 }

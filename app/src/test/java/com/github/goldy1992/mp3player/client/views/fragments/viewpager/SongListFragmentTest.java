@@ -35,7 +35,7 @@ public class SongListFragmentTest extends FragmentTestBase<SongListFragment> {
         activityScenario = Robolectric.buildActivity(TestMainActivity.class).setup();
         TestMainActivity testMainActivity = activityScenario.get();
         MediaActivityCompatComponent component = testMainActivity.getMediaActivityCompatComponent();
-        folderListFragment = new SongListFragment(MediaItemType.SONGS, "id", component);
+        folderListFragment = SongListFragment.newInstance(MediaItemType.SONGS, "id", component);
         super.setup(folderListFragment, SongListFragment.class);
     }
     @Test

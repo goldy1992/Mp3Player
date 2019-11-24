@@ -36,7 +36,7 @@ public class FolderListFragmentTest extends FragmentTestBase<FolderListFragment>
         activityScenario = Robolectric.buildActivity(TestMainActivity.class).setup();
         TestMainActivity testMainActivity = activityScenario.get();
         MediaActivityCompatComponent component = testMainActivity.getMediaActivityCompatComponent();
-        folderListFragment = new FolderListFragment(MediaItemType.FOLDERS, "id", component);
+        folderListFragment = FolderListFragment.newInstance(MediaItemType.FOLDERS, "id", component);
         super.setup(folderListFragment, FolderListFragment.class);
     }
 

@@ -180,9 +180,9 @@ public abstract class MainActivity extends MediaActivityCompat implements MediaB
             MediaItemType category = (MediaItemType) MediaItemUtils.getExtra(ROOT_ITEM_TYPE, mediaItem);
             MediaItemListFragment mediaItemListFragment;
             switch (category) {
-                case SONGS: mediaItemListFragment = new SongListFragment(category, id, getMediaActivityCompatComponent());
+                case SONGS: mediaItemListFragment = SongListFragment.newInstance(category, id, getMediaActivityCompatComponent());
                     break;
-                case FOLDERS: mediaItemListFragment = new FolderListFragment(category, id, getMediaActivityCompatComponent());
+                case FOLDERS: mediaItemListFragment = FolderListFragment.newInstance(category, id, getMediaActivityCompatComponent());
                     break;
                 default:
                     mediaItemListFragment = null;

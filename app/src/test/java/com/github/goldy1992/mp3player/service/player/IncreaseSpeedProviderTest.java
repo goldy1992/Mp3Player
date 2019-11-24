@@ -32,7 +32,7 @@ public class IncreaseSpeedProviderTest extends SpeedProviderTestBase {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         super.setup();
-        this.increaseSpeedProvider = new IncreaseSpeedProvider(handler);
+        this.increaseSpeedProvider = new IncreaseSpeedProvider();
     }
 
     @Test

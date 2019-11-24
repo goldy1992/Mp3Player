@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.service.player;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.exoplayer2.ControlDispatcher;
@@ -14,23 +13,13 @@ import static com.github.goldy1992.mp3player.commons.Constants.INCREASE_PLAYBACK
 
 public abstract class SpeedChangeActionProviderBase implements MediaSessionConnector.CustomActionProvider {
 
-    Handler handler;
-
     private static final float MINIMUM_PLAYBACK_SPEED = 0.25f;
     private static final float MAXIMUM_PLAYBACK_SPEED = 2f;
     private static final float DEFAULT_PLAYBACK_SPEED_CHANGE = 0.05f;
     private static final String LOG_TAG = "ACTN_PRVDR";
 
-    public SpeedChangeActionProviderBase(Handler handler) {
-        this.handler = handler;
-    }
-
     @Override
     public void onCustomAction(Player player, ControlDispatcher controlDispatcher, String action, Bundle extras) {
-        handler.post(() -> { this.performAction(player, action);} );
-    }
-
-    private void performAction(Player player, String action) {
         Log.i(LOG_TAG, "hit speed change");
         final float currentSpeed = player.getPlaybackParameters().speed;
         float newSpeed = currentSpeed;

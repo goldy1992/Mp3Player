@@ -182,7 +182,7 @@ public class SeekerBarController2 implements ValueAnimator.AnimatorUpdateListene
     }
 
     private float getPositionAsFraction() {
-        Log.e(LOG_TAG, "current pos: " + currentPosition + ", seekerbar max" + seekerBar.getMax());
+        //Log.d(LOG_TAG, "current pos: " + currentPosition + ", seekerbar max" + seekerBar.getMax());
         return currentPosition / (float) seekerBar.getMax();
     }
 

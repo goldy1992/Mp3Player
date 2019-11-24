@@ -18,6 +18,7 @@ import com.github.goldy1992.mp3player.client.PermissionsProcessor;
 import com.github.goldy1992.mp3player.dagger.components.DaggerMediaActivityCompatComponent;
 import com.github.goldy1992.mp3player.dagger.components.MediaActivityCompatComponent;
 import com.github.goldy1992.mp3player.dagger.components.SplashScreenEntryActivityComponent;
+import com.github.goldy1992.mp3player.service.MediaPlaybackServiceInjector;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -149,6 +150,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     public void onPermissionGranted() {
         Log.i(LOG_TAG, "permission granted");
         setPermissionGranted(true);
+        createService();
         Runnable r = new Thread(() -> mediaBrowserAdapter.connect());
         runOnUiThread(r);
     }
@@ -191,6 +193,10 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     @Inject
     public void setMediaBrowserAdapter(MediaBrowserAdapter mediaBrowserAdapter) {
         this.mediaBrowserAdapter = mediaBrowserAdapter;
+    }
+
+    private void createService() {
+        startService(new Intent(getApplicationContext(), MediaPlaybackServiceInjector.class));
     }
 
     private void initialiseDependencies() {
