@@ -197,11 +197,11 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     }
 
     private void createService() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(new Intent(getApplicationContext(), MediaPlaybackServiceInjector.class));
-        } else {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            startForegroundService(new Intent(getApplicationContext(), MediaPlaybackServiceInjector.class));
+//        } else {
             startService(new Intent(getApplicationContext(), MediaPlaybackServiceInjector.class));
-        }
+//        }
     }
 
     private void initialiseDependencies() {

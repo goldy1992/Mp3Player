@@ -53,7 +53,7 @@ public abstract class MediaItemListFragment extends Fragment implements MyGeneri
     private AlbumArtPainter albumArtPainter;
     private MyGenericItemTouchListener myGenericItemTouchListener;
 
-    public MediaItemListFragment(MediaItemType mediaItemType, String id, MediaActivityCompatComponent component) {
+    public void init(MediaItemType mediaItemType, String id, MediaActivityCompatComponent component) {
         this.parentItemType = mediaItemType;
         this.parentItemTypeId = id;
         injectDependencies(component);

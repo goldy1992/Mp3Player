@@ -44,7 +44,7 @@ public abstract class FolderActivity extends MediaActivityCompat {
         super.onConnected();
         MediaItem mediaItem = getIntent().getParcelableExtra(MEDIA_ITEM);
         String itemLibraryId = MediaItemUtils.getLibraryId(mediaItem);
-        this.viewPageFragment = new SongListFragment(MediaItemType.FOLDER, itemLibraryId, getMediaActivityCompatComponent());
+        this.viewPageFragment = SongListFragment.newInstance(MediaItemType.FOLDER, itemLibraryId, getMediaActivityCompatComponent());
         initialiseView(R.layout.activity_folder);
         getSupportFragmentManager().beginTransaction().add(R.id.songListFragment, viewPageFragment).commit();
         getSupportActionBar().setTitle(MediaItemUtils.getDirectoryName(mediaItem));

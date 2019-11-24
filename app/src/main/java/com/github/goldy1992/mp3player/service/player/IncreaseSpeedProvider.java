@@ -14,8 +14,8 @@ import static com.github.goldy1992.mp3player.commons.Constants.INCREASE_PLAYBACK
 public class IncreaseSpeedProvider extends SpeedChangeActionProviderBase {
 
     @Inject
-    public IncreaseSpeedProvider(@Named("worker")Handler handler) {
-        super(handler);
+    public IncreaseSpeedProvider() {
+        super();
     }
 
     @Override

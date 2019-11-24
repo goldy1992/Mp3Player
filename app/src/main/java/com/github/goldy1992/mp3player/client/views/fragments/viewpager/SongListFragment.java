@@ -10,11 +10,11 @@ import javax.inject.Inject;
 
 public class SongListFragment extends MediaItemListFragment {
 
-    @Inject
-    public SongListFragment(MediaItemType mediaItemType, String id, MediaActivityCompatComponent compatComponent) {
-        super(mediaItemType, id, compatComponent);
+    public static SongListFragment newInstance(MediaItemType mediaItemType, String id, MediaActivityCompatComponent component) {
+        SongListFragment songListFragment = new SongListFragment();
+        songListFragment.init(mediaItemType, id, component);
+        return songListFragment;
     }
-
     @Override
     public void itemSelected(MediaBrowserCompat.MediaItem item) {
         mediaControllerAdapter.playFromMediaId(MediaItemUtils.getLibraryId(item), null);

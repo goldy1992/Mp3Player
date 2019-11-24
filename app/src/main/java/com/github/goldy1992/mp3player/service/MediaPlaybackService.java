@@ -96,14 +96,14 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
     @Override
     public void onNotificationPosted(
             int notificationId, Notification notification, boolean ongoing) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             // fix to make notifications removable on versions < oreo.
             if (!ongoing) {
                 stopForeground(false);
             } else {
                 startForeground(notificationId, notification);
             }
-        }
+       // }
     }
 
     @Override
