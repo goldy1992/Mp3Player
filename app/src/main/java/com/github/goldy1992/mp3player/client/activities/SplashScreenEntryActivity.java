@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.client.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -197,11 +196,7 @@ public class SplashScreenEntryActivity extends AppCompatActivity
     }
 
     private void createService() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            startForegroundService(new Intent(getApplicationContext(), MediaPlaybackServiceInjector.class));
-//        } else {
-            startService(new Intent(getApplicationContext(), MediaPlaybackServiceInjector.class));
-//        }
+        startService(new Intent(getApplicationContext(), MediaPlaybackServiceInjector.class));
     }
 
     private void initialiseDependencies() {
