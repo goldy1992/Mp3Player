@@ -1,4 +1,4 @@
-# ![Android MP3 Player](app/src/main/res/mipmap-hdpi/my_app_icon.png) Android MP3 Player    
+# ![Android MP3 Player](app/src/main/res/mipmap-hdpi/headphone_icon_foreground.png) Android MP3 Player
 [![Build Status](https://travis-ci.org/goldy1992/Mp3Player.svg?branch=master)](https://travis-ci.org/goldy1992/Mp3Player) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=goldy1992_Mp3Player&metric=alert_status)](https://sonarcloud.io/dashboard?id=goldy1992_Mp3Player)
 ---
 Supported Versions `>= Android Marshmallow`
