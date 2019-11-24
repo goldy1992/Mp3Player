@@ -33,6 +33,7 @@ public abstract class ContentResolverRetriever<T extends SearchEntity> extends C
 
     abstract Cursor performGetChildrenQuery(String id);
     void updateSearchDatabase(List<MediaItem> results) {
+        // TODO: put this code in a more appropriate place when the servic is started
         if (isSearchable()) {
             handler.post(() -> {
                 final int resultsSize = results.size();

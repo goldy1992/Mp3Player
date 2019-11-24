@@ -99,5 +99,4 @@ public class ContentManager {
         query = StringUtils.stripAccents(query);
         return query.trim().toUpperCase();
     }
-
 }
