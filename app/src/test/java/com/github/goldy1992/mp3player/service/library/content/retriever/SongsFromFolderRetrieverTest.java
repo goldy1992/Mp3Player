@@ -37,8 +37,7 @@ public class SongsFromFolderRetrieverTest extends ContentResolverRetrieverTestBa
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        when(searchDatabase.songDao()).thenReturn(songDao);
-        this.retriever = spy(new SongsFromFolderRetriever(contentResolver, resultsParser, searchDatabase, handler));
+        this.retriever = spy(new SongsFromFolderRetriever(contentResolver, resultsParser, handler));
     }
 
     @Test

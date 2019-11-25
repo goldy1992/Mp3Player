@@ -6,7 +6,6 @@ import com.github.goldy1992.mp3player.commons.MediaItemBuilder;
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest;
 import com.github.goldy1992.mp3player.service.library.search.Folder;
-import com.github.goldy1992.mp3player.service.library.search.FolderDao;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,8 +26,6 @@ import static com.github.goldy1992.mp3player.commons.MediaItemType.FOLDER;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -36,8 +33,6 @@ import static org.robolectric.Shadows.shadowOf;
 @LooperMode(LooperMode.Mode.PAUSED)
 public class FoldersRetrieverTest extends ContentResolverRetrieverTestBase<FoldersRetriever> {
 
-    @Mock
-    FolderDao folderDao;
 
     @Mock
     FolderResultsParser resultsParser;
@@ -48,7 +43,7 @@ public class FoldersRetrieverTest extends ContentResolverRetrieverTestBase<Folde
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        this.retriever = spy(new FoldersRetriever(contentResolver, resultsParser, folderDao, handler));
+        this.retriever = spy(new FoldersRetriever(contentResolver, resultsParser, handler));
     }
 
     @Test
@@ -67,10 +62,7 @@ public class FoldersRetrieverTest extends ContentResolverRetrieverTestBase<Folde
         when(contentResolver.query(EXTERNAL_CONTENT_URI, retriever.getProjection(), null, null, null)).thenReturn(cursor);
         when(resultsParser.create(cursor, contentRequest.getMediaIdPrefix())).thenReturn(expectedResult);
         /* IN ORDER for the database update code to be hit, there needs to be difference in file
-        numbers to call it. This is a flaw in the design and will be addressed in another issue
-
-         TO call the code we therefore differe the result size */
-        when(folderDao.getCount()).thenReturn(expectedResult.size() + 1);
+        numbers to call it. This is a flaw in the design and will be addressed in another issue */
 
 
         List<MediaBrowserCompat.MediaItem> result = retriever.getChildren(contentRequest);
@@ -79,13 +71,6 @@ public class FoldersRetrieverTest extends ContentResolverRetrieverTestBase<Folde
 
         // assert results are the expected ones
         assertEquals(expectedResult, result);
-        // verify database call
-        verify(folderDao, times(1)).insertAll(captor.capture());
-        List<Folder> folders = captor.getValue();
-        assertEquals(1, folders.size());
-        Folder folder = folders.get(0);
-        assertEquals(folder.getId(), directoryPath);
-        assertEquals(folder.getValue(), directoryName);
     }
 
     @Test
