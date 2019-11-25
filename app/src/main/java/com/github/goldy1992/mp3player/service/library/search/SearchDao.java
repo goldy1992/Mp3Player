@@ -10,5 +10,7 @@ public interface SearchDao<T extends SearchEntity> {
 
     void insertAll(List<T> songs);
 
+    void deleteOld(List<String> ids);
+
     List<T> query(String query);
 }

@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.service.library.search.managers;
 
 import android.os.Handler;
-import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.annotation.NonNull;
 
@@ -31,22 +31,34 @@ public abstract class SearchDatabaseManager<T extends SearchEntity> {
         this.rootCategoryId = rootCategoryId;
     }
 
-    abstract T createFromMediaItem(@NonNull MediaBrowserCompat.MediaItem item);
+    abstract T createFromMediaItem(@NonNull MediaItem item);
 
     void reindex() {
-        List<MediaBrowserCompat.MediaItem> results = contentManager.getChildren(rootCategoryId);
         handler.post(() -> {
-            final int resultsSize = results.size();
-            final int count = dao.getCount();
-
-            if (count != resultsSize) { // INSERT NORMALISED VALUES
-                List<T> entries = new ArrayList<>();
-                for (MediaBrowserCompat.MediaItem mediaItem : results) {
-                    T entry = createFromMediaItem(mediaItem);
-                    entries.add(entry);
-                }
-                dao.insertAll(entries);
-            }
+            List<MediaItem> results = contentManager.getChildren(rootCategoryId);
+            List<T> entries = buildResults(results);
+            deleteOld(entries);
+            // replace any new entries
+            dao.insertAll(entries);
         });
+    }
+
+    private void deleteOld(List<T> entries) {
+        // Delete old entries i.e. files that have been deleted.
+        List<String> ids = new ArrayList<>();
+        for (T entry : entries) {
+            ids.add(entry.getId());
+        }
+        // remove old entries
+        dao.deleteOld(ids);
+    }
+
+    private List<T> buildResults(List<MediaItem> mediaItems) {
+        List<T> entries = new ArrayList<>();
+        for (MediaItem mediaItem : mediaItems) {
+            T entry = createFromMediaItem(mediaItem);
+            entries.add(entry);
+        }
+        return entries;
     }
 }

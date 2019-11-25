@@ -23,6 +23,10 @@ public interface SongDao extends SearchDao<Song> {
     public void insertAll(List<Song> songs);
 
     @Override
+    @Query("DELETE FROM songs WHERE id NOT IN ( :ids )")
+    void deleteOld(List<String> ids);
+
+    @Override
     @Query("SELECT * FROM songs WHERE value like '%' || :value || '%'")
     List<Song> query(String value);
 }

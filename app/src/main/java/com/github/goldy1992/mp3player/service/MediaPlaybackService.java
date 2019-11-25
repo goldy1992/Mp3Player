@@ -18,6 +18,7 @@ import androidx.media.MediaBrowserServiceCompat;
 
 import com.github.goldy1992.mp3player.service.library.AudioObserver;
 import com.github.goldy1992.mp3player.service.library.ContentManager;
+import com.github.goldy1992.mp3player.service.library.search.managers.SearchDatabaseManagers;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
     private MediaSessionCompat mediaSession;
     private RootAuthenticator rootAuthenticator;
     private AudioObserver audioObserver;
+    private SearchDatabaseManagers searchDatabaseManagers;
 
     abstract void initialiseDependencies();
 
@@ -51,13 +53,13 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     true,
                     audioObserver);
+        searchDatabaseManagers.reindexAll();
     }
 
     @Override
     public int onStartCommand (Intent intent,
-                                      int flags,
-                                      int startId) {
-
+                               int flags,
+                               int startId) {
         Log.i(LOG_TAG, "breakpoint, on start command called");
         return START_STICKY;
     }
@@ -102,14 +104,15 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
      * @param ongoing Whether the notification is ongoing.
      */
     @Override
-    public void onNotificationPosted(
-            int notificationId, Notification notification, boolean ongoing) {
-           // fix to make notifications removable on versions < oreo.
-            if (!ongoing) {
-                stopForeground(false);
-            } else {
-                startForeground(notificationId, notification);
-            }
+    public void onNotificationPosted(int notificationId,
+                                     Notification notification,
+                                     boolean ongoing) {
+        // fix to make notifications removable
+        if (!ongoing) {
+            stopForeground(false);
+        } else {
+            startForeground(notificationId, notification);
+        }
     }
 
     @Override
@@ -167,6 +170,12 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
     public void setAudioObserver(AudioObserver audioObserver) {
         this.audioObserver = audioObserver;
     }
+
+    @Inject
+    public void setSearchDatabaseManagers(SearchDatabaseManagers searchDatabaseManagers) {
+        this.searchDatabaseManagers = searchDatabaseManagers;
+    }
+
 
     @VisibleForTesting
     public HandlerThread getWorker() {
