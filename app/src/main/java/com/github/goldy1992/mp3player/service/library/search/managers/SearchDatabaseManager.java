@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.github.goldy1992.mp3player.service.library.ContentManager;
 import com.github.goldy1992.mp3player.service.library.search.SearchDao;
@@ -31,6 +32,7 @@ public abstract class SearchDatabaseManager<T extends SearchEntity> {
         this.rootCategoryId = rootCategoryId;
     }
 
+    @Nullable
     abstract T createFromMediaItem(@NonNull MediaItem item);
 
     void reindex() {
@@ -57,7 +59,9 @@ public abstract class SearchDatabaseManager<T extends SearchEntity> {
         List<T> entries = new ArrayList<>();
         for (MediaItem mediaItem : mediaItems) {
             T entry = createFromMediaItem(mediaItem);
-            entries.add(entry);
+            if (null != entry) {
+                entries.add(entry);
+            }
         }
         return entries;
     }

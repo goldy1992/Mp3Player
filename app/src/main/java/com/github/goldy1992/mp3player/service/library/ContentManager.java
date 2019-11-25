@@ -15,7 +15,6 @@ import com.github.goldy1992.mp3player.service.library.content.retriever.SongFrom
 import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearcher;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
+import static com.github.goldy1992.mp3player.commons.Normaliser.normalise;
 
 public class ContentManager {
 
@@ -88,15 +88,12 @@ public class ContentManager {
     }
     /**
      *
-     * @param id
-     * @return
+     * @param id the id of the playlist
+     * @return the playlist
      */
     public List<MediaItem> getPlaylist(String id) {
        return getChildren(id);
     }
 
-    private String normalise(@NonNull String query) {
-        query = StringUtils.stripAccents(query);
-        return query.trim().toUpperCase();
-    }
+
 }

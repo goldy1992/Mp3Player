@@ -3,15 +3,25 @@ package com.github.goldy1992.mp3player.service.library;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.UserHandle;
 import android.util.Log;
 
 import com.github.goldy1992.mp3player.LogTagger;
+import com.github.goldy1992.mp3player.service.library.search.managers.SearchDatabaseManagers;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+/**
+ * A listener to the android ContentRetriever from the URI: content://media/external/audio/media or the
+ * i.e. MediaStore.Audio.Media.EXTERNAL_CONTENT_URI constant.
+ *
+ * onChange is called when there is a change when a song indexed with the EXTERNAL_CONTENT_URI is
+ * added, changed or deleted.
+ */
 public class AudioObserver extends ContentObserver implements LogTagger {
+
+    /** Search Database Manager */
+    private SearchDatabaseManagers searchDatabaseManagers;
 
     /**
      * Creates a content observer.
@@ -36,17 +46,7 @@ public class AudioObserver extends ContentObserver implements LogTagger {
     }
 
 
-    /**
-     * Dispatches a change notification to the observer. Includes the changed
-     * content Uri when available and also the user whose content changed.
-     *
-     * @param selfChange True if this is a self-change notification.
-     * @param uri The Uri of the changed content, or null if unknown.
-     * @param userId The user whose content changed. Can be either a specific
-     *         user or {@link UserHandle#USER_ALL}.
-     *
-     * @hide
-     */
+    /** {@inheritDoc} */
     public void onChange(boolean selfChange, Uri uri, int userId) {
 
         // TODO: see what type of uri is posted and either reindex the whole database or just the changed Uri
