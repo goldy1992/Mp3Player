@@ -16,7 +16,6 @@ public abstract class MediaStoreObserver extends ContentObserver implements LogT
     public MediaStoreObserver(Handler handler, ContentResolver contentResolver) {
         super(handler);
         this.contentResolver = contentResolver;
-        register();
     }
 
     public void register() {

@@ -50,7 +50,6 @@ public class AudioObserver extends MediaStoreObserver implements LogTagger {
     @Inject
     public AudioObserver(@Named("worker") Handler handler,
                          ContentResolver contentResolver,
-                         SearchDatabaseManagers searchDatabaseManagers,
                          ContentManager contentManager,
                          SongDatabaseManager songDatabaseManager,
                          FolderDatabaseManager folderDatabaseManager) {
@@ -73,13 +72,20 @@ public class AudioObserver extends MediaStoreObserver implements LogTagger {
     }
 
 
-    /** {@inheritDoc}
+    /**
+     * {@inheritDoc}
      *
-     * For the purpose of th
-     * */
+     * For the purpose of the Normalised search database we're not interested in who made the change
+     * therefore parameter, selfChange and userId are not used.
+     *
+     * @param selfChange not used
+     * @param uri the uri that has changed
+     * @param userId not used
+     *
+     */
     public void onChange(boolean selfChange, Uri uri, int userId) {
         if (uri != null) {
-            if (getUriString().equals(uri)) {
+            if (getUri().equals(uri)) {
                 // if a track is deleted the default MediaStore.Audio.EXTERNAL_CONTENT uri as the argument
             }
             else if (uri.toString().startsWith(getUriString())) {
