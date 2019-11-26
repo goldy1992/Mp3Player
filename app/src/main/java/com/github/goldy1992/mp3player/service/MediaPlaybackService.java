@@ -1,12 +1,10 @@
 package com.github.goldy1992.mp3player.service;
 
 import android.app.Notification;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
@@ -16,8 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.media.MediaBrowserServiceCompat;
 
-import com.github.goldy1992.mp3player.service.library.AudioObserver;
 import com.github.goldy1992.mp3player.service.library.ContentManager;
+import com.github.goldy1992.mp3player.service.library.content.observers.AudioObserver;
 import com.github.goldy1992.mp3player.service.library.search.managers.SearchDatabaseManagers;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener;
 
@@ -48,11 +46,6 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
         super.onCreate();
         this.mediaSessionConnectorCreator.create();
         setSessionToken(mediaSession.getSessionToken());
-        getApplicationContext().getContentResolver()
-            .registerContentObserver(
-                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    true,
-                    audioObserver);
         searchDatabaseManagers.reindexAll();
     }
 

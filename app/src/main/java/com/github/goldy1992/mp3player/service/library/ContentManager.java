@@ -10,6 +10,7 @@ import com.github.goldy1992.mp3player.service.library.content.ContentRetrievers;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequestParser;
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetriever;
+import com.github.goldy1992.mp3player.service.library.content.retriever.MediaItemFromIdRetriever;
 import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever;
 import com.github.goldy1992.mp3player.service.library.content.retriever.SongFromUriRetriever;
 import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearcher;
@@ -20,10 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 import static com.github.goldy1992.mp3player.commons.Normaliser.normalise;
 
+@Singleton
 public class ContentManager {
 
     public static final String CONTENT_SCHEME = "content";
@@ -34,17 +37,20 @@ public class ContentManager {
     private final RootRetriever rootRetriever;
     private final ContentRequestParser contentRequestParser;
     private final SongFromUriRetriever songFromUriRetriever;
+    private final MediaItemFromIdRetriever mediaItemFromIdRetriever;
 
     @Inject
     public ContentManager(ContentRetrievers contentRetrievers,
                           ContentSearchers contentSearchers,
                           ContentRequestParser contentRequestParser,
-                          SongFromUriRetriever songFromUriRetriever) {
+                          SongFromUriRetriever songFromUriRetriever,
+                          MediaItemFromIdRetriever mediaItemFromIdRetriever) {
         this.contentSearchers = contentSearchers;
         this.contentRetrievers = contentRetrievers;
         this.contentRequestParser = contentRequestParser;
         this.rootRetriever = contentRetrievers.getRoot();
         this.songFromUriRetriever = songFromUriRetriever;
+        this.mediaItemFromIdRetriever = mediaItemFromIdRetriever;
     }
     /**
      * The id is in the following format
@@ -85,6 +91,13 @@ public class ContentManager {
     @Nullable
     public MediaItem getItem(@NonNull Uri uri) {
         return songFromUriRetriever.getSong(uri);
+    }
+    /**
+     *
+     */
+    @Nullable
+    public MediaItem getItem(long id) {
+        return mediaItemFromIdRetriever.getItem(id);
     }
     /**
      *
