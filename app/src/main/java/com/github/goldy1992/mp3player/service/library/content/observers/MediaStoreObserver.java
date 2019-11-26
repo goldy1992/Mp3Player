@@ -5,6 +5,8 @@ import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
 
+import androidx.annotation.NonNull;
+
 import com.github.goldy1992.mp3player.LogTagger;
 
 public abstract class MediaStoreObserver extends ContentObserver implements LogTagger {
@@ -17,13 +19,18 @@ public abstract class MediaStoreObserver extends ContentObserver implements LogT
         register();
     }
 
-    private void register() {
+    public void register() {
         contentResolver.registerContentObserver(getUri(), true, this);
     }
 
-    private void unregister() {
+    public void unregister() {
         contentResolver.unregisterContentObserver(this);
     }
 
+    @NonNull
     public abstract Uri getUri();
+
+    public String getUriString() {
+        return getUri().toString();
+    }
 }

@@ -15,7 +15,7 @@ import androidx.annotation.VisibleForTesting;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.github.goldy1992.mp3player.service.library.ContentManager;
-import com.github.goldy1992.mp3player.service.library.content.observers.AudioObserver;
+import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers;
 import com.github.goldy1992.mp3player.service.library.search.managers.SearchDatabaseManagers;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener;
 
@@ -30,13 +30,14 @@ import javax.inject.Named;
 public abstract class MediaPlaybackService extends MediaBrowserServiceCompat implements NotificationListener {
 
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
+
     private ContentManager contentManager;
     private HandlerThread worker;
     private Handler handler;
     private MediaSessionConnectorCreator mediaSessionConnectorCreator;
     private MediaSessionCompat mediaSession;
     private RootAuthenticator rootAuthenticator;
-    private AudioObserver audioObserver;
+    private MediaStoreObservers mediaStoreObservers;
     private SearchDatabaseManagers searchDatabaseManagers;
 
     abstract void initialiseDependencies();
@@ -46,6 +47,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
         super.onCreate();
         this.mediaSessionConnectorCreator.create();
         setSessionToken(mediaSession.getSessionToken());
+        this.mediaStoreObservers.registerAll();
         searchDatabaseManagers.reindexAll();
     }
 
@@ -122,7 +124,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getApplicationContext().getContentResolver().unregisterContentObserver(audioObserver);
+        mediaStoreObservers.unregisterAll();
     }
 
     public MediaSessionCompat getMediaSession() {
@@ -160,15 +162,14 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
     }
 
     @Inject
-    public void setAudioObserver(AudioObserver audioObserver) {
-        this.audioObserver = audioObserver;
+    public void setMediaStoreObservers(MediaStoreObservers mediaStoreObservers) {
+        this.mediaStoreObservers = mediaStoreObservers;
     }
 
     @Inject
     public void setSearchDatabaseManagers(SearchDatabaseManagers searchDatabaseManagers) {
         this.searchDatabaseManagers = searchDatabaseManagers;
     }
-
 
     @VisibleForTesting
     public HandlerThread getWorker() {

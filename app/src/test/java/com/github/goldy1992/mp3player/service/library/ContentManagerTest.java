@@ -7,6 +7,7 @@ import com.github.goldy1992.mp3player.service.library.content.ContentRetrievers;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequestParser;
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetriever;
+import com.github.goldy1992.mp3player.service.library.content.retriever.MediaItemFromIdRetriever;
 import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever;
 import com.github.goldy1992.mp3player.service.library.content.retriever.SongFromUriRetriever;
 import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearcher;
@@ -53,6 +54,9 @@ public class ContentManagerTest {
     private MediaItem rootItem;
 
     @Mock
+    private MediaItemFromIdRetriever mediaItemFromIdRetriever;
+
+    @Mock
     private SongFromUriRetriever songFromUriRetriever;
 
     private static Map<MediaItemType, ContentSearcher> contentSearcherMap;
@@ -65,10 +69,10 @@ public class ContentManagerTest {
         this.contentManager = new ContentManager(contentRetrievers,
                 contentSearchers,
                 contentRequestParser,
-                songFromUriRetriever);
+                songFromUriRetriever,
+                mediaItemFromIdRetriever);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testGetChildren() {
         final String contentRetrieverId = "id";

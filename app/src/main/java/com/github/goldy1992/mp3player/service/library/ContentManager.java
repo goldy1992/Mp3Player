@@ -97,6 +97,8 @@ public class ContentManager {
      */
     @Nullable
     public MediaItem getItem(long id) {
+        /* TODO: in the future the content manager will need to know which type of URI will need
+        *   to be parsed, e.g. song, album, artist etc. */
         return mediaItemFromIdRetriever.getItem(id);
     }
     /**

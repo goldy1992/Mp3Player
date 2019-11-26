@@ -35,6 +35,11 @@ public abstract class SearchDatabaseManager<T extends SearchEntity> {
     @Nullable
     abstract T createFromMediaItem(@NonNull MediaItem item);
 
+    public void insert(MediaItem item) {
+        T t = createFromMediaItem(item);
+        dao.insert(t);
+    }
+
     void reindex() {
         handler.post(() -> {
             List<MediaItem> results = contentManager.getChildren(rootCategoryId);
