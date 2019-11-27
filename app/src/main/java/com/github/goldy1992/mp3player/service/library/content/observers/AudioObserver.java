@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import com.github.goldy1992.mp3player.LogTagger;
 import com.github.goldy1992.mp3player.service.library.ContentManager;
 import com.github.goldy1992.mp3player.service.library.search.managers.FolderDatabaseManager;
-import com.github.goldy1992.mp3player.service.library.search.managers.SearchDatabaseManagers;
 import com.github.goldy1992.mp3player.service.library.search.managers.SongDatabaseManager;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
