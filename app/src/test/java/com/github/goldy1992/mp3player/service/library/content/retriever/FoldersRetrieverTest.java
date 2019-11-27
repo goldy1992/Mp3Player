@@ -56,7 +56,7 @@ public class FoldersRetrieverTest extends ContentResolverRetrieverTestBase<Folde
         when(file.getAbsolutePath()).thenReturn(directoryPath);
         when(file.getName()).thenReturn(directoryName);
         MediaBrowserCompat.MediaItem mediaItem = new MediaItemBuilder("id")
-                .setFile(file)
+                .setDirectoryFile(file)
                 .build();
         expectedResult.add(mediaItem);
         when(contentResolver.query(EXTERNAL_CONTENT_URI, retriever.getProjection(), null, null, null)).thenReturn(cursor);

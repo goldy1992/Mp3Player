@@ -68,7 +68,7 @@ public class FolderResultsParser extends ResultsParser {
         return new MediaItemBuilder(filePath)
         .setMediaItemType(MediaItemType.FOLDER)
         .setLibraryId(buildLibraryId(parentId, filePath))
-        .setFile(folder)
+        .setDirectoryFile(folder)
         .setFlags(FLAG_BROWSABLE)
         .build();
     }

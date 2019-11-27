@@ -106,7 +106,7 @@ public class MediaItemUtilsTest {
     public void testGetDirectoryNameNotNull() {
         final String directoryName = "directoryName";
         MediaItem mediaItem = new MediaItemBuilder("id")
-                .setFile(new File("/sdsad/" + directoryName ))
+                .setDirectoryFile(new File("/sdsad/" + directoryName ))
                 .build();
         assertEquals(directoryName, MediaItemUtils.getDirectoryName(mediaItem));
     }

@@ -32,23 +32,23 @@ public class FoldersResultFilterTest {
         final int expectedResultsSize = 2;
         File file1ToKeep = new File("/a/b/abc101");
         MediaItem item1Keep = new MediaItemBuilder("id")
-                .setFile(file1ToKeep)
+                .setDirectoryFile(file1ToKeep)
                 .build();
 
         File file2ToThrow = new File("/a/b/1ac101");
         MediaItem item2Throw = new MediaItemBuilder("id")
-                .setFile(file2ToThrow)
+                .setDirectoryFile(file2ToThrow)
                 .build();
 
         File file3ToThrow = new File("/a/abc/101");
         MediaItem item3Throw = new MediaItemBuilder("id")
-                .setFile(file3ToThrow)
+                .setDirectoryFile(file3ToThrow)
                 .build();
 
 
         File file4ToKeep = new File("/a/abc/abc10abc1");
         MediaItem item4Keep = new MediaItemBuilder("id")
-                .setFile(file4ToKeep)
+                .setDirectoryFile(file4ToKeep)
                 .build();
 
         List<MediaItem> resultsToProcess = new ArrayList<>();
