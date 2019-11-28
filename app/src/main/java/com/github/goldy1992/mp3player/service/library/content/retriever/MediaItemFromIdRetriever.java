@@ -16,6 +16,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static android.provider.BaseColumns._ID;
 import static com.github.goldy1992.mp3player.service.library.content.Projections.SONG_PROJECTION;
 
 @Singleton
@@ -33,11 +34,11 @@ public class MediaItemFromIdRetriever {
 
     @Nullable
     public MediaBrowserCompat.MediaItem getItem(long id) {
-        final String WHERE = MediaStore.Audio.Media._ID + " = ?";
-        final String[] WHERE_ARGS = {String.valueOf(id)};
+        final String where = _ID + " = ?";
+        final String[] whereArgs = {String.valueOf(id)};
 
         Cursor cursor =  contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                PROJECTION, WHERE, WHERE_ARGS, null);
+                PROJECTION, where, whereArgs, null);
 
         if (null != cursor) {
             List<MediaBrowserCompat.MediaItem> results = songResultsParser.create(cursor, "");

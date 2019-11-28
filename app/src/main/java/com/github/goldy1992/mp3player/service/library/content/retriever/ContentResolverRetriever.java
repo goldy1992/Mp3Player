@@ -31,7 +31,6 @@ public abstract class ContentResolverRetriever extends ContentRetriever {
     @Override
     public List<MediaItem> getChildren(ContentRequest request) {
         Cursor cursor = performGetChildrenQuery(request.getQueryString());
-        List<MediaItem> results = resultsParser.create(cursor, request.getMediaIdPrefix());
-        return results;
+        return resultsParser.create(cursor, request.getMediaIdPrefix());
     }
 }
