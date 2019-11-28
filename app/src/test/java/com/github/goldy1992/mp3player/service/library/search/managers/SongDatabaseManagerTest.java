@@ -58,4 +58,10 @@ public class SongDatabaseManagerTest extends SearchDatabaseManagerTestBase {
         assertEquals(expectedId, song.getId());
         assertEquals(expectedValue, song.getValue());
     }
+
+    @Test
+    @Override
+    public void testReindex() {
+
+    }
 }

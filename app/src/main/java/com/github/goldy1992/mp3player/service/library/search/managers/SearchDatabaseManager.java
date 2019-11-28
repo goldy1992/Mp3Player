@@ -40,7 +40,7 @@ public abstract class SearchDatabaseManager<T extends SearchEntity> {
         dao.insert(t);
     }
 
-    void reindex() {
+    public void reindex() {
         handler.post(() -> {
             List<MediaItem> results = contentManager.getChildren(rootCategoryId);
             List<T> entries = buildResults(results);

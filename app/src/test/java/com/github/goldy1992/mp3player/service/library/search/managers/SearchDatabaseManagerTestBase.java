@@ -22,4 +22,6 @@ public abstract class SearchDatabaseManagerTestBase {
     MediaItemTypeIds mediaItemTypeIds;
 
     public abstract void testInsert();
+
+    public abstract void testReindex();
 }

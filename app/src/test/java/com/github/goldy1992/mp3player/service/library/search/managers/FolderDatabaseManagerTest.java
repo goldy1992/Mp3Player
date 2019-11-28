@@ -4,6 +4,7 @@ package com.github.goldy1992.mp3player.service.library.search.managers;
 import android.support.v4.media.MediaBrowserCompat;
 
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder;
+import com.github.goldy1992.mp3player.commons.MediaItemType;
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 import com.github.goldy1992.mp3player.service.library.search.Folder;
 import com.github.goldy1992.mp3player.service.library.search.FolderDao;
@@ -18,6 +19,8 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
@@ -29,10 +32,27 @@ public class FolderDatabaseManagerTest extends SearchDatabaseManagerTestBase {
 
     private FolderDatabaseManager folderDatabaseManager;
 
+    private static final String TEST_DIRECTORY_NAME =  "fileName";
+
+    private static final String EXPECTED_DIRECTORY_NAME = TEST_DIRECTORY_NAME.toUpperCase();
+
+    private static final String TEST_DIRECTORY_PATH = File.separator
+            + "a" + File.separator
+            + "b" + File.separator
+            + TEST_DIRECTORY_NAME;
+
+    private static final File TEST_FILE = new File(TEST_DIRECTORY_PATH);
+
 
 
     @Captor
     ArgumentCaptor<Folder> folderCaptor;
+
+    @Captor
+    ArgumentCaptor<List<String>> deleteCaptor;
+
+    @Captor
+    ArgumentCaptor<List<Folder>> insertAllCaptor;
 
 
     @Mock
@@ -56,22 +76,41 @@ public class FolderDatabaseManagerTest extends SearchDatabaseManagerTestBase {
     @Override
     @Test
     public void testInsert() {
-        final String directoryName = "fileName";
-        final String expectedDirectoryName = directoryName.toUpperCase();
 
 
-        final File file = new File(File.separator
-                + "a" + File.separator
-                + "b" + File.separator
-                + directoryName);
-        final String expectedId = file.getAbsolutePath();
+        final String expectedId = TEST_FILE.getAbsolutePath();
         MediaBrowserCompat.MediaItem mediaItem = new MediaItemBuilder(expectedId)
-                .setDirectoryFile(file)
+                .setDirectoryFile(TEST_FILE)
                 .build();
         folderDatabaseManager.insert(mediaItem);
         verify(folderDao, times(1)).insert(folderCaptor.capture());
         Folder folder = folderCaptor.getValue();
         assertEquals(expectedId, folder.getId());
-        assertEquals(expectedDirectoryName, folder.getValue());
+        assertEquals(EXPECTED_DIRECTORY_NAME, folder.getValue());
+    }
+
+    @Override
+    @Test
+    public void testReindex() {
+        final String expectedId = TEST_FILE.getAbsolutePath();
+        MediaBrowserCompat.MediaItem mediaItem = new MediaItemBuilder(expectedId)
+                .setDirectoryFile(TEST_FILE)
+                .build();
+
+        MediaBrowserCompat.MediaItem toReturn = new MediaItemBuilder(expectedId)
+                .setDirectoryFile(TEST_FILE)
+                .build();
+        when(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.FOLDERS)))
+                .thenReturn(Collections.singletonList(toReturn));
+
+        folderDatabaseManager.reindex();
+
+        verify(folderDao, times(1)).deleteOld(deleteCaptor.capture());
+        List<String> idsToDelete = deleteCaptor.getValue();
+        assertEquals(expectedId, idsToDelete.get(0));
+
+
+
+
     }
 }
