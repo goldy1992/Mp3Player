@@ -11,7 +11,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.github.goldy1992.mp3player.LogTagger;
+import com.github.goldy1992.mp3player.commons.MediaItemType;
+import com.github.goldy1992.mp3player.commons.MediaItemUtils;
 import com.github.goldy1992.mp3player.service.library.ContentManager;
+import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 import com.github.goldy1992.mp3player.service.library.search.managers.FolderDatabaseManager;
 import com.github.goldy1992.mp3player.service.library.search.managers.SongDatabaseManager;
 
@@ -51,8 +54,9 @@ public class AudioObserver extends MediaStoreObserver implements LogTagger {
                          ContentResolver contentResolver,
                          ContentManager contentManager,
                          SongDatabaseManager songDatabaseManager,
-                         FolderDatabaseManager folderDatabaseManager) {
-        super(handler, contentResolver);
+                         FolderDatabaseManager folderDatabaseManager,
+                         MediaItemTypeIds mediaItemTypeIds) {
+        super(handler, contentResolver, mediaItemTypeIds);
         this.songDatabaseManager = songDatabaseManager;
         this.folderDatabaseManager = folderDatabaseManager;
         this.contentManager = contentManager;
@@ -100,6 +104,9 @@ public class AudioObserver extends MediaStoreObserver implements LogTagger {
                             songDatabaseManager.insert(result);
                             folderDatabaseManager.insert(result);
                             Log.i(getLogTag(), "UPDATED songs and folders");
+                            mediaPlaybackService.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.SONGS));
+                            mediaPlaybackService.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.FOLDERS));
+                            mediaPlaybackService.notifyChildrenChanged(MediaItemUtils.getDirectoryPath(result));
                         }
                     }
                 } catch (Exception ex) {

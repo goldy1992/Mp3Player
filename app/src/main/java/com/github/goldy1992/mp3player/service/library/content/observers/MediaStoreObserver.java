@@ -8,14 +8,27 @@ import android.os.Handler;
 import androidx.annotation.NonNull;
 
 import com.github.goldy1992.mp3player.LogTagger;
+import com.github.goldy1992.mp3player.service.MediaPlaybackService;
+import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 
 public abstract class MediaStoreObserver extends ContentObserver implements LogTagger {
 
     private final ContentResolver contentResolver;
 
-    public MediaStoreObserver(Handler handler, ContentResolver contentResolver) {
+    final MediaItemTypeIds mediaItemTypeIds;
+
+    MediaPlaybackService mediaPlaybackService;
+
+    public MediaStoreObserver(Handler handler,
+                              ContentResolver contentResolver,
+                              MediaItemTypeIds mediaItemTypeIds) {
         super(handler);
         this.contentResolver = contentResolver;
+        this.mediaItemTypeIds = mediaItemTypeIds;
+    }
+
+    public void init(MediaPlaybackService mediaPlaybackService) {
+        this.mediaPlaybackService = mediaPlaybackService;
     }
 
     public void register() {

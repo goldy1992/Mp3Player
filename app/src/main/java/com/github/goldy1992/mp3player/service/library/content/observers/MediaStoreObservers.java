@@ -1,5 +1,7 @@
 package com.github.goldy1992.mp3player.service.library.content.observers;
 
+import com.github.goldy1992.mp3player.service.MediaPlaybackService;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,10 @@ public class MediaStoreObservers {
     public MediaStoreObservers(AudioObserver audioObserver) {
         this.mediaStoreObserversList = new ArrayList<>();
         this.mediaStoreObserversList.add(audioObserver);
+    }
+
+    public void init(MediaPlaybackService mediaPlaybackService) {
+
     }
 
     public void registerAll() {

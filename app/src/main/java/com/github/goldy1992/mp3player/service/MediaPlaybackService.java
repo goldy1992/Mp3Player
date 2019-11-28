@@ -46,9 +46,9 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
     public void onCreate() {
         super.onCreate();
         this.mediaSessionConnectorCreator.create();
-        setSessionToken(mediaSession.getSessionToken());
-        this.mediaStoreObservers.registerAll();
-        searchDatabaseManagers.reindexAll();
+        this.setSessionToken(mediaSession.getSessionToken());
+        this.mediaStoreObservers.init(this);
+        this.searchDatabaseManagers.reindexAll();
     }
 
     @Override
