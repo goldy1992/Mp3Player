@@ -17,6 +17,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.LooperMode;
 
 import java.io.File;
 import java.util.Collections;
@@ -26,7 +27,9 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.robolectric.Shadows.shadowOf;
 
+@LooperMode(LooperMode.Mode.PAUSED)
 @RunWith(RobolectricTestRunner.class)
 public class FolderDatabaseManagerTest extends SearchDatabaseManagerTestBase {
 
@@ -42,8 +45,6 @@ public class FolderDatabaseManagerTest extends SearchDatabaseManagerTestBase {
             + TEST_DIRECTORY_NAME;
 
     private static final File TEST_FILE = new File(TEST_DIRECTORY_PATH);
-
-
 
     @Captor
     ArgumentCaptor<Folder> folderCaptor;
@@ -63,6 +64,7 @@ public class FolderDatabaseManagerTest extends SearchDatabaseManagerTestBase {
 
     @Before
     public void setup() {
+        super.setup();
         MockitoAnnotations.initMocks(this);
         when(searchDatabase.folderDao()).thenReturn(folderDao);
         this.mediaItemTypeIds = new MediaItemTypeIds();
@@ -104,13 +106,15 @@ public class FolderDatabaseManagerTest extends SearchDatabaseManagerTestBase {
                 .thenReturn(Collections.singletonList(toReturn));
 
         folderDatabaseManager.reindex();
+        shadowOf(handler.getLooper()).idle();
 
         verify(folderDao, times(1)).deleteOld(deleteCaptor.capture());
         List<String> idsToDelete = deleteCaptor.getValue();
         assertEquals(expectedId, idsToDelete.get(0));
 
-
-
-
+        verify(folderDao, times(1)).insertAll(insertAllCaptor.capture());
+        Folder insertedFolder = insertAllCaptor.getValue().get(0);
+        assertEquals(expectedId, insertedFolder.getId());
+        assertEquals(EXPECTED_DIRECTORY_NAME, insertedFolder.getValue());
     }
 }

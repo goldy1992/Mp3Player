@@ -13,13 +13,17 @@ public abstract class SearchDatabaseManagerTestBase {
     @Mock
     ContentManager contentManager;
 
-    @Mock
     Handler handler;
 
     @Mock
     SearchDatabase searchDatabase;
 
     MediaItemTypeIds mediaItemTypeIds;
+
+
+    public void setup() {
+        this.handler = new Handler();
+    }
 
     public abstract void testInsert();
 
