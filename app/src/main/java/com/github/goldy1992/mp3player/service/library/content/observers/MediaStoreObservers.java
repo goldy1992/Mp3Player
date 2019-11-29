@@ -20,7 +20,10 @@ public class MediaStoreObservers {
     }
 
     public void init(MediaPlaybackService mediaPlaybackService) {
-
+        for (MediaStoreObserver mediaStoreObserver : mediaStoreObserversList) {
+            mediaStoreObserver.init(mediaPlaybackService);
+        }
+        registerAll();
     }
 
     public void registerAll() {
