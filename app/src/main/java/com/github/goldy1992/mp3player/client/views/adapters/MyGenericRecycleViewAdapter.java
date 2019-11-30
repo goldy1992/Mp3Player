@@ -45,13 +45,13 @@ public abstract class MyGenericRecycleViewAdapter extends MediaItemRecyclerViewA
 
     @Override
     public void onChildrenLoaded(@NonNull String parentId, @NonNull ArrayList<MediaItem> children) {
-        if (!isInitialised && children.isEmpty()) {
-            addNoChildrenFoundItem();
-        }
+
 
         if (!children.isEmpty()) {
-            this.items.addAll(children);
+            this.items = children;
             mainHandler.post(this::notifyDataSetChanged);
+        } else {
+            addNoChildrenFoundItem();
         }
         this.isInitialised = true;
     }

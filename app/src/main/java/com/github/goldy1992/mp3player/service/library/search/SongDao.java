@@ -11,7 +11,7 @@ import java.util.List;
 public interface SongDao extends SearchDao<Song> {
 
     @Override
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Song song);
 
     @Override

@@ -104,11 +104,17 @@ public class AudioObserver extends MediaStoreObserver implements LogTagger {
                             songDatabaseManager.insert(result);
                             folderDatabaseManager.insert(result);
                             Log.i(getLogTag(), "UPDATED songs and folders");
-                            mediaPlaybackService.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.SONGS));
-                            mediaPlaybackService.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.FOLDERS));
                             mediaPlaybackService.notifyChildrenChanged(MediaItemUtils.getDirectoryPath(result));
                         }
+                    } else {
+                        songDatabaseManager.reindex();
+                        folderDatabaseManager.reindex();
                     }
+                            mediaPlaybackService.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.SONGS));
+                            mediaPlaybackService.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.FOLDERS));
+
+
+
                 } catch (Exception ex) {
                     Log.e(getLogTag(), ExceptionUtils.getStackTrace(ex));
                     return;

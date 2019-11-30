@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import com.github.goldy1992.mp3player.service.library.ContentManager;
+import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 import com.github.goldy1992.mp3player.service.library.search.managers.FolderDatabaseManager;
 import com.github.goldy1992.mp3player.service.library.search.managers.SongDatabaseManager;
 
@@ -32,6 +33,8 @@ public class AudioObserverTest {
 
     private AudioObserver audioObserver;
 
+    private MediaItemTypeIds mediaItemTypeIds;
+
     @Mock
     private ContentResolver contentResolver;
 
@@ -50,12 +53,14 @@ public class AudioObserverTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         this.handler = new Handler(Looper.getMainLooper());
+        this.mediaItemTypeIds = new MediaItemTypeIds();
         this.audioObserver = new AudioObserver(
                 handler,
                 contentResolver,
                 contentManager,
                 songDatabaseManager,
-                folderDatabaseManager);
+                folderDatabaseManager,
+                mediaItemTypeIds);
     }
 
     @Test

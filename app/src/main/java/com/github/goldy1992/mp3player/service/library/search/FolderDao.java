@@ -11,7 +11,7 @@ import java.util.List;
 public interface FolderDao extends SearchDao<Folder> {
 
     @Override
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Folder folder);
 
     @Override
