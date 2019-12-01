@@ -72,8 +72,8 @@ public class MainActivityTest {
     public void testOnOptionsItemSelectedOpenDrawer() {
         MenuItem menuItem = mock(MenuItem.class);
         when(menuItem.getItemId()).thenReturn(android.R.id.home);
-        DrawerLayout drawerLayoutSpy = spy(mainActivity.getDrawerLayout());
-        mainActivity.setDrawerLayout(drawerLayoutSpy);
+        DrawerLayout drawerLayoutSpy = spy(mainActivity.drawerLayout);
+        mainActivity.drawerLayout = drawerLayoutSpy;
         mainActivity.onOptionsItemSelected(menuItem);
         verify(drawerLayoutSpy, times(1)).openDrawer(GravityCompat.START);
     }
@@ -101,8 +101,8 @@ public class MainActivityTest {
     @Test
     public void testNavigationItemSelected() {
         MenuItem menuItem = mock(MenuItem.class);
-        DrawerLayout drawerLayoutSpy = spy(mainActivity.getDrawerLayout());
-        mainActivity.setDrawerLayout(drawerLayoutSpy);
+        DrawerLayout drawerLayoutSpy = spy(mainActivity.drawerLayout);
+        mainActivity.drawerLayout = drawerLayoutSpy;
         mainActivity.onNavigationItemSelected(menuItem);
         verify(menuItem, times(1)).setChecked(true);
         verify(drawerLayoutSpy, times(1)).closeDrawers();

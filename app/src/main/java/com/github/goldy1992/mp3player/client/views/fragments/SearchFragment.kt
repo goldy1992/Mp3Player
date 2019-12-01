@@ -1,0 +1,76 @@
+package com.github.goldy1992.mp3player.client.views.fragments
+
+import android.app.Activity
+import android.app.SearchManager
+import android.content.ComponentName
+import android.content.Context
+import android.graphics.Color
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.OnFocusChangeListener
+import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.LinearLayout
+import androidx.annotation.VisibleForTesting
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
+import com.github.goldy1992.mp3player.LogTagger
+import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.activities.SearchResultActivityInjector
+
+class SearchFragment : Fragment(), LogTagger {
+    private var linearLayout: LinearLayout? = null
+    private var searchView: SearchView? = null
+    private var inputMethodManager: InputMethodManager? = null
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+        return inflater.inflate(R.layout.fragment_search, container, false)
+    }
+
+    override fun onViewCreated(view: View, bundle: Bundle?) {
+        searchView = view.findViewById(R.id.search_view)
+        inputMethodManager = context!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        // Get the SearchView and set the searchable configuration
+        val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val componentName = ComponentName(context, SearchResultActivityInjector::class.java)
+        val searchableInfo = searchManager.getSearchableInfo(componentName)
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchableInfo)
+        searchView.setIconifiedByDefault(false) // Do not iconify the widget; expand it by default
+        searchView.setSubmitButtonEnabled(true)
+        searchView.setBackgroundColor(Color.WHITE)
+        linearLayout = view.findViewById(R.id.search_fragment_layout)
+        val background = linearLayout.getBackground()
+        background.alpha = 200
+        linearLayout.setOnClickListener(View.OnClickListener { view: View? -> onClickOnLayout(view) })
+        searchView.setOnClickListener(View.OnClickListener { v: View? -> Log.i(logTag, "hit search view") })
+        searchView.requestFocusFromTouch()
+        inputMethodManager!!.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+        searchView.setOnQueryTextFocusChangeListener(OnFocusChangeListener { v: View?, queryTextFocused: Boolean -> onFocusChange(v, queryTextFocused) })
+    }
+
+    @VisibleForTesting
+    fun onClickOnLayout(view: View?) {
+        Log.i(logTag, "hit on click listener")
+        inputMethodManager!!.hideSoftInputFromWindow(getView()!!.windowToken, 0)
+        this.parentFragmentManager.popBackStack()
+    }
+
+    @VisibleForTesting
+    fun onFocusChange(v: View?, queryTextFocused: Boolean) {
+        Log.i("tag", "focus changed: has focus: $queryTextFocused")
+        if (!queryTextFocused) {
+            val fragmentManager = parentFragmentManager
+            if (!fragmentManager.isDestroyed) {
+                fragmentManager.popBackStack()
+            }
+        }
+    }
+
+    override fun getLogTag(): String {
+        return "SRCH_FRAGMENT"
+    }
+}

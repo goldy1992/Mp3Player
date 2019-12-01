@@ -39,7 +39,7 @@ public class PlayPauseButtonTest extends MediaButtonTestBase {
     @Test
     public void testCreate() {
         assertNotNull(playPauseButton);
-        assertEquals(INITIAL_PLAYBACK_STATE, playPauseButton.getState());
+        assertEquals(INITIAL_PLAYBACK_STATE, playPauseButton.state);
     }
     /**
      * GIVEN: a playPauseButton
@@ -49,7 +49,7 @@ public class PlayPauseButtonTest extends MediaButtonTestBase {
     @Test
     public void testOnPlaybackStateChangedPlaying() {
          playPauseButton.onPlaybackStateChanged(createState(STATE_PLAYING));
-         assertEquals(STATE_PLAYING, playPauseButton.getState());
+         assertEquals(STATE_PLAYING, playPauseButton.state);
     }
     /**
      * GIVEN: a playPauseButton
@@ -59,7 +59,7 @@ public class PlayPauseButtonTest extends MediaButtonTestBase {
     @Test
     public void testOnPlaybackStateChangedPaused() {
         playPauseButton.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_PAUSED));
-        assertEquals(STATE_PAUSED, playPauseButton.getState());
+        assertEquals(STATE_PAUSED, playPauseButton.state);
     }
     /**
      * GIVEN: a playPauseButton in state S
@@ -70,7 +70,7 @@ public class PlayPauseButtonTest extends MediaButtonTestBase {
     public void testOnPlaybackStateChangedOtherState() {
         @PlaybackStateCompat.State int expectedState = STATE_PAUSED;
         playPauseButton.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_ERROR));
-        assertEquals(expectedState, playPauseButton.getState());
+        assertEquals(expectedState, playPauseButton.state);
     }
     /**
      * GIVEN: a PlayPauseButton in state paused
@@ -79,7 +79,7 @@ public class PlayPauseButtonTest extends MediaButtonTestBase {
      */
     @Test
     public void testClickPlayWhenPaused() {
-        playPauseButton.setState(STATE_PAUSED);
+        playPauseButton.state = STATE_PAUSED;
         playPauseButton.onClick(null);
         verify(mediaControllerAdapter, times(1)).play();
     }
@@ -90,7 +90,7 @@ public class PlayPauseButtonTest extends MediaButtonTestBase {
      */
     @Test
     public void testClickPauseWhenPlaying() {
-        playPauseButton.setState(STATE_PLAYING);
+        playPauseButton.state = STATE_PLAYING;
         playPauseButton.onClick(null);
         verify(mediaControllerAdapter, times(1)).pause();
     }

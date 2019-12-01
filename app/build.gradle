@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'jacoco'
 apply plugin: "de.mannodermaus.android-junit5"
 apply plugin: 'com.github.ben-manes.versions'
@@ -205,4 +207,9 @@ dependencies {
         exclude module: "support-annotations"
     }
     androidTestImplementation group: 'androidx.test.uiautomator', name: 'uiautomator', version: TEST_UI_AUTOMATOR_VERSION
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

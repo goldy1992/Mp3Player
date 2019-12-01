@@ -16,7 +16,7 @@ public class SearchResultActivityInjectorTestImpl extends SearchResultActivity {
         MediaActivityCompatComponent component = DaggerTestMediaActivityCompatComponent
                 .factory()
                 .create(getApplicationContext(), getWorkerId(), this);
-        this.setMediaActivityCompatComponent(component);
+        this.mediaActivityCompatComponent = component;
         component.searchResultActivitySubComponent().inject(this);
     }
 }

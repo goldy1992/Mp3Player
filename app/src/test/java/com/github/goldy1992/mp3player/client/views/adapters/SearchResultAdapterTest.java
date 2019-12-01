@@ -72,7 +72,7 @@ public class SearchResultAdapterTest extends MediaItemRecyclerViewAdapterTestBas
                 new MediaItemBuilder("101")
                         .build()
         );
-        this.searchResultAdapter.getItems().addAll(mediaItems);
+        this.searchResultAdapter.items.addAll(mediaItems);
         searchResultAdapter.onBindViewHolder(mySongViewHolder, 0);
     }
     @Test
@@ -81,7 +81,7 @@ public class SearchResultAdapterTest extends MediaItemRecyclerViewAdapterTestBas
         MediaItem mediaItem = new MediaItemBuilder("id")
                 .setMediaItemType(mediaItemType)
                 .build();
-        this.searchResultAdapter.getItems().add(mediaItem); // add as the first item
+        this.searchResultAdapter.items.add(mediaItem); // add as the first item
         int result = searchResultAdapter.getItemViewType(0);
         assertEquals(mediaItemType.getValue(), result);
 
@@ -90,7 +90,7 @@ public class SearchResultAdapterTest extends MediaItemRecyclerViewAdapterTestBas
     public void testGetItemViewTypeNoMediaItemType() {
         MediaItem mediaItem = new MediaItemBuilder("id")
                 .build();
-        this.searchResultAdapter.getItems().add(mediaItem); // add as the first item
+        this.searchResultAdapter.items.add(mediaItem); // add as the first item
         int result = searchResultAdapter.getItemViewType(0);
         assertEquals(0, result);
     }
@@ -102,7 +102,7 @@ public class SearchResultAdapterTest extends MediaItemRecyclerViewAdapterTestBas
         for (int i = 1; i <= 5; i++) {
             mediaItems.add(mediaItem);
         }
-        searchResultAdapter.getItems().addAll(mediaItems);
+        searchResultAdapter.items.addAll(mediaItems);
         assertEquals(expectedSize, searchResultAdapter.getItemCount());
     }
     /**

@@ -18,7 +18,7 @@ public class FolderActivityInjectorTestImpl extends FolderActivity {
         MediaActivityCompatComponent component = DaggerTestMediaActivityCompatComponent
                 .factory()
                 .create(getApplicationContext(), getWorkerId(), this);
-        this.setMediaActivityCompatComponent(component);
+        this.mediaActivityCompatComponent = component;
         component.inject(this);
     }
 }

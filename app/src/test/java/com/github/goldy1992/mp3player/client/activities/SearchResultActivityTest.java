@@ -55,7 +55,7 @@ public class SearchResultActivityTest {
     public void testOnSongItemSelected() {
         final SearchResultActivity searchResultActivitySpied = spy(searchResultActivity);
         final MediaControllerAdapter spiedMediaControllerAdapter = spy(searchResultActivitySpied.mediaControllerAdapter);
-        searchResultActivitySpied.setMediaControllerAdapter(spiedMediaControllerAdapter);
+        searchResultActivitySpied.mediaControllerAdapter = spiedMediaControllerAdapter;
         final String libraryId = "libId";
         MediaBrowserCompat.MediaItem mediaItem = new MediaItemBuilder("id")
                 .setMediaItemType(MediaItemType.SONGS)
@@ -70,7 +70,7 @@ public class SearchResultActivityTest {
     public void testOnFolderItemSelected() {
         final SearchResultActivity searchResultActivitySpied = spy(searchResultActivity);
         final MediaControllerAdapter spiedMediaControllerAdapter = spy(searchResultActivitySpied.mediaControllerAdapter);
-        searchResultActivitySpied.setMediaControllerAdapter(spiedMediaControllerAdapter);
+        searchResultActivitySpied.mediaControllerAdapter = spiedMediaControllerAdapter;
         final String libraryId = "libId";
         MediaBrowserCompat.MediaItem mediaItem = new MediaItemBuilder("id")
                 .setMediaItemType(MediaItemType.FOLDERS)
@@ -83,10 +83,10 @@ public class SearchResultActivityTest {
 
     @Test
     public void testHandleNewIntent() {
-        SearchView spiedSearchView = spy(searchResultActivity.getSearchView());
-        this.searchResultActivity.setSearchView(spiedSearchView);
+        SearchView spiedSearchView = spy(searchResultActivity.searchView);
+        this.searchResultActivity.searchView = spiedSearchView;
         MediaBrowserAdapter mediaBrowserAdapterSpied = spy(searchResultActivity.mediaBrowserAdapter);
-        this.searchResultActivity.setMediaBrowserAdapter(mediaBrowserAdapterSpied);
+        this.searchResultActivity.mediaBrowserAdapter = mediaBrowserAdapterSpied;
         final String expectedQuery = "QUERY";
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEARCH);

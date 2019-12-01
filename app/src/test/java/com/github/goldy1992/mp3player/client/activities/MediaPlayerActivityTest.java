@@ -90,8 +90,8 @@ public class MediaPlayerActivityTest {
 
 
         MediaPlayerActivity mediaPlayerActivity = this.activityController.get();
-        MediaControllerAdapter spiedMediaControllerAdapter = spy(mediaPlayerActivity.getMediaControllerAdapter());
-        mediaPlayerActivity.setMediaControllerAdapter(spiedMediaControllerAdapter);
+        MediaControllerAdapter spiedMediaControllerAdapter = spy(mediaPlayerActivity.mediaControllerAdapter);
+        mediaPlayerActivity.mediaControllerAdapter = spiedMediaControllerAdapter;
         mediaPlayerActivity.onNewIntent(newIntent);
         verify(spiedMediaControllerAdapter, never()).playFromUri(testUri, null);
     }
@@ -106,8 +106,8 @@ public class MediaPlayerActivityTest {
 
 
         MediaPlayerActivity mediaPlayerActivity = this.activityController.get();
-        MediaControllerAdapter spiedMediaControllerAdapter = spy(mediaPlayerActivity.getMediaControllerAdapter());
-        mediaPlayerActivity.setMediaControllerAdapter(spiedMediaControllerAdapter);
+        MediaControllerAdapter spiedMediaControllerAdapter = spy(mediaPlayerActivity.mediaControllerAdapter);
+        mediaPlayerActivity.mediaControllerAdapter = spiedMediaControllerAdapter;
         mediaPlayerActivity.onNewIntent(newIntent);
         verify(spiedMediaControllerAdapter, times(1)).playFromUri(testUri, null);
     }
@@ -116,8 +116,8 @@ public class MediaPlayerActivityTest {
     public void onMetadataChanged() {
         createAndStartActivity();
         MediaPlayerActivity mediaPlayerActivity = this.activityController.get();
-        MediaControllerAdapter spiedMediaControllerAdapter = spy(mediaPlayerActivity.getMediaControllerAdapter());
-        mediaPlayerActivity.setMediaControllerAdapter(spiedMediaControllerAdapter);
+        MediaControllerAdapter spiedMediaControllerAdapter = spy(mediaPlayerActivity.mediaControllerAdapter);
+        mediaPlayerActivity.mediaControllerAdapter = spiedMediaControllerAdapter;
 
         MediaMetadataCompat mediaMetadataCompat = new MediaMetadataCompat.Builder().build();
         mediaPlayerActivity.onMetadataChanged(mediaMetadataCompat);

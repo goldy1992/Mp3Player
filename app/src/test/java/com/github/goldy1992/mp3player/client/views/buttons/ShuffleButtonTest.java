@@ -34,21 +34,21 @@ public class ShuffleButtonTest extends MediaButtonTestBase{
     public void updateStateShuffleModeAll() {
         @PlaybackStateCompat.ShuffleMode final int shuffleMode = SHUFFLE_MODE_ALL;
         this.shuffleButton.updateState(shuffleMode);
-        assertEquals(shuffleMode, shuffleButton.getShuffleMode());
+        assertEquals(shuffleMode, shuffleButton.shuffleMode);
     }
 
     @Test
     public void updateStateNotShuffleModeAll() {
         @PlaybackStateCompat.ShuffleMode final int shuffleMode = SHUFFLE_MODE_NONE;
         this.shuffleButton.updateState(shuffleMode);
-        assertEquals(shuffleMode, shuffleButton.getShuffleMode());
+        assertEquals(shuffleMode, shuffleButton.shuffleMode);
     }
 
     @Test
     public void testOnClickChangeToShuffleAll() {
         @PlaybackStateCompat.ShuffleMode final int currentShuffleMode = SHUFFLE_MODE_NONE;
         @PlaybackStateCompat.ShuffleMode final int expectedShuffleMode = SHUFFLE_MODE_ALL;
-        shuffleButton.setShuffleMode(currentShuffleMode);
+        shuffleButton.shuffleMode = currentShuffleMode;
         shuffleButton.onClick(mock(View.class));
         verify(mediaControllerAdapter, times(1)).setShuffleMode(expectedShuffleMode);
     }
@@ -57,7 +57,7 @@ public class ShuffleButtonTest extends MediaButtonTestBase{
     public void testOnClickChangeToShuffleNone() {
         @PlaybackStateCompat.ShuffleMode final int currentShuffleMode = SHUFFLE_MODE_ALL;
         @PlaybackStateCompat.ShuffleMode final int expectedShuffleMode = SHUFFLE_MODE_NONE;
-        shuffleButton.setShuffleMode(currentShuffleMode);
+        shuffleButton.shuffleMode = currentShuffleMode;
         shuffleButton.onClick(mock(View.class));
         verify(mediaControllerAdapter, times(1)).setShuffleMode(expectedShuffleMode);
     }
@@ -70,7 +70,7 @@ public class ShuffleButtonTest extends MediaButtonTestBase{
         PlaybackStateCompat playbackState = new PlaybackStateCompat.Builder().setExtras(extras).build();
         shuffleButton.onPlaybackStateChanged(playbackState);
 
-        assertEquals(expectedShuffleMode, shuffleButton.getShuffleMode());
+        assertEquals(expectedShuffleMode, shuffleButton.shuffleMode);
     }
 
 }

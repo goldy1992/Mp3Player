@@ -34,35 +34,35 @@ public class TrackViewPagerChangeCallbackTest {
     @Test
     public void testSamePosition() {
         final int initialPosition = 0;
-        this.trackViewPagerChangeCallback.setCurrentPosition(initialPosition);
+        this.trackViewPagerChangeCallback.currentPosition = initialPosition;
         this.trackViewPagerChangeCallback.onPageSelected(initialPosition);
         verify(mediaControllerAdapter, never()).seekTo(anyLong());
         verify(mediaControllerAdapter, never()).skipToPrevious();
         verify(mediaControllerAdapter, never()).skipToNext();
-        assertEquals(initialPosition, trackViewPagerChangeCallback.getCurrentPosition());
+        assertEquals(initialPosition, trackViewPagerChangeCallback.currentPosition);
     }
 
     @Test
     public void testSkipToNext() {
         final int initialPosition = 0;
-        this.trackViewPagerChangeCallback.setCurrentPosition(initialPosition);
+        this.trackViewPagerChangeCallback.currentPosition = initialPosition;
 
         final int skipToNextPosition = initialPosition + 1;
         trackViewPagerChangeCallback.onPageSelected(skipToNextPosition);
 
-        assertEquals(skipToNextPosition, trackViewPagerChangeCallback.getCurrentPosition());
+        assertEquals(skipToNextPosition, trackViewPagerChangeCallback.currentPosition);
         verify(mediaControllerAdapter, times(1)).skipToNext();
     }
 
     @Test
     public void testSkipToPrevious() {
         final int initialPosition = 2;
-        this.trackViewPagerChangeCallback.setCurrentPosition(initialPosition);
+        this.trackViewPagerChangeCallback.currentPosition = initialPosition;
 
         final int skipToPreviousPosition = initialPosition - 1;
         trackViewPagerChangeCallback.onPageSelected(skipToPreviousPosition);
 
-        assertEquals(skipToPreviousPosition, trackViewPagerChangeCallback.getCurrentPosition());
+        assertEquals(skipToPreviousPosition, trackViewPagerChangeCallback.currentPosition);
         verify(mediaControllerAdapter, times(1)).seekTo(0);
         verify(mediaControllerAdapter, times(1)).skipToPrevious();
     }
@@ -70,13 +70,13 @@ public class TrackViewPagerChangeCallbackTest {
     @Test
     public void testSkipMoreThanOnePosition() {
         final int initialPosition = 2;
-        this.trackViewPagerChangeCallback.setCurrentPosition(initialPosition);
+        this.trackViewPagerChangeCallback.currentPosition = initialPosition;
 
         final int skipTwoPositions = initialPosition + 2;
 
         trackViewPagerChangeCallback.onPageSelected(skipTwoPositions);
 
-        assertEquals(skipTwoPositions, trackViewPagerChangeCallback.getCurrentPosition());
+        assertEquals(skipTwoPositions, trackViewPagerChangeCallback.currentPosition);
         verify(mediaControllerAdapter, never()).skipToPrevious();
         verify(mediaControllerAdapter, never()).skipToNext();
         verify(mediaControllerAdapter, never()).seekTo(anyLong());

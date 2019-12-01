@@ -26,7 +26,7 @@ public class EmptyMediaActivityCompatFragmentActivity extends MediaActivityCompa
                 .factory()
                 .create(getApplicationContext(), getWorkerId(), this);
         component.inject(this);
-        setMediaActivityCompatComponent(component);
+        mediaActivityCompatComponent = component;
     }
 
     @Override
