@@ -8,6 +8,9 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
+import com.github.goldy1992.mp3player.commons.MediaItemBuilder;
+import com.github.goldy1992.mp3player.commons.MediaItemType;
+import com.github.goldy1992.mp3player.service.MediaPlaybackService;
 import com.github.goldy1992.mp3player.service.library.ContentManager;
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 import com.github.goldy1992.mp3player.service.library.search.managers.FolderDatabaseManager;
@@ -20,9 +23,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
+import java.io.File;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -47,6 +51,9 @@ public class AudioObserverTest {
     @Mock
     private FolderDatabaseManager folderDatabaseManager;
 
+    @Mock
+    private MediaPlaybackService mediaPlaybackService;
+
     private Handler handler;
 
     @Before
@@ -61,6 +68,7 @@ public class AudioObserverTest {
                 songDatabaseManager,
                 folderDatabaseManager,
                 mediaItemTypeIds);
+        this.audioObserver.init(mediaPlaybackService);
     }
 
     @Test
@@ -84,13 +92,19 @@ public class AudioObserverTest {
     @Test
     public void testOnChangeParsableUriWithValidId() {
         final long expectedId = 2334L;
+        final File expectedDir = new File("/a/b/c");
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         uri = ContentUris.withAppendedId(uri, expectedId);
-        MediaItem result = mock(MediaItem.class);
+        MediaItem result = new MediaItemBuilder("sf")
+                .setDirectoryFile(expectedDir)
+                .build();
         when(contentManager.getItem(expectedId)).thenReturn(result);
         this.audioObserver.onChange(true, uri);
         verify(contentManager, times(1)).getItem(expectedId);
         verify(songDatabaseManager, times(1)).insert(result);
         verify(folderDatabaseManager, times(1)).insert(result);
+        verify(mediaPlaybackService, times(1)).notifyChildrenChanged(expectedDir.getAbsolutePath());
+        verify(mediaPlaybackService, times(1)).notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.FOLDERS));
+        verify(mediaPlaybackService, times(1)).notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.SONGS));
     }
 }

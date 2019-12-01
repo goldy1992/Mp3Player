@@ -15,18 +15,21 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class ContentResolverSearcher<T extends SearchEntity> extends ContentSearcher {
+
     final ContentResolver contentResolver;
     final ResultsParser resultsParser;
     final SearchDao<T> searchDatabase;
+    final ResultsFilter resultsFilter;
 
-    public ContentResolverSearcher(ContentResolver contentResolver,
+    ContentResolverSearcher(ContentResolver contentResolver,
                                    ResultsParser resultsParser,
                                    ResultsFilter resultsFilter,
                                    SearchDao<T> searchDatabase) {
-        super(resultsFilter);
+        super();
         this.contentResolver = contentResolver;
         this.resultsParser = resultsParser;
         this.searchDatabase = searchDatabase;
+        this.resultsFilter = resultsFilter;
     }
 
     abstract String getIdPrefix();
@@ -42,12 +45,7 @@ public abstract class ContentResolverSearcher<T extends SearchEntity> extends Co
             return Collections.emptyList();
         }
         List<MediaItem> results = resultsParser.create(cursor, getIdPrefix());
-        if (isFilterable()) {
-            /*
-             keep in case we need to filter in the future.
-             */
-        }
-        return results;
+        return null != resultsFilter ? resultsFilter.filter(query, results) : results;
     }
 
 

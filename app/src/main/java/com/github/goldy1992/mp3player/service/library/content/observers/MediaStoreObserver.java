@@ -39,9 +39,14 @@ public abstract class MediaStoreObserver extends ContentObserver implements LogT
         contentResolver.unregisterContentObserver(this);
     }
 
+    boolean startsWithUri(Uri uri) {
+        return uri != null && uri.toString().startsWith(getUriString());
+    }
+
     @NonNull
     public abstract Uri getUri();
 
+    @NonNull
     public String getUriString() {
         return getUri().toString();
     }

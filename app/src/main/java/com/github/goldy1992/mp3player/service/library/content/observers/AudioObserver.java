@@ -18,6 +18,7 @@ import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 import com.github.goldy1992.mp3player.service.library.search.managers.FolderDatabaseManager;
 import com.github.goldy1992.mp3player.service.library.search.managers.SongDatabaseManager;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.inject.Inject;
@@ -29,7 +30,7 @@ import javax.inject.Singleton;
  * i.e. MediaStore.Audio.Media.EXTERNAL_CONTENT_URI constant.
  *
  * onChange is called when there is a change when a song indexed with the EXTERNAL_CONTENT_URI is
- * added, changed or deleted.
+ * added, changed or deleted, and update respective song and folder lists
  */
 @Singleton
 public class AudioObserver extends MediaStoreObserver implements LogTagger {
@@ -87,44 +88,40 @@ public class AudioObserver extends MediaStoreObserver implements LogTagger {
      *
      */
     public void onChange(boolean selfChange, Uri uri, int userId) {
-        if (uri != null) {
-            if (getUri().equals(uri)) {
-                // if a track is deleted the default MediaStore.Audio.EXTERNAL_CONTENT uri as the argument
-            }
-            else if (uri.toString().startsWith(getUriString())) {
-                /* If it's a new track or changes are made to the row in the content resolver table,
-                 then the exact content if will appear there is will start with
-                MediaStore.Audio.EXTERNAL_CONTENT  */
-                try {
-                    long id = ContentUris.parseId(uri);
-                    if (INVALID_ID != id) {
-                        MediaItem result = contentManager.getItem(id);
-                        if (null != result) {
-                            Log.i(getLogTag(), "UPDATING songs and folders index");
-                            songDatabaseManager.insert(result);
-                            folderDatabaseManager.insert(result);
-                            Log.i(getLogTag(), "UPDATED songs and folders");
-                            mediaPlaybackService.notifyChildrenChanged(MediaItemUtils.getDirectoryPath(result));
-                        }
-                    } else {
-                        songDatabaseManager.reindex();
-                        folderDatabaseManager.reindex();
-                    }
-                            mediaPlaybackService.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.SONGS));
-                            mediaPlaybackService.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.FOLDERS));
-
-
-
-                } catch (Exception ex) {
-                    Log.e(getLogTag(), ExceptionUtils.getStackTrace(ex));
-                    return;
-                }
-            }
+        if (startsWithUri(uri)) {
+            updateSearchDatabase(uri);
+            mediaPlaybackService.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.SONGS));
+            mediaPlaybackService.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.FOLDERS));
         }
-
         // when there is a "change" to the meta data the exact id will given as the uri
         Log.i(getLogTag(),"hit on change");
+    }
 
+    private void updateSearchDatabase(Uri uri) {
+        long id = INVALID_ID;
+        try {
+            id = ContentUris.parseId(uri);
+        } catch (Exception ex) {
+            Log.e(getLogTag(), ExceptionUtils.getStackTrace(ex));
+        }
+
+        // If we know the id then just get that id
+        if (INVALID_ID != id) {
+            MediaItem result = contentManager.getItem(id);
+            if (null != result) {
+                Log.i(getLogTag(), "UPDATING songs and folders index");
+                songDatabaseManager.insert(result);
+                folderDatabaseManager.insert(result);
+                Log.i(getLogTag(), "UPDATED songs and folders");
+                String directoryPath = MediaItemUtils.getDirectoryPath(result);
+                if (StringUtils.isNotEmpty(directoryPath)) {
+                    mediaPlaybackService.notifyChildrenChanged(directoryPath);
+                }
+            }
+        } else {
+            songDatabaseManager.reindex();
+            folderDatabaseManager.reindex();
+        }
     }
 
     @Override

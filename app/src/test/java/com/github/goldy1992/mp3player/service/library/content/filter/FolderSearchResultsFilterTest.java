@@ -17,13 +17,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
-public class FoldersResultFilterTest {
+public class FolderSearchResultsFilterTest {
 
-    private FoldersResultFilter foldersResultFilter;
+    private FolderSearchResultsFilter folderSearchResultsFilter;
 
     @Before
     public void setup() {
-        this.foldersResultFilter = new FoldersResultFilter();
+        this.folderSearchResultsFilter = new FolderSearchResultsFilter();
     }
 
     @Test
@@ -57,7 +57,7 @@ public class FoldersResultFilterTest {
         resultsToProcess.add(item3Throw);
         resultsToProcess.add(item4Keep);
 
-        List<MediaItem> results = foldersResultFilter.filter(filterQuery, resultsToProcess);
+        List<MediaItem> results = folderSearchResultsFilter.filter(filterQuery, resultsToProcess);
         assertEquals(expectedResultsSize, results.size());
         assertTrue(results.contains(item1Keep));
         assertTrue(results.contains(item4Keep));

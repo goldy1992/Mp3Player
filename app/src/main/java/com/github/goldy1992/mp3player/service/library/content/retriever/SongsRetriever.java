@@ -21,7 +21,7 @@ public class SongsRetriever extends ContentResolverRetriever {
     public SongsRetriever(ContentResolver contentResolver,
                           SongResultsParser resultsParser,
                           @Named("worker") Handler handler) {
-        super(contentResolver, resultsParser, handler);
+        super(contentResolver, resultsParser, handler, null);
     }
 
     @Override

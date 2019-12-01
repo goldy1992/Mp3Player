@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
+import com.github.goldy1992.mp3player.service.library.content.filter.SongsFromFolderResultsFilter;
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser;
 
 import javax.inject.Inject;
@@ -15,11 +16,14 @@ import static com.github.goldy1992.mp3player.service.library.content.Projections
 
 public class SongsFromFolderRetriever extends ContentResolverRetriever {
 
+    private static final String WHERE = MediaStore.Audio.Media.DATA + " LIKE ? ";
+
     @Inject
     public SongsFromFolderRetriever(ContentResolver contentResolver,
                                     SongResultsParser resultsParser,
-                                    @Named("worker") Handler handler) {
-        super(contentResolver, resultsParser, handler);
+                                    @Named("worker") Handler handler,
+                                    SongsFromFolderResultsFilter songsFromFolderResultsFilter) {
+        super(contentResolver, resultsParser, handler, songsFromFolderResultsFilter);
     }
 
     @Override
@@ -29,10 +33,9 @@ public class SongsFromFolderRetriever extends ContentResolverRetriever {
 
     @Override
     Cursor performGetChildrenQuery(String id) {
-        String WHERE_CLAUSE = MediaStore.Audio.Media.DATA + " LIKE ? ";
-        String[] WHERE_ARGS = {id + "%"};
+        String[] whereArgs = {id + "%"};
         return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,getProjection(),
-                WHERE_CLAUSE , WHERE_ARGS, null);
+                WHERE, whereArgs, null);
     }
 
     @Override

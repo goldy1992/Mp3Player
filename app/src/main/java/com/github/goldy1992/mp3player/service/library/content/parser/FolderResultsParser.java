@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player.service.library.content.parser;
 
 import android.database.Cursor;
 import android.provider.MediaStore;
-import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.annotation.NonNull;
 
@@ -32,8 +32,8 @@ public class FolderResultsParser extends ResultsParser {
     }
 
     @Override
-    public List<MediaBrowserCompat.MediaItem> create(@NonNull Cursor cursor, String mediaIdPrefix) {
-        TreeSet<MediaBrowserCompat.MediaItem> listToReturn = new TreeSet<>(this);
+    public List<MediaItem> create(@NonNull Cursor cursor, String mediaIdPrefix) {
+        TreeSet<MediaItem> listToReturn = new TreeSet<>(this);
         Set<String> directoryPathSet = new HashSet<>();
         while (cursor.moveToNext()) {
             String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
@@ -45,7 +45,7 @@ public class FolderResultsParser extends ResultsParser {
                 if (null != directory) {
                     directoryPath = directory.getAbsolutePath();
                     if (directoryPathSet.add(directoryPath)) {
-                        MediaBrowserCompat.MediaItem mediaItem = createFolderMediaItem(directory, mediaIdPrefix);
+                        MediaItem mediaItem = createFolderMediaItem(directory, mediaIdPrefix);
                         listToReturn.add(mediaItem);
                     }
                 }
@@ -60,7 +60,7 @@ public class FolderResultsParser extends ResultsParser {
     }
 
 
-    private MediaBrowserCompat.MediaItem createFolderMediaItem(File folder, String parentId) {
+    private MediaItem createFolderMediaItem(File folder, String parentId) {
         /* append a file separator so that folders with an "extended" name are discarded...
          * e.g. Folder to accept: 'folder1'
          *      Folder to reject: 'folder1extended' */
@@ -74,7 +74,7 @@ public class FolderResultsParser extends ResultsParser {
     }
 
     @Override
-    public int compare(MediaBrowserCompat.MediaItem m1, MediaBrowserCompat.MediaItem m2) {
+    public int compare(MediaItem m1, MediaItem m2) {
         return caseSensitiveStringCompare(getDirectoryPath(m1), getDirectoryPath(m2));
     }
 

@@ -21,7 +21,7 @@ public class FoldersRetriever extends ContentResolverRetriever {
     public FoldersRetriever(ContentResolver contentResolver,
                             FolderResultsParser resultsParser,
                             @Named("worker") Handler handler) {
-        super(contentResolver, resultsParser, handler);
+        super(contentResolver, resultsParser, handler, null);
     }
 
     @Override
