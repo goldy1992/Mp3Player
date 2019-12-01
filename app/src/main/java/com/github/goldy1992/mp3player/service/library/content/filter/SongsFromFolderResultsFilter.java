@@ -16,7 +16,9 @@ public class SongsFromFolderResultsFilter implements ResultsFilter {
 
 
     @Inject
-    public SongsFromFolderResultsFilter() {}
+    public SongsFromFolderResultsFilter() {
+        /* Empty constructor declared for dagger insert */
+    }
 
 
     @Override

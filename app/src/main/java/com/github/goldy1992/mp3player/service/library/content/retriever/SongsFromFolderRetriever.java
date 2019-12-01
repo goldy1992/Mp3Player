@@ -12,11 +12,12 @@ import com.github.goldy1992.mp3player.service.library.content.parser.SongResults
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import static android.provider.MediaStore.MediaColumns.DATA;
 import static com.github.goldy1992.mp3player.service.library.content.Projections.SONG_PROJECTION;
 
 public class SongsFromFolderRetriever extends ContentResolverRetriever {
 
-    private static final String WHERE = MediaStore.Audio.Media.DATA + " LIKE ? ";
+    private static final String WHERE = DATA + " LIKE ? ";
 
     @Inject
     public SongsFromFolderRetriever(ContentResolver contentResolver,

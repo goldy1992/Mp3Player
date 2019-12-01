@@ -29,9 +29,6 @@ public abstract class MyGenericRecycleViewAdapter extends MediaItemRecyclerViewA
     private static final String EMPTY_MEDIA_ID = "EMPTY_MEDIA_ID";
     final int EMPTY_VIEW_TYPE = -1;
 
-
-
-    private boolean isInitialised = false;
     private final MediaItem EMPTY_LIST_ITEM = buildEmptyListMediaItem();
 
     public MyGenericRecycleViewAdapter(AlbumArtPainter albumArtPainter, Handler mainHandler) {
@@ -53,7 +50,6 @@ public abstract class MyGenericRecycleViewAdapter extends MediaItemRecyclerViewA
         } else {
             addNoChildrenFoundItem();
         }
-        this.isInitialised = true;
     }
     @Override
     public MediaItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -14,7 +14,7 @@ import com.github.goldy1992.mp3player.service.library.search.SearchEntity;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class ContentResolverSearcher<T extends SearchEntity> extends ContentSearcher {
+public abstract class ContentResolverSearcher<T extends SearchEntity> implements ContentSearcher {
 
     final ContentResolver contentResolver;
     final ResultsParser resultsParser;

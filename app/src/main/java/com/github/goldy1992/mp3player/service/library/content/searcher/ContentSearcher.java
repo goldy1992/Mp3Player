@@ -8,9 +8,9 @@ import com.github.goldy1992.mp3player.commons.MediaItemType;
 
 import java.util.List;
 
-public abstract class ContentSearcher {
+public interface ContentSearcher {
 
-    public abstract List<MediaItem> search(@NonNull String query);
-    public abstract MediaItemType getSearchCategory();
+    List<MediaItem> search(@NonNull String query);
+    MediaItemType getSearchCategory();
 
 }
