@@ -86,7 +86,7 @@ public class MediaItemBuilder {
         return this;
     }
 
-    public MediaItemBuilder setFile(File file) {
+    public MediaItemBuilder setDirectoryFile(File file) {
         extras.putSerializable(META_DATA_DIRECTORY, file);
         return this;
     }

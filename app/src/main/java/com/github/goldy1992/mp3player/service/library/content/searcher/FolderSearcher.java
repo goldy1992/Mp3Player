@@ -8,7 +8,7 @@ import androidx.annotation.VisibleForTesting;
 
 import com.github.goldy1992.mp3player.commons.MediaItemType;
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
-import com.github.goldy1992.mp3player.service.library.content.filter.FoldersResultFilter;
+import com.github.goldy1992.mp3player.service.library.content.filter.FolderSearchResultsFilter;
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser;
 import com.github.goldy1992.mp3player.service.library.search.Folder;
 import com.github.goldy1992.mp3player.service.library.search.FolderDao;
@@ -30,10 +30,10 @@ public class FolderSearcher extends ContentResolverSearcher<Folder> {
     @Inject
     public FolderSearcher(ContentResolver contentResolver,
                           FolderResultsParser resultsParser,
-                          FoldersResultFilter foldersResultFilter,
+                          FolderSearchResultsFilter folderSearchResultsFilter,
                           MediaItemTypeIds mediaItemTypeIds,
                           FolderDao folderDao) {
-        super(contentResolver, resultsParser,  foldersResultFilter, folderDao);
+        super(contentResolver, resultsParser, folderSearchResultsFilter, folderDao);
         this.mediaItemTypeIds = mediaItemTypeIds;
     }
 

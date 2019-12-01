@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.service;
 
 import android.app.Notification;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -16,6 +15,8 @@ import androidx.annotation.VisibleForTesting;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.github.goldy1992.mp3player.service.library.ContentManager;
+import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers;
+import com.github.goldy1992.mp3player.service.library.search.managers.SearchDatabaseManagers;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener;
 
 import java.util.List;
@@ -29,12 +30,15 @@ import javax.inject.Named;
 public abstract class MediaPlaybackService extends MediaBrowserServiceCompat implements NotificationListener {
 
     private static final String LOG_TAG = "MEDIA_PLAYBACK_SERVICE";
+
     private ContentManager contentManager;
     private HandlerThread worker;
     private Handler handler;
     private MediaSessionConnectorCreator mediaSessionConnectorCreator;
     private MediaSessionCompat mediaSession;
     private RootAuthenticator rootAuthenticator;
+    private MediaStoreObservers mediaStoreObservers;
+    private SearchDatabaseManagers searchDatabaseManagers;
 
     abstract void initialiseDependencies();
 
@@ -42,14 +46,15 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
     public void onCreate() {
         super.onCreate();
         this.mediaSessionConnectorCreator.create();
-        setSessionToken(mediaSession.getSessionToken());
+        this.setSessionToken(mediaSession.getSessionToken());
+        this.mediaStoreObservers.init(this);
+        this.searchDatabaseManagers.reindexAll();
     }
 
     @Override
     public int onStartCommand (Intent intent,
-                                      int flags,
-                                      int startId) {
-
+                               int flags,
+                               int startId) {
         Log.i(LOG_TAG, "breakpoint, on start command called");
         return START_STICKY;
     }
@@ -94,14 +99,15 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
      * @param ongoing Whether the notification is ongoing.
      */
     @Override
-    public void onNotificationPosted(
-            int notificationId, Notification notification, boolean ongoing) {
-           // fix to make notifications removable on versions < oreo.
-            if (!ongoing) {
-                stopForeground(false);
-            } else {
-                startForeground(notificationId, notification);
-            }
+    public void onNotificationPosted(int notificationId,
+                                     Notification notification,
+                                     boolean ongoing) {
+        // fix to make notifications removable
+        if (!ongoing) {
+            stopForeground(false);
+        } else {
+            startForeground(notificationId, notification);
+        }
     }
 
     @Override
@@ -113,6 +119,12 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
             List<MediaBrowserCompat.MediaItem> mediaItems = contentManager.search(query);
             result.sendResult(mediaItems);
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mediaStoreObservers.unregisterAll();
     }
 
     public MediaSessionCompat getMediaSession() {
@@ -147,6 +159,16 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
     @Inject
     public void setMediaSessionConnectorCreator(MediaSessionConnectorCreator mediaSessionConnectorCreator) {
         this.mediaSessionConnectorCreator = mediaSessionConnectorCreator;
+    }
+
+    @Inject
+    public void setMediaStoreObservers(MediaStoreObservers mediaStoreObservers) {
+        this.mediaStoreObservers = mediaStoreObservers;
+    }
+
+    @Inject
+    public void setSearchDatabaseManagers(SearchDatabaseManagers searchDatabaseManagers) {
+        this.searchDatabaseManagers = searchDatabaseManagers;
     }
 
     @VisibleForTesting

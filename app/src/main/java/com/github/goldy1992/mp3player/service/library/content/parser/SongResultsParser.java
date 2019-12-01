@@ -55,8 +55,11 @@ public class SongResultsParser extends ResultsParser {
         final String mediaId = c.getString(c.getColumnIndex(MediaStore.Audio.Media._ID));
         final String mediaFilePath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
         final File mediaFile =  new File(mediaFilePath);
+        File directory = null;
         if (!mediaFile.exists()) {
             return null;
+        } else {
+            directory = mediaFile.getParentFile();
         }
         final Uri mediaUri = Uri.fromFile(mediaFile);
         final long duration = c.getLong(c.getColumnIndex(MediaStore.Audio.Media.DURATION));
@@ -74,6 +77,7 @@ public class SongResultsParser extends ResultsParser {
                 .setLibraryId(buildLibraryId(libraryIdPrefix, mediaId))
                 .setDuration(duration)
                 .setFileName(fileName)
+                .setDirectoryFile(directory)
                 .setArtist(artist)
                 .setMediaItemType(MediaItemType.SONG)
                 .setFlags(FLAG_PLAYABLE)

@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.service.library.content.retriever;
 import android.support.v4.media.MediaBrowserCompat;
 
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder;
+import com.github.goldy1992.mp3player.service.library.content.filter.SongsFromFolderResultsFilter;
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest;
 import com.github.goldy1992.mp3player.service.library.search.SongDao;
@@ -37,8 +38,7 @@ public class SongsFromFolderRetrieverTest extends ContentResolverRetrieverTestBa
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        when(searchDatabase.songDao()).thenReturn(songDao);
-        this.retriever = spy(new SongsFromFolderRetriever(contentResolver, resultsParser, searchDatabase, handler));
+        this.retriever = spy(new SongsFromFolderRetriever(contentResolver, resultsParser, handler, new SongsFromFolderResultsFilter()));
     }
 
     @Test

@@ -13,10 +13,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class FoldersResultFilter extends ResultsFilter {
+public class FolderSearchResultsFilter implements ResultsFilter {
 
     @Inject
-    public FoldersResultFilter() {
+    public FolderSearchResultsFilter() {
         super();
     }
 

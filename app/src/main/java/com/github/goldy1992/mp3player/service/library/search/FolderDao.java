@@ -11,7 +11,7 @@ import java.util.List;
 public interface FolderDao extends SearchDao<Folder> {
 
     @Override
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Folder folder);
 
     @Override
@@ -20,7 +20,12 @@ public interface FolderDao extends SearchDao<Folder> {
 
     @Override
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertAll(List<Folder> folders);
+    void insertAll(List<Folder> folders);
+
+    @Override
+    @Query("DELETE FROM folders WHERE id NOT IN ( :ids )")
+    void deleteOld(List<String> ids);
+
 
     @Override
     @Query("SELECT * FROM folders WHERE value like '%' || :value || '%'")

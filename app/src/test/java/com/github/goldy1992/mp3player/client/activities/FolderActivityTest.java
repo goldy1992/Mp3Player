@@ -32,7 +32,7 @@ public class FolderActivityTest {
         File folder = new File("/a/b/xyz");
         MediaBrowserCompat.MediaItem mediaItem = new MediaItemBuilder("id")
             .setLibraryId("xyz")
-            .setFile(folder)
+            .setDirectoryFile(folder)
             .build();
         intent.putExtra(MEDIA_ITEM, mediaItem);
         this.scenario = Robolectric.buildActivity(FolderActivityInjectorTestImpl.class, intent).setup();

@@ -11,7 +11,7 @@ import java.util.List;
 public interface SongDao extends SearchDao<Song> {
 
     @Override
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Song song);
 
     @Override
@@ -21,6 +21,10 @@ public interface SongDao extends SearchDao<Song> {
     @Override
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAll(List<Song> songs);
+
+    @Override
+    @Query("DELETE FROM songs WHERE id NOT IN ( :ids )")
+    void deleteOld(List<String> ids);
 
     @Override
     @Query("SELECT * FROM songs WHERE value like '%' || :value || '%'")
