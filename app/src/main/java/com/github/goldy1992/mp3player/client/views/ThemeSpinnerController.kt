@@ -23,8 +23,8 @@ class ThemeSpinnerController(private val context: Context, private val spinner: 
             : ArrayAdapter<String?>? = null
     private var themeResIds: MutableList<Int>? = null
     @get:VisibleForTesting
-    var themeNameToResMap: BiMap<String, Int>? = null
-        private set
+    private var themeNameToResMap: BiMap<String, Int> = HashBiMap.create()
+
     private var selectCount: Long = 0
     var currentTheme: String? = null
         private set
@@ -35,12 +35,11 @@ class ThemeSpinnerController(private val context: Context, private val spinner: 
         spinner.onItemSelectedListener = this
         val themeArray = context.resources.obtainTypedArray(R.array.themes)
         themeResIds = ArrayList()
-        themeNameToResMap = HashBiMap.create()
-        if (themeArray != null && themeArray.length() > 0) {
+        if (themeArray.length() > 0) {
             val numberOfResources = themeArray.length()
             for (i in 0 until numberOfResources) { // for each theme in the theme array
                 val res = themeArray.getResourceId(i, 0)
-                themeResIds.add(res)
+                themeResIds?.add(res)
                 val themeNameArray = context.obtainStyledAttributes(res, attrs) // get the theme name GIVEN the themes res if.
                 val themeName = themeNameArray.getString(0)
                 adapter!!.add(themeName)
@@ -51,7 +50,7 @@ class ThemeSpinnerController(private val context: Context, private val spinner: 
         recycleTypedArray(themeArray)
         val currentThemeId = currentThemeId
         if (currentThemeId != -1) {
-            currentTheme = themeNameToResMap.inverse()[currentThemeId]
+            currentTheme = themeNameToResMap!!.inverse()[currentThemeId]
             val position = adapter!!.getPosition(currentTheme)
             spinner.setSelection(position)
         }
@@ -59,7 +58,7 @@ class ThemeSpinnerController(private val context: Context, private val spinner: 
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
         val res = themeResIds!![position]
-        Log.d(LOG_TAG, "selected " + themeNameToResMap!!.get(res))
+        Log.d(LOG_TAG, "selected " + themeNameToResMap.inverse()[res])
         if (selectCount >= 1) {
             Log.d(LOG_TAG, "select count > 1")
             setThemePreference(res)

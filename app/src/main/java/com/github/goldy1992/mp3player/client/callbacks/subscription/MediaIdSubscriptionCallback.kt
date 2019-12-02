@@ -7,13 +7,14 @@ import com.github.goldy1992.mp3player.client.MediaBrowserResponseListener
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.collections.ArrayList
 
 class MediaIdSubscriptionCallback @Inject constructor(@Named("worker") handler: Handler) : MediaBrowserCompat.SubscriptionCallback() {
     private val handler: Handler
     private val mediaBrowserResponseListeners: MutableMap<String, MutableSet<MediaBrowserResponseListener>>
     override fun onChildrenLoaded(parentId: String, children: List<MediaBrowserCompat.MediaItem>) {
         handler.post {
-            val childrenArrayList = ArrayList(children)
+            var childrenArrayList = ArrayList(children)
             val listenersToNotify: Set<MediaBrowserResponseListener>? = mediaBrowserResponseListeners[parentId]
             if (null != listenersToNotify) {
                 for (listener in listenersToNotify) {

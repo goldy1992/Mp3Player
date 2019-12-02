@@ -5,22 +5,23 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.annotation.VisibleForTesting
-import androidx.appcompat.widget.AppCompatImageButton
 import com.github.goldy1992.mp3player.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.github.goldy1992.mp3player.commons.Constants
+import kotlinx.android.synthetic.main.fragment_playback_speed_controls.*
 import javax.inject.Inject
 
 class PlaybackSpeedControlsFragment : AsyncFragment(), PlaybackStateListener {
-    private var playbackSpeed: TextView? = null
-    private var increasePlaybackSpeedButton: AppCompatImageButton? = null
-    private var decreasePlaybackSpeedButton: AppCompatImageButton? = null
+
+
     private var mediaControllerAdapter: MediaControllerAdapter? = null
+        @Inject set
+
     private var speed = 1.0f
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         initialiseDependencies()
@@ -30,19 +31,19 @@ class PlaybackSpeedControlsFragment : AsyncFragment(), PlaybackStateListener {
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
         super.onViewCreated(view, bundle)
-        decreasePlaybackSpeedButton = view.findViewById(R.id.decreasePlaybackSpeed)
+
         decreasePlaybackSpeedButton.setOnClickListener(View.OnClickListener { v: View? -> decreasePlaybackSpeed() })
-        increasePlaybackSpeedButton = view.findViewById(R.id.increasePlaybackSpeed)
+
         increasePlaybackSpeedButton.setOnClickListener(View.OnClickListener { v: View? -> increasePlaybackSpeed() })
-        playbackSpeed = view.findViewById(R.id.playbackSpeedValue)
+
         // register listeners
         mediaControllerAdapter!!.registerPlaybackStateListener(this)
         //update GUI
-        onPlaybackStateChanged(mediaControllerAdapter!!.playbackStateCompat)
+        onPlaybackStateChanged(mediaControllerAdapter!!.playbackStateCompat!!)
     }
 
     private fun updatePlaybackSpeedText(speed: Float) {
-        val r = Runnable { playbackSpeed!!.text = getString(R.string.PLAYBACK_SPEED_VALUE, speed) }
+        val r = Runnable { playbackSpeedTextView!!.text = getString(R.string.PLAYBACK_SPEED_VALUE, speed) }
         mainUpdater.post(r)
     }
 
@@ -74,8 +75,4 @@ class PlaybackSpeedControlsFragment : AsyncFragment(), PlaybackStateListener {
         component!!.inject(this)
     }
 
-    @Inject
-    fun setMediaControllerAdapter(mediaControllerAdapter: MediaControllerAdapter?) {
-        this.mediaControllerAdapter = mediaControllerAdapter
-    }
 }

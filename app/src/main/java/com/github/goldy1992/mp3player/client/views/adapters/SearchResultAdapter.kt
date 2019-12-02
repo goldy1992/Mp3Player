@@ -39,9 +39,7 @@ class SearchResultAdapter @Inject constructor(albumArtPainter: AlbumArtPainter, 
 
     override fun onBindViewHolder(holder: MediaItemViewHolder, position: Int) {
         val item = items[holder.adapterPosition]
-        if (null != item) {
-            holder.bindMediaItem(item)
-        }
+        holder.bindMediaItem(item)
     }
 
     override fun getItemViewType(position: Int): Int {

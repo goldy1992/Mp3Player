@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.client.views.adapters
 
-import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaBrowserCompat.MediaItem
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
@@ -11,9 +11,14 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator.OnConfigureTabCallback
 import java.util.*
 
-class MyPagerAdapter(fm: FragmentManager?, lifecycle: Lifecycle?) : FragmentStateAdapter(fm!!, lifecycle!!), OnConfigureTabCallback {
-    val menuCategories: Map<MediaItemType, MediaBrowserCompat.MediaItem> = TreeMap()
-    val pagerItems: Map<MediaItemType, MediaItemListFragment> = TreeMap()
+class MyPagerAdapter
+    constructor(
+        fm: FragmentManager?,
+        lifecycle: Lifecycle?)
+    : FragmentStateAdapter(fm!!, lifecycle!!), OnConfigureTabCallback {
+
+    val menuCategories = sortedMapOf<MediaItemType, MediaItem>()
+    var pagerItems = sortedMapOf<MediaItemType, MediaItemListFragment>()
     private fun getMediaItemTypeFromPosition(position: Int): MediaItemType {
         val categoryArrayList = ArrayList(menuCategories.keys)
         return categoryArrayList[position]

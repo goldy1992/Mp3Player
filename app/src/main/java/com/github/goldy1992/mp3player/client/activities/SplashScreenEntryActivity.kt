@@ -17,17 +17,24 @@ import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.dagger.components.DaggerMediaActivityCompatComponent
 import com.github.goldy1992.mp3player.service.MediaPlaybackServiceInjector
 import org.apache.commons.lang3.exception.ExceptionUtils
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.ReentrantLock
 import javax.inject.Inject
 
+/**
+ *
+ */
 class SplashScreenEntryActivity : AppCompatActivity(), MediaBrowserConnectorCallback, PermissionGranted {
+
     private var mediaBrowserAdapter: MediaBrowserAdapter? = null
     private var permissionsProcessor: PermissionsProcessor? = null
-    @get:VisibleForTesting
-    @set:VisibleForTesting
+    private val lock = ReentrantLock()
+    private val condition = lock.newCondition()
+
     @Volatile
     var isSplashScreenFinishedDisplaying = false
-    @get:VisibleForTesting
-    @set:VisibleForTesting
+
+
     @Volatile
     var isPermissionGranted = false
     private var mainActivityIntent: Intent? = null
@@ -54,16 +61,17 @@ class SplashScreenEntryActivity : AppCompatActivity(), MediaBrowserConnectorCall
         Log.i(LOG_TAG, "onStart")
     }
 
+
     @Synchronized
     private fun splashScreenRun() { //    Log.i(LOG_TAG, "splashscreen run");
         try {
-            wait(WAIT_TIME)
+            condition.await(WAIT_TIME, TimeUnit.MILLISECONDS)
         } catch (ex: InterruptedException) {
             Log.e(LOG_TAG, ExceptionUtils.getMessage(ex.fillInStackTrace()))
             Thread.currentThread().interrupt()
         } finally {
             isSplashScreenFinishedDisplaying = true
-            notifyAll()
+            condition.signalAll()
         }
     }
 
@@ -105,7 +113,7 @@ class SplashScreenEntryActivity : AppCompatActivity(), MediaBrowserConnectorCall
         Log.i(LOG_TAG, "processing complete")
         while (!isSplashScreenFinishedDisplaying || !isPermissionGranted) {
             try {
-                wait(Constants.ONE_SECOND)
+                condition.await(Constants.ONE_SECOND, TimeUnit.MILLISECONDS)
             } catch (ex: InterruptedException) {
                 val error = ExceptionUtils.getMessage(ex.fillInStackTrace())
                 Log.e(LOG_TAG, error)

@@ -8,10 +8,7 @@ import android.view.MenuItem
 import android.widget.Spinner
 import androidx.annotation.LayoutRes
 import androidx.annotation.VisibleForTesting
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.github.goldy1992.mp3player.R
 import com.github.goldy1992.mp3player.client.MediaBrowserResponseListener
@@ -28,60 +25,51 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-import com.google.android.material.navigation.NavigationView
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import javax.inject.Inject
 
 abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListener {
-    @set:VisibleForTesting
-    var drawerLayout: DrawerLayout? = null
-    private var titleToolbar: Toolbar? = null
+
     var rootMenuItemsPager: ViewPager2? = null
         private set
-    private var tabLayout: TabLayout? = null
+
     private var tabLayoutMediator: TabLayoutMediator? = null
     @get:VisibleForTesting
     var adapter: MyPagerAdapter? = null
         private set
-    private var actionBar: ActionBar? = null
+
     @get:VisibleForTesting
     var searchFragment: SearchFragment? = null
         private set
-    private var appBarLayout: AppBarLayout? = null
-    var navigationView: NavigationView? = null
-        private set
+
     private var myDrawerListener: MyDrawerListener? = null
-    public override fun initialiseView(@LayoutRes layoutRes: Int): Boolean {
-        setContentView(layoutRes)
+
+    override fun initialiseView(@LayoutRes layoutId: Int): Boolean {
+        setContentView(layoutId)
         searchFragment = SearchFragment()
-        drawerLayout = findViewById(R.id.drawer_layout)
-        titleToolbar = findViewById(R.id.titleToolbar)
-        navigationView = findViewById(R.id.nav_view)
-        appBarLayout = findViewById(R.id.appbar)
-        appBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { app: AppBarLayout?, offset: Int ->
+        appBarLayout!!.addOnOffsetChangedListener(OnOffsetChangedListener { app: AppBarLayout?, offset: Int ->
             Log.i(LOG_TAG, "offset: " + offset + ", scroll range: " + app!!.totalScrollRange)
+            var newOffset = offset
             if (null != app) {
-                offset += app.totalScrollRange
+                newOffset += app.totalScrollRange
             }
             rootMenuItemsPager!!.setPadding(
                     rootMenuItemsPager!!.paddingLeft,
                     rootMenuItemsPager!!.paddingTop,
                     rootMenuItemsPager!!.paddingRight,
-                    offset)
+                    newOffset)
         })
         rootMenuItemsPager = findViewById(R.id.rootItemsPager)
-        tabLayout = findViewById(R.id.tabs)
         adapter = MyPagerAdapter(supportFragmentManager, lifecycle)
-        rootMenuItemsPager.setAdapter(adapter)
-        tabLayoutMediator = TabLayoutMediator(tabLayout, rootMenuItemsPager, adapter!!)
+        rootMenuItemsPager!!.setAdapter(adapter)
+        tabLayoutMediator = TabLayoutMediator(tabLayout, rootMenuItemsPager!!, adapter!!)
         tabLayoutMediator!!.attach()
-        rootMenuItemsPager.setAdapter(adapter)
+        rootMenuItemsPager!!.setAdapter(adapter)
         setSupportActionBar(titleToolbar)
-        actionBar = supportActionBar
-        actionBar!!.setDisplayHomeAsUpEnabled(true)
-        actionBar!!.setHomeAsUpIndicator(R.drawable.ic_menu)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_menu)
         if (null != mediaBrowserAdapter) {
             mediaBrowserAdapter!!.registerRootListener(this)
         }
@@ -115,7 +103,7 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
                 Log.i(LOG_TAG, "hit action search")
                 supportFragmentManager
                         .beginTransaction()
-                        .add(R.id.fragment_container, searchFragment, "SEARCH_FGMT")
+                        .add(R.id.fragment_container, searchFragment!!, "SEARCH_FGMT")
                         .addToBackStack(null)
                         .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                         .commit()

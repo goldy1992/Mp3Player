@@ -14,16 +14,20 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class MySongViewAdapter @Inject constructor(albumArtPainter: AlbumArtPainter, @Named("main") mainHandler: Handler) : MyGenericRecycleViewAdapter(albumArtPainter, mainHandler) {
-    private override val LOG_TAG = "MY_VIEW_ADAPTER"
+
+    override fun getLogTag() : String {
+        return "MY_VIEW_ADAPTER"
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaItemViewHolder {
-        var vh = super.onCreateViewHolder(parent, viewType)
-        if (vh == null) { // create a new views
+        return if (viewType == EMPTY_VIEW_TYPE) {
+            createEmptyViewHolder(parent, viewType)
+        } else { // create a new views
             val layoutInflater = LayoutInflater.from(parent.context)
             val v = layoutInflater
                     .inflate(R.layout.song_item_menu, parent, false)
-            vh = MySongViewHolder(v, albumArtPainter)
+            MySongViewHolder(v, albumArtPainter)
         }
-        return vh
     }
 
     override fun onBindViewHolder(holder: MediaItemViewHolder, position: Int) {

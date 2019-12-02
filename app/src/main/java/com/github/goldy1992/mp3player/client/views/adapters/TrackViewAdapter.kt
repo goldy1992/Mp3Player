@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.views.adapters
 
 import android.os.Handler
-import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.MediaSessionCompat.QueueItem
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +12,8 @@ import com.github.goldy1992.mp3player.client.views.viewholders.MediaPlayerTrackV
 class TrackViewAdapter // TODO: if there is no queue make an empty view holder
 (val albumArtPainter: AlbumArtPainter,
  val mainHandler: Handler,
- var queue: List<MediaSessionCompat.QueueItem>?) : RecyclerView.Adapter<MediaPlayerTrackViewHolder>() {
+ var queue: List<QueueItem>?) : RecyclerView.Adapter<MediaPlayerTrackViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaPlayerTrackViewHolder { // create a new views
         val layoutInflater = LayoutInflater.from(parent.context)
         val v = layoutInflater
@@ -34,8 +35,8 @@ class TrackViewAdapter // TODO: if there is no queue make an empty view holder
     /**
      *
      */
-    fun setQueue(queue: List<MediaSessionCompat.QueueItem>?) {
-        this.queue = queue
+    fun updateQueue(updatedQueue: List<QueueItem>) {
+        this.queue = updatedQueue
         notifyDataSetChanged()
     }
 

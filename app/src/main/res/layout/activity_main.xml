@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
+    android:id="@+id/drawerLayout"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -24,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="true"
-                android:id="@+id/appbar"
+                android:id="@+id/appBarLayout"
                 >
 
                 <androidx.appcompat.widget.Toolbar
@@ -40,7 +40,7 @@
                 </androidx.appcompat.widget.Toolbar>
 
                 <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabs"
+                    android:id="@+id/tabLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:tabTextColor="?attr/textColorPrimary"
@@ -69,7 +69,7 @@
 
     <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
+        android:id="@+id/navigationView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"

@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
 apply plugin: "de.mannodermaus.android-junit5"
 apply plugin: 'com.github.ben-manes.versions'
@@ -153,6 +154,7 @@ dependencies {
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
     implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
     annotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
+    kapt group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
     implementation 'androidx.viewpager2:viewpager2:1.0.0-rc01'
     // added to remove compile time warning
@@ -166,6 +168,7 @@ dependencies {
 
     annotationProcessor  group: 'com.google.dagger', name: 'dagger-android-processor', version: DAGGER_VERSION
     annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
 
     testAnnotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION

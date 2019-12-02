@@ -14,6 +14,8 @@ class SeekerBar
     : AppCompatSeekBar(context, attrs, defStyleAttr) {
 
     var valueAnimator: ValueAnimator? = null
+
+
     var isTracking = false
     override fun setOnSeekBarChangeListener(listener: OnSeekBarChangeListener) {
         super.setOnSeekBarChangeListener(listener)

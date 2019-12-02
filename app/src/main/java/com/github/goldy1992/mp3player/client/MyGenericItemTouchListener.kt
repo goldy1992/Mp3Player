@@ -45,10 +45,6 @@ class MyGenericItemTouchListener @Inject constructor(context: Context?, itemSele
         return false
     }
 
-    fun setParentView(parentView: RecyclerView?) {
-        this.parentView = parentView
-    }
-
     interface ItemSelectedListener {
         fun itemSelected(item: MediaBrowserCompat.MediaItem?)
     }

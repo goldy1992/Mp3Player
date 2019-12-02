@@ -43,8 +43,8 @@ class PlaybackTrackerFragment : AsyncFragment(), PlaybackStateListener, Metadata
         // init MediaController listeners
         registerMediaControllerListeners()
         // update GUI state
-        onMetadataChanged(mediaControllerAdapter!!.metadata)
-        onPlaybackStateChanged(mediaControllerAdapter!!.playbackStateCompat)
+        onMetadataChanged(mediaControllerAdapter!!.metadata!!)
+        onPlaybackStateChanged(mediaControllerAdapter!!.playbackStateCompat!!)
     }
 
     private fun registerMediaControllerListeners() {
@@ -59,14 +59,14 @@ class PlaybackTrackerFragment : AsyncFragment(), PlaybackStateListener, Metadata
 
     override fun onMetadataChanged(metadata: MediaMetadataCompat) {
         val duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
-        counter!!.setDuration(duration)
+        counter!!.duration = duration
         val durationString = formatTime(duration)
         mainUpdater.post { updateDurationText(durationString) }
         seekerBarController!!.onMetadataChanged(metadata)
     }
 
     fun initialiseDependencies() {
-        val component = (activity as MediaActivityCompat?)!!.mediaActivityCompatComponent
+        val component = (activity as MediaActivityCompat?)!!.mediaActivityCompatComponent!!
                 .playbackTrackerSubcomponent()
         component.inject(this)
     }

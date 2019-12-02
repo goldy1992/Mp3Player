@@ -6,7 +6,8 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.dagger.components.MediaActivityCompatComponent
 
 class SongListFragment : MediaItemListFragment() {
-    override fun itemSelected(item: MediaBrowserCompat.MediaItem) {
+
+    override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {
         mediaControllerAdapter!!.playFromMediaId(MediaItemUtils.getLibraryId(item), null)
     }
 

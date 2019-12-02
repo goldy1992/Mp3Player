@@ -16,7 +16,7 @@ import javax.inject.Named
 
 class PlayPauseButton @Inject constructor(context: Context, mediaControllerAdapter: MediaControllerAdapter,
                                           @Named("main") mainUpdater: Handler) : MediaButton(context, mediaControllerAdapter, mainUpdater), PlaybackStateListener {
-    @get:State
+    @get:PlaybackStateCompat.State
     @set:VisibleForTesting
     @PlaybackStateCompat.State
     var state = INITIAL_PLAYBACK_STATE

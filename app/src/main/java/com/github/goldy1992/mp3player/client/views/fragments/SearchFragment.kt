@@ -12,17 +12,15 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.LinearLayout
 import androidx.annotation.VisibleForTesting
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import com.github.goldy1992.mp3player.LogTagger
 import com.github.goldy1992.mp3player.R
 import com.github.goldy1992.mp3player.client.activities.SearchResultActivityInjector
+import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment : Fragment(), LogTagger {
-    private var linearLayout: LinearLayout? = null
-    private var searchView: SearchView? = null
+
     private var inputMethodManager: InputMethodManager? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -31,7 +29,6 @@ class SearchFragment : Fragment(), LogTagger {
     }
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
-        searchView = view.findViewById(R.id.search_view)
         inputMethodManager = context!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         // Get the SearchView and set the searchable configuration
         val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
@@ -42,7 +39,6 @@ class SearchFragment : Fragment(), LogTagger {
         searchView.setIconifiedByDefault(false) // Do not iconify the widget; expand it by default
         searchView.setSubmitButtonEnabled(true)
         searchView.setBackgroundColor(Color.WHITE)
-        linearLayout = view.findViewById(R.id.search_fragment_layout)
         val background = linearLayout.getBackground()
         background.alpha = 200
         linearLayout.setOnClickListener(View.OnClickListener { view: View? -> onClickOnLayout(view) })

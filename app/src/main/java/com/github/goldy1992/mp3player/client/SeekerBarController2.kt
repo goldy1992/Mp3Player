@@ -121,7 +121,7 @@ class SeekerBarController2
                 valueAnimator.setCurrentFraction(positionAsFraction)
             }
             removeValueAnimator()
-            seekerBar.setValueAnimator(valueAnimator)
+            seekerBar!!.valueAnimator =valueAnimator
             this.valueAnimator = valueAnimator
         } catch (ex: IllegalArgumentException) {
             Log.e(LOG_TAG, "seekerbar Max: $currentSongDuration")
@@ -130,7 +130,7 @@ class SeekerBarController2
     }
 
     fun setLooping(state: PlaybackStateCompat?) {
-        val repeatMode = mediaControllerAdapter.getRepeatMode()
+        val repeatMode = mediaControllerAdapter!!.repeatMode
         if (null != repeatMode) {
             isLooping = repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE
             if (null != valueAnimator) {
@@ -140,11 +140,10 @@ class SeekerBarController2
     }
 
     private fun removeValueAnimator() {
-        if (null != seekerBar && null != seekerBar.getValueAnimator()) {
-            seekerBar.getValueAnimator().removeAllUpdateListeners()
-            seekerBar.getValueAnimator().cancel()
-            seekerBar.setValueAnimator(null)
-        }
+            seekerBar!!.valueAnimator!!.removeAllUpdateListeners()
+            seekerBar!!.valueAnimator!!.cancel()
+            seekerBar!!.valueAnimator = null
+
     }
 
     /**

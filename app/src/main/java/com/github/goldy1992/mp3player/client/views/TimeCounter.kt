@@ -9,6 +9,7 @@ import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.calculateCurrentPlaybackPosition
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.Constants.ONE_SECOND
 import com.github.goldy1992.mp3player.dagger.scopes.FragmentScope
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -19,7 +20,8 @@ import javax.inject.Named
 @FragmentScope
 class TimeCounter @Inject constructor(@param:Named("main") private val mainHandler: Handler, private val mediaControllerAdapter: MediaControllerAdapter) {
     private var textView: TextView? = null
-    var duration: Long = 0
+
+    var duration: Long = 0L
     var currentPosition: Long = 0
         private set
     var currentState = PlaybackStateCompat.STATE_NONE
@@ -85,7 +87,7 @@ class TimeCounter @Inject constructor(@param:Named("main") private val mainHandl
     private fun createTimer() {
         cancelTimer()
         timer = Executors.newSingleThreadScheduledExecutor()
-        timer.scheduleAtFixedRate(Runnable { updateUi() }, 0L, timerFixedRate, TimeUnit.MILLISECONDS)
+        timer?.scheduleAtFixedRate(Runnable { updateUi() }, 0L, timerFixedRate, TimeUnit.MILLISECONDS)
         //Log.d(LOG_TAG, "create timer");
     }
 
@@ -94,12 +96,12 @@ class TimeCounter @Inject constructor(@param:Named("main") private val mainHandl
      * 0.95 playbacks speed => 1000ms / 0.95 = 1052
      */
     private val timerFixedRate: Long
-        private get() =
+        get() =
                 /**
                  * e.g. slower playback speed => longer update time
                  * 0.95 playbacks speed => 1000ms / 0.95 = 1052
                  */
-            (ONE_SECOND / currentSpeed)
+            (ONE_SECOND / currentSpeed) as Long
 
     private fun updateTimerText() {
         val text = formatTime(currentPosition)
@@ -120,10 +122,6 @@ class TimeCounter @Inject constructor(@param:Named("main") private val mainHandl
 
     val isRunning: Boolean
         get() = currentState == PlaybackStateCompat.STATE_PLAYING
-
-    fun setDuration(duration: Long) {
-        this.duration = duration
-    }
 
     fun init(textView: TextView?) {
         this.textView = textView

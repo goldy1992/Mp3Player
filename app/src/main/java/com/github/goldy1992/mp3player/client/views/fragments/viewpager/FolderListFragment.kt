@@ -6,7 +6,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.dagger.components.MediaActivityCompatComponent
 
 class FolderListFragment : MediaItemListFragment() {
-    override fun itemSelected(item: MediaBrowserCompat.MediaItem) {
+    override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {
         val intent = intentMapper!!.getIntent(parentItemType)
         if (null != intent) {
             intent.putExtra(Constants.MEDIA_ITEM, item)
