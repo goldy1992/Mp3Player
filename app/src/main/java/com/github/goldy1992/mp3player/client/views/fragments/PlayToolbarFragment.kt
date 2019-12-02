@@ -10,9 +10,21 @@ import com.github.goldy1992.mp3player.R
 import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
 import com.github.goldy1992.mp3player.client.activities.MediaPlayerActivity
 import com.github.goldy1992.mp3player.client.utils.IntentUtils.createGoToMediaPlayerActivity
+import com.github.goldy1992.mp3player.client.views.buttons.PlayPauseButton
+import com.github.goldy1992.mp3player.client.views.buttons.SkipToNextButton
+import com.github.goldy1992.mp3player.client.views.buttons.SkipToPreviousButton
 import kotlinx.android.synthetic.main.fragment_playback_toolbar.*
+import javax.inject.Inject
 
-class PlayToolBarFragment : Fragment() {
+
+class PlayToolbarFragment : Fragment() {
+
+    var playPauseBtn: PlayPauseButton? = null
+    @Inject set
+    var skipToPreviousBtn: SkipToPreviousButton? = null
+    @Inject set
+    var skipToNextBtn: SkipToNextButton? = null
+    @Inject set
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -23,6 +35,9 @@ class PlayToolBarFragment : Fragment() {
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
         super.onViewCreated(view, bundle)
+        playPauseBtn?.init(playPauseButton)
+        skipToPreviousBtn?.init(skipToPreviousButton)
+        skipToNextBtn?.init(skipToNextButton)
 
         if (!isMediaPlayerActivity) {
             playbackToolbar.setOnClickListener(View.OnClickListener { v: View? -> goToMediaPlayerActivity() })

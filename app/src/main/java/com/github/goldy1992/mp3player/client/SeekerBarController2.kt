@@ -140,10 +140,9 @@ class SeekerBarController2
     }
 
     private fun removeValueAnimator() {
-            seekerBar!!.valueAnimator!!.removeAllUpdateListeners()
-            seekerBar!!.valueAnimator!!.cancel()
-            seekerBar!!.valueAnimator = null
-
+        seekerBar?.valueAnimator?.removeAllUpdateListeners()
+        seekerBar?.valueAnimator?.cancel()
+        seekerBar?.valueAnimator = null
     }
 
     /**

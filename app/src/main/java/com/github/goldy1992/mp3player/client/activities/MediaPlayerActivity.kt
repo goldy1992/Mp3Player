@@ -44,7 +44,7 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener {
         }
     }
 
-    public override fun initialiseView(layoutId: Int): Boolean {
+    override fun initialiseView(layoutId: Int): Boolean {
         setContentView(layoutId)
         val fm = supportFragmentManager
 

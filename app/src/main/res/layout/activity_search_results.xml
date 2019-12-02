@@ -51,7 +51,7 @@
 
     <fragment
         android:id="@+id/playToolbarFragment"
-        class="com.github.goldy1992.mp3player.client.views.fragments.PlayToolBarFragment"
+        class="com.github.goldy1992.mp3player.client.views.fragments.PlayToolbarFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

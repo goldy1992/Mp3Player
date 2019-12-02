@@ -13,7 +13,11 @@ import org.apache.commons.collections4.CollectionUtils
 import javax.inject.Inject
 import javax.inject.Named
 
-class MySongViewAdapter @Inject constructor(albumArtPainter: AlbumArtPainter, @Named("main") mainHandler: Handler) : MyGenericRecycleViewAdapter(albumArtPainter, mainHandler) {
+class MySongViewAdapter
+    @Inject
+    constructor(albumArtPainter: AlbumArtPainter,
+                @Named("main") mainHandler: Handler)
+    : MyGenericRecycleViewAdapter(albumArtPainter, mainHandler) {
 
     override fun getLogTag() : String {
         return "MY_VIEW_ADAPTER"

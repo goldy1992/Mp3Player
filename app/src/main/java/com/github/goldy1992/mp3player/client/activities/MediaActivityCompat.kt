@@ -17,13 +17,11 @@ import javax.inject.Inject
 
 abstract class MediaActivityCompat : AppCompatActivity(), MediaBrowserConnectorCallback {
     /** MediaBrowserAdapter  */
-    @JvmField
-    @set:Inject
     var mediaBrowserAdapter: MediaBrowserAdapter? = null
+        @Inject set
     /** MediaControllerAdapter  */
-    @JvmField
-    @set:Inject
     var mediaControllerAdapter: MediaControllerAdapter? = null
+        @Inject set
     /** @return the mediaActivityCompatComponent
      */
     /** Dependencies  */

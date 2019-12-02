@@ -6,30 +6,26 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
-import com.github.goldy1992.mp3player.R
-import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
-import com.github.goldy1992.mp3player.client.MediaBrowserConnectorCallback
 import com.github.goldy1992.mp3player.client.PermissionGranted
 import com.github.goldy1992.mp3player.client.PermissionsProcessor
 import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.dagger.components.DaggerMediaActivityCompatComponent
 import com.github.goldy1992.mp3player.service.MediaPlaybackServiceInjector
-import org.apache.commons.lang3.exception.ExceptionUtils
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.locks.ReentrantLock
-import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  *
  */
-class SplashScreenEntryActivity : AppCompatActivity(), MediaBrowserConnectorCallback, PermissionGranted {
+class SplashScreenEntryActivity : AppCompatActivity(), PermissionGranted {
 
-    private var mediaBrowserAdapter: MediaBrowserAdapter? = null
+
     private var permissionsProcessor: PermissionsProcessor? = null
-    private val lock = ReentrantLock()
-    private val condition = lock.newCondition()
+
 
     @Volatile
     var isSplashScreenFinishedDisplaying = false
@@ -38,8 +34,7 @@ class SplashScreenEntryActivity : AppCompatActivity(), MediaBrowserConnectorCall
     @Volatile
     var isPermissionGranted = false
     private var mainActivityIntent: Intent? = null
-    @get:VisibleForTesting
-    val thread = Thread(Runnable { init() })
+
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         if (!isTaskRoot
@@ -48,31 +43,16 @@ class SplashScreenEntryActivity : AppCompatActivity(), MediaBrowserConnectorCall
             finish()
             return
         }
-        initialiseDependencies()
         super.onCreate(savedInstanceState)
+        permissionsProcessor = PermissionsProcessor(this, this)
         // TODO: have this injected so that a test implementation can be provided
         mainActivityIntent = Intent(applicationContext, mainActivityClass)
-        setContentView(R.layout.splash_screen)
-        thread.start()
+        CoroutineScope(IO).launch { init()}
     }
 
     override fun onStart() {
         super.onStart()
         Log.i(LOG_TAG, "onStart")
-    }
-
-
-    @Synchronized
-    private fun splashScreenRun() { //    Log.i(LOG_TAG, "splashscreen run");
-        try {
-            condition.await(WAIT_TIME, TimeUnit.MILLISECONDS)
-        } catch (ex: InterruptedException) {
-            Log.e(LOG_TAG, ExceptionUtils.getMessage(ex.fillInStackTrace()))
-            Thread.currentThread().interrupt()
-        } finally {
-            isSplashScreenFinishedDisplaying = true
-            condition.signalAll()
-        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
@@ -94,46 +74,25 @@ class SplashScreenEntryActivity : AppCompatActivity(), MediaBrowserConnectorCall
         }
     }
 
-    // MediaBrowserConnectorCallback
-    override fun onConnected() {
-        onProcessingComplete()
-        Log.i(LOG_TAG, "hit on connected")
-    }
 
-    // MediaBrowserConnectorCallback
-    override fun onConnectionSuspended() {}
-
-    // MediaBrowserConnectorCallback
-    override fun onConnectionFailed() {
-        Log.i(LOG_TAG, "connection failed")
-    }
-
-    @Synchronized
-    private fun onProcessingComplete() {
+    private suspend fun onProcessingComplete() {
         Log.i(LOG_TAG, "processing complete")
-        while (!isSplashScreenFinishedDisplaying || !isPermissionGranted) {
-            try {
-                condition.await(Constants.ONE_SECOND, TimeUnit.MILLISECONDS)
-            } catch (ex: InterruptedException) {
-                val error = ExceptionUtils.getMessage(ex.fillInStackTrace())
-                Log.e(LOG_TAG, error)
-                Thread.currentThread().interrupt()
-            }
+        while (!(isSplashScreenFinishedDisplaying && isPermissionGranted)) {
+           delay(Constants.ONE_SECOND)
         }
         startMainActivity(mainActivityIntent)
     }
 
-    private fun startMainActivity(mainActivityIntent: Intent?) {
-        Log.i(LOG_TAG, "start main activity")
-        startActivityForResult(mainActivityIntent, APP_TERMINATED)
+    private suspend fun startMainActivity(mainActivityIntent: Intent?) {
+        withContext(Main) {
+            Log.i(LOG_TAG, "start main activity")
+            startActivityForResult(mainActivityIntent, APP_TERMINATED)
+        }
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == APP_TERMINATED) {
-            if (mediaBrowserAdapter != null) {
-                mediaBrowserAdapter!!.disconnect()
-            }
             finish()
         }
     }
@@ -142,37 +101,18 @@ class SplashScreenEntryActivity : AppCompatActivity(), MediaBrowserConnectorCall
         Log.i(LOG_TAG, "permission granted")
         isPermissionGranted = true
         createService()
-        val r: Runnable = Thread(Runnable { mediaBrowserAdapter!!.connect() })
-        runOnUiThread(r)
+        CoroutineScope(IO).launch { onProcessingComplete() }
     }
 
-    fun init() {
+    private suspend fun init() {
         Log.i(LOG_TAG, "reset")
         permissionsProcessor!!.requestPermission(permission.WRITE_EXTERNAL_STORAGE)
-        val splashScreenWaitThread = Thread(Runnable { splashScreenRun() })
-        splashScreenWaitThread.start()
-    }
-
-    @Inject
-    fun setPermissionsProcessor(permissionsProcessor: PermissionsProcessor?) {
-        this.permissionsProcessor = permissionsProcessor
-    }
-
-    @Inject
-    fun setMediaBrowserAdapter(mediaBrowserAdapter: MediaBrowserAdapter?) {
-        this.mediaBrowserAdapter = mediaBrowserAdapter
+        delay(WAIT_TIME)
+        isSplashScreenFinishedDisplaying = true
     }
 
     private fun createService() {
         startService(Intent(applicationContext, MediaPlaybackServiceInjector::class.java))
-    }
-
-    private fun initialiseDependencies() {
-        val component = DaggerMediaActivityCompatComponent
-                .factory()
-                .create(applicationContext, "SPSH_SCRN_ACTVTY_WRKR", this)
-        val splashScreenEntryActivityComponent = component.splashScreenEntryActivity().create(this, this)
-        splashScreenEntryActivityComponent.inject(this)
     }
 
     val mainActivityClass: Class<*>

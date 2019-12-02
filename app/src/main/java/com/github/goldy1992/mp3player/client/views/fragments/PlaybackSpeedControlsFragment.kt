@@ -17,7 +17,7 @@ import javax.inject.Inject
 class PlaybackSpeedControlsFragment : AsyncFragment(), PlaybackStateListener {
 
 
-    private var mediaControllerAdapter: MediaControllerAdapter? = null
+    var mediaControllerAdapter: MediaControllerAdapter? = null
         @Inject set
 
     private var speed = 1.0f

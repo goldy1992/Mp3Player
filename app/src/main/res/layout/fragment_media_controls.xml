@@ -14,6 +14,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:background="@drawable/border">
+
         <ImageView
             android:id="@+id/repeatOneRepeatAllButton"
             android:layout_width="wrap_content"
@@ -29,8 +30,10 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:background="@drawable/border">
+
         <!-- It should be noted that playback speed controls was originally created as its own fragment
             therefore it has been placed as a sub-fragment in this view -->
+
         <fragment
             android:id="@+id/playbackSpeedControlsFragment"
             android:layout_width="wrap_content"

@@ -101,7 +101,7 @@ class TimeCounter @Inject constructor(@param:Named("main") private val mainHandl
                  * e.g. slower playback speed => longer update time
                  * 0.95 playbacks speed => 1000ms / 0.95 = 1052
                  */
-            (ONE_SECOND / currentSpeed) as Long
+            (ONE_SECOND / currentSpeed).toLong()
 
     private fun updateTimerText() {
         val text = formatTime(currentPosition)

@@ -35,9 +35,9 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener {
     @Inject set
 
     private val linearLayoutManager = LinearLayoutManager(context)
+
     var parentItemType: MediaItemType? = null
     private var parentItemTypeId: String? = null
-
     private var myViewAdapter: MyGenericRecycleViewAdapter? = null
 
 
@@ -49,14 +49,14 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener {
     @Inject set
 
 
-    private var recyclerViewAdapters: RecyclerViewAdapters? = null
+    protected var recyclerViewAdapters: RecyclerViewAdapters? = null
     @Inject set
 
-    private var albumArtPainter: AlbumArtPainter? = null
+    protected var albumArtPainter: AlbumArtPainter? = null
     @Inject set
 
 
-    private var myGenericItemTouchListener: MyGenericItemTouchListener? = null
+    protected var myGenericItemTouchListener: MyGenericItemTouchListener? = null
     @Inject set
 
     fun init(mediaItemType: MediaItemType?, id: String?, component: MediaActivityCompatComponent) {
