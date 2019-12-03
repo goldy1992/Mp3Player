@@ -11,6 +11,6 @@ abstract class MediaItemRecyclerViewAdapter
                  val mainHandler: Handler)
     : RecyclerView.Adapter<MediaItemViewHolder?>() {
 
-    var items = arrayListOf<MediaItem>()
+    var items: MutableList<MediaItem> = arrayListOf()
 
 }

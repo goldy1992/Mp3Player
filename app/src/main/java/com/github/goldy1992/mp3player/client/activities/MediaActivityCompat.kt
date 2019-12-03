@@ -16,18 +16,23 @@ import com.github.goldy1992.mp3player.dagger.components.MediaActivityCompatCompo
 import javax.inject.Inject
 
 abstract class MediaActivityCompat : AppCompatActivity(), MediaBrowserConnectorCallback {
+
     /** MediaBrowserAdapter  */
-    var mediaBrowserAdapter: MediaBrowserAdapter? = null
-        @Inject set
+    @Inject
+    lateinit var mediaBrowserAdapter: MediaBrowserAdapter
+
+
     /** MediaControllerAdapter  */
-    var mediaControllerAdapter: MediaControllerAdapter? = null
-        @Inject set
-    /** @return the mediaActivityCompatComponent
-     */
-    /** Dependencies  */
-    var mediaActivityCompatComponent: MediaActivityCompatComponent? = null
+    @Inject
+    lateinit var mediaControllerAdapter: MediaControllerAdapter
+
+
+    /** @return the mediaActivityCompatComponent */
+    lateinit var mediaActivityCompatComponent: MediaActivityCompatComponent
+
     /** Thread used to deal with none UI tasks  */
-    private var worker: HandlerThread? = null
+    @Inject
+    lateinit var worker: HandlerThread
 
     /** @return The unique name of the HandlerThread used by the activity
      */
@@ -35,7 +40,7 @@ abstract class MediaActivityCompat : AppCompatActivity(), MediaBrowserConnectorC
 
     /** Utility method used to initialise the dependencies set up by Dagger2. DOES NOT need to be
      * called by sub class  */
-    abstract fun initialiseDependencies()
+    protected abstract fun initialiseDependencies()
 
     // MediaBrowserConnectorCallback
     override fun onConnected() {
@@ -59,7 +64,7 @@ abstract class MediaActivityCompat : AppCompatActivity(), MediaBrowserConnectorC
         Log.i(LOG_TAG, "connection failed")
     }
 
-    abstract fun initialiseView(@LayoutRes layoutId: Int): Boolean
+    protected abstract fun initialiseView(@LayoutRes layoutId: Int): Boolean
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val settings = applicationContext.getSharedPreferences(Constants.THEME, Context.MODE_PRIVATE)
@@ -75,11 +80,6 @@ abstract class MediaActivityCompat : AppCompatActivity(), MediaBrowserConnectorC
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    @Inject
-    fun setWorker(thread: HandlerThread?) {
-        worker = thread
     }
 
     companion object {

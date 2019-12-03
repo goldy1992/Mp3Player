@@ -31,33 +31,25 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener {
      * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
      */
 
-    protected var intentMapper: IntentMapper? = null
-    @Inject set
 
     private val linearLayoutManager = LinearLayoutManager(context)
-
     var parentItemType: MediaItemType? = null
     private var parentItemTypeId: String? = null
     private var myViewAdapter: MyGenericRecycleViewAdapter? = null
 
+    @Inject
+    lateinit var intentMapper: IntentMapper
 
-    protected var mediaBrowserAdapter: MediaBrowserAdapter? = null
-    @Inject set
-
-
-    protected var mediaControllerAdapter: MediaControllerAdapter? = null
-    @Inject set
-
-
-    protected var recyclerViewAdapters: RecyclerViewAdapters? = null
-    @Inject set
-
-    protected var albumArtPainter: AlbumArtPainter? = null
-    @Inject set
-
-
-    protected var myGenericItemTouchListener: MyGenericItemTouchListener? = null
-    @Inject set
+    @Inject
+    lateinit var mediaBrowserAdapter: MediaBrowserAdapter
+    @Inject
+    lateinit var mediaControllerAdapter: MediaControllerAdapter
+    @Inject
+    lateinit var recyclerViewAdapters: RecyclerViewAdapters
+    @Inject
+    lateinit var albumArtPainter: AlbumArtPainter
+    @Inject
+    lateinit var myGenericItemTouchListener: MyGenericItemTouchListener
 
     fun init(mediaItemType: MediaItemType?, id: String?, component: MediaActivityCompatComponent) {
         parentItemType = mediaItemType

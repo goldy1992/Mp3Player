@@ -84,6 +84,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    kotlinOptions { jvmTarget = "1.8" }
 }
 
 dependencyUpdates {
@@ -131,7 +133,7 @@ dependencies {
     def FAST_SCROLL_VERSION = '2.0.1'
     def GLIDE_VERSION = '4.9.0'
     def ROOM_VERSION = '2.1.0'
-    def DAGGER_VERSION = '2.24'
+    def DAGGER_VERSION = '2.25.2'
     def EXO_PLAYER_VERSION = '2.10.4'
     def KOTLIN_COROUTINE_VERSION = '1.3.2'
 
@@ -173,6 +175,7 @@ dependencies {
     annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    kaptTest group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
 
     testAnnotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 

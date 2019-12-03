@@ -103,7 +103,7 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
                 Log.i(LOG_TAG, "hit action search")
                 supportFragmentManager
                         .beginTransaction()
-                        .add(R.id.fragment_container, searchFragment!!, "SEARCH_FGMT")
+                        .add(R.id.fragmentContainer, searchFragment!!, "SEARCH_FGMT")
                         .addToBackStack(null)
                         .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                         .commit()

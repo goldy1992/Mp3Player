@@ -19,13 +19,16 @@ import com.github.goldy1992.mp3player.client.views.TimeCounter
 import javax.inject.Inject
 
 class PlaybackTrackerFragment : AsyncFragment(), PlaybackStateListener, MetadataListener {
-    var mediaControllerAdapter: MediaControllerAdapter? = null
-        @Inject set
+    @Inject
+    lateinit var mediaControllerAdapter: MediaControllerAdapter
+    @Inject
+    lateinit var seekerBarController: SeekerBarController2
+    @Inject
+    lateinit var counter: TimeCounter
+
+
     private var duration: TextView? = null
-    var seekerBarController: SeekerBarController2? = null
-        @Inject set
-    var counter: TimeCounter? = null
-        @Inject set
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         initialiseDependencies()

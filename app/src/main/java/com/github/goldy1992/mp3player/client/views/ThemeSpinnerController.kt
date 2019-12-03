@@ -10,7 +10,6 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import androidx.annotation.VisibleForTesting
 import com.github.goldy1992.mp3player.R
 import com.github.goldy1992.mp3player.client.activities.MainActivityInjector
 import com.github.goldy1992.mp3player.commons.Constants
@@ -22,8 +21,9 @@ class ThemeSpinnerController(private val context: Context, private val spinner: 
     private var adapter // TODO: make a make from Theme name to resource
             : ArrayAdapter<String?>? = null
     private var themeResIds: MutableList<Int>? = null
-    @get:VisibleForTesting
-    private var themeNameToResMap: BiMap<String, Int> = HashBiMap.create()
+
+
+     var themeNameToResMap: BiMap<String, Int> = HashBiMap.create()
 
     private var selectCount: Long = 0
     var currentTheme: String? = null

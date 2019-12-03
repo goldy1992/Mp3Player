@@ -19,12 +19,12 @@ import javax.inject.Inject
 
 class PlayToolbarFragment : Fragment() {
 
-    var playPauseBtn: PlayPauseButton? = null
-    @Inject set
-    var skipToPreviousBtn: SkipToPreviousButton? = null
-    @Inject set
-    var skipToNextBtn: SkipToNextButton? = null
-    @Inject set
+    @Inject
+    lateinit var playPauseBtn: PlayPauseButton
+    @Inject
+    lateinit var skipToPreviousBtn: SkipToPreviousButton
+    @Inject
+    lateinit var skipToNextBtn: SkipToNextButton
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
