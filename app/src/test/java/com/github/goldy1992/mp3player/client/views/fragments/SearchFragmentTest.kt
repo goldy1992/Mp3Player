@@ -10,15 +10,14 @@ import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.LooperMode
-import kotlin.jvm.javaClass
 
 @RunWith(RobolectricTestRunner::class)
 @LooperMode(LooperMode.Mode.PAUSED)
-class SearchFragmentTest : FragmentTestBase<SearchFragment?>() {
+class SearchFragmentTest : FragmentTestBase<SearchFragment>() {
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        super.setup(Fragment::class.java, false)
+        super.setup(SearchFragment::class.java, false)
         super.addFragmentToActivity()
     }
 

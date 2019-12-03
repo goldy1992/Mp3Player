@@ -11,14 +11,15 @@ import org.mockito.MockitoAnnotations
 import org.robolectric.Robolectric
 import org.robolectric.android.controller.ActivityController
 
-open class FragmentTestBase<F : Fragment?> {
+open class FragmentTestBase<F : Fragment> {
 
 
     protected var context: Context? = null
     protected var fragment: Fragment? = null
     protected var activityScenario: ActivityController<TestMainActivity>? = null
     private var activity: TestMainActivity? = null
-    var fragmentClass: Class<F>? = null
+    var fragmentClass: Class<out F>? = null
+
     protected fun setup(fragmentClass: Class<F>, addFragmentToActivity: Boolean) {
         context = InstrumentationRegistry.getInstrumentation().context
         this.fragmentClass = fragmentClass
