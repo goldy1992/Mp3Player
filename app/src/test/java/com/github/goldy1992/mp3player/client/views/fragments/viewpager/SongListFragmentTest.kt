@@ -20,13 +20,13 @@ import org.robolectric.annotation.LooperMode
 
 @RunWith(RobolectricTestRunner::class)
 @LooperMode(LooperMode.Mode.PAUSED)
-class SongListFragmentTest : FragmentTestBase<SongListFragment?>() {
+class SongListFragmentTest : FragmentTestBase<SongListFragment>() {
     private var folderListFragment: SongListFragment? = null
-    private override var activityScenario: ActivityController<TestMainActivity>? = null
+
     @Before
     fun setup() {
         activityScenario = Robolectric.buildActivity(TestMainActivity::class.java).setup()
-        val testMainActivity: TestMainActivity = activityScenario.get()
+        val testMainActivity: TestMainActivity = activityScenario!!.get()
         val component = testMainActivity.mediaActivityCompatComponent
         folderListFragment = SongListFragment.newInstance(MediaItemType.SONGS, "id", component)
         super.setup(folderListFragment, SongListFragment::class.java)
@@ -34,7 +34,7 @@ class SongListFragmentTest : FragmentTestBase<SongListFragment?>() {
 
     @Test
     fun testItemSelected() {
-        val action = FragmentAction<SongListFragment?> { fragment: SongListFragment? -> itemSelected(fragment) }
+        val action = FragmentAction<SongListFragment> { fragment: SongListFragment? -> itemSelected(fragment) }
         performAction(action)
     }
 

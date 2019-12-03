@@ -31,8 +31,8 @@ constructor(private val context: Context,
 
     open var token: MediaSessionCompat.Token? = null
 
-    open fun setMediaToken(token: MediaSessionCompat.Token) {
-        if (!isInitialized) {
+    open fun setMediaToken(token: MediaSessionCompat.Token?) {
+        if (!isInitialized && token != null) {
             init(token)
         } else {
             Log.e(LOG_TAG, "MediaControllerAdapter already initialised")

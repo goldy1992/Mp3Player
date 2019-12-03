@@ -20,7 +20,7 @@ open class FragmentTestBase<F : Fragment> {
     private var activity: TestMainActivity? = null
     var fragmentClass: Class<out F>? = null
 
-    protected fun setup(fragmentClass: Class<F>, addFragmentToActivity: Boolean) {
+    fun setup(fragmentClass: Class<F>, addFragmentToActivity: Boolean) {
         context = InstrumentationRegistry.getInstrumentation().context
         this.fragmentClass = fragmentClass
         MockitoAnnotations.initMocks(this)

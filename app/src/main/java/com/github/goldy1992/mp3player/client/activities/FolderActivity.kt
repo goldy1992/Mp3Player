@@ -11,7 +11,7 @@ import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import kotlinx.android.synthetic.main.activity_folder.*
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_simple_title_bar.*
 import org.apache.commons.lang3.exception.ExceptionUtils
 
 abstract class FolderActivity : MediaActivityCompat() {
@@ -39,9 +39,9 @@ abstract class FolderActivity : MediaActivityCompat() {
         supportActionBar!!.setTitle(MediaItemUtils.getDirectoryName(mediaItem))
         var titleTextView: TextView? = null
         try {
-            val f = simpleTitleBarFragment!!.titleToolbar!!.javaClass.getDeclaredField("mTitleTextView")
+            val f = titleToolbar!!.javaClass.getDeclaredField("mTitleTextView")
             f.isAccessible = true
-            titleTextView = f[simpleTitleBarFragment!!.titleToolbar] as TextView
+            titleTextView = f[titleToolbar] as TextView
             titleTextView!!.ellipsize = TextUtils.TruncateAt.MARQUEE
             titleTextView.isFocusable = true
             titleTextView.isFocusableInTouchMode = true

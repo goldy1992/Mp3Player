@@ -16,6 +16,7 @@ import static com.github.goldy1992.mp3player.commons.Constants.ROOT_ITEM_TYPE;
 import static com.github.goldy1992.mp3player.commons.MediaItemType.ROOT;
 import static com.github.goldy1992.mp3player.commons.MediaItemType.SONGS;
 
+@Deprecated
 public final class TestUtils {
     private TestUtils(){}
 

@@ -12,8 +12,7 @@ import javax.inject.Inject
 
 @ComponentScope
 class MediaBrowserAdapter @Inject constructor(private val mediaBrowser: MediaBrowserCompat?,
-                                              val connectionCallback: MyConnectionCallback,
-                                              val mySubscriptionCallback: MediaIdSubscriptionCallback,
+                                              private val mySubscriptionCallback: MediaIdSubscriptionCallback,
                                               private val mySearchCallback: MySearchCallback) {
     fun init() { // Create MediaBrowserServiceCompat
         mediaBrowser!!.connect()
@@ -43,15 +42,15 @@ class MediaBrowserAdapter @Inject constructor(private val mediaBrowser: MediaBro
      * ID when communicating with the MediaPlaybackService.
      * @param id the id of the media item to be subscribed to
      */
-    fun subscribe(id: String?) {
+    open fun subscribe(id: String?) {
         mediaBrowser!!.subscribe(id!!, mySubscriptionCallback)
     }
 
-    fun subscribeToRoot() {
+    open fun subscribeToRoot() {
         mediaBrowser!!.subscribe(rootId, mySubscriptionCallback)
     }
 
-    val mediaSessionToken: MediaSessionCompat.Token
+    open val mediaSessionToken: MediaSessionCompat.Token?
         get() = mediaBrowser!!.sessionToken
 
     val rootId: String

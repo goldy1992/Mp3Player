@@ -5,7 +5,7 @@ import com.github.goldy1992.mp3player.client.views.fragments.FragmentTestBase
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-class ChildViewPagerFragmentTestBase<T : MediaItemListFragment?> : FragmentTestBase<T>() {
+class ChildViewPagerFragmentTestBase<T : MediaItemListFragment> : FragmentTestBase<T>() {
 
     @Mock
     private val mediaBrowserAdapter: MediaBrowserAdapter? = null

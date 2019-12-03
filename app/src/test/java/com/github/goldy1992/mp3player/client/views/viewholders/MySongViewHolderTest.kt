@@ -76,7 +76,7 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder?>() {
                 .setAlbumArtUri(expectedUri)
                 .build()
         mediaItemViewHolder!!.bindMediaItem(mediaItem)
-        Mockito.verify(mediaItemViewHolder!!.albumArtPainter, Mockito.times(1))
+        Mockito.verify(mediaItemViewHolder!!.albumArtPainter, Mockito.times(1))!!
                 .paintOnView(mediaItemViewHolder!!.albumArt, expectedUri)
     }
 

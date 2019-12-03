@@ -23,7 +23,7 @@ class SearchFragmentTest : FragmentTestBase<SearchFragment>() {
 
     @Test
     fun testOnClickOnLayout() {
-        val action = FragmentAction<SearchFragment?> { fragment: SearchFragment? -> clickOnLayout(fragment) }
+        val action = FragmentAction { fragment: SearchFragment? -> clickOnLayout(fragment) }
         performAction(action)
     }
 

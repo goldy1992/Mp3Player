@@ -19,7 +19,7 @@ import org.robolectric.annotation.LooperMode
 
 @RunWith(RobolectricTestRunner::class)
 @LooperMode(LooperMode.Mode.PAUSED)
-class PlaybackSpeedControlsFragmentTest : FragmentTestBase<PlaybackSpeedControlsFragment?>() {
+class PlaybackSpeedControlsFragmentTest : FragmentTestBase<PlaybackSpeedControlsFragment>() {
 
     @Mock
     private lateinit var mediaControllerAdapter: MediaControllerAdapter
@@ -32,13 +32,13 @@ class PlaybackSpeedControlsFragmentTest : FragmentTestBase<PlaybackSpeedControls
 
     @Test
     fun testIncreaseSpeed() {
-        val fragmentAction = FragmentAction<PlaybackSpeedControlsFragment?> { playbackSpeedControlsFragment: PlaybackSpeedControlsFragment? -> increaseSpeed(playbackSpeedControlsFragment) }
+        val fragmentAction = FragmentAction { playbackSpeedControlsFragment: PlaybackSpeedControlsFragment? -> increaseSpeed(playbackSpeedControlsFragment) }
         performAction(fragmentAction)
     }
 
     @Test
     fun testDecreaseSpeed() {
-        val fragmentAction = FragmentAction<PlaybackSpeedControlsFragment?> { playbackSpeedControlsFragment: PlaybackSpeedControlsFragment? -> decreaseSpeed(playbackSpeedControlsFragment) }
+        val fragmentAction = FragmentAction { playbackSpeedControlsFragment: PlaybackSpeedControlsFragment? -> decreaseSpeed(playbackSpeedControlsFragment) }
         performAction(fragmentAction)
     }
 
