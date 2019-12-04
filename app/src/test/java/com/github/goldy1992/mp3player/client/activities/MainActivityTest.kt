@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client.activities
 import android.os.Looper
 import android.support.v4.media.MediaBrowserCompat
 import android.view.MenuItem
+import androidx.core.view.GravityCompat
 import com.github.goldy1992.mp3player.R
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -13,6 +14,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
+import org.mockito.Mockito.doNothing
+import org.mockito.Mockito.spy
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
@@ -57,7 +60,7 @@ class MainActivityTest {
         val menuItem = Mockito.mock(MenuItem::class.java)
         Mockito.`when`(menuItem.itemId).thenReturn(android.R.id.home)
         mainActivity!!.onOptionsItemSelected(menuItem)
-        mainActivity?.drawerLayout?.isDrawerOpen(mainActivity!!.fragmentContainer)
+        mainActivity?.drawerLayout?.isDrawerOpen(GravityCompat.START)
     }
 
     @Test
@@ -89,6 +92,9 @@ class MainActivityTest {
 
     @Test
     fun testOnChildrenLoadedForRootCategory() {
+        var myPageAdapterSpied = spy(mainActivity!!.adapter)
+        doNothing().`when`(myPageAdapterSpied!!).notifyDataSetChanged()
+        mainActivity!!.adapter = myPageAdapterSpied;
         val parentId = "parentId"
         val children = ArrayList<MediaBrowserCompat.MediaItem>()
         val rootItemsSet: Set<MediaItemType> = MediaItemType.PARENT_TO_CHILD_MAP[MediaItemType.ROOT]!!

@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.activities
 
-import android.os.Handler
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
 import android.view.Menu
@@ -27,6 +26,9 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
@@ -36,13 +38,10 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
         private set
 
     private var tabLayoutMediator: TabLayoutMediator? = null
-    @get:VisibleForTesting
-    var adapter: MyPagerAdapter? = null
-        private set
 
-    @get:VisibleForTesting
+    var adapter: MyPagerAdapter? = null
+
     var searchFragment: SearchFragment? = null
-        private set
 
     private var myDrawerListener: MyDrawerListener? = null
 
@@ -150,8 +149,7 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
                 else -> null
             }
             if (null != mediaItemListFragment) {
-                val handler = Handler(mainLooper)
-                handler.post {
+                CoroutineScope(Main).launch {
                     adapter!!.pagerItems[category] = mediaItemListFragment
                     adapter!!.menuCategories[category] = mediaItem
                     adapter!!.notifyDataSetChanged()

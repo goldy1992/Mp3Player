@@ -40,6 +40,7 @@ android {
             debuggable true
             minifyEnabled false
             testCoverageEnabled = true
+            matchingFallbacks = ['release']
         }
     }
     flavorDimensions "version"
@@ -199,6 +200,7 @@ dependencies {
     testImplementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
     testImplementation group: 'org.robolectric', name: 'robolectric', version: ROBOLECTRIC_VERSION// https://mvnrepository.com/artifact/org.robolectric/shadows-support-v4
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
+    testImplementation project(':app:testsupport')
 
     debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
     androidTestImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION

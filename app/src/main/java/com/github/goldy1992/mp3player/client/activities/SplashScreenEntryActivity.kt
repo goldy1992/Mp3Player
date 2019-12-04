@@ -23,9 +23,7 @@ import kotlinx.coroutines.withContext
  */
 class SplashScreenEntryActivity : AppCompatActivity(), PermissionGranted {
 
-
     private var permissionsProcessor: PermissionsProcessor? = null
-
 
     @Volatile
     var isSplashScreenFinishedDisplaying = false

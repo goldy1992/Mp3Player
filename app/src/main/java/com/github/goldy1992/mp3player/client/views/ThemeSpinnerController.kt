@@ -29,34 +29,8 @@ class ThemeSpinnerController(private val context: Context, private val spinner: 
     var currentTheme: String? = null
         private set
 
-    private fun init() {
-        adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
-        spinner.onItemSelectedListener = this
-        val themeArray = context.resources.obtainTypedArray(R.array.themes)
-        themeResIds = ArrayList()
-        if (themeArray.length() > 0) {
-            val numberOfResources = themeArray.length()
-            for (i in 0 until numberOfResources) { // for each theme in the theme array
-                val res = themeArray.getResourceId(i, 0)
-                themeResIds?.add(res)
-                val themeNameArray = context.obtainStyledAttributes(res, attrs) // get the theme name GIVEN the themes res if.
-                val themeName = themeNameArray.getString(0)
-                adapter!!.add(themeName)
-                themeNameToResMap[themeName] = res
-                recycleTypedArray(themeNameArray)
-            }
-        }
-        recycleTypedArray(themeArray)
-        val currentThemeId = currentThemeId
-        if (currentThemeId != -1) {
-            currentTheme = themeNameToResMap!!.inverse()[currentThemeId]
-            val position = adapter!!.getPosition(currentTheme)
-            spinner.setSelection(position)
-        }
-    }
 
-    override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val res = themeResIds!![position]
         Log.d(LOG_TAG, "selected " + themeNameToResMap.inverse()[res])
         if (selectCount >= 1) {
@@ -119,6 +93,29 @@ class ThemeSpinnerController(private val context: Context, private val spinner: 
     }
 
     init {
-        init()
+        adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+        spinner.onItemSelectedListener = this
+        val themeArray = context.resources.obtainTypedArray(R.array.themes)
+        themeResIds = ArrayList()
+        if (themeArray.length() > 0) {
+            val numberOfResources = themeArray.length()
+            for (i in 0 until numberOfResources) { // for each theme in the theme array
+                val res = themeArray.getResourceId(i, 0)
+                themeResIds?.add(res)
+                val themeNameArray = context.obtainStyledAttributes(res, attrs) // get the theme name GIVEN the themes res if.
+                val themeName = themeNameArray.getString(0)
+                adapter!!.add(themeName)
+                themeNameToResMap[themeName] = res
+                recycleTypedArray(themeNameArray)
+            }
+        }
+        recycleTypedArray(themeArray)
+        val currentThemeId = currentThemeId
+        if (currentThemeId != -1) {
+            currentTheme = themeNameToResMap!!.inverse()[currentThemeId]
+            val position = adapter!!.getPosition(currentTheme)
+            spinner.setSelection(position)
+        }
     }
 }

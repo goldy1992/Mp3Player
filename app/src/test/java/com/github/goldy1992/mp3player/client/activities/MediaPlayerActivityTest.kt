@@ -5,10 +5,13 @@ import android.content.Intent
 import android.net.Uri
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.lifecycle.Lifecycle
+import androidx.test.core.app.ActivityScenario
 import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.android.synthetic.main.activity_media_player.*
 import org.junit.After
 import org.junit.Assert
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -42,7 +45,7 @@ class MediaPlayerActivityTest {
 
     @After
     fun tearDown() {
-        activityController!!.stop().destroy()
+//        activityController!!.stop().destroy()
     }
 
     /**
@@ -50,14 +53,18 @@ class MediaPlayerActivityTest {
      */
     @Test
     fun testInitialisationWithNormalIntent() {
-        createAndStartActivity()
-        val mediaPlayerActivity: MediaPlayerActivity = activityController!!.get()
-        Assert.assertNotNull(mediaPlayerActivity.playbackTrackerFragment)
-        Assert.assertNotNull(mediaPlayerActivity.playToolbarFragment)
-        Assert.assertNotNull(mediaPlayerActivity.mediaControlsFragment)
+        //createAndStartActivity()
+        var activityScenario = ActivityScenario.launch(MediaPlayerActivityInjectorTestImpl::class.java)
+        activityScenario.moveToState(Lifecycle.State.RESUMED)
+        activityScenario.onActivity { activity ->
+            assertNotNull(activity.playbackTrackerFragment)
+            assertNotNull(activity.playToolbarFragment)
+            assertNotNull(activity.mediaControlsFragment)
+        }
     }
 
     private fun createAndStartActivity() {
+      //  activityScenario.moveToState(Lifecycle.State.RESUMED)
         activityController = Robolectric.buildActivity(MediaPlayerActivityInjectorTestImpl::class.java, intent).setup()
     }
 

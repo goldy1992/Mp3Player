@@ -5,10 +5,11 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.SearchCallback
 import android.util.Log
 import com.github.goldy1992.mp3player.LogTagger
-import java.util.*
 
 class MySearchCallback : SearchCallback(), LogTagger {
-    var listeners: MutableSet<SearchResultListener>
+
+    private val listeners: MutableSet<SearchResultListener> = mutableSetOf()
+
     fun registerSearchResultListener(searchResultListener: SearchResultListener) {
         listeners.add(searchResultListener)
     }
@@ -23,7 +24,7 @@ class MySearchCallback : SearchCallback(), LogTagger {
      * @param extras the extras object
      * @param items the list of resulting media items
      */
-    override fun onSearchResult(query: String, extras: Bundle,
+    override fun onSearchResult(query: String, extras: Bundle?,
                                 items: List<MediaBrowserCompat.MediaItem>) {
         Log.i(logTag, "hit the onSearchResult callback")
         for (listener in listeners) {
@@ -33,9 +34,5 @@ class MySearchCallback : SearchCallback(), LogTagger {
 
     override fun getLogTag(): String {
         return "MY_SRCH_CLBCK"
-    }
-
-    init {
-        listeners = HashSet()
     }
 }
