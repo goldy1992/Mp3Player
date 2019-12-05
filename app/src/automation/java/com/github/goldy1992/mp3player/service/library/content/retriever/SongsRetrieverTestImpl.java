@@ -13,7 +13,7 @@ import static com.github.goldy1992.mp3player.TestConstants.TEST_DATA_DIR;
 public class SongsRetrieverTestImpl extends SongsRetriever {
 
     public SongsRetrieverTestImpl(ContentResolver contentResolver, SongResultsParser resultsParser, SongDao songDao, Handler handler) {
-        super(contentResolver, resultsParser, songDao, handler);
+        super(contentResolver, resultsParser, handler);
     }
 
     private final String WHERE_CLAUSE = MediaStore.Audio.Media.DATA + " LIKE ?";

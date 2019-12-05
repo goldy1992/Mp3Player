@@ -23,8 +23,8 @@ import dagger.Component;
 
 @ComponentScope
 @Component(modules = {
-        GlideModule.class,
         ComponentNameModule.class,
+        GlideModule.class,
         HandlerThreadModule.class,
         MainHandlerModule.class,
         MediaBrowserCompatModule.class,

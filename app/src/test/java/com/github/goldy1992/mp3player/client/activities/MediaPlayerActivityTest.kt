@@ -8,7 +8,6 @@ import android.support.v4.media.session.MediaSessionCompat
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.platform.app.InstrumentationRegistry
-import kotlinx.android.synthetic.main.activity_media_player.*
 import org.junit.After
 import org.junit.Assert
 import org.junit.Assert.assertNotNull
@@ -20,6 +19,7 @@ import org.mockito.MockitoAnnotations
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.android.controller.ActivityController
+import com.github.goldy1992.mp3player.client.activities.MediaPlayerActivityInjectorTestImpl
 
 @RunWith(RobolectricTestRunner::class)
 class MediaPlayerActivityTest {

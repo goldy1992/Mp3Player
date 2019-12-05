@@ -21,7 +21,7 @@ import kotlinx.coroutines.withContext
 /**
  *
  */
-class SplashScreenEntryActivity : AppCompatActivity(), PermissionGranted {
+open class SplashScreenEntryActivity : AppCompatActivity(), PermissionGranted {
 
     private var permissionsProcessor: PermissionsProcessor? = null
 

@@ -23,7 +23,6 @@ import dagger.Component;
         MediaSessionCompatModule.class,
         MediaSessionConnectorModule.class,
         SearchDatabaseModule.class,
-        ServiceModule.class
 })
 public interface AndroidTestServiceComponent extends ServiceComponent {
 

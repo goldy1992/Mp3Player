@@ -20,7 +20,7 @@ public class MainActivityInjectorAndroidTestImpl extends MainActivity implements
     }
 
     @Override
-    void initialiseDependencies() {
+    public void initialiseDependencies() {
         MediaActivityCompatComponent component = DaggerAndroidTestMediaActivityCompatComponent
                 .factory()
                 .create(getApplicationContext(), getWorkerId(), this);

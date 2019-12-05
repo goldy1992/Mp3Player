@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.service;
 
-import com.github.goldy1992.mp3player.dagger.components.AndroidTestServiceComponent;
-import com.github.goldy1992.mp3player.dagger.components.DaggerAndroidTestServiceComponent;
+import com.github.goldy1992.mp3player.dagger.components.DaggerServiceComponent;
+import com.github.goldy1992.mp3player.dagger.components.ServiceComponent;
 
 public class MediaPlaybackServiceAndroidTestImpl extends MediaPlaybackService {
 
@@ -16,7 +16,7 @@ public class MediaPlaybackServiceAndroidTestImpl extends MediaPlaybackService {
      */
     @Override
     void initialiseDependencies() {
-        AndroidTestServiceComponent component = DaggerAndroidTestServiceComponent
+        ServiceComponent component = DaggerServiceComponent
                 .factory()
                 .create(getApplicationContext(), this, "MEDIA_PLYBK_SRVC_WKR");
         component.inject(this);
