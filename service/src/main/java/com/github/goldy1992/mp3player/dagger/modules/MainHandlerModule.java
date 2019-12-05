@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.dagger.modules;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.github.goldy1992.mp3player.dagger.scopes.ComponentScope;
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope;
 
 import javax.inject.Named;
 

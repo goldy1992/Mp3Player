@@ -105,43 +105,12 @@ dependencyUpdates {
 }
 
 dependencies {
-    def CONSTRAINT_LAYOUT_VERSION = '2.0.0-alpha2'
-    def MATERIAL_VERSION = '1.1.0-alpha08'
-    def GRID_LAYOUT_VERSION = '1.0.0'
-    def CORE_VERSION = '1.0.1'
-    def MEDIA_VERSION = '1.1.0-alpha02'
-    def ANNOTATION_VERSION = '1.1.0-rc01'
-    def APP_COMPAT_VERSION = '1.0.2'
-    def DRAWER_LAYOUT_VERSION = '1.0.0'
-    def COMMONS_IO_VERSION = '1.3.2'
-    def COMMONS_LANG_VERSION = '3.9'
-    def COMMONS_COLLECTIONS4_VERSION = '4.3'
-    def MOCKITO_CORE_VERSION = '2.27.0'
-    def JUNIT4_VERSION = '4.12'
-    def JUNIT5_VERSION = '5.4.1'
-    def JUNIT_EXT_VERSION = '1.1.1'
-    def ROBOLECTRIC_VERSION = '4.3'
-    def TEST_CORE_VERSION = '1.1.0'
-    def TEST_RUNNER_VERSION = '1.1.0'
-    def TEST_RULES_VERSION = '1.1.1'
-    def MIRROR_VERSION = '1.1.1'
-    def ESPRESSO_CORE_VERSION = '3.2.0'
-    def GOOGLE_GUAVA_VERSION = '27.1-android'
-    def COORDINATOR_LAYOUT_VERSION = '1.0.0'
-    def TEST_UI_AUTOMATOR_VERSION= '2.2.0'
-    def FRAGMENT_VERSION = '1.2.0-rc02'
-    def FAST_SCROLL_VERSION = '2.0.1'
-    def GLIDE_VERSION = '4.9.0'
-    def ROOM_VERSION = '2.1.0'
-    def DAGGER_VERSION = '2.25.2'
-    def EXO_PLAYER_VERSION = '2.10.4'
-    def KOTLIN_COROUTINE_VERSION = '1.3.2'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation group: 'androidx.constraintlayout', name: 'constraintlayout', version: CONSTRAINT_LAYOUT_VERSION
     implementation group: 'com.google.android.material', name: 'material', version: MATERIAL_VERSION
     implementation group: 'androidx.gridlayout', name: 'gridlayout', version: GRID_LAYOUT_VERSION
-    implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
+
     implementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
     debugImplementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
     implementation group: 'androidx.drawerlayout', name: 'drawerlayout', version: DRAWER_LAYOUT_VERSION
@@ -151,15 +120,11 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
     implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
-    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: EXO_PLAYER_VERSION
-    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
-    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
-    implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
+
     implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: KOTLIN_COROUTINE_VERSION
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: KOTLIN_COROUTINE_VERSION
-    annotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
-    kapt group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
+
 
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.3.61'
     implementation 'androidx.viewpager2:viewpager2:1.0.0-rc01'
@@ -178,7 +143,7 @@ dependencies {
     testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     kaptTest group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
 
-    testAnnotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
+
 
     // Glide
     implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION

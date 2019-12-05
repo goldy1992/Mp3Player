@@ -7,7 +7,7 @@ import com.github.goldy1992.mp3player.client.MediaBrowserConnectorCallback;
 import com.github.goldy1992.mp3player.dagger.modules.ComponentNameModule;
 import com.github.goldy1992.mp3player.dagger.modules.MediaBrowserCompatModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.HandlerThreadModule;
-import com.github.goldy1992.mp3player.dagger.scopes.ComponentScope;
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope;
 
 import dagger.BindsInstance;
 import dagger.Component;
