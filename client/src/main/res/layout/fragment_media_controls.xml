@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:weightSum="3"
+    android:orientation="horizontal"
+    android:baselineAligned="false">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@drawable/border">
+
+        <ImageView
+            android:id="@+id/repeatOneRepeatAllButton"
+            android:layout_width="wrap_content"
+            android:paddingStart="0dp"
+            android:paddingEnd="@dimen/default_gap"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@drawable/border">
+
+        <!-- It should be noted that playback speed controls was originally created as its own fragment
+            therefore it has been placed as a sub-fragment in this view -->
+
+        <fragment
+            android:id="@+id/playbackSpeedControlsFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            class="com.github.goldy1992.mp3player.client.views.fragments.PlaybackSpeedControlsFragment"
+            tools:layout="@layout/fragment_playback_speed_controls"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:background="@drawable/border">
+
+        <ImageView
+            android:id="@+id/shuffleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="0dp"
+            android:paddingEnd="@dimen/default_gap"
+            tools:layout_alignParentEnd="true" />
+    </LinearLayout>
+
+</LinearLayout>
