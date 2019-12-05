@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +10,11 @@ import androidx.fragment.app.Fragment
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
 import com.github.goldy1992.mp3player.client.activities.MediaPlayerActivity
-import com.github.goldy1992.mp3player.client.utils.IntentUtils.createGoToMediaPlayerActivity
+//import com.github.goldy1992.mp3player.client.utils.IntentUtils.createGoToMediaPlayerActivity
 import com.github.goldy1992.mp3player.client.views.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToNextButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToPreviousButton
+import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import kotlinx.android.synthetic.main.fragment_playback_toolbar.*
 import javax.inject.Inject
 
@@ -25,6 +27,8 @@ class PlayToolbarFragment : Fragment() {
     lateinit var skipToPreviousBtn: SkipToPreviousButton
     @Inject
     lateinit var skipToNextBtn: SkipToNextButton
+    @Inject
+    lateinit var componentClassMapper : ComponentClassMapper
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -51,7 +55,8 @@ class PlayToolbarFragment : Fragment() {
         }
 
     private fun goToMediaPlayerActivity() {
-        val intent = createGoToMediaPlayerActivity(context!!)
+        val intent = Intent(context, componentClassMapper.mainActivity)
+
         startActivity(intent)
     }
 

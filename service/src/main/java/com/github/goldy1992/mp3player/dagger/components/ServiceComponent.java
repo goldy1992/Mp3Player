@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.dagger.components;
 
 import android.content.Context;
 
+import com.github.goldy1992.mp3player.commons.ComponentClassMapper;
 import com.github.goldy1992.mp3player.dagger.modules.service.ContentManagerModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.ExoPlayerModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.HandlerThreadModule;
@@ -33,6 +34,7 @@ public interface ServiceComponent {
     interface Factory {
         ServiceComponent create(@BindsInstance Context context,
                                 @BindsInstance NotificationListener notificationListener,
-                                @BindsInstance String workerId);
+                                @BindsInstance String workerId,
+                                @BindsInstance ComponentClassMapper componentClassMapper);
     }
 }

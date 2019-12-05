@@ -42,6 +42,10 @@ dependencies {
 
 
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
+    implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
+
 
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
     annotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION

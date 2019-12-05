@@ -10,8 +10,8 @@ import android.support.v4.media.session.MediaSessionCompat.Token;
 
 import androidx.annotation.Nullable;
 
-import com.github.goldy1992.mp3player.client.R;
-import com.github.goldy1992.mp3player.client.activities.MediaPlayerActivityInjector;
+import com.github.goldy1992.mp3player.commons.ComponentClassMapper;
+
 import com.github.goldy1992.mp3player.commons.MediaItemUtils;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
@@ -27,15 +27,18 @@ public class MyDescriptionAdapter implements PlayerNotificationManager.MediaDesc
     private final PlaylistManager playlistManager;
     private final Context context;
     private final Token token;
+    private final ComponentClassMapper componentClassMapper;
     private static final int REQUEST_CODE = 501;
 
     @Inject
     public MyDescriptionAdapter(Context context,
                                 Token token,
-                                PlaylistManager playlistManager) {
+                                PlaylistManager playlistManager,
+                                ComponentClassMapper componentClassMapper) {
         this.context = context;
         this.token = token;
         this.playlistManager = playlistManager;
+        this.componentClassMapper = componentClassMapper;
     }
 
     @Override
@@ -46,7 +49,7 @@ public class MyDescriptionAdapter implements PlayerNotificationManager.MediaDesc
     @Nullable
     @Override
     public PendingIntent createCurrentContentIntent(Player player) {
-        Intent openUI = new Intent(context, MediaPlayerActivityInjector.class);
+        Intent openUI = new Intent(context, componentClassMapper.getMediaPlayerActivity());
         openUI.putExtra(MEDIA_SESSION, token);
         openUI.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return PendingIntent.getActivity(
@@ -62,8 +65,6 @@ public class MyDescriptionAdapter implements PlayerNotificationManager.MediaDesc
     @Nullable
     @Override
     public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
-//        Icon icon = Icon.createWithResource(context.getApplicationContext(), R.drawable.ic_music_note);
-//        BitmapDrawable bitmapDrawable = (BitmapDrawable) icon;
         return BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_music_note);
     }
 

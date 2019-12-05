@@ -18,10 +18,7 @@ import com.github.goldy1992.mp3player.client.views.fragments.SearchFragment
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.FolderListFragment
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.MediaItemListFragment
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.SongListFragment
-import com.github.goldy1992.mp3player.commons.ComparatorUtils
-import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import com.github.goldy1992.mp3player.commons.*
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.tabs.TabLayoutMediator
@@ -43,7 +40,11 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
 
     var searchFragment: SearchFragment? = null
 
-    private var myDrawerListener: MyDrawerListener? = null
+    @Inject
+    lateinit var myDrawerListener: MyDrawerListener
+
+    @Inject
+    lateinit var componentClassMapper: ComponentClassMapper
 
     override fun initialiseView(@LayoutRes layoutId: Int): Boolean {
         setContentView(layoutId)
@@ -132,7 +133,7 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
     private fun initNavigationView() {
         navigationView!!.setNavigationItemSelectedListener { menuItem: MenuItem -> onNavigationItemSelected(menuItem) }
         val spinner = navigationView!!.menu.findItem(R.id.themes_menu_item).actionView as Spinner
-        val themeSpinnerController = ThemeSpinnerController(applicationContext, spinner, this)
+        val themeSpinnerController = ThemeSpinnerController(applicationContext, spinner, this, componentClassMapper)
     }
 
     override fun onChildrenLoaded(parentId: String, children: ArrayList<MediaBrowserCompat.MediaItem>) {
@@ -156,11 +157,6 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
                 }
             }
         }
-    }
-
-    @Inject
-    fun setMyDrawerListener(myDrawerListener: MyDrawerListener?) {
-        this.myDrawerListener = myDrawerListener
     }
 
     /** {@inheritDoc}  */

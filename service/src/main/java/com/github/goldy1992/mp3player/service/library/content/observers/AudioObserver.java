@@ -10,7 +10,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.github.goldy1992.mp3player.LogTagger;
+import com.github.goldy1992.mp3player.commons.LogTagger;
 import com.github.goldy1992.mp3player.commons.MediaItemType;
 import com.github.goldy1992.mp3player.commons.MediaItemUtils;
 import com.github.goldy1992.mp3player.service.library.ContentManager;

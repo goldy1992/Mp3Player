@@ -11,13 +11,20 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.activities.MainActivityInjector
+import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.Constants
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import java.util.*
+import javax.inject.Inject
 
-class ThemeSpinnerController(private val context: Context, private val spinner: Spinner, private val activity: Activity) : OnItemSelectedListener {
+class ThemeSpinnerController
+    @Inject
+    constructor( private val context: Context,
+                 private val spinner: Spinner,
+                 private val activity: Activity,
+                 private val componentClassMapper : ComponentClassMapper)
+    : OnItemSelectedListener {
     private var adapter // TODO: make a make from Theme name to resource
             : ArrayAdapter<String?>? = null
     private var themeResIds: MutableList<Int>? = null
@@ -37,7 +44,7 @@ class ThemeSpinnerController(private val context: Context, private val spinner: 
             Log.d(LOG_TAG, "select count > 1")
             setThemePreference(res)
             activity.finish()
-            val intent = Intent(context, MainActivityInjector::class.java)
+            val intent = Intent(context, componentClassMapper.mainActivity)
             intent.putExtra(Constants.THEME, res)
             activity.startActivity(intent)
         }

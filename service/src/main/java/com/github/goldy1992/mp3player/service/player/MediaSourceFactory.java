@@ -4,7 +4,7 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.util.Log;
 
-import com.github.goldy1992.mp3player.LogTagger;
+import com.github.goldy1992.mp3player.commons.LogTagger;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.upstream.ContentDataSource;

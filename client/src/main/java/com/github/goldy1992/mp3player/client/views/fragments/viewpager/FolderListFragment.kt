@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 import android.support.v4.media.MediaBrowserCompat
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.dagger.components.MediaActivityCompatComponent
+import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
 
 class FolderListFragment : MediaItemListFragment() {
     override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {

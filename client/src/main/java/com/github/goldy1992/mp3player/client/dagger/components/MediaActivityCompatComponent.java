@@ -11,6 +11,7 @@ import com.github.goldy1992.mp3player.client.dagger.components.fragments.Playbac
 import com.github.goldy1992.mp3player.client.dagger.modules.GlideModule;
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserCompatModule;
 import com.github.goldy1992.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
+import com.github.goldy1992.mp3player.commons.ComponentClassMapper;
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope;
 import com.github.goldy1992.mp3player.client.dagger.components.fragments.ChildViewPagerFragmentSubcomponent;
 import com.github.goldy1992.mp3player.client.dagger.modules.ComponentNameModule;
@@ -53,6 +54,6 @@ public interface MediaActivityCompatComponent {
         MediaActivityCompatComponent create(@BindsInstance Context context,
                                             @BindsInstance String workerId,
                                             @BindsInstance MediaBrowserConnectorCallback callback,
-                                            @BindsInstance Class<?> serviceClass);
+                                            @BindsInstance ComponentClassMapper componentClassMapper);
     }
 }

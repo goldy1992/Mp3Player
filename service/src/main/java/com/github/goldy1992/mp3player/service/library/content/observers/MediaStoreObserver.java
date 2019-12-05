@@ -7,7 +7,7 @@ import android.os.Handler;
 
 import androidx.annotation.NonNull;
 
-import com.github.goldy1992.mp3player.LogTagger;
+import com.github.goldy1992.mp3player.commons.LogTagger;
 import com.github.goldy1992.mp3player.service.MediaPlaybackService;
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 

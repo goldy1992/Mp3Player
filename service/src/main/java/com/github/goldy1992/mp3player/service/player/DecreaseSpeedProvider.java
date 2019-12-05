@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player.service.player;
 
 import android.support.v4.media.session.PlaybackStateCompat;
 
-import com.github.goldy1992.mp3player.client.R;
+import com.github.goldy1992.mp3player.service.R;
 import com.google.android.exoplayer2.Player;
 
 import javax.inject.Inject;

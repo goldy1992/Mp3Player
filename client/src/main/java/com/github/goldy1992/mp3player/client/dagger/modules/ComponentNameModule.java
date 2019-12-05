@@ -3,6 +3,8 @@ package com.github.goldy1992.mp3player.client.dagger.modules;
 import android.content.ComponentName;
 import android.content.Context;
 
+import com.github.goldy1992.mp3player.commons.ComponentClassMapper;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -11,7 +13,7 @@ public class ComponentNameModule {
 
     /** */
     @Provides
-    public ComponentName provideComponentName(Context context, Class<?> serviceClass) {
-        return new ComponentName(context, serviceClass);
+    public ComponentName provideComponentName(Context context, ComponentClassMapper componentClassMapper) {
+        return new ComponentName(context, componentClassMapper.getService());
     }
 }

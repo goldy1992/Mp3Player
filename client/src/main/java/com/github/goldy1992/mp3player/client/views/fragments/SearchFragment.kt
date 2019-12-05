@@ -14,14 +14,21 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.VisibleForTesting
 import androidx.fragment.app.Fragment
-import com.github.goldy1992.mp3player.LogTagger
+
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.activities.SearchResultActivityInjector
+import com.github.goldy1992.mp3player.commons.ComponentClassMapper
+import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment : Fragment(), LogTagger {
 
     private var inputMethodManager: InputMethodManager? = null
+    private lateinit var componentClassMapper : ComponentClassMapper
+
+    fun init( componentClassMapper: ComponentClassMapper) {
+        this.componentClassMapper = componentClassMapper
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -32,7 +39,7 @@ class SearchFragment : Fragment(), LogTagger {
         inputMethodManager = context!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         // Get the SearchView and set the searchable configuration
         val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val componentName = ComponentName(context, SearchResultActivityInjector::class.java)
+        val componentName = ComponentName(context, componentClassMapper.searchResultActivity)
         val searchableInfo = searchManager.getSearchableInfo(componentName)
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchableInfo)

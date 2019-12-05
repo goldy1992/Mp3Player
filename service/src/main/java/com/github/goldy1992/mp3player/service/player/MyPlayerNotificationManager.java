@@ -6,9 +6,9 @@ import android.graphics.Color;
 import androidx.annotation.VisibleForTesting;
 import androidx.core.app.NotificationCompat;
 
-import com.github.goldy1992.mp3player.LogTagger;
-import com.github.goldy1992.mp3player.client.R;
+import com.github.goldy1992.mp3player.commons.LogTagger;
 import com.github.goldy1992.mp3player.service.MyDescriptionAdapter;
+import com.github.goldy1992.mp3player.service.R;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener;
