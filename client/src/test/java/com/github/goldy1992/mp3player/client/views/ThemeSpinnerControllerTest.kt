@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import android.widget.Spinner
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.activities.MainActivity
 import com.github.goldy1992.mp3player.client.views.ThemeSpinnerController
 import com.google.common.collect.BiMap

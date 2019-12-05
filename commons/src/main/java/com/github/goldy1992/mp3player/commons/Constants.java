@@ -4,15 +4,6 @@ import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.SparseArray;
 
-import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
-
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PAUSE;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PLAY;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SEEK_TO;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SET_REPEAT_MODE;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SET_SHUFFLE_MODE;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_STOP;
-
 public final class Constants {
 
     // ensure that an instance of Constants cannot be instantiated
@@ -96,8 +87,5 @@ public final class Constants {
     public static final String ID_DELIMITER = "\\|";
 
 
-    @MediaSessionConnector.PlaybackActions
-    public static final long SUPPORTED_PLAYBACK_ACTIONS = ACTION_STOP | ACTION_PAUSE | ACTION_PLAY |
-            ACTION_SET_REPEAT_MODE | ACTION_SET_SHUFFLE_MODE | ACTION_SEEK_TO;
 
 }

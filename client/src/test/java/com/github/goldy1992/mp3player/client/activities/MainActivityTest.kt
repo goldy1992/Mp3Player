@@ -4,7 +4,7 @@ import android.os.Looper
 import android.support.v4.media.MediaBrowserCompat
 import android.view.MenuItem
 import androidx.core.view.GravityCompat
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import kotlinx.android.synthetic.main.activity_main.*

@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.dagger.components.fragments;
+package com.github.goldy1992.mp3player.client.dagger.components.fragments;
 
 import com.github.goldy1992.mp3player.client.MyGenericItemTouchListener;
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.MediaItemListFragment;

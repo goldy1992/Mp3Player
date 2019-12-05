@@ -1,8 +1,7 @@
 package com.github.goldy1992.mp3player.service.library.content.request;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-
-import javax.annotation.Nullable;
 
 public final class ContentRequest {
 

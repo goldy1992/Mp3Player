@@ -1,19 +1,21 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion TARGET_SDK_VERION
+    buildToolsVersion BUILD_TOOLS_VERSION
 
 
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion MIN_SDK_VERSION
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -28,9 +30,42 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation group: 'com.l4digital.fastscroll', name: 'fastscroll', version: FAST_SCROLL_VERSION
+    implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
+    implementation group: 'androidx.drawerlayout', name: 'drawerlayout', version: DRAWER_LAYOUT_VERSION
+    implementation group: 'androidx.coordinatorlayout', name: 'coordinatorlayout', version: COORDINATOR_LAYOUT_VERSION
+    implementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
+    implementation group: 'org.apache.commons', name: 'commons-io', version: COMMONS_IO_VERSION
+    implementation group: 'androidx.constraintlayout', name: 'constraintlayout', version: CONSTRAINT_LAYOUT_VERSION
+    implementation group: 'com.google.android.material', name: 'material', version: MATERIAL_VERSION
+    implementation group: 'androidx.gridlayout', name: 'gridlayout', version: GRID_LAYOUT_VERSION
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: KOTLIN_COROUTINE_VERSION
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: KOTLIN_COROUTINE_VERSION
+    debugImplementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
+
+
+
+    // Glide
+    implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION
+    implementation ("com.github.bumptech.glide:recyclerview-integration:$GLIDE_VERSION") {
+        // Excludes the support library because it's already included by Glide.
+        transitive = false
+    }
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
+    implementation 'androidx.viewpager2:viewpager2:1.0.0-rc01'
+
+    kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    kaptTest group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
+    implementation project(path: ':commons')
 }

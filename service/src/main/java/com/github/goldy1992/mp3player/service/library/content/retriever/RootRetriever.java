@@ -5,6 +5,8 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
 
+import androidx.annotation.Nullable;
+
 import com.github.goldy1992.mp3player.commons.MediaItemType;
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds;
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest;
@@ -16,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import static com.github.goldy1992.mp3player.commons.ComparatorUtils.compareRootMediaItemsByMediaItemType;

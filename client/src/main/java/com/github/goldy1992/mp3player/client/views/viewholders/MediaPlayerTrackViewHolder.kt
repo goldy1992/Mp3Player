@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 
 class MediaPlayerTrackViewHolder(itemView: View, private val albumArtPainter: AlbumArtPainter) : RecyclerView.ViewHolder(itemView) {

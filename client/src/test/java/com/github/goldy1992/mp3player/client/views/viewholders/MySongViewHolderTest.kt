@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.client.views.viewholders
 import android.net.Uri
 import android.widget.ImageView
 import android.widget.TextView
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder

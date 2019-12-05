@@ -5,7 +5,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import org.junit.Before

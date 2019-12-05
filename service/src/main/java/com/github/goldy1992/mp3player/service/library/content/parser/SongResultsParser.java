@@ -7,6 +7,7 @@ import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder;
 import com.github.goldy1992.mp3player.commons.MediaItemType;
@@ -16,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE;

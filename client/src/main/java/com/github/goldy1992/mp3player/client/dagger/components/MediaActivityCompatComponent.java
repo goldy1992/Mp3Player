@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.dagger.components;
+package com.github.goldy1992.mp3player.client.dagger.components;
 
 import android.content.Context;
 
@@ -6,17 +6,17 @@ import com.github.goldy1992.mp3player.client.MediaBrowserConnectorCallback;
 import com.github.goldy1992.mp3player.client.activities.FolderActivity;
 import com.github.goldy1992.mp3player.client.activities.MainActivity;
 import com.github.goldy1992.mp3player.client.activities.MediaPlayerActivity;
+import com.github.goldy1992.mp3player.client.dagger.components.fragments.PlaybackButtonsSubComponent;
+import com.github.goldy1992.mp3player.client.dagger.components.fragments.PlaybackTrackerFragmentSubcomponent;
+import com.github.goldy1992.mp3player.client.dagger.modules.GlideModule;
+import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserCompatModule;
 import com.github.goldy1992.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
-import com.github.goldy1992.mp3player.dagger.components.fragments.ChildViewPagerFragmentSubcomponent;
-import com.github.goldy1992.mp3player.dagger.components.fragments.PlaybackButtonsSubComponent;
-import com.github.goldy1992.mp3player.dagger.components.fragments.PlaybackTrackerFragmentSubcomponent;
-import com.github.goldy1992.mp3player.dagger.modules.ComponentNameModule;
-import com.github.goldy1992.mp3player.dagger.modules.GlideModule;
-import com.github.goldy1992.mp3player.dagger.modules.MainHandlerModule;
-import com.github.goldy1992.mp3player.dagger.modules.MediaBrowserCompatModule;
-import com.github.goldy1992.mp3player.dagger.modules.MyDrawerListenerModule;
-import com.github.goldy1992.mp3player.dagger.modules.service.HandlerThreadModule;
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope;
+import com.github.goldy1992.mp3player.client.dagger.components.fragments.ChildViewPagerFragmentSubcomponent;
+import com.github.goldy1992.mp3player.client.dagger.modules.ComponentNameModule;
+import com.github.goldy1992.mp3player.client.dagger.modules.MainHandlerModule;
+import com.github.goldy1992.mp3player.client.dagger.modules.MyDrawerListenerModule;
+import com.github.goldy1992.mp3player.client.dagger.modules.HandlerThreadModule;
 
 import dagger.BindsInstance;
 import dagger.Component;
@@ -52,6 +52,7 @@ public interface MediaActivityCompatComponent {
     interface Factory {
         MediaActivityCompatComponent create(@BindsInstance Context context,
                                             @BindsInstance String workerId,
-                                            @BindsInstance MediaBrowserConnectorCallback callback);
+                                            @BindsInstance MediaBrowserConnectorCallback callback,
+                                            @BindsInstance Class<?> serviceClass);
     }
 }

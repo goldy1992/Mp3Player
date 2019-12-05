@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.views.adapters
 
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.dagger.scopes.ComponentScope
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import javax.inject.Inject
 
 @ComponentScope

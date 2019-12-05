@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.github.goldy1992.mp3player.R;
+import com.github.goldy1992.mp3player.client.R;
 
 public class TestSeekBarFragment extends AsyncFragment {
 

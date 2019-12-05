@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.client.views.viewholders
 import android.support.v4.media.MediaBrowserCompat
 import android.view.View
 import android.widget.TextView
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 

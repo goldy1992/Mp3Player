@@ -7,7 +7,7 @@ import android.support.v4.media.session.PlaybackStateCompat.ShuffleMode
 import android.view.View
 import android.widget.ImageView
 import androidx.annotation.VisibleForTesting
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.github.goldy1992.mp3player.commons.Constants

@@ -9,13 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.ListPreloader
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.*
 import com.github.goldy1992.mp3player.client.MyGenericItemTouchListener.ItemSelectedListener
 import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecycleViewAdapter
 import com.github.goldy1992.mp3player.client.views.adapters.RecyclerViewAdapters
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.dagger.components.MediaActivityCompatComponent
+import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
 import kotlinx.android.synthetic.main.fragment_view_page.*
 import javax.inject.Inject
 

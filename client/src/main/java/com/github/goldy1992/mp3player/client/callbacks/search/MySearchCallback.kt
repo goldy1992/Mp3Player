@@ -4,9 +4,13 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.SearchCallback
 import android.util.Log
-import com.github.goldy1992.mp3player.LogTagger
+import com.github.goldy1992.mp3player.commons.LogTagger
+import javax.inject.Inject
 
-class MySearchCallback : SearchCallback(), LogTagger {
+class MySearchCallback
+    @Inject
+    constructor()
+    : SearchCallback(), LogTagger  {
 
     private val listeners: MutableSet<SearchResultListener> = mutableSetOf()
 

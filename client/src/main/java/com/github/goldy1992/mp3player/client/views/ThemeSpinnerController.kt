@@ -10,7 +10,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.activities.MainActivityInjector
 import com.github.goldy1992.mp3player.commons.Constants
 import com.google.common.collect.BiMap

@@ -7,12 +7,12 @@ import android.util.Log
 import android.view.MenuItem
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectorCallback
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.dagger.components.MediaActivityCompatComponent
+import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
 import javax.inject.Inject
 
 abstract class MediaActivityCompat : AppCompatActivity(), MediaBrowserConnectorCallback {

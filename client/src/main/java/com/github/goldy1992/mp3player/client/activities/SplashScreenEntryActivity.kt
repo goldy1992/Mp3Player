@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.github.goldy1992.mp3player.client.PermissionGranted
 import com.github.goldy1992.mp3player.client.PermissionsProcessor
 import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.service.MediaPlaybackServiceInjector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -21,9 +20,13 @@ import kotlinx.coroutines.withContext
 /**
  *
  */
-open class SplashScreenEntryActivity : AppCompatActivity(), PermissionGranted {
+abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGranted {
 
     private var permissionsProcessor: PermissionsProcessor? = null
+
+    abstract fun mainActivityClass() : Class<*>
+
+    abstract fun serviceClass() : Class<*>
 
     @Volatile
     var isSplashScreenFinishedDisplaying = false
@@ -44,7 +47,7 @@ open class SplashScreenEntryActivity : AppCompatActivity(), PermissionGranted {
         super.onCreate(savedInstanceState)
         permissionsProcessor = PermissionsProcessor(this, this)
         // TODO: have this injected so that a test implementation can be provided
-        mainActivityIntent = Intent(applicationContext, mainActivityClass)
+        mainActivityIntent = Intent(applicationContext, mainActivityClass())
         CoroutineScope(IO).launch { init()}
     }
 
@@ -110,11 +113,9 @@ open class SplashScreenEntryActivity : AppCompatActivity(), PermissionGranted {
     }
 
     private fun createService() {
-        startService(Intent(applicationContext, MediaPlaybackServiceInjector::class.java))
+        startService(Intent(applicationContext, serviceClass()))
     }
 
-    val mainActivityClass: Class<*>
-        get() = MainActivityInjector::class.java
 
     companion object {
         private const val LOG_TAG = "SPLSH_SCRN_ENTRY_ACTVTY"

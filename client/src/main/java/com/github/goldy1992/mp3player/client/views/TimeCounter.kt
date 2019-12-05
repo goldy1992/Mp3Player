@@ -6,11 +6,11 @@ import android.util.Log
 import android.widget.TextView
 import androidx.annotation.VisibleForTesting
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.calculateCurrentPlaybackPosition
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Constants.ONE_SECOND
-import com.github.goldy1992.mp3player.dagger.scopes.FragmentScope
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit

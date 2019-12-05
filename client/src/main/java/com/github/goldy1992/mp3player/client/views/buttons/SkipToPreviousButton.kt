@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Handler
 import android.view.View
 import android.widget.ImageView
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import javax.inject.Inject
 import javax.inject.Named

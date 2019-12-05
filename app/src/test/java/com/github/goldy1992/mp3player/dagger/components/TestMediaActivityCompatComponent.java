@@ -6,7 +6,7 @@ import com.github.goldy1992.mp3player.client.MediaBrowserConnectorCallback;
 import com.github.goldy1992.mp3player.client.activities.EmptyMediaActivityCompatFragmentActivity;
 import com.github.goldy1992.mp3player.dagger.modules.ComponentNameModule;
 import com.github.goldy1992.mp3player.dagger.modules.MainHandlerModule;
-import com.github.goldy1992.mp3player.dagger.modules.MediaBrowserCompatModule;
+import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserCompatModule;
 import com.github.goldy1992.mp3player.dagger.modules.MockAlbumArtPainterModule;
 import com.github.goldy1992.mp3player.dagger.modules.MockMediaControllerAdapterModule;
 import com.github.goldy1992.mp3player.dagger.modules.MyDrawerListenerModule;

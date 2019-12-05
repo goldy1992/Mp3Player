@@ -12,7 +12,7 @@ import androidx.annotation.VisibleForTesting
 import com.github.goldy1992.mp3player.client.views.SeekerBar
 import com.github.goldy1992.mp3player.client.views.TimeCounter
 import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.dagger.scopes.FragmentScope
+import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
 import javax.inject.Inject
 
 /**

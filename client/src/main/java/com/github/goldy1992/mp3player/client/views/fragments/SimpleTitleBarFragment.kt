@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import kotlinx.android.synthetic.main.fragment_simple_title_bar.*
 
 class SimpleTitleBarFragment : Fragment() {

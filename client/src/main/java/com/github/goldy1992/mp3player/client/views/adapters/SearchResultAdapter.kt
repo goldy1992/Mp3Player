@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.client.views.adapters
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.views.viewholders.*
 import com.github.goldy1992.mp3player.commons.Constants

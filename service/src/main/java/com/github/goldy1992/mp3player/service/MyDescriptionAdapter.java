@@ -10,7 +10,7 @@ import android.support.v4.media.session.MediaSessionCompat.Token;
 
 import androidx.annotation.Nullable;
 
-import com.github.goldy1992.mp3player.R;
+import com.github.goldy1992.mp3player.client.R;
 import com.github.goldy1992.mp3player.client.activities.MediaPlayerActivityInjector;
 import com.github.goldy1992.mp3player.commons.MediaItemUtils;
 import com.google.android.exoplayer2.Player;

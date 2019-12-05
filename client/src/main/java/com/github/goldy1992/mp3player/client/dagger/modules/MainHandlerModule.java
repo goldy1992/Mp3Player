@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.dagger.modules;
+package com.github.goldy1992.mp3player.client.dagger.modules;
 
 import android.os.Handler;
 import android.os.Looper;

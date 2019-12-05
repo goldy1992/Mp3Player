@@ -7,7 +7,7 @@ import android.os.Handler
 import android.support.v4.media.MediaMetadataCompat
 import androidx.annotation.VisibleForTesting
 import com.bumptech.glide.Glide
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.callbacks.TrackViewPagerChangeCallback
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener

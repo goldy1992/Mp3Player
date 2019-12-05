@@ -9,7 +9,7 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.VisibleForTesting
 import androidx.core.view.GravityCompat
 import androidx.viewpager2.widget.ViewPager2
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaBrowserResponseListener
 import com.github.goldy1992.mp3player.client.MyDrawerListener
 import com.github.goldy1992.mp3player.client.views.ThemeSpinnerController

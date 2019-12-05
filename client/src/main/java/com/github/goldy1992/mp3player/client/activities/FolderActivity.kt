@@ -4,7 +4,7 @@ import android.support.v4.media.MediaBrowserCompat
 import android.text.TextUtils
 import android.util.Log
 import android.widget.TextView
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.MediaItemListFragment
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.SongListFragment
 import com.github.goldy1992.mp3player.commons.Constants
