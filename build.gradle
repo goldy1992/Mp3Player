@@ -64,6 +64,7 @@ plugins {
 }
 
 allprojects {
+    apply plugin: 'jacoco'
     repositories {
         google()
         jcenter()
@@ -71,6 +72,7 @@ allprojects {
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
+
 }
 
 task clean(type: Delete) {

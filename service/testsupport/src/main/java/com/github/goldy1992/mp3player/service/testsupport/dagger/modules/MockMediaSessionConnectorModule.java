@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.dagger.modules;
+package com.github.goldy1992.mp3player.service.testsupport.dagger.modules;
 
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 

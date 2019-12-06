@@ -7,7 +7,7 @@ import com.github.goldy1992.mp3player.client.utils.TimerUtils.convertToSeconds
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import org.junit.Assert
 import org.junit.Test
-import org.junit.jupiter.api.BeforeAll
+import org.junit.BeforeClass
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -74,7 +74,7 @@ class TimerUtilsTest {
         /**
          * Class setup method
          */
-        @BeforeAll
+        @BeforeClass
         fun setupTests() {
             val currentTime = SystemClock.elapsedRealtime()
             val wrongCurrentTimeErrorMessage = "SystemClock.elapsedRealTime() (i.e. ShadowSystemClock)" +

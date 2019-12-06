@@ -1,8 +1,6 @@
-package com.github.goldy1992.mp3player.dagger.modules;
+package com.github.goldy1992.mp3player.service.testsupport.dagger.modules;
 
 import android.content.Context;
-
-import androidx.room.Room;
 
 import com.github.goldy1992.mp3player.service.library.search.FolderDao;
 import com.github.goldy1992.mp3player.service.library.search.SearchDatabase;

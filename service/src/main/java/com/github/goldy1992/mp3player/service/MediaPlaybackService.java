@@ -40,7 +40,7 @@ public abstract class MediaPlaybackService extends MediaBrowserServiceCompat imp
     private MediaStoreObservers mediaStoreObservers;
     private SearchDatabaseManagers searchDatabaseManagers;
 
-    abstract void initialiseDependencies();
+    protected abstract void initialiseDependencies();
 
     @Override
     public void onCreate() {

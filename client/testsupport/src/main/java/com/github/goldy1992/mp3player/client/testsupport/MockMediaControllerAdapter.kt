@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client
+package com.github.goldy1992.mp3player.client.testsupport
 
 import android.content.Context
 import android.net.Uri
@@ -7,6 +7,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.ShuffleMode
+import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener

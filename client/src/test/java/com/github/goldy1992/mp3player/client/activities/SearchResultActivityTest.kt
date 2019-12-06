@@ -23,7 +23,7 @@ class SearchResultActivityTest {
     /** Intent  */
     private var intent: Intent? = null
     /** Activity controller  */
-    var activityController: ActivityController<SearchResultActivityInjectorTestImpl>? = null
+    var activityController: ActivityController<com.github.goldy1992.mp3player.client.testsupport.activities.SearchResultActivityInjectorTestImpl>? = null
     private var searchResultActivity: SearchResultActivity? = null
     private var mediaSessionCompat: MediaSessionCompat? = null
     @Before
@@ -32,7 +32,7 @@ class SearchResultActivityTest {
         val context = InstrumentationRegistry.getInstrumentation().context
         mediaSessionCompat = MediaSessionCompat(context, "TAG")
         intent = Intent(ApplicationProvider.getApplicationContext(), MediaPlayerActivity::class.java)
-        activityController = Robolectric.buildActivity(SearchResultActivityInjectorTestImpl::class.java, intent).setup()
+        activityController = Robolectric.buildActivity(com.github.goldy1992.mp3player.client.testsupport.activities.SearchResultActivityInjectorTestImpl::class.java, intent).setup()
         searchResultActivity = activityController!!.get()
         Assert.assertNotNull(searchResultActivity)
     }

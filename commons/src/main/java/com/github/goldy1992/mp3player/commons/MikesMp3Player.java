@@ -5,16 +5,12 @@ import android.app.Application;
 import com.github.goldy1992.mp3player.commons.dagger.components.AppComponent;
 import com.github.goldy1992.mp3player.commons.dagger.components.DaggerAppComponent;
 
-import javax.inject.Inject;
-
 /**
  * Declared in case need in the future
  */
-public class MikesMp3Player extends Application {
+public abstract class MikesMp3Player extends Application {
 
     AppComponent appComponent;
-
-    private ComponentClassMapper componentClassMapper;
 
     @Override
     public void onCreate() {
@@ -26,12 +22,5 @@ public class MikesMp3Player extends Application {
     }
 
 
-    public ComponentClassMapper getComponentClassMapper() {
-        return componentClassMapper;
-    }
-
-    @Inject
-    public void setComponentClassMapper(ComponentClassMapper componentClassMapper) {
-        this.componentClassMapper = componentClassMapper;
-    }
+    public abstract ComponentClassMapper getComponentClassMapper();
 }

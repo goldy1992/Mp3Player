@@ -31,16 +31,19 @@ dependencies {
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: EXO_PLAYER_VERSION
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
+    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
+    implementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
+
+    testImplementation 'junit:junit:4.12'
     //dagger
     implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
     implementation group: 'com.google.dagger', name: 'dagger-android', version: DAGGER_VERSION
     annotationProcessor  group: 'com.google.dagger', name: 'dagger-android-processor', version: DAGGER_VERSION
     annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
 
-
+    implementation project(path: ':commons')
     api project(':service')
 }

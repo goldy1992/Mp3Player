@@ -1,6 +1,7 @@
-package com.github.goldy1992.mp3player.client.activities
+package com.github.goldy1992.mp3player.client.testsupport.activities
 
 import android.os.Bundle
+import com.github.goldy1992.mp3player.client.activities.SearchResultActivity
 import com.github.goldy1992.mp3player.dagger.components.DaggerTestMediaActivityCompatComponent
 import com.github.goldy1992.mp3player.dagger.components.MediaActivityCompatComponent
 
