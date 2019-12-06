@@ -1,12 +1,13 @@
 package com.github.goldy1992.mp3player.service;
 
 import android.content.Context;
+import android.media.session.MediaSession;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.github.goldy1992.mp3player.TestUtils;
+import com.github.goldy1992.mp3player.commons.ComponentClassMapper;
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder;
 import com.google.android.exoplayer2.ExoPlayer;
 
@@ -33,8 +34,9 @@ public class MyDescriptionAdapterTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        MediaSessionCompat.Token token = TestUtils.getMediaSessionCompatToken(context);
-        this.myDescriptionAdapter = new MyDescriptionAdapter(context, token, playlistManager);
+        MediaSessionCompat.Token token = getMediaSessionCompatToken(context);
+        ComponentClassMapper componentClassMapper = new ComponentClassMapper.Builder().build();
+        this.myDescriptionAdapter = new MyDescriptionAdapter(context, token, playlistManager, componentClassMapper);
     }
 
     @Test
@@ -49,6 +51,12 @@ public class MyDescriptionAdapterTest {
 
         final String result = myDescriptionAdapter.getCurrentContentTitle(player);
         assertEquals(expectedTitle, result);
+    }
+
+    private MediaSessionCompat.Token getMediaSessionCompatToken(Context context) {
+        MediaSession mediaSession = new MediaSession(context, "sd");
+        MediaSession.Token sessionToken = mediaSession.getSessionToken();
+        return MediaSessionCompat.Token.fromToken(sessionToken);
     }
 
 }

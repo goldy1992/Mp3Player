@@ -5,13 +5,13 @@ apply plugin: 'com.github.ben-manes.versions'
 
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion TARGET_SDK_VERION
+    buildToolsVersion BUILD_TOOLS_VERSION
 
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 29
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERION
         versionCode 1
         versionName "1.0"
 
@@ -21,13 +21,36 @@ android {
 
     buildTypes {
         release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            testCoverageEnabled = true
         }
     }
+
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues = true
+        }
+        unitTests.all {
+            testLogging {
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                outputs.upToDateWhen { false }
+                showStandardStreams = true
+            }
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
     }
 
 }
@@ -39,6 +62,8 @@ dependencies {
     //dagger
     implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
     implementation group: 'com.google.dagger', name: 'dagger-android', version: DAGGER_VERSION
+    annotationProcessor  group: 'com.google.dagger', name: 'dagger-android-processor', version: DAGGER_VERSION
+    annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
 
 
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
@@ -64,7 +89,7 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
 
-
+    testImplementation project(path: ':service:testsupport')
 
 
     // vintage

@@ -2,12 +2,12 @@ package com.github.goldy1992.mp3player.dagger.components;
 
 import android.content.Context;
 
-import com.github.goldy1992.mp3player.dagger.modules.service.ContentManagerModule;
-import com.github.goldy1992.mp3player.dagger.modules.service.ExoPlayerModule;
-import com.github.goldy1992.mp3player.dagger.modules.service.HandlerThreadModule;
-import com.github.goldy1992.mp3player.dagger.modules.service.MediaSessionCompatModule;
-import com.github.goldy1992.mp3player.dagger.modules.service.MediaSessionConnectorModule;
-import com.github.goldy1992.mp3player.dagger.modules.service.SearchDatabaseModule;
+import ContentManagerModule;
+import ExoPlayerModule;
+import HandlerThreadModule;
+import MediaSessionCompatModule;
+import MediaSessionConnectorModule;
+import SearchDatabaseModule;
 import com.github.goldy1992.mp3player.service.MediaPlaybackService;
 
 import javax.inject.Singleton;

@@ -2,6 +2,9 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'jacoco'
+apply plugin: "de.mannodermaus.android-junit5"
+
 android {
     compileSdkVersion TARGET_SDK_VERION
     buildToolsVersion BUILD_TOOLS_VERSION
@@ -56,13 +59,15 @@ dependencies {
         transitive = false
     }
 
-    testImplementation 'junit:junit:4.12'
+
+    testImplementation project(path: ':client:testsupport', configuration: 'default')
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
     implementation 'androidx.viewpager2:viewpager2:1.0.0-rc01'
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
 
     kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     kaptTest group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION

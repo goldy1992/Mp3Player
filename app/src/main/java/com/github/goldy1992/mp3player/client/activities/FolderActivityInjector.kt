@@ -11,10 +11,10 @@ class FolderActivityInjector : FolderActivity() {
     }
 
     public override fun initialiseDependencies() {
-        var app : MikesMp3Player = applicationContext as MikesMp3Player
+        var app : MikesMp3Player = applicationContext!! as MikesMp3Player
         val component = DaggerMediaActivityCompatComponent
                 .factory()
-                .create(applicationContext, workerId, this, app)
+                .create(applicationContext, workerId, this, app.componentClassMapper)
         mediaActivityCompatComponent = component
         component.inject(this)
     }
