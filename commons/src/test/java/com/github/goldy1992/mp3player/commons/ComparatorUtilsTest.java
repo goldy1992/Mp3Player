@@ -5,8 +5,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem;
-import static com.github.goldy1992.mp3player.TestUtils.createMediaItem;
-import static com.github.goldy1992.mp3player.TestUtils.createMediaItemWithNullCategory;
 import static org.junit.Assert.assertTrue;
 
 
@@ -60,8 +58,12 @@ public class ComparatorUtilsTest {
      */
     @Test
     public void testCompareRootItemsByCategoryNullAgainstNull() {
-        final MediaItem firstNullCategory = createMediaItemWithNullCategory();
-        final MediaItem secondNullCategory = createMediaItemWithNullCategory();
+        final MediaItem firstNullCategory = new MediaItemBuilder(MISC_STRING)
+                .setRootItemType(null)
+                .build();
+        final MediaItem secondNullCategory = new MediaItemBuilder(MISC_STRING)
+                .setRootItemType(null)
+                .build();
         final int result = ComparatorUtils.compareRootMediaItemsByMediaItemType.compare(firstNullCategory, secondNullCategory);
         final boolean equal = result == 0;
         assertTrue(equal);
@@ -84,9 +86,19 @@ public class ComparatorUtilsTest {
      */
     @Test
     public void testCompareMediaItemByTitleGreaterAndLessThan() {
-        final MediaItem greaterTitleMediaItem = createMediaItem(MISC_STRING, GREATER_STRING, MISC_STRING, MediaItemType.ROOT);
-        final MediaItem lesserTitleMediaItem = createMediaItem(MISC_STRING, LESSER_STRING, MISC_STRING, MediaItemType.ROOT);
-        int result = ComparatorUtils.compareMediaItemsByTitle.compare(greaterTitleMediaItem, lesserTitleMediaItem);
+        final MediaItem greaterTitleMediaItem =
+                new MediaItemBuilder(MISC_STRING)
+                        .setTitle(GREATER_STRING)
+                        .setDescription(MISC_STRING)
+                        .setMediaItemType(MediaItemType.ROOT)
+                        .build();
+        final MediaItem lesserTitleMediaItem =
+                new MediaItemBuilder(MISC_STRING)
+                        .setTitle(LESSER_STRING)
+                        .setDescription(MISC_STRING)
+                        .setMediaItemType(MediaItemType.ROOT)
+                        .build();
+            int result = ComparatorUtils.compareMediaItemsByTitle.compare(greaterTitleMediaItem, lesserTitleMediaItem);
         assertTrue( result > 0);
         result = ComparatorUtils.compareMediaItemsByTitle.compare(lesserTitleMediaItem, greaterTitleMediaItem);
         assertTrue( result < 0);
@@ -96,8 +108,18 @@ public class ComparatorUtilsTest {
      */
     @Test
     public void testCompareMediaItemByTitleAgainstNull() {
-        final MediaItem greaterTitleMediaItem = createMediaItem(MISC_STRING, GREATER_STRING, MISC_STRING, MediaItemType.ROOT);
-        final MediaItem nullTitleMediaItem = createMediaItem(MISC_STRING, null, MISC_STRING, MediaItemType.ROOT);
+        final MediaItem greaterTitleMediaItem =
+                new MediaItemBuilder(MISC_STRING)
+                        .setTitle(GREATER_STRING)
+                        .setDescription(MISC_STRING)
+                        .setMediaItemType(MediaItemType.ROOT)
+                        .build();
+        final MediaItem nullTitleMediaItem =
+                new MediaItemBuilder(MISC_STRING)
+                        .setTitle(null)
+                        .setDescription(MISC_STRING)
+                        .setMediaItemType(MediaItemType.ROOT)
+                        .build();
         int result = ComparatorUtils.compareMediaItemsByTitle.compare(greaterTitleMediaItem, nullTitleMediaItem);
         assertTrue( result > 0);
         result = ComparatorUtils.compareMediaItemsByTitle.compare(nullTitleMediaItem, greaterTitleMediaItem);
@@ -108,8 +130,19 @@ public class ComparatorUtilsTest {
      */
     @Test
     public void testCompareMediaItemByTitleNullAgainstNull() {
-        final MediaItem firstNullTitleMediaItem = createMediaItem(MISC_STRING, null, MISC_STRING, MediaItemType.ROOT);
-        final MediaItem secondNullTitleMediaItem = createMediaItem(MISC_STRING, null, MISC_STRING, MediaItemType.ROOT);
+        final MediaItem firstNullTitleMediaItem =
+                new MediaItemBuilder(MISC_STRING)
+                        .setTitle(null)
+                        .setDescription(MISC_STRING)
+                        .setMediaItemType(MediaItemType.ROOT)
+                        .build();
+
+        final MediaItem secondNullTitleMediaItem =
+                new MediaItemBuilder(MISC_STRING)
+                        .setTitle(null)
+                        .setDescription(MISC_STRING)
+                        .setMediaItemType(MediaItemType.ROOT)
+                        .build();
         int result = ComparatorUtils.compareMediaItemsByTitle.compare(firstNullTitleMediaItem, secondNullTitleMediaItem);
         boolean equal = result == 0;
         assertTrue(equal);
@@ -120,8 +153,19 @@ public class ComparatorUtilsTest {
      */
     @Test
     public void testCompareMediaItemByTitleEqual() {
-        final MediaItem mediaItem = createMediaItem(MISC_STRING, MISC_STRING, MISC_STRING, MediaItemType.ROOT);
-        final MediaItem mediaItemSameId = createMediaItem(MISC_STRING, MISC_STRING, MISC_STRING, MediaItemType.ROOT);
+        final MediaItem mediaItem =
+                new MediaItemBuilder(MISC_STRING)
+                        .setTitle(MISC_STRING)
+                        .setDescription(MISC_STRING)
+                        .setMediaItemType(MediaItemType.ROOT)
+                        .build();
+
+        final MediaItem mediaItemSameId =
+                new MediaItemBuilder(MISC_STRING)
+                        .setTitle(MISC_STRING)
+                        .setDescription(MISC_STRING)
+                        .setMediaItemType(MediaItemType.ROOT)
+                        .build();
         final int result = ComparatorUtils.compareMediaItemById.compare(mediaItem, mediaItemSameId);
         final boolean equal = result == 0;
         assertTrue(equal);
@@ -131,8 +175,20 @@ public class ComparatorUtilsTest {
      */
     @Test
     public void testCompareMediaItemByIdGreaterAndLessThan() {
-        final MediaItem greaterTitleMediaItem = createMediaItem(GREATER_STRING, MISC_STRING, MISC_STRING, MediaItemType.ROOT);
-        final MediaItem lesserTitleMediaItem = createMediaItem(LESSER_STRING, MISC_STRING, MISC_STRING, MediaItemType.ROOT);
+        final MediaItem greaterTitleMediaItem =
+                new MediaItemBuilder(GREATER_STRING)
+                        .setTitle(MISC_STRING)
+                        .setDescription(MISC_STRING)
+                        .setMediaItemType(MediaItemType.ROOT)
+                        .build();
+
+        final MediaItem lesserTitleMediaItem =
+                new MediaItemBuilder(LESSER_STRING)
+                        .setTitle(MISC_STRING)
+                        .setDescription(MISC_STRING)
+                        .setMediaItemType(MediaItemType.ROOT)
+                        .build();
+
         int result = ComparatorUtils.compareMediaItemById.compare(greaterTitleMediaItem, lesserTitleMediaItem);
         assertTrue( result > 0);
         result = ComparatorUtils.compareMediaItemById.compare(lesserTitleMediaItem, greaterTitleMediaItem);
@@ -165,9 +221,16 @@ public class ComparatorUtilsTest {
      */
     @Test
     public void testCompareMediaItemByIdEqualIds() {
-        final MediaItem mediaItem = createMediaItem(MISC_STRING, GREATER_STRING, MISC_STRING, MediaItemType.ROOT);
-        final MediaItem mediaItemSameId = createMediaItem(MISC_STRING, LESSER_STRING, MISC_STRING, MediaItemType.ROOT);
-        final int result = ComparatorUtils.compareMediaItemById.compare(mediaItem, mediaItemSameId);
+        final MediaItem mediaItem = new MediaItemBuilder(MISC_STRING)
+                .setTitle(GREATER_STRING)
+                .setDescription(MISC_STRING)
+                .setMediaItemType(MediaItemType.ROOT)
+                .build();
+        final MediaItem mediaItemSameId =new MediaItemBuilder(MISC_STRING)
+                .setTitle(LESSER_STRING)
+                .setDescription(MISC_STRING)
+                .setMediaItemType(MediaItemType.ROOT)
+                .build();        final int result = ComparatorUtils.compareMediaItemById.compare(mediaItem, mediaItemSameId);
         final boolean EQUAL = result == 0;
         assertTrue(EQUAL);
     }

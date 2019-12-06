@@ -3,7 +3,7 @@
     android:installLocation="preferExternal">
 
     <application
-        android:name=".MikesMp3Player"
+        android:name=".commons.MikesMp3Player"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/headphone_icon"

@@ -1,7 +1,8 @@
 package com.github.goldy1992.mp3player.client.activities
 
 import android.os.Bundle
-import com.github.goldy1992.mp3player.dagger.components.DaggerMediaActivityCompatComponent
+import com.github.goldy1992.mp3player.client.dagger.components.DaggerMediaActivityCompatComponent
+import com.github.goldy1992.mp3player.commons.MikesMp3Player
 
 /**
  * Media Player Activity injector

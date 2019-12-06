@@ -21,6 +21,7 @@ import com.github.goldy1992.mp3player.client.dagger.modules.HandlerThreadModule;
 
 import dagger.BindsInstance;
 import dagger.Component;
+import dagger.Subcomponent;
 
 @ComponentScope
 @Component(modules = {

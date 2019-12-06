@@ -13,10 +13,7 @@ import com.github.goldy1992.mp3player.client.MyGenericItemTouchListener
 import com.github.goldy1992.mp3player.client.MyGenericItemTouchListener.ItemSelectedListener
 import com.github.goldy1992.mp3player.client.callbacks.search.SearchResultListener
 import com.github.goldy1992.mp3player.client.views.adapters.SearchResultAdapter
-import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import com.github.goldy1992.mp3player.commons.*
 import kotlinx.android.synthetic.main.activity_search_results.*
 import javax.inject.Inject
 
@@ -25,9 +22,8 @@ abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListene
     private var currentQuery: String? = null
     private var searchResultAdapter: SearchResultAdapter? = null
 
-    abstract fun searchResultActivityClass() : Class<*>
-
-    abstract fun folderActivityClass() : Class<*>
+    @Inject
+    lateinit var componentClassMapper: ComponentClassMapper
 
     override val workerId: String
         get() = "SRCH_RSLT_ACTVTY"
@@ -50,7 +46,7 @@ abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListene
         recyclerView.setLayoutManager(LinearLayoutManager(applicationContext))
         // Get the SearchView and set the searchable configuration
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val componentName = ComponentName(applicationContext, searchResultActivityClass())
+        val componentName = ComponentName(applicationContext, componentClassMapper.searchResultActivity)
         val searchableInfo = searchManager.getSearchableInfo(componentName)
         //    Assumes current activity is the searchable activity
         this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -72,7 +68,7 @@ abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListene
             val mediaItemType = MediaItemUtils.getMediaItemType(item)
             when (mediaItemType) {
                 MediaItemType.SONG, MediaItemType.SONGS -> mediaControllerAdapter!!.playFromMediaId(MediaItemUtils.getLibraryId(item), null)
-                MediaItemType.FOLDER, MediaItemType.FOLDERS -> intentClass = folderActivityClass()
+                MediaItemType.FOLDER, MediaItemType.FOLDERS -> intentClass = componentClassMapper.folderActivity
                 else -> {
                 }
             }

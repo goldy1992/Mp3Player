@@ -37,6 +37,9 @@ dependencies {
     //dagger
     implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
     implementation group: 'com.google.dagger', name: 'dagger-android', version: DAGGER_VERSION
+    annotationProcessor  group: 'com.google.dagger', name: 'dagger-android-processor', version: DAGGER_VERSION
+    annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
 
 
