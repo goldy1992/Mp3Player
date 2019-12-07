@@ -12,9 +12,14 @@ class TestMainActivity : MainActivity() {
     }
 
     public override fun initialiseDependencies() {
+        val componentClassMapper : ComponentClassMapper = ComponentClassMapper.Builder()
+                .service(TestMainActivity::class.java)
+                .mainActivity(TestMainActivity::class.java)
+                .searchResultActivity(SearchResultActivityInjectorTestImpl::class.java)
+                .build()
         val component: MediaActivityCompatComponent = DaggerTestMediaActivityCompatComponent
                 .factory()
-                .create(applicationContext, workerId, this, ComponentClassMapper.Builder().build())
+                .create(applicationContext, workerId, this, componentClassMapper)
         mediaActivityCompatComponent = component
         component.inject(this)
     }

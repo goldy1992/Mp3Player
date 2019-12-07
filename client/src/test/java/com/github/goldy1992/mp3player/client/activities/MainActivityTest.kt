@@ -4,11 +4,11 @@ import android.os.Looper
 import android.support.v4.media.MediaBrowserCompat
 import android.view.MenuItem
 import androidx.core.view.GravityCompat
+import androidx.test.core.app.ActivityScenario
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import kotlinx.android.synthetic.main.activity_main.*
-import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -16,101 +16,98 @@ import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.spy
-import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
-import org.robolectric.android.controller.ActivityController
 import org.robolectric.annotation.LooperMode
 import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 class MainActivityTest {
-    private var mainActivityTestActivityController: ActivityController<TestMainActivity>? = null
-    private var mainActivity: MainActivity? = null
+
+    private lateinit var scenario : ActivityScenario<TestMainActivity>
+
     @Before
     fun setup() {
-        mainActivityTestActivityController = Robolectric.buildActivity(TestMainActivity::class.java).setup()
-        mainActivity = mainActivityTestActivityController!!.get()
-    }
-
-    @After
-    fun tearDown() {
-        mainActivityTestActivityController!!.destroy()
+           scenario = ActivityScenario.launch(TestMainActivity::class.java)
     }
 
     @Test
     fun testOnItemSelected() {
-        val menuItem = Mockito.mock(MenuItem::class.java)
-        val result = mainActivity!!.onOptionsItemSelected(menuItem)
-        Assert.assertFalse(result)
+        scenario.onActivity { activity: TestMainActivity ->
+            val menuItem = Mockito.mock(MenuItem::class.java)
+            val result = activity.onOptionsItemSelected(menuItem)
+            Assert.assertFalse(result)
+        }
+
     }
 
     @Test
     fun testOnItemSelectedHomeButton() {
-        val menuItem = Mockito.mock(MenuItem::class.java)
-        Mockito.`when`(menuItem.itemId).thenReturn(android.R.id.home)
-        val result = mainActivity!!.onOptionsItemSelected(menuItem)
-        Assert.assertTrue(result)
+        scenario.onActivity { activity: TestMainActivity ->
+            val menuItem = Mockito.mock(MenuItem::class.java)
+            Mockito.`when`(menuItem.itemId).thenReturn(android.R.id.home)
+            val result = activity.onOptionsItemSelected(menuItem)
+            Assert.assertTrue(result)
+        }
     }
 
     // new tests
     @Test
     fun testOnOptionsItemSelectedOpenDrawer() {
-        val menuItem = Mockito.mock(MenuItem::class.java)
-        Mockito.`when`(menuItem.itemId).thenReturn(android.R.id.home)
-        mainActivity!!.onOptionsItemSelected(menuItem)
-        mainActivity?.drawerLayout?.isDrawerOpen(GravityCompat.START)
+        scenario.onActivity { activity: TestMainActivity ->
+            val menuItem = Mockito.mock(MenuItem::class.java)
+            Mockito.`when`(menuItem.itemId).thenReturn(android.R.id.home)
+            activity.onOptionsItemSelected(menuItem)
+            activity.drawerLayout?.isDrawerOpen(GravityCompat.START)
+        }
     }
 
     @Test
     fun testOnOptionsItemSelectedSearch() {
-        val searchFragment = mainActivity!!.searchFragment
-        // assert the search fragment is NOT already added
-        Assert.assertFalse(searchFragment!!.isAdded)
-        val menuItem = Mockito.mock(MenuItem::class.java)
-        Mockito.`when`(menuItem.itemId).thenReturn(R.id.action_search)
-        // select the search option item
-        mainActivity!!.onOptionsItemSelected(menuItem)
-        Shadows.shadowOf(Looper.getMainLooper()).idle()
-        // assert the search fragment IS now added
-        Assert.assertTrue(searchFragment.isAdded)
-        // post test remove the added fragment
-        mainActivity!!.supportFragmentManager.beginTransaction().remove(mainActivity!!.searchFragment!!)
-                .commit()
-    }
+        scenario.onActivity { activity: TestMainActivity ->
+            val searchFragment = activity.searchFragment
+            // assert the search fragment is NOT already added
+            Assert.assertFalse(searchFragment!!.isAdded)
+            val menuItem = Mockito.mock(MenuItem::class.java)
+            Mockito.`when`(menuItem.itemId).thenReturn(R.id.action_search)
+            // select the search option item
+            activity.onOptionsItemSelected(menuItem)
+            Shadows.shadowOf(Looper.getMainLooper()).idle()
+            // assert the search fragment IS now added
+            Assert.assertTrue(searchFragment.isAdded)
+            // post test remove the added fragment
+            activity.supportFragmentManager
+                    .beginTransaction()
+                    .remove(activity.searchFragment!!)
+                    .commit()
 
-    @Test
-    fun testNavigationItemSelected() {
-        val menuItem = Mockito.mock(MenuItem::class.java)
-//        val drawerLayoutSpy = Mockito.spy<DrawerLayout>(mainActivity.drawerLayout)
-//        drawerLayout = drawerLayoutSpy
-//        mainActivity!!.onNavigationItemSelected(menuItem)
-//        Mockito.verify(menuItem, Mockito.times(1)).isChecked = true
-//        Mockito.verify(drawerLayoutSpy, Mockito.times(1)).closeDrawers()
+        }
     }
 
     @Test
     fun testOnChildrenLoadedForRootCategory() {
-        var myPageAdapterSpied = spy(mainActivity!!.adapter)
-        doNothing().`when`(myPageAdapterSpied!!).notifyDataSetChanged()
-        mainActivity!!.adapter = myPageAdapterSpied;
-        val parentId = "parentId"
-        val children = ArrayList<MediaBrowserCompat.MediaItem>()
-        val rootItemsSet: Set<MediaItemType> = MediaItemType.PARENT_TO_CHILD_MAP[MediaItemType.ROOT]!!
-        for (category in rootItemsSet) {
-            val mediaItem = MediaItemBuilder("id1")
-                    .setTitle(category.title)
-                    .setDescription(category.description)
-                    .setRootItemType(category)
-                    .setMediaItemType(MediaItemType.ROOT)
-                    .build()
-            children.add(mediaItem)
+        scenario.onActivity { activity: TestMainActivity ->
+            var myPageAdapterSpied = spy(activity.adapter)
+            doNothing().`when`(myPageAdapterSpied!!).notifyDataSetChanged()
+            activity.adapter = myPageAdapterSpied;
+            val parentId = "parentId"
+            val children = ArrayList<MediaBrowserCompat.MediaItem>()
+            val rootItemsSet: Set<MediaItemType> = MediaItemType.PARENT_TO_CHILD_MAP[MediaItemType.ROOT]!!
+            for (category in rootItemsSet) {
+                val mediaItem = MediaItemBuilder("id1")
+                        .setTitle(category.title)
+                        .setDescription(category.description)
+                        .setRootItemType(category)
+                        .setMediaItemType(MediaItemType.ROOT)
+                        .build()
+                children.add(mediaItem)
+            }
+            val expectedNumOfFragmentsCreated = rootItemsSet.size
+            activity.onChildrenLoaded(parentId, children)
+            Shadows.shadowOf(Looper.getMainLooper()).idle()
+            val numberOfChildFragments = activity.adapter!!.itemCount
+            Assert.assertEquals(expectedNumOfFragmentsCreated.toLong(), numberOfChildFragments.toLong())
         }
-        val expectedNumOfFragmentsCreated = rootItemsSet.size
-        mainActivity!!.onChildrenLoaded(parentId, children)
-        Shadows.shadowOf(Looper.getMainLooper()).idle()
-        val numberOfChildFragments = mainActivity!!.adapter!!.itemCount
-        Assert.assertEquals(expectedNumOfFragmentsCreated.toLong(), numberOfChildFragments.toLong())
     }
 }

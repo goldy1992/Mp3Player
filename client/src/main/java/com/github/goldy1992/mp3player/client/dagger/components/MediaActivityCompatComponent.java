@@ -8,6 +8,7 @@ import com.github.goldy1992.mp3player.client.activities.MainActivity;
 import com.github.goldy1992.mp3player.client.activities.MediaPlayerActivity;
 import com.github.goldy1992.mp3player.client.dagger.components.fragments.PlaybackButtonsSubComponent;
 import com.github.goldy1992.mp3player.client.dagger.components.fragments.PlaybackTrackerFragmentSubcomponent;
+import com.github.goldy1992.mp3player.client.dagger.components.fragments.SearchFragmentSubcomponent;
 import com.github.goldy1992.mp3player.client.dagger.modules.GlideModule;
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserCompatModule;
 import com.github.goldy1992.mp3player.client.views.fragments.PlaybackSpeedControlsFragment;
@@ -20,7 +21,6 @@ import com.github.goldy1992.mp3player.client.dagger.modules.HandlerThreadModule;
 
 import dagger.BindsInstance;
 import dagger.Component;
-import dagger.Subcomponent;
 
 @ComponentScope
 @Component(modules = {
@@ -45,7 +45,7 @@ public interface MediaActivityCompatComponent {
     PlaybackTrackerFragmentSubcomponent playbackTrackerSubcomponent();
     PlaybackButtonsSubComponent playbackButtonsSubcomponent();
     SearchResultActivitySubComponent searchResultActivitySubComponent();
-    SplashScreenEntryActivityComponent.Factory splashScreenEntryActivity();
+    SearchFragmentSubcomponent searchFragmentSubcomponent();
 
 
     @Component.Factory

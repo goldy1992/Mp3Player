@@ -8,5 +8,6 @@
         <activity android:name=".activities.EmptyMediaActivityCompatFragmentActivity" />
         <activity android:name=".activities.MediaPlayerActivityInjectorTestImpl" />
         <activity android:name=".activities.SearchResultActivityInjectorTestImpl" />
+        <activity android:name=".activities.TestMainActivity" />
     </application>
 </manifest>

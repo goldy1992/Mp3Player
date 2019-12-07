@@ -39,7 +39,7 @@ class TimeCounterTest {
         val expectedState = PlaybackStateCompat.STATE_PLAYING
         timeCounter!!.init(null)
         timeCounter!!.updateState(createState(expectedState, 5L))
-        Assert.assertEquals(expectedState.toLong(), timeCounter!!.currentState)
+        Assert.assertEquals(expectedState, timeCounter!!.currentState)
         // current position will not be updated will not updated as text view is null
         Assert.assertEquals(expectedPosition, timeCounter!!.currentPosition)
     }

@@ -5,7 +5,6 @@ import androidx.fragment.app.testing.FragmentScenario.FragmentAction
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.activities.TestMainActivity
 import com.github.goldy1992.mp3player.client.views.fragments.FragmentTestBase
-import com.github.goldy1992.mp3player.client.views.fragments.viewpager.SongListFragment
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import org.junit.Before
@@ -15,7 +14,6 @@ import org.mockito.Mockito
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
-import org.robolectric.android.controller.ActivityController
 import org.robolectric.annotation.LooperMode
 
 @RunWith(RobolectricTestRunner::class)

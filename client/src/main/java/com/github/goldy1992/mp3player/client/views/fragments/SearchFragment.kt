@@ -16,21 +16,22 @@ import androidx.annotation.VisibleForTesting
 import androidx.fragment.app.Fragment
 
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.android.synthetic.main.fragment_search.*
+import javax.inject.Inject
 
 class SearchFragment : Fragment(), LogTagger {
 
     private var inputMethodManager: InputMethodManager? = null
-    private lateinit var componentClassMapper : ComponentClassMapper
 
-    fun init( componentClassMapper: ComponentClassMapper) {
-        this.componentClassMapper = componentClassMapper
-    }
+    @Inject
+    lateinit var componentClassMapper : ComponentClassMapper
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        initialiseDependencies()
         super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fragment_search, container, false)
     }
@@ -75,5 +76,11 @@ class SearchFragment : Fragment(), LogTagger {
 
     override fun getLogTag(): String {
         return "SRCH_FRAGMENT"
+    }
+
+    fun initialiseDependencies() {
+        val component = (activity as MediaActivityCompat?)!!.mediaActivityCompatComponent!!
+                .searchFragmentSubcomponent()
+        component.inject(this)
     }
 }
