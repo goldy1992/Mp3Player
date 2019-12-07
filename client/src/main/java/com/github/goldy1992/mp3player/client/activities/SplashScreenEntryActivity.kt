@@ -9,24 +9,28 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.github.goldy1992.mp3player.client.PermissionGranted
 import com.github.goldy1992.mp3player.client.PermissionsProcessor
+import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.DependencyInitialiser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 /**
  *
  */
-abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGranted {
+abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGranted, DependencyInitialiser {
 
-    private var permissionsProcessor: PermissionsProcessor? = null
+    @Inject
+    lateinit var componentClassMapper: ComponentClassMapper
 
-    abstract fun mainActivityClass() : Class<*>
-
-    abstract fun serviceClass() : Class<*>
+    @Inject
+    lateinit var permissionsProcessor: PermissionsProcessor
 
     @Volatile
     var isSplashScreenFinishedDisplaying = false
@@ -45,9 +49,9 @@ abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGrante
             return
         }
         super.onCreate(savedInstanceState)
-        permissionsProcessor = PermissionsProcessor(this, this)
+        //permissionsProcessor = PermissionsProcessor(this, this)
         // TODO: have this injected so that a test implementation can be provided
-        mainActivityIntent = Intent(applicationContext, mainActivityClass())
+        mainActivityIntent = Intent(applicationContext, componentClassMapper.mainActivity)
         CoroutineScope(IO).launch { init()}
     }
 
@@ -113,7 +117,7 @@ abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGrante
     }
 
     private fun createService() {
-        startService(Intent(applicationContext, serviceClass()))
+        startService(Intent(applicationContext, componentClassMapper.service))
     }
 
 

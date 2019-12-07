@@ -3,7 +3,9 @@
     package="com.github.goldy1992.mp3player.client"
     android:installLocation="preferExternal">
 
-    <application tools:ignore="GoogleAppIndexingWarning">
+    <application tools:ignore="GoogleAppIndexingWarning"
+        android:theme="@style/AppTheme">
+        <activity android:name=".activities.SplashScreenEntryActivityInjectorTestImpl" />
         <activity android:name=".activities.FolderActivityInjectorTestImpl"/>
         <activity android:name=".activities.EmptyMediaActivityCompatFragmentActivity" />
         <activity android:name=".activities.MediaPlayerActivityInjectorTestImpl" />

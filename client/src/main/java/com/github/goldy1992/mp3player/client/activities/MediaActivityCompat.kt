@@ -13,9 +13,10 @@ import com.github.goldy1992.mp3player.client.MediaBrowserConnectorCallback
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
+import com.github.goldy1992.mp3player.commons.DependencyInitialiser
 import javax.inject.Inject
 
-abstract class MediaActivityCompat : AppCompatActivity(), MediaBrowserConnectorCallback {
+abstract class MediaActivityCompat : AppCompatActivity(), DependencyInitialiser, MediaBrowserConnectorCallback {
 
     /** MediaBrowserAdapter  */
     @Inject
@@ -37,10 +38,6 @@ abstract class MediaActivityCompat : AppCompatActivity(), MediaBrowserConnectorC
     /** @return The unique name of the HandlerThread used by the activity
      */
     abstract val workerId: String
-
-    /** Utility method used to initialise the dependencies set up by Dagger2. DOES NOT need to be
-     * called by sub class  */
-    protected abstract fun initialiseDependencies()
 
     // MediaBrowserConnectorCallback
     override fun onConnected() {

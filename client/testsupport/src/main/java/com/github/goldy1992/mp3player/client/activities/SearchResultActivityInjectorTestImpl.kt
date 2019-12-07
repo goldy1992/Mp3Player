@@ -13,9 +13,15 @@ class SearchResultActivityInjectorTestImpl : SearchResultActivity() {
     }
 
     public override fun initialiseDependencies() {
+        val componentClassMapper : ComponentClassMapper = ComponentClassMapper.Builder()
+                .folderActivity(FolderActivityInjectorTestImpl::class.java)
+                .mediaPlayerActivity(MediaPlayerActivityInjectorTestImpl::class.java)
+                .service(SearchResultActivityInjectorTestImpl::class.java)
+                .searchResultActivity(SearchResultActivityInjectorTestImpl::class.java)
+                .build()
         val component: MediaActivityCompatComponent = DaggerTestMediaActivityCompatComponent
                 .factory()
-                .create(applicationContext, workerId, this, ComponentClassMapper.Builder().build())
+                .create(applicationContext, workerId, this, componentClassMapper)
         mediaActivityCompatComponent = component
         component.searchResultActivitySubComponent().inject(this)
     }

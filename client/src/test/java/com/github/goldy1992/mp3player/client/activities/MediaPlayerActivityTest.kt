@@ -43,27 +43,6 @@ class MediaPlayerActivityTest {
         context = InstrumentationRegistry.getInstrumentation().context
         mediaSessionCompat = MediaSessionCompat(context, "TAG")
         intent = Intent(context, MediaPlayerActivityInjectorTestImpl::class.java)
-        scenario = ActivityScenario.launch(intent)
-    }
-
-    @After
-    fun tearDown() {
-//        activityController!!.stop().destroy()
-    }
-
-    /**
-     * Asserts that all the items are created successfully
-     */
-    @Test
-    fun testInitialisationWithNormalIntent() {
-        //createAndStartActivity()
-        var activityScenario = ActivityScenario.launch(MediaPlayerActivityInjectorTestImpl::class.java)
-        activityScenario.moveToState(Lifecycle.State.RESUMED)
-        activityScenario.onActivity { activity ->
-            assertNotNull(activity.playbackTrackerFragment)
-            assertNotNull(activity.playToolbarFragment)
-            assertNotNull(activity.mediaControlsFragment)
-        }
     }
 
     @Test
@@ -71,6 +50,7 @@ class MediaPlayerActivityTest {
         intent!!.action = Intent.ACTION_VIEW
         val expectedUri = Mockito.mock(Uri::class.java)
         intent!!.data = expectedUri
+        scenario = ActivityScenario.launch(intent)
         scenario.onActivity { activity: MediaPlayerActivityInjectorTestImpl ->
             Assert.assertEquals(expectedUri, activity.trackToPlay)
         }
@@ -78,6 +58,7 @@ class MediaPlayerActivityTest {
 
     @Test
     fun testOnNewIntentWithoutViewAction() {
+        scenario = ActivityScenario.launch(intent)
         scenario.onActivity { activity: MediaPlayerActivityInjectorTestImpl ->
             val newIntent = Intent(context, MediaPlayerActivity::class.java)
             val testUri = Mockito.mock(Uri::class.java)
@@ -91,6 +72,7 @@ class MediaPlayerActivityTest {
 
     @Test
     fun testOnNewIntentWithViewAction() {
+        scenario = ActivityScenario.launch(intent)
         scenario.onActivity { activity: MediaPlayerActivityInjectorTestImpl ->
             val newIntent = Intent(context, MediaPlayerActivity::class.java)
             val testUri = Mockito.mock(Uri::class.java)
@@ -105,6 +87,7 @@ class MediaPlayerActivityTest {
 
     @Test
     fun onMetadataChanged() {
+        scenario = ActivityScenario.launch(intent)
         scenario.onActivity { activity: MediaPlayerActivityInjectorTestImpl ->
             val spiedMediaControllerAdapter = Mockito.spy(activity.mediaControllerAdapter)
             activity.mediaControllerAdapter = spiedMediaControllerAdapter
@@ -112,9 +95,5 @@ class MediaPlayerActivityTest {
             activity.onMetadataChanged(mediaMetadataCompat)
             Mockito.verify(spiedMediaControllerAdapter, Mockito.times(1))!!.currentQueuePosition
         }
-    }
-
-    companion object {
-        private const val MOCK_MEDIA_ID = "MOCK_MEDIA_ID"
     }
 }

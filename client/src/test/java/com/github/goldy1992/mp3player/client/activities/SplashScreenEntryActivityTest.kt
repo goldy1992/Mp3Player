@@ -11,19 +11,22 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
+import org.mockito.Mockito.spy
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class SplashScreenEntryActivityTest {
-    private var scenario: ActivityScenario<SplashScreenEntryActivity>? = null
+
+    private lateinit var scenario: ActivityScenario<SplashScreenEntryActivityInjectorTestImpl>
+
     @Before
     fun setup() {
-        scenario = ActivityScenario.launch(SplashScreenEntryActivity::class.java)
+        scenario = ActivityScenario.launch(SplashScreenEntryActivityInjectorTestImpl::class.java)
     }
 
     @Test
     fun testNonRootTask() {
-        scenario!!.onActivity { splashActivity: SplashScreenEntryActivity ->
+        scenario.onActivity { splashActivity: SplashScreenEntryActivity ->
             val spiedActivity = Mockito.spy(splashActivity)
             val context = InstrumentationRegistry.getInstrumentation().context
             val intent = Intent(context, SplashScreenEntryActivity::class.java)
@@ -72,13 +75,14 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnRequestPermissionsResultAccepted() {
-        scenario!!.onActivity { splashActivity: SplashScreenEntryActivity ->
-            Mockito.doNothing().`when`(splashActivity).onPermissionGranted()
+        scenario.onActivity { splashActivity: SplashScreenEntryActivity ->
+            var splashScreenActivitySpied : SplashScreenEntryActivity = spy(splashActivity)
+            Mockito.doNothing().`when`(splashScreenActivitySpied).onPermissionGranted()
             val requestCode = 200
             val permissions = arrayOf(permission.WRITE_EXTERNAL_STORAGE)
             val grantResults = intArrayOf(PackageManager.PERMISSION_GRANTED)
-            splashActivity.onRequestPermissionsResult(requestCode, permissions, grantResults)
-            Mockito.verify(splashActivity, Mockito.times(1)).onPermissionGranted()
+            splashScreenActivitySpied.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            Mockito.verify(splashScreenActivitySpied, Mockito.times(1)).onPermissionGranted()
         }
     }
 

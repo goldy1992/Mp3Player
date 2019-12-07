@@ -2,11 +2,12 @@ package com.github.goldy1992.mp3player.client.callbacks.metadata
 
 import android.os.Handler
 import android.support.v4.media.MediaMetadataCompat
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 
@@ -24,13 +25,14 @@ class MyMetadataCallbackTest {
     @Test
     fun testNotifyListenerWithNullMetadataCompat() {
         myMetadataCallback!!.processCallback(null)
-        Mockito.verify(metadataListener, Mockito.never()).onMetadataChanged(ArgumentMatchers.any())
+        Mockito.verify(metadataListener, Mockito.never()).onMetadataChanged(any())
     }
 
     companion object {
         private var myMetadataCallback: MyMetadataCallback? = null
-        private val metadataListener = Mockito.mock(MetadataListener::class.java)
+        private val metadataListener = mock<MetadataListener>()
         @BeforeClass
+        @JvmStatic
         fun setupClass() {
             val handler = Mockito.mock(Handler::class.java)
             myMetadataCallback = MyMetadataCallback(handler)
@@ -38,6 +40,7 @@ class MyMetadataCallbackTest {
         }
 
         @AfterClass
+        @JvmStatic
         fun tearDownClass() {
             myMetadataCallback!!.removeMetaDataListener(metadataListener)
         }
