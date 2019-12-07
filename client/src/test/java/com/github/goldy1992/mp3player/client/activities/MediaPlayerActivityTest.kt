@@ -26,8 +26,9 @@ import kotlinx.android.synthetic.main.activity_media_player.*
 class MediaPlayerActivityTest {
     /** Intent  */
     private var intent: Intent? = null
-    /** Activity controller  */
-    var activityController: ActivityController<MediaPlayerActivityInjectorTestImpl>? = null
+
+    private lateinit var scenario: ActivityScenario<MediaPlayerActivityInjectorTestImpl>
+
     /**
      */
     private var mediaSessionCompat: MediaSessionCompat? = null
@@ -41,7 +42,8 @@ class MediaPlayerActivityTest {
         MockitoAnnotations.initMocks(this)
         context = InstrumentationRegistry.getInstrumentation().context
         mediaSessionCompat = MediaSessionCompat(context, "TAG")
-        intent = Intent(context, MediaPlayerActivity::class.java)
+        intent = Intent(context, MediaPlayerActivityInjectorTestImpl::class.java)
+        scenario = ActivityScenario.launch(intent)
     }
 
     @After
@@ -64,57 +66,52 @@ class MediaPlayerActivityTest {
         }
     }
 
-    private fun createAndStartActivity() {
-      //  activityScenario.moveToState(Lifecycle.State.RESUMED)
-        activityController = Robolectric.buildActivity(MediaPlayerActivityInjectorTestImpl::class.java, intent).setup()
-    }
-
     @Test
     fun testOnCreateViewIntent() {
         intent!!.action = Intent.ACTION_VIEW
         val expectedUri = Mockito.mock(Uri::class.java)
         intent!!.data = expectedUri
-        createAndStartActivity()
-        val mediaPlayerActivity: MediaPlayerActivity = activityController!!.get()
-        Assert.assertEquals(expectedUri, mediaPlayerActivity.trackToPlay)
+        scenario.onActivity { activity: MediaPlayerActivityInjectorTestImpl ->
+            Assert.assertEquals(expectedUri, activity.trackToPlay)
+        }
     }
 
     @Test
     fun testOnNewIntentWithoutViewAction() {
-        createAndStartActivity()
-        val newIntent = Intent(context, MediaPlayerActivity::class.java)
-        val testUri = Mockito.mock(Uri::class.java)
-        newIntent.data = testUri
-        val mediaPlayerActivity: MediaPlayerActivity = activityController!!.get()
-        val spiedMediaControllerAdapter = Mockito.spy(mediaPlayerActivity.mediaControllerAdapter)
-        mediaPlayerActivity.mediaControllerAdapter = spiedMediaControllerAdapter
-        mediaPlayerActivity.onNewIntent(newIntent)
-        Mockito.verify(spiedMediaControllerAdapter, Mockito.never())!!.playFromUri(testUri, null)
+        scenario.onActivity { activity: MediaPlayerActivityInjectorTestImpl ->
+            val newIntent = Intent(context, MediaPlayerActivity::class.java)
+            val testUri = Mockito.mock(Uri::class.java)
+            newIntent.data = testUri
+            val spiedMediaControllerAdapter = Mockito.spy(activity.mediaControllerAdapter)
+            activity.mediaControllerAdapter = spiedMediaControllerAdapter
+            activity.onNewIntent(newIntent)
+            Mockito.verify(spiedMediaControllerAdapter, Mockito.never())!!.playFromUri(testUri, null)
+        }
     }
 
     @Test
     fun testOnNewIntentWithViewAction() {
-        createAndStartActivity()
-        val newIntent = Intent(context, MediaPlayerActivity::class.java)
-        val testUri = Mockito.mock(Uri::class.java)
-        newIntent.data = testUri
-        newIntent.action = Intent.ACTION_VIEW
-        val mediaPlayerActivity: MediaPlayerActivity = activityController!!.get()
-        val spiedMediaControllerAdapter = Mockito.spy(mediaPlayerActivity.mediaControllerAdapter)
-        mediaPlayerActivity.mediaControllerAdapter = spiedMediaControllerAdapter
-        mediaPlayerActivity.onNewIntent(newIntent)
-        Mockito.verify(spiedMediaControllerAdapter, Mockito.times(1))!!.playFromUri(testUri, null)
+        scenario.onActivity { activity: MediaPlayerActivityInjectorTestImpl ->
+            val newIntent = Intent(context, MediaPlayerActivity::class.java)
+            val testUri = Mockito.mock(Uri::class.java)
+            newIntent.data = testUri
+            newIntent.action = Intent.ACTION_VIEW
+            val spiedMediaControllerAdapter = Mockito.spy(activity.mediaControllerAdapter)
+            activity.mediaControllerAdapter = spiedMediaControllerAdapter
+            activity.onNewIntent(newIntent)
+            Mockito.verify(spiedMediaControllerAdapter, Mockito.times(1))!!.playFromUri(testUri, null)
+        }
     }
 
     @Test
     fun onMetadataChanged() {
-        createAndStartActivity()
-        val mediaPlayerActivity: MediaPlayerActivity = activityController!!.get()
-        val spiedMediaControllerAdapter = Mockito.spy(mediaPlayerActivity.mediaControllerAdapter)
-        mediaPlayerActivity.mediaControllerAdapter = spiedMediaControllerAdapter
-        val mediaMetadataCompat = MediaMetadataCompat.Builder().build()
-        mediaPlayerActivity.onMetadataChanged(mediaMetadataCompat)
-        Mockito.verify(spiedMediaControllerAdapter, Mockito.times(1))!!.currentQueuePosition
+        scenario.onActivity { activity: MediaPlayerActivityInjectorTestImpl ->
+            val spiedMediaControllerAdapter = Mockito.spy(activity.mediaControllerAdapter)
+            activity.mediaControllerAdapter = spiedMediaControllerAdapter
+            val mediaMetadataCompat = MediaMetadataCompat.Builder().build()
+            activity.onMetadataChanged(mediaMetadataCompat)
+            Mockito.verify(spiedMediaControllerAdapter, Mockito.times(1))!!.currentQueuePosition
+        }
     }
 
     companion object {
