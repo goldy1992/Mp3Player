@@ -14,7 +14,6 @@ import com.github.goldy1992.mp3player.client.views.fragments.PlaybackSpeedContro
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper;
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope;
 import com.github.goldy1992.mp3player.client.dagger.components.fragments.ChildViewPagerFragmentSubcomponent;
-import com.github.goldy1992.mp3player.client.dagger.modules.ComponentNameModule;
 import com.github.goldy1992.mp3player.client.dagger.modules.MainHandlerModule;
 import com.github.goldy1992.mp3player.client.dagger.modules.MyDrawerListenerModule;
 import com.github.goldy1992.mp3player.client.dagger.modules.HandlerThreadModule;
@@ -25,7 +24,6 @@ import dagger.Subcomponent;
 
 @ComponentScope
 @Component(modules = {
-        ComponentNameModule.class,
         GlideModule.class,
         HandlerThreadModule.class,
         MainHandlerModule.class,

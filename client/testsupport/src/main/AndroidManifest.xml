@@ -1,9 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.github.goldy1992.mp3player"
+    package="com.github.goldy1992.mp3player.client"
     android:installLocation="preferExternal">
 
     <application tools:ignore="GoogleAppIndexingWarning">
-            <activity android:name=".client.activities.MediaPlayerActivityInjectorTestImpl"/>
+        <activity android:name=".activities.FolderActivityInjectorTestImpl"/>
+        <activity android:name=".activities.EmptyMediaActivityCompatFragmentActivity" />
+        <activity android:name=".activities.MediaPlayerActivityInjectorTestImpl" />
+        <activity android:name=".activities.SearchResultActivityInjectorTestImpl" />
     </application>
 </manifest>

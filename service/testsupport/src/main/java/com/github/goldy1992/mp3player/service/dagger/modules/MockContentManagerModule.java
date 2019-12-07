@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.service.testsupport.dagger.modules;
+package com.github.goldy1992.mp3player.service.dagger.modules;
 
 import android.support.v4.media.MediaBrowserCompat;
 

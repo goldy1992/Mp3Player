@@ -1,13 +1,13 @@
-package com.github.goldy1992.mp3player.client.testsupport.activities
+package com.github.goldy1992.mp3player.client.activities
 
 import android.os.Bundle
-import com.github.goldy1992.mp3player.client.testsupport.dagger.components.DaggerTestMediaActivityCompatComponent
+import com.github.goldy1992.mp3player.client.activities.SearchResultActivity
+import com.github.goldy1992.mp3player.client.dagger.components.DaggerTestMediaActivityCompatComponent
 import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
-import com.github.goldy1992.mp3player.client.activities.MediaPlayerActivity
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 
-class MediaPlayerActivityInjectorTestImpl : MediaPlayerActivity() {
-    override fun onCreate(savedInstance: Bundle?) {
+class SearchResultActivityInjectorTestImpl : SearchResultActivity() {
+    public override fun onCreate(savedInstance: Bundle?) {
         initialiseDependencies()
         super.onCreate(savedInstance)
     }
@@ -17,6 +17,6 @@ class MediaPlayerActivityInjectorTestImpl : MediaPlayerActivity() {
                 .factory()
                 .create(applicationContext, workerId, this, ComponentClassMapper.Builder().build())
         mediaActivityCompatComponent = component
-        component.inject(this)
+        component.searchResultActivitySubComponent().inject(this)
     }
 }

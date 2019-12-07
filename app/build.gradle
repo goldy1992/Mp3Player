@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
-apply plugin: "de.mannodermaus.android-junit5"
+apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'com.github.ben-manes.versions'
 
 android {
@@ -153,7 +153,7 @@ dependencies {
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
 
 
-    debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+
     androidTestImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
     androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: JUNIT_EXT_VERSION

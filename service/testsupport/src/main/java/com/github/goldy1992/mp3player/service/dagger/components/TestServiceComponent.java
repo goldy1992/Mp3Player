@@ -1,6 +1,6 @@
-package com.github.goldy1992.mp3player.service.testsupport.dagger.components;
+package com.github.goldy1992.mp3player.service.dagger.components;
 
-import com.github.goldy1992.mp3player.service.testsupport.dagger.modules.MockSearchDatabaseModule;
+import com.github.goldy1992.mp3player.service.dagger.modules.MockSearchDatabaseModule;
 import com.github.goldy1992.mp3player.service.dagger.components.ServiceComponent;
 import com.github.goldy1992.mp3player.service.dagger.modules.service.ContentManagerModule;
 import com.github.goldy1992.mp3player.service.dagger.modules.service.ExoPlayerModule;

@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.views.adapters
 
 import android.support.v4.media.MediaBrowserCompat
-import com.github.goldy1992.mp3player.TestUtils
+
 import com.github.goldy1992.mp3player.client.views.viewholders.MySongViewHolder
 import com.github.goldy1992.mp3player.commons.*
 import org.junit.Assert
@@ -58,7 +58,12 @@ class MySongViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
         val fileName = "FILE_NAME"
         val extension = ".mp3"
         val fullFileName = fileName + extension
-        val mediaItem: MediaBrowserCompat.MediaItem = TestUtils.createMediaItem("ID", null, "description", MediaItemType.ROOT, 32525L)
+        val mediaItem: MediaBrowserCompat.MediaItem = MediaItemBuilder("ID")
+                .setTitle(null)
+                .setDescription("description")
+                .setMediaItemType(MediaItemType.ROOT)
+                .setDuration(32525L)
+                .build()
         mediaItem.description.extras!!.putString(MetaDataKeys.META_DATA_KEY_FILE_NAME, fullFileName)
         mediaItems.add(mediaItem)
         bindViewHolder()

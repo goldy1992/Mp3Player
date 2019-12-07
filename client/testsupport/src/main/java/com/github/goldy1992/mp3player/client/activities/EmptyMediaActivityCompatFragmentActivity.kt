@@ -1,9 +1,9 @@
-package com.github.goldy1992.mp3player.client.testsupport.activities
+package com.github.goldy1992.mp3player.client.activities
 
 import android.os.Bundle
 import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
-import com.github.goldy1992.mp3player.client.testsupport.dagger.components.DaggerTestMediaActivityCompatComponent
-import com.github.goldy1992.mp3player.client.testsupport.dagger.components.TestMediaActivityCompatComponent
+import com.github.goldy1992.mp3player.client.dagger.components.DaggerTestMediaActivityCompatComponent
+import com.github.goldy1992.mp3player.client.dagger.components.TestMediaActivityCompatComponent
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 
 class EmptyMediaActivityCompatFragmentActivity : MediaActivityCompat() {

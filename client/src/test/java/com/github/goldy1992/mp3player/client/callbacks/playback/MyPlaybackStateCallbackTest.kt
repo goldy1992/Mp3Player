@@ -3,9 +3,9 @@ package com.github.goldy1992.mp3player.client.callbacks.playback
 import android.os.Handler
 import android.support.v4.media.session.PlaybackStateCompat
 import org.junit.Assert
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.junit.jupiter.api.Assertions
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
@@ -41,7 +41,7 @@ class MyPlaybackStateCallbackTest {
         myPlaybackStateCallback!!.registerPlaybackStateListener(mockPlaybackStateListener1!!)
         val originalSize = myPlaybackStateCallback!!.getListeners().size
         val result = myPlaybackStateCallback!!.removePlaybackStateListener(mockPlaybackStateListener1)
-        Assertions.assertTrue(result)
+        assertTrue(result)
         val expectedNewSize = originalSize - 1
         Assert.assertEquals(expectedNewSize.toLong(), myPlaybackStateCallback!!.getListeners().size.toLong())
     }

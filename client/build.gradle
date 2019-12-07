@@ -2,7 +2,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: "de.mannodermaus.android-junit5"
+apply plugin: 'de.mannodermaus.android-junit5'
+apply plugin: 'jacoco'
 
 android {
     compileSdkVersion TARGET_SDK_VERION
@@ -22,8 +23,39 @@ android {
 
     buildTypes {
         release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            testCoverageEnabled = true
+        }
+    }
+    flavorDimensions 'default'
+    productFlavors {
+        full {
+            dimension = 'default'
+        }
+        automation {
+            dimension = 'default'
+        }
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues = true
+        }
+        unitTests.all {
+            testLogging {
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                outputs.upToDateWhen {false}
+                showStandardStreams = true
+            }
+            jacoco {
+                includeNoLocationClasses=true
+            }
         }
     }
 
@@ -31,7 +63,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation group: 'com.l4digital.fastscroll', name: 'fastscroll', version: FAST_SCROLL_VERSION
     implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
     implementation group: 'androidx.drawerlayout', name: 'drawerlayout', version: DRAWER_LAYOUT_VERSION
@@ -50,9 +82,11 @@ dependencies {
     implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
-    implementation 'androidx.viewpager2:viewpager2:1.0.0-rc01'
-    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation group: 'androidx.viewpager2', name: 'viewpager2', version: VIEW_PAGER2_VERSION
+    implementation group: 'androidx.recyclerview', name: 'recyclerview', version: 'RECYCLER_VIEW_VERSION'
     implementation group: 'androidx.core', name: 'core', version: CORE_VERSION
+    implementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+    implementation project(path: ':commons')
 
     // Glide
     implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION
@@ -67,11 +101,22 @@ dependencies {
     implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
     implementation project(path: ':commons')
 
-    testImplementation project(path: ':client:testsupport', configuration: 'default')
+
+    // vintage
+    testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
+    // (Optional) If you also have JUnit 4-based tests
+    testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: JUNIT5_VERSION
+    // jupiter
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: JUNIT5_VERSION
+    // (Required) Writing and executing Unit Tests on the JUnit Platform
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: JUNIT5_VERSION
+
+    testImplementation project(":client:testsupport")
     testImplementation group: 'org.robolectric', name: 'robolectric', version: ROBOLECTRIC_VERSION// https://mvnrepository.com/artifact/org.robolectric/shadows-support-v4
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
     testImplementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
+    implementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
 
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }

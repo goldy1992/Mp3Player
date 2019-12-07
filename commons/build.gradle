@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'de.mannodermaus.android-junit5'
+apply plugin: 'jacoco'
 
 android {
     compileSdkVersion TARGET_SDK_VERION

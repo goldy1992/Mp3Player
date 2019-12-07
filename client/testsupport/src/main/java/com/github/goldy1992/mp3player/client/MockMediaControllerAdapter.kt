@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.testsupport
+package com.github.goldy1992.mp3player.client
 
 import android.content.Context
 import android.net.Uri

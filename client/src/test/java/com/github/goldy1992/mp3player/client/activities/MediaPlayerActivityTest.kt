@@ -20,6 +20,7 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.android.controller.ActivityController
 import com.github.goldy1992.mp3player.client.activities.MediaPlayerActivityInjectorTestImpl
+import kotlinx.android.synthetic.main.activity_media_player.*
 
 @RunWith(RobolectricTestRunner::class)
 class MediaPlayerActivityTest {

@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client.activities
 import android.app.SearchManager
 import android.content.Intent
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
@@ -16,14 +17,15 @@ import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.android.controller.ActivityController
 
 @RunWith(RobolectricTestRunner::class)
 class SearchResultActivityTest {
     /** Intent  */
     private var intent: Intent? = null
+
+    private var scenario : ActivityScenario<SearchResultActivityInjectorTestImpl>? = null
     /** Activity controller  */
-    var activityController: ActivityController<com.github.goldy1992.mp3player.client.testsupport.activities.SearchResultActivityInjectorTestImpl>? = null
+
     private var searchResultActivity: SearchResultActivity? = null
     private var mediaSessionCompat: MediaSessionCompat? = null
     @Before
@@ -32,8 +34,7 @@ class SearchResultActivityTest {
         val context = InstrumentationRegistry.getInstrumentation().context
         mediaSessionCompat = MediaSessionCompat(context, "TAG")
         intent = Intent(ApplicationProvider.getApplicationContext(), MediaPlayerActivity::class.java)
-        activityController = Robolectric.buildActivity(com.github.goldy1992.mp3player.client.testsupport.activities.SearchResultActivityInjectorTestImpl::class.java, intent).setup()
-        searchResultActivity = activityController!!.get()
+        scenario = ActivityScenario.launch(intent)
         Assert.assertNotNull(searchResultActivity)
     }
 

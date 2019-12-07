@@ -7,6 +7,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.activities.MainActivity
 import com.github.goldy1992.mp3player.client.views.ThemeSpinnerController
+import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.google.common.collect.BiMap
 import org.apache.commons.lang3.reflect.FieldUtils
 import org.junit.Assert
@@ -40,7 +41,7 @@ class ThemeSpinnerControllerTest {
 
     @Test
     fun onItemSelected() {
-        themeSpinnerController = ThemeSpinnerController(context!!, spinner!!, mainActivity)
+        themeSpinnerController = ThemeSpinnerController(context!!, spinner!!, mainActivity, ComponentClassMapper.Builder().build())
         themeSpinnerController!!.onItemSelected(null, view!!, 1, 2342L)
         // first time called by android, we don't want to change anything
         Mockito.verify(mainActivity, Mockito.never()).finish()
@@ -62,7 +63,7 @@ class ThemeSpinnerControllerTest {
         // SET CURRENT THEME to be expectedThemeName
         theme.applyStyle(res, true)
         //when(theme.obtainStyledAttributes(attrs)).thenReturn(themeNameArray);
-        themeSpinnerController = ThemeSpinnerController(context!!, spinner!!, mainActivity)
+        themeSpinnerController = ThemeSpinnerController(context!!, spinner!!, mainActivity, ComponentClassMapper.Builder().build())
         // WHEN we use the id of the FIRST theme in the themeSpinners map we get the correct theme name returned
         val map: BiMap<Int, String> = themeSpinnerController?.themeNameToResMap!!.inverse()
         Assert.assertEquals(expectedThemeName, map[res])
@@ -72,6 +73,6 @@ class ThemeSpinnerControllerTest {
     @Test
     fun createThemeSpinnerControllerForActivityWithNullId() {
         Mockito.`when`(mainActivity.theme).thenReturn(null)
-        themeSpinnerController = ThemeSpinnerController(context!!, spinner!!, mainActivity)
+        themeSpinnerController = ThemeSpinnerController(context!!, spinner!!, mainActivity, ComponentClassMapper.Builder().build())
     }
 }
