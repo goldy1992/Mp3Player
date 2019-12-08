@@ -1,4 +1,7 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
 apply plugin: "de.mannodermaus.android-junit5"
 apply plugin: 'com.github.ben-manes.versions'
@@ -60,7 +63,6 @@ android {
             }
         }
     }
-
 }
 
 dependencies {
@@ -68,8 +70,8 @@ dependencies {
     //dagger
     implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
     implementation group: 'com.google.dagger', name: 'dagger-android', version: DAGGER_VERSION
-    annotationProcessor  group: 'com.google.dagger', name: 'dagger-android-processor', version: DAGGER_VERSION
-    annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    kapt  group: 'com.google.dagger', name: 'dagger-android-processor', version: DAGGER_VERSION
+    kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
 
 
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
@@ -79,8 +81,8 @@ dependencies {
 
 
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
-    annotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
-    testAnnotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
+    kaptTest group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
+    kapt group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
 
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: EXO_PLAYER_VERSION
@@ -89,7 +91,6 @@ dependencies {
 
     implementation project(':commons')
 
-    //kapt group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -116,4 +117,9 @@ dependencies {
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation "androidx.core:core-ktx:1.1.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

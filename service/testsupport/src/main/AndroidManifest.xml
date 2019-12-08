@@ -1,5 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.github.goldy1992.mp3player.commons" >
 
+    <application>
+
+        <service android:name="com.github.goldy1992.mp3player.service.TestMediaPlaybackServiceInjector" />
+    </application>
 
 </manifest>

@@ -1,0 +1,37 @@
+package com.github.goldy1992.mp3player.service.dagger.modules.service
+
+import android.content.Context
+import androidx.room.Room
+import com.github.goldy1992.mp3player.service.library.search.FolderDao
+import com.github.goldy1992.mp3player.service.library.search.SearchDatabase
+import com.github.goldy1992.mp3player.service.library.search.SearchDatabase.Companion.getDatabase
+import com.github.goldy1992.mp3player.service.library.search.SongDao
+import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
+
+@Module
+class SearchDatabaseModule {
+    @Provides
+    @Singleton
+    fun providesSearchDb(context: Context): SearchDatabase {
+        Room.databaseBuilder(context, SearchDatabase::class.java, DATABASE_NAME).build()
+        return getDatabase(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSongDao(searchDatabase: SearchDatabase): SongDao {
+        return searchDatabase.songDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFolderDao(searchDatabase: SearchDatabase): FolderDao {
+        return searchDatabase.folderDao()
+    }
+
+    companion object {
+        private const val DATABASE_NAME = "normalised-search-db"
+    }
+}

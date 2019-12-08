@@ -1,4 +1,7 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion TARGET_SDK_VERION
@@ -50,14 +53,20 @@ dependencies {
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
     implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
     implementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
+    implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
 
     testImplementation 'junit:junit:4.12'
     //dagger
     implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
     implementation group: 'com.google.dagger', name: 'dagger-android', version: DAGGER_VERSION
-    annotationProcessor  group: 'com.google.dagger', name: 'dagger-android-processor', version: DAGGER_VERSION
-    annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    kapt  group: 'com.google.dagger', name: 'dagger-android-processor', version: DAGGER_VERSION
+    kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
 
     implementation project(path: ':commons')
     api project(':service')
+    implementation "androidx.core:core-ktx:1.1.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
