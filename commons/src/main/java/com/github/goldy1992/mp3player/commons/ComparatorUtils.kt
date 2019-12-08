@@ -5,9 +5,11 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem
 
 object ComparatorUtils {
 
-    private const val LOG_TAG = "COMPARATOR_UTILS"
+    object Companion {
+        private const val LOG_TAG = "COMPARATOR_UTILS"
 
-    val compareRootMediaItemsByMediaItemType : Comparator<MediaItem> = Comparator<MediaItem>{m1, m2 ->
+        @JvmField
+        val compareRootMediaItemsByMediaItemType: Comparator<MediaItem> = Comparator<MediaItem> { m1, m2 ->
             val c1 = MediaItemUtils.getRootMediaItemType(m1)
             val c2 = MediaItemUtils.getRootMediaItemType(m2)
             if (c1 == null && c2 == null) {
@@ -20,47 +22,47 @@ object ComparatorUtils {
                 c1.rank - c2.rank
             }
         }
-
-    val compareMediaItemsByTitle : Comparator<MediaItem> = Comparator<MediaItem> { m1, m2 ->
-        uppercaseStringCompare(MediaItemUtils.getTitle(m1), MediaItemUtils.getTitle(m2))
-    }
-
-    val compareMediaItemById = Comparator<MediaItem> {m1, m2 ->
-        val id1 = MediaItemUtils.getMediaId(m1)
-        val id2 = MediaItemUtils.getMediaId(m2)
-         if (id1 == null && id2 == null) {
-            0
-        } else if (id1 == null) {
-            -1
-        } else if (id2 == null) {
-            1
-        } else {
-            id1.compareTo(id2)
+        @JvmStatic
+        val compareMediaItemsByTitle: Comparator<MediaItem> = Comparator<MediaItem> { m1, m2 ->
+            uppercaseStringCompare.compare(MediaItemUtils.getTitle(m1), MediaItemUtils.getTitle(m2))
+        }
+        @JvmStatic
+        val compareMediaItemById = Comparator<MediaItem> { m1, m2 ->
+            val id1 = MediaItemUtils.getMediaId(m1)
+            val id2 = MediaItemUtils.getMediaId(m2)
+            if (id1 == null && id2 == null) {
+                0
+            } else if (id1 == null) {
+                -1
+            } else if (id2 == null) {
+                1
+            } else {
+                id1.compareTo(id2)
+            }
+        }
+        @JvmField
+        val uppercaseStringCompare = Comparator<String> { string1, string2 ->
+            if (string1 == null && string2 == null) {
+                0
+            } else if (null == string1) {
+                -1
+            } else if (null == string2) {
+                1
+            } else {
+                string1.toUpperCase().compareTo(string2.toUpperCase())
+            }
+        }
+        @JvmField
+        val caseSensitiveStringCompare: Comparator<String> = Comparator<String> { string1, string2 ->
+            if (string1 == null && string2 == null) {
+                0
+            } else if (null == string1) {
+                -1
+            } else if (null == string2) {
+                1
+            } else {
+                string1.compareTo(string2)
+            }
         }
     }
-
-    fun uppercaseStringCompare(string1: String?, string2: String?): Int {
-        return if (string1 == null && string2 == null) {
-            0
-        } else if (null == string1) {
-            -1
-        } else if (null == string2) {
-            1
-        } else {
-            string1.toUpperCase().compareTo(string2.toUpperCase())
-        }
-    }
-
-    fun caseSensitiveStringCompare(string1: String?, string2: String?): Int {
-        return if (string1 == null && string2 == null) {
-            0
-        } else if (null == string1) {
-            -1
-        } else if (null == string2) {
-            1
-        } else {
-            string1.compareTo(string2)
-        }
-    }
-
 }

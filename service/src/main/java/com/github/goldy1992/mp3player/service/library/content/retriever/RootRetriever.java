@@ -20,7 +20,7 @@ import java.util.TreeSet;
 
 import javax.inject.Inject;
 
-import static com.github.goldy1992.mp3player.commons.ComparatorUtils.compareRootMediaItemsByMediaItemType;
+import static com.github.goldy1992.mp3player.commons.ComparatorUtils.Companion.compareRootMediaItemsByMediaItemType;
 import static com.github.goldy1992.mp3player.commons.Constants.MEDIA_ITEM_TYPE;
 import static com.github.goldy1992.mp3player.commons.Constants.ROOT_ITEM_TYPE;
 import static com.github.goldy1992.mp3player.commons.MediaItemType.ROOT;
@@ -78,6 +78,6 @@ public class RootRetriever extends ContentRetriever implements Comparator<MediaI
 
     @Override
     public int compare(MediaItem o1, MediaItem o2) {
-        return compareRootMediaItemsByMediaItemType(o1, o2);
+        return compareRootMediaItemsByMediaItemType.compare(o1, o2);
     }
 }

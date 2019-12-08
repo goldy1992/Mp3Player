@@ -81,7 +81,7 @@ public class MyPlayerNotificationManager implements LogTagger {
     }
 
     @Override
-    public String getLogTag() {
+    public String logTag() {
         return "MEDIA_PLAYBACK_SERVICE";
     }
 

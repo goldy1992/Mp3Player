@@ -14,10 +14,10 @@ class ComparatorUtilsTest {
      */
     @Test
     fun testCompareRootItemsByCategoryGreaterAndLessThan() {
-        var result: Int = ComparatorUtils.compareRootMediaItemsByMediaItemType.compare(SONGS_ROOT, FOLDERS_ROOT)
+        var result: Int = ComparatorUtils.Companion.compareRootMediaItemsByMediaItemType.compare(SONGS_ROOT, FOLDERS_ROOT)
         val albumsGreaterThanZero = result < 0
         Assert.assertTrue(albumsGreaterThanZero)
-        result = ComparatorUtils.compareRootMediaItemsByMediaItemType.compare(FOLDERS_ROOT, SONGS_ROOT)
+        result = ComparatorUtils.Companion.compareRootMediaItemsByMediaItemType.compare(FOLDERS_ROOT, SONGS_ROOT)
         val songsLessThanAlbums = result > 0
         Assert.assertTrue(songsLessThanAlbums)
     }
@@ -27,10 +27,10 @@ class ComparatorUtilsTest {
      */
     @Test
     fun testCompareRootItemsByCategoryNullAgainstCategory() {
-        var result: Int = ComparatorUtils.compareRootMediaItemsByMediaItemType.compare(SONGS_ROOT, null)
+        var result: Int = ComparatorUtils.Companion.compareRootMediaItemsByMediaItemType.compare(SONGS_ROOT, null)
         val songsGreaterThanNull = result > 0
         Assert.assertTrue(songsGreaterThanNull)
-        result = ComparatorUtils.compareRootMediaItemsByMediaItemType.compare(null, SONGS_ROOT)
+        result = ComparatorUtils.Companion.compareRootMediaItemsByMediaItemType.compare(null, SONGS_ROOT)
         val nullLessThanSongs = result < 0
         Assert.assertTrue(nullLessThanSongs)
     }
@@ -46,7 +46,7 @@ class ComparatorUtilsTest {
         val secondNullCategory = MediaItemBuilder(MISC_STRING)
                 .setRootItemType(null)
                 .build()
-        val result: Int = ComparatorUtils.compareRootMediaItemsByMediaItemType.compare(firstNullCategory, secondNullCategory)
+        val result: Int = ComparatorUtils.Companion.compareRootMediaItemsByMediaItemType.compare(firstNullCategory, secondNullCategory)
         val equal = result == 0
         Assert.assertTrue(equal)
     }
@@ -60,7 +60,7 @@ class ComparatorUtilsTest {
                 .setRootItemType(MediaItemType.SONGS)
                 .setMediaItemType(MediaItemType.ROOT)
                 .build()
-        val result: Int = ComparatorUtils.compareRootMediaItemsByMediaItemType.compare(SONGS_ROOT, songsRootCopy)
+        val result: Int = ComparatorUtils.Companion.compareRootMediaItemsByMediaItemType.compare(SONGS_ROOT, songsRootCopy)
         val songsGreaterThanNull = result == 0
         Assert.assertTrue(songsGreaterThanNull)
     }
@@ -80,9 +80,9 @@ class ComparatorUtilsTest {
                 .setDescription(MISC_STRING)
                 .setMediaItemType(MediaItemType.ROOT)
                 .build()
-        var result: Int = ComparatorUtils.compareMediaItemsByTitle.compare(greaterTitleMediaItem, lesserTitleMediaItem)
+        var result: Int = ComparatorUtils.Companion.compareMediaItemsByTitle.compare(greaterTitleMediaItem, lesserTitleMediaItem)
         Assert.assertTrue(result > 0)
-        result = ComparatorUtils.compareMediaItemsByTitle.compare(lesserTitleMediaItem, greaterTitleMediaItem)
+        result = ComparatorUtils.Companion.compareMediaItemsByTitle.compare(lesserTitleMediaItem, greaterTitleMediaItem)
         Assert.assertTrue(result < 0)
     }
 
@@ -101,9 +101,9 @@ class ComparatorUtilsTest {
                 .setDescription(MISC_STRING)
                 .setMediaItemType(MediaItemType.ROOT)
                 .build()
-        var result: Int = ComparatorUtils.compareMediaItemsByTitle.compare(greaterTitleMediaItem, nullTitleMediaItem)
+        var result: Int = ComparatorUtils.Companion.compareMediaItemsByTitle.compare(greaterTitleMediaItem, nullTitleMediaItem)
         Assert.assertTrue(result > 0)
-        result = ComparatorUtils.compareMediaItemsByTitle.compare(nullTitleMediaItem, greaterTitleMediaItem)
+        result = ComparatorUtils.Companion.compareMediaItemsByTitle.compare(nullTitleMediaItem, greaterTitleMediaItem)
         Assert.assertTrue(result < 0)
     }
 
@@ -122,7 +122,7 @@ class ComparatorUtilsTest {
                 .setDescription(MISC_STRING)
                 .setMediaItemType(MediaItemType.ROOT)
                 .build()
-        val result: Int = ComparatorUtils.compareMediaItemsByTitle.compare(firstNullTitleMediaItem, secondNullTitleMediaItem)
+        val result: Int = ComparatorUtils.Companion.compareMediaItemsByTitle.compare(firstNullTitleMediaItem, secondNullTitleMediaItem)
         val equal = result == 0
         Assert.assertTrue(equal)
     }
@@ -142,7 +142,7 @@ class ComparatorUtilsTest {
                 .setDescription(MISC_STRING)
                 .setMediaItemType(MediaItemType.ROOT)
                 .build()
-        val result: Int = ComparatorUtils.compareMediaItemById.compare(mediaItem, mediaItemSameId)
+        val result: Int = ComparatorUtils.Companion.compareMediaItemById.compare(mediaItem, mediaItemSameId)
         val equal = result == 0
         Assert.assertTrue(equal)
     }
@@ -162,9 +162,9 @@ class ComparatorUtilsTest {
                 .setDescription(MISC_STRING)
                 .setMediaItemType(MediaItemType.ROOT)
                 .build()
-        var result: Int = ComparatorUtils.compareMediaItemById.compare(greaterTitleMediaItem, lesserTitleMediaItem)
+        var result: Int = ComparatorUtils.Companion.compareMediaItemById.compare(greaterTitleMediaItem, lesserTitleMediaItem)
         Assert.assertTrue(result > 0)
-        result = ComparatorUtils.compareMediaItemById.compare(lesserTitleMediaItem, greaterTitleMediaItem)
+        result = ComparatorUtils.Companion.compareMediaItemById.compare(lesserTitleMediaItem, greaterTitleMediaItem)
         Assert.assertTrue(result < 0)
     }
 
@@ -175,9 +175,9 @@ class ComparatorUtilsTest {
     fun testCompareMediaItemByIdAgainstNull() {
         val nullMediaItem: MediaBrowserCompat.MediaItem? = null
         val mediaItem = MediaItemBuilder(LESSER_STRING).build()
-        var result: Int = ComparatorUtils.compareMediaItemById.compare(nullMediaItem, mediaItem)
+        var result: Int = ComparatorUtils.Companion.compareMediaItemById.compare(nullMediaItem, mediaItem)
         Assert.assertTrue(result < 0)
-        result = ComparatorUtils.compareMediaItemById.compare(mediaItem, nullMediaItem)
+        result = ComparatorUtils.Companion.compareMediaItemById.compare(mediaItem, nullMediaItem)
         Assert.assertTrue(result > 0)
     }
 
@@ -186,7 +186,7 @@ class ComparatorUtilsTest {
      */
     @Test
     fun testCompareMediaItemByIdNullAgainstNull() {
-        val result: Int = ComparatorUtils.compareMediaItemById.compare(null, null)
+        val result: Int = ComparatorUtils.Companion.compareMediaItemById.compare(null, null)
         val equal = result == 0
         Assert.assertTrue(equal)
     }
@@ -206,7 +206,7 @@ class ComparatorUtilsTest {
                 .setDescription(MISC_STRING)
                 .setMediaItemType(MediaItemType.ROOT)
                 .build()
-        val result: Int = ComparatorUtils.compareMediaItemById.compare(mediaItem, mediaItemSameId)
+        val result: Int = ComparatorUtils.Companion.compareMediaItemById.compare(mediaItem, mediaItemSameId)
         val EQUAL = result == 0
         Assert.assertTrue(EQUAL)
     }

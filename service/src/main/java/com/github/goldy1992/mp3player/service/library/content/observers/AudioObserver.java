@@ -125,7 +125,7 @@ public class AudioObserver extends MediaStoreObserver implements LogTagger {
     }
 
     @Override
-    public String getLogTag() {
+    public String logTag() {
         return "AUDIO_OBSERVER";
     }
 

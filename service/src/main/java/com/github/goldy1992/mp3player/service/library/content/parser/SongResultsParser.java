@@ -20,7 +20,7 @@ import java.util.TreeSet;
 import javax.inject.Inject;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE;
-import static com.github.goldy1992.mp3player.commons.ComparatorUtils.uppercaseStringCompare;
+import static com.github.goldy1992.mp3player.commons.ComparatorUtils.Companion.uppercaseStringCompare;
 import static com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR;
 import static com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaUri;
 import static com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle;
@@ -88,7 +88,7 @@ public class SongResultsParser extends ResultsParser {
 
     @Override
     public int compare(MediaItem m1, MediaItem m2) {
-        int result = uppercaseStringCompare(getTitle(m1), getTitle(m2));
+        int result = uppercaseStringCompare.compare(getTitle(m1), getTitle(m2));
         return result == 0 ? getMediaUri(m1).compareTo(getMediaUri(m2)) : result;
     }
 

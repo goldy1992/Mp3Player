@@ -6,6 +6,7 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem;
 
 import androidx.annotation.NonNull;
 
+import com.github.goldy1992.mp3player.commons.ComparatorUtils;
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder;
 import com.github.goldy1992.mp3player.commons.MediaItemType;
 
@@ -19,7 +20,6 @@ import java.util.TreeSet;
 import javax.inject.Inject;
 
 import static android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_BROWSABLE;
-import static com.github.goldy1992.mp3player.commons.ComparatorUtils.caseSensitiveStringCompare;
 import static com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR;
 import static com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryPath;
 
@@ -75,7 +75,7 @@ public class FolderResultsParser extends ResultsParser {
 
     @Override
     public int compare(MediaItem m1, MediaItem m2) {
-        return caseSensitiveStringCompare(getDirectoryPath(m1), getDirectoryPath(m2));
+        return ComparatorUtils.Companion.caseSensitiveStringCompare.compare(getDirectoryPath(m1), getDirectoryPath(m2));
     }
 
     private String buildLibraryId(String prefix, String childItemId) {

@@ -15,7 +15,7 @@ class MainActivityInjector : MainActivity() {
         var app : MikesMp3Player = applicationContext!! as MikesMp3Player
         val mediaActivityCompatComponent = DaggerMediaActivityCompatComponent
                 .factory()
-                .create(applicationContext, workerId, this, app.componentClassMapper)
+                .create(applicationContext, workerId, this, app.getComponentClassMapper())
         this.mediaActivityCompatComponent = mediaActivityCompatComponent
         mediaActivityCompatComponent.inject(this)
     }

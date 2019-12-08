@@ -19,6 +19,7 @@ import com.github.goldy1992.mp3player.client.views.fragments.viewpager.FolderLis
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.MediaItemListFragment
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.SongListFragment
 import com.github.goldy1992.mp3player.commons.*
+import com.github.goldy1992.mp3player.commons.ComparatorUtils.Companion.compareRootMediaItemsByMediaItemType
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.tabs.TabLayoutMediator
@@ -137,7 +138,7 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
     }
 
     override fun onChildrenLoaded(parentId: String, children: ArrayList<MediaBrowserCompat.MediaItem>) {
-        val rootItemsOrdered = TreeSet(ComparatorUtils.compareRootMediaItemsByMediaItemType)
+        val rootItemsOrdered = TreeSet(compareRootMediaItemsByMediaItemType)
         rootItemsOrdered.addAll(children)
         for (mediaItem in rootItemsOrdered) {
             val id = MediaItemUtils.getMediaId(mediaItem)

@@ -58,7 +58,7 @@ public class MediaSourceFactory implements LogTagger {
     }
 
     @Override
-    public String getLogTag () {
+    public String logTag () {
         return "MDIA_SRC_FACTORY";
     }
 }
