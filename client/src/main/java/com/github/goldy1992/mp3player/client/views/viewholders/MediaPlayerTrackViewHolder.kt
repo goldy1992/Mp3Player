@@ -20,7 +20,7 @@ class MediaPlayerTrackViewHolder(itemView: View, private val albumArtPainter: Al
         val extras = item.description.extras
         val artistText = extras!!.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)
         artist.text = artistText
-        val albumArtUri = extras[MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI] as Uri
+        val albumArtUri :Uri? = extras.get(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI) as? Uri
         if (null != albumArtUri) {
             albumArtPainter.paintOnView(albumArt, albumArtUri)
         } else {

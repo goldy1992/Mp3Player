@@ -25,14 +25,14 @@ class ShuffleButtonTest : MediaButtonTestBase() {
     fun updateStateShuffleModeAll() {
         @ShuffleMode val shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_ALL
         shuffleButton!!.updateState(shuffleMode)
-        Assert.assertEquals(shuffleMode.toLong(), shuffleButton!!.shuffleMode)
+        Assert.assertEquals(shuffleMode, shuffleButton!!.shuffleMode)
     }
 
     @Test
     fun updateStateNotShuffleModeAll() {
         @ShuffleMode val shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_NONE
         shuffleButton!!.updateState(shuffleMode)
-        Assert.assertEquals(shuffleMode.toLong(), shuffleButton!!.shuffleMode)
+        Assert.assertEquals(shuffleMode, shuffleButton!!.shuffleMode)
     }
 
     @Test
@@ -60,6 +60,6 @@ class ShuffleButtonTest : MediaButtonTestBase() {
         extras.putInt(Constants.SHUFFLE_MODE, expectedShuffleMode)
         val playbackState = PlaybackStateCompat.Builder().setExtras(extras).build()
         shuffleButton!!.onPlaybackStateChanged(playbackState)
-        Assert.assertEquals(expectedShuffleMode.toLong(), shuffleButton!!.shuffleMode)
+        Assert.assertEquals(expectedShuffleMode, shuffleButton!!.shuffleMode)
     }
 }

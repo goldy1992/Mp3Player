@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.views.viewholders
 
+import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.view.View
@@ -26,20 +27,22 @@ class MySongViewHolder(itemView: View, albumArtPainter: AlbumArtPainter?) : Medi
 
     override fun bindMediaItem(item: MediaBrowserCompat.MediaItem) { // - get element from your dataset at this position
 // - replace the contents of the views with that element
-        val title = extractTitle(item)
-        val artist = extractArtist(item)
-        val duration = extractDuration(item)
+        val title : String? = extractTitle(item)
+        val artist : String? = extractArtist(item)
+        val duration : String? = extractDuration(item)
         this.artist.text = artist
         this.title.text = title
         this.duration.text = duration
-        val uri = MediaItemUtils.getAlbumArtUri(item)
-        albumArtPainter!!.paintOnView(albumArt, uri)
+        val uri : Uri? = MediaItemUtils.getAlbumArtUri(item)
+        if (null != uri) {
+            albumArtPainter!!.paintOnView(albumArt, uri)
+        }
     }
 
     private fun extractTitle(song: MediaBrowserCompat.MediaItem): String {
         val charSequence: CharSequence? = MediaItemUtils.getTitle(song)
         if (null == charSequence) {
-            val fileName = if (MediaItemUtils.hasExtras(song)) MediaItemUtils.getExtra(MetaDataKeys.META_DATA_KEY_FILE_NAME, song) as String else null
+            val fileName = if (MediaItemUtils.hasExtras(song)) MediaItemUtils.getExtra(MetaDataKeys.META_DATA_KEY_FILE_NAME, song) as? String else null
             if (fileName != null) {
                 return FilenameUtils.removeExtension(fileName)
             }

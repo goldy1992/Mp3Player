@@ -15,7 +15,9 @@ class TestMainActivity : MainActivity() {
         val componentClassMapper : ComponentClassMapper = ComponentClassMapper.Builder()
                 .service(TestMainActivity::class.java)
                 .mainActivity(TestMainActivity::class.java)
+                .folderActivity(FolderActivityInjectorTestImpl::class.java)
                 .searchResultActivity(SearchResultActivityInjectorTestImpl::class.java)
+                .mediaPlayerActivity(MediaPlayerActivityInjectorTestImpl::class.java)
                 .build()
         val component: MediaActivityCompatComponent = DaggerTestMediaActivityCompatComponent
                 .factory()

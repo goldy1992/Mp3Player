@@ -14,8 +14,11 @@ class FolderActivityInjectorTestImpl : FolderActivity() {
 
     override fun initialiseDependencies() {
         val componentClassMapper: ComponentClassMapper = ComponentClassMapper.Builder()
-                .service(FolderActivityInjectorTestImpl::class.java)
-                .build()
+            .service(FolderActivityInjectorTestImpl::class.java)
+            .folderActivity(FolderActivityInjectorTestImpl::class.java)
+            .mainActivity(TestMainActivity::class.java)
+            .mediaPlayerActivity(MediaPlayerActivityInjectorTestImpl::class.java)
+            .build()
 
         val component: MediaActivityCompatComponent = DaggerTestMediaActivityCompatComponent
                 .factory()

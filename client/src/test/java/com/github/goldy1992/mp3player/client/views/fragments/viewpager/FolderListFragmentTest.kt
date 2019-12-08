@@ -6,6 +6,9 @@ import com.github.goldy1992.mp3player.client.activities.TestMainActivity
 import com.github.goldy1992.mp3player.client.views.fragments.FragmentTestBase
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.spy
+import com.nhaarman.mockitokotlin2.verify
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -38,7 +41,7 @@ class FolderListFragmentTest : FragmentTestBase<FolderListFragment>() {
     }
 
     private fun itemSelected(fragment: MediaItemListFragment?) {
-        val spiedFragment = Mockito.spy(fragment)
+        val spiedFragment = spy(fragment)
 
         val id = "ID"
         val title = "TITLE"
@@ -49,7 +52,7 @@ class FolderListFragmentTest : FragmentTestBase<FolderListFragment>() {
                  .build()
         spiedFragment!!.itemSelected(mediaItem)
         Shadows.shadowOf(Looper.getMainLooper()).idle()
-        Mockito.verify(spiedFragment)!!.startActivity(ArgumentMatchers.any())
+        verify(spiedFragment).startActivity(any())
     }
 
     companion object {

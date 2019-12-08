@@ -44,7 +44,7 @@ class SearchResultAdapter @Inject constructor(albumArtPainter: AlbumArtPainter, 
 
     override fun getItemViewType(position: Int): Int {
         val mediaItem = items[position]
-        val mediaItemType = MediaItemUtils.getExtra(Constants.MEDIA_ITEM_TYPE, mediaItem) as MediaItemType
+        val mediaItemType : MediaItemType? = MediaItemUtils.getMediaItemType(mediaItem)
         return mediaItemType?.value ?: super.getItemViewType(position)
     }
 

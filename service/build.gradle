@@ -3,7 +3,6 @@ apply plugin: 'jacoco'
 apply plugin: "de.mannodermaus.android-junit5"
 apply plugin: 'com.github.ben-manes.versions'
 
-
 android {
     compileSdkVersion TARGET_SDK_VERION
     buildToolsVersion BUILD_TOOLS_VERSION
@@ -27,6 +26,16 @@ android {
             debuggable true
             minifyEnabled false
             testCoverageEnabled = true
+        }
+    }
+
+    flavorDimensions 'default'
+    productFlavors {
+        full {
+            dimension = 'default'
+        }
+        automation {
+            dimension = 'default'
         }
     }
 

@@ -41,7 +41,7 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
     @Test
     fun testOnPlaybackStateChangedPlaying() {
         playPauseButton!!.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_PLAYING))
-        Assert.assertEquals(PlaybackStateCompat.STATE_PLAYING.toLong(), playPauseButton!!.state)
+        Assert.assertEquals(PlaybackStateCompat.STATE_PLAYING, playPauseButton!!.state)
     }
 
     /**
@@ -52,7 +52,7 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
     @Test
     fun testOnPlaybackStateChangedPaused() {
         playPauseButton!!.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_PAUSED))
-        Assert.assertEquals(PlaybackStateCompat.STATE_PAUSED.toLong(), playPauseButton!!.state)
+        Assert.assertEquals(PlaybackStateCompat.STATE_PAUSED, playPauseButton!!.state)
     }
 
     /**
@@ -64,7 +64,7 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
     fun testOnPlaybackStateChangedOtherState() {
         @PlaybackStateCompat.State val expectedState = PlaybackStateCompat.STATE_PAUSED
         playPauseButton!!.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_ERROR))
-        Assert.assertEquals(expectedState.toLong(), playPauseButton!!.state)
+        Assert.assertEquals(expectedState, playPauseButton!!.state)
     }
 
     /**
