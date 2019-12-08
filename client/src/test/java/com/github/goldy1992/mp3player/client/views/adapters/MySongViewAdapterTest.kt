@@ -4,6 +4,7 @@ import android.support.v4.media.MediaBrowserCompat
 
 import com.github.goldy1992.mp3player.client.views.viewholders.MySongViewHolder
 import com.github.goldy1992.mp3player.commons.*
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -14,8 +15,7 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class MySongViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
     private var mySongViewAdapter: MySongViewAdapter? = null
-    @Captor
-    private val captor: ArgumentCaptor<MediaBrowserCompat.MediaItem>? = null
+
     @Mock
     private val mySongViewHolder: MySongViewHolder? = null
 
@@ -46,11 +46,13 @@ class MySongViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
                         .build()
         )
         mySongViewAdapter!!.notifyDataSetChanged()
-        bindViewHolder()
-        Mockito.verify(mySongViewHolder, Mockito.times(1))!!.bindMediaItem(captor!!.capture())
-        val result = captor.value
-        Assert.assertEquals(expectedArtist, MediaItemUtils.getArtist(result))
-        Assert.assertEquals(expectedTitle, MediaItemUtils.getTitle(result))
+        argumentCaptor<MediaBrowserCompat.MediaItem>().apply {
+            bindViewHolder()
+            Mockito.verify(mySongViewHolder, Mockito.times(1))!!.bindMediaItem(capture())
+            val result = firstValue
+            Assert.assertEquals(expectedArtist, MediaItemUtils.getArtist(result))
+            Assert.assertEquals(expectedTitle, MediaItemUtils.getTitle(result))
+        }
     }
 
     @Test
@@ -66,10 +68,12 @@ class MySongViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
                 .build()
         mediaItem.description.extras!!.putString(MetaDataKeys.META_DATA_KEY_FILE_NAME, fullFileName)
         mediaItems.add(mediaItem)
-        bindViewHolder()
-        Mockito.verify(mySongViewHolder, Mockito.times(1))!!.bindMediaItem(captor!!.capture())
-        val result = captor.value
-        Assert.assertNull(MediaItemUtils.getTitle(result))
+        argumentCaptor<MediaBrowserCompat.MediaItem>().apply {
+            bindViewHolder()
+            Mockito.verify(mySongViewHolder, Mockito.times(1))!!.bindMediaItem(capture())
+            val result = firstValue
+            Assert.assertNull(MediaItemUtils.getTitle(result))
+        }
     }
 
     @Test
@@ -93,12 +97,14 @@ class MySongViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
                         .setMediaItemType(MediaItemType.ROOT)
                         .setDuration(3424L)
                         .build())
-        bindViewHolder()
-        Mockito.verify(mySongViewHolder, Mockito.times(1))!!.bindMediaItem(captor!!.capture())
-        val result = captor.value
-        Assert.assertEquals(expectedArtist, MediaItemUtils.getArtist(result))
-        Assert.assertEquals(expectedTitle, MediaItemUtils.getTitle(result))
-        Assert.assertEquals(originalDuration, MediaItemUtils.getDuration(result))
+        argumentCaptor<MediaBrowserCompat.MediaItem>().apply {
+            bindViewHolder()
+            Mockito.verify(mySongViewHolder, Mockito.times(1))!!.bindMediaItem(capture ())
+            val result = firstValue
+            Assert.assertEquals(expectedArtist, MediaItemUtils.getArtist(result))
+            Assert.assertEquals(expectedTitle, MediaItemUtils.getTitle(result))
+            Assert.assertEquals(originalDuration, MediaItemUtils.getDuration(result))
+        }
     }
 
     private fun bindViewHolder() {

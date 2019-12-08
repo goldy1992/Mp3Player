@@ -41,7 +41,8 @@ class ThemeSpinnerControllerTest {
 
     @Test
     fun onItemSelected() {
-        themeSpinnerController = ThemeSpinnerController(context!!, spinner!!, mainActivity, ComponentClassMapper.Builder().build())
+        themeSpinnerController = ThemeSpinnerController(context!!, spinner!!, mainActivity, ComponentClassMapper.Builder()
+                .mainActivity(ThemeSpinnerController.javaClass).build())
         themeSpinnerController!!.onItemSelected(null, view!!, 1, 2342L)
         // first time called by android, we don't want to change anything
         Mockito.verify(mainActivity, Mockito.never()).finish()

@@ -4,31 +4,36 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.media.MediaBrowserCompat
 import com.github.goldy1992.mp3player.client.MediaBrowserResponseListener
+import com.nhaarman.mockitokotlin2.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.*
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
+
+
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
-import java.util.*
+
+import kotlin.collections.ArrayList
 
 @RunWith(RobolectricTestRunner::class)
 class MediaIdSubscriptionCallbackTest {
     private var mediaIdSubscriptionCallback: MediaIdSubscriptionCallback? = null
-    @Mock
-    private val mediaBrowserResponseListener: MediaBrowserResponseListener? = null
+
+    private lateinit var mediaBrowserResponseListener: MediaBrowserResponseListener
     private var mediaItemList: List<MediaBrowserCompat.MediaItem>? = null
 
     @Mock
     private var mockMediaItem: MediaBrowserCompat.MediaItem? = null
-    @Captor
-    var captor: ArgumentCaptor<ArrayList<MediaBrowserCompat.MediaItem>>? = null
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
         val handler = Handler(Looper.getMainLooper())
+        this.mediaBrowserResponseListener = mock<MediaBrowserResponseListener>()
         mockMediaItem = Mockito.mock(MediaBrowserCompat.MediaItem::class.java)
         mediaIdSubscriptionCallback = MediaIdSubscriptionCallback(handler)
         mediaItemList = listOf(mockMediaItem!!)
@@ -46,14 +51,18 @@ class MediaIdSubscriptionCallbackTest {
 
     @Test
     fun testOnChildrenLoadedForSubscribedKey() {
-        val subscribedKey = "SubscribedKey"
-        mediaIdSubscriptionCallback!!.registerMediaBrowserResponseListener(subscribedKey, mediaBrowserResponseListener)
-        mediaIdSubscriptionCallback!!.onChildrenLoaded(subscribedKey, mediaItemList!!)
-        Shadows.shadowOf(Looper.getMainLooper()).idle()
-        Mockito.verify(mediaBrowserResponseListener, Mockito.times(1))!!.onChildrenLoaded(ArgumentMatchers.eq(subscribedKey), captor!!.capture())
-        val children = captor!!.value
-        Assert.assertEquals(1, children.size.toLong())
-        Assert.assertEquals(mockMediaItem, children[0])
+        argumentCaptor<ArrayList<MediaBrowserCompat.MediaItem>>().apply {
+            val subscribedKey = "SubscribedKey"
+            mediaIdSubscriptionCallback!!.registerMediaBrowserResponseListener(subscribedKey, mediaBrowserResponseListener)
+            mediaIdSubscriptionCallback!!.onChildrenLoaded(subscribedKey, mediaItemList!!)
+            Shadows.shadowOf(Looper.getMainLooper()).idle()
+            verify(mediaBrowserResponseListener, times(1)).onChildrenLoaded(eq(subscribedKey), capture())
+            val children = allValues
+            Assert.assertEquals(1, children.size.toLong())
+            Assert.assertEquals(mockMediaItem, children[0][0])
+
+        }
+
     }
 
     @Test
@@ -63,6 +72,6 @@ class MediaIdSubscriptionCallbackTest {
         mediaIdSubscriptionCallback!!.registerMediaBrowserResponseListener(subscribedKey, mediaBrowserResponseListener)
         mediaIdSubscriptionCallback!!.onChildrenLoaded(nonSubscribedKey, mediaItemList!!)
         Shadows.shadowOf(Looper.getMainLooper()).idle()
-        Mockito.verify(mediaBrowserResponseListener, Mockito.never())!!.onChildrenLoaded(ArgumentMatchers.eq(nonSubscribedKey), ArgumentMatchers.any())
+        verify(mediaBrowserResponseListener, never()).onChildrenLoaded(eq(nonSubscribedKey), any())
     }
 }

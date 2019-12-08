@@ -4,6 +4,7 @@ import android.support.v4.media.MediaBrowserCompat
 import com.github.goldy1992.mp3player.client.views.viewholders.MyFolderViewHolder
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -16,8 +17,6 @@ class MyFolderViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
     private var myFolderViewAdapter: MyFolderViewAdapter? = null
     @Mock
     private val myFolderViewHolder: MyFolderViewHolder? = null
-    @Captor
-    private val captor: ArgumentCaptor<MediaBrowserCompat.MediaItem>? = null
 
     @Before
     override fun setup() {
@@ -43,11 +42,13 @@ class MyFolderViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
         )
         myFolderViewAdapter!!.notifyDataSetChanged()
         myFolderViewAdapter!!.items = mediaItems
-        myFolderViewAdapter!!.onBindViewHolder(myFolderViewHolder!!, 0)
-        Mockito.verify(myFolderViewHolder, Mockito.times(1))!!.bindMediaItem(captor!!.capture())
-        val result = captor.value
-        Assert.assertEquals(directoryName, MediaItemUtils.getTitle(result))
-        Assert.assertEquals(directoryPath, MediaItemUtils.getMediaId(result))
-        Assert.assertEquals(directoryPath, MediaItemUtils.getDescription(result))
+        argumentCaptor<MediaBrowserCompat.MediaItem>().apply {
+            myFolderViewAdapter!!.onBindViewHolder(myFolderViewHolder!!, 0)
+            Mockito.verify(myFolderViewHolder, Mockito.times(1))!!.bindMediaItem(capture())
+            val result = allValues[0]
+            Assert.assertEquals(directoryName, MediaItemUtils.getTitle(result))
+            Assert.assertEquals(directoryPath, MediaItemUtils.getMediaId(result))
+            Assert.assertEquals(directoryPath, MediaItemUtils.getDescription(result))
+        }
     }
 }
