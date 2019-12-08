@@ -123,7 +123,7 @@ object MediaItemUtils {
     fun getAlbumArtUri(song: MediaBrowserCompat.MediaItem): Uri? {
         val extras = song.description.extras
         return if (null != extras) {
-            extras[MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI] as Uri
+            extras[MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI] as? Uri
         } else null
     }
 
