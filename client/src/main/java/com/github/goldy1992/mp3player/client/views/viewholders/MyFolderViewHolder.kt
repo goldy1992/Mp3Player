@@ -17,11 +17,11 @@ class MyFolderViewHolder(itemView: View, albumArtPainter: AlbumArtPainter?) : Me
         folderPath.text = folderPathText
     }
 
-    private fun extractFolderName(song: MediaBrowserCompat.MediaItem): String {
+    private fun extractFolderName(song: MediaBrowserCompat.MediaItem): String? {
         return MediaItemUtils.getDirectoryName(song)
     }
 
-    private fun extractFolderPath(song: MediaBrowserCompat.MediaItem): String {
+    private fun extractFolderPath(song: MediaBrowserCompat.MediaItem): String? {
         return MediaItemUtils.getDirectoryPath(song)
     }
 

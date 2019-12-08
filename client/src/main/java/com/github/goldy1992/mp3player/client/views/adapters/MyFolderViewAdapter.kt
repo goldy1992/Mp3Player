@@ -21,7 +21,7 @@ class MyFolderViewAdapter
                 @Named("main") mainHandler: Handler)
     : MyGenericRecycleViewAdapter(albumArtPainter, mainHandler) {
 
-    override fun getLogTag(): String {
+    override fun logTag(): String {
         return "FOLDER_VIEW_ADAPTER"
     }
 

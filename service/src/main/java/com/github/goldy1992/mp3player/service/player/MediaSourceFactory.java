@@ -52,7 +52,7 @@ public class MediaSourceFactory implements LogTagger {
             }
         } catch (ContentDataSource.ContentDataSourceException |
                 FileDataSource.FileDataSourceException ex) {
-            Log.e(getLogTag(), ExceptionUtils.getStackTrace(ex));
+            Log.e(logTag(), ExceptionUtils.getStackTrace(ex));
             return null;
         }
     }

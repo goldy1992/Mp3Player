@@ -30,13 +30,13 @@ class MySearchCallback
      */
     override fun onSearchResult(query: String, extras: Bundle?,
                                 items: List<MediaBrowserCompat.MediaItem>) {
-        Log.i(logTag, "hit the onSearchResult callback")
+        Log.i(logTag(), "hit the onSearchResult callback")
         for (listener in listeners) {
             listener.onSearchResult(items)
         }
     }
 
-    override fun getLogTag(): String {
+    override fun logTag(): String {
         return "MY_SRCH_CLBCK"
     }
 }

@@ -20,7 +20,7 @@ class MySongViewAdapter
                 @Named("main") mainHandler: Handler)
     : MyGenericRecycleViewAdapter(albumArtPainter, mainHandler), LogTagger {
 
-    override fun getLogTag() : String {
+    override fun logTag() : String {
         return "MY_VIEW_ADAPTER"
     }
 

@@ -94,7 +94,7 @@ public class AudioObserver extends MediaStoreObserver implements LogTagger {
             mediaPlaybackService.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.FOLDERS));
         }
         // when there is a "change" to the meta data the exact id will given as the uri
-        Log.i(getLogTag(),"hit on change");
+        Log.i(logTag(),"hit on change");
     }
 
     private void updateSearchDatabase(Uri uri) {
@@ -102,17 +102,17 @@ public class AudioObserver extends MediaStoreObserver implements LogTagger {
         try {
             id = ContentUris.parseId(uri);
         } catch (Exception ex) {
-            Log.e(getLogTag(), ExceptionUtils.getStackTrace(ex));
+            Log.e(logTag(), ExceptionUtils.getStackTrace(ex));
         }
 
         // If we know the id then just get that id
         if (INVALID_ID != id) {
             MediaItem result = contentManager.getItem(id);
             if (null != result) {
-                Log.i(getLogTag(), "UPDATING songs and folders index");
+                Log.i(logTag(), "UPDATING songs and folders index");
                 songDatabaseManager.insert(result);
                 folderDatabaseManager.insert(result);
-                Log.i(getLogTag(), "UPDATED songs and folders");
+                Log.i(logTag(), "UPDATED songs and folders");
                 String directoryPath = MediaItemUtils.getDirectoryPath(result);
                 if (StringUtils.isNotEmpty(directoryPath)) {
                     mediaPlaybackService.notifyChildrenChanged(directoryPath);

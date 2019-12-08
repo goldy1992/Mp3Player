@@ -94,10 +94,10 @@ abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListene
         searchResultAdapter!!.items.clear()
         searchResultAdapter!!.items.addAll(searchResults!!)
         searchResultAdapter!!.notifyDataSetChanged()
-        Log.i(logTag, "received search results")
+        Log.i(logTag(), "received search results")
     }
 
-    override fun getLogTag(): String {
+    override fun logTag(): String {
         return "SRCH_RSLT_ACTVTY"
     }
 

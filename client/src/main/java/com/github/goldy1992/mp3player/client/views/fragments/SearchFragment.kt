@@ -50,7 +50,7 @@ class SearchFragment : Fragment(), LogTagger {
         val background = linearLayout.getBackground()
         background.alpha = 200
         linearLayout.setOnClickListener(View.OnClickListener { view: View? -> onClickOnLayout(view) })
-        searchView.setOnClickListener(View.OnClickListener { v: View? -> Log.i(logTag, "hit search view") })
+        searchView.setOnClickListener(View.OnClickListener { v: View? -> Log.i(logTag(), "hit search view") })
         searchView.requestFocusFromTouch()
         inputMethodManager!!.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
         searchView.setOnQueryTextFocusChangeListener(OnFocusChangeListener { v: View?, queryTextFocused: Boolean -> onFocusChange(v, queryTextFocused) })
@@ -58,7 +58,7 @@ class SearchFragment : Fragment(), LogTagger {
 
     @VisibleForTesting
     fun onClickOnLayout(view: View?) {
-        Log.i(logTag, "hit on click listener")
+        Log.i(logTag(), "hit on click listener")
         inputMethodManager!!.hideSoftInputFromWindow(getView()!!.windowToken, 0)
         this.parentFragmentManager.popBackStack()
     }
@@ -74,7 +74,7 @@ class SearchFragment : Fragment(), LogTagger {
         }
     }
 
-    override fun getLogTag(): String {
+    override fun logTag(): String {
         return "SRCH_FRAGMENT"
     }
 

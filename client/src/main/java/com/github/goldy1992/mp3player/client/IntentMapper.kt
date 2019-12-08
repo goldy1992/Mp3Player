@@ -18,9 +18,9 @@ class IntentMapper
     private val categoryToActivityMap: MutableMap<MediaItemType,
             Class<*>> = EnumMap(MediaItemType::class.java)
     init {
-        categoryToActivityMap[MediaItemType.FOLDER] = componentClassMapper.mediaPlayerActivity
-        categoryToActivityMap[MediaItemType.SONGS] = componentClassMapper.mediaPlayerActivity
-        categoryToActivityMap[MediaItemType.FOLDERS] = componentClassMapper.folderActivity
+        categoryToActivityMap[MediaItemType.FOLDER] = componentClassMapper.mediaPlayerActivity!!
+        categoryToActivityMap[MediaItemType.SONGS] = componentClassMapper.mediaPlayerActivity!!
+        categoryToActivityMap[MediaItemType.FOLDERS] = componentClassMapper.folderActivity!!
     }
 
     fun getIntent(mediaItemType: MediaItemType?): Intent? {

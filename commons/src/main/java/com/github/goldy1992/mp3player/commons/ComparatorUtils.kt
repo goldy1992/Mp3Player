@@ -1,0 +1,66 @@
+package com.github.goldy1992.mp3player.commons
+
+
+import android.support.v4.media.MediaBrowserCompat.MediaItem
+
+object ComparatorUtils {
+
+    private const val LOG_TAG = "COMPARATOR_UTILS"
+
+    val compareRootMediaItemsByMediaItemType : Comparator<MediaItem> = Comparator<MediaItem>{m1, m2 ->
+            val c1 = MediaItemUtils.getRootMediaItemType(m1)
+            val c2 = MediaItemUtils.getRootMediaItemType(m2)
+            if (c1 == null && c2 == null) {
+                0
+            } else if (c1 == null) {
+                -1
+            } else if (c2 == null) {
+                1
+            } else {
+                c1.rank - c2.rank
+            }
+        }
+
+    val compareMediaItemsByTitle : Comparator<MediaItem> = Comparator<MediaItem> { m1, m2 ->
+        uppercaseStringCompare(MediaItemUtils.getTitle(m1), MediaItemUtils.getTitle(m2))
+    }
+
+    val compareMediaItemById = Comparator<MediaItem> {m1, m2 ->
+        val id1 = MediaItemUtils.getMediaId(m1)
+        val id2 = MediaItemUtils.getMediaId(m2)
+         if (id1 == null && id2 == null) {
+            0
+        } else if (id1 == null) {
+            -1
+        } else if (id2 == null) {
+            1
+        } else {
+            id1.compareTo(id2)
+        }
+    }
+
+    fun uppercaseStringCompare(string1: String?, string2: String?): Int {
+        return if (string1 == null && string2 == null) {
+            0
+        } else if (null == string1) {
+            -1
+        } else if (null == string2) {
+            1
+        } else {
+            string1.toUpperCase().compareTo(string2.toUpperCase())
+        }
+    }
+
+    fun caseSensitiveStringCompare(string1: String?, string2: String?): Int {
+        return if (string1 == null && string2 == null) {
+            0
+        } else if (null == string1) {
+            -1
+        } else if (null == string2) {
+            1
+        } else {
+            string1.compareTo(string2)
+        }
+    }
+
+}
