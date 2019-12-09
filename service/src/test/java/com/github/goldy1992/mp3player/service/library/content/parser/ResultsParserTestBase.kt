@@ -8,7 +8,7 @@ abstract class ResultsParserTestBase {
     var resultsParser: ResultsParser? = null
     open fun setup() {}
     abstract fun testGetType()
-    abstract fun createDataSet(): Array<Array<Any?>>
+    abstract fun createDataSet(): Array<Array<Any?>?>
     fun getResultsForProjection(projection: Array<String?>, testPrefix: String?): List<MediaBrowserCompat.MediaItem> {
         val cursor = RoboCursor()
         val columns = Arrays.asList<String>(*projection)

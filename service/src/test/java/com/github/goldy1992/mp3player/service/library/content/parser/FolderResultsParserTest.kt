@@ -2,7 +2,9 @@ package com.github.goldy1992.mp3player.service.library.content.parser
 
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaId
+import com.github.goldy1992.mp3player.service.library.content.Projections.FOLDER_PROJECTION
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -66,8 +68,8 @@ class FolderResultsParserTest : ResultsParserTestBase() {
         Assert.assertFalse(item2MediaId.contains(SONG_1))
     }
 
-    public override fun createDataSet(): Array<Array<Any?>> {
-        val dataSet: Array<Array<Any?>> = arrayOfNulls(3)
+    public override fun createDataSet(): Array<Array<Any?>?> {
+        val dataSet: Array<Array<Any?>?> = arrayOfNulls(3)
         dataSet[0] = arrayOf(DIR_1_SONG_1!!.absolutePath)
         dataSet[1] = arrayOf(DIR_1_SONG_2!!.absolutePath)
         dataSet[2] = arrayOf(DIR_2_SONG_1!!.absolutePath)

@@ -16,13 +16,13 @@ class PlaylistManagerTest {
     @Before
     fun setup() {
         val queueItems: List<MediaBrowserCompat.MediaItem> = ArrayList()
-        playlistManager = PlaylistManager(queueItems)
+        playlistManager = PlaylistManager(queueItems.toMutableList())
     }
 
     @Test
     fun testCreateNewPlaylist() {
-        val originalPlaylist: List<MediaBrowserCompat.MediaItem?> = Collections.emptyList()
-        playlistManager = PlaylistManager(originalPlaylist)
+        val originalPlaylist: List<MediaBrowserCompat.MediaItem> = Collections.emptyList() as List<MediaBrowserCompat.MediaItem>
+        playlistManager = PlaylistManager(originalPlaylist.toMutableList())
         Assert.assertEquals(originalPlaylist, playlistManager!!.playlist)
         val newPlaylist: List<MediaBrowserCompat.MediaItem?> = emptyList()
         playlistManager!!.createNewPlaylist(newPlaylist)

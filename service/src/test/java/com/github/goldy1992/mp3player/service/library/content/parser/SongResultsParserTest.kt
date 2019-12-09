@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.service.library.content.parser
 
 import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat
+import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getArtist
@@ -10,7 +11,9 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getLibraryId
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaId
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaUri
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle
+import com.github.goldy1992.mp3player.service.library.content.Projections.SONG_PROJECTION
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -91,8 +94,8 @@ class SongResultsParserTest : ResultsParserTestBase() {
         Assert.assertEquals(getLibraryId(expectedMediaItem2), getLibraryId(mediaItems[1]))
     }
 
-    public override fun createDataSet(): Array<Array<Any?>> {
-        val dataSet: Array<Array<Any?>> = arrayOfNulls(2)
+    public override fun createDataSet(): Array<Array<Any?>?> {
+        val dataSet: Array<Array<Any?>?> = arrayOfNulls(2)
         dataSet[0] = arrayOf(getMediaUri(expectedMediaItem1!!),
                 getDuration(expectedMediaItem1),
                 getArtist(expectedMediaItem1),

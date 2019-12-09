@@ -28,11 +28,11 @@ class SongsFromFolderResultsFilterTest {
         val toFilter = MediaItemBuilder("fds")
                 .setDirectoryFile(File("/a/otherDir"))
                 .build()
-        val items: MutableList<MediaBrowserCompat.MediaItem?> = ArrayList()
+        val items: MutableList<MediaBrowserCompat.MediaItem> = ArrayList()
         items.add(dontFilter)
         items.add(toFilter)
         val results = songsFromFolderResultsFilter!!.filter(query, items)
-        Assert.assertEquals(1, results.size.toLong())
+        Assert.assertEquals(1, results!!.size.toLong())
         Assert.assertTrue(results.contains(dontFilter))
         Assert.assertFalse(results.contains(toFilter))
     }

@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.service
 
+import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import org.junit.Assert

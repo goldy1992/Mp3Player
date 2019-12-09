@@ -113,7 +113,7 @@ dependencies {
 
     testImplementation group: 'org.robolectric', name: 'robolectric', version: ROBOLECTRIC_VERSION// https://mvnrepository.com/artifact/org.robolectric/shadows-support-v4
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
-
+    testImplementation group: 'com.nhaarman.mockitokotlin2', name: 'mockito-kotlin', version: MOCKITO_KOTLIN
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.media.MediaBrowserCompat
 import androidx.media.MediaBrowserServiceCompat
+import androidx.media.MediaBrowserServiceCompat.Result
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import org.junit.Assert
 import org.junit.Before
@@ -13,6 +14,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
@@ -24,7 +26,7 @@ import java.util.*
 @LooperMode(LooperMode.Mode.PAUSED)
 class MediaPlaybackServiceTest {
     /** object to test */
-    private var mediaPlaybackService: TestMediaPlaybackServiceInjector? = null
+    lateinit var mediaPlaybackService: TestMediaPlaybackServiceInjector
     @Mock
     private val rootAuthenticator: RootAuthenticator? = null
 
@@ -53,7 +55,7 @@ class MediaPlaybackServiceTest {
     fun testOnLoadChildrenWithRejectedRootId() {
         Mockito.`when`(rootAuthenticator!!.rejectRootSubscription(ArgumentMatchers.any())).thenReturn(true)
         val parentId = "aUniqueId"
-        val result: MediaBrowserServiceCompat.Result<List<MediaBrowserCompat.MediaItem>?> = Mockito.mock<MediaBrowserServiceCompat.Result<*>>(MediaBrowserServiceCompat.Result::class.java)
+        val result: Result<List<MediaBrowserCompat.MediaItem>> = mock(Result::class.java) as Result<List<MediaBrowserCompat.MediaItem>> //Mockito.mock<Result<List<MediaBrowserCompat.MediaItem>>>(Result::class.java)
         mediaPlaybackService!!.onLoadChildren(parentId, result)
         Shadows.shadowOf(Looper.getMainLooper()).idle()
         Mockito.verify(result, Mockito.times(1)).sendResult(null)
@@ -62,7 +64,7 @@ class MediaPlaybackServiceTest {
     @Test
     fun testOnLoadChildrenWithAcceptedMediaId() {
         val parentId = "aUniqueId"
-        val result: MediaBrowserServiceCompat.Result<List<MediaBrowserCompat.MediaItem>> = Mockito.mock<MediaBrowserServiceCompat.Result<*>>(MediaBrowserServiceCompat.Result::class.java)
+        val result: Result<List<MediaBrowserCompat.MediaItem>> = mock(Result::class.java) as Result<List<MediaBrowserCompat.MediaItem>>
         val mockContentManager = Mockito.mock(ContentManager::class.java)
         mediaPlaybackService!!.contentManager = mockContentManager
         val mediaItemList: List<MediaBrowserCompat.MediaItem> = ArrayList()
@@ -75,7 +77,7 @@ class MediaPlaybackServiceTest {
     @Test
     fun testOnLoadChildrenRejectedMediaId() {
         Mockito.`when`(rootAuthenticator!!.rejectRootSubscription(ArgumentMatchers.any())).thenReturn(false)
-        val result: MediaBrowserServiceCompat.Result<List<MediaBrowserCompat.MediaItem>> = Mockito.mock<MediaBrowserServiceCompat.Result<*>>(MediaBrowserServiceCompat.Result::class.java)
+        val result: Result<List<MediaBrowserCompat.MediaItem>> = mock(Result::class.java) as Result<List<MediaBrowserCompat.MediaItem>>
         mediaPlaybackService!!.onLoadChildren(REJECTED_MEDIA_ROOT_ID, result)
         Shadows.shadowOf(Looper.getMainLooper()).idle()
         // execute all tasks posted to main looper

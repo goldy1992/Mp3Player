@@ -55,7 +55,6 @@ android {
             }
             jacoco {
                 includeNoLocationClasses=true
-
             }
         }
     }
@@ -84,7 +83,7 @@ dependencies {
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
     implementation group: 'androidx.viewpager2', name: 'viewpager2', version: VIEW_PAGER2_VERSION
-    implementation group: 'androidx.recyclerview', name: 'recyclerview', version: 'RECYCLER_VIEW_VERSION'
+    implementation group: 'androidx.recyclerview', name: 'recyclerview', version: RECYCLER_VIEW_VERSION
     implementation group: 'androidx.core', name: 'core', version: CORE_VERSION
     implementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
     implementation project(path: ':commons')
@@ -117,7 +116,7 @@ dependencies {
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
     testImplementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
 
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
+    testImplementation group: 'com.nhaarman.mockitokotlin2', name: 'mockito-kotlin', version: MOCKITO_KOTLIN
     implementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
 
     testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION

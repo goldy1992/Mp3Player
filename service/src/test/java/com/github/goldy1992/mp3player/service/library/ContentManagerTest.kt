@@ -54,10 +54,10 @@ class ContentManagerTest {
     @Test
     fun testGetChildren() {
         val contentRetrieverId = "id"
-        val expectedList: List<MediaBrowserCompat.MediaItem?> = ArrayList()
+        val expectedList: List<MediaBrowserCompat.MediaItem> = ArrayList()
         val contentRetriever = Mockito.mock(ContentRetriever::class.java)
         Mockito.`when`(contentRetrievers!![contentRetrieverId]).thenReturn(contentRetriever)
-        val contentRequest = ContentRequest(null, contentRetrieverId, null)
+        val contentRequest = ContentRequest("", contentRetrieverId, null)
         Mockito.`when`(contentRequestParser!!.parse(contentRetrieverId)).thenReturn(contentRequest)
         Mockito.`when`(contentRetriever.getChildren(contentRequest)).thenReturn(expectedList)
         val result = contentManager!!.getChildren(contentRetrieverId)
@@ -67,7 +67,7 @@ class ContentManagerTest {
     @Test
     fun testGetChildrenNull() {
         val incorrectId = "incorrectId"
-        val contentRequest = ContentRequest(null, incorrectId, null)
+        val contentRequest = ContentRequest("", incorrectId, null)
         Mockito.`when`(contentRequestParser!!.parse(incorrectId)).thenReturn(contentRequest)
         val result = contentManager!!.getChildren(incorrectId)
         Assert.assertNull(result)
@@ -96,12 +96,12 @@ class ContentManagerTest {
     private fun testSearch(query: String, expectedResultsSize: Int) {
         val song1 = Mockito.mock(MediaBrowserCompat.MediaItem::class.java)
         val song2 = Mockito.mock(MediaBrowserCompat.MediaItem::class.java)
-        val songs: MutableList<MediaBrowserCompat.MediaItem?> = ArrayList()
+        val songs: MutableList<MediaBrowserCompat.MediaItem> = ArrayList()
         songs.add(song1)
         songs.add(song2)
         val songSearcher = getContentSearch(MediaItemType.SONGS, songs)
         val folder1 = Mockito.mock(MediaBrowserCompat.MediaItem::class.java)
-        val folders: MutableList<MediaBrowserCompat.MediaItem?> = ArrayList()
+        val folders: MutableList<MediaBrowserCompat.MediaItem> = ArrayList()
         folders.add(folder1)
         val folderSearcher = getContentSearch(MediaItemType.FOLDER, folders)
         val contentSearcherList: MutableList<ContentSearcher> = ArrayList()
@@ -116,10 +116,10 @@ class ContentManagerTest {
         Assert.assertEquals(expectedResultsSize.toLong(), resultSize.toLong())
     }
 
-    private fun getContentSearch(type: MediaItemType, result: List<MediaBrowserCompat.MediaItem?>): ContentSearcher {
+    private fun getContentSearch(type: MediaItemType, result: List<MediaBrowserCompat.MediaItem>): ContentSearcher {
         val contentSearcher = Mockito.mock(ContentSearcher::class.java)
         Mockito.`when`<Any?>(contentSearcher.searchCategory).thenReturn(type)
-        Mockito.`when`(contentSearcher.search(VALID_QUERY)).thenReturn(result)
+        Mockito.`when`(contentSearcher.search(VALID_QUERY)).thenReturn(result.toMutableList())
         return contentSearcher
     }
 
