@@ -13,12 +13,13 @@ import java.util.*
 
 class MyPagerAdapter
     constructor(
-        fm: FragmentManager?,
-        lifecycle: Lifecycle?)
-    : FragmentStateAdapter(fm!!, lifecycle!!), OnConfigureTabCallback {
+        fm: FragmentManager,
+        lifecycle: Lifecycle)
+    : FragmentStateAdapter(fm, lifecycle), OnConfigureTabCallback {
 
     val menuCategories = sortedMapOf<MediaItemType, MediaItem>()
     var pagerItems = sortedMapOf<MediaItemType, MediaItemListFragment>()
+
     private fun getMediaItemTypeFromPosition(position: Int): MediaItemType {
         val categoryArrayList = ArrayList(menuCategories.keys)
         return categoryArrayList[position]

@@ -16,11 +16,9 @@ abstract class SearchDatabase : RoomDatabase() {
         @JvmStatic
         @Synchronized
         fun getDatabase(context: Context): SearchDatabase {
-            if (instance == null) {
-                instance = Room.databaseBuilder(context.applicationContext,
-                        SearchDatabase::class.java, DATABASE_NAME)
-                        .build()
-            }
+            instance = Room.databaseBuilder(context.applicationContext,
+                    SearchDatabase::class.java, DATABASE_NAME)
+                    .build()
             return instance
         }
     }

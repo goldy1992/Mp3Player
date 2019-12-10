@@ -12,7 +12,7 @@ class MediaPlayerActivityInjectorTestImpl : MediaPlayerActivity() {
         super.onCreate(savedInstance)
     }
 
-    public override fun initialiseDependencies() {
+    override fun initialiseDependencies() {
         val componentClassMapper : ComponentClassMapper = ComponentClassMapper.Builder()
                 .service(MediaPlayerActivityInjectorTestImpl::class.java)
                 .build()

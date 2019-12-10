@@ -14,9 +14,10 @@ import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
 import com.github.goldy1992.mp3player.commons.DependencyInitialiser
+import com.github.goldy1992.mp3player.commons.LogTagger
 import javax.inject.Inject
 
-abstract class MediaActivityCompat : AppCompatActivity(), DependencyInitialiser, MediaBrowserConnectorCallback {
+abstract class MediaActivityCompat : AppCompatActivity(), DependencyInitialiser, MediaBrowserConnectorCallback, LogTagger {
 
     /** MediaBrowserAdapter  */
     @Inject
@@ -53,12 +54,12 @@ abstract class MediaActivityCompat : AppCompatActivity(), DependencyInitialiser,
 
     // MediaBrowserConnectorCallback
     override fun onConnectionSuspended() { /* TODO: implement onConnectionSuspended */
-        Log.i(LOG_TAG, "connection suspended")
+        Log.i(logTag(), "connection suspended")
     }
 
     // MediaBrowserConnectorCallback
     override fun onConnectionFailed() { /* TODO: implement onConnectionFailed */
-        Log.i(LOG_TAG, "connection failed")
+        Log.i(logTag(), "connection failed")
     }
 
     protected abstract fun initialiseView(@LayoutRes layoutId: Int): Boolean
@@ -77,9 +78,5 @@ abstract class MediaActivityCompat : AppCompatActivity(), DependencyInitialiser,
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    companion object {
-        private const val LOG_TAG = "MEDIA_ACTIVITY_COMPAT"
     }
 }

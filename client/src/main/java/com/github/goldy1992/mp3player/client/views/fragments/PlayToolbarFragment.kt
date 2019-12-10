@@ -55,7 +55,7 @@ class PlayToolbarFragment : Fragment() {
         }
 
     private fun goToMediaPlayerActivity() {
-        val intent = Intent(context, componentClassMapper.mainActivity)
+        val intent = Intent(context, componentClassMapper.mediaPlayerActivity)
 
         startActivity(intent)
     }

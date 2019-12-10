@@ -4,12 +4,14 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+
     compileSdkVersion TARGET_SDK_VERION
     buildToolsVersion BUILD_TOOLS_VERSION
 
     lintOptions {
         abortOnError false
     }
+
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERION
@@ -20,6 +22,15 @@ android {
         consumerProguardFiles 'consumer-rules.pro'
         missingDimensionStrategy 'full', 'automation'
     }
+
+    compileOptions {
+        incremental = false
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions { jvmTarget = "1.8" }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -31,6 +42,7 @@ android {
             testCoverageEnabled = true
         }
     }
+
     flavorDimensions 'default'
     productFlavors {
         full {
@@ -51,9 +63,9 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.2.0-rc01'
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
     implementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
-    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation group: 'androidx.recyclerview', name: 'recyclerview', version: RECYCLER_VIEW_VERSION
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
-    implementation 'androidx.viewpager2:viewpager2:1.0.0-rc01'
+    implementation group: 'androidx.viewpager2', name: 'viewpager2', version: VIEW_PAGER2_VERSION
     implementation group: 'com.l4digital.fastscroll', name: 'fastscroll', version: FAST_SCROLL_VERSION
 
 // Glide
@@ -71,7 +83,4 @@ dependencies {
     api project(":client")
     implementation project(path: ':commons')
 
-}
-repositories {
-    mavenCentral()
 }

@@ -172,10 +172,4 @@ dependencies {
     api project(path: ':service')
     api project(path: ':client')
 
-
-
-
-}
-repositories {
-    mavenCentral()
 }

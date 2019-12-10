@@ -12,7 +12,7 @@ import org.robolectric.android.AttributeSetBuilderImpl.ArscResourceResolver
 
 @RunWith(RobolectricTestRunner::class)
 class SquareImageViewTest {
-    private var context: Context? = null
+    private lateinit var context: Context
     @Before
     fun setup() {
         context = InstrumentationRegistry.getInstrumentation().context
@@ -37,7 +37,8 @@ class SquareImageViewTest {
         val myAttributeSetBuilder = MyAttributeSetBuilderImpl(resourceResolver)
         myAttributeSetBuilder.addAttribute(R.attr.useWidthOrHeight, useWidthOrHeight)
         val attributeSet = myAttributeSetBuilder.build()
-        val squareImageView = SquareImageView(context!!, attributeSet, 0)
+
+        val squareImageView = SquareImageView(context, attributeSet, 0)
         val spiedSquareImageView = Mockito.spy(squareImageView)
         Mockito.`when`(spiedSquareImageView.measuredHeight).thenReturn(TEST_HEIGHT)
         Mockito.`when`(spiedSquareImageView.measuredWidth).thenReturn(TEST_WIDTH)

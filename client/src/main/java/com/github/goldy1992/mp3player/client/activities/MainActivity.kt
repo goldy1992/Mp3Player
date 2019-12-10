@@ -51,7 +51,7 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
         setContentView(layoutId)
         searchFragment = SearchFragment()
         appBarLayout!!.addOnOffsetChangedListener(OnOffsetChangedListener { app: AppBarLayout?, offset: Int ->
-            Log.i(LOG_TAG, "offset: " + offset + ", scroll range: " + app!!.totalScrollRange)
+            Log.i(logTag(), "offset: " + offset + ", scroll range: " + app!!.totalScrollRange)
             var newOffset = offset
             if (null != app) {
                 newOffset += app.totalScrollRange
@@ -101,7 +101,7 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
                 return true
             }
             R.id.action_search -> {
-                Log.i(LOG_TAG, "hit action search")
+                Log.i(logTag(), "hit action search")
                 supportFragmentManager
                         .beginTransaction()
                         .add(R.id.fragmentContainer, searchFragment!!, "SEARCH_FGMT")
@@ -142,7 +142,7 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
         rootItemsOrdered.addAll(children)
         for (mediaItem in rootItemsOrdered) {
             val id = MediaItemUtils.getMediaId(mediaItem)
-            Log.i(LOG_TAG, "media id: $id")
+            Log.i(logTag(), "media id: $id")
             val category = MediaItemUtils.getExtra(Constants.ROOT_ITEM_TYPE, mediaItem) as MediaItemType
             var mediaItemListFragment: MediaItemListFragment?
             mediaItemListFragment = when (category) {
@@ -164,8 +164,8 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
     override val workerId: String
         get() = "MAIN_ACTVTY_WRKR"
 
-    companion object {
-        private const val LOG_TAG = "MAIN_ACTIVITY"
-        private const val READ_REQUEST_CODE = 42
+    override fun logTag(): String {
+        return "MAIN_ACTIVITY"
     }
+
 }

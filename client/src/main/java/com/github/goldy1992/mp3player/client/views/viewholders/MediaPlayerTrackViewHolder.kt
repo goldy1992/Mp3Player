@@ -10,10 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 
-class MediaPlayerTrackViewHolder(itemView: View, private val albumArtPainter: AlbumArtPainter) : RecyclerView.ViewHolder(itemView) {
-    private val title: TextView
-    private val artist: TextView
-    private val albumArt: ImageView
+class MediaPlayerTrackViewHolder(itemView: View, private val albumArtPainter: AlbumArtPainter)
+    : RecyclerView.ViewHolder(itemView) {
+    private val title: TextView = itemView.findViewById(R.id.songTitle)
+    private val artist: TextView = itemView.findViewById(R.id.songArtist)
+    private val albumArt: ImageView = itemView.findViewById(R.id.albumArt)
+
+
     fun bindMediaItem(item: MediaSessionCompat.QueueItem) {
         val titleText = item.description.title.toString()
         title.text = titleText
@@ -27,11 +30,5 @@ class MediaPlayerTrackViewHolder(itemView: View, private val albumArtPainter: Al
             val image = extras.getSerializable(MediaMetadataCompat.METADATA_KEY_ALBUM_ART) as ByteArray
             albumArtPainter.paintOnView(albumArt, image)
         }
-    }
-
-    init {
-        title = itemView.findViewById(R.id.songTitle)
-        artist = itemView.findViewById(R.id.songArtist)
-        albumArt = itemView.findViewById(R.id.albumArt)
     }
 }

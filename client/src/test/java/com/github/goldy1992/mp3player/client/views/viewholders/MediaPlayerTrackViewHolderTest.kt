@@ -5,55 +5,52 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class MediaPlayerTrackViewHolderTest {
-    private var mediaPlayerTrackViewHolder: MediaPlayerTrackViewHolder? = null
-    @Mock
-    private val albumArtPainter: AlbumArtPainter? = null
-    @Mock
-    private val titleView: TextView? = null
-    @Mock
-    private val artistView: TextView? = null
-    @Mock
-    private val albumArtView: ImageView? = null
-    @Mock
-    private val view: View? = null
+
+    private lateinit var mediaPlayerTrackViewHolder: MediaPlayerTrackViewHolder
+
+    private val albumArtPainter: AlbumArtPainter = mock<AlbumArtPainter>()
+    private val titleView: TextView = mock<TextView>()
+    private val artistView: TextView = mock<TextView>()
+    private val albumArtView: ImageView = mock<ImageView>()
+    private val view: View = mock<View>()
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
-        Mockito.`when`<Any?>(view!!.findViewById(R.id.songTitle)).thenReturn(titleView)
-        Mockito.`when`<Any?>(view.findViewById(R.id.songArtist)).thenReturn(artistView)
-        Mockito.`when`<Any?>(view.findViewById(R.id.albumArt)).thenReturn(albumArtView)
-        mediaPlayerTrackViewHolder = MediaPlayerTrackViewHolder(view, albumArtPainter!!)
+        whenever<Any?>(view.findViewById(R.id.songTitle)).thenReturn(titleView)
+        whenever<Any?>(view.findViewById(R.id.songArtist)).thenReturn(artistView)
+        whenever<Any?>(view.findViewById(R.id.albumArt)).thenReturn(albumArtView)
+        mediaPlayerTrackViewHolder = MediaPlayerTrackViewHolder(view, albumArtPainter)
     }
 
     @Test
     fun testBindMediaItem() {
         val expectedTitle = "TITLE"
         val expectedArtist = "ARTIST"
-        val expectedAlbumArtUri = Mockito.mock(Uri::class.java)
+        val expectedAlbumArtUri = mock<Uri>()
         val mediaItem = MediaItemBuilder("id")
                 .setTitle(expectedTitle)
                 .setArtist(expectedArtist)
                 .setAlbumArtUri(expectedAlbumArtUri)
                 .build()
         val queueItem = MediaSessionCompat.QueueItem(mediaItem.description, 1L)
-        mediaPlayerTrackViewHolder!!.bindMediaItem(queueItem)
-        Mockito.verify(titleView, Mockito.times(1))!!.text = expectedTitle
-        Mockito.verify(artistView, Mockito.times(1))!!.text = expectedArtist
-        Mockito.verify(albumArtPainter, Mockito.times(1))!!.paintOnView(albumArtView, expectedAlbumArtUri)
+        mediaPlayerTrackViewHolder.bindMediaItem(queueItem)
+        verify(titleView, times(1)).text = expectedTitle
+        verify(artistView, times(1)).text = expectedArtist
+        verify(albumArtPainter, times(1)).paintOnView(albumArtView, expectedAlbumArtUri)
     }
 
     @Test
@@ -65,7 +62,7 @@ class MediaPlayerTrackViewHolderTest {
                 .setAlbumArtImage(expectedAlbumArt)
                 .build()
         val queueItem = MediaSessionCompat.QueueItem(mediaItem.description, 1L)
-        mediaPlayerTrackViewHolder!!.bindMediaItem(queueItem)
-        Mockito.verify(albumArtPainter, Mockito.times(1))!!.paintOnView(albumArtView, expectedAlbumArt)
+        mediaPlayerTrackViewHolder.bindMediaItem(queueItem)
+        verify(albumArtPainter, times(1)).paintOnView(albumArtView, expectedAlbumArt)
     }
 }

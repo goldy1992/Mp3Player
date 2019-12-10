@@ -13,6 +13,7 @@ import android.widget.Spinner
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.LogTagger
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import java.util.*
@@ -24,10 +25,11 @@ class ThemeSpinnerController
                  private val spinner: Spinner,
                  private val activity: Activity,
                  private val componentClassMapper : ComponentClassMapper)
-    : OnItemSelectedListener {
+    : OnItemSelectedListener, LogTagger {
     private var adapter // TODO: make a make from Theme name to resource
             : ArrayAdapter<String?>? = null
     private var themeResIds: MutableList<Int>? = null
+    val attrs = intArrayOf(R.attr.themeName)
 
 
      var themeNameToResMap: BiMap<String, Int> = HashBiMap.create()
@@ -39,9 +41,9 @@ class ThemeSpinnerController
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val res = themeResIds!![position]
-        Log.d(LOG_TAG, "selected " + themeNameToResMap.inverse()[res])
+        Log.d(logTag(), "selected " + themeNameToResMap.inverse()[res])
         if (selectCount >= 1) {
-            Log.d(LOG_TAG, "select count > 1")
+            Log.d(logTag(), "select count > 1")
             setThemePreference(res)
             activity.finish()
             val intent = Intent(context, componentClassMapper.mainActivity)
@@ -64,7 +66,7 @@ class ThemeSpinnerController
                 if (null != themeNameArray && themeNameArray.length() > 0) {
                     val themeName = themeNameArray.getString(0)
                     themeNameArray.recycle()
-                    Log.d(LOG_TAG, "current theme is: $themeName")
+                    Log.d(logTag(), "current theme is: $themeName")
                     val result = themeNameToResMap!![themeName]
                     return result ?: -1
                 }
@@ -94,10 +96,7 @@ class ThemeSpinnerController
         typedArray?.recycle()
     }
 
-    companion object {
-        private val attrs = intArrayOf(R.attr.themeName)
-        private const val LOG_TAG = "THM_SPNR_CTLR"
-    }
+
 
     init {
         adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item)
@@ -124,5 +123,9 @@ class ThemeSpinnerController
             val position = adapter!!.getPosition(currentTheme)
             spinner.setSelection(position)
         }
+    }
+
+    override fun logTag(): String {
+       return "THM_SPNR_CTLR"
     }
 }

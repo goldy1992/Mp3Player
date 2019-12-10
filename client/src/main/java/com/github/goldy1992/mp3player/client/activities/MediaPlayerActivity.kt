@@ -12,14 +12,13 @@ import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.callbacks.TrackViewPagerChangeCallback
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
 import com.github.goldy1992.mp3player.client.views.adapters.TrackViewAdapter
+import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.android.synthetic.main.activity_media_player.*
 
 /**
  * Created by Mike on 24/09/2017.
  */
-abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener {
-
-    private val LOG_TAG = "MEDIA_PLAYER_ACTIVITY"
+abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, LogTagger {
 
     private var trackViewAdapter: TrackViewAdapter? = null
     private var trackViewPagerChangeCallback: TrackViewPagerChangeCallback? = null
@@ -87,6 +86,10 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener {
     override fun onDestroy() {
         super.onDestroy()
         mediaControllerAdapter!!.disconnect()
+    }
+
+    override fun logTag(): String {
+       return "MEDIA_PLAYER_ACTIVITY"
     }
 
 }

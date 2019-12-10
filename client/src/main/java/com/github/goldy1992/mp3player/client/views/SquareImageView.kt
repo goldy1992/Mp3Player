@@ -6,8 +6,12 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.widget.AppCompatImageView
 import com.github.goldy1992.mp3player.client.R
 
-class SquareImageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : AppCompatImageView(context, attrs, defStyleAttr) {
+class SquareImageView
+    @JvmOverloads
+    constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
+    : AppCompatImageView(context, attrs, defStyleAttr) {
     private var useWidthOrHeight = 0
+
     public override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         when (useWidthOrHeight) {

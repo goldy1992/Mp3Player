@@ -50,9 +50,9 @@ abstract class FolderActivity : MediaActivityCompat() {
             titleTextView.isSelected = true
             titleTextView.marqueeRepeatLimit = -1
         } catch (ex: NoSuchFieldException) {
-            Log.e(LOG_TAG, ExceptionUtils.getMessage(ex))
+            Log.e(logTag(), ExceptionUtils.getMessage(ex))
         } catch (ex: IllegalAccessException) {
-            Log.e(LOG_TAG, ExceptionUtils.getMessage(ex))
+            Log.e(logTag(), ExceptionUtils.getMessage(ex))
         }
     }
 
@@ -60,7 +60,8 @@ abstract class FolderActivity : MediaActivityCompat() {
         finish()
     }
 
-    companion object {
-        private const val LOG_TAG = "FOLDER_ACTIVITY"
+    override fun logTag(): String {
+        return "FOLDER_ACTIVITY"
     }
+
 }

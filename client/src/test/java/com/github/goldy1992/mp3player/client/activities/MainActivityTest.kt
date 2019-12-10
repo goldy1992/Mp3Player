@@ -8,14 +8,15 @@ import androidx.test.core.app.ActivityScenario
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.nhaarman.mockitokotlin2.doNothing
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.spy
+import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.android.synthetic.main.activity_main.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
-import org.mockito.Mockito.doNothing
-import org.mockito.Mockito.spy
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
 import org.robolectric.annotation.LooperMode
@@ -29,24 +30,23 @@ class MainActivityTest {
 
     @Before
     fun setup() {
-           scenario = ActivityScenario.launch(TestMainActivity::class.java)
+       scenario = ActivityScenario.launch(TestMainActivity::class.java)
     }
 
     @Test
     fun testOnItemSelected() {
         scenario.onActivity { activity: TestMainActivity ->
-            val menuItem = Mockito.mock(MenuItem::class.java)
+            val menuItem = mock<MenuItem>()
             val result = activity.onOptionsItemSelected(menuItem)
             Assert.assertFalse(result)
         }
-
     }
 
     @Test
     fun testOnItemSelectedHomeButton() {
         scenario.onActivity { activity: TestMainActivity ->
-            val menuItem = Mockito.mock(MenuItem::class.java)
-            Mockito.`when`(menuItem.itemId).thenReturn(android.R.id.home)
+            val menuItem = mock<MenuItem>()
+            whenever(menuItem.itemId).thenReturn(android.R.id.home)
             val result = activity.onOptionsItemSelected(menuItem)
             Assert.assertTrue(result)
         }
@@ -56,8 +56,8 @@ class MainActivityTest {
     @Test
     fun testOnOptionsItemSelectedOpenDrawer() {
         scenario.onActivity { activity: TestMainActivity ->
-            val menuItem = Mockito.mock(MenuItem::class.java)
-            Mockito.`when`(menuItem.itemId).thenReturn(android.R.id.home)
+            val menuItem = mock<MenuItem>()
+            whenever(menuItem.itemId).thenReturn(android.R.id.home)
             activity.onOptionsItemSelected(menuItem)
             activity.drawerLayout?.isDrawerOpen(GravityCompat.START)
         }
@@ -69,8 +69,8 @@ class MainActivityTest {
             val searchFragment = activity.searchFragment
             // assert the search fragment is NOT already added
             Assert.assertFalse(searchFragment!!.isAdded)
-            val menuItem = Mockito.mock(MenuItem::class.java)
-            Mockito.`when`(menuItem.itemId).thenReturn(R.id.action_search)
+            val menuItem = mock<MenuItem>()
+            whenever(menuItem.itemId).thenReturn(R.id.action_search)
             // select the search option item
             activity.onOptionsItemSelected(menuItem)
             Shadows.shadowOf(Looper.getMainLooper()).idle()
@@ -89,7 +89,7 @@ class MainActivityTest {
     fun testOnChildrenLoadedForRootCategory() {
         scenario.onActivity { activity: TestMainActivity ->
             var myPageAdapterSpied = spy(activity.adapter)
-            doNothing().`when`(myPageAdapterSpied!!).notifyDataSetChanged()
+            doNothing().whenever(myPageAdapterSpied!!).notifyDataSetChanged()
             activity.adapter = myPageAdapterSpied;
             val parentId = "parentId"
             val children = ArrayList<MediaBrowserCompat.MediaItem>()

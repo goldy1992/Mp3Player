@@ -5,11 +5,13 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.ShuffleMode
 import android.view.View
 import com.github.goldy1992.mp3player.commons.Constants
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
@@ -40,8 +42,8 @@ class ShuffleButtonTest : MediaButtonTestBase() {
         @ShuffleMode val currentShuffleMode = PlaybackStateCompat.SHUFFLE_MODE_NONE
         @ShuffleMode val expectedShuffleMode = PlaybackStateCompat.SHUFFLE_MODE_ALL
         shuffleButton!!.shuffleMode = currentShuffleMode
-        shuffleButton!!.onClick(Mockito.mock(View::class.java))
-        Mockito.verify(mediaControllerAdapter, Mockito.times(1))!!.shuffleMode = expectedShuffleMode
+        shuffleButton!!.onClick(mock<View>())
+        verify(mediaControllerAdapter, times(1))!!.shuffleMode = expectedShuffleMode
     }
 
     @Test
@@ -49,8 +51,8 @@ class ShuffleButtonTest : MediaButtonTestBase() {
         @ShuffleMode val currentShuffleMode = PlaybackStateCompat.SHUFFLE_MODE_ALL
         @ShuffleMode val expectedShuffleMode = PlaybackStateCompat.SHUFFLE_MODE_NONE
         shuffleButton!!.shuffleMode = currentShuffleMode
-        shuffleButton!!.onClick(Mockito.mock(View::class.java))
-        Mockito.verify(mediaControllerAdapter, Mockito.times(1))!!.shuffleMode = expectedShuffleMode
+        shuffleButton!!.onClick(mock<View>())
+        verify(mediaControllerAdapter, times(1))!!.shuffleMode = expectedShuffleMode
     }
 
     @Test

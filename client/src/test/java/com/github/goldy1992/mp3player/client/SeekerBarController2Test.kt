@@ -9,14 +9,12 @@ import android.support.v4.media.session.PlaybackStateCompat
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.views.SeekerBar
 import com.github.goldy1992.mp3player.client.views.TimeCounter
+import com.nhaarman.mockitokotlin2.mock
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowSeekBar
@@ -26,22 +24,22 @@ import org.robolectric.shadows.ShadowValueAnimator
 @Config(manifest = Config.NONE, sdk = [26], shadows = [ShadowValueAnimator::class, ShadowSeekBar::class])
 class SeekerBarController2Test {
     private var m_context: Context? = null
-    @Mock
-    private val m_mediaControllerAdapter: MediaControllerAdapter? = null
-    private var timeCounter: TimeCounter? = null
-    private var m_seekerBarController2: SeekerBarController2? = null
-    private var m_seekerBar: SeekerBar? = null
+
+    private val m_mediaControllerAdapter: MediaControllerAdapter = mock<MediaControllerAdapter>()
+    private lateinit var timeCounter: TimeCounter
+    private lateinit var m_seekerBarController2: SeekerBarController2
+    private lateinit var m_seekerBar: SeekerBar
     private val DEFAULT_DURATION: Long = 3000
+
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
         m_context = InstrumentationRegistry.getInstrumentation().context
-        timeCounter = TimeCounter(Handler(Looper.getMainLooper()), m_mediaControllerAdapter!!)
+        timeCounter = TimeCounter(Handler(Looper.getMainLooper()), m_mediaControllerAdapter)
         m_seekerBar = SeekerBar(m_context)
-        m_seekerBarController2 = SeekerBarController2(m_mediaControllerAdapter, timeCounter!!)
-        m_seekerBarController2!!.init(m_seekerBar!!)
+        m_seekerBarController2 = SeekerBarController2(m_mediaControllerAdapter, timeCounter)
+        m_seekerBarController2.init(m_seekerBar)
         // set default metadata
-        m_seekerBarController2!!.onMetadataChanged(createMetaData(DEFAULT_DURATION))
+        m_seekerBarController2.onMetadataChanged(createMetaData(DEFAULT_DURATION))
     }
 
     @After
@@ -66,10 +64,9 @@ class SeekerBarController2Test {
 
     @Test
     fun testStartTracking() {
-        val timeCounter = Mockito.mock(TimeCounter::class.java)
         //    m_seekerBar.setTimeCounter(timeCounter);
-        m_seekerBarController2!!.onStartTrackingTouch(m_seekerBar!!)
-        Assert.assertTrue(m_seekerBar!!.isTracking)
+        m_seekerBarController2.onStartTrackingTouch(m_seekerBar)
+        Assert.assertTrue(m_seekerBar.isTracking)
     }
 
     @Test
@@ -91,7 +88,7 @@ class SeekerBarController2Test {
         val EXPECTED_DURATION = (DEFAULT_DURATION / speed).toLong()
         val playbackState = createPlaybackState(PlaybackStateCompat.STATE_PAUSED, 350, speed)
         val originalValueAnimator = m_seekerBarController2!!.valueAnimator
-        m_seekerBarController2!!.onPlaybackStateChanged(playbackState)
+        m_seekerBarController2.onPlaybackStateChanged(playbackState)
         assertValueAnimatorReset(originalValueAnimator)
         val valueAnimator = m_seekerBarController2!!.valueAnimator
         Assert.assertTrue(valueAnimator!!.isStarted)

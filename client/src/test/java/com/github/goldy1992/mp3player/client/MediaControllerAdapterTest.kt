@@ -13,121 +13,118 @@ import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MyMetadataCallback
 import com.github.goldy1992.mp3player.client.callbacks.playback.MyPlaybackStateCallback
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
+import com.nhaarman.mockitokotlin2.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class MediaControllerAdapterTest {
-    private var mediaControllerAdapter: MediaControllerAdapter? = null
-    @Mock
-    private val myMetaDataCallback: MyMetadataCallback? = null
-    @Mock
-    private val playbackStateCallback: MyPlaybackStateCallback? = null
-    private var myMediaControllerCallback: MyMediaControllerCallback? = null
-    private var context: Context? = null
+
+    private val myMetaDataCallback: MyMetadataCallback = mock<MyMetadataCallback>()
+    private val playbackStateCallback: MyPlaybackStateCallback = mock<MyPlaybackStateCallback>()
+    
+    private lateinit var mediaControllerAdapter: MediaControllerAdapter
+    private lateinit var myMediaControllerCallback: MyMediaControllerCallback
+    private lateinit var context: Context
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
         context = InstrumentationRegistry.getInstrumentation().context
-        myMediaControllerCallback = Mockito.spy(MyMediaControllerCallback(myMetaDataCallback!!, playbackStateCallback!!))
+        myMediaControllerCallback = spy(MyMediaControllerCallback(myMetaDataCallback, playbackStateCallback))
         val token = mediaSessionCompatToken
         mediaControllerAdapter = initialiseMediaControllerAdapter(token)
     }
 
     @Test
     fun testIsInitialised() {
-        Mockito.`when`(mediaControllerAdapter!!.mediaController!!.isSessionReady).thenReturn(true)
-        Assert.assertTrue(mediaControllerAdapter!!.isInitialized)
+        whenever(mediaControllerAdapter.mediaController?.isSessionReady).thenReturn(true)
+        Assert.assertTrue(mediaControllerAdapter.isInitialized)
     }
 
     @Test
     fun testSetMediaSessionTokenWhenAlreadyInitialised() {
-        Mockito.`when`(mediaControllerAdapter!!.isInitialized).thenReturn(true)
+        whenever(mediaControllerAdapter.isInitialized).thenReturn(true)
         val token = mediaSessionCompatToken
-        Mockito.reset(mediaControllerAdapter)
-        mediaControllerAdapter!!.setMediaToken(token)
-        Mockito.verify(mediaControllerAdapter, Mockito.never())!!.init(token)
+        reset(mediaControllerAdapter)
+        mediaControllerAdapter.setMediaToken(token)
+        verify(mediaControllerAdapter, never()).init(token)
     }
 
     @Test
     fun testPlay() {
-        mediaControllerAdapter!!.play()
-        Mockito.verify(mediaControllerAdapter, Mockito.times(1))!!.play()
+        mediaControllerAdapter.play()
+        verify(mediaControllerAdapter, times(1)).play()
     }
 
     @Test
     fun testPause() {
-        mediaControllerAdapter!!.pause()
-        Mockito.verify(mediaControllerAdapter, Mockito.times(1))!!.pause()
+        mediaControllerAdapter.pause()
+        verify(mediaControllerAdapter, times(1)).pause()
     }
 
     @Test
     fun testSkipToNext() {
-        mediaControllerAdapter!!.skipToNext()
-        Mockito.verify(mediaControllerAdapter, Mockito.times(1))!!.skipToNext()
+        mediaControllerAdapter.skipToNext()
+        verify(mediaControllerAdapter, times(1)).skipToNext()
     }
 
     @Test
     fun testSkipToPrevious() {
-        mediaControllerAdapter!!.skipToPrevious()
-        Mockito.verify(mediaControllerAdapter, Mockito.times(1))!!.skipToPrevious()
+        mediaControllerAdapter.skipToPrevious()
+        verify(mediaControllerAdapter, times(1)).skipToPrevious()
     }
 
     @Test
     fun testStop() {
-        mediaControllerAdapter!!.stop()
-        Mockito.verify(mediaControllerAdapter, Mockito.times(1))!!.stop()
+        mediaControllerAdapter.stop()
+        verify(mediaControllerAdapter, times(1)).stop()
     }
 
     @Test
     fun testPrepareFromMediaId() {
         val mediaId = "MEDIA_ID"
         val extras = Bundle()
-        mediaControllerAdapter!!.prepareFromMediaId(mediaId, extras)
-        Mockito.verify(mediaControllerAdapter, Mockito.times(1))!!.prepareFromMediaId(mediaId, extras)
+        mediaControllerAdapter.prepareFromMediaId(mediaId, extras)
+        verify(mediaControllerAdapter, times(1)).prepareFromMediaId(mediaId, extras)
     }
 
     @Test
     fun testPlayFromMediaId() {
         val mediaId = "MEDIA_ID"
         val extras = Bundle()
-        mediaControllerAdapter!!.playFromMediaId(mediaId, extras)
-        Mockito.verify(mediaControllerAdapter, Mockito.times(1))!!.playFromMediaId(mediaId, extras)
+        mediaControllerAdapter.playFromMediaId(mediaId, extras)
+        verify(mediaControllerAdapter, times(1)).playFromMediaId(mediaId, extras)
     }
 
     @Test
     fun testSeekTo() {
         val position = 23542L
-        mediaControllerAdapter!!.seekTo(position)
-        Mockito.verify(mediaControllerAdapter, Mockito.times(1))!!.seekTo(position)
+        mediaControllerAdapter.seekTo(position)
+        verify(mediaControllerAdapter, times(1)).seekTo(position)
     }
 
     @Test
     fun testSetRepeatMode() {
         @PlaybackStateCompat.State val repeatMode = PlaybackStateCompat.REPEAT_MODE_ALL
-        mediaControllerAdapter!!.repeatMode = repeatMode
-        Mockito.verify(mediaControllerAdapter, Mockito.times(1))!!.repeatMode = repeatMode
+        mediaControllerAdapter.repeatMode = repeatMode
+        verify(mediaControllerAdapter, times(1)).repeatMode = repeatMode
     }
 
     @Test
     fun testGetRepeatMode() {
         val expected = PlaybackStateCompat.REPEAT_MODE_ALL
-        Mockito.`when`(mediaControllerAdapter!!.mediaController!!.repeatMode).thenReturn(expected)
-        val result = mediaControllerAdapter!!.repeatMode
+        whenever(mediaControllerAdapter.mediaController?.repeatMode).thenReturn(expected)
+        val result = mediaControllerAdapter.repeatMode
         Assert.assertEquals(expected.toLong(), result.toLong())
     }
 
     @Test
     fun testGetShuffleMode() {
         val expected = PlaybackStateCompat.SHUFFLE_MODE_ALL
-        Mockito.`when`(mediaControllerAdapter!!.mediaController!!.shuffleMode).thenReturn(expected)
-        val result = mediaControllerAdapter!!.shuffleMode
+        whenever(mediaControllerAdapter.mediaController?.shuffleMode).thenReturn(expected)
+        val result = mediaControllerAdapter.shuffleMode
         Assert.assertEquals(expected.toLong(), result.toLong())
     }
 
@@ -137,29 +134,29 @@ class MediaControllerAdapterTest {
         val metadata = MediaMetadataCompat.Builder()
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, expectedPath)
                 .build()
-        Mockito.`when`(mediaControllerAdapter!!.metadata).thenReturn(metadata)
-        val result = mediaControllerAdapter!!.currentSongAlbumArtUri
-        Assert.assertEquals(result!!.path, expectedPath)
+        whenever(mediaControllerAdapter.metadata).thenReturn(metadata)
+        val result = mediaControllerAdapter.currentSongAlbumArtUri
+        Assert.assertEquals(result?.path, expectedPath)
     }
 
     @Test
     fun testSendCustomAction() {
         val customAction = "DO_SOMETHING"
         val args = Bundle()
-        mediaControllerAdapter!!.sendCustomAction(customAction, args)
-        Mockito.verify(mediaControllerAdapter, Mockito.times(1))!!.sendCustomAction(customAction, args)
+        mediaControllerAdapter.sendCustomAction(customAction, args)
+        verify(mediaControllerAdapter, times(1)).sendCustomAction(customAction, args)
     }
 
     @Test
     fun testShuffleMode() {
         @PlaybackStateCompat.State val shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_ALL
-        mediaControllerAdapter!!.shuffleMode = shuffleMode
-        Mockito.verify(mediaControllerAdapter, Mockito.times(1))!!.shuffleMode = shuffleMode
+        mediaControllerAdapter.shuffleMode = shuffleMode
+        verify(mediaControllerAdapter, times(1)).shuffleMode = shuffleMode
     }
 
     @Test
     fun testNullGetPlaybackState() {
-        val result = mediaControllerAdapter!!.playbackState
+        val result = mediaControllerAdapter.playbackState
         Assert.assertEquals(0, result.toLong())
     }
 
@@ -169,75 +166,75 @@ class MediaControllerAdapterTest {
         val expectedState = PlaybackStateCompat.Builder()
                 .setState(state, 34L, 0.4f)
                 .build()
-        val mediaControllerCompat = mediaControllerAdapter!!.mediaController
-        Mockito.`when`(mediaControllerCompat!!.playbackState).thenReturn(expectedState)
-        @PlaybackStateCompat.State val result = mediaControllerAdapter!!.playbackState
+        val mediaControllerCompat = mediaControllerAdapter.mediaController
+        whenever(mediaControllerCompat?.playbackState).thenReturn(expectedState)
+        @PlaybackStateCompat.State val result = mediaControllerAdapter.playbackState
         Assert.assertEquals(state.toLong(), result.toLong())
     }
 
     @Test
     fun testGetPlaybackStateCompatWhenNull() {
-        mediaControllerAdapter!!.mediaController = null
-        Assert.assertNull(mediaControllerAdapter!!.playbackStateCompat)
+        mediaControllerAdapter.mediaController = null
+        Assert.assertNull(mediaControllerAdapter.playbackStateCompat)
     }
 
     @Test
     fun testGetMetadataNullController() {
-        mediaControllerAdapter!!.mediaController = null
-        Assert.assertNull(mediaControllerAdapter!!.metadata)
+        mediaControllerAdapter.mediaController = null
+        Assert.assertNull(mediaControllerAdapter.metadata)
     }
 
     @Test
     fun testGetMetadata() {
-        val metadata = Mockito.mock(MediaMetadataCompat::class.java)
-        val mockMediaController = Mockito.mock(MediaControllerCompat::class.java)
-        Mockito.`when`(mockMediaController.metadata).thenReturn(metadata)
-        mediaControllerAdapter!!.mediaController = mockMediaController
-        Assert.assertEquals(metadata, mediaControllerAdapter!!.metadata)
+        val metadata = mock<MediaMetadataCompat>()
+        val mockMediaController = mock<MediaControllerCompat>()
+        whenever(mockMediaController.metadata).thenReturn(metadata)
+        mediaControllerAdapter.mediaController = mockMediaController
+        Assert.assertEquals(metadata, mediaControllerAdapter.metadata)
     }
 
     @Test
     fun testRegisterMetaDataListener() {
-        val expected = Mockito.mock(MetadataListener::class.java)
-        mediaControllerAdapter!!.registerMetaDataListener(expected)
-        Mockito.verify(myMetaDataCallback, Mockito.times(1))!!.registerMetaDataListener(expected)
+        val expected = mock<MetadataListener>()
+        mediaControllerAdapter.registerMetaDataListener(expected)
+        verify(myMetaDataCallback, times(1)).registerMetaDataListener(expected)
     }
 
     @Test
     fun testUnregisterMetaDataListener() {
-        val expected = Mockito.mock(MetadataListener::class.java)
-        mediaControllerAdapter!!.unregisterMetaDataListener(expected)
-        Mockito.verify(myMetaDataCallback, Mockito.times(1))!!.removeMetaDataListener(expected)
+        val expected = mock<MetadataListener>()
+        mediaControllerAdapter.unregisterMetaDataListener(expected)
+        verify(myMetaDataCallback, times(1)).removeMetaDataListener(expected)
     }
 
     @Test
     fun testUnregisterPlaybackStateListener() {
-        val expected = Mockito.mock(PlaybackStateListener::class.java)
-        mediaControllerAdapter!!.unregisterPlaybackStateListener(expected)
-        Mockito.verify(playbackStateCallback, Mockito.times(1))!!.removePlaybackStateListener(expected)
+        val expected = mock<PlaybackStateListener>()
+        mediaControllerAdapter.unregisterPlaybackStateListener(expected)
+        verify(playbackStateCallback, times(1)).removePlaybackStateListener(expected)
     }
 
     @Test
     fun testRegisterPlaybackListener() {
-        val expected = Mockito.mock(PlaybackStateListener::class.java)
-        mediaControllerAdapter!!.registerPlaybackStateListener(expected)
-        Mockito.verify(playbackStateCallback, Mockito.times(1))!!.registerPlaybackStateListener(expected)
+        val expected = mock<PlaybackStateListener>()
+        mediaControllerAdapter.registerPlaybackStateListener(expected)
+        verify(playbackStateCallback, times(1)).registerPlaybackStateListener(expected)
     }
 
     @Test
     fun testDisconnect() {
-        mediaControllerAdapter!!.disconnect()
-        Mockito.verify(mediaControllerAdapter!!.mediaController, Mockito.times(1))!!.unregisterCallback(myMediaControllerCallback!!)
+        mediaControllerAdapter.disconnect()
+        verify(mediaControllerAdapter.mediaController, times(1))?.unregisterCallback(myMediaControllerCallback)
     }
 
     private fun initialiseMediaControllerAdapter(token: MediaSessionCompat.Token): MediaControllerAdapter {
-        val spiedMediaControllerAdapter = Mockito.spy(MediaControllerAdapter(context!!, myMediaControllerCallback))
+        val spiedMediaControllerAdapter = spy(MediaControllerAdapter(context, myMediaControllerCallback))
         Assert.assertFalse(spiedMediaControllerAdapter.isInitialized)
         spiedMediaControllerAdapter.setMediaToken(token)
         Assert.assertEquals(token, spiedMediaControllerAdapter.token)
-        val transportControls = Mockito.mock(MediaControllerCompat.TransportControls::class.java)
-        Mockito.`when`(spiedMediaControllerAdapter.controller).thenReturn(transportControls)
-        val mediaControllerCompat = Mockito.mock(MediaControllerCompat::class.java)
+        val transportControls = mock<MediaControllerCompat.TransportControls>()
+        whenever(spiedMediaControllerAdapter.controller).thenReturn(transportControls)
+        val mediaControllerCompat = mock<MediaControllerCompat>()
         spiedMediaControllerAdapter.mediaController = mediaControllerCompat
         return spiedMediaControllerAdapter
     }

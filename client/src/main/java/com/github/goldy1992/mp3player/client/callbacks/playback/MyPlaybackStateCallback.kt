@@ -1,13 +1,17 @@
 package com.github.goldy1992.mp3player.client.callbacks.playback
 
-import android.os.Handler
 import android.support.v4.media.session.PlaybackStateCompat
 import com.github.goldy1992.mp3player.client.callbacks.AsyncCallback
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Named
 
-class MyPlaybackStateCallback @Inject constructor(@Named("main") handler: Handler) : AsyncCallback<PlaybackStateCompat>(handler) {
+class MyPlaybackStateCallback
+
+    @Inject
+    constructor()
+    : AsyncCallback<PlaybackStateCompat>() {
+
+
     private val listeners: MutableSet<PlaybackStateListener>
     override fun processCallback(data: PlaybackStateCompat) {
         for (listener in listeners) {

@@ -1,11 +1,12 @@
 package com.github.goldy1992.mp3player.client.views.buttons
 
 import android.support.v4.media.session.PlaybackStateCompat
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
@@ -13,7 +14,7 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
     /**
      * Play Pause Button to test
      */
-    private var playPauseButton: PlayPauseButton? = null
+    private lateinit var playPauseButton: PlayPauseButton
 
     /**
      * setup
@@ -21,7 +22,7 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
     @Before
     public override fun setup() {
         super.setup()
-        playPauseButton = PlayPauseButton(context!!, mediaControllerAdapter!!, handler!!)
+        playPauseButton = PlayPauseButton(context, mediaControllerAdapter, handler)
     }
 
     /**
@@ -30,7 +31,7 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
     @Test
     fun testCreate() {
         Assert.assertNotNull(playPauseButton)
-        Assert.assertEquals(PlayPauseButton.INITIAL_PLAYBACK_STATE, playPauseButton!!.state)
+        Assert.assertEquals(PlayPauseButton.INITIAL_PLAYBACK_STATE, playPauseButton.state)
     }
 
     /**
@@ -76,7 +77,7 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
     fun testClickPlayWhenPaused() {
         playPauseButton!!.state = PlaybackStateCompat.STATE_PAUSED
         playPauseButton!!.onClick(null)
-        Mockito.verify(mediaControllerAdapter, Mockito.times(1))!!.play()
+        verify(mediaControllerAdapter, times(1))!!.play()
     }
 
     /**
@@ -86,9 +87,9 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
      */
     @Test
     fun testClickPauseWhenPlaying() {
-        playPauseButton!!.state = PlaybackStateCompat.STATE_PLAYING
-        playPauseButton!!.onClick(null)
-        Mockito.verify(mediaControllerAdapter, Mockito.times(1))!!.pause()
+        playPauseButton.state = PlaybackStateCompat.STATE_PLAYING
+        playPauseButton.onClick(null)
+        verify(mediaControllerAdapter, times(1))!!.pause()
     }
 
     /**

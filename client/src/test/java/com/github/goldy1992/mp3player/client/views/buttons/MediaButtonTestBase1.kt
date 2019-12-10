@@ -4,30 +4,28 @@ import android.content.Context
 import android.os.Handler
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
+import com.nhaarman.mockitokotlin2.mock
 
 open class MediaButtonTestBase {
     /**
      * mock MediaControllerAdapter
      */
-    @Mock
-    protected var mediaControllerAdapter: MediaControllerAdapter? = null
+
+    protected val mediaControllerAdapter: MediaControllerAdapter = mock<MediaControllerAdapter>()
     /**
      * The main handler used to update the GUI
      */
-    @Mock
-    protected var handler: Handler? = null
+
+    protected val handler: Handler = mock<Handler>()
     /**
      * Context
      */
-    protected var context: Context? = null
+    protected lateinit var context: Context
 
     /**
      * setup
      */
     protected open fun setup() {
-        MockitoAnnotations.initMocks(this)
         context = InstrumentationRegistry.getInstrumentation().context
     }
 }

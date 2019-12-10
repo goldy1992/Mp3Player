@@ -9,6 +9,7 @@ import com.github.goldy1992.mp3player.service.MediaPlaybackServiceInjector
 class SplashScreenEntryActivityInjector : SplashScreenEntryActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        initialiseDependencies()
         super.onCreate(savedInstanceState)
     }
 

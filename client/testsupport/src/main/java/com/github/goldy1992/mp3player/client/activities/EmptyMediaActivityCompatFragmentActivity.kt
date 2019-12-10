@@ -27,4 +27,8 @@ class EmptyMediaActivityCompatFragmentActivity : MediaActivityCompat() {
     override fun initialiseView(layoutId: Int): Boolean {
         return true
     }
+
+    override fun logTag(): String {
+        return "EMPTY_ACTIVITY"
+    }
 }

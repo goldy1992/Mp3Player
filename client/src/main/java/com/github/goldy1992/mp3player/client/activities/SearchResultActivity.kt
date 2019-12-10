@@ -105,5 +105,4 @@ abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListene
     fun setSearchResultAdapter(searchResultAdapter: SearchResultAdapter?) {
         this.searchResultAdapter = searchResultAdapter
     }
-
 }

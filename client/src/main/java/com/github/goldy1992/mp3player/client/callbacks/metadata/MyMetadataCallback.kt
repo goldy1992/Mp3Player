@@ -9,7 +9,12 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
-class MyMetadataCallback @Inject constructor(@Named("main") handler: Handler) : AsyncCallback<MediaMetadataCompat?>(handler) {
+class MyMetadataCallback
+
+    @Inject
+    constructor()
+    : AsyncCallback<MediaMetadataCompat?>() {
+
     private var currentMediaId: String? = null
     private val metadataListeners: MutableSet<MetadataListener>
     override fun processCallback(mediaMetadataCompat: MediaMetadataCompat?) {
