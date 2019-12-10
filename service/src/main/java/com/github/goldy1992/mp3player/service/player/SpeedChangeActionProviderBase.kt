@@ -10,7 +10,7 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector.CustomActionProvider
 
 abstract class SpeedChangeActionProviderBase : CustomActionProvider {
-    override fun onCustomAction(player: Player, controlDispatcher: ControlDispatcher, action: String, extras: Bundle) {
+    override fun onCustomAction(player: Player, controlDispatcher: ControlDispatcher, action: String, extras: Bundle?) {
         Log.i(LOG_TAG, "hit speed change")
         val currentSpeed = player.playbackParameters.speed
         var newSpeed = currentSpeed

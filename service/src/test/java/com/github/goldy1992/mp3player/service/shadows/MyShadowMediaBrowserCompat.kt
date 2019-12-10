@@ -5,10 +5,11 @@ import android.support.v4.media.session.MediaSessionCompat
 import org.robolectric.annotation.Implementation
 import org.robolectric.annotation.Implements
 import org.robolectric.shadows.support.v4.ShadowMediaBrowserCompat
+import java.util.*
 
 @Implements(MediaBrowserCompat::class)
 class MyShadowMediaBrowserCompat : ShadowMediaBrowserCompat() {
     @get:Implementation
     val sessionToken: MediaSessionCompat.Token
-        get() = null
+        get() = Object() as MediaSessionCompat.Token
 }

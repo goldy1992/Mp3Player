@@ -1,7 +1,13 @@
 package com.github.goldy1992.mp3player.service.player
 
 import android.os.Looper
+import com.github.goldy1992.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED
 import com.google.android.exoplayer2.PlaybackParameters
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.capture
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -16,10 +22,10 @@ import org.robolectric.annotation.LooperMode
 @RunWith(RobolectricTestRunner::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 class IncreaseSpeedProviderTest : SpeedProviderTestBase() {
-    private var increaseSpeedProvider: IncreaseSpeedProvider? = null
+    private lateinit var increaseSpeedProvider: IncreaseSpeedProvider
     @Before
     override fun setup() {
-        MockitoAnnotations.initMocks(this)
+
         super.setup()
         increaseSpeedProvider = IncreaseSpeedProvider()
     }
@@ -35,12 +41,14 @@ class IncreaseSpeedProviderTest : SpeedProviderTestBase() {
     fun testIncreaseSpeed() {
         val currentSpeed = 1.0f
         val expectedSpeed = 1.05f
-        Mockito.`when`(exoPlayer!!.playbackParameters).thenReturn(PlaybackParameters(currentSpeed))
-        increaseSpeedProvider!!.onCustomAction(exoPlayer!!, controlDispatcher!!, INCREASE_PLAYBACK_SPEED, null)
-        Shadows.shadowOf(Looper.getMainLooper()).idle()
-        Mockito.verify(exoPlayer, Mockito.times(1)).setPlaybackParameters(captor!!.capture())
-        val playbackParameters = captor!!.value
-        Assert.assertEquals(expectedSpeed, playbackParameters.speed, 0.0f)
+        whenever(exoPlayer!!.playbackParameters).thenReturn(PlaybackParameters(currentSpeed))
+        argumentCaptor<PlaybackParameters>().apply {
+            increaseSpeedProvider!!.onCustomAction(exoPlayer, controlDispatcher!!, INCREASE_PLAYBACK_SPEED, null)
+            Shadows.shadowOf(Looper.getMainLooper()).idle()
+            verify(exoPlayer, times(1)).setPlaybackParameters(capture())
+            val playbackParameters = firstValue
+            Assert.assertEquals(expectedSpeed, playbackParameters.speed, 0.0f)
+        }
     }
 
     /**

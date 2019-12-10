@@ -42,7 +42,7 @@ class MyPlaybackPreparer @Inject constructor(private val exoPlayer: ExoPlayer,
         }
     }
 
-    override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle) {
+    override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) {
         val trackId = extractTrackId(mediaId)
         if (null != trackId) {
             val results = contentManager.getPlaylist(mediaId)
@@ -74,11 +74,11 @@ class MyPlaybackPreparer @Inject constructor(private val exoPlayer: ExoPlayer,
         } // if
     }
 
-    override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle) {
+    override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) {
         throw UnsupportedOperationException()
     }
 
-    override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle) {
+    override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) {
         val result = contentManager.getItem(uri)
         val playlist: MutableList<MediaBrowserCompat.MediaItem> = ArrayList()
         playlist.add(result!!)
@@ -86,7 +86,7 @@ class MyPlaybackPreparer @Inject constructor(private val exoPlayer: ExoPlayer,
         preparePlaylist(playWhenReady, getMediaId(result), playlist)
     }
 
-    override fun onCommand(player: Player, controlDispatcher: ControlDispatcher, command: String, extras: Bundle, cb: ResultReceiver): Boolean {
+    override fun onCommand(player: Player, controlDispatcher: ControlDispatcher, command: String, extras: Bundle?, cb: ResultReceiver?): Boolean {
         return false
     }
 

@@ -20,7 +20,7 @@ import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
 class FolderSearcherTest : ContentResolverSearcherTestBase<FolderSearcher?>() {
-    private var filter: FolderSearchResultsFilter? = null
+    private lateinit var filter: FolderSearchResultsFilter
     @Mock
     var resultsParser: FolderResultsParser? = null
     private var mediaItemTypeIds: MediaItemTypeIds? = null
@@ -52,7 +52,7 @@ class FolderSearcherTest : ContentResolverSearcherTestBase<FolderSearcher?>() {
         expectedDbResult.add(folder1)
         expectedDbResult.add(folder2)
         expectedDbResult.add(folder3)
-        Mockito.`when`(folderDao!!.query(ContentResolverSearcherTestBase.Companion.VALID_QUERY)).thenReturn(expectedDbResult)
+        Mockito.`when`(folderDao!!.query(ContentResolverSearcherTestBase.Companion.VALID_QUERY)).thenReturn(expectedDbResult as List<Folder>)
         val EXPECTED_WHERE = (MediaStore.Audio.Media.DATA + " LIKE ? OR "
                 + MediaStore.Audio.Media.DATA + " LIKE ? OR "
                 + MediaStore.Audio.Media.DATA + " LIKE ? COLLATE NOCASE")

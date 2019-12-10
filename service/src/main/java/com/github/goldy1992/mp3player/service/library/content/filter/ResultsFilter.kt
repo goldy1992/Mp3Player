@@ -4,6 +4,6 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem
 
 interface ResultsFilter {
     fun filter(query: String,
-               results: List<MediaItem>?):
+               results: MutableList<MediaItem>?):
             List<MediaItem>?
 }

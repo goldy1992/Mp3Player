@@ -11,7 +11,7 @@ class FolderSearchResultsFilter
     constructor() : ResultsFilter {
 
     override fun filter(query: String,
-                        results: List<MediaItem>?)
+                        results: MutableList<MediaItem>?)
             : List<MediaItem>? {
         val iterator: MutableListIterator<MediaItem> = results!!.toMutableList().listIterator()
         while (iterator.hasNext()) {

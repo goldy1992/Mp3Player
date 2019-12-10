@@ -5,6 +5,7 @@ import android.support.v4.media.MediaMetadataCompat
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.service.PlaylistManager
 import com.google.android.exoplayer2.ExoPlayer
+import com.nhaarman.mockitokotlin2.mock
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -16,15 +17,13 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class MyMetadataProviderTest {
-    @Mock
-    private val playlistManager: PlaylistManager? = null
-    @Mock
-    private val exoPlayer: ExoPlayer? = null
-    private var myMetadataProvider: MyMetadataProvider? = null
+
+    private val playlistManager: PlaylistManager = mock<PlaylistManager>()
+    private val exoPlayer: ExoPlayer = mock<ExoPlayer>()
+    private lateinit var myMetadataProvider: MyMetadataProvider
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
-        myMetadataProvider = MyMetadataProvider(playlistManager!!)
+        myMetadataProvider = MyMetadataProvider(playlistManager)
     }
 
     @Test
@@ -44,15 +43,15 @@ class MyMetadataProviderTest {
         Mockito.`when`(exoPlayer!!.currentWindowIndex).thenReturn(index)
         Mockito.`when`(playlistManager!!.getItemAtIndex(index)).thenReturn(mediaItem)
         val result = myMetadataProvider!!.getMetadata(exoPlayer)
-        val actualId = result.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)
+        val actualId = result?.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)
         Assert.assertEquals(expectedId, actualId)
-        val actualDuration = result.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
+        val actualDuration = result?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
         Assert.assertEquals(expectedDuration, actualDuration)
-        val actualTitle = result.getString(MediaMetadataCompat.METADATA_KEY_TITLE)
+        val actualTitle = result?.getString(MediaMetadataCompat.METADATA_KEY_TITLE)
         Assert.assertEquals(expectedTitle, actualTitle)
-        val actualArtist = result.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)
+        val actualArtist = result?.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)
         Assert.assertEquals(expectedArtist, actualArtist)
-        val actualAlbumArt = result.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI)
+        val actualAlbumArt = result?.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI)
         Assert.assertEquals(expectedAlbumArt, actualAlbumArt)
     }
 }

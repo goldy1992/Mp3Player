@@ -131,10 +131,6 @@ dependencies {
 
     kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     kaptTest group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
-    annotationProcessor  group: 'com.google.dagger', name: 'dagger-android-processor', version: DAGGER_VERSION
-    annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
-
-
 
 
     // vintage

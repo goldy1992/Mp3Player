@@ -5,15 +5,16 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.search.Folder
 import com.github.goldy1992.mp3player.service.library.search.FolderDao
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
-import org.mockito.Captor
-import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
 import org.robolectric.annotation.LooperMode
@@ -22,27 +23,21 @@ import java.io.File
 @LooperMode(LooperMode.Mode.PAUSED)
 @RunWith(RobolectricTestRunner::class)
 class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
-    private var folderDatabaseManager: FolderDatabaseManager? = null
-    @Captor
-    var folderCaptor: ArgumentCaptor<Folder>? = null
-    @Captor
-    var deleteCaptor: ArgumentCaptor<List<String?>>? = null
-    @Captor
-    var insertAllCaptor: ArgumentCaptor<List<Folder?>>? = null
-    @Mock
-    private val folderDao: FolderDao? = null
+
+    private lateinit var folderDatabaseManager: FolderDatabaseManager
+
+    private var folderDao: FolderDao = mock<FolderDao>()
 
     @Before
     override fun setup() {
         super.setup()
-        MockitoAnnotations.initMocks(this)
-        Mockito.`when`(searchDatabase!!.folderDao()).thenReturn(folderDao)
+        whenever(searchDatabase.folderDao()).thenReturn(folderDao)
         mediaItemTypeIds = MediaItemTypeIds()
         folderDatabaseManager = FolderDatabaseManager(
-                contentManager!!,
+                contentManager,
                 handler!!,
-                mediaItemTypeIds!!,
-                searchDatabase!!)
+                mediaItemTypeIds,
+                searchDatabase)
     }
 
     @Test
@@ -51,15 +46,17 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         val mediaItem = MediaItemBuilder(expectedId)
                 .setDirectoryFile(TEST_FILE)
                 .build()
-        folderDatabaseManager!!.insert(mediaItem)
-        Mockito.verify(folderDao, Mockito.times(1))!!.insert(folderCaptor!!.capture())
-        val folder = folderCaptor!!.value
-        Assert.assertEquals(expectedId, folder.id)
-        Assert.assertEquals(EXPECTED_DIRECTORY_NAME, folder.value)
+        argumentCaptor<Folder>().apply {
+            folderDatabaseManager!!.insert(mediaItem)
+            verify(folderDao, times(1)).insert(capture())
+            val folder = firstValue
+            Assert.assertEquals(expectedId, folder.id)
+            Assert.assertEquals(EXPECTED_DIRECTORY_NAME, folder.value)
+        }
     }
 
     @Test
-    override fun testReindex() {
+    fun testReindexCheckDeleteOld() {
         val expectedId = TEST_FILE.absolutePath
         val mediaItem = MediaItemBuilder(expectedId)
                 .setDirectoryFile(TEST_FILE)
@@ -67,17 +64,40 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         val toReturn = MediaItemBuilder(expectedId)
                 .setDirectoryFile(TEST_FILE)
                 .build()
-        Mockito.`when`(contentManager!!.getChildren(mediaItemTypeIds!!.getId(MediaItemType.FOLDERS)))
+        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.FOLDERS)))
                 .thenReturn(listOf(toReturn))
-        folderDatabaseManager!!.reindex()
-        Shadows.shadowOf(handler!!.looper).idle()
-        Mockito.verify(folderDao, Mockito.times(1))!!.deleteOld(deleteCaptor!!.capture())
-        val idsToDelete = deleteCaptor!!.value
-        Assert.assertEquals(expectedId, idsToDelete[0])
-        Mockito.verify(folderDao, Mockito.times(1))!!.insertAll(insertAllCaptor!!.capture())
-        val insertedFolder = insertAllCaptor!!.value[0]
-        Assert.assertEquals(expectedId, insertedFolder!!.id)
-        Assert.assertEquals(EXPECTED_DIRECTORY_NAME, insertedFolder.value)
+
+        argumentCaptor<List<String>>().apply {
+            folderDatabaseManager!!.reindex()
+            Shadows.shadowOf(handler.looper).idle()
+            verify(folderDao, Mockito.times(1)).deleteOld(capture())
+            val idsToDelete = firstValue
+            Assert.assertEquals(expectedId, idsToDelete[0])
+        }
+    }
+
+    @Test
+    fun testReindexCheckInsertAll() {
+        val expectedId = TEST_FILE.absolutePath
+        val mediaItem = MediaItemBuilder(expectedId)
+                .setDirectoryFile(TEST_FILE)
+                .build()
+        val toReturn = MediaItemBuilder(expectedId)
+                .setDirectoryFile(TEST_FILE)
+                .build()
+        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.FOLDERS)))
+                .thenReturn(listOf(toReturn))
+
+        argumentCaptor<List<Folder>>().apply {
+                folderDatabaseManager!!.reindex()
+                Shadows.shadowOf(handler.looper).idle()
+                     verify(folderDao, Mockito.times(1))!!.insertAll(capture())
+                val insertedFolder = firstValue[0]
+                Assert.assertEquals(expectedId, insertedFolder.id)
+                Assert.assertEquals(EXPECTED_DIRECTORY_NAME, insertedFolder.value)
+
+        }
+
     }
 
     companion object {

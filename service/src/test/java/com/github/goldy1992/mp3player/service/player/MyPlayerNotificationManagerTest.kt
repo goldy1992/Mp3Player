@@ -31,7 +31,7 @@ class MyPlayerNotificationManagerTest {
     fun setup() {
         MockitoAnnotations.initMocks(this)
         context = InstrumentationRegistry.getInstrumentation().context
-        myPlayerNotificationManager = MyPlayerNotificationManager(context, myDescriptionAdapter!!, exoPlayer!!, notificationListener!!)
+        myPlayerNotificationManager = MyPlayerNotificationManager(context!!, myDescriptionAdapter!!, exoPlayer!!, notificationListener!!)
         Assert.assertNotNull(myPlayerNotificationManager!!.playbackNotificationManager)
         Assert.assertFalse(myPlayerNotificationManager!!.isActive)
     }

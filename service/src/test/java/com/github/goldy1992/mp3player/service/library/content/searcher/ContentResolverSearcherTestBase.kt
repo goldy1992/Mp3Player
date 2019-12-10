@@ -21,7 +21,7 @@ abstract class ContentResolverSearcherTestBase<T : ContentResolverSearcher<*>?> 
     companion object {
         const val VALID_QUERY = "VALID_QUERY"
         const val INVALID_QUERY = "INVALID_QUERY"
-        var expectedResult: MutableList<MediaBrowserCompat.MediaItem?> = ArrayList()
+        var expectedResult: MutableList<MediaBrowserCompat.MediaItem> = ArrayList()
 
         init {
             expectedResult.add(Mockito.mock(MediaBrowserCompat.MediaItem::class.java))

@@ -14,6 +14,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 import java.util.*
+import kotlin.collections.HashMap
 
 @RunWith(RobolectricTestRunner::class)
 class RootRetrieverTest {
@@ -62,10 +63,10 @@ class RootRetrieverTest {
         private val ROOT_TYPE_2 = MediaItemType.FOLDERS
         private const val ROOT_TYPE_1_ID = "sfsdfsdf"
         private const val ROOT_TYPE_2_ID = ";lbmgvms"
-        private var testRootItemMap: MutableMap<MediaItemType, String>? = null
+        lateinit var testRootItemMap: MutableMap<MediaItemType, String>
         @BeforeClass
         fun setupClass() {
-            testRootItemMap = HashMap()
+            testRootItemMap = HashMap<MediaItemType, String>()
             testRootItemMap[ROOT_TYPE_1] = ROOT_TYPE_1_ID
             testRootItemMap[ROOT_TYPE_2] = ROOT_TYPE_2_ID
         }

@@ -17,7 +17,7 @@ abstract class ContentResolverRetriever internal constructor(val contentResolver
     override fun getChildren(request: ContentRequest): List<MediaBrowserCompat.MediaItem>? {
         val cursor = performGetChildrenQuery(request.queryString)
         val results = resultsParser.create(cursor, request.mediaIdPrefix)
-        return if (null != resultsFilter) resultsFilter.filter(request.queryString, results) else results
+        return if (null != resultsFilter) resultsFilter.filter(request.queryString, results.toMutableList()) else results
     }
 
 }

@@ -54,7 +54,7 @@ android {
                 showStandardStreams = true
             }
             jacoco {
-                includeNoLocationClasses=true
+                includeNoLocationClasses = true
             }
         }
     }

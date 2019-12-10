@@ -20,7 +20,7 @@ abstract class ContentResolverSearcher<T : SearchEntity> internal constructor(va
     override fun search(query: String): List<MediaBrowserCompat.MediaItem>? {
         val cursor = performSearchQuery(query) ?: return emptyList()
         val results = resultsParser.create(cursor, idPrefix)
-        return if (null != resultsFilter) resultsFilter.filter(query, results) else results
+        return if (null != resultsFilter) resultsFilter.filter(query, results.toMutableList()) else results
     }
 
     abstract val projection: Array<String?>

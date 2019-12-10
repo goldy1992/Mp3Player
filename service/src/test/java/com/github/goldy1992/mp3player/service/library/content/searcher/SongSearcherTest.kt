@@ -45,7 +45,7 @@ class SongSearcherTest : ContentResolverSearcherTestBase<SongSearcher?>() {
         expectedDbResult.add(song1)
         expectedDbResult.add(song2)
         expectedDbResult.add(song3)
-        Mockito.`when`(songDao!!.query(ContentResolverSearcherTestBase.Companion.VALID_QUERY)).thenReturn(expectedDbResult)
+        Mockito.`when`(songDao!!.query(ContentResolverSearcherTestBase.Companion.VALID_QUERY)).thenReturn(expectedDbResult as List<Song>)
         val EXPECTED_WHERE = MediaStore.Audio.Media._ID + " IN(?, ?, ?) COLLATE NOCASE"
         val EXPECTED_WHERE_ARGS = arrayOf(id1, id2, id3)
         Mockito.`when`(contentResolver!!.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, searcher!!.projection, EXPECTED_WHERE, EXPECTED_WHERE_ARGS, null))

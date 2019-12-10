@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class SongsFromFolderResultsFilter @Inject constructor() : ResultsFilter {
     override fun filter(query: String,
-                        results: List<MediaBrowserCompat.MediaItem>?): List<MediaBrowserCompat.MediaItem>? {
+                        results: MutableList<MediaBrowserCompat.MediaItem>?): List<MediaBrowserCompat.MediaItem>? {
         val queryPath = File(query)
         val iterator: MutableIterator<MediaBrowserCompat.MediaItem?> = results!!.toMutableList().listIterator()
         while (iterator.hasNext()) {

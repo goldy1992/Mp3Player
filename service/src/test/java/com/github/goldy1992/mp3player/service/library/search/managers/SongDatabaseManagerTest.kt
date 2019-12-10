@@ -5,6 +5,9 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.search.Song
 import com.github.goldy1992.mp3player.service.library.search.SongDao
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -21,13 +24,8 @@ import org.robolectric.annotation.LooperMode
 @LooperMode(LooperMode.Mode.PAUSED)
 @RunWith(RobolectricTestRunner::class)
 class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
-    private var songDatabaseManager: SongDatabaseManager? = null
-    @Captor
-    var songCaptor: ArgumentCaptor<Song>? = null
-    @Captor
-    var deleteCaptor: ArgumentCaptor<List<String?>>? = null
-    @Captor
-    var insertAllCaptor: ArgumentCaptor<List<Song?>>? = null
+    private lateinit var songDatabaseManager: SongDatabaseManager
+
     @Mock
     private val songDao: SongDao? = null
 
@@ -35,13 +33,13 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
     override fun setup() {
         super.setup()
         MockitoAnnotations.initMocks(this)
-        Mockito.`when`(searchDatabase!!.songDao()).thenReturn(songDao)
+        whenever(searchDatabase.songDao()).thenReturn(songDao)
         mediaItemTypeIds = MediaItemTypeIds()
         songDatabaseManager = SongDatabaseManager(
-                contentManager!!,
-                handler!!,
-                mediaItemTypeIds!!,
-                searchDatabase!!)
+                contentManager,
+                handler,
+                mediaItemTypeIds,
+                searchDatabase)
     }
 
     @Test
@@ -52,31 +50,52 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         val mediaItem = MediaItemBuilder(expectedId)
                 .setTitle(expectedValue)
                 .build()
-        songDatabaseManager!!.insert(mediaItem)
-        Mockito.verify(songDao, Mockito.times(1))!!.insert(songCaptor!!.capture())
-        val song = songCaptor!!.value
-        Assert.assertEquals(expectedId, song.id)
-        Assert.assertEquals(expectedValue, song.value)
+        argumentCaptor<Song>().apply {
+            songDatabaseManager.insert(mediaItem)
+            Mockito.verify(songDao, Mockito.times(1))!!.insert(capture())
+            val song = firstValue
+            Assert.assertEquals(expectedId, song.id)
+            Assert.assertEquals(expectedValue, song.value)
+        }
     }
 
     @Test
-    override fun testReindex() {
+    fun testReindexCheckDeleteOld() {
         val expectedId = "sdkjdsf"
         val title = "expectedTitle"
         val expectedTitle = title.toUpperCase()
         val toReturn = MediaItemBuilder(expectedId)
                 .setTitle(title)
                 .build()
-        Mockito.`when`(contentManager!!.getChildren(mediaItemTypeIds!!.getId(MediaItemType.SONGS)))
+        whenever(contentManager!!.getChildren(mediaItemTypeIds!!.getId(MediaItemType.SONGS)))
                 .thenReturn(listOf(toReturn))
-        songDatabaseManager!!.reindex()
+
+        argumentCaptor<List<String>>().apply {
+            songDatabaseManager!!.reindex()
+            Shadows.shadowOf(handler!!.looper).idle()
+            Mockito.verify(songDao, Mockito.times(1))!!.deleteOld(capture())
+            val idsToDelete = firstValue[0]
+            Assert.assertEquals(expectedId, idsToDelete[0])
+        }
+    }
+
+    @Test
+    fun testReindexCheckInsertAll() {
+        val expectedId = "sdkjdsf"
+        val title = "expectedTitle"
+        val expectedTitle = title.toUpperCase()
+        val toReturn = MediaItemBuilder(expectedId)
+                .setTitle(title)
+                .build()
+        whenever(contentManager.getChildren(mediaItemTypeIds!!.getId(MediaItemType.SONGS)))
+                .thenReturn(listOf(toReturn))
+        argumentCaptor<List<Song>>().apply {
+        songDatabaseManager.reindex()
         Shadows.shadowOf(handler!!.looper).idle()
-        Mockito.verify(songDao, Mockito.times(1))!!.deleteOld(deleteCaptor!!.capture())
-        val idsToDelete = deleteCaptor!!.value
-        Assert.assertEquals(expectedId, idsToDelete[0])
-        Mockito.verify(songDao, Mockito.times(1))!!.insertAll(insertAllCaptor!!.capture())
-        val insertedFolder = insertAllCaptor!!.value[0]
+        verify(songDao, Mockito.times(1))!!.insertAll(capture())
+        val insertedFolder = firstValue[0]
         Assert.assertEquals(expectedId, insertedFolder!!.id)
         Assert.assertEquals(expectedTitle, insertedFolder.value)
+        }
     }
 }

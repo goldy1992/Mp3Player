@@ -17,6 +17,6 @@ abstract class ContentResolverRetrieverTestBase<T : ContentResolverRetriever?> {
     var cursor: Cursor? = null
     var handler = Handler(Looper.getMainLooper())
     var contentRequest: ContentRequest? = null
-    var expectedResult: List<MediaBrowserCompat.MediaItem> = ArrayList()
+    var expectedResult: MutableList<MediaBrowserCompat.MediaItem> = ArrayList()
     abstract fun testGetMediaType()
 }
