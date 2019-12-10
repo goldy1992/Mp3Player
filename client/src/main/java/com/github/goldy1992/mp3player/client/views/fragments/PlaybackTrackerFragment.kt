@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.SeekerBarController2
@@ -16,9 +17,13 @@ import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateLis
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.client.views.SeekerBar
 import com.github.goldy1992.mp3player.client.views.TimeCounter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class PlaybackTrackerFragment : AsyncFragment(), PlaybackStateListener, MetadataListener {
+class PlaybackTrackerFragment : Fragment(), PlaybackStateListener, MetadataListener {
+
     @Inject
     lateinit var mediaControllerAdapter: MediaControllerAdapter
     @Inject
@@ -40,34 +45,35 @@ class PlaybackTrackerFragment : AsyncFragment(), PlaybackStateListener, Metadata
         super.onViewCreated(view, bundle)
         // init counter
         val counterView = view.findViewById<TextView>(R.id.timer)
-        counter!!.init(counterView)
+        counter.init(counterView)
         // init seeker bar
         val seekerBar: SeekerBar = view.findViewById(R.id.seekBar)
-        seekerBarController!!.init(seekerBar)
+        seekerBarController.init(seekerBar)
         // init duration
         duration = view.findViewById(R.id.duration)
         // init MediaController listeners
         registerMediaControllerListeners()
         // update GUI state
-        onMetadataChanged(mediaControllerAdapter!!.metadata!!)
-        onPlaybackStateChanged(mediaControllerAdapter!!.playbackStateCompat!!)
+        onMetadataChanged(mediaControllerAdapter.metadata!!)
+        onPlaybackStateChanged(mediaControllerAdapter.playbackStateCompat!!)
     }
 
     private fun registerMediaControllerListeners() {
-        mediaControllerAdapter!!.registerPlaybackStateListener(this)
-        mediaControllerAdapter!!.registerMetaDataListener(this)
+        mediaControllerAdapter.registerPlaybackStateListener(this)
+        mediaControllerAdapter.registerMetaDataListener(this)
     }
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
-        counter!!.updateState(state)
-        seekerBarController!!.onPlaybackStateChanged(state)
+        counter.updateState(state)
+        seekerBarController.onPlaybackStateChanged(state)
     }
 
     override fun onMetadataChanged(metadata: MediaMetadataCompat) {
         val duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
         counter!!.duration = duration
         val durationString = formatTime(duration)
-        mainUpdater.post { updateDurationText(durationString) }
+
+        CoroutineScope(Dispatchers.Main).launch{ updateDurationText(durationString) }
         seekerBarController!!.onMetadataChanged(metadata)
     }
 

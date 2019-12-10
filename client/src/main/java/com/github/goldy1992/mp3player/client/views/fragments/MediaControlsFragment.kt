@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
 import com.github.goldy1992.mp3player.client.views.buttons.RepeatOneRepeatAllButton
 import com.github.goldy1992.mp3player.client.views.buttons.ShuffleButton
 import javax.inject.Inject
 
-class MediaControlsFragment : AsyncFragment() {
+class MediaControlsFragment : Fragment() {
     private var repeatOneRepeatAllButton: RepeatOneRepeatAllButton? = null
     private var shuffleButton: ShuffleButton? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

@@ -13,6 +13,8 @@ import com.github.goldy1992.mp3player.client.views.SeekerBar
 import com.github.goldy1992.mp3player.client.views.TimeCounter
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 /**
@@ -140,9 +142,13 @@ class SeekerBarController2
     }
 
     private fun removeValueAnimator() {
-        seekerBar?.valueAnimator?.removeAllUpdateListeners()
-        seekerBar?.valueAnimator?.cancel()
-        seekerBar?.valueAnimator = null
+
+        CoroutineScope(Dispatchers.Main).apply {
+            seekerBar?.valueAnimator?.removeAllUpdateListeners()
+            seekerBar?.valueAnimator?.cancel()
+            seekerBar?.valueAnimator = null
+        }
+
     }
 
     /**
