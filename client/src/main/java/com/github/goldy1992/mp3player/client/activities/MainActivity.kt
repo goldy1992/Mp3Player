@@ -8,10 +8,9 @@ import android.widget.Spinner
 import androidx.annotation.LayoutRes
 import androidx.annotation.VisibleForTesting
 import androidx.core.view.GravityCompat
-import androidx.viewpager2.widget.ViewPager2
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaBrowserResponseListener
-import com.github.goldy1992.mp3player.client.MyDrawerListener
+import com.github.goldy1992.mp3player.client.listeners.MyDrawerListener
 import com.github.goldy1992.mp3player.client.views.ThemeSpinnerController
 import com.github.goldy1992.mp3player.client.views.adapters.MyPagerAdapter
 import com.github.goldy1992.mp3player.client.views.fragments.SearchFragment
@@ -32,9 +31,6 @@ import javax.inject.Inject
 
 abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListener {
 
-    var rootMenuItemsPager: ViewPager2? = null
-        private set
-
     private var tabLayoutMediator: TabLayoutMediator? = null
 
     var adapter: MyPagerAdapter? = null
@@ -51,18 +47,15 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
         setContentView(layoutId)
         searchFragment = SearchFragment()
         appBarLayout!!.addOnOffsetChangedListener(OnOffsetChangedListener { app: AppBarLayout?, offset: Int ->
-            Log.i(logTag(), "offset: " + offset + ", scroll range: " + app!!.totalScrollRange)
+            Log.i(logTag(), "offset: " + offset + ", scroll range: " + app?.totalScrollRange)
             var newOffset = offset
-            if (null != app) {
-                newOffset += app.totalScrollRange
-            }
-            rootMenuItemsPager!!.setPadding(
-                    rootMenuItemsPager!!.paddingLeft,
-                    rootMenuItemsPager!!.paddingTop,
-                    rootMenuItemsPager!!.paddingRight,
+                newOffset += app!!.totalScrollRange
+            rootMenuItemsPager?.setPadding(
+                    rootMenuItemsPager.paddingLeft,
+                    rootMenuItemsPager.paddingTop,
+                    rootMenuItemsPager.paddingRight,
                     newOffset)
         })
-        rootMenuItemsPager = findViewById(R.id.rootItemsPager)
         adapter = MyPagerAdapter(supportFragmentManager, lifecycle)
         rootMenuItemsPager!!.setAdapter(adapter)
         tabLayoutMediator = TabLayoutMediator(tabLayout, rootMenuItemsPager!!, adapter!!)
@@ -71,9 +64,8 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
         setSupportActionBar(titleToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_menu)
-        if (null != mediaBrowserAdapter) {
-            mediaBrowserAdapter!!.registerRootListener(this)
-        }
+        mediaBrowserAdapter!!.registerRootListener(this)
+
         initNavigationView()
         drawerLayout.addDrawerListener(myDrawerListener!!)
         return true
@@ -141,7 +133,7 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
         val rootItemsOrdered = TreeSet(compareRootMediaItemsByMediaItemType)
         rootItemsOrdered.addAll(children)
         for (mediaItem in rootItemsOrdered) {
-            val id = MediaItemUtils.getMediaId(mediaItem)
+            val id = MediaItemUtils.getMediaId(mediaItem)!!
             Log.i(logTag(), "media id: $id")
             val category = MediaItemUtils.getExtra(Constants.ROOT_ITEM_TYPE, mediaItem) as MediaItemType
             var mediaItemListFragment: MediaItemListFragment?
@@ -159,10 +151,6 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
             }
         }
     }
-
-    /** {@inheritDoc}  */
-    override val workerId: String
-        get() = "MAIN_ACTVTY_WRKR"
 
     override fun logTag(): String {
         return "MAIN_ACTIVITY"

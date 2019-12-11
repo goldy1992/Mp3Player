@@ -9,7 +9,11 @@ import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import dagger.Component
 
 @ComponentScope
-@Component(modules = [MockAlbumArtPainterModule::class, HandlerThreadModule::class, MainHandlerModule::class, MediaBrowserCompatModule::class, MockMediaControllerAdapterModule::class, MyDrawerListenerModule::class])
+@Component(modules =
+    [MockAlbumArtPainterModule::class,
+    MediaBrowserCompatModule::class,
+    MockMediaControllerAdapterModule::class,
+    MyDrawerListenerModule::class])
 interface TestMediaActivityCompatComponent : MediaActivityCompatComponent {
 
     open fun inject(emptyMediaActivityCompatFragmentActivity: EmptyMediaActivityCompatFragmentActivity?)

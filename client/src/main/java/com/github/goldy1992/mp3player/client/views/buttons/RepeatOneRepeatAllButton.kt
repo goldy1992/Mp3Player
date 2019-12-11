@@ -11,19 +11,27 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.github.goldy1992.mp3player.commons.Constants
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
 
 /**
  *
  */
-class RepeatOneRepeatAllButton @Inject constructor(context: Context, mediaControllerAdapter: MediaControllerAdapter,
-                                                   @Named("main") mainUpdater: Handler) : MediaButton(context, mediaControllerAdapter, mainUpdater), PlaybackStateListener {
+class RepeatOneRepeatAllButton
+
+    @Inject
+    constructor(context: Context,
+                mediaControllerAdapter: MediaControllerAdapter)
+    : MediaButton(context, mediaControllerAdapter), PlaybackStateListener {
+
     @PlaybackStateCompat.RepeatMode
     var state = 0
         private set
 
-    override fun init(view: ImageView?) {
+    override fun init(view: ImageView) {
         super.init(view)
         mediaControllerAdapter.registerPlaybackStateListener(this)
         updateState(mediaControllerAdapter.repeatMode)
@@ -38,15 +46,15 @@ class RepeatOneRepeatAllButton @Inject constructor(context: Context, mediaContro
     fun updateState(@PlaybackStateCompat.RepeatMode newState: Int) {
         when (newState) {
             PlaybackStateCompat.REPEAT_MODE_ALL -> {
-                mainUpdater.post { setRepeatAllIcon() }
+                CoroutineScope(Main).launch { setRepeatAllIcon() }
                 state = PlaybackStateCompat.REPEAT_MODE_ALL
             }
             PlaybackStateCompat.REPEAT_MODE_ONE -> {
-                mainUpdater.post { setRepeatOneIcon() }
+                CoroutineScope(Main).launch { setRepeatOneIcon() }
                 state = PlaybackStateCompat.REPEAT_MODE_ONE
             }
             PlaybackStateCompat.REPEAT_MODE_NONE -> {
-                mainUpdater.post { setRepeatNoneIcon() }
+                CoroutineScope(Main).launch  { setRepeatNoneIcon() }
                 state = PlaybackStateCompat.REPEAT_MODE_NONE
             }
             else -> {

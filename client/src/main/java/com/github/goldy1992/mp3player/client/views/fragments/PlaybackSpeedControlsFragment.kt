@@ -6,15 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.VisibleForTesting
+import androidx.fragment.app.Fragment
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import kotlinx.android.synthetic.main.fragment_playback_speed_controls.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class PlaybackSpeedControlsFragment : AsyncFragment(), PlaybackStateListener {
+class PlaybackSpeedControlsFragment : Fragment(), PlaybackStateListener {
 
     @Inject
     lateinit var mediaControllerAdapter: MediaControllerAdapter
@@ -36,30 +42,31 @@ class PlaybackSpeedControlsFragment : AsyncFragment(), PlaybackStateListener {
         increasePlaybackSpeedButton.setOnClickListener(View.OnClickListener { v: View? -> increasePlaybackSpeed() })
 
         // register listeners
-        mediaControllerAdapter!!.registerPlaybackStateListener(this)
+        mediaControllerAdapter.registerPlaybackStateListener(this)
         //update GUI
-        onPlaybackStateChanged(mediaControllerAdapter!!.playbackStateCompat!!)
+        onPlaybackStateChanged(mediaControllerAdapter.playbackStateCompat!!)
     }
 
     private fun updatePlaybackSpeedText(speed: Float) {
-        val r = Runnable { playbackSpeedTextView!!.text = getString(R.string.PLAYBACK_SPEED_VALUE, speed) }
-        mainUpdater.post(r)
+        CoroutineScope(Main).launch {
+            playbackSpeedTextView!!.text = getString(R.string.PLAYBACK_SPEED_VALUE, speed)
+        }
+
     }
 
     @VisibleForTesting
     fun increasePlaybackSpeed() {
-        worker!!.post {
-            val extras = Bundle()
-            mediaControllerAdapter!!.sendCustomAction(Constants.INCREASE_PLAYBACK_SPEED, extras)
+        CoroutineScope(Dispatchers.Default).launch {
+            mediaControllerAdapter!!.sendCustomAction(Constants.INCREASE_PLAYBACK_SPEED, Bundle())
         }
     }
 
     @VisibleForTesting
     fun decreasePlaybackSpeed() {
-        worker!!.post {
-            val extras = Bundle()
-            mediaControllerAdapter!!.sendCustomAction(Constants.DECREASE_PLAYBACK_SPEED, extras)
-        }
+      CoroutineScope(Dispatchers.Default).launch {
+          mediaControllerAdapter!!.sendCustomAction(Constants.DECREASE_PLAYBACK_SPEED, Bundle())
+      }
+
     }
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat) {

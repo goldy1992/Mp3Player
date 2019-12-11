@@ -11,11 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.ListPreloader
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.*
-import com.github.goldy1992.mp3player.client.MyGenericItemTouchListener.ItemSelectedListener
+import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener.ItemSelectedListener
 import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecycleViewAdapter
 import com.github.goldy1992.mp3player.client.views.adapters.RecyclerViewAdapters
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
+import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
 import kotlinx.android.synthetic.main.fragment_view_page.*
 import javax.inject.Inject
 
@@ -33,9 +34,9 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener {
 
 
     private val linearLayoutManager = LinearLayoutManager(context)
-    var parentItemType: MediaItemType? = null
-    private var parentItemTypeId: String? = null
-    private var myViewAdapter: MyGenericRecycleViewAdapter? = null
+    lateinit var parentItemType: MediaItemType
+    private lateinit var parentItemTypeId: String
+    private lateinit var myViewAdapter: MyGenericRecycleViewAdapter
 
     @Inject
     lateinit var intentMapper: IntentMapper
@@ -51,11 +52,11 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener {
     @Inject
     lateinit var myGenericItemTouchListener: MyGenericItemTouchListener
 
-    fun init(mediaItemType: MediaItemType?, id: String?, component: MediaActivityCompatComponent) {
+    fun init(mediaItemType: MediaItemType, id: String, component: MediaActivityCompatComponent) {
         parentItemType = mediaItemType
         parentItemTypeId = id
         injectDependencies(component)
-        myViewAdapter = recyclerViewAdapters!!.getAdapter(mediaItemType)
+        myViewAdapter = recyclerViewAdapters.getAdapter(mediaItemType)!!
         mediaBrowserAdapter!!.registerListener(parentItemTypeId, myViewAdapter)
         mediaBrowserAdapter!!.subscribe(parentItemTypeId)
     }

@@ -1,27 +1,31 @@
 package com.github.goldy1992.mp3player.client.callbacks.subscription
 
-import android.os.Handler
 import android.support.v4.media.MediaBrowserCompat
 import androidx.annotation.VisibleForTesting
 import com.github.goldy1992.mp3player.client.MediaBrowserResponseListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Named
 import kotlin.collections.ArrayList
 
-class MediaIdSubscriptionCallback @Inject constructor(@Named("worker") handler: Handler) : MediaBrowserCompat.SubscriptionCallback() {
-    private val handler: Handler
+class MediaIdSubscriptionCallback
+
+    @Inject
+    constructor() : MediaBrowserCompat.SubscriptionCallback() {
+
     private val mediaBrowserResponseListeners: MutableMap<String, MutableSet<MediaBrowserResponseListener>>
+
     override fun onChildrenLoaded(parentId: String, children: List<MediaBrowserCompat.MediaItem>) {
-        handler.post {
-            var childrenArrayList = ArrayList(children)
-            val listenersToNotify: Set<MediaBrowserResponseListener>? = mediaBrowserResponseListeners[parentId]
-            if (null != listenersToNotify) {
-                for (listener in listenersToNotify) {
-                    listener.onChildrenLoaded(parentId, childrenArrayList)
-                }
+        var childrenArrayList = ArrayList(children)
+        val listenersToNotify: Set<MediaBrowserResponseListener>? = mediaBrowserResponseListeners[parentId]
+        if (null != listenersToNotify) {
+            for (listener in listenersToNotify) {
+                listener.onChildrenLoaded(parentId, childrenArrayList)
             }
         }
+
     }
 
     @Synchronized
@@ -43,6 +47,6 @@ class MediaIdSubscriptionCallback @Inject constructor(@Named("worker") handler: 
 
     init {
         mediaBrowserResponseListeners = HashMap()
-        this.handler = handler
+
     }
 }

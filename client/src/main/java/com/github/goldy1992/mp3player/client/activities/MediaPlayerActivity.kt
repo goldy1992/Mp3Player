@@ -77,12 +77,6 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, Lo
         trackViewAdapter!!.updateQueue(queueItems!!)
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    override val workerId: String
-        get() = "MDIA_PLYER_ACTVT_WKR"
-
     override fun onDestroy() {
         super.onDestroy()
         mediaControllerAdapter!!.disconnect()

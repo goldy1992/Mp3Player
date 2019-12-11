@@ -1,24 +1,21 @@
 package com.github.goldy1992.mp3player.client.views.adapters
 
-import android.os.Handler
 import android.support.v4.media.MediaBrowserCompat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestBuilder
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.views.viewholders.MediaItemViewHolder
 import com.github.goldy1992.mp3player.client.views.viewholders.MySongViewHolder
 import com.github.goldy1992.mp3player.commons.LogTagger
 import org.apache.commons.collections4.CollectionUtils
 import javax.inject.Inject
-import javax.inject.Named
 
 class MySongViewAdapter
     @Inject
-    constructor(albumArtPainter: AlbumArtPainter,
-                @Named("main") mainHandler: Handler)
-    : MyGenericRecycleViewAdapter(albumArtPainter, mainHandler), LogTagger {
+    constructor(albumArtPainter: AlbumArtPainter)
+    : MyGenericRecycleViewAdapter(albumArtPainter), LogTagger {
 
     override fun logTag() : String {
         return "MY_VIEW_ADAPTER"

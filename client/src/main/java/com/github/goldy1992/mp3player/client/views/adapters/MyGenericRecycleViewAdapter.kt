@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.views.adapters
 
-import android.os.Handler
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.MediaDescriptionCompat
 import android.view.LayoutInflater
@@ -14,11 +13,13 @@ import com.github.goldy1992.mp3player.client.views.viewholders.MediaItemViewHold
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.l4digital.fastscroll.FastScroller
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 
 
 abstract class MyGenericRecycleViewAdapter
-    (albumArtPainter: AlbumArtPainter,
-     mainHandler: Handler) : MediaItemRecyclerViewAdapter(albumArtPainter, mainHandler),
+    (albumArtPainter: AlbumArtPainter) : MediaItemRecyclerViewAdapter(albumArtPainter),
         MediaBrowserResponseListener,
         FastScroller.SectionIndexer,
         PreloadModelProvider<MediaItem?>,
@@ -35,7 +36,7 @@ abstract class MyGenericRecycleViewAdapter
     override fun onChildrenLoaded(parentId: String, children: ArrayList<MediaItem>) {
         if (!children.isEmpty()) {
             this.items = children
-            mainHandler.post { notifyDataSetChanged() }
+            CoroutineScope(Main).launch { notifyDataSetChanged() }
         } else {
             addNoChildrenFoundItem()
         }
@@ -56,7 +57,7 @@ abstract class MyGenericRecycleViewAdapter
 
     private fun addNoChildrenFoundItem() {
         items.add(EMPTY_LIST_ITEM)
-        mainHandler.post { notifyDataSetChanged() }
+        CoroutineScope(Main).launch { notifyDataSetChanged() }
     }
 
     private fun buildEmptyListMediaItem(): MediaItem {

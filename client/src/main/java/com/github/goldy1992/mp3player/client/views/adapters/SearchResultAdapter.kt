@@ -12,7 +12,10 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import javax.inject.Inject
 import javax.inject.Named
 
-class SearchResultAdapter @Inject constructor(albumArtPainter: AlbumArtPainter, @Named("main") mainHandler: Handler) : MediaItemRecyclerViewAdapter(albumArtPainter, mainHandler) {
+class SearchResultAdapter
+
+    @Inject
+    constructor(albumArtPainter: AlbumArtPainter) : MediaItemRecyclerViewAdapter(albumArtPainter) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaItemViewHolder {
         var layoutInflater: LayoutInflater? = null
         return if (viewType == MediaItemType.SONG.value) { // create a new views

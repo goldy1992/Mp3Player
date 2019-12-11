@@ -13,13 +13,10 @@ class EmptyMediaActivityCompatFragmentActivity : MediaActivityCompat() {
         super.onCreate(savedInstanceState)
     }
 
-    override val workerId: String
-        get() = "WORKER_ID"
-
     override fun initialiseDependencies() {
         val component = DaggerTestMediaActivityCompatComponent
                 .factory()
-                .create(applicationContext, workerId, this, ComponentClassMapper.Builder().build()) as TestMediaActivityCompatComponent
+                .create(applicationContext, this, ComponentClassMapper.Builder().build()) as TestMediaActivityCompatComponent
         component.inject(this)
         mediaActivityCompatComponent = component
     }

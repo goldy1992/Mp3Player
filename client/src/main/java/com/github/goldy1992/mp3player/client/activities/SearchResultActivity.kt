@@ -25,9 +25,6 @@ abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListene
     @Inject
     lateinit var componentClassMapper: ComponentClassMapper
 
-    override val workerId: String
-        get() = "SRCH_RSLT_ACTVTY"
-
     override fun onConnected() {
         super.onConnected()
         initialiseView(R.layout.activity_search_results)

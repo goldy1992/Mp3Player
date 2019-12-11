@@ -11,17 +11,23 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.github.goldy1992.mp3player.commons.Constants
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
 
-class ShuffleButton @Inject constructor(context: Context, mediaControllerAdapter: MediaControllerAdapter,
-                                        @Named("main") mainUpdater: Handler) : MediaButton(context, mediaControllerAdapter, mainUpdater), PlaybackStateListener {
-    @get:VisibleForTesting
-    @set:VisibleForTesting
+class ShuffleButton
+
+    @Inject
+    constructor(context: Context,
+                mediaControllerAdapter: MediaControllerAdapter)
+    : MediaButton(context, mediaControllerAdapter), PlaybackStateListener {
+
     @ShuffleMode
     var shuffleMode = 0
 
-    override fun init(view: ImageView?) {
+    override fun init(view: ImageView) {
         super.init(view)
         mediaControllerAdapter.registerPlaybackStateListener(this)
         updateState(mediaControllerAdapter.shuffleMode)
@@ -31,11 +37,11 @@ class ShuffleButton @Inject constructor(context: Context, mediaControllerAdapter
         when (newState) {
             PlaybackStateCompat.SHUFFLE_MODE_ALL -> {
                 shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_ALL
-                mainUpdater.post { setShuffleOn() }
+               CoroutineScope(Main).launch{ setShuffleOn() }
             }
             else -> {
                 shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_NONE
-                mainUpdater.post { setShuffleOff() }
+                CoroutineScope(Main).launch { setShuffleOff() }
             }
         }
     }

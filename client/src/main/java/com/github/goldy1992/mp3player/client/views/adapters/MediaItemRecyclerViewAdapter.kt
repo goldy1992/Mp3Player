@@ -7,8 +7,7 @@ import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.views.viewholders.MediaItemViewHolder
 
 abstract class MediaItemRecyclerViewAdapter
-    constructor (val albumArtPainter: AlbumArtPainter,
-                 val mainHandler: Handler)
+    constructor (val albumArtPainter: AlbumArtPainter)
     : RecyclerView.Adapter<MediaItemViewHolder?>() {
 
     var items: MutableList<MediaItem> = arrayListOf()

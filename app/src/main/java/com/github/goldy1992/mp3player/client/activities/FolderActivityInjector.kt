@@ -14,7 +14,7 @@ class FolderActivityInjector : FolderActivity() {
         var app : MikesMp3Player = applicationContext!! as MikesMp3Player
         val component = DaggerMediaActivityCompatComponent
                 .factory()
-                .create(applicationContext, workerId, this, app.getComponentClassMapper())
+                .create(applicationContext,  this, app.getComponentClassMapper())
         mediaActivityCompatComponent = component
         component.inject(this)
     }

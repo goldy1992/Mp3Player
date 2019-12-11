@@ -17,9 +17,8 @@ import javax.inject.Named
 
 class MyFolderViewAdapter
     @Inject
-    constructor(albumArtPainter: AlbumArtPainter,
-                @Named("main") mainHandler: Handler)
-    : MyGenericRecycleViewAdapter(albumArtPainter, mainHandler) {
+    constructor(albumArtPainter: AlbumArtPainter)
+    : MyGenericRecycleViewAdapter(albumArtPainter) {
 
     override fun logTag(): String {
         return "FOLDER_VIEW_ADAPTER"

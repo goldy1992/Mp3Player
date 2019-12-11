@@ -14,9 +14,9 @@ class SongListFragment : MediaItemListFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(mediaItemType: MediaItemType?, id: String?, component: MediaActivityCompatComponent?): SongListFragment {
+        fun newInstance(mediaItemType: MediaItemType, id: String, component: MediaActivityCompatComponent): SongListFragment {
             val songListFragment = SongListFragment()
-            songListFragment.init(mediaItemType, id, component!!)
+            songListFragment.init(mediaItemType, id, component)
             return songListFragment
         }
     }

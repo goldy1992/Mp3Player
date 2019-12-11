@@ -23,33 +23,22 @@ abstract class MediaActivityCompat : AppCompatActivity(), DependencyInitialiser,
     @Inject
     lateinit var mediaBrowserAdapter: MediaBrowserAdapter
 
-
     /** MediaControllerAdapter  */
     @Inject
     lateinit var mediaControllerAdapter: MediaControllerAdapter
 
-
     /** @return the mediaActivityCompatComponent */
     lateinit var mediaActivityCompatComponent: MediaActivityCompatComponent
 
-    /** Thread used to deal with none UI tasks  */
-    @Inject
-    lateinit var worker: HandlerThread
-
-    /** @return The unique name of the HandlerThread used by the activity
-     */
-    abstract val workerId: String
-
     // MediaBrowserConnectorCallback
     override fun onConnected() {
-        mediaControllerAdapter!!.setMediaToken(mediaBrowserAdapter!!.mediaSessionToken)
+        mediaControllerAdapter.setMediaToken(mediaBrowserAdapter.mediaSessionToken)
     }
 
     public override fun onDestroy() {
         super.onDestroy()
-        mediaControllerAdapter!!.disconnect()
-        mediaBrowserAdapter!!.disconnect()
-        worker!!.quitSafely()
+        mediaControllerAdapter.disconnect()
+        mediaBrowserAdapter.disconnect()
     }
 
     // MediaBrowserConnectorCallback
@@ -67,7 +56,7 @@ abstract class MediaActivityCompat : AppCompatActivity(), DependencyInitialiser,
         super.onCreate(savedInstanceState)
         val settings = applicationContext.getSharedPreferences(Constants.THEME, Context.MODE_PRIVATE)
         setTheme(settings.getInt(Constants.THEME, R.style.AppTheme_Blue))
-        mediaBrowserAdapter!!.init()
+        mediaBrowserAdapter.init()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

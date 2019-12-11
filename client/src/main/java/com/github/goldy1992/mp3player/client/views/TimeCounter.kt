@@ -1,36 +1,40 @@
 package com.github.goldy1992.mp3player.client.views
 
-import android.os.Handler
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.widget.TextView
-import androidx.annotation.VisibleForTesting
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.calculateCurrentPlaybackPosition
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Constants.ONE_SECOND
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
+import com.github.goldy1992.mp3player.commons.LogTagger
+import kotlin.concurrent.timer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import java.util.*
+
 import javax.inject.Inject
-import javax.inject.Named
 
 @FragmentScope
-class TimeCounter @Inject constructor(@param:Named("main") private val mainHandler: Handler, private val mediaControllerAdapter: MediaControllerAdapter) {
+class TimeCounter
+
+    @Inject
+    constructor(private val mediaControllerAdapter: MediaControllerAdapter) : LogTagger {
     private var textView: TextView? = null
 
     var duration: Long = 0L
+
     var currentPosition: Long = 0
         private set
     var currentState = PlaybackStateCompat.STATE_NONE
         private set
     var currentSpeed = 0f
         private set
-    @get:VisibleForTesting
-    @set:VisibleForTesting
-    var timer: ScheduledExecutorService? = null
+
+    var timer: Timer? = null
+
     var isRepeating = false
     val isInitialised: Boolean
         get() = textView != null
@@ -66,28 +70,27 @@ class TimeCounter @Inject constructor(@param:Named("main") private val mainHandl
     }
 
     private fun haltTimer(currentTime: Long) {
-        Log.i(LOG_TAG, "halt timer")
-        cancelTimer()
+        Log.i(logTag(), "halt timer")
+        timer?.cancel()
         currentPosition = currentTime
         updateTimerText()
     }
 
     private fun resetTimer() { //Log.d(LOG_TAG, "reset timer");
-        cancelTimer()
+        timer?.cancel()
         currentPosition = START
         updateTimerText()
     }
 
     private fun cancelTimer() { //Log.d(LOG_TAG, "Cancel timer");
-        if (timer != null) { // cancel timer and make new one
-            timer!!.shutdown()
-        }
+
     }
 
     private fun createTimer() {
-        cancelTimer()
-        timer = Executors.newSingleThreadScheduledExecutor()
-        timer?.scheduleAtFixedRate(Runnable { updateUi() }, 0L, timerFixedRate, TimeUnit.MILLISECONDS)
+        timer?.cancel()
+        timer = timer("", false, 0L, timerFixedRate) {
+            updateUi()
+        }
         //Log.d(LOG_TAG, "create timer");
     }
 
@@ -105,7 +108,7 @@ class TimeCounter @Inject constructor(@param:Named("main") private val mainHandl
 
     private fun updateTimerText() {
         val text = formatTime(currentPosition)
-        mainHandler.post { textView!!.text = text }
+        CoroutineScope(Main).apply {  textView!!.text = text }
     }
 
     private fun updateUi() { //Log.d(LOG_TAG,"current position: " + timeCounter.getCurrentPosition() + ", duration: " + timeCounter.getDuration());
@@ -129,7 +132,9 @@ class TimeCounter @Inject constructor(@param:Named("main") private val mainHandl
 
     companion object {
         private const val START = 0L
-        const val LOG_TAG = "TimeCounter"
     }
 
+    override fun logTag(): String {
+        return "TimeCounter";
+    }
 }

@@ -17,5 +17,5 @@ abstract class MikesMp3Player : Application() {
         appComponent!!.inject(this)
     }
 
-    abstract fun getComponentClassMapper(): ComponentClassMapper?
+    abstract fun getComponentClassMapper(): ComponentClassMapper
 }

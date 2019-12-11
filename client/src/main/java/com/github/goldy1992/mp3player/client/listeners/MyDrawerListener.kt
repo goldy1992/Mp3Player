@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client
+package com.github.goldy1992.mp3player.client.listeners
 
 import android.view.View
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener

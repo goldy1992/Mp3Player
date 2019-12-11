@@ -11,17 +11,22 @@ import androidx.annotation.VisibleForTesting
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
 
-class PlayPauseButton @Inject constructor(context: Context, mediaControllerAdapter: MediaControllerAdapter,
-                                          @Named("main") mainUpdater: Handler) : MediaButton(context, mediaControllerAdapter, mainUpdater), PlaybackStateListener {
-    @get:PlaybackStateCompat.State
-    @set:VisibleForTesting
+class PlayPauseButton
+    @Inject
+    constructor(context: Context,
+                mediaControllerAdapter: MediaControllerAdapter)
+    : MediaButton(context, mediaControllerAdapter), PlaybackStateListener {
+
     @PlaybackStateCompat.State
     var state = INITIAL_PLAYBACK_STATE
 
-    override fun init(view: ImageView?) {
+    override fun init(view: ImageView) {
         super.init(view)
         updateState(mediaControllerAdapter.playbackState)
         mediaControllerAdapter.registerPlaybackStateListener(this)
@@ -48,12 +53,12 @@ class PlayPauseButton @Inject constructor(context: Context, mediaControllerAdapt
     }
 
     private fun setStatePlaying() {
-        mainUpdater.post { setPauseIcon() }
+        CoroutineScope(Main).launch { setPauseIcon() }
         state = PlaybackStateCompat.STATE_PLAYING
     }
 
     private fun setStatePaused() {
-        mainUpdater.post { setPlayIcon() }
+        CoroutineScope(Main).launch{ setPlayIcon() }
         state = PlaybackStateCompat.STATE_PAUSED
     }
 

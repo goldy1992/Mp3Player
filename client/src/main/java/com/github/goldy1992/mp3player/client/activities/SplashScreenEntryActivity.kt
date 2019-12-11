@@ -13,6 +13,7 @@ import com.github.goldy1992.mp3player.client.PermissionsProcessor
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.DependencyInitialiser
+import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -24,7 +25,7 @@ import javax.inject.Inject
 /**
  *
  */
-abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGranted, DependencyInitialiser {
+abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGranted, LogTagger, DependencyInitialiser {
 
     @Inject
     lateinit var componentClassMapper: ComponentClassMapper
@@ -57,7 +58,7 @@ abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGrante
 
     override fun onStart() {
         super.onStart()
-        Log.i(LOG_TAG, "onStart")
+        Log.i(logTag(), "onStart")
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
@@ -81,7 +82,7 @@ abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGrante
 
 
     private suspend fun onProcessingComplete() {
-        Log.i(LOG_TAG, "processing complete")
+        Log.i(logTag(), "processing complete")
         while (!(isSplashScreenFinishedDisplaying && isPermissionGranted)) {
            delay(Constants.ONE_SECOND)
         }
@@ -90,7 +91,7 @@ abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGrante
 
     private suspend fun startMainActivity(mainActivityIntent: Intent?) {
         withContext(Main) {
-            Log.i(LOG_TAG, "start main activity")
+            Log.i(logTag(), "start main activity")
             startActivityForResult(mainActivityIntent, APP_TERMINATED)
         }
     }
@@ -103,14 +104,14 @@ abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGrante
     }
 
     override fun onPermissionGranted() {
-        Log.i(LOG_TAG, "permission granted")
+        Log.i(logTag(), "permission granted")
         isPermissionGranted = true
         createService()
         CoroutineScope(IO).launch { onProcessingComplete() }
     }
 
     private suspend fun init() {
-        Log.i(LOG_TAG, "reset")
+        Log.i(logTag(), "reset")
         permissionsProcessor!!.requestPermission(permission.WRITE_EXTERNAL_STORAGE)
         delay(WAIT_TIME)
         isSplashScreenFinishedDisplaying = true
@@ -120,9 +121,12 @@ abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGrante
         startService(Intent(applicationContext, componentClassMapper.service))
     }
 
+    override fun logTag(): String {
+        return "SPLSH_SCRN_ENTRY_ACTVTY"
+    }
+
 
     companion object {
-        private const val LOG_TAG = "SPLSH_SCRN_ENTRY_ACTVTY"
         private const val WAIT_TIME = 3000L
         const val APP_TERMINATED = 0x78
     }

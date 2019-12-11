@@ -21,7 +21,7 @@ class SearchResultActivityInjectorTestImpl : SearchResultActivity() {
                 .build()
         val component: MediaActivityCompatComponent = DaggerTestMediaActivityCompatComponent
                 .factory()
-                .create(applicationContext, workerId, this, componentClassMapper)
+                .create(applicationContext,  this, componentClassMapper)
         mediaActivityCompatComponent = component
         component.searchResultActivitySubComponent().inject(this)
     }
