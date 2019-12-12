@@ -34,7 +34,7 @@ class SeekerBarController2Test {
     @Before
     fun setUp() {
         m_context = InstrumentationRegistry.getInstrumentation().context
-        timeCounter = TimeCounter(Handler(Looper.getMainLooper()), m_mediaControllerAdapter)
+        timeCounter = TimeCounter(m_mediaControllerAdapter)
         m_seekerBar = SeekerBar(m_context)
         m_seekerBarController2 = SeekerBarController2(m_mediaControllerAdapter, timeCounter)
         m_seekerBarController2.init(m_seekerBar)

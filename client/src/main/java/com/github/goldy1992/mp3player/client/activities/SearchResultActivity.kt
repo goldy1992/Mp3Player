@@ -9,8 +9,8 @@ import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.MyGenericItemTouchListener
-import com.github.goldy1992.mp3player.client.MyGenericItemTouchListener.ItemSelectedListener
+import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
+import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener.ItemSelectedListener
 import com.github.goldy1992.mp3player.client.callbacks.search.SearchResultListener
 import com.github.goldy1992.mp3player.client.views.adapters.SearchResultAdapter
 import com.github.goldy1992.mp3player.commons.*

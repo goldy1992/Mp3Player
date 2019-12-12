@@ -21,14 +21,11 @@ class MyPlaybackStateCallbackTest {
     private val mockPlaybackStateListener2: PlaybackStateListener? = null
     /** the Playback State Callback to test  */
     private var myPlaybackStateCallback: MyPlaybackStateCallback? = null
-    /** Handler for initialisation  */
-    @Mock
-    private val handler: Handler? = null
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        myPlaybackStateCallback = MyPlaybackStateCallback(handler!!)
+        myPlaybackStateCallback = MyPlaybackStateCallback()
     }
 
     /**

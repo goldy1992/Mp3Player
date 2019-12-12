@@ -22,7 +22,7 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
     @Before
     public override fun setup() {
         super.setup()
-        playPauseButton = PlayPauseButton(context, mediaControllerAdapter, handler)
+        playPauseButton = PlayPauseButton(context, mediaControllerAdapter)
     }
 
     /**

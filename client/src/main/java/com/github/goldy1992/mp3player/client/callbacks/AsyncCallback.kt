@@ -1,15 +1,12 @@
 package com.github.goldy1992.mp3player.client.callbacks
 
-import android.os.Handler
 import android.os.Parcelable
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.launch
+import com.github.goldy1992.mp3player.commons.LogTagger
 
-abstract class AsyncCallback<P : Parcelable?>() {
+abstract class AsyncCallback<P : Parcelable>() : LogTagger {
+
     fun onStateChanged(state: P) {
-        CoroutineScope(Default).launch { processCallback(state) }
+        processCallback(state)
     }
 
     abstract fun processCallback(data: P)

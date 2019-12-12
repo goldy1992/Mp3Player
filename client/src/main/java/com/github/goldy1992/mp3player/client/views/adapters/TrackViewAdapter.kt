@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.views.viewholders.MediaPlayerTrackViewHolder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 
 class TrackViewAdapter // TODO: if there is no queue make an empty view holder
 (val albumArtPainter: AlbumArtPainter,
@@ -37,7 +40,8 @@ class TrackViewAdapter // TODO: if there is no queue make an empty view holder
      */
     fun updateQueue(updatedQueue: List<QueueItem>) {
         this.queue = updatedQueue
-        notifyDataSetChanged()
+
+        CoroutineScope(Main).launch { notifyDataSetChanged() }
     }
 
 }

@@ -14,6 +14,9 @@ import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
 import com.github.goldy1992.mp3player.client.views.adapters.TrackViewAdapter
 import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.android.synthetic.main.activity_media_player.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 
 /**
  * Created by Mike on 24/09/2017.
@@ -70,11 +73,14 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, Lo
     }
 
     override fun onMetadataChanged(metadata: MediaMetadataCompat) { // TODO: in future this should be a listener for when the queue has changed
-        val queueItems = mediaControllerAdapter!!.queue
-        val currentPosition = mediaControllerAdapter!!.currentQueuePosition
-        trackViewPagerChangeCallback!!.currentPosition = currentPosition
-        trackViewPager!!.setCurrentItem(currentPosition, false)
+        val queueItems = mediaControllerAdapter.queue
+        CoroutineScope(Main).launch {
+            val currentPosition = mediaControllerAdapter.currentQueuePosition
+            trackViewPagerChangeCallback!!.currentPosition = currentPosition
+            trackViewPager!!.setCurrentItem(currentPosition, false)
+        }
         trackViewAdapter!!.updateQueue(queueItems!!)
+
     }
 
     override fun onDestroy() {

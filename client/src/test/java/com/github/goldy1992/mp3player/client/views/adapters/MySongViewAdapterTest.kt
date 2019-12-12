@@ -23,7 +23,7 @@ class MySongViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
     override fun setup() {
         super.setup()
         MockitoAnnotations.initMocks(this)
-        mySongViewAdapter = MySongViewAdapter(albumArtPainter!!, handler!!)
+        mySongViewAdapter = MySongViewAdapter(albumArtPainter!!)
     }
 
     @Test

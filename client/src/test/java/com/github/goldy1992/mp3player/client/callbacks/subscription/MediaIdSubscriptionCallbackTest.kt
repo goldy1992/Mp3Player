@@ -32,10 +32,9 @@ class MediaIdSubscriptionCallbackTest {
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        val handler = Handler(Looper.getMainLooper())
         this.mediaBrowserResponseListener = mock<MediaBrowserResponseListener>()
         mockMediaItem = Mockito.mock(MediaBrowserCompat.MediaItem::class.java)
-        mediaIdSubscriptionCallback = MediaIdSubscriptionCallback(handler)
+        mediaIdSubscriptionCallback = MediaIdSubscriptionCallback()
         mediaItemList = listOf(mockMediaItem!!)
     }
 

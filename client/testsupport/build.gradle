@@ -62,7 +62,7 @@ dependencies {
     implementation project(path: ':app', configuration: 'default')
     implementation 'androidx.core:core-ktx:1.2.0-rc01'
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
-    implementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
+    implementation group: 'com.nhaarman.mockitokotlin2', name: 'mockito-kotlin', version: MOCKITO_KOTLIN
     implementation group: 'androidx.recyclerview', name: 'recyclerview', version: RECYCLER_VIEW_VERSION
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
     implementation group: 'androidx.viewpager2', name: 'viewpager2', version: VIEW_PAGER2_VERSION

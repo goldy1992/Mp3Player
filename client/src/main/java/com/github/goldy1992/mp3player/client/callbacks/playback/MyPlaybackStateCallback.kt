@@ -4,6 +4,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import com.github.goldy1992.mp3player.client.callbacks.AsyncCallback
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.HashSet
 
 class MyPlaybackStateCallback
 
@@ -12,7 +13,7 @@ class MyPlaybackStateCallback
     : AsyncCallback<PlaybackStateCompat>() {
 
 
-    private val listeners: MutableSet<PlaybackStateListener>
+    private val listeners: MutableSet<PlaybackStateListener> = HashSet()
     override fun processCallback(data: PlaybackStateCompat) {
         for (listener in listeners) {
             listener.onPlaybackStateChanged(data)
@@ -37,11 +38,7 @@ class MyPlaybackStateCallback
         return listeners
     }
 
-    companion object {
-        private const val LOG_TAG = "MY_PLYBK_ST_CLLBK"
-    }
-
-    init {
-        listeners = HashSet()
+    override fun logTag(): String {
+        return "MY_PLYBK_ST_CLLBK"
     }
 }

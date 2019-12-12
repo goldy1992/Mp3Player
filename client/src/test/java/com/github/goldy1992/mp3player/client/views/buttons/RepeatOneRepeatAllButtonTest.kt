@@ -20,7 +20,7 @@ class RepeatOneRepeatAllButtonTest : MediaButtonTestBase() {
     @Before
     public override fun setup() {
         super.setup()
-        repeatOneRepeatAllButton = RepeatOneRepeatAllButton(context!!, mediaControllerAdapter!!, handler!!)
+        repeatOneRepeatAllButton = RepeatOneRepeatAllButton(context, mediaControllerAdapter)
     }
 
     @Test

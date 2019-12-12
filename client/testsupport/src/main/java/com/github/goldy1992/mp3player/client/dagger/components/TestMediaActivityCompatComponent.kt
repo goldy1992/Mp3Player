@@ -12,8 +12,7 @@ import dagger.Component
 @Component(modules =
     [MockAlbumArtPainterModule::class,
     MediaBrowserCompatModule::class,
-    MockMediaControllerAdapterModule::class,
-    MyDrawerListenerModule::class])
+    MockMediaControllerAdapterModule::class])
 interface TestMediaActivityCompatComponent : MediaActivityCompatComponent {
 
     open fun inject(emptyMediaActivityCompatFragmentActivity: EmptyMediaActivityCompatFragmentActivity?)

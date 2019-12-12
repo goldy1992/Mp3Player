@@ -20,7 +20,7 @@ class ShuffleButtonTest : MediaButtonTestBase() {
     @Before
     public override fun setup() {
         super.setup()
-        shuffleButton = ShuffleButton(context!!, mediaControllerAdapter!!, handler!!)
+        shuffleButton = ShuffleButton(context, mediaControllerAdapter)
     }
 
     @Test

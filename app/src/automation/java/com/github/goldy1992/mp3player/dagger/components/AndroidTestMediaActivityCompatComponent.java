@@ -7,7 +7,6 @@ import com.github.goldy1992.mp3player.dagger.modules.AndroidTestComponentNameMod
 import com.github.goldy1992.mp3player.dagger.modules.GlideModule;
 import com.github.goldy1992.mp3player.dagger.modules.MainHandlerModule;
 import com.github.goldy1992.mp3player.dagger.modules.MediaBrowserCompatModule;
-import com.github.goldy1992.mp3player.dagger.modules.MyDrawerListenerModule;
 import com.github.goldy1992.mp3player.dagger.modules.service.HandlerThreadModule;
 import com.github.goldy1992.mp3player.dagger.scopes.ComponentScope;
 
@@ -20,8 +19,7 @@ import dagger.Component;
         GlideModule.class,
         HandlerThreadModule.class,
         MainHandlerModule.class,
-        MediaBrowserCompatModule.class,
-        MyDrawerListenerModule.class
+        MediaBrowserCompatModule.class
 })
 public interface AndroidTestMediaActivityCompatComponent extends MediaActivityCompatComponent {
 

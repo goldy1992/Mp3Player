@@ -57,8 +57,8 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener {
         parentItemTypeId = id
         injectDependencies(component)
         myViewAdapter = recyclerViewAdapters.getAdapter(mediaItemType)!!
-        mediaBrowserAdapter!!.registerListener(parentItemTypeId, myViewAdapter)
-        mediaBrowserAdapter!!.subscribe(parentItemTypeId)
+        mediaBrowserAdapter.registerListener(parentItemTypeId, myViewAdapter)
+        mediaBrowserAdapter.subscribe(parentItemTypeId)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -70,7 +70,7 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener {
     override fun onViewCreated(view: View, bundle: Bundle?) {
         recyclerView.setAdapter(myViewAdapter)
         recyclerView.addOnItemTouchListener(myGenericItemTouchListener!!)
-        myGenericItemTouchListener!!.parentView = recyclerView
+        myGenericItemTouchListener.parentView = recyclerView
         recyclerView.setItemAnimator(DefaultItemAnimator())
         recyclerView.setLayoutManager(linearLayoutManager)
 

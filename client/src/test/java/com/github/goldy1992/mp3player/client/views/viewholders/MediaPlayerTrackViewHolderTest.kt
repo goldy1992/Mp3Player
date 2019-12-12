@@ -7,11 +7,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.views.SquareImageView
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.android.synthetic.main.view_holder_media_player.view.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,15 +27,16 @@ class MediaPlayerTrackViewHolderTest {
     private val albumArtPainter: AlbumArtPainter = mock<AlbumArtPainter>()
     private val titleView: TextView = mock<TextView>()
     private val artistView: TextView = mock<TextView>()
-    private val albumArtView: ImageView = mock<ImageView>()
+    private val albumArtView: SquareImageView = mock<SquareImageView>()
     private val view: View = mock<View>()
 
     @Before
     fun setup() {
-        whenever<Any?>(view.findViewById(R.id.songTitle)).thenReturn(titleView)
-        whenever<Any?>(view.findViewById(R.id.songArtist)).thenReturn(artistView)
-        whenever<Any?>(view.findViewById(R.id.albumArt)).thenReturn(albumArtView)
+        whenever<Any?>(view.songTitle).thenReturn(titleView)
+        whenever<Any?>(view.songArtist).thenReturn(artistView)
+        whenever<Any?>(view.albumArt).thenReturn(albumArtView)
         mediaPlayerTrackViewHolder = MediaPlayerTrackViewHolder(view, albumArtPainter)
+
     }
 
     @Test

@@ -9,10 +9,8 @@ import com.github.goldy1992.mp3player.client.dagger.components.fragments.ChildVi
 import com.github.goldy1992.mp3player.client.dagger.components.fragments.PlaybackButtonsSubComponent
 import com.github.goldy1992.mp3player.client.dagger.components.fragments.PlaybackTrackerFragmentSubcomponent
 import com.github.goldy1992.mp3player.client.dagger.components.fragments.SearchFragmentSubcomponent
-import com.github.goldy1992.mp3player.client.dagger.modules.GestureDetectorModule
 import com.github.goldy1992.mp3player.client.dagger.modules.GlideModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserCompatModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MyDrawerListenerModule
 import com.github.goldy1992.mp3player.client.views.fragments.PlaybackSpeedControlsFragment
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
@@ -21,10 +19,8 @@ import dagger.Component
 
 @ComponentScope
 @Component(modules =
-    [GestureDetectorModule::class,
-    GlideModule::class,
-    MediaBrowserCompatModule::class,
-    MyDrawerListenerModule::class])
+    [GlideModule::class,
+    MediaBrowserCompatModule::class])
 interface MediaActivityCompatComponent {
     // activities
     fun inject(mainActivity: MainActivity)

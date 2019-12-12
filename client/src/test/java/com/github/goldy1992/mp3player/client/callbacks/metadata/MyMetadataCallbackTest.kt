@@ -22,11 +22,6 @@ class MyMetadataCallbackTest {
         Mockito.verify(metadataListener, Mockito.times(1)).onMetadataChanged(mediaMetadataCompat)
     }
 
-    @Test
-    fun testNotifyListenerWithNullMetadataCompat() {
-        myMetadataCallback!!.processCallback(null)
-        Mockito.verify(metadataListener, Mockito.never()).onMetadataChanged(any())
-    }
 
     companion object {
         private var myMetadataCallback: MyMetadataCallback? = null
@@ -35,7 +30,7 @@ class MyMetadataCallbackTest {
         @JvmStatic
         fun setupClass() {
             val handler = Mockito.mock(Handler::class.java)
-            myMetadataCallback = MyMetadataCallback(handler)
+            myMetadataCallback = MyMetadataCallback()
             myMetadataCallback!!.registerMetaDataListener(metadataListener)
         }
 

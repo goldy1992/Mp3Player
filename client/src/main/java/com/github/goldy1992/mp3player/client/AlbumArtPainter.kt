@@ -11,10 +11,14 @@ import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.util.FixedPreloadSizeProvider
+import com.github.goldy1992.mp3player.client.views.SquareImageView
+import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import javax.inject.Inject
 
-class AlbumArtPainter @Inject constructor(private val requestManager: RequestManager) {
+class AlbumArtPainter
+
+    @Inject constructor(private val requestManager: RequestManager) : LogTagger {
 
     private val requestOptions: RequestOptions = RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL)
 
@@ -24,7 +28,7 @@ class AlbumArtPainter @Inject constructor(private val requestManager: RequestMan
         try {
             requestManager.load(uri).apply(requestOptions).fitCenter().into(imageView!!)
         } catch (ex: Exception) { // TODO: load a default image when the album art if not found
-//            Log.e(LOG_TAG, ExceptionUtils.getStackTrace(ex));
+//            Log.e(logTag(), ExceptionUtils.getStackTrace(ex));
         }
     }
 
@@ -32,7 +36,15 @@ class AlbumArtPainter @Inject constructor(private val requestManager: RequestMan
         try {
             requestManager.load(image).apply(requestOptions).fitCenter().into(imageView!!)
         } catch (ex: Exception) { // TODO: load a default image when the album art if not found
-//            Log.e(LOG_TAG, ExceptionUtils.getStackTrace(ex));
+//            Log.e(logTag(), ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
+    fun paintOnView(imageView: SquareImageView?, image: ByteArray) {
+        try {
+            requestManager.load(image).apply(requestOptions).fitCenter().into(imageView!!)
+        } catch (ex: Exception) { // TODO: load a default image when the album art if not found
+//            Log.e(logTag(), ExceptionUtils.getStackTrace(ex));
         }
     }
 
@@ -52,8 +64,8 @@ class AlbumArtPainter @Inject constructor(private val requestManager: RequestMan
         imageView.setImageDrawable(null)
     }
 
-    companion object {
-        private const val LOG_TAG = "ALBM_ART_PAINTER"
-    }
+    override fun logTag(): String {
+        return "ALBM_ART_PAINTER";
+  }
 
 }

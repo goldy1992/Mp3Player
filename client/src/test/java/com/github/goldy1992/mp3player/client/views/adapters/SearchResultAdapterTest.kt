@@ -25,9 +25,8 @@ class SearchResultAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
     @Before
     override fun setup() {
         super.setup()
-        MockitoAnnotations.initMocks(this)
         context = InstrumentationRegistry.getInstrumentation().context
-        searchResultAdapter = SearchResultAdapter(albumArtPainter!!, handler!!)
+        searchResultAdapter = SearchResultAdapter(albumArtPainter)
     }
 
     /**
