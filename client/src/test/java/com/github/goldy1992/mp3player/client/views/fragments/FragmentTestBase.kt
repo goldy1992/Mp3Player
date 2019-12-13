@@ -23,7 +23,6 @@ open class FragmentTestBase<F : Fragment> {
     fun setup(fragmentClass: Class<F>, addFragmentToActivity: Boolean) {
         context = InstrumentationRegistry.getInstrumentation().context
         this.fragmentClass = fragmentClass
-        MockitoAnnotations.initMocks(this)
         activityScenario = Robolectric.buildActivity(TestMainActivity::class.java).setup()
         activity = activityScenario!!.get()
         val fragmentArgs = Bundle()

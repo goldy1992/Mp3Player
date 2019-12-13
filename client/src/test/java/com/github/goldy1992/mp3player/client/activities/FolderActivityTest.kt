@@ -31,11 +31,11 @@ class FolderActivityTest {
         scenario = ActivityScenario.launch(intent)
     }
 
-//    @Test
-//    fun testOnBackPressed() {
-//        scenario!!.onActivity { activity : FolderActivity ->
-//            activity.onBackPressed()
-//            Assert.assertTrue(activity.isFinishing)
-//        }
-//    }
+    @Test
+    fun testOnBackPressed() {
+        scenario!!.onActivity { activity : FolderActivity ->
+            activity.onBackPressed()
+            Assert.assertTrue(activity.isFinishing)
+        }
+    }
 }
