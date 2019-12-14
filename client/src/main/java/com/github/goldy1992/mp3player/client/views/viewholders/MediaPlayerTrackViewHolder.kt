@@ -20,7 +20,6 @@ class MediaPlayerTrackViewHolder(itemView: View, private val albumArtPainter: Al
 
     fun bindMediaItem(item: MediaSessionCompat.QueueItem) {
 
-        CoroutineScope(Main).launch {
             val titleText = item.description.title.toString()
             itemView.songTitle.text = titleText
             val extras = item.description.extras
@@ -33,7 +32,7 @@ class MediaPlayerTrackViewHolder(itemView: View, private val albumArtPainter: Al
                 val image = extras.getSerializable(MediaMetadataCompat.METADATA_KEY_ALBUM_ART) as ByteArray
                 albumArtPainter.paintOnView(itemView.albumArt, image)
             }
-        }
+
     }
 
 }

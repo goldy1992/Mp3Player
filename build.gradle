@@ -40,7 +40,7 @@ buildscript {
         MOCKITO_CORE_VERSION = '2.27.0'
         MOCKITO_KOTLIN = '2.2.0'
         RECYCLER_VIEW_VERSION = '1.1.0'
-        ROBOLECTRIC_VERSION = '4.3.1'
+        ROBOLECTRIC_VERSION = '4.3'
         ROOM_VERSION = '2.1.0'
         TEST_CORE_VERSION = '1.2.0'
         TEST_RULES_VERSION = '1.1.1'

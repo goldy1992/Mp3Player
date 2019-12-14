@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'jacoco'
 
 jacoco {
@@ -139,13 +138,6 @@ dependencies {
 
     // vintage
     testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
-    // (Optional) If you also have JUnit 4-based tests
-    testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: JUNIT5_VERSION
-    // jupiter
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: JUNIT5_VERSION
-    // (Required) Writing and executing Unit Tests on the JUnit Platform
-    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: JUNIT5_VERSION
-
 
 
     testImplementation project(":client:testsupport")

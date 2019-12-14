@@ -1,0 +1,41 @@
+apply plugin:  'jacoco'
+
+jacoco {
+    toolVersion = "0.8.5"
+    // Custom reports directory can be specfied like this:
+    // reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: "testDebugUnitTest") {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports for Debug build"
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def excludes = ['**/R.class',
+                    '**/R$*.class',
+                    '**/*$ViewBinder*.*',
+                    '**/*$InjectAdapter*.*',
+                    '**/*Injector*.*',
+                    '**/BuildConfig.*',
+                    '**/Manifest*.*',
+                    '**/*Test*.*',
+                    '**/*Activity*.*',
+                    '**/CiMattersApplication*.*',
+                    'android/**/*.*']
+
+    def debugTree = fileTree(
+            dir: "$buildDir/intermediates/javac/debug/compileDebugJavaWithJavac/classes/de/logerbyte/jacocotest",
+            excludes: excludes)
+    def kotlinDebugTree = fileTree(
+            dir: "$buildDir/tmp/kotlin-classes/debug",
+            excludes: excludes)
+    def mainSrc = "${project.projectDir}/src/main/java"
+
+    getClassDirectories().setFrom(files([debugTree], [kotlinDebugTree]))
+    executionData = files("$buildDir/jacoco/testDebugUnitTest.exec")
+    sourceDirectories = files([mainSrc])
+}

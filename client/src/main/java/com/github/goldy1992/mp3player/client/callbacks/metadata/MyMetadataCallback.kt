@@ -4,40 +4,41 @@ import android.media.MediaMetadata
 import android.support.v4.media.MediaMetadataCompat
 import android.util.Log
 import com.github.goldy1992.mp3player.client.callbacks.AsyncCallback
+import com.github.goldy1992.mp3player.commons.LogTagger
 import javax.inject.Inject
 import kotlin.collections.HashSet
 
 class MyMetadataCallback
 
     @Inject
-    constructor()
-    : AsyncCallback<MediaMetadataCompat>() {
+    constructor() : LogTagger {
 
-    private var currentMediaId: String? = null
-    private val metadataListeners: MutableSet<MetadataListener> = HashSet()
-    override fun processCallback(data: MediaMetadataCompat) {
+    var currentMediaId: String? = null
 
+    val metadataListeners: MutableSet<MetadataListener> = HashSet()
+
+    fun processCallback(data: MediaMetadataCompat) {
         val mediaMetadata = data.mediaMetadata as MediaMetadata
         val newMediaId = mediaMetadata.description.mediaId
-        if (newMediaId != null && newMediaId != currentMediaId) {
-            currentMediaId = newMediaId
-            notifyListeners(data)
+        newMediaId?.let {
+            if (newMediaId != currentMediaId) {
+                currentMediaId = newMediaId
+                notifyListeners(data)
+            }
         }
     }
 
-    private fun notifyListeners(metadata: MediaMetadataCompat) {
+    fun notifyListeners(metadata: MediaMetadataCompat) {
         for (listener in metadataListeners) {
             listener.onMetadataChanged(metadata)
         }
     }
 
-    @Synchronized
     fun registerMetaDataListener(listener: MetadataListener) {
         Log.i(logTag(), "registerMetaDataListener" + listener.javaClass)
         metadataListeners.add(listener)
     }
 
-    @Synchronized
     fun removeMetaDataListener(listener: MetadataListener?): Boolean {
         return metadataListeners.remove(listener)
     }

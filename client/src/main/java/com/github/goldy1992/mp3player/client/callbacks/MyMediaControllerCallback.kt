@@ -14,7 +14,7 @@ import javax.inject.Inject
 class MyMediaControllerCallback @Inject constructor(val myMetaDataCallback: MyMetadataCallback,
                                                     val myPlaybackStateCallback: MyPlaybackStateCallback) : MediaControllerCompat.Callback() {
     override fun onMetadataChanged(metadata: MediaMetadataCompat) {
-        myMetaDataCallback.onStateChanged(metadata)
+        myMetaDataCallback.processCallback(metadata)
     }
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
