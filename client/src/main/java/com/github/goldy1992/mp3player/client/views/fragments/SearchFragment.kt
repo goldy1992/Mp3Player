@@ -40,7 +40,7 @@ class SearchFragment : Fragment(), LogTagger {
         inputMethodManager = context!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         // Get the SearchView and set the searchable configuration
         val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val componentName = ComponentName(context, componentClassMapper.searchResultActivity)
+        val componentName = ComponentName(context!!, componentClassMapper.searchResultActivity!!)
         val searchableInfo = searchManager.getSearchableInfo(componentName)
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchableInfo)

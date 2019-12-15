@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 
 class TrackViewAdapter // TODO: if there is no queue make an empty view holder
 (val albumArtPainter: AlbumArtPainter,
- val mainHandler: Handler,
  var queue: List<QueueItem>?) : RecyclerView.Adapter<MediaPlayerTrackViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaPlayerTrackViewHolder { // create a new views

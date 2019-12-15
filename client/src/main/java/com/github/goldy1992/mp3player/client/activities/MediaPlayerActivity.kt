@@ -53,7 +53,7 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, Lo
         val context = applicationContext
         val albumArtPainter = AlbumArtPainter(Glide.with(context))
         trackViewPagerChangeCallback = TrackViewPagerChangeCallback(mediaControllerAdapter!!)
-        trackViewAdapter = TrackViewAdapter(albumArtPainter, Handler(mainLooper), mediaControllerAdapter!!.queue)
+        trackViewAdapter = TrackViewAdapter(albumArtPainter, mediaControllerAdapter!!.queue)
         mediaControllerAdapter!!.registerMetaDataListener(this)
         trackViewPager.setAdapter(trackViewAdapter)
         trackViewPager.registerOnPageChangeCallback(trackViewPagerChangeCallback!!)

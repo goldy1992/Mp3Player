@@ -16,7 +16,7 @@ import java.io.File
 @RunWith(RobolectricTestRunner::class)
 class FolderActivityTest {
 
-    private var scenario: ActivityScenario<FolderActivityInjectorTestImpl>? = null
+    private lateinit var scenario: ActivityScenario<FolderActivityInjectorTestImpl>
 
     @Before
     fun setup() {
@@ -33,9 +33,10 @@ class FolderActivityTest {
 
     @Test
     fun testOnBackPressed() {
-        scenario!!.onActivity { activity : FolderActivity ->
+        scenario.onActivity { activity : FolderActivity ->
             activity.onBackPressed()
             Assert.assertTrue(activity.isFinishing)
         }
+        scenario.close()
     }
 }

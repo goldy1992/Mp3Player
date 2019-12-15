@@ -8,10 +8,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.github.goldy1992.mp3player.client.R;
 
-public class TestSeekBarFragment extends AsyncFragment {
+public class TestSeekBarFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

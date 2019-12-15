@@ -11,9 +11,9 @@ import dagger.Provides
 @Module
 class MediaBrowserCompatModule {
     @Provides
-    fun provideMediaBrowserCompat(context: Context?, componentClassMapper: ComponentClassMapper,
+    fun provideMediaBrowserCompat(context: Context, componentClassMapper: ComponentClassMapper,
                                   myConnectionCallback: MyConnectionCallback?): MediaBrowserCompat {
-        val componentName = ComponentName(context, componentClassMapper.service)
+        val componentName = ComponentName(context, componentClassMapper.service!!)
         return MediaBrowserCompat(context, componentName, myConnectionCallback, null)
     }
 }

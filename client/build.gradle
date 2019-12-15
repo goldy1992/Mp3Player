@@ -2,48 +2,39 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'jacoco'
 
-jacoco {
-    toolVersion = JACOCO_VERSION
-}
 
-
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-}
-
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testFullDebugUnitTest', 'createFullDebugUnitTestCoverageReport']) {
 
     reports {
         xml.enabled = true
         html.enabled = true
     }
 
-    def fileFilter = [
-            '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$[0-9].*'
-    ]
-    def debugTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
-    def mainSrc = "$project.projectDir/src/main/kotlin"
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/*Dagger*.**', '**/*_Factory*.**', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/fullDebug", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
 
-    sourceDirectories = files([mainSrc])
-    classDirectories = files([debugTree])
-    executionData = fileTree(dir: project.buildDir, includes: [
-            'jacoco/testDebugUnitTest.exec', 'outputs/code_coverage/debugAndroidTest/connected/**/*.ec'
+    sourceDirectories.from = files([mainSrc])
+    classDirectories.from = files([debugTree])
+    executionData.from = fileTree(dir: "$buildDir", includes: [
+            "jacoco/testFullDebugUnitTest.exec",
+            "outputs/code-coverage/connected/*coverage.ec"
     ])
 }
 
 android {
+
     compileSdkVersion TARGET_SDK_VERION
     buildToolsVersion BUILD_TOOLS_VERSION
-
 
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERION
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
         vectorDrawables.useSupportLibrary = true
@@ -80,19 +71,31 @@ android {
 
 
     testOptions {
+        execution 'ANDROID_TEST_ORCHESTRATOR'
+        animationsDisabled true
+
         unitTests {
             includeAndroidResources = true
             returnDefaultValues = true
         }
+
         unitTests.all {
             testLogging {
                 events "passed", "skipped", "failed", "standardOut", "standardError"
                 outputs.upToDateWhen {false}
                 showStandardStreams = true
             }
+            jacoco {
+                includeNoLocationClasses = true
+            }
         }
     }
 
+    sourceSets {
+        main.java.srcDirs += 'src/main/java'
+        test.java.srcDirs += 'src/test/java'
+        androidTest.java.srcDirs += 'src/androidTest/java'
+    }
 }
 
 dependencies {
@@ -136,16 +139,17 @@ dependencies {
     implementation project(path: ':commons')
 
 
-    // vintage
-    testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
-
-
+    testImplementation junit5UnitTests
+    testRuntimeOnly junit5UnitTestRuntime
     testImplementation project(":client:testsupport")
-    testImplementation group: 'org.robolectric', name: 'robolectric', version: ROBOLECTRIC_VERSION// https://mvnrepository.com/artifact/org.robolectric/shadows-support-v4
+
+
+    testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
+        exclude group: "com.google.auto.service", module: "auto-service"
+    }
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
-    testImplementation group: 'com.nhaarman.mockitokotlin2', name: 'mockito-kotlin', version: MOCKITO_KOTLIN
     testImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: KOTLIN_COROUTINE_VERSION
-    implementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
+    testImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
 
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }

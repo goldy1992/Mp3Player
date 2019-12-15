@@ -43,7 +43,7 @@ abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListene
         recyclerView.setLayoutManager(LinearLayoutManager(applicationContext))
         // Get the SearchView and set the searchable configuration
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val componentName = ComponentName(applicationContext, componentClassMapper.searchResultActivity)
+        val componentName = ComponentName(applicationContext, componentClassMapper.searchResultActivity!!)
         val searchableInfo = searchManager.getSearchableInfo(componentName)
         //    Assumes current activity is the searchable activity
         this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)

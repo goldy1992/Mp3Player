@@ -8,9 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_holder_media_player.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
 
 class MediaPlayerTrackViewHolder(itemView: View, private val albumArtPainter: AlbumArtPainter)
     : RecyclerView.ViewHolder(itemView), LayoutContainer {
