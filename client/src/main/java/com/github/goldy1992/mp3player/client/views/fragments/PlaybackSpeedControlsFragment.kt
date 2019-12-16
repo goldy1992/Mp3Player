@@ -12,12 +12,9 @@ import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
+
 import kotlinx.android.synthetic.main.fragment_playback_speed_controls.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
+
 import javax.inject.Inject
 
 class PlaybackSpeedControlsFragment : Fragment(), PlaybackStateListener {
@@ -48,24 +45,19 @@ class PlaybackSpeedControlsFragment : Fragment(), PlaybackStateListener {
     }
 
     private fun updatePlaybackSpeedText(speed: Float) {
-        CoroutineScope(Main).launch {
             playbackSpeedTextView!!.text = getString(R.string.PLAYBACK_SPEED_VALUE, speed)
-        }
-
     }
 
     @VisibleForTesting
     fun increasePlaybackSpeed() {
-        CoroutineScope(Dispatchers.Default).launch {
             mediaControllerAdapter!!.sendCustomAction(Constants.INCREASE_PLAYBACK_SPEED, Bundle())
-        }
+
     }
 
     @VisibleForTesting
     fun decreasePlaybackSpeed() {
-      CoroutineScope(Dispatchers.Default).launch {
           mediaControllerAdapter!!.sendCustomAction(Constants.DECREASE_PLAYBACK_SPEED, Bundle())
-      }
+
 
     }
 

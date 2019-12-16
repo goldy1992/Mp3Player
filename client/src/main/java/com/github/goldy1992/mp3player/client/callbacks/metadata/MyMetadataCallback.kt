@@ -3,7 +3,6 @@ package com.github.goldy1992.mp3player.client.callbacks.metadata
 import android.media.MediaMetadata
 import android.support.v4.media.MediaMetadataCompat
 import android.util.Log
-import com.github.goldy1992.mp3player.client.callbacks.AsyncCallback
 import com.github.goldy1992.mp3player.commons.LogTagger
 import javax.inject.Inject
 import kotlin.collections.HashSet
@@ -13,9 +12,9 @@ class MyMetadataCallback
     @Inject
     constructor() : LogTagger {
 
-    var currentMediaId: String? = null
+    private var currentMediaId: String? = null
 
-    val metadataListeners: MutableSet<MetadataListener> = HashSet()
+    private val metadataListeners: MutableSet<MetadataListener> = HashSet()
 
     fun processCallback(data: MediaMetadataCompat) {
         val mediaMetadata = data.mediaMetadata as MediaMetadata
@@ -28,7 +27,7 @@ class MyMetadataCallback
         }
     }
 
-    fun notifyListeners(metadata: MediaMetadataCompat) {
+    private fun notifyListeners(metadata: MediaMetadataCompat) {
         for (listener in metadataListeners) {
             listener.onMetadataChanged(metadata)
         }

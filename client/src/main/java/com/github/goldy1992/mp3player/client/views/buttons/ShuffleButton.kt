@@ -11,11 +11,7 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.github.goldy1992.mp3player.commons.Constants
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
 
 class ShuffleButton
 
@@ -37,11 +33,11 @@ class ShuffleButton
         when (newState) {
             PlaybackStateCompat.SHUFFLE_MODE_ALL -> {
                 shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_ALL
-               CoroutineScope(Main).launch{ setShuffleOn() }
+                setShuffleOn()
             }
             else -> {
                 shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_NONE
-                CoroutineScope(Main).launch { setShuffleOff() }
+                setShuffleOff()
             }
         }
     }

@@ -17,9 +17,6 @@ import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateLis
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.client.views.SeekerBar
 import com.github.goldy1992.mp3player.client.views.TimeCounter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class PlaybackTrackerFragment : Fragment(), PlaybackStateListener, MetadataListener {
@@ -72,8 +69,7 @@ class PlaybackTrackerFragment : Fragment(), PlaybackStateListener, MetadataListe
         val duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
         counter!!.duration = duration
         val durationString = formatTime(duration)
-
-        CoroutineScope(Dispatchers.Main).launch{ updateDurationText(durationString) }
+        updateDurationText(durationString)
         seekerBarController!!.onMetadataChanged(metadata)
     }
 

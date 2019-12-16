@@ -11,11 +11,7 @@ import androidx.annotation.VisibleForTesting
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
 
 class PlayPauseButton
     @Inject
@@ -53,12 +49,12 @@ class PlayPauseButton
     }
 
     private fun setStatePlaying() {
-        CoroutineScope(Main).launch { setPauseIcon() }
+        setPauseIcon()
         state = PlaybackStateCompat.STATE_PLAYING
     }
 
     private fun setStatePaused() {
-        CoroutineScope(Main).launch{ setPlayIcon() }
+        setPlayIcon()
         state = PlaybackStateCompat.STATE_PAUSED
     }
 

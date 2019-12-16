@@ -11,12 +11,7 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.github.goldy1992.mp3player.commons.Constants
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
-
 /**
  *
  */
@@ -46,15 +41,15 @@ class RepeatOneRepeatAllButton
     fun updateState(@PlaybackStateCompat.RepeatMode newState: Int) {
         when (newState) {
             PlaybackStateCompat.REPEAT_MODE_ALL -> {
-                CoroutineScope(Main).launch { setRepeatAllIcon() }
+                setRepeatAllIcon()
                 state = PlaybackStateCompat.REPEAT_MODE_ALL
             }
             PlaybackStateCompat.REPEAT_MODE_ONE -> {
-                CoroutineScope(Main).launch { setRepeatOneIcon() }
+                setRepeatOneIcon()
                 state = PlaybackStateCompat.REPEAT_MODE_ONE
             }
             PlaybackStateCompat.REPEAT_MODE_NONE -> {
-                CoroutineScope(Main).launch  { setRepeatNoneIcon() }
+                 setRepeatNoneIcon()
                 state = PlaybackStateCompat.REPEAT_MODE_NONE
             }
             else -> {

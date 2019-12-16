@@ -5,26 +5,6 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'jacoco'
 
-
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testFullDebugUnitTest', 'createFullDebugUnitTestCoverageReport']) {
-
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-
-    def fileFilter = ['**/R.class', '**/R$*.class', '**/*Dagger*.**', '**/*_Factory*.**', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-    def debugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/fullDebug", excludes: fileFilter)
-    def mainSrc = "${project.projectDir}/src/main/java"
-
-    sourceDirectories.from = files([mainSrc])
-    classDirectories.from = files([debugTree])
-    executionData.from = fileTree(dir: "$buildDir", includes: [
-            "jacoco/testFullDebugUnitTest.exec",
-            "outputs/code-coverage/connected/*coverage.ec"
-    ])
-}
-
 android {
 
     compileSdkVersion TARGET_SDK_VERION
@@ -85,9 +65,6 @@ android {
                 outputs.upToDateWhen {false}
                 showStandardStreams = true
             }
-            jacoco {
-                includeNoLocationClasses = true
-            }
         }
     }
 
@@ -121,7 +98,7 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
     implementation group: 'androidx.viewpager2', name: 'viewpager2', version: VIEW_PAGER2_VERSION
     implementation group: 'androidx.recyclerview', name: 'recyclerview', version: RECYCLER_VIEW_VERSION
-    implementation group: 'androidx.core', name: 'core', version: CORE_VERSION
+    implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     implementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
     implementation project(path: ':commons')
 

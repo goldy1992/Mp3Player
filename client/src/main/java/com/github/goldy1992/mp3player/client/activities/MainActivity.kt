@@ -23,9 +23,6 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
@@ -143,11 +140,10 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
                 else -> null
             }
             if (null != mediaItemListFragment) {
-                CoroutineScope(Main).launch {
-                    adapter!!.pagerItems[category] = mediaItemListFragment
-                    adapter!!.menuCategories[category] = mediaItem
-                    adapter!!.notifyDataSetChanged()
-                }
+                adapter!!.pagerItems[category] = mediaItemListFragment
+                adapter!!.menuCategories[category] = mediaItem
+                adapter!!.notifyDataSetChanged()
+
             }
         }
     }

@@ -11,8 +11,6 @@ import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Constants.ONE_SECOND
 import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlin.concurrent.timer
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Main
 import java.util.*
 
 import javax.inject.Inject
@@ -108,7 +106,7 @@ class TimeCounter
 
     private fun updateTimerText() {
         val text = formatTime(currentPosition)
-        CoroutineScope(Main).apply {  textView!!.text = text }
+        textView!!.text = text
     }
 
     private fun updateUi() { //Log.d(LOG_TAG,"current position: " + timeCounter.getCurrentPosition() + ", duration: " + timeCounter.getDuration());

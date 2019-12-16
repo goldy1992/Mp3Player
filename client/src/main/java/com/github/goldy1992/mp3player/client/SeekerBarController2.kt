@@ -13,11 +13,6 @@ import com.github.goldy1992.mp3player.client.views.SeekerBar
 import com.github.goldy1992.mp3player.client.views.TimeCounter
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -74,19 +69,18 @@ class SeekerBarController2
         val newPosition = positionAsFraction
         //Log.d(LOG_TAG, "new fraction: " + newPosition);
         valueAnimator!!.setCurrentFraction(newPosition)
-        CoroutineScope(Main).launch {
 
-            if (!valueAnimator!!.isStarted) {
-                valueAnimator!!.start()
-            }
+        if (!valueAnimator!!.isStarted) {
+            valueAnimator!!.start()
+        }
 
-            when (currentState) {
-                PlaybackStateCompat.STATE_PAUSED -> valueAnimator!!.pause()
-                PlaybackStateCompat.STATE_PLAYING -> valueAnimator!!.resume()
-                else -> {
-                }
+        when (currentState) {
+            PlaybackStateCompat.STATE_PAUSED -> valueAnimator!!.pause()
+            PlaybackStateCompat.STATE_PLAYING -> valueAnimator!!.resume()
+            else -> {
             }
         }
+
     }
 
     override fun onAnimationUpdate(valueAnimator: ValueAnimator) { //     Log.i(LOG_TAG, "animation update from: " + valueAnimator);
@@ -149,13 +143,9 @@ class SeekerBarController2
     }
 
     private fun removeValueAnimator() {
-
-        CoroutineScope(Dispatchers.Main).launch {
-            seekerBar?.valueAnimator?.removeAllUpdateListeners()
-            seekerBar?.valueAnimator?.cancel()
-            seekerBar?.valueAnimator = null
-        }
-
+        seekerBar?.valueAnimator?.removeAllUpdateListeners()
+        seekerBar?.valueAnimator?.cancel()
+        seekerBar?.valueAnimator = null
     }
 
     /**
