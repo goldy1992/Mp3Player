@@ -11,8 +11,13 @@ import javax.inject.Inject
  * Created by Mike on 04/10/2017.
  * TODO: ORGANIZE LISTENERS INTO CATEGORIES DEFINED BY THE ACTION THAT SHOULD BE SET IN THE ACTIONS LIST
  */
-class MyMediaControllerCallback @Inject constructor(val myMetaDataCallback: MyMetadataCallback,
-                                                    val myPlaybackStateCallback: MyPlaybackStateCallback) : MediaControllerCompat.Callback() {
+class MyMediaControllerCallback
+
+    @Inject
+    constructor(val myMetaDataCallback: MyMetadataCallback,
+                val myPlaybackStateCallback: MyPlaybackStateCallback)
+    : MediaControllerCompat.Callback() {
+
     override fun onMetadataChanged(metadata: MediaMetadataCompat) {
         myMetaDataCallback.processCallback(metadata)
     }
