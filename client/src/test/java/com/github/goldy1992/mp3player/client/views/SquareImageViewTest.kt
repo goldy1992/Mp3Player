@@ -3,10 +3,12 @@ package com.github.goldy1992.mp3player.client.views
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
+import com.nhaarman.mockitokotlin2.spy
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.android.AttributeSetBuilderImpl.ArscResourceResolver
 
@@ -22,14 +24,14 @@ class SquareImageViewTest {
     fun testOnMeasureUsingWidth() {
         val squareImageView = createSquareImageView("X")
         squareImageView.onMeasure(TEST_WIDTH, TEST_HEIGHT)
-        Mockito.verify(squareImageView).setDimensions(TEST_WIDTH)
+        verify(squareImageView).setDimensions(TEST_WIDTH)
     }
 
     @Test
     fun testOnMeasureUsingHeight() {
         val squareImageView = createSquareImageView("Y")
         squareImageView.onMeasure(TEST_WIDTH, TEST_HEIGHT)
-        Mockito.verify(squareImageView).setDimensions(TEST_HEIGHT)
+        verify(squareImageView).setDimensions(TEST_HEIGHT)
     }
 
     private fun createSquareImageView(useWidthOrHeight: String): SquareImageView {
@@ -39,9 +41,9 @@ class SquareImageViewTest {
         val attributeSet = myAttributeSetBuilder.build()
 
         val squareImageView = SquareImageView(context, attributeSet, 0)
-        val spiedSquareImageView = Mockito.spy(squareImageView)
-        Mockito.`when`(spiedSquareImageView.measuredHeight).thenReturn(TEST_HEIGHT)
-        Mockito.`when`(spiedSquareImageView.measuredWidth).thenReturn(TEST_WIDTH)
+        val spiedSquareImageView = spy(squareImageView)
+        whenever(spiedSquareImageView.measuredHeight).thenReturn(TEST_HEIGHT)
+        whenever(spiedSquareImageView.measuredWidth).thenReturn(TEST_WIDTH)
         return spiedSquareImageView
     }
 

@@ -7,10 +7,11 @@ import com.github.goldy1992.mp3player.client.activities.TestMainActivity
 import com.github.goldy1992.mp3player.client.views.fragments.FragmentTestBase
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
@@ -37,7 +38,7 @@ class SongListFragmentTest : FragmentTestBase<SongListFragment>() {
     }
 
     private fun itemSelected(fragment: MediaItemListFragment?) {
-        val mediaControllerAdapter = Mockito.mock(MediaControllerAdapter::class.java)
+        val mediaControllerAdapter = mock<MediaControllerAdapter>()
         fragment!!.mediaControllerAdapter = mediaControllerAdapter
         val expectedLibraryId = "ID"
         val mediaItem = MediaItemBuilder("id")
@@ -45,6 +46,6 @@ class SongListFragmentTest : FragmentTestBase<SongListFragment>() {
                 .build()
         fragment.itemSelected(mediaItem)
         Shadows.shadowOf(Looper.getMainLooper()).idle()
-        Mockito.verify(mediaControllerAdapter).playFromMediaId(expectedLibraryId, null)
+        verify(mediaControllerAdapter).playFromMediaId(expectedLibraryId, null)
     }
 }

@@ -1,6 +1,9 @@
 package com.github.goldy1992.mp3player.client.views.buttons
 
 import android.support.v4.media.session.PlaybackStateCompat
+import android.view.View
+import android.widget.ImageView
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert
@@ -16,6 +19,7 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
      */
     private lateinit var playPauseButton: PlayPauseButton
 
+    private val view : ImageView = mock<ImageView>()
     /**
      * setup
      */
@@ -23,6 +27,7 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
     public override fun setup() {
         super.setup()
         playPauseButton = PlayPauseButton(context, mediaControllerAdapter)
+        playPauseButton.init(view)
     }
 
     /**
@@ -31,7 +36,7 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
     @Test
     fun testCreate() {
         Assert.assertNotNull(playPauseButton)
-        Assert.assertEquals(PlayPauseButton.INITIAL_PLAYBACK_STATE, playPauseButton.state)
+        Assert.assertEquals(2, playPauseButton.state)
     }
 
     /**

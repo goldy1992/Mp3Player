@@ -8,28 +8,28 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import org.junit.Assert
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.spy
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
-import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class SearchResultActivityTest {
     /** Intent  */
-    private var intent: Intent? = null
+    private lateinit var intent: Intent
 
     private lateinit var scenario : ActivityScenario<SearchResultActivityInjectorTestImpl>
     /** Activity controller  */
 
-    private var mediaSessionCompat: MediaSessionCompat? = null
+    private lateinit var mediaSessionCompat: MediaSessionCompat
+
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
         val context = InstrumentationRegistry.getInstrumentation().context
         mediaSessionCompat = MediaSessionCompat(context, "TAG")
         intent = Intent(ApplicationProvider.getApplicationContext(), SearchResultActivityInjectorTestImpl::class.java)
@@ -39,8 +39,8 @@ class SearchResultActivityTest {
     @Test
     fun testOnSongItemSelected() {
         scenario.onActivity { activity: SearchResultActivityInjectorTestImpl ->
-            val searchResultActivitySpied = Mockito.spy(activity)
-            val spiedMediaControllerAdapter = Mockito.spy(searchResultActivitySpied!!.mediaControllerAdapter)
+            val searchResultActivitySpied = spy(activity)
+            val spiedMediaControllerAdapter = spy(searchResultActivitySpied!!.mediaControllerAdapter)
             searchResultActivitySpied.mediaControllerAdapter = spiedMediaControllerAdapter
             val libraryId = "libId"
             val mediaItem = MediaItemBuilder("id")
@@ -48,16 +48,16 @@ class SearchResultActivityTest {
                     .setLibraryId(libraryId)
                     .build()
             searchResultActivitySpied.itemSelected(mediaItem)
-            Mockito.verify(searchResultActivitySpied, Mockito.never())!!.startActivity(ArgumentMatchers.any())
-            Mockito.verify(spiedMediaControllerAdapter, Mockito.times(1))!!.playFromMediaId(libraryId, null)
+            verify(searchResultActivitySpied, never())!!.startActivity(any())
+            verify(spiedMediaControllerAdapter, times(1))!!.playFromMediaId(libraryId, null)
         }
     }
 
     @Test
     fun testOnFolderItemSelected() {
         scenario.onActivity { activity: SearchResultActivityInjectorTestImpl ->
-            val searchResultActivitySpied = Mockito.spy(activity)
-            val spiedMediaControllerAdapter = Mockito.spy(searchResultActivitySpied!!.mediaControllerAdapter)
+            val searchResultActivitySpied = spy(activity)
+            val spiedMediaControllerAdapter = spy(searchResultActivitySpied.mediaControllerAdapter)
             searchResultActivitySpied.mediaControllerAdapter = spiedMediaControllerAdapter
             val libraryId = "libId"
             val mediaItem = MediaItemBuilder("id")
@@ -65,8 +65,8 @@ class SearchResultActivityTest {
                     .setLibraryId(libraryId)
                     .build()
             searchResultActivitySpied.itemSelected(mediaItem)
-            Mockito.verify(searchResultActivitySpied, Mockito.times(1))!!.startActivity(ArgumentMatchers.any())
-            Mockito.verify(spiedMediaControllerAdapter, Mockito.never())!!.playFromMediaId(libraryId, null)
+            verify(searchResultActivitySpied, times(1)).startActivity(any())
+            verify(spiedMediaControllerAdapter, never()).playFromMediaId(libraryId, null)
         }
     }
 
@@ -74,14 +74,14 @@ class SearchResultActivityTest {
     fun testHandleNewIntent() {
         scenario.onActivity { activity: SearchResultActivityInjectorTestImpl ->
 
-            val mediaBrowserAdapterSpied = Mockito.spy(activity.mediaBrowserAdapter)
+            val mediaBrowserAdapterSpied = spy(activity.mediaBrowserAdapter)
             activity.mediaBrowserAdapter = mediaBrowserAdapterSpied
             val expectedQuery = "QUERY"
             val intent = Intent()
             intent.action = Intent.ACTION_SEARCH
             intent.putExtra(SearchManager.QUERY, expectedQuery)
             activity.onNewIntent(intent)
-            Mockito.verify(mediaBrowserAdapterSpied, Mockito.times(1))!!.search(expectedQuery, null)
+            verify(mediaBrowserAdapterSpied, times(1))!!.search(expectedQuery, null)
         }
     }
 }

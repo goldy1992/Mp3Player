@@ -8,11 +8,9 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import org.mockito.ArgumentMatchers
-import org.mockito.Mock
-import org.mockito.Mockito
 
 open class MediaItemRecyclerViewAdapterTestBase {
     var albumArtPainter: AlbumArtPainter = mock<AlbumArtPainter>()
@@ -27,9 +25,9 @@ open class MediaItemRecyclerViewAdapterTestBase {
 
     private val mockViewGroup: ViewGroup
         get() {
-            val viewGroup = Mockito.mock(ViewGroup::class.java)
+            val viewGroup = mock<ViewGroup>()
             val layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-            whenever(viewGroup.generateLayoutParams(ArgumentMatchers.any(AttributeSet::class.java))).thenReturn(layoutParams)
+            whenever(viewGroup.generateLayoutParams(any<AttributeSet>())).thenReturn(layoutParams)
             whenever(viewGroup.context).thenReturn(context)
             return viewGroup
         }

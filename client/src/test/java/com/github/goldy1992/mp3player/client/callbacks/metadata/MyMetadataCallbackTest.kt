@@ -4,11 +4,12 @@ import android.os.Handler
 import android.support.v4.media.MediaMetadataCompat
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
@@ -19,7 +20,7 @@ class MyMetadataCallbackTest {
                 .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, "id")
                 .build()
         myMetadataCallback!!.processCallback(mediaMetadataCompat)
-        Mockito.verify(metadataListener, Mockito.times(1)).onMetadataChanged(mediaMetadataCompat)
+        verify(metadataListener, times(1)).onMetadataChanged(mediaMetadataCompat)
     }
 
 
@@ -29,7 +30,7 @@ class MyMetadataCallbackTest {
         @BeforeClass
         @JvmStatic
         fun setupClass() {
-            val handler = Mockito.mock(Handler::class.java)
+            val handler = mock<Handler>()
             myMetadataCallback = MyMetadataCallback()
             myMetadataCallback!!.registerMetaDataListener(metadataListener)
         }

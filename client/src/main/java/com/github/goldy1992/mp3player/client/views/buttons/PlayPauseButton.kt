@@ -1,23 +1,23 @@
 package com.github.goldy1992.mp3player.client.views.buttons
 
 import android.content.Context
-import android.os.Handler
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.annotation.VisibleForTesting
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
+import com.github.goldy1992.mp3player.commons.LogTagger
 import javax.inject.Inject
 
 class PlayPauseButton
     @Inject
     constructor(context: Context,
                 mediaControllerAdapter: MediaControllerAdapter)
-    : MediaButton(context, mediaControllerAdapter), PlaybackStateListener {
+    : MediaButton(context, mediaControllerAdapter), PlaybackStateListener, LogTagger {
 
     @PlaybackStateCompat.State
     var state = INITIAL_PLAYBACK_STATE
@@ -31,10 +31,10 @@ class PlayPauseButton
     @VisibleForTesting
     override fun onClick(view: View?) {
         if (state == PlaybackStateCompat.STATE_PLAYING) {
-            Log.d(LOG_TAG, "calling pause")
+            Log.d(logTag(), "calling pause")
             mediaControllerAdapter.pause()
         } else {
-            Log.d(LOG_TAG, "calling play")
+            Log.d(logTag(), "calling play")
             mediaControllerAdapter.play()
         }
     }
@@ -69,12 +69,10 @@ class PlayPauseButton
     }
 
     @get:DrawableRes
-    private val playIcon: Int
-        private get() = R.drawable.ic_baseline_play_arrow_24px
+    val playIcon = R.drawable.ic_baseline_play_arrow_24px
 
     @get:DrawableRes
-    private val pauseIcon: Int
-        private get() = R.drawable.ic_baseline_pause_24px
+    val pauseIcon = R.drawable.ic_baseline_pause_24px
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
         updateState(state.state)
@@ -84,6 +82,9 @@ class PlayPauseButton
         @JvmField
         @PlaybackStateCompat.State
         val INITIAL_PLAYBACK_STATE = PlaybackStateCompat.STATE_STOPPED
-        private const val LOG_TAG = "PLAY_PAUSE_BUTTON"
+    }
+
+    override fun logTag(): String {
+        return "PLAY_PAUSE_BUTTON";
     }
 }

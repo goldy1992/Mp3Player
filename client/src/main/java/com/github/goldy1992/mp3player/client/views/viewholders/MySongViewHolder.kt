@@ -14,28 +14,26 @@ import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.MetaDataKeys
 import org.apache.commons.io.FilenameUtils
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.fragment_album_art.view.*
+import kotlinx.android.synthetic.main.song_item_menu.view.*
 
-class MySongViewHolder(itemView: View, albumArtPainter: AlbumArtPainter?) : MediaItemViewHolder(itemView, albumArtPainter) {
-    @get:VisibleForTesting
-    val title: TextView
-    @get:VisibleForTesting
-    val artist: TextView
-    @get:VisibleForTesting
-    val duration: TextView
-    @get:VisibleForTesting
-    val albumArt: ImageView
+class MySongViewHolder(itemView: View, albumArtPainter: AlbumArtPainter?)
+    : MediaItemViewHolder(itemView, albumArtPainter), LayoutContainer {
+    override val containerView: View?
+        get() = itemView
 
     override fun bindMediaItem(item: MediaBrowserCompat.MediaItem) { // - get element from your dataset at this position
 // - replace the contents of the views with that element
         val title : String? = extractTitle(item)
         val artist : String? = extractArtist(item)
         val duration : String? = extractDuration(item)
-        this.artist.text = artist
-        this.title.text = title
-        this.duration.text = duration
+        itemView.artist.text = artist
+        itemView.title.text = title
+        itemView.duration.text = duration
         val uri : Uri? = MediaItemUtils.getAlbumArtUri(item)
         if (null != uri) {
-            albumArtPainter!!.paintOnView(albumArt, uri)
+            albumArtPainter!!.paintOnView(itemView.albumArt, uri)
         }
     }
 
@@ -74,10 +72,5 @@ class MySongViewHolder(itemView: View, albumArtPainter: AlbumArtPainter?) : Medi
         return artist
     }
 
-    init {
-        artist = itemView.findViewById(R.id.artist)
-        title = itemView.findViewById(R.id.title)
-        duration = itemView.findViewById(R.id.duration)
-        albumArt = itemView.findViewById(R.id.song_item_album_art)
-    }
+
 }

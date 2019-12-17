@@ -1,39 +1,35 @@
 package com.github.goldy1992.mp3player.client.callbacks.subscription
 
-import android.os.Handler
 import android.os.Looper
-import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaBrowserCompat.MediaItem
 import com.github.goldy1992.mp3player.client.MediaBrowserResponseListener
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
-
-
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
-
-import kotlin.collections.ArrayList
 
 @RunWith(RobolectricTestRunner::class)
 class MediaIdSubscriptionCallbackTest {
     private var mediaIdSubscriptionCallback: MediaIdSubscriptionCallback? = null
 
     private lateinit var mediaBrowserResponseListener: MediaBrowserResponseListener
-    private var mediaItemList: List<MediaBrowserCompat.MediaItem>? = null
+    private lateinit var mediaItemList: List<MediaItem>
 
-    @Mock
-    private var mockMediaItem: MediaBrowserCompat.MediaItem? = null
+
+    private val mockMediaItem: MediaItem = mock<MediaItem>()
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
         this.mediaBrowserResponseListener = mock<MediaBrowserResponseListener>()
-        mockMediaItem = Mockito.mock(MediaBrowserCompat.MediaItem::class.java)
         mediaIdSubscriptionCallback = MediaIdSubscriptionCallback()
         mediaItemList = listOf(mockMediaItem!!)
     }
@@ -50,7 +46,7 @@ class MediaIdSubscriptionCallbackTest {
 
     @Test
     fun testOnChildrenLoadedForSubscribedKey() {
-        argumentCaptor<ArrayList<MediaBrowserCompat.MediaItem>>().apply {
+        argumentCaptor<ArrayList<MediaItem>>().apply {
             val subscribedKey = "SubscribedKey"
             mediaIdSubscriptionCallback!!.registerMediaBrowserResponseListener(subscribedKey, mediaBrowserResponseListener)
             mediaIdSubscriptionCallback!!.onChildrenLoaded(subscribedKey, mediaItemList!!)

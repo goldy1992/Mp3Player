@@ -6,12 +6,12 @@ import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.*
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
@@ -44,7 +44,7 @@ class MyFolderViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
         myFolderViewAdapter!!.items = mediaItems
         argumentCaptor<MediaBrowserCompat.MediaItem>().apply {
             myFolderViewAdapter!!.onBindViewHolder(myFolderViewHolder, 0)
-            verify(myFolderViewHolder, Mockito.times(1)).bindMediaItem(capture())
+            verify(myFolderViewHolder, times(1)).bindMediaItem(capture())
             val result = allValues[0]
             Assert.assertEquals(directoryName, MediaItemUtils.getTitle(result))
             Assert.assertEquals(directoryPath, MediaItemUtils.getMediaId(result))

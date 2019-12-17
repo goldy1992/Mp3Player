@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.views.adapters
 
 import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaBrowserCompat.MediaItem
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.views.viewholders.EmptyListViewHolder
@@ -9,12 +10,11 @@ import com.github.goldy1992.mp3player.client.views.viewholders.MySongViewHolder
 import com.github.goldy1992.mp3player.client.views.viewholders.RootItemViewHolder
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.nhaarman.mockitokotlin2.mock
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
@@ -61,7 +61,7 @@ class SearchResultAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
     /**  */
     @Test
     fun testBindViewHolder() {
-        val mySongViewHolder = Mockito.mock(MySongViewHolder::class.java)
+        val mySongViewHolder = mock<MySongViewHolder>()
         mediaItems.add(
                 MediaItemBuilder("101")
                         .build()
@@ -92,7 +92,7 @@ class SearchResultAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
 
     @Test
     fun testItemCount() {
-        val mediaItem = Mockito.mock(MediaBrowserCompat.MediaItem::class.java)
+        val mediaItem = mock<MediaItem>()
         val expectedSize = 5
         for (i in 1..5) {
             mediaItems.add(mediaItem)

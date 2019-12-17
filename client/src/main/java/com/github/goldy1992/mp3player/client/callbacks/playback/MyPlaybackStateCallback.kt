@@ -3,7 +3,6 @@ package com.github.goldy1992.mp3player.client.callbacks.playback
 import android.support.v4.media.session.PlaybackStateCompat
 import com.github.goldy1992.mp3player.commons.LogTagger
 import javax.inject.Inject
-import kotlin.collections.HashSet
 
 class MyPlaybackStateCallback
 

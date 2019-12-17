@@ -12,11 +12,7 @@ open class MediaButtonTestBase {
      */
 
     protected val mediaControllerAdapter: MediaControllerAdapter = mock<MediaControllerAdapter>()
-    /**
-     * The main handler used to update the GUI
-     */
 
-    protected val handler: Handler = mock<Handler>()
     /**
      * Context
      */

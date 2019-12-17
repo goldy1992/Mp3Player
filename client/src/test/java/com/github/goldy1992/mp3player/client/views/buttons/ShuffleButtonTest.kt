@@ -10,11 +10,13 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
+@Ignore
 class ShuffleButtonTest : MediaButtonTestBase() {
     private var shuffleButton: ShuffleButton? = null
     @Before
@@ -52,7 +54,7 @@ class ShuffleButtonTest : MediaButtonTestBase() {
         @ShuffleMode val expectedShuffleMode = PlaybackStateCompat.SHUFFLE_MODE_NONE
         shuffleButton!!.shuffleMode = currentShuffleMode
         shuffleButton!!.onClick(mock<View>())
-        verify(mediaControllerAdapter, times(1))!!.shuffleMode = expectedShuffleMode
+        verify(mediaControllerAdapter, times(1)).shuffleMode = expectedShuffleMode
     }
 
     @Test

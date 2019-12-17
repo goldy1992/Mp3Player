@@ -97,7 +97,10 @@ dependencies {
     //testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.25.1'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
 
-    testImplementation group: 'org.robolectric', name: 'robolectric', version: ROBOLECTRIC_VERSION// https://mvnrepository.com/artifact/org.robolectric/shadows-support-v4
+    testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
+        exclude group: "com.google.auto.service", module: "auto-service"
+    }
+
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
     implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
