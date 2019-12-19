@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_folder.*
 import kotlinx.android.synthetic.main.fragment_simple_title_bar.*
 import org.apache.commons.lang3.exception.ExceptionUtils
 
-abstract class FolderActivity : MediaActivityCompat() {
+abstract class `FolderActivity.old` : MediaActivityCompat() {
 
     private var viewPageFragment: MediaItemListFragment? = null
 
