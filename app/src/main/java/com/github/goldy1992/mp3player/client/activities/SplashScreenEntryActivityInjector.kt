@@ -15,8 +15,8 @@ class SplashScreenEntryActivityInjector : SplashScreenEntryActivity() {
 
     override fun initialiseDependencies() {
         val componentClassMapper : ComponentClassMapper = ComponentClassMapper.Builder()
-                .service(MediaPlaybackServiceInjector::class.java)
-                .mainActivity(MainActivityInjector::class.java)
+     //           .service(MediaPlaybackServiceInjector::class.java)
+       //         .mainActivity(MainActivityInjector::class.java)
                 .build()
         val component : SplashScreenEntryActivityComponent = DaggerSplashScreenEntryActivityComponent
                 .factory()
