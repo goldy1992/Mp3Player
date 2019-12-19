@@ -7,7 +7,7 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 import javax.inject.Inject
 import kotlin.collections.HashSet
 
-class MyMetadataCallback
+class `MyMetadataCallback.old`
 
     @Inject
     constructor() : LogTagger {
