@@ -69,8 +69,12 @@ android {
     }
 
     sourceSets {
-        main.java.srcDirs += 'src/main/java'
-        test.java.srcDirs += 'src/test/java'
+//        main {
+//            java.srcDirs += ["$projectDir/../commons/src/main"]
+//        }
+        test {
+            java.srcDirs = ["src/main/java", "$projectDir/../commons/src/main/java", "$projectDir/testsupport/src/main/java"]
+        }
         androidTest.java.srcDirs += 'src/androidTest/java'
     }
 }
@@ -100,7 +104,7 @@ dependencies {
     implementation group: 'androidx.recyclerview', name: 'recyclerview', version: RECYCLER_VIEW_VERSION
     implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     implementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
-    implementation project(path: ':commons')
+    api project(path: ':commons')
 
     // Glide
     implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION
@@ -113,12 +117,12 @@ dependencies {
     kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     kaptTest group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
-    implementation project(path: ':commons')
+    api project(path: ':commons')
 
 
     testImplementation junit5UnitTests
     testRuntimeOnly junit5UnitTestRuntime
-    testImplementation project(":client:testsupport")
+    testApi project(":client:testsupport")
 
 
     testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
