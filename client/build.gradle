@@ -5,6 +5,10 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'jacoco'
 
+jacoco {
+
+}
+
 android {
 
     compileSdkVersion TARGET_SDK_VERION
@@ -20,6 +24,12 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
+    sourceSets {
+        test {
+            java.srcDirs += ["$projectDir/testsupport/src/main",  ]
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -31,6 +41,7 @@ android {
             testCoverageEnabled = true
         }
     }
+
     flavorDimensions 'default'
     productFlavors {
         full {
@@ -100,7 +111,7 @@ dependencies {
     implementation group: 'androidx.recyclerview', name: 'recyclerview', version: RECYCLER_VIEW_VERSION
     implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     implementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
-    implementation project(path: ':commons')
+    api project(path: ':commons')
 
     // Glide
     implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION
@@ -113,12 +124,11 @@ dependencies {
     kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     kaptTest group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
-    implementation project(path: ':commons')
 
 
     testImplementation junit5UnitTests
     testRuntimeOnly junit5UnitTestRuntime
-    testApi project(":client:testsupport")
+    //testApi project(":client:testsupport")
 
 
     testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {

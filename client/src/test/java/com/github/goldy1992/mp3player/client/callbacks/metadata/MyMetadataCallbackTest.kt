@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.client.callbacks.metadata
 
 import android.os.Handler
 import android.support.v4.media.MediaMetadataCompat
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
