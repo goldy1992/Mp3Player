@@ -5,6 +5,42 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'jacoco'
 
+jacoco {
+    toolVersion = "$JACOCO_VERSION"
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
+task jacocoTestReportFullDebug(type: JacocoReport, dependsOn: ['testFullDebugUnitTest']) {
+
+    println "reporting for duty"
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = [
+            '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$[0-9].*'
+    ]
+
+    def mainSrc = "$project.projectDir/src/main/java"
+    def commonsSrc = "$projectDir/../commons/src/main/java"
+    def testSupportSrc = "$projectDir/testsupport/src/main/java"
+    def daggerSrc = "$project.buildDir/generated/source/kapt/fullDebug"
+    def testSupportDaggerSrc = "$projectDir/testsupport/build/generated/source/kapt/fullDebug"
+
+    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebug", excludes: fileFilter)
+    def daggerClasses = fileTree(dir: "$project.buildDir/build/intermediates/javac/fullDebug/classes", excludes: fileFilter)
+    def testSupportClasses = fileTree(dir: "$projectDir/testsupport/build/tmp/kotlin-classes/fullDebug", excludes: fileFilter)
+    def testSupportDaggerClasses = fileTree(dir: "$projectDir/testsupport/build/intermediates/javac/fullDebug/classes", excludes: fileFilter)
+
+    sourceDirectories.from = files([mainSrc, commonsSrc, testSupportSrc, daggerSrc, testSupportDaggerSrc])
+    classDirectories.from = files([mainClasses, daggerClasses, testSupportClasses, testSupportDaggerClasses])
+    executionData.from = "$project.buildDir/jacoco/testFullDebugUnitTest.exec"
+}
+
 android {
 
     compileSdkVersion TARGET_SDK_VERION
@@ -69,11 +105,12 @@ android {
     }
 
     sourceSets {
-//        main {
-//            java.srcDirs += ["$projectDir/../commons/src/main"]
-//        }
         test {
-            java.srcDirs = ["src/main/java", "$projectDir/../commons/src/main/java", "$projectDir/testsupport/src/main/java"]
+            java.srcDirs = ["src/main/java",
+                            "$projectDir/../commons/src/main/java",
+                            "$projectDir/testsupport/src/main/java",
+                            "$project.buildDir/generated/source/kapt/fullDebug",
+                            "$projectDir/testsupport/build/generated/source/kapt/fullDebug" ]
         }
         androidTest.java.srcDirs += 'src/androidTest/java'
     }
@@ -115,8 +152,7 @@ dependencies {
 
 
     kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
-    kaptTest group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
-    implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
+    api group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
     api project(path: ':commons')
 
 

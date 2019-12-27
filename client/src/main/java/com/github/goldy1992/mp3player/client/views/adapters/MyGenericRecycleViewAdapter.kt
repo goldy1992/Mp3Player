@@ -21,12 +21,13 @@ abstract class MyGenericRecycleViewAdapter
         PreloadModelProvider<MediaItem?>,
         LogTagger {
 
-    val LOG_TAG = "MY_VIEW_ADAPTER"
+    private val EMPTY_MEDIA_ID = "EMPTY_MEDIA_ID"
+
     val EMPTY_VIEW_TYPE = -1
     private val EMPTY_LIST_ITEM = buildEmptyListMediaItem()
 
     override fun getItemCount(): Int {
-        return items!!.size
+        return items.size
     }
 
     override fun onChildrenLoaded(parentId: String, children: ArrayList<MediaItem>) {
@@ -64,10 +65,7 @@ abstract class MyGenericRecycleViewAdapter
     }
 
     protected val isEmptyRecycleView: Boolean
-        protected get() = items.isEmpty() || items!![Constants.FIRST] == EMPTY_LIST_ITEM
+        protected get() = items.isEmpty() || items[Constants.FIRST] == EMPTY_LIST_ITEM
 
 
-    companion object {
-        private const val EMPTY_MEDIA_ID = "EMPTY_MEDIA_ID"
-    }
 }
