@@ -21,23 +21,30 @@ task jacocoTestReportFullDebug(type: JacocoReport, dependsOn: ['testFullDebugUni
         html.enabled = true
     }
 
-    def fileFilter = [
-            '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$[0-9].*'
+    def classFilter = [
+            '**/dagger/**', '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$[0-9].*'
     ]
 
-    def mainSrc = "$project.projectDir/src/main/java"
+    def srcFilter = [
+        '**/dagger/**', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$[0-9].*', '**/*_Factory.*'
+    ]
+
+    def mainSrc = fileTree(dir: "$project.projectDir/src/main/java/com/goldy1992/mp3player/client", excludes: srcFilter)
+
     def commonsSrc = "$projectDir/../commons/src/main/java"
     def testSupportSrc = "$projectDir/testsupport/src/main/java"
     def daggerSrc = "$project.buildDir/generated/source/kapt/fullDebug"
     def testSupportDaggerSrc = "$projectDir/testsupport/build/generated/source/kapt/fullDebug"
 
-    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebug", excludes: fileFilter)
-    def daggerClasses = fileTree(dir: "$project.buildDir/build/intermediates/javac/fullDebug/classes", excludes: fileFilter)
-    def testSupportClasses = fileTree(dir: "$projectDir/testsupport/build/tmp/kotlin-classes/fullDebug", excludes: fileFilter)
-    def testSupportDaggerClasses = fileTree(dir: "$projectDir/testsupport/build/intermediates/javac/fullDebug/classes", excludes: fileFilter)
+    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebug", excludes: classFilter)
+    def daggerClasses = fileTree(dir: "$project.buildDir/build/intermediates/javac/fullDebug/classes", excludes: classFilter)
+    def testSupportClasses = fileTree(dir: "$projectDir/testsupport/build/tmp/kotlin-classes/fullDebug", excludes: classFilter)
+    def testSupportDaggerClasses = fileTree(dir: "$projectDir/testsupport/build/intermediates/javac/fullDebug/classes", excludes: classFilter)
 
-    sourceDirectories.from = files([mainSrc, commonsSrc, testSupportSrc, daggerSrc, testSupportDaggerSrc])
-    classDirectories.from = files([mainClasses, daggerClasses, testSupportClasses, testSupportDaggerClasses])
+    sourceDirectories.from = files([mainSrc])
+    println "main sources: \n" + files([mainSrc]).getFrom() + "\n"//, commonsSrc, testSupportSrc, daggerSrc, testSupportDaggerSrc])
+    classDirectories.from = files([mainClasses])//, daggerClasses, testSupportClasses, testSupportDaggerClasses])
+    println "main classes: \n" + classDirectories.from.asList() + "\n"
     executionData.from = "$project.buildDir/jacoco/testFullDebugUnitTest.exec"
 }
 
@@ -105,11 +112,13 @@ android {
     }
 
     sourceSets {
+        main {
+            java.srcDirs = ["src/main/java"]//,
+//            "$project.buildDir/generated/source/kapt/fullDebug" ]
+        }
         test {
-            java.srcDirs = ["src/main/java",
-                            "$projectDir/../commons/src/main/java",
+            java.srcDirs = ["src/test/java",
                             "$projectDir/testsupport/src/main/java",
-                            "$project.buildDir/generated/source/kapt/fullDebug",
                             "$projectDir/testsupport/build/generated/source/kapt/fullDebug" ]
         }
         androidTest.java.srcDirs += 'src/androidTest/java'
