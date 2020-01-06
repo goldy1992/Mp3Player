@@ -6,6 +6,43 @@ apply plugin: 'jacoco'
 apply plugin: "de.mannodermaus.android-junit5"
 apply plugin: 'com.github.ben-manes.versions'
 
+
+jacoco {
+    toolVersion = "$JACOCO_VERSION"
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
+task jacocoTestReportFullDebug(type: JacocoReport, dependsOn: ['testFullDebugUnitTest']) {
+
+    println "reporting for duty"
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = [
+            '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$[0-9].*'
+    ]
+
+    def mainSrc = "$project.projectDir/src/main/java"
+    def testSupportSrc = "$projectDir/testsupport/src/main/java"
+    def daggerSrc = "$project.buildDir/generated/source/kapt/fullDebug"
+    def testSupportDaggerSrc = "$projectDir/testsupport/build/generated/source/kapt/fullDebug"
+
+    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebugUnitTest", excludes: fileFilter)
+    def daggerClasses = fileTree(dir: "$project.buildDir/build/intermediates/javac/fullDebugUnitTest/classes", excludes: fileFilter)
+    def testSupportClasses = fileTree(dir: "$projectDir/testsupport/build/tmp/kotlin-classes/fullDebugUnitTest", excludes: fileFilter)
+    def testSupportDaggerClasses = fileTree(dir: "$projectDir/testsupport/build/intermediates/javac/fullDebugUnitTest/classes", excludes: fileFilter)
+
+
+    sourceDirectories.from = files([mainSrc, testSupportSrc, daggerSrc, testSupportDaggerSrc])
+    classDirectories.from = files([mainClasses, daggerClasses, testSupportClasses, testSupportDaggerClasses])
+    executionData.from = "$project.buildDir/jacoco/testFullDebugUnitTest.exec"
+}
+
 android {
     compileSdkVersion TARGET_SDK_VERION
     buildToolsVersion BUILD_TOOLS_VERSION
@@ -60,20 +97,40 @@ android {
             }
             jacoco {
                 includeNoLocationClasses = true
-
+                includes = ['com/github/goldy1992/mp3player/server/**']
+                excludes =  [
+                        '**/dagger/**',
+                        '**/commons/**',
+                        '**_Factory**',
+                        '**_MembersInjector**',
+                        '**/R.class',
+                        '**/R$*.class',
+                        '**/BuildConfig.*',
+                        '**/Manifest*.*',
+                        '**/*Test*.*',
+                        'android/**/*.*',
+                        '**/*$[0-9].*'
+                ]
             }
         }
+    }
+
+    sourceSets {
+        test {
+            java.srcDirs = ["src/main/java",
+                            "$projectDir/testsupport/src/main/java",
+                            "$project.buildDir/generated/source/kapt/fullDebug",
+                            "$projectDir/testsupport/build/generated/source/kapt/fullDebug" ]
+        }
+        androidTest.java.srcDirs += 'src/androidTest/java'
     }
 }
 
 dependencies {
 
     //dagger
-    implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
-    implementation group: 'com.google.dagger', name: 'dagger-android', version: DAGGER_VERSION
-    kapt  group: 'com.google.dagger', name: 'dagger-android-processor', version: DAGGER_VERSION
     kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
-
+    api group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
 
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
@@ -90,7 +147,7 @@ dependencies {
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
     implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
 
-    implementation project(':commons')
+    api project(':commons')
 
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -98,26 +155,17 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation project(path: ':commons')
 
-    testImplementation project(path: ':service:testsupport')
+    testApi project(path: ':service:testsupport')
 
 
-    // vintage
-    testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
-    // (Optional) If you also have JUnit 4-based tests
-    testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: JUNIT5_VERSION
-    // jupiter
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: JUNIT5_VERSION
-    // (Required) Writing and executing Unit Tests on the JUnit Platform
-    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: JUNIT5_VERSION
-    //testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.25.1'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
+    testImplementation junit5UnitTests
+    testRuntimeOnly junit5UnitTestRuntime
 
     testImplementation group: 'org.robolectric', name: 'robolectric', version: ROBOLECTRIC_VERSION// https://mvnrepository.com/artifact/org.robolectric/shadows-support-v4
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
     testImplementation group: 'com.nhaarman.mockitokotlin2', name: 'mockito-kotlin', version: MOCKITO_KOTLIN
 
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
     implementation "androidx.core:core-ktx:1.1.0"
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
 }

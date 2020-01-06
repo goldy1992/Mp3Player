@@ -26,7 +26,6 @@ task jacocoTestReportFullDebug(type: JacocoReport, dependsOn: ['testFullDebugUni
     ]
 
     def mainSrc = "$project.projectDir/src/main/java"
-    def commonsSrc = "$projectDir/../commons/src/main/java"
     def testSupportSrc = "$projectDir/testsupport/src/main/java"
     def daggerSrc = "$project.buildDir/generated/source/kapt/fullDebug"
     def testSupportDaggerSrc = "$projectDir/testsupport/build/generated/source/kapt/fullDebug"
@@ -36,8 +35,6 @@ task jacocoTestReportFullDebug(type: JacocoReport, dependsOn: ['testFullDebugUni
     def testSupportClasses = fileTree(dir: "$projectDir/testsupport/build/tmp/kotlin-classes/fullDebugUnitTest", excludes: fileFilter)
     def testSupportDaggerClasses = fileTree(dir: "$projectDir/testsupport/build/intermediates/javac/fullDebugUnitTest/classes", excludes: fileFilter)
 
-//    sourceDirectories.from = files([mainSrc, commonsSrc, testSupportSrc, daggerSrc, testSupportDaggerSrc])
-//    classDirectories.from = files([mainClasses, daggerClasses, testSupportClasses, testSupportDaggerClasses])
 
     sourceDirectories.from = files([mainSrc, testSupportSrc, daggerSrc, testSupportDaggerSrc])
     classDirectories.from = files([mainClasses, daggerClasses, testSupportClasses, testSupportDaggerClasses])
@@ -108,13 +105,26 @@ android {
                 includeNoLocationClasses = true
                 includes = ['com/github/goldy1992/mp3player/client/**']
                 excludes =  [
-            '**/dagger/**', '**/commons/**','**_Factory**', '**_MembersInjector**', '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$[0-9].*'
-    ]
+                                '**/dagger/**',
+                                '**/commons/**',
+                                '**_Factory**',
+                                '**_MembersInjector**',
+                                '**/R.class',
+                                '**/R$*.class',
+                                '**/BuildConfig.*',
+                                '**/Manifest*.*',
+                                '**/*Test*.*',
+                                'android/**/*.*',
+                                '**/*$[0-9].*'
+                ]
             }
         }
     }
 
     sourceSets {
+        main {
+            java.srcDirs = ["src/main/java"]
+        }
         test {
             java.srcDirs = ["src/main/java",
                             "$projectDir/testsupport/src/main/java",
