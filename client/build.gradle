@@ -21,30 +21,26 @@ task jacocoTestReportFullDebug(type: JacocoReport, dependsOn: ['testFullDebugUni
         html.enabled = true
     }
 
-    def classFilter = [
-            '**/dagger/**', '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$[0-9].*'
+    def fileFilter = [
+            '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$[0-9].*'
     ]
 
-    def srcFilter = [
-        '**/dagger/**', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$[0-9].*', '**/*_Factory.*'
-    ]
-
-    def mainSrc = fileTree(dir: "$project.projectDir/src/main/java/com/goldy1992/mp3player/client", excludes: srcFilter)
-
+    def mainSrc = "$project.projectDir/src/main/java"
     def commonsSrc = "$projectDir/../commons/src/main/java"
     def testSupportSrc = "$projectDir/testsupport/src/main/java"
     def daggerSrc = "$project.buildDir/generated/source/kapt/fullDebug"
     def testSupportDaggerSrc = "$projectDir/testsupport/build/generated/source/kapt/fullDebug"
 
-    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebug", excludes: classFilter)
-    def daggerClasses = fileTree(dir: "$project.buildDir/build/intermediates/javac/fullDebug/classes", excludes: classFilter)
-    def testSupportClasses = fileTree(dir: "$projectDir/testsupport/build/tmp/kotlin-classes/fullDebug", excludes: classFilter)
-    def testSupportDaggerClasses = fileTree(dir: "$projectDir/testsupport/build/intermediates/javac/fullDebug/classes", excludes: classFilter)
+    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebugUnitTest", excludes: fileFilter)
+    def daggerClasses = fileTree(dir: "$project.buildDir/build/intermediates/javac/fullDebugUnitTest/classes", excludes: fileFilter)
+    def testSupportClasses = fileTree(dir: "$projectDir/testsupport/build/tmp/kotlin-classes/fullDebugUnitTest", excludes: fileFilter)
+    def testSupportDaggerClasses = fileTree(dir: "$projectDir/testsupport/build/intermediates/javac/fullDebugUnitTest/classes", excludes: fileFilter)
 
-    sourceDirectories.from = files([mainSrc])
-    println "main sources: \n" + files([mainSrc]).getFrom() + "\n"//, commonsSrc, testSupportSrc, daggerSrc, testSupportDaggerSrc])
-    classDirectories.from = files([mainClasses])//, daggerClasses, testSupportClasses, testSupportDaggerClasses])
-    println "main classes: \n" + classDirectories.from.asList() + "\n"
+//    sourceDirectories.from = files([mainSrc, commonsSrc, testSupportSrc, daggerSrc, testSupportDaggerSrc])
+//    classDirectories.from = files([mainClasses, daggerClasses, testSupportClasses, testSupportDaggerClasses])
+
+    sourceDirectories.from = files([mainSrc, testSupportSrc, daggerSrc, testSupportDaggerSrc])
+    classDirectories.from = files([mainClasses, daggerClasses, testSupportClasses, testSupportDaggerClasses])
     executionData.from = "$project.buildDir/jacoco/testFullDebugUnitTest.exec"
 }
 
@@ -108,17 +104,21 @@ android {
                 outputs.upToDateWhen {false}
                 showStandardStreams = true
             }
+            jacoco {
+                includeNoLocationClasses = true
+                includes = ['com/github/goldy1992/mp3player/client/**']
+                excludes =  [
+            '**/dagger/**', '**/commons/**','**_Factory**', '**_MembersInjector**', '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$[0-9].*'
+    ]
+            }
         }
     }
 
     sourceSets {
-        main {
-            java.srcDirs = ["src/main/java"]//,
-//            "$project.buildDir/generated/source/kapt/fullDebug" ]
-        }
         test {
-            java.srcDirs = ["src/test/java",
+            java.srcDirs = ["src/main/java",
                             "$projectDir/testsupport/src/main/java",
+                            "$project.buildDir/generated/source/kapt/fullDebug",
                             "$projectDir/testsupport/build/generated/source/kapt/fullDebug" ]
         }
         androidTest.java.srcDirs += 'src/androidTest/java'
