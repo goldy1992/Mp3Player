@@ -6,30 +6,25 @@ import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
-import com.github.goldy1992.mp3player.service.library.search.Song
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.spy
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
-import org.mockito.Captor
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
 
 @RunWith(RobolectricTestRunner::class)
 class SongsRetrieverTest : ContentResolverRetrieverTestBase<SongsRetriever?>() {
-    @Mock
-    var resultsParser: SongResultsParser? = null
-    @Captor
-    var captor: ArgumentCaptor<List<Song>>? = null
+
+    var resultsParser: SongResultsParser = mock<SongResultsParser>()
+
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
-        retriever = Mockito.spy(SongsRetriever(contentResolver!!, resultsParser!!, handler))
+        retriever = spy(SongsRetriever(contentResolver!!, resultsParser!!, handler))
     }
 
     @Test
@@ -41,8 +36,8 @@ class SongsRetrieverTest : ContentResolverRetrieverTestBase<SongsRetriever?>() {
                 .setTitle(title)
                 .build()
         expectedResult.add(mediaItem)
-        Mockito.`when`(contentResolver!!.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, retriever!!.projection, null, null, null)).thenReturn(cursor)
-        Mockito.`when`(resultsParser!!.create(cursor!!, contentRequest!!.mediaIdPrefix!!)).thenReturn(expectedResult)
+        whenever(contentResolver!!.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, retriever!!.projection, null, null, null)).thenReturn(cursor)
+        whenever(resultsParser!!.create(cursor!!, contentRequest!!.mediaIdPrefix!!)).thenReturn(expectedResult)
         val result = retriever!!.getChildren(contentRequest!!)
         // call remaining looper messages
         Shadows.shadowOf(Looper.getMainLooper()).idle()

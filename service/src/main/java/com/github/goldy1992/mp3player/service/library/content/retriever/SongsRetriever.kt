@@ -12,9 +12,9 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class SongsRetriever @Inject constructor(contentResolver: ContentResolver,
-                                         resultsParser: SongResultsParser,
-                                         @Named("worker") handler: Handler) : ContentResolverRetriever(contentResolver, resultsParser, handler, null) {
+open class SongsRetriever @Inject constructor(contentResolver: ContentResolver,
+                                              resultsParser: SongResultsParser,
+                                              @Named("worker") handler: Handler) : ContentResolverRetriever(contentResolver, resultsParser, handler, null) {
     override val type: MediaItemType?
         get() = MediaItemType.SONG
 

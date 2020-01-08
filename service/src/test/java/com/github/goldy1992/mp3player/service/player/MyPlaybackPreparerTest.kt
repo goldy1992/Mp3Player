@@ -11,38 +11,35 @@ import com.google.android.exoplayer2.ControlDispatcher
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.upstream.FileDataSource.FileDataSourceException
+import com.nhaarman.mockitokotlin2.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
 class MyPlaybackPreparerTest {
-    @Mock
-    private val contentManager: ContentManager? = null
-    @Mock
-    private val exoPlayer: ExoPlayer? = null
-    @Mock
-    private val mediaSourceFactory: MediaSourceFactory? = null
-    @Mock
-    private val myControlDispatcher: MyControlDispatcher? = null
-    @Mock
-    private val playlistManager: PlaylistManager? = null
-    @Mock
-    private val mediaSource: MediaSource? = null
+
+    private val contentManager: ContentManager = mock<ContentManager>()
+    
+    private val exoPlayer: ExoPlayer = mock<ExoPlayer>()
+
+    private val mediaSourceFactory: MediaSourceFactory = mock<MediaSourceFactory>()
+
+    private val myControlDispatcher: MyControlDispatcher = mock<MyControlDispatcher>()
+
+    private val playlistManager: PlaylistManager = mock<PlaylistManager>()
+
+    private val mediaSource: MediaSource = mock<MediaSource>()
     private var myPlaybackPreparer: MyPlaybackPreparer? = null
+
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
         val testItem = MediaItemBuilder("id1").setMediaUri(Uri.parse("string")).build()
-        Mockito.`when`<List<MediaBrowserCompat.MediaItem>>(playlistManager!!.playlist).thenReturn(listOf(testItem))
-        Mockito.`when`(mediaSourceFactory!!.createMediaSource(ArgumentMatchers.any<Uri>())).thenReturn(mediaSource)
+        whenever(playlistManager!!.playlist).thenReturn(mutableListOf(testItem))
+        whenever(mediaSourceFactory!!.createMediaSource(any<Uri>())).thenReturn(mediaSource)
         myPlaybackPreparer = MyPlaybackPreparer(exoPlayer!!, contentManager!!, mediaSourceFactory, myControlDispatcher!!, playlistManager)
     }
 
@@ -61,9 +58,9 @@ class MyPlaybackPreparerTest {
     @Test
     @Throws(FileDataSourceException::class)
     fun testPreparePlaylistOnConstruct() { // don't play when being constructed
-        Mockito.verify(myControlDispatcher, Mockito.times(1))!!.dispatchSetPlayWhenReady(exoPlayer!!, false)
+        verify(myControlDispatcher, times(1))!!.dispatchSetPlayWhenReady(exoPlayer!!, false)
         // should seek to the first index, position 0
-        Mockito.verify(myControlDispatcher, Mockito.times(1))!!.dispatchSeekTo(exoPlayer, 0, 0)
+        verify(myControlDispatcher, times(1))!!.dispatchSeekTo(exoPlayer, 0, 0)
     }
 
     @Test(expected = UnsupportedOperationException::class)
@@ -75,14 +72,14 @@ class MyPlaybackPreparerTest {
     fun testOnPrepareFromUri() {
         val testUri = Uri.parse("query")
         val testItem = MediaItemBuilder("id1").setMediaUri(Uri.parse("string")).build()
-        Mockito.`when`(contentManager!!.getItem(testUri)).thenReturn(testItem)
+        whenever(contentManager!!.getItem(testUri)).thenReturn(testItem)
         myPlaybackPreparer!!.onPrepareFromUri(testUri, true, null)
-        Mockito.verify(playlistManager, Mockito.times(1))!!.createNewPlaylist(ArgumentMatchers.any<List<MediaBrowserCompat.MediaItem?>>())
+        verify(playlistManager, times(1))!!.createNewPlaylist(any<List<MediaBrowserCompat.MediaItem?>>())
     }
 
     @Test
     fun testOnCommand() {
-        Assert.assertFalse(myPlaybackPreparer!!.onCommand(exoPlayer!!, Mockito.mock(ControlDispatcher::class.java), "query", null, null))
+        Assert.assertFalse(myPlaybackPreparer!!.onCommand(exoPlayer!!, mock<ControlDispatcher>(), "query", null, null))
     }
 
     @Test
@@ -96,9 +93,9 @@ class MyPlaybackPreparerTest {
         items.add(testItem1)
         items.add(testItem2)
         items.add(testItem3)
-        Mockito.`when`(contentManager!!.getPlaylist(mediaId)).thenReturn(items)
+        whenever(contentManager!!.getPlaylist(mediaId)).thenReturn(items)
         myPlaybackPreparer!!.onPrepareFromMediaId(mediaId, true, null)
-        Mockito.verify(myControlDispatcher, Mockito.times(1))!!.dispatchSeekTo(exoPlayer, 1, 0)
+         verify(myControlDispatcher, times(1))!!.dispatchSeekTo(exoPlayer, 1, 0)
     }
 
     private fun assertContainsAction(@PlaybackStateCompat.Actions action: Long) {

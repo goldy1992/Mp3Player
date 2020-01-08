@@ -1,11 +1,9 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'jacoco'
 apply plugin: "de.mannodermaus.android-junit5"
-apply plugin: 'com.github.ben-manes.versions'
-
+apply plugin: 'jacoco'
 
 jacoco {
     toolVersion = "$JACOCO_VERSION"
@@ -68,7 +66,6 @@ android {
             testCoverageEnabled = true
         }
     }
-
     flavorDimensions 'default'
     productFlavors {
         full {
@@ -80,11 +77,17 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        incremental = false
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions { jvmTarget = "1.8" }
+
     testOptions {
+        execution 'ANDROID_TEST_ORCHESTRATOR'
+        animationsDisabled true
+
         unitTests {
             includeAndroidResources = true
             returnDefaultValues = true
@@ -116,11 +119,15 @@ android {
     }
 
     sourceSets {
+        main {
+            java.srcDirs = ["src/main/java"]
+        }
         test {
-            java.srcDirs = ["src/main/java",
+            java.srcDirs = ["src/test/java",
                             "$projectDir/testsupport/src/main/java",
                             "$project.buildDir/generated/source/kapt/fullDebug",
                             "$projectDir/testsupport/build/generated/source/kapt/fullDebug" ]
+            java.srcDirs += sourceSets.main.java.srcDirs
         }
         androidTest.java.srcDirs += 'src/androidTest/java'
     }
@@ -128,32 +135,28 @@ android {
 
 dependencies {
 
-    //dagger
-    kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
-    api group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
-
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
     implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: EXO_PLAYER_VERSION
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
+    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
+    implementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
+    implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
+    api project(':commons')
 
+
+    //dagger
+    kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    api group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
 
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
     kaptTest group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
     kapt group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
-
-    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: EXO_PLAYER_VERSION
-    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
-    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
-
-    api project(':commons')
-
-
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation project(path: ':commons')
 
     testApi project(path: ':service:testsupport')
 
@@ -163,9 +166,5 @@ dependencies {
 
     testImplementation group: 'org.robolectric', name: 'robolectric', version: ROBOLECTRIC_VERSION// https://mvnrepository.com/artifact/org.robolectric/shadows-support-v4
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
-    testImplementation group: 'com.nhaarman.mockitokotlin2', name: 'mockito-kotlin', version: MOCKITO_KOTLIN
 
-
-    implementation "androidx.core:core-ktx:1.1.0"
-    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
 }

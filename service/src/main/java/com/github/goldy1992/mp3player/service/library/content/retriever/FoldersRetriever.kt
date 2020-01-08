@@ -12,9 +12,14 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class FoldersRetriever @Inject constructor(contentResolver: ContentResolver,
-                                           resultsParser: FolderResultsParser,
-                                           @Named("worker") handler: Handler) : ContentResolverRetriever(contentResolver, resultsParser, handler, null) {
+open class FoldersRetriever
+
+    @Inject
+    constructor(contentResolver: ContentResolver,
+                resultsParser: FolderResultsParser,
+                @Named("worker") handler: Handler)
+
+    : ContentResolverRetriever(contentResolver, resultsParser, handler, null) {
     override val type: MediaItemType?
         get() = MediaItemType.FOLDER
 

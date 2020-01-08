@@ -6,14 +6,13 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
+import com.nhaarman.mockitokotlin2.mock
 import org.junit.Assert
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
-import java.util.*
 import kotlin.collections.HashMap
 
 @RunWith(RobolectricTestRunner::class)
@@ -26,7 +25,7 @@ class RootRetrieverTest {
 
     @Test
     fun testGetChildren() {
-        val result = rootRetriever!!.getChildren(Mockito.mock(ContentRequest::class.java))
+        val result = rootRetriever!!.getChildren(mock<ContentRequest>())
         Assert.assertEquals(testRootItemMap!!.size.toLong(), result!!.size.toLong())
         val item1 = result[0]
         assertValidRootItem(item1)

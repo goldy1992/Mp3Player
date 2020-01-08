@@ -14,31 +14,29 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaUri
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class SongFromUriRetrieverTest {
     private var songFromUriRetriever: SongFromUriRetriever? = null
-    @Mock
-    private val contentResolver: ContentResolver? = null
-    @Mock
-    private val songResultsParser: SongResultsParser? = null
-    @Mock
-    private val testUri: Uri? = null
-    @Mock
-    private val mmr: MediaMetadataRetriever? = null
+
+    private val contentResolver: ContentResolver = mock<ContentResolver>()
+    
+    private val songResultsParser: SongResultsParser = mock<SongResultsParser>()
+
+    private val testUri: Uri = mock<Uri>()
+
+    private val mmr: MediaMetadataRetriever = mock<MediaMetadataRetriever>()
     private var mediaItemTypeIds: MediaItemTypeIds? = null
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
         mediaItemTypeIds = MediaItemTypeIds()
         val context = InstrumentationRegistry.getInstrumentation().context
         songFromUriRetriever = SongFromUriRetriever(context, contentResolver!!, songResultsParser!!, mmr!!, mediaItemTypeIds!!)
@@ -46,15 +44,15 @@ class SongFromUriRetrieverTest {
 
     @Test
     fun testGetSongWithContentScheme() {
-        Mockito.`when`(testUri!!.scheme).thenReturn(ContentResolver.SCHEME_CONTENT)
+        whenever(testUri!!.scheme).thenReturn(ContentResolver.SCHEME_CONTENT)
         val expectedEmbeddedPic = ByteArray(1)
-        Mockito.`when`(mmr!!.embeddedPicture).thenReturn(expectedEmbeddedPic)
+        whenever(mmr!!.embeddedPicture).thenReturn(expectedEmbeddedPic)
         val expectedTitle = "TITLE"
-        Mockito.`when`(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)).thenReturn(expectedTitle)
+        whenever(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)).thenReturn(expectedTitle)
         val expectedArtist = "ARTIST"
-        Mockito.`when`(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)).thenReturn(expectedArtist)
+        whenever(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)).thenReturn(expectedArtist)
         val expectedDuration = 1123L
-        Mockito.`when`(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)).thenReturn(expectedDuration.toString())
+        whenever(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)).thenReturn(expectedDuration.toString())
         val result = songFromUriRetriever!!.getSong(testUri)
         val actualEmbeddedPicture = getAlbumArtImage(result!!)
         Assert.assertEquals(expectedEmbeddedPic, actualEmbeddedPicture)
@@ -70,20 +68,20 @@ class SongFromUriRetrieverTest {
 
     @Test
     fun testGetSongWithNonContentScheme() {
-        val expectedMediaItem = Mockito.mock(MediaBrowserCompat.MediaItem::class.java)
-        val cursor = Mockito.mock(Cursor::class.java)
-        Mockito.`when`(contentResolver!!.query(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+        val expectedMediaItem = mock<MediaBrowserCompat.MediaItem>()
+        val cursor = mock<Cursor>()
+        whenever(contentResolver!!.query(any(), any(), any(), any(), any()))
                 .thenReturn(cursor)
         val id = mediaItemTypeIds!!.getId(MediaItemType.SONGS)
-        Mockito.`when`(songResultsParser!!.create(cursor, id!!)).thenReturn(listOf(expectedMediaItem))
-        Mockito.`when`(testUri!!.scheme).thenReturn(ContentResolver.SCHEME_FILE)
+        whenever(songResultsParser!!.create(cursor, id!!)).thenReturn(listOf(expectedMediaItem))
+        whenever(testUri!!.scheme).thenReturn(ContentResolver.SCHEME_FILE)
         val result = songFromUriRetriever!!.getSong(testUri)
         Assert.assertEquals(expectedMediaItem, result)
     }
 
     @Test
     fun testUriWithNullScheme() {
-        Mockito.`when`(testUri!!.scheme).thenReturn(null)
+        whenever(testUri!!.scheme).thenReturn(null)
         val result = songFromUriRetriever!!.getSong(testUri)
         Assert.assertNull(result)
     }

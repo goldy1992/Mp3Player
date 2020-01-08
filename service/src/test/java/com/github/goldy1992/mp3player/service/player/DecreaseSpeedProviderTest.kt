@@ -3,17 +3,11 @@ package com.github.goldy1992.mp3player.service.player
 import android.os.Looper
 import com.github.goldy1992.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED
 import com.google.android.exoplayer2.PlaybackParameters
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
 
@@ -24,7 +18,6 @@ class DecreaseSpeedProviderTest : SpeedProviderTestBase() {
 
     @Before
     override fun setup() {
-        MockitoAnnotations.initMocks(this)
         super.setup()
         decreaseSpeedProvider = DecreaseSpeedProvider()
     }
@@ -57,10 +50,10 @@ class DecreaseSpeedProviderTest : SpeedProviderTestBase() {
     fun testDecreaseSpeedInvalidSpeed() {
         val currentSpeed = 0.27f
         val expectedSpeed = 0.27f
-        Mockito.`when`(exoPlayer!!.playbackParameters).thenReturn(PlaybackParameters(currentSpeed))
-        decreaseSpeedProvider!!.onCustomAction(exoPlayer!!, controlDispatcher!!, DECREASE_PLAYBACK_SPEED, null)
-        Mockito.verify(exoPlayer, Mockito.never()).setPlaybackParameters(ArgumentMatchers.any<PlaybackParameters>())
-        val playbackParameters = exoPlayer!!.playbackParameters
+        whenever(exoPlayer.playbackParameters).thenReturn(PlaybackParameters(currentSpeed))
+        decreaseSpeedProvider.onCustomAction(exoPlayer, controlDispatcher, DECREASE_PLAYBACK_SPEED, null)
+        verify(exoPlayer, never()).setPlaybackParameters(any<PlaybackParameters>())
+        val playbackParameters = exoPlayer.playbackParameters
         Assert.assertEquals(expectedSpeed, playbackParameters.speed, 0.00f)
     }
 }

@@ -3,20 +3,21 @@ package com.github.goldy1992.mp3player.service.library.content.searcher
 import android.content.ContentResolver
 import android.database.Cursor
 import android.support.v4.media.MediaBrowserCompat
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Test
-import org.mockito.ArgumentMatchers
-import org.mockito.Mock
-import org.mockito.Mockito
 import java.util.*
 
 abstract class ContentResolverSearcherTestBase<T : ContentResolverSearcher<*>?> {
     var searcher: T? = null
     var idPrefix: String? = null
-    @Mock
-    var contentResolver: ContentResolver? = null
-    @Mock
-    var cursor: Cursor? = null
+
+    var contentResolver: ContentResolver = mock<ContentResolver>()
+
+    var cursor: Cursor = mock<Cursor>()
 
     companion object {
         const val VALID_QUERY = "VALID_QUERY"
@@ -24,7 +25,7 @@ abstract class ContentResolverSearcherTestBase<T : ContentResolverSearcher<*>?> 
         var expectedResult: MutableList<MediaBrowserCompat.MediaItem> = ArrayList()
 
         init {
-            expectedResult.add(Mockito.mock(MediaBrowserCompat.MediaItem::class.java))
+            expectedResult.add(mock<MediaBrowserCompat.MediaItem>())
         }
     }
 
@@ -32,7 +33,7 @@ abstract class ContentResolverSearcherTestBase<T : ContentResolverSearcher<*>?> 
     abstract fun testSearchValidMultipleArguments()
     @Test
     fun testSearchInvalid() {
-        Mockito.`when`<List<MediaBrowserCompat.MediaItem?>>(searcher!!.resultsParser.create(ArgumentMatchers.eq(ArgumentMatchers.any<Cursor>()), idPrefix!!)).thenReturn(expectedResult)
+        whenever(searcher!!.resultsParser.create(eq(any<Cursor>()), idPrefix!!)).thenReturn(expectedResult)
         val result: List<*>? = searcher!!.search(INVALID_QUERY)
         Assert.assertNotEquals(expectedResult, result)
     }

@@ -8,33 +8,32 @@ import com.github.goldy1992.mp3player.service.library.content.filter.FolderSearc
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
 import com.github.goldy1992.mp3player.service.library.search.Folder
 import com.github.goldy1992.mp3player.service.library.search.FolderDao
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.spy
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
 class FolderSearcherTest : ContentResolverSearcherTestBase<FolderSearcher?>() {
     private lateinit var filter: FolderSearchResultsFilter
-    @Mock
-    var resultsParser: FolderResultsParser? = null
+
+    var resultsParser: FolderResultsParser = mock<FolderResultsParser>()
     private var mediaItemTypeIds: MediaItemTypeIds? = null
-    @Mock
-    var folderDao: FolderDao? = null
+
+    var folderDao: FolderDao = mock<FolderDao>()
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
         mediaItemTypeIds = MediaItemTypeIds()
         idPrefix = mediaItemTypeIds!!.getId(MediaItemType.FOLDER)
-        filter = Mockito.mock(FolderSearchResultsFilter::class.java)
-        Mockito.`when`(filter.filter(ContentResolverSearcherTestBase.Companion.VALID_QUERY, ContentResolverSearcherTestBase.Companion.expectedResult)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
-        searcher = Mockito.spy(FolderSearcher(contentResolver!!, resultsParser!!, filter, mediaItemTypeIds!!, folderDao!!))
+        filter = mock<FolderSearchResultsFilter>()
+        whenever(filter.filter(ContentResolverSearcherTestBase.Companion.VALID_QUERY, ContentResolverSearcherTestBase.Companion.expectedResult)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
+        searcher = spy(FolderSearcher(contentResolver!!, resultsParser!!, filter, mediaItemTypeIds!!, folderDao!!))
     }
 
     @Test
@@ -52,7 +51,7 @@ class FolderSearcherTest : ContentResolverSearcherTestBase<FolderSearcher?>() {
         expectedDbResult.add(folder1)
         expectedDbResult.add(folder2)
         expectedDbResult.add(folder3)
-        Mockito.`when`(folderDao!!.query(ContentResolverSearcherTestBase.Companion.VALID_QUERY)).thenReturn(expectedDbResult as List<Folder>)
+        whenever(folderDao!!.query(ContentResolverSearcherTestBase.Companion.VALID_QUERY)).thenReturn(expectedDbResult as List<Folder>)
         val EXPECTED_WHERE = (MediaStore.Audio.Media.DATA + " LIKE ? OR "
                 + MediaStore.Audio.Media.DATA + " LIKE ? OR "
                 + MediaStore.Audio.Media.DATA + " LIKE ? COLLATE NOCASE")
@@ -60,9 +59,9 @@ class FolderSearcherTest : ContentResolverSearcherTestBase<FolderSearcher?>() {
                 searcher!!.likeParam(id1),
                 searcher!!.likeParam(id2),
                 searcher!!.likeParam(id3))
-        Mockito.`when`(contentResolver!!.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, searcher!!.projection, EXPECTED_WHERE, EXPECTED_WHERE_ARGS, null))
+        whenever(contentResolver!!.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, searcher!!.projection, EXPECTED_WHERE, EXPECTED_WHERE_ARGS, null))
                 .thenReturn(cursor)
-        Mockito.`when`<List<MediaBrowserCompat.MediaItem?>>(resultsParser!!.create(cursor!!, idPrefix!!)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
+        whenever<List<MediaBrowserCompat.MediaItem?>>(resultsParser!!.create(cursor!!, idPrefix!!)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
         val result = searcher!!.search(ContentResolverSearcherTestBase.Companion.VALID_QUERY)
         Assert.assertEquals(ContentResolverSearcherTestBase.Companion.expectedResult, result)
     }

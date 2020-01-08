@@ -6,13 +6,11 @@ import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.service.PlaylistManager
 import com.google.android.exoplayer2.ExoPlayer
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
@@ -40,8 +38,8 @@ class MyMetadataProviderTest {
                 .setAlbumArtUri(Uri.parse(expectedAlbumArt))
                 .build()
         val index = 7
-        Mockito.`when`(exoPlayer!!.currentWindowIndex).thenReturn(index)
-        Mockito.`when`(playlistManager!!.getItemAtIndex(index)).thenReturn(mediaItem)
+        whenever(exoPlayer!!.currentWindowIndex).thenReturn(index)
+        whenever(playlistManager.getItemAtIndex(index)).thenReturn(mediaItem)
         val result = myMetadataProvider!!.getMetadata(exoPlayer)
         val actualId = result?.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)
         Assert.assertEquals(expectedId, actualId)

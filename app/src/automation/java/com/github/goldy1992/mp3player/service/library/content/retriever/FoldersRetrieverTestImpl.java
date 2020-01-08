@@ -21,8 +21,9 @@ public class FoldersRetrieverTestImpl extends FoldersRetriever {
     private final String[] WHERE_ARGS = {"%" + TEST_DATA_DIR + "%"};
 
     @Override
-    Cursor performGetChildrenQuery(String id) {
-        return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, getProjection(),
-                WHERE_CLAUSE, WHERE_ARGS, null);
+    public Cursor performGetChildrenQuery(String id) {
+        return null;
+        //contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, getProjection(),
+          //      WHERE_CLAUSE, WHERE_ARGS, null);
     }
 }

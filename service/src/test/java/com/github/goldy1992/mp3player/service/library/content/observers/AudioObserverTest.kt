@@ -13,13 +13,10 @@ import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.search.managers.FolderDatabaseManager
 import com.github.goldy1992.mp3player.service.library.search.managers.SongDatabaseManager
+import com.nhaarman.mockitokotlin2.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import java.io.File
 
@@ -27,20 +24,20 @@ import java.io.File
 class AudioObserverTest {
     private var audioObserver: AudioObserver? = null
     private var mediaItemTypeIds: MediaItemTypeIds? = null
-    @Mock
-    private val contentResolver: ContentResolver? = null
-    @Mock
-    private val contentManager: ContentManager? = null
-    @Mock
-    private val songDatabaseManager: SongDatabaseManager? = null
-    @Mock
-    private val folderDatabaseManager: FolderDatabaseManager? = null
-    @Mock
-    private val mediaPlaybackService: MediaPlaybackService? = null
+
+    private val contentResolver: ContentResolver = mock<ContentResolver>()
+
+    private val contentManager: ContentManager = mock<ContentManager>()
+
+    private val songDatabaseManager: SongDatabaseManager = mock<SongDatabaseManager>()
+
+    private val folderDatabaseManager: FolderDatabaseManager = mock<FolderDatabaseManager>()
+
+    private val mediaPlaybackService: MediaPlaybackService = mock<MediaPlaybackService>()
     private var handler: Handler? = null
+    
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
         handler = Handler(Looper.getMainLooper())
         mediaItemTypeIds = MediaItemTypeIds()
         audioObserver = AudioObserver(
@@ -56,7 +53,7 @@ class AudioObserverTest {
     @Test
     fun testNullUri() {
         audioObserver!!.onChange(true)
-        Mockito.verify(contentManager, Mockito.never())!!.getItem(ArgumentMatchers.anyLong())
+        verify(contentManager, never())!!.getItem(any<Long>())
     }
 
     @Test
@@ -64,11 +61,11 @@ class AudioObserverTest {
         val expectedId = 2334L
         var uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         uri = ContentUris.withAppendedId(uri, expectedId)
-        Mockito.`when`(contentManager!!.getItem(expectedId)).thenReturn(null)
+        whenever(contentManager!!.getItem(expectedId)).thenReturn(null)
         audioObserver!!.onChange(true, uri)
-        Mockito.verify(contentManager, Mockito.times(1))!!.getItem(expectedId)
-        Mockito.verify(songDatabaseManager, Mockito.never())!!.insert(ArgumentMatchers.any(MediaBrowserCompat.MediaItem::class.java))
-        Mockito.verify(folderDatabaseManager, Mockito.never())!!.insert(ArgumentMatchers.any(MediaBrowserCompat.MediaItem::class.java))
+        verify(contentManager, times(1))!!.getItem(expectedId)
+        verify(songDatabaseManager, never())!!.insert(any<MediaBrowserCompat.MediaItem>())
+        verify(folderDatabaseManager, never())!!.insert(any<MediaBrowserCompat.MediaItem>())
     }
 
     @Test
@@ -80,13 +77,13 @@ class AudioObserverTest {
         val result = MediaItemBuilder("sf")
                 .setDirectoryFile(expectedDir)
                 .build()
-        Mockito.`when`(contentManager!!.getItem(expectedId)).thenReturn(result)
+        whenever(contentManager!!.getItem(expectedId)).thenReturn(result)
         audioObserver!!.onChange(true, uri)
-        Mockito.verify(contentManager, Mockito.times(1))!!.getItem(expectedId)
-        Mockito.verify(songDatabaseManager, Mockito.times(1))!!.insert(result)
-        Mockito.verify(folderDatabaseManager, Mockito.times(1))!!.insert(result)
-        Mockito.verify(mediaPlaybackService, Mockito.times(1))!!.notifyChildrenChanged(expectedDir.absolutePath)
-        Mockito.verify(mediaPlaybackService, Mockito.times(1))!!.notifyChildrenChanged(mediaItemTypeIds!!.getId(MediaItemType.FOLDERS)!!)
-        Mockito.verify(mediaPlaybackService, Mockito.times(1))!!.notifyChildrenChanged(mediaItemTypeIds!!.getId(MediaItemType.SONGS)!!)
+        verify(contentManager, times(1))!!.getItem(expectedId)
+        verify(songDatabaseManager, times(1))!!.insert(result)
+        verify(folderDatabaseManager, times(1))!!.insert(result)
+        verify(mediaPlaybackService, times(1))!!.notifyChildrenChanged(expectedDir.absolutePath)
+        verify(mediaPlaybackService, times(1))!!.notifyChildrenChanged(mediaItemTypeIds!!.getId(MediaItemType.FOLDERS)!!)
+        verify(mediaPlaybackService, times(1))!!.notifyChildrenChanged(mediaItemTypeIds!!.getId(MediaItemType.SONGS)!!)
     }
 }

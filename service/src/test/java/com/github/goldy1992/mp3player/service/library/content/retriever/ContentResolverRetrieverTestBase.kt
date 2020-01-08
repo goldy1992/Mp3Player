@@ -6,15 +6,16 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.media.MediaBrowserCompat
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
-import org.mockito.Mock
+import com.nhaarman.mockitokotlin2.mock
+
 import java.util.*
 
 abstract class ContentResolverRetrieverTestBase<T : ContentResolverRetriever?> {
     var retriever: T? = null
-    @Mock
-    var contentResolver: ContentResolver? = null
-    @Mock
-    var cursor: Cursor? = null
+
+    var contentResolver: ContentResolver = mock<ContentResolver>()
+
+    var cursor: Cursor = mock<Cursor>()
     var handler = Handler(Looper.getMainLooper())
     var contentRequest: ContentRequest? = null
     var expectedResult: MutableList<MediaBrowserCompat.MediaItem> = ArrayList()

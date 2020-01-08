@@ -68,7 +68,7 @@ dependencies {
     implementation group: 'androidx.viewpager2', name: 'viewpager2', version: VIEW_PAGER2_VERSION
     implementation group: 'com.l4digital.fastscroll', name: 'fastscroll', version: FAST_SCROLL_VERSION
 
-// Glide
+    // Glide
     implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION
     implementation ("com.github.bumptech.glide:recyclerview-integration:$GLIDE_VERSION") {
         // Excludes the support library because it's already included by Glide.

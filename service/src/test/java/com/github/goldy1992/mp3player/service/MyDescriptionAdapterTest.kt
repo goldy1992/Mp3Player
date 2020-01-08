@@ -7,25 +7,23 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.google.android.exoplayer2.ExoPlayer
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class MyDescriptionAdapterTest {
-    @Mock
-    private val playlistManager: PlaylistManager? = null
-    @Mock
+
+    private val playlistManager: PlaylistManager = mock<PlaylistManager>()
+
     private val player: ExoPlayer? = null
     private var myDescriptionAdapter: MyDescriptionAdapter? = null
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
         val context = InstrumentationRegistry.getInstrumentation().context
         val token = getMediaSessionCompatToken(context)
         val componentClassMapper = ComponentClassMapper.Builder().build()
@@ -39,8 +37,8 @@ class MyDescriptionAdapterTest {
                 .setTitle(expectedTitle)
                 .build()
         val index = 7
-        Mockito.`when`(player!!.currentWindowIndex).thenReturn(index)
-        Mockito.`when`(playlistManager!!.getItemAtIndex(index)).thenReturn(testItem)
+        whenever(player!!.currentWindowIndex).thenReturn(index)
+        whenever(playlistManager!!.getItemAtIndex(index)).thenReturn(testItem)
         val result = myDescriptionAdapter!!.getCurrentContentTitle(player)
         Assert.assertEquals(expectedTitle, result)
     }

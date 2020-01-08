@@ -4,8 +4,13 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
+
     compileSdkVersion TARGET_SDK_VERION
     buildToolsVersion BUILD_TOOLS_VERSION
+
+    lintOptions {
+        abortOnError false
+    }
 
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION
@@ -15,7 +20,16 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
+        missingDimensionStrategy 'full', 'automation'
     }
+
+    compileOptions {
+        incremental = false
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions { jvmTarget = "1.8" }
 
     buildTypes {
         release {
@@ -54,14 +68,12 @@ dependencies {
     implementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
 
-    testImplementation 'junit:junit:4.12'
     //dagger
-    implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
-    implementation group: 'com.google.dagger', name: 'dagger-android', version: DAGGER_VERSION
-    kapt  group: 'com.google.dagger', name: 'dagger-android-processor', version: DAGGER_VERSION
     kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
-
+    kaptTest group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
     implementation project(path: ':commons')
+
     api project(':service')
     implementation "androidx.core:core-ktx:1.1.0"
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version

@@ -10,56 +10,54 @@ import com.github.goldy1992.mp3player.service.library.content.retriever.MediaIte
 import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.SongFromUriRetriever
 import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearcher
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
-import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
 class ContentManagerTest {
     private var contentManager: ContentManager? = null
-    @Mock
-    private val contentRequestParser: ContentRequestParser? = null
-    @Mock
-    private val contentRetrievers: ContentRetrievers? = null
-    @Mock
-    private val contentSearchers: ContentSearchers? = null
-    @Mock
-    private val rootRetriever: RootRetriever? = null
-    @Mock
-    private val rootItem: MediaBrowserCompat.MediaItem? = null
-    @Mock
-    private val mediaItemFromIdRetriever: MediaItemFromIdRetriever? = null
-    @Mock
-    private val songFromUriRetriever: SongFromUriRetriever? = null
+
+    private val contentRequestParser: ContentRequestParser = mock<ContentRequestParser>()
+
+    private val contentRetrievers: ContentRetrievers = mock<ContentRetrievers>()
+
+    private val contentSearchers: ContentSearchers = mock<ContentSearchers>()
+    
+    private val rootRetriever: RootRetriever = mock<RootRetriever>()
+    
+    private val rootItem: MediaBrowserCompat.MediaItem = mock<MediaBrowserCompat.MediaItem>()
+    
+    private val mediaItemFromIdRetriever: MediaItemFromIdRetriever = mock<MediaItemFromIdRetriever>()
+    
+    private val songFromUriRetriever: SongFromUriRetriever = mock<SongFromUriRetriever>()
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
-        Mockito.`when`(contentRetrievers!!.root).thenReturn(rootRetriever)
-        Mockito.`when`(rootRetriever!!.getRootItem(ArgumentMatchers.any<MediaItemType>())).thenReturn(rootItem)
+
+        whenever(contentRetrievers.root).thenReturn(rootRetriever)
+        whenever(rootRetriever.getRootItem(any<MediaItemType>())).thenReturn(rootItem)
         contentManager = ContentManager(contentRetrievers,
-                contentSearchers!!,
-                contentRequestParser!!,
-                songFromUriRetriever!!,
-                mediaItemFromIdRetriever!!)
+                contentSearchers,
+                contentRequestParser,
+                songFromUriRetriever,
+                mediaItemFromIdRetriever)
     }
 
     @Test
     fun testGetChildren() {
         val contentRetrieverId = "id"
         val expectedList: List<MediaBrowserCompat.MediaItem> = ArrayList()
-        val contentRetriever = Mockito.mock(ContentRetriever::class.java)
-        Mockito.`when`(contentRetrievers!![contentRetrieverId]).thenReturn(contentRetriever)
+        val contentRetriever = mock<ContentRetriever>()
+        whenever(contentRetrievers!![contentRetrieverId]).thenReturn(contentRetriever)
         val contentRequest = ContentRequest("", contentRetrieverId, null)
-        Mockito.`when`(contentRequestParser!!.parse(contentRetrieverId)).thenReturn(contentRequest)
-        Mockito.`when`(contentRetriever.getChildren(contentRequest)).thenReturn(expectedList)
+        whenever(contentRequestParser!!.parse(contentRetrieverId)).thenReturn(contentRequest)
+        whenever(contentRetriever.getChildren(contentRequest)).thenReturn(expectedList)
         val result = contentManager!!.getChildren(contentRetrieverId)
         Assert.assertEquals(expectedList, result)
     }
@@ -68,7 +66,7 @@ class ContentManagerTest {
     fun testGetChildrenNull() {
         val incorrectId = "incorrectId"
         val contentRequest = ContentRequest("", incorrectId, null)
-        Mockito.`when`(contentRequestParser!!.parse(incorrectId)).thenReturn(contentRequest)
+        whenever(contentRequestParser!!.parse(incorrectId)).thenReturn(contentRequest)
         val result = contentManager!!.getChildren(incorrectId)
         Assert.assertNull(result)
     }
@@ -94,22 +92,22 @@ class ContentManagerTest {
     }
 
     private fun testSearch(query: String, expectedResultsSize: Int) {
-        val song1 = Mockito.mock(MediaBrowserCompat.MediaItem::class.java)
-        val song2 = Mockito.mock(MediaBrowserCompat.MediaItem::class.java)
+        val song1 = mock<MediaBrowserCompat.MediaItem>()
+        val song2 = mock<MediaBrowserCompat.MediaItem>()
         val songs: MutableList<MediaBrowserCompat.MediaItem> = ArrayList()
         songs.add(song1)
         songs.add(song2)
         val songSearcher = getContentSearch(MediaItemType.SONGS, songs)
-        val folder1 = Mockito.mock(MediaBrowserCompat.MediaItem::class.java)
+        val folder1 = mock<MediaBrowserCompat.MediaItem>()
         val folders: MutableList<MediaBrowserCompat.MediaItem> = ArrayList()
         folders.add(folder1)
         val folderSearcher = getContentSearch(MediaItemType.FOLDER, folders)
         val contentSearcherList: MutableList<ContentSearcher> = ArrayList()
         contentSearcherList.add(songSearcher)
         contentSearcherList.add(folderSearcher)
-        Mockito.`when`(contentSearchers!!.all).thenReturn(contentSearcherList)
-        Mockito.`when`(contentSearchers[songSearcher.searchCategory]).thenReturn(songSearcher)
-        Mockito.`when`(contentSearchers[folderSearcher.searchCategory]).thenReturn(folderSearcher)
+        whenever(contentSearchers!!.all).thenReturn(contentSearcherList)
+        whenever(contentSearchers[songSearcher.searchCategory]).thenReturn(songSearcher)
+        whenever(contentSearchers[folderSearcher.searchCategory]).thenReturn(folderSearcher)
         val result = contentManager!!.search(query)
         Assert.assertNotNull(result)
         val resultSize = result.size
@@ -117,9 +115,9 @@ class ContentManagerTest {
     }
 
     private fun getContentSearch(type: MediaItemType, result: List<MediaBrowserCompat.MediaItem>): ContentSearcher {
-        val contentSearcher = Mockito.mock(ContentSearcher::class.java)
-        Mockito.`when`<Any?>(contentSearcher.searchCategory).thenReturn(type)
-        Mockito.`when`(contentSearcher.search(VALID_QUERY)).thenReturn(result.toMutableList())
+        val contentSearcher = mock<ContentSearcher>()
+        whenever<Any?>(contentSearcher.searchCategory).thenReturn(type)
+        whenever(contentSearcher.search(VALID_QUERY)).thenReturn(result.toMutableList())
         return contentSearcher
     }
 

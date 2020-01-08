@@ -7,30 +7,29 @@ import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
 import com.github.goldy1992.mp3player.service.library.search.Song
 import com.github.goldy1992.mp3player.service.library.search.SongDao
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.spy
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
 class SongSearcherTest : ContentResolverSearcherTestBase<SongSearcher?>() {
     private var mediaItemTypeIds: MediaItemTypeIds? = null
-    @Mock
-    var songDao: SongDao? = null
-    @Mock
-    var resultsParser: SongResultsParser? = null
+
+    var songDao: SongDao = mock<SongDao>()
+
+    var resultsParser: SongResultsParser = mock<SongResultsParser>()
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
         mediaItemTypeIds = MediaItemTypeIds()
         idPrefix = mediaItemTypeIds!!.getId(MediaItemType.SONG)
-        searcher = Mockito.spy(SongSearcher(contentResolver!!, resultsParser!!, mediaItemTypeIds!!, songDao!!))
+        searcher = spy(SongSearcher(contentResolver!!, resultsParser!!, mediaItemTypeIds!!, songDao!!))
     }
 
     @Test
@@ -45,12 +44,12 @@ class SongSearcherTest : ContentResolverSearcherTestBase<SongSearcher?>() {
         expectedDbResult.add(song1)
         expectedDbResult.add(song2)
         expectedDbResult.add(song3)
-        Mockito.`when`(songDao!!.query(ContentResolverSearcherTestBase.Companion.VALID_QUERY)).thenReturn(expectedDbResult as List<Song>)
+        whenever(songDao!!.query(ContentResolverSearcherTestBase.Companion.VALID_QUERY)).thenReturn(expectedDbResult as List<Song>)
         val EXPECTED_WHERE = MediaStore.Audio.Media._ID + " IN(?, ?, ?) COLLATE NOCASE"
         val EXPECTED_WHERE_ARGS = arrayOf(id1, id2, id3)
-        Mockito.`when`(contentResolver!!.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, searcher!!.projection, EXPECTED_WHERE, EXPECTED_WHERE_ARGS, null))
+        whenever(contentResolver!!.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, searcher!!.projection, EXPECTED_WHERE, EXPECTED_WHERE_ARGS, null))
                 .thenReturn(cursor)
-        Mockito.`when`<List<MediaBrowserCompat.MediaItem?>>(resultsParser!!.create(cursor!!, idPrefix!!)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
+        whenever<List<MediaBrowserCompat.MediaItem?>>(resultsParser!!.create(cursor!!, idPrefix!!)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
         val result = searcher!!.search(ContentResolverSearcherTestBase.Companion.VALID_QUERY)
         Assert.assertEquals(ContentResolverSearcherTestBase.Companion.expectedResult, result)
     }

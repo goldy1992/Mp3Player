@@ -4,23 +4,20 @@ import android.content.Intent
 import android.media.AudioManager
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.android.exoplayer2.ExoPlayer
+import com.nhaarman.mockitokotlin2.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
-import org.mockito.Spy
+
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class AudioBecomingNoisyBroadcastReceiverTest {
-    @Mock
-    private val exoPlayer: ExoPlayer? = null
-    @Spy
-    private val context = InstrumentationRegistry.getInstrumentation().context
+
+    private val exoPlayer: ExoPlayer = mock<ExoPlayer>()
+
+    private val context = spy(InstrumentationRegistry.getInstrumentation().context)
     /**
      * audio becoming noisy receiver
      */
@@ -28,7 +25,6 @@ class AudioBecomingNoisyBroadcastReceiverTest {
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
         audioBecomingNoisyBroadcastReceiver = AudioBecomingNoisyBroadcastReceiver(context, exoPlayer!!)
     }
 
@@ -38,7 +34,7 @@ class AudioBecomingNoisyBroadcastReceiverTest {
         intent.action = AudioManager.ACTION_AUDIO_BECOMING_NOISY
         audioBecomingNoisyBroadcastReceiver!!.onReceive(context, intent)
         /* Issue 64: we just want to update the playback state in this scenario, scpeifically to
-         * state PAUSED */Mockito.verify(exoPlayer, Mockito.times(1))!!.playWhenReady = false
+         * state PAUSED */verify(exoPlayer, times(1))!!.playWhenReady = false
     }
 
     @Test
@@ -46,13 +42,13 @@ class AudioBecomingNoisyBroadcastReceiverTest {
         Assert.assertFalse(audioBecomingNoisyBroadcastReceiver!!.isRegistered)
         audioBecomingNoisyBroadcastReceiver!!.register()
         // assert that register receiver is called
-        Mockito.verify(context, Mockito.times(1)).registerReceiver(ArgumentMatchers.any(), ArgumentMatchers.any())
+        verify(context, times(1)).registerReceiver(any(), any())
         Assert.assertTrue(audioBecomingNoisyBroadcastReceiver!!.isRegistered)
         // reset invocation count
-        Mockito.reset(context)
+        reset(context)
         audioBecomingNoisyBroadcastReceiver!!.register()
         // assert that register receiver is never called if there is already a receiver registered
-        Mockito.verify(context, Mockito.never()).registerReceiver(ArgumentMatchers.any(), ArgumentMatchers.any())
+        verify(context, never()).registerReceiver(any(), any())
     }
 
     @Test
@@ -60,12 +56,12 @@ class AudioBecomingNoisyBroadcastReceiverTest {
         Assert.assertFalse(audioBecomingNoisyBroadcastReceiver!!.isRegistered)
         audioBecomingNoisyBroadcastReceiver!!.unregister()
         // assert that unregister receiver is NEVER called
-        Mockito.verify(context, Mockito.never()).unregisterReceiver(audioBecomingNoisyBroadcastReceiver)
+        verify(context, never()).unregisterReceiver(audioBecomingNoisyBroadcastReceiver)
         audioBecomingNoisyBroadcastReceiver!!.register()
         Assert.assertTrue(audioBecomingNoisyBroadcastReceiver!!.isRegistered)
         audioBecomingNoisyBroadcastReceiver!!.register()
         // assert that register receiver is never called if there is already a receiver registered
         audioBecomingNoisyBroadcastReceiver!!.unregister()
-        Mockito.verify(context, Mockito.times(1)).registerReceiver(ArgumentMatchers.any(), ArgumentMatchers.any())
+        verify(context, times(1)).registerReceiver(any(), any())
     }
 }

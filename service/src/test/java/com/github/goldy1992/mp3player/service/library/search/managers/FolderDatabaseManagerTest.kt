@@ -14,7 +14,6 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
 import org.robolectric.annotation.LooperMode
@@ -70,7 +69,7 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         argumentCaptor<List<String>>().apply {
             folderDatabaseManager!!.reindex()
             Shadows.shadowOf(handler.looper).idle()
-            verify(folderDao, Mockito.times(1)).deleteOld(capture())
+            verify(folderDao, times(1)).deleteOld(capture())
             val idsToDelete = firstValue
             Assert.assertEquals(expectedId, idsToDelete[0])
         }
@@ -91,7 +90,7 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         argumentCaptor<List<Folder>>().apply {
                 folderDatabaseManager!!.reindex()
                 Shadows.shadowOf(handler.looper).idle()
-                     verify(folderDao, Mockito.times(1))!!.insertAll(capture())
+                     verify(folderDao, times(1))!!.insertAll(capture())
                 val insertedFolder = firstValue[0]
                 Assert.assertEquals(expectedId, insertedFolder.id)
                 Assert.assertEquals(EXPECTED_DIRECTORY_NAME, insertedFolder.value)

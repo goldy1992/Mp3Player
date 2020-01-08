@@ -7,28 +7,24 @@ import com.github.goldy1992.mp3player.service.library.content.filter.SongsFromFo
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
 import com.github.goldy1992.mp3player.service.library.search.SongDao
+import com.nhaarman.mockitokotlin2.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
 
 @RunWith(RobolectricTestRunner::class)
 class SongsFromFolderRetrieverTest : ContentResolverRetrieverTestBase<SongsFromFolderRetriever?>() {
-    @Mock
-    var resultsParser: SongResultsParser? = null
-    @Mock
-    var songDao: SongDao? = null
+
+    var resultsParser: SongResultsParser = mock<SongResultsParser>()
+
+    var songDao: SongDao = mock<SongDao>()
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
-        retriever = Mockito.spy(SongsFromFolderRetriever(contentResolver!!, resultsParser!!, handler, SongsFromFolderResultsFilter()))
+        retriever = spy(SongsFromFolderRetriever(contentResolver!!, resultsParser!!, handler, SongsFromFolderResultsFilter()))
     }
 
     @Test
@@ -40,8 +36,8 @@ class SongsFromFolderRetrieverTest : ContentResolverRetrieverTestBase<SongsFromF
                 .setTitle(title)
                 .build()
         expectedResult.add(mediaItem)
-        Mockito.`when`(contentResolver!!.query(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.eq<String?>(null))).thenReturn(cursor)
-        Mockito.`when`(resultsParser!!.create(cursor!!, contentRequest!!.mediaIdPrefix!!)).thenReturn(expectedResult)
+        whenever(contentResolver!!.query(any(), any(), any(), any(), eq<String?>(null))).thenReturn(cursor)
+        whenever(resultsParser!!.create(cursor!!, contentRequest!!.mediaIdPrefix!!)).thenReturn(expectedResult)
         val result = retriever!!.getChildren(contentRequest!!)
         // call remaining looper messages
         Shadows.shadowOf(Looper.getMainLooper()).idle()
