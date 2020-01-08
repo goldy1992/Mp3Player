@@ -16,6 +16,6 @@ class TestMediaPlaybackServiceInjector : MediaPlaybackService() {
         val component = DaggerTestServiceComponent
                 .factory()
                 .create(applicationContext, this, "MEDIA_PLYBK_SRVC_WKR", ComponentClassMapper.Builder().build())
-        component!!.inject(this)
+        component.inject(this)
     }
 }

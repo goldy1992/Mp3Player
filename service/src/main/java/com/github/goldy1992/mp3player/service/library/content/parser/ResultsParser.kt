@@ -10,7 +10,7 @@ import java.util.*
 
 abstract class ResultsParser : Comparator<MediaItem> {
 
-    abstract fun create(cursor: Cursor, mediaIdPrefix: String?): List<MediaItem>
+    abstract fun create(cursor: Cursor?, mediaIdPrefix: String?): List<MediaItem>
 
     abstract val type: MediaItemType?
 

@@ -20,7 +20,7 @@ class SongResultsParser
     @Inject
     constructor() : ResultsParser() {
 
-    override fun create(cursor: Cursor, libraryIdPrefix: String?): List<MediaItem> {
+    override fun create(cursor: Cursor?, libraryIdPrefix: String?): List<MediaItem> {
         val listToReturn = TreeSet(this)
         while (cursor != null && cursor.moveToNext()) {
             val mediaItem = buildMediaItem(cursor, libraryIdPrefix!!)

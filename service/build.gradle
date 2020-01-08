@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: "de.mannodermaus.android-junit5"
 apply plugin: 'jacoco'
 
@@ -154,7 +154,7 @@ dependencies {
     api group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
 
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
-    kaptTest group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
+    implementation group: 'androidx.room', name: 'room-ktx', version: ROOM_VERSION
     kapt group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
 

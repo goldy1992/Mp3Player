@@ -23,7 +23,7 @@ open class FoldersRetriever
     override val type: MediaItemType?
         get() = MediaItemType.FOLDER
 
-    public override fun performGetChildrenQuery(id: String?): Cursor {
+    override fun performGetChildrenQuery(id: String?): Cursor? {
         return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection,
                 null, null, null)
     }

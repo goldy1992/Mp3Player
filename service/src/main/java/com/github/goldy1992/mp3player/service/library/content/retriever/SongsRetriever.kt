@@ -18,7 +18,7 @@ open class SongsRetriever @Inject constructor(contentResolver: ContentResolver,
     override val type: MediaItemType?
         get() = MediaItemType.SONG
 
-    public override fun performGetChildrenQuery(id: String?): Cursor {
+    public override fun performGetChildrenQuery(id: String?): Cursor? {
         return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection,
                 null, null, null)
     }

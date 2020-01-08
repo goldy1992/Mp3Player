@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.service.library.content.parser
 
 import android.database.Cursor
 import android.provider.MediaStore
-import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import com.github.goldy1992.mp3player.commons.ComparatorUtils
 import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
@@ -18,10 +17,10 @@ class FolderResultsParser
     @Inject
     constructor() : ResultsParser() {
 
-    override fun create(cursor: Cursor, mediaIdPrefix: String?): List<MediaItem> {
+    override fun create(cursor: Cursor?, mediaIdPrefix: String?): List<MediaItem> {
         val listToReturn = TreeSet(this)
         val directoryPathSet: MutableSet<String> = HashSet()
-        while (cursor.moveToNext()) {
+        while (cursor!!.moveToNext()) {
             val path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
             val file = File(path)
             if (file.exists()) {

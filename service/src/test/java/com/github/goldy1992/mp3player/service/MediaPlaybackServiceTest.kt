@@ -44,8 +44,11 @@ class MediaPlaybackServiceTest {
         val rootHints: Bundle? = null
         whenever(rootAuthenticator!!.authenticate(clientPackageName, clientUid, rootHints)).thenReturn(browserRoot)
         val result = mediaPlaybackService!!.onGetRoot(clientPackageName, clientUid, rootHints)
+        Shadows.shadowOf(mediaPlaybackService.worker!!.looper).idle()
+
         Assert.assertNotNull(result)
         Assert.assertEquals(ACCEPTED_MEDIA_ROOT_ID, result!!.rootId)
+
     }
 
     @Test

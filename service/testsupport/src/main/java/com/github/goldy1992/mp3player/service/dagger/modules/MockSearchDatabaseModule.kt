@@ -6,26 +6,37 @@ import com.github.goldy1992.mp3player.service.library.search.SearchDatabase
 import com.github.goldy1992.mp3player.service.library.search.SongDao
 import dagger.Module
 import dagger.Provides
-import org.mockito.Mockito
+import com.nhaarman.mockitokotlin2.*
 import javax.inject.Singleton
 
 @Module
 class MockSearchDatabaseModule {
+
+    val searchDatabase : SearchDatabase = mock<SearchDatabase>()
+    val songDao : SongDao = mock<SongDao>()
+    val folderDao : FolderDao = mock<FolderDao>()
+
+    init
+    {
+        whenever(searchDatabase.folderDao()).thenReturn(folderDao)
+        whenever(searchDatabase.songDao()).thenReturn(songDao)
+    }
+
     @Provides
     @Singleton
     fun providesSearchDb(context: Context?): SearchDatabase {
-        return Mockito.mock(SearchDatabase::class.java)
+        return searchDatabase
     }
 
     @Provides
     @Singleton
     fun provideSongDao(searchDatabase: SearchDatabase?): SongDao {
-        return Mockito.mock(SongDao::class.java)
+        return songDao
     }
 
     @Provides
     @Singleton
     fun provideFolderDao(searchDatabase: SearchDatabase?): FolderDao {
-        return Mockito.mock(FolderDao::class.java)
+        return folderDao
     }
 }

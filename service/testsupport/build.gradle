@@ -59,14 +59,15 @@ dependencies {
 
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
-
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-
+    implementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: EXO_PLAYER_VERSION
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
     implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
     implementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
+    implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
+    implementation group: 'com.nhaarman.mockitokotlin2', name: 'mockito-kotlin', version: MOCKITO_KOTLIN
 
     //dagger
     kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
@@ -75,6 +76,4 @@ dependencies {
     implementation project(path: ':commons')
 
     api project(':service')
-    implementation "androidx.core:core-ktx:1.1.0"
-    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
 }

@@ -12,7 +12,7 @@ abstract class ContentResolverRetriever internal constructor(val contentResolver
                                                              val resultsParser: ResultsParser,
                                                              val handler: Handler,
                                                              val resultsFilter: ResultsFilter?) : ContentRetriever() {
-    abstract fun performGetChildrenQuery(id: String?): Cursor
+    abstract fun performGetChildrenQuery(id: String?): Cursor?
     abstract val projection: Array<String?>?
     override fun getChildren(request: ContentRequest): List<MediaBrowserCompat.MediaItem>? {
         val cursor = performGetChildrenQuery(request.queryString)
