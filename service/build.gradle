@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: "de.mannodermaus.android-junit5"
+apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'jacoco'
 
 jacoco {
@@ -15,7 +15,8 @@ tasks.withType(Test) {
 
 task jacocoTestReportFullDebug(type: JacocoReport, dependsOn: ['testFullDebugUnitTest']) {
 
-    println "reporting for duty"
+    println "project dir: $projectDir"
+    println "build dir: $project.buildDir"
     reports {
         xml.enabled = true
         html.enabled = true
@@ -50,7 +51,6 @@ android {
         targetSdkVersion TARGET_SDK_VERION
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
     }
@@ -100,7 +100,7 @@ android {
             }
             jacoco {
                 includeNoLocationClasses = true
-                includes = ['com/github/goldy1992/mp3player/server/**']
+                includes = ['com/github/goldy1992/mp3player/service/**']
                 excludes =  [
                         '**/dagger/**',
                         '**/commons/**',
@@ -146,7 +146,7 @@ dependencies {
     implementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
     implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
-    api project(':commons')
+    api project(path: ':commons')
 
 
     //dagger
@@ -158,13 +158,14 @@ dependencies {
     kapt group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
 
-    testApi project(path: ':service:testsupport')
-
-
     testImplementation junit5UnitTests
     testRuntimeOnly junit5UnitTestRuntime
+    testApi project(":service:testsupport")
 
-    testImplementation group: 'org.robolectric', name: 'robolectric', version: ROBOLECTRIC_VERSION// https://mvnrepository.com/artifact/org.robolectric/shadows-support-v4
+    testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
+        exclude group: "com.google.auto.service", module: "auto-service"
+    }
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
+    testImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
 
 }
