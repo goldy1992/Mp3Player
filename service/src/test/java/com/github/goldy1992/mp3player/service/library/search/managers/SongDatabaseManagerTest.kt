@@ -66,7 +66,7 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
             Shadows.shadowOf(handler!!.looper).idle()
             verify(songDao, times(1))!!.deleteOld(capture())
             val idsToDelete = firstValue[0]
-            Assert.assertEquals(expectedId, idsToDelete[0])
+            Assert.assertEquals(expectedId, idsToDelete)
         }
     }
 

@@ -19,8 +19,11 @@ import java.io.IOException
  */
 @RunWith(RobolectricTestRunner::class)
 class FolderResultsParserTest : ResultsParserTestBase() {
+
     @Rule
+    @JvmField
     var tempFolder = TemporaryFolder()
+
     private var DIR_1: File? = null
     private var DIR_2: File? = null
     private var DIR_1_SONG_1: File? = null

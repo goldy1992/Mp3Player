@@ -27,8 +27,11 @@ import java.io.IOException
  */
 @RunWith(RobolectricTestRunner::class)
 class SongResultsParserTest : ResultsParserTestBase() {
+
     @Rule
+    @JvmField
     var temporaryFolder = TemporaryFolder()
+
     private val COMMON_TITLE = "a common title"
     private var expectedMediaItem1: MediaBrowserCompat.MediaItem? = null
     private val ALBUM_ID_1 = 2334L

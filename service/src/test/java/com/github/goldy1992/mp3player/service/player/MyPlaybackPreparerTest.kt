@@ -95,7 +95,7 @@ class MyPlaybackPreparerTest {
         items.add(testItem3)
         whenever(contentManager!!.getPlaylist(mediaId)).thenReturn(items)
         myPlaybackPreparer!!.onPrepareFromMediaId(mediaId, true, null)
-         verify(myControlDispatcher, times(1))!!.dispatchSeekTo(exoPlayer, 1, 0)
+        verify(myControlDispatcher, times(1))!!.dispatchSeekTo(exoPlayer, 1, 0)
     }
 
     private fun assertContainsAction(@PlaybackStateCompat.Actions action: Long) {

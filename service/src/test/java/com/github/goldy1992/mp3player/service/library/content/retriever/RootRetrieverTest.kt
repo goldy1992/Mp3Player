@@ -64,6 +64,7 @@ class RootRetrieverTest {
         private const val ROOT_TYPE_2_ID = ";lbmgvms"
         lateinit var testRootItemMap: MutableMap<MediaItemType, String>
         @BeforeClass
+        @JvmStatic
         fun setupClass() {
             testRootItemMap = HashMap<MediaItemType, String>()
             testRootItemMap[ROOT_TYPE_1] = ROOT_TYPE_1_ID

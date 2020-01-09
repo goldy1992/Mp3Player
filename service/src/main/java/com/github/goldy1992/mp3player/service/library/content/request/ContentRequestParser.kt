@@ -1,15 +1,13 @@
 package com.github.goldy1992.mp3player.service.library.content.request
 
-import com.github.goldy1992.mp3player.commons.Constants.ID_DELIMITER
 import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
-import java.util.*
 import javax.inject.Inject
 
 class ContentRequestParser @Inject constructor(private val mediaItemTypeIds: MediaItemTypeIds) {
     fun parse(id: String): ContentRequest? {
-        val splitId = Arrays.asList<String>(*id.split(ID_DELIMITER).toTypedArray())
+        val splitId = id.split(ID_SEPARATOR)
         val mediaIdPrefix = calculateMediaIdPrefix(splitId)
         val splitIdSize = splitId.size
         if (splitIdSize == 1) {

@@ -29,7 +29,6 @@ class MediaPlaybackServiceTest {
 
     @Before
     fun setup() {
-
         mediaPlaybackService = Robolectric.buildService(TestMediaPlaybackServiceInjector::class.java).create().get()
         mediaPlaybackService.setHandler(Handler(Looper.getMainLooper()))
         Shadows.shadowOf(mediaPlaybackService.worker!!.looper).idle()
@@ -76,13 +75,11 @@ class MediaPlaybackServiceTest {
 
     @Test
     fun testOnLoadChildrenRejectedMediaId() {
-        whenever(rootAuthenticator!!.rejectRootSubscription(any())).thenReturn(false)
+        whenever(rootAuthenticator!!.rejectRootSubscription(any())).thenReturn(true)
         val result: Result<List<MediaBrowserCompat.MediaItem>> = mock<Result<List<MediaBrowserCompat.MediaItem>>>() as Result<List<MediaBrowserCompat.MediaItem>>
         mediaPlaybackService!!.onLoadChildren(REJECTED_MEDIA_ROOT_ID, result)
         Shadows.shadowOf(Looper.getMainLooper()).idle()
-        // execute all tasks posted to main looper
-//shadowOf(mediaPlaybackService.getWorker().getLooper()).idle();
-        verify(result, times(1)).sendResult(any())
+        verify(result, times(1)).sendResult(null)
     }
 
     companion object {

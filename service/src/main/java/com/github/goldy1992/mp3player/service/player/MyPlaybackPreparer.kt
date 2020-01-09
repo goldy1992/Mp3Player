@@ -6,6 +6,7 @@ import android.os.ResultReceiver
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
 import com.github.goldy1992.mp3player.commons.Constants.ID_DELIMITER
+import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaId
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaUri
 import com.github.goldy1992.mp3player.service.MyControlDispatcher
@@ -92,7 +93,7 @@ class MyPlaybackPreparer @Inject constructor(private val exoPlayer: ExoPlayer,
 
     private fun extractTrackId(mediaId: String?): String? {
         if (null != mediaId) {
-            val splitId = Arrays.asList<String>(*mediaId.split(ID_DELIMITER).toTypedArray())
+            val splitId = Arrays.asList<String>(*mediaId.split(ID_SEPARATOR).toTypedArray())
             if (!splitId.isEmpty()) {
                 return splitId[splitId.size - 1]
             }

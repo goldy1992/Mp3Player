@@ -20,8 +20,10 @@ class MyDescriptionAdapterTest {
 
     private val playlistManager: PlaylistManager = mock<PlaylistManager>()
 
-    private val player: ExoPlayer? = null
+    private val player: ExoPlayer = mock<ExoPlayer>()
+
     private var myDescriptionAdapter: MyDescriptionAdapter? = null
+
     @Before
     fun setup() {
         val context = InstrumentationRegistry.getInstrumentation().context

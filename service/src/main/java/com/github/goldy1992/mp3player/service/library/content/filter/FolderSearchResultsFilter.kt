@@ -13,14 +13,10 @@ class FolderSearchResultsFilter
     override fun filter(query: String,
                         results: MutableList<MediaItem>?)
             : List<MediaItem>? {
-        val iterator: MutableListIterator<MediaItem> = results!!.toMutableList().listIterator()
-        while (iterator.hasNext()) {
-            val currentItem = iterator.next()
-            val directoryName = getDirectoryName(currentItem!!)
-            if (null != directoryName && !StringUtils.contains(directoryName.toUpperCase(), query.toUpperCase())) {
-                iterator.remove()
-            }
+
+        return results!!.filter {
+            val directoryName = getDirectoryName(it)
+            null != directoryName && StringUtils.contains(directoryName.toUpperCase(), query.toUpperCase())
         }
-        return results
     }
 }

@@ -13,6 +13,7 @@ import java.util.*
 @RunWith(RobolectricTestRunner::class)
 class SongsFromFolderResultsFilterTest {
     private var songsFromFolderResultsFilter: SongsFromFolderResultsFilter? = null
+
     @Before
     fun setup() {
         songsFromFolderResultsFilter = SongsFromFolderResultsFilter()

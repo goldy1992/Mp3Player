@@ -15,6 +15,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
@@ -70,7 +71,7 @@ class SongFromUriRetrieverTest {
     fun testGetSongWithNonContentScheme() {
         val expectedMediaItem = mock<MediaBrowserCompat.MediaItem>()
         val cursor = mock<Cursor>()
-        whenever(contentResolver!!.query(any(), any(), any(), any(), any()))
+        whenever(contentResolver!!.query(any(), any(), eq(null), eq(null), eq(null)))
                 .thenReturn(cursor)
         val id = mediaItemTypeIds!!.getId(MediaItemType.SONGS)
         whenever(songResultsParser!!.create(cursor, id!!)).thenReturn(listOf(expectedMediaItem))
