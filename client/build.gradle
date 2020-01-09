@@ -3,43 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'de.mannodermaus.android-junit5'
-apply plugin: 'jacoco'
-
-jacoco {
-    toolVersion = "$JACOCO_VERSION"
-}
-
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-}
-
-task jacocoTestReportFullDebug(type: JacocoReport, dependsOn: ['testFullDebugUnitTest']) {
-
-    println "reporting for duty"
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-
-    def fileFilter = [
-            '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$[0-9].*'
-    ]
-
-    def mainSrc = "$project.projectDir/src/main/java"
-    def testSupportSrc = "$projectDir/testsupport/src/main/java"
-    def daggerSrc = "$project.buildDir/generated/source/kapt/fullDebug"
-    def testSupportDaggerSrc = "$projectDir/testsupport/build/generated/source/kapt/fullDebug"
-
-    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebugUnitTest", excludes: fileFilter)
-    def daggerClasses = fileTree(dir: "$project.buildDir/build/intermediates/javac/fullDebugUnitTest/classes", excludes: fileFilter)
-    def testSupportClasses = fileTree(dir: "$projectDir/testsupport/build/tmp/kotlin-classes/fullDebugUnitTest", excludes: fileFilter)
-    def testSupportDaggerClasses = fileTree(dir: "$projectDir/testsupport/build/intermediates/javac/fullDebugUnitTest/classes", excludes: fileFilter)
-
-
-    sourceDirectories.from = files([mainSrc, testSupportSrc, daggerSrc, testSupportDaggerSrc])
-    classDirectories.from = files([mainClasses, daggerClasses, testSupportClasses, testSupportDaggerClasses])
-    executionData.from = "$project.buildDir/jacoco/testFullDebugUnitTest.exec"
-}
+apply from: rootProject.file("jacoco-with-test-support.gradle")
 
 android {
     compileSdkVersion TARGET_SDK_VERION
@@ -101,19 +65,21 @@ android {
             }
             jacoco {
                 includeNoLocationClasses = true
-                includes = ['com/github/goldy1992/mp3player/client/**']
+                includes = [
+                    'com/github/goldy1992/mp3player/client/**',
+                    'com/github/goldy1992/mp3player/commons/**'
+                ]
                 excludes =  [
-                                '**/dagger/**',
-                                '**/commons/**',
-                                '**_Factory**',
-                                '**_MembersInjector**',
-                                '**/R.class',
-                                '**/R$*.class',
-                                '**/BuildConfig.*',
-                                '**/Manifest*.*',
-                                '**/*Test*.*',
-                                'android/**/*.*',
-                                '**/*$[0-9].*'
+                    '**/dagger/**',
+                    '**_Factory**',
+                    '**_MembersInjector**',
+                    '**/R.class',
+                    '**/R$*.class',
+                    '**/BuildConfig.*',
+                    '**/Manifest*.*',
+                    '**/*Test*.*',
+                    'android/**/*.*',
+                    '**/*$[0-9].*'
                 ]
             }
         }
@@ -127,7 +93,8 @@ android {
             java.srcDirs = ["src/test/java",
                             "$projectDir/testsupport/src/main/java",
                             "$project.buildDir/generated/source/kapt/fullDebug",
-                            "$projectDir/testsupport/build/generated/source/kapt/fullDebug" ]
+                            "$projectDir/testsupport/build/generated/source/kapt/fullDebug",
+                            "$rootDir/commons/src/main/java" ]
             java.srcDirs += sourceSets.main.java.srcDirs
         }
         androidTest.java.srcDirs += 'src/androidTest/java'

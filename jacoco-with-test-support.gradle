@@ -1,0 +1,45 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "$JACOCO_VERSION"
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
+task jacocoTestReportFullDebug(type: JacocoReport, dependsOn: ['testFullDebugUnitTest']) {
+
+    println "reporting for duty"
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*Test*.*',
+            'android/**/*.*',
+            '**/*$[0-9].*',
+            '**/dagger/**'
+    ]
+
+    def mainSrc = "$project.projectDir/src/main/java"
+    def testSupportSrc = "$projectDir/testsupport/src/main/java"
+    def daggerSrc = "$project.buildDir/generated/source/kapt/fullDebug"
+    def testSupportDaggerSrc = "$projectDir/testsupport/build/generated/source/kapt/fullDebug"
+    def commonsSrc = "$rootDir/commons/src/main/java"
+
+    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebugUnitTest", excludes: fileFilter)
+    def daggerClasses = fileTree(dir: "$project.buildDir/build/intermediates/javac/fullDebugUnitTest/classes", excludes: fileFilter)
+    def testSupportClasses = fileTree(dir: "$projectDir/testsupport/build/tmp/kotlin-classes/fullDebugUnitTest", excludes: fileFilter)
+    def testSupportDaggerClasses = fileTree(dir: "$projectDir/testsupport/build/intermediates/javac/fullDebugUnitTest/classes", excludes: fileFilter)
+    def commonsClasses = fileTree(dir: "$rootDir/commons/build/tmp/kotlin-classes/fullDebugUnitTest", excludes: fileFilter)
+
+    sourceDirectories.from = files([mainSrc, testSupportSrc, daggerSrc, testSupportDaggerSrc, commonsSrc])
+    classDirectories.from = files([mainClasses, daggerClasses, testSupportClasses, testSupportDaggerClasses, commonsClasses])
+    executionData.from = "$project.buildDir/jacoco/testFullDebugUnitTest.exec"
+}
