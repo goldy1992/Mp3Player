@@ -4,22 +4,18 @@ import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.annotation.VisibleForTesting
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.MetaDataKeys
-import org.apache.commons.io.FilenameUtils
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.fragment_album_art.view.*
 import kotlinx.android.synthetic.main.song_item_menu.view.*
+import org.apache.commons.io.FilenameUtils
 
 class MySongViewHolder(itemView: View, albumArtPainter: AlbumArtPainter?)
     : MediaItemViewHolder(itemView, albumArtPainter), LayoutContainer {
+
     override val containerView: View?
         get() = itemView
 

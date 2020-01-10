@@ -10,15 +10,15 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-@Ignore
 class RepeatOneRepeatAllButtonTest : MediaButtonTestBase() {
-    private var repeatOneRepeatAllButton: RepeatOneRepeatAllButton? = null
+
+    private lateinit var repeatOneRepeatAllButton: RepeatOneRepeatAllButton
+
     @Before
     public override fun setup() {
         super.setup()
@@ -29,8 +29,8 @@ class RepeatOneRepeatAllButtonTest : MediaButtonTestBase() {
     fun testInit() {
         val imageView = mock<ImageView>()
         @PlaybackStateCompat.RepeatMode val expectedState = PlaybackStateCompat.REPEAT_MODE_NONE
-        whenever(mediaControllerAdapter!!.repeatMode).thenReturn(expectedState)
-        repeatOneRepeatAllButton!!.init(imageView)
+        whenever(mediaControllerAdapter.repeatMode).thenReturn(expectedState)
+        repeatOneRepeatAllButton.init(imageView)
         Assert.assertEquals(expectedState, repeatOneRepeatAllButton!!.state)
     }
 
@@ -56,31 +56,33 @@ class RepeatOneRepeatAllButtonTest : MediaButtonTestBase() {
 
     @Test
     fun testOnPlaybackStateChangedWithNoRepeatMode() {
-        val expectedState = mediaControllerAdapter!!.playbackState
+        val expectedState = mediaControllerAdapter.playbackState
         val state = PlaybackStateCompat.Builder().build()
-        repeatOneRepeatAllButton!!.onPlaybackStateChanged(state)
-        Assert.assertEquals(expectedState, repeatOneRepeatAllButton!!.state)
+        repeatOneRepeatAllButton.onPlaybackStateChanged(state)
+        Assert.assertEquals(expectedState, repeatOneRepeatAllButton.state)
     }
 
     @Test
     fun testOnPlaybackStateChangedWithValidRepeatMode() {
+        val imageView : ImageView = mock<ImageView>()
+        repeatOneRepeatAllButton.init(imageView)
         val expectedState = PlaybackStateCompat.REPEAT_MODE_ONE
-        repeatOneRepeatAllButton!!.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_NONE)
+        repeatOneRepeatAllButton.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_NONE)
         val extras = Bundle()
         extras.putInt(Constants.REPEAT_MODE, expectedState)
         val state = PlaybackStateCompat.Builder()
                 .setExtras(extras)
                 .build()
-        whenever(mediaControllerAdapter!!.repeatMode).thenReturn(expectedState)
-        repeatOneRepeatAllButton!!.onPlaybackStateChanged(state)
-        Assert.assertEquals(expectedState, repeatOneRepeatAllButton!!.state)
+        whenever(mediaControllerAdapter.repeatMode).thenReturn(expectedState)
+        repeatOneRepeatAllButton.onPlaybackStateChanged(state)
+        Assert.assertEquals(expectedState, repeatOneRepeatAllButton.state)
     }
 
     private fun runOnClick(@PlaybackStateCompat.RepeatMode originalRepeatMode: Int,
                            @PlaybackStateCompat.RepeatMode expectedRepeatMode: Int) {
         val imageView = mock<ImageView>()
-        repeatOneRepeatAllButton!!.setRepeatMode(originalRepeatMode)
-        repeatOneRepeatAllButton!!.onClick(imageView)
-        verify(mediaControllerAdapter, times(1))!!.repeatMode = expectedRepeatMode
+        repeatOneRepeatAllButton.setRepeatMode(originalRepeatMode)
+        repeatOneRepeatAllButton.onClick(imageView)
+        verify(mediaControllerAdapter, times(1)).repeatMode = expectedRepeatMode
     }
 }

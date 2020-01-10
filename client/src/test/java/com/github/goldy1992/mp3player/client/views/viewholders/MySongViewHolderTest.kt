@@ -1,27 +1,33 @@
 package com.github.goldy1992.mp3player.client.views.viewholders
 
 import android.net.Uri
+import android.widget.ImageView
+import android.widget.TextView
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.spy
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import kotlinx.android.synthetic.main.fragment_album_art.view.*
+import com.nhaarman.mockitokotlin2.*
 import kotlinx.android.synthetic.main.song_item_menu.view.*
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-@Ignore // TODO: fix
 class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
+
+    val titleTextView : TextView = mock<TextView>()
+    val artistTextView : TextView = mock<TextView>()
+    val durationTextView : TextView = mock<TextView>()
+    val albumArtImageView : ImageView = mock<ImageView>()
+
     @Before
     override fun setup() {
         super.setup()
+        whenever(view.title).thenReturn(titleTextView)
+        whenever(view.artist).thenReturn(artistTextView)
+        whenever(view.duration).thenReturn(durationTextView)
+        whenever(view.albumArt).thenReturn(albumArtImageView)
         mediaItemViewHolder = spy(MySongViewHolder(view, albumArtPainter))
     }
 
@@ -31,8 +37,8 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
         val mediaItem = MediaItemBuilder("id")
                 .setTitle(expectedTitle)
                 .build()
-        mediaItemViewHolder!!.bindMediaItem(mediaItem)
-        verify(mediaItemViewHolder!!.itemView.title, times(1)).text = expectedTitle
+        mediaItemViewHolder.bindMediaItem(mediaItem)
+        verify(mediaItemViewHolder.itemView.title, times(1)).text = expectedTitle
     }
 
     @Test
