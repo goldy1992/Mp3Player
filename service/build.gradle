@@ -69,7 +69,6 @@ android {
                 ]
                 excludes =  [
                     '**/dagger/**',
-                    '**/commons/**',
                     '**_Factory**',
                     '**_MembersInjector**',
                     '**/R.class',

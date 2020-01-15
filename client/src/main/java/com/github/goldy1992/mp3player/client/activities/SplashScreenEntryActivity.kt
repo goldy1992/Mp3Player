@@ -1,8 +1,10 @@
 package com.github.goldy1992.mp3player.client.activities
 
 import android.Manifest.permission
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -56,18 +58,12 @@ abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGrante
         CoroutineScope(IO).launch { init()}
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.i(logTag(), "onStart")
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                             grantResults: IntArray) { //   Log.i(LOG_TAG, "permission result");
         var permissionIsGranted = false
-        if (permissions.size > 0 && grantResults.size > 0) {
-            for (i in permissions.indices) {
-                if (permission.WRITE_EXTERNAL_STORAGE == permissions[i] &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (permissions.isNotEmpty() && grantResults.isNotEmpty()) {
+            permissions.forEach {
+                if (WRITE_EXTERNAL_STORAGE == it && grantResults.first() == PERMISSION_GRANTED) {
                     permissionIsGranted = true
                 }
             }
@@ -112,7 +108,7 @@ abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGrante
 
     private suspend fun init() {
         Log.i(logTag(), "reset")
-        permissionsProcessor!!.requestPermission(permission.WRITE_EXTERNAL_STORAGE)
+        permissionsProcessor.requestPermission(WRITE_EXTERNAL_STORAGE)
         delay(WAIT_TIME)
         isSplashScreenFinishedDisplaying = true
     }

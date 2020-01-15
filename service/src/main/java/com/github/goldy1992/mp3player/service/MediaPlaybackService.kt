@@ -4,33 +4,27 @@ import android.app.Notification
 import android.app.Service
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
-import androidx.annotation.VisibleForTesting
 import androidx.media.MediaBrowserServiceCompat
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers
 import com.github.goldy1992.mp3player.service.library.search.managers.SearchDatabaseManagers
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * Created by Mike on 24/09/2017.
  */
 abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotificationManager.NotificationListener {
-    @get:VisibleForTesting
-    @set:Inject
-    var contentManager: ContentManager? = null
-    @get:VisibleForTesting
-    @set:Inject
-    var worker: HandlerThread? = null
-    private var handler: Handler? = null
-    private var mediaSessionConnectorCreator: MediaSessionConnectorCreator? = null
-    @set:Inject
+
+
+    private lateinit var contentManager: ContentManager
+
+    private lateinit var mediaSessionConnectorCreator: MediaSessionConnectorCreator
+
+    @Inject
     var mediaSession: MediaSessionCompat? = null
     private var rootAuthenticator: RootAuthenticator? = null
     private var mediaStoreObservers: MediaStoreObservers? = null
@@ -111,10 +105,6 @@ abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotific
         mediaStoreObservers!!.unregisterAll()
     }
 
-    @Inject
-    fun setHandler(@Named("worker") handler: Handler?) {
-        this.handler = handler
-    }
 
     @Inject
     fun setRootAuthenticator(rootAuthenticator: RootAuthenticator?) {
@@ -122,7 +112,7 @@ abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotific
     }
 
     @Inject
-    fun setMediaSessionConnectorCreator(mediaSessionConnectorCreator: MediaSessionConnectorCreator?) {
+    fun setMediaSessionConnectorCreator(mediaSessionConnectorCreator: MediaSessionConnectorCreator) {
         this.mediaSessionConnectorCreator = mediaSessionConnectorCreator
     }
 

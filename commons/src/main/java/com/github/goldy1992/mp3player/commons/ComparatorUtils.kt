@@ -40,7 +40,7 @@ object ComparatorUtils {
                 id1.compareTo(id2)
             }
         }
-        @JvmField
+        @JvmStatic
         val uppercaseStringCompare = Comparator<String> { string1, string2 ->
             if (string1 == null && string2 == null) {
                 0

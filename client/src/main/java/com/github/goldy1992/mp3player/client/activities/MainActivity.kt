@@ -64,7 +64,7 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
         mediaBrowserAdapter!!.registerRootListener(this)
 
         initNavigationView()
-        drawerLayout.addDrawerListener(myDrawerListener!!)
+        drawerLayout.addDrawerListener(myDrawerListener)
         return true
     }
 
@@ -92,11 +92,11 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
             R.id.action_search -> {
                 Log.i(logTag(), "hit action search")
                 supportFragmentManager
-                        .beginTransaction()
-                        .add(R.id.fragmentContainer, searchFragment!!, "SEARCH_FGMT")
-                        .addToBackStack(null)
-                        .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                        .commit()
+                    .beginTransaction()
+                    .add(R.id.fragmentContainer, searchFragment!!, "SEARCH_FGMT")
+                    .addToBackStack(null)
+                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                    .commit()
             }
             else -> return super.onOptionsItemSelected(item)
         }
@@ -116,7 +116,7 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
         // close drawer when item is tapped
         drawerLayout!!.closeDrawers()
         // Add code here to update the UI based on the item selected
-// For example, swap UI fragments here
+        // For example, swap UI fragments here
         return true
     }
 

@@ -13,6 +13,7 @@ import javax.inject.Inject
 class PermissionsProcessor @Inject constructor(parentActivity: SplashScreenEntryActivity, permissionGranted: PermissionGranted) {
     private val permissionGranted: PermissionGranted
     private val parentActivity: Activity
+
     fun requestPermission(permission: String) { // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(parentActivity,
                         permission)

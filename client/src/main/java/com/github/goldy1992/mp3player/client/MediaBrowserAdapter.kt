@@ -17,10 +17,6 @@ class MediaBrowserAdapter
     constructor(private val mediaBrowser: MediaBrowserCompat,
                 private val mySubscriptionCallback: MediaIdSubscriptionCallback,
                 private val mySearchCallback: MySearchCallback) : LogTagger {
-    fun init() { // Create MediaBrowserServiceCompat
-        mediaBrowser.connect()
-        //Log.i(LOG_TAG, "calling connect");
-    }
 
     /**
      * Disconnects from the media browser service
