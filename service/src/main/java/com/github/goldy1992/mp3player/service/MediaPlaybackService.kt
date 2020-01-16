@@ -8,40 +8,46 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import androidx.media.MediaBrowserServiceCompat
+import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers
 import com.github.goldy1992.mp3player.service.library.search.managers.SearchDatabaseManagers
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 /**
  * Created by Mike on 24/09/2017.
  */
-abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotificationManager.NotificationListener {
+abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotificationManager.NotificationListener, LogTagger,  CoroutineScope by GlobalScope {
 
 
     private lateinit var contentManager: ContentManager
 
     private lateinit var mediaSessionConnectorCreator: MediaSessionConnectorCreator
 
-    @Inject
-    var mediaSession: MediaSessionCompat? = null
+    private lateinit var mediaSession: MediaSessionCompat
+
     private var rootAuthenticator: RootAuthenticator? = null
     private var mediaStoreObservers: MediaStoreObservers? = null
     private var searchDatabaseManagers: SearchDatabaseManagers? = null
     protected abstract fun initialiseDependencies()
+
     override fun onCreate() {
         super.onCreate()
         mediaSessionConnectorCreator!!.create()
         this.sessionToken = mediaSession!!.sessionToken
         mediaStoreObservers!!.init(this)
-        searchDatabaseManagers!!.reindexAll()
+
+        launch(Dispatchers.IO) {
+            searchDatabaseManagers!!.reindexAll()
+        }
     }
 
     override fun onStartCommand(intent: Intent,
                                 flags: Int,
                                 startId: Int): Int {
-        Log.i(LOG_TAG, "breakpoint, on start command called")
+        Log.i(logTag(), "breakpoint, on start command called")
         return Service.START_STICKY
     }
 
@@ -62,7 +68,7 @@ abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotific
             return
         }
         result.detach()
-        handler!!.post {
+        launch(Dispatchers.Default) {
             // Assume for example that the music catalog is already loaded/cached.
             val mediaItems = contentManager!!.getChildren(parentId)
             result.sendResult(mediaItems)
@@ -93,15 +99,16 @@ abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotific
     override fun onSearch(query: String, extras: Bundle,
                           result: Result<List<MediaBrowserCompat.MediaItem>>) {
         result.detach()
-        handler!!.post {
+        launch(Dispatchers.Default) {
             // Assume for example that the music catalog is already loaded/cached.
-            val mediaItems = contentManager!!.search(query)
+            val mediaItems = contentManager.search(query)
             result.sendResult(mediaItems as List<MediaBrowserCompat.MediaItem>)
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        this.cancel()
         mediaStoreObservers!!.unregisterAll()
     }
 
@@ -117,6 +124,11 @@ abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotific
     }
 
     @Inject
+    fun setMediaSession(mediaSession : MediaSessionCompat) {
+        this.mediaSession = mediaSession
+    }
+
+    @Inject
     fun setMediaStoreObservers(mediaStoreObservers: MediaStoreObservers?) {
         this.mediaStoreObservers = mediaStoreObservers
     }
@@ -126,7 +138,12 @@ abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotific
         this.searchDatabaseManagers = searchDatabaseManagers
     }
 
-    companion object {
-        private const val LOG_TAG = "MEDIA_PLAYBACK_SERVICE"
+    @Inject
+    fun setContentManager(contentManager: ContentManager) {
+        this.contentManager = contentManager
+    }
+
+    override fun logTag() : String {
+        return "MEDIA_PLAYBACK_SERVICE"
     }
 }
