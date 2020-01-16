@@ -50,11 +50,11 @@ abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGrante
             return
         }
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.splash_screen);
         //permissionsProcessor = PermissionsProcessor(this, this)
         // TODO: have this injected so that a test implementation can be provided
         mainActivityIntent = Intent(applicationContext, componentClassMapper.mainActivity)
         CoroutineScope(IO).launch { init()}
+        setContentView(R.layout.splash_screen);
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,

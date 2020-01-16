@@ -25,7 +25,7 @@ class SplashScreenEntryActivityTest {
 
     @Before
     fun setup() {
-        scenario = ActivityScenario.launch(SplashScreenEntryActivityInjectorTestImpl::class.java)
+        scenario = ActivityScenario.launch<SplashScreenEntryActivityInjectorTestImpl>(SplashScreenEntryActivityInjectorTestImpl::class.java)
     }
 
     @Test

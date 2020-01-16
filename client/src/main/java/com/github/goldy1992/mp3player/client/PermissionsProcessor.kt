@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client
 
 import android.Manifest.permission
-import android.app.Activity
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
