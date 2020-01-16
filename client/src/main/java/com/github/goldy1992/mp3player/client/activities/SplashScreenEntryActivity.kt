@@ -1,11 +1,8 @@
 package com.github.goldy1992.mp3player.client.activities
 
-import android.Manifest.permission
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast

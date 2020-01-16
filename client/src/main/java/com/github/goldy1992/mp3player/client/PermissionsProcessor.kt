@@ -10,9 +10,12 @@ import com.github.goldy1992.mp3player.client.activities.SplashScreenEntryActivit
 import java.util.*
 import javax.inject.Inject
 
-class PermissionsProcessor @Inject constructor(parentActivity: SplashScreenEntryActivity, permissionGranted: PermissionGranted) {
-    private val permissionGranted: PermissionGranted
-    private val parentActivity: Activity
+class PermissionsProcessor
+
+    @Inject
+    constructor(private val parentActivity: SplashScreenEntryActivity,
+                private val permissionGranted: PermissionGranted) {
+
 
     fun requestPermission(permission: String) { // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(parentActivity,
@@ -43,8 +46,5 @@ class PermissionsProcessor @Inject constructor(parentActivity: SplashScreenEntry
         PERMISSION_RQ_CODE_MAP[permission.WRITE_EXTERNAL_STORAGE] = 0
     }
 
-    init {
-        this.parentActivity = parentActivity
-        this.permissionGranted = permissionGranted
-    }
+
 }
