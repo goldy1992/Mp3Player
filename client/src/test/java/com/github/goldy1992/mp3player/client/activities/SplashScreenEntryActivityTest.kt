@@ -17,21 +17,26 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.LooperMode
+import kotlinx.android.synthetic.main.splash_screen.*
 
 @RunWith(RobolectricTestRunner::class)
+@LooperMode(LooperMode.Mode.PAUSED)
 class SplashScreenEntryActivityTest {
 
     private lateinit var scenario: ActivityScenario<SplashScreenEntryActivityInjectorTestImpl>
 
+    private lateinit var intent: Intent
+
     @Before
     fun setup() {
-        scenario = ActivityScenario.launch<SplashScreenEntryActivityInjectorTestImpl>(SplashScreenEntryActivityInjectorTestImpl::class.java)
+        scenario = ActivityScenario.launch(SplashScreenEntryActivityInjectorTestImpl::class.java)
     }
 
     @Test
     fun testNonRootTask() {
-        scenario.onActivity { splashActivity: SplashScreenEntryActivity ->
-            val spiedActivity = spy(splashActivity)
+        scenario.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
+            val spiedActivity : SplashScreenEntryActivityInjectorTestImpl = spy(splashActivity)
             val context = InstrumentationRegistry.getInstrumentation().context
             val intent = Intent(context, SplashScreenEntryActivity::class.java)
             intent.addCategory(Intent.CATEGORY_LAUNCHER)
@@ -50,7 +55,7 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnPermissionGranted() {
-        scenario!!.onActivity { splashActivity: SplashScreenEntryActivity ->
+        scenario!!.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
             val spiedActivity = spy(splashActivity)
             doNothing().whenever(spiedActivity).runOnUiThread(any<Runnable>())
             spiedActivity.onPermissionGranted()
@@ -60,7 +65,7 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnActivityResultValidAppTerminated() {
-        scenario!!.onActivity { splashActivity: SplashScreenEntryActivity ->
+        scenario!!.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
             val spiedActivity = spy(splashActivity)
             spiedActivity.onActivityResult(SplashScreenEntryActivity.APP_TERMINATED, SplashScreenEntryActivity.APP_TERMINATED, null)
             verify(spiedActivity, times(1)).finish()
@@ -69,7 +74,7 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnActivityResultInvalidAppTerminated() {
-        scenario!!.onActivity { splashActivity: SplashScreenEntryActivity ->
+        scenario!!.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
             val NOT_APP_TERMINATED = -1
             val spiedActivity = spy(splashActivity)
             spiedActivity.onActivityResult(NOT_APP_TERMINATED, NOT_APP_TERMINATED, null)
@@ -79,7 +84,7 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnRequestPermissionsResultAccepted() {
-        scenario.onActivity { splashActivity: SplashScreenEntryActivity ->
+        scenario.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
             var splashScreenActivitySpied : SplashScreenEntryActivity = spy(splashActivity)
             doNothing().whenever(splashScreenActivitySpied).onPermissionGranted()
             val requestCode = 200
@@ -92,7 +97,7 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnRequestPermissionsResultRejected() {
-        scenario!!.onActivity { splashActivity: SplashScreenEntryActivity ->
+        scenario!!.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
             val requestCode = 200
             val permissions = arrayOf(permission.WRITE_EXTERNAL_STORAGE)
             val grantResults = intArrayOf(PackageManager.PERMISSION_DENIED)
@@ -103,7 +108,7 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnRequestPermissionsResultEmpty() {
-        scenario!!.onActivity { splashActivity: SplashScreenEntryActivity ->
+        scenario!!.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
             val requestCode = 200
             val permissions = arrayOf<String>()
             val grantResults = intArrayOf()
