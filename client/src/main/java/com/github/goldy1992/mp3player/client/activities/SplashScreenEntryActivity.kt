@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.activities
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
@@ -50,6 +51,8 @@ abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGrante
             return
         }
         super.onCreate(savedInstanceState)
+        val settings = applicationContext.getSharedPreferences(Constants.THEME, Context.MODE_PRIVATE)
+        setTheme(settings.getInt(Constants.THEME, R.style.AppTheme_Blue))
         //permissionsProcessor = PermissionsProcessor(this, this)
         // TODO: have this injected so that a test implementation can be provided
         mainActivityIntent = Intent(applicationContext, componentClassMapper.mainActivity)
