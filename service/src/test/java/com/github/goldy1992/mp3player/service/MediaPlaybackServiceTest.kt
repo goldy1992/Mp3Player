@@ -8,8 +8,15 @@ import androidx.media.MediaBrowserServiceCompat
 import androidx.media.MediaBrowserServiceCompat.Result
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.nhaarman.mockitokotlin2.*
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -22,17 +29,19 @@ import java.util.*
 @RunWith(RobolectricTestRunner::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 class MediaPlaybackServiceTest {
+
     /** object to test */
     lateinit var mediaPlaybackService: TestMediaPlaybackServiceInjector
 
     private val rootAuthenticator: RootAuthenticator = mock<RootAuthenticator>()
 
+    private val testCoroutineScope : TestCoroutineScope = TestCoroutineScope()
+
     @Before
     fun setup() {
         mediaPlaybackService = Robolectric.buildService(TestMediaPlaybackServiceInjector::class.java).create().get()
-        mediaPlaybackService.setHandler(Handler(Looper.getMainLooper()))
-        Shadows.shadowOf(mediaPlaybackService.worker!!.looper).idle()
         mediaPlaybackService.setRootAuthenticator(rootAuthenticator)
+        mediaPlaybackService.coroutineContext.plus(testCoroutineScope.coroutineContext)
     }
 
     @Test
@@ -41,10 +50,8 @@ class MediaPlaybackServiceTest {
         val clientPackageName = "packageName"
         val clientUid = 45
         val rootHints: Bundle? = null
-        whenever(rootAuthenticator!!.authenticate(clientPackageName, clientUid, rootHints)).thenReturn(browserRoot)
-        val result = mediaPlaybackService!!.onGetRoot(clientPackageName, clientUid, rootHints)
-        Shadows.shadowOf(mediaPlaybackService.worker!!.looper).idle()
-
+        whenever(rootAuthenticator.authenticate(clientPackageName, clientUid, rootHints)).thenReturn(browserRoot)
+        val result = mediaPlaybackService.onGetRoot(clientPackageName, clientUid, rootHints)
         Assert.assertNotNull(result)
         Assert.assertEquals(ACCEPTED_MEDIA_ROOT_ID, result!!.rootId)
 
@@ -52,7 +59,7 @@ class MediaPlaybackServiceTest {
 
     @Test
     fun testOnLoadChildrenWithRejectedRootId() {
-        whenever(rootAuthenticator!!.rejectRootSubscription(any())).thenReturn(true)
+        whenever(rootAuthenticator.rejectRootSubscription(any())).thenReturn(true)
         val parentId = "aUniqueId"
         val result: Result<List<MediaBrowserCompat.MediaItem>> = mock<Result<List<MediaBrowserCompat.MediaItem>>>() as Result<List<MediaBrowserCompat.MediaItem>> //Mockito.mock<Result<List<MediaBrowserCompat.MediaItem>>>(Result::class.java)
         mediaPlaybackService!!.onLoadChildren(parentId, result)
@@ -61,14 +68,20 @@ class MediaPlaybackServiceTest {
     }
 
     @Test
-    fun testOnLoadChildrenWithAcceptedMediaId() {
+    fun testOnLoadChildrenWithAcceptedMediaId() = runBlockingTest {
         val parentId = "aUniqueId"
         val result: Result<List<MediaBrowserCompat.MediaItem>> = mock<Result<List<MediaBrowserCompat.MediaItem>>>() as Result<List<MediaBrowserCompat.MediaItem>>
         val mockContentManager = mock<ContentManager>()
-        mediaPlaybackService!!.contentManager = mockContentManager
+        mediaPlaybackService.setContentManager(mockContentManager)
         val mediaItemList: List<MediaBrowserCompat.MediaItem> = ArrayList()
         whenever(mockContentManager.getChildren(any<String>())).thenReturn(mediaItemList)
-        mediaPlaybackService!!.onLoadChildren(parentId, result)
+        pauseDispatcher {
+            mediaPlaybackService.onLoadChildren(parentId, result)
+            runCurrent()
+        }
+        println("returned from method")
+
+        println("finished waiting")
         Shadows.shadowOf(Looper.getMainLooper()).idle()
         verify(result, times(1)).sendResult(mediaItemList)
     }
@@ -77,7 +90,7 @@ class MediaPlaybackServiceTest {
     fun testOnLoadChildrenRejectedMediaId() {
         whenever(rootAuthenticator!!.rejectRootSubscription(any())).thenReturn(true)
         val result: Result<List<MediaBrowserCompat.MediaItem>> = mock<Result<List<MediaBrowserCompat.MediaItem>>>() as Result<List<MediaBrowserCompat.MediaItem>>
-        mediaPlaybackService!!.onLoadChildren(REJECTED_MEDIA_ROOT_ID, result)
+        mediaPlaybackService.onLoadChildren(REJECTED_MEDIA_ROOT_ID, result)
         Shadows.shadowOf(Looper.getMainLooper()).idle()
         verify(result, times(1)).sendResult(null)
     }
