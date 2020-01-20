@@ -69,13 +69,15 @@ abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotific
             return
         }
         result.detach()
-        launch(Dispatchers.Default) {
-            // Assume for example that the music catalog is already loaded/cached.
-            val mediaItems = contentManager!!.getChildren(parentId)
-            result.sendResult(mediaItems)
-            println("finish coroutine")
+        runBlocking {
+            launch(Dispatchers.Default) {
+                // Assume for example that the music catalog is already loaded/cached.
+                val mediaItems = contentManager!!.getChildren(parentId)
+                result.sendResult(mediaItems)
+                println("finish coroutine")
+            }.join()
+            println("finished on load children")
         }
-        println("finished on load children")
     }
 
     /**
