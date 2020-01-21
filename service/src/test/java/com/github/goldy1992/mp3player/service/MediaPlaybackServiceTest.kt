@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaBrowserCompat.MediaItem
 import androidx.media.MediaBrowserServiceCompat
 import androidx.media.MediaBrowserServiceCompat.Result
 import com.github.goldy1992.mp3player.service.library.ContentManager
@@ -35,13 +36,13 @@ class MediaPlaybackServiceTest {
 
     private val rootAuthenticator: RootAuthenticator = mock<RootAuthenticator>()
 
-    private val testCoroutineScope : TestCoroutineScope = TestCoroutineScope()
+    private val contentManager : ContentManager = mock<ContentManager>()
 
     @Before
     fun setup() {
         mediaPlaybackService = Robolectric.buildService(TestMediaPlaybackServiceInjector::class.java).create().get()
         mediaPlaybackService.setRootAuthenticator(rootAuthenticator)
-        mediaPlaybackService.coroutineContext.plus(testCoroutineScope.coroutineContext)
+        mediaPlaybackService.setContentManager(contentManager)
     }
 
     @Test
@@ -61,8 +62,8 @@ class MediaPlaybackServiceTest {
     fun testOnLoadChildrenWithRejectedRootId() {
         whenever(rootAuthenticator.rejectRootSubscription(any())).thenReturn(true)
         val parentId = "aUniqueId"
-        val result: Result<List<MediaBrowserCompat.MediaItem>> = mock<Result<List<MediaBrowserCompat.MediaItem>>>() as Result<List<MediaBrowserCompat.MediaItem>> //Mockito.mock<Result<List<MediaBrowserCompat.MediaItem>>>(Result::class.java)
-        mediaPlaybackService!!.onLoadChildren(parentId, result)
+        val result: Result<List<MediaItem>> = mock<Result<List<MediaItem>>>() as Result<List<MediaItem>> //Mockito.mock<Result<List<MediaBrowserCompat.MediaItem>>>(Result::class.java)
+        mediaPlaybackService.onLoadChildren(parentId, result)
         Shadows.shadowOf(Looper.getMainLooper()).idle()
         verify(result, times(1)).sendResult(null)
     }
@@ -70,18 +71,10 @@ class MediaPlaybackServiceTest {
     @Test
     fun testOnLoadChildrenWithAcceptedMediaId() = runBlockingTest {
         val parentId = "aUniqueId"
-        val result: Result<List<MediaBrowserCompat.MediaItem>> = mock<Result<List<MediaBrowserCompat.MediaItem>>>() as Result<List<MediaBrowserCompat.MediaItem>>
-        val mockContentManager = mock<ContentManager>()
-        mediaPlaybackService.setContentManager(mockContentManager)
-        val mediaItemList: List<MediaBrowserCompat.MediaItem> = ArrayList()
-        whenever(mockContentManager.getChildren(any<String>())).thenReturn(mediaItemList)
-        pauseDispatcher {
-            mediaPlaybackService.onLoadChildren(parentId, result)
-            runCurrent()
-        }
-        println("returned from method")
-
-        println("finished waiting")
+        val result: Result<List<MediaItem>> = mock<Result<List<MediaItem>>>() as Result<List<MediaItem>>
+        val mediaItemList: List<MediaItem> = ArrayList()
+        whenever(contentManager.getChildren(any<String>())).thenReturn(mediaItemList)
+        mediaPlaybackService.onLoadChildren(parentId, result)
         Shadows.shadowOf(Looper.getMainLooper()).idle()
         verify(result, times(1)).sendResult(mediaItemList)
     }
@@ -89,10 +82,21 @@ class MediaPlaybackServiceTest {
     @Test
     fun testOnLoadChildrenRejectedMediaId() {
         whenever(rootAuthenticator!!.rejectRootSubscription(any())).thenReturn(true)
-        val result: Result<List<MediaBrowserCompat.MediaItem>> = mock<Result<List<MediaBrowserCompat.MediaItem>>>() as Result<List<MediaBrowserCompat.MediaItem>>
+        val result: Result<List<MediaItem>> = mock<Result<List<MediaItem>>>() as Result<List<MediaItem>>
         mediaPlaybackService.onLoadChildren(REJECTED_MEDIA_ROOT_ID, result)
         Shadows.shadowOf(Looper.getMainLooper()).idle()
         verify(result, times(1)).sendResult(null)
+    }
+
+    @Test
+    fun testOnSearch() {
+        val result : Result<List<MediaItem>> = mock<Result<List<MediaItem>>>()
+        val query : String = "query"
+        val extras : Bundle = Bundle()
+        val expectedMediaItems = mock<List<MediaItem>>()
+        whenever(contentManager.search(any<String>())).thenReturn(expectedMediaItems)
+        mediaPlaybackService.onSearch(query, extras, result)
+        verify(result, times(1)).sendResult(expectedMediaItems)
     }
 
     companion object {

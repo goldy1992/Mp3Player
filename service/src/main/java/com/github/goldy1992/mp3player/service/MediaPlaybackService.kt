@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.service
 
 import android.app.Notification
 import android.app.Service
-import android.content.ContentProvider
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
@@ -16,7 +15,6 @@ import com.github.goldy1992.mp3player.service.library.search.managers.SearchData
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import kotlinx.coroutines.*
 import javax.inject.Inject
-import kotlin.coroutines.experimental.migration.toExperimentalCoroutineContext
 
 /**
  * Created by Mike on 24/09/2017.
@@ -104,10 +102,12 @@ abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotific
     override fun onSearch(query: String, extras: Bundle,
                           result: Result<List<MediaBrowserCompat.MediaItem>>) {
         result.detach()
-        launch(Dispatchers.Default) {
-            // Assume for example that the music catalog is already loaded/cached.
-            val mediaItems = contentManager.search(query)
-            result.sendResult(mediaItems as List<MediaBrowserCompat.MediaItem>)
+        runBlocking {
+            launch(Dispatchers.Default) {
+                // Assume for example that the music catalog is already loaded/cached.
+                val mediaItems = contentManager.search(query)
+                result.sendResult(mediaItems as List<MediaBrowserCompat.MediaItem>)
+            }.join()
         }
     }
 
