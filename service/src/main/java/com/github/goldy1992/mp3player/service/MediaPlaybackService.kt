@@ -99,14 +99,14 @@ abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotific
         }
     }
 
-    override fun onSearch(query: String, extras: Bundle,
-                          result: Result<List<MediaBrowserCompat.MediaItem>>) {
+    override fun onSearch(query: String, extras: Bundle?,
+                          result: Result<MutableList<MediaBrowserCompat.MediaItem>>) {
         result.detach()
         runBlocking {
             launch(Dispatchers.Default) {
                 // Assume for example that the music catalog is already loaded/cached.
                 val mediaItems = contentManager.search(query)
-                result.sendResult(mediaItems as List<MediaBrowserCompat.MediaItem>)
+                result.sendResult(mediaItems as MutableList<MediaBrowserCompat.MediaItem>)
             }.join()
         }
     }
