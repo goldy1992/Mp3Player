@@ -90,10 +90,10 @@ class MediaPlaybackServiceTest {
 
     @Test
     fun testOnSearch() {
-        val result : Result<List<MediaItem>> = mock<Result<List<MediaItem>>>()
+        val result : Result<MutableList<MediaItem>> = mock<Result<MutableList<MediaItem>>>()
         val query : String = "query"
-        val extras : Bundle = Bundle()
-        val expectedMediaItems = mock<List<MediaItem>>()
+        val extras : Bundle? = Bundle()
+        val expectedMediaItems = mock<MutableList<MediaItem>>()
         whenever(contentManager.search(any<String>())).thenReturn(expectedMediaItems)
         mediaPlaybackService.onSearch(query, extras, result)
         verify(result, times(1)).sendResult(expectedMediaItems)
