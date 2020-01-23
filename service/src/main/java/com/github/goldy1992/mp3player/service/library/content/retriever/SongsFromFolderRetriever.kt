@@ -14,9 +14,8 @@ import javax.inject.Named
 
 class SongsFromFolderRetriever @Inject constructor(contentResolver: ContentResolver,
                                                    resultsParser: SongResultsParser,
-                                                   @Named("worker") handler: Handler,
-                                                   songsFromFolderResultsFilter: SongsFromFolderResultsFilter?) : ContentResolverRetriever(contentResolver, resultsParser, handler, songsFromFolderResultsFilter) {
-    override val type: MediaItemType?
+                                                   songsFromFolderResultsFilter: SongsFromFolderResultsFilter?) : ContentResolverRetriever(contentResolver, resultsParser, songsFromFolderResultsFilter) {
+    override val type: MediaItemType
         get() = MediaItemType.SONG
 
     public override fun performGetChildrenQuery(id: String?): Cursor {

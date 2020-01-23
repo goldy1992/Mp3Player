@@ -13,9 +13,8 @@ import javax.inject.Singleton
 
 @Singleton
 open class SongsRetriever @Inject constructor(contentResolver: ContentResolver,
-                                              resultsParser: SongResultsParser,
-                                              @Named("worker") handler: Handler) : ContentResolverRetriever(contentResolver, resultsParser, handler, null) {
-    override val type: MediaItemType?
+                                              resultsParser: SongResultsParser) : ContentResolverRetriever(contentResolver, resultsParser, null) {
+    override val type: MediaItemType
         get() = MediaItemType.SONG
 
     public override fun performGetChildrenQuery(id: String?): Cursor? {

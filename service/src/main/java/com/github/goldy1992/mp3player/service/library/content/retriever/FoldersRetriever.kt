@@ -16,11 +16,10 @@ open class FoldersRetriever
 
     @Inject
     constructor(contentResolver: ContentResolver,
-                resultsParser: FolderResultsParser,
-                @Named("worker") handler: Handler)
+                resultsParser: FolderResultsParser)
 
-    : ContentResolverRetriever(contentResolver, resultsParser, handler, null) {
-    override val type: MediaItemType?
+    : ContentResolverRetriever(contentResolver, resultsParser, null) {
+    override val type: MediaItemType
         get() = MediaItemType.FOLDER
 
     override fun performGetChildrenQuery(id: String?): Cursor? {

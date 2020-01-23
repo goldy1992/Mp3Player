@@ -8,9 +8,8 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.service.MediaPlaybackService
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 
-abstract class MediaStoreObserver(handler: Handler?,
-                                  private val contentResolver: ContentResolver,
-                                  val mediaItemTypeIds: MediaItemTypeIds) : ContentObserver(handler), LogTagger {
+abstract class MediaStoreObserver(private val contentResolver: ContentResolver,
+                                  val mediaItemTypeIds: MediaItemTypeIds) : ContentObserver(Handler()), LogTagger {
     var mediaPlaybackService: MediaPlaybackService? = null
     fun init(mediaPlaybackService: MediaPlaybackService?) {
         this.mediaPlaybackService = mediaPlaybackService

@@ -17,5 +17,5 @@ abstract class ContentRetriever {
     /**
      * @return The type of MediaItem retrieved from the Content Retriever
      */
-    abstract val type: MediaItemType?
+    abstract val type: MediaItemType
 }

@@ -12,7 +12,7 @@ class SearchDatabaseManagers @Inject constructor(songDatabaseManager: SongDataba
     /**
      * reindexes all of the search database tables.
      */
-    fun reindexAll() {
+    suspend fun reindexAll() {
         for (manager in dbManagerMap.values) {
             manager.reindex()
         }

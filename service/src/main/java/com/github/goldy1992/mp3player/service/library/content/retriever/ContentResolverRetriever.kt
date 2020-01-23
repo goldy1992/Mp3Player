@@ -10,7 +10,6 @@ import com.github.goldy1992.mp3player.service.library.content.request.ContentReq
 
 abstract class ContentResolverRetriever internal constructor(val contentResolver: ContentResolver,
                                                              val resultsParser: ResultsParser,
-                                                             val handler: Handler,
                                                              val resultsFilter: ResultsFilter?) : ContentRetriever() {
     abstract fun performGetChildrenQuery(id: String?): Cursor?
     abstract val projection: Array<String?>?
