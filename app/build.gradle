@@ -1,18 +1,18 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
-apply plugin: "de.mannodermaus.android-junit5"
+apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'com.github.ben-manes.versions'
 
 android {
-    def PIE = 28
-    def MARSHMALLOW = 23
-    def BUILD_TOOLS_VERSION = '29.0.2'
 
-    compileSdkVersion PIE
+    compileSdkVersion TARGET_SDK_VERION
 	buildToolsVersion BUILD_TOOLS_VERSION
     defaultConfig {
         applicationId "com.github.goldy1992.mp3player"
-        minSdkVersion MARSHMALLOW
+        minSdkVersion MIN_SDK_VERSION
         targetSdkVersion PIE
         versionCode 4
         versionName "1.1.0"
@@ -39,7 +39,7 @@ android {
             testCoverageEnabled = true
         }
     }
-    flavorDimensions "version"
+    flavorDimensions "default"
     productFlavors {
         full {
             applicationIdSuffix ".full"
@@ -81,6 +81,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    kotlinOptions { jvmTarget = "1.8" }
 }
 
 dependencyUpdates {
@@ -100,80 +102,37 @@ dependencyUpdates {
 }
 
 dependencies {
-    def CONSTRAINT_LAYOUT_VERSION = '2.0.0-alpha2'
-    def MATERIAL_VERSION = '1.1.0-alpha08'
-    def GRID_LAYOUT_VERSION = '1.0.0'
-    def CORE_VERSION = '1.0.1'
-    def MEDIA_VERSION = '1.1.0-alpha02'
-    def ANNOTATION_VERSION = '1.1.0-rc01'
-    def APP_COMPAT_VERSION = '1.0.2'
-    def DRAWER_LAYOUT_VERSION = '1.0.0'
-    def COMMONS_IO_VERSION = '1.3.2'
-    def COMMONS_LANG_VERSION = '3.9'
-    def COMMONS_COLLECTIONS4_VERSION = '4.3'
-    def MOCKITO_CORE_VERSION = '2.27.0'
-    def JUNIT4_VERSION = '4.12'
-    def JUNIT5_VERSION = '5.4.1'
-    def JUNIT_EXT_VERSION = '1.1.1'
-    def ROBOLECTRIC_VERSION = '4.3'
-    def TEST_CORE_VERSION = '1.1.0'
-    def TEST_RUNNER_VERSION = '1.1.0'
-    def TEST_RULES_VERSION = '1.1.1'
-    def MIRROR_VERSION = '1.1.1'
-    def ESPRESSO_CORE_VERSION = '3.2.0'
-    def GOOGLE_GUAVA_VERSION = '27.1-android'
-    def COORDINATOR_LAYOUT_VERSION = '1.0.0'
-    def TEST_UI_AUTOMATOR_VERSION= '2.2.0'
-    def FRAGMENT_VERSION = '1.2.0-rc02'
-    def FAST_SCROLL_VERSION = '2.0.1'
-    def GLIDE_VERSION = '4.9.0'
-    def ROOM_VERSION = '2.1.0'
-    def DAGGER_VERSION = '2.24'
-    def EXO_PLAYER_VERSION = '2.10.4'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation group: 'androidx.constraintlayout', name: 'constraintlayout', version: CONSTRAINT_LAYOUT_VERSION
-    implementation group: 'com.google.android.material', name: 'material', version: MATERIAL_VERSION
-    implementation group: 'androidx.gridlayout', name: 'gridlayout', version: GRID_LAYOUT_VERSION
-    implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
-    implementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
-    debugImplementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
-    implementation group: 'androidx.drawerlayout', name: 'drawerlayout', version: DRAWER_LAYOUT_VERSION
-    implementation group: 'androidx.coordinatorlayout', name: 'coordinatorlayout', version: COORDINATOR_LAYOUT_VERSION
-    implementation group: 'androidx.core', name: 'core', version: CORE_VERSION
-    implementation group: 'org.apache.commons', name: 'commons-io', version: COMMONS_IO_VERSION
+
+
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
     implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
-    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: EXO_PLAYER_VERSION
-    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
-    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
-    implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
-    implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
-    annotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
+    implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
 
-    implementation 'androidx.viewpager2:viewpager2:1.0.0-rc01'
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: KOTLIN_COROUTINE_VERSION
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: KOTLIN_COROUTINE_VERSION
+
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+
+
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
+
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.3.61'
+
     // added to remove compile time warning
-    testAnnotationProcessor group: 'com.google.auto.service', name: 'auto-service', version: '1.0-rc4'
+//    testAnnotationProcessor group: 'com.google.auto.service', name: 'auto-service', version: '1.0-rc4'
 
     //dagger
     implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
     implementation group: 'com.google.dagger', name: 'dagger-android', version: DAGGER_VERSION
 
-    implementation group: 'com.l4digital.fastscroll', name: 'fastscroll', version: FAST_SCROLL_VERSION
 
-    annotationProcessor  group: 'com.google.dagger', name: 'dagger-android-processor', version: DAGGER_VERSION
-    annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
-    testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    kaptTest group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
 
-    testAnnotationProcessor group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
-    // Glide
-    implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION
-    implementation ("com.github.bumptech.glide:recyclerview-integration:$GLIDE_VERSION") {
-        // Excludes the support library because it's already included by Glide.
-        transitive = false
-    }
     // vintage
     testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
     // (Optional) If you also have JUnit 4-based tests
@@ -189,7 +148,8 @@ dependencies {
     testImplementation group: 'org.robolectric', name: 'robolectric', version: ROBOLECTRIC_VERSION// https://mvnrepository.com/artifact/org.robolectric/shadows-support-v4
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
 
-    debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+
+
     androidTestImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
     androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: JUNIT_EXT_VERSION
@@ -205,4 +165,11 @@ dependencies {
         exclude module: "support-annotations"
     }
     androidTestImplementation group: 'androidx.test.uiautomator', name: 'uiautomator', version: TEST_UI_AUTOMATOR_VERSION
+    implementation 'androidx.core:core-ktx:1.2.0-rc01'
+    implementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
+
+    implementation project(path: ':commons')
+    api project(path: ':service')
+    api project(path: ':client')
+
 }

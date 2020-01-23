@@ -1,0 +1,109 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'de.mannodermaus.android-junit5'
+apply plugin: 'jacoco'
+
+android {
+    compileSdkVersion TARGET_SDK_VERION
+    buildToolsVersion BUILD_TOOLS_VERSION
+
+
+    defaultConfig {
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERION
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+        missingDimensionStrategy 'full', 'automation'
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+            minifyEnabled false
+            testCoverageEnabled = true
+        }
+    }
+
+    flavorDimensions 'default'
+    productFlavors {
+        full {
+            dimension = 'default'
+        }
+        automation {
+            dimension = 'default'
+        }
+    }
+
+    compileOptions {
+        incremental = false
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions { jvmTarget = "1.8" }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues = true
+        }
+        unitTests.all {
+            testLogging {
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                outputs.upToDateWhen {false}
+                showStandardStreams = true
+            }
+            jacoco {
+                includeNoLocationClasses=true
+            }
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
+
+    //dagger
+    kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    kaptTest group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
+
+
+    implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
+
+
+    // vintage
+    testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
+    // (Optional) If you also have JUnit 4-based tests
+    testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: JUNIT5_VERSION
+    // jupiter
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: JUNIT5_VERSION
+    // (Required) Writing and executing Unit Tests on the JUnit Platform
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: JUNIT5_VERSION
+    //testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.25.1'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
+
+    testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
+        exclude group: "com.google.auto.service", module: "auto-service"
+    }
+
+    testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
+    implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
+
+
+}

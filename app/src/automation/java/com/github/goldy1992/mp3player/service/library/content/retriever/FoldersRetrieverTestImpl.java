@@ -12,7 +12,7 @@ import static com.github.goldy1992.mp3player.TestConstants.TEST_DATA_DIR;
 
 public class FoldersRetrieverTestImpl extends FoldersRetriever {
     public FoldersRetrieverTestImpl(ContentResolver contentResolver, FolderResultsParser resultsParser, FolderDao folderDao, Handler handler) {
-        super(contentResolver, resultsParser, folderDao, handler);
+        super(contentResolver, resultsParser, handler);
     }
 
     private final String WHERE_CLAUSE = MediaStore.Audio.Media.DATA + " LIKE ?";
@@ -21,8 +21,9 @@ public class FoldersRetrieverTestImpl extends FoldersRetriever {
     private final String[] WHERE_ARGS = {"%" + TEST_DATA_DIR + "%"};
 
     @Override
-    Cursor performGetChildrenQuery(String id) {
-        return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, getProjection(),
-                WHERE_CLAUSE, WHERE_ARGS, null);
+    public Cursor performGetChildrenQuery(String id) {
+        return null;
+        //contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, getProjection(),
+          //      WHERE_CLAUSE, WHERE_ARGS, null);
     }
 }

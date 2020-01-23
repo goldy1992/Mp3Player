@@ -1,0 +1,51 @@
+package com.github.goldy1992.mp3player.client.views.fragments.viewpager
+
+import android.os.Looper
+import androidx.fragment.app.testing.FragmentScenario.FragmentAction
+import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.activities.TestMainActivity
+import com.github.goldy1992.mp3player.client.views.fragments.FragmentTestBase
+import com.github.goldy1992.mp3player.commons.MediaItemBuilder
+import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.Robolectric
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows
+import org.robolectric.annotation.LooperMode
+
+@RunWith(RobolectricTestRunner::class)
+@LooperMode(LooperMode.Mode.PAUSED)
+class SongListFragmentTest : FragmentTestBase<SongListFragment>() {
+    private var folderListFragment: SongListFragment? = null
+
+    @Before
+    fun setup() {
+        activityScenario = Robolectric.buildActivity(TestMainActivity::class.java).setup()
+        val testMainActivity: TestMainActivity = activityScenario!!.get()
+        val component = testMainActivity.mediaActivityCompatComponent
+        folderListFragment = SongListFragment.newInstance(MediaItemType.SONGS, "id", component)
+        super.setup(folderListFragment, SongListFragment::class.java)
+    }
+
+    @Test
+    fun testItemSelected() {
+        val action = FragmentAction<SongListFragment> { fragment: SongListFragment? -> itemSelected(fragment) }
+        performAction(action)
+    }
+
+    private fun itemSelected(fragment: MediaItemListFragment?) {
+        val mediaControllerAdapter = mock<MediaControllerAdapter>()
+        fragment!!.mediaControllerAdapter = mediaControllerAdapter
+        val expectedLibraryId = "ID"
+        val mediaItem = MediaItemBuilder("id")
+                .setLibraryId(expectedLibraryId)
+                .build()
+        fragment.itemSelected(mediaItem)
+        Shadows.shadowOf(Looper.getMainLooper()).idle()
+        verify(mediaControllerAdapter).playFromMediaId(expectedLibraryId, null)
+    }
+}

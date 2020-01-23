@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_blue">#3F51B5</color>
+    <color name="dark_blue">#303F9F</color>
+    <color name="accent_pink">#FF4081</color>
+
+    <color name="primary_orange">#ffa500</color>
+    <color name="dark_orange">#c15f03</color>
+    <color name="accent_orange">#FF0000</color>
+    <!--<color name="notification_bg">#e91e63</color>-->
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#000000</color>
+    <!--<color name="no_fill">#80000000</color>-->
+</resources>

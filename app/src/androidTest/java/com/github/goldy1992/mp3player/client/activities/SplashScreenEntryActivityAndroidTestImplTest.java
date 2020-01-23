@@ -12,7 +12,7 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.runner.AndroidJUnit4;
 
-import com.github.goldy1992.mp3player.R;
+import com.github.goldy1992.mp3player.client.R;
 import com.google.android.material.tabs.TabLayout;
 
 import org.hamcrest.Description;
