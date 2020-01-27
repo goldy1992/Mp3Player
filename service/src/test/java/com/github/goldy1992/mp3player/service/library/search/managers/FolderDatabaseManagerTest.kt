@@ -34,7 +34,6 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         mediaItemTypeIds = MediaItemTypeIds()
         folderDatabaseManager = FolderDatabaseManager(
                 contentManager,
-                handler!!,
                 mediaItemTypeIds,
                 searchDatabase)
     }

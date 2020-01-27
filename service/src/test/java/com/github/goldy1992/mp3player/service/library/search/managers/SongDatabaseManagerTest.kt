@@ -28,7 +28,6 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         mediaItemTypeIds = MediaItemTypeIds()
         songDatabaseManager = SongDatabaseManager(
                 contentManager,
-                handler,
                 mediaItemTypeIds,
                 searchDatabase)
     }

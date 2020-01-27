@@ -17,7 +17,7 @@ abstract class SearchDatabaseManager<T : SearchEntity>(private val contentManage
         dao!!.insert(t!!)
     }
 
-    suspend fun reindex() {
+    fun reindex() {
         val results = contentManager.getChildren(rootCategoryId)
         val entries = buildResults(results)
         deleteOld(entries)
