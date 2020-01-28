@@ -1,12 +1,10 @@
 package com.github.goldy1992.mp3player.service.library.search.managers
 
-import android.os.Handler
 import android.support.v4.media.MediaBrowserCompat
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.search.SearchDao
 import com.github.goldy1992.mp3player.service.library.search.SearchEntity
 import java.util.*
-import javax.inject.Named
 
 abstract class SearchDatabaseManager<T : SearchEntity>(private val contentManager: ContentManager,
                                                         private val dao: SearchDao<T>,
@@ -14,7 +12,7 @@ abstract class SearchDatabaseManager<T : SearchEntity>(private val contentManage
     abstract fun createFromMediaItem(item: MediaBrowserCompat.MediaItem): T?
     fun insert(item: MediaBrowserCompat.MediaItem) {
         val t = createFromMediaItem(item)
-        dao!!.insert(t!!)
+        dao.insert(t!!)
     }
 
     fun reindex() {

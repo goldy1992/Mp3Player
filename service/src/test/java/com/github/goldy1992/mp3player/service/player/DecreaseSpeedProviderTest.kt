@@ -17,14 +17,13 @@ class DecreaseSpeedProviderTest : SpeedProviderTestBase() {
     private lateinit var decreaseSpeedProvider: DecreaseSpeedProvider
 
     @Before
-    override fun setup() {
-        super.setup()
+    fun setup() {
         decreaseSpeedProvider = DecreaseSpeedProvider()
     }
 
     @Test
     fun testGetCustomAction() {
-        val customAction = decreaseSpeedProvider!!.getCustomAction(exoPlayer!!)
+        val customAction = decreaseSpeedProvider.getCustomAction(exoPlayer)
         Assert.assertEquals(DECREASE_PLAYBACK_SPEED, customAction.action)
         Assert.assertEquals(DECREASE_PLAYBACK_SPEED, customAction.name)
     }

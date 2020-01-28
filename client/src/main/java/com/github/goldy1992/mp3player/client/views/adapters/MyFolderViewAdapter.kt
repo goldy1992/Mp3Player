@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.views.adapters
 
-import android.os.Handler
 import android.support.v4.media.MediaBrowserCompat
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MetaDataKeys
 import java.io.File
 import javax.inject.Inject
-import javax.inject.Named
 
 class MyFolderViewAdapter
     @Inject

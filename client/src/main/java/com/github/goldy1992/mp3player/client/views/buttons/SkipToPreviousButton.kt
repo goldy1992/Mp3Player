@@ -19,4 +19,8 @@ class SkipToPreviousButton @Inject constructor(context: Context,
     override fun onClick(view: View?) {
         mediaControllerAdapter.skipToPrevious()
     }
+
+    override fun logTag(): String {
+        return "SKIP_PRV_BTN"
+    }
 }

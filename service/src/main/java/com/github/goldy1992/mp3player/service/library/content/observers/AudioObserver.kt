@@ -3,7 +3,6 @@ package com.github.goldy1992.mp3player.service.library.content.observers
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.net.Uri
-import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -17,7 +16,6 @@ import kotlinx.coroutines.*
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.exception.ExceptionUtils
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -31,9 +29,8 @@ import javax.inject.Singleton
 class AudioObserver
 /**
  * Creates a content observer.
- *
- * @param handler The handler to run [.onChange] on, or null if none.
- */ @Inject constructor(contentResolver: ContentResolver,
+ */
+@Inject constructor(contentResolver: ContentResolver,
                         /** Content manager  */
                         private val contentManager: ContentManager,
                         /** Search Database Manager  */

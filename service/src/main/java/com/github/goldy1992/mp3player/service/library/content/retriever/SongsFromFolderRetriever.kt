@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.service.library.content.retriever
 
 import android.content.ContentResolver
 import android.database.Cursor
-import android.os.Handler
 import android.provider.MediaStore
 import android.provider.MediaStore.MediaColumns
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -10,7 +9,6 @@ import com.github.goldy1992.mp3player.service.library.content.Projections.SONG_P
 import com.github.goldy1992.mp3player.service.library.content.filter.SongsFromFolderResultsFilter
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
 import javax.inject.Inject
-import javax.inject.Named
 
 class SongsFromFolderRetriever @Inject constructor(contentResolver: ContentResolver,
                                                    resultsParser: SongResultsParser,

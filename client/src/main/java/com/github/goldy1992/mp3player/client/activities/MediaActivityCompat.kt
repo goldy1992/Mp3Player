@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.client.activities
 
 import android.content.Context
 import android.os.Bundle
-import android.os.HandlerThread
 import android.util.Log
 import android.view.MenuItem
 import androidx.annotation.LayoutRes

@@ -29,8 +29,7 @@ abstract class SpeedChangeActionProviderBase : CustomActionProvider {
      * @return true if it's a valid speed
      */
     private fun validSpeed(speed: Float): Boolean {
-        return speed >= MINIMUM_PLAYBACK_SPEED &&
-                speed <= MAXIMUM_PLAYBACK_SPEED
+        return speed in MINIMUM_PLAYBACK_SPEED..MAXIMUM_PLAYBACK_SPEED
     }
 
     private fun changeSpeed(newSpeed: Float, player: Player) {
