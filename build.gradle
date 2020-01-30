@@ -48,6 +48,19 @@ buildscript {
         TEST_UI_AUTOMATOR_VERSION= '2.2.0'
         VIEW_PAGER2_VERSION = '1.0.0'
 
+        EXCLUDE_LIST =  [
+                '**/dagger/**',
+                '**_Factory**',
+                '**_MembersInjector**',
+                '**/R.class',
+                '**/R$*.class',
+                '**/BuildConfig.*',
+                '**/Manifest*.*',
+                '**/*Test*.*',
+                'android/**/*.*',
+                '**/*$[0-9].*'
+        ]
+
         junit5UnitTests =  [
             "junit:junit:$JUNIT4_VERSION",
             "org.junit.jupiter:junit-jupiter-api:$JUNIT5_VERSION",

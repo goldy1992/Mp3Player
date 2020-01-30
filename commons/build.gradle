@@ -42,6 +42,9 @@ android {
         automation {
             dimension = 'default'
         }
+        unitTest {
+            dimension = 'default'
+        }
     }
 
     compileOptions {
@@ -64,7 +67,7 @@ android {
                 showStandardStreams = true
             }
             jacoco {
-                includeNoLocationClasses=true
+                includeNoLocationClasses = true
             }
         }
     }

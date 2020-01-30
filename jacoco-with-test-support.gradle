@@ -8,7 +8,7 @@ tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
 
-task jacocoTestReportFullDebug(type: JacocoReport, dependsOn: ['testFullDebugUnitTest']) {
+task jacocoTestReportUnitTestDebug(type: JacocoReport, dependsOn: ['testUnitTestDebugUnitTest']) {
 
     println "reporting for duty"
     reports {
@@ -28,18 +28,9 @@ task jacocoTestReportFullDebug(type: JacocoReport, dependsOn: ['testFullDebugUni
     ]
 
     def mainSrc = "$project.projectDir/src/main/java"
-    def testSupportSrc = "$projectDir/testsupport/src/main/java"
-    def daggerSrc = "$project.buildDir/generated/source/kapt/fullDebug"
-    def testSupportDaggerSrc = "$projectDir/testsupport/build/generated/source/kapt/fullDebug"
-    def commonsSrc = "$rootDir/commons/src/main/java"
+    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/unitTestDebug", excludes: fileFilter)
 
-    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebugUnitTest", excludes: fileFilter)
-    def daggerClasses = fileTree(dir: "$project.buildDir/build/intermediates/javac/fullDebugUnitTest/classes", excludes: fileFilter)
-    def testSupportClasses = fileTree(dir: "$projectDir/testsupport/build/tmp/kotlin-classes/fullDebugUnitTest", excludes: fileFilter)
-    def testSupportDaggerClasses = fileTree(dir: "$projectDir/testsupport/build/intermediates/javac/fullDebugUnitTest/classes", excludes: fileFilter)
-    def commonsClasses = fileTree(dir: "$rootDir/commons/build/tmp/kotlin-classes/fullDebugUnitTest", excludes: fileFilter)
-
-    sourceDirectories.from = files([mainSrc, testSupportSrc, daggerSrc, testSupportDaggerSrc, commonsSrc])
-    classDirectories.from = files([mainClasses, daggerClasses, testSupportClasses, testSupportDaggerClasses, commonsClasses])
-    executionData.from = "$project.buildDir/jacoco/testFullDebugUnitTest.exec"
+    sourceDirectories.from = files([mainSrc])
+    classDirectories.from = files([mainClasses])
+    executionData.from = "$project.buildDir/jacoco/testUnitTestDebugUnitTest.exec"
 }

@@ -37,6 +37,9 @@ android {
         automation {
             dimension = 'default'
         }
+        unitTest {
+            dimension = "default"
+        }
     }
 
     compileOptions {
@@ -63,44 +66,14 @@ android {
             }
             jacoco {
                 includeNoLocationClasses = true
-                includes = [
-                    'com/github/goldy1992/mp3player/service/**',
-                    'com/github/goldy1992/mp3player/commons/**'
-                ]
-                excludes =  [
-                    '**/dagger/**',
-                    '**_Factory**',
-                    '**_MembersInjector**',
-                    '**/R.class',
-                    '**/R$*.class',
-                    '**/BuildConfig.*',
-                    '**/Manifest*.*',
-                    '**/*Test*.*',
-                    'android/**/*.*',
-                    '**/*$[0-9].*'
-                ]
+                includes = ['com/github/goldy1992/mp3player/service/**']
+                excludes =  EXCLUDE_LIST
             }
         }
-    }
-
-    sourceSets {
-        main {
-            java.srcDirs = ["src/main/java"]
-        }
-        test {
-            java.srcDirs = ["src/test/java",
-                            "$projectDir/testsupport/src/main/java",
-                            "$project.buildDir/generated/source/kapt/fullDebug",
-                            "$projectDir/testsupport/build/generated/source/kapt/fullDebug",
-                            "$rootDir/commons/src/main/java" ]
-            java.srcDirs += sourceSets.main.java.srcDirs
-        }
-        androidTest.java.srcDirs += 'src/androidTest/java'
     }
 }
 
 dependencies {
-
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
@@ -114,7 +87,7 @@ dependencies {
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: KOTLIN_COROUTINE_VERSION
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: KOTLIN_COROUTINE_VERSION
-    api project(path: ':commons')
+    implementation project(':commons')
 
 
     //dagger
@@ -126,9 +99,8 @@ dependencies {
     kapt group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
 
-    testImplementation junit5UnitTests
+    unitTestImplementation junit5UnitTests
     testRuntimeOnly junit5UnitTestRuntime
-    testApi project(":service:testsupport")
 
     testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
         exclude group: "com.google.auto.service", module: "auto-service"

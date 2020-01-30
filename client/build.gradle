@@ -6,6 +6,7 @@ apply plugin: 'de.mannodermaus.android-junit5'
 apply from: rootProject.file("jacoco-with-test-support.gradle")
 
 android {
+
     compileSdkVersion TARGET_SDK_VERION
     buildToolsVersion BUILD_TOOLS_VERSION
 
@@ -38,6 +39,9 @@ android {
         automation {
             dimension = 'default'
         }
+        unitTest {
+            dimension = 'default'
+        }
     }
 
     compileOptions {
@@ -56,83 +60,20 @@ android {
             includeAndroidResources = true
             returnDefaultValues = true
         }
-
         unitTests.all {
-            def fileFilter = [
-                    '**/R.class',
-                    '**/R$*.class',
-                    '**/BuildConfig.*',
-                    '**/Manifest*.*',
-                    '**/*Test*.*',
-                    'android/**/*.*',
-                    '**/*$[0-9].*',
-                    '**/dagger/**'
-            ]
-
-            def mainSrc = "$project.projectDir/src/main/java"
-            def testSupportSrc = "$projectDir/testsupport/src/main/java"
-            def daggerSrc = "$project.buildDir/generated/source/kapt/fullDebug"
-            def testSupportDaggerSrc = "$projectDir/testsupport/build/generated/source/kapt/fullDebug"
-            def commonsSrc = "$rootDir/commons/src/main/java"
-
-            $project.
-            def d =  ObjectFactory.sourceDirectorySet("x", "y")
-            d.srcDir("$project.buildDir/tmp/kotlin-classes/fullDebug")
-
-            def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebug", excludes: fileFilter)
-            def daggerClasses = fileTree(dir: "$project.buildDir/build/intermediates/javac/fullDebug/classes", excludes: fileFilter)
-            def testSupportClasses = fileTree(dir: "$projectDir/testsupport/build/tmp/kotlin-classes/fullDebugUnitTest", excludes: fileFilter)
-            def testSupportDaggerClasses = fileTree(dir: "$projectDir/testsupport/build/intermediates/javac/fullDebug/classes", excludes: fileFilter)
-            def commonsClasses = fileTree(dir: "$rootDir/commons/build/tmp/kotlin-classes/fullDebug", excludes: fileFilter)
-
-
-         //   FileCollection f = files([mainClasses, daggerClasses, testSupportClasses, testSupportDaggerClasses, commonsClasses])
-
-            setTestClassesDirs(getTestClassesDirs().plus(d))
-            getTestClassesDirs().each {
-                println(it)
-            }
-
             testLogging {
                 events "passed", "skipped", "failed", "standardOut", "standardError"
                 outputs.upToDateWhen {false}
                 showStandardStreams = true
             }
-            jacoco {
+            jacoco { // FOR USE IN TEST EXECUTION
                 includeNoLocationClasses = true
-                includes = [
-                    'com/github/goldy1992/mp3player/client/**',
-                    'com/github/goldy1992/mp3player/commons/**'
-                ]
-                excludes =  [
-                    '**/dagger/**',
-                    '**_Factory**',
-                    '**_MembersInjector**',
-                    '**/R.class',
-                    '**/R$*.class',
-                    '**/BuildConfig.*',
-                    '**/Manifest*.*',
-                    '**/*Test*.*',
-                    'android/**/*.*',
-                    '**/*$[0-9].*'
-                ]
+                includes = ['com/github/goldy1992/mp3player/client/**']
+                excludes = EXCLUDE_LIST
             }
         }
     }
 
-//    sourceSets {
-//        main {
-//            java.srcDirs = ["src/main/java"]
-//        }
-//        test {
-//            java.srcDirs = ["src/test/java",
-//                            "$projectDir/testsupport/src/main/java",
-//                            "$project.buildDir/generated/source/kapt/fullDebug",
-//                            "$projectDir/testsupport/build/generated/source/kapt/fullDebug",
-//                         ]
-//        }
-//        androidTest.java.srcDirs += 'src/androidTest/java'
-//    }
 }
 
 dependencies {
@@ -171,12 +112,11 @@ dependencies {
 
     kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     api group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
-    api project(path: ':commons')
 
+    implementation project(':commons')
 
-    testImplementation junit5UnitTests
+    unitTestImplementation junit5UnitTests
     testRuntimeOnly junit5UnitTestRuntime
-    testApi project(":client:testsupport")
 
 
     testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
