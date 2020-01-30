@@ -123,6 +123,7 @@ dependencies {
         exclude group: "com.google.auto.service", module: "auto-service"
     }
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN"
     testImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: KOTLIN_COROUTINE_VERSION
     testImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
 
