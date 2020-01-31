@@ -41,15 +41,15 @@ class MediaBrowserAdapter
      * ID when communicating with the MediaPlaybackService.
      * @param id the id of the media item to be subscribed to
      */
-    open fun subscribe(id: String?) {
-        mediaBrowser!!.subscribe(id!!, mySubscriptionCallback)
+    fun subscribe(id: String?) {
+        mediaBrowser.subscribe(id!!, mySubscriptionCallback)
     }
 
-    open fun subscribeToRoot() {
-        mediaBrowser!!.subscribe(rootId, mySubscriptionCallback)
+    fun subscribeToRoot() {
+        mediaBrowser.subscribe(rootId, mySubscriptionCallback)
     }
 
-    open val mediaSessionToken: MediaSessionCompat.Token?
+    val mediaSessionToken: MediaSessionCompat.Token?
         get() = mediaBrowser.sessionToken
 
     val rootId: String

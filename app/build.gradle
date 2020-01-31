@@ -17,6 +17,7 @@ android {
         versionCode 4
         versionName "1.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        missingDimensionStrategy 'full', 'automation'
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation":"$projectDir/schemas".toString()]
@@ -50,6 +51,9 @@ android {
             applicationIdSuffix ".automation"
             versionNameSuffix "-automation"
             resValue "string", "app_name", "Test Music Player"
+
+        }
+        unitTest {
 
         }
     }
