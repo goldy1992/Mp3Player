@@ -136,17 +136,13 @@ constructor(private val context: Context,
         get() {
             val currentMetaData = metadata
             val albumArtUriPath = currentMetaData!!.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI)
-            if (albumArtUriPath != null) {
-                var albumArtUri: Uri? = null
-                albumArtUri = try {
-                    Uri.parse(albumArtUriPath)
-                } catch (ex: NullPointerException) {
-                    Log.e(LOG_TAG, "$albumArtUriPath: is an invalid Uri")
-                    return null
-                }
-                return albumArtUri
+
+            return try {
+                Uri.parse(albumArtUriPath)
+            } catch (ex: NullPointerException) {
+                Log.e(LOG_TAG, "$albumArtUriPath: is an invalid Uri")
+                return null
             }
-            return null
         }
 
     open fun disconnect() {

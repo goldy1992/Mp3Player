@@ -28,7 +28,7 @@ abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListene
     override fun onConnected() {
         super.onConnected()
         initialiseView(R.layout.activity_search_results)
-        mediaBrowserAdapter?.registerSearchResultListener(this)
+        mediaBrowserAdapter.registerSearchResultListener(this)
         handleIntent(intent)
     }
 
@@ -62,9 +62,8 @@ abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListene
     override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {
         if (null != item) {
             var intentClass: Class<*>? = null
-            val mediaItemType = MediaItemUtils.getMediaItemType(item)
-            when (mediaItemType) {
-                MediaItemType.SONG, MediaItemType.SONGS -> mediaControllerAdapter!!.playFromMediaId(MediaItemUtils.getLibraryId(item), null)
+            when (MediaItemUtils.getMediaItemType(item)) {
+                MediaItemType.SONG, MediaItemType.SONGS -> mediaControllerAdapter.playFromMediaId(MediaItemUtils.getLibraryId(item), null)
                 MediaItemType.FOLDER, MediaItemType.FOLDERS -> intentClass = componentClassMapper.folderActivity
                 else -> {
                 }
@@ -83,7 +82,7 @@ abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListene
             if (null != searchView) {
                 searchView!!.setQuery(currentQuery, false)
             }
-            mediaBrowserAdapter!!.search(currentQuery, null)
+            mediaBrowserAdapter.search(currentQuery, null)
         }
     }
 

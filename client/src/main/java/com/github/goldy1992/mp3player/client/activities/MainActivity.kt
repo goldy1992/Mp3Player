@@ -61,7 +61,7 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
         setSupportActionBar(titleToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_menu)
-        mediaBrowserAdapter!!.registerRootListener(this)
+        mediaBrowserAdapter.registerRootListener(this)
 
         initNavigationView()
         drawerLayout.addDrawerListener(myDrawerListener)
@@ -106,7 +106,7 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
     // MediaBrowserConnectorCallback
     override fun onConnected() {
         super.onConnected()
-        mediaBrowserAdapter!!.subscribeToRoot()
+        mediaBrowserAdapter.subscribeToRoot()
         initialiseView(R.layout.activity_main)
     }
 
@@ -123,7 +123,7 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
     private fun initNavigationView() {
         navigationView!!.setNavigationItemSelectedListener { menuItem: MenuItem -> onNavigationItemSelected(menuItem) }
         val spinner = navigationView!!.menu.findItem(R.id.themes_menu_item).actionView as Spinner
-        val themeSpinnerController = ThemeSpinnerController(applicationContext, spinner, this, componentClassMapper)
+        ThemeSpinnerController(applicationContext, spinner, this, componentClassMapper)
     }
 
     override fun onChildrenLoaded(parentId: String, children: ArrayList<MediaBrowserCompat.MediaItem>) {

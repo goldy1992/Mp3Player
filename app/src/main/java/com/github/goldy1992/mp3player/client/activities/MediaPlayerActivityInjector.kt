@@ -8,9 +8,9 @@ import com.github.goldy1992.mp3player.commons.MikesMp3Player
  * Media Player Activity injector
  */
 class MediaPlayerActivityInjector : MediaPlayerActivity() {
-    override fun onCreate(savedInstance: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         initialiseDependencies()
-        super.onCreate(savedInstance)
+        super.onCreate(savedInstanceState)
     }
 
     public override fun initialiseDependencies() {

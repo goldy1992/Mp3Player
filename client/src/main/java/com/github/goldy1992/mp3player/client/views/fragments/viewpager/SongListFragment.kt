@@ -12,6 +12,10 @@ class SongListFragment : MediaItemListFragment() {
         mediaControllerAdapter!!.playFromMediaId(MediaItemUtils.getLibraryId(item), null)
     }
 
+    override fun logTag(): String {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     companion object {
         @JvmStatic
         fun newInstance(mediaItemType: MediaItemType, id: String, component: MediaActivityCompatComponent): SongListFragment {

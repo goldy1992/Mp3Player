@@ -3,13 +3,12 @@ package com.github.goldy1992.mp3player.client.activities
 import android.os.Bundle
 import com.github.goldy1992.mp3player.client.dagger.components.DaggerTestMediaActivityCompatComponent
 import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
-import com.github.goldy1992.mp3player.client.activities.MediaPlayerActivity
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 
 class MediaPlayerActivityInjectorTestImpl : MediaPlayerActivity() {
-    override fun onCreate(savedInstance: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         initialiseDependencies()
-        super.onCreate(savedInstance)
+        super.onCreate(savedInstanceState)
     }
 
     override fun initialiseDependencies() {
