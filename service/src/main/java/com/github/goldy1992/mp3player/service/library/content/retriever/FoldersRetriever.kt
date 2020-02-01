@@ -2,13 +2,11 @@ package com.github.goldy1992.mp3player.service.library.content.retriever
 
 import android.content.ContentResolver
 import android.database.Cursor
-import android.os.Handler
 import android.provider.MediaStore
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.content.Projections.FOLDER_PROJECTION
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
@@ -16,11 +14,10 @@ open class FoldersRetriever
 
     @Inject
     constructor(contentResolver: ContentResolver,
-                resultsParser: FolderResultsParser,
-                @Named("worker") handler: Handler)
+                resultsParser: FolderResultsParser)
 
-    : ContentResolverRetriever(contentResolver, resultsParser, handler, null) {
-    override val type: MediaItemType?
+    : ContentResolverRetriever(contentResolver, resultsParser, null) {
+    override val type: MediaItemType
         get() = MediaItemType.FOLDER
 
     override fun performGetChildrenQuery(id: String?): Cursor? {

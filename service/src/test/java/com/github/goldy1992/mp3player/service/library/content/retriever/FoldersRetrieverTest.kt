@@ -27,7 +27,7 @@ class FoldersRetrieverTest : ContentResolverRetrieverTestBase<FoldersRetriever?>
 
     @Before
     fun setup() {
-        retriever = spy(FoldersRetriever(contentResolver!!, resultsParser!!, handler))
+        retriever = spy(FoldersRetriever(contentResolver, resultsParser))
     }
 
     @Test

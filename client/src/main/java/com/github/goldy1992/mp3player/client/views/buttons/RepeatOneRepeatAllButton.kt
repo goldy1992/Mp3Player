@@ -38,6 +38,10 @@ class RepeatOneRepeatAllButton
         mediaControllerAdapter.repeatMode = nextState
     }
 
+    override fun logTag(): String {
+        return "RPT1_RPT_ALL_BTN"
+    }
+
     fun updateState(@PlaybackStateCompat.RepeatMode newState: Int) {
         when (newState) {
             PlaybackStateCompat.REPEAT_MODE_ALL -> {
@@ -54,7 +58,7 @@ class RepeatOneRepeatAllButton
             }
             else -> {
                 val sb = StringBuilder().append("Invalid RepeatMode param: ").append(newState)
-                Log.e(LOG_TAG, sb.toString())
+                Log.e(logTag(), sb.toString())
             }
         }
     }
@@ -89,9 +93,5 @@ class RepeatOneRepeatAllButton
         if (this.state != newRepeatMode) {
             updateState(newRepeatMode)
         }
-    }
-
-    companion object {
-        private const val LOG_TAG = "RPT1_RPT_ALL_BTN"
     }
 }

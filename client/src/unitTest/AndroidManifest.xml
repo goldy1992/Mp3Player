@@ -5,6 +5,7 @@
 
     <application tools:ignore="GoogleAppIndexingWarning"
         android:theme="@style/AppTheme">
+
         <activity android:name=".activities.SplashScreenEntryActivityInjectorTestImpl" />
         <activity android:name=".activities.FolderActivityInjectorTestImpl"/>
         <activity android:name=".activities.EmptyMediaActivityCompatFragmentActivity" />

@@ -24,7 +24,7 @@ class SongsRetrieverTest : ContentResolverRetrieverTestBase<SongsRetriever?>() {
 
     @Before
     fun setup() {
-        retriever = spy(SongsRetriever(contentResolver!!, resultsParser!!, handler))
+        retriever = spy(SongsRetriever(contentResolver, resultsParser))
     }
 
     @Test

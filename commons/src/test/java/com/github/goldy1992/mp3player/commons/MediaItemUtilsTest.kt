@@ -1,9 +1,8 @@
 package com.github.goldy1992.mp3player.commons
 
 import android.net.Uri
-import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.MediaDescriptionCompat
-import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getAlbumArtPath
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getArtist
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDescription
@@ -16,7 +15,10 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaUri
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle
+import com.nhaarman.mockitokotlin2.mock
 import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
 import org.junit.runner.RunWith
@@ -31,7 +33,7 @@ class MediaItemUtilsTest {
         val mediaDescription = MediaDescriptionCompat.Builder()
                 .setMediaId("anId")
                 .build()
-        val mediaItem = MediaBrowserCompat.MediaItem(mediaDescription, 0)
+        val mediaItem = MediaItem(mediaDescription, 0)
         Assertions.assertNull(getExtras(mediaItem))
     }
 
@@ -183,5 +185,57 @@ class MediaItemUtilsTest {
                 .setDescription(description)
                 .build()
         Assertions.assertEquals(description, getDescription(mediaItem))
+    }
+
+    @Test
+    fun testGetDirectoryPath() {
+        val path = "a" + File.pathSeparator + "b" + File.pathSeparator + "c"
+        val testFile = File(path)
+        val expectedPath = testFile.absolutePath
+        val m : MediaItem = MediaItemBuilder("id")
+                .setDirectoryFile(testFile)
+                .build()
+        val result = MediaItemUtils.getDirectoryPath(m)
+        assertEquals(expectedPath, result)
+    }
+
+    @Test
+    fun testGetNullAlbumArtUri() {
+        val m : MediaItem = MediaItemBuilder()
+                .build()
+        val result = MediaItemUtils.getAlbumArtUri(m)
+        assertNull(result)
+    }
+
+    @Test
+    fun testGetAlbumArtUri() {
+        val expectedAlbumArtUri : Uri = mock<Uri>()
+        val mediaItem : MediaItem = MediaItemBuilder()
+                .setAlbumArtUri(expectedAlbumArtUri)
+                .build()
+        val result = MediaItemUtils.getAlbumArtUri(mediaItem)
+        assertEquals(expectedAlbumArtUri, result)
+    }
+
+    @Test
+    fun testGetAlbumArtImage() {
+        val expectedImage = ByteArray(4)
+        val mediaItem : MediaItem = MediaItemBuilder()
+                .setAlbumArtImage(expectedImage)
+                .build()
+        val result = MediaItemUtils.getAlbumArtImage(mediaItem)
+        assertEquals(expectedImage, result)
+    }
+
+    @Test
+    fun testGetRootTitle() {
+        val rootItemType : MediaItemType = MediaItemType.FOLDERS
+        val expectedRootTitle : String? = rootItemType.title
+        val mediaItem : MediaItem = MediaItemBuilder()
+                .setRootItemType(rootItemType)
+                .build()
+        val result = MediaItemUtils.getRootTitle(mediaItem)
+
+        assertEquals(expectedRootTitle, result)
     }
 }

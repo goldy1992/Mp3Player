@@ -15,7 +15,7 @@ class ComponentClassMapper private constructor() {
         private set
 
     class Builder {
-        private val componentClassMapper: ComponentClassMapper
+        private val componentClassMapper: ComponentClassMapper = ComponentClassMapper()
         fun service(service: Class<*>?): Builder {
             componentClassMapper.service = service
             return this
@@ -50,8 +50,5 @@ class ComponentClassMapper private constructor() {
             return componentClassMapper
         }
 
-        init {
-            componentClassMapper = ComponentClassMapper()
-        }
     }
 }

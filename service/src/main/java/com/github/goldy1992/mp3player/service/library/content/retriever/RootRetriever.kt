@@ -25,7 +25,7 @@ class RootRetriever @Inject constructor(private val mediaItemTypeIds: MediaItemT
         return typeToMediaItemMap[mediaItemType]
     }
 
-    override val type: MediaItemType?
+    override val type: MediaItemType
         get() = MediaItemType.ROOT
 
     /**

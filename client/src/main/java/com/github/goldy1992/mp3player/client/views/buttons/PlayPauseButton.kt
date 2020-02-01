@@ -17,7 +17,7 @@ class PlayPauseButton
     @Inject
     constructor(context: Context,
                 mediaControllerAdapter: MediaControllerAdapter)
-    : MediaButton(context, mediaControllerAdapter), PlaybackStateListener, LogTagger {
+    : MediaButton(context, mediaControllerAdapter), PlaybackStateListener {
 
     @PlaybackStateCompat.State
     var state = INITIAL_PLAYBACK_STATE

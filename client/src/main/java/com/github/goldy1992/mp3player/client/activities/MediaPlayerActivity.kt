@@ -3,7 +3,6 @@ package com.github.goldy1992.mp3player.client.activities
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.support.v4.media.MediaMetadataCompat
 import androidx.annotation.VisibleForTesting
 import com.bumptech.glide.Glide
@@ -64,7 +63,7 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, Lo
     override fun onConnected() {
         super.onConnected()
         if (null != trackToPlay) {
-            mediaControllerAdapter!!.playFromUri(trackToPlay, null)
+            mediaControllerAdapter.playFromUri(trackToPlay, null)
         }
         initialiseView(R.layout.activity_media_player)
     }
@@ -79,7 +78,7 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, Lo
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaControllerAdapter!!.disconnect()
+        mediaControllerAdapter.disconnect()
     }
 
     override fun logTag(): String {

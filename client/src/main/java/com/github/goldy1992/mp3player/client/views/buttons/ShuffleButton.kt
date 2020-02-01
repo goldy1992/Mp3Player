@@ -1,12 +1,10 @@
 package com.github.goldy1992.mp3player.client.views.buttons
 
 import android.content.Context
-import android.os.Handler
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.ShuffleMode
 import android.view.View
 import android.widget.ImageView
-import androidx.annotation.VisibleForTesting
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
@@ -51,6 +49,10 @@ class ShuffleButton
         mediaControllerAdapter.shuffleMode = newShuffleMode
     }
 
+    override fun logTag(): String {
+        return "SHUFFLE_BTN"
+    }
+
     private fun setShuffleOn() {
         setImage(R.drawable.ic_baseline_shuffle_24px, Constants.OPAQUE)
     }
@@ -64,9 +66,5 @@ class ShuffleButton
         if (shuffleMode != newShuffleMode) {
             updateState(newShuffleMode)
         }
-    }
-
-    companion object {
-        private const val LOG_TAG = "SHUFFLE_BTN"
     }
 }

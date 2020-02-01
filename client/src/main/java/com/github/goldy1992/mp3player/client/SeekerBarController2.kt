@@ -98,12 +98,9 @@ class SeekerBarController2
     override fun onStopTrackingTouch(seekBar: SeekBar) {
         setTracking(seekBar, false)
         Log.i(LOG_TAG, "Stop TRACKING")
-        val seekerBar = seekBar as SeekerBar
-        if (seekerBar != null) {
-            currentPosition = seekBar.getProgress()
-            mediaControllerAdapter!!.seekTo(currentPosition.toLong())
-            createAnimator()
-        }
+        currentPosition = seekBar.getProgress()
+        mediaControllerAdapter!!.seekTo(currentPosition.toLong())
+        createAnimator()
     }
 
     private fun setTracking(seekBar: SeekBar, tracking: Boolean) {

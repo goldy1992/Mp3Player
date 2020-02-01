@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.service.library.search.managers
 
-import android.os.Handler
 import android.support.v4.media.MediaBrowserCompat
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaId
@@ -11,19 +10,16 @@ import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.search.SearchDatabase
 import com.github.goldy1992.mp3player.service.library.search.Song
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class SongDatabaseManager
     @Inject
     constructor(contentManager: ContentManager,
-                @Named("worker") handler: Handler,
                 mediaItemTypeIds: MediaItemTypeIds,
                 searchDatabase: SearchDatabase)
     : SearchDatabaseManager<Song>(
         contentManager,
-        handler,
         searchDatabase.songDao(),
         mediaItemTypeIds.getId(MediaItemType.SONGS)) {
 

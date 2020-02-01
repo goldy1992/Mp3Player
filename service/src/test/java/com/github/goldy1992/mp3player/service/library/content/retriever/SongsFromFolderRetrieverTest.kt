@@ -24,7 +24,7 @@ class SongsFromFolderRetrieverTest : ContentResolverRetrieverTestBase<SongsFromF
 
     @Before
     fun setup() {
-        retriever = SongsFromFolderRetriever(contentResolver!!, resultsParser!!, handler, null)
+        retriever = SongsFromFolderRetriever(contentResolver, resultsParser, null)
     }
 
     @Test

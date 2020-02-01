@@ -3,7 +3,6 @@ package com.github.goldy1992.mp3player.service.library.content.observers
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.net.Uri
-import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -13,10 +12,10 @@ import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.search.managers.FolderDatabaseManager
 import com.github.goldy1992.mp3player.service.library.search.managers.SongDatabaseManager
+import kotlinx.coroutines.*
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.exception.ExceptionUtils
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -30,17 +29,15 @@ import javax.inject.Singleton
 class AudioObserver
 /**
  * Creates a content observer.
- *
- * @param handler The handler to run [.onChange] on, or null if none.
- */ @Inject constructor(@Named("worker") handler: Handler?,
-                        contentResolver: ContentResolver,
+ */
+@Inject constructor(contentResolver: ContentResolver,
                         /** Content manager  */
                         private val contentManager: ContentManager,
                         /** Search Database Manager  */
                         private val songDatabaseManager: SongDatabaseManager,
                         /** Search Database Manager  */
                         private val folderDatabaseManager: FolderDatabaseManager,
-                        mediaItemTypeIds: MediaItemTypeIds) : MediaStoreObserver(handler, contentResolver, mediaItemTypeIds), LogTagger {
+                        mediaItemTypeIds: MediaItemTypeIds) : MediaStoreObserver(contentResolver, mediaItemTypeIds), LogTagger {
 
     /** {@inheritDoc}  */
     override fun onChange(selfChange: Boolean) {
@@ -64,15 +61,19 @@ class AudioObserver
      */
     fun onChange(selfChange: Boolean, uri: Uri?, userId: Int) {
         if (startsWithUri(uri)) {
-            updateSearchDatabase(uri)
-            mediaPlaybackService!!.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.SONGS)!!)
-            mediaPlaybackService!!.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.FOLDERS)!!)
-        }
-        // when there is a "change" to the meta data the exact id will given as the uri
-        Log.i(logTag(), "hit on change")
+
+                runBlocking {
+                    updateSearchDatabase(uri)
+                    mediaPlaybackService!!.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.SONGS)!!)
+                    mediaPlaybackService!!.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.FOLDERS)!!)
+                }
+            }
+            // when there is a "change" to the meta data the exact id will given as the uri
+            Log.i(logTag(), "hit on change")
+
     }
 
-    private fun updateSearchDatabase(uri: Uri?) {
+    private suspend fun updateSearchDatabase(uri: Uri?) {
         var id = INVALID_ID
         try {
             id = ContentUris.parseId(uri)
@@ -93,8 +94,11 @@ class AudioObserver
                 }
             }
         } else {
-            songDatabaseManager.reindex()
-            folderDatabaseManager.reindex()
+               withContext(Dispatchers.IO) {
+                    songDatabaseManager.reindex()
+                    folderDatabaseManager.reindex()
+                }
+
         }
     }
 

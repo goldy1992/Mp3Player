@@ -18,16 +18,15 @@ import org.robolectric.annotation.LooperMode
 @LooperMode(LooperMode.Mode.PAUSED)
 class IncreaseSpeedProviderTest : SpeedProviderTestBase() {
     private lateinit var increaseSpeedProvider: IncreaseSpeedProvider
-    @Before
-    override fun setup() {
 
-        super.setup()
+    @Before
+    fun setup() {
         increaseSpeedProvider = IncreaseSpeedProvider()
     }
 
     @Test
     fun testGetCustomAction() {
-        val customAction = increaseSpeedProvider!!.getCustomAction(exoPlayer!!)
+        val customAction = increaseSpeedProvider.getCustomAction(exoPlayer)
         Assert.assertEquals(INCREASE_PLAYBACK_SPEED, customAction.action)
         Assert.assertEquals(INCREASE_PLAYBACK_SPEED, customAction.name)
     }

@@ -35,8 +35,8 @@ abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotific
 
     override fun onCreate() {
         super.onCreate()
-        mediaSessionConnectorCreator!!.create()
-        this.sessionToken = mediaSession!!.sessionToken
+        mediaSessionConnectorCreator.create()
+        this.sessionToken = mediaSession.sessionToken
         mediaStoreObservers!!.init(this)
         launch(Dispatchers.IO) {
             searchDatabaseManagers!!.reindexAll()
@@ -70,7 +70,7 @@ abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotific
         runBlocking {
             launch(Dispatchers.Default) {
                 // Assume for example that the music catalog is already loaded/cached.
-                val mediaItems = contentManager!!.getChildren(parentId)
+                val mediaItems = contentManager.getChildren(parentId)
                 result.sendResult(mediaItems)
                 println("finish coroutine")
             }.join()

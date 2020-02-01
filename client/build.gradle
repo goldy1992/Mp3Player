@@ -6,6 +6,7 @@ apply plugin: 'de.mannodermaus.android-junit5'
 apply from: rootProject.file("jacoco-with-test-support.gradle")
 
 android {
+
     compileSdkVersion TARGET_SDK_VERION
     buildToolsVersion BUILD_TOOLS_VERSION
 
@@ -38,6 +39,10 @@ android {
         automation {
             dimension = 'default'
         }
+        unitTest {
+            dimension = 'default'
+            matchingFallbacks = ['full']
+        }
     }
 
     compileOptions {
@@ -56,49 +61,20 @@ android {
             includeAndroidResources = true
             returnDefaultValues = true
         }
-
         unitTests.all {
             testLogging {
                 events "passed", "skipped", "failed", "standardOut", "standardError"
                 outputs.upToDateWhen {false}
                 showStandardStreams = true
             }
-            jacoco {
+            jacoco { // FOR USE IN TEST EXECUTION
                 includeNoLocationClasses = true
-                includes = [
-                    'com/github/goldy1992/mp3player/client/**',
-                    'com/github/goldy1992/mp3player/commons/**'
-                ]
-                excludes =  [
-                    '**/dagger/**',
-                    '**_Factory**',
-                    '**_MembersInjector**',
-                    '**/R.class',
-                    '**/R$*.class',
-                    '**/BuildConfig.*',
-                    '**/Manifest*.*',
-                    '**/*Test*.*',
-                    'android/**/*.*',
-                    '**/*$[0-9].*'
-                ]
+                includes = ['com/github/goldy1992/mp3player/client/**']
+                excludes = EXCLUDE_LIST
             }
         }
     }
 
-    sourceSets {
-        main {
-            java.srcDirs = ["src/main/java"]
-        }
-        test {
-            java.srcDirs = ["src/test/java",
-                            "$projectDir/testsupport/src/main/java",
-                            "$project.buildDir/generated/source/kapt/fullDebug",
-                            "$projectDir/testsupport/build/generated/source/kapt/fullDebug",
-                            "$rootDir/commons/src/main/java" ]
-            java.srcDirs += sourceSets.main.java.srcDirs
-        }
-        androidTest.java.srcDirs += 'src/androidTest/java'
-    }
 }
 
 dependencies {
@@ -137,18 +113,18 @@ dependencies {
 
     kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     api group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
-    api project(path: ':commons')
 
+    implementation project(':commons')
 
-    testImplementation junit5UnitTests
+    unitTestImplementation junit5UnitTests
     testRuntimeOnly junit5UnitTestRuntime
-    testApi project(":client:testsupport")
 
 
     testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
         exclude group: "com.google.auto.service", module: "auto-service"
     }
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN"
     testImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: KOTLIN_COROUTINE_VERSION
     testImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
 

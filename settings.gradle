@@ -1,6 +1,4 @@
 include ':app',
         ':service',
-        ':service:testsupport',
         ':commons',
-        ':client',
-        ':client:testsupport'
+        ':client'

@@ -41,7 +41,6 @@ class AudioObserverTest {
         handler = Handler(Looper.getMainLooper())
         mediaItemTypeIds = MediaItemTypeIds()
         audioObserver = AudioObserver(
-                handler,
                 contentResolver!!,
                 contentManager!!,
                 songDatabaseManager!!,
