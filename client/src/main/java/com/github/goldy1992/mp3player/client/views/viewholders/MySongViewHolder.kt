@@ -36,7 +36,7 @@ class MySongViewHolder(itemView: View, albumArtPainter: AlbumArtPainter?)
     private fun extractTitle(song: MediaBrowserCompat.MediaItem): String {
         val charSequence: CharSequence? = MediaItemUtils.getTitle(song)
         return if (null == charSequence) {
-            val fileName : String? = MediaItemUtils.getExtra(MetaDataKeys.META_DATA_KEY_FILE_NAME, song) as String
+            val fileName : String? = MediaItemUtils.getExtra(MetaDataKeys.META_DATA_KEY_FILE_NAME, song) as? String
             if (fileName == null)
                 Constants.UNKNOWN else FilenameUtils.removeExtension(fileName)
             } else {
