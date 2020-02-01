@@ -89,16 +89,8 @@ dependencies {
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
 
 
-    // vintage
-    testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
-    // (Optional) If you also have JUnit 4-based tests
-    testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: JUNIT5_VERSION
-    // jupiter
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: JUNIT5_VERSION
-    // (Required) Writing and executing Unit Tests on the JUnit Platform
-    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: JUNIT5_VERSION
-    //testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.25.1'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
+    unitTestImplementation junit5UnitTests
+    testRuntimeOnly junit5UnitTestRuntime
 
     testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
         exclude group: "com.google.auto.service", module: "auto-service"

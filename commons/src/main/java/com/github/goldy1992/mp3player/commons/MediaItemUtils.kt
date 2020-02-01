@@ -7,15 +7,15 @@ import android.support.v4.media.MediaMetadataCompat
 import java.io.File
 
 object MediaItemUtils {
-    fun hasExtras(item: MediaBrowserCompat.MediaItem?): Boolean {
+    private fun hasExtras(item: MediaBrowserCompat.MediaItem?): Boolean {
         return item != null && item.description.extras != null
     }
 
-    fun hasTitle(item: MediaBrowserCompat.MediaItem?): Boolean {
+    private fun hasTitle(item: MediaBrowserCompat.MediaItem?): Boolean {
         return item != null && item.description.title != null
     }
 
-    fun hasDescription(item: MediaBrowserCompat.MediaItem?): Boolean {
+    private fun hasDescription(item: MediaBrowserCompat.MediaItem?): Boolean {
         return item != null && item.description.description != null
     }
 
@@ -53,7 +53,7 @@ object MediaItemUtils {
         } else null
     }
 
-    fun hasExtra(key: String?, item: MediaBrowserCompat.MediaItem): Boolean {
+    private fun hasExtra(key: String?, item: MediaBrowserCompat.MediaItem): Boolean {
         return hasExtras(item) && item.description.extras!!.containsKey(key)
     }
 
@@ -138,7 +138,7 @@ object MediaItemUtils {
     fun getRootTitle(song: MediaBrowserCompat.MediaItem): String? {
         val extras = song.description.extras
         if (null != extras) {
-            val mediaItemType = extras.getSerializable(Constants.ROOT_ITEM_TYPE) as MediaItemType
+            val mediaItemType : MediaItemType? = extras.getSerializable(Constants.ROOT_ITEM_TYPE) as MediaItemType
             return mediaItemType?.title
         }
         return null

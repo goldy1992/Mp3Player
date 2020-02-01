@@ -8,11 +8,15 @@ import android.support.v4.media.MediaMetadataCompat
 import java.io.File
 
 class MediaItemBuilder(private val mediaId: String) {
+
+    constructor () : this("defaultMediaId")
+
     private var description: String? = null
     private var title: String? = null
     private var mediaUri: Uri? = null
-    private val extras: Bundle
+    private val extras: Bundle = Bundle()
     private var flags = 0
+
     fun setFlags(flags: Int): MediaItemBuilder {
         this.flags = flags
         return this
@@ -87,9 +91,5 @@ class MediaItemBuilder(private val mediaId: String) {
                 .setExtras(extras)
                 .build()
         return MediaBrowserCompat.MediaItem(mediaDescription, flags)
-    }
-
-    init {
-        extras = Bundle()
     }
 }
