@@ -20,7 +20,7 @@ class FolderResultsParser
     override fun create(cursor: Cursor?, mediaIdPrefix: String?): List<MediaItem> {
         val listToReturn = TreeSet(this)
         val directoryPathSet: MutableSet<String> = HashSet()
-        while (cursor != null && cursor!!.moveToNext()) {
+        while (cursor != null && cursor.moveToNext()) {
             val path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
             val file = File(path)
             if (file.exists()) {

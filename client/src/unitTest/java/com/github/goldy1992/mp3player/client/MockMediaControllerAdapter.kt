@@ -77,18 +77,22 @@ class MockMediaControllerAdapter
         get() = 0L
 
     // DO NOTHING
-    @get:ShuffleMode
-    override var shuffleMode: Int
-        get() = PlaybackStateCompat.SHUFFLE_MODE_ALL
-        set(shuffleMode) { // DO NOTHING
-        }
+    @ShuffleMode
+    override fun getShuffleMode() : Int? {
+    return PlaybackStateCompat.SHUFFLE_MODE_ALL
+    }
+
+    override fun setShuffleMode(shuffleMode : Int) { // DO NOTHING
+    }
 
     // DO NOTHING
-    @get:PlaybackStateCompat.RepeatMode
-    override var repeatMode: Int
-        get() = PlaybackStateCompat.REPEAT_MODE_ALL
-        set(repeatMode) { // DO NOTHING
-        }
+    @PlaybackStateCompat.RepeatMode
+    override fun getRepeatMode() : Int {
+        return PlaybackStateCompat.REPEAT_MODE_ALL
+    }
+
+    override fun setRepeatMode(repeatMode : Int ) { // DO NOTHING
+    }
 
     override var token: MediaSessionCompat.Token?
         get() = null

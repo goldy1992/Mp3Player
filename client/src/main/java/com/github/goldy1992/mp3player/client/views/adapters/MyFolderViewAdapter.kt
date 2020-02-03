@@ -24,7 +24,7 @@ class MyFolderViewAdapter
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaItemViewHolder {
         return if (viewType == EMPTY_VIEW_TYPE) {
-            createEmptyViewHolder(parent, viewType)
+            createEmptyViewHolder(parent)
         } else { // create a new views
             val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.folder_item_menu, parent, false)

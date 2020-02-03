@@ -67,14 +67,14 @@ class PlaybackTrackerFragment : Fragment(), PlaybackStateListener, MetadataListe
 
     override fun onMetadataChanged(metadata: MediaMetadataCompat) {
         val duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
-        counter!!.duration = duration
+        counter.duration = duration
         val durationString = formatTime(duration)
         updateDurationText(durationString)
-        seekerBarController!!.onMetadataChanged(metadata)
+        seekerBarController.onMetadataChanged(metadata)
     }
 
     fun initialiseDependencies() {
-        val component = (activity as MediaActivityCompat?)!!.mediaActivityCompatComponent!!
+        val component = (activity as MediaActivityCompat?)!!.mediaActivityCompatComponent
                 .playbackTrackerSubcomponent()
         component.inject(this)
     }

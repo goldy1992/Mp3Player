@@ -9,7 +9,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils
 class SongListFragment : MediaItemListFragment() {
 
     override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {
-        mediaControllerAdapter!!.playFromMediaId(MediaItemUtils.getLibraryId(item), null)
+        mediaControllerAdapter.playFromMediaId(MediaItemUtils.getLibraryId(item), null)
     }
 
     override fun logTag(): String {

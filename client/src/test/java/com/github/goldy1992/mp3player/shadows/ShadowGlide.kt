@@ -10,6 +10,7 @@ import org.robolectric.annotation.Implementation
 import org.robolectric.annotation.Implements
 
 @Implements(Glide::class)
+@Suppress("UNUSED_PARAMETER")
 class ShadowGlide {
 
 

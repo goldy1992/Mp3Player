@@ -31,7 +31,7 @@ class MediaIdSubscriptionCallbackTest {
     fun setup() {
         this.mediaBrowserResponseListener = mock<MediaBrowserResponseListener>()
         mediaIdSubscriptionCallback = MediaIdSubscriptionCallback()
-        mediaItemList = listOf(mockMediaItem!!)
+        mediaItemList = listOf(mockMediaItem)
     }
 
     @Test
@@ -49,7 +49,7 @@ class MediaIdSubscriptionCallbackTest {
         argumentCaptor<ArrayList<MediaItem>>().apply {
             val subscribedKey = "SubscribedKey"
             mediaIdSubscriptionCallback!!.registerMediaBrowserResponseListener(subscribedKey, mediaBrowserResponseListener)
-            mediaIdSubscriptionCallback!!.onChildrenLoaded(subscribedKey, mediaItemList!!)
+            mediaIdSubscriptionCallback!!.onChildrenLoaded(subscribedKey, mediaItemList)
             Shadows.shadowOf(Looper.getMainLooper()).idle()
             verify(mediaBrowserResponseListener, times(1)).onChildrenLoaded(eq(subscribedKey), capture())
             val children = allValues
@@ -65,7 +65,7 @@ class MediaIdSubscriptionCallbackTest {
         val subscribedKey = "SubscribedKey"
         val nonSubscribedKey = "NonSubscribedKey"
         mediaIdSubscriptionCallback!!.registerMediaBrowserResponseListener(subscribedKey, mediaBrowserResponseListener)
-        mediaIdSubscriptionCallback!!.onChildrenLoaded(nonSubscribedKey, mediaItemList!!)
+        mediaIdSubscriptionCallback!!.onChildrenLoaded(nonSubscribedKey, mediaItemList)
         Shadows.shadowOf(Looper.getMainLooper()).idle()
         verify(mediaBrowserResponseListener, never()).onChildrenLoaded(eq(nonSubscribedKey), any())
     }

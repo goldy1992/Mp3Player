@@ -108,15 +108,15 @@ class MediaControllerAdapterTest {
     @Test
     fun testSetRepeatMode() {
         @PlaybackStateCompat.State val repeatMode = PlaybackStateCompat.REPEAT_MODE_ALL
-        mediaControllerAdapter.repeatMode = repeatMode
-        verify(mediaControllerAdapter, times(1)).repeatMode = repeatMode
+        mediaControllerAdapter.setRepeatMode(repeatMode)
+        verify(mediaControllerAdapter, times(1)).setRepeatMode(repeatMode)
     }
 
     @Test
     fun testGetRepeatMode() {
         val expected = PlaybackStateCompat.REPEAT_MODE_ALL
         whenever(mediaControllerAdapter.mediaController?.repeatMode).thenReturn(expected)
-        val result = mediaControllerAdapter.repeatMode
+        val result = mediaControllerAdapter.getRepeatMode()!!
         Assert.assertEquals(expected.toLong(), result.toLong())
     }
 
@@ -124,7 +124,7 @@ class MediaControllerAdapterTest {
     fun testGetShuffleMode() {
         val expected = PlaybackStateCompat.SHUFFLE_MODE_ALL
         whenever(mediaControllerAdapter.mediaController?.shuffleMode).thenReturn(expected)
-        val result = mediaControllerAdapter.shuffleMode
+        val result = mediaControllerAdapter.getShuffleMode()!!
         Assert.assertEquals(expected.toLong(), result.toLong())
     }
 
@@ -150,8 +150,8 @@ class MediaControllerAdapterTest {
     @Test
     fun testShuffleMode() {
         @PlaybackStateCompat.State val shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_ALL
-        mediaControllerAdapter.shuffleMode = shuffleMode
-        verify(mediaControllerAdapter, times(1)).shuffleMode = shuffleMode
+        mediaControllerAdapter.setShuffleMode(shuffleMode)
+        verify(mediaControllerAdapter, times(1)).setShuffleMode(shuffleMode)
     }
 
     @Test
@@ -240,7 +240,7 @@ class MediaControllerAdapterTest {
     }
 
     private val mediaSessionCompatToken: MediaSessionCompat.Token
-        private get() {
+        get() {
             val mediaSession = MediaSession(InstrumentationRegistry.getInstrumentation().context, "sd")
             val sessionToken = mediaSession.sessionToken
             return MediaSessionCompat.Token.fromToken(sessionToken)

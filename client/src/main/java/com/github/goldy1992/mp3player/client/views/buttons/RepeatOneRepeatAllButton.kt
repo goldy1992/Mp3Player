@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client.views.buttons
 
 import android.content.Context
-import android.os.Handler
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.view.View
@@ -26,16 +25,16 @@ class RepeatOneRepeatAllButton
     var state = 0
         private set
 
-    override fun init(view: ImageView) {
-        super.init(view)
+    override fun init(imageView: ImageView) {
+        super.init(imageView)
         mediaControllerAdapter.registerPlaybackStateListener(this)
-        updateState(mediaControllerAdapter.repeatMode)
+        updateState(mediaControllerAdapter.getRepeatMode()!!)
     }
 
     @VisibleForTesting
     override fun onClick(view: View?) {
         val nextState = nextState
-        mediaControllerAdapter.repeatMode = nextState
+        mediaControllerAdapter.setRepeatMode(nextState)
     }
 
     override fun logTag(): String {
@@ -81,7 +80,7 @@ class RepeatOneRepeatAllButton
     }
 
     private val nextState: Int
-        private get() = when (state) {
+        get() = when (state) {
             PlaybackStateCompat.REPEAT_MODE_ALL -> PlaybackStateCompat.REPEAT_MODE_NONE
             PlaybackStateCompat.REPEAT_MODE_NONE -> PlaybackStateCompat.REPEAT_MODE_ONE
             PlaybackStateCompat.REPEAT_MODE_ONE -> PlaybackStateCompat.REPEAT_MODE_ALL
@@ -89,7 +88,7 @@ class RepeatOneRepeatAllButton
         }
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
-        val newRepeatMode = mediaControllerAdapter.repeatMode
+        val newRepeatMode = mediaControllerAdapter.getRepeatMode()!!
         if (this.state != newRepeatMode) {
             updateState(newRepeatMode)
         }

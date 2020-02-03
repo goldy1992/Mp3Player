@@ -16,7 +16,7 @@ class EmptyMediaActivityCompatFragmentActivity : MediaActivityCompat() {
     override fun initialiseDependencies() {
         val component = DaggerTestMediaActivityCompatComponent
                 .factory()
-                .create(applicationContext, this, ComponentClassMapper.Builder().build()) as TestMediaActivityCompatComponent
+                .create(applicationContext, this, ComponentClassMapper.Builder().build())
         component.inject(this)
         mediaActivityCompatComponent = component
     }

@@ -30,7 +30,6 @@ class MyMetadataCallbackTest {
         @BeforeClass
         @JvmStatic
         fun setupClass() {
-            val handler = mock<Handler>()
             myMetadataCallback = MyMetadataCallback()
             myMetadataCallback!!.registerMetaDataListener(metadataListener)
         }

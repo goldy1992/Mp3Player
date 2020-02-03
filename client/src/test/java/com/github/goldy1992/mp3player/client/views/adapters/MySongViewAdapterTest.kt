@@ -23,12 +23,12 @@ class MySongViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
     @Before
     override fun setup() {
         super.setup()
-        mySongViewAdapter = MySongViewAdapter(albumArtPainter!!)
+        mySongViewAdapter = MySongViewAdapter(albumArtPainter)
     }
 
     @Test
     fun testOnCreateViewHolder() {
-        val result = mySongViewAdapter!!.onCreateViewHolder(viewGroup!!, 0) as MySongViewHolder
+        val result = mySongViewAdapter!!.onCreateViewHolder(viewGroup, 0) as MySongViewHolder
         Assert.assertNotNull(result)
     }
 
@@ -48,7 +48,7 @@ class MySongViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
         mySongViewAdapter!!.notifyDataSetChanged()
         argumentCaptor<MediaBrowserCompat.MediaItem>().apply {
             bindViewHolder()
-            verify(mySongViewHolder, times(1))!!.bindMediaItem(capture())
+            verify(mySongViewHolder, times(1)).bindMediaItem(capture())
             val result = firstValue
             Assert.assertEquals(expectedArtist, MediaItemUtils.getArtist(result))
             Assert.assertEquals(expectedTitle, MediaItemUtils.getTitle(result))
@@ -70,7 +70,7 @@ class MySongViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
         mediaItems.add(mediaItem)
         argumentCaptor<MediaBrowserCompat.MediaItem>().apply {
             bindViewHolder()
-            verify(mySongViewHolder, times(1))!!.bindMediaItem(capture())
+            verify(mySongViewHolder, times(1)).bindMediaItem(capture())
             val result = firstValue
             Assert.assertNull(MediaItemUtils.getTitle(result))
         }
@@ -99,7 +99,7 @@ class MySongViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
                         .build())
         argumentCaptor<MediaBrowserCompat.MediaItem>().apply {
             bindViewHolder()
-            verify(mySongViewHolder, times(1))!!.bindMediaItem(capture ())
+            verify(mySongViewHolder, times(1)).bindMediaItem(capture ())
             val result = firstValue
             Assert.assertEquals(expectedArtist, MediaItemUtils.getArtist(result))
             Assert.assertEquals(expectedTitle, MediaItemUtils.getTitle(result))
@@ -109,6 +109,6 @@ class MySongViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
 
     private fun bindViewHolder() {
         mySongViewAdapter!!.items = mediaItems
-        mySongViewAdapter!!.onBindViewHolder(mySongViewHolder!!, 0)
+        mySongViewAdapter!!.onBindViewHolder(mySongViewHolder, 0)
     }
 }

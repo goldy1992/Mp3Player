@@ -55,7 +55,7 @@ class MySongViewHolder(itemView: View, albumArtPainter: AlbumArtPainter?)
     }
 
     private fun extractArtist(song: MediaBrowserCompat.MediaItem): String? {
-        var artist: String? = null
+        var artist: String?
         try {
             artist = MediaItemUtils.getArtist(song)
             if (null == artist) {

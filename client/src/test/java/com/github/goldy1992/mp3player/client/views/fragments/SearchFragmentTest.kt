@@ -1,9 +1,6 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
-import android.view.View
-
 import androidx.fragment.app.testing.FragmentScenario.FragmentAction
-import com.nhaarman.mockitokotlin2.mock
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,6 +25,6 @@ class SearchFragmentTest : FragmentTestBase<SearchFragment>() {
     }
 
     private fun clickOnLayout(fragment: SearchFragment?) {
-        fragment!!.onClickOnLayout(mock<View>())
+        fragment!!.onClickOnLayout()
     }
 }

@@ -30,13 +30,13 @@ class PlaybackSpeedControlsFragmentTest : FragmentTestBase<PlaybackSpeedControls
     @Test
     fun testIncreaseSpeed() {
         val fragmentAction = FragmentAction { playbackSpeedControlsFragment: PlaybackSpeedControlsFragment? -> increaseSpeed(playbackSpeedControlsFragment) }
-       // performAction(fragmentAction)
+        performAction(fragmentAction)
     }
 
     @Test
     fun testDecreaseSpeed() {
         val fragmentAction = FragmentAction { playbackSpeedControlsFragment: PlaybackSpeedControlsFragment? -> decreaseSpeed(playbackSpeedControlsFragment) }
-       // performAction(fragmentAction)
+        performAction(fragmentAction)
     }
 
     private fun increaseSpeed(playbackSpeedControlsFragment: PlaybackSpeedControlsFragment?) {

@@ -15,11 +15,12 @@ import com.github.goldy1992.mp3player.client.views.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToNextButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToPreviousButton
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
+import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.android.synthetic.main.fragment_playback_toolbar.*
 import javax.inject.Inject
 
 
-class PlayToolbarFragment : Fragment() {
+class PlayToolbarFragment : Fragment(), LogTagger {
 
     @Inject
     lateinit var playPauseBtn: PlayPauseButton
@@ -39,17 +40,17 @@ class PlayToolbarFragment : Fragment() {
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
         super.onViewCreated(view, bundle)
-        playPauseBtn?.init(playPauseButton)
-        skipToPreviousBtn?.init(skipToPreviousButton)
-        skipToNextBtn?.init(skipToNextButton)
+        playPauseBtn.init(playPauseButton)
+        skipToPreviousBtn.init(skipToPreviousButton)
+        skipToNextBtn.init(skipToNextButton)
 
         if (!isMediaPlayerActivity) {
-            playbackToolbar.setOnClickListener(View.OnClickListener { v: View? -> goToMediaPlayerActivity() })
+            playbackToolbar.setOnClickListener(View.OnClickListener { goToMediaPlayerActivity() })
         }
     }
 
     private val isMediaPlayerActivity: Boolean
-        private get() {
+        get() {
             val activity: Activity? = activity
             return activity != null && activity is MediaPlayerActivity
         }
@@ -64,12 +65,12 @@ class PlayToolbarFragment : Fragment() {
         val activity = activity
         if (null != activity && activity is MediaActivityCompat) {
             val mediaPlayerActivity = getActivity() as MediaActivityCompat?
-            mediaPlayerActivity!!.mediaActivityCompatComponent!!.playbackButtonsSubcomponent()
+            mediaPlayerActivity!!.mediaActivityCompatComponent.playbackButtonsSubcomponent()
                     .inject(this)
         }
     }
 
-    companion object {
-        private const val LOG_TAG = "PLY_PAUSE_BTN"
+    override fun logTag(): String {
+        return "PLY_PAUSE_BTN"
     }
 }

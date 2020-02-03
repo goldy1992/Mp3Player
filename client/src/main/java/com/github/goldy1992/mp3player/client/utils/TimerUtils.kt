@@ -35,7 +35,7 @@ object TimerUtils {
         return if (state.state != PlaybackStateCompat.STATE_PLAYING) {
             state.position
         } else {
-            val timestamp = state.lastPositionUpdateTime ?: return state.bufferedPosition
+            val timestamp = state.lastPositionUpdateTime
             val currentTime = SystemClock.elapsedRealtime()
             val timeDiff = currentTime - timestamp
             state.position + timeDiff

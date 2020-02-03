@@ -22,7 +22,7 @@ class TrackViewPagerChangeCallbackTest {
 
     @Before
     fun setup() {
-        whenever(mediaControllerAdapter!!.currentQueuePosition).thenReturn(0)
+        whenever(mediaControllerAdapter.currentQueuePosition).thenReturn(0)
         trackViewPagerChangeCallback = TrackViewPagerChangeCallback(mediaControllerAdapter)
     }
 
@@ -31,9 +31,9 @@ class TrackViewPagerChangeCallbackTest {
         val initialPosition = 0
         trackViewPagerChangeCallback!!.currentPosition = initialPosition
         trackViewPagerChangeCallback!!.onPageSelected(initialPosition)
-        verify(mediaControllerAdapter, never())!!.seekTo(any<Long>())
-        verify(mediaControllerAdapter, never())!!.skipToPrevious()
-        verify(mediaControllerAdapter, never())!!.skipToNext()
+        verify(mediaControllerAdapter, never()).seekTo(any<Long>())
+        verify(mediaControllerAdapter, never()).skipToPrevious()
+        verify(mediaControllerAdapter, never()).skipToNext()
         Assert.assertEquals(initialPosition.toLong(), trackViewPagerChangeCallback!!.currentPosition.toLong())
     }
 
@@ -44,7 +44,7 @@ class TrackViewPagerChangeCallbackTest {
         val skipToNextPosition = initialPosition + 1
         trackViewPagerChangeCallback!!.onPageSelected(skipToNextPosition)
         Assert.assertEquals(skipToNextPosition.toLong(), trackViewPagerChangeCallback!!.currentPosition.toLong())
-        verify(mediaControllerAdapter, times(1))!!.skipToNext()
+        verify(mediaControllerAdapter, times(1)).skipToNext()
     }
 
     @Test
@@ -54,8 +54,8 @@ class TrackViewPagerChangeCallbackTest {
         val skipToPreviousPosition = initialPosition - 1
         trackViewPagerChangeCallback!!.onPageSelected(skipToPreviousPosition)
         Assert.assertEquals(skipToPreviousPosition.toLong(), trackViewPagerChangeCallback!!.currentPosition.toLong())
-        verify(mediaControllerAdapter, times(1))!!.seekTo(0)
-        verify(mediaControllerAdapter, times(1))!!.skipToPrevious()
+        verify(mediaControllerAdapter, times(1)).seekTo(0)
+        verify(mediaControllerAdapter, times(1)).skipToPrevious()
     }
 
     @Test
@@ -65,8 +65,8 @@ class TrackViewPagerChangeCallbackTest {
         val skipTwoPositions = initialPosition + 2
         trackViewPagerChangeCallback!!.onPageSelected(skipTwoPositions)
         Assert.assertEquals(skipTwoPositions.toLong(), trackViewPagerChangeCallback!!.currentPosition.toLong())
-        verify(mediaControllerAdapter, never())!!.skipToPrevious()
-        verify(mediaControllerAdapter, never())!!.skipToNext()
-        verify(mediaControllerAdapter, never())!!.seekTo(any<Long>())
+        verify(mediaControllerAdapter, never()).skipToPrevious()
+        verify(mediaControllerAdapter, never()).skipToNext()
+        verify(mediaControllerAdapter, never()).seekTo(any<Long>())
     }
 }

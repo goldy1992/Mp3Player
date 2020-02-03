@@ -16,8 +16,8 @@ class PlaylistManager
     @Synchronized
     fun createNewPlaylist(newList: List<MediaItem?>?): Boolean {
         playlist!!.clear()
-        val result = playlist!!.addAll(newList as List<MediaItem>)
-        queueIndex = if (playlist!!.isEmpty()) EMPTY_PLAYLIST_INDEX else START_OF_PLAYLIST
+        val result = playlist.addAll(newList as List<MediaItem>)
+        queueIndex = if (playlist.isEmpty()) EMPTY_PLAYLIST_INDEX else START_OF_PLAYLIST
         return result
     }
 

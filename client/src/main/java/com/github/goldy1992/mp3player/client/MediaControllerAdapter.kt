@@ -24,7 +24,6 @@ open class MediaControllerAdapter
 constructor(private val context: Context,
             private val myMediaControllerCallback: MyMediaControllerCallback?) {
 
-
     @get:VisibleForTesting
     @set:VisibleForTesting
     var mediaController: MediaControllerCompat? = null
@@ -118,19 +117,23 @@ constructor(private val context: Context,
             mediaController!!.metadata
         } else null
 
-    @get:ShuffleMode
-    open var shuffleMode: Int
-        get() = mediaController!!.shuffleMode
-        set(shuffleMode) {
-            controller.setShuffleMode(shuffleMode)
-        }
+    @ShuffleMode
+    open fun getShuffleMode() : Int? {
+       return mediaController!!.shuffleMode
+    }
 
-    @get:PlaybackStateCompat.RepeatMode
-    open var repeatMode: Int
-        get() = mediaController!!.repeatMode
-        set(repeatMode) {
-            controller.setRepeatMode(repeatMode)
-        }
+    open fun setShuffleMode(shuffleMode : Int) {
+        controller.setShuffleMode(shuffleMode)
+    }
+
+    @PlaybackStateCompat.RepeatMode
+    open fun getRepeatMode() : Int? {
+        return mediaController?.repeatMode
+    }
+
+    open fun setRepeatMode(repeatMode : Int) {
+        controller.setRepeatMode(repeatMode)
+    }
 
     val currentSongAlbumArtUri: Uri?
         get() {

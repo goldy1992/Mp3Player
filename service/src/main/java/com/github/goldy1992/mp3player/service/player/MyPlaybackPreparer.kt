@@ -58,7 +58,7 @@ class MyPlaybackPreparer @Inject constructor(private val exoPlayer: ExoPlayer,
             val resultsIterator = results.listIterator()
             while (resultsIterator.hasNext()) {
                 val currentMediaItem = resultsIterator.next()
-                val currentUri = getMediaUri(currentMediaItem!!)
+                val currentUri = getMediaUri(currentMediaItem)
                 val src = mediaSourceFactory.createMediaSource(currentUri)
                 if (null != src) {
                     concatenatingMediaSource.addMediaSource(src)

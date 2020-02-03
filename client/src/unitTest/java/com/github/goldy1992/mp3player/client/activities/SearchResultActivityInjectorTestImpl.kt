@@ -1,15 +1,14 @@
 package com.github.goldy1992.mp3player.client.activities
 
 import android.os.Bundle
-import com.github.goldy1992.mp3player.client.activities.SearchResultActivity
 import com.github.goldy1992.mp3player.client.dagger.components.DaggerTestMediaActivityCompatComponent
 import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 
 class SearchResultActivityInjectorTestImpl : SearchResultActivity() {
-    public override fun onCreate(savedInstance: Bundle?) {
+    public override fun onCreate(savedInstanceState: Bundle?) {
         initialiseDependencies()
-        super.onCreate(savedInstance)
+        super.onCreate(savedInstanceState)
     }
 
     public override fun initialiseDependencies() {

@@ -11,8 +11,8 @@ class SkipToPreviousButton @Inject constructor(context: Context,
                                                mediaControllerAdapter: MediaControllerAdapter)
     : MediaButton(context, mediaControllerAdapter) {
 
-    override fun init(view: ImageView) {
-        super.init(view)
+    override fun init(imageView: ImageView) {
+        super.init(imageView)
         setImage(R.drawable.ic_baseline_skip_previous_24px)
     }
 
