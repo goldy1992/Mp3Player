@@ -25,7 +25,7 @@ class AudioBecomingNoisyBroadcastReceiverTest {
 
     @Before
     fun setup() {
-        audioBecomingNoisyBroadcastReceiver = AudioBecomingNoisyBroadcastReceiver(context, exoPlayer!!)
+        audioBecomingNoisyBroadcastReceiver = AudioBecomingNoisyBroadcastReceiver(context, exoPlayer)
     }
 
     @Test
@@ -34,7 +34,7 @@ class AudioBecomingNoisyBroadcastReceiverTest {
         intent.action = AudioManager.ACTION_AUDIO_BECOMING_NOISY
         audioBecomingNoisyBroadcastReceiver!!.onReceive(context, intent)
         /* Issue 64: we just want to update the playback state in this scenario, scpeifically to
-         * state PAUSED */verify(exoPlayer, times(1))!!.playWhenReady = false
+         * state PAUSED */verify(exoPlayer, times(1)).playWhenReady = false
     }
 
     @Test

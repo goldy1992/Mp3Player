@@ -59,9 +59,9 @@ class AudioObserver
      * @param uri the uri that has changed
      * @param userId not used
      */
+    @Suppress("UNUSED_PARAMETER")
     fun onChange(selfChange: Boolean, uri: Uri?, userId: Int) {
         if (startsWithUri(uri)) {
-
                 runBlocking {
                     updateSearchDatabase(uri)
                     mediaPlaybackService!!.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.SONGS)!!)

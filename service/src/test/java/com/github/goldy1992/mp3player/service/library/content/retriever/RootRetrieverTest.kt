@@ -26,7 +26,7 @@ class RootRetrieverTest {
     @Test
     fun testGetChildren() {
         val result = rootRetriever!!.getChildren(mock<ContentRequest>())
-        Assert.assertEquals(testRootItemMap!!.size.toLong(), result!!.size.toLong())
+        Assert.assertEquals(testRootItemMap.size.toLong(), result!!.size.toLong())
         val item1 = result[0]
         assertValidRootItem(item1)
         assertRootItemType(item1, ROOT_TYPE_1)

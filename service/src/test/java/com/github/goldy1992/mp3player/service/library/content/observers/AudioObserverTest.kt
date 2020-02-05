@@ -41,10 +41,10 @@ class AudioObserverTest {
         handler = Handler(Looper.getMainLooper())
         mediaItemTypeIds = MediaItemTypeIds()
         audioObserver = AudioObserver(
-                contentResolver!!,
-                contentManager!!,
-                songDatabaseManager!!,
-                folderDatabaseManager!!,
+                contentResolver,
+                contentManager,
+                songDatabaseManager,
+                folderDatabaseManager,
                 mediaItemTypeIds!!)
         audioObserver!!.init(mediaPlaybackService)
     }
@@ -52,7 +52,7 @@ class AudioObserverTest {
     @Test
     fun testNullUri() {
         audioObserver!!.onChange(true)
-        verify(contentManager, never())!!.getItem(any<Long>())
+        verify(contentManager, never()).getItem(any<Long>())
     }
 
     @Test
@@ -60,11 +60,11 @@ class AudioObserverTest {
         val expectedId = 2334L
         var uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         uri = ContentUris.withAppendedId(uri, expectedId)
-        whenever(contentManager!!.getItem(expectedId)).thenReturn(null)
+        whenever(contentManager.getItem(expectedId)).thenReturn(null)
         audioObserver!!.onChange(true, uri)
-        verify(contentManager, times(1))!!.getItem(expectedId)
-        verify(songDatabaseManager, never())!!.insert(any<MediaBrowserCompat.MediaItem>())
-        verify(folderDatabaseManager, never())!!.insert(any<MediaBrowserCompat.MediaItem>())
+        verify(contentManager, times(1)).getItem(expectedId)
+        verify(songDatabaseManager, never()).insert(any<MediaBrowserCompat.MediaItem>())
+        verify(folderDatabaseManager, never()).insert(any<MediaBrowserCompat.MediaItem>())
     }
 
     @Test
@@ -76,13 +76,13 @@ class AudioObserverTest {
         val result = MediaItemBuilder("sf")
                 .setDirectoryFile(expectedDir)
                 .build()
-        whenever(contentManager!!.getItem(expectedId)).thenReturn(result)
+        whenever(contentManager.getItem(expectedId)).thenReturn(result)
         audioObserver!!.onChange(true, uri)
-        verify(contentManager, times(1))!!.getItem(expectedId)
-        verify(songDatabaseManager, times(1))!!.insert(result)
-        verify(folderDatabaseManager, times(1))!!.insert(result)
-        verify(mediaPlaybackService, times(1))!!.notifyChildrenChanged(expectedDir.absolutePath)
-        verify(mediaPlaybackService, times(1))!!.notifyChildrenChanged(mediaItemTypeIds!!.getId(MediaItemType.FOLDERS)!!)
-        verify(mediaPlaybackService, times(1))!!.notifyChildrenChanged(mediaItemTypeIds!!.getId(MediaItemType.SONGS)!!)
+        verify(contentManager, times(1)).getItem(expectedId)
+        verify(songDatabaseManager, times(1)).insert(result)
+        verify(folderDatabaseManager, times(1)).insert(result)
+        verify(mediaPlaybackService, times(1)).notifyChildrenChanged(expectedDir.absolutePath)
+        verify(mediaPlaybackService, times(1)).notifyChildrenChanged(mediaItemTypeIds!!.getId(MediaItemType.FOLDERS)!!)
+        verify(mediaPlaybackService, times(1)).notifyChildrenChanged(mediaItemTypeIds!!.getId(MediaItemType.SONGS)!!)
     }
 }

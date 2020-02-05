@@ -33,7 +33,7 @@ class FolderSearcherTest : ContentResolverSearcherTestBase<FolderSearcher?>() {
         idPrefix = mediaItemTypeIds!!.getId(MediaItemType.FOLDER)
         filter = mock<FolderSearchResultsFilter>()
         whenever(filter.filter(ContentResolverSearcherTestBase.Companion.VALID_QUERY, ContentResolverSearcherTestBase.Companion.expectedResult)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
-        searcher = spy(FolderSearcher(contentResolver!!, resultsParser!!, filter, mediaItemTypeIds!!, folderDao!!))
+        searcher = spy(FolderSearcher(contentResolver, resultsParser, filter, mediaItemTypeIds!!, folderDao))
     }
 
     @Test
@@ -51,7 +51,8 @@ class FolderSearcherTest : ContentResolverSearcherTestBase<FolderSearcher?>() {
         expectedDbResult.add(folder1)
         expectedDbResult.add(folder2)
         expectedDbResult.add(folder3)
-        whenever(folderDao!!.query(ContentResolverSearcherTestBase.Companion.VALID_QUERY)).thenReturn(expectedDbResult as List<Folder>)
+        @Suppress("UNCHECKED_CAST")
+        whenever(folderDao.query(ContentResolverSearcherTestBase.Companion.VALID_QUERY)).thenReturn(expectedDbResult as List<Folder>)
         val EXPECTED_WHERE = (MediaStore.Audio.Media.DATA + " LIKE ? OR "
                 + MediaStore.Audio.Media.DATA + " LIKE ? OR "
                 + MediaStore.Audio.Media.DATA + " LIKE ? COLLATE NOCASE")
@@ -59,9 +60,9 @@ class FolderSearcherTest : ContentResolverSearcherTestBase<FolderSearcher?>() {
                 searcher!!.likeParam(id1),
                 searcher!!.likeParam(id2),
                 searcher!!.likeParam(id3))
-        whenever(contentResolver!!.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, searcher!!.projection, EXPECTED_WHERE, EXPECTED_WHERE_ARGS, null))
+        whenever(contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, searcher!!.projection, EXPECTED_WHERE, EXPECTED_WHERE_ARGS, null))
                 .thenReturn(cursor)
-        whenever<List<MediaBrowserCompat.MediaItem?>>(resultsParser!!.create(cursor!!, idPrefix!!)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
+        whenever<List<MediaBrowserCompat.MediaItem?>>(resultsParser.create(cursor, idPrefix!!)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
         val result = searcher!!.search(ContentResolverSearcherTestBase.Companion.VALID_QUERY)
         Assert.assertEquals(ContentResolverSearcherTestBase.Companion.expectedResult, result)
     }

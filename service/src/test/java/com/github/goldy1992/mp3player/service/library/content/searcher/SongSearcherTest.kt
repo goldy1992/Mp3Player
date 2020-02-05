@@ -29,7 +29,7 @@ class SongSearcherTest : ContentResolverSearcherTestBase<SongSearcher?>() {
     fun setup() {
         mediaItemTypeIds = MediaItemTypeIds()
         idPrefix = mediaItemTypeIds!!.getId(MediaItemType.SONG)
-        searcher = spy(SongSearcher(contentResolver!!, resultsParser!!, mediaItemTypeIds!!, songDao!!))
+        searcher = spy(SongSearcher(contentResolver, resultsParser, mediaItemTypeIds!!, songDao))
     }
 
     @Test
@@ -44,12 +44,13 @@ class SongSearcherTest : ContentResolverSearcherTestBase<SongSearcher?>() {
         expectedDbResult.add(song1)
         expectedDbResult.add(song2)
         expectedDbResult.add(song3)
-        whenever(songDao!!.query(ContentResolverSearcherTestBase.Companion.VALID_QUERY)).thenReturn(expectedDbResult as List<Song>)
+        @Suppress("UNCHECKED_CAST")
+        whenever(songDao.query(ContentResolverSearcherTestBase.Companion.VALID_QUERY)).thenReturn(expectedDbResult as List<Song>)
         val EXPECTED_WHERE = MediaStore.Audio.Media._ID + " IN(?, ?, ?) COLLATE NOCASE"
         val EXPECTED_WHERE_ARGS = arrayOf(id1, id2, id3)
-        whenever(contentResolver!!.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, searcher!!.projection, EXPECTED_WHERE, EXPECTED_WHERE_ARGS, null))
+        whenever(contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, searcher!!.projection, EXPECTED_WHERE, EXPECTED_WHERE_ARGS, null))
                 .thenReturn(cursor)
-        whenever<List<MediaBrowserCompat.MediaItem?>>(resultsParser!!.create(cursor!!, idPrefix!!)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
+        whenever<List<MediaBrowserCompat.MediaItem?>>(resultsParser.create(cursor, idPrefix!!)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
         val result = searcher!!.search(ContentResolverSearcherTestBase.Companion.VALID_QUERY)
         Assert.assertEquals(ContentResolverSearcherTestBase.Companion.expectedResult, result)
     }

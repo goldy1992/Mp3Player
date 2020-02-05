@@ -42,7 +42,7 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
                 .build()
         argumentCaptor<Song>().apply {
             songDatabaseManager.insert(mediaItem)
-            verify(songDao, times(1))!!.insert(capture())
+            verify(songDao, times(1)).insert(capture())
             val song = firstValue
             Assert.assertEquals(expectedId, song.id)
             Assert.assertEquals(expectedValue, song.value)
@@ -53,7 +53,6 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
     fun testReindexCheckDeleteOld() {
         val expectedId = "sdkjdsf"
         val title = "expectedTitle"
-        val expectedTitle = title.toUpperCase()
         val toReturn = MediaItemBuilder(expectedId)
                 .setTitle(title)
                 .build()
@@ -61,9 +60,9 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
                 .thenReturn(listOf(toReturn))
 
         argumentCaptor<List<String>>().apply {
-            songDatabaseManager!!.reindex()
-            Shadows.shadowOf(handler!!.looper).idle()
-            verify(songDao, times(1))!!.deleteOld(capture())
+            songDatabaseManager.reindex()
+            Shadows.shadowOf(handler.looper).idle()
+            verify(songDao, times(1)).deleteOld(capture())
             val idsToDelete = firstValue[0]
             Assert.assertEquals(expectedId, idsToDelete)
         }
@@ -77,14 +76,14 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         val toReturn = MediaItemBuilder(expectedId)
                 .setTitle(title)
                 .build()
-        whenever(contentManager.getChildren(mediaItemTypeIds!!.getId(MediaItemType.SONGS)))
+        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.SONGS)))
                 .thenReturn(listOf(toReturn))
         argumentCaptor<List<Song>>().apply {
         songDatabaseManager.reindex()
-        Shadows.shadowOf(handler!!.looper).idle()
-        verify(songDao, times(1))!!.insertAll(capture())
+        Shadows.shadowOf(handler.looper).idle()
+        verify(songDao, times(1)).insertAll(capture())
         val insertedFolder = firstValue[0]
-        Assert.assertEquals(expectedId, insertedFolder!!.id)
+        Assert.assertEquals(expectedId, insertedFolder.id)
         Assert.assertEquals(expectedTitle, insertedFolder.value)
         }
     }

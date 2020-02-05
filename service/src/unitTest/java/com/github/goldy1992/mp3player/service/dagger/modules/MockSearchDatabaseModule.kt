@@ -24,18 +24,21 @@ class MockSearchDatabaseModule {
 
     @Provides
     @Singleton
+    @Suppress("UNUSED_PARAMETER")
     fun providesSearchDb(context: Context?): SearchDatabase {
         return searchDatabase
     }
 
     @Provides
     @Singleton
+    @Suppress("UNUSED_PARAMETER")
     fun provideSongDao(searchDatabase: SearchDatabase?): SongDao {
         return songDao
     }
 
     @Provides
     @Singleton
+    @Suppress("UNUSED_PARAMETER")
     fun provideFolderDao(searchDatabase: SearchDatabase?): FolderDao {
         return folderDao
     }

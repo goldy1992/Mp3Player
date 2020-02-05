@@ -13,7 +13,9 @@ import com.github.goldy1992.mp3player.service.library.content.request.ContentReq
 import java.util.*
 import javax.inject.Inject
 
+@Suppress("UNUSED_PARAMETER")
 class RootRetriever @Inject constructor(private val mediaItemTypeIds: MediaItemTypeIds) : ContentRetriever(), Comparator<MediaItem?> {
+
     private val CHILDREN: List<MediaItem>
     private val typeToMediaItemMap: MutableMap<MediaItemType, MediaItem>
 
@@ -56,6 +58,7 @@ class RootRetriever @Inject constructor(private val mediaItemTypeIds: MediaItemT
             categorySet.add(mediaItem)
             typeToMediaItemMap[category] = mediaItem
         }
+        @Suppress("UNCHECKED_CAST")
         CHILDREN = ArrayList(categorySet) as List<MediaItem>
     }
 }

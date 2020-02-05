@@ -58,7 +58,7 @@ class FolderResultsParserTest : ResultsParserTestBase() {
         val results = getResultsForProjection(FOLDER_PROJECTION.toTypedArray(), ID_PREFIX)
         // I.e one of the items is removed because it is in the same folder as a previous song
         val expectedResultsSize = 2
-        Assert.assertEquals(expectedResultsSize.toLong(), results!!.size.toLong())
+        Assert.assertEquals(expectedResultsSize.toLong(), results.size.toLong())
         val item1MediaId = getMediaId(results[0])
         Assert.assertNotNull(item1MediaId)
         Assert.assertTrue(item1MediaId!!.contains(DIR_1!!.name))

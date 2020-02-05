@@ -17,11 +17,10 @@ import javax.inject.Singleton
 class ContentManager @Inject constructor(private val contentRetrievers: ContentRetrievers,
                                          private val contentSearchers: ContentSearchers,
                                          private val contentRequestParser: ContentRequestParser,
-                                         songFromUriRetriever: SongFromUriRetriever,
-                                         mediaItemFromIdRetriever: MediaItemFromIdRetriever) {
-    private val rootRetriever: RootRetriever
-    private val songFromUriRetriever: SongFromUriRetriever
-    private val mediaItemFromIdRetriever: MediaItemFromIdRetriever
+                                         private val songFromUriRetriever: SongFromUriRetriever,
+                                         private val mediaItemFromIdRetriever: MediaItemFromIdRetriever) {
+    private val rootRetriever: RootRetriever = contentRetrievers.root
+
     /**
      * The id is in the following format
      * CATEGORY_ID | CHILD_ID where CHILD_ID is optional.
@@ -37,7 +36,7 @@ class ContentManager @Inject constructor(private val contentRetrievers: ContentR
         val request = contentRequestParser.parse(parentId!!)
         val contentRetriever = contentRetrievers[request!!.contentRetrieverKey]
         if (null != contentRetriever)
-        return contentRetriever!!.getChildren(request)
+        return contentRetriever.getChildren(request)
         else
             return null
     }
@@ -89,9 +88,4 @@ class ContentManager @Inject constructor(private val contentRetrievers: ContentR
         const val FILE_SCHEME = "file"
     }
 
-    init {
-        rootRetriever = contentRetrievers.root
-        this.songFromUriRetriever = songFromUriRetriever
-        this.mediaItemFromIdRetriever = mediaItemFromIdRetriever
-    }
 }

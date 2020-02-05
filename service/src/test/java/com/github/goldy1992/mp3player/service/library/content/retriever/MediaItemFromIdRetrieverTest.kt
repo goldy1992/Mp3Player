@@ -21,7 +21,7 @@ class MediaItemFromIdRetrieverTest {
 
     @Before
     fun setup() {
-        mediaItemFromIdRetriever = MediaItemFromIdRetriever(contentResolver, songResultsParser!!)
+        mediaItemFromIdRetriever = MediaItemFromIdRetriever(contentResolver, songResultsParser)
     }
 
     @Test
@@ -30,7 +30,7 @@ class MediaItemFromIdRetrieverTest {
         whenever(contentResolver.query(any(), any(), any(), any(), any())).thenReturn(null)
         val result = mediaItemFromIdRetriever!!.getItem(id)
         Assert.assertNull(result)
-        verify(songResultsParser, never())!!.create(any(), any())
+        verify(songResultsParser, never()).create(any(), any())
     }
 
     @Test

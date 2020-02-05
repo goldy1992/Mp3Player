@@ -32,9 +32,9 @@ class DecreaseSpeedProviderTest : SpeedProviderTestBase() {
     fun testDecreaseSpeed() {
         val currentSpeed = 1.0f
         val expectedSpeed = 0.95f
-        whenever(exoPlayer!!.playbackParameters).thenReturn(PlaybackParameters(currentSpeed))
+        whenever(exoPlayer.playbackParameters).thenReturn(PlaybackParameters(currentSpeed))
         argumentCaptor<PlaybackParameters>().apply {
-            decreaseSpeedProvider!!.onCustomAction(exoPlayer!!, controlDispatcher!!, DECREASE_PLAYBACK_SPEED, null)
+            decreaseSpeedProvider.onCustomAction(exoPlayer, controlDispatcher, DECREASE_PLAYBACK_SPEED, null)
             Shadows.shadowOf(Looper.getMainLooper()).idle()
             verify(exoPlayer, times(1)).setPlaybackParameters(capture())
             val playbackParameters = firstValue

@@ -40,14 +40,14 @@ class SongFromUriRetrieverTest {
     fun setup() {
         mediaItemTypeIds = MediaItemTypeIds()
         val context = InstrumentationRegistry.getInstrumentation().context
-        songFromUriRetriever = SongFromUriRetriever(context, contentResolver!!, songResultsParser!!, mmr!!, mediaItemTypeIds!!)
+        songFromUriRetriever = SongFromUriRetriever(context, contentResolver, songResultsParser, mmr, mediaItemTypeIds!!)
     }
 
     @Test
     fun testGetSongWithContentScheme() {
-        whenever(testUri!!.scheme).thenReturn(ContentResolver.SCHEME_CONTENT)
+        whenever(testUri.scheme).thenReturn(ContentResolver.SCHEME_CONTENT)
         val expectedEmbeddedPic = ByteArray(1)
-        whenever(mmr!!.embeddedPicture).thenReturn(expectedEmbeddedPic)
+        whenever(mmr.embeddedPicture).thenReturn(expectedEmbeddedPic)
         val expectedTitle = "TITLE"
         whenever(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)).thenReturn(expectedTitle)
         val expectedArtist = "ARTIST"
@@ -71,18 +71,18 @@ class SongFromUriRetrieverTest {
     fun testGetSongWithNonContentScheme() {
         val expectedMediaItem = mock<MediaBrowserCompat.MediaItem>()
         val cursor = mock<Cursor>()
-        whenever(contentResolver!!.query(any(), any(), eq(null), eq(null), eq(null)))
+        whenever(contentResolver.query(any(), any(), eq(null), eq(null), eq(null)))
                 .thenReturn(cursor)
         val id = mediaItemTypeIds!!.getId(MediaItemType.SONGS)
-        whenever(songResultsParser!!.create(cursor, id!!)).thenReturn(listOf(expectedMediaItem))
-        whenever(testUri!!.scheme).thenReturn(ContentResolver.SCHEME_FILE)
+        whenever(songResultsParser.create(cursor, id!!)).thenReturn(listOf(expectedMediaItem))
+        whenever(testUri.scheme).thenReturn(ContentResolver.SCHEME_FILE)
         val result = songFromUriRetriever!!.getSong(testUri)
         Assert.assertEquals(expectedMediaItem, result)
     }
 
     @Test
     fun testUriWithNullScheme() {
-        whenever(testUri!!.scheme).thenReturn(null)
+        whenever(testUri.scheme).thenReturn(null)
         val result = songFromUriRetriever!!.getSong(testUri)
         Assert.assertNull(result)
     }

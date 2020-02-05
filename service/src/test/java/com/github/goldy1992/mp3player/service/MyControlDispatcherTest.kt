@@ -23,31 +23,31 @@ class MyControlDispatcherTest {
 
     @Before
     fun setup() {
-        myControlDispatcher = MyControlDispatcher(audioBecomingNoisyBroadcastReceiver!!, playerNotificationManager!!)
+        myControlDispatcher = MyControlDispatcher(audioBecomingNoisyBroadcastReceiver, playerNotificationManager)
     }
 
     @Test
     fun testDispatchSetPlayWhenReady() {
-        whenever(playerNotificationManager!!.isActive).thenReturn(true)
-        val result = myControlDispatcher!!.dispatchSetPlayWhenReady(exoPlayer!!, true)
+        whenever(playerNotificationManager.isActive).thenReturn(true)
+        val result = myControlDispatcher!!.dispatchSetPlayWhenReady(exoPlayer, true)
         Assert.assertTrue(result)
-        verify(audioBecomingNoisyBroadcastReceiver, times(1))!!.register()
-        verify(playerNotificationManager, never())!!.activate()
+        verify(audioBecomingNoisyBroadcastReceiver, times(1)).register()
+        verify(playerNotificationManager, never()).activate()
     }
 
     @Test
     fun testDispatchSetPlayWhenReadyPlaybackManagerNotActive() {
-        whenever(playerNotificationManager!!.isActive).thenReturn(false)
-        val result = myControlDispatcher!!.dispatchSetPlayWhenReady(exoPlayer!!, true)
+        whenever(playerNotificationManager.isActive).thenReturn(false)
+        val result = myControlDispatcher!!.dispatchSetPlayWhenReady(exoPlayer, true)
         Assert.assertTrue(result)
-        verify(audioBecomingNoisyBroadcastReceiver, times(1))!!.register()
-        verify(playerNotificationManager, times(1))!!.activate()
+        verify(audioBecomingNoisyBroadcastReceiver, times(1)).register()
+        verify(playerNotificationManager, times(1)).activate()
     }
 
     @Test
     fun testDispatchSetPlayWhenNotReady() {
-        val result = myControlDispatcher!!.dispatchSetPlayWhenReady(exoPlayer!!, false)
+        val result = myControlDispatcher!!.dispatchSetPlayWhenReady(exoPlayer, false)
         Assert.assertTrue(result)
-        verify(audioBecomingNoisyBroadcastReceiver, times(1))!!.unregister()
+        verify(audioBecomingNoisyBroadcastReceiver, times(1)).unregister()
     }
 }

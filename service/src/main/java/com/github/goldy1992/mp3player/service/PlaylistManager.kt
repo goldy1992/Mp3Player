@@ -13,7 +13,8 @@ class PlaylistManager
             @param:Named("starting_playlist") val playlist: MutableList<MediaItem>?) {
 
     private var queueIndex = EMPTY_PLAYLIST_INDEX
-    @Synchronized
+
+    @Suppress("UNCHECKED_CAST")
     fun createNewPlaylist(newList: List<MediaItem?>?): Boolean {
         playlist!!.clear()
         val result = playlist.addAll(newList as List<MediaItem>)

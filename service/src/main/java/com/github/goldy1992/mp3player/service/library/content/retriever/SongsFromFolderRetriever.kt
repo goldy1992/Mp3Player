@@ -16,7 +16,7 @@ class SongsFromFolderRetriever @Inject constructor(contentResolver: ContentResol
     override val type: MediaItemType
         get() = MediaItemType.SONG
 
-    public override fun performGetChildrenQuery(id: String?): Cursor {
+    override fun performGetChildrenQuery(id: String?): Cursor? {
         val whereArgs = arrayOf("$id%")
         return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection,
                 WHERE, whereArgs, null)

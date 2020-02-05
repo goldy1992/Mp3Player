@@ -36,8 +36,8 @@ class SongsFromFolderRetrieverTest : ContentResolverRetrieverTestBase<SongsFromF
                 .setTitle(title)
                 .build()
         expectedResult.add(mediaItem)
-        whenever(contentResolver!!.query(any(), any(), any(), any(), eq(null))).thenReturn(cursor)
-        whenever(resultsParser!!.create(cursor!!, contentRequest!!.mediaIdPrefix!!)).thenReturn(expectedResult)
+        whenever(contentResolver.query(any(), any(), any(), any(), eq(null))).thenReturn(cursor)
+        whenever(resultsParser.create(cursor, contentRequest!!.mediaIdPrefix!!)).thenReturn(expectedResult)
         val result = retriever!!.getChildren(contentRequest!!)
         // call remaining looper messages
         Shadows.shadowOf(Looper.getMainLooper()).idle()

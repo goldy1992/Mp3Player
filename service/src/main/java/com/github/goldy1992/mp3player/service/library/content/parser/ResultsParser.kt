@@ -15,7 +15,7 @@ abstract class ResultsParser : Comparator<MediaItem> {
     abstract val type: MediaItemType?
 
     protected val extras: Bundle
-        protected get() {
+        get() {
             val extras = Bundle()
             extras.putSerializable(MEDIA_ITEM_TYPE, type)
             return extras

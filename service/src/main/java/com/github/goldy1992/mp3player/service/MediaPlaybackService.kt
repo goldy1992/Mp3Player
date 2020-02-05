@@ -99,6 +99,7 @@ abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotific
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onSearch(query: String, extras: Bundle?,
                           result: Result<MutableList<MediaBrowserCompat.MediaItem>>) {
         result.detach()

@@ -35,7 +35,7 @@ class FolderResultsParser
                 }
             }
         }
-        return ArrayList(listToReturn) as List<MediaItem>
+        return ArrayList(listToReturn)
     }
 
     override val type: MediaItemType?

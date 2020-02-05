@@ -15,6 +15,7 @@ abstract class SearchDatabaseManager<T : SearchEntity>(private val contentManage
         dao.insert(t!!)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun reindex() {
         val results = contentManager.getChildren(rootCategoryId)
         val entries = buildResults(results)

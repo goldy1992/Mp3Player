@@ -54,9 +54,9 @@ class ContentManagerTest {
         val contentRetrieverId = "id"
         val expectedList: List<MediaBrowserCompat.MediaItem> = ArrayList()
         val contentRetriever = mock<ContentRetriever>()
-        whenever(contentRetrievers!![contentRetrieverId]).thenReturn(contentRetriever)
+        whenever(contentRetrievers[contentRetrieverId]).thenReturn(contentRetriever)
         val contentRequest = ContentRequest("", contentRetrieverId, null)
-        whenever(contentRequestParser!!.parse(contentRetrieverId)).thenReturn(contentRequest)
+        whenever(contentRequestParser.parse(contentRetrieverId)).thenReturn(contentRequest)
         whenever(contentRetriever.getChildren(contentRequest)).thenReturn(expectedList)
         val result = contentManager!!.getChildren(contentRetrieverId)
         Assert.assertEquals(expectedList, result)
@@ -66,7 +66,7 @@ class ContentManagerTest {
     fun testGetChildrenNull() {
         val incorrectId = "incorrectId"
         val contentRequest = ContentRequest("", incorrectId, null)
-        whenever(contentRequestParser!!.parse(incorrectId)).thenReturn(contentRequest)
+        whenever(contentRequestParser.parse(incorrectId)).thenReturn(contentRequest)
         val result = contentManager!!.getChildren(incorrectId)
         Assert.assertNull(result)
     }
@@ -105,7 +105,7 @@ class ContentManagerTest {
         val contentSearcherList: MutableList<ContentSearcher> = ArrayList()
         contentSearcherList.add(songSearcher)
         contentSearcherList.add(folderSearcher)
-        whenever(contentSearchers!!.all).thenReturn(contentSearcherList)
+        whenever(contentSearchers.all).thenReturn(contentSearcherList)
         whenever(contentSearchers[songSearcher.searchCategory]).thenReturn(songSearcher)
         whenever(contentSearchers[folderSearcher.searchCategory]).thenReturn(folderSearcher)
         val result = contentManager!!.search(query)
