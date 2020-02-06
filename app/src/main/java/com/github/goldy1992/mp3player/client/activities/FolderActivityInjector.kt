@@ -5,9 +5,9 @@ import com.github.goldy1992.mp3player.commons.MikesMp3Player
 import com.github.goldy1992.mp3player.client.dagger.components.DaggerMediaActivityCompatComponent
 
 class FolderActivityInjector : FolderActivity() {
-    public override fun onCreate(savedInstance: Bundle?) {
+    public override fun onCreate(savedInstanceState: Bundle?) {
         initialiseDependencies()
-        super.onCreate(savedInstance)
+        super.onCreate(savedInstanceState)
     }
 
     public override fun initialiseDependencies() {

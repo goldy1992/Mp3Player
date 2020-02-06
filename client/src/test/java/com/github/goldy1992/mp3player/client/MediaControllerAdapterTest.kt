@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client
 
 import android.content.Context
+import android.media.session.MediaController
 import android.media.session.MediaSession
 import android.os.Bundle
 import android.support.v4.media.MediaDescriptionCompat
@@ -8,6 +9,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
@@ -143,6 +145,15 @@ class MediaControllerAdapterTest {
     }
 
     @Test
+    fun testGetAlbumArtNullUri() {
+        val metadata = MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, null)
+                .build()
+        whenever(mediaControllerAdapter.metadata).thenReturn(metadata)
+        val result = mediaControllerAdapter.currentSongAlbumArtUri
+        Assert.assertNull(result)
+    }
+    @Test
     fun testSendCustomAction() {
         val customAction = "DO_SOMETHING"
         val args = Bundle()
@@ -228,6 +239,44 @@ class MediaControllerAdapterTest {
     fun testDisconnect() {
         mediaControllerAdapter.disconnect()
         verify(mediaControllerAdapter.mediaController, times(1))?.unregisterCallback(myMediaControllerCallback)
+    }
+
+    @Test
+    fun testCurrentQueuePosition() {
+        val expectedQueuePosition = 2
+        val expectedQueueId = 13213L
+        val mediaDescriptionCompat = MediaDescriptionCompat.Builder().build()
+        val expectedQueueItem = MediaSessionCompat.QueueItem(mediaDescriptionCompat, expectedQueueId)
+        val inactiveQueueId = 2112L
+        val inactiveQueueItem = MediaSessionCompat.QueueItem(mediaDescriptionCompat, inactiveQueueId)
+        val mediaController : MediaControllerCompat = mock<MediaControllerCompat>()
+        val playbackStateCompat : PlaybackStateCompat = PlaybackStateCompat.Builder()
+                .setActiveQueueItemId(expectedQueueId).build()
+        mediaControllerAdapter.mediaController = mediaController
+        whenever(mediaController.playbackState).thenReturn(playbackStateCompat)
+
+        val queue : List<MediaSessionCompat.QueueItem> = mutableListOf(inactiveQueueItem, inactiveQueueItem, expectedQueueItem)
+        whenever(mediaController.queue).thenReturn(queue)
+
+        val result = mediaControllerAdapter.getCurrentPosition()
+        assertEquals(expectedQueuePosition, result)
+    }
+
+    @Test
+    fun testCurrentQueuePositionNotFound() {
+        val expectedQueuePosition = -1
+        val expectedQueueId = 90L
+        val mediaController : MediaControllerCompat = mock<MediaControllerCompat>()
+        val playbackStateCompat : PlaybackStateCompat = PlaybackStateCompat.Builder()
+                .setActiveQueueItemId(expectedQueueId).build()
+        mediaControllerAdapter.mediaController = mediaController
+        whenever(mediaController.playbackState).thenReturn(playbackStateCompat)
+
+
+        whenever(mediaController.queue).thenReturn(emptyList())
+
+        val result = mediaControllerAdapter.getCurrentPosition()
+        assertEquals(expectedQueuePosition, result)
     }
 
     private fun initialiseMediaControllerAdapter(token: MediaSessionCompat.Token): MediaControllerAdapter {

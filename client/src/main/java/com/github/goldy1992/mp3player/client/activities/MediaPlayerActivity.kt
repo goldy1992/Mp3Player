@@ -47,11 +47,11 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, Lo
         val context = applicationContext
         val albumArtPainter = AlbumArtPainter(Glide.with(context))
         trackViewPagerChangeCallback = TrackViewPagerChangeCallback(mediaControllerAdapter)
-        trackViewAdapter = TrackViewAdapter(albumArtPainter, mediaControllerAdapter.queue)
+        trackViewAdapter = TrackViewAdapter(albumArtPainter, mediaControllerAdapter.getQueue())
         mediaControllerAdapter.registerMetaDataListener(this)
         trackViewPager.setAdapter(trackViewAdapter)
         trackViewPager.registerOnPageChangeCallback(trackViewPagerChangeCallback!!)
-        trackViewPager.setCurrentItem(mediaControllerAdapter.currentQueuePosition, false)
+        trackViewPager.setCurrentItem(mediaControllerAdapter.getCurrentPosition(), false)
         return true
     }
 
@@ -67,8 +67,8 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, Lo
     }
 
     override fun onMetadataChanged(metadata: MediaMetadataCompat) { // TODO: in future this should be a listener for when the queue has changed
-        val queueItems = mediaControllerAdapter.queue
-        val currentPosition = mediaControllerAdapter.currentQueuePosition
+        val queueItems = mediaControllerAdapter.getQueue()
+        val currentPosition = mediaControllerAdapter.getCurrentPosition()
         trackViewPagerChangeCallback!!.currentPosition = currentPosition
         trackViewPager!!.setCurrentItem(currentPosition, false)
         trackViewAdapter!!.updateQueue(queueItems!!)

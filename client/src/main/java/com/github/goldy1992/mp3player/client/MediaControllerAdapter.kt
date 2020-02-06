@@ -166,17 +166,18 @@ constructor(private val context: Context,
     val controller: MediaControllerCompat.TransportControls
         get() = mediaController!!.transportControls
 
-    open val queue: List<MediaSessionCompat.QueueItem>?
-        get() = mediaController!!.queue
+    open fun getQueue(): List<MediaSessionCompat.QueueItem>? {
+        return mediaController!!.queue
+    }
 
-    open val activeQueueItemId: Long
-        get() = mediaController!!.playbackState.activeQueueItemId
+    open fun getActiveQueueItemId(): Long? {
+        return mediaController!!.playbackState.activeQueueItemId
+    }
 
-    val currentQueuePosition: Int
-        get() {
-            val queue = queue
+   open fun getCurrentPosition() : Int {
+            val queue = getQueue()
             if (queue != null) {
-                val id = activeQueueItemId
+                val id = getActiveQueueItemId()
                 for (i in queue.indices) {
                     val queueItem = queue[i]
                     if (queueItem.queueId == id) {

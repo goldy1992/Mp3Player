@@ -36,6 +36,6 @@ class TrackViewPagerChangeCallback(
 
     /** Constructor  */
     init {
-        currentPosition = mediaControllerAdapter.currentQueuePosition
+        currentPosition = mediaControllerAdapter.getCurrentPosition()
     }
 }

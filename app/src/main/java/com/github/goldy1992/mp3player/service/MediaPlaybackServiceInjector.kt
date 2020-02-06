@@ -16,7 +16,7 @@ class MediaPlaybackServiceInjector : MediaPlaybackService() {
         val app = applicationContext as MikesMp3Player
         DaggerServiceComponent
                 .factory()
-                .create(applicationContext, this, "MEDIA_PLYBK_SRVC_WKR", app.getComponentClassMapper()!!)
+                .create(applicationContext, this, "MEDIA_PLYBK_SRVC_WKR", app.getComponentClassMapper())
                 .inject(this)
     }
 }
