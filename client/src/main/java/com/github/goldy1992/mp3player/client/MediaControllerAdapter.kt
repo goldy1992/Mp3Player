@@ -14,6 +14,7 @@ import androidx.annotation.VisibleForTesting
 import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
+import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import org.apache.commons.lang3.exception.ExceptionUtils
 import javax.inject.Inject
@@ -22,7 +23,7 @@ import javax.inject.Inject
 open class MediaControllerAdapter
 @Inject
 constructor(private val context: Context,
-            private val myMediaControllerCallback: MyMediaControllerCallback?) {
+            private val myMediaControllerCallback: MyMediaControllerCallback?) : LogTagger {
 
     @get:VisibleForTesting
     @set:VisibleForTesting
@@ -34,7 +35,7 @@ constructor(private val context: Context,
         if (!isInitialized && token != null) {
             init(token)
         } else {
-            Log.e(LOG_TAG, "MediaControllerAdapter already initialised")
+            Log.e(logTag(), "MediaControllerAdapter already initialised")
         }
     }
 
@@ -44,7 +45,7 @@ constructor(private val context: Context,
             mediaController = MediaControllerCompat(context, token)
             mediaController!!.registerCallback(myMediaControllerCallback!!)
         } catch (ex: RemoteException) {
-            Log.e(LOG_TAG, ExceptionUtils.getStackTrace(ex))
+            Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
         }
         this.token = token
     }
@@ -143,7 +144,7 @@ constructor(private val context: Context,
             return try {
                 Uri.parse(albumArtUriPath)
             } catch (ex: NullPointerException) {
-                Log.e(LOG_TAG, "$albumArtUriPath: is an invalid Uri")
+                Log.e(logTag(), "$albumArtUriPath: is an invalid Uri")
                 return null
             }
         }
@@ -186,8 +187,8 @@ constructor(private val context: Context,
             return -1
         }
 
-    companion object {
-        private const val LOG_TAG = "MDIA_CNTRLLR_ADPTR"
+    override fun logTag(): String {
+        return "MDIA_CNTRLLR_ADPTR"
     }
 
 }

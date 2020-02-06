@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client
 import android.content.Context
 import android.media.session.MediaSession
 import android.os.Bundle
+import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
@@ -15,10 +16,12 @@ import com.github.goldy1992.mp3player.client.callbacks.playback.MyPlaybackStateC
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.nhaarman.mockitokotlin2.*
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
 class MediaControllerAdapterTest {
