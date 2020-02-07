@@ -18,11 +18,6 @@ android {
         versionName "1.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         missingDimensionStrategy 'full', 'automation'
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = ["room.schemaLocation":"$projectDir/schemas".toString()]
-            }
-        }
     }
 
     adbOptions {
@@ -137,22 +132,8 @@ dependencies {
     kaptTest group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
 
 
-    // vintage
-    testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
-    // (Optional) If you also have JUnit 4-based tests
-    testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: JUNIT5_VERSION
-    // jupiter
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: JUNIT5_VERSION
-    // (Required) Writing and executing Unit Tests on the JUnit Platform
-    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: JUNIT5_VERSION
-    //testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.25.1'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: MOCKITO_CORE_VERSION
-    testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
-    testImplementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
-    testImplementation group: 'org.robolectric', name: 'robolectric', version: ROBOLECTRIC_VERSION// https://mvnrepository.com/artifact/org.robolectric/shadows-support-v4
-    testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
-
-
+    unitTestImplementation junit5UnitTests
+    testRuntimeOnly junit5UnitTestRuntime
 
     androidTestImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
