@@ -51,7 +51,7 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, Lo
         mediaControllerAdapter.registerMetaDataListener(this)
         trackViewPager.setAdapter(trackViewAdapter)
         trackViewPager.registerOnPageChangeCallback(trackViewPagerChangeCallback!!)
-        trackViewPager.setCurrentItem(mediaControllerAdapter.getCurrentPosition(), false)
+        trackViewPager.setCurrentItem(mediaControllerAdapter.getCurrentQueuePosition(), false)
         return true
     }
 
@@ -68,7 +68,7 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, Lo
 
     override fun onMetadataChanged(metadata: MediaMetadataCompat) { // TODO: in future this should be a listener for when the queue has changed
         val queueItems = mediaControllerAdapter.getQueue()
-        val currentPosition = mediaControllerAdapter.getCurrentPosition()
+        val currentPosition = mediaControllerAdapter.getCurrentQueuePosition()
         trackViewPagerChangeCallback!!.currentPosition = currentPosition
         trackViewPager!!.setCurrentItem(currentPosition, false)
         trackViewAdapter!!.updateQueue(queueItems!!)

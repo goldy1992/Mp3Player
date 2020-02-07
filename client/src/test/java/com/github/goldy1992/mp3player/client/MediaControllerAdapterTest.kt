@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client
 
 import android.content.Context
-import android.media.session.MediaController
 import android.media.session.MediaSession
 import android.os.Bundle
 import android.support.v4.media.MediaDescriptionCompat
@@ -9,7 +8,6 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
@@ -23,7 +21,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
 class MediaControllerAdapterTest {
@@ -258,7 +255,7 @@ class MediaControllerAdapterTest {
         val queue : List<MediaSessionCompat.QueueItem> = mutableListOf(inactiveQueueItem, inactiveQueueItem, expectedQueueItem)
         whenever(mediaController.queue).thenReturn(queue)
 
-        val result = mediaControllerAdapter.getCurrentPosition()
+        val result = mediaControllerAdapter.getCurrentQueuePosition()
         assertEquals(expectedQueuePosition, result)
     }
 
@@ -275,7 +272,7 @@ class MediaControllerAdapterTest {
 
         whenever(mediaController.queue).thenReturn(emptyList())
 
-        val result = mediaControllerAdapter.getCurrentPosition()
+        val result = mediaControllerAdapter.getCurrentQueuePosition()
         assertEquals(expectedQueuePosition, result)
     }
 

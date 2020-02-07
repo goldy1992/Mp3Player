@@ -174,7 +174,7 @@ constructor(private val context: Context,
         return mediaController!!.playbackState.activeQueueItemId
     }
 
-   open fun getCurrentPosition() : Int {
+   open fun getCurrentQueuePosition() : Int {
             val queue = getQueue()
             if (queue != null) {
                 val id = getActiveQueueItemId()

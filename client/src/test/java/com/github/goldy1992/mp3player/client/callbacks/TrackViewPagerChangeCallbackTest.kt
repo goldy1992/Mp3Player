@@ -22,7 +22,7 @@ class TrackViewPagerChangeCallbackTest {
 
     @Before
     fun setup() {
-        whenever(mediaControllerAdapter.getCurrentPosition()).thenReturn(0)
+        whenever(mediaControllerAdapter.getCurrentQueuePosition()).thenReturn(0)
         trackViewPagerChangeCallback = TrackViewPagerChangeCallback(mediaControllerAdapter)
     }
 
