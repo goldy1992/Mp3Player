@@ -13,7 +13,7 @@ class SongListFragment : MediaItemListFragment() {
     }
 
     override fun logTag(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return "SONG_LST_FRGMNT"
     }
 
     companion object {
