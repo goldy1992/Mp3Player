@@ -129,4 +129,6 @@ dependencies {
     testImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
 
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    automationImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
+
 }
