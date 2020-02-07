@@ -29,7 +29,7 @@ class MyDescriptionAdapterTest {
         val context = InstrumentationRegistry.getInstrumentation().context
         val token = getMediaSessionCompatToken(context)
         val componentClassMapper = ComponentClassMapper.Builder().build()
-        myDescriptionAdapter = MyDescriptionAdapter(context, token, playlistManager!!, componentClassMapper)
+        myDescriptionAdapter = MyDescriptionAdapter(context, token, playlistManager, componentClassMapper)
     }
 
     @Test
@@ -39,8 +39,8 @@ class MyDescriptionAdapterTest {
                 .setTitle(expectedTitle)
                 .build()
         val index = 7
-        whenever(player!!.currentWindowIndex).thenReturn(index)
-        whenever(playlistManager!!.getItemAtIndex(index)).thenReturn(testItem)
+        whenever(player.currentWindowIndex).thenReturn(index)
+        whenever(playlistManager.getItemAtIndex(index)).thenReturn(testItem)
         val result = myDescriptionAdapter!!.getCurrentContentTitle(player)
         Assert.assertEquals(expectedTitle, result)
     }

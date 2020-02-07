@@ -22,12 +22,12 @@ class MyFolderViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
     @Before
     override fun setup() {
         super.setup()
-        myFolderViewAdapter = MyFolderViewAdapter(albumArtPainter!!)
+        myFolderViewAdapter = MyFolderViewAdapter(albumArtPainter)
     }
 
     @Test
     fun testOnCreateViewHolder() {
-        val result = myFolderViewAdapter!!.onCreateViewHolder(viewGroup!!, 0) as MyFolderViewHolder
+        val result = myFolderViewAdapter.onCreateViewHolder(viewGroup, 0) as MyFolderViewHolder
         Assert.assertNotNull(result)
     }
 
@@ -40,10 +40,10 @@ class MyFolderViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
                 .setDescription(directoryPath)
                 .build()
         )
-        myFolderViewAdapter!!.notifyDataSetChanged()
-        myFolderViewAdapter!!.items = mediaItems
+        myFolderViewAdapter.notifyDataSetChanged()
+        myFolderViewAdapter.items = mediaItems
         argumentCaptor<MediaBrowserCompat.MediaItem>().apply {
-            myFolderViewAdapter!!.onBindViewHolder(myFolderViewHolder, 0)
+            myFolderViewAdapter.onBindViewHolder(myFolderViewHolder, 0)
             verify(myFolderViewHolder, times(1)).bindMediaItem(capture())
             val result = allValues[0]
             Assert.assertEquals(directoryName, MediaItemUtils.getTitle(result))

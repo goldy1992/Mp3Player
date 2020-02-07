@@ -17,6 +17,7 @@ import com.github.goldy1992.mp3player.client.views.adapters.RecyclerViewAdapters
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
+import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.android.synthetic.main.fragment_view_page.*
 import javax.inject.Inject
 
@@ -27,7 +28,7 @@ import javax.inject.Inject
  * 1) we don't want to override the constructor for compatibility purposes
  * 2) This ChildViewFragment will be provided after the main injection is done
  */
-abstract class MediaItemListFragment : Fragment(), ItemSelectedListener {
+abstract class MediaItemListFragment : Fragment(), ItemSelectedListener, LogTagger {
     /**
      * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
      */
@@ -69,27 +70,20 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener {
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
         recyclerView.setAdapter(myViewAdapter)
-        recyclerView.addOnItemTouchListener(myGenericItemTouchListener!!)
+        recyclerView.addOnItemTouchListener(myGenericItemTouchListener)
         myGenericItemTouchListener.parentView = recyclerView
         recyclerView.setItemAnimator(DefaultItemAnimator())
         recyclerView.setLayoutManager(linearLayoutManager)
 
-        val preloader = albumArtPainter!!
+        val preloader = albumArtPainter
                 .createPreloader(myViewAdapter
                         as ListPreloader.PreloadModelProvider<MediaBrowserCompat.MediaItem?>)
         recyclerView.addOnScrollListener(preloader)
         recyclerView.setHideScrollbar(true)
     }
 
-
-
-
     private fun injectDependencies(component: MediaActivityCompatComponent) {
         component.childViewPagerFragmentSubcomponentFactory()
                 .create(parentItemType, parentItemTypeId, this).inject(this)
-    }
-
-    companion object {
-        private const val LOG_TAG = "GENRC_VIW_PGE_FRGMNT"
     }
 }

@@ -15,6 +15,10 @@ class FolderListFragment : MediaItemListFragment() {
         }
     }
 
+    override fun logTag(): String {
+        return "FLDR_LST_FRGMNT"
+    }
+
     companion object {
         @JvmStatic
         fun newInstance(mediaItemType: MediaItemType, id: String, component: MediaActivityCompatComponent): FolderListFragment {

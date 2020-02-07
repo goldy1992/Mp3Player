@@ -9,7 +9,9 @@ import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import javax.inject.Inject
 
 class RootAuthenticator @Inject constructor(ids: MediaItemTypeIds) {
-    private val acceptedMediaId: String
+    private val acceptedMediaId: String = ids.getId(MediaItemType.ROOT)!!
+
+    @Suppress("UNUSED_PARAMETER")
     fun authenticate(clientPackageName: String, clientUid: Int,
                      rootHints: Bundle?): MediaBrowserServiceCompat.BrowserRoot {
         val extras = Bundle()
@@ -28,6 +30,7 @@ class RootAuthenticator @Inject constructor(ids: MediaItemTypeIds) {
         return REJECTED_MEDIA_ROOT_ID == id
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun allowBrowsing(clientPackageName: String, clientUid: Int): Boolean {
         return clientPackageName.contains(PACKAGE_NAME)
     }
@@ -38,7 +41,4 @@ class RootAuthenticator @Inject constructor(ids: MediaItemTypeIds) {
         val REJECTED_MEDIA_ROOT_ID = "empty_root_id"
     }
 
-    init {
-        acceptedMediaId = ids.getId(MediaItemType.ROOT)!!
-    }
 }

@@ -23,8 +23,9 @@ class MyShadowMediaPlayer : ShadowMediaPlayer() {
 
     companion object {
         @Implementation
+        @Suppress("UNUSED_PARAMETER")
         fun create(context: Context?, uri: Uri): MediaPlayer? {
-            val ds = DataSource.toDataSource(uri.path.toString())
+            val ds = DataSource.toDataSource(uri.path!!.toString())
             addMediaInfo(ds, MediaInfo())
             val mp = MediaPlayer()
             val shadow = Shadow.extract<MyShadowMediaPlayer>(mp)

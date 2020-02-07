@@ -8,13 +8,13 @@ import androidx.room.Query
 @Dao
 interface SongDao : SearchDao<Song> {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    override fun insert(song: Song)
+    override fun insert(entity: Song)
 
     @Query("SELECT COUNT(*) FROM songs")
     override fun count() : Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    override fun insertAll(items: List<Song>)
+    override fun insertAll(entities: List<Song>)
 
     @Query("DELETE FROM songs WHERE id NOT IN ( :ids )")
     override fun deleteOld(ids: List<String?>?)

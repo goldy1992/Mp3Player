@@ -10,7 +10,6 @@ tasks.withType(Test) {
 
 task jacocoTestReportUnitTestDebug(type: JacocoReport, dependsOn: ['testUnitTestDebugUnitTest']) {
 
-    println "reporting for duty"
     reports {
         xml.enabled = true
         html.enabled = true

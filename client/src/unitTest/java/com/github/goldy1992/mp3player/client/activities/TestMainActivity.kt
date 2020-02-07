@@ -6,12 +6,12 @@ import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityComp
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 
 class TestMainActivity : MainActivity() {
-    public override fun onCreate(savedInstance: Bundle?) {
+    public override fun onCreate(savedInstanceState: Bundle?) {
         initialiseDependencies()
-        super.onCreate(savedInstance)
+        super.onCreate(savedInstanceState)
     }
 
-    public override fun initialiseDependencies() {
+    override fun initialiseDependencies() {
         val componentClassMapper : ComponentClassMapper = ComponentClassMapper.Builder()
                 .service(TestMainActivity::class.java)
                 .mainActivity(TestMainActivity::class.java)

@@ -15,10 +15,7 @@ class MyPlaybackStateCallbackTest {
     /** a mock PlaybackStateListener  */
 
     private val mockPlaybackStateListener1: PlaybackStateListener = mock<PlaybackStateListener>()
-    /** a mock PlaybackStateListener  */
 
-    private val mockPlaybackStateListener2: PlaybackStateListener = mock<PlaybackStateListener>()
-    /** the Playback State Callback to test  */
     private var myPlaybackStateCallback: MyPlaybackStateCallback = MyPlaybackStateCallback()
 
 
@@ -29,13 +26,10 @@ class MyPlaybackStateCallbackTest {
      */
     @Test
     fun testRemovePlaybackStateListener() {
-        myPlaybackStateCallback!!.registerPlaybackStateListener(mockPlaybackStateListener1!!)
-        val originalSize = 1
-        val result = myPlaybackStateCallback!!.removePlaybackStateListener(mockPlaybackStateListener1)
+        myPlaybackStateCallback.registerPlaybackStateListener(mockPlaybackStateListener1)
+        val result = myPlaybackStateCallback.removePlaybackStateListener(mockPlaybackStateListener1)
         assertTrue(result)
-        val expectedNewSize = originalSize - 1
-    //    Assert.assertEquals(expectedNewSize.toLong(), myPlaybackStateCallback.li.toLong())
-    }
+   }
 
     /**
      * GIVEN: an empty PlaybackStateListener set
@@ -44,7 +38,7 @@ class MyPlaybackStateCallbackTest {
      */
     @Test
     fun testRemovePlaybackStateListenerOnEmptySet() {
-        val result = myPlaybackStateCallback!!.removePlaybackStateListener(null)
+        val result = myPlaybackStateCallback.removePlaybackStateListener(null)
         Assert.assertFalse(result)
     }
 

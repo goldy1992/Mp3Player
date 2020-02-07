@@ -34,7 +34,7 @@ class TimeCounter
     var timer: Timer? = null
 
     var isRepeating = false
-    val isInitialised: Boolean
+    private val isInitialised: Boolean
         get() = textView != null
 
     fun seekTo(position: Long) {
@@ -49,7 +49,7 @@ class TimeCounter
     fun updateState(state: PlaybackStateCompat) { //Log.d(LOG_TAG, "new state");
         currentState = state.state
         currentSpeed = state.playbackSpeed
-        val repeatMode = mediaControllerAdapter.repeatMode
+        val repeatMode = mediaControllerAdapter.getRepeatMode()
         isRepeating = repeatMode != null && repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE
         val latestPosition = calculateCurrentPlaybackPosition(state)
         if (isInitialised) {

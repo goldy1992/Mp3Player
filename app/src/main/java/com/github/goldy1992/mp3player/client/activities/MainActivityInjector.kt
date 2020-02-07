@@ -5,9 +5,9 @@ import com.github.goldy1992.mp3player.client.dagger.components.DaggerMediaActivi
 import com.github.goldy1992.mp3player.commons.MikesMp3Player
 
 class MainActivityInjector : MainActivity() {
-    public override fun onCreate(savedInstance: Bundle?) {
+    public override fun onCreate(savedInstanceState: Bundle?) {
         initialiseDependencies()
-        super.onCreate(savedInstance)
+        super.onCreate(savedInstanceState)
     }
 
     /** {@inheritDoc}  */

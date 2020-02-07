@@ -14,6 +14,7 @@ import androidx.annotation.VisibleForTesting
 import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
+import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import org.apache.commons.lang3.exception.ExceptionUtils
 import javax.inject.Inject
@@ -22,8 +23,7 @@ import javax.inject.Inject
 open class MediaControllerAdapter
 @Inject
 constructor(private val context: Context,
-            private val myMediaControllerCallback: MyMediaControllerCallback?) {
-
+            private val myMediaControllerCallback: MyMediaControllerCallback?) : LogTagger {
 
     @get:VisibleForTesting
     @set:VisibleForTesting
@@ -35,7 +35,7 @@ constructor(private val context: Context,
         if (!isInitialized && token != null) {
             init(token)
         } else {
-            Log.e(LOG_TAG, "MediaControllerAdapter already initialised")
+            Log.e(logTag(), "MediaControllerAdapter already initialised")
         }
     }
 
@@ -45,7 +45,7 @@ constructor(private val context: Context,
             mediaController = MediaControllerCompat(context, token)
             mediaController!!.registerCallback(myMediaControllerCallback!!)
         } catch (ex: RemoteException) {
-            Log.e(LOG_TAG, ExceptionUtils.getStackTrace(ex))
+            Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
         }
         this.token = token
     }
@@ -118,35 +118,35 @@ constructor(private val context: Context,
             mediaController!!.metadata
         } else null
 
-    @get:ShuffleMode
-    open var shuffleMode: Int
-        get() = mediaController!!.shuffleMode
-        set(shuffleMode) {
-            controller.setShuffleMode(shuffleMode)
-        }
+    @ShuffleMode
+    open fun getShuffleMode() : Int? {
+       return mediaController!!.shuffleMode
+    }
 
-    @get:PlaybackStateCompat.RepeatMode
-    open var repeatMode: Int
-        get() = mediaController!!.repeatMode
-        set(repeatMode) {
-            controller.setRepeatMode(repeatMode)
-        }
+    open fun setShuffleMode(shuffleMode : Int) {
+        controller.setShuffleMode(shuffleMode)
+    }
+
+    @PlaybackStateCompat.RepeatMode
+    open fun getRepeatMode() : Int? {
+        return mediaController?.repeatMode
+    }
+
+    open fun setRepeatMode(repeatMode : Int) {
+        controller.setRepeatMode(repeatMode)
+    }
 
     val currentSongAlbumArtUri: Uri?
         get() {
             val currentMetaData = metadata
             val albumArtUriPath = currentMetaData!!.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI)
-            if (albumArtUriPath != null) {
-                var albumArtUri: Uri? = null
-                albumArtUri = try {
-                    Uri.parse(albumArtUriPath)
-                } catch (ex: NullPointerException) {
-                    Log.e(LOG_TAG, "$albumArtUriPath: is an invalid Uri")
-                    return null
-                }
-                return albumArtUri
+
+            return try {
+                Uri.parse(albumArtUriPath)
+            } catch (ex: NullPointerException) {
+                Log.e(logTag(), "$albumArtUriPath: is an invalid Uri")
+                return null
             }
-            return null
         }
 
     open fun disconnect() {
@@ -166,17 +166,18 @@ constructor(private val context: Context,
     val controller: MediaControllerCompat.TransportControls
         get() = mediaController!!.transportControls
 
-    open val queue: List<MediaSessionCompat.QueueItem>?
-        get() = mediaController!!.queue
+    open fun getQueue(): List<MediaSessionCompat.QueueItem>? {
+        return mediaController!!.queue
+    }
 
-    open val activeQueueItemId: Long
-        get() = mediaController!!.playbackState.activeQueueItemId
+    open fun getActiveQueueItemId(): Long? {
+        return mediaController!!.playbackState.activeQueueItemId
+    }
 
-    val currentQueuePosition: Int
-        get() {
-            val queue = queue
+   open fun getCurrentQueuePosition() : Int {
+            val queue = getQueue()
             if (queue != null) {
-                val id = activeQueueItemId
+                val id = getActiveQueueItemId()
                 for (i in queue.indices) {
                     val queueItem = queue[i]
                     if (queueItem.queueId == id) {
@@ -187,8 +188,8 @@ constructor(private val context: Context,
             return -1
         }
 
-    companion object {
-        private const val LOG_TAG = "MDIA_CNTRLLR_ADPTR"
+    override fun logTag(): String {
+        return "MDIA_CNTRLLR_ADPTR"
     }
 
 }

@@ -7,9 +7,9 @@ import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 
 
 class FolderActivityInjectorTestImpl : FolderActivity() {
-    public override fun onCreate(savedInstance: Bundle?) {
+    public override fun onCreate(savedInstanceState: Bundle?) {
         initialiseDependencies()
-        super.onCreate(savedInstance)
+        super.onCreate(savedInstanceState)
     }
 
     override fun initialiseDependencies() {

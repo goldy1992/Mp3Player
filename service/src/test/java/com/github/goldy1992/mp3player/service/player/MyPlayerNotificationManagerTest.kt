@@ -30,7 +30,7 @@ class MyPlayerNotificationManagerTest {
     @Before
     fun setup() {
         context = InstrumentationRegistry.getInstrumentation().context
-        myPlayerNotificationManager = MyPlayerNotificationManager(context!!, myDescriptionAdapter!!, exoPlayer!!, notificationListener!!)
+        myPlayerNotificationManager = MyPlayerNotificationManager(context!!, myDescriptionAdapter, exoPlayer, notificationListener)
         Assert.assertNotNull(myPlayerNotificationManager!!.playbackNotificationManager)
         Assert.assertFalse(myPlayerNotificationManager!!.isActive)
     }
@@ -40,7 +40,7 @@ class MyPlayerNotificationManagerTest {
         myPlayerNotificationManager!!.setPlayerNotificationManager(playerNotificationManager)
         myPlayerNotificationManager!!.activate()
         Assert.assertTrue(myPlayerNotificationManager!!.isActive)
-        verify(playerNotificationManager, times(1))!!.setPlayer(exoPlayer)
+        verify(playerNotificationManager, times(1)).setPlayer(exoPlayer)
     }
 
     @Test
@@ -48,6 +48,6 @@ class MyPlayerNotificationManagerTest {
         myPlayerNotificationManager!!.setPlayerNotificationManager(playerNotificationManager)
         myPlayerNotificationManager!!.deactivate()
         Assert.assertFalse(myPlayerNotificationManager!!.isActive)
-        verify(playerNotificationManager, times(1))!!.setPlayer(null)
+        verify(playerNotificationManager, times(1)).setPlayer(null)
     }
 }

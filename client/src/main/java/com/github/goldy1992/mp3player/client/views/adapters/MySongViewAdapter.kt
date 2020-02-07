@@ -23,7 +23,7 @@ class MySongViewAdapter
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaItemViewHolder {
         return if (viewType == EMPTY_VIEW_TYPE) {
-            createEmptyViewHolder(parent, viewType)
+            createEmptyViewHolder(parent)
         } else { // create a new views
             val layoutInflater = LayoutInflater.from(parent.context)
             val v = layoutInflater
@@ -38,14 +38,14 @@ class MySongViewAdapter
             val songViewHolder = holder as MySongViewHolder
             // TODO: look into the use of holder.getAdapterPosition rather than the position parameter.
 //Log.i(LOG_TAG, "position: " + position);
-            val song = items!![holder.getAdapterPosition()]!!
+            val song = items[holder.getAdapterPosition()]
             songViewHolder.bindMediaItem(song)
         }
     }
 
     override fun getSectionText(position: Int): String {
         if (CollectionUtils.isNotEmpty(items)) {
-            val title = items!![position]!!.description.title
+            val title = items[position].description.title
             if (null != title) {
                 return title.toString().substring(0, 1)
             }
@@ -54,9 +54,9 @@ class MySongViewAdapter
     }
 
     override fun getPreloadItems(position: Int): List<MediaBrowserCompat.MediaItem> {
-        return if (position >= items!!.size) {
+        return if (position >= items.size) {
             emptyList()
-        } else listOf(items!![position])
+        } else listOf(items[position])
     }
 
     override fun getPreloadRequestBuilder(item: MediaBrowserCompat.MediaItem): RequestBuilder<*>? {

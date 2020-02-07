@@ -49,22 +49,22 @@ class SearchFragment : Fragment(), LogTagger {
         searchView.setBackgroundColor(Color.WHITE)
         val background = linearLayout.getBackground()
         background.alpha = 200
-        linearLayout.setOnClickListener(View.OnClickListener { view: View? -> onClickOnLayout(view) })
-        searchView.setOnClickListener(View.OnClickListener { v: View? -> Log.i(logTag(), "hit search view") })
+        linearLayout.setOnClickListener(View.OnClickListener { onClickOnLayout() })
+        searchView.setOnClickListener(View.OnClickListener { Log.i(logTag(), "hit search view") })
         searchView.requestFocusFromTouch()
         inputMethodManager!!.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
-        searchView.setOnQueryTextFocusChangeListener(OnFocusChangeListener { v: View?, queryTextFocused: Boolean -> onFocusChange(v, queryTextFocused) })
+        searchView.setOnQueryTextFocusChangeListener(OnFocusChangeListener { _: View?, queryTextFocused: Boolean -> onFocusChange(queryTextFocused) })
     }
 
     @VisibleForTesting
-    fun onClickOnLayout(view: View?) {
+    fun onClickOnLayout() {
         Log.i(logTag(), "hit on click listener")
         inputMethodManager!!.hideSoftInputFromWindow(getView()!!.windowToken, 0)
         this.parentFragmentManager.popBackStack()
     }
 
     @VisibleForTesting
-    fun onFocusChange(v: View?, queryTextFocused: Boolean) {
+    fun onFocusChange(queryTextFocused: Boolean) {
         Log.i("tag", "focus changed: has focus: $queryTextFocused")
         if (!queryTextFocused) {
             val fragmentManager = parentFragmentManager
@@ -79,7 +79,7 @@ class SearchFragment : Fragment(), LogTagger {
     }
 
     fun initialiseDependencies() {
-        val component = (activity as MediaActivityCompat?)!!.mediaActivityCompatComponent!!
+        val component = (activity as MediaActivityCompat?)!!.mediaActivityCompatComponent
                 .searchFragmentSubcomponent()
         component.inject(this)
     }

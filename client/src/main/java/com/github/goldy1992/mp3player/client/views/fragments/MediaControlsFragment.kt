@@ -29,7 +29,7 @@ class MediaControlsFragment : Fragment() {
 
     fun initialiseDependencies() {
         val component = (activity as MediaActivityCompat?)!!.mediaActivityCompatComponent
-        component!!.playbackButtonsSubcomponent()
+        component.playbackButtonsSubcomponent()
                 .inject(this)
     }
 

@@ -40,7 +40,7 @@ abstract class MyGenericRecycleViewAdapter
     }
 
 
-    fun createEmptyViewHolder(parent: ViewGroup, viewType: Int): MediaItemViewHolder {
+    fun createEmptyViewHolder(parent: ViewGroup): MediaItemViewHolder {
             val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.empty_item_menu, parent, false)
             return EmptyListViewHolder(view, albumArtPainter)
@@ -65,7 +65,7 @@ abstract class MyGenericRecycleViewAdapter
     }
 
     protected val isEmptyRecycleView: Boolean
-        protected get() = items.isEmpty() || items[Constants.FIRST] == EMPTY_LIST_ITEM
+        get() = items.isEmpty() || items[Constants.FIRST] == EMPTY_LIST_ITEM
 
 
 }

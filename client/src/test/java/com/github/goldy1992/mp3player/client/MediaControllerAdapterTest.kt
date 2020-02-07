@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client
 import android.content.Context
 import android.media.session.MediaSession
 import android.os.Bundle
+import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
@@ -15,6 +16,7 @@ import com.github.goldy1992.mp3player.client.callbacks.playback.MyPlaybackStateC
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.nhaarman.mockitokotlin2.*
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -108,15 +110,15 @@ class MediaControllerAdapterTest {
     @Test
     fun testSetRepeatMode() {
         @PlaybackStateCompat.State val repeatMode = PlaybackStateCompat.REPEAT_MODE_ALL
-        mediaControllerAdapter.repeatMode = repeatMode
-        verify(mediaControllerAdapter, times(1)).repeatMode = repeatMode
+        mediaControllerAdapter.setRepeatMode(repeatMode)
+        verify(mediaControllerAdapter, times(1)).setRepeatMode(repeatMode)
     }
 
     @Test
     fun testGetRepeatMode() {
         val expected = PlaybackStateCompat.REPEAT_MODE_ALL
         whenever(mediaControllerAdapter.mediaController?.repeatMode).thenReturn(expected)
-        val result = mediaControllerAdapter.repeatMode
+        val result = mediaControllerAdapter.getRepeatMode()!!
         Assert.assertEquals(expected.toLong(), result.toLong())
     }
 
@@ -124,7 +126,7 @@ class MediaControllerAdapterTest {
     fun testGetShuffleMode() {
         val expected = PlaybackStateCompat.SHUFFLE_MODE_ALL
         whenever(mediaControllerAdapter.mediaController?.shuffleMode).thenReturn(expected)
-        val result = mediaControllerAdapter.shuffleMode
+        val result = mediaControllerAdapter.getShuffleMode()!!
         Assert.assertEquals(expected.toLong(), result.toLong())
     }
 
@@ -140,6 +142,15 @@ class MediaControllerAdapterTest {
     }
 
     @Test
+    fun testGetAlbumArtNullUri() {
+        val metadata = MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, null)
+                .build()
+        whenever(mediaControllerAdapter.metadata).thenReturn(metadata)
+        val result = mediaControllerAdapter.currentSongAlbumArtUri
+        Assert.assertNull(result)
+    }
+    @Test
     fun testSendCustomAction() {
         val customAction = "DO_SOMETHING"
         val args = Bundle()
@@ -150,8 +161,8 @@ class MediaControllerAdapterTest {
     @Test
     fun testShuffleMode() {
         @PlaybackStateCompat.State val shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_ALL
-        mediaControllerAdapter.shuffleMode = shuffleMode
-        verify(mediaControllerAdapter, times(1)).shuffleMode = shuffleMode
+        mediaControllerAdapter.setShuffleMode(shuffleMode)
+        verify(mediaControllerAdapter, times(1)).setShuffleMode(shuffleMode)
     }
 
     @Test
@@ -227,6 +238,44 @@ class MediaControllerAdapterTest {
         verify(mediaControllerAdapter.mediaController, times(1))?.unregisterCallback(myMediaControllerCallback)
     }
 
+    @Test
+    fun testCurrentQueuePosition() {
+        val expectedQueuePosition = 2
+        val expectedQueueId = 13213L
+        val mediaDescriptionCompat = MediaDescriptionCompat.Builder().build()
+        val expectedQueueItem = MediaSessionCompat.QueueItem(mediaDescriptionCompat, expectedQueueId)
+        val inactiveQueueId = 2112L
+        val inactiveQueueItem = MediaSessionCompat.QueueItem(mediaDescriptionCompat, inactiveQueueId)
+        val mediaController : MediaControllerCompat = mock<MediaControllerCompat>()
+        val playbackStateCompat : PlaybackStateCompat = PlaybackStateCompat.Builder()
+                .setActiveQueueItemId(expectedQueueId).build()
+        mediaControllerAdapter.mediaController = mediaController
+        whenever(mediaController.playbackState).thenReturn(playbackStateCompat)
+
+        val queue : List<MediaSessionCompat.QueueItem> = mutableListOf(inactiveQueueItem, inactiveQueueItem, expectedQueueItem)
+        whenever(mediaController.queue).thenReturn(queue)
+
+        val result = mediaControllerAdapter.getCurrentQueuePosition()
+        assertEquals(expectedQueuePosition, result)
+    }
+
+    @Test
+    fun testCurrentQueuePositionNotFound() {
+        val expectedQueuePosition = -1
+        val expectedQueueId = 90L
+        val mediaController : MediaControllerCompat = mock<MediaControllerCompat>()
+        val playbackStateCompat : PlaybackStateCompat = PlaybackStateCompat.Builder()
+                .setActiveQueueItemId(expectedQueueId).build()
+        mediaControllerAdapter.mediaController = mediaController
+        whenever(mediaController.playbackState).thenReturn(playbackStateCompat)
+
+
+        whenever(mediaController.queue).thenReturn(emptyList())
+
+        val result = mediaControllerAdapter.getCurrentQueuePosition()
+        assertEquals(expectedQueuePosition, result)
+    }
+
     private fun initialiseMediaControllerAdapter(token: MediaSessionCompat.Token): MediaControllerAdapter {
         val spiedMediaControllerAdapter = spy(MediaControllerAdapter(context, myMediaControllerCallback))
         Assert.assertFalse(spiedMediaControllerAdapter.isInitialized)
@@ -240,7 +289,7 @@ class MediaControllerAdapterTest {
     }
 
     private val mediaSessionCompatToken: MediaSessionCompat.Token
-        private get() {
+        get() {
             val mediaSession = MediaSession(InstrumentationRegistry.getInstrumentation().context, "sd")
             val sessionToken = mediaSession.sessionToken
             return MediaSessionCompat.Token.fromToken(sessionToken)

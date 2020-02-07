@@ -59,7 +59,7 @@ class ThemeSpinnerController
      * @return
      */
     private val currentThemeId: Int
-        private get() {
+        get() {
             val activityTheme = activity.theme
             if (null != activityTheme) {
                 val themeNameArray = activityTheme.obtainStyledAttributes(attrs)
@@ -67,7 +67,7 @@ class ThemeSpinnerController
                     val themeName = themeNameArray.getString(0)
                     themeNameArray.recycle()
                     Log.d(logTag(), "current theme is: $themeName")
-                    val result = themeNameToResMap!![themeName]
+                    val result = themeNameToResMap[themeName]
                     return result ?: -1
                 }
             }
@@ -119,7 +119,7 @@ class ThemeSpinnerController
         recycleTypedArray(themeArray)
         val currentThemeId = currentThemeId
         if (currentThemeId != -1) {
-            currentTheme = themeNameToResMap!!.inverse()[currentThemeId]
+            currentTheme = themeNameToResMap.inverse()[currentThemeId]
             val position = adapter!!.getPosition(currentTheme)
             spinner.setSelection(position)
         }

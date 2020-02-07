@@ -38,15 +38,14 @@ class MyPlaybackPreparerTest {
     @Before
     fun setup() {
         val testItem = MediaItemBuilder("id1").setMediaUri(Uri.parse("string")).build()
-        whenever(playlistManager!!.playlist).thenReturn(mutableListOf(testItem))
-        whenever(mediaSourceFactory!!.createMediaSource(any<Uri>())).thenReturn(mediaSource)
-        myPlaybackPreparer = MyPlaybackPreparer(exoPlayer!!, contentManager!!, mediaSourceFactory, myControlDispatcher!!, playlistManager)
+        whenever(playlistManager.playlist).thenReturn(mutableListOf(testItem))
+        whenever(mediaSourceFactory.createMediaSource(any<Uri>())).thenReturn(mediaSource)
+        myPlaybackPreparer = MyPlaybackPreparer(exoPlayer, contentManager, mediaSourceFactory, myControlDispatcher, playlistManager)
     }
 
     @Test
     fun testSupportedActions() {
-        val items: List<MediaBrowserCompat.MediaItem> = ArrayList()
-        myPlaybackPreparer = MyPlaybackPreparer(exoPlayer!!, contentManager!!, mediaSourceFactory!!, myControlDispatcher!!, playlistManager!!)
+        myPlaybackPreparer = MyPlaybackPreparer(exoPlayer, contentManager, mediaSourceFactory, myControlDispatcher, playlistManager)
         assertContainsAction(PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID)
         assertContainsAction(PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH)
     }
@@ -58,9 +57,9 @@ class MyPlaybackPreparerTest {
     @Test
     @Throws(FileDataSourceException::class)
     fun testPreparePlaylistOnConstruct() { // don't play when being constructed
-        verify(myControlDispatcher, times(1))!!.dispatchSetPlayWhenReady(exoPlayer!!, false)
+        verify(myControlDispatcher, times(1)).dispatchSetPlayWhenReady(exoPlayer, false)
         // should seek to the first index, position 0
-        verify(myControlDispatcher, times(1))!!.dispatchSeekTo(exoPlayer, 0, 0)
+        verify(myControlDispatcher, times(1)).dispatchSeekTo(exoPlayer, 0, 0)
     }
 
     @Test(expected = UnsupportedOperationException::class)
@@ -72,14 +71,14 @@ class MyPlaybackPreparerTest {
     fun testOnPrepareFromUri() {
         val testUri = Uri.parse("query")
         val testItem = MediaItemBuilder("id1").setMediaUri(Uri.parse("string")).build()
-        whenever(contentManager!!.getItem(testUri)).thenReturn(testItem)
+        whenever(contentManager.getItem(testUri)).thenReturn(testItem)
         myPlaybackPreparer!!.onPrepareFromUri(testUri, true, null)
-        verify(playlistManager, times(1))!!.createNewPlaylist(any<List<MediaBrowserCompat.MediaItem?>>())
+        verify(playlistManager, times(1)).createNewPlaylist(any<List<MediaBrowserCompat.MediaItem?>>())
     }
 
     @Test
     fun testOnCommand() {
-        Assert.assertFalse(myPlaybackPreparer!!.onCommand(exoPlayer!!, mock<ControlDispatcher>(), "query", null, null))
+        Assert.assertFalse(myPlaybackPreparer!!.onCommand(exoPlayer, mock<ControlDispatcher>(), "query", null, null))
     }
 
     @Test
@@ -93,9 +92,9 @@ class MyPlaybackPreparerTest {
         items.add(testItem1)
         items.add(testItem2)
         items.add(testItem3)
-        whenever(contentManager!!.getPlaylist(mediaId)).thenReturn(items)
+        whenever(contentManager.getPlaylist(mediaId)).thenReturn(items)
         myPlaybackPreparer!!.onPrepareFromMediaId(mediaId, true, null)
-        verify(myControlDispatcher, times(1))!!.dispatchSeekTo(exoPlayer, 1, 0)
+        verify(myControlDispatcher, times(1)).dispatchSeekTo(exoPlayer, 1, 0)
     }
 
     private fun assertContainsAction(@PlaybackStateCompat.Actions action: Long) {

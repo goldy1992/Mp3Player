@@ -26,8 +26,8 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, Lo
     var trackToPlay: Uri? = null
         private set
 
-    public override fun onCreate(savedInstance: Bundle?) {
-        super.onCreate(savedInstance)
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         val intent = intent
         if (Intent.ACTION_VIEW == intent.action) {
             trackToPlay = intent.data
@@ -38,22 +38,20 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, Lo
         super.onNewIntent(intent)
         if (Intent.ACTION_VIEW == intent.action) {
             trackToPlay = intent.data
-            mediaControllerAdapter!!.playFromUri(trackToPlay, null)
+            mediaControllerAdapter.playFromUri(trackToPlay, null)
         }
     }
 
     override fun initialiseView(layoutId: Int): Boolean {
         setContentView(layoutId)
-        val fm = supportFragmentManager
-
         val context = applicationContext
         val albumArtPainter = AlbumArtPainter(Glide.with(context))
-        trackViewPagerChangeCallback = TrackViewPagerChangeCallback(mediaControllerAdapter!!)
-        trackViewAdapter = TrackViewAdapter(albumArtPainter, mediaControllerAdapter!!.queue)
-        mediaControllerAdapter!!.registerMetaDataListener(this)
+        trackViewPagerChangeCallback = TrackViewPagerChangeCallback(mediaControllerAdapter)
+        trackViewAdapter = TrackViewAdapter(albumArtPainter, mediaControllerAdapter.getQueue())
+        mediaControllerAdapter.registerMetaDataListener(this)
         trackViewPager.setAdapter(trackViewAdapter)
         trackViewPager.registerOnPageChangeCallback(trackViewPagerChangeCallback!!)
-        trackViewPager.setCurrentItem(mediaControllerAdapter!!.currentQueuePosition, false)
+        trackViewPager.setCurrentItem(mediaControllerAdapter.getCurrentQueuePosition(), false)
         return true
     }
 
@@ -69,8 +67,8 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, Lo
     }
 
     override fun onMetadataChanged(metadata: MediaMetadataCompat) { // TODO: in future this should be a listener for when the queue has changed
-        val queueItems = mediaControllerAdapter.queue
-        val currentPosition = mediaControllerAdapter.currentQueuePosition
+        val queueItems = mediaControllerAdapter.getQueue()
+        val currentPosition = mediaControllerAdapter.getCurrentQueuePosition()
         trackViewPagerChangeCallback!!.currentPosition = currentPosition
         trackViewPager!!.setCurrentItem(currentPosition, false)
         trackViewAdapter!!.updateQueue(queueItems!!)

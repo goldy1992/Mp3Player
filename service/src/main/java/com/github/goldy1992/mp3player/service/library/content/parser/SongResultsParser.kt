@@ -4,7 +4,6 @@ import android.content.ContentUris
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
-import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import com.github.goldy1992.mp3player.commons.ComparatorUtils.Companion.uppercaseStringCompare
 import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
@@ -20,10 +19,10 @@ class SongResultsParser
     @Inject
     constructor() : ResultsParser() {
 
-    override fun create(cursor: Cursor?, libraryIdPrefix: String?): List<MediaItem> {
+    override fun create(cursor: Cursor?, mediaIdPrefix: String?): List<MediaItem> {
         val listToReturn = TreeSet(this)
         while (cursor != null && cursor.moveToNext()) {
-            val mediaItem = buildMediaItem(cursor, libraryIdPrefix!!)
+            val mediaItem = buildMediaItem(cursor, mediaIdPrefix!!)
             if (null != mediaItem) {
                 listToReturn.add(mediaItem)
             }
@@ -38,8 +37,8 @@ class SongResultsParser
         val mediaId = c.getString(c.getColumnIndex(MediaStore.Audio.Media._ID))
         val mediaFilePath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA))
         val mediaFile = File(mediaFilePath)
-        var directory: File? = null
-        directory = if (!mediaFile.exists()) {
+
+        val directory = if (!mediaFile.exists()) {
             return null
         } else {
             mediaFile.parentFile

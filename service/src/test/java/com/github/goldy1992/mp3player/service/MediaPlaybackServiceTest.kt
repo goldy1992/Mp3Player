@@ -7,6 +7,7 @@ import androidx.media.MediaBrowserServiceCompat
 import androidx.media.MediaBrowserServiceCompat.Result
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.nhaarman.mockitokotlin2.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Before
@@ -53,16 +54,17 @@ class MediaPlaybackServiceTest {
     fun testOnLoadChildrenWithRejectedRootId() {
         whenever(rootAuthenticator.rejectRootSubscription(any())).thenReturn(true)
         val parentId = "aUniqueId"
-        val result: Result<List<MediaItem>> = mock<Result<List<MediaItem>>>() as Result<List<MediaItem>> //Mockito.mock<Result<List<MediaBrowserCompat.MediaItem>>>(Result::class.java)
+        val result: Result<List<MediaItem>> = mock<Result<List<MediaItem>>>()
         mediaPlaybackService.onLoadChildren(parentId, result)
         Shadows.shadowOf(Looper.getMainLooper()).idle()
         verify(result, times(1)).sendResult(null)
     }
 
     @Test
+    @ExperimentalCoroutinesApi
     fun testOnLoadChildrenWithAcceptedMediaId() = runBlockingTest {
         val parentId = "aUniqueId"
-        val result: Result<List<MediaItem>> = mock<Result<List<MediaItem>>>() as Result<List<MediaItem>>
+        val result: Result<List<MediaItem>> = mock<Result<List<MediaItem>>>()
         val mediaItemList: List<MediaItem> = ArrayList()
         whenever(contentManager.getChildren(any<String>())).thenReturn(mediaItemList)
         mediaPlaybackService.onLoadChildren(parentId, result)
@@ -72,8 +74,8 @@ class MediaPlaybackServiceTest {
 
     @Test
     fun testOnLoadChildrenRejectedMediaId() {
-        whenever(rootAuthenticator!!.rejectRootSubscription(any())).thenReturn(true)
-        val result: Result<List<MediaItem>> = mock<Result<List<MediaItem>>>() as Result<List<MediaItem>>
+        whenever(rootAuthenticator.rejectRootSubscription(any())).thenReturn(true)
+        val result: Result<List<MediaItem>> = mock<Result<List<MediaItem>>>()
         mediaPlaybackService.onLoadChildren(REJECTED_MEDIA_ROOT_ID, result)
         Shadows.shadowOf(Looper.getMainLooper()).idle()
         verify(result, times(1)).sendResult(null)

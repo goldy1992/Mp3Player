@@ -55,7 +55,7 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnPermissionGranted() {
-        scenario!!.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
+        scenario.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
             val spiedActivity = spy(splashActivity)
             doNothing().whenever(spiedActivity).runOnUiThread(any<Runnable>())
             spiedActivity.onPermissionGranted()
@@ -65,7 +65,7 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnActivityResultValidAppTerminated() {
-        scenario!!.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
+        scenario.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
             val spiedActivity = spy(splashActivity)
             spiedActivity.onActivityResult(SplashScreenEntryActivity.APP_TERMINATED, SplashScreenEntryActivity.APP_TERMINATED, null)
             verify(spiedActivity, times(1)).finish()
@@ -74,7 +74,7 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnActivityResultInvalidAppTerminated() {
-        scenario!!.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
+        scenario.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
             val NOT_APP_TERMINATED = -1
             val spiedActivity = spy(splashActivity)
             spiedActivity.onActivityResult(NOT_APP_TERMINATED, NOT_APP_TERMINATED, null)
@@ -97,7 +97,7 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnRequestPermissionsResultRejected() {
-        scenario!!.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
+        scenario.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
             val requestCode = 200
             val permissions = arrayOf(permission.WRITE_EXTERNAL_STORAGE)
             val grantResults = intArrayOf(PackageManager.PERMISSION_DENIED)
@@ -108,7 +108,7 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnRequestPermissionsResultEmpty() {
-        scenario!!.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
+        scenario.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
             val requestCode = 200
             val permissions = arrayOf<String>()
             val grantResults = intArrayOf()

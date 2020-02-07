@@ -40,7 +40,7 @@ class SearchResultActivityTest {
     fun testOnSongItemSelected() {
         scenario.onActivity { activity: SearchResultActivityInjectorTestImpl ->
             val searchResultActivitySpied = spy(activity)
-            val spiedMediaControllerAdapter = spy(searchResultActivitySpied!!.mediaControllerAdapter)
+            val spiedMediaControllerAdapter = spy(searchResultActivitySpied.mediaControllerAdapter)
             searchResultActivitySpied.mediaControllerAdapter = spiedMediaControllerAdapter
             val libraryId = "libId"
             val mediaItem = MediaItemBuilder("id")
@@ -48,8 +48,8 @@ class SearchResultActivityTest {
                     .setLibraryId(libraryId)
                     .build()
             searchResultActivitySpied.itemSelected(mediaItem)
-            verify(searchResultActivitySpied, never())!!.startActivity(any())
-            verify(spiedMediaControllerAdapter, times(1))!!.playFromMediaId(libraryId, null)
+            verify(searchResultActivitySpied, never()).startActivity(any())
+            verify(spiedMediaControllerAdapter, times(1)).playFromMediaId(libraryId, null)
         }
     }
 
@@ -81,7 +81,7 @@ class SearchResultActivityTest {
             intent.action = Intent.ACTION_SEARCH
             intent.putExtra(SearchManager.QUERY, expectedQuery)
             activity.onNewIntent(intent)
-            verify(mediaBrowserAdapterSpied, times(1))!!.search(expectedQuery, null)
+            verify(mediaBrowserAdapterSpied, times(1)).search(expectedQuery, null)
         }
     }
 }

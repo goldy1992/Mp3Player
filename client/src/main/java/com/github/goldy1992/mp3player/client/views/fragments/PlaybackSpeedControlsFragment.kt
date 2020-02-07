@@ -34,9 +34,9 @@ class PlaybackSpeedControlsFragment : Fragment(), PlaybackStateListener {
     override fun onViewCreated(view: View, bundle: Bundle?) {
         super.onViewCreated(view, bundle)
 
-        decreasePlaybackSpeedButton.setOnClickListener(View.OnClickListener { v: View? -> decreasePlaybackSpeed() })
+        decreasePlaybackSpeedButton.setOnClickListener(View.OnClickListener { decreasePlaybackSpeed() })
 
-        increasePlaybackSpeedButton.setOnClickListener(View.OnClickListener { v: View? -> increasePlaybackSpeed() })
+        increasePlaybackSpeedButton.setOnClickListener(View.OnClickListener { increasePlaybackSpeed() })
 
         // register listeners
         mediaControllerAdapter.registerPlaybackStateListener(this)
@@ -50,13 +50,13 @@ class PlaybackSpeedControlsFragment : Fragment(), PlaybackStateListener {
 
     @VisibleForTesting
     fun increasePlaybackSpeed() {
-            mediaControllerAdapter!!.sendCustomAction(Constants.INCREASE_PLAYBACK_SPEED, Bundle())
+            mediaControllerAdapter.sendCustomAction(Constants.INCREASE_PLAYBACK_SPEED, Bundle())
 
     }
 
     @VisibleForTesting
     fun decreasePlaybackSpeed() {
-          mediaControllerAdapter!!.sendCustomAction(Constants.DECREASE_PLAYBACK_SPEED, Bundle())
+          mediaControllerAdapter.sendCustomAction(Constants.DECREASE_PLAYBACK_SPEED, Bundle())
 
 
     }
@@ -70,7 +70,7 @@ class PlaybackSpeedControlsFragment : Fragment(), PlaybackStateListener {
 
     fun initialiseDependencies() {
         val component = (activity as MediaActivityCompat?)!!.mediaActivityCompatComponent
-        component!!.inject(this)
+        component.inject(this)
     }
 
 }

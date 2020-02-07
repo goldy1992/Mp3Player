@@ -47,8 +47,8 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
         val mediaItem = MediaItemBuilder("id")
                 .setTitle(null)
                 .build()
-        mediaItemViewHolder!!.bindMediaItem(mediaItem)
-        verify(mediaItemViewHolder!!.itemView.title, times(1)).text = expectedTitle
+        mediaItemViewHolder.bindMediaItem(mediaItem)
+        verify(mediaItemViewHolder.itemView.title, times(1)).text = expectedTitle
     }
 
     @Test
@@ -58,8 +58,8 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
                 .setTitle(null)
                 .setFileName(expectedTitle)
                 .build()
-        mediaItemViewHolder!!.bindMediaItem(mediaItem)
-        verify(mediaItemViewHolder!!.itemView.title, times(1)).text = expectedTitle
+        mediaItemViewHolder.bindMediaItem(mediaItem)
+        verify(mediaItemViewHolder.itemView.title, times(1)).text = expectedTitle
     }
 
     @Test
@@ -70,8 +70,8 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
                 .setTitle(null)
                 .setFileName(fileName)
                 .build()
-        mediaItemViewHolder!!.bindMediaItem(mediaItem)
-        verify(mediaItemViewHolder!!.itemView.title, times(1)).text = expectedTitle
+        mediaItemViewHolder.bindMediaItem(mediaItem)
+        verify(mediaItemViewHolder.itemView.title, times(1)).text = expectedTitle
     }
 
     @Test
@@ -80,9 +80,9 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
         val mediaItem = MediaItemBuilder("id")
                 .setAlbumArtUri(expectedUri)
                 .build()
-        mediaItemViewHolder!!.bindMediaItem(mediaItem)
-        verify(mediaItemViewHolder!!.albumArtPainter, times(1))!!
-                .paintOnView(mediaItemViewHolder!!.itemView.albumArt, expectedUri)
+        mediaItemViewHolder.bindMediaItem(mediaItem)
+        verify(mediaItemViewHolder.albumArtPainter, times(1))!!
+                .paintOnView(mediaItemViewHolder.itemView.albumArt, expectedUri)
     }
 
     @Test
@@ -91,7 +91,7 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
         val mediaItem = MediaItemBuilder("id")
                 .setArtist(expectedArtist)
                 .build()
-        mediaItemViewHolder!!.bindMediaItem(mediaItem)
+        mediaItemViewHolder.bindMediaItem(mediaItem)
         verify(mediaItemViewHolder.itemView.artist, times(1)).text = expectedArtist
     }
 
@@ -101,7 +101,7 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
         val mediaItem = MediaItemBuilder("id")
                 .setArtist(null)
                 .build()
-        mediaItemViewHolder!!.bindMediaItem(mediaItem)
+        mediaItemViewHolder.bindMediaItem(mediaItem)
         verify(mediaItemViewHolder.itemView.artist, times(1)).text = expectedArtist
     }
 
@@ -112,7 +112,7 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
         val mediaItem = MediaItemBuilder("id")
                 .setDuration(originalDuration)
                 .build()
-        mediaItemViewHolder!!.bindMediaItem(mediaItem)
+        mediaItemViewHolder.bindMediaItem(mediaItem)
         verify(mediaItemViewHolder.itemView.duration, times(1)).text = expectedDuration
     }
 }

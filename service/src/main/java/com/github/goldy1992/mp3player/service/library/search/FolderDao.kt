@@ -9,13 +9,13 @@ import androidx.room.Query
 interface FolderDao : SearchDao<Folder> {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    override fun insert(folder: Folder)
+    override fun insert(entity: Folder)
 
     @Query("SELECT COUNT(*) FROM folders")
     override fun count() : Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    override fun insertAll(items: List<Folder>)
+    override fun insertAll(entities: List<Folder>)
 
     @Query("DELETE FROM folders WHERE id NOT IN ( :ids )")
     override fun deleteOld(ids: List<String?>?)

@@ -29,9 +29,9 @@ class RepeatOneRepeatAllButtonTest : MediaButtonTestBase() {
     fun testInit() {
         val imageView = mock<ImageView>()
         @PlaybackStateCompat.RepeatMode val expectedState = PlaybackStateCompat.REPEAT_MODE_NONE
-        whenever(mediaControllerAdapter.repeatMode).thenReturn(expectedState)
+        whenever(mediaControllerAdapter.getRepeatMode()).thenReturn(expectedState)
         repeatOneRepeatAllButton.init(imageView)
-        Assert.assertEquals(expectedState, repeatOneRepeatAllButton!!.state)
+        Assert.assertEquals(expectedState, repeatOneRepeatAllButton.state)
     }
 
     @Test
@@ -73,7 +73,7 @@ class RepeatOneRepeatAllButtonTest : MediaButtonTestBase() {
         val state = PlaybackStateCompat.Builder()
                 .setExtras(extras)
                 .build()
-        whenever(mediaControllerAdapter.repeatMode).thenReturn(expectedState)
+        whenever(mediaControllerAdapter.getRepeatMode()).thenReturn(expectedState)
         repeatOneRepeatAllButton.onPlaybackStateChanged(state)
         Assert.assertEquals(expectedState, repeatOneRepeatAllButton.state)
     }
@@ -83,6 +83,6 @@ class RepeatOneRepeatAllButtonTest : MediaButtonTestBase() {
         val imageView = mock<ImageView>()
         repeatOneRepeatAllButton.setRepeatMode(originalRepeatMode)
         repeatOneRepeatAllButton.onClick(imageView)
-        verify(mediaControllerAdapter, times(1)).repeatMode = expectedRepeatMode
+        verify(mediaControllerAdapter, times(1)).setRepeatMode(expectedRepeatMode)
     }
 }

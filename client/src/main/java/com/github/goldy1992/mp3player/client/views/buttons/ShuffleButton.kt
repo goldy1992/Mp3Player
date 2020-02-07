@@ -21,10 +21,10 @@ class ShuffleButton
     @ShuffleMode
     var shuffleMode = 0
 
-    override fun init(view: ImageView) {
-        super.init(view)
+    override fun init(imageView: ImageView) {
+        super.init(imageView)
         mediaControllerAdapter.registerPlaybackStateListener(this)
-        updateState(mediaControllerAdapter.shuffleMode)
+        updateState(mediaControllerAdapter.getShuffleMode()!!)
     }
 
     fun updateState(@ShuffleMode newState: Int) {
@@ -46,7 +46,7 @@ class ShuffleButton
             PlaybackStateCompat.SHUFFLE_MODE_ALL -> PlaybackStateCompat.SHUFFLE_MODE_NONE
             else -> PlaybackStateCompat.SHUFFLE_MODE_ALL
         }
-        mediaControllerAdapter.shuffleMode = newShuffleMode
+        mediaControllerAdapter.setShuffleMode(newShuffleMode)
     }
 
     override fun logTag(): String {
@@ -62,7 +62,7 @@ class ShuffleButton
     }
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
-        val newShuffleMode = mediaControllerAdapter.shuffleMode
+        val newShuffleMode = mediaControllerAdapter.getShuffleMode()!!
         if (shuffleMode != newShuffleMode) {
             updateState(newShuffleMode)
         }

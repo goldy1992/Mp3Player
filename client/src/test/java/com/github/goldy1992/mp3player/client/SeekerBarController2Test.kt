@@ -48,11 +48,11 @@ class SeekerBarController2Test {
 
     @Test
     fun testMetadataChanged() {
-        val originalValueAnimator = m_seekerBarController2!!.valueAnimator
+        val originalValueAnimator = m_seekerBarController2.valueAnimator
         val DURATION: Long = 1000
-        m_seekerBarController2!!.onMetadataChanged(createMetaData(DURATION))
+        m_seekerBarController2.onMetadataChanged(createMetaData(DURATION))
         assertValueAnimatorReset(originalValueAnimator)
-        val resultValueAnimator = m_seekerBarController2!!.valueAnimator
+        val resultValueAnimator = m_seekerBarController2.valueAnimator
         Assert.assertEquals(DURATION, resultValueAnimator!!.duration)
     }
 
@@ -72,10 +72,10 @@ class SeekerBarController2Test {
     @Test
     fun testStopTracking() { //        TimeCounter timeCounter = mock(TimeCounter.class);
 //        m_seekerBar.setTimeCounter(timeCounter);
-        val valueAnimator = m_seekerBarController2!!.valueAnimator
+        val valueAnimator = m_seekerBarController2.valueAnimator
         valueAnimator!!.start()
-        m_seekerBarController2!!.onStopTrackingTouch(m_seekerBar!!)
-        Assert.assertFalse(m_seekerBar!!.isTracking)
+        m_seekerBarController2.onStopTrackingTouch(m_seekerBar)
+        Assert.assertFalse(m_seekerBar.isTracking)
     }
 
     @Test
@@ -87,10 +87,10 @@ class SeekerBarController2Test {
     private fun testSpeedChange(speed: Float) {
         val EXPECTED_DURATION = (DEFAULT_DURATION / speed).toLong()
         val playbackState = createPlaybackState(PlaybackStateCompat.STATE_PAUSED, 350, speed)
-        val originalValueAnimator = m_seekerBarController2!!.valueAnimator
+        val originalValueAnimator = m_seekerBarController2.valueAnimator
         m_seekerBarController2.onPlaybackStateChanged(playbackState)
         assertValueAnimatorReset(originalValueAnimator)
-        val valueAnimator = m_seekerBarController2!!.valueAnimator
+        val valueAnimator = m_seekerBarController2.valueAnimator
         Assert.assertTrue(valueAnimator!!.isStarted)
         Assert.assertTrue(valueAnimator.isPaused)
         val resultDuration = valueAnimator.duration
@@ -103,7 +103,7 @@ class SeekerBarController2Test {
     }
 
     private fun assertValueAnimatorReset(originalAnimator: ValueAnimator?) {
-        val resultValueAnimator = m_seekerBarController2!!.valueAnimator
+        val resultValueAnimator = m_seekerBarController2.valueAnimator
         Assert.assertNotEquals("Value animator should have been recreated", resultValueAnimator, originalAnimator)
     }
 

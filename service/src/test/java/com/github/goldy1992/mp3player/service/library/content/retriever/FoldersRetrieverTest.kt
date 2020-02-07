@@ -43,8 +43,8 @@ class FoldersRetrieverTest : ContentResolverRetrieverTestBase<FoldersRetriever?>
                 .setDirectoryFile(file)
                 .build()
         expectedResult.add(mediaItem)
-        whenever(contentResolver!!.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, retriever!!.projection, null, null, null)).thenReturn(cursor)
-        whenever(resultsParser!!.create(cursor!!, contentRequest!!.mediaIdPrefix!!)).thenReturn(expectedResult)
+        whenever(contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, retriever!!.projection, null, null, null)).thenReturn(cursor)
+        whenever(resultsParser.create(cursor, contentRequest!!.mediaIdPrefix!!)).thenReturn(expectedResult)
         /* IN ORDER for the database update code to be hit, there needs to be difference in file
         numbers to call it. This is a flaw in the design and will be addressed in another issue */
         val result = retriever!!.getChildren(contentRequest!!)

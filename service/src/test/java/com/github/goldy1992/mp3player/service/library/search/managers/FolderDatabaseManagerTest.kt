@@ -45,7 +45,7 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
                 .setDirectoryFile(TEST_FILE)
                 .build()
         argumentCaptor<Folder>().apply {
-            folderDatabaseManager!!.insert(mediaItem)
+            folderDatabaseManager.insert(mediaItem)
             verify(folderDao, times(1)).insert(capture())
             val folder = firstValue
             Assert.assertEquals(expectedId, folder.id)
@@ -56,9 +56,7 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
     @Test
     fun testReindexCheckDeleteOld() {
         val expectedId = TEST_FILE.absolutePath
-        val mediaItem = MediaItemBuilder(expectedId)
-                .setDirectoryFile(TEST_FILE)
-                .build()
+
         val toReturn = MediaItemBuilder(expectedId)
                 .setDirectoryFile(TEST_FILE)
                 .build()
@@ -66,7 +64,7 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
                 .thenReturn(listOf(toReturn))
 
         argumentCaptor<List<String>>().apply {
-            folderDatabaseManager!!.reindex()
+            folderDatabaseManager.reindex()
             Shadows.shadowOf(handler.looper).idle()
             verify(folderDao, times(1)).deleteOld(capture())
             val idsToDelete = firstValue
@@ -77,9 +75,6 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
     @Test
     fun testReindexCheckInsertAll() {
         val expectedId = TEST_FILE.absolutePath
-        val mediaItem = MediaItemBuilder(expectedId)
-                .setDirectoryFile(TEST_FILE)
-                .build()
         val toReturn = MediaItemBuilder(expectedId)
                 .setDirectoryFile(TEST_FILE)
                 .build()
@@ -87,9 +82,9 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
                 .thenReturn(listOf(toReturn))
 
         argumentCaptor<List<Folder>>().apply {
-                folderDatabaseManager!!.reindex()
+                folderDatabaseManager.reindex()
                 Shadows.shadowOf(handler.looper).idle()
-                     verify(folderDao, times(1))!!.insertAll(capture())
+                     verify(folderDao, times(1)).insertAll(capture())
                 val insertedFolder = firstValue[0]
                 Assert.assertEquals(expectedId, insertedFolder.id)
                 Assert.assertEquals(EXPECTED_DIRECTORY_NAME, insertedFolder.value)

@@ -34,12 +34,12 @@ abstract class FolderActivity : MediaActivityCompat() {
                 viewPageFragment as SongListFragment)
                 .commit()
         supportActionBar!!.setTitle(MediaItemUtils.getDirectoryName(mediaItem))
-        var titleTextView: TextView? = null
+        val titleTextView: TextView?
         try {
             val f = titleToolbar!!.javaClass.getDeclaredField("mTitleTextView")
             f.isAccessible = true
             titleTextView = f[titleToolbar] as TextView
-            titleTextView!!.ellipsize = TextUtils.TruncateAt.MARQUEE
+            titleTextView.ellipsize = TextUtils.TruncateAt.MARQUEE
             titleTextView.isFocusable = true
             titleTextView.isFocusableInTouchMode = true
             titleTextView.requestFocus()

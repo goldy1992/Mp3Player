@@ -85,12 +85,12 @@ class SongResultsParserTest : ResultsParserTestBase() {
     @Test
     fun testCreate() {
         val mediaItems = getResultsForProjection(SONG_PROJECTION.toTypedArray(), ID_PREFIX)
-        Assert.assertEquals(getTitle(expectedMediaItem1!!), getTitle(mediaItems!![0]!!))
+        Assert.assertEquals(getTitle(expectedMediaItem1!!), getTitle(mediaItems[0]))
         Assert.assertEquals(getArtist(expectedMediaItem1), getArtist(mediaItems[0]))
         Assert.assertEquals(getDuration(expectedMediaItem1), getDuration(mediaItems[0]))
         //assertEquals(MediaItemUtils.getAlbumArtUri(expectedMediaItem1), MediaItemUtils.getAlbumArtUri(mediaItems.get(0)));
         Assert.assertEquals(getLibraryId(expectedMediaItem1), getLibraryId(mediaItems[0]))
-        Assert.assertEquals(getTitle(expectedMediaItem2!!), getTitle(mediaItems[1]!!))
+        Assert.assertEquals(getTitle(expectedMediaItem2!!), getTitle(mediaItems[1]))
         Assert.assertEquals(getArtist(expectedMediaItem2), getArtist(mediaItems[1]))
         Assert.assertEquals(getDuration(expectedMediaItem2), getDuration(mediaItems[1]))
         //assertEquals(MediaItemUtils.getAlbumArtUri(expectedMediaItem2), MediaItemUtils.getAlbumArtUri(mediaItems.get(1)));

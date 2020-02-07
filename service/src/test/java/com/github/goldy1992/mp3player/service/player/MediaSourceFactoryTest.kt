@@ -32,7 +32,7 @@ class MediaSourceFactoryTest {
     @Test
     @Throws(ContentDataSourceException::class, FileDataSourceException::class)
     fun testCreateContentMediaSource() {
-        whenever(testUri!!.scheme).thenReturn(ContentResolver.SCHEME_CONTENT)
+        whenever(testUri.scheme).thenReturn(ContentResolver.SCHEME_CONTENT)
         val result = mediaSourceFactory!!.createMediaSource(testUri)
         Assert.assertNotNull(result)
         verify(contentDataSource, times(1)).open(any())
@@ -42,7 +42,7 @@ class MediaSourceFactoryTest {
     @Test
     @Throws(ContentDataSourceException::class, FileDataSourceException::class)
     fun testCreateFileMediaSource() {
-        whenever(testUri!!.scheme).thenReturn(ContentResolver.SCHEME_FILE)
+        whenever(testUri.scheme).thenReturn(ContentResolver.SCHEME_FILE)
         val result = mediaSourceFactory!!.createMediaSource(testUri)
         Assert.assertNotNull(result)
         verify(fileDataSource, times(1)).open(any())
@@ -52,7 +52,7 @@ class MediaSourceFactoryTest {
     @Test
     @Throws(ContentDataSourceException::class)
     fun returnNullOnException() {
-        whenever(contentDataSource!!.open(any())).thenThrow(ContentDataSourceException(IOException()))
+        whenever(contentDataSource.open(any())).thenThrow(ContentDataSourceException(IOException()))
         Assert.assertNull(mediaSourceFactory!!.createMediaSource(testUri))
     }
 }

@@ -46,8 +46,8 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
      */
     @Test
     fun testOnPlaybackStateChangedPlaying() {
-        playPauseButton!!.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_PLAYING))
-        Assert.assertEquals(PlaybackStateCompat.STATE_PLAYING, playPauseButton!!.state)
+        playPauseButton.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_PLAYING))
+        Assert.assertEquals(PlaybackStateCompat.STATE_PLAYING, playPauseButton.state)
     }
 
     /**
@@ -57,8 +57,8 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
      */
     @Test
     fun testOnPlaybackStateChangedPaused() {
-        playPauseButton!!.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_PAUSED))
-        Assert.assertEquals(PlaybackStateCompat.STATE_PAUSED, playPauseButton!!.state)
+        playPauseButton.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_PAUSED))
+        Assert.assertEquals(PlaybackStateCompat.STATE_PAUSED, playPauseButton.state)
     }
 
     /**
@@ -69,8 +69,8 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
     @Test
     fun testOnPlaybackStateChangedOtherState() {
         @PlaybackStateCompat.State val expectedState = PlaybackStateCompat.STATE_PAUSED
-        playPauseButton!!.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_ERROR))
-        Assert.assertEquals(expectedState, playPauseButton!!.state)
+        playPauseButton.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_ERROR))
+        Assert.assertEquals(expectedState, playPauseButton.state)
     }
 
     /**
@@ -80,9 +80,9 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
      */
     @Test
     fun testClickPlayWhenPaused() {
-        playPauseButton!!.state = PlaybackStateCompat.STATE_PAUSED
-        playPauseButton!!.onClick(null)
-        verify(mediaControllerAdapter, times(1))!!.play()
+        playPauseButton.state = PlaybackStateCompat.STATE_PAUSED
+        playPauseButton.onClick(null)
+        verify(mediaControllerAdapter, times(1)).play()
     }
 
     /**
@@ -94,7 +94,7 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
     fun testClickPauseWhenPlaying() {
         playPauseButton.state = PlaybackStateCompat.STATE_PLAYING
         playPauseButton.onClick(null)
-        verify(mediaControllerAdapter, times(1))!!.pause()
+        verify(mediaControllerAdapter, times(1)).pause()
     }
 
     /**

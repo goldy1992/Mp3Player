@@ -38,9 +38,9 @@ class MyMetadataProviderTest {
                 .setAlbumArtUri(Uri.parse(expectedAlbumArt))
                 .build()
         val index = 7
-        whenever(exoPlayer!!.currentWindowIndex).thenReturn(index)
+        whenever(exoPlayer.currentWindowIndex).thenReturn(index)
         whenever(playlistManager.getItemAtIndex(index)).thenReturn(mediaItem)
-        val result = myMetadataProvider!!.getMetadata(exoPlayer)
+        val result = myMetadataProvider.getMetadata(exoPlayer)
         val actualId = result?.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)
         Assert.assertEquals(expectedId, actualId)
         val actualDuration = result?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)

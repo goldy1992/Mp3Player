@@ -58,7 +58,7 @@ class MediaPlayerActivityTest {
             val spiedMediaControllerAdapter = spy(activity.mediaControllerAdapter)
             activity.mediaControllerAdapter = spiedMediaControllerAdapter
             activity.onNewIntent(newIntent)
-            verify(spiedMediaControllerAdapter, never())!!.playFromUri(testUri, null)
+            verify(spiedMediaControllerAdapter, never()).playFromUri(testUri, null)
         }
     }
 
@@ -73,7 +73,7 @@ class MediaPlayerActivityTest {
             val spiedMediaControllerAdapter = spy(activity.mediaControllerAdapter)
             activity.mediaControllerAdapter = spiedMediaControllerAdapter
             activity.onNewIntent(newIntent)
-            verify(spiedMediaControllerAdapter, times(1))!!.playFromUri(testUri, null)
+            verify(spiedMediaControllerAdapter, times(1)).playFromUri(testUri, null)
         }
     }
 
@@ -85,7 +85,7 @@ class MediaPlayerActivityTest {
             activity.mediaControllerAdapter = spiedMediaControllerAdapter
             val mediaMetadataCompat = MediaMetadataCompat.Builder().build()
             activity.onMetadataChanged(mediaMetadataCompat)
-            verify(spiedMediaControllerAdapter, times(1))!!.currentQueuePosition
+            verify(spiedMediaControllerAdapter, times(1)).getCurrentQueuePosition()
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.service.library
 
 import android.net.Uri
-import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import com.github.goldy1992.mp3player.commons.Normaliser.normalise
 import com.github.goldy1992.mp3player.service.library.content.ContentRetrievers
@@ -18,11 +17,10 @@ import javax.inject.Singleton
 class ContentManager @Inject constructor(private val contentRetrievers: ContentRetrievers,
                                          private val contentSearchers: ContentSearchers,
                                          private val contentRequestParser: ContentRequestParser,
-                                         songFromUriRetriever: SongFromUriRetriever,
-                                         mediaItemFromIdRetriever: MediaItemFromIdRetriever) {
-    private val rootRetriever: RootRetriever
-    private val songFromUriRetriever: SongFromUriRetriever
-    private val mediaItemFromIdRetriever: MediaItemFromIdRetriever
+                                         private val songFromUriRetriever: SongFromUriRetriever,
+                                         private val mediaItemFromIdRetriever: MediaItemFromIdRetriever) {
+    private val rootRetriever: RootRetriever = contentRetrievers.root
+
     /**
      * The id is in the following format
      * CATEGORY_ID | CHILD_ID where CHILD_ID is optional.
@@ -38,7 +36,7 @@ class ContentManager @Inject constructor(private val contentRetrievers: ContentR
         val request = contentRequestParser.parse(parentId!!)
         val contentRetriever = contentRetrievers[request!!.contentRetrieverKey]
         if (null != contentRetriever)
-        return contentRetriever!!.getChildren(request)
+        return contentRetriever.getChildren(request)
         else
             return null
     }
@@ -48,11 +46,10 @@ class ContentManager @Inject constructor(private val contentRetrievers: ContentR
      * @return a list of media items which match the search query
      */
     fun search(query: String): List<MediaItem?> {
-        var query = query
-        query = normalise(query)
+        val normalisedQuery = normalise(query)
         val results: MutableList<MediaItem?> = ArrayList()
         for (contentSearcher in contentSearchers.all) {
-            val searchResults : List<MediaItem>? = contentSearcher.search(query)
+            val searchResults : List<MediaItem>? = contentSearcher.search(normalisedQuery)
             if (CollectionUtils.isNotEmpty(searchResults)) {
                 val searchCategory = contentSearcher.searchCategory
                 results.add(rootRetriever.getRootItem(searchCategory))
@@ -91,9 +88,4 @@ class ContentManager @Inject constructor(private val contentRetrievers: ContentR
         const val FILE_SCHEME = "file"
     }
 
-    init {
-        rootRetriever = contentRetrievers.root
-        this.songFromUriRetriever = songFromUriRetriever
-        this.mediaItemFromIdRetriever = mediaItemFromIdRetriever
-    }
 }

@@ -15,7 +15,7 @@ class SearchResultAdapter
     constructor(albumArtPainter: AlbumArtPainter) : MediaItemRecyclerViewAdapter(albumArtPainter) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaItemViewHolder {
-        var layoutInflater: LayoutInflater? = null
+        val layoutInflater: LayoutInflater?
         return if (viewType == MediaItemType.SONG.value) { // create a new views
             layoutInflater = LayoutInflater.from(parent.context)
             val v = layoutInflater

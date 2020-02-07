@@ -36,8 +36,8 @@ class SongsRetrieverTest : ContentResolverRetrieverTestBase<SongsRetriever?>() {
                 .setTitle(title)
                 .build()
         expectedResult.add(mediaItem)
-        whenever(contentResolver!!.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, retriever!!.projection, null, null, null)).thenReturn(cursor)
-        whenever(resultsParser!!.create(cursor!!, contentRequest!!.mediaIdPrefix!!)).thenReturn(expectedResult)
+        whenever(contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, retriever!!.projection, null, null, null)).thenReturn(cursor)
+        whenever(resultsParser.create(cursor, contentRequest!!.mediaIdPrefix!!)).thenReturn(expectedResult)
         val result = retriever!!.getChildren(contentRequest!!)
         // call remaining looper messages
         Shadows.shadowOf(Looper.getMainLooper()).idle()

@@ -37,7 +37,7 @@ class SeekerBarController2
         private set
 
     fun onPlaybackStateChanged(state: PlaybackStateCompat) { //LoggingUtils.logPlaybackStateCompat(state, LOG_TAG);
-        setLooping(state)
+        setLooping()
         currentState = state.state
         val position = state.position
         if (validPosition(position)) {
@@ -129,14 +129,13 @@ class SeekerBarController2
         }
     }
 
-    fun setLooping(state: PlaybackStateCompat?) {
-        val repeatMode = mediaControllerAdapter!!.repeatMode
-        if (null != repeatMode) {
-            isLooping = repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE
-            if (null != valueAnimator) {
-                valueAnimator!!.repeatCount = if (isLooping) ValueAnimator.INFINITE else 0
-            }
+    private fun setLooping() {
+        val repeatMode = mediaControllerAdapter!!.getRepeatMode()
+        isLooping = repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE
+        if (null != valueAnimator) {
+            valueAnimator!!.repeatCount = if (isLooping) ValueAnimator.INFINITE else 0
         }
+
     }
 
     private fun removeValueAnimator() {
@@ -157,11 +156,11 @@ class SeekerBarController2
 
     //Log.d(LOG_TAG, "current pos: " + currentPosition + ", seekerbar max" + seekerBar.getMax());
     private val positionAsFraction: Float
-        private get() =//Log.d(LOG_TAG, "current pos: " + currentPosition + ", seekerbar max" + seekerBar.getMax());
+        get() =//Log.d(LOG_TAG, "current pos: " + currentPosition + ", seekerbar max" + seekerBar.getMax());
             currentPosition / seekerBar!!.max.toFloat()
 
     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-        val updateTimer = seekBar != null && seekBar is SeekerBar && seekBar.isTracking
+        val updateTimer = seekBar is SeekerBar && seekBar.isTracking
         if (updateTimer) { //Log.i(LOG_TAG, "PROGRESS CHANGED");
             timeCounter.seekTo(progress.toLong())
         }
