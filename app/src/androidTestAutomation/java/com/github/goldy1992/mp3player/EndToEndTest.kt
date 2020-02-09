@@ -26,82 +26,26 @@ import org.junit.runner.RunWith
 
 
 @LargeTest
-@RunWith(androidx.test.runner.AndroidJUnit4::class)
+@RunWith(androidx.test.ext.junit.runners.AndroidJUnit4::class)
 class EndToEndTest {
 
-    //    IdlingResource idlingResource;
-//    @Rule
-//    public ActivityTestRule<MainActivityInjectorAndroidTestImpl> mActivityTestRule = new ActivityTestRule<>(MainActivityInjectorAndroidTestImpl.class);
+
 //
-//    @Rule
-//    public GrantPermissionRule mGrantPermissionRule =
-//            GrantPermissionRule.grant(
-//                    "android.permission.WRITE_EXTERNAL_STORAGE");
-//
-//    @Before
-//    public void setup() {
-//        this.idlingResource = mActivityTestRule.getActivity();
-//        IdlingRegistry.getInstance().register(idlingResource);
-//    }
-//
-//    @After
-//    public void tearDown() {
-//        IdlingRegistry.getInstance().unregister(idlingResource);
-//    }
+
 //
 //    @Test
 //    public void splashScreenEntryActivityTest() {
 ////        Espresso.onIdle();
 ////        MainActivity mainActivity = mActivityTestRule.getActivity();
-////        TabLayout tabLayout = mainActivity.findViewById(R.id.tabs);
-////
-////        final int expectedTabCount = 2;
-////        final int actualTabCount = tabLayout.getTabCount();
-////        assertEquals(expectedTabCount, actualTabCount);
-////
-////        assertTabName(tabLayout, 0, MediaItemType.SONGS.getTitle());
-////        assertTabName(tabLayout, 1, MediaItemType.FOLDERS.getTitle());
-////
-////        onView(allOf(
-////                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-////                withId(R.id.recycler_view)))
-////                .check(matches(isDisplayed()));
-////
-////        onView(withRecyclerView(R.id.recycler_view)
-////                .atPositionOnView(0, R.id.title))
-////                .check(matches(withText("#Dprimera")))
-////
-////                .perform(scrollToPosition(14));
+
 ////
 ////
-////        onView(withRecyclerView(R.id.recycler_view)
-////                .atPositionOnView(14, R.id.title))
-////                .check(matches(withText("Yuya")));
 ////
-//
-//
-//
-//
-//    }
-//
-//    private static Matcher<View> childAtPosition(
-//            final Matcher<View> parentMatcher, final int position) {
-//
-//        return new TypeSafeMatcher<View>() {
-//            @Override
-//            public void describeTo(Description description) {
-//                description.appendText("Child at position " + position + " in parent ");
-//                parentMatcher.describeTo(description);
-//            }
-//
-//            @Override
-//            public boolean matchesSafely(View view) {
-//                ViewParent parent = view.getParent();
-//                return parent instanceof ViewGroup && parentMatcher.matches(parent)
-//                        && view.equals(((ViewGroup) parent).getChildAt(position));
-//            }
-//        };
-//    }
+////
+////
+////    }
+////
+
 
     private val BASIC_SAMPLE_PACKAGE = "com.github.goldy1992.mp3player.automation"
 
@@ -123,6 +67,7 @@ class EndToEndTest {
 
     @Test
     fun firstTest() {
+
 
     }
 
