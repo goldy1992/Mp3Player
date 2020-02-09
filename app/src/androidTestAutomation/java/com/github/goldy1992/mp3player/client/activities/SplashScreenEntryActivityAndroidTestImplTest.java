@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 public class SplashScreenEntryActivityAndroidTestImplTest {
 
     @Rule
-    public ActivityTestRule<SplashScreenEntryActivityAndroidTestImpl> mActivityTestRule = new ActivityTestRule<>(SplashScreenEntryActivityAndroidTestImpl.class);
+    public ActivityTestRule<SplashScreenEntryActivityInjector> mActivityTestRule = new ActivityTestRule<>(SplashScreenEntryActivityInjector.class);
 
     @Rule
     public GrantPermissionRule mGrantPermissionRule =

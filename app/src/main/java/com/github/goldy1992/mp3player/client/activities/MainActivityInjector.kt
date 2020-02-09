@@ -11,8 +11,8 @@ class MainActivityInjector : MainActivity() {
     }
 
     /** {@inheritDoc}  */
-    public override fun initialiseDependencies() {
-        var app : MikesMp3Player = applicationContext!! as MikesMp3Player
+    override fun initialiseDependencies() {
+        val app : MikesMp3Player = applicationContext!! as MikesMp3Player
         val mediaActivityCompatComponent = DaggerMediaActivityCompatComponent
                 .factory()
                 .create(applicationContext,  this, app.getComponentClassMapper())
