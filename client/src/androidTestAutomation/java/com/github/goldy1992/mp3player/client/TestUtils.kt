@@ -8,26 +8,33 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.util.HumanReadables
-import com.github.goldy1992.mp3player.client.RecyclerViewMatcher
+import com.google.android.material.tabs.TabLayout
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
+import org.junit.Assert.assertEquals
 
 
 object TestUtils {
 
+    fun assertTabName(tabLayout: TabLayout, position: Int, expectedTabTitle: String?) {
+        val tab = tabLayout.getTabAt(position)
+        val actualNameFirstTab = tab!!.text.toString()
+        assertEquals(expectedTabTitle, actualNameFirstTab)
+    }
+
     fun <VH : RecyclerView.ViewHolder?> actionOnItemViewAtPosition(position: Int,
                                                                    @IdRes viewId: Int,
                                                                    viewAction: ViewAction): ViewAction? {
-        return ActionOnItemViewAtPositionViewAction<Any?>(position, viewId, viewAction)
+        return ActionOnItemViewAtPositionViewAction<VH>(position, viewId, viewAction)
     }
 
     private class ActionOnItemViewAtPositionViewAction<VH : RecyclerView.ViewHolder?>(private val position: Int,
                                                                                       @param:IdRes private val viewId: Int,
                                                                                       private val viewAction: ViewAction) : ViewAction {
         override fun getConstraints(): Matcher<View> {
-            return Matchers.allOf(arrayOf<Matcher>(
+            return Matchers.allOf(
                     ViewMatchers.isAssignableFrom(RecyclerView::class.java), ViewMatchers.isDisplayed()
-            ))
+            )
         }
 
         override fun getDescription(): String {
@@ -61,9 +68,9 @@ object TestUtils {
 
     private class ScrollToPositionViewAction(private val position: Int) : ViewAction {
         override fun getConstraints(): Matcher<View> {
-            return Matchers.allOf(arrayOf<Matcher>(
-                    ViewMatchers.isAssignableFrom(RecyclerView::class.java), ViewMatchers.isDisplayed()
-            ))
+            return Matchers.allOf(
+                ViewMatchers.isAssignableFrom(RecyclerView::class.java), ViewMatchers.isDisplayed()
+            )
         }
 
         override fun getDescription(): String {

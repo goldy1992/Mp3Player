@@ -138,7 +138,7 @@ dependencies {
     androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
     androidTestImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
 
-    automationImplementation group: 'androidx.test', name: 'rules', version: TEST_RULES_VERSION
+    androidTestImplementation group: 'androidx.test', name: 'rules', version: TEST_RULES_VERSION
+    androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
     automationImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
-
 }
