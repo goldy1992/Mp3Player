@@ -18,8 +18,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.TestUtils.assertTabName
-import com.github.goldy1992.mp3player.client.TestUtils.withRecyclerView
+import com.github.goldy1992.mp3player.TestUtils.assertTabName
+import com.github.goldy1992.mp3player.TestUtils.withRecyclerView
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.google.android.material.tabs.TabLayout
 import org.hamcrest.CoreMatchers.allOf
@@ -34,15 +34,15 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class MainActivityTest {
+class MainActivityAndroidTest {
 
     private lateinit var idlingResource : IdlingResource;
 
 
-    @Rule
+    @get:Rule
     val mActivityTestRule : ActivityTestRule<MainActivityInjectorAndroidTestImpl> = ActivityTestRule(MainActivityInjectorAndroidTestImpl::class.java)
 
-    @Rule
+    @get:Rule
     val  mGrantPermissionRule : GrantPermissionRule =
             GrantPermissionRule.grant(
                     "android.permission.WRITE_EXTERNAL_STORAGE")

@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client
+package com.github.goldy1992.mp3player
 
 import android.view.View
 import androidx.annotation.IdRes
@@ -15,6 +15,9 @@ import org.junit.Assert.assertEquals
 
 
 object TestUtils {
+
+    private val packageName : String = "com.github.goldy1992.mp3player.automation"
+    private val packageSeparator : String = ":"
 
     fun assertTabName(tabLayout: TabLayout, position: Int, expectedTabTitle: String?) {
         val tab = tabLayout.getTabAt(position)
@@ -87,6 +90,10 @@ object TestUtils {
 
     fun withRecyclerView(recyclerViewId: Int): RecyclerViewMatcher? {
         return RecyclerViewMatcher(recyclerViewId)
+    }
+
+    fun resourceId(id : String) : String {
+        return packageName + packageSeparator + "id/" + id
     }
 
 }

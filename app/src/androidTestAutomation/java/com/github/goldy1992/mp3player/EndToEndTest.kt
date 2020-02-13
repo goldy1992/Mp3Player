@@ -3,22 +3,16 @@ package com.github.goldy1992.mp3player
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.util.Log
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.GrantPermissionRule
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.SearchCondition
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiObject
-import androidx.test.uiautomator.UiObjectNotFoundException
-import androidx.test.uiautomator.UiSelector
-import androidx.test.uiautomator.Until
-import com.github.goldy1992.mp3player.client.activities.MainActivityInjectorAndroidTestImpl
+import androidx.test.uiautomator.*
+import com.github.goldy1992.mp3player.TestUtils.resourceId
 import org.hamcrest.CoreMatchers.notNullValue
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -28,24 +22,6 @@ import org.junit.runner.RunWith
 @LargeTest
 @RunWith(androidx.test.ext.junit.runners.AndroidJUnit4::class)
 class EndToEndTest {
-
-
-//
-
-//
-//    @Test
-//    public void splashScreenEntryActivityTest() {
-////        Espresso.onIdle();
-////        MainActivity mainActivity = mActivityTestRule.getActivity();
-
-////
-////
-////
-////
-////
-////    }
-////
-
 
     private val BASIC_SAMPLE_PACKAGE = "com.github.goldy1992.mp3player.automation"
 
@@ -61,6 +37,7 @@ class EndToEndTest {
         // Initialize UiDevice instance
         mDevice = UiDevice.getInstance(getInstrumentation())
         startApp()
+        assertSplashScreenActity()
         waitForMainActivityToLoad()
     }
 
@@ -68,6 +45,7 @@ class EndToEndTest {
     @Test
     fun firstTest() {
 
+        assertTrue(true)
 
     }
 
@@ -110,20 +88,21 @@ class EndToEndTest {
     }
 
 
-    private fun allowPermissionsIfNeeded() {
+    private fun assertSplashScreenActity() {
+        val imageViewId : String = resourceId("imageView")
+        mDevice.wait(
+                Until.hasObject(By.res("com.github.goldy1992.mp3player.automation:id/imageView")),
+                LAUNCH_TIMEOUT
+        )
 
-        val accept : String = "PERMITIR"
-        // Wait for the app to appear
-        mDevice.wait(Until.findObject(By.text(accept)), 2000L)
+        val logoUi : UiObject = mDevice.findObject(UiSelector().resourceId(imageViewId))
+        assertTrue(logoUi.exists())
 
-        val allowPermissions = mDevice.findObject(UiSelector().text(accept))
-        if (allowPermissions.exists()) {
-            try {
-                allowPermissions.click()
-            } catch (e: UiObjectNotFoundException) {
-                Log.e("error", "There is no permissions dialog to interact with ")
-            }
-        }
+        val titleViewId : String = resourceId("titleView")
+        val title : UiObject = mDevice.findObject(UiSelector().resourceId(titleViewId))
+        assertTrue(title.exists())
+        val expectedTitle = "Music Player"
+        assertEquals(expectedTitle, title.text)
 
     }
 }

@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client
+package com.github.goldy1992.mp3player
 
 import android.content.res.Resources
 import android.view.View

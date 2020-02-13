@@ -8,6 +8,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
 
 import com.github.goldy1992.mp3player.client.R;
+import com.github.goldy1992.mp3player.client.views.fragments.TestSeekBarFragment;
 
 import org.junit.Before;
 import org.junit.Test;
