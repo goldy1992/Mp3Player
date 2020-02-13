@@ -3,6 +3,8 @@ package com.github.goldy1992.mp3player
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Point
+import android.view.accessibility.AccessibilityEvent
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.filters.LargeTest
@@ -37,14 +39,39 @@ class EndToEndTest {
         // Initialize UiDevice instance
         mDevice = UiDevice.getInstance(getInstrumentation())
         startApp()
-        assertSplashScreenActity()
+        assertSplashScreenActivity()
         waitForMainActivityToLoad()
     }
 
 
     @Test
-    fun firstTest() {
+    fun playSongTest() {
+        val released : Boolean = false
+val fastScrollHandleBubbleId : String = resourceId("fastscroll_bubble")
+        val fastScrollHandleId : String = resourceId("fastscroll_handle")
 
+        val recyclerViewId : String = resourceId("recyclerView")
+
+        // assert number of items in songs
+    //    val recyclerView : UiObject2 = mDevice.findObject(By.res(recyclerViewId))
+
+    //    val recyclerView1 : UiObject = mDevice.findObject(UiSelector().resourceId(recyclerViewId))
+
+        val recyclerViewScrollable : UiScrollable = UiScrollable(UiSelector().resourceId(recyclerViewId))
+
+        assertTrue(recyclerViewScrollable.scrollToEnd(1))
+        val fastScrollHandle : UiObject2  = getUiObject2FromId(fastScrollHandleId)
+
+
+        mDevice.wait(Until.hasObject(By.res(fastScrollHandleBubbleId)), LAUNCH_TIMEOUT)
+        val fastScrollHandleBubble : UiObject2 = getUiObject2FromId(fastScrollHandleBubbleId)
+        assertEquals("0", fastScrollHandleBubble.text)
+        //recyclerView1.
+
+
+        // assert name of first
+
+        // assert name of last
         assertTrue(true)
 
     }
@@ -73,25 +100,11 @@ class EndToEndTest {
         mDevice.wait(Until.hasObject(By.text("Folders")), LAUNCH_TIMEOUT)
     }
 
-    /**
-     * Uses package manager to find the package name of the device launcher. Usually this package
-     * is "com.android.launcher" but can be different at times. This is a generic solution which
-     * works on all platforms.`
-     */
-    private fun getLauncherPackageName(): String? { // Create launcher Intent
-        val intent = Intent(Intent.ACTION_MAIN)
-        intent.addCategory(Intent.CATEGORY_HOME)
-        // Use PackageManager to get the launcher package name
-        val pm = getApplicationContext<Context>().packageManager
-        val resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
-        return resolveInfo.activityInfo.packageName
-    }
 
-
-    private fun assertSplashScreenActity() {
+    private fun assertSplashScreenActivity() {
         val imageViewId : String = resourceId("imageView")
         mDevice.wait(
-                Until.hasObject(By.res("com.github.goldy1992.mp3player.automation:id/imageView")),
+                Until.hasObject(By.res(imageViewId)),
                 LAUNCH_TIMEOUT
         )
 
@@ -100,9 +113,29 @@ class EndToEndTest {
 
         val titleViewId : String = resourceId("titleView")
         val title : UiObject = mDevice.findObject(UiSelector().resourceId(titleViewId))
+
         assertTrue(title.exists())
         val expectedTitle = "Music Player"
         assertEquals(expectedTitle, title.text)
+
+    }
+
+    private fun getUiObjectFromId(id : String) : UiObject {
+        return mDevice.findObject(UiSelector().resourceId(id))
+    }
+
+    private fun getUiObject2FromId(id : String) : UiObject2 {
+        return mDevice.findObject(By.res(id))
+    }
+
+    class MyEventCondition() : UiObject2Condition<Boolean>() {
+
+        var release : Boolean = false
+
+         override fun apply(object2: UiObject2): Boolean {
+            return release
+        }
+
 
     }
 }
