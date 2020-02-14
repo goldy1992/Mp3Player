@@ -6,12 +6,18 @@ import android.content.pm.PackageManager
 import android.graphics.Point
 import android.view.accessibility.AccessibilityEvent
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
-import androidx.test.espresso.matcher.ViewMatchers.assertThat
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.action.ViewActions.longClick
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.*
 import com.github.goldy1992.mp3player.TestUtils.resourceId
+import com.github.goldy1992.mp3player.client.RecyclerViewCountAssertion
+import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -52,20 +58,24 @@ val fastScrollHandleBubbleId : String = resourceId("fastscroll_bubble")
 
         val recyclerViewId : String = resourceId("recyclerView")
 
+        var recyclerViewInteraction : ViewInteraction = onView(withId(R.id.recyclerView))
+        recyclerViewInteraction.check(RecyclerViewCountAssertion(37))
+        recyclerViewInteraction.perform(longClick())
+
         // assert number of items in songs
     //    val recyclerView : UiObject2 = mDevice.findObject(By.res(recyclerViewId))
 
     //    val recyclerView1 : UiObject = mDevice.findObject(UiSelector().resourceId(recyclerViewId))
 
-        val recyclerViewScrollable : UiScrollable = UiScrollable(UiSelector().resourceId(recyclerViewId))
+  //      val recyclerViewScrollable : UiScrollable = UiScrollable(UiSelector().resourceId(recyclerViewId))
 
-        assertTrue(recyclerViewScrollable.scrollToEnd(1))
-        val fastScrollHandle : UiObject2  = getUiObject2FromId(fastScrollHandleId)
+//        assertTrue(recyclerViewScrollable.scrollToEnd(1))
+//        val fastScrollHandle : UiObject2  = getUiObject2FromId(fastScrollHandleId)
 
 
-        mDevice.wait(Until.hasObject(By.res(fastScrollHandleBubbleId)), LAUNCH_TIMEOUT)
-        val fastScrollHandleBubble : UiObject2 = getUiObject2FromId(fastScrollHandleBubbleId)
-        assertEquals("0", fastScrollHandleBubble.text)
+        //mDevice.wait(Until.hasObject(By.res(fastScrollHandleBubbleId)), LAUNCH_TIMEOUT)
+//        val fastScrollHandleBubble : UiObject2 = getUiObject2FromId(fastScrollHandleBubbleId)
+//        assertEquals("0", fastScrollHandleBubble.text)
         //recyclerView1.
 
 
@@ -102,21 +112,26 @@ val fastScrollHandleBubbleId : String = resourceId("fastscroll_bubble")
 
 
     private fun assertSplashScreenActivity() {
+        val expectedTitle = "Music Player"
+
         val imageViewId : String = resourceId("imageView")
         mDevice.wait(
                 Until.hasObject(By.res(imageViewId)),
                 LAUNCH_TIMEOUT
         )
 
-        val logoUi : UiObject = mDevice.findObject(UiSelector().resourceId(imageViewId))
-        assertTrue(logoUi.exists())
-
-        val titleViewId : String = resourceId("titleView")
-        val title : UiObject = mDevice.findObject(UiSelector().resourceId(titleViewId))
-
-        assertTrue(title.exists())
-        val expectedTitle = "Music Player"
-        assertEquals(expectedTitle, title.text)
+        onView(withId(R.id.imageView)).check(matches(isDisplayed()))
+        onView(withId(R.id.titleView)).check(matches(isDisplayed()))
+        onView(withId(R.id.titleView)).check(matches(withText(containsString(expectedTitle))))
+//        val logoUi : UiObject = mDevice.findObject(UiSelector().resourceId(imageViewId))
+//        assertTrue(logoUi.exists())
+//
+//        val titleViewId : String = resourceId("titleView")
+//        val title : UiObject = mDevice.findObject(UiSelector().resourceId(titleViewId))
+//
+//        assertTrue(title.exists())
+//
+//        assertEquals(expectedTitle, title.text)
 
     }
 
@@ -128,14 +143,4 @@ val fastScrollHandleBubbleId : String = resourceId("fastscroll_bubble")
         return mDevice.findObject(By.res(id))
     }
 
-    class MyEventCondition() : UiObject2Condition<Boolean>() {
-
-        var release : Boolean = false
-
-         override fun apply(object2: UiObject2): Boolean {
-            return release
-        }
-
-
-    }
 }
