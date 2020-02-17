@@ -30,10 +30,10 @@ class RecyclerViewMatcher(private val recyclerViewId: Int) {
             }
 
             override fun matchesSafely(view: View?): Boolean {
-                resources = view!!.getResources()
+                resources = view!!.resources
                 if (childView == null) {
-                    val recyclerView: RecyclerView = view!!.getRootView().findViewById(recyclerViewId) as RecyclerView
-                    childView = if (recyclerView != null && recyclerView.getId() === recyclerViewId) {
+                    val recyclerView: RecyclerView? = view.getRootView().findViewById(recyclerViewId) as RecyclerView
+                    childView = if (recyclerView != null && recyclerView.id === recyclerViewId) {
                         recyclerView.findViewHolderForAdapterPosition(position)!!.itemView
                     } else {
                         return false
