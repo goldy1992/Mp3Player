@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
+import java.lang.Integer.toString
 
 class RecyclerViewMatcher(private val recyclerViewId: Int) {
+
     fun atPosition(position: Int): Matcher<View?>? {
         return atPositionOnView(position, -1)
     }
@@ -16,8 +18,9 @@ class RecyclerViewMatcher(private val recyclerViewId: Int) {
         return object : TypeSafeMatcher<View?>() {
             var resources: Resources? = null
             var childView: View? = null
+
             override fun describeTo(description: Description?) {
-                var idDescription = Integer.toString(recyclerViewId)
+                var idDescription = recyclerViewId.toString()
                 if (resources != null) {
                     idDescription = try {
                         resources!!.getResourceName(recyclerViewId)
@@ -32,7 +35,7 @@ class RecyclerViewMatcher(private val recyclerViewId: Int) {
             override fun matchesSafely(view: View?): Boolean {
                 resources = view!!.resources
                 if (childView == null) {
-                    val recyclerView: RecyclerView? = view.getRootView().findViewById(recyclerViewId) as RecyclerView
+                    val recyclerView: RecyclerView? = view.rootView.findViewById(recyclerViewId) as RecyclerView
                     childView = if (recyclerView != null && recyclerView.id === recyclerViewId) {
                         recyclerView.findViewHolderForAdapterPosition(position)!!.itemView
                     } else {

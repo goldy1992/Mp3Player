@@ -2,21 +2,11 @@ package com.github.goldy1992.mp3player
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Point
-import android.view.View
-import android.view.accessibility.AccessibilityEvent
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.action.MotionEvents
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.longClick
-import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.base.UiControllerImpl_Factory
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
@@ -24,12 +14,12 @@ import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.*
 import com.github.goldy1992.mp3player.TestUtils.resourceId
-import com.github.goldy1992.mp3player.TestUtils.withRecyclerView
+import com.github.goldy1992.mp3player.client.PlayPauseButtonAssert.assertPauseIconDisplayed
+import com.github.goldy1992.mp3player.client.PlayPauseButtonAssert.assertPlayIconDisplayed
 import com.github.goldy1992.mp3player.client.RecyclerViewCountAssertion
+import com.github.goldy1992.mp3player.client.views.viewholders.MySongViewHolder
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.notNullValue
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -61,45 +51,18 @@ class EndToEndTest {
 
     @Test
     fun playSongTest() {
-        val released : Boolean = false
-        val fastScrollHandleBubbleId : String = resourceId("fastscroll_bubble")
-        val fastScrollHandleId : String = resourceId("fastscroll_handle")
 
-        val recyclerViewId : String = resourceId("recyclerView")
-
+        assertPlayIconDisplayed()
         var recyclerViewInteraction : ViewInteraction = onView(withId(R.id.recyclerView))
         recyclerViewInteraction.check(RecyclerViewCountAssertion(37))
         val position = 25
-        onView(withId(R.id.recyclerView))!!.perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
-        Thread.sleep(1000L)
-        onView(withRecyclerView(R.id.recyclerView)!!.atPosition(position)).perform(longClick())
-//        recyclerViewInteraction.
-
-//        MotionEvents.sendDown()
-
-        // assert number of items in songs
-    //    val recyclerView : UiObject2 = mDevice.findObject(By.res(recyclerViewId))
-
-    //    val recyclerView1 : UiObject = mDevice.findObject(UiSelector().resourceId(recyclerViewId))
-
-//        val scrollHandle : View = mDevice.findObject(UiSelector().resourceId(recyclerViewId)) as View
-
-//        assertTrue(recyclerViewScrollable.scrollToEnd(1))
-//        val fastScrollHandle : UiObject2  = getUiObject2FromId(fastScrollHandleId)
-
-
-        //mDevice.wait(Until.hasObject(By.res(fastScrollHandleBubbleId)), LAUNCH_TIMEOUT)
-//        val fastScrollHandleBubble : UiObject2 = getUiObject2FromId(fastScrollHandleBubbleId)
-//        assertEquals("0", fastScrollHandleBubble.text)
-        //recyclerView1.
-
+        onView(withId(R.id.recyclerView))!!.perform(RecyclerViewActions.actionOnItemAtPosition<MySongViewHolder>(position, click()))
 
         // assert name of first
 
+        Thread.sleep(1000L)
         // assert name of last
-        assertTrue(true)
-        Thread.sleep(5000L)
-
+        assertPauseIconDisplayed()
     }
 
     private fun startApp() {
