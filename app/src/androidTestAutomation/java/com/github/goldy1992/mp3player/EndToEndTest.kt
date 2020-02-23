@@ -70,8 +70,10 @@ class EndToEndTest {
 
         recyclerViewInteraction.check(RecyclerViewCountAssertion(37))
         val position = 25
-        onView(withId(R.id.recyclerView))!!.perform(RecyclerViewActions.actionOnItemAtPosition<MySongViewHolder>(position, click()))
-        awaitingMediaControllerIdlingResource.waitForPlay()
+        onView(withId(R.id.recyclerView))!!.perform(RecyclerViewActions.scrollToPosition<MySongViewHolder>(position))
+
+        mDevice.findObject(By.text("La Instalada")).click()
+          awaitingMediaControllerIdlingResource.waitForPlay()
 
         assertPauseIconDisplayed()
     }
