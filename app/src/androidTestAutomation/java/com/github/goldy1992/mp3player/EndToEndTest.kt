@@ -58,6 +58,8 @@ class EndToEndTest {
         val position = 25
         onView(withId(R.id.recyclerView))!!.perform(RecyclerViewActions.actionOnItemAtPosition<MySongViewHolder>(position, click()))
 
+        val viewInteraction : ViewInteraction = onView(withId(R.id.recyclerView))
+        viewInteraction.
         // assert name of first
 
         Thread.sleep(1000L)
