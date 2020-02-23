@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client.dagger.components
 import android.content.Context
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectorCallback
 import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
+import com.github.goldy1992.mp3player.client.dagger.modules.AndroidTestMediaControllerModule
 import com.github.goldy1992.mp3player.client.dagger.modules.GlideModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserCompatModule
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
@@ -12,6 +13,7 @@ import dagger.Component
 
 @ComponentScope
 @Component(modules = [
+    AndroidTestMediaControllerModule::class,
     GlideModule::class,
     MediaBrowserCompatModule::class
 ])

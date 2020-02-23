@@ -23,7 +23,7 @@ import javax.inject.Inject
 open class MediaControllerAdapter
 @Inject
 constructor(private val context: Context,
-            private val myMediaControllerCallback: MyMediaControllerCallback?) : LogTagger {
+            val myMediaControllerCallback: MyMediaControllerCallback) : LogTagger {
 
     @get:VisibleForTesting
     @set:VisibleForTesting

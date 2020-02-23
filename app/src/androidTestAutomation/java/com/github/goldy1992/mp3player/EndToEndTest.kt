@@ -4,16 +4,27 @@ import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.assertThat
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.GrantPermissionRule
-import androidx.test.uiautomator.*
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiObject
+import androidx.test.uiautomator.UiObject2
+import androidx.test.uiautomator.UiSelector
+import androidx.test.uiautomator.Until
 import com.github.goldy1992.mp3player.TestUtils.resourceId
+import com.github.goldy1992.mp3player.actions.RegisterIdlingResourceAction
+import com.github.goldy1992.mp3player.client.AwaitingMediaControllerIdlingResource
 import com.github.goldy1992.mp3player.client.PlayPauseButtonAssert.assertPauseIconDisplayed
 import com.github.goldy1992.mp3player.client.PlayPauseButtonAssert.assertPlayIconDisplayed
 import com.github.goldy1992.mp3player.client.RecyclerViewCountAssertion
@@ -51,19 +62,17 @@ class EndToEndTest {
 
     @Test
     fun playSongTest() {
-
+        val awaitingMediaControllerIdlingResource : AwaitingMediaControllerIdlingResource = AwaitingMediaControllerIdlingResource()
+        IdlingRegistry.getInstance().register(awaitingMediaControllerIdlingResource)
+        onView(withId(R.id.fragmentContainer)).perform(RegisterIdlingResourceAction(awaitingMediaControllerIdlingResource))
         assertPlayIconDisplayed()
         var recyclerViewInteraction : ViewInteraction = onView(withId(R.id.recyclerView))
+
         recyclerViewInteraction.check(RecyclerViewCountAssertion(37))
         val position = 25
         onView(withId(R.id.recyclerView))!!.perform(RecyclerViewActions.actionOnItemAtPosition<MySongViewHolder>(position, click()))
+        awaitingMediaControllerIdlingResource.waitForPlay()
 
-        val viewInteraction : ViewInteraction = onView(withId(R.id.recyclerView))
-        viewInteraction.
-        // assert name of first
-
-        Thread.sleep(1000L)
-        // assert name of last
         assertPauseIconDisplayed()
     }
 

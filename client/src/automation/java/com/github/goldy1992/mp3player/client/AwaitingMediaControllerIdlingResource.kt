@@ -1,14 +1,17 @@
 package com.github.goldy1992.mp3player.client
 
+import android.util.Log
 import androidx.test.espresso.IdlingResource
+import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
+@ComponentScope
 class AwaitingMediaControllerIdlingResource
 
-    @Inject
-    constructor(): IdlingResource {
+@Inject
+    constructor(): IdlingResource, LogTagger {
 
     private var resourceCallback : IdlingResource.ResourceCallback? = null
 
@@ -22,7 +25,9 @@ class AwaitingMediaControllerIdlingResource
 
     /** {@inheritDoc} */
     override fun isIdleNow(): Boolean {
-        return !(awaitingPlay || awaitingPause)
+        val res = !(awaitingPlay || awaitingPause)
+        Log.i(logTag(), "isIdleNow : $res")
+        return res
     }
 
     fun isAwaitingPlay() : Boolean {
@@ -53,13 +58,18 @@ class AwaitingMediaControllerIdlingResource
     }
 
     private fun updateIdleStatus() {
-        if (!isIdleNow) {
-            resourceCallback?.onTransitionToIdle()
-        }
+        resourceCallback?.onTransitionToIdle()
     }
 
     /** {@inheritDoc} */
     override fun registerIdleTransitionCallback(callback: IdlingResource.ResourceCallback?) {
         this.resourceCallback = callback
       }
+
+    /**
+     * @return the name of the log tag given to the class
+     */
+    override fun logTag(): String {
+        return "waitMedCtrlIdlgRes"
+    }
 }
