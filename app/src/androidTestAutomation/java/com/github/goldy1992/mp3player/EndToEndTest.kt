@@ -2,26 +2,21 @@ package com.github.goldy1992.mp3player
 
 import android.content.Context
 import android.content.Intent
+import android.view.InputDevice
+import android.view.MotionEvent
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.*
+import androidx.test.espresso.action.ViewActions.actionWithAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.assertThat
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.GrantPermissionRule
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiObject
-import androidx.test.uiautomator.UiObject2
-import androidx.test.uiautomator.UiSelector
-import androidx.test.uiautomator.Until
+import androidx.test.uiautomator.*
 import com.github.goldy1992.mp3player.TestUtils.resourceId
 import com.github.goldy1992.mp3player.actions.RegisterIdlingResourceAction
 import com.github.goldy1992.mp3player.client.AwaitingMediaControllerIdlingResource
@@ -31,6 +26,7 @@ import com.github.goldy1992.mp3player.client.RecyclerViewCountAssertion
 import com.github.goldy1992.mp3player.client.views.viewholders.MySongViewHolder
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.notNullValue
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -59,7 +55,6 @@ class EndToEndTest {
         waitForMainActivityToLoad()
     }
 
-
     @Test
     fun playSongTest() {
         val awaitingMediaControllerIdlingResource : AwaitingMediaControllerIdlingResource = AwaitingMediaControllerIdlingResource()
@@ -72,10 +67,17 @@ class EndToEndTest {
         val position = 25
         onView(withId(R.id.recyclerView))!!.perform(RecyclerViewActions.scrollToPosition<MySongViewHolder>(position))
 
+        awaitingMediaControllerIdlingResource.waitForPlay()
         mDevice.findObject(By.text("La Instalada")).click()
-          awaitingMediaControllerIdlingResource.waitForPlay()
 
         assertPauseIconDisplayed()
+
+        awaitingMediaControllerIdlingResource.waitForPause()
+        val playPauseButton : String = resourceId("playPauseButton")
+        mDevice.findObject(UiSelector().resourceId(playPauseButton)).click()
+        assertPlayIconDisplayed()
+        goToMediaPlayerActivity()
+        assertTrue(true)
     }
 
     private fun startApp() {
@@ -115,15 +117,6 @@ class EndToEndTest {
         onView(withId(R.id.imageView)).check(matches(isDisplayed()))
         onView(withId(R.id.titleView)).check(matches(isDisplayed()))
         onView(withId(R.id.titleView)).check(matches(withText(containsString(expectedTitle))))
-//        val logoUi : UiObject = mDevice.findObject(UiSelector().resourceId(imageViewId))
-//        assertTrue(logoUi.exists())
-//
-//        val titleViewId : String = resourceId("titleView")
-//        val title : UiObject = mDevice.findObject(UiSelector().resourceId(titleViewId))
-//
-//        assertTrue(title.exists())
-//
-//        assertEquals(expectedTitle, title.text)
 
     }
 
@@ -133,6 +126,21 @@ class EndToEndTest {
 
     private fun getUiObject2FromId(id : String) : UiObject2 {
         return mDevice.findObject(By.res(id))
+    }
+
+    /**
+     * Clicks to the left of the fragment toolbar instead of the center as the center is covered
+     * by the PlayPauseButton
+     */
+    private fun goToMediaPlayerActivity() {
+        onView(withId(R.id.innerPlaybackToolbarLayout))
+            .perform(ViewActions.actionWithAssertions(
+                GeneralClickAction(
+                        Tap.SINGLE,
+                        GeneralLocation.CENTER_LEFT,
+                        Press.FINGER,
+                        InputDevice.SOURCE_UNKNOWN,
+                        MotionEvent.BUTTON_PRIMARY)))
     }
 
 }
