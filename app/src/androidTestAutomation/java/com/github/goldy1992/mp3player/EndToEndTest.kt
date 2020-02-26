@@ -6,12 +6,9 @@ import android.view.InputDevice
 import android.view.MotionEvent
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.*
-import androidx.test.espresso.action.ViewActions.actionWithAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
@@ -19,14 +16,18 @@ import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.*
 import com.github.goldy1992.mp3player.TestUtils.resourceId
 import com.github.goldy1992.mp3player.actions.RegisterIdlingResourceAction
-import com.github.goldy1992.mp3player.client.AwaitingMediaControllerIdlingResource
-import com.github.goldy1992.mp3player.client.PlayPauseButtonAssert.assertPauseIconDisplayed
-import com.github.goldy1992.mp3player.client.PlayPauseButtonAssert.assertPlayIconDisplayed
+import com.github.goldy1992.mp3player.client.PlayPauseButtonAssert.assertIsPlaying
+import com.github.goldy1992.mp3player.client.PlayPauseButtonAssert.assertNotPlaying
 import com.github.goldy1992.mp3player.client.RecyclerViewCountAssertion
-import com.github.goldy1992.mp3player.client.views.viewholders.MySongViewHolder
+import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.clickOnItemWithText
+import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.createAndRegisterIdlingResource
+import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.scrollToRecyclerViewPosition
+import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.togglePlayPauseButton
+import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.unregisterIdlingResource
+import com.github.goldy1992.mp3player.testdata.Songs.SONGS
+import com.github.goldy1992.mp3player.testdata.Songs.SONGS_COUNT
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.notNullValue
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -57,26 +58,30 @@ class EndToEndTest {
 
     @Test
     fun playSongTest() {
-        val awaitingMediaControllerIdlingResource : AwaitingMediaControllerIdlingResource = AwaitingMediaControllerIdlingResource()
-        IdlingRegistry.getInstance().register(awaitingMediaControllerIdlingResource)
+        val awaitingMediaControllerIdlingResource = createAndRegisterIdlingResource()
         onView(withId(R.id.fragmentContainer)).perform(RegisterIdlingResourceAction(awaitingMediaControllerIdlingResource))
-        assertPlayIconDisplayed()
+        assertNotPlaying()
         var recyclerViewInteraction : ViewInteraction = onView(withId(R.id.recyclerView))
 
-        recyclerViewInteraction.check(RecyclerViewCountAssertion(37))
-        val position = 25
-        onView(withId(R.id.recyclerView))!!.perform(RecyclerViewActions.scrollToPosition<MySongViewHolder>(position))
+        recyclerViewInteraction.check(RecyclerViewCountAssertion(SONGS_COUNT))
+
+        val position = 8
+        val expectedSong = SONGS[8]
+
+        scrollToRecyclerViewPosition(position)
 
         awaitingMediaControllerIdlingResource.waitForPlay()
-        mDevice.findObject(By.text("La Instalada")).click()
-
-        assertPauseIconDisplayed()
+        clickOnItemWithText(mDevice, expectedSong.title)
+        assertIsPlaying()
 
         awaitingMediaControllerIdlingResource.waitForPause()
-        val playPauseButton : String = resourceId("playPauseButton")
-        mDevice.findObject(UiSelector().resourceId(playPauseButton)).click()
-        assertPlayIconDisplayed()
+        togglePlayPauseButton(mDevice)
+        assertNotPlaying()
         goToMediaPlayerActivity()
+
+        // assert that the correct song is displayed on media player activity
+
+        unregisterIdlingResource(awaitingMediaControllerIdlingResource)
     }
 
     private fun startApp() {

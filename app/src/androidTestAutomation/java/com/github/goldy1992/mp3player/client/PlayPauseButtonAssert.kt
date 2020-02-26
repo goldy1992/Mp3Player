@@ -9,14 +9,14 @@ import com.github.goldy1992.mp3player.ImageMatcher
 
 object PlayPauseButtonAssert {
 
-    fun assertPlayIconDisplayed() {
+    fun assertNotPlaying() {
         @DrawableRes
         val playButton = R.drawable.ic_baseline_play_arrow_24px
         val playMatcher : ImageMatcher = ImageMatcher(playButton)
         onView(withId(R.id.playPauseButton)).check(matches(playMatcher))
     }
 
-    fun assertPauseIconDisplayed() {
+    fun assertIsPlaying() {
         @DrawableRes
         val pauseButton = R.drawable.ic_baseline_pause_24px
         val pauseMatcher : ImageMatcher = ImageMatcher(pauseButton)
