@@ -77,7 +77,6 @@ class EndToEndTest {
         mDevice.findObject(UiSelector().resourceId(playPauseButton)).click()
         assertPlayIconDisplayed()
         goToMediaPlayerActivity()
-        assertTrue(true)
     }
 
     private fun startApp() {
