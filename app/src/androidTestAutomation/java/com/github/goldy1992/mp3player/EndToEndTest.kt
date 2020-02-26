@@ -62,7 +62,6 @@ class EndToEndTest {
         onView(withId(R.id.fragmentContainer)).perform(RegisterIdlingResourceAction(awaitingMediaControllerIdlingResource))
         assertNotPlaying()
         var recyclerViewInteraction : ViewInteraction = onView(withId(R.id.recyclerView))
-
         recyclerViewInteraction.check(RecyclerViewCountAssertion(SONGS_COUNT))
 
         val position = 8
@@ -73,6 +72,10 @@ class EndToEndTest {
         awaitingMediaControllerIdlingResource.waitForPlay()
         clickOnItemWithText(mDevice, expectedSong.title)
         assertIsPlaying()
+
+        mDevice.openNotification()
+        mDevice.hasObject(By.text("Test Music Player"))
+     //   UiScrollable(UiSelector().text("Test Music Player")).flingToBeginning(1)
 
         awaitingMediaControllerIdlingResource.waitForPause()
         togglePlayPauseButton(mDevice)
