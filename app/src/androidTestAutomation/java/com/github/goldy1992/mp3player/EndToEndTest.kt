@@ -16,6 +16,8 @@ import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.*
 import com.github.goldy1992.mp3player.TestUtils.resourceId
 import com.github.goldy1992.mp3player.actions.RegisterIdlingResourceAction
+import com.github.goldy1992.mp3player.client.NotificationBarUtils.closeNotifications
+import com.github.goldy1992.mp3player.client.NotificationBarUtils.playFromNotificationBar
 import com.github.goldy1992.mp3player.client.PlayPauseButtonAssert.assertIsPlaying
 import com.github.goldy1992.mp3player.client.PlayPauseButtonAssert.assertNotPlaying
 import com.github.goldy1992.mp3player.client.RecyclerViewCountAssertion
@@ -73,19 +75,28 @@ class EndToEndTest {
         clickOnItemWithText(mDevice, expectedSong.title)
         assertIsPlaying()
 
-        mDevice.openNotification()
-        mDevice.hasObject(By.text("Test Music Player"))
-     //   UiScrollable(UiSelector().text("Test Music Player")).flingToBeginning(1)
 
         awaitingMediaControllerIdlingResource.waitForPause()
         togglePlayPauseButton(mDevice)
         assertNotPlaying()
+
+        mDevice.openNotification()
+        mDevice.hasObject(By.text("Test Music Player"))
+        awaitingMediaControllerIdlingResource.waitForPlay()
+        playFromNotificationBar(mDevice)
+        closeNotifications()
+
+        assertIsPlaying()
         goToMediaPlayerActivity()
+
 
         // assert that the correct song is displayed on media player activity
 
         unregisterIdlingResource(awaitingMediaControllerIdlingResource)
     }
+
+
+
 
     private fun startApp() {
         // Start from the home screen
