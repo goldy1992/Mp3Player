@@ -26,6 +26,7 @@ import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.create
 import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.scrollToRecyclerViewPosition
 import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.togglePlayPauseButton
 import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.unregisterIdlingResource
+import com.github.goldy1992.mp3player.testdata.Song
 import com.github.goldy1992.mp3player.testdata.Songs.SONGS
 import com.github.goldy1992.mp3player.testdata.Songs.SONGS_COUNT
 import org.hamcrest.CoreMatchers.containsString
@@ -67,7 +68,7 @@ class EndToEndTest {
         recyclerViewInteraction.check(RecyclerViewCountAssertion(SONGS_COUNT))
 
         val position = 8
-        val expectedSong = SONGS[8]
+        val expectedSong : Song = SONGS[8]
 
         scrollToRecyclerViewPosition(position)
 
@@ -84,13 +85,21 @@ class EndToEndTest {
         mDevice.hasObject(By.text("Test Music Player"))
         awaitingMediaControllerIdlingResource.waitForPlay()
         playFromNotificationBar(mDevice)
-        closeNotifications()
-
+        closeNotifications(getApplicationContext<Context>())
+        waitForMainActivityToLoad()
         assertIsPlaying()
         goToMediaPlayerActivity()
 
-
         // assert that the correct song is displayed on media player activity
+        onView(withId(R.id.songTitle)).check(matches(withText(expectedSong.title)))
+        onView(withId(R.id.songArtist)).check(matches(withText(expectedSong.artist)))
+        // TODO: assert correct image is displayed
+
+        mDevice.pressBack()
+        waitForMainActivityToLoad()
+
+        assertIsPlaying()
+
 
         unregisterIdlingResource(awaitingMediaControllerIdlingResource)
     }

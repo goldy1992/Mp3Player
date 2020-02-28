@@ -1,6 +1,9 @@
 package com.github.goldy1992.mp3player.client
 
+import android.content.Context
+import android.content.Intent
 import androidx.test.uiautomator.*
+
 
 object NotificationBarUtils {
 
@@ -35,11 +38,8 @@ object NotificationBarUtils {
         uiObject.click()
     }
 
-    fun closeNotifications() {
-        val notificationStackScroller = UiSelector()
-                .packageName(SYSTEM_UI_PACKAGE)
-                .resourceId(NOTIFICATION_STACK_CONTROLLER_ID)
-        val uiScrollable = UiScrollable(notificationStackScroller)
-        uiScrollable.flingToEnd(1)
+    fun closeNotifications(context : Context) {
+        val it = Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
+        context.sendBroadcast(it)
     }
 }

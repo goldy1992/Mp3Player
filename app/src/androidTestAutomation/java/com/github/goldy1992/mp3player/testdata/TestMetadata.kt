@@ -4,7 +4,7 @@ object TestMetadata {
 
     // ARTISTS
     const val PUPY_Y_LOS_QUE_SON_SON = "Pupy y Los Que Son Son"
-    const val ELITO_REVE = "Elito Revé y Su Charangón"
+    const val ELITO_REVE = "Elito Revé y su Charangón"
     const val HAVANA_DE_PRIMERA = "Alexander Abreu y Havana D'Primera"
 
     // SONGS
