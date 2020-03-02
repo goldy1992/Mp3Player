@@ -8,15 +8,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="28" />
 
-
-    <instrumentation android:targetPackage="com.github.goldy1992.mp3player"
-        android:name="androidx.test.runner.AndroidJUnitRunner"/>
-
-
-
     <application>
 
-        <activity android:name=".client.activities.SplashScreenEntryActivityAndroidTestImpl">
+        <activity android:name=".client.activities.SplashScreenEntryActivityInjector">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

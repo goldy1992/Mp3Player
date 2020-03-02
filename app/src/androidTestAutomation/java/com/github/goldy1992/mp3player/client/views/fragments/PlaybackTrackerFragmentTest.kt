@@ -1,6 +1,8 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
+import android.os.Bundle
 import android.os.HandlerThread
+import android.provider.Settings.Global.putInt
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.fragment.app.FragmentFactory
@@ -20,6 +22,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class PlaybackTrackerFragmentTest {
+
     private val HANDLER_THREAD_ID = "HANDLER_THREAD_ID"
     private var duration: Long = 0
     private var position = 0
@@ -33,7 +36,11 @@ class PlaybackTrackerFragmentTest {
     @Before
     fun init() {
         val fragmentFactory = FragmentFactory()
-        fragmentScenario = launchFragmentInContainer<PlaybackTrackerFragment>(null, R.style.AppTheme_AppBarOverlay, fragmentFactory)
+        // The "fragmentArgs" and "factory" arguments are optional.
+        val fragmentArgs = Bundle().apply {
+            putInt("selectedListItem", 0)
+        }
+        fragmentScenario = launchFragmentInContainer<PlaybackTrackerFragment>()
         fragmentScenario!!.onFragment { fragment: PlaybackTrackerFragment -> initFragment(fragment) }
         onMetadataChangedAction = FragmentAction { fragment: PlaybackTrackerFragment -> changeMetaData(fragment) }
         onPlaybackStateChangedAction = FragmentAction { fragment: PlaybackTrackerFragment -> changePlaybackState(fragment) }
