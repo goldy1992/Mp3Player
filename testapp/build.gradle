@@ -1,0 +1,80 @@
+apply plugin: 'com.android.test'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion TARGET_SDK_VERION
+    buildToolsVersion BUILD_TOOLS_VERSION
+
+    // Set the target app project.
+    targetProjectPath ':app'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
+    defaultConfig {
+        applicationId "com.github.goldy1992.mp3player"
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion PIE
+        versionCode 4
+        versionName "1.1.0"
+        testInstrumentationRunner "androidx.test.ext.junit.runners.AndroidJUnit4"
+        missingDimensionStrategy 'default', 'automation'
+    }
+    kotlinOptions { jvmTarget = "1.8" }
+
+//    testOptions {
+//
+//        unitTests {
+//            includeAndroidResources = true
+//            returnDefaultValues = true
+//        }
+//        unitTests.all {
+//            testLogging {
+//                events "passed", "skipped", "failed", "standardOut", "standardError"
+//                outputs.upToDateWhen {false}
+//                showStandardStreams = true
+//            }
+//            jacoco {
+//                includeNoLocationClasses=true
+//            }
+//        }
+//    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
+
+
+    implementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
+    implementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
+    implementation group: 'androidx.test.ext', name: 'junit', version: JUNIT_EXT_VERSION
+    implementation group: 'androidx.test', name: 'rules', version: TEST_RULES_VERSION
+    implementation group: 'androidx.test', name: 'runner', version: TEST_RUNNER_VERSION
+    implementation group: 'androidx.test', name: 'monitor', version: MIRROR_VERSION
+    implementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
+    implementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+    implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
+
+
+    implementation(group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION) {
+        exclude module: "support-annotations"
+    }
+    implementation group: 'androidx.test.uiautomator', name: 'uiautomator', version: TEST_UI_AUTOMATOR_VERSION
+
+
+    debugImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
+    debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+    implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
+    debugImplementation group: 'androidx.fragment', name: 'fragment-ktx', version: FRAGMENT_VERSION
+    //   automationImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+
+    //  automationImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION}
+    implementation project(':client')
+    implementation project (':commons')
+}

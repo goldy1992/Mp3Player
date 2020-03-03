@@ -10,6 +10,7 @@ import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.GrantPermissionRule
@@ -38,7 +39,7 @@ import org.junit.runner.RunWith
 
 
 @LargeTest
-@RunWith(androidx.test.ext.junit.runners.AndroidJUnit4::class)
+@RunWith(AndroidJUnit4::class)
 class EndToEndTest {
 
     private val BASIC_SAMPLE_PACKAGE = "com.github.goldy1992.mp3player.automation"

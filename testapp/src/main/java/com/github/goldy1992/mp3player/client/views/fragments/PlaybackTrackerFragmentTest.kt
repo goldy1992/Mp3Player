@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.client.views.fragments
 
 import android.os.Bundle
 import android.os.HandlerThread
-import android.provider.Settings.Global.putInt
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.fragment.app.FragmentFactory

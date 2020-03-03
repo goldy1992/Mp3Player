@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.github.goldy1992.mp3player"
+    android:installLocation="preferExternal">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Specify runner and target application package -->
+    <instrumentation android:name="androidx.test.ext.junit.runners.AndroidJUnit4"
+        android:targetPackage="com.github.goldy1992.mp3player"/>
+
+<!--    <application>-->
+
+<!--        <activity android:name=".client.activities.SplashScreenEntryActivityInjector">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
+
+<!--        <activity android:name=".client.activities.MainActivityInjectorAndroidTestImpl"/>-->
+
+<!--        <service-->
+<!--            android:name=".service.MediaPlaybackServiceAndroidTestImpl"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.media.browse.MediaBrowserService" />-->
+<!--            </intent-filter>-->
+<!--        </service>-->
+<!--    </application>-->
+
+</manifest>

@@ -20,6 +20,11 @@ android {
         missingDimensionStrategy 'full', 'automation'
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 
     buildTypes {
         release {
@@ -43,7 +48,6 @@ android {
             applicationIdSuffix ".automation"
             versionNameSuffix "-automation"
             resValue "string", "app_name", "Test Music Player"
-
         }
         unitTest {
 
