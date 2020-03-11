@@ -8,6 +8,8 @@ import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.*
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
@@ -26,17 +28,22 @@ import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.create
 import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.scrollToRecyclerViewPosition
 import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.togglePlayPauseButton
 import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.unregisterIdlingResource
+import com.github.goldy1992.mp3player.client.views.fragments.SearchFragmentUtils
+import com.github.goldy1992.mp3player.client.views.fragments.SearchFragmentUtils.openSearchFragment
 import com.github.goldy1992.mp3player.testdata.Song
 import com.github.goldy1992.mp3player.testdata.Songs.SONGS
 import com.github.goldy1992.mp3player.testdata.Songs.SONGS_COUNT
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.notNullValue
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
+/**
+ * End to end tests
+ */
 @LargeTest
 @RunWith(androidx.test.ext.junit.runners.AndroidJUnit4::class)
 class EndToEndTest {
@@ -50,6 +57,9 @@ class EndToEndTest {
 
     private  lateinit var  mDevice: UiDevice
 
+    /**
+     * before method
+     */
     @Before
     fun setup() {
         // Initialize UiDevice instance
@@ -58,7 +68,9 @@ class EndToEndTest {
         assertSplashScreenActivity()
         waitForMainActivityToLoad()
     }
-
+    /**
+     * asserts
+     */
     @Test
     fun playSongTest() {
         val awaitingMediaControllerIdlingResource = createAndRegisterIdlingResource()
@@ -99,14 +111,19 @@ class EndToEndTest {
         waitForMainActivityToLoad()
 
         assertIsPlaying()
-
-
         unregisterIdlingResource(awaitingMediaControllerIdlingResource)
     }
-
-
-
-
+    @Test
+    fun testSearch() {
+        val awaitingMediaControllerIdlingResource = createAndRegisterIdlingResource()
+        onView(withId(R.id.fragmentContainer)).perform(RegisterIdlingResourceAction(awaitingMediaControllerIdlingResource))
+        openSearchFragment()
+        SearchFragmentUtils.performSearchQuery("prim")
+        assertTrue(true)
+    }
+    /**
+     *
+     */
     private fun startApp() {
         // Start from the home screen
         mDevice.pressHome();
