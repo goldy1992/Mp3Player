@@ -8,8 +8,6 @@ import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.*
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
@@ -113,6 +111,10 @@ class EndToEndTest {
         assertIsPlaying()
         unregisterIdlingResource(awaitingMediaControllerIdlingResource)
     }
+
+    /**
+     * end to end test for the search functionality
+     */
     @Test
     fun testSearch() {
         val awaitingMediaControllerIdlingResource = createAndRegisterIdlingResource()
