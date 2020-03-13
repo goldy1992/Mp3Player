@@ -131,16 +131,6 @@ dependencies {
     testImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: KOTLIN_COROUTINE_VERSION
     testImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
 
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    androidTestImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
-    androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
-    androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: JUNIT_EXT_VERSION
-    androidTestImplementation group: 'androidx.test', name: 'rules', version: TEST_RULES_VERSION
-    androidTestImplementation group: 'androidx.test', name: 'runner', version: TEST_RUNNER_VERSION
-    androidTestImplementation group: 'androidx.test', name: 'monitor', version: MIRROR_VERSION
-    androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
-    androidTestImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
-
     androidTestImplementation group: 'androidx.test', name: 'rules', version: TEST_RULES_VERSION
     androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
     automationImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
