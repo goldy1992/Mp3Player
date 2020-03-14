@@ -1,23 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.github.goldy1992.mp3player"
     android:installLocation="preferExternal">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="28" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-    <application>
 
-        <activity android:name=".client.activities.SplashScreenEntryActivityAndroidTestImpl">
+    <application
+        android:name=".AndroidTestMainApplication"
+        android:allowBackup="true"
+        android:fullBackupContent="true"
+        android:icon="@mipmap/headphone_icon"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        tools:node="replace"
+        android:theme="@style/AppTheme.Orange">
+
+        <activity
+            android:name=".client.activities.SplashScreenEntryActivityInjector"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".client.activities.MainActivityInjectorAndroidTestImpl"/>
+        <activity
+            android:name=".client.activities.MainActivityInjectorAndroidTestImpl"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan" >
+
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".client.activities.SearchResultActivity" />
+
+        </activity>
+
+
+        <activity
+            android:name=".client.activities.MediaPlayerActivityInjector"
+            android:label="@string/app_name"
+            android:parentActivityName=".client.activities.MainActivityInjector"
+            android:launchMode="singleTask" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content"/>
+                <data android:scheme="file"/>
+                <data android:mimeType="audio/*"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".client.activities.FolderActivityInjector"
+            android:label="@string/FOLDER_NAME"
+            android:parentActivityName=".client.activities.MainActivityInjector" />
+
+        <activity android:name=".client.activities.SearchResultActivityInjector"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
 
         <service
             android:name=".service.MediaPlaybackServiceAndroidTestImpl"
@@ -27,6 +79,12 @@
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
         </service>
+
+        <receiver android:name="androidx.media.session.MediaButtonReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

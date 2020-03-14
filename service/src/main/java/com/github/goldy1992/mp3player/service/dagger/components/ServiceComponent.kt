@@ -4,6 +4,8 @@ import android.content.Context
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.service.MediaPlaybackService
 import com.github.goldy1992.mp3player.service.dagger.modules.service.ContentManagerModule
+import com.github.goldy1992.mp3player.service.dagger.modules.service.ContentRetrieversModule
+import com.github.goldy1992.mp3player.service.dagger.modules.service.ContentSearchersModule
 import com.github.goldy1992.mp3player.service.dagger.modules.service.ExoPlayerModule
 import com.github.goldy1992.mp3player.service.dagger.modules.service.MediaSessionCompatModule
 import com.github.goldy1992.mp3player.service.dagger.modules.service.MediaSessionConnectorModule
@@ -14,7 +16,14 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [ContentManagerModule::class, ExoPlayerModule::class, MediaSessionCompatModule::class, MediaSessionConnectorModule::class, SearchDatabaseModule::class])
+@Component(modules = [
+    ContentManagerModule::class,
+    ContentRetrieversModule::class,
+    ContentSearchersModule::class,
+    ExoPlayerModule::class,
+    MediaSessionCompatModule::class,
+    MediaSessionConnectorModule::class,
+    SearchDatabaseModule::class])
 interface ServiceComponent {
     fun inject(mediaPlaybackService: MediaPlaybackService?)
     @Component.Factory

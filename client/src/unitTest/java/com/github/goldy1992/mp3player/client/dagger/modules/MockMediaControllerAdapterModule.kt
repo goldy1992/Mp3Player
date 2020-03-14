@@ -10,7 +10,7 @@ import dagger.Provides
 @Module
 class MockMediaControllerAdapterModule {
     @Provides
-    fun provideMediaControllerAdapter(context: Context?, myMediaControllerCallback: MyMediaControllerCallback?): MediaControllerAdapter {
+    fun provideMediaControllerAdapter(context: Context?, myMediaControllerCallback: MyMediaControllerCallback): MediaControllerAdapter {
         return MockMediaControllerAdapter(context, myMediaControllerCallback)
     }
 }

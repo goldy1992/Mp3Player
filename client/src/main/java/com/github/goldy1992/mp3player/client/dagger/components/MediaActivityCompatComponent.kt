@@ -11,6 +11,7 @@ import com.github.goldy1992.mp3player.client.dagger.components.fragments.Playbac
 import com.github.goldy1992.mp3player.client.dagger.components.fragments.SearchFragmentSubcomponent
 import com.github.goldy1992.mp3player.client.dagger.modules.GlideModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserCompatModule
+import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerModule
 import com.github.goldy1992.mp3player.client.views.fragments.PlaybackSpeedControlsFragment
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope

@@ -15,12 +15,12 @@ import org.apache.commons.lang3.StringUtils
 import java.util.*
 import javax.inject.Inject
 
-class FolderSearcher @Inject constructor(contentResolver: ContentResolver,
+open class FolderSearcher constructor(contentResolver: ContentResolver,
                                          resultsParser: FolderResultsParser,
                                          folderSearchResultsFilter: FolderSearchResultsFilter?,
                                          private val mediaItemTypeIds: MediaItemTypeIds,
                                          folderDao: FolderDao) : ContentResolverSearcher<Folder>(contentResolver, resultsParser, folderSearchResultsFilter, folderDao) {
-    public override fun performSearchQuery(query: String?): Cursor? {
+    override fun performSearchQuery(query: String?): Cursor? {
         val results: List<Folder>? = searchDatabase.query(query)
         if (results != null && !results.isEmpty()) {
             val ids: MutableList<String> = ArrayList()
@@ -56,7 +56,7 @@ class FolderSearcher @Inject constructor(contentResolver: ContentResolver,
     }
 
     companion object {
-        private const val LIKE_STATEMENT = MediaStore.Audio.Media.DATA + " LIKE ?"
+        const val LIKE_STATEMENT = MediaStore.Audio.Media.DATA + " LIKE ?"
     }
 
 }

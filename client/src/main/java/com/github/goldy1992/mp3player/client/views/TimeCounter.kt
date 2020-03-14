@@ -10,6 +10,9 @@ import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Constants.ONE_SECOND
 import com.github.goldy1992.mp3player.commons.LogTagger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 import kotlin.concurrent.timer
 import java.util.*
 
@@ -87,7 +90,9 @@ class TimeCounter
     private fun createTimer() {
         timer?.cancel()
         timer = timer("", false, 0L, timerFixedRate) {
-            updateUi()
+            CoroutineScope(Main).launch {
+                updateUi()
+            }
         }
         //Log.d(LOG_TAG, "create timer");
     }

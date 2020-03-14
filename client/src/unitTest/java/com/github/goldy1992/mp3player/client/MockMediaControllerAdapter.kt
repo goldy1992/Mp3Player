@@ -18,7 +18,7 @@ import kotlin.collections.ArrayList
 class MockMediaControllerAdapter
     @Inject
     constructor(context: Context?,
-                myMediaControllerCallback: MyMediaControllerCallback?)
+                myMediaControllerCallback: MyMediaControllerCallback)
     : MediaControllerAdapter(context!!, myMediaControllerCallback) {
     override fun setMediaToken(token: MediaSessionCompat.Token?) { // DO NOTHING
     }

@@ -14,10 +14,12 @@ import org.apache.commons.lang3.StringUtils
 import java.util.*
 import javax.inject.Inject
 
-class SongSearcher @Inject constructor(contentResolver: ContentResolver,
-                                       resultsParser: SongResultsParser,
-                                       private val mediaItemTypeIds: MediaItemTypeIds,
-                                       songDao: SongDao)
+open class SongSearcher
+
+    constructor(contentResolver: ContentResolver,
+               resultsParser: SongResultsParser,
+               private val mediaItemTypeIds: MediaItemTypeIds,
+               songDao: SongDao)
     : ContentResolverSearcher<Song>(
         contentResolver,
         resultsParser,
@@ -32,7 +34,7 @@ class SongSearcher @Inject constructor(contentResolver: ContentResolver,
     override val searchCategory: MediaItemType?
         get() = MediaItemType.SONGS
 
-    public override fun performSearchQuery(query: String?): Cursor? {
+    override fun performSearchQuery(query: String?): Cursor? {
         val results: List<Song>? = searchDatabase.query(query)
         val ids: MutableList<String> = ArrayList()
         val parameters: MutableList<String?> = ArrayList()
@@ -50,7 +52,7 @@ class SongSearcher @Inject constructor(contentResolver: ContentResolver,
     }
 
     companion object {
-        private const val PARAMETER = "?"
+        const val PARAMETER = "?"
     }
 
 }

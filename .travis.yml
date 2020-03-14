@@ -55,11 +55,11 @@ android:
   - google-gdk-license-.+
 
 ## safelist
-#branches:
-#  only:
-#  - master
-#  - develop
-#  - feature/issue-50/create-color-theme
+branches:
+  only:
+  - master
+  - develop
+
 before_install:
 # Install SDK license so Android Gradle plugin can install deps.
 - mkdir "$ANDROID_HOME/licenses" || true

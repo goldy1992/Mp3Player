@@ -12,7 +12,7 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import javax.inject.Inject
 
-class PlayPauseButton
+open class PlayPauseButton
     @Inject
     constructor(context: Context,
                 mediaControllerAdapter: MediaControllerAdapter)

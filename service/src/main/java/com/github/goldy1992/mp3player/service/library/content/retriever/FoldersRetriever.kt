@@ -12,7 +12,6 @@ import javax.inject.Singleton
 @Singleton
 open class FoldersRetriever
 
-    @Inject
     constructor(contentResolver: ContentResolver,
                 resultsParser: FolderResultsParser)
 
