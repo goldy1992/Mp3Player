@@ -5,17 +5,18 @@
     android:layout_width="match_parent"
     android:layout_gravity="center_vertical"
     android:layout_height="wrap_content"
+    android:paddingStart="@dimen/default_gap"
     android:paddingEnd="14dp"
     >
 
     <ImageView
         android:layout_alignParentStart="true"
-        android:layout_height="75dp"
-        android:layout_width="75dp"
+        android:layout_height="50dp"
+        android:layout_width="50dp"
         android:layout_centerVertical="true"
         android:id="@+id/albumArt"
-        android:paddingLeft="@dimen/default_gap"
-        android:paddingRight="@dimen/default_gap"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/content_description"
         android:background="@android:color/white" />
@@ -32,10 +33,11 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
+            android:paddingStart="@dimen/default_gap"
+            android:paddingEnd="0dp"
             android:layout_gravity="start"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
+            style="@style/TextAppearance.MaterialComponents.Subtitle2"
+            />
 
 
         <LinearLayout
@@ -53,15 +55,16 @@
                 android:layout_weight="9"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:paddingStart="@dimen/default_gap"
+                android:paddingEnd="0dp"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                 />
 
             <TextView android:id="@+id/duration"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:maxLines="1"
                 android:textAlignment="viewEnd"
-                android:layout_toEndOf="@id/artist"
                 android:layout_width="30dp"
                 android:textSize="14sp"
                 android:textStyle="normal" />

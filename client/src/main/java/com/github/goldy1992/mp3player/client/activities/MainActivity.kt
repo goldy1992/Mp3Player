@@ -54,10 +54,10 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
                     newOffset)
         })
         adapter = MyPagerAdapter(supportFragmentManager, lifecycle)
-        rootMenuItemsPager!!.setAdapter(adapter)
+        rootMenuItemsPager!!.adapter = adapter
         tabLayoutMediator = TabLayoutMediator(tabLayout, rootMenuItemsPager!!, adapter!!)
         tabLayoutMediator!!.attach()
-        rootMenuItemsPager!!.setAdapter(adapter)
+        rootMenuItemsPager!!.adapter = adapter
         setSupportActionBar(titleToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_menu)

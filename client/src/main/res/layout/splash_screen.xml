@@ -22,7 +22,7 @@
         android:id="@+id/titleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
+        style="@style/TextAppearance.MaterialComponents.Headline3"
         android:textAlignment="center"
         android:layout_gravity="center"
         android:text="@string/APP_TITLE"/>

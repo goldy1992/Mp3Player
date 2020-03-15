@@ -16,25 +16,30 @@ class SearchResultAdapter
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaItemViewHolder {
         val layoutInflater: LayoutInflater?
-        return if (viewType == MediaItemType.SONG.value) { // create a new views
-            layoutInflater = LayoutInflater.from(parent.context)
-            val v = layoutInflater
-                    .inflate(R.layout.song_item_menu, parent, false) as ViewGroup
-            MySongViewHolder(v, albumArtPainter)
-        } else if (viewType == MediaItemType.ROOT.value) { // create a new views
-            layoutInflater = LayoutInflater.from(parent.context)
-            val v = layoutInflater
-                    .inflate(R.layout.root_item_menu, parent, false) as ViewGroup
-            RootItemViewHolder(v, albumArtPainter)
-        } else if (viewType == MediaItemType.FOLDER.value) {
-            layoutInflater = LayoutInflater.from(parent.context)
-            val v = layoutInflater
-                    .inflate(R.layout.folder_item_menu, parent, false) as ViewGroup
-            MyFolderViewHolder(v, albumArtPainter)
-        } else {
-            val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.empty_item_menu, parent, false)
-            EmptyListViewHolder(view, albumArtPainter)
+        return when (viewType) {
+            MediaItemType.SONG.value -> { // create a new views
+                layoutInflater = LayoutInflater.from(parent.context)
+                val v = layoutInflater
+                        .inflate(R.layout.song_item_menu, parent, false) as ViewGroup
+                MySongViewHolder(v, albumArtPainter)
+            }
+            MediaItemType.ROOT.value -> { // create a new views
+                layoutInflater = LayoutInflater.from(parent.context)
+                val v = layoutInflater
+                        .inflate(R.layout.root_item_menu, parent, false) as ViewGroup
+                RootItemViewHolder(v, albumArtPainter)
+            }
+            MediaItemType.FOLDER.value -> {
+                layoutInflater = LayoutInflater.from(parent.context)
+                val v = layoutInflater
+                        .inflate(R.layout.folder_item_menu, parent, false) as ViewGroup
+                MyFolderViewHolder(v, albumArtPainter)
+            }
+            else -> {
+                val view = LayoutInflater.from(parent.context)
+                        .inflate(R.layout.empty_item_menu, parent, false)
+                EmptyListViewHolder(view, albumArtPainter)
+            }
         }
     }
 

@@ -43,7 +43,7 @@ abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotific
         }
     }
 
-    override fun onStartCommand(intent: Intent,
+    override fun onStartCommand(intent: Intent?,
                                 flags: Int,
                                 startId: Int): Int {
         Log.i(logTag(), "breakpoint, on start command called")

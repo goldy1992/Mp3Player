@@ -20,7 +20,7 @@ import javax.inject.Inject
 abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListener, LogTagger, ItemSelectedListener {
 
     private var currentQuery: String? = null
-    private var searchResultAdapter: SearchResultAdapter? = null
+    private lateinit var searchResultAdapter: SearchResultAdapter
 
     @Inject
     lateinit var componentClassMapper: ComponentClassMapper
@@ -36,11 +36,11 @@ abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListene
         setContentView(layoutId)
         setSupportActionBar(toolbar)
 
-        recyclerView.setAdapter(searchResultAdapter)
+        recyclerView.adapter = searchResultAdapter
         val itemTouchListener = MyGenericItemTouchListener(applicationContext, this)
         recyclerView.addOnItemTouchListener(itemTouchListener)
         itemTouchListener.parentView =recyclerView
-        recyclerView.setLayoutManager(LinearLayoutManager(applicationContext))
+        recyclerView.layoutManager = LinearLayoutManager(applicationContext)
         // Get the SearchView and set the searchable configuration
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val componentName = ComponentName(applicationContext, componentClassMapper.searchResultActivity!!)
@@ -87,9 +87,9 @@ abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListene
     }
 
     override fun onSearchResult(searchResults: List<MediaBrowserCompat.MediaItem>?) {
-        searchResultAdapter!!.items.clear()
-        searchResultAdapter!!.items.addAll(searchResults!!)
-        searchResultAdapter!!.notifyDataSetChanged()
+        searchResultAdapter.items.clear()
+        searchResultAdapter.items.addAll(searchResults!!)
+        searchResultAdapter.notifyDataSetChanged()
         Log.i(logTag(), "received search results")
     }
 
@@ -98,7 +98,7 @@ abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListene
     }
 
     @Inject
-    fun setSearchResultAdapter(searchResultAdapter: SearchResultAdapter?) {
+    fun setSearchResultAdapter(searchResultAdapter: SearchResultAdapter) {
         this.searchResultAdapter = searchResultAdapter
     }
 }
