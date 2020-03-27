@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
@@ -34,7 +35,7 @@ abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListene
 
     public override fun initialiseView(layoutId: Int): Boolean {
         setContentView(layoutId)
-//        setSupportActionBar(toolbar)
+        setSupportActionBar(toolbar)
 
         recyclerView.adapter = searchResultAdapter
         val itemTouchListener = MyGenericItemTouchListener(applicationContext, this)
@@ -46,7 +47,7 @@ abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListene
         val componentName = ComponentName(applicationContext, componentClassMapper.searchResultActivity!!)
         val searchableInfo = searchManager.getSearchableInfo(componentName)
         //    Assumes current activity is the searchable activity
-//        this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         searchView.setSearchableInfo(searchableInfo)
         searchView.setIconifiedByDefault(false) // Do not iconify the widget; expand it by default
         searchView.isSubmitButtonEnabled = true

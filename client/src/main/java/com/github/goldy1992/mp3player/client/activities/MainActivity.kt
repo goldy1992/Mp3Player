@@ -1,5 +1,7 @@
 package com.github.goldy1992.mp3player.client.activities
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
 import android.view.Menu
@@ -23,6 +25,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 import java.util.*
 import javax.inject.Inject
 
@@ -58,6 +61,7 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
         tabLayoutMediator = TabLayoutMediator(tabLayout, rootMenuItemsPager!!, adapter!!)
         tabLayoutMediator!!.attach()
         rootMenuItemsPager!!.adapter = adapter
+      //  tabLayout.tabTextColors = ColorStateList.valueOf(Color.BLACK)
         setSupportActionBar(titleToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_menu)

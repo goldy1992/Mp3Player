@@ -43,9 +43,9 @@
                     android:id="@+id/tabLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:tabTextColor="?attr/textColorPrimary"
+                    app:tabTextColor="?attr/textColorSecondary"
                     app:layout_collapseMode="parallax"
-                    app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"/>
+                    app:tabTextAppearance="@android:style/TextAppearance.Material.Widget.TabWidget"/>
 
             </com.google.android.material.appbar.AppBarLayout>
 
