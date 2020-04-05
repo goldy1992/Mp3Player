@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.client.views.fragments
 
 import android.os.Bundle
 import android.os.HandlerThread
-import android.provider.Settings.Global.putInt
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.fragment.app.FragmentFactory
@@ -12,15 +11,14 @@ import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.goldy1992.mp3player.CustomMatchers
+import com.goldy1992.mp3player.commons.CustomMatchers
 import com.github.goldy1992.mp3player.client.R
 import org.hamcrest.CoreMatchers
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(androidx.test.ext.junit.runners.AndroidJUnit4::class)
 class PlaybackTrackerFragmentTest {
 
     private val HANDLER_THREAD_ID = "HANDLER_THREAD_ID"

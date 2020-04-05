@@ -15,14 +15,14 @@ import javax.inject.Singleton
 @Module
 class AndroidTestContentRetrieversModule  {
     @Provides
-    @Singleton
+    @ComponentScope
     fun providesSongsRetriever(contentResolver: ContentResolver,
                                     resultsParser: SongResultsParser) : SongsRetriever {
         return SongsRetrieverTestImpl(contentResolver, resultsParser)
     }
 
     @Provides
-    @Singleton
+    @ComponentScope
     fun providesFoldersRetriever(contentResolver: ContentResolver,
                                       resultsParser: FolderResultsParser) : FoldersRetriever {
         return FoldersRetrieverTestImpl(contentResolver, resultsParser)

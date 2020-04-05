@@ -18,7 +18,7 @@ import javax.inject.Singleton
 @Module
 class AndroidTestContentSearchersModule {
     @Provides
-    @Singleton
+    @ComponentScope
     fun providesSongSearcher(contentResolver: ContentResolver,
                              resultsParser: SongResultsParser,
                              mediaItemTypeIds: MediaItemTypeIds,
@@ -28,7 +28,7 @@ class AndroidTestContentSearchersModule {
     }
 
     @Provides
-    @Singleton
+    @ComponentScope
     fun providesFolderSearcher(contentResolver: ContentResolver,
                                resultsParser: FolderResultsParser,
                                folderResultsFilter: FolderSearchResultsFilter,

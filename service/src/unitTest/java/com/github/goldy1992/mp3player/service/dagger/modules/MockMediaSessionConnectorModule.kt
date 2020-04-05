@@ -10,7 +10,7 @@ import javax.inject.Singleton
 @Module
 class MockMediaSessionConnectorModule {
     @Provides
-    @Singleton
+    @ComponentScope
     fun providesMediaSessionConnector(): MediaSessionConnector {
         return mock<MediaSessionConnector>()
     }

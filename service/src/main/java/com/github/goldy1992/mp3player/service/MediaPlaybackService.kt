@@ -8,7 +8,9 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import androidx.media.MediaBrowserServiceCompat
+import com.github.goldy1992.mp3player.commons.DependencyInitialiser
 import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.service.dagger.ServiceComponentProvider
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers
 import com.github.goldy1992.mp3player.service.library.search.managers.SearchDatabaseManagers
@@ -19,7 +21,11 @@ import javax.inject.Inject
 /**
  * Created by Mike on 24/09/2017.
  */
-abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotificationManager.NotificationListener, LogTagger, CoroutineScope by GlobalScope {
+class MediaPlaybackService : MediaBrowserServiceCompat(),
+        CoroutineScope by GlobalScope,
+        DependencyInitialiser,
+        LogTagger,
+        PlayerNotificationManager.NotificationListener {
 
 
     private lateinit var contentManager: ContentManager
@@ -31,9 +37,16 @@ abstract class MediaPlaybackService : MediaBrowserServiceCompat(), PlayerNotific
     private var rootAuthenticator: RootAuthenticator? = null
     private var mediaStoreObservers: MediaStoreObservers? = null
     private var searchDatabaseManagers: SearchDatabaseManagers? = null
-    protected abstract fun initialiseDependencies()
+
+    override fun initialiseDependencies() {
+        (applicationContext as ServiceComponentProvider)
+                .serviceComponent(applicationContext, this, "MEDIA_PLYBK_SRVC_WKR")
+                .inject(this)
+
+    }
 
     override fun onCreate() {
+        initialiseDependencies()
         super.onCreate()
         mediaSessionConnectorCreator.create()
         this.sessionToken = mediaSession.sessionToken

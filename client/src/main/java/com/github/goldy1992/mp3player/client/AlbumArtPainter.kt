@@ -49,7 +49,7 @@ class AlbumArtPainter
     }
 
     fun createPreloader(
-            preloadModelProvider: PreloadModelProvider<MediaItem?>): RecyclerViewPreloader<MediaItem> {
+            preloadModelProvider: PreloadModelProvider<MediaItem>): RecyclerViewPreloader<MediaItem> {
         val preloadSizeProvider = FixedPreloadSizeProvider<MediaItem>(20, 20)
         return RecyclerViewPreloader<MediaItem>(
                 requestManager, preloadModelProvider, preloadSizeProvider, 10 )

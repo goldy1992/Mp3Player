@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player;
+package com.goldy1992.mp3player.commons;
 
 import android.view.View;
 

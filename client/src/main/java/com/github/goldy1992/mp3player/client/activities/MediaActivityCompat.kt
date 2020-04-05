@@ -4,19 +4,18 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
-import androidx.appcompat.app.AppCompatActivity
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectorCallback
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaActivityCompatComponent
 import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
-import com.github.goldy1992.mp3player.commons.DependencyInitialiser
-import com.github.goldy1992.mp3player.commons.LogTagger
+
 import javax.inject.Inject
 
-abstract class MediaActivityCompat : AppCompatActivity(), DependencyInitialiser, MediaBrowserConnectorCallback, LogTagger {
+abstract class MediaActivityCompat : BaseActivity(), MediaBrowserConnectorCallback {
 
     /** MediaBrowserAdapter  */
     @Inject
@@ -66,5 +65,12 @@ abstract class MediaActivityCompat : AppCompatActivity(), DependencyInitialiser,
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    @CallSuper
+    override fun initialiseDependencies() {
+        val component = getClientsComponentProvider()
+                .mediaActivityComponent(applicationContext, this)
+        this.mediaActivityCompatComponent = component
     }
 }

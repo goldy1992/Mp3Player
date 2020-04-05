@@ -5,6 +5,7 @@ import android.graphics.Color
 import androidx.annotation.VisibleForTesting
 import androidx.core.app.NotificationCompat
 import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.MyDescriptionAdapter
 import com.github.goldy1992.mp3player.service.R
 import com.google.android.exoplayer2.ExoPlayer
@@ -12,7 +13,7 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
+@ComponentScope
 class MyPlayerNotificationManager @Inject constructor(private val context: Context, private val myDescriptionAdapter: MyDescriptionAdapter,
                                                       private val exoPlayer: ExoPlayer,
                                                       private val notificationListener: PlayerNotificationManager.NotificationListener) : LogTagger {

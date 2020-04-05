@@ -114,10 +114,17 @@ dependencies {
     implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     implementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
     implementation group: 'com.google.android.material', name: 'material', version: MATERIAL_VERSION
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: EXO_PLAYER_VERSION
+    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
+    implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
+    implementation group: 'com.l4digital.fastscroll', name: 'fastscroll', version: FAST_SCROLL_VERSION
+
+    // Glide
+    implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION
 
     //dagger
     implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
-    implementation group: 'com.google.dagger', name: 'dagger-android', version: DAGGER_VERSION
+
     // local libs
     implementation project(path: ':commons')
     implementation project(path: ':service')

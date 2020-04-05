@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.service
 
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.player.DecreaseSpeedProvider
 import com.github.goldy1992.mp3player.service.player.IncreaseSpeedProvider
 import com.github.goldy1992.mp3player.service.player.MyMediaButtonEventHandler
@@ -14,7 +15,7 @@ import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector.Play
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
+@ComponentScope
 class MediaSessionConnectorCreator
     @Inject
     constructor(

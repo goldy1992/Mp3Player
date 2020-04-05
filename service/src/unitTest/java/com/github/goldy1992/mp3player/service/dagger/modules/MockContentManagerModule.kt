@@ -12,13 +12,13 @@ import javax.inject.Singleton
 @Module
 class MockContentManagerModule {
     @Provides
-    @Singleton
+    @ComponentScope
     fun provideContentManager(): ContentManager {
         return mock<ContentManager>()
     }
 
     @Provides
-    @Singleton
+    @ComponentScope
     @Named("starting_playlist")
     fun providesInitialPlaylist(contentManager: ContentManager, ids: Map<MediaItemType?, String?>): List<MediaBrowserCompat.MediaItem>? {
         return contentManager.getPlaylist(ids[MediaItemType.SONGS])

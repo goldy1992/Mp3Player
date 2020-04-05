@@ -18,8 +18,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.TestUtils.assertTabName
-import com.github.goldy1992.mp3player.TestUtils.withRecyclerView
+import com.goldy1992.mp3player.commons.TestUtils.assertTabName
+import com.goldy1992.mp3player.commons.TestUtils.withRecyclerView
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.google.android.material.tabs.TabLayout
 import org.hamcrest.CoreMatchers.allOf

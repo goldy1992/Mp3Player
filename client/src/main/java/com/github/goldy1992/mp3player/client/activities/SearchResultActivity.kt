@@ -17,7 +17,7 @@ import com.github.goldy1992.mp3player.commons.*
 import kotlinx.android.synthetic.main.activity_search_results.*
 import javax.inject.Inject
 
-abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListener, LogTagger, ItemSelectedListener {
+class SearchResultActivity : MediaActivityCompat(), SearchResultListener, LogTagger, ItemSelectedListener {
 
     private var currentQuery: String? = null
     private var searchResultAdapter: SearchResultAdapter? = null
@@ -100,5 +100,10 @@ abstract class SearchResultActivity : MediaActivityCompat(), SearchResultListene
     @Inject
     fun setSearchResultAdapter(searchResultAdapter: SearchResultAdapter?) {
         this.searchResultAdapter = searchResultAdapter
+    }
+
+    override fun initialiseDependencies() {
+        super.initialiseDependencies()
+        this.mediaActivityCompatComponent.inject(this)
     }
 }

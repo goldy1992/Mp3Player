@@ -5,7 +5,7 @@ import com.github.goldy1992.mp3player.service.dagger.modules.service.*
 import dagger.Component
 import javax.inject.Singleton
 
-@Singleton
+@ComponentScope
 @Component(modules = [
     ContentManagerModule::class,
     ContentRetrieversModule::class,

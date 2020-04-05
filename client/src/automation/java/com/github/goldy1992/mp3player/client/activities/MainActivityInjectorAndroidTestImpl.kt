@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.test.espresso.IdlingResource
 import androidx.viewpager2.widget.ViewPager2
 import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
-import com.github.goldy1992.mp3player.commons.MikesMp3Player
 import com.github.goldy1992.mp3player.client.dagger.components.DaggerAndroidTestMediaActivityCompatComponent
 import kotlinx.android.synthetic.main.activity_main.*
 

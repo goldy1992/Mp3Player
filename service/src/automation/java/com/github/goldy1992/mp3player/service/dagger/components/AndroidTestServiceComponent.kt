@@ -13,7 +13,7 @@ import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
-@Singleton
+@ComponentScope
 @Component(modules = [AndroidTestContentRetrieversModule::class,
     AndroidTestContentSearchersModule::class,
     ContentManagerModule::class,

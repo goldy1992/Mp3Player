@@ -1,11 +1,16 @@
 package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 
 import android.support.v4.media.MediaBrowserCompat
+import com.github.goldy1992.mp3player.client.views.adapters.MyFolderViewAdapter
+import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecycleViewAdapter
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
+import javax.inject.Inject
 
 class FolderListFragment : MediaItemListFragment() {
+
+    @Inject
+    lateinit var myFolderViewAdapter : MyFolderViewAdapter
 
     override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {
         val intent = intentMapper.getIntent(parentItemType)
@@ -15,15 +20,23 @@ class FolderListFragment : MediaItemListFragment() {
         }
     }
 
+    override fun getViewAdapter(): MyGenericRecycleViewAdapter {
+        return myFolderViewAdapter
+    }
+
     override fun logTag(): String {
         return "FLDR_LST_FRGMNT"
     }
 
+    override fun initialiseDependencies() {
+        createMediaItemListFragmentSubcomponent(this)?.inject(this)
+    }
+
     companion object {
         @JvmStatic
-        fun newInstance(mediaItemType: MediaItemType, id: String, component: MediaActivityCompatComponent): FolderListFragment {
+        fun newInstance(mediaItemType: MediaItemType, id: String): FolderListFragment {
             val folderListFragment = FolderListFragment()
-            folderListFragment.init(mediaItemType, id, component)
+            folderListFragment.init(mediaItemType, id)
             return folderListFragment
         }
     }

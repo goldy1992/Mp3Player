@@ -1,11 +1,12 @@
 package com.github.goldy1992.mp3player.service.library.content.observers
 
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.MediaPlaybackService
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
+@ComponentScope
 class MediaStoreObservers @Inject constructor(audioObserver: AudioObserver) {
     private val mediaStoreObserversList: MutableList<MediaStoreObserver>
     fun init(mediaPlaybackService: MediaPlaybackService?) {

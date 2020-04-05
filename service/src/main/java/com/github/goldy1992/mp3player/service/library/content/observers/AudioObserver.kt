@@ -8,6 +8,7 @@ import android.util.Log
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryPath
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.search.managers.FolderDatabaseManager
@@ -25,7 +26,7 @@ import javax.inject.Singleton
  * onChange is called when there is a change when a song indexed with the EXTERNAL_CONTENT_URI is
  * added, changed or deleted, and update respective song and folder lists
  */
-@Singleton
+@ComponentScope
 class AudioObserver
 /**
  * Creates a content observer.

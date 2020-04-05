@@ -11,13 +11,12 @@ import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.callbacks.TrackViewPagerChangeCallback
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
 import com.github.goldy1992.mp3player.client.views.adapters.TrackViewAdapter
-import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.android.synthetic.main.activity_media_player.*
 
 /**
  * Created by Mike on 24/09/2017.
  */
-abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, LogTagger {
+class MediaPlayerActivity : MediaActivityCompat(), MetadataListener {
 
     private var trackViewAdapter: TrackViewAdapter? = null
     private var trackViewPagerChangeCallback: TrackViewPagerChangeCallback? = null
@@ -42,6 +41,11 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, Lo
         }
     }
 
+    override fun initialiseDependencies() {
+        super.initialiseDependencies()
+        this.mediaActivityCompatComponent.inject(this)
+    }
+
     override fun initialiseView(layoutId: Int): Boolean {
         setContentView(layoutId)
         val context = applicationContext
@@ -49,7 +53,7 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, Lo
         trackViewPagerChangeCallback = TrackViewPagerChangeCallback(mediaControllerAdapter)
         trackViewAdapter = TrackViewAdapter(albumArtPainter, mediaControllerAdapter.getQueue())
         mediaControllerAdapter.registerMetaDataListener(this)
-        trackViewPager.setAdapter(trackViewAdapter)
+        trackViewPager.adapter = trackViewAdapter
         trackViewPager.registerOnPageChangeCallback(trackViewPagerChangeCallback!!)
         trackViewPager.setCurrentItem(mediaControllerAdapter.getCurrentQueuePosition(), false)
         return true

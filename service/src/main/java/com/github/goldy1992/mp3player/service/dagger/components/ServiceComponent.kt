@@ -1,22 +1,15 @@
 package com.github.goldy1992.mp3player.service.dagger.components
 
 import android.content.Context
-import com.github.goldy1992.mp3player.commons.ComponentClassMapper
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.MediaPlaybackService
-import com.github.goldy1992.mp3player.service.dagger.modules.service.ContentManagerModule
-import com.github.goldy1992.mp3player.service.dagger.modules.service.ContentRetrieversModule
-import com.github.goldy1992.mp3player.service.dagger.modules.service.ContentSearchersModule
-import com.github.goldy1992.mp3player.service.dagger.modules.service.ExoPlayerModule
-import com.github.goldy1992.mp3player.service.dagger.modules.service.MediaSessionCompatModule
-import com.github.goldy1992.mp3player.service.dagger.modules.service.MediaSessionConnectorModule
-import com.github.goldy1992.mp3player.service.dagger.modules.service.SearchDatabaseModule
+import com.github.goldy1992.mp3player.service.dagger.modules.service.*
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import dagger.BindsInstance
-import dagger.Component
-import javax.inject.Singleton
+import dagger.Subcomponent
 
-@Singleton
-@Component(modules = [
+@ComponentScope
+@Subcomponent(modules = [
     ContentManagerModule::class,
     ContentRetrieversModule::class,
     ContentSearchersModule::class,
@@ -25,12 +18,13 @@ import javax.inject.Singleton
     MediaSessionConnectorModule::class,
     SearchDatabaseModule::class])
 interface ServiceComponent {
-    fun inject(mediaPlaybackService: MediaPlaybackService?)
-    @Component.Factory
+
+    fun inject(mediaPlaybackService: MediaPlaybackService)
+
+    @Subcomponent.Factory
     interface Factory {
         fun create(@BindsInstance context: Context,
                    @BindsInstance notificationListener: PlayerNotificationManager.NotificationListener,
-                   @BindsInstance workerId: String,
-                   @BindsInstance componentClassMapper: ComponentClassMapper): ServiceComponent
+                   @BindsInstance workerId: String) : ServiceComponent
     }
 }

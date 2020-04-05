@@ -20,7 +20,8 @@ import javax.inject.Inject
  */
 @FragmentScope
 class SeekerBarController2
-@Inject constructor(private val mediaControllerAdapter: MediaControllerAdapter?,
+    @Inject
+    constructor(private val mediaControllerAdapter: MediaControllerAdapter?,
                     private val timeCounter: TimeCounter)
     : AnimatorUpdateListener, OnSeekBarChangeListener {
 

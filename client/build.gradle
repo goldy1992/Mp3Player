@@ -113,7 +113,6 @@ dependencies {
         transitive = false
     }
 
-
     kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     api group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
 
@@ -134,4 +133,10 @@ dependencies {
     androidTestImplementation group: 'androidx.test', name: 'rules', version: TEST_RULES_VERSION
     androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
     automationImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
+
+    androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: JUNIT_EXT_VERSION
+    androidTestImplementation group: 'androidx.test', name: 'rules', version: TEST_RULES_VERSION
+    androidTestImplementation group: 'androidx.test', name: 'runner', version: TEST_RUNNER_VERSION
+    androidTestImplementation group: 'androidx.test', name: 'monitor', version: MIRROR_VERSION
+
 }

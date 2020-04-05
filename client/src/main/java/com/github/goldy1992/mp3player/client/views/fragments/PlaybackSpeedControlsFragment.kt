@@ -17,25 +17,23 @@ import kotlinx.android.synthetic.main.fragment_playback_speed_controls.*
 
 import javax.inject.Inject
 
-class PlaybackSpeedControlsFragment : Fragment(), PlaybackStateListener {
-
-    @Inject
-    lateinit var mediaControllerAdapter: MediaControllerAdapter
+class PlaybackSpeedControlsFragment : MediaFragment(), PlaybackStateListener {
 
     private var speed = 1.0f
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        initialiseDependencies()
         super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fragment_playback_speed_controls, container, true)
     }
 
+    override fun logTag(): String {
+        TODO("Not yet implemented")
+    }
+
     override fun onViewCreated(view: View, bundle: Bundle?) {
         super.onViewCreated(view, bundle)
-
         decreasePlaybackSpeedButton.setOnClickListener(View.OnClickListener { decreasePlaybackSpeed() })
-
         increasePlaybackSpeedButton.setOnClickListener(View.OnClickListener { increasePlaybackSpeed() })
 
         // register listeners
@@ -50,8 +48,7 @@ class PlaybackSpeedControlsFragment : Fragment(), PlaybackStateListener {
 
     @VisibleForTesting
     fun increasePlaybackSpeed() {
-            mediaControllerAdapter.sendCustomAction(Constants.INCREASE_PLAYBACK_SPEED, Bundle())
-
+        mediaControllerAdapter.sendCustomAction(Constants.INCREASE_PLAYBACK_SPEED, Bundle())
     }
 
     @VisibleForTesting
@@ -68,9 +65,9 @@ class PlaybackSpeedControlsFragment : Fragment(), PlaybackStateListener {
         }
     }
 
-    fun initialiseDependencies() {
-        val component = (activity as MediaActivityCompat?)!!.mediaActivityCompatComponent
-        component.inject(this)
+    override fun initialiseDependencies() {
+        createMediaFragmentSubcomponent()
+        ?.inject(this)
     }
 
 }

@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_folder.*
 import kotlinx.android.synthetic.main.fragment_simple_title_bar.*
 import org.apache.commons.lang3.exception.ExceptionUtils
 
-abstract class FolderActivity : MediaActivityCompat() {
+class FolderActivity : MediaActivityCompat() {
 
     private var viewPageFragment: MediaItemListFragment? = null
 
@@ -27,7 +27,7 @@ abstract class FolderActivity : MediaActivityCompat() {
         super.onConnected()
         val mediaItem: MediaBrowserCompat.MediaItem = intent.getParcelableExtra(Constants.MEDIA_ITEM)
         val itemLibraryId = MediaItemUtils.getLibraryId(mediaItem)!!
-        viewPageFragment = SongListFragment.newInstance(MediaItemType.FOLDER, itemLibraryId, mediaActivityCompatComponent)
+        viewPageFragment = SongListFragment.newInstance(MediaItemType.FOLDER, itemLibraryId)
         initialiseView(R.layout.activity_folder)
         supportFragmentManager.beginTransaction()
                 .add(R.id.songListFragment,
@@ -59,6 +59,11 @@ abstract class FolderActivity : MediaActivityCompat() {
 
     override fun logTag(): String {
         return "FOLDER_ACTIVITY"
+    }
+
+    override fun initialiseDependencies() {
+        super.initialiseDependencies()
+        this.mediaActivityCompatComponent.inject(this)
     }
 
 }

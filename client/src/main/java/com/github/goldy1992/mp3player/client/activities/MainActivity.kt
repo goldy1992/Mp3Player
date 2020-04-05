@@ -8,8 +8,8 @@ import android.widget.Spinner
 import androidx.annotation.LayoutRes
 import androidx.annotation.VisibleForTesting
 import androidx.core.view.GravityCompat
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaBrowserResponseListener
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.listeners.MyDrawerListener
 import com.github.goldy1992.mp3player.client.views.ThemeSpinnerController
 import com.github.goldy1992.mp3player.client.views.adapters.MyPagerAdapter
@@ -17,8 +17,11 @@ import com.github.goldy1992.mp3player.client.views.fragments.SearchFragment
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.FolderListFragment
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.MediaItemListFragment
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.SongListFragment
-import com.github.goldy1992.mp3player.commons.*
 import com.github.goldy1992.mp3player.commons.ComparatorUtils.Companion.compareRootMediaItemsByMediaItemType
+import com.github.goldy1992.mp3player.commons.ComponentClassMapper
+import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.tabs.TabLayoutMediator
@@ -26,8 +29,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import javax.inject.Inject
 
-abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListener {
-
+class MainActivity : MediaActivityCompat(),
+    MediaBrowserResponseListener
+{
     private var tabLayoutMediator: TabLayoutMediator? = null
 
     var adapter: MyPagerAdapter? = null
@@ -54,10 +58,10 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
                     newOffset)
         })
         adapter = MyPagerAdapter(supportFragmentManager, lifecycle)
-        rootMenuItemsPager!!.setAdapter(adapter)
+        rootMenuItemsPager!!.adapter = adapter
         tabLayoutMediator = TabLayoutMediator(tabLayout, rootMenuItemsPager!!, adapter!!)
         tabLayoutMediator!!.attach()
-        rootMenuItemsPager!!.setAdapter(adapter)
+        rootMenuItemsPager!!.adapter = adapter
         setSupportActionBar(titleToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_menu)
@@ -76,6 +80,11 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
                     .remove(searchFragment!!)
                     .commit()
         }
+    }
+
+    override fun initialiseDependencies() {
+        super.initialiseDependencies()
+        this.mediaActivityCompatComponent.inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -135,8 +144,8 @@ abstract class MainActivity : MediaActivityCompat(), MediaBrowserResponseListene
             val category = MediaItemUtils.getExtra(Constants.ROOT_ITEM_TYPE, mediaItem) as MediaItemType
             var mediaItemListFragment: MediaItemListFragment?
             mediaItemListFragment = when (category) {
-                MediaItemType.SONGS -> SongListFragment.newInstance(category, id, mediaActivityCompatComponent)
-                MediaItemType.FOLDERS -> FolderListFragment.newInstance(category, id, mediaActivityCompatComponent)
+                MediaItemType.SONGS -> SongListFragment.newInstance(category, id)
+                MediaItemType.FOLDERS -> FolderListFragment.newInstance(category, id)
                 else -> null
             }
             if (null != mediaItemListFragment) {
