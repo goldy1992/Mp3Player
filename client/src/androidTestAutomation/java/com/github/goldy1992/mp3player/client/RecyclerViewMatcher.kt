@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player
+package com.github.goldy1992.mp3player.client
 
 import android.content.res.Resources
 import android.view.View
@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
-import java.lang.Integer.toString
 
 class RecyclerViewMatcher(private val recyclerViewId: Int) {
 

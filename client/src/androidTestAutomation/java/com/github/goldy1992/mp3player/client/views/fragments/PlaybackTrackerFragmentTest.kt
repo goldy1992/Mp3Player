@@ -1,18 +1,17 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
-import android.os.Bundle
 import android.os.HandlerThread
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.fragment.app.FragmentFactory
-import androidx.fragment.app.testing.FragmentScenario
-import androidx.fragment.app.testing.FragmentScenario.FragmentAction
-import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.test.core.app.ActivityScenario
+import androidx.test.core.app.ActivityScenario.ActivityAction
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
-import com.goldy1992.mp3player.commons.CustomMatchers
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.activities.MediaActivityCompatAutomationImpl
+import com.goldy1992.mp3player.commons.CustomMatchers
 import org.hamcrest.CoreMatchers
 import org.junit.Before
 import org.junit.Test
@@ -21,27 +20,42 @@ import org.junit.runner.RunWith
 @RunWith(androidx.test.ext.junit.runners.AndroidJUnit4::class)
 class PlaybackTrackerFragmentTest {
 
+    companion object {
+        private val FRAGMENT_TAG = "PlaybackTrackerFragment"
+    }
+
+    private val fragmentFactory : FragmentFactory = FragmentFactory()
+
     private val HANDLER_THREAD_ID = "HANDLER_THREAD_ID"
     private var duration: Long = 0
     private var position = 0
     private var playbackSpeed = 0f
     @PlaybackStateCompat.State
     private var playbackState = PlaybackStateCompat.STATE_PAUSED
-    var fragmentScenario: FragmentScenario<PlaybackTrackerFragment>? = null
-    var onMetadataChangedAction: FragmentAction<PlaybackTrackerFragment>? = null
-    var onPlaybackStateChangedAction: FragmentAction<PlaybackTrackerFragment>? = null
+
+    private lateinit var playbackTrackerFragment: PlaybackTrackerFragment
+
+    private lateinit var activityScenario : ActivityScenario<MediaActivityCompatAutomationImpl>
+  //  var fragmentScenario: FragmentScenario<PlaybackTrackerFragment>? = null
+    var onMetadataChangedAction: ActivityAction<MediaActivityCompatAutomationImpl>? = null
+    var onPlaybackStateChangedAction: ActivityAction<MediaActivityCompatAutomationImpl>? = null
 
     @Before
     fun init() {
-        val fragmentFactory = FragmentFactory()
-        // The "fragmentArgs" and "factory" arguments are optional.
-        val fragmentArgs = Bundle().apply {
-            putInt("selectedListItem", 0)
+       this.playbackTrackerFragment = PlaybackTrackerFragment()
+        activityScenario = ActivityScenario.launch(MediaActivityCompatAutomationImpl::class.java)
+        activityScenario.onActivity { activity ->
+
+            activity.supportFragmentManager.fragmentFactory = fragmentFactory
+            activity.supportFragmentManager
+                    .beginTransaction()
+                    .add(R.id.fragmentContainer, playbackTrackerFragment, FRAGMENT_TAG)
+                    .commitNow()
         }
-        fragmentScenario = launchFragmentInContainer<PlaybackTrackerFragment>()
-        fragmentScenario!!.onFragment { fragment: PlaybackTrackerFragment -> initFragment(fragment) }
-        onMetadataChangedAction = FragmentAction { fragment: PlaybackTrackerFragment -> changeMetaData(fragment) }
-        onPlaybackStateChangedAction = FragmentAction { fragment: PlaybackTrackerFragment -> changePlaybackState(fragment) }
+
+//              fragmentScenario!!.onFragment { fragment: PlaybackTrackerFragment -> initFragment(fragment) }
+        onMetadataChangedAction = ActivityAction { activity: MediaActivityCompatAutomationImpl -> changeMetaData(activity) }
+        onPlaybackStateChangedAction = ActivityAction { activity: MediaActivityCompatAutomationImpl -> changePlaybackState(activity) }
     }
 
     /**
@@ -56,9 +70,9 @@ class PlaybackTrackerFragmentTest {
         playbackState = PlaybackStateCompat.STATE_PAUSED
         playbackSpeed = 1.0f
         val EXPECTED = "20"
-        fragmentScenario!!.onFragment(onMetadataChangedAction!!)
+        activityScenario.onActivity(onMetadataChangedAction!!)
         Espresso.onView(ViewMatchers.withId(R.id.duration)).check(ViewAssertions.matches(ViewMatchers.withText(CoreMatchers.containsString(EXPECTED))))
-        fragmentScenario!!.onFragment(onPlaybackStateChangedAction!!)
+        activityScenario.onActivity(onPlaybackStateChangedAction!!)
         Espresso.onView(ViewMatchers.withId(R.id.seekBar)).check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
         Espresso.onView(ViewMatchers.withId(R.id.seekBar)).check(ViewAssertions.matches(CustomMatchers.withSeekbarProgress(10000)))
     }
@@ -74,15 +88,21 @@ class PlaybackTrackerFragmentTest {
 //        fragment.init(mediaControllerAdapter);
     }
 
-    private fun changeMetaData(fragment: PlaybackTrackerFragment) {
+    private fun changeMetaData(activity: MediaActivityCompatAutomationImpl) {
+        val fragment = getFragment(activity)
         val metadataCompat = MediaMetadataCompat.Builder()
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration).build()
-        fragment.onMetadataChanged(metadataCompat)
+        fragment!!.onMetadataChanged(metadataCompat)
     }
 
-    private fun changePlaybackState(fragment: PlaybackTrackerFragment) {
+    private fun changePlaybackState(activity: MediaActivityCompatAutomationImpl) {
+        val fragment = getFragment(activity)
         val playbackStateCompat = PlaybackStateCompat.Builder()
                 .setState(playbackState, position.toLong(), playbackSpeed).build()
-        fragment.onPlaybackStateChanged(playbackStateCompat)
+        fragment!!.onPlaybackStateChanged(playbackStateCompat)
+    }
+
+    private fun getFragment(activity : MediaActivityCompatAutomationImpl) : PlaybackTrackerFragment? {
+        return activity.supportFragmentManager.fragments[0] as? PlaybackTrackerFragment
     }
 }

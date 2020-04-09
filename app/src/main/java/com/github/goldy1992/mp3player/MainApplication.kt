@@ -9,6 +9,7 @@ import com.github.goldy1992.mp3player.client.dagger.ClientComponentsProvider
 import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaActivityCompatComponent
 import com.github.goldy1992.mp3player.client.dagger.subcomponents.SplashScreenEntryActivityComponent
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
+import com.github.goldy1992.mp3player.commons.DependencyInitialiser
 import com.github.goldy1992.mp3player.dagger.components.AppComponent
 import com.github.goldy1992.mp3player.dagger.components.DaggerAppComponent
 import com.github.goldy1992.mp3player.service.MediaPlaybackService
@@ -17,13 +18,14 @@ import com.github.goldy1992.mp3player.service.dagger.components.ServiceComponent
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 
 
-class MainApplication : Application(),
+open class MainApplication : Application(),
         ClientComponentsProvider,
+        DependencyInitialiser,
         ServiceComponentProvider {
 
-    private lateinit var appComponent: AppComponent
+    protected lateinit var appComponent: AppComponent
 
-     private val componentClassMapper: ComponentClassMapper =
+    protected val componentClassMapper: ComponentClassMapper =
             ComponentClassMapper.Builder()
                 .splashActivity(SplashScreenEntryActivity::class.java)
                 .mainActivity(MainActivity::class.java)
@@ -35,9 +37,7 @@ class MainApplication : Application(),
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = DaggerAppComponent
-                .factory()
-                .create(componentClassMapper)
+        initialiseDependencies()
         appComponent.inject(this)
     }
 
@@ -60,6 +60,12 @@ class MainApplication : Application(),
         return appComponent
                 .mediaPlaybackService()
                 .create(context, notificationListener, workerId)
+    }
+
+    override fun initialiseDependencies() {
+        appComponent = DaggerAppComponent
+                .factory()
+                .create(componentClassMapper)
     }
 
 

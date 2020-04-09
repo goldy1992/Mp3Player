@@ -10,30 +10,28 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import javax.inject.Inject
 
-@ComponentScope
-class MediaBrowserAdapter
+open class MediaBrowserAdapter
 
-    @Inject
-    constructor(private val mediaBrowser: MediaBrowserCompat,
+    constructor(private val mediaBrowser: MediaBrowserCompat?,
                 private val mySubscriptionCallback: MediaIdSubscriptionCallback,
                 private val mySearchCallback: MySearchCallback) : LogTagger {
 
     /**
      * Disconnects from the media browser service
      */
-    fun disconnect() {
-        mediaBrowser.disconnect()
+    open fun disconnect() {
+        mediaBrowser?.disconnect()
     }
 
-    fun search(query: String?, extras: Bundle?) {
-        mediaBrowser.search(query!!, extras, mySearchCallback)
+    open fun search(query: String?, extras: Bundle?) {
+        mediaBrowser?.search(query!!, extras, mySearchCallback)
     }
 
     /**
      * Connects to the media browser service
      */
-    fun connect() {
-        mediaBrowser.connect()
+    open fun connect() {
+        mediaBrowser?.connect()
     }
 
     /**
@@ -41,19 +39,19 @@ class MediaBrowserAdapter
      * ID when communicating with the MediaPlaybackService.
      * @param id the id of the media item to be subscribed to
      */
-    fun subscribe(id: String?) {
-        mediaBrowser.subscribe(id!!, mySubscriptionCallback)
+    open fun subscribe(id: String?) {
+        mediaBrowser?.subscribe(id!!, mySubscriptionCallback)
     }
 
-    fun subscribeToRoot() {
-        mediaBrowser.subscribe(rootId, mySubscriptionCallback)
+    open fun subscribeToRoot() {
+        mediaBrowser?.subscribe(rootId, mySubscriptionCallback)
     }
 
     val mediaSessionToken: MediaSessionCompat.Token?
-        get() = mediaBrowser.sessionToken
+        get() = mediaBrowser?.sessionToken
 
     val rootId: String
-        get() = mediaBrowser.root
+        get() = mediaBrowser!!.root
 
 
     fun registerRootListener(mediaBrowserResponseListener: MediaBrowserResponseListener) {

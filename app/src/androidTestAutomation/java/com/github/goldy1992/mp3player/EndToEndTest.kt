@@ -14,20 +14,20 @@ import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.*
-import com.goldy1992.mp3player.commons.TestUtils.resourceId
+import com.github.goldy1992.mp3player.TestUtils.resourceId
 import com.github.goldy1992.mp3player.actions.RegisterIdlingResourceAction
-import com.goldy1992.mp3player.commons.NotificationBarUtils.closeNotifications
-import com.goldy1992.mp3player.commons.NotificationBarUtils.playFromNotificationBar
-import com.goldy1992.mp3player.commons.PlayPauseButtonAssert.assertIsPlaying
-import com.goldy1992.mp3player.commons.PlayPauseButtonAssert.assertNotPlaying
+import com.github.goldy1992.mp3player.client.NotificationBarUtils.closeNotifications
+import com.github.goldy1992.mp3player.client.NotificationBarUtils.playFromNotificationBar
+import com.github.goldy1992.mp3player.client.PlayPauseButtonAssert.assertIsPlaying
+import com.github.goldy1992.mp3player.client.PlayPauseButtonAssert.assertNotPlaying
 import com.github.goldy1992.mp3player.client.RecyclerViewCountAssertion
-import com.goldy1992.mp3player.commons.MainActivityUtils.clickOnItemWithText
-import com.goldy1992.mp3player.commons.MainActivityUtils.createAndRegisterIdlingResource
-import com.goldy1992.mp3player.commons.MainActivityUtils.scrollToRecyclerViewPosition
-import com.goldy1992.mp3player.commons.MainActivityUtils.togglePlayPauseButton
-import com.goldy1992.mp3player.commons.MainActivityUtils.unregisterIdlingResource
-import com.goldy1992.mp3player.commons.SearchFragmentUtils
-import com.goldy1992.mp3player.commons.SearchFragmentUtils.openSearchFragment
+import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.clickOnItemWithText
+import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.createAndRegisterIdlingResource
+import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.scrollToRecyclerViewPosition
+import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.togglePlayPauseButton
+import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.unregisterIdlingResource
+import com.github.goldy1992.mp3player.client.views.fragments.SearchFragmentUtils
+import com.github.goldy1992.mp3player.client.views.fragments.SearchFragmentUtils.openSearchFragment
 import com.github.goldy1992.mp3player.testdata.Song
 import com.github.goldy1992.mp3player.testdata.Songs.SONGS
 import com.github.goldy1992.mp3player.testdata.Songs.SONGS_COUNT
@@ -53,7 +53,7 @@ class EndToEndTest {
     @get:Rule
     var permissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
-    private  lateinit var  mDevice: UiDevice
+    private lateinit var mDevice: UiDevice
 
     /**
      * before method

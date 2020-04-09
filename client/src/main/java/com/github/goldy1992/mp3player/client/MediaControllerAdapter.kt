@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @ComponentScope
 open class MediaControllerAdapter
-@Inject
+
 constructor(private val context: Context,
             val myMediaControllerCallback: MyMediaControllerCallback) : LogTagger {
 
@@ -40,7 +40,7 @@ constructor(private val context: Context,
     }
 
     @VisibleForTesting
-    fun init(token: MediaSessionCompat.Token) {
+    open fun init(token: MediaSessionCompat.Token) {
         try {
             mediaController = MediaControllerCompat(context, token)
             mediaController!!.registerCallback(myMediaControllerCallback!!)
@@ -87,19 +87,19 @@ constructor(private val context: Context,
     }
 
     open fun registerMetaDataListener(metaDataListener: MetadataListener?) {
-        myMediaControllerCallback!!.myMetaDataCallback.registerMetaDataListener(metaDataListener!!)
+        myMediaControllerCallback.myMetaDataCallback.registerMetaDataListener(metaDataListener!!)
     }
 
     open fun unregisterMetaDataListener(metaDataListener: MetadataListener?) {
-        myMediaControllerCallback!!.myMetaDataCallback.removeMetaDataListener(metaDataListener)
+        myMediaControllerCallback.myMetaDataCallback.removeMetaDataListener(metaDataListener)
     }
 
     open fun registerPlaybackStateListener(playbackStateListener: PlaybackStateListener?) {
-        myMediaControllerCallback!!.myPlaybackStateCallback.registerPlaybackStateListener(playbackStateListener!!)
+        myMediaControllerCallback.myPlaybackStateCallback.registerPlaybackStateListener(playbackStateListener!!)
     }
 
     fun unregisterPlaybackStateListener(playbackStateListener: PlaybackStateListener?) {
-        myMediaControllerCallback!!.myPlaybackStateCallback.removePlaybackStateListener(playbackStateListener)
+        myMediaControllerCallback.myPlaybackStateCallback.removePlaybackStateListener(playbackStateListener)
     }
 
     open val playbackState: Int

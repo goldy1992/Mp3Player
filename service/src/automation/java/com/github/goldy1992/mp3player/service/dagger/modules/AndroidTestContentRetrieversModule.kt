@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.service.dagger.modules
 
 import android.content.ContentResolver
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.dagger.modules.service.ContentRetrieversModule
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser

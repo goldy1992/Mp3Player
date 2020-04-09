@@ -2,8 +2,6 @@ package com.github.goldy1992.mp3player.client
 
 import android.content.Context
 import android.content.Intent
-
-import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope

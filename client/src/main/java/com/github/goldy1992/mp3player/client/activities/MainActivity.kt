@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import javax.inject.Inject
 
-class MainActivity : MediaActivityCompat(),
+open class MainActivity : MediaActivityCompat(),
     MediaBrowserResponseListener
 {
     private var tabLayoutMediator: TabLayoutMediator? = null

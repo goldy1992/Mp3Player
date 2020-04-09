@@ -18,21 +18,19 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import com.github.goldy1992.mp3player.client.R
-import com.goldy1992.mp3player.commons.TestUtils.assertTabName
-import com.goldy1992.mp3player.commons.TestUtils.withRecyclerView
+import com.github.goldy1992.mp3player.client.TestUtils.assertTabName
+import com.github.goldy1992.mp3player.client.TestUtils.withRecyclerView
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.google.android.material.tabs.TabLayout
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
-import org.junit.After
+import org.junit.*
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
 import org.junit.runner.RunWith
 
+@Ignore
 @RunWith(AndroidJUnit4::class)
 class MainActivityAndroidTest {
 
@@ -41,6 +39,7 @@ class MainActivityAndroidTest {
 
     @get:Rule
     val mActivityTestRule : ActivityTestRule<MainActivityInjectorAndroidTestImpl> = ActivityTestRule(MainActivityInjectorAndroidTestImpl::class.java)
+
 
     @get:Rule
     val  mGrantPermissionRule : GrantPermissionRule =
