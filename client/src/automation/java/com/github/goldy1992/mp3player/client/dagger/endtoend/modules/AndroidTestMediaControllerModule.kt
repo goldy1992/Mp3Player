@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.dagger.modules
+package com.github.goldy1992.mp3player.client.dagger.endtoend.modules
 
 import com.github.goldy1992.mp3player.client.callbacks.AndroidTestMediaControllerCallback
 import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback

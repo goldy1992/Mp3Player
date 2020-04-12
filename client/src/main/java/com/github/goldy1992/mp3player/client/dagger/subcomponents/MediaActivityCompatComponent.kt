@@ -4,13 +4,13 @@ import android.content.Context
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectorCallback
 import com.github.goldy1992.mp3player.client.activities.*
 import com.github.goldy1992.mp3player.client.dagger.modules.*
-import com.github.goldy1992.mp3player.client.views.fragments.*
+import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import dagger.BindsInstance
-import dagger.Subcomponent
+import dagger.Component
 
 @ComponentScope
-@Subcomponent(modules = [
+@Component(modules = [
     GlideModule::class,
     MediaBrowserAdapterModule::class,
     MediaControllerAdapterModule::class,
@@ -32,10 +32,11 @@ interface MediaActivityCompatComponent {
     fun mediaFragmentSubcomponent() : MediaFragmentSubcomponent.Factory
     fun mediaItemListFragmentSubcomponent() : MediaItemListFragmentSubcomponent.Factory
 
-    @Subcomponent.Factory
+    @Component.Factory
     interface Factory {
         fun create(@BindsInstance context: Context,
-                   @BindsInstance callback: MediaBrowserConnectorCallback)
+                   @BindsInstance callback: MediaBrowserConnectorCallback,
+                   @BindsInstance componentClassMapper: ComponentClassMapper)
                 : MediaActivityCompatComponent
     }
 }

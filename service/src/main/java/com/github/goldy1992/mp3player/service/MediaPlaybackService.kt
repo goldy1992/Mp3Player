@@ -40,7 +40,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat(),
 
     override fun initialiseDependencies() {
         (applicationContext as ServiceComponentProvider)
-                .serviceComponent(applicationContext, this, "MEDIA_PLYBK_SRVC_WKR")
+                .serviceComponent(applicationContext, this)
                 .inject(this)
 
     }
@@ -59,6 +59,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat(),
     override fun onStartCommand(intent: Intent,
                                 flags: Int,
                                 startId: Int): Int {
+        super.onStartCommand(intent, flags, startId)
         Log.i(logTag(), "breakpoint, on start command called")
         return Service.START_STICKY
     }

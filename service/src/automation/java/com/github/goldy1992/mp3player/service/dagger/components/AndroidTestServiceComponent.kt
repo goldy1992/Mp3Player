@@ -4,10 +4,11 @@ import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.dagger.modules.AndroidTestContentRetrieversModule
 import com.github.goldy1992.mp3player.service.dagger.modules.AndroidTestContentSearchersModule
 import com.github.goldy1992.mp3player.service.dagger.modules.service.*
-import dagger.Subcomponent
+import dagger.Component
 
 @ComponentScope
-@Subcomponent(modules = [AndroidTestContentRetrieversModule::class,
+@Component(modules = [
+    AndroidTestContentRetrieversModule::class,
     AndroidTestContentSearchersModule::class,
     ContentManagerModule::class,
     ExoPlayerModule::class,
@@ -16,6 +17,6 @@ import dagger.Subcomponent
     SearchDatabaseModule::class])
 interface AndroidTestServiceComponent : ServiceComponent {
 
-    @Subcomponent.Factory
+    @Component.Factory
     interface Factory : ServiceComponent.Factory
 }

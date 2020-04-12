@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.dagger.modules
+package com.github.goldy1992.mp3player.client.dagger.integration.modules
 
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MockMediaBrowserAdapter

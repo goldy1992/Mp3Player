@@ -7,7 +7,7 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager
 interface ServiceComponentProvider {
     
     fun serviceComponent(context: Context,
-                         notificationListener: PlayerNotificationManager.NotificationListener,
-                         workerId: String) : ServiceComponent
+                         notificationListener: PlayerNotificationManager.NotificationListener)
+        : ServiceComponent
     
 }

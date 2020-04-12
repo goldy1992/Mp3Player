@@ -1,16 +1,12 @@
 package com.github.goldy1992.mp3player.client.activities
 
-import android.os.Bundle
 import androidx.test.espresso.IdlingResource
 import androidx.viewpager2.widget.ViewPager2
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivityInjectorAndroidTestImpl : MainActivity(), IdlingResource {
+
     private var resourceCallback: IdlingResource.ResourceCallback? = null
-    public override fun onCreate(savedInstanceState: Bundle?) {
-        initialiseDependencies()
-        super.onCreate(savedInstanceState)
-    }
 
     override fun getName(): String {
         return "mainActivity"

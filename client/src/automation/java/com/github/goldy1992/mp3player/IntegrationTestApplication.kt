@@ -6,20 +6,22 @@ import com.github.goldy1992.mp3player.client.MediaBrowserConnectorCallback
 import com.github.goldy1992.mp3player.client.PermissionGranted
 import com.github.goldy1992.mp3player.client.activities.*
 import com.github.goldy1992.mp3player.client.dagger.ClientComponentsProvider
-import com.github.goldy1992.mp3player.client.dagger.components.DaggerTestAppComponent
-import com.github.goldy1992.mp3player.client.dagger.components.TestAppComponent
+import com.github.goldy1992.mp3player.client.dagger.integration.components.DaggerIntegrationMediaActivityCompatComponent
+import com.github.goldy1992.mp3player.client.dagger.integration.components.DaggerIntegrationTestAppComponent
+import com.github.goldy1992.mp3player.client.dagger.integration.components.IntegrationTestAppComponent
+import com.github.goldy1992.mp3player.client.dagger.subcomponents.DaggerSplashScreenEntryActivityComponent
 import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaActivityCompatComponent
 import com.github.goldy1992.mp3player.client.dagger.subcomponents.SplashScreenEntryActivityComponent
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 
-class TestApplication : Application(),
+class IntegrationTestApplication : Application(),
         ClientComponentsProvider {
 
-    private lateinit var appComponent: TestAppComponent
+    private lateinit var appComponent: IntegrationTestAppComponent
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = DaggerTestAppComponent
+        appComponent = DaggerIntegrationTestAppComponent
                 .factory()
                 .create(componentClassMapper)
         appComponent.inject(this)
@@ -35,10 +37,14 @@ class TestApplication : Application(),
                     .build()
 
     override fun splashScreenComponent(splashScreenEntryActivity: SplashScreenEntryActivity, permissionGranted: PermissionGranted): SplashScreenEntryActivityComponent {
-       return appComponent.splashScreen().create(splashScreenEntryActivity, permissionGranted)
+       return DaggerSplashScreenEntryActivityComponent
+               .factory()
+               .create(splashScreenEntryActivity, permissionGranted, componentClassMapper)
     }
 
     override fun mediaActivityComponent(context: Context, callback: MediaBrowserConnectorCallback): MediaActivityCompatComponent {
-        return appComponent.mediaActivity().create(context, callback)
+        return DaggerIntegrationMediaActivityCompatComponent
+                .factory()
+                .create(context, callback, componentClassMapper)
     }
 }

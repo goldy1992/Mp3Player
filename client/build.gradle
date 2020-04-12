@@ -39,6 +39,10 @@ android {
         automation {
             dimension = 'default'
         }
+//        integration {
+//            dimension = 'default'
+//            matchingFallbacks = ['full']
+//        }
         unitTest {
             dimension = 'default'
             matchingFallbacks = ['full']
