@@ -4,13 +4,14 @@
     android:installLocation="preferExternal">
 
     <application tools:ignore="GoogleAppIndexingWarning"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name="com.github.goldy1992.mp3player.UnitTestApplication">
 
-        <activity android:name=".activities.SplashScreenEntryActivityInjectorTestImpl" />
-        <activity android:name=".activities.FolderActivityInjectorTestImpl"/>
+        <activity android:name=".activities.SplashScreenEntryActivity" />
+        <activity android:name=".activities.FolderActivity"/>
         <activity android:name=".activities.EmptyMediaActivityCompatFragmentActivity" />
-        <activity android:name=".activities.MediaPlayerActivityInjectorTestImpl" />
-        <activity android:name=".activities.SearchResultActivityInjectorTestImpl" />
-        <activity android:name=".activities.TestMainActivity" />
+        <activity android:name=".activities.MediaPlayerActivity" />
+        <activity android:name=".activities.SearchResultActivity" />
+        <activity android:name=".activities.MainActivity" />
     </application>
 </manifest>

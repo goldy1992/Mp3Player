@@ -54,11 +54,11 @@ open class MediaBrowserAdapter
         get() = mediaBrowser!!.root
 
 
-    fun registerRootListener(mediaBrowserResponseListener: MediaBrowserResponseListener) {
+    open fun registerRootListener(mediaBrowserResponseListener: MediaBrowserResponseListener) {
         mySubscriptionCallback.registerMediaBrowserResponseListener(rootId, mediaBrowserResponseListener)
     }
 
-    fun registerListener(parentId: String?, mediaBrowserResponseListener: MediaBrowserResponseListener) {
+    open fun registerListener(parentId: String?, mediaBrowserResponseListener: MediaBrowserResponseListener) {
         mySubscriptionCallback.registerMediaBrowserResponseListener(parentId!!, mediaBrowserResponseListener)
     }
 

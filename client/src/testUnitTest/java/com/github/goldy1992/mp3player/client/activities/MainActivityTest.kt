@@ -26,16 +26,17 @@ import java.util.*
 @LooperMode(LooperMode.Mode.PAUSED)
 class MainActivityTest {
 
-    private lateinit var scenario : ActivityScenario<TestMainActivity>
+    private lateinit var scenario : ActivityScenario<MainActivity>
 
     @Before
     fun setup() {
-       scenario = ActivityScenario.launch(TestMainActivity::class.java)
+        scenario = ActivityScenario.launch(MainActivity::class.java)
+        scenario.onActivity { activity -> activity.onConnected() }
     }
 
     @Test
     fun testOnItemSelected() {
-        scenario.onActivity { activity: TestMainActivity ->
+        scenario.onActivity { activity: MainActivity ->
             val menuItem = mock<MenuItem>()
             val result = activity.onOptionsItemSelected(menuItem)
             Assert.assertFalse(result)
@@ -44,7 +45,7 @@ class MainActivityTest {
 
     @Test
     fun testOnItemSelectedHomeButton() {
-        scenario.onActivity { activity: TestMainActivity ->
+        scenario.onActivity { activity: MainActivity ->
             val menuItem = mock<MenuItem>()
             whenever(menuItem.itemId).thenReturn(android.R.id.home)
             val result = activity.onOptionsItemSelected(menuItem)
@@ -55,7 +56,7 @@ class MainActivityTest {
     // new tests
     @Test
     fun testOnOptionsItemSelectedOpenDrawer() {
-        scenario.onActivity { activity: TestMainActivity ->
+        scenario.onActivity { activity: MainActivity ->
             val menuItem = mock<MenuItem>()
             whenever(menuItem.itemId).thenReturn(android.R.id.home)
             activity.onOptionsItemSelected(menuItem)
@@ -65,7 +66,7 @@ class MainActivityTest {
 
     @Test
     fun testOnOptionsItemSelectedSearch() {
-        scenario.onActivity { activity: TestMainActivity ->
+        scenario.onActivity { activity: MainActivity ->
             val searchFragment = activity.searchFragment
             // assert the search fragment is NOT already added
             Assert.assertFalse(searchFragment!!.isAdded)
@@ -87,7 +88,7 @@ class MainActivityTest {
 
     @Test
     fun testOnChildrenLoadedForRootCategory() {
-        scenario.onActivity { activity: TestMainActivity ->
+        scenario.onActivity { activity: MainActivity ->
             var myPageAdapterSpied = spy(activity.adapter)
             doNothing().whenever(myPageAdapterSpied!!).notifyDataSetChanged()
             activity.adapter = myPageAdapterSpied;

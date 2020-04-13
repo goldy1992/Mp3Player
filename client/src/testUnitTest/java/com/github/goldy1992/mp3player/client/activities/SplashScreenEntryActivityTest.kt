@@ -3,47 +3,44 @@ package com.github.goldy1992.mp3player.client.activities
 import android.Manifest.permission
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Bundle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.platform.app.InstrumentationRegistry
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doNothing
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.spy
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.LooperMode
-import kotlinx.android.synthetic.main.splash_screen.*
+import java.lang.reflect.Method
 
 @RunWith(RobolectricTestRunner::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 class SplashScreenEntryActivityTest {
 
-    private lateinit var scenario: ActivityScenario<SplashScreenEntryActivityInjectorTestImpl>
-
-    private lateinit var intent: Intent
+    private lateinit var scenario: ActivityScenario<SplashScreenEntryActivity>
 
     @Before
     fun setup() {
-        scenario = ActivityScenario.launch(SplashScreenEntryActivityInjectorTestImpl::class.java)
+        launchActivity(null)
     }
 
     @Test
     fun testNonRootTask() {
-        scenario.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
-            val spiedActivity : SplashScreenEntryActivityInjectorTestImpl = spy(splashActivity)
+        scenario.onActivity { splashActivity: SplashScreenEntryActivity ->
+            val spiedActivity : SplashScreenEntryActivity = spy(splashActivity)
             val context = InstrumentationRegistry.getInstrumentation().context
             val intent = Intent(context, SplashScreenEntryActivity::class.java)
+
             intent.addCategory(Intent.CATEGORY_LAUNCHER)
             intent.action = Intent.ACTION_MAIN
             whenever(spiedActivity.intent).thenReturn(intent)
             whenever(spiedActivity.isTaskRoot).thenReturn(false)
-            spiedActivity.onCreate(null)
+            val onCreateMethod: Method = SplashScreenEntryActivity::class.java.getDeclaredMethod("onCreate", Bundle::class.java)
+            onCreateMethod.isAccessible = true
+            onCreateMethod.invoke(spiedActivity, null)
+
             Assert.assertTrue(splashActivity.isFinishing)
         }
     }
@@ -55,7 +52,7 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnPermissionGranted() {
-        scenario.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
+        scenario.onActivity { splashActivity: SplashScreenEntryActivity ->
             val spiedActivity = spy(splashActivity)
             doNothing().whenever(spiedActivity).runOnUiThread(any<Runnable>())
             spiedActivity.onPermissionGranted()
@@ -65,7 +62,7 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnActivityResultValidAppTerminated() {
-        scenario.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
+        scenario.onActivity { splashActivity: SplashScreenEntryActivity ->
             val spiedActivity = spy(splashActivity)
             spiedActivity.onActivityResult(SplashScreenEntryActivity.APP_TERMINATED, SplashScreenEntryActivity.APP_TERMINATED, null)
             verify(spiedActivity, times(1)).finish()
@@ -74,7 +71,7 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnActivityResultInvalidAppTerminated() {
-        scenario.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
+        scenario.onActivity { splashActivity: SplashScreenEntryActivity ->
             val NOT_APP_TERMINATED = -1
             val spiedActivity = spy(splashActivity)
             spiedActivity.onActivityResult(NOT_APP_TERMINATED, NOT_APP_TERMINATED, null)
@@ -84,7 +81,7 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnRequestPermissionsResultAccepted() {
-        scenario.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
+        scenario.onActivity { splashActivity: SplashScreenEntryActivity ->
             var splashScreenActivitySpied : SplashScreenEntryActivity = spy(splashActivity)
             doNothing().whenever(splashScreenActivitySpied).onPermissionGranted()
             val requestCode = 200
@@ -97,7 +94,7 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnRequestPermissionsResultRejected() {
-        scenario.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
+        scenario.onActivity { splashActivity: SplashScreenEntryActivity ->
             val requestCode = 200
             val permissions = arrayOf(permission.WRITE_EXTERNAL_STORAGE)
             val grantResults = intArrayOf(PackageManager.PERMISSION_DENIED)
@@ -108,20 +105,21 @@ class SplashScreenEntryActivityTest {
 
     @Test
     fun testOnRequestPermissionsResultEmpty() {
-        scenario.onActivity { splashActivity: SplashScreenEntryActivityInjectorTestImpl ->
+        scenario.onActivity { splashActivity: SplashScreenEntryActivity ->
             val requestCode = 200
             val permissions = arrayOf<String>()
             val grantResults = intArrayOf()
             splashActivity.onRequestPermissionsResult(requestCode, permissions, grantResults)
             Assert.assertTrue(splashActivity.isFinishing)
         }
-    } //    @After
-//    public void tearDown() {
-//        if (null != splashScreenEntryActivity) {
-//            Thread thread = splashScreenEntryActivity.getThread();
-//            if (null != thread) {
-//                thread.stop();
-//            }
-//        }
-//    }
+    }
+
+    private fun launchActivity(intent: Intent?) {
+        scenario = if (null == intent) {
+            ActivityScenario.launch(SplashScreenEntryActivity::class.java)
+        }
+        else {
+            ActivityScenario.launch(intent)
+        }
+    }
 }
