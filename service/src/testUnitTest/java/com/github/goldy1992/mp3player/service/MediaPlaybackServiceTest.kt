@@ -24,7 +24,7 @@ import java.util.*
 class MediaPlaybackServiceTest {
 
     /** object to test */
-    lateinit var mediaPlaybackService: TestMediaPlaybackServiceInjector
+    lateinit var mediaPlaybackService: MediaPlaybackService
 
     private val rootAuthenticator: RootAuthenticator = mock<RootAuthenticator>()
 
@@ -32,7 +32,7 @@ class MediaPlaybackServiceTest {
 
     @Before
     fun setup() {
-        mediaPlaybackService = Robolectric.buildService(TestMediaPlaybackServiceInjector::class.java).create().get()
+        mediaPlaybackService = Robolectric.buildService(MediaPlaybackService::class.java).create().get()
         mediaPlaybackService.setRootAuthenticator(rootAuthenticator)
         mediaPlaybackService.setContentManager(contentManager)
     }

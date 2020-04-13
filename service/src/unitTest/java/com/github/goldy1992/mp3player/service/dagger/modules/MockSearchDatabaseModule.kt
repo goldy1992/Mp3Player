@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.service.dagger.modules
 
 import android.content.Context
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.library.search.FolderDao
 import com.github.goldy1992.mp3player.service.library.search.SearchDatabase
 import com.github.goldy1992.mp3player.service.library.search.SongDao

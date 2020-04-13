@@ -21,7 +21,7 @@ import javax.inject.Inject
 /**
  * Created by Mike on 24/09/2017.
  */
-class MediaPlaybackService : MediaBrowserServiceCompat(),
+open class MediaPlaybackService : MediaBrowserServiceCompat(),
         CoroutineScope by GlobalScope,
         DependencyInitialiser,
         LogTagger,
