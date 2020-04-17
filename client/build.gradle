@@ -31,21 +31,19 @@ android {
             testCoverageEnabled = true
         }
     }
-    flavorDimensions 'default'
+    flavorDimensions flavor_dimen_mode
     productFlavors {
         full {
-            dimension = 'default'
+            dimension = flavor_dimen_mode
         }
-        automation {
-            dimension = 'default'
+        endToEnd {
+            dimension = flavor_dimen_mode
         }
-//        integration {
-//            dimension = 'default'
-//            matchingFallbacks = ['full']
-//        }
+        integration {
+            dimension = flavor_dimen_mode
+        }
         unitTest {
-            dimension = 'default'
-            matchingFallbacks = ['full']
+            dimension = flavor_dimen_mode
         }
     }
 
@@ -78,12 +76,27 @@ android {
         }
     }
 
+    variantFilter { variant ->
+        def names = variant.flavors*.name
+        def isReleaseTest = variant.buildType.name =="release" &&
+                 (
+                 names.contains(flavor_endToEnd)
+                || names.contains(flavor_integration)
+                || names.contains(flavor_unitTest))
+
+        // To check for a build type instead, use variant.buildType.name == "buildType"
+        if (isReleaseTest) {
+            // Gradle ignores any variants that satisfy the conditions above.
+            setIgnore(true)
+        }
+    }
+
 }
 
 dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    automationImplementation fileTree(dir: 'libs', include: ['*.jar'])
+//    automationImplementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
     implementation group: 'com.l4digital.fastscroll', name: 'fastscroll', version: FAST_SCROLL_VERSION
     implementation group: 'androidx.drawerlayout', name: 'drawerlayout', version: DRAWER_LAYOUT_VERSION
@@ -109,7 +122,7 @@ dependencies {
     debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
     implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
     debugImplementation group: 'androidx.fragment', name: 'fragment-ktx', version: FRAGMENT_VERSION
-    automationImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+//    automationImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
 
     // Glide
     implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION
@@ -121,7 +134,7 @@ dependencies {
     kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     api group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
 
-    automationImplementation project(':commons')
+ //   automationImplementation project(':commons')
     androidTestImplementation project(':commons')
     implementation project(':commons')
 
@@ -139,7 +152,7 @@ dependencies {
 
     androidTestImplementation group: 'androidx.test', name: 'rules', version: TEST_RULES_VERSION
     androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
-    automationImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
+ //   automationImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
     androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
 
     androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: JUNIT_EXT_VERSION

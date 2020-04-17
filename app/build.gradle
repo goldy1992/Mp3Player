@@ -4,7 +4,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
 apply plugin: 'de.mannodermaus.android-junit5'
-apply plugin: 'com.github.ben-manes.versions'
 
 android {
 
@@ -17,7 +16,6 @@ android {
         versionCode 4
         versionName "1.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        missingDimensionStrategy 'full', 'automation'
     }
 
 
@@ -32,20 +30,19 @@ android {
             testCoverageEnabled = true
         }
     }
-    flavorDimensions "default"
+    flavorDimensions "tier"
     productFlavors {
         full {
             applicationIdSuffix ".full"
             versionNameSuffix "-full"
             resValue "string", "app_name", "Music Player"
+            missingDimensionStrategy flavor_dimen_mode, flavor_full, flavor_integration, flavor_unitTest
         }
         automation {
             applicationIdSuffix ".automation"
             versionNameSuffix "-automation"
             resValue "string", "app_name", "Test Music Player"
-
-        }
-        unitTest {
+            missingDimensionStrategy flavor_dimen_mode, flavor_endToEnd
 
         }
     }
@@ -80,22 +77,6 @@ android {
     }
 
     kotlinOptions { jvmTarget = "1.8" }
-}
-
-dependencyUpdates {
-    checkForGradleUpdate = true
-    resolutionStrategy {
-        componentSelection { rules ->
-            rules.all { ComponentSelection selection ->
-                boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
-                    selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
-                }
-                if (rejected) {
-                    selection.reject('Release candidate')
-                }
-            }
-        }
-    }
 }
 
 dependencies {
@@ -133,7 +114,7 @@ dependencies {
     kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     kaptTest group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
 
-    unitTestImplementation junit5UnitTests
+    androidTestImplementation junit5UnitTests
     testRuntimeOnly junit5UnitTestRuntime
 
     androidTestImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
@@ -157,9 +138,9 @@ dependencies {
     debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
     implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
     debugImplementation group: 'androidx.fragment', name: 'fragment-ktx', version: FRAGMENT_VERSION
-    automationImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+//    automationImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
 
-    automationImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
+  //  automationImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
 
 
 }

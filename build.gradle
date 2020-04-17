@@ -71,6 +71,16 @@ buildscript {
             "org.junit.vintage:junit-vintage-engine:$JUNIT5_VERSION",
             "org.junit.jupiter:junit-jupiter-engine:$JUNIT5_VERSION"
         ]
+
+        // flavour dimensions
+        flavor_dimen_mode = "mode"
+
+        // flavours
+        flavor_full = "full"
+        flavor_unitTest = "unitTest"
+        flavor_integration = "integration"
+        flavor_endToEnd = "endToEnd"
+        flavor_automation = "automation"
     }
 
     repositories {
