@@ -47,6 +47,17 @@ android {
         }
     }
 
+    sourceSets {
+        integration {
+            java.srcDirs += ['src/testCommons/java']
+            res.srcDirs += ['src/testCommons/res']
+        }
+        endToEnd {
+            java.srcDirs += ['src/testCommons/java']
+            res.srcDirs += ['src/testCommons/res']
+        }
+    }
+
     compileOptions {
         incremental = false
         sourceCompatibility JavaVersion.VERSION_1_8
