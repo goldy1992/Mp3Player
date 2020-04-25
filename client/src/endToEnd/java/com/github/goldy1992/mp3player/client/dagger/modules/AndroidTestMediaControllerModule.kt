@@ -4,6 +4,7 @@ import com.github.goldy1992.mp3player.client.callbacks.AndroidTestMediaControlle
 import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MyMetadataCallback
 import com.github.goldy1992.mp3player.client.callbacks.playback.MyPlaybackStateCallback
+import com.github.goldy1992.mp3player.client.callbacks.queue.MyQueueCallback
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import dagger.Module
 import dagger.Provides
@@ -14,8 +15,9 @@ class AndroidTestMediaControllerModule {
     @Provides
     @ComponentScope
     fun providesMediaControllerCallback(myPlaybackStateCallback: MyPlaybackStateCallback,
-                                        myMetadataCallback: MyMetadataCallback)
+                                        myMetadataCallback: MyMetadataCallback,
+                                        myQueueCallback: MyQueueCallback)
             : MyMediaControllerCallback {
-        return AndroidTestMediaControllerCallback(myMetadataCallback, myPlaybackStateCallback)
+        return AndroidTestMediaControllerCallback(myMetadataCallback, myPlaybackStateCallback, myQueueCallback)
     }
 }

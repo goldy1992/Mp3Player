@@ -49,12 +49,13 @@ abstract class MediaActivityCompat : BaseActivity(), MediaBrowserConnectorCallba
         Log.i(logTag(), "connection failed")
     }
 
-    protected abstract fun initialiseView(@LayoutRes layoutId: Int): Boolean
+    protected abstract fun initialiseView() : Boolean
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val settings = applicationContext.getSharedPreferences(Constants.THEME, Context.MODE_PRIVATE)
         setTheme(settings.getInt(Constants.THEME, R.style.AppTheme_Blue))
         mediaBrowserAdapter.connect()
+        initialiseView()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

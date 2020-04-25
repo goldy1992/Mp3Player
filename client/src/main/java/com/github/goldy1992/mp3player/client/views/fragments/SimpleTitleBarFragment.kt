@@ -22,11 +22,11 @@ class SimpleTitleBarFragment : Fragment() {
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
 
-        val activity = activity as AppCompatActivity?
-        activity!!.setSupportActionBar(titleToolbar)
-        activity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        val myActivity : AppCompatActivity? = requireActivity() as AppCompatActivity
+        myActivity!!.setSupportActionBar(titleToolbar)
+        myActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         val typedValue = TypedValue()
-        val theme = context!!.theme
+        val theme = requireContext().theme
         theme.resolveAttribute(R.attr.textColorPrimary, typedValue, true)
         @ColorInt val color = typedValue.data
         titleToolbar.navigationIcon!!.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)

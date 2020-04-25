@@ -172,5 +172,6 @@ dependencies {
     androidTestImplementation group: 'androidx.test', name: 'monitor', version: MIRROR_VERSION
 
     endToEndImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
+    integrationImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: ESPRESSO_CORE_VERSION
 
 }

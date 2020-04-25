@@ -56,7 +56,7 @@ open class MediaPlaybackService : MediaBrowserServiceCompat(),
         }
     }
 
-    override fun onStartCommand(intent: Intent,
+    override fun onStartCommand(intent: Intent?,
                                 flags: Int,
                                 startId: Int): Int {
         super.onStartCommand(intent, flags, startId)

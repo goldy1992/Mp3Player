@@ -27,13 +27,12 @@ class SearchResultActivity : MediaActivityCompat(), SearchResultListener, LogTag
 
     override fun onConnected() {
         super.onConnected()
-        initialiseView(R.layout.activity_search_results)
         mediaBrowserAdapter.registerSearchResultListener(this)
         handleIntent(intent)
     }
 
-    public override fun initialiseView(layoutId: Int): Boolean {
-        setContentView(layoutId)
+    public override fun initialiseView(): Boolean {
+        setContentView(R.layout.activity_search_results)
         setSupportActionBar(toolbar)
 
         recyclerView.setAdapter(searchResultAdapter)

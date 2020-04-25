@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.activities
 
 import android.os.Bundle
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 
 class EmptyMediaActivityCompatFragmentActivity : MediaActivityCompat() {
 
@@ -14,7 +15,7 @@ class EmptyMediaActivityCompatFragmentActivity : MediaActivityCompat() {
         this.mediaActivityCompatComponent.inject(this)
     }
 
-    override fun initialiseView(layoutId: Int): Boolean {
+    override fun initialiseView(): Boolean {
         return true
     }
 

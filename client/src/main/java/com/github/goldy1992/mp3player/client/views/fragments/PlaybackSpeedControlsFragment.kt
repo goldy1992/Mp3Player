@@ -37,9 +37,9 @@ class PlaybackSpeedControlsFragment : MediaFragment(), PlaybackStateListener {
         increasePlaybackSpeedButton.setOnClickListener(View.OnClickListener { increasePlaybackSpeed() })
 
         // register listeners
-        mediaControllerAdapter.registerPlaybackStateListener(this)
+        mediaControllerAdapter.registerListener(this)
         //update GUI
-        onPlaybackStateChanged(mediaControllerAdapter.playbackStateCompat!!)
+        //onPlaybackStateChanged(mediaControllerAdapter.playbackStateCompat!!)
     }
 
     private fun updatePlaybackSpeedText(speed: Float) {

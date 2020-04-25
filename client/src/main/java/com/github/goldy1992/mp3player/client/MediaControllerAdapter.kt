@@ -11,6 +11,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.ShuffleMode
 import android.util.Log
 import androidx.annotation.VisibleForTesting
+import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
@@ -43,7 +44,9 @@ constructor(private val context: Context,
     open fun init(token: MediaSessionCompat.Token) {
         try {
             mediaController = MediaControllerCompat(context, token)
-            mediaController!!.registerCallback(myMediaControllerCallback!!)
+            mediaController!!.registerCallback(myMediaControllerCallback)
+            myMediaControllerCallback.myMetaDataCallback.processCallback(mediaController!!.metadata)
+            myMediaControllerCallback.myPlaybackStateCallback.processCallback(mediaController!!.playbackState)
         } catch (ex: RemoteException) {
             Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
         }
@@ -86,20 +89,12 @@ constructor(private val context: Context,
         controller.skipToPrevious()
     }
 
-    open fun registerMetaDataListener(metaDataListener: MetadataListener?) {
-        myMediaControllerCallback.myMetaDataCallback.registerMetaDataListener(metaDataListener!!)
+    open fun registerListener(listener: Listener) {
+        myMediaControllerCallback.registerListener(listener)
     }
 
-    open fun unregisterMetaDataListener(metaDataListener: MetadataListener?) {
-        myMediaControllerCallback.myMetaDataCallback.removeMetaDataListener(metaDataListener)
-    }
-
-    open fun registerPlaybackStateListener(playbackStateListener: PlaybackStateListener?) {
-        myMediaControllerCallback.myPlaybackStateCallback.registerPlaybackStateListener(playbackStateListener!!)
-    }
-
-    fun unregisterPlaybackStateListener(playbackStateListener: PlaybackStateListener?) {
-        myMediaControllerCallback.myPlaybackStateCallback.removePlaybackStateListener(playbackStateListener)
+    open fun removeListener(listener: Listener) {
+        myMediaControllerCallback.removeListener(listener)
     }
 
     open val playbackState: Int

@@ -5,6 +5,7 @@ import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MyMetadataCallback
 import com.github.goldy1992.mp3player.client.callbacks.playback.MyPlaybackStateCallback
+import com.github.goldy1992.mp3player.client.callbacks.queue.MyQueueCallback
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import dagger.Module
 import dagger.Provides
@@ -15,8 +16,9 @@ class MediaControllerModule {
     @Provides
     @ComponentScope
     fun provideMediaControllerCallback(myMetadataCallback: MyMetadataCallback,
-                                       myPlaybackStateCallback: MyPlaybackStateCallback) : MyMediaControllerCallback {
-        return MyMediaControllerCallback(myMetadataCallback, myPlaybackStateCallback)
+                                       myPlaybackStateCallback: MyPlaybackStateCallback,
+                                    myQueueCallback: MyQueueCallback) : MyMediaControllerCallback {
+        return MyMediaControllerCallback(myMetadataCallback, myPlaybackStateCallback, myQueueCallback)
     }
 
     @Provides

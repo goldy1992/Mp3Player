@@ -18,8 +18,8 @@ class FolderActivity : MediaActivityCompat() {
 
     private var viewPageFragment: MediaItemListFragment? = null
 
-    override fun initialiseView(layoutId: Int): Boolean {
-        setContentView(layoutId)
+    override fun initialiseView(): Boolean {
+        setContentView(R.layout.activity_folder)
         return true
     }
 
@@ -28,7 +28,6 @@ class FolderActivity : MediaActivityCompat() {
         val mediaItem: MediaBrowserCompat.MediaItem = intent.getParcelableExtra(Constants.MEDIA_ITEM)
         val itemLibraryId = MediaItemUtils.getLibraryId(mediaItem)!!
         viewPageFragment = SongListFragment.newInstance(MediaItemType.FOLDER, itemLibraryId)
-        initialiseView(R.layout.activity_folder)
         supportFragmentManager.beginTransaction()
                 .add(R.id.songListFragment,
                 viewPageFragment as SongListFragment)

@@ -49,13 +49,13 @@ class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, Metadata
         // init MediaController listeners
         registerMediaControllerListeners()
         // update GUI state
-        onMetadataChanged(mediaControllerAdapter.metadata!!)
-        onPlaybackStateChanged(mediaControllerAdapter.playbackStateCompat!!)
+//        onMetadataChanged(mediaControllerAdapter.metadata!!)
+//        onPlaybackStateChanged(mediaControllerAdapter.playbackStateCompat!!)
     }
 
     private fun registerMediaControllerListeners() {
-        mediaControllerAdapter.registerPlaybackStateListener(this)
-        mediaControllerAdapter.registerMetaDataListener(this)
+        mediaControllerAdapter.registerListener(this as PlaybackStateListener)
+        mediaControllerAdapter.registerListener(this as MetadataListener)
     }
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat) {

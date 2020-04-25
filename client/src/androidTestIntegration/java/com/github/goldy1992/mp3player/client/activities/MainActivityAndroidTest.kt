@@ -1,9 +1,11 @@
 package com.github.goldy1992.mp3player.client.activities
 
+import android.support.v4.media.MediaBrowserCompat
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewParent
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.IdlingResource
@@ -20,6 +22,7 @@ import androidx.test.rule.GrantPermissionRule
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.TestUtils.assertTabName
 import com.github.goldy1992.mp3player.client.TestUtils.withRecyclerView
+import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.google.android.material.tabs.TabLayout
 import org.hamcrest.CoreMatchers.allOf
@@ -29,27 +32,28 @@ import org.hamcrest.TypeSafeMatcher
 import org.junit.*
 import org.junit.Assert.assertEquals
 import org.junit.runner.RunWith
+import kotlinx.android.synthetic.main.activity_main.tabLayout
+import kotlinx.coroutines.*
 
-@Ignore
 @RunWith(AndroidJUnit4::class)
 class MainActivityAndroidTest {
 
     private lateinit var idlingResource : IdlingResource;
 
+    private lateinit var activityScenario : ActivityScenario<MainActivityIdlingResourceImpl>
 
     @get:Rule
-    val mActivityTestRule : ActivityTestRule<MainActivityInjectorAndroidTestImpl> = ActivityTestRule(MainActivityInjectorAndroidTestImpl::class.java)
+    var permissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
-
-    @get:Rule
-    val  mGrantPermissionRule : GrantPermissionRule =
-            GrantPermissionRule.grant(
-                    "android.permission.WRITE_EXTERNAL_STORAGE")
 
     @Before
     fun setup() {
-        this.idlingResource = mActivityTestRule.activity as IdlingResource
-        IdlingRegistry.getInstance().register(idlingResource);
+        this.activityScenario = ActivityScenario.launch(MainActivityIdlingResourceImpl::class.java)
+        this.activityScenario.onActivity {
+            this.idlingResource = it as IdlingResource
+
+        }
+         IdlingRegistry.getInstance().register(idlingResource);
     }
 
     @After
@@ -57,35 +61,59 @@ class MainActivityAndroidTest {
         IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
+    /**
+     * WHEN: straight after onCreate has been called
+     * THEN: the TabLayout should be visible with 0 tabs.
+     */
+    @Test
+    fun testNoTabsExistAfterOnCreate() {
+        activityScenario.onActivity {
+            val tabLayout: TabLayout = it.findViewById(R.id.tabLayout)
+            val expectedTabCount = 0;
+            val actualTabCount = tabLayout.tabCount;
+            assertEquals(expectedTabCount, actualTabCount);
+        }
+    }
 
     @Test
-    fun firstTest() {
+    fun loadRootItems() {
+        val expectedTab1Title = "sdffs"
+        val expectedTab2Title = "sasdsaddffs"
+        val rootSongs = MediaItemBuilder().setTitle(expectedTab1Title).setRootItemType(MediaItemType.SONGS).build()
+        val rootFolders = MediaItemBuilder().setTitle(expectedTab2Title).setRootItemType(MediaItemType.FOLDERS).build()
+        val rootItems = ArrayList<MediaBrowserCompat.MediaItem>()
+        rootItems.add(rootSongs)
+        rootItems.add(rootFolders)
+        activityScenario.onActivity {
+            runBlocking {
+                    it.onChildrenLoaded("root", rootItems)
 
-        val mainActivity = mActivityTestRule.activity
-        var tabLayout : TabLayout = mainActivity.findViewById(R.id.tabLayout)
+                    val tabLayout: TabLayout = it.findViewById(R.id.tabLayout)
+                    val expectedTabCount = 2
+                    val actualTabCount = tabLayout.tabCount
+                    assertEquals(expectedTabCount, actualTabCount)
 
-        val expectedTabCount = 2;
-        val actualTabCount = tabLayout.getTabCount();
-        assertEquals(expectedTabCount, actualTabCount);
+                    assertTabName(tabLayout, 0, expectedTab1Title)
+                    assertTabName(tabLayout, 1, expectedTab2Title)
 
-        assertTabName(tabLayout, 0, MediaItemType.SONGS.title);
-        assertTabName(tabLayout, 1, MediaItemType.FOLDERS.title);
-
-        onView(allOf(
-                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                withId(R.id.recycler_view)))
-                .check(matches(isDisplayed()));
-
-        onView(withRecyclerView(R.id.recycler_view)!!
-                .atPositionOnView(0, R.id.title))
-                .check(matches(withText("#Dprimera")))
-
-                .perform(scrollToPosition<RecyclerView.ViewHolder>(14));
-
-
-        onView(withRecyclerView(R.id.recycler_view)!!
-                .atPositionOnView(14, R.id.title))
-                .check(matches(withText("Yuya")));
+            }
+//            onView(allOf(
+//                    withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+//                    withId(R.id.recycler_view)))
+//                    .check(matches(isDisplayed()));
+//
+//            onView(withRecyclerView(R.id.recycler_view)!!
+//                    .atPositionOnView(0, R.id.title))
+//                    .check(matches(withText("#Dprimera")))
+//
+//                    .perform(scrollToPosition<RecyclerView.ViewHolder>(14));
+//
+//
+//            onView(withRecyclerView(R.id.recycler_view)!!
+//                    .atPositionOnView(14, R.id.title))
+//                    .check(matches(withText("Yuya")));
+//
+        }
     }
 
     private fun  childAtPosition(

@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Spinner
-import androidx.annotation.LayoutRes
 import androidx.annotation.VisibleForTesting
 import androidx.core.view.GravityCompat
 import com.github.goldy1992.mp3player.client.MediaBrowserResponseListener
@@ -34,7 +33,7 @@ open class MainActivity : MediaActivityCompat(),
 {
     private var tabLayoutMediator: TabLayoutMediator? = null
 
-    var adapter: MyPagerAdapter? = null
+    private lateinit var adapter: MyPagerAdapter
 
     var searchFragment: SearchFragment? = null
 
@@ -44,8 +43,8 @@ open class MainActivity : MediaActivityCompat(),
     @Inject
     lateinit var componentClassMapper: ComponentClassMapper
 
-    override fun initialiseView(@LayoutRes layoutId: Int): Boolean {
-        setContentView(layoutId)
+    override fun initialiseView(): Boolean {
+        setContentView(R.layout.activity_main)
         searchFragment = SearchFragment()
         appBarLayout!!.addOnOffsetChangedListener(OnOffsetChangedListener { app: AppBarLayout?, offset: Int ->
             Log.i(logTag(), "offset: " + offset + ", scroll range: " + app?.totalScrollRange)
@@ -65,7 +64,6 @@ open class MainActivity : MediaActivityCompat(),
         setSupportActionBar(titleToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_menu)
-        mediaBrowserAdapter.registerRootListener(this)
 
         initNavigationView()
         drawerLayout.addDrawerListener(myDrawerListener)
@@ -115,8 +113,8 @@ open class MainActivity : MediaActivityCompat(),
     // MediaBrowserConnectorCallback
     override fun onConnected() {
         super.onConnected()
+        mediaBrowserAdapter.registerRootListener(this)
         mediaBrowserAdapter.subscribeToRoot()
-        initialiseView(R.layout.activity_main)
     }
 
     @VisibleForTesting
@@ -152,7 +150,6 @@ open class MainActivity : MediaActivityCompat(),
                 adapter!!.pagerItems[category] = mediaItemListFragment
                 adapter!!.menuCategories[category] = mediaItem
                 adapter!!.notifyDataSetChanged()
-
             }
         }
     }

@@ -1,13 +1,17 @@
 package com.github.goldy1992.mp3player.client.callbacks
 
+import android.support.v4.media.MediaMetadataCompat
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
+import com.github.goldy1992.mp3player.client.callbacks.metadata.MyMetadataCallback
 
-class TrackViewPagerChangeCallback(
+class TrackViewPagerChangeCallback (
         /**  */
-        private val mediaControllerAdapter: MediaControllerAdapter) : OnPageChangeCallback() {
+        private val mediaControllerAdapter: MediaControllerAdapter) : OnPageChangeCallback(),
+        MetadataListener {
     /**  */
-    var currentPosition: Int
+     var currentPosition: Int = -1
 
     /**
      *
@@ -36,6 +40,10 @@ class TrackViewPagerChangeCallback(
 
     /** Constructor  */
     init {
+        mediaControllerAdapter.registerListener(this)
+    }
+
+    override fun onMetadataChanged(metadata: MediaMetadataCompat) {
         currentPosition = mediaControllerAdapter.getCurrentQueuePosition()
     }
 }

@@ -1,7 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.github.goldy1992.mp3player.client" >
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application android:name="com.github.goldy1992.mp3player.IntegrationTestApplication">
+        <activity android:name=".activities.MainActivityIdlingResourceImpl" />
         <activity android:name=".activities.MediaActivityCompatAutomationImpl" />
     </application>
 </manifest>

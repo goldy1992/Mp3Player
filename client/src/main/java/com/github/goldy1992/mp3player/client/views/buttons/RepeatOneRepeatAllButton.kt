@@ -27,8 +27,8 @@ class RepeatOneRepeatAllButton
 
     override fun init(imageView: ImageView) {
         super.init(imageView)
-        mediaControllerAdapter.registerPlaybackStateListener(this)
-        updateState(mediaControllerAdapter.getRepeatMode()!!)
+        mediaControllerAdapter.registerListener(this)
+//        updateState(mediaControllerAdapter.getRepeatMode()!!)
     }
 
     @VisibleForTesting

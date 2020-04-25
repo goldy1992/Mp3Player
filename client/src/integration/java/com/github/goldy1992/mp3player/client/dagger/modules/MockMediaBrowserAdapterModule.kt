@@ -1,6 +1,7 @@
-package com.github.goldy1992.mp3player.client.dagger.integration.modules
+package com.github.goldy1992.mp3player.client.dagger.modules
 
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
+import com.github.goldy1992.mp3player.client.MockMediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback
 import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope

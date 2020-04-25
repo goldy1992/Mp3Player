@@ -4,19 +4,21 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaSessionCompat
 import androidx.annotation.VisibleForTesting
 import com.bumptech.glide.Glide
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.callbacks.TrackViewPagerChangeCallback
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
+import com.github.goldy1992.mp3player.client.callbacks.queue.QueueListener
 import com.github.goldy1992.mp3player.client.views.adapters.TrackViewAdapter
 import kotlinx.android.synthetic.main.activity_media_player.*
 
 /**
  * Created by Mike on 24/09/2017.
  */
-class MediaPlayerActivity : MediaActivityCompat(), MetadataListener {
+class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, QueueListener {
 
     private var trackViewAdapter: TrackViewAdapter? = null
     private var trackViewPagerChangeCallback: TrackViewPagerChangeCallback? = null
@@ -46,16 +48,16 @@ class MediaPlayerActivity : MediaActivityCompat(), MetadataListener {
         this.mediaActivityCompatComponent.inject(this)
     }
 
-    override fun initialiseView(layoutId: Int): Boolean {
-        setContentView(layoutId)
+    override fun initialiseView(): Boolean {
+        setContentView(R.layout.activity_media_player)
         val context = applicationContext
         val albumArtPainter = AlbumArtPainter(Glide.with(context))
         trackViewPagerChangeCallback = TrackViewPagerChangeCallback(mediaControllerAdapter)
-        trackViewAdapter = TrackViewAdapter(albumArtPainter, mediaControllerAdapter.getQueue())
-        mediaControllerAdapter.registerMetaDataListener(this)
+        trackViewAdapter = TrackViewAdapter(albumArtPainter, mediaControllerAdapter)
+        mediaControllerAdapter.registerListener(this)
+        mediaControllerAdapter.registerListener(trackViewAdapter!!)
         trackViewPager.adapter = trackViewAdapter
         trackViewPager.registerOnPageChangeCallback(trackViewPagerChangeCallback!!)
-        trackViewPager.setCurrentItem(mediaControllerAdapter.getCurrentQueuePosition(), false)
         return true
     }
 
@@ -67,7 +69,8 @@ class MediaPlayerActivity : MediaActivityCompat(), MetadataListener {
         if (null != trackToPlay) {
             mediaControllerAdapter.playFromUri(trackToPlay, null)
         }
-        initialiseView(R.layout.activity_media_player)
+        // update state of GUI
+   //     initialiseView(R.layout.activity_media_player)
     }
 
     override fun onMetadataChanged(metadata: MediaMetadataCompat) { // TODO: in future this should be a listener for when the queue has changed
@@ -85,6 +88,10 @@ class MediaPlayerActivity : MediaActivityCompat(), MetadataListener {
 
     override fun logTag(): String {
        return "MEDIA_PLAYER_ACTIVITY"
+    }
+
+    override fun onQueueChanged(queue: List<MediaSessionCompat.QueueItem>) {
+        trackViewPager.setCurrentItem(mediaControllerAdapter.getCurrentQueuePosition(), false)
     }
 
 }

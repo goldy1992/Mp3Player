@@ -8,13 +8,16 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.ShuffleMode
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
+@ComponentScope
 class MockMediaControllerAdapter
     @Inject
     constructor(context: Context?,
@@ -50,13 +53,10 @@ class MockMediaControllerAdapter
     override fun skipToPrevious() { // DO NOTHING
     }
 
-    override fun registerMetaDataListener(metaDataListener: MetadataListener?) { // DO NOTHING
+    override fun registerListener(listener: Listener) { // DO NOTHING
     }
 
-    override fun unregisterMetaDataListener(metaDataListener: MetadataListener?) { // DO NOTHING
-    }
-
-    override fun registerPlaybackStateListener(playbackStateListener: PlaybackStateListener?) { // DO NOTHING
+    override fun removeListener(listener: Listener) {
     }
 
     override val playbackState: Int

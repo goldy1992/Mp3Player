@@ -23,8 +23,8 @@ class ShuffleButton
 
     override fun init(imageView: ImageView) {
         super.init(imageView)
-        mediaControllerAdapter.registerPlaybackStateListener(this)
-        updateState(mediaControllerAdapter.getShuffleMode()!!)
+        mediaControllerAdapter.registerListener(this)
+//        updateState(mediaControllerAdapter.getShuffleMode()!!)
     }
 
     fun updateState(@ShuffleMode newState: Int) {

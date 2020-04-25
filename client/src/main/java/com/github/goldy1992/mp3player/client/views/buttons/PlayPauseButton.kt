@@ -26,7 +26,7 @@ open class PlayPauseButton
     override fun init(imageView: ImageView) {
         super.init(imageView)
         updateState(mediaControllerAdapter.playbackState)
-        mediaControllerAdapter.registerPlaybackStateListener(this)
+        mediaControllerAdapter.registerListener(this)
     }
 
     @VisibleForTesting

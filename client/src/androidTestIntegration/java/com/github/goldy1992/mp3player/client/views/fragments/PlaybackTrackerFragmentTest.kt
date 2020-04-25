@@ -42,15 +42,15 @@ class PlaybackTrackerFragmentTest {
 
     @Before
     fun init() {
-       this.playbackTrackerFragment = PlaybackTrackerFragment()
         activityScenario = ActivityScenario.launch(MediaActivityCompatAutomationImpl::class.java)
         activityScenario.onActivity { activity ->
 
             activity.supportFragmentManager.fragmentFactory = fragmentFactory
+            playbackTrackerFragment = activity.supportFragmentManager.fragmentFactory.instantiate(PlaybackTrackerFragment::class.java.classLoader!!, PlaybackTrackerFragment::class.java.name) as PlaybackTrackerFragment
             activity.supportFragmentManager
                     .beginTransaction()
                     .add(R.id.fragmentContainer, playbackTrackerFragment, FRAGMENT_TAG)
-                    .commitNow()
+                    .commitNowAllowingStateLoss()
         }
 
 //              fragmentScenario!!.onFragment { fragment: PlaybackTrackerFragment -> initFragment(fragment) }
