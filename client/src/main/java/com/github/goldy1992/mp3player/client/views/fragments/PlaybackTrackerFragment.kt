@@ -9,11 +9,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.SeekerBarController2
+import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.client.views.SeekerBar
 import com.github.goldy1992.mp3player.client.views.TimeCounter
+import java.util.*
 import javax.inject.Inject
 
 class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, MetadataListener {
@@ -24,6 +26,11 @@ class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, Metadata
     lateinit var counter: TimeCounter
 
     private var duration: TextView? = null
+
+    override fun mediaControllerListeners(): Set<Listener> {
+        return Collections.emptySet()
+        TODO("Implement with all the Media Controller Listeners")
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

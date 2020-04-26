@@ -8,14 +8,18 @@ import android.graphics.Color
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener.ItemSelectedListener
 import com.github.goldy1992.mp3player.client.callbacks.search.SearchResultListener
 import com.github.goldy1992.mp3player.client.views.adapters.SearchResultAdapter
 import com.github.goldy1992.mp3player.commons.*
 import kotlinx.android.synthetic.main.activity_search_results.*
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.HashSet
 
 class SearchResultActivity : MediaActivityCompat(), SearchResultListener, LogTagger, ItemSelectedListener {
 
@@ -29,6 +33,12 @@ class SearchResultActivity : MediaActivityCompat(), SearchResultListener, LogTag
         super.onConnected()
         mediaBrowserAdapter.registerSearchResultListener(this)
         handleIntent(intent)
+    }
+
+    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
+        val toReturn : MutableSet<MediaBrowserConnectionListener> = HashSet()
+        toReturn.add(this)
+        return toReturn
     }
 
     public override fun initialiseView(): Boolean {
@@ -99,6 +109,10 @@ class SearchResultActivity : MediaActivityCompat(), SearchResultListener, LogTag
     @Inject
     fun setSearchResultAdapter(searchResultAdapter: SearchResultAdapter?) {
         this.searchResultAdapter = searchResultAdapter
+    }
+
+    override fun mediaControllerListeners(): Set<Listener> {
+        return Collections.emptySet()
     }
 
     override fun initialiseDependencies() {

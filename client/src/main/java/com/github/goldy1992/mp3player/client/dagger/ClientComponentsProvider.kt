@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.dagger
 
 import android.content.Context
-import com.github.goldy1992.mp3player.client.MediaBrowserConnectorCallback
+import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.PermissionGranted
 import com.github.goldy1992.mp3player.client.activities.SplashScreenEntryActivity
 import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaActivityCompatComponent
@@ -14,7 +14,7 @@ interface ClientComponentsProvider {
             : SplashScreenEntryActivityComponent
 
     fun mediaActivityComponent(context: Context,
-                                callback: MediaBrowserConnectorCallback)
+                                callback: MediaBrowserConnectionListener)
             : MediaActivityCompatComponent
 
 

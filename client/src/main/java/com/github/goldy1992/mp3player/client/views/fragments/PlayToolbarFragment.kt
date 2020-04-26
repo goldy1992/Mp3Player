@@ -9,12 +9,14 @@ import android.view.ViewGroup
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
 import com.github.goldy1992.mp3player.client.activities.MediaPlayerActivity
+import com.github.goldy1992.mp3player.client.callbacks.Listener
 //import com.github.goldy1992.mp3player.client.utils.IntentUtils.createGoToMediaPlayerActivity
 import com.github.goldy1992.mp3player.client.views.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToNextButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToPreviousButton
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import kotlinx.android.synthetic.main.fragment_playback_toolbar.*
+import java.util.*
 import javax.inject.Inject
 
 
@@ -34,6 +36,11 @@ class PlayToolbarFragment : MediaFragment() {
 
         super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fragment_playback_toolbar, container, true)
+    }
+
+    override fun mediaControllerListeners(): Set<Listener> {
+        return Collections.emptySet()
+        TODO("Implement with all the Media Controller Listeners")
     }
 
     override fun onViewCreated(view: View, bundle: Bundle?) {

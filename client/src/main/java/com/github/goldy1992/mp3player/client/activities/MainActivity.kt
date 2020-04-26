@@ -7,8 +7,10 @@ import android.view.MenuItem
 import android.widget.Spinner
 import androidx.annotation.VisibleForTesting
 import androidx.core.view.GravityCompat
+import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.MediaBrowserResponseListener
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.listeners.MyDrawerListener
 import com.github.goldy1992.mp3player.client.views.ThemeSpinnerController
 import com.github.goldy1992.mp3player.client.views.adapters.MyPagerAdapter
@@ -68,6 +70,14 @@ open class MainActivity : MediaActivityCompat(),
         initNavigationView()
         drawerLayout.addDrawerListener(myDrawerListener)
         return true
+    }
+
+    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
+        return Collections.singleton(this)
+    }
+
+    override fun mediaControllerListeners(): Set<Listener> {
+        return Collections.emptySet()
     }
 
     public override fun onResume() {
@@ -147,9 +157,9 @@ open class MainActivity : MediaActivityCompat(),
                 else -> null
             }
             if (null != mediaItemListFragment) {
-                adapter!!.pagerItems[category] = mediaItemListFragment
-                adapter!!.menuCategories[category] = mediaItem
-                adapter!!.notifyDataSetChanged()
+                adapter.pagerItems[category] = mediaItemListFragment
+                adapter.menuCategories[category] = mediaItem
+                adapter.notifyDataSetChanged()
             }
         }
     }

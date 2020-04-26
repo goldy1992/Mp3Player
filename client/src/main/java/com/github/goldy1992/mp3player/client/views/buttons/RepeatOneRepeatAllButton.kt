@@ -25,12 +25,6 @@ class RepeatOneRepeatAllButton
     var state = 0
         private set
 
-    override fun init(imageView: ImageView) {
-        super.init(imageView)
-        mediaControllerAdapter.registerListener(this)
-//        updateState(mediaControllerAdapter.getRepeatMode()!!)
-    }
-
     @VisibleForTesting
     override fun onClick(view: View?) {
         val nextState = nextState

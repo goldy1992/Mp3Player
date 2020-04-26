@@ -18,7 +18,8 @@ import javax.inject.Inject
 
 class AlbumArtPainter
 
-    @Inject constructor(private val requestManager: RequestManager) : LogTagger {
+    @Inject
+    constructor(private val requestManager: RequestManager) : LogTagger {
 
     private val requestOptions: RequestOptions = RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL)
 

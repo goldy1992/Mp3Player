@@ -52,6 +52,11 @@ open class MyMediaControllerCallback
             this.myQueueCallback.registerListener(listener)
         }
     }
+    fun registerListeners(listeners: Collection<Listener>) {
+        for (listener in listeners) {
+            registerListener(listener)
+        }
+    }
     /**
      * Removes a callback listener.
      * @param listener The listener to be removed.

@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.dagger.subcomponents
 
 import android.content.Context
-import com.github.goldy1992.mp3player.client.MediaBrowserConnectorCallback
+import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.activities.*
 import com.github.goldy1992.mp3player.client.dagger.modules.*
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
@@ -35,7 +35,6 @@ interface MediaActivityCompatComponent {
     @Component.Factory
     interface Factory {
         fun create(@BindsInstance context: Context,
-                   @BindsInstance callback: MediaBrowserConnectorCallback,
                    @BindsInstance componentClassMapper: ComponentClassMapper)
                 : MediaActivityCompatComponent
     }

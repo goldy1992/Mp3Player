@@ -8,8 +8,8 @@ import com.github.goldy1992.mp3player.client.callbacks.search.SearchResultListen
 import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
-import javax.inject.Inject
 
+@ComponentScope
 open class MediaBrowserAdapter
 
     constructor(private val mediaBrowser: MediaBrowserCompat?,

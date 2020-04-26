@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.RemoteException
+import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
@@ -24,7 +25,9 @@ import javax.inject.Inject
 open class MediaControllerAdapter
 
 constructor(private val context: Context,
-            val myMediaControllerCallback: MyMediaControllerCallback) : LogTagger {
+            private val mediaBrowserCompat: MediaBrowserCompat,
+            val myMediaControllerCallback: MyMediaControllerCallback)
+    : MediaBrowserConnectionListener, LogTagger {
 
     @get:VisibleForTesting
     @set:VisibleForTesting
@@ -32,25 +35,16 @@ constructor(private val context: Context,
 
     open var token: MediaSessionCompat.Token? = null
 
-    open fun setMediaToken(token: MediaSessionCompat.Token?) {
-        if (!isInitialized && token != null) {
-            init(token)
-        } else {
-            Log.e(logTag(), "MediaControllerAdapter already initialised")
-        }
-    }
-
-    @VisibleForTesting
-    open fun init(token: MediaSessionCompat.Token) {
+    override fun onConnected() {
         try {
-            mediaController = MediaControllerCompat(context, token)
+            this.token = mediaBrowserCompat.sessionToken
+            mediaController = MediaControllerCompat(context, token!!)
             mediaController!!.registerCallback(myMediaControllerCallback)
             myMediaControllerCallback.myMetaDataCallback.processCallback(mediaController!!.metadata)
             myMediaControllerCallback.myPlaybackStateCallback.processCallback(mediaController!!.playbackState)
         } catch (ex: RemoteException) {
             Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
         }
-        this.token = token
     }
 
     open fun prepareFromMediaId(mediaId: String?, extras: Bundle?) {
@@ -91,6 +85,10 @@ constructor(private val context: Context,
 
     open fun registerListener(listener: Listener) {
         myMediaControllerCallback.registerListener(listener)
+    }
+
+    open fun registerListeners(listener: Collection<Listener>) {
+        myMediaControllerCallback.registerListeners(listener)
     }
 
     open fun removeListener(listener: Listener) {
@@ -170,18 +168,18 @@ constructor(private val context: Context,
     }
 
    open fun getCurrentQueuePosition() : Int {
-            val queue = getQueue()
-            if (queue != null) {
-                val id = getActiveQueueItemId()
-                for (i in queue.indices) {
-                    val queueItem = queue[i]
-                    if (queueItem.queueId == id) {
-                        return i
-                    }
+        val queue = getQueue()
+        if (queue != null) {
+            val id = getActiveQueueItemId()
+            for (i in queue.indices) {
+                val queueItem = queue[i]
+                if (queueItem.queueId == id) {
+                    return i
                 }
             }
-            return -1
         }
+        return -1
+    }
 
     override fun logTag(): String {
         return "MDIA_CNTRLLR_ADPTR"

@@ -10,10 +10,12 @@ import androidx.fragment.app.Fragment
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
+import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.github.goldy1992.mp3player.commons.Constants
 
 import kotlinx.android.synthetic.main.fragment_playback_speed_controls.*
+import java.util.*
 
 import javax.inject.Inject
 
@@ -29,6 +31,11 @@ class PlaybackSpeedControlsFragment : MediaFragment(), PlaybackStateListener {
 
     override fun logTag(): String {
         TODO("Not yet implemented")
+    }
+
+    override fun mediaControllerListeners(): Set<Listener> {
+        return Collections.emptySet()
+        TODO("Implement with all the Media Controller Listeners")
     }
 
     override fun onViewCreated(view: View, bundle: Bundle?) {

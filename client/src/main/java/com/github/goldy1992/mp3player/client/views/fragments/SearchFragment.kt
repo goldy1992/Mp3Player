@@ -16,9 +16,11 @@ import androidx.annotation.VisibleForTesting
 import androidx.fragment.app.Fragment
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
+import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.android.synthetic.main.fragment_search.*
+import java.util.*
 import javax.inject.Inject
 
 class SearchFragment : MediaFragment(), LogTagger {
@@ -27,6 +29,11 @@ class SearchFragment : MediaFragment(), LogTagger {
 
     @Inject
     lateinit var componentClassMapper : ComponentClassMapper
+
+    override fun mediaControllerListeners(): Set<Listener> {
+        return Collections.emptySet()
+        TODO("Implement with all the Media Controller Listeners")
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
