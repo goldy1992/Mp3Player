@@ -4,8 +4,8 @@ import android.support.v4.media.MediaBrowserCompat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestBuilder
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
 import com.github.goldy1992.mp3player.client.views.viewholders.MediaItemViewHolder
 import com.github.goldy1992.mp3player.client.views.viewholders.MyFolderViewHolder

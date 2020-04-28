@@ -31,7 +31,6 @@ class TrackViewPagerChangeCallback
             mediaControllerAdapter.seekTo(0)
             mediaControllerAdapter.skipToPrevious()
         }
-        currentPosition = position
     }
 
     private fun isSkipToNext(position: Int): Boolean {

@@ -9,7 +9,6 @@ import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.audio.AudioAttributes
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 @Module
 class ExoPlayerModule {

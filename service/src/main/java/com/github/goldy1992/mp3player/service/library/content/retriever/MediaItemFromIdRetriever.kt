@@ -9,7 +9,6 @@ import com.github.goldy1992.mp3player.service.library.content.Projections.SONG_P
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
 import org.apache.commons.collections4.CollectionUtils
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @ComponentScope
 class MediaItemFromIdRetriever @Inject constructor(private val contentResolver: ContentResolver,

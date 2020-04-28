@@ -12,7 +12,6 @@ import com.github.goldy1992.mp3player.client.views.fragments.viewpager.SongListF
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
-import kotlinx.android.synthetic.main.activity_folder.*
 import kotlinx.android.synthetic.main.fragment_simple_title_bar.*
 import org.apache.commons.lang3.exception.ExceptionUtils
 import java.util.*

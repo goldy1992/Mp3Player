@@ -3,8 +3,8 @@ package com.github.goldy1992.mp3player.client.views.buttons
 import android.content.Context
 import android.view.View
 import android.widget.ImageView
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
 import javax.inject.Inject
 

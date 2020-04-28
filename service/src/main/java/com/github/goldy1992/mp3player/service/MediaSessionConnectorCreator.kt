@@ -3,17 +3,11 @@ package com.github.goldy1992.mp3player.service
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
-import com.github.goldy1992.mp3player.service.player.DecreaseSpeedProvider
-import com.github.goldy1992.mp3player.service.player.IncreaseSpeedProvider
-import com.github.goldy1992.mp3player.service.player.MyMediaButtonEventHandler
-import com.github.goldy1992.mp3player.service.player.MyMetadataProvider
-import com.github.goldy1992.mp3player.service.player.MyPlaybackPreparer
-import com.github.goldy1992.mp3player.service.player.MyTimelineQueueNavigator
+import com.github.goldy1992.mp3player.service.player.*
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector.PlaybackActions
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @ComponentScope
 class MediaSessionConnectorCreator

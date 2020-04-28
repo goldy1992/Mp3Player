@@ -6,18 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.VisibleForTesting
-import androidx.fragment.app.Fragment
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.github.goldy1992.mp3player.commons.Constants
-
 import kotlinx.android.synthetic.main.fragment_playback_speed_controls.*
 import java.util.*
-
-import javax.inject.Inject
 
 class PlaybackSpeedControlsFragment : MediaFragment(), PlaybackStateListener {
 
@@ -34,8 +28,7 @@ class PlaybackSpeedControlsFragment : MediaFragment(), PlaybackStateListener {
     }
 
     override fun mediaControllerListeners(): Set<Listener> {
-        return Collections.emptySet()
-        TODO("Implement with all the Media Controller Listeners")
+        return Collections.singleton(this)
     }
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
@@ -44,13 +37,12 @@ class PlaybackSpeedControlsFragment : MediaFragment(), PlaybackStateListener {
         increasePlaybackSpeedButton.setOnClickListener(View.OnClickListener { increasePlaybackSpeed() })
 
         // register listeners
-        mediaControllerAdapter.registerListener(this)
         //update GUI
-        //onPlaybackStateChanged(mediaControllerAdapter.playbackStateCompat!!)
+//        onPlaybackStateChanged(mediaControllerAdapter.playbackStateCompat!!)
     }
 
     private fun updatePlaybackSpeedText(speed: Float) {
-            playbackSpeedTextView!!.text = getString(R.string.PLAYBACK_SPEED_VALUE, speed)
+        playbackSpeedTextView!!.text = getString(R.string.PLAYBACK_SPEED_VALUE, speed)
     }
 
     @VisibleForTesting
@@ -61,8 +53,6 @@ class PlaybackSpeedControlsFragment : MediaFragment(), PlaybackStateListener {
     @VisibleForTesting
     fun decreasePlaybackSpeed() {
           mediaControllerAdapter.sendCustomAction(Constants.DECREASE_PLAYBACK_SPEED, Bundle())
-
-
     }
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat) {

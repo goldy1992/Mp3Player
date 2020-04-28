@@ -7,7 +7,6 @@ import com.google.common.collect.HashBiMap
 import org.apache.commons.lang3.RandomStringUtils
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @ComponentScope
 class MediaItemTypeIds @Inject constructor() {

@@ -12,7 +12,6 @@ import com.github.goldy1992.mp3player.service.library.content.retriever.SongFrom
 import org.apache.commons.collections4.CollectionUtils
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @ComponentScope
 class ContentManager @Inject constructor(private val contentRetrievers: ContentRetrievers,

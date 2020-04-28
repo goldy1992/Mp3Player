@@ -8,7 +8,6 @@ import com.github.goldy1992.mp3player.service.dagger.modules.service.*
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import dagger.BindsInstance
 import dagger.Component
-import dagger.Subcomponent
 
 @ComponentScope
 @Component(modules = [

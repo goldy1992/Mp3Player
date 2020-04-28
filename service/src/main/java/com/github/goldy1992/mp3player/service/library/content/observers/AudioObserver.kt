@@ -13,11 +13,12 @@ import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.search.managers.FolderDatabaseManager
 import com.github.goldy1992.mp3player.service.library.search.managers.SongDatabaseManager
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.exception.ExceptionUtils
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * A listener to the android ContentRetriever from the URI: content://media/external/audio/media or the

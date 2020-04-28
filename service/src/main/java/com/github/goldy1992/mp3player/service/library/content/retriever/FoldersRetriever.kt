@@ -7,8 +7,6 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.library.content.Projections.FOLDER_PROJECTION
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @ComponentScope
 open class FoldersRetriever

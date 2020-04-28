@@ -8,7 +8,6 @@ import com.github.goldy1992.mp3player.service.library.content.retriever.FoldersR
 import com.github.goldy1992.mp3player.service.library.content.retriever.SongsRetriever
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 @Module
 open class ContentRetrieversModule {

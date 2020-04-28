@@ -10,7 +10,6 @@ import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
-import javax.inject.Singleton
 
 @Module
 class ContentManagerModule {

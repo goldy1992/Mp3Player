@@ -6,11 +6,12 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.annotation.VisibleForTesting
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.github.goldy1992.mp3player.commons.Constants
 import javax.inject.Inject
+
 /**
  *
  */
@@ -24,6 +25,11 @@ class RepeatOneRepeatAllButton
     @PlaybackStateCompat.RepeatMode
     var state = 0
         private set
+
+    override fun init(imageView: ImageView) {
+        super.init(imageView)
+        updateState(PlaybackStateCompat.REPEAT_MODE_NONE)
+    }
 
     @VisibleForTesting
     override fun onClick(view: View?) {

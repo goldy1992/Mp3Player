@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
+import com.github.goldy1992.mp3player.client.callbacks.search.SearchResultListener
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener.ItemSelectedListener
-import com.github.goldy1992.mp3player.client.callbacks.search.SearchResultListener
 import com.github.goldy1992.mp3player.client.views.adapters.SearchResultAdapter
 import com.github.goldy1992.mp3player.commons.*
 import kotlinx.android.synthetic.main.activity_search_results.*

@@ -6,7 +6,6 @@ import com.google.android.exoplayer2.upstream.ContentDataSource
 import com.google.android.exoplayer2.upstream.FileDataSource
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 @Module
 class MediaSessionConnectorModule {

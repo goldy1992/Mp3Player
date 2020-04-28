@@ -4,7 +4,6 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @ComponentScope
 class SearchDatabaseManagers @Inject constructor(songDatabaseManager: SongDatabaseManager,

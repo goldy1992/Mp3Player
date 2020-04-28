@@ -7,7 +7,6 @@ import com.github.goldy1992.mp3player.service.library.content.searcher.FolderSea
 import com.github.goldy1992.mp3player.service.library.content.searcher.SongSearcher
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @ComponentScope
 class ContentSearchers

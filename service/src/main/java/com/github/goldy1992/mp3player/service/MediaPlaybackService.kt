@@ -14,6 +14,7 @@ import com.github.goldy1992.mp3player.service.dagger.ServiceComponentProvider
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers
 import com.github.goldy1992.mp3player.service.library.search.managers.SearchDatabaseManagers
+import com.github.goldy1992.mp3player.service.player.MyPlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -59,9 +60,13 @@ open class MediaPlaybackService : MediaBrowserServiceCompat(),
     override fun onStartCommand(intent: Intent?,
                                 flags: Int,
                                 startId: Int): Int {
-        super.onStartCommand(intent, flags, startId)
         Log.i(logTag(), "breakpoint, on start command called")
         return Service.START_STICKY
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        onNotificationCancelled(MyPlayerNotificationManager.NOTIFICATION_ID, false)
     }
 
     override fun onGetRoot(clientPackageName: String, clientUid: Int,

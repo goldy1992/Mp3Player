@@ -9,7 +9,6 @@ import com.github.goldy1992.mp3player.service.library.search.SearchDatabase.Comp
 import com.github.goldy1992.mp3player.service.library.search.SongDao
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 @Module
 class SearchDatabaseModule {

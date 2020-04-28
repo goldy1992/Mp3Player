@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
+//import com.github.goldy1992.mp3player.client.utils.IntentUtils.createGoToMediaPlayerActivity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -7,16 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
 import com.github.goldy1992.mp3player.client.activities.MediaPlayerActivity
 import com.github.goldy1992.mp3player.client.callbacks.Listener
-//import com.github.goldy1992.mp3player.client.utils.IntentUtils.createGoToMediaPlayerActivity
 import com.github.goldy1992.mp3player.client.views.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToNextButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToPreviousButton
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import kotlinx.android.synthetic.main.fragment_playback_toolbar.*
-import java.util.*
 import javax.inject.Inject
 
 
@@ -39,8 +37,9 @@ class PlayToolbarFragment : MediaFragment() {
     }
 
     override fun mediaControllerListeners(): Set<Listener> {
-        return Collections.emptySet()
-        TODO("Implement with all the Media Controller Listeners")
+        val toReturn : MutableSet<Listener> = HashSet()
+        toReturn.add(playPauseBtn)
+        return toReturn
     }
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
@@ -62,7 +61,6 @@ class PlayToolbarFragment : MediaFragment() {
 
     private fun goToMediaPlayerActivity() {
         val intent = Intent(context, componentClassMapper.mediaPlayerActivity)
-
         startActivity(intent)
     }
 
@@ -72,6 +70,6 @@ class PlayToolbarFragment : MediaFragment() {
     }
 
     override fun logTag(): String {
-        return "PLY_PAUSE_BTN"
+        return "PLY_TLBR_FRGMT"
     }
 }

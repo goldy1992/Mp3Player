@@ -11,7 +11,6 @@ import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.search.SearchDatabase
 import com.github.goldy1992.mp3player.service.library.search.Song
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @ComponentScope
 class SongDatabaseManager

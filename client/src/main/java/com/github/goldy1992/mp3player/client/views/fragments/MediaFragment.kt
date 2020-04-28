@@ -5,7 +5,6 @@ import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
 import com.github.goldy1992.mp3player.client.callbacks.Listener
-import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaActivityCompatComponent
 import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaFragmentSubcomponent
 import javax.inject.Inject
 

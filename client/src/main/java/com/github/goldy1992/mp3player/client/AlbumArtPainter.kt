@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client
 
 import android.net.Uri
-import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.widget.ImageView
 import com.bumptech.glide.ListPreloader.PreloadModelProvider

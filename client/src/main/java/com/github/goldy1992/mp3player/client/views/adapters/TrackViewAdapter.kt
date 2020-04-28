@@ -4,8 +4,9 @@ import android.support.v4.media.session.MediaSessionCompat.QueueItem
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.github.goldy1992.mp3player.client.*
-import com.github.goldy1992.mp3player.client.callbacks.queue.QueueListener
+import com.github.goldy1992.mp3player.client.AlbumArtPainter
+import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.views.viewholders.MediaPlayerTrackViewHolder
 import java.util.*
 import javax.inject.Inject
@@ -15,7 +16,7 @@ class TrackViewAdapter
     @Inject
     constructor(val albumArtPainter: AlbumArtPainter,
                 val mediaControllerAdapter: MediaControllerAdapter)
-    : RecyclerView.Adapter<MediaPlayerTrackViewHolder>(), QueueListener {
+    : RecyclerView.Adapter<MediaPlayerTrackViewHolder>() {
 
     private var queue : List<QueueItem>? = Collections.emptyList()
 
@@ -37,7 +38,7 @@ class TrackViewAdapter
         } else -1
     }
 
-    override fun onQueueChanged(queue: List<QueueItem>) {
+    fun onQueueChanged(queue: List<QueueItem>) {
         this.queue = queue
         notifyDataSetChanged()
     }

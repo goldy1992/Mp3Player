@@ -13,7 +13,6 @@ import com.github.goldy1992.mp3player.service.library.search.Folder
 import com.github.goldy1992.mp3player.service.library.search.FolderDao
 import org.apache.commons.lang3.StringUtils
 import java.util.*
-import javax.inject.Inject
 
 open class FolderSearcher constructor(contentResolver: ContentResolver,
                                          resultsParser: FolderResultsParser,

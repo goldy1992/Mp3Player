@@ -4,7 +4,6 @@ import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.FolderListFragment
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.SongListFragment
-import com.github.goldy1992.mp3player.commons.MediaItemType
 import dagger.BindsInstance
 import dagger.Subcomponent
 

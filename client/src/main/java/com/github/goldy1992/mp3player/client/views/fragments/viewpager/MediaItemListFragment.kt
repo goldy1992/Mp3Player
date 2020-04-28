@@ -12,6 +12,7 @@ import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.IntentMapper
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
+import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaItemListFragmentSubcomponent
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener.ItemSelectedListener
@@ -19,6 +20,7 @@ import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecycleView
 import com.github.goldy1992.mp3player.client.views.fragments.MediaFragment
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import kotlinx.android.synthetic.main.fragment_view_page.*
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -81,5 +83,9 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
                 ?.mediaItemListFragmentSubcomponent()
                 ?.create(listener)
 
+    }
+
+    override fun mediaControllerListeners(): Set<Listener> {
+        return Collections.emptySet()
     }
 }

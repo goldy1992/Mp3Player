@@ -3,14 +3,9 @@ package com.github.goldy1992.mp3player.service.library.content
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
-import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetriever
-import com.github.goldy1992.mp3player.service.library.content.retriever.FoldersRetriever
-import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever
-import com.github.goldy1992.mp3player.service.library.content.retriever.SongsFromFolderRetriever
-import com.github.goldy1992.mp3player.service.library.content.retriever.SongsRetriever
+import com.github.goldy1992.mp3player.service.library.content.retriever.*
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @ComponentScope
 class ContentRetrievers

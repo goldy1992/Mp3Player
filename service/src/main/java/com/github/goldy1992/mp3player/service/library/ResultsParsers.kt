@@ -7,7 +7,6 @@ import com.github.goldy1992.mp3player.service.library.content.parser.ResultsPars
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @ComponentScope
 class ResultsParsers @Inject constructor(songResultsParser: SongResultsParser,

@@ -5,8 +5,8 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.ShuffleMode
 import android.view.View
 import android.widget.ImageView
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.github.goldy1992.mp3player.commons.Constants
 import javax.inject.Inject
@@ -19,11 +19,11 @@ class ShuffleButton
     : MediaButton(context, mediaControllerAdapter), PlaybackStateListener {
 
     @ShuffleMode
-    var shuffleMode = 0
+    var shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_NONE
 
     override fun init(imageView: ImageView) {
         super.init(imageView)
-//        updateState(mediaControllerAdapter.getShuffleMode()!!)
+        updateState(PlaybackStateCompat.SHUFFLE_MODE_NONE)
     }
 
     fun updateState(@ShuffleMode newState: Int) {
@@ -41,7 +41,8 @@ class ShuffleButton
 
     override fun onClick(view: View?) {
         @ShuffleMode val newShuffleMode: Int
-        newShuffleMode = when (shuffleMode) {
+        newShuffleMode = when (shuffleMode)
+        {
             PlaybackStateCompat.SHUFFLE_MODE_ALL -> PlaybackStateCompat.SHUFFLE_MODE_NONE
             else -> PlaybackStateCompat.SHUFFLE_MODE_ALL
         }

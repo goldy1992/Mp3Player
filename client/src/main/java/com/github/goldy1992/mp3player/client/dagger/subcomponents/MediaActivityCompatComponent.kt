@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client.dagger.subcomponents
 
 import android.content.Context
-import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.activities.*
 import com.github.goldy1992.mp3player.client.dagger.modules.*
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper

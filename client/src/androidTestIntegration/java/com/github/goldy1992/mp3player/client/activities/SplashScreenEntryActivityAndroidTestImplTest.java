@@ -5,15 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
-import androidx.test.espresso.NoMatchingViewException;
-import androidx.test.espresso.ViewAssertion;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.runner.AndroidJUnit4;
-
-import com.github.goldy1992.mp3player.client.R;
-import com.google.android.material.tabs.TabLayout;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -22,10 +16,6 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.junit.Assert.assertTrue;
 
 @Ignore
 @LargeTest

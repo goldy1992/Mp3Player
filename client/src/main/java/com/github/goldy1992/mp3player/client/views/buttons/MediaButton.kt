@@ -11,6 +11,7 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 abstract class MediaButton protected constructor(protected val context: Context,
                                                  protected val mediaControllerAdapter: MediaControllerAdapter) : LogTagger {
     protected lateinit var view: ImageView
+
     open fun init(imageView: ImageView) {
         view = imageView
         view.setOnClickListener(::onClick)

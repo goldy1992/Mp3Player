@@ -5,18 +5,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import androidx.annotation.CallSuper
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
 import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaActivityCompatComponent
 import com.github.goldy1992.mp3player.commons.Constants
-import java.util.*
-
 import javax.inject.Inject
-import kotlin.collections.HashSet
 
 abstract class MediaActivityCompat : BaseActivity(), MediaBrowserConnectionListener {
 

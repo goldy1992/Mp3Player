@@ -1,12 +1,10 @@
 package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 
 import android.support.v4.media.MediaBrowserCompat
-import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecycleViewAdapter
 import com.github.goldy1992.mp3player.client.views.adapters.MySongViewAdapter
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
-import java.util.*
 import javax.inject.Inject
 
 
@@ -17,11 +15,6 @@ class SongListFragment : MediaItemListFragment() {
 
     override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {
         mediaControllerAdapter.playFromMediaId(MediaItemUtils.getLibraryId(item), null)
-    }
-
-    override fun mediaControllerListeners(): Set<Listener> {
-        return Collections.emptySet()
-        TODO("Implement with all the Media Controller Listeners")
     }
 
     override fun getViewAdapter(): MyGenericRecycleViewAdapter {

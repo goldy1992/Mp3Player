@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.commons
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class ComponentClassMapperTest {
