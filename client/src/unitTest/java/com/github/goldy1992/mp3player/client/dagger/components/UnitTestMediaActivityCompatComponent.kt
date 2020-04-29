@@ -13,6 +13,7 @@ import dagger.Component
 
 @ComponentScope
 @Component(modules = [
+    MediaBrowserCompatModule::class,
     MockAlbumArtPainterModule::class,
     MockMediaBrowserAdapterModule::class,
     MockMediaControllerAdapterModule::class

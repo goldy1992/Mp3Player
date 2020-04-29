@@ -7,10 +7,11 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
+import com.nhaarman.mockitokotlin2.mock
 import java.util.*
 
 class MockMediaControllerAdapter(context: Context, mediaControllerCallback: MyMediaControllerCallback)
-    : MediaControllerAdapter(context, null, mediaControllerCallback) {
+    : MediaControllerAdapter(context, mock<android.support.v4.media.MediaBrowserCompat>(), mediaControllerCallback) {
 
     override fun prepareFromMediaId(mediaId: String?, extras: Bundle?) {
         // Do nothing.

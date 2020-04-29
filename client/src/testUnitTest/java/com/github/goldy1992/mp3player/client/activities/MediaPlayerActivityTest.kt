@@ -77,18 +77,6 @@ class MediaPlayerActivityTest {
         }
     }
 
-    @Test
-    fun onMetadataChanged() {
-        launchActivityAndConnect()
-        scenario.onActivity { activity: MediaPlayerActivity ->
-            val spiedMediaControllerAdapter = spy(activity.mediaControllerAdapter)
-            activity.mediaControllerAdapter = spiedMediaControllerAdapter
-            val mediaMetadataCompat = MediaMetadataCompat.Builder().build()
-          //  activity.onMetadataChanged(mediaMetadataCompat)
-            verify(spiedMediaControllerAdapter, times(1)).getCurrentQueuePosition()
-        }
-    }
-
     private fun launchActivityAndConnect() {
         scenario = ActivityScenario.launch(intent)
         scenario.onActivity { activity -> activity.onConnected() }
