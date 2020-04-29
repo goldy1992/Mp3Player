@@ -10,9 +10,9 @@ import com.github.goldy1992.mp3player.client.dagger.ClientComponentsProvider
 import com.github.goldy1992.mp3player.client.dagger.components.DaggerUnitTestAppComponent
 import com.github.goldy1992.mp3player.client.dagger.components.DaggerUnitTestMediaActivityCompatComponent
 import com.github.goldy1992.mp3player.client.dagger.components.UnitTestAppComponent
-import com.github.goldy1992.mp3player.client.dagger.subcomponents.DaggerSplashScreenEntryActivityComponent
-import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaActivityCompatComponent
-import com.github.goldy1992.mp3player.client.dagger.subcomponents.SplashScreenEntryActivityComponent
+import com.github.goldy1992.mp3player.client.dagger.components.DaggerSplashScreenEntryActivityComponent
+import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
+import com.github.goldy1992.mp3player.client.dagger.components.SplashScreenEntryActivityComponent
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 
 class UnitTestApplication: Application(), ClientComponentsProvider {
