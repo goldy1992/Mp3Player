@@ -28,7 +28,7 @@ class AutomationApplication : MainApplication() {
     override fun buildComponentClassMapper(): ComponentClassMapper {
         return ComponentClassMapper.Builder()
                 .splashActivity(SplashScreenEntryActivity::class.java)
-                .mainActivity(MainActivityInjectorAndroidTestImpl::class.java)
+                .mainActivity(MainActivityIdlingResourceImpl::class.java)
                 .folderActivity(FolderActivity::class.java)
                 .service(MediaPlaybackService::class.java)
                 .mediaPlayerActivity(MediaPlayerActivity::class.java)

@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.dagger.endtoend.modules
+package com.github.goldy1992.mp3player.client.dagger.modules
 
 import com.github.goldy1992.mp3player.client.callbacks.AndroidTestMediaControllerCallback
 import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
@@ -10,7 +10,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class AndroidTestMediaControllerModule {
+class AutomationMediaControllerCallbackModule {
 
     @Provides
     @ComponentScope
