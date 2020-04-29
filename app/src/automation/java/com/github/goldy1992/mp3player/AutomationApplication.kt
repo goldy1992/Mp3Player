@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player
 
 import android.content.Context
-import com.github.goldy1992.mp3player.client.MediaBrowserConnectorCallback
+import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.activities.*
 import com.github.goldy1992.mp3player.client.dagger.endtoend.components.DaggerAutomationMediaActivityCompatComponent
 import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaActivityCompatComponent
@@ -19,10 +19,10 @@ class AutomationApplication : MainApplication() {
             .create(context, notificationListener, componentClassMapper)
     }
 
-    override fun mediaActivityComponent(context: Context, callback: MediaBrowserConnectorCallback): MediaActivityCompatComponent {
+    override fun mediaActivityComponent(context: Context, callback: MediaBrowserConnectionListener): MediaActivityCompatComponent {
         return DaggerAutomationMediaActivityCompatComponent
                 .factory()
-                .create(context, callback, componentClassMapper)
+                .create(context, componentClassMapper)
     }
 
     override fun buildComponentClassMapper(): ComponentClassMapper {

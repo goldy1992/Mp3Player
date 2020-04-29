@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client.dagger.components
 
 import android.content.Context
-import com.github.goldy1992.mp3player.client.MediaBrowserConnectorCallback
 import com.github.goldy1992.mp3player.client.dagger.modules.*
 import com.github.goldy1992.mp3player.client.activities.EmptyMediaActivityCompatFragmentActivity
 import com.github.goldy1992.mp3player.client.dagger.modules.MockAlbumArtPainterModule
@@ -26,7 +25,6 @@ interface UnitTestMediaActivityCompatComponent : MediaActivityCompatComponent {
     interface Factory : MediaActivityCompatComponent.Factory {
 
        override fun create(@BindsInstance context: Context,
-                   @BindsInstance callback: MediaBrowserConnectorCallback,
                    @BindsInstance componentClassMapper: ComponentClassMapper): UnitTestMediaActivityCompatComponent
     }
 }

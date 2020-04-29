@@ -14,6 +14,7 @@ import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MyMetadataCallback
 import com.github.goldy1992.mp3player.client.callbacks.playback.MyPlaybackStateCallback
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
+import com.github.goldy1992.mp3player.client.callbacks.queue.MyQueueCallback
 import com.nhaarman.mockitokotlin2.*
 import org.junit.Assert
 import org.junit.Assert.assertEquals
@@ -27,14 +28,15 @@ class MediaControllerAdapterTest {
 
     private val myMetaDataCallback: MyMetadataCallback = mock<MyMetadataCallback>()
     private val playbackStateCallback: MyPlaybackStateCallback = mock<MyPlaybackStateCallback>()
-    
+    private val queueCallback : MyQueueCallback = mock<MyQueueCallback>()
+
     private lateinit var mediaControllerAdapter: MediaControllerAdapter
     private lateinit var myMediaControllerCallback: MyMediaControllerCallback
     private lateinit var context: Context
     @Before
     fun setup() {
         context = InstrumentationRegistry.getInstrumentation().context
-        myMediaControllerCallback = spy(MyMediaControllerCallback(myMetaDataCallback, playbackStateCallback))
+        myMediaControllerCallback = spy(MyMediaControllerCallback(myMetaDataCallback, playbackStateCallback, queueCallback))
         val token = mediaSessionCompatToken
         mediaControllerAdapter = initialiseMediaControllerAdapter(token)
     }
@@ -50,8 +52,8 @@ class MediaControllerAdapterTest {
         whenever(mediaControllerAdapter.isInitialized).thenReturn(true)
         val token = mediaSessionCompatToken
         reset(mediaControllerAdapter)
-        mediaControllerAdapter.setMediaToken(token)
-        verify(mediaControllerAdapter, never()).init(token)
+        mediaControllerAdapter.onConnected()
+    //    verify(mediaControllerAdapter, never()).init(token)
     }
 
     @Test
@@ -207,29 +209,29 @@ class MediaControllerAdapterTest {
     @Test
     fun testRegisterMetaDataListener() {
         val expected = mock<MetadataListener>()
-        mediaControllerAdapter.registerMetaDataListener(expected)
-        verify(myMetaDataCallback, times(1)).registerMetaDataListener(expected)
+        mediaControllerAdapter.registerListener(expected)
+        verify(myMetaDataCallback, times(1)).registerListener(expected)
     }
 
     @Test
     fun testUnregisterMetaDataListener() {
         val expected = mock<MetadataListener>()
-        mediaControllerAdapter.unregisterMetaDataListener(expected)
-        verify(myMetaDataCallback, times(1)).removeMetaDataListener(expected)
+        mediaControllerAdapter.registerListener(expected)
+        verify(myMetaDataCallback, times(1)).removeListener(expected)
     }
 
     @Test
     fun testUnregisterPlaybackStateListener() {
         val expected = mock<PlaybackStateListener>()
-        mediaControllerAdapter.unregisterPlaybackStateListener(expected)
-        verify(playbackStateCallback, times(1)).removePlaybackStateListener(expected)
+        mediaControllerAdapter.removeListener(expected)
+        verify(playbackStateCallback, times(1)).removeListener(expected)
     }
 
     @Test
     fun testRegisterPlaybackListener() {
         val expected = mock<PlaybackStateListener>()
-        mediaControllerAdapter.registerPlaybackStateListener(expected)
-        verify(playbackStateCallback, times(1)).registerPlaybackStateListener(expected)
+        mediaControllerAdapter.registerListener(expected)
+        verify(playbackStateCallback, times(1)).registerListener(expected)
     }
 
     @Test
@@ -277,9 +279,9 @@ class MediaControllerAdapterTest {
     }
 
     private fun initialiseMediaControllerAdapter(token: MediaSessionCompat.Token): MediaControllerAdapter {
-        val spiedMediaControllerAdapter = spy(MediaControllerAdapter(context, myMediaControllerCallback))
+        val spiedMediaControllerAdapter = spy(MediaControllerAdapter(context, null, myMediaControllerCallback))
         Assert.assertFalse(spiedMediaControllerAdapter.isInitialized)
-        spiedMediaControllerAdapter.setMediaToken(token)
+//        spiedMediaControllerAdapter.setMediaToken(token)
         Assert.assertEquals(token, spiedMediaControllerAdapter.token)
         val transportControls = mock<MediaControllerCompat.TransportControls>()
         whenever(spiedMediaControllerAdapter.controller).thenReturn(transportControls)

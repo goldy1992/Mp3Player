@@ -31,13 +31,13 @@ class MyMetadataCallbackTest {
         @JvmStatic
         fun setupClass() {
             myMetadataCallback = MyMetadataCallback()
-            myMetadataCallback!!.registerMetaDataListener(metadataListener)
+            myMetadataCallback!!.registerListener(metadataListener)
         }
 
         @AfterClass
         @JvmStatic
         fun tearDownClass() {
-            myMetadataCallback!!.removeMetaDataListener(metadataListener)
+            myMetadataCallback!!.removeListener(metadataListener)
         }
     }
 }

@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player
 
 import android.app.Application
 import android.content.Context
-import com.github.goldy1992.mp3player.client.MediaBrowserConnectorCallback
+import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.PermissionGranted
 import com.github.goldy1992.mp3player.client.activities.*
 import com.github.goldy1992.mp3player.client.dagger.ClientComponentsProvider
@@ -42,9 +42,9 @@ class IntegrationTestApplication : Application(),
                .create(splashScreenEntryActivity, permissionGranted, componentClassMapper)
     }
 
-    override fun mediaActivityComponent(context: Context, callback: MediaBrowserConnectorCallback): MediaActivityCompatComponent {
+    override fun mediaActivityComponent(context: Context, callback: MediaBrowserConnectionListener): MediaActivityCompatComponent {
         return DaggerIntegrationMediaActivityCompatComponent
                 .factory()
-                .create(context, callback, componentClassMapper)
+                .create(context, componentClassMapper)
     }
 }

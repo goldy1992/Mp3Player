@@ -84,7 +84,7 @@ class MediaPlayerActivityTest {
             val spiedMediaControllerAdapter = spy(activity.mediaControllerAdapter)
             activity.mediaControllerAdapter = spiedMediaControllerAdapter
             val mediaMetadataCompat = MediaMetadataCompat.Builder().build()
-            activity.onMetadataChanged(mediaMetadataCompat)
+          //  activity.onMetadataChanged(mediaMetadataCompat)
             verify(spiedMediaControllerAdapter, times(1)).getCurrentQueuePosition()
         }
     }

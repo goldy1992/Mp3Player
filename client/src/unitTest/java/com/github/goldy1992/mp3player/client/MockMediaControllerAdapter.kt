@@ -22,9 +22,7 @@ class MockMediaControllerAdapter
     @Inject
     constructor(context: Context?,
                 myMediaControllerCallback: MyMediaControllerCallback)
-    : MediaControllerAdapter(context!!, myMediaControllerCallback) {
-    override fun setMediaToken(token: MediaSessionCompat.Token?) { // DO NOTHING
-    }
+    : MediaControllerAdapter(context!!, null, myMediaControllerCallback) {
 
     override fun prepareFromMediaId(mediaId: String?, extras: Bundle?) { // DO NOTHING
     }

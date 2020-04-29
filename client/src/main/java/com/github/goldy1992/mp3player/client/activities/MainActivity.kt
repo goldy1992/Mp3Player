@@ -35,7 +35,7 @@ open class MainActivity : MediaActivityCompat(),
 {
     private var tabLayoutMediator: TabLayoutMediator? = null
 
-    private lateinit var adapter: MyPagerAdapter
+    lateinit var adapter: MyPagerAdapter
 
     var searchFragment: SearchFragment? = null
 

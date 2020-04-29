@@ -10,15 +10,7 @@ import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
 import java.util.*
 
 class MockMediaControllerAdapter(context: Context, mediaControllerCallback: MyMediaControllerCallback)
-    : MediaControllerAdapter(context, mediaControllerCallback) {
-
-    override fun setMediaToken(token: MediaSessionCompat.Token?) {
-        // Do nothing.
-    }
-
-    override fun init(token: MediaSessionCompat.Token) {
-        // Do nothing.
-    }
+    : MediaControllerAdapter(context, null, mediaControllerCallback) {
 
     override fun prepareFromMediaId(mediaId: String?, extras: Bundle?) {
         // Do nothing.
