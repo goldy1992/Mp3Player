@@ -85,8 +85,4 @@ dependencies {
     implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
 
-//    automationImplementation(group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION) {
-//        exclude module: "support-annotations"
-//    }
-
 }

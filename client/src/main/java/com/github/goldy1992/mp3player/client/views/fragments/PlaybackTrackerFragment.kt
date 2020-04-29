@@ -53,16 +53,6 @@ class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, Metadata
         seekerBarController.init(seekerBar)
         // init duration
         duration = view.findViewById(R.id.duration)
-        // init MediaController listeners
-        registerMediaControllerListeners()
-        // update GUI state
-//        onMetadataChanged(mediaControllerAdapter.metadata!!)
-//        onPlaybackStateChanged(mediaControllerAdapter.playbackStateCompat!!)
-    }
-
-    private fun registerMediaControllerListeners() {
-        mediaControllerAdapter.registerListener(this as PlaybackStateListener)
-        mediaControllerAdapter.registerListener(this as MetadataListener)
     }
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat) {

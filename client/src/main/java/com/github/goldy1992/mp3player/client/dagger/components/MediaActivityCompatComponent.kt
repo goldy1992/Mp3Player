@@ -1,8 +1,10 @@
-package com.github.goldy1992.mp3player.client.dagger.subcomponents
+package com.github.goldy1992.mp3player.client.dagger.components
 
 import android.content.Context
 import com.github.goldy1992.mp3player.client.activities.*
 import com.github.goldy1992.mp3player.client.dagger.modules.*
+import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaFragmentSubcomponent
+import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaItemListFragmentSubcomponent
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import dagger.BindsInstance

@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
-//import com.github.goldy1992.mp3player.client.utils.IntentUtils.createGoToMediaPlayerActivity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle

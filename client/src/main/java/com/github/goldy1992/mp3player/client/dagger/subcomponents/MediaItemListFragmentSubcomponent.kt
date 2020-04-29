@@ -16,10 +16,7 @@ interface MediaItemListFragmentSubcomponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(
-//                @BindsInstance mediaItemType: MediaItemType,
-//                @BindsInstance parentId: String,
-                @BindsInstance listener: MyGenericItemTouchListener.ItemSelectedListener)
+        fun create(@BindsInstance listener: MyGenericItemTouchListener.ItemSelectedListener)
                 : MediaItemListFragmentSubcomponent
     }
 }

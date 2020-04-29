@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.dagger.subcomponents
+package com.github.goldy1992.mp3player.client.dagger.components
 
 import com.github.goldy1992.mp3player.client.PermissionGranted
 import com.github.goldy1992.mp3player.client.activities.SplashScreenEntryActivity
