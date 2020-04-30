@@ -6,8 +6,8 @@ import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.PermissionGranted
 import com.github.goldy1992.mp3player.client.activities.*
 import com.github.goldy1992.mp3player.client.dagger.ClientComponentsProvider
-import com.github.goldy1992.mp3player.client.dagger.subcomponents.DaggerMediaActivityCompatComponent
-import com.github.goldy1992.mp3player.client.dagger.subcomponents.DaggerSplashScreenEntryActivityComponent
+import com.github.goldy1992.mp3player.client.dagger.components.DaggerMediaActivityCompatComponent
+import com.github.goldy1992.mp3player.client.dagger.components.DaggerSplashScreenEntryActivityComponent
 import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
 import com.github.goldy1992.mp3player.client.dagger.components.SplashScreenEntryActivityComponent
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
