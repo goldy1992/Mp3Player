@@ -29,7 +29,6 @@ class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, Metadata
 
     override fun mediaControllerListeners(): Set<Listener> {
         return Collections.emptySet()
-        TODO("Implement with all the Media Controller Listeners")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +39,7 @@ class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, Metadata
     }
 
     override fun logTag(): String {
-        TODO("Not yet implemented")
+        return "PLY_TRKR_FRGMT"
     }
 
     override fun onViewCreated(view: View, bundle: Bundle?) {

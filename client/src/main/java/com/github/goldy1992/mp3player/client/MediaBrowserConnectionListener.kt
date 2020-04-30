@@ -7,9 +7,15 @@ import com.github.goldy1992.mp3player.client.callbacks.Listener
  */
 interface MediaBrowserConnectionListener : Listener {
     /** Called when the component has successfully connected to the MediaBrowserService. */
-    fun onConnected() {}
+    fun onConnected() {
+        // Can be implemented if needed
+    }
     /** Called when the connection to the MediaBrowserService has been suspended. */
-    fun onConnectionSuspended() {}
+    fun onConnectionSuspended() {
+        // Can be implemented if needed
+    }
     /** Called when the attempt to connect to the MediaBrowserService has failed. */
-    fun onConnectionFailed() {}
+    fun onConnectionFailed() {
+        // Can be implemented if needed
+    }
 }
