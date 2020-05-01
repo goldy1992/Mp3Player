@@ -36,9 +36,7 @@ class PlayToolbarFragment : MediaFragment() {
     }
 
     override fun mediaControllerListeners(): Set<Listener> {
-        val toReturn : MutableSet<Listener> = HashSet()
-        toReturn.add(playPauseBtn)
-        return toReturn
+        return setOf(playPauseBtn)
     }
 
     override fun onViewCreated(view: View, bundle: Bundle?) {

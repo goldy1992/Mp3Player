@@ -28,10 +28,7 @@ class MediaControlsFragment : MediaFragment() {
     }
 
     override fun mediaControllerListeners(): Set<Listener> {
-        val toReturn : MutableSet<Listener> = HashSet()
-        toReturn.add(repeatOneRepeatAllButton)
-        toReturn.add(shuffleButton)
-        return toReturn
+        return setOf(repeatOneRepeatAllButton, shuffleButton)
     }
 
     override fun onViewCreated(view: View, bundle: Bundle?) {

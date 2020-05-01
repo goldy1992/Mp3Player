@@ -28,7 +28,7 @@ class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, Metadata
     private var duration: TextView? = null
 
     override fun mediaControllerListeners(): Set<Listener> {
-        return Collections.emptySet()
+        return setOf(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

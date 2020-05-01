@@ -24,7 +24,7 @@ class PlaybackSpeedControlsFragment : MediaFragment(), PlaybackStateListener {
     }
 
     override fun logTag(): String {
-        TODO("Not yet implemented")
+        return "PLY_SPD_CTRL_FGMT"
     }
 
     override fun mediaControllerListeners(): Set<Listener> {
