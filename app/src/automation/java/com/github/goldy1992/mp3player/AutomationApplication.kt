@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player
 import android.content.Context
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.activities.*
-import com.github.goldy1992.mp3player.client.dagger.endtoend.components.DaggerAutomationMediaActivityCompatComponent
+import com.github.goldy1992.mp3player.client.dagger.components.DaggerAutomationMediaActivityCompatComponent
 import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.service.MediaPlaybackService
