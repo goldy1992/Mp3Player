@@ -52,6 +52,7 @@ open class MediaPlaybackService : MediaBrowserServiceCompat(),
     }
 
     override fun onCreate() {
+        Log.i(logTag(), "onCreate called")
         initialiseDependencies()
         super.onCreate()
         mediaSessionConnectorCreator.create()
@@ -145,9 +146,12 @@ open class MediaPlaybackService : MediaBrowserServiceCompat(),
 
     override fun onDestroy() {
         super.onDestroy()
+        this.mediaSession.release()
         Log.i(logTag(), "onDeStRoY")
-        this.cancel()
-        stopSelf()
+        if (this.coroutineContext.isActive) {
+            this.cancel()
+        }
+        //stopSelf()
         mediaStoreObservers!!.unregisterAll()
     }
 
