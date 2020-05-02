@@ -151,7 +151,6 @@ open class MediaPlaybackService : MediaBrowserServiceCompat(),
         if (this.coroutineContext.isActive) {
             this.cancel()
         }
-        //stopSelf()
         mediaStoreObservers!!.unregisterAll()
     }
 
