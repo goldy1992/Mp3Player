@@ -9,6 +9,7 @@ import dagger.Provides
 
 @Module
 class GlideModule {
+
     @ComponentScope
     @Provides
     fun providesRequestManager(context: Context?): RequestManager {

@@ -5,9 +5,9 @@ import android.support.v4.media.MediaDescriptionCompat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.ListPreloader.PreloadModelProvider
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.MediaBrowserResponseListener
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.views.viewholders.EmptyListViewHolder
 import com.github.goldy1992.mp3player.client.views.viewholders.MediaItemViewHolder
 import com.github.goldy1992.mp3player.commons.Constants

@@ -16,12 +16,12 @@ import java.io.File
 @RunWith(RobolectricTestRunner::class)
 class FolderActivityTest {
 
-    private lateinit var scenario: ActivityScenario<FolderActivityInjectorTestImpl>
+    private lateinit var scenario: ActivityScenario<FolderActivity>
 
     @Before
     fun setup() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val intent = Intent(context, FolderActivityInjectorTestImpl::class.java)
+        val intent = Intent(context, FolderActivity::class.java)
         val folder = File("/a/b/xyz")
         val mediaItem = MediaItemBuilder("id")
                 .setLibraryId("xyz")

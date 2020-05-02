@@ -9,10 +9,11 @@ import android.view.animation.LinearInterpolator
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.annotation.VisibleForTesting
+import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
 import com.github.goldy1992.mp3player.client.views.SeekerBar
 import com.github.goldy1992.mp3player.client.views.TimeCounter
 import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
+import com.github.goldy1992.mp3player.commons.LogTagger
 import javax.inject.Inject
 
 /**
@@ -20,9 +21,10 @@ import javax.inject.Inject
  */
 @FragmentScope
 class SeekerBarController2
-@Inject constructor(private val mediaControllerAdapter: MediaControllerAdapter?,
+    @Inject
+    constructor(private val mediaControllerAdapter: MediaControllerAdapter?,
                     private val timeCounter: TimeCounter)
-    : AnimatorUpdateListener, OnSeekBarChangeListener {
+    : AnimatorUpdateListener, OnSeekBarChangeListener, LogTagger {
 
     private var seekerBar: SeekerBar? = null
     @PlaybackStateCompat.State
@@ -57,7 +59,7 @@ class SeekerBarController2
      * @param metadata the metadata object
      */
     fun onMetadataChanged(metadata: MediaMetadataCompat?) {
-        Log.i(LOG_TAG, "meta data change")
+        Log.i(logTag(), "meta data change")
         val max = metadata?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)?.toInt() ?: 0
         seekerBar!!.max = max
         currentSongDuration = max.toLong()
@@ -89,7 +91,7 @@ class SeekerBarController2
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar) {
-        Log.i(LOG_TAG, "START TRACKING")
+        Log.i(logTag(), "START TRACKING")
         timeCounter.cancelTimerDuringTracking()
         removeValueAnimator()
         setTracking(seekBar, true)
@@ -97,7 +99,7 @@ class SeekerBarController2
 
     override fun onStopTrackingTouch(seekBar: SeekBar) {
         setTracking(seekBar, false)
-        Log.i(LOG_TAG, "Stop TRACKING")
+        Log.i(logTag(), "Stop TRACKING")
         currentPosition = seekBar.getProgress()
         mediaControllerAdapter!!.seekTo(currentPosition.toLong())
         createAnimator()
@@ -124,7 +126,7 @@ class SeekerBarController2
             seekerBar!!.valueAnimator =valueAnimator
             this.valueAnimator = valueAnimator
         } catch (ex: IllegalArgumentException) {
-            Log.e(LOG_TAG, "seekerbar Max: $currentSongDuration")
+            Log.e(logTag(), "seekerbar Max: $currentSongDuration")
             throw IllegalArgumentException(ex)
         }
     }
@@ -167,13 +169,6 @@ class SeekerBarController2
     }
 
     /**
-     *
-     * @return true if the controller has been initialised correctly
-     */
-    val isInitialised: Boolean
-        get() = mediaControllerAdapter != null && mediaControllerAdapter.isInitialized && seekerBar != null
-
-    /**
      * setter method automatically associates the on seeker bar change listener to be the controller
      * and therefore cannot be null
      * @param seekerBar the seeker bar
@@ -183,8 +178,8 @@ class SeekerBarController2
         this.seekerBar!!.setOnSeekBarChangeListener(this)
     }
 
-    companion object {
-        private const val LOG_TAG = "SKR_MDIA_CNTRLR_CLBK"
+    override fun logTag(): String {
+        return "SKR_MDIA_CNTRLR_CLBK"
     }
 
 }

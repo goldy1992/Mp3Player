@@ -3,25 +3,31 @@ package com.github.goldy1992.mp3player.client
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.ShuffleMode
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
 import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
+import com.nhaarman.mockitokotlin2.mock
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
+@ComponentScope
 class MockMediaControllerAdapter
+
+
     @Inject
     constructor(context: Context?,
+                mediaBrowserCompat: MediaBrowserCompat,
                 myMediaControllerCallback: MyMediaControllerCallback)
-    : MediaControllerAdapter(context!!, myMediaControllerCallback) {
-    override fun setMediaToken(token: MediaSessionCompat.Token?) { // DO NOTHING
-    }
+    : MediaControllerAdapter(context!!, mediaBrowserCompat, myMediaControllerCallback) {
 
     override fun prepareFromMediaId(mediaId: String?, extras: Bundle?) { // DO NOTHING
     }
@@ -50,13 +56,10 @@ class MockMediaControllerAdapter
     override fun skipToPrevious() { // DO NOTHING
     }
 
-    override fun registerMetaDataListener(metaDataListener: MetadataListener?) { // DO NOTHING
+    override fun registerListener(listener: Listener) { // DO NOTHING
     }
 
-    override fun unregisterMetaDataListener(metaDataListener: MetadataListener?) { // DO NOTHING
-    }
-
-    override fun registerPlaybackStateListener(playbackStateListener: PlaybackStateListener?) { // DO NOTHING
+    override fun removeListener(listener: Listener) {
     }
 
     override val playbackState: Int

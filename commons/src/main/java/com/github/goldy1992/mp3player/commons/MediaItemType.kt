@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.commons
 
-import java.util.EnumSet
+import java.util.*
 
 
 enum class MediaItemType(

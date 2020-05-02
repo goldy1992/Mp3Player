@@ -5,20 +5,22 @@ import android.support.v4.media.MediaBrowserCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.ListPreloader
+import com.github.goldy1992.mp3player.client.AlbumArtPainter
+import com.github.goldy1992.mp3player.client.IntentMapper
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.*
+import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
+import com.github.goldy1992.mp3player.client.callbacks.Listener
+import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaItemListFragmentSubcomponent
+import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener.ItemSelectedListener
 import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecycleViewAdapter
-import com.github.goldy1992.mp3player.client.views.adapters.RecyclerViewAdapters
+import com.github.goldy1992.mp3player.client.views.fragments.MediaFragment
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
-import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
-import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.android.synthetic.main.fragment_view_page.*
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -28,38 +30,28 @@ import javax.inject.Inject
  * 1) we don't want to override the constructor for compatibility purposes
  * 2) This ChildViewFragment will be provided after the main injection is done
  */
-abstract class MediaItemListFragment : Fragment(), ItemSelectedListener, LogTagger {
+abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
     /**
      * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
      */
-
-
     private val linearLayoutManager = LinearLayoutManager(context)
+
     lateinit var parentItemType: MediaItemType
     private lateinit var parentItemTypeId: String
-    private lateinit var myViewAdapter: MyGenericRecycleViewAdapter
+
+    protected abstract fun getViewAdapter() : MyGenericRecycleViewAdapter
 
     @Inject
     lateinit var intentMapper: IntentMapper
 
     @Inject
-    lateinit var mediaBrowserAdapter: MediaBrowserAdapter
-    @Inject
-    lateinit var mediaControllerAdapter: MediaControllerAdapter
-    @Inject
-    lateinit var recyclerViewAdapters: RecyclerViewAdapters
-    @Inject
     lateinit var albumArtPainter: AlbumArtPainter
     @Inject
     lateinit var myGenericItemTouchListener: MyGenericItemTouchListener
 
-    fun init(mediaItemType: MediaItemType, id: String, component: MediaActivityCompatComponent) {
+    protected fun init(mediaItemType: MediaItemType, id: String) {
         parentItemType = mediaItemType
         parentItemTypeId = id
-        injectDependencies(component)
-        myViewAdapter = recyclerViewAdapters.getAdapter(mediaItemType)!!
-        mediaBrowserAdapter.registerListener(parentItemTypeId, myViewAdapter)
-        mediaBrowserAdapter.subscribe(parentItemTypeId)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -69,21 +61,31 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener, LogTagg
     }
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
-        recyclerView.setAdapter(myViewAdapter)
+        mediaBrowserAdapter.registerListener(parentItemTypeId, getViewAdapter())
+        mediaBrowserAdapter.subscribe(parentItemTypeId)
+        recyclerView.adapter = getViewAdapter()
         recyclerView.addOnItemTouchListener(myGenericItemTouchListener)
         myGenericItemTouchListener.parentView = recyclerView
-        recyclerView.setItemAnimator(DefaultItemAnimator())
-        recyclerView.setLayoutManager(linearLayoutManager)
+        recyclerView.itemAnimator = DefaultItemAnimator()
+        recyclerView.layoutManager = linearLayoutManager
 
-        val preloader = albumArtPainter
-                .createPreloader(myViewAdapter
-                        as ListPreloader.PreloadModelProvider<MediaBrowserCompat.MediaItem?>)
-        recyclerView.addOnScrollListener(preloader)
+        val preLoader = albumArtPainter
+                .createPreloader(getViewAdapter()
+                        as ListPreloader.PreloadModelProvider<MediaBrowserCompat.MediaItem>)
+        recyclerView.addOnScrollListener(preLoader)
         recyclerView.setHideScrollbar(true)
     }
 
-    private fun injectDependencies(component: MediaActivityCompatComponent) {
-        component.childViewPagerFragmentSubcomponentFactory()
-                .create(parentItemType, parentItemTypeId, this).inject(this)
+    protected fun createMediaItemListFragmentSubcomponent(listener: ItemSelectedListener)
+            : MediaItemListFragmentSubcomponent? {
+        return  (activity as MediaActivityCompat?)
+                ?.mediaActivityCompatComponent
+                ?.mediaItemListFragmentSubcomponent()
+                ?.create(listener)
+
+    }
+
+    override fun mediaControllerListeners(): Set<Listener> {
+        return Collections.emptySet()
     }
 }

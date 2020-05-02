@@ -53,7 +53,7 @@ class EndToEndTest {
     @get:Rule
     var permissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
-    private  lateinit var  mDevice: UiDevice
+    private lateinit var mDevice: UiDevice
 
     /**
      * before method

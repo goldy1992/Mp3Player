@@ -1,8 +1,6 @@
 package com.github.goldy1992.mp3player.client
 
 import android.content.SearchRecentSuggestionsProvider
-import android.database.Cursor
-import android.net.Uri
 
 class MySearchSuggestionsProvider : SearchRecentSuggestionsProvider() {
 

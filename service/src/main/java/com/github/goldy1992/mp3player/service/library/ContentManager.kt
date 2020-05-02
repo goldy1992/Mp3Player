@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.service.library
 import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import com.github.goldy1992.mp3player.commons.Normaliser.normalise
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.library.content.ContentRetrievers
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequestParser
 import com.github.goldy1992.mp3player.service.library.content.retriever.MediaItemFromIdRetriever
@@ -11,9 +12,8 @@ import com.github.goldy1992.mp3player.service.library.content.retriever.SongFrom
 import org.apache.commons.collections4.CollectionUtils
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@ComponentScope
 class ContentManager @Inject constructor(private val contentRetrievers: ContentRetrievers,
                                          private val contentSearchers: ContentSearchers,
                                          private val contentRequestParser: ContentRequestParser,

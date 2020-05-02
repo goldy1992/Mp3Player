@@ -1,10 +1,9 @@
 package com.github.goldy1992.mp3player.client.activities
 
 import android.os.Bundle
-import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
-import com.github.goldy1992.mp3player.client.dagger.components.DaggerTestMediaActivityCompatComponent
-import com.github.goldy1992.mp3player.client.dagger.components.TestMediaActivityCompatComponent
-import com.github.goldy1992.mp3player.commons.ComponentClassMapper
+import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
+import com.github.goldy1992.mp3player.client.callbacks.Listener
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 
 class EmptyMediaActivityCompatFragmentActivity : MediaActivityCompat() {
 
@@ -14,15 +13,20 @@ class EmptyMediaActivityCompatFragmentActivity : MediaActivityCompat() {
     }
 
     override fun initialiseDependencies() {
-        val component = DaggerTestMediaActivityCompatComponent
-                .factory()
-                .create(applicationContext, this, ComponentClassMapper.Builder().build())
-        component.inject(this)
-        mediaActivityCompatComponent = component
+        super.initialiseDependencies()
+        this.mediaActivityCompatComponent.inject(this)
     }
 
-    override fun initialiseView(layoutId: Int): Boolean {
+    override fun initialiseView(): Boolean {
         return true
+    }
+
+    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
+        return emptySet()
+    }
+
+    override fun mediaControllerListeners(): Set<Listener> {
+        return emptySet()
     }
 
     override fun logTag(): String {
