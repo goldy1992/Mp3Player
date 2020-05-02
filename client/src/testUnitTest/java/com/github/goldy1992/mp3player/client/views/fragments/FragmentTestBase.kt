@@ -6,7 +6,7 @@ import androidx.core.util.Preconditions
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.testing.FragmentScenario.FragmentAction
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.goldy1992.mp3player.client.activities.TestMainActivity
+import com.github.goldy1992.mp3player.client.activities.MainActivity
 
 import org.robolectric.Robolectric
 import org.robolectric.android.controller.ActivityController
@@ -16,14 +16,14 @@ open class FragmentTestBase<F : Fragment> {
 
     protected var context: Context? = null
     protected var fragment: Fragment? = null
-    protected var activityScenario: ActivityController<TestMainActivity>? = null
-    private var activity: TestMainActivity? = null
+    protected var activityScenario: ActivityController<MainActivity>? = null
+    private var activity: MainActivity? = null
     var fragmentClass: Class<out F>? = null
 
     fun setup(fragmentClass: Class<F>, addFragmentToActivity: Boolean) {
         context = InstrumentationRegistry.getInstrumentation().context
         this.fragmentClass = fragmentClass
-        activityScenario = Robolectric.buildActivity(TestMainActivity::class.java).setup()
+        activityScenario = Robolectric.buildActivity(MainActivity::class.java).setup()
         activity = activityScenario!!.get()
         val fragmentArgs = Bundle()
         fragment = activity!!.supportFragmentManager
@@ -40,7 +40,7 @@ open class FragmentTestBase<F : Fragment> {
         this.fragmentClass = fragmentClass
         context = InstrumentationRegistry.getInstrumentation().context
         this.fragment = fragment
-        activityScenario = Robolectric.buildActivity(TestMainActivity::class.java).setup()
+        activityScenario = Robolectric.buildActivity(MainActivity::class.java).setup()
         activity = activityScenario!!.get()
         addFragmentToActivity()
     }

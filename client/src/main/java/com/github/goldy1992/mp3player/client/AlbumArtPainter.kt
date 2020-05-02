@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client
 
 import android.net.Uri
-import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.widget.ImageView
 import com.bumptech.glide.ListPreloader.PreloadModelProvider
@@ -18,7 +17,8 @@ import javax.inject.Inject
 
 class AlbumArtPainter
 
-    @Inject constructor(private val requestManager: RequestManager) : LogTagger {
+    @Inject
+    constructor(private val requestManager: RequestManager) : LogTagger {
 
     private val requestOptions: RequestOptions = RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL)
 
@@ -49,7 +49,7 @@ class AlbumArtPainter
     }
 
     fun createPreloader(
-            preloadModelProvider: PreloadModelProvider<MediaItem?>): RecyclerViewPreloader<MediaItem> {
+            preloadModelProvider: PreloadModelProvider<MediaItem>): RecyclerViewPreloader<MediaItem> {
         val preloadSizeProvider = FixedPreloadSizeProvider<MediaItem>(20, 20)
         return RecyclerViewPreloader<MediaItem>(
                 requestManager, preloadModelProvider, preloadSizeProvider, 10 )

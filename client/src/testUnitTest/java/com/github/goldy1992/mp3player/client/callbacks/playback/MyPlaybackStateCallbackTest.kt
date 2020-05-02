@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.client.callbacks.playback
 
 import android.os.Handler
 import android.support.v4.media.session.PlaybackStateCompat
+import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.nhaarman.mockitokotlin2.mock
 import org.junit.Assert
 import org.junit.Assert.assertTrue
@@ -26,8 +27,8 @@ class MyPlaybackStateCallbackTest {
      */
     @Test
     fun testRemovePlaybackStateListener() {
-        myPlaybackStateCallback.registerPlaybackStateListener(mockPlaybackStateListener1)
-        val result = myPlaybackStateCallback.removePlaybackStateListener(mockPlaybackStateListener1)
+        myPlaybackStateCallback.registerListener(mockPlaybackStateListener1)
+        val result = myPlaybackStateCallback.removeListener(mockPlaybackStateListener1)
         assertTrue(result)
    }
 
@@ -38,7 +39,7 @@ class MyPlaybackStateCallbackTest {
      */
     @Test
     fun testRemovePlaybackStateListenerOnEmptySet() {
-        val result = myPlaybackStateCallback.removePlaybackStateListener(null)
+        val result = myPlaybackStateCallback.removeListener(mock<Listener>())
         Assert.assertFalse(result)
     }
 

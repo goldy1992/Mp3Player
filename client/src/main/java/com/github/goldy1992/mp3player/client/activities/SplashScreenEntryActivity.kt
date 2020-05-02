@@ -7,14 +7,11 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.github.goldy1992.mp3player.client.PermissionGranted
 import com.github.goldy1992.mp3player.client.PermissionsProcessor
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.commons.DependencyInitialiser
-import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -26,7 +23,7 @@ import javax.inject.Inject
 /**
  *
  */
-abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGranted, LogTagger, DependencyInitialiser {
+class SplashScreenEntryActivity : BaseActivity(), PermissionGranted {
 
     @Inject
     lateinit var componentClassMapper: ComponentClassMapper
@@ -37,13 +34,12 @@ abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGrante
     @Volatile
     var isSplashScreenFinishedDisplaying = false
 
-
     @Volatile
     var isPermissionGranted = false
     private var mainActivityIntent: Intent? = null
 
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         if (!isTaskRoot
                 && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
                 && intent.action != null && intent.action == Intent.ACTION_MAIN) {
@@ -53,7 +49,6 @@ abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGrante
         super.onCreate(savedInstanceState)
         val settings = applicationContext.getSharedPreferences(Constants.THEME, Context.MODE_PRIVATE)
         setTheme(settings.getInt(Constants.THEME, R.style.AppTheme_Blue))
-        //permissionsProcessor = PermissionsProcessor(this, this)
         // TODO: have this injected so that a test implementation can be provided
         mainActivityIntent = Intent(applicationContext, componentClassMapper.mainActivity)
         CoroutineScope(IO).launch { init()}
@@ -123,9 +118,15 @@ abstract class SplashScreenEntryActivity : AppCompatActivity(), PermissionGrante
         return "SPLSH_SCRN_ENTRY_ACTVTY"
     }
 
+    override fun initialiseDependencies() {
+        getClientsComponentProvider()
+        .splashScreenComponent(this, this)
+        .inject(this)
+    }
 
     companion object {
         private const val WAIT_TIME = 3000L
         const val APP_TERMINATED = 0x78
     }
+
 }

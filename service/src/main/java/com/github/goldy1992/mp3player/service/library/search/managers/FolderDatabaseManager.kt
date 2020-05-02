@@ -5,14 +5,14 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryName
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryPath
 import com.github.goldy1992.mp3player.commons.Normaliser.normalise
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.search.Folder
 import com.github.goldy1992.mp3player.service.library.search.SearchDatabase
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@ComponentScope
 class FolderDatabaseManager
     @Inject
     constructor(contentManager: ContentManager,

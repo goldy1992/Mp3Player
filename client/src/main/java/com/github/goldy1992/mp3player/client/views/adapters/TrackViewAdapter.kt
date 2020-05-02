@@ -4,13 +4,21 @@ import android.support.v4.media.session.MediaSessionCompat.QueueItem
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
+import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.views.viewholders.MediaPlayerTrackViewHolder
+import java.util.*
+import javax.inject.Inject
 
-class TrackViewAdapter // TODO: if there is no queue make an empty view holder
-(val albumArtPainter: AlbumArtPainter,
- var queue: List<QueueItem>?) : RecyclerView.Adapter<MediaPlayerTrackViewHolder>() {
+class TrackViewAdapter
+
+    @Inject
+    constructor(val albumArtPainter: AlbumArtPainter,
+                val mediaControllerAdapter: MediaControllerAdapter)
+    : RecyclerView.Adapter<MediaPlayerTrackViewHolder>() {
+
+    private var queue : List<QueueItem>? = Collections.emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaPlayerTrackViewHolder { // create a new views
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -30,12 +38,8 @@ class TrackViewAdapter // TODO: if there is no queue make an empty view holder
         } else -1
     }
 
-    /**
-     *
-     */
-    fun updateQueue(updatedQueue: List<QueueItem>) {
-        this.queue = updatedQueue
-         notifyDataSetChanged()
+    fun onQueueChanged(queue: List<QueueItem>) {
+        this.queue = queue
+        notifyDataSetChanged()
     }
-
 }

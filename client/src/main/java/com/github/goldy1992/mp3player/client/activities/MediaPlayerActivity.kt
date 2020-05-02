@@ -3,24 +3,20 @@ package com.github.goldy1992.mp3player.client.activities
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.media.MediaMetadataCompat
 import androidx.annotation.VisibleForTesting
-import com.bumptech.glide.Glide
+import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.AlbumArtPainter
-import com.github.goldy1992.mp3player.client.callbacks.TrackViewPagerChangeCallback
-import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
-import com.github.goldy1992.mp3player.client.views.adapters.TrackViewAdapter
-import com.github.goldy1992.mp3player.commons.LogTagger
-import kotlinx.android.synthetic.main.activity_media_player.*
+import com.github.goldy1992.mp3player.client.callbacks.Listener
+import com.github.goldy1992.mp3player.client.views.TrackViewPager
+import javax.inject.Inject
 
 /**
  * Created by Mike on 24/09/2017.
  */
-abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, LogTagger {
+class MediaPlayerActivity : MediaActivityCompat() {
 
-    private var trackViewAdapter: TrackViewAdapter? = null
-    private var trackViewPagerChangeCallback: TrackViewPagerChangeCallback? = null
+    @Inject
+    lateinit var trackViewPager : TrackViewPager
 
     @get:VisibleForTesting
     var trackToPlay: Uri? = null
@@ -42,17 +38,23 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, Lo
         }
     }
 
-    override fun initialiseView(layoutId: Int): Boolean {
-        setContentView(layoutId)
-        val context = applicationContext
-        val albumArtPainter = AlbumArtPainter(Glide.with(context))
-        trackViewPagerChangeCallback = TrackViewPagerChangeCallback(mediaControllerAdapter)
-        trackViewAdapter = TrackViewAdapter(albumArtPainter, mediaControllerAdapter.getQueue())
-        mediaControllerAdapter.registerMetaDataListener(this)
-        trackViewPager.setAdapter(trackViewAdapter)
-        trackViewPager.registerOnPageChangeCallback(trackViewPagerChangeCallback!!)
-        trackViewPager.setCurrentItem(mediaControllerAdapter.getCurrentQueuePosition(), false)
+    override fun initialiseDependencies() {
+        super.initialiseDependencies()
+        this.mediaActivityCompatComponent.inject(this)
+    }
+
+    override fun initialiseView(): Boolean {
+        setContentView(R.layout.activity_media_player)
+        this.trackViewPager.init(findViewById(R.id.trackViewPager))
         return true
+    }
+
+    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
+        return setOf(this, trackViewPager)
+    }
+
+    override fun mediaControllerListeners(): Set<Listener> {
+        return setOf(trackViewPager)
     }
 
     /**
@@ -63,16 +65,8 @@ abstract class MediaPlayerActivity : MediaActivityCompat(), MetadataListener, Lo
         if (null != trackToPlay) {
             mediaControllerAdapter.playFromUri(trackToPlay, null)
         }
-        initialiseView(R.layout.activity_media_player)
-    }
+     }
 
-    override fun onMetadataChanged(metadata: MediaMetadataCompat) { // TODO: in future this should be a listener for when the queue has changed
-        val queueItems = mediaControllerAdapter.getQueue()
-        val currentPosition = mediaControllerAdapter.getCurrentQueuePosition()
-        trackViewPagerChangeCallback!!.currentPosition = currentPosition
-        trackViewPager!!.setCurrentItem(currentPosition, false)
-        trackViewAdapter!!.updateQueue(queueItems!!)
-    }
 
     override fun onDestroy() {
         super.onDestroy()

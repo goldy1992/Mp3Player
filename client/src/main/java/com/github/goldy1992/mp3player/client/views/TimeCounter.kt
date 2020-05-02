@@ -13,10 +13,9 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import kotlin.concurrent.timer
 import java.util.*
-
 import javax.inject.Inject
+import kotlin.concurrent.timer
 
 @FragmentScope
 class TimeCounter

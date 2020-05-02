@@ -2,44 +2,30 @@ package com.github.goldy1992.mp3player.client.callbacks.metadata
 
 import android.media.MediaMetadata
 import android.support.v4.media.MediaMetadataCompat
-import android.util.Log
-import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.client.callbacks.Callback
+import com.github.goldy1992.mp3player.client.callbacks.Listener
 import javax.inject.Inject
-import kotlin.collections.HashSet
 
 class MyMetadataCallback
 
     @Inject
-    constructor() : LogTagger {
+    constructor() : Callback() {
 
     private var currentMediaId: String? = null
 
-    private val metadataListeners: MutableSet<MetadataListener> = HashSet()
-
-    fun processCallback(data: MediaMetadataCompat) {
-        val mediaMetadata = data.mediaMetadata as MediaMetadata
+    override fun processCallback(data: Any) {
+        val mediaMetadata = (data as MediaMetadataCompat).mediaMetadata as MediaMetadata
         val newMediaId = mediaMetadata.description.mediaId
         newMediaId?.let {
             if (newMediaId != currentMediaId) {
                 currentMediaId = newMediaId
-                notifyListeners(data)
+                super.processCallback(data)
             }
         }
     }
 
-    private fun notifyListeners(metadata: MediaMetadataCompat) {
-        for (listener in metadataListeners) {
-            listener.onMetadataChanged(metadata)
-        }
-    }
-
-    fun registerMetaDataListener(listener: MetadataListener) {
-        Log.i(logTag(), "registerMetaDataListener" + listener.javaClass)
-        metadataListeners.add(listener)
-    }
-
-    fun removeMetaDataListener(listener: MetadataListener?): Boolean {
-        return metadataListeners.remove(listener)
+    override fun updateListener(listener: Listener, data: Any) {
+        (listener as MetadataListener).onMetadataChanged(data as MediaMetadataCompat)
     }
 
     override fun logTag(): String {

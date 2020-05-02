@@ -1,12 +1,11 @@
 package com.github.goldy1992.mp3player.service
 
-import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import javax.inject.Inject
 import javax.inject.Named
-import javax.inject.Singleton
 
-@Singleton
+@ComponentScope
 class PlaylistManager
     @Inject
     constructor(

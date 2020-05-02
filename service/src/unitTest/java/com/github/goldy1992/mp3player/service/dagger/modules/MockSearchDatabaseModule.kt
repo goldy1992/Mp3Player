@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.service.dagger.modules
 
 import android.content.Context
+import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.library.search.FolderDao
 import com.github.goldy1992.mp3player.service.library.search.SearchDatabase
 import com.github.goldy1992.mp3player.service.library.search.SongDao
@@ -23,21 +24,21 @@ class MockSearchDatabaseModule {
     }
 
     @Provides
-    @Singleton
+    @ComponentScope
     @Suppress("UNUSED_PARAMETER")
     fun providesSearchDb(context: Context?): SearchDatabase {
         return searchDatabase
     }
 
     @Provides
-    @Singleton
+    @ComponentScope
     @Suppress("UNUSED_PARAMETER")
     fun provideSongDao(searchDatabase: SearchDatabase?): SongDao {
         return songDao
     }
 
     @Provides
-    @Singleton
+    @ComponentScope
     @Suppress("UNUSED_PARAMETER")
     fun provideFolderDao(searchDatabase: SearchDatabase?): FolderDao {
         return folderDao

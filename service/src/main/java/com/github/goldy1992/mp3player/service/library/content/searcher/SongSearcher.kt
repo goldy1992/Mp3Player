@@ -12,7 +12,6 @@ import com.github.goldy1992.mp3player.service.library.search.Song
 import com.github.goldy1992.mp3player.service.library.search.SongDao
 import org.apache.commons.lang3.StringUtils
 import java.util.*
-import javax.inject.Inject
 
 open class SongSearcher
 

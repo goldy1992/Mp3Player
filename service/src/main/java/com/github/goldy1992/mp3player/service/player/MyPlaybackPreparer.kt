@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.ResultReceiver
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
-import com.github.goldy1992.mp3player.commons.Constants.ID_DELIMITER
 import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaId
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaUri

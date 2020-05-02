@@ -4,23 +4,26 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import androidx.annotation.LayoutRes
-import androidx.appcompat.app.AppCompatActivity
-import com.github.goldy1992.mp3player.client.R
+import androidx.annotation.CallSuper
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
-import com.github.goldy1992.mp3player.client.MediaBrowserConnectorCallback
+import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.callbacks.Listener
+import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
 import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
-import com.github.goldy1992.mp3player.commons.DependencyInitialiser
-import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.commons.Constants
 import javax.inject.Inject
 
-abstract class MediaActivityCompat : AppCompatActivity(), DependencyInitialiser, MediaBrowserConnectorCallback, LogTagger {
+abstract class MediaActivityCompat : BaseActivity(), MediaBrowserConnectionListener {
 
     /** MediaBrowserAdapter  */
     @Inject
     lateinit var mediaBrowserAdapter: MediaBrowserAdapter
+
+    /** Connection Callback */
+    @Inject
+    lateinit var myConnectionCallback : MyConnectionCallback
 
     /** MediaControllerAdapter  */
     @Inject
@@ -29,10 +32,6 @@ abstract class MediaActivityCompat : AppCompatActivity(), DependencyInitialiser,
     /** @return the mediaActivityCompatComponent */
     lateinit var mediaActivityCompatComponent: MediaActivityCompatComponent
 
-    // MediaBrowserConnectorCallback
-    override fun onConnected() {
-        mediaControllerAdapter.setMediaToken(mediaBrowserAdapter.mediaSessionToken)
-    }
 
     public override fun onDestroy() {
         super.onDestroy()
@@ -50,12 +49,27 @@ abstract class MediaActivityCompat : AppCompatActivity(), DependencyInitialiser,
         Log.i(logTag(), "connection failed")
     }
 
-    protected abstract fun initialiseView(@LayoutRes layoutId: Int): Boolean
+    /**
+     *
+     */
+    protected abstract fun initialiseView() : Boolean
+
+    /**
+     * @return A set of MediaBrowserConnectionListeners to be connected to.
+     */
+    protected abstract fun mediaBrowserConnectionListeners() : Set<MediaBrowserConnectionListener>
+
+    /**
+     * @return A set of media controller listeners
+     */
+    protected abstract fun mediaControllerListeners() : Set<Listener>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val settings = applicationContext.getSharedPreferences(Constants.THEME, Context.MODE_PRIVATE)
         setTheme(settings.getInt(Constants.THEME, R.style.AppTheme_Blue))
-        mediaBrowserAdapter.connect()
+        connect()
+        initialiseView()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -66,5 +80,19 @@ abstract class MediaActivityCompat : AppCompatActivity(), DependencyInitialiser,
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    @CallSuper
+    override fun initialiseDependencies() {
+        val component = getClientsComponentProvider()
+                .mediaActivityComponent(applicationContext, this)
+        this.mediaActivityCompatComponent = component
+    }
+
+    private fun connect() {
+        myConnectionCallback.registerMediaControllerAdapter(mediaControllerAdapter)
+        myConnectionCallback.registerListeners(mediaBrowserConnectionListeners())
+        mediaControllerAdapter.registerListeners(mediaControllerListeners())
+        mediaBrowserAdapter.connect()
     }
 }

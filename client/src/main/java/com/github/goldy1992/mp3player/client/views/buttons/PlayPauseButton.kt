@@ -10,8 +10,10 @@ import androidx.annotation.VisibleForTesting
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
+import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
 import javax.inject.Inject
 
+@FragmentScope
 open class PlayPauseButton
     @Inject
     constructor(context: Context,
@@ -24,7 +26,6 @@ open class PlayPauseButton
     override fun init(imageView: ImageView) {
         super.init(imageView)
         updateState(mediaControllerAdapter.playbackState)
-        mediaControllerAdapter.registerPlaybackStateListener(this)
     }
 
     @VisibleForTesting

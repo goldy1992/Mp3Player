@@ -23,7 +23,7 @@ class SearchResultActivityTest {
     /** Intent  */
     private lateinit var intent: Intent
 
-    private lateinit var scenario : ActivityScenario<SearchResultActivityInjectorTestImpl>
+    private lateinit var scenario : ActivityScenario<SearchResultActivity>
     /** Activity controller  */
 
     private lateinit var mediaSessionCompat: MediaSessionCompat
@@ -32,13 +32,13 @@ class SearchResultActivityTest {
     fun setup() {
         val context = InstrumentationRegistry.getInstrumentation().context
         mediaSessionCompat = MediaSessionCompat(context, "TAG")
-        intent = Intent(ApplicationProvider.getApplicationContext(), SearchResultActivityInjectorTestImpl::class.java)
+        intent = Intent(ApplicationProvider.getApplicationContext(), SearchResultActivity::class.java)
         scenario = ActivityScenario.launch(intent)
     }
 
     @Test
     fun testOnSongItemSelected() {
-        scenario.onActivity { activity: SearchResultActivityInjectorTestImpl ->
+        scenario.onActivity { activity: SearchResultActivity ->
             val searchResultActivitySpied = spy(activity)
             val spiedMediaControllerAdapter = spy(searchResultActivitySpied.mediaControllerAdapter)
             searchResultActivitySpied.mediaControllerAdapter = spiedMediaControllerAdapter
@@ -55,7 +55,7 @@ class SearchResultActivityTest {
 
     @Test
     fun testOnFolderItemSelected() {
-        scenario.onActivity { activity: SearchResultActivityInjectorTestImpl ->
+        scenario.onActivity { activity: SearchResultActivity ->
             val searchResultActivitySpied = spy(activity)
             val spiedMediaControllerAdapter = spy(searchResultActivitySpied.mediaControllerAdapter)
             searchResultActivitySpied.mediaControllerAdapter = spiedMediaControllerAdapter
@@ -72,7 +72,7 @@ class SearchResultActivityTest {
 
     @Test
     fun testHandleNewIntent() {
-        scenario.onActivity { activity: SearchResultActivityInjectorTestImpl ->
+        scenario.onActivity { activity: SearchResultActivity ->
 
             val mediaBrowserAdapterSpied = spy(activity.mediaBrowserAdapter)
             activity.mediaBrowserAdapter = mediaBrowserAdapterSpied

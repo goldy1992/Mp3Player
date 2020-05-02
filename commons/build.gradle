@@ -18,8 +18,6 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
-        missingDimensionStrategy 'full', 'automation'
-
     }
 
     buildTypes {
@@ -31,19 +29,6 @@ android {
             debuggable true
             minifyEnabled false
             testCoverageEnabled = true
-        }
-    }
-
-    flavorDimensions 'default'
-    productFlavors {
-        full {
-            dimension = 'default'
-        }
-        automation {
-            dimension = 'default'
-        }
-        unitTest {
-            dimension = 'default'
         }
     }
 
@@ -89,7 +74,7 @@ dependencies {
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
 
 
-    unitTestImplementation junit5UnitTests
+    testImplementation junit5UnitTests
     testRuntimeOnly junit5UnitTestRuntime
 
     testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
@@ -99,6 +84,5 @@ dependencies {
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
     implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
-
 
 }

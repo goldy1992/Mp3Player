@@ -20,7 +20,7 @@ class MediaPlayerActivityTest {
     /** Intent  */
     private var intent: Intent? = null
 
-    private lateinit var scenario: ActivityScenario<MediaPlayerActivityInjectorTestImpl>
+    private lateinit var scenario: ActivityScenario<MediaPlayerActivity>
 
     /**
      */
@@ -34,7 +34,7 @@ class MediaPlayerActivityTest {
     fun setup() {
         context = InstrumentationRegistry.getInstrumentation().context
         mediaSessionCompat = MediaSessionCompat(context, "TAG")
-        intent = Intent(context, MediaPlayerActivityInjectorTestImpl::class.java)
+        intent = Intent(context, MediaPlayerActivity::class.java)
     }
 
     @Test
@@ -42,16 +42,16 @@ class MediaPlayerActivityTest {
         intent!!.action = Intent.ACTION_VIEW
         val expectedUri = mock<Uri>()
         intent!!.data = expectedUri
-        scenario = ActivityScenario.launch(intent)
-        scenario.onActivity { activity: MediaPlayerActivityInjectorTestImpl ->
+        launchActivityAndConnect()
+        scenario.onActivity { activity: MediaPlayerActivity ->
             Assert.assertEquals(expectedUri, activity.trackToPlay)
         }
     }
 
     @Test
     fun testOnNewIntentWithoutViewAction() {
-        scenario = ActivityScenario.launch(intent)
-        scenario.onActivity { activity: MediaPlayerActivityInjectorTestImpl ->
+        launchActivityAndConnect()
+        scenario.onActivity { activity: MediaPlayerActivity ->
             val newIntent = Intent(context, MediaPlayerActivity::class.java)
             val testUri = mock<Uri>()
             newIntent.data = testUri
@@ -64,8 +64,8 @@ class MediaPlayerActivityTest {
 
     @Test
     fun testOnNewIntentWithViewAction() {
-        scenario = ActivityScenario.launch(intent)
-        scenario.onActivity { activity: MediaPlayerActivityInjectorTestImpl ->
+        launchActivityAndConnect()
+        scenario.onActivity { activity: MediaPlayerActivity ->
             val newIntent = Intent(context, MediaPlayerActivity::class.java)
             val testUri = mock<Uri>()
             newIntent.data = testUri
@@ -77,15 +77,8 @@ class MediaPlayerActivityTest {
         }
     }
 
-    @Test
-    fun onMetadataChanged() {
+    private fun launchActivityAndConnect() {
         scenario = ActivityScenario.launch(intent)
-        scenario.onActivity { activity: MediaPlayerActivityInjectorTestImpl ->
-            val spiedMediaControllerAdapter = spy(activity.mediaControllerAdapter)
-            activity.mediaControllerAdapter = spiedMediaControllerAdapter
-            val mediaMetadataCompat = MediaMetadataCompat.Builder().build()
-            activity.onMetadataChanged(mediaMetadataCompat)
-            verify(spiedMediaControllerAdapter, times(1)).getCurrentQueuePosition()
-        }
+        scenario.onActivity { activity -> activity.onConnected() }
     }
 }

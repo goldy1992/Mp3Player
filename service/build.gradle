@@ -34,16 +34,30 @@ android {
             testCoverageEnabled = true
         }
     }
-    flavorDimensions 'default'
+    flavorDimensions flavor_dimen_mode
     productFlavors {
         full {
-            dimension = 'default'
+            dimension = flavor_dimen_mode
         }
-        automation {
-            dimension = 'default'
+        endToEnd {
+            dimension = flavor_dimen_mode
         }
         unitTest {
-            dimension = "default"
+            dimension = flavor_dimen_mode
+        }
+    }
+
+    variantFilter { variant ->
+        def names = variant.flavors*.name
+        def isReleaseTest = variant.buildType.name =="release" &&
+            (
+                names.contains(flavor_integration)
+                || names.contains(flavor_unitTest)
+            )
+        // To check for a build type instead, use variant.buildType.name == "buildType"
+        if (isReleaseTest) {
+            // Gradle ignores any variants that satisfy the conditions above.
+            setIgnore(true)
         }
     }
 
