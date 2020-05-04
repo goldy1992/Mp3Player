@@ -21,6 +21,7 @@ import kotlinx.android.synthetic.main.fragment_search.*
 import java.util.*
 import javax.inject.Inject
 
+@Deprecated("Go straight to {@link SearchResultActivity instead}")
 class SearchFragment : MediaFragment(), LogTagger {
 
     private var inputMethodManager: InputMethodManager? = null
@@ -41,6 +42,7 @@ class SearchFragment : MediaFragment(), LogTagger {
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
         inputMethodManager = requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+
         // Get the SearchView and set the searchable configuration
         val searchManager = requireActivity().getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val componentName = ComponentName(requireContext(), componentClassMapper.searchResultActivity!!)

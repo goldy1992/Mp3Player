@@ -10,5 +10,6 @@
     <application android:name="com.github.goldy1992.mp3player.IntegrationTestApplication">
         <activity android:name=".activities.MainActivityIdlingResourceImpl" />
         <activity android:name=".activities.MediaActivityCompatAutomationImpl" />
+        <activity android:name=".activities.SearchResultActivity" />
     </application>
 </manifest>

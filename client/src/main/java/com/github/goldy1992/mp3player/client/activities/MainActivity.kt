@@ -1,5 +1,7 @@
 package com.github.goldy1992.mp3player.client.activities
 
+import android.content.Intent
+import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
 import android.view.Menu
@@ -37,7 +39,7 @@ open class MainActivity : MediaActivityCompat(),
 
     lateinit var adapter: MyPagerAdapter
 
-    var searchFragment: SearchFragment? = null
+    lateinit var searchIntent : Intent
 
     @Inject
     lateinit var myDrawerListener: MyDrawerListener
@@ -45,9 +47,13 @@ open class MainActivity : MediaActivityCompat(),
     @Inject
     lateinit var componentClassMapper: ComponentClassMapper
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        searchIntent = Intent(applicationContext, componentClassMapper.searchResultActivity)
+    }
+
     override fun initialiseView(): Boolean {
         setContentView(R.layout.activity_main)
-        searchFragment = SearchFragment()
         appBarLayout!!.addOnOffsetChangedListener(OnOffsetChangedListener { app: AppBarLayout?, offset: Int ->
             Log.i(logTag(), "offset: " + offset + ", scroll range: " + app?.totalScrollRange)
             var newOffset = offset
@@ -60,8 +66,9 @@ open class MainActivity : MediaActivityCompat(),
         })
         adapter = MyPagerAdapter(supportFragmentManager, lifecycle)
         rootMenuItemsPager!!.adapter = adapter
-        tabLayoutMediator = TabLayoutMediator(tabLayout, rootMenuItemsPager!!, adapter!!)
+        tabLayoutMediator = TabLayoutMediator(tabLayout, rootMenuItemsPager!!, adapter)
         tabLayoutMediator!!.attach()
+        rootMenuItemsPager!!.adapter = adapter
         setSupportActionBar(titleToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_menu)
@@ -77,16 +84,6 @@ open class MainActivity : MediaActivityCompat(),
 
     override fun mediaControllerListeners(): Set<Listener> {
         return Collections.emptySet()
-    }
-
-    public override fun onResume() {
-        super.onResume()
-        if (null != searchFragment && searchFragment!!.isAdded && searchFragment!!.isVisible) {
-            supportFragmentManager
-                    .beginTransaction()
-                    .remove(searchFragment!!)
-                    .commit()
-        }
     }
 
     override fun initialiseDependencies() {
@@ -106,13 +103,7 @@ open class MainActivity : MediaActivityCompat(),
                 return true
             }
             R.id.action_search -> {
-                Log.i(logTag(), "hit action search")
-                supportFragmentManager
-                    .beginTransaction()
-                    .add(R.id.fragmentContainer, searchFragment!!, "SEARCH_FGMT")
-                    .addToBackStack(null)
-                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                    .commit()
+               startActivity(searchIntent)
             }
             else -> return super.onOptionsItemSelected(item)
         }

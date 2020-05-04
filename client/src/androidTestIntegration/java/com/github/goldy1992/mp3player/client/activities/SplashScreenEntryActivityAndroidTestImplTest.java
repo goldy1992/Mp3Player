@@ -18,7 +18,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @Ignore
-@LargeTest
 @RunWith(AndroidJUnit4.class)
 public class SplashScreenEntryActivityAndroidTestImplTest {
 //

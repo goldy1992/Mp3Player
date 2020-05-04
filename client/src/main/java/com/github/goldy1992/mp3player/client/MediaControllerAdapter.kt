@@ -22,7 +22,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 open class MediaControllerAdapter
 
 constructor(private val context: Context,
-            private var mediaBrowserCompat: MediaBrowserCompat,
+            private var mediaBrowserCompat: MediaBrowserCompat?,
             val myMediaControllerCallback: MyMediaControllerCallback)
     : MediaBrowserConnectionListener, LogTagger {
 
@@ -34,8 +34,8 @@ constructor(private val context: Context,
 
     override fun onConnected() {
         try {
-            this.token = mediaBrowserCompat.sessionToken
-            mediaController = createMediaController(context, mediaBrowserCompat.sessionToken)
+            this.token = mediaBrowserCompat!!.sessionToken
+            mediaController = createMediaController(context, mediaBrowserCompat!!.sessionToken)
             mediaController!!.registerCallback(myMediaControllerCallback)
             myMediaControllerCallback.myMetaDataCallback.processCallback(mediaController!!.metadata)
             myMediaControllerCallback.myPlaybackStateCallback.processCallback(mediaController!!.playbackState)

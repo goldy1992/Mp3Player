@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.activities
 
+import android.app.Activity
 import android.app.SearchManager
 import android.content.ComponentName
 import android.content.Context
@@ -7,6 +8,11 @@ import android.content.Intent
 import android.graphics.Color
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
+import android.view.Menu
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
@@ -18,14 +24,19 @@ import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListene
 import com.github.goldy1992.mp3player.client.views.adapters.SearchResultAdapter
 import com.github.goldy1992.mp3player.commons.*
 import kotlinx.android.synthetic.main.activity_search_results.*
+import kotlinx.android.synthetic.main.activity_search_results.searchView
+import kotlinx.android.synthetic.main.fragment_search.*
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.HashSet
+
 
 class SearchResultActivity : MediaActivityCompat(), SearchResultListener, LogTagger, ItemSelectedListener {
 
     private var currentQuery: String? = null
     private lateinit var searchResultAdapter: SearchResultAdapter
+
+    private lateinit var inputMethodManager: InputMethodManager
 
     @Inject
     lateinit var componentClassMapper: ComponentClassMapper
@@ -45,12 +56,14 @@ class SearchResultActivity : MediaActivityCompat(), SearchResultListener, LogTag
     public override fun initialiseView(): Boolean {
         setContentView(R.layout.activity_search_results)
         setSupportActionBar(toolbar)
+        inputMethodManager = applicationContext.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
 
         recyclerView.adapter = searchResultAdapter
         val itemTouchListener = MyGenericItemTouchListener(applicationContext, this)
         recyclerView.addOnItemTouchListener(itemTouchListener)
         itemTouchListener.parentView =recyclerView
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
+
         // Get the SearchView and set the searchable configuration
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val componentName = ComponentName(applicationContext, componentClassMapper.searchResultActivity!!)
@@ -61,6 +74,9 @@ class SearchResultActivity : MediaActivityCompat(), SearchResultListener, LogTag
         searchView.setIconifiedByDefault(false) // Do not iconify the widget; expand it by default
         searchView.isSubmitButtonEnabled = true
         searchView.setBackgroundColor(Color.WHITE)
+        searchView.requestFocusFromTouch()
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+
         return true
     }
 
@@ -89,13 +105,19 @@ class SearchResultActivity : MediaActivityCompat(), SearchResultListener, LogTag
     private fun handleIntent(intent: Intent) {
         if (Intent.ACTION_SEARCH == intent.action) {
             currentQuery = intent.getStringExtra(SearchManager.QUERY)
-            if (null != searchView) {
-                searchView!!.setQuery(currentQuery, false)
-            }
+//            if (null != searchView) {
+//                searchView!!.setQuery(currentQuery, false)
+//            }
             mediaBrowserAdapter.search(currentQuery, null)
         }
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+     //   menuInflater.inflate(R.menu.search_bar_menu, menu)
+
+        return true
+    }
     override fun onSearchResult(searchResults: List<MediaBrowserCompat.MediaItem>?) {
         searchResultAdapter.items.clear()
         searchResultAdapter.items.addAll(searchResults!!)

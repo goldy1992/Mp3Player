@@ -18,39 +18,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:background="@color/accent_orange"
             android:fitsSystemWindows="true"
             >
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:focusableInTouchMode="true"
+                android:background="@color/white"
                 android:layout_height="wrap_content" >
+
 
                 <androidx.appcompat.widget.SearchView
                     android:id="@+id/searchView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/white"
-                    />
+                    android:layout_height="wrap_content"
+                    app:searchHintIcon="@null"
+                    app:queryBackground="@null"
+                    app:goIcon="@null"
+                    app:searchIcon="@null"
+                    app:submitBackground="@null"
+                    android:layout_alignParentTop="true" />
             </androidx.appcompat.widget.Toolbar>
-
         </com.google.android.material.appbar.AppBarLayout>
 
-        <com.lapism.search.widget.SearchView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/lapsimSearch"
-        />
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/appbar"
+            android:layout_below="@id/toolbar"
             android:layout_above="@id/playToolbarFragment"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
 
-            />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
@@ -61,7 +62,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         tools:layout="@layout/fragment_playback_toolbar" />
-
 
 
 </RelativeLayout>

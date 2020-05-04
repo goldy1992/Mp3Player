@@ -7,6 +7,11 @@ apply from: rootProject.file("jacoco-with-test-support.gradle")
 
 android {
 
+    packagingOptions {
+        exclude 'META-INF/LICENSE.md'
+        exclude 'META-INF/LICENSE-notice.md'
+    }
+
     compileSdkVersion TARGET_SDK_VERION
     buildToolsVersion BUILD_TOOLS_VERSION
 
@@ -177,6 +182,8 @@ dependencies {
     androidTestImplementation group: 'androidx.test', name: 'runner', version: TEST_RUNNER_VERSION
     androidTestImplementation group: 'androidx.test', name: 'monitor', version: MIRROR_VERSION
 
+
+    androidTestImplementation 'org.mockito:mockito-android:3.3.3'
     endToEndImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
     integrationImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: ESPRESSO_CORE_VERSION
 

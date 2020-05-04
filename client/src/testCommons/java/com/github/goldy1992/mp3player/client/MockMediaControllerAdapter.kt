@@ -11,8 +11,11 @@ import com.nhaarman.mockitokotlin2.mock
 import java.util.*
 
 class MockMediaControllerAdapter(context: Context, mediaControllerCallback: MyMediaControllerCallback)
-    : MediaControllerAdapter(context, mock<android.support.v4.media.MediaBrowserCompat>(), mediaControllerCallback) {
+    : MediaControllerAdapter(context, null, mediaControllerCallback) {
 
+    override fun onConnected() {
+        // Do nothing.
+    }
     override fun prepareFromMediaId(mediaId: String?, extras: Bundle?) {
         // Do nothing.
     }
