@@ -44,7 +44,7 @@ class ThemeSpinnerController
         Log.d(logTag(), "selected " + themeNameToResMap.inverse()[res])
         if (selectCount >= 1) {
             Log.d(logTag(), "select count > 1")
-            setThemePreference(res)
+            //setThemePreference(res)
             activity.finish()
             val intent = Intent(context, componentClassMapper.mainActivity)
             intent.putExtra(Constants.THEME, res)

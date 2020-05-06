@@ -48,7 +48,7 @@ class SplashScreenEntryActivity : BaseActivity(), PermissionGranted {
         }
         super.onCreate(savedInstanceState)
         val settings = applicationContext.getSharedPreferences(Constants.THEME, Context.MODE_PRIVATE)
-        setTheme(settings.getInt(Constants.THEME, R.style.AppTheme_Blue))
+        //setTheme(settings.getInt(Constants.THEME, R.style.AppTheme_Blue))
         // TODO: have this injected so that a test implementation can be provided
         mainActivityIntent = Intent(applicationContext, componentClassMapper.mainActivity)
         CoroutineScope(IO).launch { init()}

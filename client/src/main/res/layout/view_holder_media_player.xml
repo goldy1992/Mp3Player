@@ -10,14 +10,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:id="@+id/appbar_layout"
-        android:gravity="top"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:gravity="top" >
+<!--        android:theme="@style/AppTheme.AppBarOverlay">-->
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/titleToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
             >
             <LinearLayout
                 android:orientation="vertical"
@@ -28,18 +27,21 @@
                 <TextView
                     android:id="@+id/songTitle"
                     android:layout_width="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="?attr/colorOnPrimary"
                     android:marqueeRepeatLimit="marquee_forever"
                     />
 
                 <TextView
                     android:id="@+id/songArtist"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
                     android:singleLine="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

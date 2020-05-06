@@ -27,25 +27,21 @@
                 android:id="@+id/appBarLayout"
                 >
 
-                <androidx.appcompat.widget.Toolbar
+                <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/titleToolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                    android:background="?attr/colorPrimary"
                     app:layout_scrollFlags="scroll|enterAlways"
-                    app:titleTextColor="?attr/textColorPrimary"
-                    app:title="@string/APP_TITLE">
-
-                </androidx.appcompat.widget.Toolbar>
+                    app:title="@string/APP_TITLE"
+                    style="@style/Widget.MaterialComponents.Toolbar.Primary"
+                    />
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:tabTextColor="?attr/textColorSecondary"
-                    app:layout_collapseMode="parallax"
-                    app:tabTextAppearance="@android:style/TextAppearance.Material.Widget.TabWidget"/>
+                    style="@style/Widget.MaterialComponents.TabLayout"
+                    app:layout_collapseMode="parallax" />
 
             </com.google.android.material.appbar.AppBarLayout>
 
