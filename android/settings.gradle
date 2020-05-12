@@ -1,0 +1,12 @@
+include ':service',
+        ':commons',
+        ':client',
+        ':app'
+setBinding(new Binding([gradle: this]))                                // new
+evaluate(new File(                                                     // new
+        settingsDir.parentFile,                                              // new
+        'flutterclient/.android/include_flutter.groovy'                         // new
+))
+
+include ':flutterclient'
+project(':flutterclient').projectDir = new File('../flutterclient')
