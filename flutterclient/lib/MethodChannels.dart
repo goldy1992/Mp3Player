@@ -5,51 +5,178 @@ import 'dart:convert';
 import 'package:flutterclient/AppProperties.dart';
 import 'package:yaml/yaml.dart';
 import "dart:io";
-import 'package:flutter/services.dart' show MethodChannel, rootBundle;
+import 'package:flutter/services.dart' show MethodCall, MethodChannel, rootBundle;
 
-const _connect = "connect";
-const _subscribe = "subscribe";
-const _request = "request";
 const _APP_PROPERTIES_ASSET = "assets/AppProperties.yml";
 const _METHOD_CHANNEL = "method-channel";
 const _CONNECTION = "connection";
 const _REQUEST = "request";
 const _SUBSCRIPTION = "subscription";
 const _PREFIX = "prefix";
-const _TYPES = "types";
-const _NAMES = "names";
+const _SUFFIXES = "suffixes";
 
-String _CHANNEL_PREFIX;
-Set<String> _CHANNEL_TYPES;
-Map<String, String> _CHANNEL_NAME_SUFFIX_MAP;
+String _channelPrefix;
+Map<String, String> _channelSuffixMap;
 
-Map<String, MethodChannel> method_channel_map = HashMap();
+RequestChannel requestChannel;
+SubscriptionChannel subscriptionChannel;
+ConnectionChannel connectionChannel;
 
-MethodChannel connection_channel;
-MethodChannel request_channel;
-MethodChannel subscription_channel;
 
 Future<void> main() async {
   try {
     String yamlFile = await _loadYamlAsset();
     YamlMap yaml = loadYaml(yamlFile);
     Map<String, dynamic> methodChannel = Map<String, dynamic>.from(yaml[_METHOD_CHANNEL]);
-    _CHANNEL_PREFIX = methodChannel[_PREFIX];
-    _CHANNEL_TYPES = Set.from(methodChannel[_TYPES]);
-    _CHANNEL_NAME_SUFFIX_MAP = Map<String, String>.from(methodChannel[_NAMES]);
+    _channelPrefix = methodChannel[_PREFIX];
+    _channelSuffixMap = Map<String, String>.from(methodChannel[_SUFFIXES]);
 
-    method_channel_map.putIfAbsent(_CHANNEL_TYPES., () => null)
+    connectionChannel = new ConnectionChannel(getChannelName(_channelSuffixMap[_CONNECTION]));
+    requestChannel = new RequestChannel(getChannelName(_channelSuffixMap[_REQUEST]));
+    subscriptionChannel = SubscriptionChannel(requestChannel, getChannelName(_channelSuffixMap[_SUBSCRIPTION]));
   }
   catch(ex) {
     print("error: $ex");
   }
 }
 
-MethodChannel _createMethodChannel(String suffix) {
-  String channelName = _CHANNEL_PREFIX + suffix;
-  return MethodChannel(channelName);
+String getChannelName(String suffix) {
+  return _channelPrefix + suffix;
 }
 
 Future<String> _loadYamlAsset() async {
-  return await rootBundle.loadString("assets/AppProperties.yml");
+  return await rootBundle.loadString(_APP_PROPERTIES_ASSET);
 }
+
+abstract class ChannelBase {
+
+  MethodChannel _channel;
+
+  Future<dynamic> methodCall(MethodCall call);
+
+  ChannelBase(String name) {
+    this._channel = new MethodChannel(name);
+    this._channel.setMethodCallHandler(methodCall);
+  }
+}
+
+
+class ConnectionChannel extends ChannelBase {
+
+  List<ConnectionSubscriber> _subscribers = List();
+
+  ConnectionChannel(String name) : super(name);
+
+  void subscribe(ConnectionSubscriber subscriber) {
+    _subscribers.add(subscriber);
+  }
+
+  void unsubscribe(ConnectionSubscriber subscriber) {
+    _subscribers.remove(subscriber);
+  }
+
+  @override
+  Future<dynamic> methodCall(MethodCall call) {
+    switch (call.method) {
+      case "onConnected":
+        {
+          print("onConnected called");
+          for (ConnectionSubscriber subscriber in _subscribers) {
+            subscriber.onConnected();
+          }
+        }
+        break;
+        // TODO: implement methodCall
+    }
+
+  }
+}
+
+
+class SubscriptionChannel extends ChannelBase {
+
+  Map<String, Set<MediaSubscriber>> _subscribers = HashMap();
+  RequestChannel _requestChannel;
+
+  SubscriptionChannel(RequestChannel requestChannel, String name) : super(name) {
+    this._requestChannel = requestChannel;
+  }
+
+  void subscribe(MediaSubscriber subscriber, String id) {
+    if (_subscribers.containsKey(id)) {
+      _subscribers[id].add(subscriber);
+    } else {
+      Set<MediaSubscriber> idSubscribers = HashSet();
+      idSubscribers.add(subscriber);
+      _subscribers.putIfAbsent(id, () => idSubscribers);
+    }
+    _requestChannel.subscribe(subscriber, id);
+  }
+
+  void unsubscribe(MediaSubscriber subscriber) {
+    for (Set<MediaSubscriber> s in _subscribers.values) {
+      Iterator<MediaSubscriber> it = s.iterator;
+      while(it.moveNext()) {
+        if (subscriber == it.current) {
+          s.remove(it.current);
+        }
+      }
+    }
+
+    _subscribers.remove(subscriber);
+  }
+
+  @override
+  Future<dynamic> methodCall(MethodCall call) {
+    switch (call.method) {
+      case "onChildrenLoaded":
+        {
+          print("onChildrenLoaded called");
+          String id = call.arguments[0];
+          String children = call.arguments[1];
+
+          Set<MediaSubscriber> mediaSubscribers = _subscribers[id];
+          if (mediaSubscribers != null) {
+            for (MediaSubscriber s in mediaSubscribers) {
+              s.onChildrenLoaded(id, children);
+            }
+          }
+        }
+        break;
+    // TODO: implement methodCall
+    }
+
+  }
+}
+
+
+class RequestChannel {
+
+  MethodChannel _methodChannel;
+
+  RequestChannel(String name) {
+    this._methodChannel = new MethodChannel(name);
+  }
+
+  void subscribe(MediaSubscriber subscriber, String id) {
+    _methodChannel.invokeMethod("subscribe", id);
+  }
+
+  @override
+  Future methodCall(MethodCall call) {
+    // TODO: implement methodCall
+    throw UnimplementedError();
+  }
+
+}
+
+abstract class ConnectionSubscriber extends Subscriber {
+    void onConnected();
+}
+
+abstract class MediaSubscriber extends Subscriber {
+    void onChildrenLoaded(String id, String children);
+}
+
+abstract class Subscriber {}
+

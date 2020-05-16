@@ -1,9 +1,5 @@
 method-channel:
   prefix: "com.github.goldy1992.mp3player/"
-  types:
-    - connection
-    - request
-    - subscription
   suffixes:
     connection: "connect"
     request: "request"

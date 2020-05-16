@@ -7,22 +7,16 @@ import 'package:flutter/services.dart';
 import 'dart:async';
 
 import 'package:flutterclient/AppProperties.dart';
+import 'package:flutterclient/MethodChannels.dart';
 
-
-String methodChannelName;
 
 MyApp myApp = MyApp();
-
-MethodChannel platform;
-
-AppProperties appProperties = new AppProperties();
 
 Future<void> main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
-    await appProperties.init();
 
-    runApp(myApp);
+     runApp(myApp);
   }
   catch (ex)
   {
@@ -30,16 +24,10 @@ Future<void> main() async {
   }
 }
 
-
-
-
-
 Connection connection = new Connection();
 
 
-
-
-Future<dynamic> methodCall(MethodCall call) async {
+Future<void> methodCall(MethodCall call) async {
   print("called:" + call.method);
 
   switch(call.method) {

@@ -23,13 +23,11 @@ constructor(context: Context) {
         const val REQUEST = "request"
         const val SUBSCRIPTION = "subscription"
         const val PREFIX = "prefix"
-        const val TYPES = "types"
-        const val NAMES = "names"
+        const val SUFFIXES = "suffixes"
     }
 
 
     private val CHANNEL_PREFIX : String
-    private val CHANNEL_TYPES : Set<String>
     private val CHANNEL_NAME_MAP : Map<String, String>
 
     val CONNECTION_CHANNEL_NAME : String
@@ -49,8 +47,7 @@ constructor(context: Context) {
         println(APP_PROPERTIES)
         val methodChannel :  Map<String, Any> = APP_PROPERTIES[METHOD_CHANNEL] as Map<String, Any>
         CHANNEL_PREFIX = methodChannel[PREFIX] as String
-        CHANNEL_TYPES = (methodChannel[TYPES] as List<String>).toSet()
-        CHANNEL_NAME_MAP = methodChannel[NAMES] as Map<String, String>
+        CHANNEL_NAME_MAP = methodChannel[SUFFIXES] as Map<String, String>
 
         CONNECTION_CHANNEL_NAME = CHANNEL_NAME_MAP[CONNECTION] ?: error("")
         REQUEST_CHANNEL_NAME = CHANNEL_NAME_MAP[REQUEST] ?: error("")
