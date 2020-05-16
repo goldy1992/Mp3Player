@@ -1,14 +1,10 @@
 package com.github.goldy1992.mp3player.client.activities
 
-import android.content.Context
-import androidx.annotation.CallSuper
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
-import com.github.goldy1992.mp3player.client.dagger.ClientComponentsProvider
-import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
 import com.github.goldy1992.mp3player.commons.DependencyInitialiser
 import com.github.goldy1992.mp3player.commons.LogTagger
 
@@ -21,7 +17,6 @@ interface MediaInterface : DependencyInitialiser, MediaBrowserConnectionListener
 
     var mediaControllerAdapter: MediaControllerAdapter
 
-    var mediaActivityCompatComponent: MediaActivityCompatComponent
 
 
     fun mediaBrowserConnectionListeners() : Set<MediaBrowserConnectionListener>

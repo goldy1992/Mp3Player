@@ -4,6 +4,7 @@ import android.net.Uri
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.SparseArray
 
+
 object Constants {
     const val MEDIA_SESSION = "mediaSession"
     const val MEDIA_ID = "mediaId"

@@ -28,7 +28,6 @@ interface MediaActivityCompatComponent {
     fun inject(mediaPlayerActivity: MediaPlayerActivity)
     fun inject(searchResultActivity: SearchResultActivity)
     fun inject(mediaActivityCompat: MediaActivityCompat)
-    fun inject(flutterMainActivity: FlutterMainActivity)
 
     /* Subcomponents */
     fun mediaFragmentSubcomponent() : MediaFragmentSubcomponent.Factory

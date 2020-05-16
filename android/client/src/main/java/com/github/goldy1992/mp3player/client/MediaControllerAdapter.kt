@@ -30,11 +30,8 @@ constructor(private val context: Context,
     @set:VisibleForTesting
     var mediaController: MediaControllerCompat? = null
 
-    open var token: MediaSessionCompat.Token? = null
-
     override fun onConnected() {
         try {
-            this.token = mediaBrowserCompat.sessionToken
             mediaController = createMediaController(context, mediaBrowserCompat.sessionToken)
             mediaController!!.registerCallback(myMediaControllerCallback)
             myMediaControllerCallback.myMetaDataCallback.processCallback(mediaController!!.metadata)

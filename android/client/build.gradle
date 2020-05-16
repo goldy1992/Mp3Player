@@ -131,7 +131,7 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
     implementation group: 'androidx.viewpager2', name: 'viewpager2', version: VIEW_PAGER2_VERSION
     implementation group: 'androidx.recyclerview', name: 'recyclerview', version: RECYCLER_VIEW_VERSION
-
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: JACKSON_VERSION
 
     debugImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
@@ -181,4 +181,5 @@ dependencies {
     integrationImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: ESPRESSO_CORE_VERSION
 
     implementation project(':flutter')
+    implementation group: 'org.yaml', name: 'snakeyaml', version: SNAKEYAML_VERSION
 }

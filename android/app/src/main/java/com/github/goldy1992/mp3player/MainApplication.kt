@@ -7,10 +7,8 @@ import com.github.goldy1992.mp3player.client.PermissionGranted
 import com.github.goldy1992.mp3player.client.activities.*
 import com.github.goldy1992.mp3player.client.activities.FlutterMainActivity
 import com.github.goldy1992.mp3player.client.dagger.ClientComponentsProvider
-import com.github.goldy1992.mp3player.client.dagger.components.DaggerMediaActivityCompatComponent
-import com.github.goldy1992.mp3player.client.dagger.components.DaggerSplashScreenEntryActivityComponent
-import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
-import com.github.goldy1992.mp3player.client.dagger.components.SplashScreenEntryActivityComponent
+import com.github.goldy1992.mp3player.client.dagger.FlutterComponentProvider
+import com.github.goldy1992.mp3player.client.dagger.components.*
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.DependencyInitialiser
 import com.github.goldy1992.mp3player.dagger.components.AppComponent
@@ -20,10 +18,12 @@ import com.github.goldy1992.mp3player.service.dagger.ServiceComponentProvider
 import com.github.goldy1992.mp3player.service.dagger.components.DaggerServiceComponent
 import com.github.goldy1992.mp3player.service.dagger.components.ServiceComponent
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
+import io.flutter.embedding.engine.FlutterEngine
 
 
 open class MainApplication : Application(),
         ClientComponentsProvider,
+        FlutterComponentProvider,
         DependencyInitialiser,
         ServiceComponentProvider {
 
@@ -57,6 +57,13 @@ open class MainApplication : Application(),
         return DaggerMediaActivityCompatComponent
                 .factory()
                 .create(context, componentClassMapper)
+    }
+
+    override fun flutterMediaActivityComponent(context: Context, flutterEngine: FlutterEngine)
+            : FlutterMediaActivityComponent {
+        return DaggerFlutterMediaActivityComponent
+                .factory()
+                .create(context, componentClassMapper, flutterEngine)
     }
 
     override fun serviceComponent(context: Context,

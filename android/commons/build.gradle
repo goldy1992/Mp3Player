@@ -64,6 +64,7 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: JACKSON_VERSION
 
     //dagger
     kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
@@ -84,5 +85,4 @@ dependencies {
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
     implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
-
 }

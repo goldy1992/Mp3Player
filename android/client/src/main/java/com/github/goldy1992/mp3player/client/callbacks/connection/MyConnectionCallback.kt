@@ -1,11 +1,14 @@
 package com.github.goldy1992.mp3player.client.callbacks.connection
 
 import android.support.v4.media.MediaBrowserCompat
+import com.github.goldy1992.mp3player.client.FlutterConstants.Companion.connect
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.MethodChannel
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Created by Mike on 04/10/2017.
@@ -13,8 +16,9 @@ import javax.inject.Inject
 @ComponentScope
 class MyConnectionCallback
     @Inject
-    constructor()
-    :  MediaBrowserCompat.ConnectionCallback(), EventChannel.EventSink{
+    constructor(@Named(connect)private val methodChannel: MethodChannel,
+                private var mediaBrowserCompat: MediaBrowserCompat)
+    :  MediaBrowserCompat.ConnectionCallback() {
 
     private var mediaControllerAdapter : MediaControllerAdapter? = null
 
@@ -22,6 +26,7 @@ class MyConnectionCallback
 
     override fun onConnected() {
         mediaControllerAdapter?.onConnected()
+        methodChannel.invokeMethod("onConnected", mediaBrowserCompat.root)
 
         for (listener in listeners) {
             listener.onConnected()
@@ -29,6 +34,7 @@ class MyConnectionCallback
     }
 
     override fun onConnectionSuspended() {
+        methodChannel.invokeMethod("onConnectionSuspended", null)
         for (listener in listeners) {
             listener.onConnectionSuspended()
         }
@@ -36,6 +42,7 @@ class MyConnectionCallback
     }
 
     override fun onConnectionFailed() {
+        methodChannel.invokeMethod("onConnectionFailed", null)
         for (listener in listeners) {
             listener.onConnectionFailed()
         }
@@ -58,15 +65,4 @@ class MyConnectionCallback
         return listeners.remove(listener)
     }
 
-    override fun endOfStream() {
-        TODO("Not yet implemented")
-    }
-
-    override fun error(errorCode: String?, errorMessage: String?, errorDetails: Any?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun success(event: Any?) {
-        TODO("Not yet implemented")
-    }
 }

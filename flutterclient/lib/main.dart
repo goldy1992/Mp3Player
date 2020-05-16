@@ -6,11 +6,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
 
+import 'package:flutterclient/AppProperties.dart';
+
+
+String methodChannelName;
+
 MyApp myApp = MyApp();
 
-void main() => runApp(myApp);
+MethodChannel platform;
 
-const platform = const MethodChannel('MY_METHOD_CHANNEL');
+AppProperties appProperties = new AppProperties();
+
+Future<void> main() async {
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    await appProperties.init();
+
+    runApp(myApp);
+  }
+  catch (ex)
+  {
+    print("error: $ex");
+  }
+}
+
+
+
+
 
 Connection connection = new Connection();
 
@@ -88,7 +110,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     platform.setMethodCallHandler(methodCall);
-    makeNativeCall("CONNECT");
+    //makeNativeCall("CONNECT");
   }
 
   void setTabs(List<String> tabs) {

@@ -30,7 +30,7 @@ abstract class MediaActivityCompat : BaseActivity(), MediaInterface  {
     override lateinit var mediaControllerAdapter: MediaControllerAdapter
 
     /** @return the mediaActivityCompatComponent */
-    override lateinit var mediaActivityCompatComponent: MediaActivityCompatComponent
+    lateinit var mediaActivityCompatComponent: MediaActivityCompatComponent
 
 
 
