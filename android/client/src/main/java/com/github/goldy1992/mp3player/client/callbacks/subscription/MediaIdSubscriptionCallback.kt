@@ -5,13 +5,14 @@ import androidx.annotation.VisibleForTesting
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.goldy1992.mp3player.client.FlutterConstants
 import com.github.goldy1992.mp3player.client.MediaBrowserResponseListener
-import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.Metadata
+import com.github.goldy1992.mp3player.commons.*
 import io.flutter.plugin.common.MethodChannel
+import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class MediaIdSubscriptionCallback
 
@@ -24,7 +25,10 @@ class MediaIdSubscriptionCallback
 
     override fun onChildrenLoaded(parentId: String, children: List<MediaBrowserCompat.MediaItem>) {
 
-
+        when(getMediaItemType(children)) {
+            MediaItemType.ROOT -> sendRootItems(parentId, children)
+            else -> return // make other try of item
+        }
 
         var childrenArrayList = ArrayList(children)
         val listenersToNotify: Set<MediaBrowserResponseListener>? = mediaBrowserResponseListeners[parentId]
@@ -41,6 +45,28 @@ class MediaIdSubscriptionCallback
         }
 
         val toSend : String = objectMapper.writeValueAsString(result)
+    }
+
+    private fun getMediaItemType(children: List<MediaBrowserCompat.MediaItem>) : MediaItemType? {
+        if (isNotEmpty(children)) {
+            val mediaItem : MediaBrowserCompat.MediaItem = children.first()
+            return MediaItemUtils.getMediaItemType(mediaItem)
+        }
+        return null
+    }
+
+    private fun sendRootItems(id : String, children : List<MediaBrowserCompat.MediaItem>) {
+        val rootItems : ArrayList<RootItem> = ArrayList()
+        for (item in children) {
+            val rootItem : RootItem = RootItem.getRootItem(item)
+            rootItems.add(rootItem)
+        }
+        val toSend : String = objectMapper.writeValueAsString(rootItems)
+        val arguments : HashMap<String, String> = HashMap()
+        arguments["id"] = id
+        arguments["children"] = toSend
+
+        methodChannel.invokeMethod("onChildrenLoaded", arguments)
     }
 
     @Synchronized

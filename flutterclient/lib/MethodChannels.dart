@@ -1,8 +1,6 @@
 library flutterclient.method_channels;
 
 import 'dart:collection';
-import 'dart:convert';
-import 'package:flutterclient/AppProperties.dart';
 import 'package:yaml/yaml.dart';
 import "dart:io";
 import 'package:flutter/services.dart' show MethodCall, MethodChannel, rootBundle;
@@ -19,8 +17,8 @@ String _channelPrefix;
 Map<String, String> _channelSuffixMap;
 
 RequestChannel requestChannel;
-SubscriptionChannel subscriptionChannel;
-ConnectionChannel connectionChannel;
+SubscriptionCallback subscriptionChannel;
+ConnectionCallback connectionChannel;
 
 
 Future<void> main() async {
@@ -31,9 +29,9 @@ Future<void> main() async {
     _channelPrefix = methodChannel[_PREFIX];
     _channelSuffixMap = Map<String, String>.from(methodChannel[_SUFFIXES]);
 
-    connectionChannel = new ConnectionChannel(getChannelName(_channelSuffixMap[_CONNECTION]));
-    requestChannel = new RequestChannel(getChannelName(_channelSuffixMap[_REQUEST]));
-    subscriptionChannel = SubscriptionChannel(requestChannel, getChannelName(_channelSuffixMap[_SUBSCRIPTION]));
+    connectionChannel = new ConnectionCallback(getChannelName(_channelSuffixMap[_CONNECTION]));
+    subscriptionChannel = new SubscriptionCallback(getChannelName(_channelSuffixMap[_SUBSCRIPTION]));
+    requestChannel = new RequestChannel(getChannelName(_channelSuffixMap[_REQUEST]), connectionChannel, subscriptionChannel);
   }
   catch(ex) {
     print("error: $ex");
@@ -48,24 +46,24 @@ Future<String> _loadYamlAsset() async {
   return await rootBundle.loadString(_APP_PROPERTIES_ASSET);
 }
 
-abstract class ChannelBase {
+abstract class CallbackBase {
 
   MethodChannel _channel;
 
   Future<dynamic> methodCall(MethodCall call);
 
-  ChannelBase(String name) {
+  CallbackBase(String name) {
     this._channel = new MethodChannel(name);
     this._channel.setMethodCallHandler(methodCall);
   }
 }
 
 
-class ConnectionChannel extends ChannelBase {
+class ConnectionCallback extends CallbackBase {
 
   List<ConnectionSubscriber> _subscribers = List();
 
-  ConnectionChannel(String name) : super(name);
+  ConnectionCallback(String name) : super(name);
 
   void subscribe(ConnectionSubscriber subscriber) {
     _subscribers.add(subscriber);
@@ -82,7 +80,7 @@ class ConnectionChannel extends ChannelBase {
         {
           print("onConnected called");
           for (ConnectionSubscriber subscriber in _subscribers) {
-            subscriber.onConnected();
+            subscriber.onConnected(call.arguments[0]);
           }
         }
         break;
@@ -93,14 +91,11 @@ class ConnectionChannel extends ChannelBase {
 }
 
 
-class SubscriptionChannel extends ChannelBase {
+class SubscriptionCallback extends CallbackBase {
 
   Map<String, Set<MediaSubscriber>> _subscribers = HashMap();
-  RequestChannel _requestChannel;
 
-  SubscriptionChannel(RequestChannel requestChannel, String name) : super(name) {
-    this._requestChannel = requestChannel;
-  }
+  SubscriptionCallback(String name) : super(name);
 
   void subscribe(MediaSubscriber subscriber, String id) {
     if (_subscribers.containsKey(id)) {
@@ -110,7 +105,6 @@ class SubscriptionChannel extends ChannelBase {
       idSubscribers.add(subscriber);
       _subscribers.putIfAbsent(id, () => idSubscribers);
     }
-    _requestChannel.subscribe(subscriber, id);
   }
 
   void unsubscribe(MediaSubscriber subscriber) {
@@ -132,8 +126,8 @@ class SubscriptionChannel extends ChannelBase {
       case "onChildrenLoaded":
         {
           print("onChildrenLoaded called");
-          String id = call.arguments[0];
-          String children = call.arguments[1];
+          String id = call.arguments["id"];
+          String children = call.arguments["children"];
 
           Set<MediaSubscriber> mediaSubscribers = _subscribers[id];
           if (mediaSubscribers != null) {
@@ -154,24 +148,30 @@ class RequestChannel {
 
   MethodChannel _methodChannel;
 
-  RequestChannel(String name) {
+  SubscriptionCallback _subscriptionCallback;
+
+  ConnectionCallback _connectionCallback;
+
+  RequestChannel(String name, ConnectionCallback connectionCallback, SubscriptionCallback subscriptionCallback) {
     this._methodChannel = new MethodChannel(name);
+    this._connectionCallback = connectionCallback;
+    this._subscriptionCallback = subscriptionCallback;
   }
 
   void subscribe(MediaSubscriber subscriber, String id) {
+    _subscriptionCallback.subscribe(subscriber, id);
     _methodChannel.invokeMethod("subscribe", id);
   }
 
-  @override
-  Future methodCall(MethodCall call) {
-    // TODO: implement methodCall
-    throw UnimplementedError();
+  void connect(ConnectionSubscriber connectionSubscriber) {
+    _connectionCallback.subscribe(connectionSubscriber);
+    _methodChannel.invokeMethod("connect");
   }
 
 }
 
 abstract class ConnectionSubscriber extends Subscriber {
-    void onConnected();
+    void onConnected(String roodId);
 }
 
 abstract class MediaSubscriber extends Subscriber {

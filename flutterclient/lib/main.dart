@@ -2,12 +2,16 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
 
 import 'package:flutterclient/AppProperties.dart';
 import 'package:flutterclient/MethodChannels.dart';
+import 'package:flutterclient/RootItem.dart';
+import 'dart:convert';
 
 
 MyApp myApp = MyApp();
@@ -24,47 +28,42 @@ Future<void> main() async {
   }
 }
 
-Connection connection = new Connection();
 
-
-Future<void> methodCall(MethodCall call) async {
-  print("called:" + call.method);
-
-  switch(call.method) {
-    case "onConnected":
-      {
-        print("onConnected called");
-        connection.setState(ConnectionState.CONNECTED);
-        makeNativeCall("SUBSCRIBE_ROOT");
-      }
-      break;
-    case "onReceiveTabNames":
-      {
-        try {
-          List<String> tabs = List<String>.from(call.arguments);
-
-          onReceiveTabNames(tabs);
-        } catch(ex) {
-          print("Exception: $ex");
-        }
-      }
-      break;
-  }
-}
+//Future<void> methodCall(MethodCall call) async {
+//  print("called:" + call.method);
+//
+//  switch(call.method) {
+//    case "onConnected":
+//      {
+//        print("onConnected called");
+//        connection.setState(ConnectionState.CONNECTED);
+//        makeNativeCall("SUBSCRIBE_ROOT");
+//      }
+//      break;
+//    case "onReceiveTabNames":
+//      {
+//        try {
+//          List<String> tabs = List<String>.from(call.arguments);
+//
+//          onReceiveTabNames(tabs);
+//        } catch(ex) {
+//          print("Exception: $ex");
+//        }
+//      }
+//      break;
+//  }
+//}
 
 void onReceiveTabNames(List<String> tabN) async {
   myApp.__myAppState.setTabs(tabN);
 }
 
 
-
-void makeNativeCall(String methodName) async {
-  platform.invokeMethod(methodName);
-}
-
 class MyApp extends StatefulWidget {
 
-  _MyAppState __myAppState = _MyAppState();
+
+
+  _MyAppState __myAppState = _MyAppState(requestChannel);
 
   MyApp({Key key}) : super(key: key);
 
@@ -72,33 +71,22 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => __myAppState;
 }
 
-enum ConnectionState {
-  NOT_CONNECTED,
-  CONNECTED,
-  SUSPENDED
-}
 
-class Connection {
-  var connectionState = ConnectionState.NOT_CONNECTED;
+class _MyAppState extends State<MyApp> implements ConnectionSubscriber, MediaSubscriber {
 
-  ConnectionState getState() {
-    return connectionState;
+  RequestChannel requestChannel;
+
+  _MyAppState(RequestChannel requestChannel) {
+    this.requestChannel = requestChannel;
   }
 
-  void setState(ConnectionState connectionState) {
-    this.connectionState = connectionState;
-  }
-}
+  Map<String, StatefulWidget> tabs = HashMap();
 
-class _MyAppState extends State<MyApp> {
-
-  List<String> tabs = List();
 
   @override
   void initState() {
     super.initState();
-    platform.setMethodCallHandler(methodCall);
-    //makeNativeCall("CONNECT");
+    requestChannel.connect(this);
   }
 
   void setTabs(List<String> tabs) {
@@ -142,5 +130,18 @@ class _MyAppState extends State<MyApp> {
           )
       ),
     );
+  }
+
+  @override
+  void onChildrenLoaded(String id, String children) {
+
+    RootItem rootItem = RootItem.fromJson(json.decode(children))
+    // TODO: implement onChildrenLoaded
+  }
+
+
+  @override
+  void onConnected(String rootId) {
+    subscriptionChannel.subscribe(this, rootId);
   }
 }

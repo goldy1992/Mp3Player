@@ -43,6 +43,7 @@ open class MediaBrowserAdapter
         mediaBrowser?.subscribe(id!!, mySubscriptionCallback)
     }
 
+    @Deprecated(message = "{@link#subscribe}")
     open fun subscribeToRoot() {
         mediaBrowser?.subscribe(rootId, mySubscriptionCallback)
     }
