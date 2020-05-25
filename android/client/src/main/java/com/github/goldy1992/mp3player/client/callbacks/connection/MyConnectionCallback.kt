@@ -5,7 +5,6 @@ import com.github.goldy1992.mp3player.client.FlutterConstants.Companion.connect
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 import javax.inject.Inject
 import javax.inject.Named
@@ -16,17 +15,19 @@ import javax.inject.Named
 @ComponentScope
 class MyConnectionCallback
     @Inject
-    constructor(@Named(connect)private val methodChannel: MethodChannel,
-                private var mediaBrowserCompat: MediaBrowserCompat)
+    constructor(@Named(connect)private val methodChannel: MethodChannel)
     :  MediaBrowserCompat.ConnectionCallback() {
 
     private var mediaControllerAdapter : MediaControllerAdapter? = null
+
+
+    var mediaBrowserCompat : MediaBrowserCompat? = null
 
     private val listeners : MutableSet<MediaBrowserConnectionListener> = HashSet()
 
     override fun onConnected() {
         mediaControllerAdapter?.onConnected()
-        methodChannel.invokeMethod("onConnected", mediaBrowserCompat.root)
+        methodChannel.invokeMethod("onConnected", mediaBrowserCompat!!.root)
 
         for (listener in listeners) {
             listener.onConnected()
@@ -34,7 +35,7 @@ class MyConnectionCallback
     }
 
     override fun onConnectionSuspended() {
-        methodChannel.invokeMethod("onConnectionSuspended", null)
+       // methodChannel.invokeMethod("onConnectionSuspended", null)
         for (listener in listeners) {
             listener.onConnectionSuspended()
         }

@@ -40,10 +40,7 @@ open class MainApplication : Application(),
         return ComponentClassMapper.Builder()
                 .splashActivity(SplashScreenEntryActivity::class.java)
                 .mainActivity(FlutterMainActivity::class.java)
-                .folderActivity(FolderActivity::class.java)
                 .service(MediaPlaybackService::class.java)
-                .mediaPlayerActivity(MediaPlayerActivity::class.java)
-                .searchResultActivity(SearchResultActivity::class.java)
                 .build()
     }
     override fun splashScreenComponent(splashScreenEntryActivity: SplashScreenEntryActivity,
@@ -53,11 +50,11 @@ open class MainApplication : Application(),
                 .create(splashScreenEntryActivity, permissionGranted, componentClassMapper)
     }
 
-    override fun mediaActivityComponent(context: Context, callback: MediaBrowserConnectionListener): MediaActivityCompatComponent {
-        return DaggerMediaActivityCompatComponent
-                .factory()
-                .create(context, componentClassMapper)
-    }
+//    override fun mediaActivityComponent(context: Context, callback: MediaBrowserConnectionListener): MediaActivityCompatComponent {
+//        return DaggerMediaActivityCompatComponent
+//                .factory()
+//                .create(context, componentClassMapper)
+//    }
 
     override fun flutterMediaActivityComponent(context: Context, flutterEngine: FlutterEngine)
             : FlutterMediaActivityComponent {

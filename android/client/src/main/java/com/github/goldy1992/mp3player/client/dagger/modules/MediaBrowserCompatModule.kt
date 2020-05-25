@@ -19,6 +19,8 @@ class MediaBrowserCompatModule {
                                   myConnectionCallback: MyConnectionCallback):
             MediaBrowserCompat {
         val componentName = ComponentName(context, componentClassMapper.service!!)
-        return MediaBrowserCompat(context, componentName, myConnectionCallback, null)
+        val toReturn : MediaBrowserCompat = MediaBrowserCompat(context, componentName, myConnectionCallback, null)
+        myConnectionCallback.mediaBrowserCompat = toReturn
+        return toReturn
     }
 }

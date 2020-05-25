@@ -1,13 +1,8 @@
 package com.github.goldy1992.mp3player.client.dagger
 
-import android.content.Context
-import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.PermissionGranted
 import com.github.goldy1992.mp3player.client.activities.SplashScreenEntryActivity
-import com.github.goldy1992.mp3player.client.dagger.components.FlutterMediaActivityComponent
-import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
 import com.github.goldy1992.mp3player.client.dagger.components.SplashScreenEntryActivityComponent
-import io.flutter.embedding.engine.FlutterEngine
 
 interface ClientComponentsProvider {
 
@@ -15,9 +10,9 @@ interface ClientComponentsProvider {
                               permissionGranted: PermissionGranted)
             : SplashScreenEntryActivityComponent
 
-    fun mediaActivityComponent(context: Context,
-                                callback: MediaBrowserConnectionListener)
-            : MediaActivityCompatComponent
+//    fun mediaActivityComponent(context: Context,
+//                                callback: MediaBrowserConnectionListener)
+//            : MediaActivityCompatComponent
 
 
 }

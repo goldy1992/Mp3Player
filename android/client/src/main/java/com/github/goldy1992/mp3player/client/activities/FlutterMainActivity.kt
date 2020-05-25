@@ -106,12 +106,12 @@ class FlutterMainActivity : FlutterActivity(),
 
         when (call.method) {
 
-            "SUBSCRIBE_ROOT" -> {
-                mediaBrowserAdapter.subscribeToRoot()
+            "subscribe" -> {
+                mediaBrowserAdapter.subscribe(call.arguments as String)
                 result.success(null)
             }
 
-            "CONNECT" -> {
+            "connect" -> {
                 connect()
                 result.success(null)
             }

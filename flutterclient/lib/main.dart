@@ -3,15 +3,15 @@
 // found in the LICENSE file.
 
 import 'dart:collection';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'dart:async';
 
-import 'package:flutterclient/AppProperties.dart';
 import 'package:flutterclient/MethodChannels.dart';
-import 'package:flutterclient/RootItem.dart';
-import 'dart:convert';
+import 'package:flutterclient/medialist.dart';
+import 'package:flutterclient/rootitem.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 
 MyApp myApp = MyApp();
@@ -19,8 +19,9 @@ MyApp myApp = MyApp();
 Future<void> main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
+    await loadMethodChannels();
 
-     runApp(myApp);
+    runApp(myApp);
   }
   catch (ex)
   {
@@ -28,40 +29,7 @@ Future<void> main() async {
   }
 }
 
-
-//Future<void> methodCall(MethodCall call) async {
-//  print("called:" + call.method);
-//
-//  switch(call.method) {
-//    case "onConnected":
-//      {
-//        print("onConnected called");
-//        connection.setState(ConnectionState.CONNECTED);
-//        makeNativeCall("SUBSCRIBE_ROOT");
-//      }
-//      break;
-//    case "onReceiveTabNames":
-//      {
-//        try {
-//          List<String> tabs = List<String>.from(call.arguments);
-//
-//          onReceiveTabNames(tabs);
-//        } catch(ex) {
-//          print("Exception: $ex");
-//        }
-//      }
-//      break;
-//  }
-//}
-
-void onReceiveTabNames(List<String> tabN) async {
-  myApp.__myAppState.setTabs(tabN);
-}
-
-
 class MyApp extends StatefulWidget {
-
-
 
   _MyAppState __myAppState = _MyAppState(requestChannel);
 
@@ -76,12 +44,13 @@ class _MyAppState extends State<MyApp> implements ConnectionSubscriber, MediaSub
 
   RequestChannel requestChannel;
 
+  final List<SingleChildWidget> _providers = List();
+
   _MyAppState(RequestChannel requestChannel) {
     this.requestChannel = requestChannel;
   }
 
-  Map<String, StatefulWidget> tabs = HashMap();
-
+  Map<RootItem, Widget> tabs = HashMap();
 
   @override
   void initState() {
@@ -89,7 +58,7 @@ class _MyAppState extends State<MyApp> implements ConnectionSubscriber, MediaSub
     requestChannel.connect(this);
   }
 
-  void setTabs(List<String> tabs) {
+  void setTabs(Map<RootItem, Widget> tabs) {
     this.setState(() {this.tabs = tabs;});
   }
 
@@ -98,35 +67,74 @@ class _MyAppState extends State<MyApp> implements ConnectionSubscriber, MediaSub
   }
 
   List<Widget> getTabs() {
-    if (tabs.length == 0) {
+    print("current tab name: ${tabs.keys}");
+    if (tabs.keys.length == 0) {
       return <Widget>[Tab(icon: CircularProgressIndicator())];
     }
 
     List<Widget> list = new List<Widget>();
 
-    for(var i = 0; i < tabs.length; i++){
-      Tab tab = Tab(text: tabs[i]);
-      list.add(tab);
-    }
+    Iterator<RootItem> tabNames = tabs.keys.iterator;
+
+    while(tabNames.moveNext()) {
+      list.add(Tab(text: tabNames.current.title));
+  }
     return list;
+  }
+
+  List<Widget> getTabChildren () {
+    print("getting tab children");
+    if (tabs.values.length == 0) {
+      return <Widget>[Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Center(
+            child: Container(
+              height: 40,
+              width: 20,
+              margin: EdgeInsets.all(5),
+              child: CircularProgressIndicator(
+                strokeWidth: 2.0,
+                valueColor: AlwaysStoppedAnimation(Colors.white),
+              ),
+            ),
+          ),
+        ],
+      )
+      ];
+    }
+    return tabs.values.toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    return _providers.isEmpty ?
+        buildMaterialApp()
+        : MultiProvider(
+        providers: _providers,
+      child: buildMaterialApp()
+    );
+  }
+
+  MaterialApp buildMaterialApp() {
     return MaterialApp(
       home: DefaultTabController(
-          length: getTabLength(),
-          child: Scaffold(
-            appBar: AppBar(
-              title: Text('Waiting for tabs'),
-              leading: new IconButton(icon: Icon(Icons.menu)),
-              actions: <Widget>[
-                new IconButton(icon: Icon(Icons.search), onPressed: null)
-              ],
-              bottom: TabBar(
-                tabs: getTabs()
+        length: getTabLength(),
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('MP3 Player'),
+            leading: new IconButton(icon: Icon(Icons.menu)),
+                actions: <Widget>[
+                  new IconButton(icon: Icon(Icons.search), onPressed: null)
+                ],
+                bottom: TabBar(
+                    tabs: getTabs()
+                ),
               ),
-            ),
+              body: TabBarView(
+                  children: getTabChildren()
+              )
           )
       ),
     );
@@ -134,14 +142,54 @@ class _MyAppState extends State<MyApp> implements ConnectionSubscriber, MediaSub
 
   @override
   void onChildrenLoaded(String id, String children) {
+    print("id: $id\nchildren: $children");
 
-    RootItem rootItem = RootItem.fromJson(json.decode(children))
-    // TODO: implement onChildrenLoaded
+    List<dynamic> jsonCode = json.decode(children);
+    List<RootItem> rootItems = List();
+    for (dynamic d in jsonCode) {
+      RootItem rootItem = RootItem.fromJson(d);
+      rootItems.add(rootItem);
+    }
+
+    Map<RootItem, Widget> map = new HashMap();
+    for (RootItem r in rootItems) {
+      print("title = ${r.title}");
+      if ("Songs" == r.title) {
+        setState(() {
+          _providers.add(ChangeNotifierProvider(create: (context) => Songs(requestChannel, r.id)));
+          map.putIfAbsent(r, () => new SongList(key: UniqueKey()));
+        });
+
+      } else {
+        map.putIfAbsent(r, () =>  Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Center(
+              child: Container(
+                height: 50,
+                width: 50,
+                margin: EdgeInsets.all(5),
+                child: CircularProgressIndicator(
+                  strokeWidth: 3.0,
+                  valueColor: AlwaysStoppedAnimation(Theme
+                      .of(context)
+                      .primaryColor),
+                ),
+              ),
+            )
+          ]
+        ));
+      }
+    }
+    print("map: $map");
+    setTabs(map);
   }
 
 
   @override
   void onConnected(String rootId) {
-    subscriptionChannel.subscribe(this, rootId);
+    requestChannel.subscribe(this, rootId);
   }
+
 }

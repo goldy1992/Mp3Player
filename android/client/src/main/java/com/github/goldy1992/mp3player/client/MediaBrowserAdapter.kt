@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaSessionCompat
+import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
 import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback
 import com.github.goldy1992.mp3player.client.callbacks.search.SearchResultListener
 import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
@@ -14,7 +15,8 @@ open class MediaBrowserAdapter
 
     constructor(private val mediaBrowser: MediaBrowserCompat?,
                 private val mySubscriptionCallback: MediaIdSubscriptionCallback,
-                private val mySearchCallback: MySearchCallback) : LogTagger {
+                private val mySearchCallback: MySearchCallback,
+                private val myConnectionCallback: MyConnectionCallback) : MediaBrowserConnectionListener, LogTagger {
 
     /**
      * Disconnects from the media browser service
@@ -53,6 +55,19 @@ open class MediaBrowserAdapter
 
     val rootId: String
         get() = mediaBrowser!!.root
+
+
+    open override fun onConnected() {
+        // Can be implemented if needed
+    }
+    /** Called when the connection to the MediaBrowserService has been suspended. */
+    open override fun onConnectionSuspended() {
+        // Can be implemented if needed
+    }
+    /** Called when the attempt to connect to the MediaBrowserService has failed. */
+    open override fun onConnectionFailed() {
+        // Can be implemented if needed
+    }
 
 
     open fun registerRootListener(mediaBrowserResponseListener: MediaBrowserResponseListener) {

@@ -15,7 +15,7 @@ RootItem _$RootItemFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$RootItemToJson(RootItem instance) => <String, dynamic>{
-      'id': instance.id,
+      'id': instance._id,
       'title': instance.title,
       'description': instance.description,
     };

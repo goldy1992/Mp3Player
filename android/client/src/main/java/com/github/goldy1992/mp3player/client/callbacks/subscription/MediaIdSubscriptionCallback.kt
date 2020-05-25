@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.goldy1992.mp3player.client.FlutterConstants
 import com.github.goldy1992.mp3player.client.MediaBrowserResponseListener
 import com.github.goldy1992.mp3player.commons.*
+import com.github.goldy1992.mp3player.commons.ComparatorUtils.Companion.compareRootMediaItemsByMediaItemType
 import io.flutter.plugin.common.MethodChannel
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import java.util.*
@@ -27,24 +28,9 @@ class MediaIdSubscriptionCallback
 
         when(getMediaItemType(children)) {
             MediaItemType.ROOT -> sendRootItems(parentId, children)
-            else -> return // make other try of item
+            else -> sendMetadata(parentId, children)
         }
 
-        var childrenArrayList = ArrayList(children)
-        val listenersToNotify: Set<MediaBrowserResponseListener>? = mediaBrowserResponseListeners[parentId]
-        if (null != listenersToNotify) {
-            for (listener in listenersToNotify) {
-                listener.onChildrenLoaded(parentId, childrenArrayList)
-            }
-        }
-
-        val result : MutableList<Metadata> = ArrayList()
-
-        for (item in children) {
-            result.add(Metadata.getMetadata(item))
-        }
-
-        val toSend : String = objectMapper.writeValueAsString(result)
     }
 
     private fun getMediaItemType(children: List<MediaBrowserCompat.MediaItem>) : MediaItemType? {
@@ -56,12 +42,28 @@ class MediaIdSubscriptionCallback
     }
 
     private fun sendRootItems(id : String, children : List<MediaBrowserCompat.MediaItem>) {
+        val rootItemsOrdered = TreeSet(compareRootMediaItemsByMediaItemType)
+        rootItemsOrdered.addAll(children)
         val rootItems : ArrayList<RootItem> = ArrayList()
-        for (item in children) {
+        for (item in rootItemsOrdered) {
             val rootItem : RootItem = RootItem.getRootItem(item)
             rootItems.add(rootItem)
         }
         val toSend : String = objectMapper.writeValueAsString(rootItems)
+        val arguments : HashMap<String, String> = HashMap()
+        arguments["id"] = id
+        arguments["children"] = toSend
+
+        methodChannel.invokeMethod("onChildrenLoaded", arguments)
+    }
+
+    private fun sendMetadata(id : String, children : List<MediaBrowserCompat.MediaItem>) {
+        val metadataList : ArrayList<Metadata> = ArrayList()
+        for (item in children) {
+            val metadata : Metadata = Metadata.getMetadata(item)
+            metadataList.add(metadata)
+        }
+        val toSend : String = objectMapper.writeValueAsString(metadataList)
         val arguments : HashMap<String, String> = HashMap()
         arguments["id"] = id
         arguments["children"] = toSend

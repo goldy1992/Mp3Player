@@ -61,6 +61,7 @@ class Metadata
                     .title(MediaItemUtils.getTitle(item))
                     .artist(MediaItemUtils.getArtist(item))
                     .duration(MediaItemUtils.getDuration(item))
+                    .albumArtPath(MediaItemUtils.getAlbumArtUri(item)!!.toString())
                     .build()
         }
 

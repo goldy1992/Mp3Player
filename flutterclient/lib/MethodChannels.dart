@@ -2,7 +2,6 @@ library flutterclient.method_channels;
 
 import 'dart:collection';
 import 'package:yaml/yaml.dart';
-import "dart:io";
 import 'package:flutter/services.dart' show MethodCall, MethodChannel, rootBundle;
 
 const _APP_PROPERTIES_ASSET = "assets/AppProperties.yml";
@@ -21,7 +20,7 @@ SubscriptionCallback subscriptionChannel;
 ConnectionCallback connectionChannel;
 
 
-Future<void> main() async {
+void loadMethodChannels() async {
   try {
     String yamlFile = await _loadYamlAsset();
     YamlMap yaml = loadYaml(yamlFile);
@@ -80,7 +79,7 @@ class ConnectionCallback extends CallbackBase {
         {
           print("onConnected called");
           for (ConnectionSubscriber subscriber in _subscribers) {
-            subscriber.onConnected(call.arguments[0]);
+            subscriber.onConnected(call.arguments);
           }
         }
         break;
