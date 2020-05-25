@@ -6,6 +6,7 @@ import 'package:flutterclient/metadata.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+import 'package:flutterclient/songs.dart';
 import 'package:provider/provider.dart';
 
 
@@ -17,14 +18,14 @@ class SongList extends StatelessWidget  {
   Widget build(BuildContext context) {
     return ListView(
         padding: const EdgeInsets.all(8),
-        children: []//getChildren(context)
+        children: getChildren(context)
     );
   }
 
   List<Widget> getChildren(BuildContext context) {
     List<Widget> toReturn = List();
-    List<Metadata> metadataList = Provider.of<Songs>(context).songs;
-    if (metadataList.length <= 0) {
+    List<Song> songs = Provider.of<Songs>(context).songs;
+    if (songs.length <= 0) {
       toReturn.add(Flexible(
           child: Container(
             height: 50,
@@ -32,7 +33,7 @@ class SongList extends StatelessWidget  {
             child: Center(child:  Text('Entry: ')),
           )));
     } else {
-      for (Metadata m in metadataList) {
+      for (Song m in songs) {
         toReturn.add(
             Container(
                 height: 50,
@@ -94,7 +95,7 @@ class Songs extends ChangeNotifier implements MediaSubscriber {
   final RequestChannel _requestChannel;
   String _id;
 
-  List<Metadata> songs = List();
+  List<Song> songs = List();
 
   Songs(this._requestChannel, this._id) : super() {
     print("subscribing to $_id");
@@ -105,14 +106,14 @@ class Songs extends ChangeNotifier implements MediaSubscriber {
   void onChildrenLoaded(String id, String children) {
     print("id: $id\nchildren: $children");
 
-    List<dynamic> jsonCode = json.decode(children);
+    Map<String, dynamic> jsonCode = json.decode(children);
 
-    List<Metadata> metadataList = List();
-    for (dynamic d in jsonCode) {
-      Metadata metadata = Metadata.fromJson(d);
-      metadataList.add(metadata);
+    List<Song> songsList = List();
+    for (dynamic d in jsonCode["songs"]) {
+      Song metadata = Song.fromJson(d);
+      songsList.add(metadata);
     }
-    this.songs = metadataList;
+    this.songs = songsList;
     notifyListeners();
   }
 }

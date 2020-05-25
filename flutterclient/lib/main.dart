@@ -13,13 +13,12 @@ import 'package:flutterclient/rootitem.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
-
 MyApp myApp = MyApp();
 
 Future<void> main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
-    await loadMethodChannels();
+    await loadFakeMethodChannels();
 
     runApp(myApp);
   }
@@ -143,10 +142,9 @@ class _MyAppState extends State<MyApp> implements ConnectionSubscriber, MediaSub
   @override
   void onChildrenLoaded(String id, String children) {
     print("id: $id\nchildren: $children");
-
-    List<dynamic> jsonCode = json.decode(children);
+    Map<String, dynamic> jsonCode = json.decode(children);
     List<RootItem> rootItems = List();
-    for (dynamic d in jsonCode) {
+    for (dynamic d in jsonCode["rootItems"]) {
       RootItem rootItem = RootItem.fromJson(d);
       rootItems.add(rootItem);
     }
@@ -156,8 +154,10 @@ class _MyAppState extends State<MyApp> implements ConnectionSubscriber, MediaSub
       print("title = ${r.title}");
       if ("Songs" == r.title) {
         setState(() {
-          _providers.add(ChangeNotifierProvider(create: (context) => Songs(requestChannel, r.id)));
-          map.putIfAbsent(r, () => new SongList(key: UniqueKey()));
+          Songs songs = new Songs(requestChannel, r.id);
+          SongList songList = new SongList(key: UniqueKey());
+          _providers.add(ChangeNotifierProvider(create: (context) => songs));
+          map.putIfAbsent(r, () =>  songList);
         });
 
       } else {
@@ -189,6 +189,7 @@ class _MyAppState extends State<MyApp> implements ConnectionSubscriber, MediaSub
 
   @override
   void onConnected(String rootId) {
+    print("subscribing to root id: $rootId");
     requestChannel.subscribe(this, rootId);
   }
 
