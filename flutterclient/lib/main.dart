@@ -21,15 +21,12 @@ Future<void> main() async {
     await loadFakeMethodChannels();
 
     runApp(myApp);
-  }
-  catch (ex)
-  {
+  } catch (ex) {
     print("error: $ex");
   }
 }
 
 class MyApp extends StatefulWidget {
-
   _MyAppState __myAppState = _MyAppState(requestChannel);
 
   MyApp({Key key}) : super(key: key);
@@ -38,9 +35,10 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => __myAppState;
 }
 
+class _MyAppState extends State<MyApp>
+    implements ConnectionSubscriber, MediaSubscriber {
 
-class _MyAppState extends State<MyApp> implements ConnectionSubscriber, MediaSubscriber {
-
+  GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   RequestChannel requestChannel;
 
   final List<SingleChildWidget> _providers = List();
@@ -58,7 +56,9 @@ class _MyAppState extends State<MyApp> implements ConnectionSubscriber, MediaSub
   }
 
   void setTabs(Map<RootItem, Widget> tabs) {
-    this.setState(() {this.tabs = tabs;});
+    this.setState(() {
+      this.tabs = tabs;
+    });
   }
 
   int getTabLength() {
@@ -75,32 +75,33 @@ class _MyAppState extends State<MyApp> implements ConnectionSubscriber, MediaSub
 
     Iterator<RootItem> tabNames = tabs.keys.iterator;
 
-    while(tabNames.moveNext()) {
+    while (tabNames.moveNext()) {
       list.add(Tab(text: tabNames.current.title));
-  }
+    }
     return list;
   }
 
-  List<Widget> getTabChildren () {
+  List<Widget> getTabChildren() {
     print("getting tab children");
     if (tabs.values.length == 0) {
-      return <Widget>[Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Center(
-            child: Container(
-              height: 40,
-              width: 20,
-              margin: EdgeInsets.all(5),
-              child: CircularProgressIndicator(
-                strokeWidth: 2.0,
-                valueColor: AlwaysStoppedAnimation(Colors.white),
+      return <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Center(
+              child: Container(
+                height: 40,
+                width: 20,
+                margin: EdgeInsets.all(5),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.0,
+                  valueColor: AlwaysStoppedAnimation(Colors.white),
+                ),
               ),
             ),
-          ),
-        ],
-      )
+          ],
+        )
       ];
     }
     return tabs.values.toList();
@@ -108,34 +109,33 @@ class _MyAppState extends State<MyApp> implements ConnectionSubscriber, MediaSub
 
   @override
   Widget build(BuildContext context) {
-    return _providers.isEmpty ?
-        buildMaterialApp()
-        : MultiProvider(
-        providers: _providers,
-      child: buildMaterialApp()
-    );
+    return _providers.isEmpty
+        ? buildMaterialApp()
+        : MultiProvider(providers: _providers, child: buildMaterialApp());
   }
 
   MaterialApp buildMaterialApp() {
     return MaterialApp(
+
       home: DefaultTabController(
-        length: getTabLength(),
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text('MP3 Player'),
-            leading: new IconButton(icon: Icon(Icons.menu)),
+          length: getTabLength(),
+          child: Scaffold(
+            key: _scaffoldState,
+            drawer: Drawer(),
+              appBar: AppBar(
+                title: Text('MP3 Player'),
+                leading: new IconButton(icon: Icon(Icons.menu), onPressed: () => _scaffoldState.currentState.openDrawer()),
                 actions: <Widget>[
-                  new IconButton(icon: Icon(Icons.search), onPressed: null)
+                  Builder(
+                    builder: (context) =>  IconButton(icon: Icon(Icons.search), onPressed: () async {
+                    Scaffold.of(context).showSnackBar(SnackBar(content: Text("sdad")));
+
+                  })
+                  )
                 ],
-                bottom: TabBar(
-                    tabs: getTabs()
-                ),
+                bottom: TabBar(tabs: getTabs()),
               ),
-              body: TabBarView(
-                  children: getTabChildren()
-              )
-          )
-      ),
+              body: TabBarView(children: getTabChildren()))),
     );
   }
 
@@ -157,40 +157,37 @@ class _MyAppState extends State<MyApp> implements ConnectionSubscriber, MediaSub
           Songs songs = new Songs(requestChannel, r.id);
           SongList songList = new SongList(key: UniqueKey());
           _providers.add(ChangeNotifierProvider(create: (context) => songs));
-          map.putIfAbsent(r, () =>  songList);
+          map.putIfAbsent(r, () => songList);
         });
-
       } else {
-        map.putIfAbsent(r, () =>  Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Center(
-              child: Container(
-                height: 50,
-                width: 50,
-                margin: EdgeInsets.all(5),
-                child: CircularProgressIndicator(
-                  strokeWidth: 3.0,
-                  valueColor: AlwaysStoppedAnimation(Theme
-                      .of(context)
-                      .primaryColor),
-                ),
-              ),
-            )
-          ]
-        ));
+        map.putIfAbsent(
+            r,
+            () => Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Center(
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          margin: EdgeInsets.all(5),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 3.0,
+                            valueColor: AlwaysStoppedAnimation(
+                                Theme.of(context).primaryColor),
+                          ),
+                        ),
+                      )
+                    ]));
       }
     }
     print("map: $map");
     setTabs(map);
   }
 
-
   @override
   void onConnected(String rootId) {
     print("subscribing to root id: $rootId");
     requestChannel.subscribe(this, rootId);
   }
-
 }
