@@ -9,7 +9,9 @@ import 'dart:async';
 
 import 'package:flutterclient/MethodChannels.dart';
 import 'package:flutterclient/medialist.dart';
+import 'package:flutterclient/mediaplayer.dart';
 import 'package:flutterclient/rootitem.dart';
+import 'package:flutterclient/search.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -37,7 +39,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp>
     implements ConnectionSubscriber, MediaSubscriber {
-
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   RequestChannel requestChannel;
 
@@ -116,27 +117,44 @@ class _MyAppState extends State<MyApp>
 
   MaterialApp buildMaterialApp() {
     return MaterialApp(
-
-      home: DefaultTabController(
-          length: getTabLength(),
-          child: Scaffold(
-            key: _scaffoldState,
-            drawer: Drawer(),
+        home: DefaultTabController(
+            length: getTabLength(),
+            child: Scaffold(
+              key: _scaffoldState,
+              drawer: Drawer(),
               appBar: AppBar(
                 title: Text('MP3 Player'),
-                leading: new IconButton(icon: Icon(Icons.menu), onPressed: () => _scaffoldState.currentState.openDrawer()),
+                leading: new IconButton(
+                    icon: Icon(Icons.menu),
+                    onPressed: () => _scaffoldState.currentState.openDrawer()),
                 actions: <Widget>[
                   Builder(
-                    builder: (context) =>  IconButton(icon: Icon(Icons.search), onPressed: () async {
-                    Scaffold.of(context).showSnackBar(SnackBar(content: Text("sdad")));
-
-                  })
-                  )
+                      builder: (context) => IconButton(
+                          icon: Icon(Icons.search),
+                          onPressed: () async {
+                            showSearch(
+                                context: context, delegate: MySearchDelegate());
+                          }))
                 ],
                 bottom: TabBar(tabs: getTabs()),
               ),
-              body: TabBarView(children: getTabChildren()))),
-    );
+              body: TabBarView(children: getTabChildren()),
+              bottomNavigationBar: Container(
+                color: Theme.of(context).primaryColorDark,
+                  child: Builder( builder: (context) => GestureDetector(
+                      onTap: () { print("tapped bottom nav bar");
+
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MediaPlayer()),
+                      );},
+                      child: Row(
+
+                          children: <Widget>[
+                        Text("bottom app bar"),
+                        IconButton(
+                          icon: Icon(Icons.play_arrow),
+                        )
+                      ]))),
+            ))));
   }
 
   @override

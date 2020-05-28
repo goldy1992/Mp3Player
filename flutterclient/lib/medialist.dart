@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterclient/MethodChannels.dart';
-import 'package:flutterclient/metadata.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +12,28 @@ import 'package:provider/provider.dart';
 
 class SongList extends StatelessWidget {
   SongList({Key key}) : super(key: key);
+  ScrollController _customScrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-        padding: const EdgeInsets.all(8), children: getChildren(context));
+    return DraggableScrollbar.semicircle(
+      labelTextBuilder: (offset) {
+
+        List<Song> songs = Provider.of<Songs>(context).songs;
+        final int currentItem = _customScrollController.hasClients ?
+        (_customScrollController.offset /
+            _customScrollController.position.maxScrollExtent * songs.length)
+        .floor()
+            : 0;
+        print("offset: $offset");
+        print("controller offset: ${_customScrollController.offset}");
+        print("max scroll extend: ${_customScrollController.position.maxScrollExtent}");
+        return Text("${songs[currentItem].title.substring(0, 1)}");
+      },
+      controller: _customScrollController,
+        child: ListView(
+          controller: _customScrollController,
+        padding: const EdgeInsets.all(8), children: getChildren(context)));
   }
 
   List<Widget> getChildren(BuildContext context) {

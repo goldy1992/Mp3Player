@@ -162,6 +162,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.6"
+  draggable_scrollbar:
+    dependency: "direct main"
+    description:
+      name: draggable_scrollbar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   fixnum:
     dependency: transitive
     description:
@@ -382,6 +389,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.3"
+  random_string:
+    dependency: "direct main"
+    description:
+      name: random_string
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   shelf:
     dependency: transitive
     description:

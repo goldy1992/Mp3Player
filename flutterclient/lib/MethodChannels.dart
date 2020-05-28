@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:ffi';
 import 'package:flutterclient/rootitem.dart';
 import 'package:flutterclient/songs.dart';
+import 'package:random_string/random_string.dart';
 import 'package:yaml/yaml.dart';
 import 'package:flutter/services.dart' show MethodCall, MethodChannel, rootBundle;
 
@@ -207,11 +208,28 @@ class MockData {
 
   static final RootItems rootItems = new RootItems([songs, folders]);
 
-  static final Song song1 = new Song("song1", "Song 1", "Artist1", 241231, null);
-  static final Song song2 = new Song("song2", "Song 2", "Artist1", 123131, null);
-  static final Song song3 = new Song("song3", "Song 3", "Artist2", 952231, null);
+  static final Song song1 = new Song("song1", "aSong 1", "Artist1", 241231, null);
+  static final Song song2 = new Song("song2", "bSong 2", "Artist1", 123131, null);
+  static final Song song3 = new Song("song3", "cSong 3", "Artist2", 952231, null);
+  static final Song song4 = new Song("song4", "dSong 4", "Artist5", 241231, null);
+  static final Song song5 = new Song("song5", "eSong 5", "Artist6", 123131, null);
+  static final Song song6 = new Song("song6", "fSong 6", "Artist7", 952231, null);
 
-  static final Songs songList = new Songs([song1, song2, song3]);
+  static final Songs songList = new Songs(createSongs());
+
+  static List<Song> createSongs() {
+    List<Song> songs = List();
+    for (int i = 1; i <= 100; i++) {
+      Song song = Song(randomString(10), randomString(10).toLowerCase(), randomString(10), int.parse(randomNumeric(6)), null);
+      songs.add(song);
+    }
+  Iterator<Song> songIt = SplayTreeSet.from(songs, (Song s1, Song s2) {return s1.title.compareTo(s2.title);}).iterator;
+    List<Song> toReturn = List();
+    while(songIt.moveNext()) {
+      toReturn.add(songIt.current);
+    }
+    return toReturn;
+  }
 }
 
 class FakeRequestChannel extends RequestChannel {
