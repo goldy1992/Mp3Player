@@ -11,29 +11,32 @@ import 'package:flutterclient/songs.dart';
 import 'package:provider/provider.dart';
 
 class SongList extends StatelessWidget {
-  SongList({Key key}) : super(key: key);
-  ScrollController _customScrollController = ScrollController();
+  ScrollController controller;
+  SongList(this.controller, {Key key}) : super(key: key);
 
+  ScrollController newScrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollbar.semicircle(
-      labelTextBuilder: (offset) {
-
-        List<Song> songs = Provider.of<Songs>(context).songs;
-        final int currentItem = _customScrollController.hasClients ?
-        (_customScrollController.offset /
-            _customScrollController.position.maxScrollExtent * songs.length)
-        .floor()
-            : 0;
-        print("offset: $offset");
-        print("controller offset: ${_customScrollController.offset}");
-        print("max scroll extend: ${_customScrollController.position.maxScrollExtent}");
-        return Text("${songs[currentItem].title.substring(0, 1)}");
-      },
-      controller: _customScrollController,
-        child: ListView(
-          controller: _customScrollController,
-        padding: const EdgeInsets.all(8), children: getChildren(context)));
+    List<Widget> children = getChildren(context);
+    return SafeArea(
+        top: false,
+        bottom: false,
+        child: Builder(builder: (BuildContext context) {
+          return DraggableScrollbar.rrect(
+              controller: newScrollController,
+              padding: EdgeInsets.all(8),
+              backgroundColor: Colors.black,
+              labelTextBuilder: (double offset) => Text("${offset ~/ 100}"),
+              child: ListView.builder(
+                  controller: newScrollController,
+                  itemCount: children.length,
+                  itemBuilder: (context, index) {
+                return children[index];
+              }
+              )
+          );
+        }
+        ));
   }
 
   List<Widget> getChildren(BuildContext context) {

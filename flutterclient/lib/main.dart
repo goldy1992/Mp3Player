@@ -42,6 +42,8 @@ class _MyAppState extends State<MyApp>
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   RequestChannel requestChannel;
 
+  ScrollController _scrollViewController = ScrollController();
+
   final List<SingleChildWidget> _providers = List();
 
   _MyAppState(RequestChannel requestChannel) {
@@ -117,44 +119,70 @@ class _MyAppState extends State<MyApp>
 
   MaterialApp buildMaterialApp() {
     return MaterialApp(
-        home: DefaultTabController(
-            length: getTabLength(),
-            child: Scaffold(
-              key: _scaffoldState,
+      home: DefaultTabController(
+          length: getTabLength(),
+          child: Scaffold(
               drawer: Drawer(),
-              appBar: AppBar(
-                title: Text('MP3 Player'),
-                leading: new IconButton(
-                    icon: Icon(Icons.menu),
-                    onPressed: () => _scaffoldState.currentState.openDrawer()),
-                actions: <Widget>[
-                  Builder(
-                      builder: (context) => IconButton(
-                          icon: Icon(Icons.search),
-                          onPressed: () async {
-                            showSearch(
-                                context: context, delegate: MySearchDelegate());
-                          }))
-                ],
-                bottom: TabBar(tabs: getTabs()),
-              ),
-              body: TabBarView(children: getTabChildren()),
+              body: NestedScrollView(
+               // controller: _scrollViewController,
+                headerSliverBuilder:
+                    (BuildContext context, bool innerBoxIsScrolled) {
+                  // These are the slivers that show up in the "outer" scroll view.
+                  return <Widget>[
+                    SliverOverlapAbsorber(
+                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                      sliver:  SliverAppBar(
+                        floating: true,
+                        pinned: false,
+                        snap: true,
+                        forceElevated: innerBoxIsScrolled,
+                        key: _scaffoldState,
+                        title: Text('MP3 Player'),
+                        leading: new IconButton(
+                            icon: Icon(Icons.menu),
+                            onPressed: () =>
+                                _scaffoldState.currentState.openDrawer()),
+                        actions: <Widget>[
+                          Builder(
+                              builder: (context) => IconButton(
+                                  icon: Icon(Icons.search),
+                                  onPressed: () async {
+                                    showSearch(
+                                        context: context,
+                                        delegate: MySearchDelegate());
+                                  }))
+                        ],
+                        bottom: TabBar(tabs: getTabs()),
+                      ),
+                    ),
+
+                  ];
+                },
+                body: TabBarView(
+                  children: getTabChildren()
+                //getTabChildren(),
+              )),
               bottomNavigationBar: Container(
                 color: Theme.of(context).primaryColorDark,
-                  child: Builder( builder: (context) => GestureDetector(
-                      onTap: () { print("tapped bottom nav bar");
+                child: Builder(
+                    builder: (context) => GestureDetector(
+                        onTap: () {
+                          print("tapped bottom nav bar");
 
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => MediaPlayer()),
-                      );},
-                      child: Row(
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MediaPlayer()),
+                          );
+                        },
+                        child: Row(children: <Widget>[
+                          Text("bottom app bar"),
+                          IconButton(
+                            icon: Icon(Icons.play_arrow),
+                          )
+                        ]))),
+              ))));
 
-                          children: <Widget>[
-                        Text("bottom app bar"),
-                        IconButton(
-                          icon: Icon(Icons.play_arrow),
-                        )
-                      ]))),
-            ))));
   }
 
   @override
@@ -173,7 +201,7 @@ class _MyAppState extends State<MyApp>
       if ("Songs" == r.title) {
         setState(() {
           Songs songs = new Songs(requestChannel, r.id);
-          SongList songList = new SongList(key: UniqueKey());
+          SongList songList = new SongList(_scrollViewController, key: UniqueKey());
           _providers.add(ChangeNotifierProvider(create: (context) => songs));
           map.putIfAbsent(r, () => songList);
         });
@@ -209,3 +237,43 @@ class _MyAppState extends State<MyApp>
     requestChannel.subscribe(this, rootId);
   }
 }
+
+class SliverAppBarDelegate extends SliverPersistentHeader {
+  final TabBarView tabBarView;
+
+  SliverAppBarDelegate(this.tabBarView);
+
+  @override
+  Widget build(BuildContext context) {
+    return tabBarView;
+  }
+
+  @override
+  // TODO: implement maxExtent
+  double get maxExtent => throw UnimplementedError();
+
+  @override
+  // TODO: implement minExtent
+  double get minExtent => throw UnimplementedError();
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    // TODO: implement shouldRebuild
+    throw UnimplementedError();
+  }
+}
+
+//class MyScrollController extends ScrollController {
+//
+//  @override
+//  ScrollPosition get position {
+//  Iterable<ScrollPosition> scrollPositions =  super.getPositions();
+//
+//  assert(_positions.isNotEmpty, 'ScrollController not attached to any scroll views.');
+//    assert(_positions.length == 1, 'ScrollController attached to multiple scroll views.');
+//    return _positions.single;
+//
+//  }
+//
+//}
+
