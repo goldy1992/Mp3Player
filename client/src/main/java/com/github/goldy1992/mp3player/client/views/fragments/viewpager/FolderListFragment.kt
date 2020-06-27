@@ -13,6 +13,7 @@ class FolderListFragment : MediaItemListFragment() {
     lateinit var myFolderViewAdapter : MyFolderViewAdapter
 
     override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {
+        val parentItemType : MediaItemType = requireArguments().get(MEDIA_ITEM_TYPE) as MediaItemType
         val intent = intentMapper.getIntent(parentItemType)
         if (null != intent) {
             intent.putExtra(Constants.MEDIA_ITEM, item)
@@ -29,14 +30,18 @@ class FolderListFragment : MediaItemListFragment() {
     }
 
     override fun initialiseDependencies() {
-        createMediaItemListFragmentSubcomponent(this, this.parentItemTypeId)?.inject(this)
+        createMediaItemListFragmentSubcomponent(this,
+                arguments?.get(MEDIA_ITEM_TYPE) as MediaItemType,
+                arguments?.getString(PARENT_ID) as String)
+                ?.inject(this)
     }
 
     companion object {
         @JvmStatic
         fun newInstance(mediaItemType: MediaItemType, id: String): FolderListFragment {
             val folderListFragment = FolderListFragment()
-            folderListFragment.init(mediaItemType, id)
+            val args = createArguments(mediaItemType, id)
+            folderListFragment.arguments = args
             return folderListFragment
         }
     }

@@ -33,15 +33,25 @@ import javax.inject.Inject
  * 2) This ChildViewFragment will be provided after the main injection is done
  */
 abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
+
+    companion object {
+        const val MEDIA_ITEM_TYPE = "mediaItemType"
+        const val PARENT_ID = "parentId"
+
+        fun createArguments(mediaItemType: MediaItemType, id: String) : Bundle {
+            val toReturn = Bundle()
+            toReturn.putSerializable(MEDIA_ITEM_TYPE, mediaItemType)
+            toReturn.putString(PARENT_ID, id)
+            return toReturn
+        }
+    }
+
     /**
      * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
      */
     private val linearLayoutManager = LinearLayoutManager(context)
 
     lateinit var binding: FragmentViewPageBinding
-
-    lateinit var parentItemType: MediaItemType
-    lateinit var parentItemTypeId: String
 
     protected abstract fun getViewAdapter() : MyGenericRecyclerViewAdapter
 
@@ -55,11 +65,6 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
     lateinit var albumArtPainter: AlbumArtPainter
     @Inject
     lateinit var myGenericItemTouchListener: MyGenericItemTouchListener
-
-    protected fun init(mediaItemType: MediaItemType, id: String) {
-        parentItemType = mediaItemType
-        parentItemTypeId = id
-    }
 
     fun subscribeUi(adapter: MyGenericRecyclerViewAdapter, binding: FragmentViewPageBinding) {
         viewModel.items.observe(viewLifecycleOwner) { result ->
@@ -89,12 +94,14 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
         recyclerView.setHideScrollbar(true)
     }
 
-    protected fun createMediaItemListFragmentSubcomponent(listener: ItemSelectedListener, parentItemTypeId : String)
+    protected fun createMediaItemListFragmentSubcomponent(listener: ItemSelectedListener,
+                                                          mediaItemType: MediaItemType,
+                                                          parentItemTypeId : String)
             : MediaItemListFragmentSubcomponent? {
         return  (activity as MediaActivityCompat?)
                 ?.mediaActivityCompatComponent
                 ?.mediaItemListFragmentSubcomponent()
-                ?.create(listener, parentItemTypeId)
+                ?.create(listener, mediaItemType, parentItemTypeId)
     }
 
     override fun mediaControllerListeners(): Set<Listener> {
