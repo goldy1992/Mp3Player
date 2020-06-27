@@ -7,10 +7,12 @@ import android.view.MenuItem
 import android.widget.Spinner
 import androidx.annotation.VisibleForTesting
 import androidx.core.view.GravityCompat
+import androidx.databinding.DataBindingUtil
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.MediaBrowserResponseListener
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
+import com.github.goldy1992.mp3player.client.databinding.ActivityMainBinding
 import com.github.goldy1992.mp3player.client.listeners.MyDrawerListener
 import com.github.goldy1992.mp3player.client.views.ThemeSpinnerController
 import com.github.goldy1992.mp3player.client.views.adapters.MyPagerAdapter
@@ -46,16 +48,16 @@ open class MainActivity : MediaActivityCompat(),
     lateinit var componentClassMapper: ComponentClassMapper
 
     override fun initialiseView(): Boolean {
-        setContentView(R.layout.activity_main)
+        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)!!
         searchFragment = SearchFragment()
-        appBarLayout!!.addOnOffsetChangedListener(OnOffsetChangedListener { app: AppBarLayout?, offset: Int ->
+        binding.appBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { app: AppBarLayout?, offset: Int ->
             Log.i(logTag(), "offset: " + offset + ", scroll range: " + app?.totalScrollRange)
             var newOffset = offset
                 newOffset += app!!.totalScrollRange
-            rootMenuItemsPager?.setPadding(
-                    rootMenuItemsPager.paddingLeft,
-                    rootMenuItemsPager.paddingTop,
-                    rootMenuItemsPager.paddingRight,
+            binding.rootMenuItemsPager.setPadding(
+                    binding.rootMenuItemsPager.paddingLeft,
+                    binding.rootMenuItemsPager.paddingTop,
+                    binding.rootMenuItemsPager.paddingRight,
                     newOffset)
         })
         adapter = MyPagerAdapter(supportFragmentManager, lifecycle)

@@ -39,17 +39,14 @@ class SearchResultAdapter
     }
 
     override fun onBindViewHolder(holder: MediaItemViewHolder, position: Int) {
-        val item = items[holder.adapterPosition]
+        val item = getItem(position)
         holder.bindMediaItem(item)
     }
 
     override fun getItemViewType(position: Int): Int {
-        val mediaItem = items[position]
+        val mediaItem = getItem(position)
         val mediaItemType : MediaItemType? = MediaItemUtils.getMediaItemType(mediaItem)
         return mediaItemType?.value ?: super.getItemViewType(position)
     }
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
 }

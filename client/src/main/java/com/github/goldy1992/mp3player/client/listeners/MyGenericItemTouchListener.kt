@@ -39,8 +39,9 @@ class MyGenericItemTouchListener
         if (null != childView) {
             val childPosition = parentView!!.getChildAdapterPosition(childView)
             val myViewAdapter = parentView!!.adapter as MediaItemRecyclerViewAdapter?
+            myViewAdapter!!.currentList[childPosition]
             if (null != myViewAdapter) {
-                itemSelectedListener.itemSelected(myViewAdapter.items[childPosition])
+                itemSelectedListener.itemSelected(myViewAdapter.currentList[childPosition])
             }
         }
         return false

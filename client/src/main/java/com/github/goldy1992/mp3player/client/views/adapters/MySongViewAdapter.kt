@@ -18,7 +18,7 @@ class MySongViewAdapter
 
     @Inject
     constructor(albumArtPainter: AlbumArtPainter)
-    : MyGenericRecycleViewAdapter(albumArtPainter), LogTagger {
+    : MyGenericRecyclerViewAdapter(albumArtPainter), LogTagger {
 
     override fun logTag() : String {
         return "MY_VIEW_ADAPTER"
@@ -41,14 +41,14 @@ class MySongViewAdapter
             val songViewHolder = holder as MySongViewHolder
             // TODO: look into the use of holder.getAdapterPosition rather than the position parameter.
 //Log.i(LOG_TAG, "position: " + position);
-            val song = items[holder.getAdapterPosition()]
+            val song = getItem(position)
             songViewHolder.bindMediaItem(song)
         }
     }
 
     override fun getSectionText(position: Int): String {
-        if (CollectionUtils.isNotEmpty(items)) {
-            val title = items[position].description.title
+        if (hasItems()) {
+            val title = getItem(position).description.title
             if (null != title) {
                 return title.toString().substring(0, 1)
             }
@@ -57,9 +57,9 @@ class MySongViewAdapter
     }
 
     override fun getPreloadItems(position: Int): List<MediaBrowserCompat.MediaItem> {
-        return if (position >= items.size) {
+        return if (position >= itemCount) {
             emptyList()
-        } else listOf(items[position])
+        } else listOf(getItem(position))
     }
 
     override fun getPreloadRequestBuilder(item: MediaBrowserCompat.MediaItem): RequestBuilder<*>? {

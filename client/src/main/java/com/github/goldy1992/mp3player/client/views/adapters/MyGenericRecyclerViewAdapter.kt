@@ -14,9 +14,8 @@ import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.l4digital.fastscroll.FastScroller
 
-abstract class MyGenericRecycleViewAdapter
+abstract class MyGenericRecyclerViewAdapter
     (albumArtPainter: AlbumArtPainter) : MediaItemRecyclerViewAdapter(albumArtPainter),
-        MediaBrowserResponseListener,
         FastScroller.SectionIndexer,
         PreloadModelProvider<MediaItem?>,
         LogTagger {
@@ -26,18 +25,15 @@ abstract class MyGenericRecycleViewAdapter
     val EMPTY_VIEW_TYPE = -1
     private val EMPTY_LIST_ITEM = buildEmptyListMediaItem()
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
 
-    override fun onChildrenLoaded(parentId: String, children: ArrayList<MediaItem>) {
-        if (!children.isEmpty()) {
-            this.items = children
-            notifyDataSetChanged()
-        } else {
-            addNoChildrenFoundItem()
-        }
-    }
+//    override fun onChildrenLoaded(parentId: String, children: ArrayList<MediaItem>) {
+//        if (!children.isEmpty()) {
+//            this.items = children
+//            notifyDataSetChanged()
+//        } else {
+//            addNoChildrenFoundItem()
+//        }
+//    }
 
 
     fun createEmptyViewHolder(parent: ViewGroup): MediaItemViewHolder {
@@ -52,10 +48,10 @@ abstract class MyGenericRecycleViewAdapter
         } else super.getItemViewType(position)
     }
 
-    private fun addNoChildrenFoundItem() {
-        items.add(EMPTY_LIST_ITEM)
-        notifyDataSetChanged()
-    }
+//    private fun addNoChildrenFoundItem() {
+//        items.add(EMPTY_LIST_ITEM)
+//        notifyDataSetChanged()
+//    }
 
     private fun buildEmptyListMediaItem(): MediaItem {
         val mediaDescriptionCompat = MediaDescriptionCompat.Builder()
@@ -65,7 +61,10 @@ abstract class MyGenericRecycleViewAdapter
     }
 
     protected val isEmptyRecycleView: Boolean
-        get() = items.isEmpty() || items[Constants.FIRST] == EMPTY_LIST_ITEM
+        get() = !hasItems() || getItem(Constants.FIRST) == EMPTY_LIST_ITEM
 
 
+    fun hasItems() : Boolean {
+        return itemCount > 0
+    }
 }

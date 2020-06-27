@@ -96,8 +96,8 @@ class SearchResultActivity : MediaActivityCompat(), SearchResultListener, LogTag
     }
 
     override fun onSearchResult(searchResults: List<MediaBrowserCompat.MediaItem>?) {
-        searchResultAdapter!!.items.clear()
-        searchResultAdapter!!.items.addAll(searchResults!!)
+        //searchResultAdapter!!.items.clear()
+        //searchResultAdapter!!.items.addAll(searchResults!!)
         searchResultAdapter!!.notifyDataSetChanged()
         Log.i(logTag(), "received search results")
     }

@@ -10,6 +10,10 @@ android {
     compileSdkVersion TARGET_SDK_VERION
     buildToolsVersion BUILD_TOOLS_VERSION
 
+    buildFeatures {
+        dataBinding true
+    }
+
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERION
@@ -133,6 +137,11 @@ dependencies {
     implementation group: 'androidx.recyclerview', name: 'recyclerview', version: RECYCLER_VIEW_VERSION
 
 
+    def lifecycleVersion = '2.2.0'
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+
     debugImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
     implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
@@ -146,6 +155,7 @@ dependencies {
         transitive = false
     }
 
+    kapt "com.android.databinding:compiler:"
     kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
     api group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
 

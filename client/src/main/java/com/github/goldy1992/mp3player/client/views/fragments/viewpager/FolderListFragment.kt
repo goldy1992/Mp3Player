@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 
 import android.support.v4.media.MediaBrowserCompat
 import com.github.goldy1992.mp3player.client.views.adapters.MyFolderViewAdapter
-import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecycleViewAdapter
+import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecyclerViewAdapter
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import javax.inject.Inject
@@ -20,7 +20,7 @@ class FolderListFragment : MediaItemListFragment() {
         }
     }
 
-    override fun getViewAdapter(): MyGenericRecycleViewAdapter {
+    override fun getViewAdapter(): MyGenericRecyclerViewAdapter {
         return myFolderViewAdapter
     }
 
@@ -29,7 +29,7 @@ class FolderListFragment : MediaItemListFragment() {
     }
 
     override fun initialiseDependencies() {
-        createMediaItemListFragmentSubcomponent(this)?.inject(this)
+        createMediaItemListFragmentSubcomponent(this, this.parentItemTypeId)?.inject(this)
     }
 
     companion object {
