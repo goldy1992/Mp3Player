@@ -24,7 +24,9 @@ class SongListFragment : MediaItemListFragment() {
     }
 
     override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {
-        mediaControllerAdapter.playFromMediaId(MediaItemUtils.getLibraryId(item), null)
+        with(viewModel) {
+            mediaControllerAdapter.playFromMediaId(MediaItemUtils.getLibraryId(item), null)
+        }
     }
 
     override fun getViewAdapter(): MyGenericRecyclerViewAdapter {
