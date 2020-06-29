@@ -117,6 +117,6 @@ class SearchResultActivity : MediaActivityCompat(), SearchResultListener, LogTag
 
     override fun initialiseDependencies() {
         super.initialiseDependencies()
-        this.mediaActivityCompatComponent.inject(this)
+        //this.mediaActivityCompatComponent.inject(this)
     }
 }

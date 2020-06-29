@@ -13,7 +13,7 @@ import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.IntentMapper
 import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
 import com.github.goldy1992.mp3player.client.callbacks.Listener
-import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaItemListFragmentSubcomponent
+//import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaItemListFragmentSubcomponent
 import com.github.goldy1992.mp3player.client.databinding.FragmentViewPageBinding
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener.ItemSelectedListener
@@ -46,6 +46,14 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
         }
     }
 
+    fun getParentMediaItemType() : MediaItemType? {
+        return arguments?.get(MEDIA_ITEM_TYPE) as? MediaItemType
+    }
+
+    fun getParentId() : String? {
+        return arguments?.getString(PARENT_ID)
+    }
+
     /**
      * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
      */
@@ -55,7 +63,6 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
 
     protected abstract fun getViewAdapter() : MyGenericRecyclerViewAdapter
 
-    @Inject
     lateinit var viewModel: MediaListViewModel
 
     @Inject
@@ -63,8 +70,8 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
 
     @Inject
     lateinit var albumArtPainter: AlbumArtPainter
-    @Inject
-    lateinit var myGenericItemTouchListener: MyGenericItemTouchListener
+
+    lateinit var myGenericItemTouchListener : MyGenericItemTouchListener
 
     fun subscribeUi(adapter: MyGenericRecyclerViewAdapter, binding: FragmentViewPageBinding) {
         viewModel.items.observe(viewLifecycleOwner) { result ->
@@ -76,6 +83,7 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
+        myGenericItemTouchListener = MyGenericItemTouchListener(requireContext(), this)
         binding = FragmentViewPageBinding.inflate(inflater, container, false)
         binding.recyclerView.adapter = getViewAdapter()
         binding.recyclerView.addOnItemTouchListener(myGenericItemTouchListener)
@@ -94,15 +102,15 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
         recyclerView.setHideScrollbar(true)
     }
 
-    protected fun createMediaItemListFragmentSubcomponent(listener: ItemSelectedListener,
-                                                          mediaItemType: MediaItemType,
-                                                          parentItemTypeId : String)
-            : MediaItemListFragmentSubcomponent? {
-        return  (activity as MediaActivityCompat?)
-                ?.mediaActivityCompatComponent
-                ?.mediaItemListFragmentSubcomponent()
-                ?.create(listener, mediaItemType, parentItemTypeId)
-    }
+//    protected fun createMediaItemListFragmentSubcomponent(listener: ItemSelectedListener,
+    //                                                      mediaItemType: MediaItemType,parentItemTypeId : String)
+  //          : MediaItemListFragmentSubcomponent? {
+//        return  (activity as MediaActivityCompat?)
+//                ?.mediaActivityCompatComponent
+//                ?.mediaItemListFragmentSubcomponent()
+//                ?.create(listener, mediaItemType, parentItemTypeId)
+    //    return null
+   // }
 
     override fun mediaControllerListeners(): Set<Listener> {
         return Collections.emptySet()

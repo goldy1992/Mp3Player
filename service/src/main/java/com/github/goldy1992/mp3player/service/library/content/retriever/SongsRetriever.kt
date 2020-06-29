@@ -7,8 +7,9 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.library.content.Projections.SONG_PROJECTION
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
+import dagger.hilt.android.scopes.ServiceScoped
 
-@ComponentScope
+@ServiceScoped
 open class SongsRetriever constructor(contentResolver: ContentResolver,
                                       resultsParser: SongResultsParser)
     : ContentResolverRetriever(contentResolver, resultsParser, null) {

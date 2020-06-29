@@ -30,10 +30,10 @@ class FolderListFragment : MediaItemListFragment() {
     }
 
     override fun initialiseDependencies() {
-        createMediaItemListFragmentSubcomponent(this,
-                arguments?.get(MEDIA_ITEM_TYPE) as MediaItemType,
-                arguments?.getString(PARENT_ID) as String)
-                ?.inject(this)
+        //createMediaItemListFragmentSubcomponent(this,
+          //      arguments?.get(MEDIA_ITEM_TYPE) as MediaItemType,
+            //    arguments?.getString(PARENT_ID) as String)
+             //   ?.inject(this)
     }
 
     companion object {

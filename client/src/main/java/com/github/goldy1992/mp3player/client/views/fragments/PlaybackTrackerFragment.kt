@@ -68,8 +68,8 @@ class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, Metadata
     }
 
     override fun initialiseDependencies() {
-        createMediaFragmentSubcomponent()
-            ?.inject(this)
+        //createMediaFragmentSubcomponent()
+         //   ?.inject(this)
     }
 
     private fun updateDurationText(duration: String) {

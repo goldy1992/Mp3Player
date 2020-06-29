@@ -9,13 +9,15 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
 import com.github.goldy1992.mp3player.client.views.adapters.MediaItemRecyclerViewAdapter
 import com.github.goldy1992.mp3player.commons.LogTagger
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class MyGenericItemTouchListener
 
-    @Inject
+
     constructor(
-            private var context: Context,
+            @ApplicationContext context: Context,
+
             var itemSelectedListener : ItemSelectedListener)
     :  GestureDetector.SimpleOnGestureListener(), LogTagger, OnItemTouchListener {
 

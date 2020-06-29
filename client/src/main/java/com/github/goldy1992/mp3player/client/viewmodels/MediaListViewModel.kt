@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 abstract class MediaListViewModel
 
-    @Inject
+//    @Inject
     constructor(
                 private val mediaBrowserAdapter: MediaBrowserAdapter,
                 val mediaControllerAdapter: MediaControllerAdapter,

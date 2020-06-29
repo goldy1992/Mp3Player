@@ -5,10 +5,11 @@ import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
 import com.github.goldy1992.mp3player.service.library.content.parser.ResultsParser
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
+import dagger.hilt.android.scopes.ServiceScoped
 import java.util.*
 import javax.inject.Inject
 
-@ComponentScope
+@ServiceScoped
 class ResultsParsers @Inject constructor(songResultsParser: SongResultsParser,
                                          folderResultsParser: FolderResultsParser) {
     private val resultsParserEnumMap: EnumMap<MediaItemType, ResultsParser>

@@ -7,12 +7,13 @@ import android.content.IntentFilter
 import android.media.AudioManager
 import androidx.annotation.VisibleForTesting
 import com.google.android.exoplayer2.ExoPlayer
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class AudioBecomingNoisyBroadcastReceiver
 /**
  * Constructor
- */ @Inject constructor(private val context: Context, private val player: ExoPlayer) : BroadcastReceiver() {
+ */ @Inject constructor(@ApplicationContext private val context: Context, private val player: ExoPlayer) : BroadcastReceiver() {
     @get:VisibleForTesting
     var isRegistered = false
         private set

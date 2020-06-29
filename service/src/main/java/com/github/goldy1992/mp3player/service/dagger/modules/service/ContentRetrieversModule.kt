@@ -8,19 +8,23 @@ import com.github.goldy1992.mp3player.service.library.content.retriever.FoldersR
 import com.github.goldy1992.mp3player.service.library.content.retriever.SongsRetriever
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ServiceComponent
+import dagger.hilt.android.scopes.ServiceScoped
 
+@InstallIn(ServiceComponent::class)
 @Module
 open class ContentRetrieversModule {
 
     @Provides
-    @ComponentScope
+    @ServiceScoped
     fun providesSongsRetriever(contentResolver: ContentResolver,
                                resultsParser: SongResultsParser) : SongsRetriever {
         return SongsRetriever(contentResolver, resultsParser)
     }
 
     @Provides
-    @ComponentScope
+    @ServiceScoped
     fun providesFoldersRetriever(contentResolver: ContentResolver,
                                  resultsParser: FolderResultsParser) : FoldersRetriever {
         return FoldersRetriever(contentResolver, resultsParser)

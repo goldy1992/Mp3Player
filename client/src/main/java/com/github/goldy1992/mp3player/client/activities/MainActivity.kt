@@ -28,10 +28,12 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import javax.inject.Inject
 
+@AndroidEntryPoint
 open class MainActivity : MediaActivityCompat(),
     MediaBrowserResponseListener
 {
@@ -94,7 +96,7 @@ open class MainActivity : MediaActivityCompat(),
 
     override fun initialiseDependencies() {
         super.initialiseDependencies()
-        this.mediaActivityCompatComponent.inject(this)
+//        this.mediaActivityCompatComponent.inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

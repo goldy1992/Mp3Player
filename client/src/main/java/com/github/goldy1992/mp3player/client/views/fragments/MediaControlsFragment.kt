@@ -38,8 +38,8 @@ class MediaControlsFragment : MediaFragment() {
     }
 
     override fun initialiseDependencies() {
-        createMediaFragmentSubcomponent()
-            ?.inject(this)
+        //createMediaFragmentSubcomponent()
+          //  ?.inject(this)
     }
 
 }

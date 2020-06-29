@@ -11,7 +11,6 @@ import javax.inject.Inject
 
 class PermissionsProcessor
 
-    @Inject
     constructor(private val parentActivity: SplashScreenEntryActivity,
                 private val permissionGranted: PermissionGranted) {
 

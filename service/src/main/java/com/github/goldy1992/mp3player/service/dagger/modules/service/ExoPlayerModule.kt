@@ -9,12 +9,17 @@ import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.audio.AudioAttributes
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ServiceComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ServiceScoped
 
+@InstallIn(ServiceComponent::class)
 @Module
 class ExoPlayerModule {
     @Provides
-    @ComponentScope
-    fun provideExoPlayer(context: Context?): ExoPlayer {
+    @ServiceScoped
+    fun provideExoPlayer(@ApplicationContext context: Context?): ExoPlayer {
         val simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(context)
         val audioAttributes = AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)

@@ -5,7 +5,7 @@ import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
 import com.github.goldy1992.mp3player.client.callbacks.Listener
-import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaFragmentSubcomponent
+//import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaFragmentSubcomponent
 import javax.inject.Inject
 
 abstract class MediaFragment : BaseFragment() {
@@ -19,14 +19,15 @@ abstract class MediaFragment : BaseFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mediaControllerAdapter.registerListeners(mediaControllerListeners())
+//        mediaControllerAdapter.registerListeners(mediaControllerListeners())
     }
 
 
-    protected fun createMediaFragmentSubcomponent() : MediaFragmentSubcomponent? {
-        return  (activity as MediaActivityCompat?)
-                ?.mediaActivityCompatComponent
-                ?.mediaFragmentSubcomponent()
-                ?.create()
-    }
+  //  protected fun createMediaFragmentSubcomponent() : MediaFragmentSubcomponent? {
+//        return  (activity as MediaActivityCompat?)
+//              //  ?.mediaActivityCompatComponent
+//                ?.mediaFragmentSubcomponent()
+//                ?.create()
+    //    return null
+    //}
 }

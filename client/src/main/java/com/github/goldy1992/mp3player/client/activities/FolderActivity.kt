@@ -75,7 +75,7 @@ class FolderActivity : MediaActivityCompat() {
 
     override fun initialiseDependencies() {
         super.initialiseDependencies()
-        this.mediaActivityCompatComponent.inject(this)
+        //this.mediaActivityCompatComponent.inject(this)
     }
 
 }

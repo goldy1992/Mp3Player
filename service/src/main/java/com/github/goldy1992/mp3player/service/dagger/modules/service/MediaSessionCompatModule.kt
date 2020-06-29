@@ -6,25 +6,30 @@ import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.player.MyMediaButtonEventHandler
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ServiceComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ServiceScoped
 
+@InstallIn(ServiceComponent::class)
 @Module
 class MediaSessionCompatModule {
     private val LOG_TAG = "MEDIA_SESSION_COMPAT"
 
     @Provides
-    @ComponentScope
-    fun provideMediaSessionCompat(context: Context): MediaSessionCompat {
+    @ServiceScoped
+    fun provideMediaSessionCompat(@ApplicationContext context: Context): MediaSessionCompat {
         return MediaSessionCompat(context, LOG_TAG)
     }
 
-    @ComponentScope
+    @ServiceScoped
     @Provides
     fun provideMediaSessionToken(mediaSessionCompat: MediaSessionCompat): MediaSessionCompat.Token {
         return mediaSessionCompat.sessionToken
     }
 
     @Provides
-    @ComponentScope
+    @ServiceScoped
     fun myMediaButtonEventHandler(): MyMediaButtonEventHandler {
         return MyMediaButtonEventHandler()
     }

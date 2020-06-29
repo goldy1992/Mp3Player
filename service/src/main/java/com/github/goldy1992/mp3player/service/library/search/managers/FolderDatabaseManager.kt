@@ -10,9 +10,10 @@ import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.search.Folder
 import com.github.goldy1992.mp3player.service.library.search.SearchDatabase
+import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 
-@ComponentScope
+@ServiceScoped
 class FolderDatabaseManager
     @Inject
     constructor(contentManager: ContentManager,

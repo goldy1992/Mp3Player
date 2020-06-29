@@ -40,7 +40,7 @@ class MediaPlayerActivity : MediaActivityCompat() {
 
     override fun initialiseDependencies() {
         super.initialiseDependencies()
-        this.mediaActivityCompatComponent.inject(this)
+        //this.mediaActivityCompatComponent.inject(this)
     }
 
     override fun initialiseView(): Boolean {

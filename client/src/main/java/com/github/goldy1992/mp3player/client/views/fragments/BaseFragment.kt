@@ -8,7 +8,7 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 abstract class BaseFragment : Fragment(), LogTagger, DependencyInitialiser {
 
     override fun onAttach(context: Context) {
-        initialiseDependencies()
+     //   initialiseDependencies()
         super.onAttach(context)
     }
 }

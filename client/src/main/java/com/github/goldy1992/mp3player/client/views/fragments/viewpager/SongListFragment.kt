@@ -9,9 +9,10 @@ import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecyclerVie
 import com.github.goldy1992.mp3player.client.views.adapters.MySongViewAdapter
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class SongListFragment : MediaItemListFragment() {
 
     @Inject
@@ -37,12 +38,12 @@ class SongListFragment : MediaItemListFragment() {
         return "SONG_LST_FRGMNT"
     }
 
-    override fun initialiseDependencies() {
-        createMediaItemListFragmentSubcomponent(this,
-                arguments?.get(MEDIA_ITEM_TYPE) as MediaItemType,
-                arguments?.getString(PARENT_ID) as String)?.
-            inject(this)
-    }
+    override fun initialiseDependencies() { }
+//        createMediaItemListFragmentSubcomponent(this,
+//                arguments?.get(MEDIA_ITEM_TYPE) as MediaItemType,
+//                arguments?.getString(PARENT_ID) as String)?.
+//            inject(this)
+//    }
 
     companion object {
         @JvmStatic

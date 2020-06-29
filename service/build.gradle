@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'de.mannodermaus.android-junit5'
+apply plugin: 'dagger.hilt.android.plugin'
 apply from: rootProject.file("jacoco-with-test-support.gradle")
 
 android {
@@ -18,7 +19,7 @@ android {
         consumerProguardFiles 'consumer-rules.pro'
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
     }
@@ -109,9 +110,9 @@ dependencies {
     implementation project(':commons')
 
 
-    //dagger
-    kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
-    api group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
+//    //dagger
+//    kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+//    api group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
 
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
     implementation group: 'androidx.room', name: 'room-ktx', version: ROOM_VERSION
@@ -128,4 +129,8 @@ dependencies {
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN"
     testImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     testImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: KOTLIN_COROUTINE_VERSION
+
+    implementation "com.google.dagger:hilt-android:2.28-alpha"
+    kapt "com.google.dagger:hilt-android-compiler:2.28-alpha"
+
 }

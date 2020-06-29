@@ -9,11 +9,12 @@ import com.github.goldy1992.mp3player.service.library.content.request.ContentReq
 import com.github.goldy1992.mp3player.service.library.content.retriever.MediaItemFromIdRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.SongFromUriRetriever
+import dagger.hilt.android.scopes.ServiceScoped
 import org.apache.commons.collections4.CollectionUtils
 import java.util.*
 import javax.inject.Inject
 
-@ComponentScope
+@ServiceScoped
 class ContentManager @Inject constructor(private val contentRetrievers: ContentRetrievers,
                                          private val contentSearchers: ContentSearchers,
                                          private val contentRequestParser: ContentRequestParser,

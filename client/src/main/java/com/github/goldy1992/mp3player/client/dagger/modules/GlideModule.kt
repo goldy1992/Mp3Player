@@ -6,13 +6,18 @@ import com.bumptech.glide.RequestManager
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.scopes.ActivityScoped
 
+@InstallIn(ActivityComponent::class)
 @Module
 class GlideModule {
 
-    @ComponentScope
+    @ActivityScoped
     @Provides
-    fun providesRequestManager(context: Context?): RequestManager {
+    fun providesRequestManager(@ActivityContext context: Context?): RequestManager {
         return Glide.with(context!!)
     }
 }

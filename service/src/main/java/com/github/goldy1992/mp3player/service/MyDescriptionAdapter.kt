@@ -14,10 +14,12 @@ import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 
-@ComponentScope
-class MyDescriptionAdapter @Inject constructor(private val context: Context,
+@ServiceScoped
+class MyDescriptionAdapter @Inject constructor(@ApplicationContext private val context: Context,
                                                private val token: MediaSessionCompat.Token,
                                                private val playlistManager: PlaylistManager,
                                                private val componentClassMapper: ComponentClassMapper) : MediaDescriptionAdapter {

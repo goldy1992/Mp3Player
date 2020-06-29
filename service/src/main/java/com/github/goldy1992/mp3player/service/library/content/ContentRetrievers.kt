@@ -4,10 +4,11 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.retriever.*
+import dagger.hilt.android.scopes.ServiceScoped
 import java.util.*
 import javax.inject.Inject
 
-@ComponentScope
+@ServiceScoped
 class ContentRetrievers
 
     @Inject

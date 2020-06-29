@@ -12,11 +12,11 @@ import androidx.media.MediaBrowserServiceCompat
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.DependencyInitialiser
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.service.dagger.ServiceComponentProvider
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers
 import com.github.goldy1992.mp3player.service.library.search.managers.SearchDatabaseManagers
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
@@ -28,6 +28,7 @@ import javax.inject.Inject
  * list, the service will continue to run in the background and only be destroyed by the operating
  * system.
  */
+@AndroidEntryPoint
 open class MediaPlaybackService : MediaBrowserServiceCompat(),
         CoroutineScope by GlobalScope,
         DependencyInitialiser,
@@ -45,15 +46,15 @@ open class MediaPlaybackService : MediaBrowserServiceCompat(),
     private var searchDatabaseManagers: SearchDatabaseManagers? = null
 
     override fun initialiseDependencies() {
-        (applicationContext as ServiceComponentProvider)
-                .serviceComponent(applicationContext, this)
-                .inject(this)
+//        (applicationContext as ServiceComponentProvider)
+//                .serviceComponent(applicationContext, this)
+//                .inject(this)
 
     }
 
     override fun onCreate() {
         Log.i(logTag(), "onCreate called")
-        initialiseDependencies()
+//        initialiseDependencies()
         super.onCreate()
         mediaSessionConnectorCreator.create()
         this.sessionToken = mediaSession.sessionToken
@@ -107,27 +108,6 @@ open class MediaPlaybackService : MediaBrowserServiceCompat(),
                 println("finish coroutine")
             }.join()
             println("finished on load children")
-        }
-    }
-
-    /**
-     * Called each time after the notification has been posted.
-     *
-     *
-     * For a service, the `ongoing` flag can be used as an indicator as to whether it
-     * should be in the foreground.
-     *
-     * @param notificationId The id of the notification which has been posted.
-     * @param notification The [Notification].
-     * @param ongoing Whether the notification is ongoing.
-     */
-    override fun onNotificationPosted(notificationId: Int,
-                                      notification: Notification,
-                                      ongoing: Boolean) { // fix to make notifications removable
-        if (!ongoing) {
-            stopForeground(false)
-        } else {
-            startForeground(notificationId, notification)
         }
     }
 

@@ -59,8 +59,8 @@ class PlaybackSpeedControlsFragment : MediaFragment(), PlaybackStateListener {
     }
 
     override fun initialiseDependencies() {
-        createMediaFragmentSubcomponent()
-        ?.inject(this)
+        //createMediaFragmentSubcomponent()
+        //?.inject(this)
     }
 
 }

@@ -7,9 +7,9 @@ import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback
 import com.github.goldy1992.mp3player.client.callbacks.search.SearchResultListener
 import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 
-@ComponentScope
+
+
 open class MediaBrowserAdapter
 
     constructor(private val mediaBrowser: MediaBrowserCompat?,

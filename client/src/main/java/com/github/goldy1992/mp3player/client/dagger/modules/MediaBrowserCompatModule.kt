@@ -8,13 +8,18 @@ import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ActivityScoped
 
+@InstallIn(ActivityComponent::class)
 @Module
 class MediaBrowserCompatModule {
 
-    @ComponentScope
+    @ActivityScoped
     @Provides
-    fun provideMediaBrowserCompat(context: Context,
+    fun provideMediaBrowserCompat(@ApplicationContext context: Context,
                                   componentClassMapper: ComponentClassMapper,
                                   myConnectionCallback: MyConnectionCallback):
             MediaBrowserCompat {

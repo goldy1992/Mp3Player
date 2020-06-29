@@ -15,10 +15,8 @@ import androidx.annotation.VisibleForTesting
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import org.apache.commons.lang3.exception.ExceptionUtils
 
-@ComponentScope
 open class MediaControllerAdapter
 
 constructor(private val context: Context,

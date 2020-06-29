@@ -12,6 +12,7 @@ import com.github.goldy1992.mp3player.client.PermissionsProcessor
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -23,13 +24,13 @@ import javax.inject.Inject
 /**
  *
  */
+@AndroidEntryPoint
 class SplashScreenEntryActivity : BaseActivity(), PermissionGranted {
 
     @Inject
     lateinit var componentClassMapper: ComponentClassMapper
 
-    @Inject
-    lateinit var permissionsProcessor: PermissionsProcessor
+    val permissionsProcessor: PermissionsProcessor = PermissionsProcessor(this, this)
 
     @Volatile
     var isSplashScreenFinishedDisplaying = false
@@ -119,9 +120,9 @@ class SplashScreenEntryActivity : BaseActivity(), PermissionGranted {
     }
 
     override fun initialiseDependencies() {
-        getClientsComponentProvider()
-        .splashScreenComponent(this, this)
-        .inject(this)
+//        getClientsComponentProvider()
+//        .splashScreenComponent(this, this)
+//        .inject(this)
     }
 
     companion object {

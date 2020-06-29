@@ -11,9 +11,10 @@ import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.PlaylistManager
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector.MediaMetadataProvider
+import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 
-@ComponentScope
+@ServiceScoped
 class MyMetadataProvider
     @Inject
     constructor(private val playlistManager: PlaylistManager)

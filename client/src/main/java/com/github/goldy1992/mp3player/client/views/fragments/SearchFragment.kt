@@ -82,7 +82,7 @@ class SearchFragment : MediaFragment(), LogTagger {
     }
 
     override fun initialiseDependencies() {
-createMediaFragmentSubcomponent()
-        ?.inject(this)
+//createMediaFragmentSubcomponent()
+  //      ?.inject(this)
     }
 }

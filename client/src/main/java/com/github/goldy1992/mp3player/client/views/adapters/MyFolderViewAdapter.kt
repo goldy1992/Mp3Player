@@ -11,10 +11,11 @@ import com.github.goldy1992.mp3player.client.views.viewholders.MediaItemViewHold
 import com.github.goldy1992.mp3player.client.views.viewholders.MyFolderViewHolder
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MetaDataKeys
+import dagger.hilt.android.scopes.FragmentScoped
 import java.io.File
 import javax.inject.Inject
 
-@FragmentScope
+@FragmentScoped
 class MyFolderViewAdapter
 
     @Inject
