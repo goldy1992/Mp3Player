@@ -31,10 +31,6 @@ abstract class MediaActivityCompat : BaseActivity(), MediaBrowserConnectionListe
     @Inject
     lateinit var mediaControllerAdapter: MediaControllerAdapter
 
-//    /** @return the mediaActivityCompatComponent */
-//    lateinit var mediaActivityCompatComponent: MediaActivityCompatComponent
-
-
     public override fun onDestroy() {
         super.onDestroy()
         mediaControllerAdapter.disconnect()

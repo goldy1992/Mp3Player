@@ -5,15 +5,18 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Spinner
+import androidx.activity.viewModels
 import androidx.annotation.VisibleForTesting
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.observe
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
-import com.github.goldy1992.mp3player.client.MediaBrowserResponseListener
+import com.github.goldy1992.mp3player.client.MediaBrowserSubscriber
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.databinding.ActivityMainBinding
 import com.github.goldy1992.mp3player.client.listeners.MyDrawerListener
+import com.github.goldy1992.mp3player.client.viewmodels.MainActivityViewModel
 import com.github.goldy1992.mp3player.client.views.ThemeSpinnerController
 import com.github.goldy1992.mp3player.client.views.adapters.MyPagerAdapter
 import com.github.goldy1992.mp3player.client.views.fragments.SearchFragment
@@ -35,13 +38,15 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 open class MainActivity : MediaActivityCompat(),
-    MediaBrowserResponseListener
+    MediaBrowserSubscriber
 {
     private var tabLayoutMediator: TabLayoutMediator? = null
 
     lateinit var adapter: MyPagerAdapter
 
     var searchFragment: SearchFragment? = null
+
+    val viewModel : MainActivityViewModel by viewModels()
 
     @Inject
     lateinit var myDrawerListener: MyDrawerListener
@@ -63,10 +68,31 @@ open class MainActivity : MediaActivityCompat(),
                     newOffset)
         })
         adapter = MyPagerAdapter(supportFragmentManager, lifecycle)
-        rootMenuItemsPager!!.adapter = adapter
+
+
+        viewModel.menuCategories.observe(this) {
+            for (mediaItem in it) {
+                val id = MediaItemUtils.getMediaId(mediaItem)!!
+                Log.i(logTag(), "media id: $id")
+                val category = MediaItemUtils.getExtra(Constants.ROOT_ITEM_TYPE, mediaItem) as MediaItemType
+                var mediaItemListFragment: MediaItemListFragment?
+                mediaItemListFragment = when (category) {
+                    MediaItemType.SONGS -> SongListFragment.newInstance(category, id)
+                    MediaItemType.FOLDERS -> FolderListFragment.newInstance(category, id)
+                    else -> null
+                }
+                if (null != mediaItemListFragment) {
+                    adapter.pagerItems[category] = mediaItemListFragment
+                    adapter.menuCategories[category] = mediaItem
+                    adapter.notifyDataSetChanged()
+                }
+            }
+
+        }
+        binding.rootMenuItemsPager.adapter = adapter
         tabLayoutMediator = TabLayoutMediator(tabLayout, rootMenuItemsPager!!, adapter!!)
         tabLayoutMediator!!.attach()
-        rootMenuItemsPager!!.adapter = adapter
+        binding.rootMenuItemsPager.adapter = adapter
         setSupportActionBar(titleToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_menu)
@@ -127,8 +153,7 @@ open class MainActivity : MediaActivityCompat(),
     // MediaBrowserConnectorCallback
     override fun onConnected() {
         super.onConnected()
-        mediaBrowserAdapter.registerRootListener(this)
-        mediaBrowserAdapter.subscribeToRoot()
+        mediaBrowserAdapter.subscribeToRoot(this)
     }
 
     @VisibleForTesting

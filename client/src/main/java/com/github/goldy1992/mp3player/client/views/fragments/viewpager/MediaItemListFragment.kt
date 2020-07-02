@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.view.LayoutInflater
@@ -11,9 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.ListPreloader
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.IntentMapper
-import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
 import com.github.goldy1992.mp3player.client.callbacks.Listener
-//import com.github.goldy1992.mp3player.client.dagger.subcomponents.MediaItemListFragmentSubcomponent
 import com.github.goldy1992.mp3player.client.databinding.FragmentViewPageBinding
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener.ItemSelectedListener
@@ -54,6 +53,11 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
         return arguments?.getString(PARENT_ID)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mediaBrowserAdapter.subscribe(getParentId()!!, viewModel())
+    }
+
     /**
      * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
      */
@@ -63,7 +67,6 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
 
     protected abstract fun getViewAdapter() : MyGenericRecyclerViewAdapter
 
-    lateinit var viewModel: MediaListViewModel
 
     @Inject
     lateinit var intentMapper: IntentMapper
@@ -74,11 +77,13 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
     lateinit var myGenericItemTouchListener : MyGenericItemTouchListener
 
     fun subscribeUi(adapter: MyGenericRecyclerViewAdapter, binding: FragmentViewPageBinding) {
-        viewModel.items.observe(viewLifecycleOwner) { result ->
+        viewModel().items.observe(viewLifecycleOwner) { result ->
             adapter.submitList(result)
         }
     }
 
+
+    abstract fun viewModel() : MediaListViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -101,16 +106,6 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
         recyclerView.addOnScrollListener(preLoader)
         recyclerView.setHideScrollbar(true)
     }
-
-//    protected fun createMediaItemListFragmentSubcomponent(listener: ItemSelectedListener,
-    //                                                      mediaItemType: MediaItemType,parentItemTypeId : String)
-  //          : MediaItemListFragmentSubcomponent? {
-//        return  (activity as MediaActivityCompat?)
-//                ?.mediaActivityCompatComponent
-//                ?.mediaItemListFragmentSubcomponent()
-//                ?.create(listener, mediaItemType, parentItemTypeId)
-    //    return null
-   // }
 
     override fun mediaControllerListeners(): Set<Listener> {
         return Collections.emptySet()

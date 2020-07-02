@@ -1,6 +1,9 @@
 package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 
 import android.support.v4.media.MediaBrowserCompat
+import androidx.fragment.app.viewModels
+import com.github.goldy1992.mp3player.client.viewmodels.MediaListViewModel
+import com.github.goldy1992.mp3player.client.viewmodels.SongListViewModel
 import com.github.goldy1992.mp3player.client.views.adapters.MyFolderViewAdapter
 import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecyclerViewAdapter
 import com.github.goldy1992.mp3player.commons.Constants
@@ -23,6 +26,11 @@ class FolderListFragment : MediaItemListFragment() {
 
     override fun getViewAdapter(): MyGenericRecyclerViewAdapter {
         return myFolderViewAdapter
+    }
+
+    private val viewModel : SongListViewModel by viewModels()
+    override fun viewModel(): MediaListViewModel {
+        return viewModel
     }
 
     override fun logTag(): String {

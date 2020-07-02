@@ -19,7 +19,7 @@ abstract class MediaFragment : BaseFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-//        mediaControllerAdapter.registerListeners(mediaControllerListeners())
+        mediaControllerAdapter.registerListeners(mediaControllerListeners())
     }
 
 

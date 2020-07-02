@@ -9,14 +9,16 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import dagger.hilt.android.scopes.ActivityScoped
 
-@InstallIn(ActivityComponent::class)
+@InstallIn(ActivityRetainedComponent::class)
 @Module
 class MediaBrowserAdapterModule {
 
-    @ActivityScoped
+    @ActivityRetainedScoped
     @Provides
     fun provideMediaBrowserAdapter(mediaBrowser: MediaBrowserCompat,
                                    mySubscriptionCallback: MediaIdSubscriptionCallback,

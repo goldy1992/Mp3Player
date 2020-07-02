@@ -9,10 +9,8 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 
-@FragmentScoped
 class MediaListViewModelFactory
 
-    @Inject
     constructor(
             val mediaBrowserAdapter: MediaBrowserAdapter,
             val mediaControllerAdapter: MediaControllerAdapter,
