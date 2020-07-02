@@ -9,10 +9,14 @@ import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListene
 abstract class MediaListViewModel
     : ViewModel(), MediaBrowserSubscriber, MyGenericItemTouchListener .ItemSelectedListener {
 
+    var isSubscribed : Boolean = false
+
+    var scrollPosition : Int = 0
 
     var items : MutableLiveData<List<MediaBrowserCompat.MediaItem>> =  MutableLiveData()
 
     override fun onChildrenLoaded(parentId: String, children: ArrayList<MediaBrowserCompat.MediaItem>) {
+        isSubscribed = true
         items.postValue(children)
     }
 

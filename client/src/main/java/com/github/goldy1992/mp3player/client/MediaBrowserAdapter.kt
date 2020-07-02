@@ -37,6 +37,7 @@ open class MediaBrowserAdapter
      * Connects to the media browser service
      */
     open fun connect() {
+
         if (!isConnected()) {
             mediaBrowser?.connect()
         }

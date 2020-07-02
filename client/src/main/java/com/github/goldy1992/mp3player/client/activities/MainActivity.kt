@@ -37,8 +37,7 @@ import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-open class MainActivity : MediaActivityCompat(),
-    MediaBrowserSubscriber
+open class MainActivity : MediaActivityCompat()
 {
     private var tabLayoutMediator: TabLayoutMediator? = null
 
@@ -46,7 +45,7 @@ open class MainActivity : MediaActivityCompat(),
 
     var searchFragment: SearchFragment? = null
 
-    val viewModel : MainActivityViewModel by viewModels()
+    private val viewModel : MainActivityViewModel by viewModels()
 
     @Inject
     lateinit var myDrawerListener: MyDrawerListener
@@ -153,7 +152,9 @@ open class MainActivity : MediaActivityCompat(),
     // MediaBrowserConnectorCallback
     override fun onConnected() {
         super.onConnected()
-        mediaBrowserAdapter.subscribeToRoot(this)
+        if (!viewModel.isLoaded()) {
+            mediaBrowserAdapter.subscribeToRoot(viewModel)
+        }
     }
 
     @VisibleForTesting
@@ -172,25 +173,8 @@ open class MainActivity : MediaActivityCompat(),
         ThemeSpinnerController(applicationContext, spinner, this, componentClassMapper)
     }
 
-    override fun onChildrenLoaded(parentId: String, children: ArrayList<MediaBrowserCompat.MediaItem>) {
-        val rootItemsOrdered = TreeSet(compareRootMediaItemsByMediaItemType)
-        rootItemsOrdered.addAll(children)
-        for (mediaItem in rootItemsOrdered) {
-            val id = MediaItemUtils.getMediaId(mediaItem)!!
-            Log.i(logTag(), "media id: $id")
-            val category = MediaItemUtils.getExtra(Constants.ROOT_ITEM_TYPE, mediaItem) as MediaItemType
-            var mediaItemListFragment: MediaItemListFragment?
-            mediaItemListFragment = when (category) {
-                MediaItemType.SONGS -> SongListFragment.newInstance(category, id)
-                MediaItemType.FOLDERS -> FolderListFragment.newInstance(category, id)
-                else -> null
-            }
-            if (null != mediaItemListFragment) {
-                adapter.pagerItems[category] = mediaItemListFragment
-                adapter.menuCategories[category] = mediaItem
-                adapter.notifyDataSetChanged()
-            }
-        }
+     fun onChildrenLoaded(parentId: String, children: ArrayList<MediaBrowserCompat.MediaItem>) {
+
     }
 
     override fun logTag(): String {

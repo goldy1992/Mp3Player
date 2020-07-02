@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,11 +54,6 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
         return arguments?.getString(PARENT_ID)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mediaBrowserAdapter.subscribe(getParentId()!!, viewModel())
-    }
-
     /**
      * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
      */
@@ -88,6 +84,11 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
+
+        if (!viewModel().isSubscribed) {
+            mediaBrowserAdapter.subscribe(getParentId()!!, viewModel())
+        }
+
         myGenericItemTouchListener = MyGenericItemTouchListener(requireContext(), this)
         binding = FragmentViewPageBinding.inflate(inflater, container, false)
         binding.recyclerView.adapter = getViewAdapter()
@@ -95,9 +96,24 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
         myGenericItemTouchListener.parentView = binding.recyclerView
         binding.recyclerView.itemAnimator = DefaultItemAnimator()
         binding.recyclerView.layoutManager = linearLayoutManager
+        //binding.recyclerView.restoreHierarchyState(RecyclerView.Adapter.StateRestorationPolicy.ALLOW)
+        Log.i(logTag(), "initial scroll position: ${viewModel().scrollPosition}" )
+        //binding.recyclerView.layoutManager!!.scrollToPosition(viewModel().scrollPosition)
+       // binding.recyclerView.scrollToPosition(viewModel().scrollPosition)
         return binding.root
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.i(logTag(), "Saving instanceState, scroll psotion: ${binding.recyclerView.scrollY}")
+      //  viewModel().scrollPosition = (binding.recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.i(logTag(), "ON pause, scroll psotion: ${binding.recyclerView.scrollY}")
+
+    }
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
         val preLoader = albumArtPainter
