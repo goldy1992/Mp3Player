@@ -11,7 +11,6 @@ import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.observe
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
-import com.github.goldy1992.mp3player.client.MediaBrowserSubscriber
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.databinding.ActivityMainBinding

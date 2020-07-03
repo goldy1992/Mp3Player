@@ -8,11 +8,13 @@ import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.views.TrackViewPager
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by Mike on 24/09/2017.
  */
+@AndroidEntryPoint
 class MediaPlayerActivity : MediaActivityCompat() {
 
     @Inject

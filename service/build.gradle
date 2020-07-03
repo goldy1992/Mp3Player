@@ -109,11 +109,6 @@ dependencies {
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: KOTLIN_COROUTINE_VERSION
     implementation project(':commons')
 
-
-//    //dagger
-//    kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
-//    api group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
-
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
     implementation group: 'androidx.room', name: 'room-ktx', version: ROOM_VERSION
     kapt group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
@@ -130,7 +125,7 @@ dependencies {
     testImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     testImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: KOTLIN_COROUTINE_VERSION
 
-    implementation "com.google.dagger:hilt-android:2.28-alpha"
-    kapt "com.google.dagger:hilt-android-compiler:2.28-alpha"
-
+    // hilt
+    implementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
+    kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
 }
