@@ -119,12 +119,6 @@ class SplashScreenEntryActivity : BaseActivity(), PermissionGranted {
         return "SPLSH_SCRN_ENTRY_ACTVTY"
     }
 
-    override fun initialiseDependencies() {
-//        getClientsComponentProvider()
-//        .splashScreenComponent(this, this)
-//        .inject(this)
-    }
-
     companion object {
         private const val WAIT_TIME = 3000L
         const val APP_TERMINATED = 0x78

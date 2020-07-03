@@ -27,12 +27,6 @@ class SongListFragment : MediaItemListFragment() {
         return viewModel
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val toReturn : View? = super.onCreateView(inflater, container, savedInstanceState)
-        subscribeUi(mySongViewAdapter, binding)
-        return toReturn
-    }
-
     override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {
         mediaControllerAdapter.playFromMediaId(MediaItemUtils.getLibraryId(item), null)
     }
@@ -44,13 +38,6 @@ class SongListFragment : MediaItemListFragment() {
     override fun logTag(): String {
         return "SONG_LST_FRGMNT"
     }
-
-    override fun initialiseDependencies() { }
-//        createMediaItemListFragmentSubcomponent(this,
-//                arguments?.get(MEDIA_ITEM_TYPE) as MediaItemType,
-//                arguments?.getString(PARENT_ID) as String)?.
-//            inject(this)
-//    }
 
     companion object {
         @JvmStatic

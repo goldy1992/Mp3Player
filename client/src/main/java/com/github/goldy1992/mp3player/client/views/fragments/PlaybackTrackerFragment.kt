@@ -33,7 +33,6 @@ class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, Metadata
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        initialiseDependencies()
         super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fragment_playback_tracker, container, false)
     }
@@ -65,11 +64,6 @@ class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, Metadata
         val durationString = formatTime(duration)
         updateDurationText(durationString)
         seekerBarController.onMetadataChanged(metadata)
-    }
-
-    override fun initialiseDependencies() {
-        //createMediaFragmentSubcomponent()
-         //   ?.inject(this)
     }
 
     private fun updateDurationText(duration: String) {

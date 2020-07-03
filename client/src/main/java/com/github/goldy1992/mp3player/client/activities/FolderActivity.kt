@@ -72,10 +72,4 @@ class FolderActivity : MediaActivityCompat() {
     override fun logTag(): String {
         return "FOLDER_ACTIVITY"
     }
-
-    override fun initialiseDependencies() {
-        super.initialiseDependencies()
-        //this.mediaActivityCompatComponent.inject(this)
-    }
-
 }

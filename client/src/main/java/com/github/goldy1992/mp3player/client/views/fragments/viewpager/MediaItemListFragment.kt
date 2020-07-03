@@ -46,6 +46,7 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
         }
     }
 
+
     fun getParentMediaItemType() : MediaItemType? {
         return arguments?.get(MEDIA_ITEM_TYPE) as? MediaItemType
     }
@@ -63,10 +64,6 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
 
     protected abstract fun getViewAdapter() : MyGenericRecyclerViewAdapter
 
-
-    @Inject
-    lateinit var intentMapper: IntentMapper
-
     @Inject
     lateinit var albumArtPainter: AlbumArtPainter
 
@@ -78,16 +75,12 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
         }
     }
 
-
     abstract fun viewModel() : MediaListViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-
-        if (!viewModel().isSubscribed) {
-            mediaBrowserAdapter.subscribe(getParentId()!!, viewModel())
-        }
+        mediaBrowserAdapter.subscribe(getParentId()!!, viewModel())
 
         myGenericItemTouchListener = MyGenericItemTouchListener(requireContext(), this)
         binding = FragmentViewPageBinding.inflate(inflater, container, false)
@@ -96,10 +89,7 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
         myGenericItemTouchListener.parentView = binding.recyclerView
         binding.recyclerView.itemAnimator = DefaultItemAnimator()
         binding.recyclerView.layoutManager = linearLayoutManager
-        //binding.recyclerView.restoreHierarchyState(RecyclerView.Adapter.StateRestorationPolicy.ALLOW)
-        Log.i(logTag(), "initial scroll position: ${viewModel().scrollPosition}" )
-        //binding.recyclerView.layoutManager!!.scrollToPosition(viewModel().scrollPosition)
-       // binding.recyclerView.scrollToPosition(viewModel().scrollPosition)
+        subscribeUi(getViewAdapter(), binding)
         return binding.root
     }
 

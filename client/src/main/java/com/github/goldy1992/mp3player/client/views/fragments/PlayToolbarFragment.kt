@@ -62,11 +62,6 @@ class PlayToolbarFragment : MediaFragment() {
         startActivity(intent)
     }
 
-    override fun initialiseDependencies() {
-        //createMediaFragmentSubcomponent()
-        //?.inject(this)
-    }
-
     override fun logTag(): String {
         return "PLY_TLBR_FRGMT"
     }

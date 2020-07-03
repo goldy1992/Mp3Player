@@ -89,7 +89,7 @@ open class MainActivity : MediaActivityCompat()
 
         }
         binding.rootMenuItemsPager.adapter = adapter
-        tabLayoutMediator = TabLayoutMediator(tabLayout, rootMenuItemsPager!!, adapter!!)
+        tabLayoutMediator = TabLayoutMediator(tabLayout, rootMenuItemsPager!!, adapter)
         tabLayoutMediator!!.attach()
         binding.rootMenuItemsPager.adapter = adapter
         setSupportActionBar(titleToolbar)
@@ -117,11 +117,6 @@ open class MainActivity : MediaActivityCompat()
                     .remove(searchFragment!!)
                     .commit()
         }
-    }
-
-    override fun initialiseDependencies() {
-        super.initialiseDependencies()
-//        this.mediaActivityCompatComponent.inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

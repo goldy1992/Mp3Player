@@ -9,11 +9,10 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 /**
  * Base class that serves as a Util to help perform Dagger dependency injection.
  */
-abstract class BaseActivity : AppCompatActivity(), DependencyInitialiser, LogTagger {
+abstract class BaseActivity : AppCompatActivity(), LogTagger {
 
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
-        initialiseDependencies()
         super.onCreate(savedInstanceState)
     }
 

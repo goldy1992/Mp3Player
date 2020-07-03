@@ -38,11 +38,6 @@ class MediaPlayerActivity : MediaActivityCompat() {
         }
     }
 
-    override fun initialiseDependencies() {
-        super.initialiseDependencies()
-        //this.mediaActivityCompatComponent.inject(this)
-    }
-
     override fun initialiseView(): Boolean {
         setContentView(R.layout.activity_media_player)
         this.trackViewPager.init(findViewById(R.id.trackViewPager))

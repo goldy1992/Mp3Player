@@ -37,9 +37,4 @@ class MediaControlsFragment : MediaFragment() {
         shuffleButton.init(view.findViewById(R.id.shuffleButton))
     }
 
-    override fun initialiseDependencies() {
-        //createMediaFragmentSubcomponent()
-          //  ?.inject(this)
-    }
-
 }

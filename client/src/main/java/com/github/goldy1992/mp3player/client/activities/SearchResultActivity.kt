@@ -114,9 +114,4 @@ class SearchResultActivity : MediaActivityCompat(), SearchResultListener, LogTag
     override fun mediaControllerListeners(): Set<Listener> {
         return Collections.emptySet()
     }
-
-    override fun initialiseDependencies() {
-        super.initialiseDependencies()
-        //this.mediaActivityCompatComponent.inject(this)
-    }
 }
