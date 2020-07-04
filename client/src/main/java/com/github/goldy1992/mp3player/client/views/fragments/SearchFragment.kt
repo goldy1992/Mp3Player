@@ -17,10 +17,12 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.LogTagger
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_search.*
 import java.util.*
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class SearchFragment : MediaFragment(), LogTagger {
 
     private var inputMethodManager: InputMethodManager? = null
