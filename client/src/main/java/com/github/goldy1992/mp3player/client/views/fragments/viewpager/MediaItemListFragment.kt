@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.ListPreloader
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
-import com.github.goldy1992.mp3player.client.IntentMapper
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.databinding.FragmentViewPageBinding
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener

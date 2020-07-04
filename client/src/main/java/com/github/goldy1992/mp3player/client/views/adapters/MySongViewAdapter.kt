@@ -6,12 +6,10 @@ import android.view.ViewGroup
 import com.bumptech.glide.RequestBuilder
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
 import com.github.goldy1992.mp3player.client.views.viewholders.MediaItemViewHolder
 import com.github.goldy1992.mp3player.client.views.viewholders.MySongViewHolder
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.scopes.FragmentScoped
-import org.apache.commons.collections4.CollectionUtils
 import javax.inject.Inject
 
 @FragmentScoped

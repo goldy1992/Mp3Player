@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.service
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 import javax.inject.Named

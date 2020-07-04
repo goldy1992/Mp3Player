@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.service.dagger.modules.service
 
 import android.content.Context
 import android.media.MediaMetadataRetriever
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory

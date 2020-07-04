@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.service.library
 
 import android.support.v4.media.MediaBrowserCompat
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 

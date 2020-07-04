@@ -2,8 +2,6 @@ package com.github.goldy1992.mp3player.client.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-
-import com.github.goldy1992.mp3player.commons.DependencyInitialiser
 import com.github.goldy1992.mp3player.commons.LogTagger
 
 /**

@@ -40,7 +40,6 @@ class TrackViewPager
     override fun onQueueChanged(queue: List<MediaSessionCompat.QueueItem>) {
         trackViewAdapter.onQueueChanged(queue)
         setCurrentItem()
-
     }
 
     private fun setCurrentItem() {

@@ -2,9 +2,6 @@ package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.github.goldy1992.mp3player.client.viewmodels.MediaListViewModel
 import com.github.goldy1992.mp3player.client.viewmodels.SongListViewModel

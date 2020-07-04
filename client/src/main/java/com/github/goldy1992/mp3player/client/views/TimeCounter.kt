@@ -4,7 +4,6 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.widget.TextView
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.calculateCurrentPlaybackPosition
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.Constants

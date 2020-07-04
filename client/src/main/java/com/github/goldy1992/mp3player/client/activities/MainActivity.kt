@@ -22,7 +22,6 @@ import com.github.goldy1992.mp3player.client.views.fragments.SearchFragment
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.FolderListFragment
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.MediaItemListFragment
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.SongListFragment
-import com.github.goldy1992.mp3player.commons.ComparatorUtils.Companion.compareRootMediaItemsByMediaItemType
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType

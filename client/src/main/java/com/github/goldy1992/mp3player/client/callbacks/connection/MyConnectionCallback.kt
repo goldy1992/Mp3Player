@@ -3,15 +3,13 @@ package com.github.goldy1992.mp3player.client.callbacks.connection
 import android.support.v4.media.MediaBrowserCompat
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 
 /**
  * Created by Mike on 04/10/2017.
  */
-@ActivityRetainedScoped
+@ActivityScoped
 class MyConnectionCallback
     @Inject
     constructor()

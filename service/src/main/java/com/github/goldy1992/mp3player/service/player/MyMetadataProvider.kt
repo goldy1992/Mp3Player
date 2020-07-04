@@ -7,7 +7,6 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getArtist
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDuration
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaId
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.PlaylistManager
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector.MediaMetadataProvider

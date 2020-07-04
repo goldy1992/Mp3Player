@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
@@ -14,9 +13,6 @@ import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import javax.inject.Inject
 
 abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowserConnectionListener {

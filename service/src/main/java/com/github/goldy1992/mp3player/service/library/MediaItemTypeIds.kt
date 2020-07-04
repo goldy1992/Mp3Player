@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.service.library
 
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import dagger.hilt.android.scopes.ServiceScoped

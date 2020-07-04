@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.service.library
 
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
 import com.github.goldy1992.mp3player.service.library.content.parser.ResultsParser
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser

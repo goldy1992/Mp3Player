@@ -14,7 +14,6 @@ import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.databinding.ActivitySearchResultsBinding
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener.ItemSelectedListener
-import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecyclerViewAdapter
 import com.github.goldy1992.mp3player.client.views.adapters.SearchResultAdapter
 import com.github.goldy1992.mp3player.commons.*
 import dagger.hilt.android.AndroidEntryPoint

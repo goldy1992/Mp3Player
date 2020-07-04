@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.service.library.content.observers
 
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.MediaPlaybackService
 import dagger.hilt.android.scopes.ServiceScoped
 import java.util.*
