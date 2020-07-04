@@ -15,9 +15,11 @@ import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateLis
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.client.views.SeekerBar
 import com.github.goldy1992.mp3player.client.views.TimeCounter
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, MetadataListener {
 
     @Inject
