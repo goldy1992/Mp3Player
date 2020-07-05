@@ -128,4 +128,8 @@ dependencies {
     // hilt
     implementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
     kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+
+    testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
+    kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+
 }

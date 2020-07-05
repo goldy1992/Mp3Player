@@ -9,7 +9,10 @@ import java.util.*
 import javax.inject.Inject
 
 @ServiceScoped
-class MediaItemTypeIds @Inject constructor() {
+class MediaItemTypeIds
+
+    @Inject
+    constructor() {
     private var idToMediaItemTypeMap: Map<String, MediaItemType>? = null
     private var mediaItemTypeToIdMap: EnumMap<MediaItemType, String>? = null
     /**

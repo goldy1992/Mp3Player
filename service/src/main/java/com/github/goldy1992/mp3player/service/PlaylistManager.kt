@@ -9,7 +9,7 @@ import javax.inject.Named
 class PlaylistManager
     @Inject
     constructor(
-            @param:Named("starting_playlist") val playlist: MutableList<MediaItem>?) {
+            @Named("starting_playlist") val playlist: MutableList<MediaItem>?) {
 
     private var queueIndex = EMPTY_PLAYLIST_INDEX
 

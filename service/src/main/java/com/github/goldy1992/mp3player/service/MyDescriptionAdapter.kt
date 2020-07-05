@@ -18,10 +18,13 @@ import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 
 @ServiceScoped
-class MyDescriptionAdapter @Inject constructor(@ApplicationContext private val context: Context,
-                                               private val token: MediaSessionCompat.Token,
-                                               private val playlistManager: PlaylistManager,
-                                               private val componentClassMapper: ComponentClassMapper) : MediaDescriptionAdapter {
+class MyDescriptionAdapter
+
+    @Inject constructor(@ApplicationContext private val context: Context,
+                       private val token: MediaSessionCompat.Token,
+                       private val playlistManager: PlaylistManager,
+                       private val componentClassMapper: ComponentClassMapper)
+    : MediaDescriptionAdapter {
     override fun getCurrentContentTitle(player: Player): String {
         return getTitle(getCurrentMediaItem(player)!!)!!
     }

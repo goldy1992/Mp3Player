@@ -27,9 +27,4 @@ class MediaSessionCompatModule {
         return mediaSessionCompat.sessionToken
     }
 
-    @Provides
-    @ServiceScoped
-    fun myMediaButtonEventHandler(): MyMediaButtonEventHandler {
-        return MyMediaButtonEventHandler()
-    }
 }
