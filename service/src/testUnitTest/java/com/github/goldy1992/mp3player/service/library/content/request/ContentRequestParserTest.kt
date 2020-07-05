@@ -3,14 +3,16 @@ package com.github.goldy1992.mp3player.service.library.content.request
 import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.junit.Test
 
-internal class ContentRequestParserTest {
+
+
+class ContentRequestParserTest {
     private var contentRequestParser: ContentRequestParser? = null
     private var mediaItemTypeIds: MediaItemTypeIds? = null
-    @BeforeEach
+    @Before
     fun setup() {
         mediaItemTypeIds = MediaItemTypeIds()
         contentRequestParser = ContentRequestParser(mediaItemTypeIds!!)
@@ -21,9 +23,9 @@ internal class ContentRequestParserTest {
         val foldersId = mediaItemTypeIds!!.getId(MediaItemType.FOLDERS)
         val folderId = mediaItemTypeIds!!.getId(MediaItemType.FOLDER)
         val contentRequest = contentRequestParser!!.parse(foldersId!!)
-        Assertions.assertEquals(foldersId, contentRequest!!.contentRetrieverKey)
-        Assertions.assertEquals(folderId, contentRequest.mediaIdPrefix) // each child of FOLDERS is of type FOLDER
-        Assertions.assertEquals(foldersId, contentRequest.queryString)
+        assertEquals(foldersId, contentRequest!!.contentRetrieverKey)
+        assertEquals(folderId, contentRequest.mediaIdPrefix) // each child of FOLDERS is of type FOLDER
+        assertEquals(foldersId, contentRequest.queryString)
     }
 
     @Test
@@ -32,8 +34,8 @@ internal class ContentRequestParserTest {
         val path = "/a/b/mediaPath"
         val id = folderId + ID_SEPARATOR + path
         val contentRequest = contentRequestParser!!.parse(id)
-        Assertions.assertEquals(folderId, contentRequest!!.contentRetrieverKey)
-        Assertions.assertEquals(id, contentRequest.mediaIdPrefix)
-        Assertions.assertEquals(path, contentRequest.queryString)
+        assertEquals(folderId, contentRequest!!.contentRetrieverKey)
+        assertEquals(id, contentRequest.mediaIdPrefix)
+        assertEquals(path, contentRequest.queryString)
     }
 }

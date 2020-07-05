@@ -28,9 +28,9 @@ import javax.inject.Inject
 
 
 @RunWith(RobolectricTestRunner::class)
-@UninstallModules(SearchDatabaseModule::class, MediaSessionCompatModule::class, ContentManagerModule::class)
-@Config(application = HiltTestApplication::class)
-@HiltAndroidTest
+//@UninstallModules(SearchDatabaseModule::class, MediaSessionCompatModule::class, ContentManagerModule::class)
+//@Config(application = HiltTestApplication::class)
+//@HiltAndroidTest
 class MyDescriptionAdapterTest {
 
     private val playlistManager: PlaylistManager = mock<PlaylistManager>()
@@ -39,11 +39,6 @@ class MyDescriptionAdapterTest {
 
   //  @Inject @JvmField
     var myDescriptionAdapter: MyDescriptionAdapter? = null
-
-    @Rule @JvmField
-    val rule : HiltAndroidRule = HiltAndroidRule(this)
-
-
 
     @Before
     fun setup() {
