@@ -38,7 +38,7 @@ android {
             testCoverageEnabled = true
         }
     }
-    flavorDimensions "tier"
+    flavorDimensions flavor_dimen_mode
     productFlavors {
         full {
             applicationIdSuffix ".full"
@@ -46,20 +46,30 @@ android {
             resValue "string", "app_name", "Music Player"
             missingDimensionStrategy flavor_dimen_mode, flavor_full, flavor_integration, flavor_unitTest
         }
-        automation {
-            applicationIdSuffix ".automation"
-            versionNameSuffix "-automation"
+        endToEnd {
+            applicationIdSuffix ".endToEnd"
+            versionNameSuffix "-endToEnd"
             resValue "string", "app_name", "Test Music Player"
-            missingDimensionStrategy flavor_dimen_mode, flavor_endToEnd
-
+        }
+        integration {
+            applicationIdSuffix ".integration"
+            versionNameSuffix "-integration"
+            resValue "string", "app_name", "Test Music Player"
+        }
+        unitTest {
+            applicationIdSuffix ".unitTest"
+            versionNameSuffix "-unitTest"
+            resValue "string", "app_name", "Test Music Player"
         }
     }
 
     variantFilter { variant ->
         def names = variant.flavors*.name
         def isReleaseTest = variant.buildType.name == "release" &&
-                        names.contains(flavor_automation)
-
+                (              names.contains(flavor_endToEnd)
+        || names.contains(flavor_integration)
+                || names.contains(flavor_unitTest)
+                )
         // To check for a build type instead, use variant.buildType.name == "buildType"
         if (isReleaseTest) {
             // Gradle ignores any variants that satisfy the conditions above.
