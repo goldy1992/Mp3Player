@@ -16,14 +16,16 @@ class MockMediaSessionCompatModule {
 
     @ServiceScoped
     @Provides
-    fun providesMockMediaSessionCompat(@ApplicationContext context: Context, token : MediaSessionCompat.Token) : MediaSessionCompat {
-        return MediaSessionCompat.fromMediaSession(context, token)
+    fun providesMockMediaSessionCompat(@ApplicationContext context: Context) : MediaSessionCompat {
+        val mediaSession = MediaSession(context, "sd")
+        val sessionToken = mediaSession.sessionToken
+        return MediaSessionCompat.fromMediaSession(context, mediaSession)
     }
 
     @ServiceScoped
     @Provides
-    fun providesMockMediaSessionCompatToken(@ApplicationContext context: Context) : MediaSessionCompat.Token {
-        return getMediaSessionCompatToken(context)
+    fun providesMockMediaSessionCompatToken(mediaSessionCompat: MediaSessionCompat) : MediaSessionCompat.Token {
+        return mediaSessionCompat.sessionToken
     }
 
     private fun getMediaSessionCompatToken(context: Context): MediaSessionCompat.Token {

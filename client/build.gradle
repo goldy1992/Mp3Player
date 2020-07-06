@@ -7,7 +7,6 @@ apply from: rootProject.file("jacoco-with-test-support.gradle")
 apply plugin: 'dagger.hilt.android.plugin'
 
 android {
-
     compileSdkVersion TARGET_SDK_VERION
     buildToolsVersion BUILD_TOOLS_VERSION
 
@@ -143,11 +142,20 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    testImplementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    testImplementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    testImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    androidTestImplementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    androidTestImplementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    androidTestImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+
 
     debugImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
+    debugImplementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
     debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+    implementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
     implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
-    debugImplementation group: 'androidx.fragment', name: 'fragment-ktx', version: FRAGMENT_VERSION
+    implementation group: 'androidx.fragment', name: 'fragment-ktx', version: FRAGMENT_VERSION
     integrationImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
 
     // Glide
@@ -160,8 +168,17 @@ dependencies {
     // hilt
     implementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
     kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+    testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
+    kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
+    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+
     implementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
     kapt group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
+    testImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
+    kaptTest group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
+    androidTestImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
+    kaptAndroidTest group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
 
 
     //   automationImplementation project(':commons')

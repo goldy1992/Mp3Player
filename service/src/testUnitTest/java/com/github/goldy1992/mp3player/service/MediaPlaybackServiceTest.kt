@@ -39,7 +39,6 @@ import javax.inject.Inject
     ContentManagerModule::class)
 @Config(application = HiltTestApplication::class)
 @HiltAndroidTest
-@Ignore
 class MediaPlaybackServiceTest {
 
     @Rule @JvmField
@@ -55,11 +54,8 @@ class MediaPlaybackServiceTest {
 
     @Before
     fun setup() {
-//        app = InstrumentationRegistry.getInstrumentation().context.applicationContext as HiltTestApplication
-       rule.inject()
-
-        mediaPlaybackService = Robolectric.setupService(MediaPlaybackService::class.java);
-        EntryPoints.get(mediaPlaybackService, MediaPlaybackService::class.java)
+        rule.inject()
+        mediaPlaybackService = Robolectric.setupService(MediaPlaybackService::class.java)
         mediaPlaybackService.setRootAuthenticator(rootAuthenticator)
         mediaPlaybackService.setContentManager(contentManager)
     }
