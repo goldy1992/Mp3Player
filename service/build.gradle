@@ -45,7 +45,6 @@ android {
         }
         unitTest {
             dimension = flavor_dimen_mode
-            missingDimensionStrategy "full"
         }
     }
 
