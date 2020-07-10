@@ -7,7 +7,7 @@ import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback
 import com.github.goldy1992.mp3player.client.callbacks.search.SearchResultListener
 import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
 import com.github.goldy1992.mp3player.commons.LogTagger
-
+import dagger.hilt.android.scopes.ActivityScoped
 
 
 open class MediaBrowserAdapter
@@ -58,12 +58,12 @@ open class MediaBrowserAdapter
      * @param id the id of the media item to be subscribed to
      */
     open fun subscribe(id: String, mediaBrowserSubscriber: MediaBrowserSubscriber) {
-        mySubscriptionCallback.registerMediaBrowserResponseListener(id, mediaBrowserSubscriber)
+        mySubscriptionCallback.registerMediaBrowserSubscriber(id, mediaBrowserSubscriber)
         mediaBrowser?.subscribe(id, mySubscriptionCallback)
     }
 
     open fun subscribeToRoot(listener : MediaBrowserSubscriber) {
-        mySubscriptionCallback.registerMediaBrowserResponseListener(rootId, listener)
+        mySubscriptionCallback.registerMediaBrowserSubscriber(rootId, listener)
         mediaBrowser?.subscribe(rootId, mySubscriptionCallback)
     }
 
@@ -75,11 +75,11 @@ open class MediaBrowserAdapter
 
 
     open fun registerRootListener(mediaBrowserSubscriber: MediaBrowserSubscriber) {
-        mySubscriptionCallback.registerMediaBrowserResponseListener(rootId, mediaBrowserSubscriber)
+        mySubscriptionCallback.registerMediaBrowserSubscriber(rootId, mediaBrowserSubscriber)
     }
 
     open fun registerListener(parentId: String?, mediaBrowserSubscriber: MediaBrowserSubscriber) {
-        mySubscriptionCallback.registerMediaBrowserResponseListener(parentId!!, mediaBrowserSubscriber)
+        mySubscriptionCallback.registerMediaBrowserSubscriber(parentId!!, mediaBrowserSubscriber)
     }
 
     fun registerSearchResultListener(searchResultListener: SearchResultListener?) {

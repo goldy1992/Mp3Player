@@ -144,9 +144,7 @@ open class MainActivity : MediaActivityCompat()
     // MediaBrowserConnectorCallback
     override fun onConnected() {
         super.onConnected()
-        if (!viewModel.isLoaded()) {
-            mediaBrowserAdapter.subscribeToRoot(viewModel)
-        }
+        mediaBrowserAdapter.subscribeToRoot(viewModel)
     }
 
     @VisibleForTesting

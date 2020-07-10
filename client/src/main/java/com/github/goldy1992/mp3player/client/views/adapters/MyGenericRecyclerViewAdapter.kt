@@ -24,17 +24,6 @@ abstract class MyGenericRecyclerViewAdapter
     val EMPTY_VIEW_TYPE = -1
     private val EMPTY_LIST_ITEM = buildEmptyListMediaItem()
 
-
-//    override fun onChildrenLoaded(parentId: String, children: ArrayList<MediaItem>) {
-//        if (!children.isEmpty()) {
-//            this.items = children
-//            notifyDataSetChanged()
-//        } else {
-//            addNoChildrenFoundItem()
-//        }
-//    }
-
-
     fun createEmptyViewHolder(parent: ViewGroup): MediaItemViewHolder {
             val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.empty_item_menu, parent, false)
@@ -46,11 +35,6 @@ abstract class MyGenericRecyclerViewAdapter
             EMPTY_VIEW_TYPE
         } else super.getItemViewType(position)
     }
-
-//    private fun addNoChildrenFoundItem() {
-//        items.add(EMPTY_LIST_ITEM)
-//        notifyDataSetChanged()
-//    }
 
     private fun buildEmptyListMediaItem(): MediaItem {
         val mediaDescriptionCompat = MediaDescriptionCompat.Builder()

@@ -19,7 +19,7 @@ android {
         targetSdkVersion PIE
         versionCode 4
         versionName "1.1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.github.goldy1992.mp3player.Mp3PlayerHiltTestRunner"
     }
 
     buildFeatures {
@@ -147,6 +147,12 @@ dependencies {
     kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
     implementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
     kapt group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
+    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
+    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
+    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+    androidTestImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
+
+    kaptAndroidTest group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
 
 
     androidTestImplementation junit5UnitTests

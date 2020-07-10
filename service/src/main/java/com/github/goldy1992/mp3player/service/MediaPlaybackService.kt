@@ -30,7 +30,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 open class MediaPlaybackService : MediaBrowserServiceCompat(),
         CoroutineScope by GlobalScope,
-        DependencyInitialiser,
         LogTagger,
         PlayerNotificationManager.NotificationListener {
 
@@ -44,16 +43,8 @@ open class MediaPlaybackService : MediaBrowserServiceCompat(),
     private var mediaStoreObservers: MediaStoreObservers? = null
     private var searchDatabaseManagers: SearchDatabaseManagers? = null
 
-    override fun initialiseDependencies() {
-//        (applicationContext as ServiceComponentProvider)
-//                .serviceComponent(applicationContext, this)
-//                .inject(this)
-
-    }
-
     override fun onCreate() {
         Log.i(logTag(), "onCreate called")
-//        initialiseDependencies()
         super.onCreate()
         mediaSessionConnectorCreator.create()
         this.sessionToken = mediaSession.sessionToken

@@ -8,15 +8,12 @@ import com.github.goldy1992.mp3player.client.MediaBrowserSubscriber
 abstract class MediaListViewModel
     : ViewModel(), MediaBrowserSubscriber {
 
-    var isSubscribed : Boolean = false
-
     var items : MutableLiveData<List<MediaItem>> =  MutableLiveData()
 
     override fun onChildrenLoaded(parentId: String, children: ArrayList<MediaItem>) {
     /* TODO: only update livedata if its value has changed, for circumstanves such as screen rotation
         it is unlikely to need to be updated.
      */
-        isSubscribed = true
         items.postValue(children)
     }
 

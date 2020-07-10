@@ -21,24 +21,16 @@ class MainActivityViewModel
         Log.i(logTag(), "creating MainActivityViewModel")
     }
 
-    private var loaded = false
-
     val menuCategories : MutableLiveData<List<MediaItem>> = MutableLiveData(ArrayList())
 
     override fun onChildrenLoaded(parentId: String, children: ArrayList<MediaItem>) {
-        this.loaded = true
         val rootItemsOrdered = TreeSet(ComparatorUtils.Companion.compareRootMediaItemsByMediaItemType)
         rootItemsOrdered.addAll(children)
+        // TODO: compare new list and old list to see if need to update
         menuCategories.postValue(rootItemsOrdered.toList())
     }
 
     override fun logTag(): String {
         return "MAIN_ACTY_VIEW_MODEL"
     }
-
-    fun isLoaded() : Boolean {
-        return loaded
-    }
-
-
 }
