@@ -91,18 +91,6 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
         return binding.root
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        Log.i(logTag(), "Saving instanceState, scroll psotion: ${binding.recyclerView.scrollY}")
-      //  viewModel().scrollPosition = (binding.recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.i(logTag(), "ON pause, scroll psotion: ${binding.recyclerView.scrollY}")
-
-    }
-
     override fun onViewCreated(view: View, bundle: Bundle?) {
         val preLoader = albumArtPainter
                 .createPreloader(getViewAdapter()
