@@ -13,7 +13,7 @@
 
 
     <application
-        android:name=".AutomationApplication"
+        android:name=".MainApplication"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/headphone_icon"

@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player.client.dagger.components
 
 import android.content.Context
 import com.github.goldy1992.mp3player.client.activities.EmptyMediaActivityCompatFragmentActivity
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserCompatModule
+import com.github.goldy1992.mp3player.client.di.MediaBrowserCompatModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MockAlbumArtPainterModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MockMediaBrowserAdapterModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MockMediaControllerAdapterModule
