@@ -37,10 +37,10 @@ class MediaIdSubscriptionCallbackTest {
     @Test
     fun testRegisterListener() {
         val key = "KEY"
-        Assert.assertTrue(mediaIdSubscriptionCallback!!.getMediaBrowserResponseListeners().isEmpty())
-        mediaIdSubscriptionCallback!!.registerMediaBrowserResponseListener(key, MediaBrowserSubscriber)
+        Assert.assertTrue(mediaIdSubscriptionCallback!!.getMediaBrowserSubscribers().isEmpty())
+        mediaIdSubscriptionCallback!!.registerMediaBrowserSubscriber(key, MediaBrowserSubscriber)
         // assert size is now 1
-        val restultSize = mediaIdSubscriptionCallback!!.getMediaBrowserResponseListeners().size
+        val restultSize = mediaIdSubscriptionCallback!!.getMediaBrowserSubscribers().size
         Assert.assertEquals(1, restultSize.toLong())
     }
 
@@ -48,7 +48,7 @@ class MediaIdSubscriptionCallbackTest {
     fun testOnChildrenLoadedForSubscribedKey() {
         argumentCaptor<ArrayList<MediaItem>>().apply {
             val subscribedKey = "SubscribedKey"
-            mediaIdSubscriptionCallback!!.registerMediaBrowserResponseListener(subscribedKey, MediaBrowserSubscriber)
+            mediaIdSubscriptionCallback!!.registerMediaBrowserSubscriber(subscribedKey, MediaBrowserSubscriber)
             mediaIdSubscriptionCallback!!.onChildrenLoaded(subscribedKey, mediaItemList)
             Shadows.shadowOf(Looper.getMainLooper()).idle()
             verify(MediaBrowserSubscriber, times(1)).onChildrenLoaded(eq(subscribedKey), capture())
@@ -64,7 +64,7 @@ class MediaIdSubscriptionCallbackTest {
     fun testOnChildrenLoadedForNonSubscribedKey() {
         val subscribedKey = "SubscribedKey"
         val nonSubscribedKey = "NonSubscribedKey"
-        mediaIdSubscriptionCallback!!.registerMediaBrowserResponseListener(subscribedKey, MediaBrowserSubscriber)
+        mediaIdSubscriptionCallback!!.registerMediaBrowserSubscriber(subscribedKey, MediaBrowserSubscriber)
         mediaIdSubscriptionCallback!!.onChildrenLoaded(nonSubscribedKey, mediaItemList)
         Shadows.shadowOf(Looper.getMainLooper()).idle()
         verify(MediaBrowserSubscriber, never()).onChildrenLoaded(eq(nonSubscribedKey), any())

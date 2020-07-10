@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.callbacks.subscription
 
 import android.support.v4.media.MediaBrowserCompat
+import androidx.annotation.VisibleForTesting
 import com.github.goldy1992.mp3player.client.MediaBrowserSubscriber
 import com.github.goldy1992.mp3player.commons.LogTagger
 import java.util.*
@@ -31,6 +32,11 @@ class MediaIdSubscriptionCallback
             subscribers[key] = HashSet()
         }
         subscribers[key]!!.add(listener!!)
+    }
+
+    @VisibleForTesting
+    fun getMediaBrowserSubscribers() : Map<String, MutableSet<MediaBrowserSubscriber>> {
+        return subscribers
     }
 
     override fun logTag(): String {
