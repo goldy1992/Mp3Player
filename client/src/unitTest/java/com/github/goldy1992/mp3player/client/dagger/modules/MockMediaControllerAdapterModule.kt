@@ -7,11 +7,17 @@ import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
 import com.github.goldy1992.mp3player.client.MockMediaControllerAdapter
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ActivityScoped
 
+@InstallIn(ActivityComponent::class)
 @Module
 class MockMediaControllerAdapterModule {
+    @ActivityScoped
     @Provides
-    fun provideMediaControllerAdapter(context: Context?, mediaBrowserCompat: MediaBrowserCompat, myMediaControllerCallback: MyMediaControllerCallback): MediaControllerAdapter {
+    fun provideMediaControllerAdapter(@ApplicationContext context: Context, mediaBrowserCompat: MediaBrowserCompat, myMediaControllerCallback: MyMediaControllerCallback): MediaControllerAdapter {
         return MockMediaControllerAdapter(context, mediaBrowserCompat, myMediaControllerCallback)
     }
 }

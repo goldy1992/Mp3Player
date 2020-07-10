@@ -15,6 +15,10 @@ android {
         viewBinding true
     }
 
+    hilt {
+        enableTransformForLocalTests = true
+    }
+
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERION
@@ -149,7 +153,6 @@ dependencies {
     androidTestImplementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     androidTestImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
 
-
     debugImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     debugImplementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
     debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
@@ -168,8 +171,10 @@ dependencies {
     // hilt
     implementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
     kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+
     testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
     kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+
     androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
     kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
 

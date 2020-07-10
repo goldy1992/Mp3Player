@@ -8,10 +8,16 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.scopes.ActivityScoped
 
 
+@InstallIn(ActivityComponent::class)
 @Module
 class MockAlbumArtPainterModule {
+
+    @ActivityScoped
     @Provides
     fun provideAlbumArtPainter(): AlbumArtPainter {
         val albumArtPainter : AlbumArtPainter = mock<AlbumArtPainter>()

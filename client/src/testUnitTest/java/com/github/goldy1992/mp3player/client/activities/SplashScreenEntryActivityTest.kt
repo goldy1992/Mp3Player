@@ -6,23 +6,40 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.platform.app.InstrumentationRegistry
+import com.github.goldy1992.mp3player.client.dagger.modules.GlideModule
+import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
+import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
 import com.nhaarman.mockitokotlin2.*
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.LooperMode
 import java.lang.reflect.Method
 
+@HiltAndroidTest
+@UninstallModules(GlideModule::class,
+        MediaBrowserAdapterModule::class,
+        MediaControllerAdapterModule::class)
 @RunWith(RobolectricTestRunner::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 class SplashScreenEntryActivityTest {
 
     private lateinit var scenario: ActivityScenario<SplashScreenEntryActivity>
 
+    @Rule
+    @JvmField
+    val rule : HiltAndroidRule = HiltAndroidRule(this)
+
+
     @Before
     fun setup() {
+        rule.inject()
         launchActivity(null)
     }
 

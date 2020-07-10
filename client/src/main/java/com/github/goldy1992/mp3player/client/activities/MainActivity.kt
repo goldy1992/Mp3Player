@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.activities
 
-import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -166,9 +165,6 @@ open class MainActivity : MediaActivityCompat()
         ThemeSpinnerController(applicationContext, spinner, this, componentClassMapper)
     }
 
-     fun onChildrenLoaded(parentId: String, children: ArrayList<MediaBrowserCompat.MediaItem>) {
-
-    }
 
     override fun logTag(): String {
         return "MAIN_ACTIVITY"

@@ -1,0 +1,68 @@
+package com.github.goldy1992.mp3player.client
+
+import com.github.goldy1992.mp3player.client.activities.*
+import com.github.goldy1992.mp3player.client.callbacks.TrackViewPagerChangeCallbackTest
+import com.github.goldy1992.mp3player.client.callbacks.metadata.MyMetadataCallbackTest
+import com.github.goldy1992.mp3player.client.callbacks.playback.MyPlaybackStateCallbackTest
+import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallbackTest
+import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
+import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserCompatModule
+import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
+import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListenerTest
+import com.github.goldy1992.mp3player.client.views.SquareImageViewTest
+import com.github.goldy1992.mp3player.client.views.ThemeSpinnerControllerTest
+import com.github.goldy1992.mp3player.client.views.TimeCounterTest
+import com.github.goldy1992.mp3player.client.views.adapters.MyFolderViewAdapterTest
+import com.github.goldy1992.mp3player.client.views.adapters.MySongViewAdapterTest
+import com.github.goldy1992.mp3player.client.views.adapters.SearchResultAdapterTest
+import com.github.goldy1992.mp3player.client.views.buttons.PlayPauseButtonTest
+import com.github.goldy1992.mp3player.client.views.buttons.RepeatOneRepeatAllButtonTest
+import com.github.goldy1992.mp3player.client.views.buttons.ShuffleButtonTest
+import com.github.goldy1992.mp3player.client.views.fragments.PlaybackSpeedControlsFragmentTest
+import com.github.goldy1992.mp3player.client.views.fragments.SearchFragmentTest
+import com.github.goldy1992.mp3player.client.views.fragments.viewpager.FolderListFragmentTest
+import com.github.goldy1992.mp3player.client.views.fragments.viewpager.SongListFragmentTest
+import com.github.goldy1992.mp3player.client.views.viewholders.MediaPlayerTrackViewHolderTest
+import com.github.goldy1992.mp3player.client.views.viewholders.MySongViewHolderTest
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
+import org.junit.runner.RunWith
+import org.junit.runners.Suite
+
+@RunWith(Suite::class)
+@HiltAndroidTest
+@UninstallModules(
+        MediaBrowserAdapterModule::class,
+       // MediaBrowserCompatModule::class,
+        MediaControllerAdapterModule::class)
+@Suite.SuiteClasses(
+        FolderActivityTest::class,
+        FolderListFragmentTest::class,
+        MainActivityTest::class,
+        MediaControllerAdapterTest::class,
+        MediaIdSubscriptionCallbackTest::class,
+        MediaPlayerActivityTest::class,
+        MediaPlayerTrackViewHolderTest::class,
+        MyFolderViewAdapterTest::class,
+        MySongViewAdapterTest::class,
+        MySongViewHolderTest::class,
+        MyGenericItemTouchListenerTest::class,
+        MyMetadataCallbackTest::class,
+        MyPlaybackStateCallbackTest::class,
+        PlayPauseButtonTest::class,
+        PlaybackSpeedControlsFragmentTest::class,
+        RepeatOneRepeatAllButtonTest::class,
+        SearchFragmentTest::class,
+        SearchResultActivityTest::class,
+        SearchResultAdapterTest::class,
+        SeekerBarController2Test::class,
+        ShuffleButtonTest::class,
+        SongListFragmentTest::class,
+        SplashScreenEntryActivityTest::class,
+        SquareImageViewTest::class,
+        TimeCounterTest::class,
+        TimerUtilsTest::class,
+        ThemeSpinnerControllerTest::class,
+        TrackViewPagerChangeCallbackTest::class
+)
+class UnitTestSuite

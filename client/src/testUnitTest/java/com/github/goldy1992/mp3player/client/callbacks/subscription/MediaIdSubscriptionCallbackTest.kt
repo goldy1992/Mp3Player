@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player.client.callbacks.subscription
 
 import android.os.Looper
 import android.support.v4.media.MediaBrowserCompat.MediaItem
-import com.github.goldy1992.mp3player.client.MediaBrowserResponseListener
+import com.github.goldy1992.mp3player.client.MediaBrowserSubscriber
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
@@ -21,7 +21,7 @@ import org.robolectric.Shadows
 class MediaIdSubscriptionCallbackTest {
     private var mediaIdSubscriptionCallback: MediaIdSubscriptionCallback? = null
 
-    private lateinit var mediaBrowserResponseListener: MediaBrowserResponseListener
+    private lateinit var MediaBrowserSubscriber: MediaBrowserSubscriber
     private lateinit var mediaItemList: List<MediaItem>
 
 
@@ -29,7 +29,7 @@ class MediaIdSubscriptionCallbackTest {
 
     @Before
     fun setup() {
-        this.mediaBrowserResponseListener = mock<MediaBrowserResponseListener>()
+        this.MediaBrowserSubscriber = mock<MediaBrowserSubscriber>()
         mediaIdSubscriptionCallback = MediaIdSubscriptionCallback()
         mediaItemList = listOf(mockMediaItem)
     }
@@ -38,7 +38,7 @@ class MediaIdSubscriptionCallbackTest {
     fun testRegisterListener() {
         val key = "KEY"
         Assert.assertTrue(mediaIdSubscriptionCallback!!.getMediaBrowserResponseListeners().isEmpty())
-        mediaIdSubscriptionCallback!!.registerMediaBrowserResponseListener(key, mediaBrowserResponseListener)
+        mediaIdSubscriptionCallback!!.registerMediaBrowserResponseListener(key, MediaBrowserSubscriber)
         // assert size is now 1
         val restultSize = mediaIdSubscriptionCallback!!.getMediaBrowserResponseListeners().size
         Assert.assertEquals(1, restultSize.toLong())
@@ -48,10 +48,10 @@ class MediaIdSubscriptionCallbackTest {
     fun testOnChildrenLoadedForSubscribedKey() {
         argumentCaptor<ArrayList<MediaItem>>().apply {
             val subscribedKey = "SubscribedKey"
-            mediaIdSubscriptionCallback!!.registerMediaBrowserResponseListener(subscribedKey, mediaBrowserResponseListener)
+            mediaIdSubscriptionCallback!!.registerMediaBrowserResponseListener(subscribedKey, MediaBrowserSubscriber)
             mediaIdSubscriptionCallback!!.onChildrenLoaded(subscribedKey, mediaItemList)
             Shadows.shadowOf(Looper.getMainLooper()).idle()
-            verify(mediaBrowserResponseListener, times(1)).onChildrenLoaded(eq(subscribedKey), capture())
+            verify(MediaBrowserSubscriber, times(1)).onChildrenLoaded(eq(subscribedKey), capture())
             val children = allValues
             Assert.assertEquals(1, children.size.toLong())
             Assert.assertEquals(mockMediaItem, children[0][0])
@@ -64,9 +64,9 @@ class MediaIdSubscriptionCallbackTest {
     fun testOnChildrenLoadedForNonSubscribedKey() {
         val subscribedKey = "SubscribedKey"
         val nonSubscribedKey = "NonSubscribedKey"
-        mediaIdSubscriptionCallback!!.registerMediaBrowserResponseListener(subscribedKey, mediaBrowserResponseListener)
+        mediaIdSubscriptionCallback!!.registerMediaBrowserResponseListener(subscribedKey, MediaBrowserSubscriber)
         mediaIdSubscriptionCallback!!.onChildrenLoaded(nonSubscribedKey, mediaItemList)
         Shadows.shadowOf(Looper.getMainLooper()).idle()
-        verify(mediaBrowserResponseListener, never()).onChildrenLoaded(eq(nonSubscribedKey), any())
+        verify(MediaBrowserSubscriber, never()).onChildrenLoaded(eq(nonSubscribedKey), any())
     }
 }
