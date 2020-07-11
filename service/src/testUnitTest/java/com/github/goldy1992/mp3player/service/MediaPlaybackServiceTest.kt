@@ -3,25 +3,46 @@ package com.github.goldy1992.mp3player.service
 import android.os.Bundle
 import android.os.Looper
 import android.support.v4.media.MediaBrowserCompat.MediaItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.media.MediaBrowserServiceCompat
 import androidx.media.MediaBrowserServiceCompat.Result
+import androidx.test.platform.app.InstrumentationRegistry
+import com.github.goldy1992.mp3player.service.dagger.modules.service.ContentManagerModule
+import com.github.goldy1992.mp3player.service.dagger.modules.service.MediaSessionCompatModule
+import com.github.goldy1992.mp3player.service.dagger.modules.service.SearchDatabaseModule
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.nhaarman.mockitokotlin2.*
+import dagger.hilt.EntryPoints
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.HiltTestApplication
+import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.*
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
+import org.robolectric.annotation.Config
 import org.robolectric.annotation.LooperMode
 import java.util.*
+import javax.inject.Inject
+
 
 @RunWith(RobolectricTestRunner::class)
 @LooperMode(LooperMode.Mode.PAUSED)
+@UninstallModules(
+    SearchDatabaseModule::class,
+    MediaSessionCompatModule::class,
+    ContentManagerModule::class)
+@Config(application = HiltTestApplication::class)
+@HiltAndroidTest
 class MediaPlaybackServiceTest {
+
+    @Rule @JvmField
+    val rule : HiltAndroidRule = HiltAndroidRule(this)
 
     /** object to test */
     lateinit var mediaPlaybackService: MediaPlaybackService
@@ -30,9 +51,11 @@ class MediaPlaybackServiceTest {
 
     private val contentManager : ContentManager = mock<ContentManager>()
 
+
     @Before
     fun setup() {
-        mediaPlaybackService = Robolectric.buildService(MediaPlaybackService::class.java).create().get()
+        rule.inject()
+        mediaPlaybackService = Robolectric.setupService(MediaPlaybackService::class.java)
         mediaPlaybackService.setRootAuthenticator(rootAuthenticator)
         mediaPlaybackService.setContentManager(contentManager)
     }

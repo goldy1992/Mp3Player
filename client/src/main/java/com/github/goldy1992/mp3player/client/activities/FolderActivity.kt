@@ -12,11 +12,13 @@ import com.github.goldy1992.mp3player.client.views.fragments.viewpager.SongListF
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_simple_title_bar.*
 import org.apache.commons.lang3.exception.ExceptionUtils
 import java.util.*
 import kotlin.collections.HashSet
 
+@AndroidEntryPoint
 class FolderActivity : MediaActivityCompat() {
 
     private var viewPageFragment: MediaItemListFragment? = null
@@ -72,10 +74,4 @@ class FolderActivity : MediaActivityCompat() {
     override fun logTag(): String {
         return "FOLDER_ACTIVITY"
     }
-
-    override fun initialiseDependencies() {
-        super.initialiseDependencies()
-        this.mediaActivityCompatComponent.inject(this)
-    }
-
 }

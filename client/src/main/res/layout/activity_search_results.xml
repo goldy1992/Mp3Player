@@ -1,62 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/overview_coordinator_layout"
-        android:layout_above="@id/playToolbarFragment"
-        android:layout_alignParentTop="true"
+    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.github.goldy1992.mp3player.client.activities.MainActivity">
+        android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appbar"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/overview_coordinator_layout"
+            android:layout_above="@id/playToolbarFragment"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.github.goldy1992.mp3player.client.activities.SearchResultActivity">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:fitsSystemWindows="true"
+                >
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:focusableInTouchMode="true"
+                    android:layout_height="wrap_content" >
+
+                    <androidx.appcompat.widget.SearchView
+                        android:id="@+id/searchView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        />
+                </androidx.appcompat.widget.Toolbar>
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/appbar"
+                android:layout_above="@id/playToolbarFragment"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
+                />
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <fragment
+            android:id="@+id/playToolbarFragment"
+            class="com.github.goldy1992.mp3player.client.views.fragments.PlayToolbarFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:fitsSystemWindows="true"
-            >
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:focusableInTouchMode="true"
-                android:layout_height="wrap_content" >
+            android:layout_alignParentBottom="true"
+            tools:layout="@layout/fragment_playback_toolbar" />
 
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/searchView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/white"
-                    />
-            </androidx.appcompat.widget.Toolbar>
+    </RelativeLayout>
 
-        </com.google.android.material.appbar.AppBarLayout>
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/appbar"
-            android:layout_above="@id/playToolbarFragment"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-
-            />
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-    <fragment
-        android:id="@+id/playToolbarFragment"
-        class="com.github.goldy1992.mp3player.client.views.fragments.PlayToolbarFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        tools:layout="@layout/fragment_playback_toolbar" />
-
-
-
-</RelativeLayout>
+</layout>

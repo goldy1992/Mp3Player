@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.service.dagger.modules.service
 
 import android.content.ContentResolver
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.filter.FolderSearchResultsFilter
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
@@ -12,12 +11,16 @@ import com.github.goldy1992.mp3player.service.library.search.FolderDao
 import com.github.goldy1992.mp3player.service.library.search.SongDao
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ServiceComponent
+import dagger.hilt.android.scopes.ServiceScoped
 
+@InstallIn(ServiceComponent::class)
 @Module
 class ContentSearchersModule {
 
     @Provides
-    @ComponentScope
+    @ServiceScoped
     fun providesSongSearcher(contentResolver: ContentResolver,
                              resultsParser: SongResultsParser,
                              mediaItemTypeIds: MediaItemTypeIds,
@@ -27,7 +30,7 @@ class ContentSearchersModule {
     }
 
     @Provides
-    @ComponentScope
+    @ServiceScoped
     fun providesFolderSearcher(contentResolver: ContentResolver,
                                resultsParser: FolderResultsParser,
                                folderResultsFilter : FolderSearchResultsFilter,

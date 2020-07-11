@@ -11,10 +11,11 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.Projections.SONG_PROJECTION
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
+import dagger.hilt.android.qualifiers.ApplicationContext
 import org.apache.commons.collections4.CollectionUtils
 import javax.inject.Inject
 
-class SongFromUriRetriever @Inject constructor(private val context: Context,
+class SongFromUriRetriever @Inject constructor(@ApplicationContext private val context: Context,
                                                private val contentResolver: ContentResolver,
                                                private val songResultsParser: SongResultsParser,
                                                private val mmr: MediaMetadataRetriever,

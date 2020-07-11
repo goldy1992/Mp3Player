@@ -4,18 +4,18 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import androidx.annotation.CallSuper
+import androidx.appcompat.app.AppCompatActivity
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
-import com.github.goldy1992.mp3player.client.dagger.components.MediaActivityCompatComponent
 import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.LogTagger
 import javax.inject.Inject
 
-abstract class MediaActivityCompat : BaseActivity(), MediaBrowserConnectionListener {
+abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowserConnectionListener {
 
     /** MediaBrowserAdapter  */
     @Inject
@@ -28,10 +28,6 @@ abstract class MediaActivityCompat : BaseActivity(), MediaBrowserConnectionListe
     /** MediaControllerAdapter  */
     @Inject
     lateinit var mediaControllerAdapter: MediaControllerAdapter
-
-    /** @return the mediaActivityCompatComponent */
-    lateinit var mediaActivityCompatComponent: MediaActivityCompatComponent
-
 
     public override fun onDestroy() {
         super.onDestroy()
@@ -80,13 +76,6 @@ abstract class MediaActivityCompat : BaseActivity(), MediaBrowserConnectionListe
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    @CallSuper
-    override fun initialiseDependencies() {
-        val component = getClientsComponentProvider()
-                .mediaActivityComponent(applicationContext, this)
-        this.mediaActivityCompatComponent = component
     }
 
     private fun connect() {

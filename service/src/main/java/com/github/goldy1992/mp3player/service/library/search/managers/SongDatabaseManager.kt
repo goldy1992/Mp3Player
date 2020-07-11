@@ -5,14 +5,14 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaId
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle
 import com.github.goldy1992.mp3player.commons.Normaliser.normalise
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.search.SearchDatabase
 import com.github.goldy1992.mp3player.service.library.search.Song
+import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 
-@ComponentScope
+@ServiceScoped
 class SongDatabaseManager
     @Inject
     constructor(contentManager: ContentManager,

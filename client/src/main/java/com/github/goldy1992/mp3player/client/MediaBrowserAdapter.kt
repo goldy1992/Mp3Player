@@ -7,9 +7,9 @@ import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback
 import com.github.goldy1992.mp3player.client.callbacks.search.SearchResultListener
 import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
+import dagger.hilt.android.scopes.ActivityScoped
 
-@ComponentScope
+
 open class MediaBrowserAdapter
 
     constructor(private val mediaBrowser: MediaBrowserCompat?,
@@ -28,10 +28,19 @@ open class MediaBrowserAdapter
     }
 
     /**
+     * @return True if the mediaBrowser is connected
+     */
+    open fun isConnected() : Boolean {
+        return mediaBrowser != null && mediaBrowser.isConnected
+    }
+    /**
      * Connects to the media browser service
      */
     open fun connect() {
-        mediaBrowser?.connect()
+
+        if (!isConnected()) {
+            mediaBrowser?.connect()
+        }
     }
 
     /**
@@ -43,7 +52,18 @@ open class MediaBrowserAdapter
         mediaBrowser?.subscribe(id!!, mySubscriptionCallback)
     }
 
-    open fun subscribeToRoot() {
+    /**
+     * subscribes to a MediaItem via a libraryRequest. The id of the libraryRequest will be used for the parent
+     * ID when communicating with the MediaPlaybackService.
+     * @param id the id of the media item to be subscribed to
+     */
+    open fun subscribe(id: String, mediaBrowserSubscriber: MediaBrowserSubscriber) {
+        mySubscriptionCallback.registerMediaBrowserSubscriber(id, mediaBrowserSubscriber)
+        mediaBrowser?.subscribe(id, mySubscriptionCallback)
+    }
+
+    open fun subscribeToRoot(listener : MediaBrowserSubscriber) {
+        mySubscriptionCallback.registerMediaBrowserSubscriber(rootId, listener)
         mediaBrowser?.subscribe(rootId, mySubscriptionCallback)
     }
 
@@ -54,12 +74,12 @@ open class MediaBrowserAdapter
         get() = mediaBrowser!!.root
 
 
-    open fun registerRootListener(mediaBrowserResponseListener: MediaBrowserResponseListener) {
-        mySubscriptionCallback.registerMediaBrowserResponseListener(rootId, mediaBrowserResponseListener)
+    open fun registerRootListener(mediaBrowserSubscriber: MediaBrowserSubscriber) {
+        mySubscriptionCallback.registerMediaBrowserSubscriber(rootId, mediaBrowserSubscriber)
     }
 
-    open fun registerListener(parentId: String?, mediaBrowserResponseListener: MediaBrowserResponseListener) {
-        mySubscriptionCallback.registerMediaBrowserResponseListener(parentId!!, mediaBrowserResponseListener)
+    open fun registerListener(parentId: String?, mediaBrowserSubscriber: MediaBrowserSubscriber) {
+        mySubscriptionCallback.registerMediaBrowserSubscriber(parentId!!, mediaBrowserSubscriber)
     }
 
     fun registerSearchResultListener(searchResultListener: SearchResultListener?) {

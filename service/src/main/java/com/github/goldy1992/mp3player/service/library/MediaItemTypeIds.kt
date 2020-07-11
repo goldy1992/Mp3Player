@@ -1,15 +1,18 @@
 package com.github.goldy1992.mp3player.service.library
 
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
+import dagger.hilt.android.scopes.ServiceScoped
 import org.apache.commons.lang3.RandomStringUtils
 import java.util.*
 import javax.inject.Inject
 
-@ComponentScope
-class MediaItemTypeIds @Inject constructor() {
+@ServiceScoped
+class MediaItemTypeIds
+
+    @Inject
+    constructor() {
     private var idToMediaItemTypeMap: Map<String, MediaItemType>? = null
     private var mediaItemTypeToIdMap: EnumMap<MediaItemType, String>? = null
     /**

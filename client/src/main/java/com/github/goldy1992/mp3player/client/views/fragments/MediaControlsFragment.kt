@@ -8,8 +8,10 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.views.buttons.RepeatOneRepeatAllButton
 import com.github.goldy1992.mp3player.client.views.buttons.ShuffleButton
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class MediaControlsFragment : MediaFragment() {
 
     @Inject
@@ -35,11 +37,6 @@ class MediaControlsFragment : MediaFragment() {
         super.onViewCreated(view, bundle)
         repeatOneRepeatAllButton.init(view.findViewById(R.id.repeatOneRepeatAllButton))
         shuffleButton.init(view.findViewById(R.id.shuffleButton))
-    }
-
-    override fun initialiseDependencies() {
-        createMediaFragmentSubcomponent()
-            ?.inject(this)
     }
 
 }

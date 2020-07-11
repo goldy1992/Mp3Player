@@ -10,9 +10,11 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.github.goldy1992.mp3player.commons.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_playback_speed_controls.*
 import java.util.*
 
+@AndroidEntryPoint
 class PlaybackSpeedControlsFragment : MediaFragment(), PlaybackStateListener {
 
     private var speed = 1.0f
@@ -56,11 +58,6 @@ class PlaybackSpeedControlsFragment : MediaFragment(), PlaybackStateListener {
         if (speed > 0) {
             updatePlaybackSpeedText(speed)
         }
-    }
-
-    override fun initialiseDependencies() {
-        createMediaFragmentSubcomponent()
-        ?.inject(this)
     }
 
 }

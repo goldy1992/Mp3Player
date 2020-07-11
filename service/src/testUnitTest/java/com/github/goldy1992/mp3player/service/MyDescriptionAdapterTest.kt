@@ -15,6 +15,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
+
 @RunWith(RobolectricTestRunner::class)
 class MyDescriptionAdapterTest {
 
@@ -22,10 +23,12 @@ class MyDescriptionAdapterTest {
 
     private val player: ExoPlayer = mock<ExoPlayer>()
 
-    private var myDescriptionAdapter: MyDescriptionAdapter? = null
+  //  @Inject @JvmField
+    var myDescriptionAdapter: MyDescriptionAdapter? = null
 
     @Before
     fun setup() {
+      //  rule.inject()
         val context = InstrumentationRegistry.getInstrumentation().context
         val token = getMediaSessionCompatToken(context)
         val componentClassMapper = ComponentClassMapper.Builder().build()

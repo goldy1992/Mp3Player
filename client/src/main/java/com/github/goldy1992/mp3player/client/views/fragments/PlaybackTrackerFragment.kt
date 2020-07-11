@@ -15,9 +15,10 @@ import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateLis
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.client.views.SeekerBar
 import com.github.goldy1992.mp3player.client.views.TimeCounter
-import java.util.*
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, MetadataListener {
 
     @Inject
@@ -33,7 +34,6 @@ class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, Metadata
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        initialiseDependencies()
         super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fragment_playback_tracker, container, false)
     }
@@ -65,11 +65,6 @@ class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, Metadata
         val durationString = formatTime(duration)
         updateDurationText(durationString)
         seekerBarController.onMetadataChanged(metadata)
-    }
-
-    override fun initialiseDependencies() {
-        createMediaFragmentSubcomponent()
-            ?.inject(this)
     }
 
     private fun updateDurationText(duration: String) {

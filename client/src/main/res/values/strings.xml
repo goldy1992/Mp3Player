@@ -23,6 +23,7 @@
     <string name="channel_description">channel description</string>
     <string name="menu">Menu</string>
     <!-- THEME NAMES !-->
+    <string name="themes_title">Themes</string>
     <string name="THEME_BLUE">Blue</string>
     <string name="THEME_ORANGE">Orange</string>
     <string name="content_description">content description</string>

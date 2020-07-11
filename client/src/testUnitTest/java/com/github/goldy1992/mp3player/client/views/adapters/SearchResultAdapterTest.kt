@@ -66,7 +66,7 @@ class SearchResultAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
                 MediaItemBuilder("101")
                         .build()
         )
-        searchResultAdapter!!.items.addAll(mediaItems)
+        searchResultAdapter!!.submitList(mediaItems)
         searchResultAdapter!!.onBindViewHolder(mySongViewHolder, 0)
     }
 
@@ -76,7 +76,7 @@ class SearchResultAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
         val mediaItem = MediaItemBuilder("id")
                 .setMediaItemType(mediaItemType)
                 .build()
-        searchResultAdapter!!.items.add(mediaItem) // add as the first item
+        searchResultAdapter!!.submitList(arrayListOf(mediaItem)) // add as the first item
         val result = searchResultAdapter!!.getItemViewType(0)
         Assert.assertEquals(mediaItemType.value.toLong(), result.toLong())
     }
@@ -85,7 +85,7 @@ class SearchResultAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
     fun testGetItemViewTypeNoMediaItemType() {
         val mediaItem = MediaItemBuilder("id")
                 .build()
-        searchResultAdapter!!.items.add(mediaItem) // add as the first item
+        searchResultAdapter!!.submitList(arrayListOf(mediaItem)) // add as the first item
         val result = searchResultAdapter!!.getItemViewType(0)
         Assert.assertEquals(0, result.toLong())
     }
@@ -97,7 +97,7 @@ class SearchResultAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
         for (i in 1..5) {
             mediaItems.add(mediaItem)
         }
-        searchResultAdapter!!.items.addAll(mediaItems)
+        searchResultAdapter!!.submitList(mediaItems)
         Assert.assertEquals(expectedSize.toLong(), searchResultAdapter!!.itemCount.toLong())
     }
 

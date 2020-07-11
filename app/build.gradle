@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
 apply plugin: 'de.mannodermaus.android-junit5'
+apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     packagingOptions {
@@ -18,9 +19,13 @@ android {
         targetSdkVersion PIE
         versionCode 4
         versionName "1.1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.github.goldy1992.mp3player.Mp3PlayerHiltTestRunner"
     }
 
+    buildFeatures {
+        dataBinding true
+        viewBinding true
+    }
 
     buildTypes {
         release {
@@ -33,7 +38,7 @@ android {
             testCoverageEnabled = true
         }
     }
-    flavorDimensions "tier"
+    flavorDimensions flavor_dimen_mode
     productFlavors {
         full {
             applicationIdSuffix ".full"
@@ -41,20 +46,30 @@ android {
             resValue "string", "app_name", "Music Player"
             missingDimensionStrategy flavor_dimen_mode, flavor_full, flavor_integration, flavor_unitTest
         }
-        automation {
-            applicationIdSuffix ".automation"
-            versionNameSuffix "-automation"
+        endToEnd {
+            applicationIdSuffix ".endToEnd"
+            versionNameSuffix "-endToEnd"
             resValue "string", "app_name", "Test Music Player"
-            missingDimensionStrategy flavor_dimen_mode, flavor_endToEnd
-
+        }
+        integration {
+            applicationIdSuffix ".integration"
+            versionNameSuffix "-integration"
+            resValue "string", "app_name", "Test Music Player"
+        }
+        unitTest {
+            applicationIdSuffix ".unitTest"
+            versionNameSuffix "-unitTest"
+            resValue "string", "app_name", "Test Music Player"
         }
     }
 
     variantFilter { variant ->
         def names = variant.flavors*.name
         def isReleaseTest = variant.buildType.name == "release" &&
-                        names.contains(flavor_automation)
-
+                (              names.contains(flavor_endToEnd)
+        || names.contains(flavor_integration)
+                || names.contains(flavor_unitTest)
+                )
         // To check for a build type instead, use variant.buildType.name == "buildType"
         if (isReleaseTest) {
             // Gradle ignores any variants that satisfy the conditions above.
@@ -127,8 +142,18 @@ dependencies {
     implementation project(path: ':service')
     implementation project(path: ':client')
 
-    kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
-    kaptTest group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    // hilt
+    implementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
+    kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+    implementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
+    kapt group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
+    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
+    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
+    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+    androidTestImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
+
+    kaptAndroidTest group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
+
 
     androidTestImplementation junit5UnitTests
     testRuntimeOnly junit5UnitTestRuntime
@@ -150,9 +175,11 @@ dependencies {
 
 
 
+
     debugImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
     implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
-    debugImplementation group: 'androidx.fragment', name: 'fragment-ktx', version: FRAGMENT_VERSION
+    implementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
+    implementation group: 'androidx.fragment', name: 'fragment-ktx', version: FRAGMENT_VERSION
 
 }

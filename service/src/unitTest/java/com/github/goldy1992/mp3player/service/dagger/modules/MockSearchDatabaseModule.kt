@@ -8,8 +8,13 @@ import com.github.goldy1992.mp3player.service.library.search.SongDao
 import dagger.Module
 import dagger.Provides
 import com.nhaarman.mockitokotlin2.*
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ServiceComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Singleton
 
+@InstallIn(ServiceComponent::class)
 @Module
 class MockSearchDatabaseModule {
 
@@ -24,21 +29,21 @@ class MockSearchDatabaseModule {
     }
 
     @Provides
-    @ComponentScope
+    @ServiceScoped
     @Suppress("UNUSED_PARAMETER")
-    fun providesSearchDb(context: Context?): SearchDatabase {
+    fun providesSearchDb(@ApplicationContext context: Context): SearchDatabase {
         return searchDatabase
     }
 
     @Provides
-    @ComponentScope
+    @ServiceScoped
     @Suppress("UNUSED_PARAMETER")
     fun provideSongDao(searchDatabase: SearchDatabase?): SongDao {
         return songDao
     }
 
     @Provides
-    @ComponentScope
+    @ServiceScoped
     @Suppress("UNUSED_PARAMETER")
     fun provideFolderDao(searchDatabase: SearchDatabase?): FolderDao {
         return folderDao

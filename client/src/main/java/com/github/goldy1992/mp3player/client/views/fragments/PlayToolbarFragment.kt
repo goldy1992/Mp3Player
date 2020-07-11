@@ -13,10 +13,11 @@ import com.github.goldy1992.mp3player.client.views.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToNextButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToPreviousButton
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_playback_toolbar.*
 import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class PlayToolbarFragment : MediaFragment() {
 
     @Inject
@@ -59,11 +60,6 @@ class PlayToolbarFragment : MediaFragment() {
     private fun goToMediaPlayerActivity() {
         val intent = Intent(context, componentClassMapper.mediaPlayerActivity)
         startActivity(intent)
-    }
-
-    override fun initialiseDependencies() {
-        createMediaFragmentSubcomponent()
-        ?.inject(this)
     }
 
     override fun logTag(): String {

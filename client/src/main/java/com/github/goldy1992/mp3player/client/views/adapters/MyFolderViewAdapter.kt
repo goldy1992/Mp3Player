@@ -6,20 +6,20 @@ import android.view.ViewGroup
 import com.bumptech.glide.RequestBuilder
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
 import com.github.goldy1992.mp3player.client.views.viewholders.MediaItemViewHolder
 import com.github.goldy1992.mp3player.client.views.viewholders.MyFolderViewHolder
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MetaDataKeys
+import dagger.hilt.android.scopes.FragmentScoped
 import java.io.File
 import javax.inject.Inject
 
-@FragmentScope
+@FragmentScoped
 class MyFolderViewAdapter
 
     @Inject
     constructor(albumArtPainter: AlbumArtPainter)
-    : MyGenericRecycleViewAdapter(albumArtPainter) {
+    : MyGenericRecyclerViewAdapter(albumArtPainter) {
 
     override fun logTag(): String {
         return "FOLDER_VIEW_ADAPTER"
@@ -40,13 +40,13 @@ class MyFolderViewAdapter
         if (isFolderHolder && !isEmptyRecycleView) {
             val folderViewHolder = holder as MyFolderViewHolder
             //Log.i(LOG_TAG, "position: " + position);
-            val song = items[holder.getAdapterPosition()]
+            val song = getItem(position)
             folderViewHolder.bindMediaItem(song)
         }
     }
 
     override fun getSectionText(position: Int): String {
-        val extras = items[position].description.extras
+        val extras = getItem(position).description.extras
         if (null != extras) {
             val directory = extras.getSerializable(MetaDataKeys.META_DATA_DIRECTORY) as File
             if (directory.name.isNotEmpty()) {

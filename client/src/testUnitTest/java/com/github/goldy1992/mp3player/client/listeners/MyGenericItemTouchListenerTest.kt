@@ -49,7 +49,7 @@ class MyGenericItemTouchListenerTest {
         val childView : View = mock<View>()
         val viewAdapter : MediaItemRecyclerViewAdapter = MySongViewAdapter(albumArtPainter)
         val expectedMediaItem : MediaBrowserCompat.MediaItem = MediaItemBuilder("id").build()
-        viewAdapter.items.add(expectedMediaItem)
+        viewAdapter.submitList(arrayListOf(expectedMediaItem))
         whenever(motionEvent.x).thenReturn(0f)
         whenever(motionEvent.y).thenReturn(0f)
         whenever(parentView.findChildViewUnder(motionEvent.x, motionEvent.y)).thenReturn(childView)

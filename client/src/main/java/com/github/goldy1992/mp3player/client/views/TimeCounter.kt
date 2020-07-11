@@ -4,12 +4,12 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.widget.TextView
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.calculateCurrentPlaybackPosition
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Constants.ONE_SECOND
 import com.github.goldy1992.mp3player.commons.LogTagger
+import dagger.hilt.android.scopes.FragmentScoped
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
@@ -17,7 +17,7 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.timer
 
-@FragmentScope
+@FragmentScoped
 class TimeCounter
 
     @Inject

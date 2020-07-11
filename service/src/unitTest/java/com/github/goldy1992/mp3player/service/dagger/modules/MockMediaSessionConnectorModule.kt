@@ -1,17 +1,18 @@
 package com.github.goldy1992.mp3player.service.dagger.modules
 
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.nhaarman.mockitokotlin2.mock
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ServiceComponent
+import dagger.hilt.android.scopes.ServiceScoped
 
-import javax.inject.Singleton
-
+@InstallIn(ServiceComponent::class)
 @Module
 class MockMediaSessionConnectorModule {
     @Provides
-    @ComponentScope
+    @ServiceScoped
     fun providesMediaSessionConnector(): MediaSessionConnector {
         return mock<MediaSessionConnector>()
     }

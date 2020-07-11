@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.commons
 
 import java.util.*
 
-
 enum class MediaItemType(
         val rank: Int,
         val title: String,
@@ -32,6 +31,4 @@ enum class MediaItemType(
                 FOLDER to SONG
         )
     }
-
-
 }

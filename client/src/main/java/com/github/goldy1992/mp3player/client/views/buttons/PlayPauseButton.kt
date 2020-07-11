@@ -10,13 +10,14 @@ import androidx.annotation.VisibleForTesting
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
-import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 
-@FragmentScope
+@FragmentScoped
 open class PlayPauseButton
     @Inject
-    constructor(context: Context,
+    constructor(@ActivityContext context: Context,
                 mediaControllerAdapter: MediaControllerAdapter)
     : MediaButton(context, mediaControllerAdapter), PlaybackStateListener {
 

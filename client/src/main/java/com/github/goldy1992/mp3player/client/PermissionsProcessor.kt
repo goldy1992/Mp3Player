@@ -7,11 +7,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.goldy1992.mp3player.client.activities.SplashScreenEntryActivity
 import java.util.*
-import javax.inject.Inject
 
 class PermissionsProcessor
 
-    @Inject
     constructor(private val parentActivity: SplashScreenEntryActivity,
                 private val permissionGranted: PermissionGranted) {
 

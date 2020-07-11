@@ -16,15 +16,16 @@ import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
+import dagger.hilt.android.qualifiers.ActivityContext
 import java.util.*
 import javax.inject.Inject
 
 class ThemeSpinnerController
     @Inject
-    constructor( private val context: Context,
-                 private val spinner: Spinner,
-                 private val activity: Activity,
-                 private val componentClassMapper : ComponentClassMapper)
+    constructor(@ActivityContext private val context: Context,
+                private val spinner: Spinner,
+                private val activity: Activity,
+                private val componentClassMapper : ComponentClassMapper)
     : OnItemSelectedListener, LogTagger {
     private var adapter // TODO: make a make from Theme name to resource
             : ArrayAdapter<String?>? = null

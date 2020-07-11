@@ -1,11 +1,11 @@
 package com.github.goldy1992.mp3player.service.library.search.managers
 
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
+import dagger.hilt.android.scopes.ServiceScoped
 import java.util.*
 import javax.inject.Inject
 
-@ComponentScope
+@ServiceScoped
 class SearchDatabaseManagers @Inject constructor(songDatabaseManager: SongDatabaseManager,
                                                  folderDatabaseManager: FolderDatabaseManager) {
     val dbManagerMap: EnumMap<MediaItemType, SearchDatabaseManager<*>>

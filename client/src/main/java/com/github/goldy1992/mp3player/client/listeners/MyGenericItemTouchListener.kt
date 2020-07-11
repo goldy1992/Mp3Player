@@ -9,13 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
 import com.github.goldy1992.mp3player.client.views.adapters.MediaItemRecyclerViewAdapter
 import com.github.goldy1992.mp3player.commons.LogTagger
-import javax.inject.Inject
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 class MyGenericItemTouchListener
 
-    @Inject
+
     constructor(
-            private var context: Context,
+            @ApplicationContext context: Context,
+
             var itemSelectedListener : ItemSelectedListener)
     :  GestureDetector.SimpleOnGestureListener(), LogTagger, OnItemTouchListener {
 
@@ -39,8 +40,9 @@ class MyGenericItemTouchListener
         if (null != childView) {
             val childPosition = parentView!!.getChildAdapterPosition(childView)
             val myViewAdapter = parentView!!.adapter as MediaItemRecyclerViewAdapter?
+            myViewAdapter!!.currentList[childPosition]
             if (null != myViewAdapter) {
-                itemSelectedListener.itemSelected(myViewAdapter.items[childPosition])
+                itemSelectedListener.itemSelected(myViewAdapter.currentList[childPosition])
             }
         }
         return false

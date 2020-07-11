@@ -9,17 +9,17 @@ import android.view.animation.LinearInterpolator
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.annotation.VisibleForTesting
-import com.github.goldy1992.mp3player.client.dagger.scopes.FragmentScope
 import com.github.goldy1992.mp3player.client.views.SeekerBar
 import com.github.goldy1992.mp3player.client.views.TimeCounter
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
+import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 
 /**
  *
  */
-@FragmentScope
+@FragmentScoped
 class SeekerBarController2
     @Inject
     constructor(private val mediaControllerAdapter: MediaControllerAdapter?,

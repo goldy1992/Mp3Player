@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'de.mannodermaus.android-junit5'
+apply plugin: 'dagger.hilt.android.plugin'
 apply from: rootProject.file("jacoco-with-test-support.gradle")
 
 android {
@@ -18,7 +19,7 @@ android {
         consumerProguardFiles 'consumer-rules.pro'
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
     }
@@ -67,6 +68,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    hilt {
+        enableTransformForLocalTests = true
+    }
+
     kotlinOptions { jvmTarget = "1.8" }
 
     testOptions {
@@ -108,11 +113,6 @@ dependencies {
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: KOTLIN_COROUTINE_VERSION
     implementation project(':commons')
 
-
-    //dagger
-    kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
-    api group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
-
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
     implementation group: 'androidx.room', name: 'room-ktx', version: ROOM_VERSION
     kapt group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
@@ -128,4 +128,12 @@ dependencies {
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN"
     testImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     testImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: KOTLIN_COROUTINE_VERSION
+
+    // hilt
+    implementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
+    kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+
+    testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
+    kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+
 }

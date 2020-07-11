@@ -4,16 +4,20 @@ import android.content.Context
 import android.support.v4.media.MediaBrowserCompat
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ActivityScoped
 
+@InstallIn(ActivityComponent::class)
 @Module
 class MediaControllerAdapterModule {
 
-    @ComponentScope
+    @ActivityScoped
     @Provides
-    fun providesMediaControllerAdapter(context: Context,
+    fun providesMediaControllerAdapter(@ApplicationContext context: Context,
                                        mediaBrowserCompat: MediaBrowserCompat,
                                        myMediaControllerCallback: MyMediaControllerCallback)
             : MediaControllerAdapter {

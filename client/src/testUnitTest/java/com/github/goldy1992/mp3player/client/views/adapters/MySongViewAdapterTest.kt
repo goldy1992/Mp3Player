@@ -108,7 +108,7 @@ class MySongViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
     }
 
     private fun bindViewHolder() {
-        mySongViewAdapter!!.items = mediaItems
+        mySongViewAdapter!!.submitList(mediaItems)
         mySongViewAdapter!!.onBindViewHolder(mySongViewHolder, 0)
     }
 }

@@ -41,7 +41,7 @@ class MyFolderViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
                 .build()
         )
         myFolderViewAdapter.notifyDataSetChanged()
-        myFolderViewAdapter.items = mediaItems
+        myFolderViewAdapter.submitList(mediaItems)
         argumentCaptor<MediaBrowserCompat.MediaItem>().apply {
             myFolderViewAdapter.onBindViewHolder(myFolderViewHolder, 0)
             verify(myFolderViewHolder, times(1)).bindMediaItem(capture())

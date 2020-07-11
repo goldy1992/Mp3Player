@@ -1,23 +1,34 @@
 package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 
+import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
-import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecycleViewAdapter
+import androidx.fragment.app.viewModels
+import com.github.goldy1992.mp3player.client.viewmodels.MediaListViewModel
+import com.github.goldy1992.mp3player.client.viewmodels.SongListViewModel
+import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecyclerViewAdapter
 import com.github.goldy1992.mp3player.client.views.adapters.MySongViewAdapter
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class SongListFragment : MediaItemListFragment() {
 
     @Inject
-    lateinit var mySongViewAdapter: MySongViewAdapter;
+    lateinit var mySongViewAdapter: MySongViewAdapter
+
+    private val viewModel : SongListViewModel by viewModels()
+
+    override fun viewModel(): MediaListViewModel {
+        return viewModel
+    }
 
     override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {
         mediaControllerAdapter.playFromMediaId(MediaItemUtils.getLibraryId(item), null)
     }
 
-    override fun getViewAdapter(): MyGenericRecycleViewAdapter {
+    override fun getViewAdapter(): MyGenericRecyclerViewAdapter {
         return mySongViewAdapter
     }
 
@@ -25,15 +36,12 @@ class SongListFragment : MediaItemListFragment() {
         return "SONG_LST_FRGMNT"
     }
 
-    override fun initialiseDependencies() {
-        createMediaItemListFragmentSubcomponent(this)?.inject(this)
-    }
-
     companion object {
         @JvmStatic
         fun newInstance(mediaItemType: MediaItemType, id: String): SongListFragment {
             val songListFragment = SongListFragment()
-            songListFragment.init(mediaItemType, id)
+            val args : Bundle = createArguments(mediaItemType, id)
+            songListFragment.arguments = args
             return songListFragment
         }
     }
