@@ -23,7 +23,8 @@ task jacocoTestReportDebug(type: JacocoReport, dependsOn: ['test']) {
             '**/*Test*.*',
             'android/**/*.*',
             '**/*$[0-9].*',
-            '**/dagger/**'
+            '**/dagger/**',
+            '**/databinding/**'
     ]
 
     def mainSrc = "$project.projectDir/src/main/java"

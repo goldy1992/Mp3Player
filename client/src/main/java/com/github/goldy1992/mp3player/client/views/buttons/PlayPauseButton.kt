@@ -10,6 +10,7 @@ import androidx.annotation.VisibleForTesting
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
+import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
@@ -24,7 +25,7 @@ open class PlayPauseButton
     @PlaybackStateCompat.State
     var state = INITIAL_PLAYBACK_STATE
 
-    override fun init(imageView: ImageView) {
+    override fun init(imageView: MaterialButton) {
         super.init(imageView)
         updateState(mediaControllerAdapter.playbackState)
     }

@@ -175,7 +175,6 @@ dependencies {
 
 
 
-
     debugImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
     implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION

@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ImageView
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
@@ -14,7 +15,7 @@ class SkipToPreviousButton @Inject constructor(@ActivityContext context: Context
                                                mediaControllerAdapter: MediaControllerAdapter)
     : MediaButton(context, mediaControllerAdapter) {
 
-    override fun init(imageView: ImageView) {
+    override fun init(imageView: MaterialButton) {
         super.init(imageView)
         setImage(R.drawable.ic_baseline_skip_previous_24px)
     }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents">
         <!-- Base theme !-->
         <item name="textColorPrimary">?textColorPrimary</item>
         <item name="textColorSecondary">?textColorSecondary</item>

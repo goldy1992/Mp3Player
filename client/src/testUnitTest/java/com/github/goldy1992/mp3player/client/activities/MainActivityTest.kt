@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.activities
 
 import android.os.Looper
+import android.os.Looper.getMainLooper
 import android.support.v4.media.MediaBrowserCompat
 import android.view.MenuItem
 import androidx.core.view.GravityCompat
@@ -26,6 +27,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.LooperMode
 import java.util.*
 
@@ -55,6 +57,7 @@ class MainActivityTest {
         scenario.onActivity { activity: MainActivity ->
             val menuItem = mock<MenuItem>()
             val result = activity.onOptionsItemSelected(menuItem)
+            shadowOf(getMainLooper()).idle()
             Assert.assertFalse(result)
         }
     }
