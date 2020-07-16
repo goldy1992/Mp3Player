@@ -27,7 +27,7 @@ class SimpleTitleBarFragment : Fragment() {
         myActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         val typedValue = TypedValue()
         val theme = requireContext().theme
-        theme.resolveAttribute(R.attr.textColorPrimary, typedValue, true)
+//        theme.resolveAttribute(R.attr.textColorPrimary, typedValue, true)
         @ColorInt val color = typedValue.data
         titleToolbar.navigationIcon!!.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
     }

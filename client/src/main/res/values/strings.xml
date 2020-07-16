@@ -16,7 +16,6 @@
     <string name="APP_TITLE">Music Player</string>
     <string name="APP_TITLE_H1"><![CDATA[<h1>Mike\'s MP3 Player</h1>]]></string>
     <string name="FOLDER_NAME">%1$s</string>
-    <string name="FOLDER_PATH"></string>
     <string name="NO_MEDIA_FOUND">No audio tracks found on your device.</string>
     <string name="search_hint">Search media</string>
     <string name="notification_channel_name">channel_name</string>

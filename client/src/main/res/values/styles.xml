@@ -1,15 +1,12 @@
 <resources>
     <!-- Base application theme. -->
-
-
     <style name="AppTheme.ActionBar">
         <item name="actionBarPopupTheme">@style/AppTheme</item>
         <item name="actionBarWidgetTheme">@null</item>
-        <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
     </style>
 
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+    <style name="AppTheme.AppBarOverlay" parent="AppTheme.ActionBar" >
 
 
     </style>
