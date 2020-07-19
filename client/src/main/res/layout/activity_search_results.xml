@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/overview_coordinator_layout"
             android:layout_above="@id/playToolbarFragment"
             android:layout_alignParentTop="true"
@@ -60,5 +60,3 @@
             tools:layout="@layout/fragment_playback_toolbar" />
 
     </RelativeLayout>
-
-</layout>
