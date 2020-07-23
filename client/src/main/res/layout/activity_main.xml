@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 <androidx.drawerlayout.widget.DrawerLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto">
+
 
     <RelativeLayout
         android:id="@+id/fragmentContainer"
@@ -29,26 +29,23 @@
                 android:fitsSystemWindows="true"
                 android:id="@+id/appBarLayout"
                 >
-
-                <androidx.appcompat.widget.Toolbar
+                <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/titleToolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                    android:background="?attr/colorPrimary"
                     app:layout_scrollFlags="scroll|enterAlways"
-                    app:titleTextColor="?attr/textColorPrimary"
-                    app:title="@string/APP_TITLE">
+                    android:elevation="0dp"
+                    style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface">
 
-                </androidx.appcompat.widget.Toolbar>
+                </com.google.android.material.appbar.MaterialToolbar>
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:tabTextColor="?attr/textColorPrimary"
                     app:layout_collapseMode="parallax"
-                    app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"/>
+                    style="@style/Widget.MaterialComponents.TabLayout.Colored"
+                    app:tabIndicatorColor="?colorSecondary"/>
 
             </com.google.android.material.appbar.AppBarLayout>
 
@@ -58,7 +55,10 @@
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
 
         <fragment
             android:id="@+id/playToolbarFragment"
@@ -82,4 +82,3 @@
 
 
 </androidx.drawerlayout.widget.DrawerLayout>
-</layout>

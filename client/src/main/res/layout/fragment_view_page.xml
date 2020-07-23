@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.l4digital.fastscroll.FastScrollRecyclerView
-        android:id="@+id/recyclerView"
-        app:fastScrollAutoHide="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:bubbleColor="?colorPrimary"
-        app:bubbleTextColor="#ffffff"
-        app:handleColor="?colorPrimary"
-      />
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-</FrameLayout>
-</layout>
+
+    <com.l4digital.fastscroll.FastScrollRecyclerView
+            android:id="@+id/recyclerView"
+            app:fastScrollAutoHide="false"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:bubbleColor="?colorPrimary"
+            app:bubbleTextColor="?colorOnPrimary"
+            app:handleColor="?colorPrimary"
+          />
+
+    </FrameLayout>

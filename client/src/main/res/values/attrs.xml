@@ -33,11 +33,6 @@
         </attr>
     </declare-styleable>
 
-    <attr name="textColorPrimary" format="reference" />
-    <attr name="textColorSecondary" format="reference" />
-    <attr name="themeColorPrimary" format="reference"/>
-    <attr name="themeColorPrimaryDark" format="reference"/>
-    <attr name="themeColorAccent" format="reference"/>
     <attr name="themeName" format="reference"/>
 
     <array name="themes">

@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.views.adapters
 
+import android.content.Context
 import android.support.v4.media.session.MediaSessionCompat.QueueItem
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -21,10 +22,11 @@ class TrackViewAdapter
     private var queue : List<QueueItem>? = Collections.emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaPlayerTrackViewHolder { // create a new views
-        val layoutInflater = LayoutInflater.from(parent.context)
+        val context : Context = parent.context
+        val layoutInflater = LayoutInflater.from(context)
         val v = layoutInflater
                 .inflate(R.layout.view_holder_media_player, parent, false)
-        return MediaPlayerTrackViewHolder(v, albumArtPainter)
+        return MediaPlayerTrackViewHolder(v, albumArtPainter, context)
     }
 
     override fun onBindViewHolder(holder: MediaPlayerTrackViewHolder, position: Int) {

@@ -18,7 +18,7 @@
         android:paddingRight="@dimen/default_gap"
         android:adjustViewBounds="true"
         android:contentDescription="@string/content_description"
-        android:background="@android:color/white" />
+         />
 
     <RelativeLayout
         android:layout_width="wrap_content"

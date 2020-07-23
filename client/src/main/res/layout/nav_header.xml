@@ -4,10 +4,9 @@
     android:layout_height="192dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Light"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="?themeColorPrimary">
+>
 
     <ImageView
         android:id="@+id/imageView"
@@ -22,6 +21,6 @@
         android:layout_height="wrap_content"
         android:text="@string/menu"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
 
 </LinearLayout>

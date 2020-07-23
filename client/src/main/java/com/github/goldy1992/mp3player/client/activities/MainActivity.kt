@@ -7,7 +7,6 @@ import android.widget.Spinner
 import androidx.activity.viewModels
 import androidx.annotation.VisibleForTesting
 import androidx.core.view.GravityCompat
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.observe
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.R
@@ -27,6 +26,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
@@ -51,7 +51,8 @@ open class MainActivity : MediaActivityCompat()
     lateinit var componentClassMapper: ComponentClassMapper
 
     override fun initialiseView(): Boolean {
-        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)!!
+        val binding: ActivityMainBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         searchFragment = SearchFragment()
         binding.appBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { app: AppBarLayout?, offset: Int ->
             Log.i(logTag(), "offset: " + offset + ", scroll range: " + app?.totalScrollRange)

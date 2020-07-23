@@ -29,7 +29,6 @@ import org.robolectric.RobolectricTestRunner
 @UninstallModules(GlideModule::class,
         MediaBrowserAdapterModule::class,
         MediaControllerAdapterModule::class)
-
 @RunWith(RobolectricTestRunner::class)
 class SearchResultActivityTest {
     /** Intent  */

@@ -9,6 +9,7 @@ import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.github.goldy1992.mp3player.commons.Constants
+import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.qualifiers.ActivityContext
 import javax.inject.Inject
 
@@ -22,7 +23,7 @@ class ShuffleButton
     @ShuffleMode
     var shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_NONE
 
-    override fun init(imageView: ImageView) {
+    override fun init(imageView: MaterialButton) {
         super.init(imageView)
         updateState(PlaybackStateCompat.SHUFFLE_MODE_NONE)
     }

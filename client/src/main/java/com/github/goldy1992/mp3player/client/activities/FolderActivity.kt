@@ -1,9 +1,10 @@
 package com.github.goldy1992.mp3player.client.activities
 
-import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.text.TextUtils
 import android.util.Log
 import android.widget.TextView
+import androidx.fragment.app.commit
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
@@ -12,8 +13,8 @@ import com.github.goldy1992.mp3player.client.views.fragments.viewpager.SongListF
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_simple_title_bar.*
 import org.apache.commons.lang3.exception.ExceptionUtils
 import java.util.*
 import kotlin.collections.HashSet
@@ -25,6 +26,15 @@ class FolderActivity : MediaActivityCompat() {
 
     override fun initialiseView(): Boolean {
         setContentView(R.layout.activity_folder)
+        val folderItem : MediaItem = intent.getParcelableExtra(Constants.MEDIA_ITEM)
+        val titleToolbar : MaterialToolbar = findViewById(R.id.titleToolbar)
+        setupToolbar(titleToolbar, MediaItemUtils.getDirectoryName(folderItem)!!)
+        viewPageFragment = SongListFragment.newInstance(MediaItemType.FOLDER,
+                MediaItemUtils.getLibraryId(folderItem)!!)
+
+        supportFragmentManager.commit {
+            add(R.id.song_list_fragment, viewPageFragment as SongListFragment)
+        }
         return true
     }
 
@@ -38,19 +48,21 @@ class FolderActivity : MediaActivityCompat() {
         return Collections.emptySet()
     }
 
-    override fun onConnected() {
-        super.onConnected()
-        val mediaItem: MediaBrowserCompat.MediaItem = intent.getParcelableExtra(Constants.MEDIA_ITEM)
-        val itemLibraryId = MediaItemUtils.getLibraryId(mediaItem)!!
-        viewPageFragment = SongListFragment.newInstance(MediaItemType.FOLDER, itemLibraryId)
-        supportFragmentManager.beginTransaction()
-                .add(R.id.songListFragment,
-                viewPageFragment as SongListFragment)
-                .commit()
-        supportActionBar!!.setTitle(MediaItemUtils.getDirectoryName(mediaItem))
+    override fun onBackPressed() {
+        finish()
+    }
+
+    override fun logTag(): String {
+        return "FOLDER_ACTIVITY"
+    }
+
+    private fun setupToolbar(titleToolbar: MaterialToolbar, title : String) {
+        titleToolbar.title = title
+        setSupportActionBar(titleToolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         val titleTextView: TextView?
         try {
-            val f = titleToolbar!!.javaClass.getDeclaredField("mTitleTextView")
+            val f = titleToolbar.javaClass.superclass!!.getDeclaredField("mTitleTextView")
             f.isAccessible = true
             titleTextView = f[titleToolbar] as TextView
             titleTextView.ellipsize = TextUtils.TruncateAt.MARQUEE
@@ -65,13 +77,5 @@ class FolderActivity : MediaActivityCompat() {
         } catch (ex: IllegalAccessException) {
             Log.e(logTag(), ExceptionUtils.getMessage(ex))
         }
-    }
-
-    override fun onBackPressed() {
-        finish()
-    }
-
-    override fun logTag(): String {
-        return "FOLDER_ACTIVITY"
     }
 }
