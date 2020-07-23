@@ -32,11 +32,4 @@ class MediaControlsFragment : MediaFragment() {
     override fun mediaControllerListeners(): Set<Listener> {
         return setOf(repeatOneRepeatAllButton, shuffleButton)
     }
-
-    override fun onViewCreated(view: View, bundle: Bundle?) {
-        super.onViewCreated(view, bundle)
-//        repeatOneRepeatAllButton.init(view.findViewById(R.id.repeatOneRepeatAllButton))
-  //      shuffleButton.init(view.findViewById(R.id.shuffleButton))
-    }
-
 }
