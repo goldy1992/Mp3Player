@@ -75,14 +75,6 @@
             android:insetBottom="0dp"
             style="@style/Widget.MaterialComponents.Button.Icon"
             />
-
-<!--        <ImageView-->
-<!--            android:id="@+id/shuffleButton"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:paddingStart="0dp"-->
-<!--            android:paddingEnd="@dimen/default_gap"-->
-<!--            tools:layout_alignParentEnd="true" />-->
     </LinearLayout>
 
 </LinearLayout>

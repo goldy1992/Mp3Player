@@ -50,6 +50,7 @@ class SearchResultActivity : MediaActivityCompat(),
         binding = ActivitySearchResultsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+        this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         val recyclerView = binding.recyclerView
         recyclerView.adapter = searchResultAdapter
 
@@ -62,7 +63,7 @@ class SearchResultActivity : MediaActivityCompat(),
         val componentName = ComponentName(applicationContext, componentClassMapper.searchResultActivity!!)
         val searchableInfo = searchManager.getSearchableInfo(componentName)
         //    Assumes current activity is the searchable activity
-        this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
         val searchView = binding.searchView
         searchView.setSearchableInfo(searchableInfo)
         searchView.setIconifiedByDefault(false) // Do not iconify the widget; expand it by default
