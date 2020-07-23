@@ -18,14 +18,13 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class ShuffleButtonTest : MediaButtonTestBase() {
 
-    private var imageView : ImageView = mock<ImageView>()
 
     private lateinit var shuffleButton: ShuffleButton
     @Before
     public override fun setup() {
         super.setup()
         shuffleButton = ShuffleButton(context, mediaControllerAdapter)
-        shuffleButton.init(imageView)
+        shuffleButton.init(view)
     }
 
     @Test

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import android.widget.ImageView
 import com.github.goldy1992.mp3player.commons.Constants
+import com.google.android.material.button.MaterialButton
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -27,10 +28,10 @@ class RepeatOneRepeatAllButtonTest : MediaButtonTestBase() {
 
     @Test
     fun testInit() {
-        val imageView = mock<ImageView>()
+
         @PlaybackStateCompat.RepeatMode val expectedState = PlaybackStateCompat.REPEAT_MODE_NONE
         whenever(mediaControllerAdapter.getRepeatMode()).thenReturn(expectedState)
-        repeatOneRepeatAllButton.init(imageView)
+        repeatOneRepeatAllButton.init(view)
         Assert.assertEquals(expectedState, repeatOneRepeatAllButton.state)
     }
 
@@ -64,8 +65,7 @@ class RepeatOneRepeatAllButtonTest : MediaButtonTestBase() {
 
     @Test
     fun testOnPlaybackStateChangedWithValidRepeatMode() {
-        val imageView : ImageView = mock<ImageView>()
-        repeatOneRepeatAllButton.init(imageView)
+        repeatOneRepeatAllButton.init(view)
         val expectedState = PlaybackStateCompat.REPEAT_MODE_ONE
         repeatOneRepeatAllButton.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_NONE)
         val extras = Bundle()
@@ -80,9 +80,8 @@ class RepeatOneRepeatAllButtonTest : MediaButtonTestBase() {
 
     private fun runOnClick(@PlaybackStateCompat.RepeatMode originalRepeatMode: Int,
                            @PlaybackStateCompat.RepeatMode expectedRepeatMode: Int) {
-        val imageView = mock<ImageView>()
         repeatOneRepeatAllButton.setRepeatMode(originalRepeatMode)
-        repeatOneRepeatAllButton.onClick(imageView)
+        repeatOneRepeatAllButton.onClick(view)
         verify(mediaControllerAdapter, times(1)).setRepeatMode(expectedRepeatMode)
     }
 }
