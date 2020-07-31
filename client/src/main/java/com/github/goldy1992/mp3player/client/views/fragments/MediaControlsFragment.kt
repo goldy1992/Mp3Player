@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.views.buttons.RepeatOneRepeatAllButton
@@ -31,5 +32,12 @@ class MediaControlsFragment : MediaFragment() {
 
     override fun mediaControllerListeners(): Set<Listener> {
         return setOf(repeatOneRepeatAllButton, shuffleButton)
+    }
+
+    /**
+     * @return A set of MediaBrowserConnectionListeners to be connected to.
+     */
+    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
+        return emptySet()
     }
 }

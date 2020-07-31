@@ -12,8 +12,8 @@ class MyFirstFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         //super.onCreateView(inflater, container, savedInstanceState)
-        return FragmentMyFirstBinding.inflate(inflater).root
+        //return FragmentMyFirstBinding.inflate(inflater).root
         //return inflater.inflate(R.layout.fragment_title_screen, container, false)
-        //return inflater.inflate(R.layout.fragment_my_first, container, true)
+        return inflater.inflate(R.layout.fragment_my_first, container, false)
     }
 }

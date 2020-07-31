@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.activities.MediaPlayerActivity
 import com.github.goldy1992.mp3player.client.callbacks.Listener
@@ -38,6 +39,13 @@ class PlayToolbarFragment : MediaFragment() {
 
     override fun mediaControllerListeners(): Set<Listener> {
         return setOf(playPauseBtn)
+    }
+
+    /**
+     * @return A set of MediaBrowserConnectionListeners to be connected to.
+     */
+    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
+        return emptySet()
     }
 
     override fun onViewCreated(view: View, bundle: Bundle?) {

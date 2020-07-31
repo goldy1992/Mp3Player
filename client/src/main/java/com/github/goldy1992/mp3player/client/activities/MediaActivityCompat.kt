@@ -35,16 +35,6 @@ abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowse
         mediaBrowserAdapter.disconnect()
     }
 
-    // MediaBrowserConnectorCallback
-    override fun onConnectionSuspended() { /* TODO: implement onConnectionSuspended */
-        Log.i(logTag(), "connection suspended")
-    }
-
-    // MediaBrowserConnectorCallback
-    override fun onConnectionFailed() { /* TODO: implement onConnectionFailed */
-        Log.i(logTag(), "connection failed")
-    }
-
     /**
      *
      */
@@ -79,7 +69,6 @@ abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowse
 
     private fun connect() {
         myConnectionCallback.registerMediaControllerAdapter(mediaControllerAdapter)
-        myConnectionCallback.registerListeners(mediaBrowserConnectionListeners())
         mediaControllerAdapter.registerListeners(mediaControllerListeners())
         mediaBrowserAdapter.connect()
     }

@@ -13,6 +13,7 @@ import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.VisibleForTesting
+import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
@@ -24,7 +25,12 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchFragment : MediaFragment(), LogTagger {
-
+    /**
+     * @return A set of MediaBrowserConnectionListeners to be connected to.
+     */
+    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
+        return emptySet()
+    }
     private var inputMethodManager: InputMethodManager? = null
 
     @Inject

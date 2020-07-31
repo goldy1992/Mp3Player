@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.VisibleForTesting
+import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
@@ -24,7 +25,12 @@ class PlaybackSpeedControlsFragment : MediaFragment(), PlaybackStateListener {
         super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fragment_playback_speed_controls, container, true)
     }
-
+    /**
+     * @return A set of MediaBrowserConnectionListeners to be connected to.
+     */
+    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
+        return emptySet()
+    }
     override fun logTag(): String {
         return "PLY_SPD_CTRL_FGMT"
     }

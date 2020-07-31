@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.SeekerBarController2
 import com.github.goldy1992.mp3player.client.callbacks.Listener
@@ -21,6 +22,12 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, MetadataListener {
 
+    /**
+     * @return A set of MediaBrowserConnectionListeners to be connected to.
+     */
+    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
+        return emptySet()
+    }
     @Inject
     lateinit var seekerBarController: SeekerBarController2
     @Inject

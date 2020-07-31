@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/my_first_fragment"
-        android:name="com.github.goldy1992.mp3player.client.views.fragments.MyFirstFragment"
+        android:name="com.github.goldy1992.mp3player.client.views.fragments.MainFragment"
         android:label="My First Fragment"
-        tools:layout="@layout/fragment_my_first">
+        tools:layout="@layout/fragment_main">
     </fragment>
     
 
