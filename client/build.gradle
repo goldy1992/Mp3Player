@@ -167,6 +167,12 @@ dependencies {
         transitive = false
     }
 
+    def nav_version = '2.3.0'
+    // Kotlin
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+
     // hilt
     implementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
     kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION

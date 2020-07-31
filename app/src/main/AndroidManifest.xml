@@ -19,7 +19,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         tools:node="merge"
-        android:theme="@style/AppTheme.Orange">
+      >
 
 
         <service

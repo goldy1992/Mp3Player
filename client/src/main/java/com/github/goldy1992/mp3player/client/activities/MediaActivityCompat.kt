@@ -65,7 +65,6 @@ abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowse
         val settings = applicationContext.getSharedPreferences(Constants.THEME, Context.MODE_PRIVATE)
         setTheme(settings.getInt(Constants.THEME, R.style.AppTheme_Blue))
         connect()
-        initialiseView()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

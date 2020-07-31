@@ -11,7 +11,7 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MainActivityViewModel
+class MainFragmentViewModel
 
     @ViewModelInject
     constructor()

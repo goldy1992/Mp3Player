@@ -180,4 +180,10 @@ dependencies {
     implementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
     implementation group: 'androidx.fragment', name: 'fragment-ktx', version: FRAGMENT_VERSION
 
+    def nav_version = '2.3.0'
+    // Kotlin
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+
 }

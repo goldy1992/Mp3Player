@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/my_first_fragment">
+
+    <fragment
+        android:id="@+id/my_first_fragment"
+        android:name="com.github.goldy1992.mp3player.client.views.fragments.MyFirstFragment"
+        android:label="My First Fragment"
+        tools:layout="@layout/fragment_my_first">
+    </fragment>
+    
+
+</navigation>
