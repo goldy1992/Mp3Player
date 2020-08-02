@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.activities.MediaPlayerActivity
@@ -16,6 +18,9 @@ import com.github.goldy1992.mp3player.client.views.buttons.SkipToPreviousButton
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_playback_toolbar.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -66,8 +71,10 @@ class PlayToolbarFragment : MediaFragment() {
         }
 
     private fun goToMediaPlayerActivity() {
-        val intent = Intent(context, componentClassMapper.mediaPlayerActivity)
-        startActivity(intent)
+
+            findNavController().navigate(R.id.go_to_media_player)
+//        val intent = Intent(context, componentClassMapper.mediaPlayerActivity)
+//        startActivity(intent)
     }
 
     override fun logTag(): String {

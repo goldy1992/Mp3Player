@@ -10,7 +10,8 @@ import javax.inject.Inject
  * Created by Mike on 04/10/2017.
  */
 @ActivityScoped
-class MyConnectionCallback
+class
+MyConnectionCallback
     @Inject
     constructor()
     :  MediaBrowserCompat.ConnectionCallback() {

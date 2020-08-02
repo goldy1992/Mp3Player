@@ -5,6 +5,7 @@ import android.support.v4.media.MediaBrowserCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -52,10 +53,10 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
         return arguments?.getString(PARENT_ID)
     }
 
-    /**
-     * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
-     */
-    private val linearLayoutManager = LinearLayoutManager(context)
+//    /**
+//     * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
+//     */
+//    private val linearLayoutManager = LinearLayoutManager(context)
 
     lateinit var binding: FragmentViewPageBinding
 
@@ -77,7 +78,7 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        mediaBrowserAdapter.subscribe(getParentId()!!, viewModel())
+        viewModel().items = mediaBrowserAdapter.subscribe(getParentId()!!) as MutableLiveData<List<MediaBrowserCompat.MediaItem>>
 
         myGenericItemTouchListener = MyGenericItemTouchListener(requireContext(), this)
         binding = FragmentViewPageBinding.inflate(inflater, container, false)
@@ -85,7 +86,10 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
         binding.recyclerView.addOnItemTouchListener(myGenericItemTouchListener)
         myGenericItemTouchListener.parentView = binding.recyclerView
         binding.recyclerView.itemAnimator = DefaultItemAnimator()
-        binding.recyclerView.layoutManager = linearLayoutManager
+        binding.recyclerView.isAttachedToWindow
+        if (binding.recyclerView.layoutManager == null) {
+            binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        }
         subscribeUi(getViewAdapter(), binding)
         return binding.root
     }

@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import androidx.fragment.app.viewModels
@@ -28,6 +29,10 @@ class SongListFragment : MediaItemListFragment() {
 
     override fun viewModel(): MediaListViewModel {
         return viewModel
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
     }
 
     override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {

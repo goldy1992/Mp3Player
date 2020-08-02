@@ -37,8 +37,10 @@ class MainFragment : MediaFragment(), LogTagger {
 
     val viewModel : MainFragmentViewModel by viewModels()
 
+    lateinit var binding : FragmentMainBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding : FragmentMainBinding = FragmentMainBinding.inflate(inflater)
+        this.binding = FragmentMainBinding.inflate(inflater)
         //    searchFragment = SearchFragment()
         binding.appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { app: AppBarLayout?, offset: Int ->
             Log.i(logTag(), "offset: " + offset + ", scroll range: " + app?.totalScrollRange)
@@ -50,39 +52,12 @@ class MainFragment : MediaFragment(), LogTagger {
                     binding.rootMenuItemsPager.paddingRight,
                     newOffset)
         })
-        adapter = MyPagerAdapter(parentFragmentManager, lifecycle)
-
-
-        viewModel.menuCategories.observe(this.viewLifecycleOwner) {
-            for (mediaItem in it) {
-                val id = MediaItemUtils.getMediaId(mediaItem)!!
-                Log.i(logTag(), "media id: $id")
-                val category = MediaItemUtils.getExtra(Constants.ROOT_ITEM_TYPE, mediaItem) as MediaItemType
-                var mediaItemListFragment: MediaItemListFragment?
-                mediaItemListFragment = when (category) {
-                    // TODO: change the use of subfragments to simply use a view pager
-                    MediaItemType.SONGS -> SongListFragment.newInstance(category, id)
-                    MediaItemType.FOLDERS -> FolderListFragment.newInstance(category, id)
-                    else -> null
-                }
-                if (null != mediaItemListFragment) {
-                    adapter.pagerItems[category] = mediaItemListFragment
-                    adapter.menuCategories[category] = mediaItem
-                    adapter.notifyDataSetChanged()
-                }
-            }
-
-        }
-        binding.rootMenuItemsPager.adapter = adapter
-        tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.rootMenuItemsPager!!, adapter)
-        tabLayoutMediator!!.attach()
-        binding.rootMenuItemsPager.adapter = adapter
-        val activity : AppCompatActivity = requireActivity() as AppCompatActivity
+           val activity : AppCompatActivity = requireActivity() as AppCompatActivity
         activity.setSupportActionBar(binding.titleToolbar)
         val supportActionBar = activity.supportActionBar
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar.setHomeAsUpIndicator(R.drawable.ic_menu)
-                return binding.root
+        return binding.root
     }
 
     override fun mediaControllerListeners(): Set<Listener> {
@@ -96,13 +71,38 @@ class MainFragment : MediaFragment(), LogTagger {
         return setOf(this)
     }
 
-    override fun onConnected() {
-        super.onConnected()
-        mediaBrowserAdapter.subscribeToRoot(viewModel)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+            adapter = MyPagerAdapter(this)
+
+        mediaBrowserAdapter.subscribeToRoot().observe(this.viewLifecycleOwner) {
+            for (mediaItem in it) {
+                val id = MediaItemUtils.getMediaId(mediaItem)!!
+                Log.i(logTag(), "media id: $id")
+                val category = MediaItemUtils.getExtra(Constants.ROOT_ITEM_TYPE, mediaItem) as MediaItemType
+
+                if (!adapter.pagerItems.containsKey(category)) {
+                    val mediaItemListFragment: MediaItemListFragment? = when (category) {
+                        // TODO: change the use of subfragments to simply use a view pager
+                        MediaItemType.SONGS -> SongListFragment.newInstance(category, id)
+                        MediaItemType.FOLDERS -> FolderListFragment.newInstance(category, id)
+                        else -> null
+                    }
+                    if (null != mediaItemListFragment) {
+                        adapter.pagerItems[category] = mediaItemListFragment
+                        adapter.menuCategories[category] = mediaItem
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+            }
+
+        }
+        binding.rootMenuItemsPager.adapter = adapter
+        tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.rootMenuItemsPager!!, adapter)
+        tabLayoutMediator!!.attach()
+        binding.rootMenuItemsPager.adapter = adapter
+
+
         if (mediaBrowserAdapter.isConnected()) {
             mediaBrowserAdapter.subscribeToRoot(viewModel)
         }

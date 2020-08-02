@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
+import com.github.goldy1992.mp3player.client.MediaConnector
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
@@ -23,7 +24,7 @@ abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowse
 
     /** Connection Callback */
     @Inject
-    lateinit var myConnectionCallback : MyConnectionCallback
+    lateinit var mediaConnector : MediaConnector
 
     /** MediaControllerAdapter  */
     @Inject
@@ -68,8 +69,8 @@ abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowse
     }
 
     private fun connect() {
-        myConnectionCallback.registerMediaControllerAdapter(mediaControllerAdapter)
-        mediaControllerAdapter.registerListeners(mediaControllerListeners())
+//        myConnectionCallback.registerMediaControllerAdapter(mediaControllerAdapter)
+//        mediaControllerAdapter.registerListeners(mediaControllerListeners())
         mediaBrowserAdapter.connect()
     }
 }

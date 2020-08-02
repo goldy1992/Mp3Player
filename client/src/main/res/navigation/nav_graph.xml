@@ -3,13 +3,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/my_first_fragment">
+    app:startDestination="@id/main_fragment">
 
     <fragment
-        android:id="@+id/my_first_fragment"
+        android:id="@+id/main_fragment"
         android:name="com.github.goldy1992.mp3player.client.views.fragments.MainFragment"
         android:label="My First Fragment"
         tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/go_to_media_player"
+            app:destination="@id/media_player_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/media_player_fragment"
+        android:name="com.github.goldy1992.mp3player.client.views.fragments.MediaPlayerFragment"
+        android:label="Media Player Fragment"
+        tools:layout="@layout/fragment_media_player">
     </fragment>
     
 

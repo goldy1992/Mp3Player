@@ -3,18 +3,20 @@ package com.github.goldy1992.mp3player.client
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
 import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback
 import com.github.goldy1992.mp3player.client.callbacks.search.SearchResultListener
 import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
 import com.github.goldy1992.mp3player.commons.LogTagger
-import dagger.hilt.android.scopes.ActivityScoped
 
 
 open class MediaBrowserAdapter
 
     constructor(private val mediaBrowser: MediaBrowserCompat?,
                 private val mySubscriptionCallback: MediaIdSubscriptionCallback,
-                private val mySearchCallback: MySearchCallback) : LogTagger {
+                private val mySearchCallback: MySearchCallback) : LogTagger, MediaBrowserConnectionListener {
 
     /**
      * Disconnects from the media browser service
@@ -37,7 +39,6 @@ open class MediaBrowserAdapter
      * Connects to the media browser service
      */
     open fun connect() {
-
         if (!isConnected()) {
             mediaBrowser?.connect()
         }
@@ -48,8 +49,10 @@ open class MediaBrowserAdapter
      * ID when communicating with the MediaPlaybackService.
      * @param id the id of the media item to be subscribed to
      */
-    open fun subscribe(id: String?) {
-        mediaBrowser?.subscribe(id!!, mySubscriptionCallback)
+    open fun subscribe(id: String) : LiveData<List<MediaBrowserCompat.MediaItem>> {
+        val toReturn = mySubscriptionCallback.subscribe(id)
+        mediaBrowser?.subscribe(id, mySubscriptionCallback)
+        return toReturn
     }
 
     /**
@@ -62,8 +65,19 @@ open class MediaBrowserAdapter
         mediaBrowser?.subscribe(id, mySubscriptionCallback)
     }
 
+    @Deprecated("Use subscribeToRoot()")
     open fun subscribeToRoot(listener : MediaBrowserSubscriber) {
         mySubscriptionCallback.registerMediaBrowserSubscriber(rootId, listener)
+        mediaBrowser?.subscribe(rootId, mySubscriptionCallback)
+    }
+
+    open fun subscribeToRoot() : LiveData<List<MediaBrowserCompat.MediaItem>> {
+        return mySubscriptionCallback.getRootLiveData()
+    }
+
+         /** Called when the component has successfully connected to the MediaBrowserService. */
+    override fun onConnected() {
+        mySubscriptionCallback.subscribeRoot(rootId)
         mediaBrowser?.subscribe(rootId, mySubscriptionCallback)
     }
 

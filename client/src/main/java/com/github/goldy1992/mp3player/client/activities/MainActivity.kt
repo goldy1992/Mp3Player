@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -47,6 +48,14 @@ open class MainActivity : MediaActivityCompat()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val intent = intent
+        if (Intent.ACTION_VIEW == intent.action) {
+            // navigate to media player fragment
+//            trackToPlay = intent.data
+        }
+
+
         val binding : ActivityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         this.drawerLayout = binding.drawerLayout
