@@ -47,11 +47,11 @@ class MediaPlayerActivity : MediaActivityCompat() {
     }
 
     override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
-        return setOf(this, trackViewPager)
+        return setOf(this)
     }
 
     override fun mediaControllerListeners(): Set<Listener> {
-        return setOf(trackViewPager)
+        return emptySet()
     }
 
     /**

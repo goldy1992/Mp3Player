@@ -41,6 +41,7 @@ constructor(private val context: Context,
             mediaController!!.registerCallback(this)
             metadata.postValue(mediaController!!.metadata)
             playbackState.postValue(mediaController!!.playbackState)
+            queue.postValue(mediaController!!.queue)
         } catch (ex: RemoteException) {
             Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
         }

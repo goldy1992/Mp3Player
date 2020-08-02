@@ -25,6 +25,7 @@ class MediaPlayerFragment : MediaFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentMediaPlayerBinding.inflate(layoutInflater)
+        mediaControllerAdapter.queue.observe(viewLifecycleOwner, trackViewPager.trackViewAdapter)
         this.trackViewPager.init(binding.trackViewPager)
         return binding.root
     }
