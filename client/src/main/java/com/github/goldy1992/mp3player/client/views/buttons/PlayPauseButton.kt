@@ -4,12 +4,11 @@ import android.content.Context
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.Observer
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.FragmentScoped
@@ -20,15 +19,10 @@ open class PlayPauseButton
     @Inject
     constructor(@ActivityContext context: Context,
                 mediaControllerAdapter: MediaControllerAdapter)
-    : MediaButton(context, mediaControllerAdapter), PlaybackStateListener {
+    : MediaButton(context, mediaControllerAdapter), Observer<PlaybackStateCompat> {
 
     @PlaybackStateCompat.State
     var state = INITIAL_PLAYBACK_STATE
-
-    override fun init(imageView: MaterialButton) {
-        super.init(imageView)
-        updateState(mediaControllerAdapter.playbackState)
-    }
 
     @VisibleForTesting
     override fun onClick(view: View?) {
@@ -38,15 +32,6 @@ open class PlayPauseButton
         } else {
             Log.d(logTag(), "calling play")
             mediaControllerAdapter.play()
-        }
-    }
-
-    private fun updateState(newState: Int) {
-        if (newState != state) {
-            when (newState) {
-                PlaybackStateCompat.STATE_PLAYING -> setStatePlaying()
-                else -> setStatePaused()
-            }
         }
     }
 
@@ -76,10 +61,6 @@ open class PlayPauseButton
     @get:DrawableRes
     val pauseIcon = R.drawable.ic_baseline_pause_24px
 
-    override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
-        updateState(state.state)
-    }
-
     companion object {
         @JvmField
         @PlaybackStateCompat.State
@@ -88,5 +69,16 @@ open class PlayPauseButton
 
     override fun logTag(): String {
         return "PLAY_PAUSE_BUTTON";
+    }
+
+    /**
+     * Called when the data is changed.
+     * @param t  The new data
+     */
+    override fun onChanged(t: PlaybackStateCompat?) {
+        when (t?.state) {
+            PlaybackStateCompat.STATE_PLAYING -> setStatePlaying()
+            else -> setStatePaused()
+        }
     }
 }

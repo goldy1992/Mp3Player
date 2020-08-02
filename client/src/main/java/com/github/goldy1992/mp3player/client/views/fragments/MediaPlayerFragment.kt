@@ -28,18 +28,6 @@ class MediaPlayerFragment : MediaFragment() {
         this.trackViewPager.init(binding.trackViewPager)
         return binding.root
     }
-    override fun mediaControllerListeners(): Set<Listener> {
-        return setOf(trackViewPager)
-    }
-
-
-
-    /**
-     * @return A set of MediaBrowserConnectionListeners to be connected to.
-     */
-    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
-        return setOf(this, trackViewPager)
-    }
 
     /**
      * @return the name of the log tag given to the class

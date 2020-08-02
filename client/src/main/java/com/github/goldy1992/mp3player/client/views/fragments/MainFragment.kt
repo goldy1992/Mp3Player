@@ -2,12 +2,14 @@ package com.github.goldy1992.mp3player.client.views.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.observe
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.R
@@ -60,17 +62,6 @@ class MainFragment : MediaFragment(), LogTagger {
         return binding.root
     }
 
-    override fun mediaControllerListeners(): Set<Listener> {
-        return emptySet()
-    }
-
-    /**
-     * @return A set of MediaBrowserConnectionListeners to be connected to.
-     */
-    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
-        return setOf(this)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
             adapter = MyPagerAdapter(this)
@@ -96,16 +87,12 @@ class MainFragment : MediaFragment(), LogTagger {
                 }
             }
 
-        }
+    }
         binding.rootMenuItemsPager.adapter = adapter
         tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.rootMenuItemsPager!!, adapter)
         tabLayoutMediator!!.attach()
         binding.rootMenuItemsPager.adapter = adapter
-
-
-        if (mediaBrowserAdapter.isConnected()) {
-            mediaBrowserAdapter.subscribeToRoot(viewModel)
-        }
+        viewModel.menuCategories = mediaBrowserAdapter.subscribeToRoot() as MutableLiveData<List<MediaBrowserCompat.MediaItem>>
         }
 
 

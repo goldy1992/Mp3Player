@@ -22,22 +22,12 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, MetadataListener {
 
-    /**
-     * @return A set of MediaBrowserConnectionListeners to be connected to.
-     */
-    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
-        return emptySet()
-    }
     @Inject
     lateinit var seekerBarController: SeekerBarController2
     @Inject
     lateinit var counter: TimeCounter
 
     private var duration: TextView? = null
-
-    override fun mediaControllerListeners(): Set<Listener> {
-        return setOf(this)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

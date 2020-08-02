@@ -15,12 +15,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class FolderListFragment : MediaItemListFragment() {
-    /**
-     * @return A set of MediaBrowserConnectionListeners to be connected to.
-     */
-    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
-        return emptySet()
-    }
+
     @Inject
     lateinit var myFolderViewAdapter : MyFolderViewAdapter
 

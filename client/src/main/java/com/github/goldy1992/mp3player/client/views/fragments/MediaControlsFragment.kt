@@ -29,15 +29,4 @@ class MediaControlsFragment : MediaFragment() {
     override fun logTag(): String {
         return "MDIA_CTRL_FGMT"
     }
-
-    override fun mediaControllerListeners(): Set<Listener> {
-        return setOf(repeatOneRepeatAllButton, shuffleButton)
-    }
-
-    /**
-     * @return A set of MediaBrowserConnectionListeners to be connected to.
-     */
-    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
-        return emptySet()
-    }
 }

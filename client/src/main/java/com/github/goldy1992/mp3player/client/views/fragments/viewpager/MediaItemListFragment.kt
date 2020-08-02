@@ -101,8 +101,4 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
         recyclerView.addOnScrollListener(preLoader)
         recyclerView.setHideScrollbar(true)
     }
-
-    override fun mediaControllerListeners(): Set<Listener> {
-        return Collections.emptySet()
-    }
 }

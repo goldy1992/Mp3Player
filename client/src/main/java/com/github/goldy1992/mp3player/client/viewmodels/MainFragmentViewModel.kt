@@ -21,7 +21,7 @@ class MainFragmentViewModel
         Log.i(logTag(), "creating MainActivityViewModel")
     }
 
-    val menuCategories : MutableLiveData<List<MediaItem>> = MutableLiveData(ArrayList())
+    var menuCategories : MutableLiveData<List<MediaItem>> = MutableLiveData(ArrayList())
 
     override fun onChildrenLoaded(parentId: String, children: ArrayList<MediaItem>) {
         val rootItemsOrdered = TreeSet(ComparatorUtils.Companion.compareRootMediaItemsByMediaItemType)

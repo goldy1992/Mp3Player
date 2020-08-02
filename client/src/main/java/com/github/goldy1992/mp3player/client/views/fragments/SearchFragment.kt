@@ -25,20 +25,11 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchFragment : MediaFragment(), LogTagger {
-    /**
-     * @return A set of MediaBrowserConnectionListeners to be connected to.
-     */
-    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
-        return emptySet()
-    }
+
     private var inputMethodManager: InputMethodManager? = null
 
     @Inject
     lateinit var componentClassMapper : ComponentClassMapper
-
-    override fun mediaControllerListeners(): Set<Listener> {
-        return Collections.emptySet()
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

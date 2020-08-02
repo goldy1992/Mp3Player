@@ -12,18 +12,15 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.ShuffleMode
 import android.util.Log
 import androidx.annotation.VisibleForTesting
-import com.github.goldy1992.mp3player.client.callbacks.Listener
-import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
+import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.commons.LogTagger
-import dagger.hilt.android.scopes.ActivityScoped
 import org.apache.commons.lang3.exception.ExceptionUtils
 
 open class MediaControllerAdapter
 
 constructor(private val context: Context,
-            private var mediaBrowserCompat: MediaBrowserCompat,
-            val myMediaControllerCallback: MyMediaControllerCallback)
-    : MediaBrowserConnectionListener, LogTagger {
+            private var mediaBrowserCompat: MediaBrowserCompat)
+    : MediaBrowserConnectionListener, LogTagger, MediaControllerCompat.Callback() {
 
     @get:VisibleForTesting
     @set:VisibleForTesting
@@ -31,13 +28,19 @@ constructor(private val context: Context,
 
     open var token: MediaSessionCompat.Token? = null
 
+    val metadata : MutableLiveData<MediaMetadataCompat> = MutableLiveData()
+
+    val playbackState : MutableLiveData<PlaybackStateCompat> = MutableLiveData()
+
+    val queue : MutableLiveData<MutableList<MediaSessionCompat.QueueItem>> = MutableLiveData()
+
     override fun onConnected() {
         try {
             this.token = mediaBrowserCompat.sessionToken
             mediaController = createMediaController(context, mediaBrowserCompat.sessionToken)
-            mediaController!!.registerCallback(myMediaControllerCallback)
-            myMediaControllerCallback.myMetaDataCallback.processCallback(mediaController!!.metadata)
-            myMediaControllerCallback.myPlaybackStateCallback.processCallback(mediaController!!.playbackState)
+            mediaController!!.registerCallback(this)
+            metadata.postValue(mediaController!!.metadata)
+            playbackState.postValue(mediaController!!.playbackState)
         } catch (ex: RemoteException) {
             Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
         }
@@ -79,34 +82,6 @@ constructor(private val context: Context,
         controller.skipToPrevious()
     }
 
-    open fun registerListener(listener: Listener) {
-        myMediaControllerCallback.registerListener(listener)
-    }
-
-    open fun registerListeners(listener: Collection<Listener>) {
-        myMediaControllerCallback.registerListeners(listener)
-    }
-
-    open fun removeListener(listener: Listener) {
-        myMediaControllerCallback.removeListener(listener)
-    }
-
-    open val playbackState: Int
-        get() {
-            val playbackStateCompat = playbackStateCompat
-            return playbackStateCompat?.state ?: 0
-        }
-
-    open val playbackStateCompat: PlaybackStateCompat?
-        get() = if (mediaController != null) {
-            mediaController!!.playbackState
-        } else null
-
-    open val metadata: MediaMetadataCompat?
-        get() = if (mediaController != null) {
-            mediaController!!.metadata
-        } else null
-
     @ShuffleMode
     open fun getShuffleMode() : Int? {
        return mediaController!!.shuffleMode
@@ -125,22 +100,9 @@ constructor(private val context: Context,
         controller.setRepeatMode(repeatMode)
     }
 
-    val currentSongAlbumArtUri: Uri?
-        get() {
-            val currentMetaData = metadata
-            val albumArtUriPath = currentMetaData!!.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI)
-
-            return try {
-                Uri.parse(albumArtUriPath)
-            } catch (ex: NullPointerException) {
-                Log.e(logTag(), "$albumArtUriPath: is an invalid Uri")
-                return null
-            }
-        }
-
     open fun disconnect() {
-        if (mediaController != null && myMediaControllerCallback != null) {
-            mediaController!!.unregisterCallback(myMediaControllerCallback)
+        if (mediaController != null) {
+            mediaController!!.unregisterCallback(this)
         }
     }
 
@@ -184,5 +146,18 @@ constructor(private val context: Context,
     override fun logTag(): String {
         return "MDIA_CNTRLLR_ADPTR"
     }
+
+    override fun onMetadataChanged(metadata: MediaMetadataCompat) {
+        this.metadata.postValue(metadata)
+    }
+
+    override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
+        this.playbackState.postValue(state)
+    }
+
+    override fun onQueueChanged(queue: MutableList<MediaSessionCompat.QueueItem>?) {
+        this.queue.postValue(queue!!)
+    }
+
 
 }

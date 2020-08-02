@@ -1,10 +1,8 @@
 package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import androidx.fragment.app.viewModels
-import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.viewmodels.MediaListViewModel
 import com.github.goldy1992.mp3player.client.viewmodels.SongListViewModel
 import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecyclerViewAdapter
@@ -16,12 +14,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SongListFragment : MediaItemListFragment() {
-    /**
-     * @return A set of MediaBrowserConnectionListeners to be connected to.
-     */
-    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
-        return emptySet()
-    }
+
     @Inject
     lateinit var mySongViewAdapter: MySongViewAdapter
 
@@ -29,10 +22,6 @@ class SongListFragment : MediaItemListFragment() {
 
     override fun viewModel(): MediaListViewModel {
         return viewModel
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
     }
 
     override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {
