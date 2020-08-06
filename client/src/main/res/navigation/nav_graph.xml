@@ -12,7 +12,12 @@
         tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/go_to_media_player"
-            app:destination="@id/media_player_fragment" />
+            app:destination="@id/media_player_fragment"
+            app:enterAnim="@anim/slide_in_from_bottom"
+            app:exitAnim="@anim/slide_out_from_top"
+            app:popExitAnim="@anim/slide_out_from_bottom"
+            app:popEnterAnim="@anim/slide_in_from_top"/>
+
     </fragment>
 
     <fragment
