@@ -7,12 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
+import androidx.lifecycle.Observer
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.SeekerBarController2
-import com.github.goldy1992.mp3player.client.callbacks.Listener
-import com.github.goldy1992.mp3player.client.callbacks.metadata.MetadataListener
-import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
+import com.github.goldy1992.mp3player.client.databinding.FragmentPlaybackTrackerBinding
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.client.views.SeekerBar
 import com.github.goldy1992.mp3player.client.views.TimeCounter
@@ -20,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, MetadataListener {
+class PlaybackTrackerFragment : MediaFragment(), Observer<Any> {
 
     @Inject
     lateinit var seekerBarController: SeekerBarController2
@@ -31,8 +29,10 @@ class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, Metadata
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.fragment_playback_tracker, container, false)
+        val binding = FragmentPlaybackTrackerBinding.inflate(inflater)
+        mediaControllerAdapter.playbackState.observe(viewLifecycleOwner, this)
+        mediaControllerAdapter.metadata.observe(viewLifecycleOwner, this)
+        return binding.root
     }
 
     override fun logTag(): String {
@@ -51,17 +51,17 @@ class PlaybackTrackerFragment : MediaFragment(), PlaybackStateListener, Metadata
         duration = view.findViewById(R.id.duration)
     }
 
-    override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
-        counter.updateState(state)
-        seekerBarController.onPlaybackStateChanged(state)
-    }
-
-    override fun onMetadataChanged(metadata: MediaMetadataCompat) {
-        val duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
-        counter.duration = duration
-        val durationString = formatTime(duration)
-        updateDurationText(durationString)
-        seekerBarController.onMetadataChanged(metadata)
+    override fun onChanged(data : Any) {
+        if (data is MediaMetadataCompat) {
+            val duration = data.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
+            counter.duration = duration
+            val durationString = formatTime(duration)
+            updateDurationText(durationString)
+            seekerBarController.onMetadataChanged(data)
+        } else if (data is PlaybackStateCompat) {
+            counter.updateState(data)
+            seekerBarController.onPlaybackStateChanged(data)
+        }
     }
 
     private fun updateDurationText(duration: String) {

@@ -34,6 +34,12 @@ constructor(private val context: Context,
 
     val queue : MutableLiveData<MutableList<MediaSessionCompat.QueueItem>> = MutableLiveData()
 
+    val repeatMode : MutableLiveData<Int> = MutableLiveData()
+
+    val shuffleMode : MutableLiveData<Int> = MutableLiveData()
+
+    val playbackSpeed : MutableLiveData<Float> = MutableLiveData()
+
     override fun onConnected() {
         try {
             this.token = mediaBrowserCompat.sessionToken
@@ -154,11 +160,19 @@ constructor(private val context: Context,
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
         this.playbackState.postValue(state)
+        this.playbackSpeed.postValue(state.playbackSpeed)
     }
 
     override fun onQueueChanged(queue: MutableList<MediaSessionCompat.QueueItem>?) {
         this.queue.postValue(queue!!)
     }
 
+    override fun onRepeatModeChanged(repeatMode: Int) {
+        this.repeatMode.postValue(repeatMode)
+    }
+
+    override fun onShuffleModeChanged(shuffleMode: Int) {
+        this.shuffleMode.postValue(shuffleMode)
+    }
 
 }
