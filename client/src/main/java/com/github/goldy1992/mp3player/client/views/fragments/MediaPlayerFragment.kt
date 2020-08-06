@@ -6,8 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.VisibleForTesting
-import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
-import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.databinding.FragmentMediaPlayerBinding
 import com.github.goldy1992.mp3player.client.views.TrackViewPager
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +24,7 @@ class MediaPlayerFragment : MediaFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentMediaPlayerBinding.inflate(layoutInflater)
         mediaControllerAdapter.queue.observe(viewLifecycleOwner, trackViewPager.trackViewAdapter)
+        mediaControllerAdapter.currentQueuePosition.observe(viewLifecycleOwner, trackViewPager.trackViewPagerChangeCallback)
         this.trackViewPager.init(binding.trackViewPager)
         return binding.root
     }

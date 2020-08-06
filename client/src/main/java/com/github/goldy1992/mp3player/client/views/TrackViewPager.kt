@@ -13,7 +13,7 @@ class TrackViewPager
 
     @Inject
     constructor(val trackViewAdapter: TrackViewAdapter,
-                private val trackViewPagerChangeCallback: TrackViewPagerChangeCallback,
+                val trackViewPagerChangeCallback: TrackViewPagerChangeCallback,
                 private val mediaControllerAdapter: MediaControllerAdapter)
     :  Observer<MediaMetadataCompat>, LogTagger {
 

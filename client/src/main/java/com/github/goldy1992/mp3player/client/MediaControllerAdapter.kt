@@ -40,6 +40,8 @@ constructor(private val context: Context,
 
     val playbackSpeed : MutableLiveData<Float> = MutableLiveData()
 
+    val currentQueuePosition : MutableLiveData<Int> = MutableLiveData()
+
     override fun onConnected() {
         try {
             this.token = mediaBrowserCompat.sessionToken
@@ -156,6 +158,7 @@ constructor(private val context: Context,
 
     override fun onMetadataChanged(metadata: MediaMetadataCompat) {
         this.metadata.postValue(metadata)
+        this.currentQueuePosition.postValue(getCurrentQueuePosition())
     }
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
