@@ -4,7 +4,6 @@ import android.content.Context
 import android.support.v4.media.session.MediaSessionCompat.QueueItem
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -18,7 +17,7 @@ class TrackViewAdapter
     @Inject
     constructor(val albumArtPainter: AlbumArtPainter,
                 val mediaControllerAdapter: MediaControllerAdapter)
-    : RecyclerView.Adapter<MediaPlayerTrackViewHolder>(), Observer<List<QueueItem>> {
+    : RecyclerView.Adapter<MediaPlayerTrackViewHolder>() {
 
     private var queue : List<QueueItem>? = Collections.emptyList()
 
@@ -45,7 +44,7 @@ class TrackViewAdapter
      * Called when the data is changed.
      * @param t  The new data
      */
-    override fun onChanged(t: List<QueueItem>?) {
+    fun onQueueChanged(t: List<QueueItem>?) {
         this.queue = t
         notifyDataSetChanged()
     }

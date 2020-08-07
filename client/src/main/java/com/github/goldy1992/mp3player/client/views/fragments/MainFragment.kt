@@ -11,9 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.observe
-import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
+import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
+import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.databinding.FragmentMainBinding
 import com.github.goldy1992.mp3player.client.viewmodels.MainFragmentViewModel
 import com.github.goldy1992.mp3player.client.views.adapters.MyPagerAdapter
@@ -27,9 +27,16 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainFragment : MediaFragment(), LogTagger {
+class MainFragment : DestinationFragment(), LogTagger {
+
+    @Inject
+    lateinit var mediaBrowserAdapter : MediaBrowserAdapter
+
+    @Inject
+    lateinit var mediaControllerAdapter: MediaControllerAdapter
 
     private var tabLayoutMediator: TabLayoutMediator? = null
 
@@ -54,7 +61,7 @@ class MainFragment : MediaFragment(), LogTagger {
                     binding.rootMenuItemsPager.paddingRight,
                     newOffset)
         })
-           val activity : AppCompatActivity = requireActivity() as AppCompatActivity
+        val activity : AppCompatActivity = requireActivity() as AppCompatActivity
         activity.setSupportActionBar(binding.titleToolbar)
         val supportActionBar = activity.supportActionBar
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -96,15 +103,19 @@ class MainFragment : MediaFragment(), LogTagger {
         }
 
 
-    override fun onResume() {
-        super.onResume()
-//        if (null != searchFragment && searchFragment!!.isAdded && searchFragment!!.isVisible) {
-//            fr
-//                    .beginTransaction()
-//                    .remove(searchFragment!!)
-//                    .commit()
-//        }
+//    override fun onResume() {
+//        super.onResume()
+////        if (null != searchFragment && searchFragment!!.isAdded && searchFragment!!.isVisible) {
+////            fr
+////                    .beginTransaction()
+////                    .remove(searchFragment!!)
+////                    .commit()
+////        }
+//
+//    }
 
+    override fun lockDrawerLayout(): Boolean {
+        return false
     }
 
     override fun onAttach(context: Context) {

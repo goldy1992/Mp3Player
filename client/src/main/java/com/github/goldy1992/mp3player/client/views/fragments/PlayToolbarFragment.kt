@@ -4,18 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.databinding.FragmentPlaybackToolbarBinding
 import com.github.goldy1992.mp3player.client.views.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToNextButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToPreviousButton
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
+import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PlayToolbarFragment : MediaFragment() {
+class PlayToolbarFragment : Fragment(), LogTagger {
+
+    @Inject
+    lateinit var mediaControllerAdapter : MediaControllerAdapter
 
     @Inject
     lateinit var playPauseBtn: PlayPauseButton

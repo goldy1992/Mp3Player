@@ -4,14 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.databinding.FragmentMediaControlsBinding
 import com.github.goldy1992.mp3player.client.views.buttons.RepeatOneRepeatAllButton
 import com.github.goldy1992.mp3player.client.views.buttons.ShuffleButton
+import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MediaControlsFragment : MediaFragment() {
+class MediaControlsFragment : Fragment(), LogTagger {
+
+    @Inject
+    lateinit var mediaControllerAdapter: MediaControllerAdapter
 
     @Inject
     lateinit var repeatOneRepeatAllButton: RepeatOneRepeatAllButton

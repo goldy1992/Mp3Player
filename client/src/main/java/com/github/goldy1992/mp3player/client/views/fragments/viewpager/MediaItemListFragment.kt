@@ -5,22 +5,23 @@ import android.support.v4.media.MediaBrowserCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.ListPreloader
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
-import com.github.goldy1992.mp3player.client.callbacks.Listener
+import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
+import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.databinding.FragmentViewPageBinding
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener.ItemSelectedListener
 import com.github.goldy1992.mp3player.client.viewmodels.MediaListViewModel
 import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecyclerViewAdapter
-import com.github.goldy1992.mp3player.client.views.fragments.MediaFragment
+import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import kotlinx.android.synthetic.main.fragment_view_page.*
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -30,7 +31,7 @@ import javax.inject.Inject
  * 1) we don't want to override the constructor for compatibility purposes
  * 2) This ChildViewFragment will be provided after the main injection is done
  */
-abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
+abstract class MediaItemListFragment : Fragment(), ItemSelectedListener, LogTagger {
 
     companion object {
         const val MEDIA_ITEM_TYPE = "mediaItemType"
@@ -44,6 +45,11 @@ abstract class MediaItemListFragment : MediaFragment(), ItemSelectedListener {
         }
     }
 
+    @Inject
+    lateinit var mediaBrowserAdapter : MediaBrowserAdapter
+
+    @Inject
+    lateinit var mediaControllerAdapter: MediaControllerAdapter
 
     fun getParentMediaItemType() : MediaItemType? {
         return arguments?.get(MEDIA_ITEM_TYPE) as? MediaItemType

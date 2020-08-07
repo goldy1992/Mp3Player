@@ -12,6 +12,8 @@ class TrackViewPagerChangeCallback
 
     : OnPageChangeCallback(), Observer<Int> {
 
+    var isInitialised = false
+
     /**  */
      var currentPosition: Int = -1
 
@@ -20,11 +22,11 @@ class TrackViewPagerChangeCallback
      * @param position
      */
     override fun onPageSelected(position: Int) {
-        val isUninitialised = currentPosition < 0
-        if (isUninitialised) {
-            currentPosition = position
+        if (!isInitialised) {
+            isInitialised = true
             return
         }
+
         if (position < 0 || currentPosition == position) {
             return
         }
@@ -44,7 +46,9 @@ class TrackViewPagerChangeCallback
         return position == (currentPosition - 1)
     }
 
-    override fun onChanged(t: Int?) {
-        currentPosition = t!!
+    override fun on(t: Any) {
+        if (t is Int) {
+            currentPosition = t!!
+        }
     }
 }

@@ -6,15 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.VisibleForTesting
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.databinding.FragmentPlaybackSpeedControlsBinding
 import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.LogTagger
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class PlaybackSpeedControlsFragment : MediaFragment(), Observer<Float> {
+class PlaybackSpeedControlsFragment : Fragment(), LogTagger, Observer<Float> {
+
+    @Inject
+    lateinit var mediaControllerAdapter: MediaControllerAdapter
 
     private var speed = 1.0f
 
