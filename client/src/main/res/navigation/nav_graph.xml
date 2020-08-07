@@ -3,21 +3,38 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
     app:startDestination="@id/main_fragment">
+
+    <action
+        android:id="@+id/go_to_media_player"
+        app:destination="@id/media_player_fragment"
+        app:enterAnim="@anim/slide_in_from_bottom"
+        app:exitAnim="@anim/slide_out_from_top"
+        app:popExitAnim="@anim/slide_out_from_bottom"
+        app:popEnterAnim="@anim/slide_in_from_top"/>
+
+    <action
+        android:id="@+id/go_to_folder_fragment"
+        app:destination="@id/folder_fragment"/>
 
     <fragment
         android:id="@+id/main_fragment"
         android:name="com.github.goldy1992.mp3player.client.views.fragments.MainFragment"
-        android:label="My First Fragment"
+        android:label="MP3 Player"
         tools:layout="@layout/fragment_main">
-        <action
-            android:id="@+id/go_to_media_player"
-            app:destination="@id/media_player_fragment"
-            app:enterAnim="@anim/slide_in_from_bottom"
-            app:exitAnim="@anim/slide_out_from_top"
-            app:popExitAnim="@anim/slide_out_from_bottom"
-            app:popEnterAnim="@anim/slide_in_from_top"/>
+    </fragment>
 
+
+    <fragment
+        android:id="@+id/folder_fragment"
+        android:name="com.github.goldy1992.mp3player.client.views.fragments.FolderFragment"
+        android:label="Folder Fragment"
+        tools:layout="@layout/fragment_folder">
+        <argument
+            android:name="folder"
+            app:nullable="true"
+            app:argType="android.support.v4.media.MediaBrowserCompat$MediaItem" />
     </fragment>
 
     <fragment

@@ -5,12 +5,18 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Spinner
+import androidx.annotation.VisibleForTesting
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
@@ -25,6 +31,7 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -38,6 +45,10 @@ class MainFragment : DestinationFragment(), LogTagger {
     @Inject
     lateinit var mediaControllerAdapter: MediaControllerAdapter
 
+    lateinit var drawerLayout : DrawerLayout
+
+    lateinit var navigationView : NavigationView
+
     private var tabLayoutMediator: TabLayoutMediator? = null
 
     lateinit var adapter: MyPagerAdapter
@@ -49,7 +60,12 @@ class MainFragment : DestinationFragment(), LogTagger {
     lateinit var binding : FragmentMainBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        this.binding = FragmentMainBinding.inflate(inflater)
+          this.binding = FragmentMainBinding.inflate(inflater)
+        this.drawerLayout = binding.drawerLayout
+        this.navigationView = binding.navigationView
+        initNavigationView()
+        //drawerLayout.addDrawerListener(myDrawerListener)
+
         //    searchFragment = SearchFragment()
         binding.appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { app: AppBarLayout?, offset: Int ->
             Log.i(logTag(), "offset: " + offset + ", scroll range: " + app?.totalScrollRange)
@@ -61,11 +77,17 @@ class MainFragment : DestinationFragment(), LogTagger {
                     binding.rootMenuItemsPager.paddingRight,
                     newOffset)
         })
-        val activity : AppCompatActivity = requireActivity() as AppCompatActivity
-        activity.setSupportActionBar(binding.titleToolbar)
-        val supportActionBar = activity.supportActionBar
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar.setHomeAsUpIndicator(R.drawable.ic_menu)
+//        val activity  = requireActivity() as AppCompatActivity
+//        activity.setSupportActionBar(binding.titleToolbar)
+//        val supportActionBar = activity.supportActionBar
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        supportActionBar.setHomeAsUpIndicator(R.drawable.ic_menu)
+
+
+        val navController = this.findNavController()
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        binding.titleToolbar.setupWithNavController(navController, appBarConfiguration)
+
         return binding.root
     }
 
@@ -113,6 +135,24 @@ class MainFragment : DestinationFragment(), LogTagger {
 ////        }
 //
 //    }
+
+
+    @VisibleForTesting
+    fun onNavigationItemSelected(menuItem: MenuItem): Boolean { // set item as selected to persist highlight
+        menuItem.isChecked = true
+        // close drawer when item is tapped
+        drawerLayout.closeDrawers()
+        // Add code here to update the UI based on the item selected
+        // For example, swap UI fragments here
+        return true
+    }
+
+    private fun initNavigationView() {
+        navigationView.setNavigationItemSelectedListener { menuItem: MenuItem -> onNavigationItemSelected(menuItem) }
+        val spinner = navigationView.menu.findItem(R.id.themes_menu_item).actionView as Spinner
+    //    ThemeSpinnerController(requireContext(), spinner, this, componentClassMapper)
+    }
+
 
     override fun lockDrawerLayout(): Boolean {
         return false

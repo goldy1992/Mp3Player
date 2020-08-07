@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawerLayout"
-    android:fitsSystemWindows="true"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <LinearLayout
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        tools:context=".activities.MainActivity"
-    >
+
+<LinearLayout android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.MainActivity"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
         <fragment
             android:id="@+id/nav_host_container"
@@ -24,14 +19,4 @@
 
     </LinearLayout>
 
-    <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigationView"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:menu="@menu/themes_menu"
-        app:headerLayout="@layout/nav_header"/>
 
-</androidx.drawerlayout.widget.DrawerLayout>
