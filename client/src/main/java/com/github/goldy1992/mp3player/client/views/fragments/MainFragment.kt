@@ -46,7 +46,7 @@ class MainFragment : DestinationFragment(), LogTagger {
     @Inject
     lateinit var mediaControllerAdapter: MediaControllerAdapter
 
-    lateinit var drawerLayout : DrawerLayout
+
 
     lateinit var navigationView : NavigationView
 

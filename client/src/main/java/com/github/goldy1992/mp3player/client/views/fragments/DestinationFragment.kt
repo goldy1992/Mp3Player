@@ -28,7 +28,7 @@ abstract class DestinationFragment : Fragment() {
         }
     }
 
-    protected fun setUpToolbar(toolbar : Toolbar) {
+    protected open fun setUpToolbar(toolbar : Toolbar) {
         val navController = this.findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
         toolbar.setupWithNavController(navController, appBarConfiguration)
