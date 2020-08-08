@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
@@ -11,11 +10,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.activities.MainActivity
 import com.github.goldy1992.mp3player.client.databinding.FragmentMediaPlayerBinding
 import com.github.goldy1992.mp3player.client.views.TrackViewPager
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -79,8 +74,7 @@ class MediaPlayerFragment : DestinationFragment(), LogTagger, Observer<MediaMeta
     override fun onChanged(t: MediaMetadataCompat?) {
         val titleText = t?.description?.title.toString()
         titleToolbar.title = titleText
-
-        val artistText = t?.description?.extras?.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)
+        val artistText = t?.description?.subtitle
         titleToolbar.subtitle = artistText
     }
 }
