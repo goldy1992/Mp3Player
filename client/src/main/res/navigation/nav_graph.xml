@@ -42,6 +42,13 @@
         android:label="Media Player Fragment"
         tools:layout="@layout/fragment_media_player">
     </fragment>
+
+    <fragment
+        android:id="@+id/search_results_fragment"
+        android:name="com.github.goldy1992.mp3player.client.views.fragments.SearchResultsFragment"
+        android:label="Search Results Fragment"
+        tools:layout="@layout/fragment_search_results">
+    </fragment>
     
 
 </navigation>

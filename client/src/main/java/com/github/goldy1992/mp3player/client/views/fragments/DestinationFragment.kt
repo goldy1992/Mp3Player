@@ -15,10 +15,13 @@ abstract class DestinationFragment : Fragment() {
 
     private var drawerLayout : DrawerLayout? = null
 
+    private var activity : MainActivity? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val activity = requireActivity()
         if (activity is MainActivity) {
+            this.activity = activity
             this.drawerLayout = activity.drawerLayout
             if (lockDrawerLayout()) {
                 activity.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
@@ -31,6 +34,7 @@ abstract class DestinationFragment : Fragment() {
     protected open fun setUpToolbar(toolbar : Toolbar) {
         val navController = this.findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
+        activity?.setSupportActionBar(toolbar)
         toolbar.setupWithNavController(navController, appBarConfiguration)
     }
 }

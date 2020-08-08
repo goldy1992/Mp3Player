@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +16,10 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.observe
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -60,9 +64,10 @@ class MainFragment : DestinationFragment(), LogTagger {
 
     lateinit var binding : FragmentMainBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-          this.binding = FragmentMainBinding.inflate(inflater)
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
+          this.binding = FragmentMainBinding.inflate(inflater)
         //    searchFragment = SearchFragment()
         binding.appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { app: AppBarLayout?, offset: Int ->
             Log.i(logTag(), "offset: " + offset + ", scroll range: " + app?.totalScrollRange)
@@ -78,6 +83,11 @@ class MainFragment : DestinationFragment(), LogTagger {
         return binding.root
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_main, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
             adapter = MyPagerAdapter(this)
@@ -105,7 +115,7 @@ class MainFragment : DestinationFragment(), LogTagger {
 
     }
         binding.rootMenuItemsPager.adapter = adapter
-        tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.rootMenuItemsPager!!, adapter)
+        tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.rootMenuItemsPager, adapter)
         tabLayoutMediator!!.attach()
         binding.rootMenuItemsPager.adapter = adapter
         viewModel.menuCategories = mediaBrowserAdapter.subscribeToRoot() as MutableLiveData<List<MediaBrowserCompat.MediaItem>>

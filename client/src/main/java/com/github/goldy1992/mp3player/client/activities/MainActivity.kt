@@ -10,7 +10,9 @@ import androidx.annotation.VisibleForTesting
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.R
@@ -76,12 +78,22 @@ open class MainActivity : MediaActivityCompat()
         super.onResume()
       }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return super.onCreateOptionsMenu(menu)
+//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+////        menuInflater.inflate(R.menu.menu_main, menu)
+////        return super.onCreateOptionsMenu(menu)
+//    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val navController : NavController = findNavController(R.id.nav_host_container)
+        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
     }
 
+
 //    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        Log.i(logTag(), "hit on options item selected")
+//        val navController = findNavController(R.id.nav_host_container)
+//        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
+
 //        when (item.itemId) {
 //            android.R.id.home -> {
 //               // drawerLayout!!.openDrawer(GravityCompat.START)
@@ -99,7 +111,7 @@ open class MainActivity : MediaActivityCompat()
 //            else -> return super.onOptionsItemSelected(item)
 //        }
 //        return true
-//    }
+    //}
 
     @VisibleForTesting
     fun onNavigationItemSelected(menuItem: MenuItem): Boolean { // set item as selected to persist highlight
