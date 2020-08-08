@@ -29,7 +29,6 @@
     <fragment
         android:id="@+id/folder_fragment"
         android:name="com.github.goldy1992.mp3player.client.views.fragments.FolderFragment"
-        android:label="Folder Fragment"
         tools:layout="@layout/fragment_folder">
         <argument
             android:name="folder"

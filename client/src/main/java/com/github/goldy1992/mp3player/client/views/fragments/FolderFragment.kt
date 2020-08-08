@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.databinding.FragmentFolderBinding
@@ -25,11 +24,13 @@ class FolderFragment : DestinationFragment(), LogTagger {
     private lateinit var folderListFragment : MediaItemListFragment
 
     private lateinit var titleToolbar : MaterialToolbar
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentFolderBinding.inflate(layoutInflater)
         val folderItem = arguments?.get("folder") as MediaBrowserCompat.MediaItem
         this.titleToolbar = binding.titleToolbar
-        setupToolbar(titleToolbar, MediaItemUtils.getDirectoryName(folderItem)!!)
+        setUpToolbar(titleToolbar)
+        configureToolbar(titleToolbar, MediaItemUtils.getDirectoryName(folderItem)!!)
 
         folderListFragment = SongListFragment.newInstance(MediaItemType.FOLDER,
                 MediaItemUtils.getLibraryId(folderItem)!!)
@@ -46,18 +47,13 @@ class FolderFragment : DestinationFragment(), LogTagger {
         return false
     }
 
-    private fun setupToolbar(titleToolbar: MaterialToolbar, title : String) {
+    private fun configureToolbar(titleToolbar: MaterialToolbar, title : String) {
         titleToolbar.title = title
-        val activity : AppCompatActivity = requireActivity() as AppCompatActivity
-        activity.setSupportActionBar(titleToolbar)
-        val supportActionBar = activity.supportActionBar
-        supportActionBar!!.hide()
         titleToolbar.setOnClickListener { v : View ->
             if (v == titleToolbar.navigationIcon) {
                         Log.i(logTag(), "pressed")
                     }
         }
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         val titleTextView: TextView?
         try {
             val f = titleToolbar.javaClass.superclass!!.getDeclaredField("mTitleTextView")
