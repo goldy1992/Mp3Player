@@ -78,11 +78,6 @@ open class MainActivity : MediaActivityCompat()
         super.onResume()
       }
 
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-////        menuInflater.inflate(R.menu.menu_main, menu)
-////        return super.onCreateOptionsMenu(menu)
-//    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val navController : NavController = findNavController(R.id.nav_host_container)
         return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)

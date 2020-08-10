@@ -26,7 +26,7 @@ class SearchResultActivity : MediaActivityCompat(),
 
     private var currentQuery: String? = null
 
-    private val viewModel : SearchResultActivityViewModel by viewModels()
+   // private val viewModel : SearchResultActivityViewModel by viewModels()
 
     private lateinit var binding : ActivitySearchResultsBinding
 
@@ -38,7 +38,7 @@ class SearchResultActivity : MediaActivityCompat(),
 
     override fun onConnected() {
         super.onConnected()
-        mediaBrowserAdapter.registerSearchResultListener(viewModel)
+   //     mediaBrowserAdapter.registerSearchResultListener(viewModel)
         handleIntent(intent)
     }
 
@@ -112,8 +112,8 @@ class SearchResultActivity : MediaActivityCompat(),
     }
 
     private fun subscribeUi(adapter: SearchResultAdapter) {
-        viewModel.searchResults.observe(this) { result ->
-            adapter.submitList(result)
-        }
+//        viewModel.searchResults.observe(this) { result ->
+//            adapter.submitList(result)
+//        }
     }
 }

@@ -28,12 +28,13 @@
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface">
 
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/searchView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/white"
-                    />
+<!--                <android.widget.SearchView-->
+<!--                    android:id="@+id/searchView"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:queryHint="@string/search_hint"-->
+<!--                    android:background="@color/white"-->
+<!--                    />-->
             </com.google.android.material.appbar.MaterialToolbar>
 
         </com.google.android.material.appbar.AppBarLayout>

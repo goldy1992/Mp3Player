@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.github.goldy1992.mp3player.client.activities.MainActivity
+import com.google.android.material.appbar.AppBarLayout
 
 abstract class DestinationFragment : Fragment() {
 
@@ -37,4 +38,5 @@ abstract class DestinationFragment : Fragment() {
         activity?.setSupportActionBar(toolbar)
         toolbar.setupWithNavController(navController, appBarConfiguration)
     }
+
 }

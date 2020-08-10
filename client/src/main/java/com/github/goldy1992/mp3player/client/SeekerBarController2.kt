@@ -26,12 +26,14 @@ class SeekerBarController2
                     private val timeCounter: TimeCounter)
     : AnimatorUpdateListener, OnSeekBarChangeListener, LogTagger {
 
-    private var seekerBar: SeekerBar? = null
+    private lateinit var seekerBar: SeekerBar
+
     @PlaybackStateCompat.State
     private var currentState = PlaybackStateCompat.STATE_PAUSED
     private var currentPlaybackSpeed = Constants.DEFAULT_SPEED
     private var currentPosition = Constants.DEFAULT_POSITION
     private var currentSongDuration: Long = 0
+    private var lastKnownPosition : Long = 0
     var isLooping = false
         private set
     @get:VisibleForTesting
@@ -61,7 +63,7 @@ class SeekerBarController2
     fun onMetadataChanged(metadata: MediaMetadataCompat?) {
         Log.i(logTag(), "meta data change")
         val max = metadata?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)?.toInt() ?: 0
-        seekerBar!!.max = max
+        seekerBar.max = max
         currentSongDuration = max.toLong()
         createAnimator()
         updateValueAnimator()
@@ -175,7 +177,8 @@ class SeekerBarController2
      */
     fun init(seekerBar: SeekerBar) {
         this.seekerBar = seekerBar
-        this.seekerBar!!.setOnSeekBarChangeListener(this)
+        this.seekerBar.max = 0
+        this.seekerBar.setOnSeekBarChangeListener(this)
     }
 
     override fun logTag(): String {
