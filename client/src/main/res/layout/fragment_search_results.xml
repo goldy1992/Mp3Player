@@ -21,20 +21,14 @@
             android:layout_alignParentTop="true"
             android:fitsSystemWindows="true"
             >
+
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
+                style="@style/Widget.MaterialComponents.Toolbar.Surface"
                 android:layout_width="match_parent"
-                android:focusableInTouchMode="true"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface">
+                android:focusableInTouchMode="true">
 
-<!--                <android.widget.SearchView-->
-<!--                    android:id="@+id/searchView"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:queryHint="@string/search_hint"-->
-<!--                    android:background="@color/white"-->
-<!--                    />-->
             </com.google.android.material.appbar.MaterialToolbar>
 
         </com.google.android.material.appbar.AppBarLayout>

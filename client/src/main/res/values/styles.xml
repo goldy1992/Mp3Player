@@ -21,4 +21,8 @@
         <item name="android:minHeight">48dp</item>
     </style>
 
+<!--    <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">-->
+<!--        <item name="searchHintIcon">#null</item>-->
+<!--    </style>-->
+
 </resources>

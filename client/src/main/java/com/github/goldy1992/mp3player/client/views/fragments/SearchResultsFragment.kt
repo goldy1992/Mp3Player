@@ -4,18 +4,17 @@ import android.app.Activity
 import android.app.SearchManager
 import android.content.ComponentName
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.SearchView
-import androidx.annotation.VisibleForTesting
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
@@ -109,6 +108,7 @@ class SearchResultsFragment : DestinationFragment(), MyGenericItemTouchListener.
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_menu, menu)
+        configureSearchView(menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -123,7 +123,15 @@ class SearchResultsFragment : DestinationFragment(), MyGenericItemTouchListener.
 //        }
 //    }
 
-
+    private fun configureSearchView(searchMenu: Menu) {
+        val item = searchMenu.findItem(R.id.search)
+        val searchView = item.actionView as SearchView
+        searchView.setIconifiedByDefault(false)
+        searchView.queryHint = "Search Media"
+        val magId = resources.getIdentifier("android:id/search_mag_icon", null, null)
+        val magImage = searchView.findViewById<View>(magId) as ImageView
+        magImage.layoutParams = LinearLayout.LayoutParams(0, 0)
+    }
 
     inner class QueryListener : SearchView.OnQueryTextListener {
         /** {@inheritDoc}  */
