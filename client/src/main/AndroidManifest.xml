@@ -13,7 +13,7 @@
 
         <activity
             android:name=".activities.MainActivity"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="stateHidden|adjustPan" >
             <meta-data android:name="android.app.default_searchable"
                 android:value=".activities.SearchResultActivity" />
         </activity>
