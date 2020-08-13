@@ -15,11 +15,8 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.HIDE_IMPLICIT_ONLY
-import android.view.inputmethod.InputMethodManager.SHOW_FORCED
-import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.SearchView
@@ -38,7 +35,6 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import dagger.hilt.android.AndroidEntryPoint
-import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import org.apache.commons.lang3.StringUtils.isNotEmpty
 import javax.inject.Inject
 
@@ -85,12 +81,7 @@ class SearchResultsFragment : DestinationFragment(), MyGenericItemTouchListener.
 
         subscribeUi(searchResultAdapter)
 
-
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {
@@ -101,12 +92,9 @@ class SearchResultsFragment : DestinationFragment(), MyGenericItemTouchListener.
                     val action = MainFragmentDirections.goToFolderFragment(item)
                     findNavController().navigate(action)
                 }
-
                 else -> return
             }
-
             inputMethodManager.hideSoftInputFromWindow(requireView().windowToken, 0)
-
         }
     }
 
