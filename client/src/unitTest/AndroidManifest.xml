@@ -3,9 +3,7 @@
     package="com.github.goldy1992.mp3player.client"
     android:installLocation="preferExternal">
 
-    <application tools:ignore="GoogleAppIndexingWarning"
-        android:theme="@style/AppTheme"
-        android:name="com.github.goldy1992.mp3player.UnitTestApplication">
+    <application>
 
         <activity android:name=".activities.SplashScreenEntryActivity" />
         <activity android:name=".activities.EmptyMediaActivityCompatFragmentActivity" />

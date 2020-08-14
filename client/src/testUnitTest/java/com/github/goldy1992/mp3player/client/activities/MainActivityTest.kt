@@ -86,22 +86,10 @@ class MainActivityTest {
     @Test
     fun testOnOptionsItemSelectedSearch() {
         scenario.onActivity { activity: MainActivity ->
-            val searchFragment = activity.searchFragment
-            // assert the search fragment is NOT already added
-            Assert.assertFalse(searchFragment!!.isAdded)
             val menuItem = mock<MenuItem>()
-            whenever(menuItem.itemId).thenReturn(R.id.action_search)
             // select the search option item
             activity.onOptionsItemSelected(menuItem)
             Shadows.shadowOf(Looper.getMainLooper()).idle()
-            // assert the search fragment IS now added
-            Assert.assertTrue(searchFragment.isAdded)
-            // post test remove the added fragment
-            activity.supportFragmentManager
-                    .beginTransaction()
-                    .remove(activity.searchFragment!!)
-                    .commit()
-
         }
     }
 

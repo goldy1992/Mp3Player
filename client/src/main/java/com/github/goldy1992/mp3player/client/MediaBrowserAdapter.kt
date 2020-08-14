@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.client
 
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -49,7 +50,7 @@ open class MediaBrowserAdapter
      * ID when communicating with the MediaPlaybackService.
      * @param id the id of the media item to be subscribed to
      */
-    open fun subscribe(id: String) : LiveData<List<MediaBrowserCompat.MediaItem>> {
+    open fun subscribe(id: String) : LiveData<List<MediaItem>> {
         val toReturn = mySubscriptionCallback.subscribe(id)
         mediaBrowser?.subscribe(id, mySubscriptionCallback)
         return toReturn
@@ -71,7 +72,7 @@ open class MediaBrowserAdapter
         mediaBrowser?.subscribe(rootId, mySubscriptionCallback)
     }
 
-    open fun subscribeToRoot() : LiveData<List<MediaBrowserCompat.MediaItem>> {
+    open fun subscribeToRoot() : LiveData<List<MediaItem>> {
         return mySubscriptionCallback.getRootLiveData()
     }
 

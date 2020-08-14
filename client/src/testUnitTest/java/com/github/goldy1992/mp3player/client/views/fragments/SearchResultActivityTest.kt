@@ -1,8 +1,9 @@
-package com.github.goldy1992.mp3player.client.activities
+package com.github.goldy1992.mp3player.client.views.fragments
 
 import android.app.SearchManager
 import android.content.Intent
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.fragment.app.testing.FragmentScenario
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
@@ -30,11 +31,11 @@ import org.robolectric.RobolectricTestRunner
         MediaBrowserAdapterModule::class,
         MediaControllerAdapterModule::class)
 @RunWith(RobolectricTestRunner::class)
-class SearchResultActivityTest {
+class SearchResultsFragmentTest {
     /** Intent  */
     private lateinit var intent: Intent
 
-    private lateinit var scenario : ActivityScenario<SearchResultActivity>
+    private lateinit var scenario : FragmentScenario<SearchResultsFragment>
     /** Activity controller  */
 
     private lateinit var mediaSessionCompat: MediaSessionCompat
@@ -49,47 +50,47 @@ class SearchResultActivityTest {
         rule.inject()
         val context = InstrumentationRegistry.getInstrumentation().context
         mediaSessionCompat = MediaSessionCompat(context, "TAG")
-        intent = Intent(ApplicationProvider.getApplicationContext(), SearchResultActivity::class.java)
-        scenario = ActivityScenario.launch(intent)
+//        intent = Intent(ApplicationProvider.getApplicationContext(), SearchResultsFragment::class.java)
+        scenario = FragmentScenario.launch(SearchResultsFragment::class.java)
     }
 
     @Test
     fun testOnSongItemSelected() {
-        scenario.onActivity { activity: SearchResultActivity ->
-            val searchResultActivitySpied = spy(activity)
-            val spiedMediaControllerAdapter = spy(searchResultActivitySpied.mediaControllerAdapter)
-            searchResultActivitySpied.mediaControllerAdapter = spiedMediaControllerAdapter
+        scenario.onFragment { activity: SearchResultsFragment ->
+            val SearchResultsFragmentSpied = spy(activity)
+            val spiedMediaControllerAdapter = spy(SearchResultsFragmentSpied.mediaControllerAdapter)
+            SearchResultsFragmentSpied.mediaControllerAdapter = spiedMediaControllerAdapter
             val libraryId = "libId"
             val mediaItem = MediaItemBuilder("id")
                     .setMediaItemType(MediaItemType.SONGS)
                     .setLibraryId(libraryId)
                     .build()
-            searchResultActivitySpied.itemSelected(mediaItem)
-            verify(searchResultActivitySpied, never()).startActivity(any())
+            SearchResultsFragmentSpied.itemSelected(mediaItem)
+            verify(SearchResultsFragmentSpied, never()).startActivity(any())
             verify(spiedMediaControllerAdapter, times(1)).playFromMediaId(libraryId, null)
         }
     }
 
     @Test
     fun testOnFolderItemSelected() {
-        scenario.onActivity { activity: SearchResultActivity ->
-            val searchResultActivitySpied = spy(activity)
-            val spiedMediaControllerAdapter = spy(searchResultActivitySpied.mediaControllerAdapter)
-            searchResultActivitySpied.mediaControllerAdapter = spiedMediaControllerAdapter
+        scenario.onFragment { activity: SearchResultsFragment ->
+            val SearchResultsFragmentSpied = spy(activity)
+            val spiedMediaControllerAdapter = spy(SearchResultsFragmentSpied.mediaControllerAdapter)
+            SearchResultsFragmentSpied.mediaControllerAdapter = spiedMediaControllerAdapter
             val libraryId = "libId"
             val mediaItem = MediaItemBuilder("id")
                     .setMediaItemType(MediaItemType.FOLDERS)
                     .setLibraryId(libraryId)
                     .build()
-            searchResultActivitySpied.itemSelected(mediaItem)
-            verify(searchResultActivitySpied, times(1)).startActivity(any())
+            SearchResultsFragmentSpied.itemSelected(mediaItem)
+            verify(SearchResultsFragmentSpied, times(1)).startActivity(any())
             verify(spiedMediaControllerAdapter, never()).playFromMediaId(libraryId, null)
         }
     }
 
     @Test
     fun testHandleNewIntent() {
-        scenario.onActivity { activity: SearchResultActivity ->
+        scenario.onFragment { activity: SearchResultsFragment ->
 
             val mediaBrowserAdapterSpied = spy(activity.mediaBrowserAdapter)
             activity.mediaBrowserAdapter = mediaBrowserAdapterSpied
@@ -97,7 +98,7 @@ class SearchResultActivityTest {
             val intent = Intent()
             intent.action = Intent.ACTION_SEARCH
             intent.putExtra(SearchManager.QUERY, expectedQuery)
-            activity.onNewIntent(intent)
+          //  activity.onNewIntent(intent)
             verify(mediaBrowserAdapterSpied, times(1)).search(expectedQuery, null)
         }
     }

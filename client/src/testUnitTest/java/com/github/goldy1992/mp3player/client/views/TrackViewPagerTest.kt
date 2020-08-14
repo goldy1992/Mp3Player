@@ -1,6 +1,8 @@
-package com.github.goldy1992.mp3player.client.callbacks
+package com.github.goldy1992.mp3player.client.views
 
+import androidx.viewpager2.widget.ViewPager2
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.views.adapters.TrackViewAdapter
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -15,43 +17,51 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class TrackViewPagerChangeCallbackTest {
-    private var trackViewPagerChangeCallback: TrackViewPagerChangeCallback? = null
+class TrackViewPagerTest {
 
     private val mediaControllerAdapter: MediaControllerAdapter = mock<MediaControllerAdapter>()
+
+    private val trackViewAdapter : TrackViewAdapter = mock<TrackViewAdapter>()
+
+    private val trackViewPager : TrackViewPager = TrackViewPager(trackViewAdapter, mediaControllerAdapter)
+
+    lateinit var callback : TrackViewPager.PageChangeCallback
 
     @Before
     fun setup() {
         whenever(mediaControllerAdapter.getCurrentQueuePosition()).thenReturn(0)
-        trackViewPagerChangeCallback = TrackViewPagerChangeCallback(mediaControllerAdapter)
+        init()
     }
+
+
 
     @Test
     fun testSamePosition() {
         val initialPosition = 0
-        trackViewPagerChangeCallback!!.currentPosition = initialPosition
-        trackViewPagerChangeCallback!!.onPageSelected(initialPosition)
+
+        trackViewPager.currentPosition = initialPosition
+        callback.onPageSelected(initialPosition)
         verify(mediaControllerAdapter, never()).seekTo(any<Long>())
         verify(mediaControllerAdapter, never()).skipToPrevious()
         verify(mediaControllerAdapter, never()).skipToNext()
-        Assert.assertEquals(initialPosition.toLong(), trackViewPagerChangeCallback!!.currentPosition.toLong())
+        Assert.assertEquals(initialPosition.toLong(), trackViewPager.currentPosition.toLong())
     }
 
     @Test
     fun testSkipToNext() {
         val initialPosition = 0
-        trackViewPagerChangeCallback!!.currentPosition = initialPosition
+        trackViewPager.currentPosition = initialPosition
         val skipToNextPosition = initialPosition + 1
-        trackViewPagerChangeCallback!!.onPageSelected(skipToNextPosition)
+        callback.onPageSelected(skipToNextPosition)
         verify(mediaControllerAdapter, times(1)).skipToNext()
     }
 
     @Test
     fun testSkipToPrevious() {
         val initialPosition = 2
-        trackViewPagerChangeCallback!!.currentPosition = initialPosition
+        trackViewPager.currentPosition = initialPosition
         val skipToPreviousPosition = initialPosition - 1
-        trackViewPagerChangeCallback!!.onPageSelected(skipToPreviousPosition)
+        callback.onPageSelected(skipToPreviousPosition)
         verify(mediaControllerAdapter, times(1)).seekTo(0)
         verify(mediaControllerAdapter, times(1)).skipToPrevious()
     }
@@ -59,11 +69,23 @@ class TrackViewPagerChangeCallbackTest {
     @Test
     fun testSkipMoreThanOnePosition() {
         val initialPosition = 2
-        trackViewPagerChangeCallback!!.currentPosition = initialPosition
+        trackViewPager.currentPosition = initialPosition
         val skipTwoPositions = initialPosition + 2
-        trackViewPagerChangeCallback!!.onPageSelected(skipTwoPositions)
+        callback.onPageSelected(skipTwoPositions)
         verify(mediaControllerAdapter, never()).skipToPrevious()
         verify(mediaControllerAdapter, never()).skipToNext()
         verify(mediaControllerAdapter, never()).seekTo(any<Long>())
+    }
+
+    private fun init() {
+        val viewPager2: ViewPager2 = mock<ViewPager2>()
+        whenever(viewPager2.registerOnPageChangeCallback(any())).thenAnswer {
+            val expectedCallback = it.arguments[0]
+
+            if (expectedCallback is TrackViewPager.PageChangeCallback) {
+                callback = expectedCallback
+            }
+        }
+        trackViewPager.init(viewPager2)
     }
 }

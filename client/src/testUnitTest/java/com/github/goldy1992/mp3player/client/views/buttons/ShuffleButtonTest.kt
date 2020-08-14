@@ -62,10 +62,7 @@ class ShuffleButtonTest : MediaButtonTestBase() {
     @Test
     fun testOnPlaybackStateChanged() {
         @ShuffleMode val expectedShuffleMode = PlaybackStateCompat.SHUFFLE_MODE_NONE
-        val extras = Bundle()
-        extras.putInt(Constants.SHUFFLE_MODE, expectedShuffleMode)
-        val playbackState = PlaybackStateCompat.Builder().setExtras(extras).build()
-        shuffleButton.onPlaybackStateChanged(playbackState)
+        shuffleButton.onChanged(expectedShuffleMode)
         Assert.assertEquals(expectedShuffleMode, shuffleButton.shuffleMode)
     }
 }

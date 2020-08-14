@@ -9,7 +9,6 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.support.v4.media.session.PlaybackStateCompat.ShuffleMode
 import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
@@ -22,25 +21,23 @@ constructor(private val context: Context,
             private var mediaBrowserCompat: MediaBrowserCompat)
     : MediaBrowserConnectionListener, LogTagger, MediaControllerCompat.Callback() {
 
-    @get:VisibleForTesting
-    @set:VisibleForTesting
-    var mediaController: MediaControllerCompat? = null
+    private var mediaController: MediaControllerCompat? = null
 
     open var token: MediaSessionCompat.Token? = null
 
-    val metadata : MutableLiveData<MediaMetadataCompat> = MutableLiveData()
+    open val metadata : MutableLiveData<MediaMetadataCompat> = MutableLiveData()
 
-    val playbackState : MutableLiveData<PlaybackStateCompat> = MutableLiveData()
+    open val playbackState : MutableLiveData<PlaybackStateCompat> = MutableLiveData()
 
-    val queue : MutableLiveData<MutableList<MediaSessionCompat.QueueItem>> = MutableLiveData()
+    open val queue : MutableLiveData<MutableList<MediaSessionCompat.QueueItem>> = MutableLiveData()
 
-    val repeatMode : MutableLiveData<Int> = MutableLiveData()
+    open val repeatMode : MutableLiveData<Int> = MutableLiveData()
 
-    val shuffleMode : MutableLiveData<Int> = MutableLiveData()
+    open val shuffleMode : MutableLiveData<Int> = MutableLiveData()
 
-    val playbackSpeed : MutableLiveData<Float> = MutableLiveData()
+    open val playbackSpeed : MutableLiveData<Float> = MutableLiveData()
 
-    val currentQueuePosition : MutableLiveData<Int> = MutableLiveData()
+    open val currentQueuePosition : MutableLiveData<Int> = MutableLiveData()
 
     override fun onConnected() {
         try {
@@ -56,57 +53,47 @@ constructor(private val context: Context,
     }
 
     open fun prepareFromMediaId(mediaId: String?, extras: Bundle?) {
-        controller.prepareFromMediaId(mediaId, extras)
+        transportControls.prepareFromMediaId(mediaId, extras)
     }
 
     open fun playFromMediaId(mediaId: String?, extras: Bundle?) {
-        controller.playFromMediaId(mediaId, extras)
+        transportControls.playFromMediaId(mediaId, extras)
     }
 
     open fun playFromUri(uri: Uri?, extras: Bundle?) {
-        controller.playFromUri(uri, extras)
+        transportControls.playFromUri(uri, extras)
     }
 
     open fun play() {
-        controller.play()
+        transportControls.play()
     }
 
     open fun pause() { //Log.i(LOG_TAG, "pause hit");
-        controller.pause()
+        transportControls.pause()
     }
 
     open fun seekTo(position: Long) {
-        controller.seekTo(position)
+        transportControls.seekTo(position)
     }
 
     open fun stop() {
-        controller.stop()
+        transportControls.stop()
     }
 
     open fun skipToNext() {
-        controller.skipToNext()
+        transportControls.skipToNext()
     }
 
     open fun skipToPrevious() {
-        controller.skipToPrevious()
-    }
-
-    @ShuffleMode
-    open fun getShuffleMode() : Int? {
-       return mediaController!!.shuffleMode
+        transportControls.skipToPrevious()
     }
 
     open fun setShuffleMode(shuffleMode : Int) {
-        controller.setShuffleMode(shuffleMode)
-    }
-
-    @PlaybackStateCompat.RepeatMode
-    open fun getRepeatMode() : Int? {
-        return mediaController?.repeatMode
+        transportControls.setShuffleMode(shuffleMode)
     }
 
     open fun setRepeatMode(repeatMode : Int) {
-        controller.setRepeatMode(repeatMode)
+        transportControls.setRepeatMode(repeatMode)
     }
 
     open fun disconnect() {
@@ -115,27 +102,20 @@ constructor(private val context: Context,
         }
     }
 
-    open val isInitialized: Boolean
-        get() = mediaController != null && mediaController!!.isSessionReady
-
     open fun sendCustomAction(customAction: String?, args: Bundle?) {
-        controller.sendCustomAction(customAction, args)
+        transportControls.sendCustomAction(customAction, args)
     }
 
     @get:VisibleForTesting
-    val controller: MediaControllerCompat.TransportControls
+    val transportControls: MediaControllerCompat.TransportControls
         get() = mediaController!!.transportControls
 
-    open fun getQueue(): List<MediaSessionCompat.QueueItem>? {
-        return mediaController!!.queue
-    }
-
     open fun getActiveQueueItemId(): Long? {
-        return mediaController!!.playbackState.activeQueueItemId
+        return playbackState.value?.activeQueueItemId
     }
 
    open fun getCurrentQueuePosition() : Int {
-        val queue = getQueue()
+        val queue = this.queue.value
         if (queue != null) {
             val id = getActiveQueueItemId()
             for (i in queue.indices) {

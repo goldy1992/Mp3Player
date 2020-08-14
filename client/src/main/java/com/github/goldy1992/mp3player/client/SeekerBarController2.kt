@@ -134,7 +134,7 @@ class SeekerBarController2
     }
 
     private fun setLooping() {
-        val repeatMode = mediaControllerAdapter!!.getRepeatMode()
+        val repeatMode = mediaControllerAdapter?.repeatMode?.value
         isLooping = repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE
         if (null != valueAnimator) {
             valueAnimator!!.repeatCount = if (isLooping) ValueAnimator.INFINITE else 0

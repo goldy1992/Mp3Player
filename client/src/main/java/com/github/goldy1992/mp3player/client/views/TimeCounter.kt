@@ -51,7 +51,7 @@ class TimeCounter
     fun updateState(state: PlaybackStateCompat) { //Log.d(LOG_TAG, "new state");
         currentState = state.state
         currentSpeed = state.playbackSpeed
-        val repeatMode = mediaControllerAdapter.getRepeatMode()
+        val repeatMode = mediaControllerAdapter.repeatMode.value
         isRepeating = repeatMode != null && repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE
         val latestPosition = calculateCurrentPlaybackPosition(state)
         if (isInitialised) {

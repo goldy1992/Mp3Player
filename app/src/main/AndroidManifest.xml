@@ -18,6 +18,7 @@
         android:icon="@mipmap/headphone_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        tools:ignore="GoogleAppIndexingWarning"
         tools:node="merge"
       >
 
