@@ -23,18 +23,16 @@ class MediaIdSubscriptionCallback
     private val currentData : MutableMap<String, LiveData<List<MediaBrowserCompat.MediaItem>>> = HashMap()
 
     override fun onChildrenLoaded(parentId: String, children: List<MediaBrowserCompat.MediaItem>) {
-
-        (currentData[parentId] as MutableLiveData).postValue(children)
-
-
-        val childrenArrayList = ArrayList(children)
-        val listenersToNotify: Set<MediaBrowserSubscriber>? = subscribers[parentId]
-        if (null != listenersToNotify) {
-            for (listener in listenersToNotify) {
-                listener.onChildrenLoaded(parentId, childrenArrayList)
+        if (currentData.containsKey(parentId)) {
+            (currentData[parentId] as MutableLiveData).postValue(children)
+            val childrenArrayList = ArrayList(children)
+            val listenersToNotify: Set<MediaBrowserSubscriber>? = subscribers[parentId]
+            if (null != listenersToNotify) {
+                for (listener in listenersToNotify) {
+                    listener.onChildrenLoaded(parentId, childrenArrayList)
+                }
             }
         }
-
     }
 
     @Deprecated("")

@@ -27,11 +27,6 @@ class RepeatOneRepeatAllButton
     var state = 0
         private set
 
-    override fun init(imageView: MaterialButton) {
-        super.init(imageView)
-        updateState(PlaybackStateCompat.REPEAT_MODE_NONE)
-    }
-
     @VisibleForTesting
     override fun onClick(view: View?) {
         val nextState = nextState

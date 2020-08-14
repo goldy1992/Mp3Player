@@ -2,14 +2,19 @@ package com.github.goldy1992.mp3player.client.views
 
 import android.os.Handler
 import android.os.Looper
+import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.widget.TextView
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.MockMediaControllerAdapter
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -21,6 +26,7 @@ class TimeCounterTest {
 
     private val view: TextView = mock<TextView>()
     private val mediaControllerAdapter: MediaControllerAdapter = mock<MediaControllerAdapter>()
+    private val repeatMode : MutableLiveData<Int> = MutableLiveData()
     private lateinit var handler: Handler
     private lateinit var timeCounter: TimeCounter
 
@@ -30,6 +36,7 @@ class TimeCounterTest {
 
     fun setup() {
         handler = Handler(Looper.getMainLooper())
+        whenever(mediaControllerAdapter.repeatMode).thenReturn(repeatMode)
         timeCounter = TimeCounter(mediaControllerAdapter)
         timeCounter.init(view)
     }
@@ -60,7 +67,6 @@ class TimeCounterTest {
         timeCounter.timer = spiedTimer
         val state = createState(PlaybackStateCompat.STATE_PAUSED, POSITION)
         timeCounter.updateState(state)
-       // verify(spiedTimer)!!.shutdown()
         Assert.assertFalse("TimerCounter should not be running", timeCounter.isRunning)
         Assert.assertEquals("currentTime should be equal to the position parameter", POSITION, timeCounter.currentPosition)
     }

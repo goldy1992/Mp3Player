@@ -27,12 +27,12 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
     }
 
     /**
-     * test for the create method.
+     * Asserts the initial state of the button is set to [PlayPauseButton.INITIAL_PLAYBACK_STATE]
      */
     @Test
-    fun testCreate() {
+    fun testInitialState() {
         Assert.assertNotNull(playPauseButton)
-        Assert.assertEquals(2, playPauseButton.state)
+        Assert.assertEquals(PlaybackStateCompat.STATE_STOPPED, playPauseButton.state)
     }
 
     /**

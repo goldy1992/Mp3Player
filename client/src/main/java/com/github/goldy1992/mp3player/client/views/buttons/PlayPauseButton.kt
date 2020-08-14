@@ -62,9 +62,8 @@ open class PlayPauseButton
     val pauseIcon = R.drawable.ic_baseline_pause_24px
 
     companion object {
-        @JvmField
         @PlaybackStateCompat.State
-        val INITIAL_PLAYBACK_STATE = PlaybackStateCompat.STATE_STOPPED
+        const val INITIAL_PLAYBACK_STATE = PlaybackStateCompat.STATE_STOPPED
     }
 
     override fun logTag(): String {
