@@ -30,7 +30,8 @@ class MyDescriptionAdapter
     }
 
     override fun createCurrentContentIntent(player: Player): PendingIntent? {
-        val openUI = Intent(context, componentClassMapper.mediaPlayerActivity)
+        // TODO: create intent that will allow android navigation to navigate to the MediaPlayerFragment
+        val openUI = Intent(context, componentClassMapper.mainActivity)
         openUI.putExtra(MEDIA_SESSION, token)
         openUI.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         return PendingIntent.getActivity(

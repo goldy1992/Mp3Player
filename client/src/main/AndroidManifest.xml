@@ -16,13 +16,6 @@
             android:windowSoftInputMode="stateHidden|adjustPan" >
             <meta-data android:name="android.app.default_searchable"
                 android:value=".activities.SearchResultActivity" />
-        </activity>
-
-
-        <activity
-            android:name=".activities.MediaPlayerActivity"
-            android:parentActivityName=".activities.MainActivity"
-            android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -31,14 +24,6 @@
                 <data android:scheme="file"/>
                 <data android:mimeType="audio/*"/>
             </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".activities.FolderActivity"
-            android:parentActivityName=".activities.MainActivity" />
-
-        <activity android:name=".activities.SearchResultActivity"
-            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>

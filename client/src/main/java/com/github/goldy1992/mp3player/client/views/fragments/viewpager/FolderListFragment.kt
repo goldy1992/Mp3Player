@@ -3,7 +3,6 @@ package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 import android.support.v4.media.MediaBrowserCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.github.goldy1992.mp3player.client.IntentMapper
 import com.github.goldy1992.mp3player.client.viewmodels.FolderListViewModel
 import com.github.goldy1992.mp3player.client.viewmodels.MediaListViewModel
 import com.github.goldy1992.mp3player.client.views.adapters.MyFolderViewAdapter
@@ -18,9 +17,6 @@ class FolderListFragment : MediaItemListFragment() {
 
     @Inject
     lateinit var myFolderViewAdapter : MyFolderViewAdapter
-
-    @Inject
-    lateinit var intentMapper : IntentMapper
 
     private val viewModel : FolderListViewModel by viewModels()
 
