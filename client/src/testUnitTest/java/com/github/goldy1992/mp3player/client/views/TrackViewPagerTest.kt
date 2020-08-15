@@ -1,5 +1,7 @@
 package com.github.goldy1992.mp3player.client.views
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.viewpager2.widget.ViewPager2
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.views.adapters.TrackViewAdapter
@@ -29,8 +31,7 @@ class TrackViewPagerTest {
 
     @Before
     fun setup() {
-        whenever(mediaControllerAdapter.getCurrentQueuePosition()).thenReturn(0)
-        init()
+           init()
     }
 
 
@@ -38,19 +39,17 @@ class TrackViewPagerTest {
     @Test
     fun testSamePosition() {
         val initialPosition = 0
-
-        trackViewPager.currentPosition = initialPosition
+        whenever(mediaControllerAdapter.calculateCurrentQueuePosition()).thenReturn(initialPosition)
         callback.onPageSelected(initialPosition)
         verify(mediaControllerAdapter, never()).seekTo(any<Long>())
         verify(mediaControllerAdapter, never()).skipToPrevious()
         verify(mediaControllerAdapter, never()).skipToNext()
-        Assert.assertEquals(initialPosition.toLong(), trackViewPager.currentPosition.toLong())
-    }
+       }
 
     @Test
     fun testSkipToNext() {
         val initialPosition = 0
-        trackViewPager.currentPosition = initialPosition
+        whenever(mediaControllerAdapter.calculateCurrentQueuePosition()).thenReturn(initialPosition)
         val skipToNextPosition = initialPosition + 1
         callback.onPageSelected(skipToNextPosition)
         verify(mediaControllerAdapter, times(1)).skipToNext()
@@ -59,7 +58,7 @@ class TrackViewPagerTest {
     @Test
     fun testSkipToPrevious() {
         val initialPosition = 2
-        trackViewPager.currentPosition = initialPosition
+        whenever(mediaControllerAdapter.calculateCurrentQueuePosition()).thenReturn(initialPosition)
         val skipToPreviousPosition = initialPosition - 1
         callback.onPageSelected(skipToPreviousPosition)
         verify(mediaControllerAdapter, times(1)).seekTo(0)
@@ -69,7 +68,7 @@ class TrackViewPagerTest {
     @Test
     fun testSkipMoreThanOnePosition() {
         val initialPosition = 2
-        trackViewPager.currentPosition = initialPosition
+        whenever(mediaControllerAdapter.calculateCurrentQueuePosition()).thenReturn(0)
         val skipTwoPositions = initialPosition + 2
         callback.onPageSelected(skipTwoPositions)
         verify(mediaControllerAdapter, never()).skipToPrevious()

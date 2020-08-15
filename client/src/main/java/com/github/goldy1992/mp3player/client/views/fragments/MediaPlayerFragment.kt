@@ -50,7 +50,6 @@ class MediaPlayerFragment : DestinationFragment(), LogTagger, Observer<MediaMeta
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentMediaPlayerBinding.inflate(inflater)
         mediaControllerAdapter.queue.observe(viewLifecycleOwner, trackViewPager.queueObserver)
-        mediaControllerAdapter.currentQueuePosition.observe(viewLifecycleOwner, trackViewPager.currentQueuePositionObserver)
         mediaControllerAdapter.metadata.observe(viewLifecycleOwner, trackViewPager.metadataObserver)
         mediaControllerAdapter.metadata.observe(viewLifecycleOwner, this)
         this.trackViewPager.init(binding.trackViewPager)

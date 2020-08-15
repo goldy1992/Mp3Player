@@ -24,11 +24,6 @@ class TrackViewPager
 
     val metadataObserver = MetadataObserver()
 
-    val currentQueuePositionObserver = CurrentQueuePositionObserver()
-
-    /**  */
-    var currentPosition: Int = -1
-
     fun init(viewPager2: ViewPager2) {
         this.view = viewPager2
         view.adapter = trackViewAdapter
@@ -38,7 +33,7 @@ class TrackViewPager
 
 
     private fun setCurrentItem() {
-        view.setCurrentItem(mediaControllerAdapter.getCurrentQueuePosition(), false)
+        view.setCurrentItem(mediaControllerAdapter.calculateCurrentQueuePosition(), false)
     }
 
     override fun logTag(): String {
@@ -48,27 +43,29 @@ class TrackViewPager
     inner class PageChangeCallback : ViewPager2.OnPageChangeCallback() {
         /**
          *
-         * @param position
+         * @param newPosition
          */
-        override fun onPageSelected(position: Int) {
+        override fun onPageSelected(newPosition: Int) {
 
-            if (position < 0 || currentPosition == position) {
+            val currentQueuePosition = mediaControllerAdapter.calculateCurrentQueuePosition()
+
+            if (newPosition < 0 || currentQueuePosition == newPosition) {
                 return
             }
-            if (isSkipToNext(position)) {
+            if (isSkipToNext(newPosition, currentQueuePosition)) {
                 mediaControllerAdapter.skipToNext()
-            } else if (isSkipToPrevious(position)) {
+            } else if (isSkipToPrevious(newPosition, currentQueuePosition)) {
                 mediaControllerAdapter.seekTo(0)
                 mediaControllerAdapter.skipToPrevious()
             }
         }
 
-        private fun isSkipToNext(position: Int): Boolean {
-            return position == (currentPosition + 1)
+        private fun isSkipToNext(newPosition: Int, currentPosition : Int): Boolean {
+            return newPosition == (currentPosition + 1)
         }
 
-        private fun isSkipToPrevious(position: Int): Boolean {
-            return position == (currentPosition - 1)
+        private fun isSkipToPrevious(newPosition: Int, currentPosition : Int): Boolean {
+            return newPosition == (currentPosition - 1)
         }
 
 
@@ -91,11 +88,4 @@ class TrackViewPager
         }
     }
 
-    inner class CurrentQueuePositionObserver : Observer<Int> {
-        override fun onChanged(t: Int) {
-            currentPosition = t
-            setCurrentItem()
-        }
-
-    }
 }

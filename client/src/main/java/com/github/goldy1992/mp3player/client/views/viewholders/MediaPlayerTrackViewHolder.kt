@@ -7,11 +7,12 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
+import com.github.goldy1992.mp3player.client.databinding.ViewHolderMediaPlayerBinding
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_holder_media_player.view.*
 
-class MediaPlayerTrackViewHolder(itemView: View, private val albumArtPainter: AlbumArtPainter, private  val context : Context)
-    : RecyclerView.ViewHolder(itemView), LayoutContainer {
+class MediaPlayerTrackViewHolder(itemView: ViewHolderMediaPlayerBinding, private val albumArtPainter: AlbumArtPainter, private  val context : Context)
+    : RecyclerView.ViewHolder(itemView.root), LayoutContainer {
 
     override val containerView: View?
         get() = itemView

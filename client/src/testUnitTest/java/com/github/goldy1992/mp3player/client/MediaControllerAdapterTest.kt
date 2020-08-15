@@ -218,12 +218,12 @@ class MediaControllerAdapterTest {
         val playbackStateCompat : PlaybackStateCompat = PlaybackStateCompat.Builder()
                 .setActiveQueueItemId(expectedQueueId).build()
         mediaControllerAdapter.playbackState.postValue(playbackStateCompat)
-
+        shadowOf(getMainLooper()).idle()
         val queue : MutableList<MediaSessionCompat.QueueItem> = mutableListOf(inactiveQueueItem, inactiveQueueItem, expectedQueueItem)
-        mediaControllerAdapter.queue.postValue(queue)
+        mediaControllerAdapter.onQueueChanged(queue)
         shadowOf(getMainLooper()).idle()
 
-        val result : Int = mediaControllerAdapter.getCurrentQueuePosition()
+        val result = mediaControllerAdapter.calculateCurrentQueuePosition()
         assertEquals(expectedQueuePosition, result)
     }
 
@@ -234,9 +234,10 @@ class MediaControllerAdapterTest {
         val playbackStateCompat : PlaybackStateCompat = PlaybackStateCompat.Builder()
                 .setActiveQueueItemId(expectedQueueId).build()
         mediaControllerAdapter.playbackState.postValue(playbackStateCompat)
-        mediaControllerAdapter.queue.postValue(mutableListOf())
         shadowOf(getMainLooper()).idle()
-        val result = mediaControllerAdapter.getCurrentQueuePosition()
+        mediaControllerAdapter.onQueueChanged(mutableListOf())
+        shadowOf(getMainLooper()).idle()
+        val result = mediaControllerAdapter.calculateCurrentQueuePosition()
         assertEquals(expectedQueuePosition, result)
     }
 

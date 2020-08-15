@@ -37,8 +37,6 @@ constructor(private val context: Context,
 
     open val playbackSpeed : MutableLiveData<Float> = MutableLiveData()
 
-    open val currentQueuePosition : MutableLiveData<Int> = MutableLiveData()
-
     override fun onConnected() {
         try {
             this.token = mediaBrowserCompat.sessionToken
@@ -114,13 +112,13 @@ constructor(private val context: Context,
         return playbackState.value?.activeQueueItemId
     }
 
-   open fun getCurrentQueuePosition() : Int {
-        val queue = this.queue.value
-        if (queue != null) {
-            val id = getActiveQueueItemId()
-            for (i in queue.indices) {
-                val queueItem = queue[i]
-                if (queueItem.queueId == id) {
+   fun calculateCurrentQueuePosition() : Int {
+       val currentQueue = queue.value
+       val activeQueueItemId = getActiveQueueItemId()
+        if (currentQueue != null) {
+            for (i in currentQueue.indices) {
+                val queueItem = currentQueue[i]
+                if (queueItem.queueId == activeQueueItemId) {
                     return i
                 }
             }
@@ -138,7 +136,6 @@ constructor(private val context: Context,
 
     override fun onMetadataChanged(metadata: MediaMetadataCompat) {
         this.metadata.postValue(metadata)
-        this.currentQueuePosition.postValue(getCurrentQueuePosition())
     }
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
@@ -146,8 +143,8 @@ constructor(private val context: Context,
         this.playbackSpeed.postValue(state.playbackSpeed)
     }
 
-    override fun onQueueChanged(queue: MutableList<MediaSessionCompat.QueueItem>?) {
-        this.queue.postValue(queue!!)
+    override fun onQueueChanged(newQueue: MutableList<MediaSessionCompat.QueueItem>?) {
+        this.queue.postValue(newQueue!!)
     }
 
     override fun onRepeatModeChanged(repeatMode: Int) {
