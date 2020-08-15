@@ -9,20 +9,8 @@ class ComponentClassMapperTest {
     @Test
     fun testBuildWithNoClasses() {
         val componentClassMapper : ComponentClassMapper = ComponentClassMapper.Builder().build()
-        assertNull(componentClassMapper.folderActivity)
         assertNull(componentClassMapper.mainActivity)
-        assertNull(componentClassMapper.mediaPlayerActivity)
-        assertNull(componentClassMapper.searchResultActivity)
         assertNull(componentClassMapper.service)
-    }
-
-    @Test
-    fun testBuildFolderActivity() {
-        val mockFolderActivity : Class<*> = Object::class.java
-        val componentClassMapper : ComponentClassMapper = ComponentClassMapper.Builder().
-                folderActivity(mockFolderActivity)
-                .build()
-        assertEquals(mockFolderActivity, componentClassMapper.folderActivity)
     }
 
     @Test
@@ -35,24 +23,6 @@ class ComponentClassMapperTest {
     }
 
     @Test
-    fun testBuildMediaPlayerActivity() {
-        val mockMediaPlayerActivity : Class<*> = Object::class.java
-        val componentClassMapper : ComponentClassMapper = ComponentClassMapper.Builder().
-                mediaPlayerActivity(mockMediaPlayerActivity)
-                .build()
-        assertEquals(mockMediaPlayerActivity, componentClassMapper.mediaPlayerActivity)
-    }
-
-    @Test
-    fun testBuildSearchResultActivity() {
-        val mockSearchResultActivity : Class<*> = Object::class.java
-        val componentClassMapper : ComponentClassMapper = ComponentClassMapper.Builder().
-                searchResultActivity(mockSearchResultActivity)
-                .build()
-        assertEquals(mockSearchResultActivity, componentClassMapper.searchResultActivity)
-    }
-
-    @Test
     fun testBuildService() {
         val mockService : Class<*> = Object::class.java
         val componentClassMapper : ComponentClassMapper = ComponentClassMapper.Builder().
@@ -60,6 +30,5 @@ class ComponentClassMapperTest {
                 .build()
         assertEquals(mockService, componentClassMapper.service)
     }
-
 
 }

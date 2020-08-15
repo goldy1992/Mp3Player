@@ -112,7 +112,7 @@ constructor(private val context: Context,
         return playbackState.value?.activeQueueItemId
     }
 
-   fun calculateCurrentQueuePosition() : Int {
+   open fun calculateCurrentQueuePosition() : Int {
        val currentQueue = queue.value
        val activeQueueItemId = getActiveQueueItemId()
         if (currentQueue != null) {

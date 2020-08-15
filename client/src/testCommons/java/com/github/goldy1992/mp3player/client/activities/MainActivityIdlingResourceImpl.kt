@@ -13,16 +13,17 @@ class MainActivityIdlingResourceImpl : MainActivity(), IdlingResource {
     }
 
     override fun isIdleNow(): Boolean {
-        if (this.rootMenuItemsPager != null) {
-            val viewPager2: ViewPager2 = this.rootMenuItemsPager
-            if (viewPager2.adapter != null) {
-                val isIdle: Boolean = viewPager2.adapter!!.itemCount >= 2
-                if (isIdle) {
-                    resourceCallback!!.onTransitionToIdle()
-                }
-                return isIdle
-            }
-        }
+        // TODO: move this to a fragment idling resource.
+//        if (this.rootMenuItemsPager != null) {
+//            val viewPager2: ViewPager2 = this.rootMenuItemsPager
+//            if (viewPager2.adapter != null) {
+//                val isIdle: Boolean = viewPager2.adapter!!.itemCount >= 2
+//                if (isIdle) {
+//                    resourceCallback!!.onTransitionToIdle()
+//                }
+//                return isIdle
+//            }
+//        }
         return false
     }
 

@@ -1,15 +1,11 @@
-package com.github.goldy1992.mp3player.client.callbacks
+package com.github.goldy1992.mp3player.client
 
+import android.content.Context
+import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import com.github.goldy1992.mp3player.client.AwaitingMediaControllerIdlingResource
-import com.github.goldy1992.mp3player.client.callbacks.metadata.MyMetadataCallback
-import com.github.goldy1992.mp3player.client.callbacks.playback.MyPlaybackStateCallback
-import com.github.goldy1992.mp3player.client.callbacks.queue.MyQueueCallback
 
-class AndroidTestMediaControllerCallback(myMetadataCallback: MyMetadataCallback,
-                                         myPlaybackStateCallback: MyPlaybackStateCallback,
-                                         myQueueCallback: MyQueueCallback)
-    : MyMediaControllerCallback(myMetadataCallback, myPlaybackStateCallback, myQueueCallback)  {
+class EndToEndMediaControllerAdapter(context: Context, mediaBrowserCompat: MediaBrowserCompat)
+    : MediaControllerAdapter(context, mediaBrowserCompat) {
 
     var awaitingMediaControllerIdlingResource: AwaitingMediaControllerIdlingResource? = null
 
@@ -26,4 +22,5 @@ class AndroidTestMediaControllerCallback(myMetadataCallback: MyMetadataCallback,
             }
         }
     }
+
 }
