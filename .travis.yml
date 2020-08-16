@@ -34,6 +34,9 @@ branches:
   - master
   - develop
 
+before_install:
+  - yes | sdkmanager "platforms;android-28"
+
 before_script:
 - chmod +x gradlew
 - ./gradlew dependencies || true
