@@ -1,16 +1,10 @@
 package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 
 import android.os.Looper
-import androidx.fragment.app.testing.FragmentScenario
-import androidx.fragment.app.testing.FragmentScenario.FragmentAction
-import androidx.fragment.app.testing.FragmentScenario.launch
-import androidx.fragment.app.testing.launchFragmentInContainer
 import com.github.goldy1992.mp3player.client.activities.HiltTestActivity
-import com.github.goldy1992.mp3player.client.activities.MainActivity
 import com.github.goldy1992.mp3player.client.dagger.modules.GlideModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
-import com.github.goldy1992.mp3player.client.launchFragmentInHiltContainer
 import com.github.goldy1992.mp3player.client.views.fragments.FragmentTestBase
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -51,7 +45,7 @@ class FolderListFragmentTest : FragmentTestBase<FolderListFragment>() {
         rule.inject()
         activityScenario = Robolectric.buildActivity(HiltTestActivity::class.java)
                 .setup()
-        val testMainActivity: HiltTestActivity = activityScenario!!.get()
+    //    val testMainActivity: HiltTestActivity = activityScenario!!.get()
         folderListFragment = FolderListFragment.newInstance(MediaItemType.FOLDERS, "id")
         super.setup(folderListFragment, FolderListFragment::class.java)
     }
