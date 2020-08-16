@@ -54,5 +54,5 @@ addons:
 script:
 - jdk_switcher use oraclejdk8
 - ./gradlew clean jacocoTestReportDebug -PdisablePreDex --stacktrace
-- jdk_switcher use openjdk11
+- JAVA_HOME=~/jdk && ./install-jdk.sh --target $JAVA_HOME && PATH=$JAVA_HOME/bin:$PATH
 - sonar-scanner -D sonar.java.libraries=${ANDROID_HOME}/platforms/${ANDROID_API}/android.jar
