@@ -41,16 +41,6 @@ abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowse
      */
     protected abstract fun initialiseView() : Boolean
 
-    /**
-     * @return A set of MediaBrowserConnectionListeners to be connected to.
-     */
-    protected abstract fun mediaBrowserConnectionListeners() : Set<MediaBrowserConnectionListener>
-
-    /**
-     * @return A set of media controller listeners
-     */
-    protected abstract fun mediaControllerListeners() : Set<Listener>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val settings = applicationContext.getSharedPreferences(Constants.THEME, Context.MODE_PRIVATE)
@@ -69,8 +59,6 @@ abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowse
     }
 
     private fun connect() {
-//        myConnectionCallback.registerMediaControllerAdapter(mediaControllerAdapter)
-//        mediaControllerAdapter.registerListeners(mediaControllerListeners())
         mediaBrowserAdapter.connect()
     }
 }

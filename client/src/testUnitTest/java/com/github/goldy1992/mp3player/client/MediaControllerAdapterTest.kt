@@ -11,9 +11,6 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.goldy1992.mp3player.client.callbacks.metadata.MyMetadataCallback
-import com.github.goldy1992.mp3player.client.callbacks.playback.MyPlaybackStateCallback
-import com.github.goldy1992.mp3player.client.callbacks.queue.MyQueueCallback
 import com.nhaarman.mockitokotlin2.*
 import org.junit.Assert
 import org.junit.Assert.assertEquals
@@ -28,9 +25,6 @@ import org.robolectric.annotation.LooperMode
 @LooperMode(LooperMode.Mode.PAUSED)
 class MediaControllerAdapterTest {
 
-    private val myMetaDataCallback: MyMetadataCallback = mock<MyMetadataCallback>()
-    private val playbackStateCallback: MyPlaybackStateCallback = mock<MyPlaybackStateCallback>()
-    private val queueCallback : MyQueueCallback = mock<MyQueueCallback>()
     private val mediaBrowserCompat : MediaBrowserCompat = mock<MediaBrowserCompat>()
     private val mediaControllerCompat : MediaControllerCompat = mock<MediaControllerCompat>()
     private lateinit var mediaControllerAdapter: MediaControllerAdapter

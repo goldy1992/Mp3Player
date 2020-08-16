@@ -42,12 +42,6 @@ open class MainActivity : MediaActivityCompat()
         return true
     }
 
-    /**
-     * @return A set of MediaBrowserConnectionListeners to be connected to.
-     */
-    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
-        return emptySet()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,43 +64,11 @@ open class MainActivity : MediaActivityCompat()
         binding.navigationView.setupWithNavController(navController)
     }
 
-    override fun mediaControllerListeners(): Set<Listener> {
-        return Collections.emptySet()
-    }
-
-    public override fun onResume() {
-        super.onResume()
-      }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val navController : NavController = findNavController(R.id.nav_host_container)
         return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
     }
-
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        Log.i(logTag(), "hit on options item selected")
-//        val navController = findNavController(R.id.nav_host_container)
-//        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
-
-//        when (item.itemId) {
-//            android.R.id.home -> {
-//               // drawerLayout!!.openDrawer(GravityCompat.START)
-//                return true
-//            }
-//            R.id.action_search -> {
-//                Log.i(logTag(), "hit action search")
-////                supportFragmentManager
-////                    .beginTransaction()
-////                    .add(R.id.fragmentContainer, searchFragment!!, "SEARCH_FGMT")
-////                    .addToBackStack(null)
-////                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-////                    .commit()
-//            }
-//            else -> return super.onOptionsItemSelected(item)
-//        }
-//        return true
-    //}
 
     @VisibleForTesting
     fun onNavigationItemSelected(menuItem: MenuItem): Boolean { // set item as selected to persist highlight
