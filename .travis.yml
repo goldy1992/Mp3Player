@@ -50,6 +50,7 @@ addons:
 
 
 script:
+- ls $TRAVIS_BUILD_DIR
 - jdk_switcher use oraclejdk8
 - ./gradlew clean jacocoTestReportDebug -PdisablePreDex --stacktrace
 - export JAVA_HOME=$HOME/oraclejdk8
