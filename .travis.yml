@@ -4,7 +4,6 @@ dist: trusty
 os: linux
 jdk:
   - oraclejdk8
-  - oraclejdk11
 
 before_cache:
 - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -51,7 +50,8 @@ addons:
 
 
 script:
-- jdk_switcher use oraclejdk8
+  jdk_switcher use oraclejdk8
 - ./gradlew clean jacocoTestReportDebug -PdisablePreDex --stacktrace
-- jdk_switcher use oraclejdk11
+- export JAVA_HOME=$HOME/oraclejdk8
+- $TRAVIS_BUILD_DIR/install-jdk.sh --install oraclejdk11 --target $JAVA_HOME
 - sonar-scanner -D sonar.java.libraries=${ANDROID_HOME}/platforms/${ANDROID_API}/android.jar
