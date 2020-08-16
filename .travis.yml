@@ -39,7 +39,6 @@ before_install:
   - yes | sdkmanager "platforms;android-28"
 
 before_script:
-- ls
 - chmod +x gradlew
 - ./gradlew dependencies || true
 - chmod +x ./travis/install-jdk.sh
@@ -54,5 +53,6 @@ addons:
 script:
 - jdk_switcher use oraclejdk8
 - ./gradlew clean jacocoTestReportDebug -PdisablePreDex --stacktrace
+# Install the latest JDK to support compatibility with Sonar Cloud.
 - source ./travis/install-jdk.sh
 - sonar-scanner -D sonar.java.libraries=${ANDROID_HOME}/platforms/${ANDROID_API}/android.jar
