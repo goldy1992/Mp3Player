@@ -7,24 +7,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Spinner
-import androidx.annotation.VisibleForTesting
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.observe
-import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.onNavDestinationSelected
-import androidx.navigation.ui.setupWithNavController
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.activities.MainActivity
 import com.github.goldy1992.mp3player.client.databinding.FragmentMainBinding
 import com.github.goldy1992.mp3player.client.viewmodels.MainFragmentViewModel
 import com.github.goldy1992.mp3player.client.views.adapters.MyPagerAdapter
@@ -58,7 +48,6 @@ class MainFragment : DestinationFragment(), LogTagger {
 
     lateinit var adapter: MyPagerAdapter
 
-    var searchFragment: SearchFragment? = null
 
     val viewModel : MainFragmentViewModel by viewModels()
 
