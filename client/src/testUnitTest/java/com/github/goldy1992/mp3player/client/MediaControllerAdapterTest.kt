@@ -28,7 +28,6 @@ class MediaControllerAdapterTest {
     private val mediaBrowserCompat : MediaBrowserCompat = mock<MediaBrowserCompat>()
     private val mediaControllerCompat : MediaControllerCompat = mock<MediaControllerCompat>()
     private lateinit var mediaControllerAdapter: MediaControllerAdapter
- //   private lateinit var myMediaControllerCallback: MyMediaControllerCallback
     private lateinit var context: Context
     private lateinit var token: MediaSessionCompat.Token
     @Before
