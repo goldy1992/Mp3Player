@@ -1,74 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-<androidx.drawerlayout.widget.DrawerLayout android:layout_width="match_parent"
+<androidx.drawerlayout.widget.DrawerLayout
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
     android:fitsSystemWindows="true"
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-
-    <RelativeLayout
-        android:id="@+id/fragmentContainer"
+    <LinearLayout android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/overview_coordinator_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_above="@+id/playToolbarFragment"
-            tools:context="com.github.goldy1992.mp3player.client.activities.MainActivity">
-
-            <com.google.android.material.appbar.AppBarLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fitsSystemWindows="true"
-                android:id="@+id/appBarLayout"
-                >
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/titleToolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:layout_scrollFlags="scroll|enterAlways"
-                    android:elevation="0dp"
-                    style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface">
-
-                </com.google.android.material.appbar.MaterialToolbar>
-
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_collapseMode="parallax"
-                    style="@style/Widget.MaterialComponents.TabLayout.Colored"
-                    app:tabIndicatorColor="?colorSecondary"/>
-
-            </com.google.android.material.appbar.AppBarLayout>
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/rootMenuItemsPager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
+        tools:context=".activities.MainActivity">
 
         <fragment
-            android:id="@+id/playToolbarFragment"
-            class="com.github.goldy1992.mp3player.client.views.fragments.PlayToolbarFragment"
+            android:id="@+id/nav_host_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            tools:layout="@layout/fragment_playback_toolbar" />
+            android:layout_height="match_parent"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph"
+             />
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
     <com.google.android.material.navigation.NavigationView
@@ -80,5 +34,6 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
         app:menu="@menu/themes_menu"
         app:headerLayout="@layout/nav_header"/>
 
-
 </androidx.drawerlayout.widget.DrawerLayout>
+
+

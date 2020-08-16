@@ -1,14 +1,8 @@
 package com.github.goldy1992.mp3player.client.views.buttons
 
-import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
-import android.widget.ImageView
-import com.github.goldy1992.mp3player.commons.Constants
-import com.google.android.material.button.MaterialButton
-import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -30,8 +24,6 @@ class RepeatOneRepeatAllButtonTest : MediaButtonTestBase() {
     fun testInit() {
 
         @PlaybackStateCompat.RepeatMode val expectedState = PlaybackStateCompat.REPEAT_MODE_NONE
-        whenever(mediaControllerAdapter.getRepeatMode()).thenReturn(expectedState)
-        repeatOneRepeatAllButton.init(view)
         Assert.assertEquals(expectedState, repeatOneRepeatAllButton.state)
     }
 
@@ -57,9 +49,8 @@ class RepeatOneRepeatAllButtonTest : MediaButtonTestBase() {
 
     @Test
     fun testOnPlaybackStateChangedWithNoRepeatMode() {
-        val expectedState = mediaControllerAdapter.playbackState
-        val state = PlaybackStateCompat.Builder().build()
-        repeatOneRepeatAllButton.onPlaybackStateChanged(state)
+        val expectedState = PlaybackStateCompat.REPEAT_MODE_NONE
+        repeatOneRepeatAllButton.onChanged(expectedState)
         Assert.assertEquals(expectedState, repeatOneRepeatAllButton.state)
     }
 
@@ -67,14 +58,7 @@ class RepeatOneRepeatAllButtonTest : MediaButtonTestBase() {
     fun testOnPlaybackStateChangedWithValidRepeatMode() {
         repeatOneRepeatAllButton.init(view)
         val expectedState = PlaybackStateCompat.REPEAT_MODE_ONE
-        repeatOneRepeatAllButton.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_NONE)
-        val extras = Bundle()
-        extras.putInt(Constants.REPEAT_MODE, expectedState)
-        val state = PlaybackStateCompat.Builder()
-                .setExtras(extras)
-                .build()
-        whenever(mediaControllerAdapter.getRepeatMode()).thenReturn(expectedState)
-        repeatOneRepeatAllButton.onPlaybackStateChanged(state)
+        repeatOneRepeatAllButton.onChanged(expectedState)
         Assert.assertEquals(expectedState, repeatOneRepeatAllButton.state)
     }
 

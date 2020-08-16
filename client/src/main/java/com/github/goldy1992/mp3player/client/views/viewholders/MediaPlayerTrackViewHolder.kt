@@ -7,37 +7,23 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
-import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.activities.MediaPlayerActivity
-import com.google.android.material.appbar.MaterialToolbar
+import com.github.goldy1992.mp3player.client.databinding.ViewHolderMediaPlayerBinding
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_holder_media_player.view.*
 
-class MediaPlayerTrackViewHolder(itemView: View, private val albumArtPainter: AlbumArtPainter, private  val context : Context)
-    : RecyclerView.ViewHolder(itemView), LayoutContainer {
+class MediaPlayerTrackViewHolder(itemView: ViewHolderMediaPlayerBinding, private val albumArtPainter: AlbumArtPainter, private  val context : Context)
+    : RecyclerView.ViewHolder(itemView.root), LayoutContainer {
 
     override val containerView: View?
         get() = itemView
 
     fun bindMediaItem(item: MediaSessionCompat.QueueItem) {
-
-        val materialToolbar : MaterialToolbar = itemView.findViewById(R.id.titleToolbar)
-
-        if (context is MediaPlayerActivity) {
-            val mediaPlayerActivity = context as MediaPlayerActivity
-            mediaPlayerActivity.setSupportActionBar(materialToolbar)
-            mediaPlayerActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        }
-        val titleText = item.description.title.toString()
-        materialToolbar.title = titleText
         val extras = item.description.extras
-        val artistText = extras!!.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)
-        materialToolbar.subtitle = artistText
-        val albumArtUri: Uri? = extras.get(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI) as? Uri
+        val albumArtUri: Uri? = extras?.get(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI) as? Uri
         if (null != albumArtUri) {
             albumArtPainter.paintOnView(itemView.albumArt, albumArtUri)
         } else {
-            val image = extras.getSerializable(MediaMetadataCompat.METADATA_KEY_ALBUM_ART) as ByteArray
+            val image = extras?.getSerializable(MediaMetadataCompat.METADATA_KEY_ALBUM_ART) as ByteArray
             albumArtPainter.paintOnView(itemView.albumArt, image)
         }
 

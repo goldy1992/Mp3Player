@@ -4,11 +4,10 @@ import android.content.Context
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.Observer
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.callbacks.playback.PlaybackStateListener
 import com.github.goldy1992.mp3player.commons.Constants
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.qualifiers.ActivityContext
@@ -22,16 +21,11 @@ class RepeatOneRepeatAllButton
     @Inject
     constructor(@ActivityContext context: Context,
                 mediaControllerAdapter: MediaControllerAdapter)
-    : MediaButton(context, mediaControllerAdapter), PlaybackStateListener {
+    : MediaButton(context, mediaControllerAdapter), Observer<Int> {
 
     @PlaybackStateCompat.RepeatMode
     var state = 0
         private set
-
-    override fun init(imageView: MaterialButton) {
-        super.init(imageView)
-        updateState(PlaybackStateCompat.REPEAT_MODE_NONE)
-    }
 
     @VisibleForTesting
     override fun onClick(view: View?) {
@@ -89,9 +83,8 @@ class RepeatOneRepeatAllButton
             else -> PlaybackStateCompat.REPEAT_MODE_NONE
         }
 
-    override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
-        val newRepeatMode = mediaControllerAdapter.getRepeatMode()!!
-        if (this.state != newRepeatMode) {
+    override fun onChanged(newRepeatMode : Int?) {
+        if (this.state != newRepeatMode!!) {
             updateState(newRepeatMode)
         }
     }

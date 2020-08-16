@@ -10,14 +10,6 @@ class EmptyMediaActivityCompatFragmentActivity : MediaActivityCompat() {
         return true
     }
 
-    override fun mediaBrowserConnectionListeners(): Set<MediaBrowserConnectionListener> {
-        return emptySet()
-    }
-
-    override fun mediaControllerListeners(): Set<Listener> {
-        return emptySet()
-    }
-
     override fun logTag(): String {
         return "EMPTY_ACTIVITY"
     }

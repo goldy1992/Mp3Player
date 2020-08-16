@@ -1,24 +1,27 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.activities.MediaPlayerActivity
-import com.github.goldy1992.mp3player.client.callbacks.Listener
+import com.github.goldy1992.mp3player.client.databinding.FragmentPlaybackToolbarBinding
 import com.github.goldy1992.mp3player.client.views.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToNextButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToPreviousButton
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
+import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_playback_toolbar.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PlayToolbarFragment : MediaFragment() {
+class PlayToolbarFragment : Fragment(), LogTagger {
+
+    @Inject
+    lateinit var mediaControllerAdapter : MediaControllerAdapter
 
     @Inject
     lateinit var playPauseBtn: PlayPauseButton
@@ -31,35 +34,24 @@ class PlayToolbarFragment : MediaFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
-        super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.fragment_playback_toolbar, container, true)
-    }
-
-    override fun mediaControllerListeners(): Set<Listener> {
-        return setOf(playPauseBtn)
+        val binding : FragmentPlaybackToolbarBinding = FragmentPlaybackToolbarBinding.inflate(layoutInflater)
+        playPauseBtn.init(binding.playPauseButton)
+        skipToPreviousBtn.init(binding.skipToPreviousButton)
+        skipToNextBtn.init(binding.skipToNextButton)
+        binding.playbackToolbar.setOnClickListener { goToMediaPlayerActivity() }
+        return binding.root
     }
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
         super.onViewCreated(view, bundle)
-        playPauseBtn.init(playPauseButton)
-        skipToPreviousBtn.init(skipToPreviousButton)
-        skipToNextBtn.init(skipToNextButton)
-
-        if (!isMediaPlayerActivity) {
-            playbackToolbar.setOnClickListener(View.OnClickListener { goToMediaPlayerActivity() })
-        }
+        mediaControllerAdapter.playbackState.observe(viewLifecycleOwner, playPauseBtn)
+        view.setOnClickListener { goToMediaPlayerActivity() }
     }
 
-    private val isMediaPlayerActivity: Boolean
-        get() {
-            val activity: Activity? = activity
-            return activity != null && activity is MediaPlayerActivity
-        }
-
     private fun goToMediaPlayerActivity() {
-        val intent = Intent(context, componentClassMapper.mediaPlayerActivity)
-        startActivity(intent)
+        if (findNavController().currentDestination?.id != R.id.media_player_fragment) {
+            findNavController().navigate(R.id.go_to_media_player)
+        }
     }
 
     override fun logTag(): String {

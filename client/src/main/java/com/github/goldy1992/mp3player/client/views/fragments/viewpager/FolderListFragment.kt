@@ -2,12 +2,12 @@ package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 
 import android.support.v4.media.MediaBrowserCompat
 import androidx.fragment.app.viewModels
-import com.github.goldy1992.mp3player.client.IntentMapper
+import androidx.navigation.fragment.findNavController
 import com.github.goldy1992.mp3player.client.viewmodels.FolderListViewModel
 import com.github.goldy1992.mp3player.client.viewmodels.MediaListViewModel
 import com.github.goldy1992.mp3player.client.views.adapters.MyFolderViewAdapter
 import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecyclerViewAdapter
-import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.client.views.fragments.MainFragmentDirections
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -18,9 +18,6 @@ class FolderListFragment : MediaItemListFragment() {
     @Inject
     lateinit var myFolderViewAdapter : MyFolderViewAdapter
 
-    @Inject
-    lateinit var intentMapper : IntentMapper
-
     private val viewModel : FolderListViewModel by viewModels()
 
     override fun viewModel(): MediaListViewModel {
@@ -28,12 +25,8 @@ class FolderListFragment : MediaItemListFragment() {
     }
 
     override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {
-        val parentItemType : MediaItemType = requireArguments().get(MEDIA_ITEM_TYPE) as MediaItemType
-        val intent = intentMapper.getIntent(parentItemType)
-        if (null != intent) {
-            intent.putExtra(Constants.MEDIA_ITEM, item)
-            startActivity(intent)
-        }
+        val action = MainFragmentDirections.goToFolderFragment(item)
+        findNavController().navigate(action)
     }
 
     override fun getViewAdapter(): MyGenericRecyclerViewAdapter {

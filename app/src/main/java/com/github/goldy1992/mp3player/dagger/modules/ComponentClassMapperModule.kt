@@ -20,10 +20,7 @@ class ComponentClassMapperModule {
         return ComponentClassMapper.Builder()
                 .splashActivity(SplashScreenEntryActivity::class.java)
                 .mainActivity(MainActivity::class.java)
-                .folderActivity(FolderActivity::class.java)
                 .service(MediaPlaybackService::class.java)
-                .mediaPlayerActivity(MediaPlayerActivity::class.java)
-                .searchResultActivity(SearchResultActivity::class.java)
                 .build()
     }
 }

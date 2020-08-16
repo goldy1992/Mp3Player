@@ -2,6 +2,8 @@
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:layout_marginLeft="@dimen/default_gap"
+    android:layout_marginRight="@dimen/default_gap"
     android:id="@+id/menu_item"
     android:background="@android:color/white"
 
@@ -14,16 +16,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:layout_columnSpan="1"/>
 
     <TextView android:id="@+id/folderPath"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:textSize="12sp"
-        android:textStyle="normal"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
         android:layout_columnSpan="1"/>
 
 </GridLayout>

@@ -7,8 +7,6 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers
 import com.github.goldy1992.mp3player.client.AwaitingMediaControllerIdlingResource
 import com.github.goldy1992.mp3player.client.activities.MediaActivityCompat
-import com.github.goldy1992.mp3player.client.callbacks.AndroidTestMediaControllerCallback
-import com.github.goldy1992.mp3player.client.callbacks.MyMediaControllerCallback
 import org.hamcrest.Matcher
 
 
@@ -48,12 +46,13 @@ class RegisterIdlingResourceAction
     override fun perform(uiController: UiController?, view: View?) {
         val context: Context = view!!.context
         if (context is MediaActivityCompat) {
+            // TODO: link Idling Resource with [MediaControllerAdapter]
             val mediaActivityCompat : MediaActivityCompat = context
-            val myMediaControllerCallback : MyMediaControllerCallback = mediaActivityCompat.mediaControllerAdapter.myMediaControllerCallback
-            if (myMediaControllerCallback is AndroidTestMediaControllerCallback)
-            {
-                myMediaControllerCallback.awaitingMediaControllerIdlingResource = this.awaitingMediaControllerIdlingResource
-            }
+//            val myMediaControllerCallback : MyMediaControllerCallback = mediaActivityCompat.mediaControllerAdapter.myMediaControllerCallback
+//            if (myMediaControllerCallback is AndroidTestMediaControllerCallback)
+//            {
+//                myMediaControllerCallback.awaitingMediaControllerIdlingResource = this.awaitingMediaControllerIdlingResource
+//            }
         }
     }
 }

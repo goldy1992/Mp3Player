@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 import android.os.Looper
 import androidx.fragment.app.testing.FragmentScenario.FragmentAction
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.activities.HiltTestActivity
 import com.github.goldy1992.mp3player.client.activities.MainActivity
 import com.github.goldy1992.mp3player.client.dagger.modules.GlideModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
@@ -39,8 +40,8 @@ class SongListFragmentTest : FragmentTestBase<SongListFragment>() {
 
     @Before
     fun setup() {
-        activityScenario = Robolectric.buildActivity(MainActivity::class.java).setup()
-        val testMainActivity: MainActivity = activityScenario!!.get()
+        activityScenario = Robolectric.buildActivity(HiltTestActivity::class.java).setup()
+        val testMainActivity: HiltTestActivity = activityScenario!!.get()
         folderListFragment = SongListFragment.newInstance(MediaItemType.SONGS, "id")
         super.setup(folderListFragment, SongListFragment::class.java)
     }

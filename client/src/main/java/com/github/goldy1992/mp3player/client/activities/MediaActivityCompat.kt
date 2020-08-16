@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
+import com.github.goldy1992.mp3player.client.MediaConnector
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
@@ -23,7 +24,7 @@ abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowse
 
     /** Connection Callback */
     @Inject
-    lateinit var myConnectionCallback : MyConnectionCallback
+    lateinit var mediaConnector : MediaConnector
 
     /** MediaControllerAdapter  */
     @Inject
@@ -35,37 +36,16 @@ abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowse
         mediaBrowserAdapter.disconnect()
     }
 
-    // MediaBrowserConnectorCallback
-    override fun onConnectionSuspended() { /* TODO: implement onConnectionSuspended */
-        Log.i(logTag(), "connection suspended")
-    }
-
-    // MediaBrowserConnectorCallback
-    override fun onConnectionFailed() { /* TODO: implement onConnectionFailed */
-        Log.i(logTag(), "connection failed")
-    }
-
     /**
      *
      */
     protected abstract fun initialiseView() : Boolean
-
-    /**
-     * @return A set of MediaBrowserConnectionListeners to be connected to.
-     */
-    protected abstract fun mediaBrowserConnectionListeners() : Set<MediaBrowserConnectionListener>
-
-    /**
-     * @return A set of media controller listeners
-     */
-    protected abstract fun mediaControllerListeners() : Set<Listener>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val settings = applicationContext.getSharedPreferences(Constants.THEME, Context.MODE_PRIVATE)
         setTheme(settings.getInt(Constants.THEME, R.style.AppTheme_Blue))
         connect()
-        initialiseView()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -79,9 +59,6 @@ abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowse
     }
 
     private fun connect() {
-        myConnectionCallback.registerMediaControllerAdapter(mediaControllerAdapter)
-        myConnectionCallback.registerListeners(mediaBrowserConnectionListeners())
-        mediaControllerAdapter.registerListeners(mediaControllerListeners())
         mediaBrowserAdapter.connect()
     }
 }

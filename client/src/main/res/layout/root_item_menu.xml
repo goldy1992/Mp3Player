@@ -6,10 +6,13 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"/>
+        android:layout_marginTop="@dimen/default_gap"
+        android:layout_marginLeft="@dimen/default_gap"
+        android:layout_marginRight="@dimen/default_gap"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="#c0c0c0"/>
+/>
 
 </LinearLayout>

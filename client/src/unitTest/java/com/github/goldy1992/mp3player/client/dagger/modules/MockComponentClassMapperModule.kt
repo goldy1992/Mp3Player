@@ -16,10 +16,8 @@ class MockComponentClassMapperModule {
     fun providesMockComponentClassMapper() : ComponentClassMapper {
         return ComponentClassMapper.Builder()
                 .service(ServiceComponent::class.java)
-                .folderActivity(ActivityComponent::class.java)
                 .mainActivity(ActivityComponent::class.java)
-                .mediaPlayerActivity(ActivityComponent::class.java)
-                .searchResultActivity(ActivityComponent::class.java)
+                .splashActivity(ActivityComponent::class.java)
                 .build()
     }
 }

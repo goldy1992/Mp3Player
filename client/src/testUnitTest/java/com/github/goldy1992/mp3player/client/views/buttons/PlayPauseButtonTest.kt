@@ -27,12 +27,12 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
     }
 
     /**
-     * test for the create method.
+     * Asserts the initial state of the button is set to [PlayPauseButton.INITIAL_PLAYBACK_STATE]
      */
     @Test
-    fun testCreate() {
+    fun testInitialState() {
         Assert.assertNotNull(playPauseButton)
-        Assert.assertEquals(2, playPauseButton.state)
+        Assert.assertEquals(PlaybackStateCompat.STATE_STOPPED, playPauseButton.state)
     }
 
     /**
@@ -41,8 +41,8 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
      * THEN: the state of PlayPauseButton is updated to STATE_PLAYING
      */
     @Test
-    fun testOnPlaybackStateChangedPlaying() {
-        playPauseButton.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_PLAYING))
+    fun testOnChangedPlaying() {
+        playPauseButton.onChanged(createState(PlaybackStateCompat.STATE_PLAYING))
         Assert.assertEquals(PlaybackStateCompat.STATE_PLAYING, playPauseButton.state)
     }
 
@@ -52,8 +52,8 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
      * THEN: the state of PlayPauseButton is updated to STATE_PAUSED
      */
     @Test
-    fun testOnPlaybackStateChangedPaused() {
-        playPauseButton.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_PAUSED))
+    fun testOnChangedPaused() {
+        playPauseButton.onChanged(createState(PlaybackStateCompat.STATE_PAUSED))
         Assert.assertEquals(PlaybackStateCompat.STATE_PAUSED, playPauseButton.state)
     }
 
@@ -63,9 +63,9 @@ class PlayPauseButtonTest : MediaButtonTestBase() {
      * THEN: the state of PlayPauseButton remains as state S
      */
     @Test
-    fun testOnPlaybackStateChangedOtherState() {
+    fun testOnChangedOtherState() {
         @PlaybackStateCompat.State val expectedState = PlaybackStateCompat.STATE_PAUSED
-        playPauseButton.onPlaybackStateChanged(createState(PlaybackStateCompat.STATE_ERROR))
+        playPauseButton.onChanged(createState(PlaybackStateCompat.STATE_ERROR))
         Assert.assertEquals(expectedState, playPauseButton.state)
     }
 

@@ -43,6 +43,9 @@ android {
         endToEnd {
             dimension = flavor_dimen_mode
         }
+        integration {
+            dimension = flavor_dimen_mode
+        }
         unitTest {
             dimension = flavor_dimen_mode
         }

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.databinding.ViewHolderMediaPlayerBinding
 import com.github.goldy1992.mp3player.client.views.viewholders.MediaPlayerTrackViewHolder
 import java.util.*
 import javax.inject.Inject
@@ -24,8 +25,7 @@ class TrackViewAdapter
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaPlayerTrackViewHolder { // create a new views
         val context : Context = parent.context
         val layoutInflater = LayoutInflater.from(context)
-        val v = layoutInflater
-                .inflate(R.layout.view_holder_media_player, parent, false)
+        val v : ViewHolderMediaPlayerBinding = ViewHolderMediaPlayerBinding.inflate(layoutInflater, parent, false)
         return MediaPlayerTrackViewHolder(v, albumArtPainter, context)
     }
 
@@ -40,8 +40,12 @@ class TrackViewAdapter
         } else -1
     }
 
-    fun onQueueChanged(queue: List<QueueItem>) {
-        this.queue = queue
+    /**
+     * Called when the data is changed.
+     * @param t  The new data
+     */
+    fun onQueueChanged(t: List<QueueItem>?) {
+        this.queue = t
         notifyDataSetChanged()
     }
 }
