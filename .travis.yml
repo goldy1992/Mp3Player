@@ -2,7 +2,9 @@ language: android
 sudo: required
 dist: trusty
 os: linux
-jdk: oraclejdk11
+jdk:
+  - oraclejdk8
+  - oraclejdk11
 
 before_cache:
 - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -49,5 +51,7 @@ addons:
 
 
 script:
+- jdk_switcher use oraclejdk8
 - ./gradlew clean jacocoTestReportDebug -PdisablePreDex --stacktrace
+- jdk_switcher use oraclejdk11
 - sonar-scanner -D sonar.java.libraries=${ANDROID_HOME}/platforms/${ANDROID_API}/android.jar
