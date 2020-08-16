@@ -51,18 +51,9 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener, LogTagg
     @Inject
     lateinit var mediaControllerAdapter: MediaControllerAdapter
 
-    fun getParentMediaItemType() : MediaItemType? {
-        return arguments?.get(MEDIA_ITEM_TYPE) as? MediaItemType
-    }
-
     fun getParentId() : String? {
         return arguments?.getString(PARENT_ID)
     }
-
-//    /**
-//     * The parent for all the media items in this view; if null, the fragment represent a list of all available songs.
-//     */
-//    private val linearLayoutManager = LinearLayoutManager(context)
 
     lateinit var binding: FragmentViewPageBinding
 
@@ -73,7 +64,7 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener, LogTagg
 
     lateinit var myGenericItemTouchListener : MyGenericItemTouchListener
 
-    fun subscribeUi(adapter: MyGenericRecyclerViewAdapter, binding: FragmentViewPageBinding) {
+    private fun subscribeUi(adapter: MyGenericRecyclerViewAdapter, binding: FragmentViewPageBinding) {
         viewModel().items.observe(viewLifecycleOwner) { result ->
             adapter.submitList(result)
         }

@@ -57,10 +57,6 @@ class SearchResultsFragment : DestinationFragment(), MyGenericItemTouchListener.
 
     private val viewModel : SearchResultsFragmentViewModel by viewModels()
 
-    private val resultReceiver : MyResultReceiver = MyResultReceiver()
-
-    private lateinit var searchView: SearchView
-
     override fun lockDrawerLayout(): Boolean {
         return false
     }
@@ -172,10 +168,9 @@ class SearchResultsFragment : DestinationFragment(), MyGenericItemTouchListener.
     private fun hideKeyboard() {
         try {
             val activity : Activity = requireActivity()
-            //activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
             val view : View? = activity.currentFocus
             if (view?.windowToken != null) {
-                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0, resultReceiver)
+                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -186,12 +181,4 @@ class SearchResultsFragment : DestinationFragment(), MyGenericItemTouchListener.
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, HIDE_IMPLICIT_ONLY)
     }
 
-    inner class MyResultReceiver : ResultReceiver(Handler(Looper.getMainLooper())) {
-
-        override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
-            super.onReceiveResult(resultCode, resultData)
-            Log.i("ResultReceiver", "resHandler: $resultCode")
-        }
-
-    }
 }

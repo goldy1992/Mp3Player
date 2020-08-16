@@ -40,24 +40,19 @@ class MainFragment : DestinationFragment(), LogTagger {
     @Inject
     lateinit var mediaControllerAdapter: MediaControllerAdapter
 
-
-
     lateinit var navigationView : NavigationView
 
     private var tabLayoutMediator: TabLayoutMediator? = null
 
     lateinit var adapter: MyPagerAdapter
 
-
-    val viewModel : MainFragmentViewModel by viewModels()
+    private val viewModel : MainFragmentViewModel by viewModels()
 
     lateinit var binding : FragmentMainBinding
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
-          this.binding = FragmentMainBinding.inflate(inflater)
-        //    searchFragment = SearchFragment()
+        this.binding = FragmentMainBinding.inflate(inflater)
         binding.appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { app: AppBarLayout?, offset: Int ->
             Log.i(logTag(), "offset: " + offset + ", scroll range: " + app?.totalScrollRange)
             var newOffset = offset
@@ -72,14 +67,14 @@ class MainFragment : DestinationFragment(), LogTagger {
         return binding.root
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_main, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-            adapter = MyPagerAdapter(this)
+        adapter = MyPagerAdapter(this)
 
         mediaBrowserAdapter.subscribeToRoot().observe(this.viewLifecycleOwner) {
             for (mediaItem in it) {
@@ -89,7 +84,6 @@ class MainFragment : DestinationFragment(), LogTagger {
 
                 if (!adapter.pagerItems.containsKey(category)) {
                     val mediaItemListFragment: MediaItemListFragment? = when (category) {
-                        // TODO: change the use of subfragments to simply use a view pager
                         MediaItemType.SONGS -> SongListFragment.newInstance(category, id)
                         MediaItemType.FOLDERS -> FolderListFragment.newInstance(category, id)
                         else -> null
@@ -102,7 +96,7 @@ class MainFragment : DestinationFragment(), LogTagger {
                 }
             }
 
-    }
+        } // observe
         binding.rootMenuItemsPager.adapter = adapter
         tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.rootMenuItemsPager, adapter)
         tabLayoutMediator!!.attach()
@@ -110,26 +104,8 @@ class MainFragment : DestinationFragment(), LogTagger {
         viewModel.menuCategories = mediaBrowserAdapter.subscribeToRoot() as MutableLiveData<List<MediaBrowserCompat.MediaItem>>
         }
 
-
-//    override fun onResume() {
-//        super.onResume()
-////        if (null != searchFragment && searchFragment!!.isAdded && searchFragment!!.isVisible) {
-////            fr
-////                    .beginTransaction()
-////                    .remove(searchFragment!!)
-////                    .commit()
-////        }
-//
-//    }
-
-
     override fun lockDrawerLayout(): Boolean {
         return false
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
     }
 
     override fun logTag(): String {

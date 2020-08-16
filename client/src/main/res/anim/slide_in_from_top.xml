@@ -3,5 +3,5 @@
     android:interpolator="@android:anim/decelerate_interpolator">
     <translate
         android:fromYDelta="-100%" android:toYDelta="-0%"
-        android:duration="@android:integer/config_longAnimTime"/>
+        android:duration="@android:integer/config_shortAnimTime"/>
 </set>
