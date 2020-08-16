@@ -39,8 +39,10 @@ before_install:
   - yes | sdkmanager "platforms;android-28"
 
 before_script:
+- ls $HOME
 - chmod +x gradlew
 - ./gradlew dependencies || true
+- chmod +x $HOME/travis/install-jdk.sh
 
 addons:
   sonarcloud:
@@ -53,5 +55,5 @@ script:
 - jdk_switcher use oraclejdk8
 - ./gradlew clean jacocoTestReportDebug -PdisablePreDex --stacktrace
 - export JAVA_HOME=$HOME/oraclejdk8
-- ./travis/install-jdk.sh --install oraclejdk11 --target $JAVA_HOME
+- $HOME/travis/install-jdk.sh --install oraclejdk11 --target $JAVA_HOME
 - sonar-scanner -D sonar.java.libraries=${ANDROID_HOME}/platforms/${ANDROID_API}/android.jar
