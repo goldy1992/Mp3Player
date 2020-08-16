@@ -37,7 +37,6 @@ branches:
 
 before_install:
   - yes | sdkmanager "platforms;android-28"
-  - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
 
 before_script:
 - chmod +x gradlew
@@ -51,9 +50,8 @@ addons:
 
 
 script:
-- ls $TRAVIS_BUILD_DIR
 - jdk_switcher use oraclejdk8
 - ./gradlew clean jacocoTestReportDebug -PdisablePreDex --stacktrace
 - export JAVA_HOME=$HOME/oraclejdk8
-- $TRAVIS_BUILD_DIR/install-jdk.sh --install oraclejdk11 --target $JAVA_HOME
+- ./travis/install-jdk.sh --install oraclejdk11 --target $JAVA_HOME
 - sonar-scanner -D sonar.java.libraries=${ANDROID_HOME}/platforms/${ANDROID_API}/android.jar
