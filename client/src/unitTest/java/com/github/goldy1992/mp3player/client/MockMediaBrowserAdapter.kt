@@ -28,8 +28,7 @@ class MockMediaBrowserAdapter(mediaIdSubscriptionCallback: MediaIdSubscriptionCa
         return MutableLiveData()
     }
 
-    override fun registerRootListener(mediaBrowserSubscriber: MediaBrowserSubscriber) {
-        // Do nothing.
+    override fun subscribeToRoot() : LiveData<List<MediaItem>> {
+        return MutableLiveData()
     }
-
 }

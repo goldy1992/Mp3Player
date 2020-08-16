@@ -56,22 +56,6 @@ open class MediaBrowserAdapter
         return toReturn
     }
 
-    /**
-     * subscribes to a MediaItem via a libraryRequest. The id of the libraryRequest will be used for the parent
-     * ID when communicating with the MediaPlaybackService.
-     * @param id the id of the media item to be subscribed to
-     */
-    open fun subscribe(id: String, mediaBrowserSubscriber: MediaBrowserSubscriber) {
-        mySubscriptionCallback.registerMediaBrowserSubscriber(id, mediaBrowserSubscriber)
-        mediaBrowser?.subscribe(id, mySubscriptionCallback)
-    }
-
-    @Deprecated("Use subscribeToRoot()")
-    open fun subscribeToRoot(listener : MediaBrowserSubscriber) {
-        mySubscriptionCallback.registerMediaBrowserSubscriber(rootId, listener)
-        mediaBrowser?.subscribe(rootId, mySubscriptionCallback)
-    }
-
     open fun subscribeToRoot() : LiveData<List<MediaItem>> {
         return mySubscriptionCallback.getRootLiveData()
     }
@@ -82,20 +66,9 @@ open class MediaBrowserAdapter
         mediaBrowser?.subscribe(rootId, mySubscriptionCallback)
     }
 
-    val mediaSessionToken: MediaSessionCompat.Token?
-        get() = mediaBrowser?.sessionToken
-
-    val rootId: String
+    private val rootId: String
         get() = mediaBrowser!!.root
 
-
-    open fun registerRootListener(mediaBrowserSubscriber: MediaBrowserSubscriber) {
-        mySubscriptionCallback.registerMediaBrowserSubscriber(rootId, mediaBrowserSubscriber)
-    }
-
-    open fun registerListener(parentId: String?, mediaBrowserSubscriber: MediaBrowserSubscriber) {
-        mySubscriptionCallback.registerMediaBrowserSubscriber(parentId!!, mediaBrowserSubscriber)
-    }
 
     fun registerSearchResultListener(searchResultListener: SearchResultListener?) {
         mySearchCallback.registerSearchResultListener(searchResultListener!!)

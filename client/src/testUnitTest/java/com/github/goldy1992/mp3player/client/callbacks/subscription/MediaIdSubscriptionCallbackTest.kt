@@ -35,16 +35,6 @@ class MediaIdSubscriptionCallbackTest {
     }
 
     @Test
-    fun testRegisterListener() {
-        val key = "KEY"
-        Assert.assertTrue(mediaIdSubscriptionCallback.getMediaBrowserSubscribers().isEmpty())
-        mediaIdSubscriptionCallback.registerMediaBrowserSubscriber(key, mediaBrowserSubscriber)
-        // assert size is now 1
-        val restultSize = mediaIdSubscriptionCallback.getMediaBrowserSubscribers().size
-        Assert.assertEquals(1, restultSize.toLong())
-    }
-
-    @Test
     fun testOnChildrenLoadedForSubscribedKey() {
         val subscribedKey = "SubscribedKey"
         val resultObject : LiveData<List<MediaItem>> = mediaIdSubscriptionCallback.subscribe(subscribedKey)
