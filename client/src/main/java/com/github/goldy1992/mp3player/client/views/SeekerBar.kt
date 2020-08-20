@@ -1,25 +1,16 @@
 package com.github.goldy1992.mp3player.client.views
 
-import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import androidx.appcompat.widget.AppCompatSeekBar
 import com.github.goldy1992.mp3player.client.R
+import com.google.android.material.slider.Slider
 
 class SeekerBar
-@JvmOverloads constructor(context: Context?,
+@JvmOverloads constructor(context: Context,
                           attrs: AttributeSet? = null,
                           defStyleAttr: Int = R.attr.seekBarStyle)
-    : AppCompatSeekBar(context, attrs, defStyleAttr) {
-
-    var valueAnimator: ValueAnimator? = null
-
-
-    var isTracking = false
-    override fun setOnSeekBarChangeListener(listener: OnSeekBarChangeListener) {
-        super.setOnSeekBarChangeListener(listener)
-    }
+    : Slider(context, attrs, defStyleAttr) {
 
     init {
         this.visibility = View.VISIBLE

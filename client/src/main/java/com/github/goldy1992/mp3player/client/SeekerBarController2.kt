@@ -6,14 +6,13 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.view.animation.LinearInterpolator
-import android.widget.SeekBar
-import android.widget.SeekBar.OnSeekBarChangeListener
-import androidx.annotation.VisibleForTesting
-import com.github.goldy1992.mp3player.client.views.SeekerBar
+import androidx.lifecycle.Observer
 import com.github.goldy1992.mp3player.client.views.TimeCounter
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
+import com.google.android.material.slider.Slider
 import dagger.hilt.android.scopes.FragmentScoped
+import org.apache.commons.lang3.exception.ExceptionUtils
 import javax.inject.Inject
 
 /**
@@ -22,130 +21,95 @@ import javax.inject.Inject
 @FragmentScoped
 class SeekerBarController2
     @Inject
-    constructor(private val mediaControllerAdapter: MediaControllerAdapter?,
-                    private val timeCounter: TimeCounter)
-    : AnimatorUpdateListener, OnSeekBarChangeListener, LogTagger {
+    constructor(private val mediaControllerAdapter: MediaControllerAdapter,
+                    private val timeCounter: TimeCounter )
+    : AnimatorUpdateListener, Slider.OnSliderTouchListener, Slider.OnChangeListener, LogTagger, Observer<Any> {
 
-    private lateinit var seekerBar: SeekerBar
+    private lateinit var seekerBar: Slider
 
     @PlaybackStateCompat.State
     private var currentState = PlaybackStateCompat.STATE_PAUSED
     private var currentPlaybackSpeed = Constants.DEFAULT_SPEED
-    private var currentPosition = Constants.DEFAULT_POSITION
-    private var currentSongDuration: Long = 0
-    private var lastKnownPosition : Long = 0
-    var isLooping = false
-        private set
-    @get:VisibleForTesting
-    var valueAnimator: ValueAnimator? = null
-        private set
+    private var currentPosition : Float = Constants.DEFAULT_POSITION.toFloat()
+    private var currentSongDuration: Float = 0f
+    private var isLooping = false
+    private var isTracking = false
 
-    fun onPlaybackStateChanged(state: PlaybackStateCompat) { //LoggingUtils.logPlaybackStateCompat(state, LOG_TAG);
-        setLooping()
-        currentState = state.state
-        val position = state.position
-        if (validPosition(position)) {
-            currentPosition = position.toInt()
-        }
-        val speed = state.playbackSpeed
-        val speedChanged = speed != currentPlaybackSpeed
-        if (speedChanged) {
-            currentPlaybackSpeed = speed
-        }
-        createAnimator()
-        updateValueAnimator()
+    private var valueAnimator: ValueAnimator? = null
+
+    private fun onPlaybackStateChanged(state: PlaybackStateCompat) { //LoggingUtils.logPlaybackStateCompat(state, LOG_TAG);
+        this.currentState = state.state
+        this.currentPosition = state.position.toFloat()
+        this.currentPlaybackSpeed = state.playbackSpeed
+        replaceAnimator()
     }
 
     /**
-     *
      * @param metadata the metadata object
      */
-    fun onMetadataChanged(metadata: MediaMetadataCompat?) {
+    private fun onMetadataChanged(metadata: MediaMetadataCompat?) {
         Log.i(logTag(), "meta data change")
-        val max = metadata?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)?.toInt() ?: 0
-        seekerBar.max = max
-        currentSongDuration = max.toLong()
-        createAnimator()
-        updateValueAnimator()
+        val max = metadata?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)?.toFloat() ?: 0f
+        this.seekerBar.valueTo = max
+        this.currentSongDuration = max
+        replaceAnimator()
     }
 
-    private fun updateValueAnimator() {
-        val newPosition = positionAsFraction
-        //Log.d(LOG_TAG, "new fraction: " + newPosition);
-        valueAnimator!!.setCurrentFraction(newPosition)
+    private fun onRepeatModeChanged(repeatMode : Int) {
+        this.isLooping = repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE
+        this.valueAnimator?.repeatCount = if (this.isLooping) ValueAnimator.INFINITE else 0
+    }
 
-        if (!valueAnimator!!.isStarted) {
-            valueAnimator!!.start()
+    override fun onChanged(t: Any?) {
+        when(t) {
+            is PlaybackStateCompat -> onPlaybackStateChanged(t)
+            is MediaMetadataCompat -> onMetadataChanged(t)
+            is Int -> onRepeatModeChanged(t)
+            else -> {}
         }
-
-        when (currentState) {
-            PlaybackStateCompat.STATE_PAUSED -> valueAnimator!!.pause()
-            PlaybackStateCompat.STATE_PLAYING -> valueAnimator!!.resume()
-            else -> {
-            }
-        }
-
     }
 
     override fun onAnimationUpdate(valueAnimator: ValueAnimator) { //     Log.i(LOG_TAG, "animation update from: " + valueAnimator);
-        val animatedIntValue = valueAnimator.animatedValue as Int
-        seekerBar!!.progress = animatedIntValue
+        val animatedIntValue = (valueAnimator.animatedValue as Int).toFloat()
+        seekerBar.value = animatedIntValue
     }
 
-    override fun onStartTrackingTouch(seekBar: SeekBar) {
-        Log.i(logTag(), "START TRACKING")
-        timeCounter.cancelTimerDuringTracking()
+    private fun replaceAnimator() {
         removeValueAnimator()
-        setTracking(seekBar, true)
+        this.valueAnimator = createAnimator()
     }
 
-    override fun onStopTrackingTouch(seekBar: SeekBar) {
-        setTracking(seekBar, false)
-        Log.i(logTag(), "Stop TRACKING")
-        currentPosition = seekBar.getProgress()
-        mediaControllerAdapter!!.seekTo(currentPosition.toLong())
-        createAnimator()
-    }
-
-    private fun setTracking(seekBar: SeekBar, tracking: Boolean) {
-        if (seekBar is SeekerBar) {
-            seekBar.isTracking = tracking
-        }
-    }
-
-    private fun createAnimator() {
-        try {
-            val duration = (seekerBar!!.max / currentPlaybackSpeed).toInt()
-            val valueAnimator = ValueAnimator.ofInt(0, seekerBar!!.max)
-            valueAnimator.duration = duration.toLong()
-            valueAnimator.addUpdateListener(this)
-            valueAnimator.interpolator = LinearInterpolator()
-            valueAnimator.repeatCount = if (isLooping) ValueAnimator.INFINITE else 0
-            if (currentPosition >= 0 && seekerBar!!.max > currentPosition) {
-                valueAnimator.setCurrentFraction(positionAsFraction)
+    private fun createAnimator() : ValueAnimator? {
+        return try {
+            if (!validPosition()) {
+                return null
             }
-            removeValueAnimator()
-            seekerBar!!.valueAnimator =valueAnimator
-            this.valueAnimator = valueAnimator
+
+            val duration = (this.currentSongDuration / this.currentPlaybackSpeed).toInt()
+            val newValueAnimator = ValueAnimator.ofInt(0, this.currentSongDuration.toInt())
+            newValueAnimator.duration = duration.toLong()
+            newValueAnimator.addUpdateListener(this)
+            newValueAnimator.interpolator = LinearInterpolator()
+            newValueAnimator.repeatCount = if (this.isLooping) ValueAnimator.INFINITE else 0
+            if (currentPosition >= 0 && this.currentSongDuration >= currentPosition) {
+                newValueAnimator.setCurrentFraction(currentPosition / seekerBar.valueTo)
+            }
+
+            if (currentState == PlaybackStateCompat.STATE_PLAYING) {
+                newValueAnimator.start()
+                newValueAnimator.resume()
+            }
+
+            newValueAnimator
         } catch (ex: IllegalArgumentException) {
-            Log.e(logTag(), "seekerbar Max: $currentSongDuration")
-            throw IllegalArgumentException(ex)
+            Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
+            null
         }
-    }
-
-    private fun setLooping() {
-        val repeatMode = mediaControllerAdapter?.repeatMode?.value
-        isLooping = repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE
-        if (null != valueAnimator) {
-            valueAnimator!!.repeatCount = if (isLooping) ValueAnimator.INFINITE else 0
-        }
-
     }
 
     private fun removeValueAnimator() {
-        seekerBar?.valueAnimator?.removeAllUpdateListeners()
-        seekerBar?.valueAnimator?.cancel()
-        seekerBar?.valueAnimator = null
+        valueAnimator?.removeAllUpdateListeners()
+        valueAnimator?.cancel()
     }
 
     /**
@@ -153,21 +117,9 @@ class SeekerBarController2
      * @return true if the position is greater than or equal to zero and less than or equal to the
      * maximum value of the current seeker bar
      */
-    private fun validPosition(position: Long): Boolean {
+    private fun validPosition() : Boolean {
         // Log.i(LOG_TAG, "position: " + position + ", valid: " + valid);
-        return position >= 0 && position <= seekerBar!!.max
-    }
-
-    //Log.d(LOG_TAG, "current pos: " + currentPosition + ", seekerbar max" + seekerBar.getMax());
-    private val positionAsFraction: Float
-        get() =//Log.d(LOG_TAG, "current pos: " + currentPosition + ", seekerbar max" + seekerBar.getMax());
-            currentPosition / seekerBar!!.max.toFloat()
-
-    override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-        val updateTimer = seekBar is SeekerBar && seekBar.isTracking
-        if (updateTimer) { //Log.i(LOG_TAG, "PROGRESS CHANGED");
-            timeCounter.seekTo(progress.toLong())
-        }
+        return this.currentPosition in 0f..this.currentSongDuration
     }
 
     /**
@@ -175,14 +127,34 @@ class SeekerBarController2
      * and therefore cannot be null
      * @param seekerBar the seeker bar
      */
-    fun init(seekerBar: SeekerBar) {
+    fun init(seekerBar: Slider) {
         this.seekerBar = seekerBar
-        this.seekerBar.max = 0
-        this.seekerBar.setOnSeekBarChangeListener(this)
+        this.seekerBar.addOnSliderTouchListener(this)
+        this.seekerBar.addOnChangeListener(this)
     }
 
     override fun logTag(): String {
         return "SKR_MDIA_CNTRLR_CLBK"
+    }
+
+    override fun onStartTrackingTouch(slider: Slider) {
+        this.isTracking = true
+        Log.i(logTag(), "START TRACKING")
+        timeCounter.cancelTimerDuringTracking()
+        removeValueAnimator()
+    }
+
+    override fun onStopTrackingTouch(slider: Slider) {
+        this.isTracking = false
+        Log.i(logTag(), "Stop TRACKING")
+        currentPosition = slider.value
+        mediaControllerAdapter.seekTo(currentPosition.toLong())
+    }
+
+    override fun onValueChange(slider: Slider, value: Float, fromUser: Boolean) {
+        if (isTracking) { Log.i(logTag(), "PROGRESS CHANGED");
+            timeCounter.seekTo(value.toLong())
+        }
     }
 
 }
