@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
-        <com.github.goldy1992.mp3player.client.views.SeekerBar
+        <com.google.android.material.slider.Slider
             android:id="@+id/testSeekBar"
             android:layout_width="match_parent"
             android:layout_height="100dp" />
