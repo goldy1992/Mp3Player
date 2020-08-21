@@ -6,6 +6,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.views.TimeCounter
 import com.google.android.material.slider.Slider
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
@@ -58,6 +59,22 @@ class SeekerBarController2Test {
     fun testStartTracking() {
         seekerBarController2.onStartTrackingTouch(seekerBar)
         verify(timeCounter, times(1)).cancelTimerDuringTracking()
+    }
+
+    @Test
+    fun testOnValueChangedWhenTracking() {
+        val expectedSeekTo = 33f
+        seekerBarController2.onStartTrackingTouch(seekerBar)
+        seekerBarController2.onValueChange(seekerBar, expectedSeekTo, true)
+        verify(timeCounter, times(1)).seekTo(expectedSeekTo.toLong())
+    }
+
+    @Test
+    fun testOnValueChangedWhenNotTracking() {
+        val expectedSeekTo = 33f
+        seekerBarController2.onStopTrackingTouch(seekerBar)
+        seekerBarController2.onValueChange(seekerBar, expectedSeekTo, true)
+        verify(timeCounter, never()).seekTo(expectedSeekTo.toLong())
     }
 
     private fun createMetaData(duration: Long): MediaMetadataCompat {
