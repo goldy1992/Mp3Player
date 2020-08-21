@@ -47,11 +47,11 @@ class MainFragment : DestinationFragment(), LogTagger {
 
     private val viewModel : MainFragmentViewModel by viewModels()
 
-    lateinit var binding : FragmentMainBinding
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         setHasOptionsMenu(true)
-        this.binding = FragmentMainBinding.inflate(inflater)
+        adapter = MyPagerAdapter(this)
+        val binding = FragmentMainBinding.inflate(inflater)
         binding.appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { app: AppBarLayout?, offset: Int ->
             Log.i(logTag(), "offset: " + offset + ", scroll range: " + app?.totalScrollRange)
             var newOffset = offset
@@ -63,6 +63,11 @@ class MainFragment : DestinationFragment(), LogTagger {
                     newOffset)
         })
         setUpToolbar(binding.titleToolbar)
+        binding.rootMenuItemsPager.adapter = adapter
+        tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.rootMenuItemsPager, adapter)
+        tabLayoutMediator!!.attach()
+        binding.rootMenuItemsPager.adapter = adapter
+
         return binding.root
     }
 
@@ -73,7 +78,6 @@ class MainFragment : DestinationFragment(), LogTagger {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = MyPagerAdapter(this)
 
         mediaBrowserAdapter.subscribeToRoot().observe(this.viewLifecycleOwner) {
             for (mediaItem in it) {
@@ -96,11 +100,7 @@ class MainFragment : DestinationFragment(), LogTagger {
             }
 
         } // observe
-        binding.rootMenuItemsPager.adapter = adapter
-        tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.rootMenuItemsPager, adapter)
-        tabLayoutMediator!!.attach()
-        binding.rootMenuItemsPager.adapter = adapter
-        viewModel.menuCategories = mediaBrowserAdapter.subscribeToRoot() as MutableLiveData<List<MediaBrowserCompat.MediaItem>>
+             viewModel.menuCategories = mediaBrowserAdapter.subscribeToRoot() as MutableLiveData<List<MediaBrowserCompat.MediaItem>>
         }
 
     override fun lockDrawerLayout(): Boolean {

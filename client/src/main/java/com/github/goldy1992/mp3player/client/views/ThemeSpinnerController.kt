@@ -22,11 +22,42 @@ import javax.inject.Inject
 
 class ThemeSpinnerController
     @Inject
-    constructor(@ActivityContext private val context: Context,
-                private val spinner: Spinner,
-                private val activity: Activity,
-                private val componentClassMapper : ComponentClassMapper)
+    constructor(@ActivityContext private val context: Context)
     : OnItemSelectedListener, LogTagger {
+
+
+    private lateinit var spinner: Spinner
+
+    fun init(spinner: Spinner) {
+        this.spinner = spinner
+        adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+        spinner.onItemSelectedListener = this
+        val themeArray = context.resources.obtainTypedArray(R.array.themes)
+        themeResIds = ArrayList()
+        if (themeArray.length() > 0) {
+            val numberOfResources = themeArray.length()
+            for (i in 0 until numberOfResources) { // for each theme in the theme array
+                val res = themeArray.getResourceId(i, 0)
+                themeResIds?.add(res)
+                val themeNameArray = context.obtainStyledAttributes(res, attrs) // get the theme name GIVEN the themes res if.
+                val themeName = themeNameArray.getString(0)
+                adapter!!.add(themeName)
+                themeNameToResMap[themeName] = res
+                recycleTypedArray(themeNameArray)
+            }
+        }
+        recycleTypedArray(themeArray)
+        val currentThemeId = currentThemeId
+        if (currentThemeId != -1) {
+            currentTheme = themeNameToResMap.inverse()[currentThemeId]
+            val position = adapter!!.getPosition(currentTheme)
+            spinner.setSelection(position)
+        }
+
+    }
+
+
     private var adapter // TODO: make a make from Theme name to resource
             : ArrayAdapter<String?>? = null
     private var themeResIds: MutableList<Int>? = null
@@ -46,10 +77,7 @@ class ThemeSpinnerController
         if (selectCount >= 1) {
             Log.d(logTag(), "select count > 1")
             setThemePreference(res)
-            activity.finish()
-            val intent = Intent(context, componentClassMapper.mainActivity)
-            intent.putExtra(Constants.THEME, res)
-            activity.startActivity(intent)
+            (context as Activity).recreate()
         }
         selectCount++
     }
@@ -61,7 +89,7 @@ class ThemeSpinnerController
      */
     private val currentThemeId: Int
         get() {
-            val activityTheme = activity.theme
+            val activityTheme = context.theme
             if (null != activityTheme) {
                 val themeNameArray = activityTheme.obtainStyledAttributes(attrs)
                 if (null != themeNameArray && themeNameArray.length() > 0) {
@@ -100,31 +128,7 @@ class ThemeSpinnerController
 
 
     init {
-        adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
-        spinner.onItemSelectedListener = this
-        val themeArray = context.resources.obtainTypedArray(R.array.themes)
-        themeResIds = ArrayList()
-        if (themeArray.length() > 0) {
-            val numberOfResources = themeArray.length()
-            for (i in 0 until numberOfResources) { // for each theme in the theme array
-                val res = themeArray.getResourceId(i, 0)
-                themeResIds?.add(res)
-                val themeNameArray = context.obtainStyledAttributes(res, attrs) // get the theme name GIVEN the themes res if.
-                val themeName = themeNameArray.getString(0)
-                adapter!!.add(themeName)
-                themeNameToResMap[themeName] = res
-                recycleTypedArray(themeNameArray)
-            }
-        }
-        recycleTypedArray(themeArray)
-        val currentThemeId = currentThemeId
-        if (currentThemeId != -1) {
-            currentTheme = themeNameToResMap.inverse()[currentThemeId]
-            val position = adapter!!.getPosition(currentTheme)
-            spinner.setSelection(position)
-        }
-    }
+       }
 
     override fun logTag(): String {
        return "THM_SPNR_CTLR"

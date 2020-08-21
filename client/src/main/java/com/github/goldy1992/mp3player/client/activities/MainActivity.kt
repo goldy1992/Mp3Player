@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Spinner
 import androidx.annotation.VisibleForTesting
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -19,6 +20,7 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.databinding.ActivityMainBinding
 import com.github.goldy1992.mp3player.client.listeners.MyDrawerListener
+import com.github.goldy1992.mp3player.client.views.ThemeSpinnerController
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,6 +35,9 @@ open class MainActivity : MediaActivityCompat()
 
     @Inject
     lateinit var componentClassMapper: ComponentClassMapper
+
+    @Inject
+    lateinit var themeSpinnerController: ThemeSpinnerController
 
     lateinit var drawerLayout: DrawerLayout
 
@@ -83,7 +88,7 @@ open class MainActivity : MediaActivityCompat()
     private fun initNavigationView() {
         navigationView.setNavigationItemSelectedListener { menuItem: MenuItem -> onNavigationItemSelected(menuItem) }
         val spinner = navigationView.menu.findItem(R.id.themes_menu_item).actionView as Spinner
-        //    ThemeSpinnerController(requireContext(), spinner, this, componentClassMapper)
+            themeSpinnerController.init(spinner)
     }
 
 
