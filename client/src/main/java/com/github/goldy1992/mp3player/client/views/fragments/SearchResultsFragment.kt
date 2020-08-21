@@ -59,6 +59,7 @@ class SearchResultsFragment : DestinationFragment(), MyGenericItemTouchListener.
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         this.inputMethodManager = requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         setHasOptionsMenu(true)
         val binding = FragmentSearchResultsBinding.inflate(inflater)
