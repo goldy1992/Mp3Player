@@ -1,17 +1,15 @@
 package com.github.goldy1992.mp3player.client
 
-import android.animation.ValueAnimator
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
-import android.support.v4.media.session.PlaybackStateCompat
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.goldy1992.mp3player.client.views.SeekerBar
 import com.github.goldy1992.mp3player.client.views.TimeCounter
+import com.google.android.material.slider.Slider
 import com.nhaarman.mockitokotlin2.mock
-import org.junit.After
-import org.junit.Assert
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,99 +21,65 @@ import org.robolectric.shadows.ShadowValueAnimator
 @RunWith(RobolectricTestRunner::class)
 @Config(manifest = Config.NONE, sdk = [26], shadows = [ShadowValueAnimator::class, ShadowSeekBar::class])
 class SeekerBarController2Test {
-    private var m_context: Context? = null
+    private lateinit var context: Context
 
-    private val m_mediaControllerAdapter: MediaControllerAdapter = mock<MediaControllerAdapter>()
-    private lateinit var timeCounter: TimeCounter
-    private lateinit var m_seekerBarController2: SeekerBarController2
-    private lateinit var m_seekerBar: SeekerBar
-    private val DEFAULT_DURATION: Long = 3000
+    private val mediaControllerAdapter: MediaControllerAdapter = mock<MediaControllerAdapter>()
+    private val timeCounter: TimeCounter = mock<TimeCounter>()
+    private lateinit var seekerBar: Slider
+
+    private lateinit var seekerBarController2: SeekerBarController2
+    private val defaultDuration: Long = 3000
 
     @Before
     fun setUp() {
-        m_context = InstrumentationRegistry.getInstrumentation().context
-        timeCounter = TimeCounter(m_mediaControllerAdapter)
-        m_seekerBar = SeekerBar(m_context)
-        m_seekerBarController2 = SeekerBarController2(m_mediaControllerAdapter, timeCounter)
-        m_seekerBarController2.init(m_seekerBar)
-        // set default metadata
-        m_seekerBarController2.onMetadataChanged(createMetaData(DEFAULT_DURATION))
-    }
-
-    @After
-    fun tearDown() {
+        context = InstrumentationRegistry.getInstrumentation().context
+        context.setTheme(R.style.AppTheme)
+        seekerBar = Slider(context)
+        seekerBar.valueTo = defaultDuration.toFloat()
+        seekerBarController2 = SeekerBarController2(mediaControllerAdapter, timeCounter)
+        seekerBarController2.init(seekerBar)
     }
 
     @Test
     fun testMetadataChanged() {
-        val originalValueAnimator = m_seekerBarController2.valueAnimator
-        val DURATION: Long = 1000
-        m_seekerBarController2.onMetadataChanged(createMetaData(DURATION))
-        assertValueAnimatorReset(originalValueAnimator)
-        val resultValueAnimator = m_seekerBarController2.valueAnimator
-        Assert.assertEquals(DURATION, resultValueAnimator!!.duration)
+        val expectedDuration: Long = 1000
+        seekerBarController2.onChanged(createMetaData(expectedDuration))
+        assertEquals(expectedDuration.toFloat(), seekerBar.valueTo)
     }
 
     @Test
-    fun testPlaybackSpeedIncreaseStatePaused() {
-        val SPEED = 1.1f
-        testSpeedChange(SPEED)
+    fun testStopTracking() {
+        val expectedSeekToValue = 25
+        this.seekerBar.value = expectedSeekToValue.toFloat()
+        seekerBarController2.onStopTrackingTouch(seekerBar)
+        verify(mediaControllerAdapter, times(1)).seekTo(expectedSeekToValue.toLong())
     }
 
     @Test
     fun testStartTracking() {
-        //    m_seekerBar.setTimeCounter(timeCounter);
-        m_seekerBarController2.onStartTrackingTouch(m_seekerBar)
-        Assert.assertTrue(m_seekerBar.isTracking)
+        seekerBarController2.onStartTrackingTouch(seekerBar)
+        verify(timeCounter, times(1)).cancelTimerDuringTracking()
     }
 
     @Test
-    fun testStopTracking() { //        TimeCounter timeCounter = mock(TimeCounter.class);
-//        m_seekerBar.setTimeCounter(timeCounter);
-        val valueAnimator = m_seekerBarController2.valueAnimator
-        valueAnimator!!.start()
-        m_seekerBarController2.onStopTrackingTouch(m_seekerBar)
-        Assert.assertFalse(m_seekerBar.isTracking)
+    fun testOnValueChangedWhenTracking() {
+        val expectedSeekTo = 33f
+        seekerBarController2.onStartTrackingTouch(seekerBar)
+        seekerBarController2.onValueChange(seekerBar, expectedSeekTo, true)
+        verify(timeCounter, times(1)).seekTo(expectedSeekTo.toLong())
     }
 
     @Test
-    fun testPlaybackSpeedDecreasedSpeedPaused() {
-        val SPEED = 0.75f
-        testSpeedChange(SPEED)
-    }
-
-    private fun testSpeedChange(speed: Float) {
-        val EXPECTED_DURATION = (DEFAULT_DURATION / speed).toLong()
-        val playbackState = createPlaybackState(PlaybackStateCompat.STATE_PAUSED, 350, speed)
-        val originalValueAnimator = m_seekerBarController2.valueAnimator
-        m_seekerBarController2.onPlaybackStateChanged(playbackState)
-        assertValueAnimatorReset(originalValueAnimator)
-        val valueAnimator = m_seekerBarController2.valueAnimator
-        Assert.assertTrue(valueAnimator!!.isStarted)
-        Assert.assertTrue(valueAnimator.isPaused)
-        val resultDuration = valueAnimator.duration
-        val errorMessage = StringBuilder().append("incorrect duration, expected: ")
-                .append(EXPECTED_DURATION)
-                .append(" but got ")
-                .append(resultDuration)
-                .toString()
-        Assert.assertEquals(errorMessage, EXPECTED_DURATION, resultDuration)
-    }
-
-    private fun assertValueAnimatorReset(originalAnimator: ValueAnimator?) {
-        val resultValueAnimator = m_seekerBarController2.valueAnimator
-        Assert.assertNotEquals("Value animator should have been recreated", resultValueAnimator, originalAnimator)
+    fun testOnValueChangedWhenNotTracking() {
+        val expectedSeekTo = 33f
+        seekerBarController2.onStopTrackingTouch(seekerBar)
+        seekerBarController2.onValueChange(seekerBar, expectedSeekTo, true)
+        verify(timeCounter, never()).seekTo(expectedSeekTo.toLong())
     }
 
     private fun createMetaData(duration: Long): MediaMetadataCompat {
         return MediaMetadataCompat.Builder()
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
-                .build()
-    }
-
-    private fun createPlaybackState(state: Int, position: Int, speed: Float): PlaybackStateCompat {
-        return PlaybackStateCompat.Builder()
-                .setState(state, position.toLong(), speed)
                 .build()
     }
 }

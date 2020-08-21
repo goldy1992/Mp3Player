@@ -6,13 +6,13 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.MediaItemListFragment
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator.OnConfigureTabCallback
+import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrategy
 import java.util.*
 
 class MyPagerAdapter
     constructor(
         fm: Fragment)
-    : FragmentStateAdapter(fm), OnConfigureTabCallback {
+    : FragmentStateAdapter(fm), TabConfigurationStrategy {
 
     val menuCategories = sortedMapOf<MediaItemType, MediaItem>()
     var pagerItems = sortedMapOf<MediaItemType, MediaItemListFragment>()
