@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
@@ -68,7 +67,7 @@ class MainFragment : DestinationFragment(), LogTagger {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_main, menu)
+        inflater.inflate(R.menu.app_bar_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

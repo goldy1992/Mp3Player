@@ -10,7 +10,13 @@
             app:showAsAction="always"
             android:orderInCategory="2"
             app:actionViewClass="android.widget.Spinner"
-            android:icon="@android:drawable/ic_menu_share"
+            android:icon="@drawable/ic_baseline_palette_24"
+            />
+        <item android:id="@+id/settings"
+            android:title="@string/settings"
+            app:showAsAction="ifRoom"
+            android:orderInCategory="3"
+            android:icon="@drawable/ic_baseline_settings_24"
             />
     </group>
 </menu>

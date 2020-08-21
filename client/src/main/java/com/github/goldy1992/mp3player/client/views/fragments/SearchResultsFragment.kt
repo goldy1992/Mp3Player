@@ -5,9 +5,6 @@ import android.app.SearchManager
 import android.content.ComponentName
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.ResultReceiver
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
 import android.view.LayoutInflater
@@ -95,7 +92,7 @@ class SearchResultsFragment : DestinationFragment(), MyGenericItemTouchListener.
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_menu, menu)
+        inflater.inflate(R.menu.search_results_menu, menu)
         configureSearchView(menu)
         super.onCreateOptionsMenu(menu, inflater)
     }

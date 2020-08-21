@@ -21,6 +21,6 @@
         android:layout_height="wrap_content"
         android:text="@string/menu"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
 </LinearLayout>
