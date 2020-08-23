@@ -140,6 +140,7 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
     implementation group: 'androidx.viewpager2', name: 'viewpager2', version: VIEW_PAGER2_VERSION
     implementation group: 'androidx.recyclerview', name: 'recyclerview', version: RECYCLER_VIEW_VERSION
+    implementation group: 'androidx.preference', name: 'preference-ktx', version: PREFERENCE_VERSION
 
     def lifecycleVersion = '2.2.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"

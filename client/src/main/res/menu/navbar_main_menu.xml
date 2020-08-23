@@ -12,10 +12,19 @@
             app:actionViewClass="android.widget.Spinner"
             android:icon="@drawable/ic_baseline_palette_24"
             />
-        <item android:id="@+id/settings"
+
+        <item android:id="@+id/new_theme_menu_item"
+            android:title="@string/themes_title"
+            app:showAsAction="always"
+            android:orderInCategory="3"
+            app:actionViewClass="com.github.goldy1992.mp3player.client.views.MaterialDropdownList"
+            android:icon="@drawable/ic_baseline_palette_24"
+           />
+
+        <item android:id="@+id/settings_fragment"
             android:title="@string/settings"
             app:showAsAction="ifRoom"
-            android:orderInCategory="3"
+            android:orderInCategory="4"
             android:icon="@drawable/ic_baseline_settings_24"
             />
     </group>

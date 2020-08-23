@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.client.views
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.res.TypedArray
 import android.util.Log
 import android.view.View
@@ -11,7 +10,6 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.google.common.collect.BiMap
@@ -25,19 +23,30 @@ class ThemeSpinnerController
     constructor(@ActivityContext private val context: Context)
     : OnItemSelectedListener, LogTagger {
 
+    private var adapter  : ArrayAdapter<String>? = null
+    private var themeResIds: MutableList<Int>? = null
+    val attrs = intArrayOf(R.attr.themeName)
 
-    private lateinit var spinner: Spinner
 
-    fun init(spinner: Spinner) {
+    var themeNameToResMap: BiMap<String, Int> = HashBiMap.create()
+
+    private var selectCount: Long = 0
+    var currentTheme: String? = null
+        private set
+
+
+    private lateinit var spinner: MaterialDropdownList
+
+    fun init(spinner: MaterialDropdownList) {
         this.spinner = spinner
-        adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item)
+        adapter = ArrayAdapter(context, R.layout.material_dropdown_item)
         spinner.adapter = adapter
-        spinner.onItemSelectedListener = this
+        spinner.addOnItemSelectedListener(this)
         val themeArray = context.resources.obtainTypedArray(R.array.themes)
         themeResIds = ArrayList()
         if (themeArray.length() > 0) {
-            val numberOfResources = themeArray.length()
-            for (i in 0 until numberOfResources) { // for each theme in the theme array
+            val numberOfThemes = themeArray.length()
+            for (i in 0 until numberOfThemes) { // for each theme in the theme array
                 val res = themeArray.getResourceId(i, 0)
                 themeResIds?.add(res)
                 val themeNameArray = context.obtainStyledAttributes(res, attrs) // get the theme name GIVEN the themes res if.
@@ -52,24 +61,10 @@ class ThemeSpinnerController
         if (currentThemeId != -1) {
             currentTheme = themeNameToResMap.inverse()[currentThemeId]
             val position = adapter!!.getPosition(currentTheme)
-            spinner.setSelection(position)
+         //   spinner.setSelection(position)
         }
 
     }
-
-
-    private var adapter // TODO: make a make from Theme name to resource
-            : ArrayAdapter<String?>? = null
-    private var themeResIds: MutableList<Int>? = null
-    val attrs = intArrayOf(R.attr.themeName)
-
-
-     var themeNameToResMap: BiMap<String, Int> = HashBiMap.create()
-
-    private var selectCount: Long = 0
-    var currentTheme: String? = null
-        private set
-
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val res = themeResIds!![position]
@@ -82,7 +77,7 @@ class ThemeSpinnerController
         selectCount++
     }
 
-    override fun onNothingSelected(parent: AdapterView<*>?) {}
+    override fun onNothingSelected(parent: AdapterView<*>?) = Unit
     /**
      *
      * @return
@@ -124,11 +119,6 @@ class ThemeSpinnerController
     private fun recycleTypedArray(typedArray: TypedArray?) {
         typedArray?.recycle()
     }
-
-
-
-    init {
-       }
 
     override fun logTag(): String {
        return "THM_SPNR_CTLR"

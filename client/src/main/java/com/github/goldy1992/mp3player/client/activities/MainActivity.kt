@@ -20,6 +20,7 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.databinding.ActivityMainBinding
 import com.github.goldy1992.mp3player.client.listeners.MyDrawerListener
+import com.github.goldy1992.mp3player.client.views.MaterialDropdownList
 import com.github.goldy1992.mp3player.client.views.ThemeSpinnerController
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.google.android.material.navigation.NavigationView
@@ -87,7 +88,7 @@ open class MainActivity : MediaActivityCompat()
 
     private fun initNavigationView() {
         navigationView.setNavigationItemSelectedListener { menuItem: MenuItem -> onNavigationItemSelected(menuItem) }
-        val spinner = navigationView.menu.findItem(R.id.themes_menu_item).actionView as Spinner
+        val spinner = navigationView.menu.findItem(R.id.new_theme_menu_item).actionView as MaterialDropdownList
             themeSpinnerController.init(spinner)
     }
 

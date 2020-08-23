@@ -41,6 +41,7 @@ buildscript {
         MIRROR_VERSION = '1.1.1'
         MOCKITO_CORE_VERSION = '2.27.0'
         MOCKITO_KOTLIN = '2.2.0'
+        PREFERENCE_VERSION = '1.1.1'
         RECYCLER_VIEW_VERSION = '1.1.0'
         ROBOLECTRIC_VERSION = '4.3.1'
         ROOM_VERSION = '2.2.3'
