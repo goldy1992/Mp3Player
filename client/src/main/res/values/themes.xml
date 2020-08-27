@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-
+        <item name="sliderStyle">@style/Widget.App.Slider</item>
     </style>
 
     <style name="AppTheme.Blue" >
@@ -24,9 +24,9 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-    <style name="AppTheme.Orange" >
-        <item name="colorPrimaryDark">@color/dark_orange</item>
-        <item name="colorAccent">@color/accent_orange</item>
+    <style name="AppTheme.Orange" parent="AppTheme.Blue">
+        <item name="colorPrimary">@color/dark_orange</item>
+        <item name="colorSecondary">@color/accent_orange</item>
         <item name="themeName">@string/THEME_ORANGE</item>
     </style>
 </resources>

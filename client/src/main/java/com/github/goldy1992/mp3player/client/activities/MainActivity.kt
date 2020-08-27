@@ -88,8 +88,8 @@ open class MainActivity : MediaActivityCompat()
 
     private fun initNavigationView() {
         navigationView.setNavigationItemSelectedListener { menuItem: MenuItem -> onNavigationItemSelected(menuItem) }
-        val spinner = navigationView.menu.findItem(R.id.new_theme_menu_item).actionView as MaterialDropdownList
-            themeSpinnerController.init(spinner)
+//        val spinner = navigationView.menu.findItem(R.id.new_theme_menu_item).actionView as MaterialDropdownList
+//            themeSpinnerController.init(spinner)
     }
 
 

@@ -1,24 +1,31 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
+import android.app.Activity
+import android.content.SharedPreferences
+import android.content.res.TypedArray
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.commons.Constants.CURRENT_THEME
+import com.github.goldy1992.mp3player.commons.Constants.DARK_MODE
 import com.github.goldy1992.mp3player.commons.LogTagger
 
 /**
  *
  */
-class PreferencesFragment : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener, LogTagger {
+class PreferencesFragment : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener, LogTagger,
+SharedPreferences.OnSharedPreferenceChangeListener {
 
     companion object {
-        const val DARK_MODE = "dark_mode"
+
     }
     /**
      * Called during [.onCreate] to supply the preferences for this fragment.
@@ -35,7 +42,21 @@ class PreferencesFragment : PreferenceFragmentCompat(), Preference.OnPreferenceC
         Log.i(logTag(), "log preference created")
         val switchPreferenceCompat = preferenceScreen.findPreference<SwitchPreferenceCompat>(DARK_MODE)
         switchPreferenceCompat?.onPreferenceChangeListener = this
-    }
+
+        val themeSelect = preferenceScreen.findPreference<ListPreference>(CURRENT_THEME)
+        themeSelect?.onPreferenceChangeListener = this
+        val themeMap = getThemes()
+
+        // map theme names to resource ids in settings
+        themeSelect?.entries = themeMap.keys.toTypedArray()
+        val intValues : Collection<Int> = themeMap.values
+        val charSeqValues : MutableList<CharSequence> = ArrayList()
+        intValues.forEachIndexed { index: Int, i: Int ->
+            charSeqValues.add(index, i.toString())
+        }
+        themeSelect?.entryValues = charSeqValues.toTypedArray()
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(this)
+   }
 
     /**
      * Called when a preference has been changed by the user. This is called before the state
@@ -47,8 +68,8 @@ class PreferencesFragment : PreferenceFragmentCompat(), Preference.OnPreferenceC
      */
     override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean {
         Log.i(logTag(), "Preference changed: $preference, new value: $newValue")
-        if (DARK_MODE == preference?.key) {
-            updateDarkModePreference(newValue)
+        when (preference?.key) {
+            DARK_MODE -> updateDarkModePreference(newValue)
         }
         return true
     }
@@ -61,6 +82,61 @@ class PreferencesFragment : PreferenceFragmentCompat(), Preference.OnPreferenceC
         val enableDarkMode : Boolean = newValue as Boolean
         val nightMode : Int = if (enableDarkMode)  MODE_NIGHT_YES else MODE_NIGHT_NO
         AppCompatDelegate.setDefaultNightMode(nightMode)
+    }
+
+    /**
+     * Returns a map of themeNames to their corresponding resourceIds
+     */
+    private fun getThemes() : Map<String, Int> {
+        val themeNameMap : MutableMap<String, Int> = HashMap()
+        val attrs = intArrayOf(R.attr.themeName)
+        val context = requireContext()
+        val themeArray = context.resources.obtainTypedArray(R.array.themes)
+        if (themeArray.length() > 0) {
+            val numberOfThemes = themeArray.length()
+            for (i in 0 until numberOfThemes) { // for each theme in the theme array
+                val res = themeArray.getResourceId(i, 0)
+                val themeTypedArray = context.obtainStyledAttributes(res, attrs) // get the theme name GIVEN the themes res if.
+                val themeName : String? = themeTypedArray.getString(0)
+
+                if (null != themeName) {
+                    themeNameMap[themeName] = res
+                }
+
+                Log.i(logTag(), "onCreate preferences")
+                recycleTypedArray(themeTypedArray)
+            }
+
+        }
+        recycleTypedArray(themeArray)
+        return HashMap(themeNameMap)
+    }
+
+    /**
+     *
+     */
+    private fun recycleTypedArray(typedArray: TypedArray?) {
+        typedArray?.recycle()
+    }
+
+    /**
+     * Called when a shared preference is changed, added, or removed. This
+     * may be called even if a preference is set to its existing value.
+     *
+     *
+     * This callback will be run on your main thread.
+     *
+     * @param sharedPreferences The [SharedPreferences] that received
+     * the change.
+     * @param key The key of the preference that was changed, added, or
+     * removed.
+     */
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        when(key) {
+            CURRENT_THEME -> {
+                (context as Activity).recreate()
+            }
+        }
     }
 
 }
