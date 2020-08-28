@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
-import android.app.Activity
 import android.content.SharedPreferences
 import android.content.res.TypedArray
 import android.os.Bundle
@@ -24,9 +23,6 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 class PreferencesFragment : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener, LogTagger,
 SharedPreferences.OnSharedPreferenceChangeListener {
 
-    companion object {
-
-    }
     /**
      * Called during [.onCreate] to supply the preferences for this fragment.
      * Subclasses are expected to call [.setPreferenceScreen] either
@@ -44,7 +40,6 @@ SharedPreferences.OnSharedPreferenceChangeListener {
         switchPreferenceCompat?.onPreferenceChangeListener = this
 
         val themeSelect = preferenceScreen.findPreference<ListPreference>(CURRENT_THEME)
-        themeSelect?.onPreferenceChangeListener = this
         val themeMap = getThemes()
 
         // map theme names to resource ids in settings
@@ -55,8 +50,17 @@ SharedPreferences.OnSharedPreferenceChangeListener {
             charSeqValues.add(index, i.toString())
         }
         themeSelect?.entryValues = charSeqValues.toTypedArray()
-        PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(this)
    }
+
+    private fun registerSharedPreferencesListener() {
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
+                .registerOnSharedPreferenceChangeListener(this)
+    }
+
+    private fun unregisterSharedPreferencesListener() {
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
+                .unregisterOnSharedPreferenceChangeListener(this)
+    }
 
     /**
      * Called when a preference has been changed by the user. This is called before the state
@@ -134,9 +138,25 @@ SharedPreferences.OnSharedPreferenceChangeListener {
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         when(key) {
             CURRENT_THEME -> {
-                (context as Activity).recreate()
+                /* MUST: unregister listener before recreating activity to avoid null pointer if the
+                * fragment is still in memory after being detached. */
+                PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(this)
+                requireActivity().recreate()
+                Log.i(logTag(), "hit after activity recreate")
+                this.onDestroy()
+
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        registerSharedPreferencesListener()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterSharedPreferencesListener()
     }
 
 }

@@ -21,6 +21,7 @@
 
     <style name="AppTheme.Orange" parent="AppTheme.Blue">
         <item name="colorSecondary">@color/dark_orange</item>
+        <item name="themeName">@string/THEME_ORANGE</item>
     </style>
 
 </resources>
