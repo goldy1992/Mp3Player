@@ -12,7 +12,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.databinding.ActivityMainBinding
 import com.github.goldy1992.mp3player.client.listeners.MyDrawerListener
-import com.github.goldy1992.mp3player.client.views.ThemeSpinnerController
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,9 +25,6 @@ open class MainActivity : MediaActivityCompat()
 
     @Inject
     lateinit var componentClassMapper: ComponentClassMapper
-
-    @Inject
-    lateinit var themeSpinnerController: ThemeSpinnerController
 
     lateinit var drawerLayout: DrawerLayout
 
