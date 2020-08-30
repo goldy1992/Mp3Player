@@ -28,9 +28,12 @@ task jacocoTestReportDebug(type: JacocoReport, dependsOn: ['test']) {
     ]
 
     def mainSrc = "$project.projectDir/src/main/java"
+    def hiltSrc = "$project.buildDir/generated/source/kapt/unitTestDebug"
     def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/unitTestDebug", excludes: fileFilter)
+    def hiltClasses = fileTree(dir: "$project.buildDir/intermediates/javac/unitTestDebug/classes")
+    def hiltTestClasses = fileTree(dir: "$project.buildDir/intermediates/hilt/test/unitTest/debugOutput")
 
-    sourceDirectories.from = files([mainSrc])
-    classDirectories.from = files([mainClasses])
+    sourceDirectories.from = files([mainSrc, hiltSrc])
+    classDirectories.from = files([mainClasses, hiltClasses, hiltTestClasses])
     executionData.from = "$project.buildDir/jacoco/testUnitTestDebugUnitTest.exec"
 }
