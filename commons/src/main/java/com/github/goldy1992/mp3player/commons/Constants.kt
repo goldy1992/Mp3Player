@@ -50,6 +50,8 @@ object Constants {
     const val ROOT_ITEM_TYPE = "ROOT_ITEM_TYPE"
     const val ID_SEPARATOR = "|"
     const val ID_DELIMITER = "\\|"
+    const val DARK_MODE = "dark_mode"
+    const val CURRENT_THEME = "current_theme"
 
     init {
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_NONE, "STATE_NONE") // 0

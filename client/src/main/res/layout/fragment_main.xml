@@ -29,7 +29,7 @@
                     android:layout_height="?attr/actionBarSize"
                     app:layout_scrollFlags="scroll|enterAlways"
                     android:elevation="0dp"
-                    style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface">
+                    style="@style/Widget.MaterialComponents.Toolbar.Primary">
 
                 </com.google.android.material.appbar.MaterialToolbar>
 

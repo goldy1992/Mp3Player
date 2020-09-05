@@ -1,17 +1,14 @@
 package com.github.goldy1992.mp3player.client.activities
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.MediaConnector
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.callbacks.Listener
-import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
 import javax.inject.Inject
@@ -43,8 +40,11 @@ abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowse
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val settings = applicationContext.getSharedPreferences(Constants.THEME, Context.MODE_PRIVATE)
-        setTheme(settings.getInt(Constants.THEME, R.style.AppTheme_Blue))
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val currentThemeResId : Int? = sharedPreferences.getString(Constants.CURRENT_THEME, null)?.toInt()// Int? = currentTheme?.
+        if (currentThemeResId != null) {
+            setTheme(currentThemeResId)
+        }
         connect()
     }
 

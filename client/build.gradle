@@ -24,7 +24,7 @@ android {
         targetSdkVersion TARGET_SDK_VERION
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.github.goldy1992.mp3player.client.CustomTestRunner"
         consumerProguardFiles 'consumer-rules.pro'
         vectorDrawables.useSupportLibrary = true
     }
@@ -140,6 +140,7 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
     implementation group: 'androidx.viewpager2', name: 'viewpager2', version: VIEW_PAGER2_VERSION
     implementation group: 'androidx.recyclerview', name: 'recyclerview', version: RECYCLER_VIEW_VERSION
+    implementation group: 'androidx.preference', name: 'preference-ktx', version: PREFERENCE_VERSION
 
     def lifecycleVersion = '2.2.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
@@ -175,18 +176,19 @@ dependencies {
 
     // hilt
     implementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
+    implementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
     kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+    kapt group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
 
+    testImplementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
     testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
+    testImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
     kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+    kaptTest group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
 
     androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
     kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
 
-    implementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
-    kapt group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
-    testImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
-    kaptTest group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
     androidTestImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
     kaptAndroidTest group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
 
@@ -222,4 +224,8 @@ dependencies {
     endToEndImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
     integrationImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: ESPRESSO_CORE_VERSION
 
+}
+
+kapt {
+    correctErrorTypes true
 }

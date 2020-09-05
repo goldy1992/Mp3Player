@@ -4,13 +4,11 @@
 
     <group android:checkableBehavior="single" android:menuCategory="container"
         android:orderInCategory="1">
-
-        <item android:id="@+id/themes_menu_item"
-            android:title="@string/themes_title"
-            app:showAsAction="always"
-            android:orderInCategory="2"
-            app:actionViewClass="android.widget.Spinner"
-            android:icon="@android:drawable/ic_menu_share"
+        <item android:id="@+id/settings_fragment"
+            android:title="@string/settings"
+            app:showAsAction="ifRoom"
+            android:orderInCategory="4"
+            android:icon="@drawable/ic_baseline_settings_24"
             />
     </group>
 </menu>

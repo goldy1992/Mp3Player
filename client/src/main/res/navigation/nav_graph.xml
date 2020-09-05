@@ -47,6 +47,10 @@
         android:name="com.github.goldy1992.mp3player.client.views.fragments.SearchResultsFragment"
         tools:layout="@layout/fragment_search_results">
     </fragment>
-    
+
+    <fragment android:id="@+id/settings_fragment"
+        android:name="com.github.goldy1992.mp3player.client.views.fragments.SettingsFragment"
+        tools:layout="@layout/fragment_settings">
+    </fragment>
 
 </navigation>

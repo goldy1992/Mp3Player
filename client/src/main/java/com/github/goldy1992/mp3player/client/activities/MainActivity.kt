@@ -2,27 +2,19 @@ package com.github.goldy1992.mp3player.client.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
-import android.widget.Spinner
 import androidx.annotation.VisibleForTesting
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
-import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.callbacks.Listener
 import com.github.goldy1992.mp3player.client.databinding.ActivityMainBinding
 import com.github.goldy1992.mp3player.client.listeners.MyDrawerListener
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -64,7 +56,6 @@ open class MainActivity : MediaActivityCompat()
         binding.navigationView.setupWithNavController(navController)
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val navController : NavController = findNavController(R.id.nav_host_container)
         return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
@@ -82,10 +73,7 @@ open class MainActivity : MediaActivityCompat()
 
     private fun initNavigationView() {
         navigationView.setNavigationItemSelectedListener { menuItem: MenuItem -> onNavigationItemSelected(menuItem) }
-        val spinner = navigationView.menu.findItem(R.id.themes_menu_item).actionView as Spinner
-        //    ThemeSpinnerController(requireContext(), spinner, this, componentClassMapper)
     }
-
 
     override fun logTag(): String {
         return "MAIN_ACTIVITY"
