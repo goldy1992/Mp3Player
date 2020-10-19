@@ -12,8 +12,8 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class SongListFragment : MediaItemListFragment() {
+@AndroidEntryPoint(MediaItemListFragment::class)
+class SongListFragment : Hilt_SongListFragment() {
 
     @Inject
     lateinit var mySongViewAdapter: MySongViewAdapter

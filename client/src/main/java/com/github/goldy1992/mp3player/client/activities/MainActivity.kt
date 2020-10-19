@@ -17,8 +17,8 @@ import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
-open class MainActivity : MediaActivityCompat()
+@AndroidEntryPoint(MediaActivityCompat::class)
+open class MainActivity : Hilt_MainActivity()
 {
     @Inject
     lateinit var myDrawerListener: MyDrawerListener

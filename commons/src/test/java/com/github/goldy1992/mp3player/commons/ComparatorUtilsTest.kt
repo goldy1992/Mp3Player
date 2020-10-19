@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.commons
 
 import android.support.v4.media.MediaBrowserCompat
-import com.github.goldy1992.mp3player.commons.MediaItemType
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
