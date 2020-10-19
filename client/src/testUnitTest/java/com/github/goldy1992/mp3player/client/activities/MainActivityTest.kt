@@ -65,11 +65,6 @@ class MainActivityTest {
         }
     }
 
-    @Test
-    fun trueTest() {
-        assertTrue(true)
-    }
-
     // new tests
     @Ignore
     @Test
