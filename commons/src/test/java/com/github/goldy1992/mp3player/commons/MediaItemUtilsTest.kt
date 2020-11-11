@@ -20,7 +20,6 @@ import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
-import org.junit.jupiter.api.Assertions
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
@@ -34,7 +33,7 @@ class MediaItemUtilsTest {
                 .setMediaId("anId")
                 .build()
         val mediaItem = MediaItem(mediaDescription, 0)
-        Assertions.assertNull(getExtras(mediaItem))
+        assertNull(getExtras(mediaItem))
     }
 
     @Test
@@ -50,7 +49,7 @@ class MediaItemUtilsTest {
     fun testGetMediaIdNotNull() {
         val mediaId = "MEDIA_ID"
         val mediaItem = MediaItemBuilder(mediaId).build()
-        Assertions.assertEquals(mediaId, getMediaId(mediaItem))
+        assertEquals(mediaId, getMediaId(mediaItem))
     }
 
     @Test
@@ -58,7 +57,7 @@ class MediaItemUtilsTest {
         val mediaItem = MediaItemBuilder("id")
                 .setTitle(null)
                 .build()
-        Assertions.assertNull(getTitle(mediaItem))
+        assertNull(getTitle(mediaItem))
     }
 
     @Test
@@ -67,7 +66,7 @@ class MediaItemUtilsTest {
         val mediaItem = MediaItemBuilder("id")
                 .setTitle(title)
                 .build()
-        Assertions.assertEquals(title, getTitle(mediaItem))
+        assertEquals(title, getTitle(mediaItem))
     }
 
     @Test
@@ -75,7 +74,7 @@ class MediaItemUtilsTest {
         val mediaItem = MediaItemBuilder("id")
                 .setArtist(null)
                 .build()
-        Assertions.assertNull(getArtist(mediaItem))
+        assertNull(getArtist(mediaItem))
     }
 
     @Test
@@ -84,7 +83,7 @@ class MediaItemUtilsTest {
         val mediaItem = MediaItemBuilder("id")
                 .setArtist(artist)
                 .build()
-        Assertions.assertEquals(artist, getArtist(mediaItem))
+        assertEquals(artist, getArtist(mediaItem))
     }
 
     @Test
@@ -92,7 +91,7 @@ class MediaItemUtilsTest {
         val mediaItem = MediaItemBuilder("id")
                 .setAlbumArtUri(null)
                 .build()
-        Assertions.assertNull(getAlbumArtPath(mediaItem))
+        assertNull(getAlbumArtPath(mediaItem))
     }
 
     @Test
@@ -101,14 +100,14 @@ class MediaItemUtilsTest {
         val mediaItem = MediaItemBuilder("id")
                 .setAlbumArtUri(Uri.parse(expectedPath))
                 .build()
-        Assertions.assertEquals(expectedPath, getAlbumArtPath(mediaItem))
+        assertEquals(expectedPath, getAlbumArtPath(mediaItem))
     }
 
     @Test
     fun testGetDirectoryNameNull() {
         val mediaItem = MediaItemBuilder("id")
                 .build()
-        Assertions.assertNull(getDirectoryName(mediaItem))
+        assertNull(getDirectoryName(mediaItem))
     }
 
     @Test
@@ -117,7 +116,7 @@ class MediaItemUtilsTest {
         val mediaItem = MediaItemBuilder("id")
                 .setDirectoryFile(File("/sdsad/$directoryName"))
                 .build()
-        Assertions.assertEquals(directoryName, getDirectoryName(mediaItem))
+        assertEquals(directoryName, getDirectoryName(mediaItem))
     }
 
     @Test
@@ -127,7 +126,7 @@ class MediaItemUtilsTest {
                 .setMediaUri(uri)
                 .build()
         val result = getMediaUri(mediaItem)
-        Assertions.assertEquals(uri, result)
+        assertEquals(uri, result)
     }
 
     @Test
@@ -137,7 +136,7 @@ class MediaItemUtilsTest {
                 .setDuration(expectedDuration)
                 .build()
         val result = getDuration(mediaItem)
-        Assertions.assertEquals(expectedDuration, result)
+        assertEquals(expectedDuration, result)
     }
 
     @Test
@@ -147,7 +146,7 @@ class MediaItemUtilsTest {
                 .setMediaItemType(expectedMediaItemType)
                 .build()
         val result = getMediaItemType(mediaItem)
-        Assertions.assertEquals(expectedMediaItemType, result)
+        assertEquals(expectedMediaItemType, result)
     }
 
     @Test
@@ -157,7 +156,7 @@ class MediaItemUtilsTest {
                 .setRootItemType(expectedMediaItemType)
                 .build()
         val result = getRootMediaItemType(mediaItem)
-        Assertions.assertEquals(expectedMediaItemType, result)
+        assertEquals(expectedMediaItemType, result)
     }
 
     @Test
@@ -167,7 +166,7 @@ class MediaItemUtilsTest {
                 .setLibraryId(expectedLibraryId)
                 .build()
         val result = getLibraryId(mediaItem)
-        Assertions.assertEquals(expectedLibraryId, result)
+        assertEquals(expectedLibraryId, result)
     }
 
     @Test
@@ -175,7 +174,7 @@ class MediaItemUtilsTest {
         val mediaItem = MediaItemBuilder("id")
                 .setDescription(null)
                 .build()
-        Assertions.assertNull(getDescription(mediaItem))
+        assertNull(getDescription(mediaItem))
     }
 
     @Test
@@ -184,7 +183,7 @@ class MediaItemUtilsTest {
         val mediaItem = MediaItemBuilder("id")
                 .setDescription(description)
                 .build()
-        Assertions.assertEquals(description, getDescription(mediaItem))
+        assertEquals(description, getDescription(mediaItem))
     }
 
     @Test

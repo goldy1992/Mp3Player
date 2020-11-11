@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'jacoco'
 
 android {
@@ -28,7 +27,7 @@ android {
         debug {
             debuggable true
             minifyEnabled false
-            testCoverageEnabled = true
+            testCoverageEnabled true
         }
     }
 
@@ -73,16 +72,41 @@ dependencies {
 
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
 
-
-    testImplementation junit5UnitTests
-    testRuntimeOnly junit5UnitTestRuntime
-
     testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
         exclude group: "com.google.auto.service", module: "auto-service"
     }
 
+    testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
+    testImplementation group:'com.nhaarman.mockitokotlin2', name: 'mockito-kotlin', version: MOCKITO_KOTLIN
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
     implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
+
+}
+
+task jacocoTestReportDebug(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*Test*.*',
+            'android/**/*.*',
+            '**/*$[0-9].*',
+            '**/dagger/**',
+            '**/databinding/**'
+    ]
+
+    def mainSrc = "$project.projectDir/src/main/java"
+    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+
+    sourceDirectories.from = files([mainSrc])
+    classDirectories.from = files([mainClasses])
+    executionData.from = "$project.buildDir/jacoco/testDebugUnitTest.exec"
 
 }

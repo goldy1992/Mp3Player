@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'de.mannodermaus.android-junit5'
 apply from: rootProject.file("jacoco-with-test-support.gradle")
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
@@ -195,8 +194,7 @@ dependencies {
     androidTestImplementation project(':commons')
     implementation project(':commons')
 
-    unitTestImplementation junit5UnitTests
-    testRuntimeOnly junit5UnitTestRuntime
+    unitTestImplementation junitUnitTests
 
 
     testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {

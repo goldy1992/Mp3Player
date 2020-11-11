@@ -154,8 +154,7 @@ dependencies {
     kaptAndroidTest group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
 
 
-    androidTestImplementation junit5UnitTests
-    testRuntimeOnly junit5UnitTestRuntime
+    androidTestImplementation junitUnitTests
 
     androidTestImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
