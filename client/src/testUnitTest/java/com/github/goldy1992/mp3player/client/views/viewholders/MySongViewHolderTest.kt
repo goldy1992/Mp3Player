@@ -3,11 +3,13 @@ package com.github.goldy1992.mp3player.client.views.viewholders
 import android.net.Uri
 import android.widget.ImageView
 import android.widget.TextView
+import com.github.goldy1992.mp3player.client.databinding.SongItemMenuBinding
+import com.github.goldy1992.mp3player.client.databinding.ViewHolderMediaPlayerBinding
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.nhaarman.mockitokotlin2.*
-import kotlinx.android.synthetic.main.song_item_menu.view.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,20 +17,15 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
-
-    val titleTextView : TextView = mock<TextView>()
-    val artistTextView : TextView = mock<TextView>()
-    val durationTextView : TextView = mock<TextView>()
-    val albumArtImageView : ImageView = mock<ImageView>()
+    lateinit var view : SongItemMenuBinding
 
     @Before
     override fun setup() {
         super.setup()
-        whenever(view.title).thenReturn(titleTextView)
-        whenever(view.artist).thenReturn(artistTextView)
-        whenever(view.duration).thenReturn(durationTextView)
-        whenever(view.albumArt).thenReturn(albumArtImageView)
-        mediaItemViewHolder = spy(MySongViewHolder(view, albumArtPainter))
+        scenario.onActivity {
+            this.view = SongItemMenuBinding.inflate(it.layoutInflater)
+            this.mediaItemViewHolder = MySongViewHolder(view, albumArtPainter)
+        }
     }
 
     @Test
@@ -38,7 +35,7 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
                 .setTitle(expectedTitle)
                 .build()
         mediaItemViewHolder.bindMediaItem(mediaItem)
-        verify(mediaItemViewHolder.itemView.title, times(1)).text = expectedTitle
+        assertEquals(expectedTitle, view.title.text)
     }
 
     @Test
@@ -48,7 +45,7 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
                 .setTitle(null)
                 .build()
         mediaItemViewHolder.bindMediaItem(mediaItem)
-        verify(mediaItemViewHolder.itemView.title, times(1)).text = expectedTitle
+        assertEquals(expectedTitle, view.title.text)
     }
 
     @Test
@@ -59,7 +56,7 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
                 .setFileName(expectedTitle)
                 .build()
         mediaItemViewHolder.bindMediaItem(mediaItem)
-        verify(mediaItemViewHolder.itemView.title, times(1)).text = expectedTitle
+        assertEquals(expectedTitle, view.title.text)
     }
 
     @Test
@@ -71,7 +68,7 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
                 .setFileName(fileName)
                 .build()
         mediaItemViewHolder.bindMediaItem(mediaItem)
-        verify(mediaItemViewHolder.itemView.title, times(1)).text = expectedTitle
+        assertEquals(expectedTitle, view.title.text)
     }
 
     @Test
@@ -82,7 +79,7 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
                 .build()
         mediaItemViewHolder.bindMediaItem(mediaItem)
         verify(mediaItemViewHolder.albumArtPainter, times(1))!!
-                .paintOnView(mediaItemViewHolder.itemView.albumArt, expectedUri)
+                .paintOnView(view.albumArt, expectedUri)
     }
 
     @Test
@@ -92,7 +89,7 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
                 .setArtist(expectedArtist)
                 .build()
         mediaItemViewHolder.bindMediaItem(mediaItem)
-        verify(mediaItemViewHolder.itemView.artist, times(1)).text = expectedArtist
+        assertEquals(expectedArtist, view.artist.text)
     }
 
     @Test
@@ -102,7 +99,7 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
                 .setArtist(null)
                 .build()
         mediaItemViewHolder.bindMediaItem(mediaItem)
-        verify(mediaItemViewHolder.itemView.artist, times(1)).text = expectedArtist
+        assertEquals(expectedArtist, view.artist.text)
     }
 
     @Test
@@ -113,6 +110,6 @@ class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
                 .setDuration(originalDuration)
                 .build()
         mediaItemViewHolder.bindMediaItem(mediaItem)
-        verify(mediaItemViewHolder.itemView.duration, times(1)).text = expectedDuration
+        assertEquals(expectedDuration, view.duration.text)
     }
 }

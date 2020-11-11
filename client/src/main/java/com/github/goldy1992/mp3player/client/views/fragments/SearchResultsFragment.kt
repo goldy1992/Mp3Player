@@ -120,7 +120,7 @@ class SearchResultsFragment : DestinationFragment(), MyGenericItemTouchListener.
 
         // Get the SearchView and set the searchable configuration
         val searchManager = requireContext().getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val componentName = ComponentName(context, requireActivity().javaClass)
+        val componentName = ComponentName(requireActivity(), requireActivity().javaClass)
         val searchableInfo = searchManager.getSearchableInfo(componentName)
         searchView.setOnQueryTextListener(queryListener)
         searchView.setSearchableInfo(searchableInfo)

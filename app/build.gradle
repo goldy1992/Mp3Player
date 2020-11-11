@@ -3,7 +3,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
-apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'dagger.hilt.android.plugin'
 
 android {

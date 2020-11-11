@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'de.mannodermaus.android-junit5'
 apply from: rootProject.file("jacoco-with-test-support.gradle")
@@ -37,7 +36,6 @@ android {
         debug {
             debuggable true
             minifyEnabled false
-            testCoverageEnabled = true
         }
     }
     flavorDimensions flavor_dimen_mode

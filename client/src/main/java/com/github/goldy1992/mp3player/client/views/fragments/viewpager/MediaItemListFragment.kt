@@ -21,7 +21,7 @@ import com.github.goldy1992.mp3player.client.viewmodels.MediaListViewModel
 import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecyclerViewAdapter
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import kotlinx.android.synthetic.main.fragment_view_page.*
+import com.l4digital.fastscroll.FastScrollRecyclerView
 import javax.inject.Inject
 
 /**
@@ -51,6 +51,8 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener, LogTagg
     @Inject
     lateinit var mediaControllerAdapter: MediaControllerAdapter
 
+    lateinit var recyclerView : FastScrollRecyclerView
+
     fun getParentId() : String? {
         return arguments?.getString(PARENT_ID)
     }
@@ -79,6 +81,7 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener, LogTagg
 
         myGenericItemTouchListener = MyGenericItemTouchListener(requireContext(), this)
         binding = FragmentViewPageBinding.inflate(inflater, container, false)
+        this.recyclerView = binding.recyclerView
         binding.recyclerView.adapter = getViewAdapter()
         binding.recyclerView.addOnItemTouchListener(myGenericItemTouchListener)
         myGenericItemTouchListener.parentView = binding.recyclerView

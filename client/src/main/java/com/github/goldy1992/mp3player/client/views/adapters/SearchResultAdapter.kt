@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.databinding.FragmentSearchResultsBinding
+import com.github.goldy1992.mp3player.client.databinding.SongItemMenuBinding
 import com.github.goldy1992.mp3player.client.views.viewholders.*
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
@@ -18,9 +20,8 @@ class SearchResultAdapter
         val layoutInflater: LayoutInflater?
         return if (viewType == MediaItemType.SONG.value) { // create a new views
             layoutInflater = LayoutInflater.from(parent.context)
-            val v = layoutInflater
-                    .inflate(R.layout.song_item_menu, parent, false) as ViewGroup
-            MySongViewHolder(v, albumArtPainter)
+            val view  = SongItemMenuBinding.inflate(layoutInflater)
+                MySongViewHolder(view, albumArtPainter)
         } else if (viewType == MediaItemType.ROOT.value) { // create a new views
             layoutInflater = LayoutInflater.from(parent.context)
             val v = layoutInflater
