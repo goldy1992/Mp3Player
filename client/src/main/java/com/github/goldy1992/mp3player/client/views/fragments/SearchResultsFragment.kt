@@ -7,11 +7,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.HIDE_IMPLICIT_ONLY
 import android.widget.ImageView
@@ -36,8 +32,8 @@ import org.apache.commons.lang3.StringUtils.isNotEmpty
 import javax.inject.Inject
 
 
-@AndroidEntryPoint
-class SearchResultsFragment : DestinationFragment(), MyGenericItemTouchListener.ItemSelectedListener, LogTagger {
+@AndroidEntryPoint(DestinationFragment::class)
+class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTouchListener.ItemSelectedListener, LogTagger {
 
     val queryListener : QueryListener = QueryListener()
 

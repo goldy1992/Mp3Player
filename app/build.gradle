@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
 apply plugin: 'dagger.hilt.android.plugin'
@@ -33,7 +32,6 @@ android {
         debug {
             debuggable true
             minifyEnabled false
-            testCoverageEnabled = true
         }
     }
     flavorDimensions flavor_dimen_mode

@@ -3,11 +3,7 @@ package com.github.goldy1992.mp3player.client.views.fragments
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.observe
@@ -30,8 +26,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class MainFragment : DestinationFragment(), LogTagger {
+@AndroidEntryPoint(DestinationFragment::class)
+class MainFragment : Hilt_MainFragment(), LogTagger {
 
     @Inject
     lateinit var mediaBrowserAdapter : MediaBrowserAdapter

@@ -26,8 +26,8 @@ import javax.inject.Inject
 /**
  *
  */
-@AndroidEntryPoint
-class SplashScreenEntryActivity : AppCompatActivity(), PermissionGranted, LogTagger {
+@AndroidEntryPoint(AppCompatActivity::class)
+class SplashScreenEntryActivity : Hilt_SplashScreenEntryActivity(), PermissionGranted, LogTagger {
 
     @Inject
     lateinit var componentClassMapper: ComponentClassMapper

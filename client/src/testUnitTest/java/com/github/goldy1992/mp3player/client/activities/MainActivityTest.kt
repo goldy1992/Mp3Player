@@ -43,6 +43,7 @@ class MainActivityTest {
     }
 
     @Ignore
+    // TODO: move to instrumented test
     @Test
     fun testOnItemSelected() {
         scenario.onActivity { activity: MainActivity ->
@@ -54,7 +55,6 @@ class MainActivityTest {
         }
     }
 
-    @Ignore
     @Test
     fun testOnItemSelectedHomeButton() {
         scenario.onActivity { activity: MainActivity ->
@@ -66,6 +66,7 @@ class MainActivityTest {
     }
 
     // new tests
+    // TODO: move to instrumented test
     @Ignore
     @Test
     fun testOnOptionsItemSelectedOpenDrawer() {

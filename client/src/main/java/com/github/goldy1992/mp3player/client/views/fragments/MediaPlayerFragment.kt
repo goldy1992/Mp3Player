@@ -19,8 +19,8 @@ import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class MediaPlayerFragment : DestinationFragment(), LogTagger, Observer<MediaMetadataCompat> {
+@AndroidEntryPoint(DestinationFragment::class)
+class MediaPlayerFragment : Hilt_MediaPlayerFragment(), LogTagger, Observer<MediaMetadataCompat> {
 
     @Inject
     lateinit var mediaControllerAdapter : MediaControllerAdapter

@@ -13,8 +13,8 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class MediaControlsFragment : Fragment(), LogTagger {
+@AndroidEntryPoint(Fragment::class)
+class MediaControlsFragment : Hilt_MediaControlsFragment(), LogTagger {
 
     @Inject
     lateinit var mediaControllerAdapter: MediaControllerAdapter
