@@ -37,6 +37,8 @@ class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTouchLi
 
     val queryListener : QueryListener = QueryListener()
 
+    lateinit var binding: FragmentSearchResultsBinding
+
     @Inject
     lateinit var mediaBrowserAdapter: MediaBrowserAdapter
 
@@ -58,7 +60,7 @@ class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTouchLi
         super.onCreateView(inflater, container, savedInstanceState)
         this.inputMethodManager = requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         setHasOptionsMenu(true)
-        val binding = FragmentSearchResultsBinding.inflate(inflater)
+        this.binding = FragmentSearchResultsBinding.inflate(inflater)
         val recyclerView = binding.recyclerView
         recyclerView.adapter = searchResultAdapter
         val itemTouchListener = MyGenericItemTouchListener(requireContext(), this)
@@ -66,12 +68,16 @@ class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTouchLi
         itemTouchListener.parentView = recyclerView
         val context : Context = requireContext()
         recyclerView.layoutManager = LinearLayoutManager(context)
-        // Assumes current activity is the searchable activity
-        setUpToolbar(binding.toolbar)
 
         subscribeUi(searchResultAdapter)
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Assumes current activity is the searchable activity
+        setUpToolbar(binding.toolbar)
     }
 
     override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {

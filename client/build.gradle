@@ -134,7 +134,6 @@ dependencies {
     implementation group: 'androidx.recyclerview', name: 'recyclerview', version: RECYCLER_VIEW_VERSION
     implementation group: 'androidx.preference', name: 'preference-ktx', version: PREFERENCE_VERSION
 
-    def lifecycleVersion = '2.2.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
@@ -160,10 +159,10 @@ dependencies {
         transitive = false
     }
 
-    def nav_version = '2.3.0'
-    // Kotlin
+    // navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
 
 
     // hilt
@@ -196,8 +195,6 @@ dependencies {
         exclude group: "com.google.auto.service", module: "auto-service"
     }
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
-    endToEndImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN"
-    integrationImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN"
     testImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: KOTLIN_COROUTINE_VERSION
     testImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION

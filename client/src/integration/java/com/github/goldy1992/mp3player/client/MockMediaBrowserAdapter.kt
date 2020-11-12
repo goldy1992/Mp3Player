@@ -20,8 +20,5 @@ class MockMediaBrowserAdapter(mediaIdSubscriptionCallback: MediaIdSubscriptionCa
         // Do nothing.
     }
 
-    override fun subscribe(id: String?) {
-        // Do nothing.
-    }
 
 }

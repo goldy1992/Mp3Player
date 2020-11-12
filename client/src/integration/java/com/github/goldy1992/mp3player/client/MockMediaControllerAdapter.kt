@@ -3,14 +3,12 @@ package com.github.goldy1992.mp3player.client
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.media.MediaMetadataCompat
-import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
-import com.nhaarman.mockitokotlin2.mock
-import java.util.*
+import android.support.v4.media.MediaBrowserCompat
+import dagger.hilt.android.qualifiers.ApplicationContext
 
-class MockMediaControllerAdapter(context: Context)
-    : MediaControllerAdapter(context, mock<android.support.v4.media.MediaBrowserCompat>()) {
+class MockMediaControllerAdapter(@ApplicationContext context: Context,
+mediaBrowserCompat: MediaBrowserCompat)
+    : MediaControllerAdapter(context, mediaBrowserCompat) {
 
     override fun prepareFromMediaId(mediaId: String?, extras: Bundle?) {
         // Do nothing.
