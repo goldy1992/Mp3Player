@@ -9,6 +9,12 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
 import com.github.goldy1992.mp3player.client.util.launchFragmentInHiltContainer
+import com.github.goldy1992.mp3player.commons.MediaItemBuilder
+import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.spy
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -46,45 +52,44 @@ class SearchResultsFragmentTest {
 
         @Test
         fun firstTest() {
-           val scenario = launchFragmentInHiltContainer<SearchResultsFragment>(navHostController = navController)
+           val scenario = launchFragmentInHiltContainer<SearchResultsFragment>(navHostController = navController, action = {
 
 
+           })
             assertTrue(true)
         }
 
 //    // TODO: fix tests
-//    @Test
-//    fun testOnSongItemSelected() {
-//        scenario.onFragment { activity: SearchResultsFragment ->
-//            val SearchResultsFragmentSpied = spy(activity)
-//            val spiedMediaControllerAdapter = spy(SearchResultsFragmentSpied.mediaControllerAdapter)
-//            SearchResultsFragmentSpied.mediaControllerAdapter = spiedMediaControllerAdapter
-//            val libraryId = "libId"
-//            val mediaItem = MediaItemBuilder("id")
-//                    .setMediaItemType(MediaItemType.SONGS)
-//                    .setLibraryId(libraryId)
-//                    .build()
-//            SearchResultsFragmentSpied.itemSelected(mediaItem)
-//            verify(SearchResultsFragmentSpied, never()).startActivity(any())
-//            verify(spiedMediaControllerAdapter, times(1)).playFromMediaId(libraryId, null)
-//        }
-//    }
-//
-//    @Test
-//    fun testOnFolderItemSelected() {
-//        scenario.onFragment { activity: SearchResultsFragment ->
-//            val SearchResultsFragmentSpied = spy(activity)
-//            val spiedMediaControllerAdapter = spy(SearchResultsFragmentSpied.mediaControllerAdapter)
-//            SearchResultsFragmentSpied.mediaControllerAdapter = spiedMediaControllerAdapter
-//            val libraryId = "libId"
-//            val mediaItem = MediaItemBuilder("id")
-//                    .setMediaItemType(MediaItemType.FOLDERS)
-//                    .setLibraryId(libraryId)
-//                    .build()
-//            SearchResultsFragmentSpied.itemSelected(mediaItem)
-//            verify(SearchResultsFragmentSpied, times(1)).startActivity(any())
-//            verify(spiedMediaControllerAdapter, never()).playFromMediaId(libraryId, null)
-//        }
-//    }
-
+    @Test
+    fun testOnSongItemSelected() {
+        launchFragmentInHiltContainer<SearchResultsFragment>(navHostController = navController, action = {
+            this as SearchResultsFragment
+            val spiedMediaControllerAdapter = spy(this.mediaControllerAdapter)
+            this.mediaControllerAdapter = spiedMediaControllerAdapter
+            val libraryId = "libId"
+            val mediaItem = MediaItemBuilder("id")
+                    .setMediaItemType(MediaItemType.SONGS)
+                    .setLibraryId(libraryId)
+                    .build()
+            this.itemSelected(mediaItem)
+            verify(spiedMediaControllerAdapter, times(1)).playFromMediaId(libraryId, null)
+        })
     }
+
+    @Test
+    fun testOnFolderItemSelected() {
+        launchFragmentInHiltContainer<SearchResultsFragment>(navHostController = navController, action = {
+            this as SearchResultsFragment
+              val spiedMediaControllerAdapter = spy(mediaControllerAdapter)
+            mediaControllerAdapter = spiedMediaControllerAdapter
+            val libraryId = "libId"
+            val mediaItem = MediaItemBuilder("id")
+                    .setMediaItemType(MediaItemType.FOLDERS)
+                    .setLibraryId(libraryId)
+                    .build()
+            this.itemSelected(mediaItem)
+               verify(spiedMediaControllerAdapter, never()).playFromMediaId(libraryId, null)
+        })
+    }
+
+}

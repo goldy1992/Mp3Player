@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 
-class MockMediaControllerAdapter(@ApplicationContext context: Context,
+open class MockMediaControllerAdapter(@ApplicationContext context: Context,
 mediaBrowserCompat: MediaBrowserCompat)
     : MediaControllerAdapter(context, mediaBrowserCompat) {
 

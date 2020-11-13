@@ -41,7 +41,7 @@ buildscript {
         MATERIAL_VERSION = '1.3.0-alpha02'
         MEDIA_VERSION = '1.1.0-alpha02'
         MIRROR_VERSION = '1.3.0'
-        MOCKITO_CORE_VERSION = '2.27.0'
+        MOCKITO_VERSION = '3.6.0'
         MOCKITO_KOTLIN = '2.2.0'
         PREFERENCE_VERSION = '1.1.1'
         RECYCLER_VIEW_VERSION = '1.1.0'
@@ -93,10 +93,6 @@ buildscript {
         classpath "com.google.dagger:hilt-android-gradle-plugin:$HILT_ANDROID_GRADLE_PLUGIN_VERSION"
         def nav_version = "2.3.0"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
-
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
 
@@ -108,6 +104,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://jitpack.io' }
     }
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"

@@ -33,7 +33,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint(DestinationFragment::class)
-class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTouchListener.ItemSelectedListener, LogTagger {
+open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTouchListener.ItemSelectedListener, LogTagger {
 
     val queryListener : QueryListener = QueryListener()
 
