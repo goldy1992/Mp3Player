@@ -7,6 +7,7 @@ apply plugin: 'androidx.navigation.safeargs.kotlin'
 android {
     compileSdkVersion TARGET_SDK_VERION
     buildToolsVersion BUILD_TOOLS_VERSION
+    testBuildType "instrumentation"
 
     buildFeatures {
         viewBinding true
@@ -28,14 +29,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            testCoverageEnabled false
             debuggable true
             minifyEnabled false
-            testCoverageEnabled false
         }
         instrumentation {
-            debuggable true
-            minifyEnabled false
+            initWith debug
             testCoverageEnabled true
+            matchingFallbacks = ['debug']
         }
     }
     flavorDimensions flavor_dimen_mode
@@ -96,14 +97,23 @@ android {
 
     variantFilter { variant ->
         def names = variant.flavors*.name
-        def isReleaseTest = variant.buildType.name =="release" &&
-                 (
-                 names.contains(flavor_endToEnd)
-                || names.contains(flavor_integration)
-                || names.contains(flavor_unitTest))
 
+        def ignoreReleaseVariant = variant.buildType.name == "release" &&
+                (names.contains(flavor_endToEnd)
+                        || names.contains(flavor_integration)
+                        || names.contains(flavor_unitTest)
+                )
+        def ignoreInstrumentationVariant = variant.buildType.name == "instrumentation" &&
+                (names.contains(flavor_full)
+                        || names.contains(flavor_unitTest)
+                )
+
+        def ignoreDebugVariant = variant.buildType.name == "debug" &&
+                (names.contains(flavor_endToEnd)
+                        || names.contains(flavor_integration)
+                )
         // To check for a build type instead, use variant.buildType.name == "buildType"
-        if (isReleaseTest) {
+        if (ignoreReleaseVariant || ignoreInstrumentationVariant || ignoreDebugVariant) {
             // Gradle ignores any variants that satisfy the conditions above.
             setIgnore(true)
         }

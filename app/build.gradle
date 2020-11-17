@@ -4,7 +4,8 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
 apply plugin: 'dagger.hilt.android.plugin'
 
-android {
+    android {
+    testBuildType "instrumentation"
     packagingOptions {
         exclude 'META-INF/LICENSE.md'
         exclude 'META-INF/LICENSE-notice.md'
@@ -32,6 +33,11 @@ android {
         debug {
             debuggable true
             minifyEnabled false
+        }
+        instrumentation {
+            initWith debug
+            testCoverageEnabled true
+            matchingFallbacks = ['debug']
         }
     }
     flavorDimensions flavor_dimen_mode
@@ -61,15 +67,27 @@ android {
 
     variantFilter { variant ->
         def names = variant.flavors*.name
-        def isReleaseTest = variant.buildType.name == "release" &&
-                (              names.contains(flavor_endToEnd)
-        || names.contains(flavor_integration)
-                || names.contains(flavor_unitTest)
-                )
-        // To check for a build type instead, use variant.buildType.name == "buildType"
-        if (isReleaseTest) {
-            // Gradle ignores any variants that satisfy the conditions above.
+
+        if (names.contains(flavor_unitTest)) {
             setIgnore(true)
+        } else {
+
+            def ignoreReleaseVariant = variant.buildType.name == "release" &&
+                    (names.contains(flavor_endToEnd)
+                            || names.contains(flavor_integration)
+                    )
+            def ignoreInstrumentationVariant = variant.buildType.name == "instrumentation" &&
+                    (names.contains(flavor_full))
+
+            def ignoreDebugVariant = variant.buildType.name == "debug" &&
+                    (names.contains(flavor_endToEnd)
+                            || names.contains(flavor_integration)
+                    )
+            // To check for a build type instead, use variant.buildType.name == "buildType"
+            if (ignoreReleaseVariant || ignoreInstrumentationVariant || ignoreDebugVariant) {
+                // Gradle ignores any variants that satisfy the conditions above.
+                setIgnore(true)
+            }
         }
     }
 
