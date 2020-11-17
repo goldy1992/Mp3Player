@@ -60,6 +60,7 @@ class SplashScreenEntryActivity : Hilt_SplashScreenEntryActivity(), PermissionGr
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                             grantResults: IntArray) { //   Log.i(LOG_TAG, "permission result");
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         var permissionIsGranted = false
         if (permissions.isNotEmpty() && grantResults.isNotEmpty()) {
             permissions.forEach {
