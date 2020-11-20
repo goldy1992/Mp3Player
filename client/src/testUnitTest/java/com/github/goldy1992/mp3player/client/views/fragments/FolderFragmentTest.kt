@@ -1,19 +1,11 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
-import android.content.Intent
 import androidx.fragment.app.testing.FragmentScenario
-import androidx.test.core.app.ActivityScenario
-import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.dagger.modules.GlideModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
-import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
 import dagger.hilt.android.testing.UninstallModules
-import org.junit.Assert
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Ignore
@@ -21,14 +13,10 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
-
 import java.io.File
 
 @HiltAndroidTest
-@UninstallModules(GlideModule::class,
-    MediaBrowserAdapterModule::class,
-    MediaControllerAdapterModule::class)
+@UninstallModules(GlideModule::class)
 @RunWith(RobolectricTestRunner::class)
 @Ignore
 class FolderFragmentTest {

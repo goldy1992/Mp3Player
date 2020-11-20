@@ -1,13 +1,10 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
 import android.os.Bundle
-import android.os.Handler
 import android.os.Looper
 import androidx.fragment.app.testing.FragmentScenario.FragmentAction
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.dagger.modules.GlideModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
 import com.github.goldy1992.mp3player.commons.Constants
 import com.nhaarman.mockitokotlin2.*
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -17,16 +14,13 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
 import org.robolectric.annotation.LooperMode
 
 @RunWith(RobolectricTestRunner::class)
 @HiltAndroidTest
-@UninstallModules(GlideModule::class,
-        MediaBrowserAdapterModule::class,
-        MediaControllerAdapterModule::class)
+@UninstallModules(GlideModule::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 class PlaybackSpeedControlsFragmentTest : FragmentTestBase<PlaybackSpeedControlsFragment>() {
 

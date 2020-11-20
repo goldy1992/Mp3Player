@@ -3,8 +3,6 @@ package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 import android.os.Looper
 import com.github.goldy1992.mp3player.client.activities.HiltTestActivity
 import com.github.goldy1992.mp3player.client.dagger.modules.GlideModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
 import com.github.goldy1992.mp3player.client.views.fragments.FragmentTestBase
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -14,11 +12,7 @@ import com.nhaarman.mockitokotlin2.verify
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Ignore
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
@@ -27,9 +21,7 @@ import org.robolectric.annotation.LooperMode
 
 @RunWith(RobolectricTestRunner::class)
 @HiltAndroidTest
-@UninstallModules(GlideModule::class,
-        MediaBrowserAdapterModule::class,
-        MediaControllerAdapterModule::class)
+@UninstallModules(GlideModule::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 @Ignore
 class FolderListFragmentTest : FragmentTestBase<FolderListFragment>() {

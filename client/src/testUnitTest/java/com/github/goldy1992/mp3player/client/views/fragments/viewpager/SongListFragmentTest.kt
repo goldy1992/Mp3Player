@@ -4,10 +4,7 @@ import android.os.Looper
 import androidx.fragment.app.testing.FragmentScenario.FragmentAction
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.activities.HiltTestActivity
-import com.github.goldy1992.mp3player.client.activities.MainActivity
 import com.github.goldy1992.mp3player.client.dagger.modules.GlideModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
 import com.github.goldy1992.mp3player.client.views.fragments.FragmentTestBase
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -17,7 +14,6 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,9 +24,7 @@ import org.robolectric.annotation.LooperMode
 
 @RunWith(RobolectricTestRunner::class)
 @HiltAndroidTest
-@UninstallModules(GlideModule::class,
-        MediaBrowserAdapterModule::class,
-        MediaControllerAdapterModule::class)
+@UninstallModules(GlideModule::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 class SongListFragmentTest : FragmentTestBase<SongListFragment>() {
     private var folderListFragment: SongListFragment? = null

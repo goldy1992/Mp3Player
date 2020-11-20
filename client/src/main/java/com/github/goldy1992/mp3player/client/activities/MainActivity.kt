@@ -7,6 +7,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.github.goldy1992.mp3player.client.R
@@ -30,6 +31,8 @@ open class MainActivity : Hilt_MainActivity()
 
     lateinit var navigationView: NavigationView
 
+    lateinit var appBarConfiguration: AppBarConfiguration
+
     override fun initialiseView(): Boolean {
         return true
     }
@@ -50,9 +53,11 @@ open class MainActivity : Hilt_MainActivity()
         this.navigationView = binding.navigationView
         initNavigationView()
 
+
         setContentView(binding.root)
 
         val navController : NavController = findNavController(R.id.nav_host_container)
+        this.appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
         binding.navigationView.setupWithNavController(navController)
     }
 

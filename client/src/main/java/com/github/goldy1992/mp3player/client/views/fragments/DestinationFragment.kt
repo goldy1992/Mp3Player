@@ -1,18 +1,19 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.github.goldy1992.mp3player.client.activities.MainActivity
 
-abstract class DestinationFragment : Fragment() {
+abstract class DestinationFragment : Fragment(), LifecycleEventObserver {
 
     abstract fun lockDrawerLayout() : Boolean
 
@@ -20,7 +21,18 @@ abstract class DestinationFragment : Fragment() {
 
     private var activity : MainActivity? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    protected var toolbar : Toolbar? = null
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().lifecycle.addObserver(this)
+    }
+
+    protected open fun setUpToolbar(toolbar : Toolbar) {
+     }
+
+    override fun onResume() {
+        super.onResume()
         val activity = requireActivity()
         if (activity is MainActivity) {
             this.activity = activity
@@ -30,15 +42,19 @@ abstract class DestinationFragment : Fragment() {
             } else {
                 activity.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             }
+            if (this.toolbar != null) {
+                val navController = this.findNavController()
+                activity.setSupportActionBar(toolbar)
+                toolbar?.setupWithNavController(navController, activity.appBarConfiguration)
+            }
         }
-        return super.onCreateView(inflater, container, savedInstanceState)
+
+        Log.i("some tag", "resumed!!!!")
     }
 
-    protected open fun setUpToolbar(toolbar : Toolbar) {
-        val navController = this.findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
-        activity?.setSupportActionBar(toolbar)
-        toolbar.setupWithNavController(navController, appBarConfiguration)
-    }
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+            if (event == Lifecycle.Event.ON_START) {
 
+        }
+    }
 }

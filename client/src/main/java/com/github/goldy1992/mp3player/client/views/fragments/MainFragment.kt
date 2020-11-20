@@ -58,7 +58,7 @@ class MainFragment : Hilt_MainFragment(), LogTagger {
                     binding.rootMenuItemsPager.paddingRight,
                     newOffset)
         })
-        setUpToolbar(binding.titleToolbar)
+        this.toolbar = binding.titleToolbar
         binding.rootMenuItemsPager.adapter = adapter
         tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.rootMenuItemsPager, adapter)
         tabLayoutMediator!!.attach()

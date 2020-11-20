@@ -57,8 +57,10 @@ class MainActivityTest {
             val menuItem = mock<MenuItem>()
             whenever(menuItem.itemId).thenReturn(android.R.id.home)
             val result = activity.onOptionsItemSelected(menuItem)
+            shadowOf(getMainLooper()).idle()
             Assert.assertTrue(result)
         }
+
     }
 
     // new tests

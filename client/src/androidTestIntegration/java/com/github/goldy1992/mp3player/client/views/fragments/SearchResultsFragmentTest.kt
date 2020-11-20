@@ -6,8 +6,6 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
 import com.github.goldy1992.mp3player.client.util.launchFragmentInHiltContainer
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -24,9 +22,6 @@ import org.junit.Rule
 import org.junit.Test
 
 @HiltAndroidTest
-@UninstallModules(
-        MediaBrowserAdapterModule::class,
-        MediaControllerAdapterModule::class)
 class SearchResultsFragmentTest {
 
     /** Activity controller  */
