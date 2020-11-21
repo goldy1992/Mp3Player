@@ -68,16 +68,10 @@ open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTo
         itemTouchListener.parentView = recyclerView
         val context : Context = requireContext()
         recyclerView.layoutManager = LinearLayoutManager(context)
-
+        this.toolbar = binding.toolbar
         subscribeUi(searchResultAdapter)
 
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        // Assumes current activity is the searchable activity
-        setUpToolbar(binding.toolbar)
     }
 
     override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {

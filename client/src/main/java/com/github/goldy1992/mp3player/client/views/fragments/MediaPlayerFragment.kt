@@ -40,13 +40,6 @@ class MediaPlayerFragment : Hilt_MediaPlayerFragment(), LogTagger, Observer<Medi
         return true
     }
 
-     override fun setUpToolbar(toolbar : Toolbar) {
-         titleToolbar.setOnClickListener {
-             val navController = this.findNavController()
-             navController.popBackStack()
-         }
-
-     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentMediaPlayerBinding.inflate(inflater)
         mediaControllerAdapter.queue.observe(viewLifecycleOwner, trackViewPager.queueObserver)
@@ -55,7 +48,11 @@ class MediaPlayerFragment : Hilt_MediaPlayerFragment(), LogTagger, Observer<Medi
         this.trackViewPager.init(binding.trackViewPager)
         this.titleToolbar = binding.titleToolbar
         this.appBarLayout = binding.appbarLayout
-        setUpToolbar(titleToolbar)
+
+        titleToolbar.setOnClickListener {
+            val navController = this.findNavController()
+            navController.popBackStack()
+        }
         return binding.root
     }
 

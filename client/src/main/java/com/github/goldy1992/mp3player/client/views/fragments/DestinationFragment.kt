@@ -28,9 +28,6 @@ abstract class DestinationFragment : Fragment(), LifecycleEventObserver {
         requireActivity().lifecycle.addObserver(this)
     }
 
-    protected open fun setUpToolbar(toolbar : Toolbar) {
-     }
-
     override fun onResume() {
         super.onResume()
         val activity = requireActivity()

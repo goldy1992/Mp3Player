@@ -29,7 +29,7 @@ class FolderFragment : DestinationFragment(), LogTagger {
         val binding = FragmentFolderBinding.inflate(layoutInflater)
         val folderItem = arguments?.get("folder") as MediaBrowserCompat.MediaItem
         this.titleToolbar = binding.titleToolbar
-        setUpToolbar(titleToolbar)
+        this.toolbar = binding.titleToolbar
         configureToolbar(titleToolbar, MediaItemUtils.getDirectoryName(folderItem)!!)
 
         folderListFragment = SongListFragment.newInstance(MediaItemType.FOLDER,
