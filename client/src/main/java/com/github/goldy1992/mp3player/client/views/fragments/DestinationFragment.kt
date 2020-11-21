@@ -1,19 +1,14 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
-import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.github.goldy1992.mp3player.client.activities.MainActivity
 
-abstract class DestinationFragment : Fragment(), LifecycleEventObserver {
+abstract class DestinationFragment : Fragment() {
 
     abstract fun lockDrawerLayout() : Boolean
 
@@ -22,11 +17,6 @@ abstract class DestinationFragment : Fragment(), LifecycleEventObserver {
     private var activity : MainActivity? = null
 
     protected var toolbar : Toolbar? = null
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        requireActivity().lifecycle.addObserver(this)
-    }
 
     override fun onResume() {
         super.onResume()
@@ -47,11 +37,5 @@ abstract class DestinationFragment : Fragment(), LifecycleEventObserver {
         }
 
         Log.i("some tag", "resumed!!!!")
-    }
-
-    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-            if (event == Lifecycle.Event.ON_START) {
-
-        }
     }
 }
