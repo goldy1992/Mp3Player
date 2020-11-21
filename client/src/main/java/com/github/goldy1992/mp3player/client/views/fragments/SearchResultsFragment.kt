@@ -36,10 +36,12 @@ import org.apache.commons.lang3.StringUtils.isNotEmpty
 import javax.inject.Inject
 
 
-@AndroidEntryPoint
-class SearchResultsFragment : DestinationFragment(), MyGenericItemTouchListener.ItemSelectedListener, LogTagger {
+@AndroidEntryPoint(DestinationFragment::class)
+open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTouchListener.ItemSelectedListener, LogTagger {
 
     val queryListener : QueryListener = QueryListener()
+
+    lateinit var binding: FragmentSearchResultsBinding
 
     @Inject
     lateinit var mediaBrowserAdapter: MediaBrowserAdapter
@@ -62,7 +64,7 @@ class SearchResultsFragment : DestinationFragment(), MyGenericItemTouchListener.
         super.onCreateView(inflater, container, savedInstanceState)
         this.inputMethodManager = requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         setHasOptionsMenu(true)
-        val binding = FragmentSearchResultsBinding.inflate(inflater)
+        this.binding = FragmentSearchResultsBinding.inflate(inflater)
         val recyclerView = binding.recyclerView
         recyclerView.adapter = searchResultAdapter
         val itemTouchListener = MyGenericItemTouchListener(requireContext(), this)
@@ -70,9 +72,7 @@ class SearchResultsFragment : DestinationFragment(), MyGenericItemTouchListener.
         itemTouchListener.parentView = recyclerView
         val context : Context = requireContext()
         recyclerView.layoutManager = LinearLayoutManager(context)
-        // Assumes current activity is the searchable activity
-        setUpToolbar(binding.toolbar)
-
+        this.toolbar = binding.toolbar
         subscribeUi(searchResultAdapter)
 
         return binding.root
@@ -120,7 +120,7 @@ class SearchResultsFragment : DestinationFragment(), MyGenericItemTouchListener.
 
         // Get the SearchView and set the searchable configuration
         val searchManager = requireContext().getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val componentName = ComponentName(context, requireActivity().javaClass)
+        val componentName = ComponentName(requireActivity(), requireActivity().javaClass)
         val searchableInfo = searchManager.getSearchableInfo(componentName)
         searchView.setOnQueryTextListener(queryListener)
         searchView.setSearchableInfo(searchableInfo)

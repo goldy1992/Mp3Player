@@ -1,8 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'dagger.hilt.android.plugin'
 apply from: rootProject.file("jacoco-with-test-support.gradle")
 
@@ -30,9 +28,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            testCoverageEnabled false
             debuggable true
             minifyEnabled false
-            testCoverageEnabled = true
         }
     }
     flavorDimensions flavor_dimen_mode
@@ -121,8 +119,7 @@ dependencies {
     kapt group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
 
-    unitTestImplementation junit5UnitTests
-    testRuntimeOnly junit5UnitTestRuntime
+    unitTestImplementation junitUnitTests
 
     testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
         exclude group: "com.google.auto.service", module: "auto-service"

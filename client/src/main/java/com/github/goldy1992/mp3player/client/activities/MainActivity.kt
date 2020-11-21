@@ -7,6 +7,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.github.goldy1992.mp3player.client.R
@@ -17,8 +18,8 @@ import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
-open class MainActivity : MediaActivityCompat()
+@AndroidEntryPoint(MediaActivityCompat::class)
+open class MainActivity : Hilt_MainActivity()
 {
     @Inject
     lateinit var myDrawerListener: MyDrawerListener
@@ -29,6 +30,8 @@ open class MainActivity : MediaActivityCompat()
     lateinit var drawerLayout: DrawerLayout
 
     lateinit var navigationView: NavigationView
+
+    lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun initialiseView(): Boolean {
         return true
@@ -50,9 +53,11 @@ open class MainActivity : MediaActivityCompat()
         this.navigationView = binding.navigationView
         initNavigationView()
 
+
         setContentView(binding.root)
 
         val navController : NavController = findNavController(R.id.nav_host_container)
+        this.appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
         binding.navigationView.setupWithNavController(navController)
     }
 

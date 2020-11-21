@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.databinding.ViewHolderMediaPlayerBinding
 import com.github.goldy1992.mp3player.client.views.viewholders.MediaPlayerTrackViewHolder
 import java.util.*

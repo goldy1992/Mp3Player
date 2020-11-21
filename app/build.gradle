@@ -1,12 +1,11 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
-apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'dagger.hilt.android.plugin'
 
-android {
+    android {
+    testBuildType "instrumentation"
     packagingOptions {
         exclude 'META-INF/LICENSE.md'
         exclude 'META-INF/LICENSE-notice.md'
@@ -34,7 +33,11 @@ android {
         debug {
             debuggable true
             minifyEnabled false
-            testCoverageEnabled = true
+        }
+        instrumentation {
+            initWith debug
+            testCoverageEnabled true
+            matchingFallbacks = ['debug']
         }
     }
     flavorDimensions flavor_dimen_mode
@@ -55,24 +58,31 @@ android {
             versionNameSuffix "-integration"
             resValue "string", "app_name", "Test Music Player"
         }
-        unitTest {
-            applicationIdSuffix ".unitTest"
-            versionNameSuffix "-unitTest"
-            resValue "string", "app_name", "Test Music Player"
-        }
     }
 
     variantFilter { variant ->
         def names = variant.flavors*.name
-        def isReleaseTest = variant.buildType.name == "release" &&
-                (              names.contains(flavor_endToEnd)
-        || names.contains(flavor_integration)
-                || names.contains(flavor_unitTest)
-                )
-        // To check for a build type instead, use variant.buildType.name == "buildType"
-        if (isReleaseTest) {
-            // Gradle ignores any variants that satisfy the conditions above.
+
+        if (names.contains(flavor_unitTest)) {
             setIgnore(true)
+        } else {
+
+            def ignoreReleaseVariant = variant.buildType.name == "release" &&
+                    (names.contains(flavor_endToEnd)
+                            || names.contains(flavor_integration)
+                    )
+            def ignoreInstrumentationVariant = variant.buildType.name == "instrumentation" &&
+                    (names.contains(flavor_full))
+
+            def ignoreDebugVariant = variant.buildType.name == "debug" &&
+                    (names.contains(flavor_endToEnd)
+                            || names.contains(flavor_integration)
+                    )
+            // To check for a build type instead, use variant.buildType.name == "buildType"
+            if (ignoreReleaseVariant || ignoreInstrumentationVariant || ignoreDebugVariant) {
+                // Gradle ignores any variants that satisfy the conditions above.
+                setIgnore(true)
+            }
         }
     }
 
@@ -155,8 +165,7 @@ dependencies {
     kaptAndroidTest group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
 
 
-    androidTestImplementation junit5UnitTests
-    testRuntimeOnly junit5UnitTestRuntime
+    androidTestImplementation junitUnitTests
 
     androidTestImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
@@ -181,7 +190,7 @@ dependencies {
     implementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
     implementation group: 'androidx.fragment', name: 'fragment-ktx', version: FRAGMENT_VERSION
 
-    def nav_version = '2.3.0'
+
     // Kotlin
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"

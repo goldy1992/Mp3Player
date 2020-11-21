@@ -12,8 +12,8 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class FolderListFragment : MediaItemListFragment() {
+@AndroidEntryPoint(MediaItemListFragment::class)
+class FolderListFragment : Hilt_FolderListFragment() {
 
     @Inject
     lateinit var myFolderViewAdapter : MyFolderViewAdapter

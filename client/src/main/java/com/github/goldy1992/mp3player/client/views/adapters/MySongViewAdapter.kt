@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestBuilder
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
-import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.databinding.SongItemMenuBinding
 import com.github.goldy1992.mp3player.client.views.viewholders.MediaItemViewHolder
 import com.github.goldy1992.mp3player.client.views.viewholders.MySongViewHolder
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -20,7 +20,7 @@ class MySongViewAdapter
     : MyGenericRecyclerViewAdapter(albumArtPainter), LogTagger {
 
     override fun logTag() : String {
-        return "MY_VIEW_ADAPTER"
+        return "MY_VIEW_ADAPTER "
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaItemViewHolder {
@@ -28,9 +28,8 @@ class MySongViewAdapter
             createEmptyViewHolder(parent)
         } else { // create a new views
             val layoutInflater = LayoutInflater.from(parent.context)
-            val v = layoutInflater
-                    .inflate(R.layout.song_item_menu, parent, false)
-            MySongViewHolder(v, albumArtPainter)
+            val view = SongItemMenuBinding.inflate(layoutInflater)
+            MySongViewHolder(view, albumArtPainter)
         }
     }
 

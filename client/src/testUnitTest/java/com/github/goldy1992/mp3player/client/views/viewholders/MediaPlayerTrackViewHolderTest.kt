@@ -21,7 +21,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.android.synthetic.main.view_holder_media_player.view.*
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

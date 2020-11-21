@@ -30,8 +30,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class MainFragment : DestinationFragment(), LogTagger {
+@AndroidEntryPoint(DestinationFragment::class)
+class MainFragment : Hilt_MainFragment(), LogTagger {
 
     @Inject
     lateinit var mediaBrowserAdapter : MediaBrowserAdapter
@@ -62,7 +62,7 @@ class MainFragment : DestinationFragment(), LogTagger {
                     binding.rootMenuItemsPager.paddingRight,
                     newOffset)
         })
-        setUpToolbar(binding.titleToolbar)
+        this.toolbar = binding.titleToolbar
         binding.rootMenuItemsPager.adapter = adapter
         tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.rootMenuItemsPager, adapter)
         tabLayoutMediator!!.attach()

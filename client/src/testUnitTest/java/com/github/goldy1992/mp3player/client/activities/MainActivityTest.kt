@@ -6,29 +6,21 @@ import androidx.core.view.GravityCompat
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.test.core.app.ActivityScenario
 import com.github.goldy1992.mp3player.client.dagger.modules.GlideModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import org.junit.Assert
+import org.junit.*
 import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Ignore
-import org.junit.Rule
-import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.LooperMode
 
 @HiltAndroidTest
-@UninstallModules(GlideModule::class,
-        MediaBrowserAdapterModule::class,
-        MediaControllerAdapterModule::class)
+@UninstallModules(GlideModule::class)
 @RunWith(RobolectricTestRunner::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 class MainActivityTest {
@@ -47,6 +39,7 @@ class MainActivityTest {
     }
 
     @Ignore
+    // TODO: move to instrumented test
     @Test
     fun testOnItemSelected() {
         scenario.onActivity { activity: MainActivity ->
@@ -58,23 +51,20 @@ class MainActivityTest {
         }
     }
 
-    @Ignore
     @Test
     fun testOnItemSelectedHomeButton() {
         scenario.onActivity { activity: MainActivity ->
             val menuItem = mock<MenuItem>()
             whenever(menuItem.itemId).thenReturn(android.R.id.home)
             val result = activity.onOptionsItemSelected(menuItem)
+            shadowOf(getMainLooper()).idle()
             Assert.assertTrue(result)
         }
-    }
 
-    @Test
-    fun trueTest() {
-        assertTrue(true)
     }
 
     // new tests
+    // TODO: move to instrumented test
     @Ignore
     @Test
     fun testOnOptionsItemSelectedOpenDrawer() {

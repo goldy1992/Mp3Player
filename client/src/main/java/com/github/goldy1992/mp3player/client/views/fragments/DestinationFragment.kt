@@ -1,14 +1,10 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.github.goldy1992.mp3player.client.activities.MainActivity
 
@@ -20,7 +16,10 @@ abstract class DestinationFragment : Fragment() {
 
     private var activity : MainActivity? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    protected var toolbar : Toolbar? = null
+
+    override fun onResume() {
+        super.onResume()
         val activity = requireActivity()
         if (activity is MainActivity) {
             this.activity = activity
@@ -30,15 +29,13 @@ abstract class DestinationFragment : Fragment() {
             } else {
                 activity.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             }
+            if (this.toolbar != null) {
+                val navController = this.findNavController()
+                activity.setSupportActionBar(toolbar)
+                toolbar?.setupWithNavController(navController, activity.appBarConfiguration)
+            }
         }
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
 
-    protected open fun setUpToolbar(toolbar : Toolbar) {
-        val navController = this.findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
-        activity?.setSupportActionBar(toolbar)
-        toolbar.setupWithNavController(navController, appBarConfiguration)
+        Log.i("some tag", "resumed!!!!")
     }
-
 }

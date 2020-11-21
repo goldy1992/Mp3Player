@@ -1,22 +1,10 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
-import android.app.SearchManager
 import android.content.Intent
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.fragment.app.testing.FragmentScenario
-import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.dagger.modules.GlideModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
-import com.github.goldy1992.mp3player.commons.MediaItemBuilder
-import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.spy
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -29,9 +17,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @HiltAndroidTest
-@UninstallModules(GlideModule::class,
-        MediaBrowserAdapterModule::class,
-        MediaControllerAdapterModule::class)
+@UninstallModules(GlideModule::class)
 @RunWith(RobolectricTestRunner::class)
 @Ignore
 class SearchResultsFragmentTest {

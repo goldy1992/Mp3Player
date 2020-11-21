@@ -15,7 +15,7 @@ class SettingsFragment : DestinationFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         val binding = FragmentSettingsBinding.inflate(layoutInflater)
-        setUpToolbar(binding.titleToolbar)
+        this.toolbar = binding.titleToolbar
         return binding.root
     }
 }

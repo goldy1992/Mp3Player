@@ -17,8 +17,8 @@ import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class PlaybackSpeedControlsFragment : Fragment(), LogTagger, Observer<Float> {
+@AndroidEntryPoint(Fragment::class)
+class PlaybackSpeedControlsFragment : Hilt_PlaybackSpeedControlsFragment(), LogTagger, Observer<Float> {
 
     @Inject
     lateinit var mediaControllerAdapter: MediaControllerAdapter

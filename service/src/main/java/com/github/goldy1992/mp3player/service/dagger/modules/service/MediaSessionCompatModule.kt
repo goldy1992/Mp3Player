@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.service.dagger.modules.service
 
 import android.content.Context
 import android.support.v4.media.session.MediaSessionCompat
-import com.github.goldy1992.mp3player.service.player.MyMediaButtonEventHandler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

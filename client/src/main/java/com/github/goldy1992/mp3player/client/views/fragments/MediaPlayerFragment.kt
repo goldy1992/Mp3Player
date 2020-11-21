@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.VisibleForTesting
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -19,8 +18,8 @@ import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class MediaPlayerFragment : DestinationFragment(), LogTagger, Observer<MediaMetadataCompat> {
+@AndroidEntryPoint(DestinationFragment::class)
+class MediaPlayerFragment : Hilt_MediaPlayerFragment(), LogTagger, Observer<MediaMetadataCompat> {
 
     @Inject
     lateinit var mediaControllerAdapter : MediaControllerAdapter
@@ -40,13 +39,6 @@ class MediaPlayerFragment : DestinationFragment(), LogTagger, Observer<MediaMeta
         return true
     }
 
-     override fun setUpToolbar(toolbar : Toolbar) {
-         titleToolbar.setOnClickListener {
-             val navController = this.findNavController()
-             navController.popBackStack()
-         }
-
-     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentMediaPlayerBinding.inflate(inflater)
         mediaControllerAdapter.queue.observe(viewLifecycleOwner, trackViewPager.queueObserver)
@@ -55,7 +47,11 @@ class MediaPlayerFragment : DestinationFragment(), LogTagger, Observer<MediaMeta
         this.trackViewPager.init(binding.trackViewPager)
         this.titleToolbar = binding.titleToolbar
         this.appBarLayout = binding.appbarLayout
-        setUpToolbar(titleToolbar)
+
+        titleToolbar.setOnClickListener {
+            val navController = this.findNavController()
+            navController.popBackStack()
+        }
         return binding.root
     }
 

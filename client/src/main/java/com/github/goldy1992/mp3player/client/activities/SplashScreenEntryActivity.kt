@@ -26,8 +26,8 @@ import javax.inject.Inject
 /**
  *
  */
-@AndroidEntryPoint
-class SplashScreenEntryActivity : AppCompatActivity(), PermissionGranted, LogTagger {
+@AndroidEntryPoint(AppCompatActivity::class)
+class SplashScreenEntryActivity : Hilt_SplashScreenEntryActivity(), PermissionGranted, LogTagger {
 
     @Inject
     lateinit var componentClassMapper: ComponentClassMapper
@@ -60,6 +60,7 @@ class SplashScreenEntryActivity : AppCompatActivity(), PermissionGranted, LogTag
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                             grantResults: IntArray) { //   Log.i(LOG_TAG, "permission result");
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         var permissionIsGranted = false
         if (permissions.isNotEmpty() && grantResults.isNotEmpty()) {
             permissions.forEach {

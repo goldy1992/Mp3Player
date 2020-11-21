@@ -19,8 +19,8 @@ import com.google.android.material.slider.Slider
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class PlaybackTrackerFragment : Fragment(), LogTagger, Observer<Any> {
+@AndroidEntryPoint(Fragment::class)
+class PlaybackTrackerFragment : Hilt_PlaybackTrackerFragment(), LogTagger, Observer<Any> {
 
     @Inject
     lateinit var mediaControllerAdapter : MediaControllerAdapter
