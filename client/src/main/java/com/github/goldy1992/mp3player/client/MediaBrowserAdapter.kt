@@ -3,10 +3,7 @@ package com.github.goldy1992.mp3player.client
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem
-import android.support.v4.media.session.MediaSessionCompat
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
 import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback
 import com.github.goldy1992.mp3player.client.callbacks.search.SearchResultListener
 import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback

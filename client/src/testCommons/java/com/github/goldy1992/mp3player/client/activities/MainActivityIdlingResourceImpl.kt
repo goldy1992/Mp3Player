@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client.activities
 
 import androidx.test.espresso.IdlingResource
-import androidx.viewpager2.widget.ViewPager2
 
 class MainActivityIdlingResourceImpl : MainActivity(), IdlingResource {
 

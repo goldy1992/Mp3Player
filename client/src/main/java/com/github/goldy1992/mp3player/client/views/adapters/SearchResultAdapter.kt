@@ -4,9 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.databinding.FragmentSearchResultsBinding
 import com.github.goldy1992.mp3player.client.databinding.SongItemMenuBinding
-import com.github.goldy1992.mp3player.client.views.viewholders.*
+import com.github.goldy1992.mp3player.client.views.viewholders.EmptyListViewHolder
+import com.github.goldy1992.mp3player.client.views.viewholders.MediaItemViewHolder
+import com.github.goldy1992.mp3player.client.views.viewholders.MyFolderViewHolder
+import com.github.goldy1992.mp3player.client.views.viewholders.MySongViewHolder
+import com.github.goldy1992.mp3player.client.views.viewholders.RootItemViewHolder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import javax.inject.Inject

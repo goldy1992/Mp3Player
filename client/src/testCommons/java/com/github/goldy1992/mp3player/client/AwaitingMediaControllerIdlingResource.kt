@@ -5,7 +5,6 @@ import androidx.test.espresso.IdlingResource
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @ComponentScope
 class AwaitingMediaControllerIdlingResource
