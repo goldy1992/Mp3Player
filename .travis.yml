@@ -1,7 +1,9 @@
 language: android
 sudo: required
+dist: trusty
 os: linux
-jdk: oraclejdk8
+jdk:
+  - oraclejdk8
 
 before_cache:
 - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -18,64 +20,28 @@ git:
 
 env:
   global:
-  - ADB_INSTALL_TIMEOUT=35
-  - ANDROID_API="android-28"
-  - EMULATOR_API="android-25"
-  - ANDROID_BUILD_TOOLS=28.0.3
-  - EMULATOR_TAG="armeabi-v7a"
-  - ABI_TAG="google_apis"
-  - ABI_VERSION="$ABI_TAG-25"
-  - ABI="$ABI_TAG;$EMULATOR_TAG"
-  - EMULATOR="system-images;$EMULATOR_API;$ABI_TAG;$EMULATOR_TAG"
-  - AVD_NAME=test
-  - SYS_IMG="sys-img-$EMULATOR_TAG-$ABI_VERSION"
   - secure: "lln9uFdPMa2RQsIZraczrZ8Bg+5AQPIOwbeP/soRzrjlgvBiYZnZvfrf4PuZhUmcRzom/HQ5QVnf5H6kQKCW9t8OS1p4ao26VwHsPMWBWowLQp/5he9JarJF6Xn8IkR012aujZPBNZzqNqD45Nc3FhJAiQ3XWxO/XXopGq7QLIdNLHObUU/MEbxYx/XnnLed3EHDnBoH8g2X8Uib1FbeCQlsyaSj25A9p12Gur7pzp/lY9YkDBXuUpqT/hsw7kRybiMpGXK6aJI2ztLEG7nn1/+VnYU+KJ/g8vMCWTA862ZfyTxy/k9Zp6SICvgNYrHa1X3C09wFuhtBCo+yVuyX0Lxg+87fCFrtL9QIch4mQSAToemvt839/A7dGF1Ir94G80XUf1jw8bxLlopUPGiQju7nbxVJeM/q3Lj3gIi4qk3JMj1VXtcJWH/dKJSnkremRWbI0E/P6/mH+p7d1GWTgGn3AEfhEDgl5u05zyRRf3O8mwI3r2M/Va/EYAXuADt+en+aZzKsF6/aMt9d7f9rg+gvBbuXRXI/Me3FJ8ZIABxPIux7sNA2udMAk/DyuYtrbrtwUul8yCR36UBVqMp+cKl58qOt+UmjO8uYsq2zoc+w5SjznYwzbXTl1zXZNy2p6RLQBV4F/H6n/HgRuttMUWp4JBV7CUwCh7+Ca6yN0hU="
 
 android:
   components:
-  # Uncomment the lines below if you want to
-  # use the latest revision of Android SDK Tools
-  # The BuildTools version used by your project
-  #- build-tools-$ANDROID_BUILD_TOOLS
-
-  # The SDK version used to compile your project
-  - $ANDROID_API
-  #- $EMULATOR_API
-
-  #- extra-google-google_play_services # google play services
-  #- extra-google-m2repository
-  #- extra-android-m2repository # for design library
-  # Specify at least one system image,
-  # if you need to run emulator(s) during your tests
-  # - $SYS_IMG
-
-  licenses:
-  - android-sdk-preview-license-.+
-  - android-sdk-license-.+
-  - google-gdk-license-.+
+    - tools
+    - platform-tools
+    - build-tools-29.0.2
+    - android-29
 
 ## safelist
-#branches:
-#  only:
-#  - master
-#  - develop
-#  - feature/issue-50/create-color-theme
+branches:
+  only:
+  - master
+  - develop
+
 before_install:
-# Install SDK license so Android Gradle plugin can install deps.
-- mkdir "$ANDROID_HOME/licenses" || true
-- echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
-# Install the rest of tools (e.g., avdmanager).
-- echo yes | sdkmanager --update
-- echo yes | sdkmanager tools
-# Install the system image.
-#- echo yes | sdkmanager "emulator" "$EMULATOR"
-# Create and start emulator for the script. Meant to race the install task.
-#- echo no | avdmanager create avd --force -n $AVD_NAME -k $EMULATOR -c 700M
-#- $ANDROID_HOME/emulator/emulator -avd $AVD_NAME -no-snapshot-save -no-audio -no-window -gpu swiftshader_indirect -memory 700 &
+  - yes | sdkmanager "platforms;android-28"
 
 before_script:
 - chmod +x gradlew
 - ./gradlew dependencies || true
+- chmod +x ./travis/install-jdk.sh
 
 addons:
   sonarcloud:
@@ -85,11 +51,8 @@ addons:
 
 
 script:
-- ./gradlew clean testFullDebugUnitTest jacocoTestReportFullDebug -PdisablePreDex --stacktrace
-#- ./gradlew sonarqube
+- jdk_switcher use oraclejdk8
+- ./gradlew clean jacocoTestReportDebug -PdisablePreDex --stacktrace
+# Install the latest JDK to support compatibility with Sonar Cloud.
+- source ./travis/install-jdk.sh
 - sonar-scanner -D sonar.java.libraries=${ANDROID_HOME}/platforms/${ANDROID_API}/android.jar
-#- chmod +x ./android-wait-for-emulator
-#- bash ./android-wait-for-emulator
-#- adb shell getprop ro.build.version.sdk
-#- adb shell input keyevent 82 &
-#- travis_wait 45 ./gradlew connectedDebugAndroidTest -PdisablePreDex --stacktrace

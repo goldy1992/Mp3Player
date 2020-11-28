@@ -1,0 +1,35 @@
+<manifest package="com.github.goldy1992.mp3player.client"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:theme="@style/AppTheme.Orange">
+        <activity
+            android:name=".activities.SplashScreenEntryActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".activities.SearchResultActivity" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content"/>
+                <data android:scheme="file"/>
+                <data android:mimeType="audio/*"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+
+    </application>
+</manifest>

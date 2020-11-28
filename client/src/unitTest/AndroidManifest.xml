@@ -1,0 +1,14 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.github.goldy1992.mp3player.client"
+    android:installLocation="preferExternal">
+
+    <application>
+
+        <activity android:name=".activities.SplashScreenEntryActivity" />
+        <activity android:name=".activities.EmptyMediaActivityCompatFragmentActivity" />
+        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.HiltTestActivity" />
+        <activity android:name="android.app.Activity" />
+
+    </application>
+</manifest>

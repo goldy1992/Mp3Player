@@ -1,0 +1,110 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'jacoco'
+
+android {
+    compileSdkVersion TARGET_SDK_VERION
+    buildToolsVersion BUILD_TOOLS_VERSION
+
+
+    defaultConfig {
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERION
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        incremental = false
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions { jvmTarget = "1.8" }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues = true
+        }
+        unitTests.all {
+            testLogging {
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                outputs.upToDateWhen {false}
+                showStandardStreams = true
+            }
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
+
+    //dagger
+    kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    kaptTest group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
+    implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
+
+
+    implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
+
+    testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
+        exclude group: "com.google.auto.service", module: "auto-service"
+    }
+
+    testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
+    testImplementation group:'com.nhaarman.mockitokotlin2', name: 'mockito-kotlin', version: MOCKITO_KOTLIN
+    testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
+    implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
+
+}
+
+task jacocoTestReportDebug(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*Test*.*',
+            'android/**/*.*',
+            '**/*$[0-9].*',
+            '**/dagger/**',
+            '**/databinding/**'
+    ]
+
+    def mainSrc = "$project.projectDir/src/main/java"
+    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+
+    sourceDirectories.from = files([mainSrc])
+    classDirectories.from = files([mainClasses])
+    executionData.from = "$project.buildDir/jacoco/testDebugUnitTest.exec"
+
+}

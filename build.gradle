@@ -1,15 +1,97 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+    ext {
+        PIE = 28
+        MARSHMALLOW = 23
+        MIN_SDK_VERSION = 23
+        TARGET_SDK_VERION = 28
+        BUILD_TOOLS_VERSION = '29.0.2'
+        nav_version = '2.3.1'
+        kotlin_version = '1.4.10'
+        ACTIVITY_VERSION = '1.1.0'
+        ANDROIDX_CORE_KOTLIN_VERSION = '1.3.2'
+        ANNOTATION_VERSION = '1.1.0-rc01'
+        APP_COMPAT_VERSION = '1.2.0'
+        COMMONS_COLLECTIONS4_VERSION = '4.4'
+        COMMONS_IO_VERSION = '1.3.2'
+        COMMONS_LANG_VERSION = '3.9'
+        CONSTRAINT_LAYOUT_VERSION = '2.0.1'
+        COORDINATOR_LAYOUT_VERSION = '1.1.0'
+        CORE_VERSION = '1.0.1'
+        DAGGER_VERSION = '2.29.1'
+        DRAWER_LAYOUT_VERSION = '1.0.0'
+        ESPRESSO_CORE_VERSION = '3.3.0'
+        EXO_PLAYER_VERSION = '2.10.4'
+        FAST_SCROLL_VERSION = '2.0.1'
+        FRAGMENT_VERSION = '1.3.0-beta01'
+        GLIDE_VERSION = '4.11.0'
+        GOOGLE_GUAVA_VERSION = '27.1-android'
+        GRID_LAYOUT_VERSION = '1.0.0'
+        HILT_ANDROID_GRADLE_PLUGIN_VERSION = '2.29.1-alpha'
+        HILT_VERSION = '2.29.1-alpha'
+        HILT_ANDROID_GRADLE_PLUGIN_VERSION = '2.28-alpha'
+        HILT_VERSION = '2.29.1-alpha'
+        HILT_JETPACK_VERSION = '1.0.0-alpha02'
+        JACOCO_VERSION = '0.8.5'
+        JUNIT_EXT_VERSION = '1.1.2'
+        JUNIT4_VERSION = '4.12'
+        lifecycleVersion = '2.2.0'
+        KOTLIN_COROUTINE_VERSION = '1.3.2'
+        MATERIAL_VERSION = '1.3.0-alpha02'
+        MEDIA_VERSION = '1.1.0-alpha02'
+        MIRROR_VERSION = '1.3.0'
+        MOCKITO_VERSION = '3.6.0'
+        MOCKITO_KOTLIN = '2.2.0'
+        PREFERENCE_VERSION = '1.1.1'
+        RECYCLER_VIEW_VERSION = '1.1.0'
+        ROBOLECTRIC_VERSION = '4.3.1'
+        ROOM_VERSION = '2.2.3'
+        TEST_CORE_VERSION = '1.3.0'
+        TEST_RULES_VERSION = '1.3.0'
+        TEST_RUNNER_VERSION = '1.3.0'
+        TEST_UI_AUTOMATOR_VERSION= '2.2.0'
+        VIEW_PAGER2_VERSION = '1.0.0'
+
+        EXCLUDE_LIST =  [
+                '**/dagger/**',
+                '**_Factory**',
+                '**_MembersInjector**',
+                '**/R.class',
+                '**/R$*.class',
+                '**/BuildConfig.*',
+                '**/Manifest*.*',
+                '**/*Test*.*',
+                'android/**/*.*',
+                '**/*$[0-9].*'
+        ]
+
+        junitUnitTests =  [
+            "junit:junit:$JUNIT4_VERSION",
+            "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN",
+            "androidx.core:core-ktx:$ANDROIDX_CORE_KOTLIN_VERSION"
+        ]
+
+        // flavour dimensions
+        flavor_dimen_mode = "mode"
+
+        // flavours
+        flavor_full = "full"
+        flavor_unitTest = "unitTest"
+        flavor_integration = "integration"
+        flavor_endToEnd = "endToEnd"
+        flavor_automation = "automation"
+    }
+
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.2'
-        classpath "de.mannodermaus.gradle.plugins:android-junit5:1.5.1.0"
-        classpath "com.github.ben-manes:gradle-versions-plugin:0.22.0"
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$HILT_ANDROID_GRADLE_PLUGIN_VERSION"
+        def nav_version = "2.3.0"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
     }
 }
 
@@ -21,10 +103,12 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://jitpack.io' }
     }
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
+
 }
 
 task clean(type: Delete) {

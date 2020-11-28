@@ -1,0 +1,37 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "$JACOCO_VERSION"
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
+task jacocoTestReportDebug(type: JacocoReport, dependsOn: ['testUnitTestDebugUnitTest']) {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*Test*.*',
+            'android/**/*.*',
+            '**/*$[0-9].*',
+            '**/dagger/**',
+            '**/databinding/**'
+    ]
+
+    def mainSrc = "$project.projectDir/src/main/java"
+    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/unitTestDebug", excludes: fileFilter)
+    def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/unitTestDebug", excludes: fileFilter)
+
+    sourceDirectories.from = files([mainSrc])
+    classDirectories.from = files([mainClasses, javaClasses])
+    executionData.from = "$project.buildDir/jacoco/testUnitTestDebugUnitTest.exec"
+}

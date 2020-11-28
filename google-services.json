@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "806506363446",
+    "firebase_url": "https://mp3player-goldy1992.firebaseio.com",
+    "project_id": "mp3player-goldy1992",
+    "storage_bucket": "mp3player-goldy1992.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:806506363446:android:78ab44a3ad0e1243737697",
+        "android_client_info": {
+          "package_name": "com.github.goldy1992.mp3player"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "806506363446-6bsmeqlvjatsh0raoa9bjacrse5f9ef7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPHrWiaDmbmP_MvC9tsUUXSyb_50pQsO8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "806506363446-6bsmeqlvjatsh0raoa9bjacrse5f9ef7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
