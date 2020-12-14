@@ -44,9 +44,6 @@ android {
         integration {
             dimension = flavor_dimen_mode
         }
-        unitTest {
-            dimension = flavor_dimen_mode
-        }
     }
 
     variantFilter { variant ->
@@ -119,7 +116,7 @@ dependencies {
     kapt group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
 
-    unitTestImplementation junitUnitTests
+    testImplementation junitUnitTests
 
     testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
         exclude group: "com.google.auto.service", module: "auto-service"

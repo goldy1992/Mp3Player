@@ -8,7 +8,7 @@ tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
 
-task jacocoTestReportDebug(type: JacocoReport, dependsOn: ['testUnitTestDebugUnitTest']) {
+task jacocoTestReportDebug(type: JacocoReport, dependsOn: ['testFullDebugUnitTest']) {
 
     reports {
         xml.enabled = true
@@ -28,10 +28,10 @@ task jacocoTestReportDebug(type: JacocoReport, dependsOn: ['testUnitTestDebugUni
     ]
 
     def mainSrc = "$project.projectDir/src/main/java"
-    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/unitTestDebug", excludes: fileFilter)
-    def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/unitTestDebug", excludes: fileFilter)
+    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebug", excludes: fileFilter)
+    def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/fullDebug", excludes: fileFilter)
 
     sourceDirectories.from = files([mainSrc])
     classDirectories.from = files([mainClasses, javaClasses])
-    executionData.from = "$project.buildDir/jacoco/testUnitTestDebugUnitTest.exec"
+    executionData.from = "$project.buildDir/jacoco/testFullDebugUnitTest.exec"
 }
