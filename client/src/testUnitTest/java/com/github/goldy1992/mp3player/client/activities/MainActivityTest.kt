@@ -1,5 +1,7 @@
 package com.github.goldy1992.mp3player.client.activities
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Looper.getMainLooper
 import android.view.MenuItem
 import androidx.core.view.GravityCompat
@@ -76,45 +78,21 @@ class MainActivityTest {
         }
     }
 
-    // TODO: Move to MainActivityViewModelTest
-//    @Test
-//    fun testOnChildrenLoadedForRootCategory() {
-//        scenario.onActivity { activity: MainActivity ->
-//            var myPageAdapterSpied = spy(activity.adapter)
-//            doNothing().whenever(myPageAdapterSpied).notifyDataSetChanged()
-//            activity.adapter = myPageAdapterSpied;
-//            val parentId = "parentId"
-//            val children = ArrayList<MediaBrowserCompat.MediaItem>()
-//            val rootItemsSet: Set<MediaItemType> = MediaItemType.PARENT_TO_CHILD_MAP[MediaItemType.ROOT]!!
-//            for (category in rootItemsSet) {
-//                val mediaItem = MediaItemBuilder("id1")
-//                        .setTitle(category.title)
-//                        .setDescription(category.description)
-//                        .setRootItemType(category)
-//                        .setMediaItemType(MediaItemType.ROOT)
-//                        .build()
-//                children.add(mediaItem)
-//            }
-//            val expectedNumOfFragmentsCreated = rootItemsSet.size
-//            activity.onChildrenLoaded(parentId, children)
-//            Shadows.shadowOf(Looper.getMainLooper()).idle()
-//            val numberOfChildFragments = activity.adapter.itemCount
-//            Assert.assertEquals(expectedNumOfFragmentsCreated.toLong(), numberOfChildFragments.toLong())
-//        }
-//    }
 
-    /* TODO: use these tests when intents to play a song from file is supported
+
+
     @Test
     fun testOnCreateViewIntent() {
-        intent!!.action = Intent.ACTION_VIEW
+        val intent = Intent()
+        intent.action = Intent.ACTION_VIEW
         val expectedUri = mock<Uri>()
-        intent!!.data = expectedUri
-        launchActivityAndConnect()
-        scenario.onFragment { activity: MediaPlayerFragment ->
+        intent.data = expectedUri
+        launchActivityAndConnect(intent)
+        scenario.onActivity { activity: MediaPlayerFragment ->
             Assert.assertEquals(expectedUri, activity.trackToPlay)
         }
     }
-
+/* TODO: use these tests when intents to play a song from file is supported
     @Test
     fun testOnNewIntentWithoutViewAction() {
         launchActivityAndConnect()
@@ -144,11 +122,13 @@ class MainActivityTest {
         }
     }
 
-    private fun launchActivityAndConnect() {
-        scenario = ActivityScenario.launch(intent)
-        scenario.onFragment { activity -> activity.onConnected() }
-    }
+
     */
+
+    private fun launchActivityAndConnect(intent : Intent) {
+        scenario = ActivityScenario.launch(intent)
+        scenario.onActivity { activity -> activity.onConnected() }
+    }
 
 
 }

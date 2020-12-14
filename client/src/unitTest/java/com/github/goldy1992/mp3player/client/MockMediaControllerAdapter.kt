@@ -27,7 +27,7 @@ class MockMediaControllerAdapter
     override fun playFromMediaId(mediaId: String?, extras: Bundle?) { // DO NOTHING
     }
 
-    override fun playFromUri(uri: Uri?, extras: Bundle?) { // DO NOTHING
+    override suspend fun playFromUri(uri: Uri?, extras: Bundle?) { // DO NOTHING
     }
 
     override fun play() { // DO NOTHING

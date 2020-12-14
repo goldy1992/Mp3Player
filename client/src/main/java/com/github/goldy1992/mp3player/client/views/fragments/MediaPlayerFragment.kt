@@ -31,9 +31,7 @@ class MediaPlayerFragment : Hilt_MediaPlayerFragment(), LogTagger, Observer<Medi
 
     lateinit var appBarLayout: AppBarLayout
 
-    @get:VisibleForTesting
-    var trackToPlay: Uri? = null
-        private set
+
 
     override fun lockDrawerLayout(): Boolean {
         return true

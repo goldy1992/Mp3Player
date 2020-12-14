@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.activities
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.annotation.VisibleForTesting
@@ -16,10 +17,18 @@ import com.github.goldy1992.mp3player.client.listeners.MyDrawerListener
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ *
+ */
 @AndroidEntryPoint(MediaActivityCompat::class)
-open class MainActivity : Hilt_MainActivity()
+open class MainActivity : Hilt_MainActivity(),
+        CoroutineScope by GlobalScope
 {
     @Inject
     lateinit var myDrawerListener: MyDrawerListener
@@ -33,6 +42,10 @@ open class MainActivity : Hilt_MainActivity()
 
     lateinit var appBarConfiguration: AppBarConfiguration
 
+    @get:VisibleForTesting
+    var trackToPlay: Uri? = null
+        private set
+
     override fun initialiseView(): Boolean {
         return true
     }
@@ -41,24 +54,27 @@ open class MainActivity : Hilt_MainActivity()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val intent = intent
-        if (Intent.ACTION_VIEW == intent.action) {
-            // navigate to media player fragment
-//            trackToPlay = intent.data
-        }
-
         val binding : ActivityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         this.drawerLayout = binding.drawerLayout
         drawerLayout.addDrawerListener(myDrawerListener)
         this.navigationView = binding.navigationView
         initNavigationView()
-
-
         setContentView(binding.root)
 
         val navController : NavController = findNavController(R.id.nav_host_container)
         this.appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
         binding.navigationView.setupWithNavController(navController)
+
+        val intent = intent
+        if (Intent.ACTION_VIEW == intent.action) {
+
+            trackToPlay = intent.data
+            launch(Dispatchers.Default) {
+                mediaControllerAdapter.playFromUri(trackToPlay, null)
+            }
+            navController.navigate(R.id.go_to_media_player)
+            // navigate to media player fragment
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
