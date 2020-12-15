@@ -1,8 +1,10 @@
 <manifest package="com.github.goldy1992.mp3player.client"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:theme="@style/AppTheme.Orange">
+        android:theme="@style/AppTheme.Orange"
+        tools:node="merge">
         <activity
             android:name=".activities.SplashScreenEntryActivity">
             <intent-filter>
