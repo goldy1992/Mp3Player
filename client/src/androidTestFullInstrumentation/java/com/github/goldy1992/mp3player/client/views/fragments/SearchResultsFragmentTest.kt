@@ -50,16 +50,7 @@ class SearchResultsFragmentTest {
         navController.setCurrentDestination(R.id.search_results_fragment)}
     }
 
-        @Test
-        fun firstTest() {
-           val scenario = launchFragmentInHiltContainer<SearchResultsFragment>(navHostController = navController, action = {
 
-
-           })
-            assertTrue(true)
-        }
-
-//    // TODO: fix tests
     @Test
     fun testOnSongItemSelected() {
         launchFragmentInHiltContainer<SearchResultsFragment>(navHostController = navController, action = {
@@ -88,7 +79,7 @@ class SearchResultsFragmentTest {
                     .setLibraryId(libraryId)
                     .build()
             this.itemSelected(mediaItem)
-               verify(spiedMediaControllerAdapter, never()).playFromMediaId(libraryId, null)
+            verify(spiedMediaControllerAdapter, never()).playFromMediaId(libraryId, null)
         })
     }
 

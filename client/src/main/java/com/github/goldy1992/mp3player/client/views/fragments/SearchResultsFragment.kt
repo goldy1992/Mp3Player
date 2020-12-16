@@ -18,7 +18,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.SearchView
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
