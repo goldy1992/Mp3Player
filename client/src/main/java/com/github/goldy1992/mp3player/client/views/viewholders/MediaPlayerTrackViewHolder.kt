@@ -6,7 +6,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
-import com.github.goldy1992.mp3player.client.databinding.ViewHolderMediaPlayerBinding
+import com.github.goldy1992.mp3player.databinding.ViewHolderMediaPlayerBinding
 
 class MediaPlayerTrackViewHolder(private val view: ViewHolderMediaPlayerBinding, private val albumArtPainter: AlbumArtPainter, private  val context : Context)
     : RecyclerView.ViewHolder(view.root) {

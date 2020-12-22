@@ -17,6 +17,7 @@
     <string name="APP_TITLE_H1"><![CDATA[<h1>Mike\'s MP3 Player</h1>]]></string>
     <string name="FOLDER_NAME">%1$s</string>
     <string name="NO_MEDIA_FOUND">No audio tracks found on your device.</string>
+    <string name="no_search_results_found">No search results found for query\: \"%1$s\"</string>
     <string name="search_hint">Search media</string>
     <string name="notification_channel_name">channel_name</string>
     <string name="channel_description">channel description</string>

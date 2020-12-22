@@ -29,6 +29,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.Navigation
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
+import com.github.goldy1992.mp3player.R
 import com.github.goldy1992.mp3player.client.activities.HiltTestActivity
 
 /**

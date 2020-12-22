@@ -3,9 +3,10 @@ package com.github.goldy1992.mp3player.client.views.adapters
 import android.support.v4.media.MediaBrowserCompat
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.RequestBuilder
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
-import com.github.goldy1992.mp3player.client.databinding.SongItemMenuBinding
+import com.github.goldy1992.mp3player.databinding.SongItemMenuBinding
 import com.github.goldy1992.mp3player.client.views.viewholders.MediaItemViewHolder
 import com.github.goldy1992.mp3player.client.views.viewholders.MySongViewHolder
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -23,17 +24,17 @@ class MySongViewAdapter
         return "MY_VIEW_ADAPTER "
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaItemViewHolder {
-        return if (viewType == EMPTY_VIEW_TYPE) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaItemViewHolder<ViewBinding> {
+        return if (viewType == Companion.EMPTY_VIEW_TYPE) {
             createEmptyViewHolder(parent)
         } else { // create a new views
             val layoutInflater = LayoutInflater.from(parent.context)
             val view = SongItemMenuBinding.inflate(layoutInflater)
-            MySongViewHolder(view, albumArtPainter)
+            MySongViewHolder(parent.context, view, albumArtPainter)
         }
     }
 
-    override fun onBindViewHolder(holder: MediaItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MediaItemViewHolder<ViewBinding>, position: Int) {
         val isSongHolder = holder is MySongViewHolder
         if (isSongHolder && !isEmptyRecycleView) {
             val songViewHolder = holder as MySongViewHolder

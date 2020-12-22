@@ -11,8 +11,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
-import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.databinding.ActivityMainBinding
+import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.databinding.ActivityMainBinding
 import com.github.goldy1992.mp3player.client.listeners.MyDrawerListener
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.google.android.material.navigation.NavigationView

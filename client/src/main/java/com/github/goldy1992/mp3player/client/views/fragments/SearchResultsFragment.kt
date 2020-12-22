@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaDescriptionCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -22,19 +23,24 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.R
 import com.github.goldy1992.mp3player.client.activities.SearchResultsFragmentViewModel
-import com.github.goldy1992.mp3player.client.databinding.FragmentSearchResultsBinding
+import com.github.goldy1992.mp3player.databinding.FragmentSearchResultsBinding
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
+import com.github.goldy1992.mp3player.client.views.adapters.MediaItemRecyclerViewAdapter.Companion.buildEmptyListMediaItem
 import com.github.goldy1992.mp3player.client.views.adapters.SearchResultAdapter
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import dagger.hilt.android.AndroidEntryPoint
+import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils.isNotEmpty
 import javax.inject.Inject
 
-
+/**
+ * Fragment to represent the view that will display the search interface and results when the user
+ * wants to perform a search,
+ */
 @AndroidEntryPoint(DestinationFragment::class)
 open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTouchListener.ItemSelectedListener, LogTagger {
 
@@ -140,6 +146,7 @@ open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTo
 
         private fun performSearch(query: String?): Boolean {
             if (isNotEmpty(query)) {
+                viewModel.currentQuery = query!!
                 mediaBrowserAdapter.search(query, null)
             }
             return true
@@ -150,7 +157,12 @@ open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTo
     private fun subscribeUi(adapter: SearchResultAdapter) {
         mediaBrowserAdapter.registerSearchResultListener(viewModel)
         viewModel.searchResults.observe(viewLifecycleOwner) { result ->
-            adapter.submitList(result)
+            if (CollectionUtils.isEmpty(result)) {
+                val toSubmit = mutableListOf(buildEmptyListMediaItem(viewModel.currentQuery))
+                adapter.submitList(toSubmit)
+            } else {
+                adapter.submitList(result)
+            }
         }
     }
 
@@ -174,7 +186,7 @@ open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTo
         }
     }
 
-    fun showKeyboard() {
+    private fun showKeyboard() {
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, HIDE_IMPLICIT_ONLY)
     }
 
