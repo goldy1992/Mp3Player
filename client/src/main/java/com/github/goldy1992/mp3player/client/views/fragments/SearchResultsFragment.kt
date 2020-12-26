@@ -79,7 +79,6 @@ open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTo
         recyclerView.layoutManager = LinearLayoutManager(context)
         this.toolbar = binding.toolbar
         subscribeUi(searchResultAdapter)
-
         return binding.root
     }
 

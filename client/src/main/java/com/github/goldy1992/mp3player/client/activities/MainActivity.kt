@@ -8,7 +8,6 @@ import androidx.annotation.VisibleForTesting
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.github.goldy1992.mp3player.R
@@ -28,7 +27,8 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint(MediaActivityCompat::class)
 open class MainActivity : Hilt_MainActivity(),
-        CoroutineScope by GlobalScope
+    CoroutineScope by GlobalScope,
+    DrawerLayoutActivity
 {
     @Inject
     lateinit var myDrawerListener: MyDrawerListener
@@ -40,8 +40,6 @@ open class MainActivity : Hilt_MainActivity(),
 
     lateinit var navigationView: NavigationView
 
-    lateinit var appBarConfiguration: AppBarConfiguration
-
     @get:VisibleForTesting
     var trackToPlay: Uri? = null
         private set
@@ -49,7 +47,6 @@ open class MainActivity : Hilt_MainActivity(),
     override fun initialiseView(): Boolean {
         return true
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +59,6 @@ open class MainActivity : Hilt_MainActivity(),
         setContentView(binding.root)
 
         val navController : NavController = findNavController(R.id.nav_host_container)
-        this.appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
         binding.navigationView.setupWithNavController(navController)
 
         val intent = intent
@@ -98,6 +94,10 @@ open class MainActivity : Hilt_MainActivity(),
 
     override fun logTag(): String {
         return "MAIN_ACTIVITY"
+    }
+
+    override fun drawerLayout(): DrawerLayout? {
+        return drawerLayout
     }
 
 }

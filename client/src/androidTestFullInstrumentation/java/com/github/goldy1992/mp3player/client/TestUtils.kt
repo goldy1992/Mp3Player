@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client
 
 import android.view.View
+import android.widget.SearchView
 import androidx.annotation.IdRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.PerformException
@@ -9,6 +10,7 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.util.HumanReadables
 import com.google.android.material.tabs.TabLayout
+import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.junit.Assert.assertEquals
@@ -16,7 +18,22 @@ import org.junit.Assert.assertEquals
 
 object TestUtils {
 
+    fun typeSearchViewText(text: String?): ViewAction? {
+        return object : ViewAction {
+            override fun getConstraints(): Matcher<View> {
+                //Ensure that only apply if it is a SearchView and if it is visible.
+                return CoreMatchers.allOf(ViewMatchers.isDisplayed(), ViewMatchers.isAssignableFrom(SearchView::class.java))
+            }
 
+            override fun getDescription(): String {
+                return "Change view text"
+            }
+
+            override fun perform(uiController: UiController?, view: View) {
+                (view as SearchView).setQuery(text, false)
+            }
+        }
+    }
 
     fun assertTabName(tabLayout: TabLayout, position: Int, expectedTabTitle: String?) {
         val tab = tabLayout.getTabAt(position)

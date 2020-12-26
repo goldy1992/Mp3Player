@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.github.goldy1992.mp3player.client" >
+    package="com.github.goldy1992.mp3player" >
 <!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
 <!--    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />-->
 <!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>-->
@@ -8,8 +8,9 @@
 <!--    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />-->
 
     <application xmlns:tools="http://schemas.android.com/tools"
+        android:theme="@style/AppTheme.Orange"
         tools:node="merge">
-        <activity android:name=".activities.MainActivityIdlingResourceImpl" />
-        <activity android:name=".activities.HiltTestActivity" />
+        <activity android:name=".client.activities.MainActivityIdlingResourceImpl" />
+        <activity android:name=".client.activities.HiltTestActivity" />
     </application>
 </manifest>
