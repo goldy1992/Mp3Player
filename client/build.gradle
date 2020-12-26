@@ -210,7 +210,6 @@ dependencies {
     androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
     androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
     androidTestImplementation group: 'androidx.test', name: 'core-ktx', version: TEST_CORE_VERSION
-    androidTestImplementation 'com.azimolabs.conditionwatcher:conditionwatcher:0.2'
 
     androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: JUNIT_EXT_VERSION
     androidTestImplementation group: 'androidx.test', name: 'runner', version: TEST_RUNNER_VERSION
