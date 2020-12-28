@@ -9,14 +9,29 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.util.HumanReadables
+import com.github.goldy1992.mp3player.client.views.fragments.SearchResultsFragment
 import com.google.android.material.tabs.TabLayout
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.junit.Assert.assertEquals
+import java.lang.reflect.Field
+import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
+import kotlin.reflect.jvm.javaField
 
 
 object TestUtils {
+
+    fun getField(clazz: KClass<out Any>, fieldName : String) : Field? {
+        return try {
+            (clazz.members.find { it.name == fieldName } as KProperty).javaField
+        } catch (ex : Exception) {
+            null
+        }
+
+    }
+
 
     fun typeSearchViewText(text: String?): ViewAction? {
         return object : ViewAction {

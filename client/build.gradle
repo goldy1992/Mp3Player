@@ -218,6 +218,11 @@ dependencies {
     androidTestImplementation 'com.github.tmurakami:dexopener:2.0.5'
     androidTestImplementation group: 'com.linkedin.dexmaker', name: 'dexmaker-mockito-inline-extended', version: '2.28.0'
     androidTestImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-reflect:1.4.21"
+
+    androidTestImplementation 'androidx.arch.core:core-common:2.1.0'
+    androidTestImplementation 'androidx.arch.core:core-runtime:2.1.0'
+    androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
 
 
     automationImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION

@@ -44,7 +44,7 @@ import javax.inject.Inject
 @AndroidEntryPoint(DestinationFragment::class)
 open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTouchListener.ItemSelectedListener, LogTagger {
 
-    val queryListener : QueryListener = QueryListener()
+    private val queryListener : QueryListener = QueryListener()
 
     lateinit var binding: FragmentSearchResultsBinding
 
@@ -78,7 +78,7 @@ open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTo
         val context : Context = requireContext()
         recyclerView.layoutManager = LinearLayoutManager(context)
         this.toolbar = binding.toolbar
-        subscribeUi(searchResultAdapter)
+        subscribeUi()
         return binding.root
     }
 
@@ -153,15 +153,17 @@ open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTo
 
     }
 
-    private fun subscribeUi(adapter: SearchResultAdapter) {
+    private fun subscribeUi() {
         mediaBrowserAdapter.registerSearchResultListener(viewModel)
-        viewModel.searchResults.observe(viewLifecycleOwner) { result ->
-            if (CollectionUtils.isEmpty(result)) {
-                val toSubmit = mutableListOf(buildEmptyListMediaItem(viewModel.currentQuery))
-                adapter.submitList(toSubmit)
-            } else {
-                adapter.submitList(result)
-            }
+        viewModel.searchResults.observe(viewLifecycleOwner, this::onSearchResult)
+    }
+
+    open fun onSearchResult(result : List<MediaBrowserCompat.MediaItem>) {
+        if (CollectionUtils.isEmpty(result)) {
+            val toSubmit = mutableListOf(buildEmptyListMediaItem(viewModel.currentQuery))
+            searchResultAdapter.submitList(toSubmit)
+        } else {
+            searchResultAdapter.submitList(result)
         }
     }
 
