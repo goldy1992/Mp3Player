@@ -1,23 +1,12 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
-import android.os.Looper
 import android.support.v4.media.session.MediaSessionCompat
-import android.util.Log
 import android.view.View
-import android.widget.SearchView
-import androidx.arch.core.executor.testing.CountingTaskExecutorRule
-import androidx.lifecycle.ViewModelLazy
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
-import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.idling.CountingIdlingResource
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
@@ -25,9 +14,7 @@ import com.github.goldy1992.mp3player.R
 import com.github.goldy1992.mp3player.client.BaseRobot
 import com.github.goldy1992.mp3player.client.FragmentHiltScenario
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
-import com.github.goldy1992.mp3player.client.TestUtils.getField
 import com.github.goldy1992.mp3player.client.TestUtils.typeSearchViewText
-import com.github.goldy1992.mp3player.client.activities.SearchResultsFragmentViewModel
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
 import com.github.goldy1992.mp3player.client.utils.IdlingResources
@@ -41,17 +28,12 @@ import com.nhaarman.mockitokotlin2.verify
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import org.apache.commons.lang3.reflect.FieldUtils
-import org.apache.commons.lang3.reflect.MethodUtils
-import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.Matcher
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.lang.reflect.Field
-import kotlin.reflect.KProperty
 
 @HiltAndroidTest
 @UninstallModules(
@@ -86,7 +68,6 @@ class SearchResultsFragmentTest {
         IdlingRegistry.getInstance().unregister(IdlingResources.idlingResource)
     }
 
-
     @Test
     fun testOnSongItemSelected() {
         scenario.onFragment {
@@ -119,21 +100,13 @@ class SearchResultsFragmentTest {
         }
     }
 
-    @Test
-    fun testNoResultsFound() {
-        /* used as an extra wait mechanism as the SearchFragment is added to the HiltTestActivity
-         dynamically. */
-        BaseRobot().waitForView(withId(R.id.search))
-        scenario.onFragment {
-            this as SearchResultsFragment
-            this.mediaControllerAdapter
-        }
-        val viewAction = typeSearchViewText("guapa")
-        onView(withId(R.id.search))
-               .perform(viewAction)
-        // TODO: set up test to return different values depending on the search query.
-    }
 
+    /**
+     * 2 stages to test:
+     * 1) Type query into search bar and assert that the current query is updated.
+     * 2) Given the current query from stage 1, when no results are found the query should be
+     * displayed as part of the message.
+     */
     @Test
     fun testSearchQuerySent() {
         val expectedQuery = "guapa"
@@ -146,12 +119,16 @@ class SearchResultsFragmentTest {
             spiedMediaBrowserAdapter = spy<MediaBrowserAdapter>(mediaBrowserAdapter)
             this.mediaBrowserAdapter = spiedMediaBrowserAdapter!!
         }
+
+        // Stage 1, type in the query!
         val viewAction = typeSearchViewText(expectedQuery)
         onView(withId(R.id.search))
                 .perform(viewAction)
 
         verify(spiedMediaBrowserAdapter, times(1))!!.search(expectedQuery, null)
 
+
+        // Stage 2, pass response of no results found.
         IdlingResources.idlingResource.increment()
         scenario.onFragment {
             (this as SearchResultsFragment)
