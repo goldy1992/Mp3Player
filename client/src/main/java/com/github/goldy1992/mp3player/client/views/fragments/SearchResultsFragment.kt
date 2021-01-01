@@ -6,7 +6,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.MediaDescriptionCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -27,8 +26,8 @@ import com.github.goldy1992.mp3player.R
 import com.github.goldy1992.mp3player.client.activities.SearchResultsFragmentViewModel
 import com.github.goldy1992.mp3player.databinding.FragmentSearchResultsBinding
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
-import com.github.goldy1992.mp3player.client.views.adapters.MediaItemRecyclerViewAdapter.Companion.buildEmptyListMediaItem
-import com.github.goldy1992.mp3player.client.views.adapters.SearchResultAdapter
+import com.github.goldy1992.mp3player.client.views.adapters.MediaItemListRecyclerViewAdapter.Companion.buildEmptyListMediaItem
+import com.github.goldy1992.mp3player.client.views.adapters.SearchResultAdapterList
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
@@ -55,7 +54,7 @@ open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTo
     lateinit var mediaControllerAdapter : MediaControllerAdapter
 
     @Inject
-    lateinit var searchResultAdapter: SearchResultAdapter
+    lateinit var searchResultAdapter: SearchResultAdapterList
 
     private lateinit var inputMethodManager: InputMethodManager
 

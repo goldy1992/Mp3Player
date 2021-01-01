@@ -5,8 +5,8 @@ import android.support.v4.media.MediaBrowserCompat
 import androidx.fragment.app.viewModels
 import com.github.goldy1992.mp3player.client.viewmodels.MediaListViewModel
 import com.github.goldy1992.mp3player.client.viewmodels.SongListViewModel
-import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecyclerViewAdapter
-import com.github.goldy1992.mp3player.client.views.adapters.MySongViewAdapter
+import com.github.goldy1992.mp3player.client.views.adapters.MediaItemListFastScrollListAdapter
+import com.github.goldy1992.mp3player.client.views.adapters.SongListAdapter
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class SongListFragment : Hilt_SongListFragment() {
 
     @Inject
-    lateinit var mySongViewAdapter: MySongViewAdapter
+    lateinit var songAdapter: SongListAdapter
 
     private val viewModel : SongListViewModel by viewModels()
 
@@ -28,8 +28,8 @@ class SongListFragment : Hilt_SongListFragment() {
         mediaControllerAdapter.playFromMediaId(MediaItemUtils.getLibraryId(item), null)
     }
 
-    override fun getViewAdapter(): MyGenericRecyclerViewAdapter {
-        return mySongViewAdapter
+    override fun getViewAdapter(): MediaItemListFastScrollListAdapter {
+        return songAdapter
     }
 
     override fun logTag(): String {

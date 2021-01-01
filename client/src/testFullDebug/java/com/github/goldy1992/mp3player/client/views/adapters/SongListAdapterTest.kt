@@ -1,6 +1,8 @@
 package com.github.goldy1992.mp3player.client.views.adapters
 
 import android.support.v4.media.MediaBrowserCompat
+import androidx.recyclerview.widget.RecyclerView
+import com.github.goldy1992.mp3player.client.views.viewholders.MyFolderViewHolder
 
 import com.github.goldy1992.mp3player.client.views.viewholders.MySongViewHolder
 import com.github.goldy1992.mp3player.commons.*
@@ -15,21 +17,27 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class MySongViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
-    private var mySongViewAdapter: MySongViewAdapter? = null
+class SongListAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
+
+    private lateinit var mySongViewAdapter: MySongViewAdapterList
 
     private val mySongViewHolder: MySongViewHolder =  mock<MySongViewHolder>()
 
     @Before
     override fun setup() {
         super.setup()
-        mySongViewAdapter = MySongViewAdapter(albumArtPainter)
+        mySongViewAdapter = MySongViewAdapterList(albumArtPainter)
     }
 
+    /**
+     * GIVEN: A [MediaItemType] of [MediaItemType.SONG].
+     * WHEN: A [RecyclerView.ViewHolder] is created using [MyFolderViewAdapterList.onCreateViewHolder].
+     * THEN: A [MyFolderViewHolder] is created.
+     */
     @Test
     fun testOnCreateViewHolder() {
-        val result = mySongViewAdapter!!.onCreateViewHolder(viewGroup, 0) as MySongViewHolder
-        Assert.assertNotNull(result)
+        val result = mySongViewAdapter.onCreateViewHolder(viewGroup, MediaItemType.SONG.value)
+        Assert.assertTrue(result is MySongViewHolder)
     }
 
     @Test

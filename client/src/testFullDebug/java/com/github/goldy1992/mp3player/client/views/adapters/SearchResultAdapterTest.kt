@@ -1,10 +1,8 @@
 package com.github.goldy1992.mp3player.client.views.adapters
 
-import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.goldy1992.mp3player.client.views.viewholders.EmptyListViewHolder
 import com.github.goldy1992.mp3player.client.views.viewholders.MyFolderViewHolder
 import com.github.goldy1992.mp3player.client.views.viewholders.MySongViewHolder
 import com.github.goldy1992.mp3player.client.views.viewholders.NoSearchResultsViewHolder
@@ -21,13 +19,13 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class SearchResultAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
 
-    private var searchResultAdapter: SearchResultAdapter? = null
+    private var searchResultAdapter: SearchResultAdapterList? = null
 
     @Before
     override fun setup() {
         super.setup()
         context = InstrumentationRegistry.getInstrumentation().context
-        searchResultAdapter = SearchResultAdapter(albumArtPainter)
+        searchResultAdapter = SearchResultAdapterList(albumArtPainter)
     }
 
     /**

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemasM.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/menu_item"
     android:background="@android:color/white">
-    <androidx.appcompat.widget.AppCompatTextView
+
+    <TextView
         android:paddingTop="@dimen/default_gap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
-import android.support.v4.media.MediaDescriptionCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +16,8 @@ import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener.ItemSelectedListener
 import com.github.goldy1992.mp3player.client.viewmodels.MediaListViewModel
-import com.github.goldy1992.mp3player.client.views.adapters.MediaItemRecyclerViewAdapter.Companion.buildEmptyListMediaItem
-import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecyclerViewAdapter
+import com.github.goldy1992.mp3player.client.views.adapters.MediaItemListRecyclerViewAdapter.Companion.buildEmptyListMediaItem
+import com.github.goldy1992.mp3player.client.views.adapters.MediaItemListFastScrollListAdapter
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.databinding.FragmentViewPageBinding
@@ -62,14 +61,14 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener, LogTagg
 
     lateinit var binding: FragmentViewPageBinding
 
-    protected abstract fun getViewAdapter() : MyGenericRecyclerViewAdapter
+    protected abstract fun getViewAdapter() : MediaItemListFastScrollListAdapter
 
     @Inject
     lateinit var albumArtPainter: AlbumArtPainter
 
     lateinit var myGenericItemTouchListener : MyGenericItemTouchListener
 
-    private fun subscribeUi(adapter: MyGenericRecyclerViewAdapter, binding: FragmentViewPageBinding) {
+    private fun subscribeUi(adapter: MediaItemListFastScrollListAdapter, binding: FragmentViewPageBinding) {
         viewModel().items.observe(viewLifecycleOwner) { result ->
             if (isEmpty(result)) {
                 val toSubmit = mutableListOf(buildEmptyListMediaItem())

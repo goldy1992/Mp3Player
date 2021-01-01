@@ -1,23 +1,20 @@
 package com.github.goldy1992.mp3player.client.views.adapters
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem
-import android.support.v4.media.MediaDescriptionCompat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.ListPreloader.PreloadModelProvider
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
-import com.github.goldy1992.mp3player.R
 import com.github.goldy1992.mp3player.client.views.viewholders.EmptyListViewHolder
 import com.github.goldy1992.mp3player.client.views.viewholders.MediaItemViewHolder
-import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.databinding.EmptyItemMenuBinding
 import com.l4digital.fastscroll.FastScroller
 
-abstract class MyGenericRecyclerViewAdapter
-    (albumArtPainter: AlbumArtPainter) : MediaItemRecyclerViewAdapter(albumArtPainter),
+abstract class MediaItemListFastScrollListAdapter
+    (albumArtPainter: AlbumArtPainter) : MediaItemListRecyclerViewAdapter(albumArtPainter),
         FastScroller.SectionIndexer,
-        PreloadModelProvider<MediaItem?>{
+        PreloadModelProvider<MediaItem?> {
 
 
     override fun createEmptyViewHolder(parent: ViewGroup): MediaItemViewHolder<ViewBinding> {

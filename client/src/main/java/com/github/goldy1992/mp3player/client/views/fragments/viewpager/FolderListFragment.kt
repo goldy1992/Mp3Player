@@ -5,8 +5,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.goldy1992.mp3player.client.viewmodels.FolderListViewModel
 import com.github.goldy1992.mp3player.client.viewmodels.MediaListViewModel
-import com.github.goldy1992.mp3player.client.views.adapters.MyFolderViewAdapter
-import com.github.goldy1992.mp3player.client.views.adapters.MyGenericRecyclerViewAdapter
+import com.github.goldy1992.mp3player.client.views.adapters.FolderListAdapter
+import com.github.goldy1992.mp3player.client.views.adapters.MediaItemListFastScrollListAdapter
 import com.github.goldy1992.mp3player.client.views.fragments.MainFragmentDirections
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class FolderListFragment : Hilt_FolderListFragment() {
 
     @Inject
-    lateinit var myFolderViewAdapter : MyFolderViewAdapter
+    lateinit var folderAdapter : FolderListAdapter
 
     private val viewModel : FolderListViewModel by viewModels()
 
@@ -29,8 +29,8 @@ class FolderListFragment : Hilt_FolderListFragment() {
         findNavController().navigate(action)
     }
 
-    override fun getViewAdapter(): MyGenericRecyclerViewAdapter {
-        return myFolderViewAdapter
+    override fun getViewAdapter(): MediaItemListFastScrollListAdapter {
+        return folderAdapter
     }
 
 

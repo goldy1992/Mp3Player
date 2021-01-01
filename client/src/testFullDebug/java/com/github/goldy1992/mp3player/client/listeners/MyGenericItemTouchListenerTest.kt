@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener.ItemSelectedListener
-import com.github.goldy1992.mp3player.client.views.adapters.MediaItemRecyclerViewAdapter
-import com.github.goldy1992.mp3player.client.views.adapters.MySongViewAdapter
+import com.github.goldy1992.mp3player.client.views.adapters.MediaItemListRecyclerViewAdapter
+import com.github.goldy1992.mp3player.client.views.adapters.MySongViewAdapterList
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
@@ -47,14 +47,14 @@ class MyGenericItemTouchListenerTest {
         val motionEvent : MotionEvent = mock<MotionEvent>()
         val parentView : RecyclerView = mock<RecyclerView>()
         val childView : View = mock<View>()
-        val viewAdapter : MediaItemRecyclerViewAdapter = MySongViewAdapter(albumArtPainter)
+        val viewAdapterList : MediaItemListRecyclerViewAdapter = MySongViewAdapterList(albumArtPainter)
         val expectedMediaItem : MediaBrowserCompat.MediaItem = MediaItemBuilder("id").build()
-        viewAdapter.submitList(arrayListOf(expectedMediaItem))
+        viewAdapterList.submitList(arrayListOf(expectedMediaItem))
         whenever(motionEvent.x).thenReturn(0f)
         whenever(motionEvent.y).thenReturn(0f)
         whenever(parentView.findChildViewUnder(motionEvent.x, motionEvent.y)).thenReturn(childView)
         whenever(parentView.getChildAdapterPosition(childView)).thenReturn(expectedChildPosition)
-        whenever(parentView.adapter).thenReturn(viewAdapter)
+        whenever(parentView.adapter).thenReturn(viewAdapterList)
         myGenericItemTouchListener.parentView = parentView
 
         val result = myGenericItemTouchListener.onSingleTapConfirmed(motionEvent)

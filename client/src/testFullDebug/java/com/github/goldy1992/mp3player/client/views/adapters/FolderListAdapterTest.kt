@@ -1,34 +1,43 @@
 package com.github.goldy1992.mp3player.client.views.adapters
 
 import android.support.v4.media.MediaBrowserCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.github.goldy1992.mp3player.client.views.viewholders.MyFolderViewHolder
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
+import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class MyFolderViewAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
-    private var myFolderViewAdapter: MyFolderViewAdapter = mock<MyFolderViewAdapter>()
+class FolderListAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
+
+    private lateinit var myFolderViewAdapter: FolderListAdapter
     private val myFolderViewHolder: MyFolderViewHolder = mock<MyFolderViewHolder>()
 
     @Before
     override fun setup() {
         super.setup()
-        myFolderViewAdapter = MyFolderViewAdapter(albumArtPainter)
+        myFolderViewAdapter = FolderListAdapter(albumArtPainter)
     }
 
+    /**
+     * GIVEN: A [MediaItemType] of [MediaItemType.FOLDER].
+     * WHEN: A [RecyclerView.ViewHolder] is created using [FolderListAdapter.onCreateViewHolder].
+     * THEN: A [MyFolderViewHolder] is created.
+     */
     @Test
     fun testOnCreateViewHolder() {
-        val result = myFolderViewAdapter.onCreateViewHolder(viewGroup, 0) as MyFolderViewHolder
-        Assert.assertNotNull(result)
+        val result = myFolderViewAdapter.onCreateViewHolder(viewGroup, MediaItemType.FOLDER.value)
+        assertTrue(result is MyFolderViewHolder)
     }
 
     @Test

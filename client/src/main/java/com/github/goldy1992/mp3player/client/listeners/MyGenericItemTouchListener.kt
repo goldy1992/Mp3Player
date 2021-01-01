@@ -7,7 +7,7 @@ import android.view.MotionEvent
 import androidx.core.view.GestureDetectorCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
-import com.github.goldy1992.mp3player.client.views.adapters.MediaItemRecyclerViewAdapter
+import com.github.goldy1992.mp3player.client.views.adapters.MediaItemListRecyclerViewAdapter
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -39,7 +39,7 @@ class MyGenericItemTouchListener
         val childView = parentView!!.findChildViewUnder(e.x, e.y)
         if (null != childView) {
             val childPosition = parentView!!.getChildAdapterPosition(childView)
-            val myViewAdapter = parentView!!.adapter as MediaItemRecyclerViewAdapter?
+            val myViewAdapter = parentView!!.adapter as MediaItemListRecyclerViewAdapter?
             myViewAdapter!!.currentList[childPosition]
             if (null != myViewAdapter) {
                 itemSelectedListener.itemSelected(myViewAdapter.currentList[childPosition])
