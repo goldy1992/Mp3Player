@@ -19,14 +19,14 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class SongListAdapterTest : MediaItemRecyclerViewAdapterTestBase() {
 
-    private lateinit var mySongViewAdapter: MySongViewAdapterList
+    private lateinit var mySongViewAdapter: SongListAdapter
 
     private val mySongViewHolder: MySongViewHolder =  mock<MySongViewHolder>()
 
     @Before
     override fun setup() {
         super.setup()
-        mySongViewAdapter = MySongViewAdapterList(albumArtPainter)
+        mySongViewAdapter = SongListAdapter(albumArtPainter)
     }
 
     /**
