@@ -7,7 +7,7 @@ apply plugin: 'androidx.navigation.safeargs.kotlin'
 android {
     compileSdkVersion TARGET_SDK_VERION
     buildToolsVersion BUILD_TOOLS_VERSION
-    testBuildType "instrumentation"
+    testBuildType "debug"
 
     buildFeatures {
         viewBinding true
@@ -29,14 +29,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            testCoverageEnabled false
+            testCoverageEnabled true
             debuggable true
             minifyEnabled false
-        }
-        instrumentation {
-            initWith debug
-            testCoverageEnabled true
-            matchingFallbacks = ['debug']
         }
     }
     flavorDimensions flavor_dimen_mode
@@ -58,8 +53,6 @@ android {
                     java.srcDirs += [sharedTestSrcDir]
                     resources.srcDirs += [sharedTestResDir]
                 }
-            }
-            instrumentation {
                 androidTest {
                     java.srcDirs += [sharedTestSrcDir]
                     resources.srcDirs += [sharedTestResDir]
@@ -150,9 +143,9 @@ dependencies {
     debugImplementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
     debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
 
-    instrumentationImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
-    instrumentationImplementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
-    instrumentationImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+//    instrumentationImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
+//    instrumentationImplementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
+//    instrumentationImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
 
 
     implementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
@@ -226,7 +219,7 @@ dependencies {
 
 
     automationImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
-    instrumentationImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: ESPRESSO_CORE_VERSION
+   debugImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: ESPRESSO_CORE_VERSION
     androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: ESPRESSO_CORE_VERSION
 
 }
