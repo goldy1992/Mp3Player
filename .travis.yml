@@ -52,7 +52,7 @@ addons:
 
 script:
 - jdk_switcher use oraclejdk8
-- ./gradlew clean jacocoTestReportDebug -PdisablePreDex --stacktrace
+- ./gradlew clean jacocoUnitTestReport -PdisablePreDex --stacktrace
 # Install the latest JDK to support compatibility with Sonar Cloud.
 - source ./travis/install-jdk.sh
 - sonar-scanner -D sonar.java.libraries=${ANDROID_HOME}/platforms/${ANDROID_API}/android.jar
