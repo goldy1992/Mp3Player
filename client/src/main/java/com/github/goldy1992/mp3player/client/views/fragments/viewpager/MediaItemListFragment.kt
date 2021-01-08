@@ -68,7 +68,7 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener, LogTagg
 
     lateinit var myGenericItemTouchListener : MyGenericItemTouchListener
 
-    private fun subscribeUi(adapter: MediaItemListFastScrollListAdapter, binding: FragmentViewPageBinding) {
+    private fun subscribeUi(adapter: MediaItemListFastScrollListAdapter) {
         viewModel().items.observe(viewLifecycleOwner) { result ->
             if (isEmpty(result)) {
                 val toSubmit = mutableListOf(buildEmptyListMediaItem())
@@ -97,7 +97,7 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener, LogTagg
         if (binding.recyclerView.layoutManager == null) {
             binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
-        subscribeUi(getViewAdapter(), binding)
+        subscribeUi(getViewAdapter())
         return binding.root
     }
 
