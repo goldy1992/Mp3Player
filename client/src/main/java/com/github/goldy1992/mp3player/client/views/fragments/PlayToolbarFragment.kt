@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.databinding.FragmentPlaybackToolbarBinding
+import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.databinding.FragmentPlaybackToolbarBinding
 import com.github.goldy1992.mp3player.client.views.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToNextButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToPreviousButton

@@ -9,8 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.commit
-import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.databinding.FragmentFolderBinding
+import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.databinding.FragmentFolderBinding
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.MediaItemListFragment
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.SongListFragment
 import com.github.goldy1992.mp3player.commons.LogTagger

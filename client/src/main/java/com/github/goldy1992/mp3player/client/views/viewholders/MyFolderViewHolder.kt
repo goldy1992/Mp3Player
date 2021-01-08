@@ -1,15 +1,23 @@
 package com.github.goldy1992.mp3player.client.views.viewholders
 
+import android.content.Context
 import android.support.v4.media.MediaBrowserCompat
-import android.view.View
 import android.widget.TextView
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import com.github.goldy1992.mp3player.databinding.FolderItemMenuBinding
 
-class MyFolderViewHolder(itemView: View, albumArtPainter: AlbumArtPainter?) : MediaItemViewHolder(itemView, albumArtPainter) {
-    private val folderName: TextView
-    private val folderPath: TextView
+class MyFolderViewHolder
+
+    constructor(context : Context,
+                binding: FolderItemMenuBinding,
+                albumArtPainter: AlbumArtPainter?)
+
+    : MediaItemViewHolder<FolderItemMenuBinding>(context, binding, albumArtPainter) {
+
+    private val folderName: TextView = binding.folderName
+    private val folderPath: TextView = binding.folderPath
+
     override fun bindMediaItem(item: MediaBrowserCompat.MediaItem) {
         val folderNameText = extractFolderName(item)
         folderName.text = folderNameText
@@ -25,8 +33,4 @@ class MyFolderViewHolder(itemView: View, albumArtPainter: AlbumArtPainter?) : Me
         return MediaItemUtils.getDirectoryPath(song)
     }
 
-    init {
-        folderName = itemView.findViewById(R.id.folderName)
-        folderPath = itemView.findViewById(R.id.folderPath)
-    }
 }

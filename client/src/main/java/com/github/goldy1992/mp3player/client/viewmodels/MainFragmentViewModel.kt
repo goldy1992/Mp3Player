@@ -11,6 +11,9 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**
+ * [ViewModel] class for the [com.github.goldy1992.mp3player.client.views.fragments.MainFragment].
+ */
 class MainFragmentViewModel
 
     @ViewModelInject

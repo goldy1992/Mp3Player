@@ -7,7 +7,7 @@ import android.view.View
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Observer
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.R
 import com.github.goldy1992.mp3player.commons.Constants
 import dagger.hilt.android.qualifiers.ActivityContext
 import javax.inject.Inject

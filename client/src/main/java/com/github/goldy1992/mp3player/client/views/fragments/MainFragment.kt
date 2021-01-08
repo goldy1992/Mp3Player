@@ -10,11 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.observe
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.databinding.FragmentMainBinding
+import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.databinding.FragmentMainBinding
 import com.github.goldy1992.mp3player.client.viewmodels.MainFragmentViewModel
 import com.github.goldy1992.mp3player.client.views.adapters.MyPagerAdapter
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.FolderListFragment
@@ -101,7 +100,7 @@ class MainFragment : Hilt_MainFragment(), LogTagger {
 
         } // observe
              viewModel.menuCategories = mediaBrowserAdapter.subscribeToRoot() as MutableLiveData<List<MediaBrowserCompat.MediaItem>>
-        }
+    }
 
     override fun lockDrawerLayout(): Boolean {
         return false

@@ -11,7 +11,8 @@ enum class MediaItemType(
     SONGS(1, "Songs", null),
     SONG(2, "Song", null),
     FOLDERS(3, "Folders", null),
-    FOLDER(4, "Folder", null);
+    FOLDER(4, "Folder", null),
+    NONE(5, "None", null);
 
     val value = ordinal
 

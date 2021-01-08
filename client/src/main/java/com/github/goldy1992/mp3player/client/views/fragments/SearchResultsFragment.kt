@@ -18,28 +18,32 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.SearchView
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.R
 import com.github.goldy1992.mp3player.client.activities.SearchResultsFragmentViewModel
-import com.github.goldy1992.mp3player.client.databinding.FragmentSearchResultsBinding
+import com.github.goldy1992.mp3player.databinding.FragmentSearchResultsBinding
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
-import com.github.goldy1992.mp3player.client.views.adapters.SearchResultAdapter
+import com.github.goldy1992.mp3player.client.views.adapters.MediaItemListRecyclerViewAdapter.Companion.buildEmptyListMediaItem
+import com.github.goldy1992.mp3player.client.views.adapters.SearchResultAdapterList
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import dagger.hilt.android.AndroidEntryPoint
+import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils.isNotEmpty
 import javax.inject.Inject
 
-
+/**
+ * Fragment to represent the view that will display the search interface and results when the user
+ * wants to perform a search,
+ */
 @AndroidEntryPoint(DestinationFragment::class)
 open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTouchListener.ItemSelectedListener, LogTagger {
 
-    val queryListener : QueryListener = QueryListener()
+    private val queryListener : QueryListener = QueryListener()
 
     lateinit var binding: FragmentSearchResultsBinding
 
@@ -50,7 +54,7 @@ open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTo
     lateinit var mediaControllerAdapter : MediaControllerAdapter
 
     @Inject
-    lateinit var searchResultAdapter: SearchResultAdapter
+    lateinit var searchResultAdapter: SearchResultAdapterList
 
     private lateinit var inputMethodManager: InputMethodManager
 
@@ -73,8 +77,7 @@ open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTo
         val context : Context = requireContext()
         recyclerView.layoutManager = LinearLayoutManager(context)
         this.toolbar = binding.toolbar
-        subscribeUi(searchResultAdapter)
-
+        subscribeUi()
         return binding.root
     }
 
@@ -141,6 +144,7 @@ open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTo
 
         private fun performSearch(query: String?): Boolean {
             if (isNotEmpty(query)) {
+                viewModel.currentQuery = query!!
                 mediaBrowserAdapter.search(query, null)
             }
             return true
@@ -148,10 +152,17 @@ open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTo
 
     }
 
-    private fun subscribeUi(adapter: SearchResultAdapter) {
+    private fun subscribeUi() {
         mediaBrowserAdapter.registerSearchResultListener(viewModel)
-        viewModel.searchResults.observe(viewLifecycleOwner) { result ->
-            adapter.submitList(result)
+        viewModel.searchResults.observe(viewLifecycleOwner, this::onSearchResult)
+    }
+
+    open fun onSearchResult(result : List<MediaBrowserCompat.MediaItem>) {
+        if (CollectionUtils.isEmpty(result)) {
+            val toSubmit = mutableListOf(buildEmptyListMediaItem(viewModel.currentQuery))
+            searchResultAdapter.submitList(toSubmit)
+        } else {
+            searchResultAdapter.submitList(result)
         }
     }
 
@@ -175,7 +186,7 @@ open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTo
         }
     }
 
-    fun showKeyboard() {
+    private fun showKeyboard() {
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, HIDE_IMPLICIT_ONLY)
     }
 

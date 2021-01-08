@@ -4,34 +4,63 @@ jacoco {
     toolVersion = "$JACOCO_VERSION"
 }
 
+def fileFilter = [
+        '**/R.class',
+        '**/R$*.class',
+        '**/BuildConfig.*',
+        '**/Manifest*.*',
+        '**/*Test*.*',
+        'android/**/*.*',
+        '**/*$[0-9].*',
+        '**/dagger/**',
+        '**/databinding/**',
+        '**hilt_aggregated_deps**',
+        '**/Hilt_**'
+]
+
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
 
-task jacocoTestReportDebug(type: JacocoReport, dependsOn: ['testUnitTestDebugUnitTest']) {
+/**
+ * Generates a JaCoCo Report for just the unit tests.
+ */
+task jacocoUnitTestReport(type: JacocoReport, dependsOn: ['testFullDebugUnitTest']) {
 
     reports {
         xml.enabled = true
         html.enabled = true
     }
 
-    def fileFilter = [
-            '**/R.class',
-            '**/R$*.class',
-            '**/BuildConfig.*',
-            '**/Manifest*.*',
-            '**/*Test*.*',
-            'android/**/*.*',
-            '**/*$[0-9].*',
-            '**/dagger/**',
-            '**/databinding/**'
-    ]
-
     def mainSrc = "$project.projectDir/src/main/java"
-    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/unitTestDebug", excludes: fileFilter)
-    def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/unitTestDebug", excludes: fileFilter)
+    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebug", excludes: fileFilter)
+    def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/fullDebug", excludes: fileFilter)
 
     sourceDirectories.from = files([mainSrc])
     classDirectories.from = files([mainClasses, javaClasses])
-    executionData.from = "$project.buildDir/jacoco/testUnitTestDebugUnitTest.exec"
+    executionData.from = "$projectDir/jacoco.exec"
+}
+
+/**
+ * Generates a JaCoCo Report that aggregates the test coverage for the unit tests and
+ * instrumentation tests.
+ */
+task jacocoCombinedUnitTestAndroidTestReport(type: JacocoReport, dependsOn: ['testFullDebugUnitTest', 'connectedFullDebugAndroidTest']) {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def mainSrc = "$project.projectDir/src/main/java"
+    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebug", excludes: fileFilter)
+    def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/fullDebug", excludes: fileFilter)
+
+
+    sourceDirectories.from = files([mainSrc])
+    classDirectories.from = files([mainClasses, javaClasses])
+
+    // combine unit test jacoco.exec file with the android test coverage.ec file
+    executionData.from = fileTree(dir: "$projectDir", include: ["/jacoco.exec",
+                                "build/outputs/code_coverage/fullDebugAndroidTest/connected/*.ec"])
 }
