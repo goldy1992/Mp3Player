@@ -13,6 +13,8 @@ jobs:
         uses: android-actions/setup-android@v2
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+      - name: Git fetch origin
+        run: git fetch origin
       - name: Build with Gradle
         run: ./gradlew clean sonarqube -PdisablePreDex --stacktrace
         env:
