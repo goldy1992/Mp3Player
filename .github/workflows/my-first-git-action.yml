@@ -14,7 +14,7 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
       - name: Git fetch origin
-        run: git fetch origin
+        run: git fetch --all
       - name: Build with Gradle
         run: ./gradlew clean sonarqube -PdisablePreDex --stacktrace
         env:
