@@ -87,7 +87,6 @@ task jacocoTestReportDebug(type: JacocoReport) {
         xml.enabled = true
         html.enabled = true
     }
-        println("sss $project.android.applicationVariants")
     def fileFilter = [
             '**/R.class',
             '**/R$*.class',
