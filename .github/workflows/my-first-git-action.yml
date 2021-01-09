@@ -14,4 +14,4 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
       - name: Build with Gradle
-        run: ./gradlew clean sonarqube -Dsonar.login=${{ secrets.SONAR_TOKEN }}  jacocoUnitTestReport -PdisablePreDex --stacktrace
+        run: ./gradlew clean sonarqube -Dsonar.login=${{ secrets.SONAR_TOKEN }} -PdisablePreDex --stacktrace

@@ -99,20 +99,42 @@ plugins {
     id "org.sonarqube" version "3.0"
 }
 
+sonarqube {
+    properties {
+        property 'sonar.projectName', 'Mp3Player'
+        property 'sonar.projectKey', 'goldy1992_Mp3Player'
+        property 'sonar.organization', 'goldy1992-github'
+        property 'sonar.projectVersion', '1.0'
+        property 'sonar.scm.provider', 'git'
+        property 'sonar.links.scm', 'https://github.com/goldy1992/Mp3Player.git'
+        property 'sonar.coverage.exclusions', '**Test**,\
+                                              **IAudioService.java,\
+                                              **dagger**,\
+                                              **Injector**,\
+                                              **LoggingUtils.*,\
+                                              **android**,\
+                                              **/res/**,\
+                                              **/databinding/**,\
+                                              **hilt_aggregated_deps**,\
+                                              **/Hilt_**'
+    }
+}
+
 allprojects {
     repositories {
         google()
         jcenter()
         maven { url 'https://jitpack.io' }
     }
+
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
-
-    tasks["sonarqube"].dependsOn "jacocoUnitTestReport"
 
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+rootProject.tasks["sonarqube"].dependsOn ':client:jacocoUnitTestReport'

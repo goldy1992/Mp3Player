@@ -108,3 +108,11 @@ task jacocoTestReportDebug(type: JacocoReport, dependsOn: ['testDebugUnitTest'])
     executionData.from = "$project.buildDir/jacoco/testDebugUnitTest.exec"
 
 }
+
+sonarqube {
+    properties {
+        property 'sonar.java.binaries', "${buildDir}/intermediates/javac/fullDebug/classes"
+        property 'sonar.coverage.jacoco.xmlReportPaths', "${buildDir}/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
+        property 'sonar.sources', "${projectDir}/src/main"
+    }
+}

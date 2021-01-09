@@ -227,3 +227,11 @@ dependencies {
 kapt {
     correctErrorTypes true
 }
+
+sonarqube {
+    properties {
+        property 'sonar.java.binaries', "${buildDir}/intermediates/javac/fullDebug/classes"
+        property 'sonar.coverage.jacoco.xmlReportPaths', "${buildDir}/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
+        property 'sonar.sources', "${projectDir}/src/main"
+    }
+}
