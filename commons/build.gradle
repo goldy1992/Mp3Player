@@ -105,7 +105,7 @@ task jacocoUnitTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) 
 
     sourceDirectories.from = files([mainSrc])
     classDirectories.from = files([mainClasses])
-    executionData.from = "$project.buildDir/jacoco/testDebugUnitTest.exec"
+    executionData.from = "$projectDir/jacoco.exec"
 
 }
 
