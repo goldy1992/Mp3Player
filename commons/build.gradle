@@ -82,7 +82,7 @@ dependencies {
 
 }
 
-task jacocoTestReportDebug(type: JacocoReport) {
+task jacocoUnitTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
     reports {
         xml.enabled = true
         html.enabled = true
@@ -110,8 +110,8 @@ task jacocoTestReportDebug(type: JacocoReport) {
 
 sonarqube {
     properties {
-        property 'sonar.java.binaries', "${buildDir}/intermediates/javac/fullDebug/classes"
-        property 'sonar.coverage.jacoco.xmlReportPaths', "${buildDir}/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
-        property 'sonar.sources', "${projectDir}/src/main"
+        property 'sonar.java.binaries', "build/intermediates/javac/fullDebug/classes"
+        property 'sonar.coverage.jacoco.xmlReportPaths', "build/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
+        property 'sonar.sources', "src/main"
     }
 }
