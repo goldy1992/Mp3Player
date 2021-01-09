@@ -137,4 +137,9 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-rootProject.tasks["sonarqube"].dependsOn ':client:jacocoUnitTestReport'
+rootProject.tasks["sonarqube"].dependsOn {
+    List<String> list = new ArrayList<String>()
+    list.add(':client:jacocoUnitTestReport')
+    list.add(':service:jacocoUnitTestReport')
+//    list.add(':commons:jacocoUnitTestReport')
+    return list}

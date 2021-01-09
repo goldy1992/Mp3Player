@@ -82,12 +82,12 @@ dependencies {
 
 }
 
-task jacocoTestReportDebug(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+task jacocoTestReportDebug(type: JacocoReport) {
     reports {
         xml.enabled = true
         html.enabled = true
     }
-
+        println("sss $project.android.applicationVariants")
     def fileFilter = [
             '**/R.class',
             '**/R$*.class',
