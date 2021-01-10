@@ -104,7 +104,7 @@ sonarqube {
         property 'sonar.projectKey', 'goldy1992_Mp3Player'
         property 'sonar.name', 'Mp3Player'
         property 'sonar.organization', 'goldy1992-github'
-        property 'sonar.host.url', "https://sonarcloud.io"
+        property 'sonar.host.url', 'https://sonarcloud.io'
         property 'sonar.projectVersion', '1.0'
         property 'sonar.scm.provider', 'git'
         property 'sonar.log.level', 'debug'

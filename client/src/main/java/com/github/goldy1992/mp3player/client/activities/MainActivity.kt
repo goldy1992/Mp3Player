@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client.activities
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.annotation.VisibleForTesting
 import androidx.drawerlayout.widget.DrawerLayout
@@ -45,6 +46,7 @@ open class MainActivity : Hilt_MainActivity(),
         private set
 
     override fun initialiseView(): Boolean {
+        Log.d(logTag(), "change some code")
         return true
     }
 
