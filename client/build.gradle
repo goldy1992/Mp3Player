@@ -231,7 +231,8 @@ kapt {
 sonarqube {
     properties {
         property 'sonar.java.binaries', "build/intermediates/javac/fullDebug/classes,build/tmp/kotlin-classes/fullDebug"
-        property 'sonar.coverage.jacoco.xmlReportPaths', "build/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
+//        property 'sonar.coverage.jacoco.xmlReportPaths', "build/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
+        property 'sonar.jacoco.reportPaths', "build/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
         property 'sonar.sources', "src/main/java"
         androidVariant 'fullDebug'
     }
