@@ -79,11 +79,11 @@ android {
                 outputs.upToDateWhen { false }
                 showStandardStreams = true
             }
-            jacoco {
-                includeNoLocationClasses = true
-                includes = ['com/github/goldy1992/mp3player/service/**']
-                excludes =  EXCLUDE_LIST
-            }
+//            jacoco {
+//                includeNoLocationClasses = true
+//                includes = ['com/github/goldy1992/mp3player/service/**']
+//                excludes =  EXCLUDE_LIST
+//            }
         }
     }
 }
