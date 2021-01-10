@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'jacoco'
+//apply from: rootProject.file("jacoco-with-test-support.gradle")
 
 android {
     compileSdkVersion TARGET_SDK_VERION
@@ -48,10 +48,10 @@ android {
                 outputs.upToDateWhen {false}
                 showStandardStreams = true
             }
-            jacoco {
-                includeNoLocationClasses = true
-                excludes = ['jdk.internal.*']
-            }
+//            jacoco {
+//                includeNoLocationClasses = true
+//                excludes = ['jdk.internal.*']
+//            }
         }
     }
 
@@ -83,36 +83,40 @@ dependencies {
 
 }
 
-task jacocoUnitTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-    def fileFilter = [
-            '**/R.class',
-            '**/R$*.class',
-            '**/BuildConfig.*',
-            '**/Manifest*.*',
-            '**/*Test*.*',
-            'android/**/*.*',
-            '**/*$[0-9].*',
-            '**/dagger/**',
-            '**/databinding/**'
-    ]
+//task jacocoUnitTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+//    reports {
+//        xml.enabled = true
+//        html.enabled = true
+//    }
+//    def fileFilter = [
+//            '**/R.class',
+//            '**/R$*.class',
+//            '**/BuildConfig.*',
+//            '**/Manifest*.*',
+//            '**/*Test*.*',
+//            'android/**/*.*',
+//            '**/*$[0-9].*',
+//            '**/dagger/**',
+//            '**/databinding/**'
+//    ]
+//
+//    def mainSrc = "$project.projectDir/src/main/java"
+//    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+//
+//    sourceDirectories.from = files([mainSrc])
+//    classDirectories.from = files([mainClasses])
+//    executionData.from = "$projectDir/jacoco.exec"
+//
+//}
 
-    def mainSrc = "$project.projectDir/src/main/java"
-    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
-
-    sourceDirectories.from = files([mainSrc])
-    classDirectories.from = files([mainClasses])
-    executionData.from = "$projectDir/jacoco.exec"
-
-}
+//sonarqube {
+//    properties {
+//        property 'sonar.java.binaries', "build/intermediates/javac/fullDebug/classes"
+//        property 'sonar.coverage.jacoco.xmlReportPaths', "build/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
+//        property 'sonar.sources', "src/main"
+//    }
+//}
 
 sonarqube {
-    properties {
-        property 'sonar.java.binaries', "build/intermediates/javac/fullDebug/classes"
-        property 'sonar.coverage.jacoco.xmlReportPaths', "build/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
-        property 'sonar.sources', "src/main"
-    }
+    skipProject = true
 }

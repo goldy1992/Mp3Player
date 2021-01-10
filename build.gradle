@@ -101,11 +101,13 @@ plugins {
 
 sonarqube {
     properties {
-        property 'sonar.projectName', 'Mp3Player'
         property 'sonar.projectKey', 'goldy1992_Mp3Player'
         property 'sonar.organization', 'goldy1992-github'
+        property 'sonar.host.url', "https://sonarcloud.io"
         property 'sonar.projectVersion', '1.0'
         property 'sonar.scm.provider', 'git'
+        property 'sonar.log.level', 'DEBUG'
+        property 'sonar.scanner.dumpToFile', 'sonarLogFile'
         property 'sonar.links.scm', 'https://github.com/goldy1992/Mp3Player.git'
         property 'sonar.coverage.exclusions', '**Test**,\
                                               **IAudioService.java,\
@@ -137,9 +139,9 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-rootProject.tasks["sonarqube"].dependsOn {
-    List<String> list = new ArrayList<String>()
-    list.add(':client:jacocoUnitTestReport')
-    list.add(':service:jacocoUnitTestReport')
-    list.add(':commons:jacocoUnitTestReport')
-    return list}
+//rootProject.tasks["sonarqube"].dependsOn {
+//    List<String> list = new ArrayList<String>()
+//    list.add(':client:jacocoUnitTestReport')
+//    list.add(':service:jacocoUnitTestReport')
+//    list.add(':commons:jacocoUnitTestReport')
+//    return list}

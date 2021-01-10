@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
-apply from: rootProject.file("jacoco-with-test-support.gradle")
+//apply from: rootProject.file("jacoco-with-test-support.gradle")
 
 android {
     compileSdkVersion TARGET_SDK_VERION
@@ -31,11 +31,6 @@ android {
             testCoverageEnabled false
             debuggable true
             minifyEnabled false
-        }
-        instrumentation {
-            initWith debug
-            testCoverageEnabled true
-            matchingFallbacks = ['debug']
         }
     }
     flavorDimensions flavor_dimen_mode
@@ -133,10 +128,14 @@ dependencies {
 
 }
 
+//sonarqube {
+//    properties {
+//        property 'sonar.java.binaries', "build/intermediates/javac/fullDebug/classes"
+//        property 'sonar.coverage.jacoco.xmlReportPaths', "build/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
+//        property 'sonar.sources', "src/main"
+//    }
+//}
+
 sonarqube {
-    properties {
-        property 'sonar.java.binaries', "build/intermediates/javac/fullDebug/classes"
-        property 'sonar.coverage.jacoco.xmlReportPaths', "build/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
-        property 'sonar.sources', "src/main"
-    }
+    skipProject = true
 }

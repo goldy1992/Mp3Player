@@ -18,6 +18,10 @@ def fileFilter = [
         '**/Hilt_**'
 ]
 
+def applicableProductFlavor = "full"
+
+//project.parent.tasks["sonarqube"].dependsOn project.name + ":jacocoUnitTestReport"
+
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
@@ -25,21 +29,21 @@ tasks.withType(Test) {
 /**
  * Generates a JaCoCo Report for just the unit tests.
  */
-task jacocoUnitTestReport(type: JacocoReport, dependsOn: ['testFullDebugUnitTest']) {
-
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-
-    def mainSrc = "$project.projectDir/src/main/java"
-    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebug", excludes: fileFilter)
-    def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/fullDebug", excludes: fileFilter)
-
-    sourceDirectories.from = files([mainSrc])
-    classDirectories.from = files([mainClasses, javaClasses])
-    executionData.from = "$projectDir/jacoco.exec"
-}
+//task jacocoUnitTestReport(type: JacocoReport, dependsOn: ['testFullDebugUnitTest']) {
+//
+//    reports {
+//        xml.enabled = true
+//        html.enabled = true
+//    }
+//
+//    def mainSrc = "$project.projectDir/src/main/java"
+//    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebug", excludes: fileFilter)
+//    def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/fullDebug", excludes: fileFilter)
+//
+//    sourceDirectories.from = files([mainSrc])
+//    classDirectories.from = files([mainClasses, javaClasses])
+//    executionData.from = "$projectDir/jacoco.exec"
+//}
 
 /**
  * Generates a JaCoCo Report that aggregates the test coverage for the unit tests and
@@ -64,3 +68,50 @@ task jacocoCombinedUnitTestAndroidTestReport(type: JacocoReport, dependsOn: ['te
     executionData.from = fileTree(dir: "$projectDir", include: ["/jacoco.exec",
                                 "build/outputs/code_coverage/fullDebugAndroidTest/connected/*.ec"])
 }
+
+
+
+project.afterEvaluate {
+    // Grab all build types and product flavors
+    def buildTypes = android.buildTypes.collect {
+        type -> type.name
+    }
+
+    def buildType = ''
+    if (buildTypes.contains("debug")) {
+        buildType = "debug".capitalize()
+    }
+
+
+    def productFlavors = android.productFlavors.collect {
+        flavor -> flavor.name
+    }
+
+    def flavor = ''
+    if (!productFlavors?.isEmpty() && productFlavors.contains(applicableProductFlavor) ) {
+        flavor = applicableProductFlavor.capitalize()
+    }
+
+    def buildVariant = "${flavor}${buildType}"
+
+    task jacocoUnitTestReport(type: JacocoReport, dependsOn: ["test${buildVariant}UnitTest"]) {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports on the ${buildVariant} build."
+        reports {
+            xml.enabled = true
+            html.enabled = true
+        }
+
+        def mainSrc = "$project.projectDir/src/main/java"
+        def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/${buildVariant}", excludes: fileFilter)
+        def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/${buildVariant}", excludes: fileFilter)
+
+        sourceDirectories.from = files([mainSrc])
+        classDirectories.from = files([mainClasses, javaClasses])
+        executionData.from = "$projectDir/jacoco.exec"
+    }
+
+  //  project.parent.tasks["sonarqube"].dependsOn project.name + ":jacocoUnitTestReport"
+}
+
+
