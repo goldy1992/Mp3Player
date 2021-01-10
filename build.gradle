@@ -102,11 +102,12 @@ plugins {
 sonarqube {
     properties {
         property 'sonar.projectKey', 'goldy1992_Mp3Player'
+        property 'sonar.name', 'Mp3Player'
         property 'sonar.organization', 'goldy1992-github'
         property 'sonar.host.url', "https://sonarcloud.io"
         property 'sonar.projectVersion', '1.0'
         property 'sonar.scm.provider', 'git'
-        property 'sonar.log.level', 'DEBUG'
+        property 'sonar.log.level', 'debug'
         property 'sonar.scanner.dumpToFile', 'sonarLogFile'
         property 'sonar.links.scm', 'https://github.com/goldy1992/Mp3Player.git'
         property 'sonar.coverage.exclusions', '**Test**,\
