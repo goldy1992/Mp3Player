@@ -48,10 +48,10 @@ android {
                 outputs.upToDateWhen {false}
                 showStandardStreams = true
             }
-//            jacoco {
-//                includeNoLocationClasses = true
-//                excludes = ['jdk.internal.*']
-//            }
+            jacoco {
+                includeNoLocationClasses = true
+                excludes = ['jdk.internal.*']
+            }
         }
     }
 
@@ -109,14 +109,10 @@ dependencies {
 //
 //}
 
-//sonarqube {
-//    properties {
-//        property 'sonar.java.binaries', "build/intermediates/javac/fullDebug/classes"
-//        property 'sonar.coverage.jacoco.xmlReportPaths', "build/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
-//        property 'sonar.sources', "src/main"
-//    }
-//}
-
 sonarqube {
-    skipProject = true
+    properties {
+        property 'sonar.java.binaries', "build/intermediates/javac/fullDebug/classes,build/tmp/kotlin-classes/debug"
+        property 'sonar.coverage.jacoco.xmlReportPaths', "build/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
+        property 'sonar.sources', "src/main"
+    }
 }
