@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- *
+ * The Main Activity
  */
 @AndroidEntryPoint(MediaActivityCompat::class)
 open class MainActivity : Hilt_MainActivity(),
