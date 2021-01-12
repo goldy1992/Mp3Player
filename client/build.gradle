@@ -234,7 +234,7 @@ sonarqube {
         property 'sonar.java.binaries', "${project.buildDir}/intermediates/javac/fullDebug/classes,${project.buildDir}/tmp/kotlin-classes/fullDebug"
         property 'sonar.coverage.jacoco.xmlReportPaths', "${project.buildDir}/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
         property 'sonar.junit.reportPaths', "${project.buildDir}/test-results/testFullDebugUnitTest"
-        property 'sonar.sources', "${projectDir}/src/main/java"
+      //  property 'sonar.sources', "${projectDir}/src/main/java"
         androidVariant 'fullDebug'
     }
 }
