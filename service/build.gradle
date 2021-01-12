@@ -131,10 +131,10 @@ dependencies {
 sonarqube {
     androidVariant 'fullDebug'
     properties {
-        property 'sonar.java.binaries', "build/intermediates/javac/fullDebug/classes"
-        property 'sonar.coverage.jacoco.xmlReportPaths', "build/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
-        property 'sonar.junit.reportPaths', "build/test-results/testFullDebugUnitTest"
-        property 'sonar.sources', "src/main/java"
+        property 'sonar.java.binaries', "${project.buildDir}/intermediates/javac/fullDebug/classes"
+        property 'sonar.coverage.jacoco.xmlReportPaths', "${project.buildDir}/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
+        property 'sonar.junit.reportPaths', "${project.buildDir}/test-results/testFullDebugUnitTest"
+        property 'sonar.sources', "${projectDir}/src/main/java"
     }
 }
 
