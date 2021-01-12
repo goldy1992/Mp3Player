@@ -83,36 +83,12 @@ dependencies {
 
 }
 
-//task jacocoUnitTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
-//    reports {
-//        xml.enabled = true
-//        html.enabled = true
-//    }
-//    def fileFilter = [
-//            '**/R.class',
-//            '**/R$*.class',
-//            '**/BuildConfig.*',
-//            '**/Manifest*.*',
-//            '**/*Test*.*',
-//            'android/**/*.*',
-//            '**/*$[0-9].*',
-//            '**/dagger/**',
-//            '**/databinding/**'
-//    ]
-//
-//    def mainSrc = "$project.projectDir/src/main/java"
-//    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
-//
-//    sourceDirectories.from = files([mainSrc])
-//    classDirectories.from = files([mainClasses])
-//    executionData.from = "$projectDir/jacoco.exec"
-//
-//}
-
 sonarqube {
+    androidVariant 'debug'
     properties {
-        property 'sonar.java.binaries', "build/intermediates/javac/fullDebug/classes,build/tmp/kotlin-classes/debug"
+        property 'sonar.java.binaries', "build/intermediates/javac/debug/classes,build/tmp/kotlin-classes/debug"
         property 'sonar.coverage.jacoco.xmlReportPaths', "build/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
-        property 'sonar.sources', "src/main"
+        property 'sonar.junit.reportPaths', "build/test-results/testDebugUnitTest"
+        property 'sonar.sources', "src/main/java"
     }
 }

@@ -28,7 +28,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            testCoverageEnabled false
+            testCoverageEnabled true
             debuggable true
             minifyEnabled false
         }
@@ -129,10 +129,12 @@ dependencies {
 }
 
 sonarqube {
+    androidVariant 'fullDebug'
     properties {
         property 'sonar.java.binaries', "build/intermediates/javac/fullDebug/classes"
         property 'sonar.coverage.jacoco.xmlReportPaths', "build/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
-        property 'sonar.sources', "src/main"
+        property 'sonar.junit.reportPaths', "build/test-results/testFullDebugUnitTest"
+        property 'sonar.sources', "src/main/java"
     }
 }
 
