@@ -132,8 +132,8 @@ sonarqube {
         property "sonar.organization", "goldy1992-github"
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.coverage.exclusions", "**Test**,**IAudioService.java,**dagger**,**Injector**,**LoggingUtils.*,**android**,**/res/**,**/databinding/**,**hilt_aggregated_deps**,**/Hilt_**"
-        property 'sonar.java.binaries', "${javaBinaries}"
-        property 'sonar.coverage.jacoco.xmlReportPaths', "${xmlReportPaths}"
+     //   property 'sonar.java.binaries', "${javaBinaries}"
+    //    property 'sonar.coverage.jacoco.xmlReportPaths', "${xmlReportPaths}"
       //  property 'sonar.junit.reportPaths', "${testReports}"
   //      property 'sonar.sources', "${sources}"
 
