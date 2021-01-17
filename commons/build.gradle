@@ -77,6 +77,7 @@ dependencies {
 
     testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
     testImplementation group:'com.nhaarman.mockitokotlin2', name: 'mockito-kotlin', version: MOCKITO_KOTLIN
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: mockito_inline_version
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
     implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version

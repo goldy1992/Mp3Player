@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.views.viewholders
 
 import android.net.Uri
+import android.os.Build
 import android.view.LayoutInflater
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
@@ -15,8 +16,10 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
+@Config(sdk = [Build.VERSION_CODES.P])
 class MySongViewHolderTest : MediaItemViewHolderTestBase<MySongViewHolder>() {
     lateinit var view : SongItemMenuBinding
 
