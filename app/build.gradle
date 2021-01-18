@@ -172,6 +172,6 @@ dependencies {
 
 }
 
-//sonarqube {
-//    skipProject = true
-//}
+sonarqube {
+    skipProject = true
+}
