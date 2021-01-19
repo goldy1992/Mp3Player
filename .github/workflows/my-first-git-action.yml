@@ -39,9 +39,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      - name: 'Upload Artifact'
         uses: actions/upload-artifact@v2
         with:
           name: test_report.xml
-          path: ~/**/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml
+          path: client/build/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml
           retention-days: 5
