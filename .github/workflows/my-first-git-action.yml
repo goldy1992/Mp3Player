@@ -1,12 +1,12 @@
 name: my-first-git-action
-on:
+on: [push]
   # Trigger the workflow on push or pull request,
   # but only for the main branch
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
+#  pull_request:
+#    types:
+#      - opened
+#      - synchronize
+#      - reopened
 jobs:
   run-unit-tests:
     runs-on: ubuntu-latest
@@ -35,7 +35,7 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
       - name: Build with Gradle
-        run: ./gradlew clean sonarqube --stacktrace -PdisablePreDex -Dsonar.pullrequest.key=${{ github.event.number }} -Dsonar.pullrequest.branch=${{ github.HEAD_REF }} -Dsonar.pullrequest.base=${{ github.BASE_REF }}
+        run: ./gradlew clean sonarqube --stacktrace -PdisablePreDex
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
