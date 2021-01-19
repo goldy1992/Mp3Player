@@ -43,5 +43,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: test_report.xml
-          path: /home/runner/work/Mp3Player/Mp3Player/client/build/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml
+          path: ~/**/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml
           retention-days: 5
