@@ -99,13 +99,52 @@ plugins {
     id "org.sonarqube" version "3.0"
 }
 
+def xmlReportDir = "/build/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
+def xmlReportPaths = [
+        "${projectDir}/client" + xmlReportDir,
+        "${projectDir}/service" + xmlReportDir,
+        "${projectDir}/commons" + xmlReportDir
+].join(",")
+
+def javaBinaries = [
+    "${projectDir}/client/build/intermediates/javac/fullDebug/classes",
+    "${projectDir}/client/build/tmp/kotlin-classes/fullDebug",
+    "${projectDir}/service/build/intermediates/javac/fullDebug/classes",
+    "${projectDir}/service/build/tmp/kotlin-classes/fullDebug",
+    "${projectDir}/commons/build/intermediates/javac/debug/classes",
+    "${projectDir}/commons/build/tmp/kotlin-classes/debug",
+].join(",")
+
+def testReports = [
+    "${projectDir}/client/build/test-results/testFullDebugUnitTest",
+    "${projectDir}/service/build/test-results/testFullDebugUnitTest",
+    "${projectDir}/commons/build/test-results/testDebugUnitTest"
+].join(",")
+
+def sources = ["${projectDir}/client/src/main/java",
+               "${projectDir}/service/src/main/java",
+               "${projectDir}/commons/src/main/java"
+].join(",")
+
+def testSources = ["${projectDir}/client/src/test/java",
+               "${projectDir}/service/src/test/java",
+               "${projectDir}/commons/src/test/java"
+].join(",")
+
 sonarqube {
     properties {
         property "sonar.projectKey", "goldy1992_Mp3Player"
         property "sonar.organization", "goldy1992-github"
         property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.exclusions", "**Test**,**IAudioService.java,**dagger**,**Injector**,**LoggingUtils.*,**android**,**/res/**,**/databinding/**,**hilt_aggregated_deps**,**/Hilt_**"
-        property "sonar.inclusions", "**/main/**"
+        property "sonar.coverage.exclusions", "**Test**,**IAudioService.java,**dagger**,**Injector**,**LoggingUtils.*,**android**,**/res/**,**/databinding/**,**hilt_aggregated_deps**,**/Hilt_**"
+        property "sonar.coverage.inclusions", "**/main/**"
+        property 'sonar.java.binaries', "${javaBinaries}"
+        property 'sonar.coverage.jacoco.xmlReportPaths', "${xmlReportPaths}"
+  //      property 'sonar.junit.reportPaths', "${testReports}"
+       // property 'sonar.sources', "${sources}"
+     //   property 'sonar.tests', "${testSources}"
+        property "sonar.branch.name", "feature/issue-142/migrate-to-github-actions"
+
     }
 }
 
