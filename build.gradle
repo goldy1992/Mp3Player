@@ -144,6 +144,8 @@ sonarqube {
        // property 'sonar.sources', "${sources}"
      //   property 'sonar.tests', "${testSources}"
         property "sonar.branch.name", "feature/issue-142/migrate-to-github-actions"
+        property "sonar.verbose", "true"
+        property "sonar.log.level", "debug"
 
     }
 }
