@@ -42,5 +42,5 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: test_report.xml
-          path: client/build/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml
+          path: ~/client/build/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml
           retention-days: 5
