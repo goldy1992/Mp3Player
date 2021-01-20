@@ -41,6 +41,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - uses: actions/upload-artifact@v2
         with:
-          name: test_report.xml
-          path: ~/client/build/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml
+          name: jacocoUnitTestReport.xml
+          path: ~/client/build/jacoco/jacocoUnitTestReport
           retention-days: 5
