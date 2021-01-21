@@ -167,11 +167,13 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-tasks.named('sonarqube').get().configure {
+tasks.named('help').get().configure {
     doLast {
         logger.quiet("doing last")
         File file = new File("${rootDir}")
         logger.quiet("file: ${file}")
+        // Create a file tree with a base directory
+        ConfigurableFileTree tree = fileTree(dir: "${rootDir}")
         tree.each {
             logger.quiet("${it}")
         }
