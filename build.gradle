@@ -167,7 +167,7 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-tasks.named('help').get().configure {
+tasks.named('sonarqube').get().configure {
     doLast {
         logger.quiet("doing last")
         File file = new File("${rootDir}")
