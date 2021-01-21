@@ -166,3 +166,14 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+tasks.named('sonarqube').get().configure {
+    doLast {
+        logger.quiet("doing last")
+        File file = new File("${rootDir}")
+        logger.quiet("file: ${file}")
+        tree.each {
+            logger.quiet("${it}")
+        }
+    }
+}
