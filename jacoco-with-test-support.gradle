@@ -103,8 +103,9 @@ project.afterEvaluate {
         }
 
         def mainSrc = "$project.projectDir/src/main/java"
-        def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/${buildVariant}", excludes: fileFilter)
+        def mainClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${buildVariant}", excludes: fileFilter)
         def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/${buildVariant}", excludes: fileFilter)
+        logger.quiet("${project.name}: mainClasses: ${mainClasses}, javaClasses: ${javaClasses}")
 
         sourceDirectories.from = files([mainSrc])
         classDirectories.from = files([mainClasses, javaClasses])

@@ -41,8 +41,10 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - uses: actions/upload-artifact@v2
         with:
-          name: test-results1
+          name: test-results-commons
           path: |
-            ${{ github.workspace }}/client/build/reports/jacoco/jacocoUnitTestReport/**
-            ${{ github.workspace }}/client/jacoco.exec
+            ${{ github.workspace }}/commons/build/tmp/kotlin-classes/debug
+            ${{ github.workspace }}/commons/build/intermediates/javac/debug
+            ${{ github.workspace }}/commons/build/reports/jacoco
+            ${{ github.workspace }}/commons/jacoco.exec
           retention-days: 5
