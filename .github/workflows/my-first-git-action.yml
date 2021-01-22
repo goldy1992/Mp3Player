@@ -1,12 +1,15 @@
 name: my-first-git-action
-on: [push]
+on:
   # Trigger the workflow on push or pull request,
   # but only for the main branch
-#  pull_request:
-#    types:
-#      - opened
-#      - synchronize
-#      - reopened
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+  push:
+    branches:
+      - develop
 jobs:
   run-unit-tests:
     runs-on: ubuntu-latest
@@ -39,12 +42,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      - uses: actions/upload-artifact@v2
-        with:
-          name: test-results-commons
-          path: |
-            ${{ github.workspace }}/commons/build/tmp/kotlin-classes/debug
-            ${{ github.workspace }}/commons/build/intermediates/javac/debug
-            ${{ github.workspace }}/commons/build/reports/jacoco
-            ${{ github.workspace }}/commons/jacoco.exec
-          retention-days: 5
