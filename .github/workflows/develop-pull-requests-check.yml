@@ -1,4 +1,4 @@
-name: my-first-git-action
+name: develop-pull-requests-check
 on:
   pull_request:
     types:
