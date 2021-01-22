@@ -72,16 +72,7 @@ task jacocoCombinedUnitTestAndroidTestReport(type: JacocoReport, dependsOn: ['te
 
 
 project.afterEvaluate {
-    // Grab all build types and product flavors
-    def buildTypes = android.buildTypes.collect {
-        type -> type.name
-    }
-
-    def buildType = ''
-    if (buildTypes.contains("debug")) {
-        buildType = "debug".capitalize()
-    }
-
+    def buildType = 'debug'
 
     def productFlavors = android.productFlavors.collect {
         flavor -> flavor.name
@@ -89,12 +80,18 @@ project.afterEvaluate {
 
     def flavor = ''
     if (!productFlavors?.isEmpty() && productFlavors.contains(applicableProductFlavor) ) {
-        flavor = applicableProductFlavor.capitalize()
+        flavor = applicableProductFlavor
     }
 
-    def buildVariant = "${flavor}${buildType}"
+    def buildVariant = ''
+    if (flavor.isBlank()) {
+       buildVariant = "${buildType}"
+    } else {
+        buildVariant = "${flavor}${buildType.capitalize()}"
+    }
+    def buildVariantCapitalised = buildVariant.capitalize()
 
-    task jacocoUnitTestReport(type: JacocoReport, dependsOn: ["test${buildVariant}UnitTest"]) {
+    task jacocoUnitTestReport(type: JacocoReport, dependsOn: ["test${buildVariantCapitalised}UnitTest"]) {
         group = "Reporting"
         description = "Generate Jacoco coverage reports on the ${buildVariant} build."
         reports {
@@ -105,6 +102,8 @@ project.afterEvaluate {
         def mainSrc = "$project.projectDir/src/main/java"
         def mainClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${buildVariant}", excludes: fileFilter)
         def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/${buildVariant}", excludes: fileFilter)
+        logger.quiet("build variant: ${buildVariant}")
+        logger.quiet("build variant capitalsed: ${buildVariantCapitalised}")
         logger.quiet("${project.name}: mainClasses: ${mainClasses}, javaClasses: ${javaClasses}")
 
         sourceDirectories.from = files([mainSrc])
