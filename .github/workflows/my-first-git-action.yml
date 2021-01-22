@@ -41,6 +41,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - uses: actions/upload-artifact@v2
         with:
-          name: test-results
-          path: ${{ github.workspace }}/client/build/reports/jacoco/jacocoUnitTestReport/**
+          name: test-results1
+          path: |
+            ${{ github.workspace }}/client/build/reports/jacoco/jacocoUnitTestReport/**
+            ${{ github.workspace }}/client/jacoco.exec
           retention-days: 5
