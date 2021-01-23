@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - develop
-     # - feature/issue-142/migrate-to-github-actions
+      - feature/issue-142/migrate-to-github-actions
 jobs:
   run-all-tests:
     runs-on: ubuntu-latest
@@ -46,19 +46,19 @@ jobs:
         run: ./gradlew clean jacocoUnitTestReport
 
 
-      - name: Assemble debug apks
-        run@ ./gradlew assembleDebug
+      - name: Assemble debug and androidTest APKs
+        run: ./gradlew assembleDebug assembleAndroidTest
 
 
-
-      - name: Run gcloud tests
+      - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
-      - name: Use gcloud CLI
+      - name: Run firebase tests on gcloud and pull coverage data
         run: gcloud firebase test android run \
           --type instrumentation \
           --app ${{ github.workspace }}/app/build/outputs/apk/full/debug/app-full-debug.apk \
@@ -68,10 +68,10 @@ jobs:
           --directories-to-pull /sdcard
 
 
-  - name: Retrieve coverage data from firebase tests.
-
-      - name: Create Aggregrated JaCoCo Test Report and eun SonarQube.
-        run: ./gradlew jacocoCombinedUnitTestAndroidTestReport sonarqube --stacktrace -PdisablePreDex
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#  - name: Retrieve coverage data from firebase tests.
+#
+#      - name: Create Aggregrated JaCoCo Test Report and eun SonarQube.
+#        run: ./gradlew jacocoCombinedUnitTestAndroidTestReport sonarqube --stacktrace -PdisablePreDex
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
