@@ -26,27 +26,28 @@ tasks.withType(Test) {
 
 /**
  * Generates a JaCoCo Report that aggregates the test coverage for the unit tests and
- * instrumentation tests.
+ * instrumentation tests. This will not have any task dependencies as the unit tests and
+ * instrumentation tests should already have been run.
  */
-task jacocoCombinedUnitTestAndroidTestReport(type: JacocoReport, dependsOn: ['testFullDebugUnitTest', 'connectedFullDebugAndroidTest']) {
-
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-
-    def mainSrc = "$project.projectDir/src/main/java"
-    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebug", excludes: fileFilter)
-    def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/fullDebug", excludes: fileFilter)
-
-
-    sourceDirectories.from = files([mainSrc])
-    classDirectories.from = files([mainClasses, javaClasses])
-
-    // combine unit test jacoco.exec file with the android test coverage.ec file
-    executionData.from = fileTree(dir: "$projectDir", include: ["/jacoco.exec",
-                                "build/outputs/code_coverage/fullDebugAndroidTest/connected/*.ec"])
-}
+//task jacocoCombinedUnitTestAndroidTestReport(type: JacocoReport) {
+//
+//    reports {
+//        xml.enabled = true
+//        html.enabled = true
+//    }
+//
+//    def mainSrc = "$project.projectDir/src/main/java"
+//    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebug", excludes: fileFilter)
+//    def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/fullDebug", excludes: fileFilter)
+//
+//
+//    sourceDirectories.from = files([mainSrc])
+//    classDirectories.from = files([mainClasses, javaClasses])
+//
+//    // combine unit test jacoco.exec file with the android test coverage.ec file
+//    executionData.from = fileTree(dir: "$projectDir", include: ["/jacoco.exec",
+//                                "build/outputs/code_coverage/fullDebugAndroidTest/connected/*.ec"])
+//}
 
 
 
@@ -87,7 +88,7 @@ project.afterEvaluate {
         executionData.from = "$projectDir/jacoco.exec"
     }
 
-    task jacocoCombinedUnitTestAndroidTestReport(type: JacocoReport, dependsOn: ["test${buildVariantCapitalised}UnitTest", "connected${buildVariantCapitalised}AndroidTest"]) {
+    task jacocoCombinedUnitTestAndroidTestReport(type: JacocoReport) {
 
         reports {
             xml.enabled = true
