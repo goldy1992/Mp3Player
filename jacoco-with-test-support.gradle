@@ -86,6 +86,26 @@ project.afterEvaluate {
         classDirectories.from = files([mainClasses, javaClasses])
         executionData.from = "$projectDir/jacoco.exec"
     }
+
+    task jacocoCombinedUnitTestAndroidTestReport(type: JacocoReport, dependsOn: ["test${buildVariantCapitalised}UnitTest", "connected${buildVariantCapitalised}AndroidTest"]) {
+
+        reports {
+            xml.enabled = true
+            html.enabled = true
+        }
+
+        def mainSrc = "$project.projectDir/src/main/java"
+        def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/fullDebug", excludes: fileFilter)
+        def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/fullDebug", excludes: fileFilter)
+
+
+        sourceDirectories.from = files([mainSrc])
+        classDirectories.from = files([mainClasses, javaClasses])
+
+        // combine unit test jacoco.exec file with the android test coverage.ec file
+        executionData.from = fileTree(dir: "$projectDir", include: ["/jacoco.exec",
+                                                                    "build/outputs/code_coverage/fullDebugAndroidTest/connected/*.ec"])
+    }
 }
 
 
