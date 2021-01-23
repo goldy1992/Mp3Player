@@ -6,7 +6,7 @@ buildscript {
         TARGET_SDK_VERION = 28
         BUILD_TOOLS_VERSION = '29.0.2'
         nav_version = '2.3.2'
-        kotlin_version = '1.4.10'
+        kotlin_version = '1.4.21'
         ACTIVITY_VERSION = '1.1.0'
         ANDROIDX_CORE_KOTLIN_VERSION = '1.3.2'
         ANNOTATION_VERSION = '1.1.0-rc01'
@@ -44,7 +44,7 @@ buildscript {
         MOCKITO_KOTLIN = '2.2.0'
         PREFERENCE_VERSION = '1.1.1'
         RECYCLER_VIEW_VERSION = '1.1.0'
-        ROBOLECTRIC_VERSION = '4.4'
+        ROBOLECTRIC_VERSION = '4.5'
         ROOM_VERSION = '2.2.3'
         TEST_CORE_VERSION = '1.3.0'
         TEST_RULES_VERSION = '1.3.0'
@@ -87,7 +87,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'com.android.tools.build:gradle:4.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$HILT_ANDROID_GRADLE_PLUGIN_VERSION"
         def nav_version = "2.3.0"

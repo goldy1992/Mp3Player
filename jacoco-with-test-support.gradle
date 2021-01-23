@@ -86,8 +86,6 @@ project.afterEvaluate {
         classDirectories.from = files([mainClasses, javaClasses])
         executionData.from = "$projectDir/jacoco.exec"
     }
-
-    project.parent.tasks["sonarqube"].dependsOn project.name + ":jacocoUnitTestReport"
 }
 
 
