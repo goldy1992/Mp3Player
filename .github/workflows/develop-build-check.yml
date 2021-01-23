@@ -60,12 +60,12 @@ jobs:
 
       - name: Run firebase tests on gcloud and pull coverage data
         run: gcloud firebase test android run \
-        --type instrumentation \
-        --app ${{ github.workspace }}/app/build/outputs/apk/full/debug/app-full-debug.apk \
-        --test ${{ github.workspace }}/client/build/outputs/apk/androidTest/full/debug/client-full-debug-androidTest.apk \
-        --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec \
-        --device model=Pixel2,version=29,locale=en,orientation=portrait \
-        --directories-to-pull /sdcard
+          --type instrumentation \
+          --app ${{ github.workspace }}/app/build/outputs/apk/full/debug/app-full-debug.apk \
+          --test ${{ github.workspace }}/client/build/outputs/apk/androidTest/full/debug/client-full-debug-androidTest.apk \
+          --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec \
+          --device model=Pixel2,version=29,locale=en,orientation=portrait \
+          --directories-to-pull /sdcard
 
 #  - name: Retrieve coverage data from firebase tests.
 #
