@@ -5,6 +5,8 @@ on:
       - opened
       - synchronize
       - reopened
+    branches:
+      - develop
 jobs:
   run-unit-tests:
     runs-on: ubuntu-latest
