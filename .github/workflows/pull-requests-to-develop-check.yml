@@ -6,7 +6,7 @@ on:
       - synchronize
       - reopened
     branches:
-      - develop
+      - master
 jobs:
   run-unit-tests:
     runs-on: ubuntu-latest
