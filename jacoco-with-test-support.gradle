@@ -105,7 +105,7 @@ project.afterEvaluate {
 
         // combine unit test jacoco.exec file with the android test coverage.ec file
         executionData.from = fileTree(dir: "$projectDir", include: ["/jacoco.exec",
-                                                                    "build/outputs/code_coverage/fullDebugAndroidTest/connected/*.ec"])
+                                                                    "*.ec"])
     }
 }
 
