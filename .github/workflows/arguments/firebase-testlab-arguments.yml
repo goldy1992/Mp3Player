@@ -1,7 +1,5 @@
 client-ui-tests:
   type: instrumentation
-  app: ${{ github.workspace }}/app/build/outputs/apk/full/debug/app-full-debug.apk
-  test: ${{ github.workspace }}/client/build/outputs/apk/androidTest/full/debug/client-full-debug-androidTest.apk
   environment-variables:
     coverage: true
     coverageFile: /sdcard/coverage.ec
