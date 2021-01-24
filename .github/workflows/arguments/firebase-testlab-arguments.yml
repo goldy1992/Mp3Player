@@ -8,6 +8,7 @@ client-ui-tests:
       version: 29
       locale: en
       orientation: portrait
+  directories-to-pull: /sdcard
   record-video: false
  # results-bucket:
  # results-dir:
