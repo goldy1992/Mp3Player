@@ -78,7 +78,6 @@ jobs:
 #          --results-bucket \
 #          --results-dir \
 
-  - name: Retrieve coverage data from firebase tests.
 
       - name: Create Aggregrated JaCoCo Test Report and eun SonarQube.
         run: ./gradlew jacocoCombinedUnitTestAndroidTestReport sonarqube --stacktrace -PdisablePreDex
