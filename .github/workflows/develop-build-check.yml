@@ -67,17 +67,16 @@ jobs:
           TEST_OUTPUT_FOLDER=${{ github.workspace }}/client
 
       - name: Grab remote reports and arifacts and store locally
-          gsutil -m cp -R -U gs://test-lab-$BUCKET_ID/**/sdcard/coverage.ec $TEST_OUTPUT_FOLDER || true
-#          --type instrumentation \
-#          --app ${{ github.workspace }}/app/build/outputs/apk/full/debug/app-full-debug.apk \
-#          --test ${{ github.workspace }}/client/build/outputs/apk/androidTest/full/debug/client-full-debug-androidTest.apk \
-#          --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec \
-#          --device model=Pixel2,version=29,locale=en,orientation=portrait \
-#          --directories-to-pull /sdcard \
-#          --no-record-video \
-#          --results-bucket \
-#          --results-dir \
-
+        run: gsutil -m cp -R -U gs://test-lab-$BUCKET_ID/**/sdcard/coverage.ec $TEST_OUTPUT_FOLDER || true
+            #          --type instrumentation \
+            #          --app ${{ github.workspace }}/app/build/outputs/apk/full/debug/app-full-debug.apk \
+            #          --test ${{ github.workspace }}/client/build/outputs/apk/androidTest/full/debug/client-full-debug-androidTest.apk \
+            #          --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec \
+            #          --device model=Pixel2,version=29,locale=en,orientation=portrait \
+            #          --directories-to-pull /sdcard \
+            #          --no-record-video \
+            #          --results-bucket \
+            #          --results-dir \
 
       - name: Create Aggregrated JaCoCo Test Report and eun SonarQube.
         run: ./gradlew jacocoCombinedUnitTestAndroidTestReport sonarqube --stacktrace -PdisablePreDex
