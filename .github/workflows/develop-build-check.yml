@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - develop
-      - feature/issue-142/migrate-to-github-actions
+      #- feature/issue-142/migrate-to-github-actions
 jobs:
   run-all-tests:
     runs-on: ubuntu-latest
@@ -59,7 +59,27 @@ jobs:
           export_default_credentials: true
 
       - name: Run firebase tests on gcloud and pull coverage data
-        run: gcloud firebase test android run --type instrumentation --app ${{ github.workspace }}/app/build/outputs/apk/full/debug/app-full-debug.apk --test ${{ github.workspace }}/client/build/outputs/apk/androidTest/full/debug/client-full-debug-androidTest.apk --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec --device model=Pixel2,version=29,locale=en,orientation=portrait --directories-to-pull /sdcard
+        run: |
+          GCLOUD_OUTPUT_LOG=gcloudLog.txt
+          gcloud firebase test android run arguments/firebase-testlab-arguments.yml:client-ui-tests 2>&1 | tee $GCLOUD_OUTPUT_LOG ; ( exit ${PIPESTATUS[0]}
+          # Grab the bucket ID for where our reports and artefacts are logged
+          BUCKET_ID=`cat $GCLOUD_OUTPUT_LOG | sed -n -E 's#^.+test-lab-(.+)/.+#\1#p'`
+          echo $BUCKET_ID
+          TEST_OUTPUT_FOLDER=testResults
+          mkdir $TEST_OUTPUT_FOLDER
+
+      - name: Grab remote reports and arifacts and store locally
+          gsutil -m cp -R -U gs://test-lab-$BUCKET_ID $TEST_OUTPUT_FOLDER || true
+#          --type instrumentation \
+#          --app ${{ github.workspace }}/app/build/outputs/apk/full/debug/app-full-debug.apk \
+#          --test ${{ github.workspace }}/client/build/outputs/apk/androidTest/full/debug/client-full-debug-androidTest.apk \
+#          --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec \
+#          --device model=Pixel2,version=29,locale=en,orientation=portrait \
+#          --directories-to-pull /sdcard \
+#          --no-record-video \
+#          --results-bucket \
+#          --results-dir \
+
 
 #  - name: Retrieve coverage data from firebase tests.
 #
