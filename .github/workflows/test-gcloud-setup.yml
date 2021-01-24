@@ -22,6 +22,6 @@ jobs:
       - name: Upload results
         uses: 'actions/upload-artifact@v2'
         with:
-          name: my-artifact ${{ matrix.node-version }}
+          name: my-artifact
           path: ${{ github.workspace }}/testResults
 
