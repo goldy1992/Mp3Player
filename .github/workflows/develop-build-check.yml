@@ -61,7 +61,7 @@ jobs:
       - name: Run firebase tests on gcloud and pull coverage data
         run: |
           GCLOUD_OUTPUT_LOG=gcloudLog.txt
-          gcloud firebase test android run arguments/firebase-testlab-arguments.yml:client-ui-tests 2>&1 | tee $GCLOUD_OUTPUT_LOG ; ( exit ${PIPESTATUS[0]}${{ github.workspace }} )
+           gcloud firebase test android run ${{github.workspace}}/.github/workflows/arguments/firebase-testlab-arguments.yml:client-ui-tests 2>&1 | tee $GCLOUD_OUTPUT_LOG ; ( exit ${PIPESTATUS[0]}${{ github.workspace }} )
           BUCKET_ID=`cat $GCLOUD_OUTPUT_LOG | sed -n -E 's#^.+test-lab-(.+)/.+#\1#p'`
           echo $BUCKET_ID
           TEST_OUTPUT_FOLDER=${{ github.workspace }}/client
