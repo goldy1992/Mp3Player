@@ -64,7 +64,7 @@ jobs:
           gcloud firebase test android run ${{github.workspace}}/.github/workflows/arguments/firebase-testlab-arguments.yml:client-ui-tests \
             --app ${{ github.workspace }}/app/build/outputs/apk/full/debug/app-full-debug.apk \
             --test ${{ github.workspace }}/client/build/outputs/apk/androidTest/full/debug/client-full-debug-androidTest.apk \
-            2>&1 | tee $GCLOUD_OUTPUT_LOG ; ( exit ${PIPESTATUS[0]}${{ github.workspace }} )
+             | tee $GCLOUD_OUTPUT_LOG ; ( exit ${PIPESTATUS[0]}${{ github.workspace }} )
           BUCKET_ID=`cat $GCLOUD_OUTPUT_LOG | sed -n -E 's#^.+test-lab-(.+)/.+#\1#p'`
           echo $BUCKET_ID
           TEST_OUTPUT_FOLDER=${{ github.workspace }}/client
