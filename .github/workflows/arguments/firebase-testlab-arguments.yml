@@ -11,6 +11,6 @@ client-ui-tests:
       locale: en
       orientation: portrait
   directories-to-pull: /sdcard
-  no-record-video: true
+  record-video: false
  # results-bucket:
  # results-dir:
