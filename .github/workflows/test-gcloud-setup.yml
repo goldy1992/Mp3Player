@@ -23,5 +23,5 @@ jobs:
         uses: 'actions/upload-artifact@v2'
         with:
           name: my-artifact
-          path: ${{ github.workspace }}/testResults
+          path: ${{ github.workspace }}/testResults//2021-01-24_08:55:25.483696_cOKJ/Pixel2-29-en-portrait
 
