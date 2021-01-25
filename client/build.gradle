@@ -19,6 +19,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "com.github.goldy1992.mp3player.client.CustomTestRunner"
+        /*makes the Android Test Orchestrator run its "pm clear" command after each test invocation.
+        Ensures app's state is completely cleared between tests. */
+        testInstrumentationRunnerArguments clearPackageData: 'true'
         consumerProguardFiles 'consumer-rules.pro'
         vectorDrawables.useSupportLibrary = true
     }
@@ -70,6 +73,7 @@ android {
     kotlinOptions { jvmTarget = "1.8" }
 
     testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
         animationsDisabled true
 
         unitTests {
@@ -207,6 +211,7 @@ dependencies {
 
     androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: JUNIT_EXT_VERSION
     androidTestImplementation group: 'androidx.test', name: 'runner', version: TEST_RUNNER_VERSION
+    androidTestUtil group: "androidx.test", name: "orchestrator", version: test_orchestrator_version
     androidTestImplementation group: 'androidx.test', name: 'monitor', version: MIRROR_VERSION
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN"
     androidTestImplementation 'com.github.tmurakami:dexopener:2.0.5'
