@@ -42,8 +42,8 @@ jobs:
         run: chmod +x ./gradlew
 
 
-      #- name: Create Aggregrated JaCoCo Test Report and eun SonarQube.
-      #  run: ./gradlew clean jacocoUnitTestReport
+      - name: Create Aggregrated JaCoCo Test Report and eun SonarQube.
+        run: ./gradlew clean jacocoUnitTestReport
 
 
 #      - name: Assemble debug and androidTest APKs
