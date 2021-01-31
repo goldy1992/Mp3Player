@@ -1,8 +1,8 @@
 buildscript {
 
     project.beforeEvaluate {
-        ext.properties.put("jacaco_report_name", "jacocoCombinedUnitTestAndroidTestReport")
-    }
+        logger.quiet("pre evaluating jacoco")
+     }
 
     ext {
         PIE = 28
@@ -132,6 +132,18 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-def getReportType() {
-    return "jacocoUnitTestReport"
+task preSonarQube() {
+    logger.quiet("nameeees: ${project.gradle.startParameter.taskNames}")
+
+    def reportName = "jacocoUnitTestReport"
+
+    if (project.gradle.startParameter.taskNames.join(",").contains("jacocoCombinedUnitTestAndroidTestReport")) {
+        reportName = "jacocoCombinedUnitTestAndroidTestReport"
+    }
+
+    rootProject.ext.set("jacaco_report_name", reportName)
+}
+
+tasks['sonarqube'].configure {
+    mustRunAfter tasks['preSonarQube']
 }
