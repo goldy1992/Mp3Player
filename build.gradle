@@ -1,4 +1,9 @@
 buildscript {
+
+    project.beforeEvaluate {
+        ext.properties.put("jacaco_report_name", "jacocoCombinedUnitTestAndroidTestReport")
+    }
+
     ext {
         PIE = 28
         MARSHMALLOW = 23
@@ -125,4 +130,8 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+def getReportType() {
+    return "jacocoUnitTestReport"
 }

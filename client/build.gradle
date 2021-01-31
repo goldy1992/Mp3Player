@@ -225,7 +225,7 @@ dependencies {
 
 
     automationImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
-   debugImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: ESPRESSO_CORE_VERSION
+    debugImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: ESPRESSO_CORE_VERSION
     androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: ESPRESSO_CORE_VERSION
 
 }
@@ -238,7 +238,7 @@ sonarqube {
     androidVariant 'fullDebug'
     properties {
         property 'sonar.java.binaries', "${project.buildDir}/intermediates/javac/fullDebug/classes,${project.buildDir}/tmp/kotlin-classes/fullDebug"
-        property 'sonar.coverage.jacoco.xmlReportPaths', "${project.buildDir}/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
+        property 'sonar.coverage.jacoco.xmlReportPaths', "${project.buildDir}/reports/jacoco/${jacaco_report_name}/${jacaco_report_name}.xml"
         property 'sonar.sources', "${projectDir}/src/main/java"
     }
 }
