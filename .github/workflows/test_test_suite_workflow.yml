@@ -1,6 +1,6 @@
 name: On PR Change
 on:
-  check_suite:
+  check_run:
     types: [completed]
 
 jobs:
