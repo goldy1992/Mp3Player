@@ -1,0 +1,27 @@
+name: develop-build-check
+on:
+  push:
+    branches:
+      - master
+      #- feature/issue-142/migrate-to-github-actions
+jobs:
+  run-all-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - name: Make test results dir
+        run: mkdir ${{ github.workspace }}/testResults
+      - name: Grab remote reports and arifacts and store locally
+        run: gsutil -m cp -R -U gs://test-lab-pw30jhrbi15pc-ywxmz0rw1n8wa/2021-01-24_08:55:25.483696_cOKJ ${{ github.workspace }}/testResults || true
+      - name: Upload results
+        uses: 'actions/upload-artifact@v2'
+        with:
+          name: my-artifact
+          path: ${{ github.workspace }}/testResults/2021-01-24_08:55:25.483696_cOKJ/Pixel2-29-en-portrait
+

@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client.activities
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.annotation.VisibleForTesting
 import androidx.drawerlayout.widget.DrawerLayout
@@ -11,9 +12,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.github.goldy1992.mp3player.R
-import com.github.goldy1992.mp3player.databinding.ActivityMainBinding
 import com.github.goldy1992.mp3player.client.listeners.MyDrawerListener
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
+import com.github.goldy1992.mp3player.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -23,7 +24,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- *
+ * The Main Activity
  */
 @AndroidEntryPoint(MediaActivityCompat::class)
 open class MainActivity : Hilt_MainActivity(),
@@ -50,7 +51,7 @@ open class MainActivity : Hilt_MainActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Log.d(logTag(), "onCreate called")
         val binding : ActivityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         this.drawerLayout = binding.drawerLayout
         drawerLayout.addDrawerListener(myDrawerListener)

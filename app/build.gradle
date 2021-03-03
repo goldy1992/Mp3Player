@@ -5,7 +5,7 @@ apply plugin: 'jacoco'
 apply plugin: 'dagger.hilt.android.plugin'
 
     android {
-    testBuildType "instrumentation"
+    testBuildType "debug"
     packagingOptions {
         exclude 'META-INF/LICENSE.md'
         exclude 'META-INF/LICENSE-notice.md'
@@ -31,13 +31,9 @@ apply plugin: 'dagger.hilt.android.plugin'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            testCoverageEnabled true
             debuggable true
             minifyEnabled false
-        }
-        instrumentation {
-            initWith debug
-            testCoverageEnabled true
-            matchingFallbacks = ['debug']
         }
     }
     flavorDimensions flavor_dimen_mode
@@ -175,4 +171,8 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
 
+}
+
+sonarqube {
+    skipProject = true
 }

@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'jacoco'
+apply from: rootProject.file("jacoco-with-test-support.gradle")
 
 android {
     compileSdkVersion TARGET_SDK_VERION
@@ -24,6 +24,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            testCoverageEnabled true
             debuggable true
             minifyEnabled false
         }
@@ -44,12 +45,13 @@ android {
         }
         unitTests.all {
             testLogging {
-                events "passed", "skipped", "failed", "standardOut", "standardError"
+                events "passed", "skipped"//, "failed", "standardOut", "standardError"
                 outputs.upToDateWhen {false}
-                showStandardStreams = true
+                showStandardStreams = false
             }
             jacoco {
                 includeNoLocationClasses = true
+                excludes = ['jdk.internal.*']
             }
         }
     }
@@ -76,35 +78,18 @@ dependencies {
 
     testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
     testImplementation group:'com.nhaarman.mockitokotlin2', name: 'mockito-kotlin', version: MOCKITO_KOTLIN
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: mockito_inline_version
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
     implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
 
 }
 
-task jacocoTestReportDebug(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
-    reports {
-        xml.enabled = true
-        html.enabled = true
+sonarqube {
+    androidVariant 'debug'
+    properties {
+        property 'sonar.java.binaries', "${project.buildDir}/intermediates/javac/debug/classes,${project.buildDir}/tmp/kotlin-classes/debug"
+        property 'sonar.coverage.jacoco.xmlReportPaths', "${project.buildDir}/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
+        property "sonar.sources", "${projectDir}/src/main/java"
     }
-
-    def fileFilter = [
-            '**/R.class',
-            '**/R$*.class',
-            '**/BuildConfig.*',
-            '**/Manifest*.*',
-            '**/*Test*.*',
-            'android/**/*.*',
-            '**/*$[0-9].*',
-            '**/dagger/**',
-            '**/databinding/**'
-    ]
-
-    def mainSrc = "$project.projectDir/src/main/java"
-    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
-
-    sourceDirectories.from = files([mainSrc])
-    classDirectories.from = files([mainClasses])
-    executionData.from = "$project.buildDir/jacoco/testDebugUnitTest.exec"
-
 }
