@@ -8,4 +8,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Echo's result
-        run: echo "completed check suite"
+        run: echo "completed check suite  ${{ github.event }}"
