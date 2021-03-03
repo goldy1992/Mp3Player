@@ -1,8 +1,8 @@
 name: On PR Change
 on:
     branch: mock_develop
-    check-run:
-      types: [completed]
+#    check-run:
+#      types: [completed]
 
     jobs:
       on-pr-change:
