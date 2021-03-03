@@ -1,0 +1,12 @@
+name: On PR Change
+on:
+    branch: mock_develop
+    check-run:
+      types: [completed]
+
+    jobs:
+      on-pr-change:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Echo's result
+            run: echo "completed check run"

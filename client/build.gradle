@@ -5,6 +5,7 @@ apply from: rootProject.file("jacoco-with-test-support.gradle")
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 // my mock-develop change
+// my second mock_develop change
 
 android {
     compileSdkVersion TARGET_SDK_VERION
