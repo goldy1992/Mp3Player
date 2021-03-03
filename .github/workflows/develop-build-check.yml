@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - develop
-      - feature/issue-142/migrate-to-github-actions
 jobs:
   run-all-tests:
     runs-on: ubuntu-latest
