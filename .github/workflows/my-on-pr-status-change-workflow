@@ -1,7 +1,7 @@
 name: On PR Change
 on:
   check_run:
-    types: [completed]
+#    types: [completed]
 
 jobs:
   on-pr-change:
