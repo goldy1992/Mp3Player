@@ -3,9 +3,9 @@ on:
     check-run:
       types: [completed]
 
-    jobs:
-      on-pr-change:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Echo's result
-            run: echo "completed check run"
+jobs:
+  on-pr-change:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo's result
+        run: echo "completed check run"

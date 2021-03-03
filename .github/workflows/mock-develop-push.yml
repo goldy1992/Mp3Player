@@ -1,0 +1,10 @@
+name: mock_develop push
+on:
+  push:
+    branches: [mock_develop]
+jobs:
+  on-mock-develop-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: first status check
+        run: echo "first status check on push"
