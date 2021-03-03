@@ -4,6 +4,8 @@ apply plugin: 'kotlin-kapt'
 apply from: rootProject.file("jacoco-with-test-support.gradle")
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 
+// my mock-develop change
+
 android {
     compileSdkVersion TARGET_SDK_VERION
     buildToolsVersion BUILD_TOOLS_VERSION
