@@ -1,11 +1,11 @@
 name: On PR Change
 on:
-  check_run:
-#    types: [completed]
+  check_suite:
+    types: [completed]
 
 jobs:
-  on-pr-change:
+  on-pr-check-suite-competed:
     runs-on: ubuntu-latest
     steps:
       - name: Echo's result
-        run: echo "completed check run"
+        run: echo "completed check suite"
