@@ -9,5 +9,5 @@ jobs:
 
     steps:
       - checkout
-      - run:
-          command: ./gradlew clean jacocoUnitTestReport sonarqube --stacktrace -PdisablePreDex
+      - run: 
+          command: chmod +x ./gradlew; ./gradlew clean jacocoUnitTestReport sonarqube --stacktrace -PdisablePreDex
