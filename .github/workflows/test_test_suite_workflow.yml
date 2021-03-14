@@ -1,7 +1,7 @@
 name: On status Change
-on: [status]
-#  check_run:
-#    types: [completed]
+on:
+  check_run:
+    types: [completed]
 
 jobs:
   test-status:
