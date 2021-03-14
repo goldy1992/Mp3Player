@@ -1,0 +1,15 @@
+name: test-status
+on:
+  status
+jobs:
+  testing-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: testing status
+        run: echo hellow
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
