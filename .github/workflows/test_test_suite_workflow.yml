@@ -1,6 +1,5 @@
-name: On PR Change
-on:
-  status
+name: On status Change
+on: [status]
 #  check_run:
 #    types: [completed]
 

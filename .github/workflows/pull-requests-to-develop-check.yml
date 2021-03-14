@@ -1,12 +1,12 @@
 name: develop-pull-requests-check
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
+#  pull_request:
+#    types:
+#      - opened
+#      - synchronize
+#      - reopened
     branches:
-      - master
+      - develop
 jobs:
   run-unit-tests:
     runs-on: ubuntu-latest
