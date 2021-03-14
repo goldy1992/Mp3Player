@@ -1,11 +1,21 @@
 name: On PR Change
 on:
-  check_run:
-    types: [completed]
+  status
+#  check_run:
+#    types: [completed]
 
 jobs:
-  on-pr-check-suite-competed:
+  test-status:
     runs-on: ubuntu-latest
     steps:
       - name: Echo's result
         run: echo "completed check suite  ${{ github.event }}"
+
+      - name: testing status
+        run: echo hellow
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
