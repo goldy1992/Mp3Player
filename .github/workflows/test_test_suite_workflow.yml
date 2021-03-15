@@ -26,7 +26,7 @@ jobs:
 
       - name: Run Python script.
         run: |
-          issuccess=$(python3 ./.github/workflows/analyse_payload_event.py event.json); \
+          issuccess=$(python3 ./.github/ci-scripts/analyse_payload_event.py event.json); \
           echo "result is ${issuccess}" \
           if [[ -z $issuccess ]] \
           then \
