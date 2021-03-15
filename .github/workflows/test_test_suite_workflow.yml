@@ -2,11 +2,17 @@ name: On status Change
 on:
   check_run:
     types: [completed]
+    branches:
+      - develop
 
 jobs:
   test-status:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: Echo's result
         run: echo "completed check suite  ${{ github.event }}"
 
@@ -16,5 +22,16 @@ jobs:
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo $GITHUB_CONTEXT | tee event.json;
+
+      - name: Run Python script.
         run: |
-          echo "$GITHUB_CONTEXT"
+          issuccess=$(python3 ./.github/workflows/analyse_payload_event.py event.json); \
+          echo "result is ${issuccess}" \
+          if [[ -z $issuccess ]] \
+          then \
+            echo "Merging to master" \
+          else \
+            echo "Quality gate failed... NO MERGE" \
+          fi \
+
