@@ -17,33 +17,36 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Merge develop to master.
-        if: ${{ env.IS_SONAR_CHECK_RUN && env.QUALITY_GATE_PASSED }}
-        run: echo "Merging to master"
-
       - name: Dump GitHub context into event.json
         run: echo $GITHUB_CONTEXT | tee event.json;
 
       - name: Check for Sonar event
         run: |
-           export IS_SONAR_CHECK_RUN=$(python3 ./.github/ci-scripts/is_sonar_event.py event.json); \
+          echo "IS_SONAR_CHECK_RUN=$(python3 ./.github/ci-scripts/is_sonar_event.py event.json)" >> $GITHUB_ENV ; \
+
+      - name: Echo IS_SONAR_CHECK_RUN
+        run: echo "IS_SONAR_CHECK_RUN =  ${{ env.IS_SONAR_CHECK_RUN }} "
 
       - name: Not a Sonar Event
         if: ${{ !env.IS_SONAR_CHECK_RUN }}
         run: echo "Not a sonar check run event."
 
+      - name: IS Soner event
+        if: ${{ env.IS_SONAR_CHECK_RUN }}
+        run: echo "Is a sonar check run event."
+
       - name: Check Sonar Quality Gate
         if: ${{ env.IS_SONAR_CHECK_RUN }}
         run: |
           echo "Sonar check run identified, checking quality gate"; \
-          export QUALITY_GATE_PASSED=$(python3 ./.github/ci-scripts/quality_gate_check.py event.json); \
+          echo "QUALITY_GATE_PASSED=$(python3 ./.github/ci-scripts/quality_gate_check.py event.json)" >> $GITHUB_ENV ; \
 
       - name: Quality Gate Failed.
-        if: ${{ env.IS_SONAR_CHECK_RUN && !env.QUALITY_GATE_PASSED }}
+        if: ${{ (env.IS_SONAR_CHECK_RUN == 1) && (env.QUALITY_GATE_PASSED == 0) }}
         run: echo "Quality gate failed!"
 
       - name: Merging develop to master
-        if: ${{ env.IS_SONAR_CHECK_RUN && env.QUALITY_GATE_PASSED }}
+        if: ${{ (env.IS_SONAR_CHECK_RUN == 1) && (env.QUALITY_GATE_PASSED == 1) }}
         run: |
           echo "Quality Qate passed... Merging to master..."
           curl --request POST \
@@ -52,5 +55,3 @@ jobs:
           --header 'content-type: application/json' \
           --data '{"base":"master", "head":"develop"}' \
           --fail
-
-

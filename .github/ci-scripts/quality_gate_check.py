@@ -1,6 +1,8 @@
 import json
 import sys
 
+SUCCESS = 'success'
+FAILURE = 'success'
 
 def is_sonar_success(event):
     check_run = event['check_run']
