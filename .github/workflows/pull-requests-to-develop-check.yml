@@ -1,6 +1,10 @@
 name: develop-pull-requests-check
 on:
-  push:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
     branches:
       - develop
 jobs:
