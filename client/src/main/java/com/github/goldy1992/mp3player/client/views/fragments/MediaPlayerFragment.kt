@@ -10,7 +10,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.databinding.FragmentMediaPlayerBinding
+import com.github.goldy1992.mp3player.databinding.FragmentMediaPlayerBinding
 import com.github.goldy1992.mp3player.client.views.TrackViewPager
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.google.android.material.appbar.AppBarLayout
@@ -31,9 +31,7 @@ class MediaPlayerFragment : Hilt_MediaPlayerFragment(), LogTagger, Observer<Medi
 
     lateinit var appBarLayout: AppBarLayout
 
-    @get:VisibleForTesting
-    var trackToPlay: Uri? = null
-        private set
+
 
     override fun lockDrawerLayout(): Boolean {
         return true

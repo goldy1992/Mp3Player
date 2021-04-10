@@ -7,7 +7,7 @@ apply plugin: 'androidx.navigation.safeargs.kotlin'
 android {
     compileSdkVersion TARGET_SDK_VERION
     buildToolsVersion BUILD_TOOLS_VERSION
-    testBuildType "instrumentation"
+    testBuildType "debug"
 
     buildFeatures {
         viewBinding true
@@ -19,6 +19,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "com.github.goldy1992.mp3player.client.CustomTestRunner"
+        /*makes the Android Test Orchestrator run its "pm clear" command after each test invocation.
+        Ensures app's state is completely cleared between tests. */
+        testInstrumentationRunnerArguments clearPackageData: 'true'
         consumerProguardFiles 'consumer-rules.pro'
         vectorDrawables.useSupportLibrary = true
     }
@@ -29,14 +32,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            testCoverageEnabled false
+            testCoverageEnabled true
             debuggable true
             minifyEnabled false
-        }
-        instrumentation {
-            initWith debug
-            testCoverageEnabled true
-            matchingFallbacks = ['debug']
         }
     }
     flavorDimensions flavor_dimen_mode
@@ -44,25 +42,25 @@ android {
         full {
             dimension = flavor_dimen_mode
         }
-        endToEnd {
-            dimension = flavor_dimen_mode
-        }
-        integration {
-            dimension = flavor_dimen_mode
-        }
-        unitTest {
+        automation {
             dimension = flavor_dimen_mode
         }
     }
 
     sourceSets {
-        integration {
-            java.srcDirs += ['src/testCommons/java']
-            res.srcDirs += ['src/testCommons/res']
-        }
-        endToEnd {
-            java.srcDirs += ['src/testCommons/java']
-            res.srcDirs += ['src/testCommons/res']
+        String sharedTestSrcDir = 'src/testCommons/java'
+        String sharedTestResDir = 'src/testCommons/res'
+        full {
+            debug {
+                test {
+                    java.srcDirs += [sharedTestSrcDir]
+                    resources.srcDirs += [sharedTestResDir]
+                }
+                androidTest {
+                    java.srcDirs += [sharedTestSrcDir]
+                    resources.srcDirs += [sharedTestResDir]
+                }
+            }
         }
     }
 
@@ -75,6 +73,7 @@ android {
     kotlinOptions { jvmTarget = "1.8" }
 
     testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
         animationsDisabled true
 
         unitTests {
@@ -83,9 +82,9 @@ android {
         }
         unitTests.all {
             testLogging {
-                events "passed", "skipped", "failed", "standardOut", "standardError"
+                events "passed", "skipped"//, "failed", "standardOut", "standardError"
                 outputs.upToDateWhen {false}
-                showStandardStreams = true
+                showStandardStreams = false
             }
             jacoco { // FOR USE IN TEST EXECUTION
                 includeNoLocationClasses = true
@@ -98,37 +97,21 @@ android {
     variantFilter { variant ->
         def names = variant.flavors*.name
 
-        def ignoreReleaseVariant = variant.buildType.name == "release" &&
-                (names.contains(flavor_endToEnd)
-                        || names.contains(flavor_integration)
-                        || names.contains(flavor_unitTest)
-                )
-        def ignoreInstrumentationVariant = variant.buildType.name == "instrumentation" &&
-                (names.contains(flavor_full)
-                        || names.contains(flavor_unitTest)
-                )
-
-        def ignoreDebugVariant = variant.buildType.name == "debug" &&
-                (names.contains(flavor_endToEnd)
-                        || names.contains(flavor_integration)
-                )
-        // To check for a build type instead, use variant.buildType.name == "buildType"
-        if (ignoreReleaseVariant || ignoreInstrumentationVariant || ignoreDebugVariant) {
-            // Gradle ignores any variants that satisfy the conditions above.
-            setIgnore(true)
+        if (names.contains("automation")) {
+            if (variant.buildType.name == "release" || variant.buildType.name == "debug") {
+                setIgnore(true)
+            }
         }
     }
 
 }
 
 dependencies {
-
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
-    endToEndImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
-    integrationImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
-    unitTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
+    automationImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
+    androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
+    testImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
 
     implementation group: 'com.l4digital.fastscroll', name: 'fastscroll', version: FAST_SCROLL_VERSION
     implementation group: 'androidx.drawerlayout', name: 'drawerlayout', version: DRAWER_LAYOUT_VERSION
@@ -163,10 +146,15 @@ dependencies {
     debugImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     debugImplementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
     debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+
+//    instrumentationImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
+//    instrumentationImplementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
+//    instrumentationImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+
+
     implementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
     implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
     implementation group: 'androidx.fragment', name: 'fragment-ktx', version: FRAGMENT_VERSION
-    integrationImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
 
     // Glide
     implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION
@@ -204,35 +192,53 @@ dependencies {
     androidTestImplementation project(':commons')
     implementation project(':commons')
 
-    unitTestImplementation junitUnitTests
-
+    testImplementation junitUnitTests
+    androidTestImplementation junitUnitTests
 
     testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
         exclude group: "com.google.auto.service", module: "auto-service"
     }
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN"
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: mockito_inline_version
     testImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: KOTLIN_COROUTINE_VERSION
-    testImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
 
     androidTestImplementation group: 'androidx.test', name: 'rules', version: TEST_RULES_VERSION
     androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
     androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
     androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
+    androidTestImplementation group: 'androidx.test', name: 'core-ktx', version: TEST_CORE_VERSION
 
     androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: JUNIT_EXT_VERSION
-    androidTestImplementation group: 'androidx.test', name: 'rules', version: TEST_RULES_VERSION
     androidTestImplementation group: 'androidx.test', name: 'runner', version: TEST_RUNNER_VERSION
+    androidTestUtil group: "androidx.test", name: "orchestrator", version: test_orchestrator_version
     androidTestImplementation group: 'androidx.test', name: 'monitor', version: MIRROR_VERSION
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN"
     androidTestImplementation 'com.github.tmurakami:dexopener:2.0.5'
     androidTestImplementation group: 'com.linkedin.dexmaker', name: 'dexmaker-mockito-inline-extended', version: '2.28.0'
+    androidTestImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-reflect:1.4.21"
 
-    endToEndImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
-    integrationImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: ESPRESSO_CORE_VERSION
+    androidTestImplementation 'androidx.arch.core:core-common:2.1.0'
+    androidTestImplementation 'androidx.arch.core:core-runtime:2.1.0'
+    androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
+
+
+    automationImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
+    debugImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: ESPRESSO_CORE_VERSION
+    androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: ESPRESSO_CORE_VERSION
 
 }
 
 kapt {
     correctErrorTypes true
+}
+
+sonarqube {
+    androidVariant 'fullDebug'
+    properties {
+        property 'sonar.java.binaries', "${project.buildDir}/intermediates/javac/fullDebug/classes,${project.buildDir}/tmp/kotlin-classes/fullDebug"
+        property 'sonar.coverage.jacoco.xmlReportPaths', "${project.buildDir}/reports/jacoco/${rootProject.ext.properties.jacaco_report_name}/${rootProject.ext.properties.jacaco_report_name}.xml"
+        property 'sonar.sources', "${projectDir}/src/main/java"
+    }
 }

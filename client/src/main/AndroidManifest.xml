@@ -1,10 +1,12 @@
-<manifest package="com.github.goldy1992.mp3player.client"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest package="com.github.goldy1992.mp3player"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:theme="@style/AppTheme.Orange">
+        android:theme="@style/AppTheme.Orange"
+        tools:node="merge">
         <activity
-            android:name=".activities.SplashScreenEntryActivity">
+            android:name=".client.activities.SplashScreenEntryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -12,7 +14,7 @@
         </activity>
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".client.activities.MainActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" >
             <meta-data android:name="android.app.default_searchable"
                 android:value=".activities.SearchResultActivity" />

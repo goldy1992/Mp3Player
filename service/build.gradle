@@ -28,7 +28,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            testCoverageEnabled false
+            testCoverageEnabled true
             debuggable true
             minifyEnabled false
         }
@@ -38,28 +38,18 @@ android {
         full {
             dimension = flavor_dimen_mode
         }
-        endToEnd {
-            dimension = flavor_dimen_mode
-        }
-        integration {
-            dimension = flavor_dimen_mode
-        }
-        unitTest {
+        automation {
             dimension = flavor_dimen_mode
         }
     }
 
     variantFilter { variant ->
         def names = variant.flavors*.name
-        def isReleaseTest = variant.buildType.name =="release" &&
-            (
-                names.contains(flavor_integration)
-                || names.contains(flavor_unitTest)
-            )
-        // To check for a build type instead, use variant.buildType.name == "buildType"
-        if (isReleaseTest) {
-            // Gradle ignores any variants that satisfy the conditions above.
-            setIgnore(true)
+
+        if (names.contains("automation")) {
+            if (variant.buildType.name == "release" || variant.buildType.name == "debug") {
+                setIgnore(true)
+            }
         }
     }
 
@@ -85,9 +75,9 @@ android {
         }
         unitTests.all {
             testLogging {
-                events "passed", "skipped", "failed", "standardOut", "standardError"
+                events "passed", "skipped"//, "failed", "standardOut", "standardError"
                 outputs.upToDateWhen { false }
-                showStandardStreams = true
+                showStandardStreams = false
             }
             jacoco {
                 includeNoLocationClasses = true
@@ -119,13 +109,14 @@ dependencies {
     kapt group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
 
 
-    unitTestImplementation junitUnitTests
+    testImplementation junitUnitTests
 
     testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
         exclude group: "com.google.auto.service", module: "auto-service"
     }
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN"
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: mockito_inline_version
     testImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
     testImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: KOTLIN_COROUTINE_VERSION
 
@@ -137,3 +128,13 @@ dependencies {
     kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
 
 }
+
+sonarqube {
+    androidVariant 'fullDebug'
+    properties {
+        property 'sonar.java.binaries', "${project.buildDir}/intermediates/javac/fullDebug/classes"
+        property 'sonar.coverage.jacoco.xmlReportPaths', "${project.buildDir}/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
+        property 'sonar.sources', "${projectDir}/src/main/java"
+    }
+}
+

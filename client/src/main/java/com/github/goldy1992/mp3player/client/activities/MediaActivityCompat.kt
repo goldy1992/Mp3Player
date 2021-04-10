@@ -14,15 +14,21 @@ import javax.inject.Inject
 
 abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowserConnectionListener {
 
-    /** MediaBrowserAdapter  */
+    /**
+     * MediaBrowserAdapter
+     */
     @Inject
     lateinit var mediaBrowserAdapter: MediaBrowserAdapter
 
-    /** Connection Callback */
+    /**
+     * Connection Callback
+     */
     @Inject
     lateinit var mediaConnector : MediaConnector
 
-    /** MediaControllerAdapter  */
+    /**
+     * MediaControllerAdapter
+     */
     @Inject
     lateinit var mediaControllerAdapter: MediaControllerAdapter
 
@@ -31,12 +37,13 @@ abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowse
         mediaControllerAdapter.disconnect()
         mediaBrowserAdapter.disconnect()
     }
-
     /**
      *
      */
     protected abstract fun initialiseView() : Boolean
-
+    /**
+     *
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)

@@ -1,31 +1,31 @@
 package com.github.goldy1992.mp3player.client.views.viewholders
 
+import android.content.Context
 import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
-import com.github.goldy1992.mp3player.client.databinding.SongItemMenuBinding
+import com.github.goldy1992.mp3player.databinding.SongItemMenuBinding
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.MetaDataKeys
 import org.apache.commons.io.FilenameUtils
 
-class MySongViewHolder(private val view: SongItemMenuBinding, albumArtPainter: AlbumArtPainter?)
-    : MediaItemViewHolder(view.root, albumArtPainter) {
-
+class MySongViewHolder(context: Context, binding: SongItemMenuBinding, albumArtPainter: AlbumArtPainter?)
+    : MediaItemViewHolder<SongItemMenuBinding>(context, binding, albumArtPainter) {
 
     override fun bindMediaItem(item: MediaBrowserCompat.MediaItem) { // - get element from your dataset at this position
 // - replace the contents of the views with that element
         val title : String? = extractTitle(item)
         val artist : String? = extractArtist(item)
         val duration : String? = extractDuration(item)
-        view.artist.text = artist
-        view.title.text = title
-        view.duration.text = duration
+        binding.artist.text = artist
+        binding.title.text = title
+        binding.duration.text = duration
         val uri : Uri? = MediaItemUtils.getAlbumArtUri(item)
         if (null != uri) {
-            albumArtPainter!!.paintOnView(view.albumArt, uri)
+            albumArtPainter!!.paintOnView(binding.albumArt, uri)
         }
     }
 

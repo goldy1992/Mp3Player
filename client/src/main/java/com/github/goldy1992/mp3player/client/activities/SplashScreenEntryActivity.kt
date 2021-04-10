@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.github.goldy1992.mp3player.client.PermissionGranted
 import com.github.goldy1992.mp3player.client.PermissionsProcessor
-import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.R
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -59,7 +59,8 @@ class SplashScreenEntryActivity : Hilt_SplashScreenEntryActivity(), PermissionGr
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) { //   Log.i(LOG_TAG, "permission result");
+                                            grantResults: IntArray) {
+        Log.i(logTag(), "permission result");
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         var permissionIsGranted = false
         if (permissions.isNotEmpty() && grantResults.isNotEmpty()) {
@@ -69,6 +70,7 @@ class SplashScreenEntryActivity : Hilt_SplashScreenEntryActivity(), PermissionGr
                 }
             }
         }
+        Log.i(logTag(), "permission result: " + permissionIsGranted);
         if (permissionIsGranted) {
             onPermissionGranted()
         } else {

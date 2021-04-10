@@ -5,7 +5,7 @@ apply plugin: 'jacoco'
 apply plugin: 'dagger.hilt.android.plugin'
 
     android {
-    testBuildType "instrumentation"
+    testBuildType "debug"
     packagingOptions {
         exclude 'META-INF/LICENSE.md'
         exclude 'META-INF/LICENSE-notice.md'
@@ -16,8 +16,8 @@ apply plugin: 'dagger.hilt.android.plugin'
         applicationId "com.github.goldy1992.mp3player"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion PIE
-        versionCode 4
-        versionName "1.1.0"
+        versionCode ext.properties.get('version.code')
+        versionName ext.properties.get('version.name')
         testInstrumentationRunner "com.github.goldy1992.mp3player.Mp3PlayerHiltTestRunner"
     }
 
@@ -31,13 +31,9 @@ apply plugin: 'dagger.hilt.android.plugin'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            testCoverageEnabled true
             debuggable true
             minifyEnabled false
-        }
-        instrumentation {
-            initWith debug
-            testCoverageEnabled true
-            matchingFallbacks = ['debug']
         }
     }
     flavorDimensions flavor_dimen_mode
@@ -48,14 +44,9 @@ apply plugin: 'dagger.hilt.android.plugin'
             resValue "string", "app_name", "Music Player"
             missingDimensionStrategy flavor_dimen_mode, flavor_full, flavor_integration, flavor_unitTest
         }
-        endToEnd {
-            applicationIdSuffix ".endToEnd"
-            versionNameSuffix "-endToEnd"
-            resValue "string", "app_name", "Test Music Player"
-        }
-        integration {
-            applicationIdSuffix ".integration"
-            versionNameSuffix "-integration"
+        automation {
+            applicationIdSuffix ".automation"
+            versionNameSuffix "-automation"
             resValue "string", "app_name", "Test Music Player"
         }
     }
@@ -63,24 +54,8 @@ apply plugin: 'dagger.hilt.android.plugin'
     variantFilter { variant ->
         def names = variant.flavors*.name
 
-        if (names.contains(flavor_unitTest)) {
-            setIgnore(true)
-        } else {
-
-            def ignoreReleaseVariant = variant.buildType.name == "release" &&
-                    (names.contains(flavor_endToEnd)
-                            || names.contains(flavor_integration)
-                    )
-            def ignoreInstrumentationVariant = variant.buildType.name == "instrumentation" &&
-                    (names.contains(flavor_full))
-
-            def ignoreDebugVariant = variant.buildType.name == "debug" &&
-                    (names.contains(flavor_endToEnd)
-                            || names.contains(flavor_integration)
-                    )
-            // To check for a build type instead, use variant.buildType.name == "buildType"
-            if (ignoreReleaseVariant || ignoreInstrumentationVariant || ignoreDebugVariant) {
-                // Gradle ignores any variants that satisfy the conditions above.
+        if (names.contains("automation")) {
+            if (variant.buildType.name == "release" || variant.buildType.name == "debug") {
                 setIgnore(true)
             }
         }
@@ -196,4 +171,8 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
 
+}
+
+sonarqube {
+    skipProject = true
 }

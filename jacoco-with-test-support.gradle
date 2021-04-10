@@ -4,34 +4,88 @@ jacoco {
     toolVersion = "$JACOCO_VERSION"
 }
 
+def fileFilter = [
+        '**/R.class',
+        '**/R$*.class',
+        '**/BuildConfig.*',
+        '**/Manifest*.*',
+        '**/*Test*.*',
+        'android/**/*.*',
+        '**/*$[0-9].*',
+        '**/dagger/**',
+        '**/databinding/**',
+        '**hilt_aggregated_deps**',
+        '**/Hilt_**'
+]
+
+def applicableProductFlavor = "full"
+
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
 
-task jacocoTestReportDebug(type: JacocoReport, dependsOn: ['testUnitTestDebugUnitTest']) {
+project.afterEvaluate {
+    def buildType = 'debug'
 
-    reports {
-        xml.enabled = true
-        html.enabled = true
+    def productFlavors = android.productFlavors.collect {
+        flavor -> flavor.name
     }
 
-    def fileFilter = [
-            '**/R.class',
-            '**/R$*.class',
-            '**/BuildConfig.*',
-            '**/Manifest*.*',
-            '**/*Test*.*',
-            'android/**/*.*',
-            '**/*$[0-9].*',
-            '**/dagger/**',
-            '**/databinding/**'
-    ]
+    def flavor = ''
+    if (!productFlavors?.isEmpty() && productFlavors.contains(applicableProductFlavor) ) {
+        flavor = applicableProductFlavor
+    }
 
-    def mainSrc = "$project.projectDir/src/main/java"
-    def mainClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/unitTestDebug", excludes: fileFilter)
-    def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/unitTestDebug", excludes: fileFilter)
+    def buildVariant = ''
+    if (flavor.isBlank()) {
+       buildVariant = "${buildType}"
+    } else {
+        buildVariant = "${flavor}${buildType.capitalize()}"
+    }
+    def buildVariantCapitalised = buildVariant.capitalize()
 
-    sourceDirectories.from = files([mainSrc])
-    classDirectories.from = files([mainClasses, javaClasses])
-    executionData.from = "$project.buildDir/jacoco/testUnitTestDebugUnitTest.exec"
+    task jacocoUnitTestReport(type: JacocoReport, dependsOn: ["test${buildVariantCapitalised}UnitTest"]) {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports on the ${buildVariant} build."
+        reports {
+            xml.enabled = true
+            html.enabled = true
+        }
+
+        def mainSrc = "$project.projectDir/src/main/java"
+        def mainClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${buildVariant}", excludes: fileFilter)
+        def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/${buildVariant}", excludes: fileFilter)
+
+        sourceDirectories.from = files([mainSrc])
+        classDirectories.from = files([mainClasses, javaClasses])
+        executionData.from = "$projectDir/jacoco.exec"
+    }
+    /**
+     * Generates a JaCoCo Report that aggregates the test coverage for the unit tests and
+     * instrumentation tests. This will not have any task dependencies as the unit tests and
+     * instrumentation tests should already have been run.
+     */
+    task jacocoCombinedUnitTestAndroidTestReport(type: JacocoReport) {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports for both UI and Unit Tests on the ${buildVariant} build."
+
+        reports {
+            xml.enabled = true
+            html.enabled = true
+        }
+
+        def mainSrc = "$project.projectDir/src/main/java"
+        def mainClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${buildVariant}", excludes: fileFilter)
+        def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/${buildVariant}", excludes: fileFilter)
+
+
+        sourceDirectories.from = files([mainSrc])
+        classDirectories.from = files([mainClasses, javaClasses])
+
+        // combine unit test jacoco.exec file with the android test coverage.ec file
+        executionData.from = fileTree(dir: "$projectDir", include: ["/jacoco.exec",
+                                                                    "*.ec"])
+    }
 }
+
+

@@ -1,13 +1,19 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+
+    project.beforeEvaluate {
+        Properties props = new Properties().load(file("version/version.properties").newReader())
+        project.properties.putAll(props.getProperties())
+     }
+
     ext {
+
         PIE = 28
         MARSHMALLOW = 23
         MIN_SDK_VERSION = 23
         TARGET_SDK_VERION = 28
         BUILD_TOOLS_VERSION = '29.0.2'
-        nav_version = '2.3.1'
-        kotlin_version = '1.4.10'
+        nav_version = '2.3.2'
+        kotlin_version = '1.4.21'
         ACTIVITY_VERSION = '1.1.0'
         ANDROIDX_CORE_KOTLIN_VERSION = '1.3.2'
         ANNOTATION_VERSION = '1.1.0-rc01'
@@ -18,7 +24,7 @@ buildscript {
         CONSTRAINT_LAYOUT_VERSION = '2.0.1'
         COORDINATOR_LAYOUT_VERSION = '1.1.0'
         CORE_VERSION = '1.0.1'
-        DAGGER_VERSION = '2.29.1'
+        DAGGER_VERSION = '2.30.1'
         DRAWER_LAYOUT_VERSION = '1.0.0'
         ESPRESSO_CORE_VERSION = '3.3.0'
         EXO_PLAYER_VERSION = '2.10.4'
@@ -30,7 +36,7 @@ buildscript {
         HILT_ANDROID_GRADLE_PLUGIN_VERSION = '2.29.1-alpha'
         HILT_VERSION = '2.29.1-alpha'
         HILT_ANDROID_GRADLE_PLUGIN_VERSION = '2.28-alpha'
-        HILT_VERSION = '2.29.1-alpha'
+        HILT_VERSION = '2.30.1-alpha'
         HILT_JETPACK_VERSION = '1.0.0-alpha02'
         JACOCO_VERSION = '0.8.5'
         JUNIT_EXT_VERSION = '1.1.2'
@@ -40,13 +46,15 @@ buildscript {
         MATERIAL_VERSION = '1.3.0-alpha02'
         MEDIA_VERSION = '1.1.0-alpha02'
         MIRROR_VERSION = '1.3.0'
+        mockito_inline_version = '3.7.7'
         MOCKITO_VERSION = '3.6.0'
         MOCKITO_KOTLIN = '2.2.0'
         PREFERENCE_VERSION = '1.1.1'
         RECYCLER_VIEW_VERSION = '1.1.0'
-        ROBOLECTRIC_VERSION = '4.3.1'
+        ROBOLECTRIC_VERSION = '4.5'
         ROOM_VERSION = '2.2.3'
         TEST_CORE_VERSION = '1.3.0'
+        test_orchestrator_version = '1.3.0'
         TEST_RULES_VERSION = '1.3.0'
         TEST_RUNNER_VERSION = '1.3.0'
         TEST_UI_AUTOMATOR_VERSION= '2.2.0'
@@ -87,7 +95,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'com.android.tools.build:gradle:4.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$HILT_ANDROID_GRADLE_PLUGIN_VERSION"
         def nav_version = "2.3.0"
@@ -96,7 +104,17 @@ buildscript {
 }
 
 plugins {
-    id "org.sonarqube" version "2.7"
+    id "org.sonarqube" version "3.0"
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "goldy1992_Mp3Player"
+        property "sonar.organization", "goldy1992-github"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.coverage.exclusions", "**Test**,**IAudioService.java,**dagger**,**Injector**,**LoggingUtils.*,**android**,**/res/**,**/databinding/**,**hilt_aggregated_deps**,**/Hilt_**"
+        property "sonar.coverage.inclusions", "**/main/**"
+    }
 }
 
 allprojects {
@@ -105,6 +123,7 @@ allprojects {
         jcenter()
         maven { url 'https://jitpack.io' }
     }
+
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
@@ -113,4 +132,18 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+task preSonarQube() {
+    def reportName = "jacocoUnitTestReport"
+
+    if (project.gradle.startParameter.taskNames.join(",").contains("jacocoCombinedUnitTestAndroidTestReport")) {
+        reportName = "jacocoCombinedUnitTestAndroidTestReport"
+    }
+
+    rootProject.ext.set("jacaco_report_name", reportName)
+}
+
+tasks['sonarqube'].configure {
+    mustRunAfter tasks['preSonarQube']
 }

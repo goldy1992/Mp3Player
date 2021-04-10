@@ -34,11 +34,7 @@ class ContentManager @Inject constructor(private val contentRetrievers: ContentR
      */
     fun getChildren(parentId: String?): List<MediaItem>? {
         val request = contentRequestParser.parse(parentId!!)
-        val contentRetriever = contentRetrievers[request!!.contentRetrieverKey]
-        if (null != contentRetriever)
-        return contentRetriever.getChildren(request)
-        else
-            return null
+        return contentRetrievers[request!!.contentRetrieverKey]?.getChildren(request)
     }
 
     /**

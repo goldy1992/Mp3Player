@@ -13,13 +13,28 @@ import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.commons.LogTagger
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.apache.commons.lang3.exception.ExceptionUtils
 
+/**
+ * An adapter that can be used to control the MediaPlaybackService by sending playback controls such
+ * as play/pause to the service.
+ */
 open class MediaControllerAdapter
 
 constructor(private val context: Context,
             private var mediaBrowserCompat: MediaBrowserCompat)
     : MediaBrowserConnectionListener, LogTagger, MediaControllerCompat.Callback() {
+
+
+    private val mutex : Mutex = Mutex()
+
+    init {
+        runBlocking { mutex.lock() }
+    }
 
     private var mediaController: MediaControllerCompat? = null
 
@@ -45,6 +60,7 @@ constructor(private val context: Context,
             metadata.postValue(mediaController!!.metadata)
             playbackState.postValue(mediaController!!.playbackState)
             queue.postValue(mediaController!!.queue)
+            runBlocking { mutex.unlock() }
         } catch (ex: RemoteException) {
             Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
         }
@@ -58,8 +74,8 @@ constructor(private val context: Context,
         transportControls.playFromMediaId(mediaId, extras)
     }
 
-    open fun playFromUri(uri: Uri?, extras: Bundle?) {
-        transportControls.playFromUri(uri, extras)
+    open suspend fun playFromUri(uri: Uri?, extras: Bundle?) {
+        mutex.withLock {  transportControls.playFromUri(uri, extras) }
     }
 
     open fun play() {
