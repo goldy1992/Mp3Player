@@ -16,8 +16,8 @@ apply plugin: 'dagger.hilt.android.plugin'
         applicationId "com.github.goldy1992.mp3player"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion PIE
-        versionCode 4
-        versionName "1.1.0"
+        versionCode ext.properties.get('version.code')
+        versionName ext.properties.get('version.name')
         testInstrumentationRunner "com.github.goldy1992.mp3player.Mp3PlayerHiltTestRunner"
     }
 
