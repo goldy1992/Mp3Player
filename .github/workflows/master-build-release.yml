@@ -12,6 +12,85 @@ jobs:
           fetch-depth: 0
 
 
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+
+      - name: Create Aggregrated JaCoCo Test Report and run SonarQube.
+        run: ./gradlew clean jacocoUnitTestReport
+
+
+      - name: Assemble debug and androidTest APKs
+        run: ./gradlew assembleDebug assembleAndroidTest
+
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Run firebase tests on gcloud and pull coverage data
+        run: |
+          BUCKET_ID=pw30jhrbi15pc-ywxmz0rw1n8wa/2021-01-25_23:18:57.486170_Stvb
+          echo $BUCKET_ID
+          TEST_OUTPUT_FOLDER=${{ github.workspace }}/client
+          echo $TEST_OUTPUT_FOLDER
+          gsutil -m cp -R -U gs://test-lab-$BUCKET_ID/**/sdcard/coverage.ec $TEST_OUTPUT_FOLDER || true
+          GCLOUD_OUTPUT_LOG=gcloudLog.txt
+          gcloud firebase test android run ${{github.workspace}}/.github/workflows/arguments/firebase-testlab-arguments.yml:client-ui-tests \
+            --app ${{ github.workspace }}/app/build/outputs/apk/full/debug/app-full-debug.apk \
+            --test ${{ github.workspace }}/client/build/outputs/apk/androidTest/full/debug/client-full-debug-androidTest.apk \
+             | tee $GCLOUD_OUTPUT_LOG
+          BUCKET_ID=`cat $GCLOUD_OUTPUT_LOG | sed -n -E 's#^.+test-lab-(.+)/.+#\1#p'`
+
+
+      - name: Grab remote reports and arifacts and store locally
+        run: gsutil -m cp -R -U gs://test-lab-$BUCKET_ID/**/sdcard/coverage.ec $TEST_OUTPUT_FOLDER || true
+                      --type instrumentation \
+                      --app ${{ github.workspace }}/app/build/outputs/apk/full/debug/app-full-debug.apk \
+                      --test ${{ github.workspace }}/client/build/outputs/apk/androidTest/full/debug/client-full-debug-androidTest.apk \
+                      --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec \
+                      --device model=Pixel2,version=29,locale=en,orientation=portrait \
+                      --directories-to-pull /sdcard \
+                      --no-record-video \
+                      --results-bucket \
+                      --results-dir \
+
+      - name: Create Aggregrated JaCoCo Test Report and eun SonarQube.
+        run: ./gradlew jacocoCombinedUnitTestAndroidTestReport sonarqube --stacktrace -PdisablePreDex
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+
 # code to create sources.zip and checksum to upload as github release asset.
 # sudo apt install zip
 # sudo zip -r sources.zip Mp3Player/q -x Mp3Player/google-services.json

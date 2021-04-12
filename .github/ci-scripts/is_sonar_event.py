@@ -18,8 +18,8 @@ input_file = open(sys.argv[1], 'r')
 json_string = input_file.read()
 input_file.close()
 obj = json.loads(json_string)
-event = obj['event']
-if is_sonar_event(event):
+event_obj = obj['event']
+if is_sonar_event(event_obj):
     print(1)
 else:
     print(0)
