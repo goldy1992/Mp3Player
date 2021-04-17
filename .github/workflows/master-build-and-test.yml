@@ -1,8 +1,8 @@
-name: develop-build-check
+name: master-build-release
 on:
   push:
     branches:
-      - develop
+      - master
 jobs:
   run-all-tests:
     runs-on: ubuntu-latest
@@ -11,12 +11,10 @@ jobs:
         with:
           fetch-depth: 0
 
-
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
           java-version: 11
-
 
       - name: Cache Gradle packages
         uses: actions/cache@v1
@@ -33,21 +31,17 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-
       - name: Create Aggregrated JaCoCo Test Report and run SonarQube.
         run: ./gradlew clean jacocoUnitTestReport
 
-
       - name: Assemble debug and androidTest APKs
         run: ./gradlew assembleDebug assembleAndroidTest
-
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@master
@@ -74,15 +68,15 @@ jobs:
 
       - name: Grab remote reports and arifacts and store locally
         run: gsutil -m cp -R -U gs://test-lab-$BUCKET_ID/**/sdcard/coverage.ec $TEST_OUTPUT_FOLDER || true
-                      --type instrumentation \
-                      --app ${{ github.workspace }}/app/build/outputs/apk/full/debug/app-full-debug.apk \
-                      --test ${{ github.workspace }}/client/build/outputs/apk/androidTest/full/debug/client-full-debug-androidTest.apk \
-                      --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec \
-                      --device model=Pixel2,version=29,locale=en,orientation=portrait \
-                      --directories-to-pull /sdcard \
-                      --no-record-video \
-                      --results-bucket \
-                      --results-dir \
+          --type instrumentation \
+          --app ${{ github.workspace }}/app/build/outputs/apk/full/debug/app-full-debug.apk \
+          --test ${{ github.workspace }}/client/build/outputs/apk/androidTest/full/debug/client-full-debug-androidTest.apk \
+          --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec \
+          --device model=Pixel2,version=29,locale=en,orientation=portrait \
+          --directories-to-pull /sdcard \
+          --no-record-video \
+          --results-bucket \
+          --results-dir \
 
       - name: Create Aggregrated JaCoCo Test Report and eun SonarQube.
         run: ./gradlew jacocoCombinedUnitTestAndroidTestReport sonarqube --stacktrace -PdisablePreDex

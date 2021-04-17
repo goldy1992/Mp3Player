@@ -1,0 +1,35 @@
+{
+  "devDependencies": {
+    "@semantic-release/changelog": "5.0.1",
+    "@semantic-release/exec": "^5.0.0",
+    "@semantic-release/git": "9.0.0",
+    "semantic-release": "^17.4.2"
+  },
+  "scripts": {
+    "semantic-release": "semantic-release"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/github",
+      [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "./.github/ci-scripts/release/bump_versions.py ${nextRelease.version}"
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "version/version.properties",
+            "CHANGELOG.md"
+          ]
+        }
+      ]
+    ],
+    "ci": false
+  }
+}

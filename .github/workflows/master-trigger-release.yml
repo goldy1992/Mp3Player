@@ -1,0 +1,41 @@
+name: Develop Check Run Completed Workflow
+on:
+  check_run:
+    types: [completed]
+    branches:
+      - master
+
+jobs:
+  merge-to-master-checker:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_CONTEXT: ${{ toJson(github) }}
+      QUALITY_GATE_PASSED: 0
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Dump GitHub context into event.json
+        run: echo $GITHUB_CONTEXT | tee event.json;
+
+      - name: Check Sonar Quality Gate
+        run: |
+          pip install PyGithub
+          echo "QUALITY_GATE_PASSED=$(python3 ./.github/ci-scripts/quality_gate_check.py event.json | tail -1)" >> $GITHUB_ENV ; \
+
+      - name: Setup Node.js
+        if: ${{ env.QUALITY_GATE_PASSED }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install Node.js dependencies
+        if: ${{ env.QUALITY_GATE_PASSED }}
+        run: npm ci
+
+      - name: Release
+        if: ${{ env.QUALITY_GATE_PASSED }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release --ci
