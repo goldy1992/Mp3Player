@@ -1,8 +1,0 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.github.goldy1992.mp3player"
-    android:installLocation="preferExternal">
-
-    <application>
-        <service android:name="MediaPlaybackService" />
-    </application>
-</manifest>
