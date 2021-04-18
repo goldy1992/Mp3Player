@@ -19,11 +19,19 @@ jobs:
       - name: Dump GitHub context into event.json
         run: echo $GITHUB_CONTEXT | tee event.json;
 
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+      - name: Install Python dependencies - PyGithub
+        run: pip install PyGithub
+      - name: Install Python dependencies - pyjavaproperties
+        run: pip install pyjavaproperties
       - name: Check Sonar Quality Gate
-        run: |
-          pip install PyGithub \
-          pip install pyjavaproperties \
-          echo "QUALITY_GATE_PASSED=$(python3 ./.github/ci-scripts/quality_gate_check.py event.json | tail -1)" >> $GITHUB_ENV ; \
+        run: echo "QUALITY_GATE_PASSED=$(python3 ./.github/ci-scripts/quality_gate_check.py event.json | tail -1)" >> $GITHUB_ENV ;
 
       - name: Setup Node.js
         if: ${{ env.QUALITY_GATE_PASSED }}
