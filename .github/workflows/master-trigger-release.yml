@@ -30,6 +30,10 @@ jobs:
         run: pip install PyGithub
       - name: Install Python dependencies - pyjavaproperties
         run: pip install pyjavaproperties
+      - name: Make bump_versions.py executable
+        run: chmod +x ./.github/ci-scripts/release/bump_versions.py
+      - name: Make quality_gate_check.py executable
+        run: chmod +x ./.github/ci-scripts/quality_gate_check.py
       - name: Check Sonar Quality Gate
         run: echo "QUALITY_GATE_PASSED=$(python3 ./.github/ci-scripts/quality_gate_check.py event.json | tail -1)" >> $GITHUB_ENV ;
 
