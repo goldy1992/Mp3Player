@@ -35,7 +35,7 @@ jobs:
       - name: Make quality_gate_check.py executable
         run: chmod +x ./.github/ci-scripts/quality_gate_check.py
       - name: Check Sonar Quality Gate
-        run: echo "QUALITY_GATE_PASSED=$(python3 ./.github/ci-scripts/quality_gate_check.py event.json | tail -1)" >> $GITHUB_ENV ;
+        run: echo "QUALITY_GATE_PASSED=$(python3 .github/ci-scripts/quality_gate_check.py event.json | tail -1)" >> $GITHUB_ENV ;
 
       - name: Setup Node.js
         if: ${{ env.QUALITY_GATE_PASSED }}
