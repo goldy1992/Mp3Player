@@ -50,7 +50,4 @@ jobs:
 
       - name: Release
         if: ${{ env.QUALITY_GATE_PASSED }}
-        env:
-          GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release --ci
