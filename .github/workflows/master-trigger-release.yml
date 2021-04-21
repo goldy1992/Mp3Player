@@ -12,10 +12,10 @@ jobs:
       GITHUB_CONTEXT: ${{ toJson(github) }}
       QUALITY_GATE_PASSED: 0
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
-          persist-credentials: false
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Dump GitHub context into event.json
         run: echo $GITHUB_CONTEXT | tee event.json;
