@@ -13,13 +13,15 @@
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
       "@semantic-release/changelog",
+      "@semantic-release/github",
       [
         "@semantic-release/exec",
         {
           "prepareCmd": "python3 .github/ci-scripts/release/bump_versions.py version/version.properties ${nextRelease.version}"
         }
       ],
-      ["@semantic-release/github",
+      [
+        "@semantic-release/git",
         {
           "assets": [
             "version/version.properties",
