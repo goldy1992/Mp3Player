@@ -15,6 +15,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Dump GitHub context into event.json
         run: echo $GITHUB_CONTEXT | tee event.json;
