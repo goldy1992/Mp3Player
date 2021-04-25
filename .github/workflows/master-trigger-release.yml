@@ -118,10 +118,13 @@ jobs:
         env:
           BUILD_TOOLS_VERSION: '29.0.2'
 
+      - name: Create service_account.json FROM secrets.SERVICE_ACCOUNT_JSON
+        run: echo '${{ secrets.RELEASE_SERVICE_ACCOUNT_JSON }}' > service_account.json
+
       - name: Upload signed AAB to Playstore
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJson: ${{ secrets.RELEASE_SERVICE_ACCOUNT_JSON }}
+          serviceAccountJson: service_account.json
           packageName: com.github.goldy1992.mp3player.full
           releaseFiles: ${{ env.SIGNED_RELEASE_FILE }}
           track: production
