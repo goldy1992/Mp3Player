@@ -17,8 +17,8 @@ import com.github.goldy1992.mp3player.client.activities.HiltTestActivity
 class FragmentHiltScenario<F :  Fragment>
 
     constructor(
-        private val scenario : ActivityScenario<HiltTestActivity>,
-        private val fragmentTag: String? = "fragmentTag") {
+            private val scenario : ActivityScenario<HiltTestActivity>,
+            private val fragmentTag: String? = "fragmentTag") {
     companion object {
         /**
          * launchFragmentInContainer from the androidx.fragment:fragment-testing library

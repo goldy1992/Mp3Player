@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.testing.FragmentScenario.FragmentAction
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.activities.HiltTestActivity
-import com.github.goldy1992.mp3player.client.activities.MainActivity
 
 import org.robolectric.Robolectric
 import org.robolectric.android.controller.ActivityController
