@@ -13,9 +13,3 @@ props.load(open(file))
 props[VERSION_NAME] = new_version
 props[VERSION_CODE] = str(int(props['version.code']) + 1)
 props.store(open(file, 'w'))
-
-
-
-
-
-

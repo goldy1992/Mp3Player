@@ -15,7 +15,7 @@ android {
     defaultConfig {
         applicationId "com.github.goldy1992.mp3player"
         minSdkVersion MIN_SDK_VERSION
-        targetSdkVersion PIE
+        targetSdkVersion TARGET_SDK_VERION
         versionCode Integer.parseInt(project.properties['version.code']).intValue()
         versionName project.properties['version.name']
         testInstrumentationRunner "com.github.goldy1992.mp3player.Mp3PlayerHiltTestRunner"
