@@ -1,3 +1,12 @@
+## [1.2.2](https://github.com/goldy1992/Mp3Player/compare/v1.2.1...v1.2.2) (2021-04-25)
+
+
+### Bug Fixes
+
+* **release:** fixed the release build and attempted to implement upload to play store functionality in Github Actions ([67eea60](https://github.com/goldy1992/Mp3Player/commit/67eea604f435f46546862c1d8185884f3f5e9797))
+* **release:** overwrite gradle file for next release ([a226cad](https://github.com/goldy1992/Mp3Player/commit/a226cadb3f51a120029a75955f3e14eb3318ace9))
+* **release:** reorganised release pipeline ([8cc91d3](https://github.com/goldy1992/Mp3Player/commit/8cc91d3296f2e807e72a6fad4c6f66476302d89d))
+
 ## [1.2.1](https://github.com/goldy1992/Mp3Player/compare/v1.2.0...v1.2.1) (2021-04-21)
 
 
