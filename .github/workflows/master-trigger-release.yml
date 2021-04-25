@@ -116,7 +116,7 @@ jobs:
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
         env:
-          BUILD_TOOLS_VERSION: "29.0.2"
+          BUILD_TOOLS_VERSION: '29.0.2'
 
     - name: Upload signed AAB to Playstore
       uses: r0adkll/upload-google-play@v1
