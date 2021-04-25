@@ -43,7 +43,7 @@ jobs:
         run: echo "QUALITY_GATE_PASSED=$(python3 .github/ci-scripts/quality_gate_check.py event.json | tail -1)" >> $GITHUB_ENV ;
 
       - name: Check Quality Gate Passed
-        if: !${{ env.QUALITY_GATE_PASSED }}
+        if: ${{ !env.QUALITY_GATE_PASSED }}
         run: \
           echo "Quality gate failed! Exiting with code 1."
           exit 1
