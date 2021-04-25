@@ -6,7 +6,7 @@ import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.views.viewholders.NoSearchResultsViewHolder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
-import com.github.goldy1992.mp3player.databinding.NoSearchResultsItemMenuBinding
+import com.github.goldy1992.mp3player.client.databinding.NoSearchResultsItemMenuBinding
 import javax.inject.Inject
 
 class SearchResultAdapterList

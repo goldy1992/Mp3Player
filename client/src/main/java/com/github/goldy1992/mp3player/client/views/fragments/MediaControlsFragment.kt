@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.databinding.FragmentMediaControlsBinding
+import com.github.goldy1992.mp3player.client.databinding.FragmentMediaControlsBinding
 import com.github.goldy1992.mp3player.client.views.buttons.RepeatOneRepeatAllButton
 import com.github.goldy1992.mp3player.client.views.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.commons.LogTagger

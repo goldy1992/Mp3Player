@@ -4,7 +4,7 @@ import android.content.Context
 import android.support.v4.media.MediaBrowserCompat
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
-import com.github.goldy1992.mp3player.databinding.RootItemMenuBinding
+import com.github.goldy1992.mp3player.client.databinding.RootItemMenuBinding
 
 class RootItemViewHolder
 

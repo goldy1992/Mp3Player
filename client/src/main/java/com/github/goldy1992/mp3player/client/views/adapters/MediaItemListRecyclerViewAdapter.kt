@@ -18,9 +18,9 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
-import com.github.goldy1992.mp3player.databinding.FolderItemMenuBinding
-import com.github.goldy1992.mp3player.databinding.RootItemMenuBinding
-import com.github.goldy1992.mp3player.databinding.SongItemMenuBinding
+import com.github.goldy1992.mp3player.client.databinding.FolderItemMenuBinding
+import com.github.goldy1992.mp3player.client.databinding.RootItemMenuBinding
+import com.github.goldy1992.mp3player.client.databinding.SongItemMenuBinding
 
 /**
  * A [ListAdapter] that's used to created the required [RecyclerView.ViewHolder] for each type

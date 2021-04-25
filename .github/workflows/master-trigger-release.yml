@@ -1,4 +1,4 @@
-name: Develop Check Run Completed Workflow
+name: Master Check Run Completed Workflow
 on:
   check_run:
     types: [completed]
@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  merge-to-master-checker:
+  sonar-quality-gate-check:
     runs-on: ubuntu-latest
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
@@ -26,23 +26,38 @@ jobs:
           python-version: 3.9
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
+
       - name: Install Python dependencies - PyGithub
         run: pip install PyGithub
+
       - name: Install Python dependencies - pyjavaproperties
         run: pip install pyjavaproperties
+
       - name: Make bump_versions.py executable
         run: chmod +x ./.github/ci-scripts/release/bump_versions.py
+
       - name: Make quality_gate_check.py executable
         run: chmod +x ./.github/ci-scripts/quality_gate_check.py
+
       - name: Check Sonar Quality Gate
         run: echo "QUALITY_GATE_PASSED=$(python3 .github/ci-scripts/quality_gate_check.py event.json | tail -1)" >> $GITHUB_ENV ;
 
+      - name: Check Quality Gate Passed
+        if: !${{ env.QUALITY_GATE_PASSED }}
+        run: \
+          echo "Quality gate failed! Exiting with code 1."
+          exit 1
       - name: Setup Node.js
         if: ${{ env.QUALITY_GATE_PASSED }}
         uses: actions/setup-node@v1
         with:
           node-version: 12
 
+  semantic-release:
+    needs: sonar-quality-gate-check
+    runs-on: ubuntu-latest
+    environment: release_env
+    steps:
       - name: Install Node.js dependencies
         if: ${{ env.QUALITY_GATE_PASSED }}
         run: npm ci
@@ -53,3 +68,62 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release --ci
+
+  release-to-playstore:
+    needs: semantic-release # needs semantic release so that the versions are incremented
+    runs-on: ubuntu-latest
+    environment: release_env
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew bundleRelease --stacktrace -PdisablePreDex
+
+      - name: Sign AAB (Android App Bundle)
+        uses: r0adkll/sign-android-release@v1
+        id: sign_app
+        with:
+          releaseDirectory: app/build/outputs/bundle/fullRelease
+          signingKeyBase64: ${{ secrets.KEY_STORE_BASE64 }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "29.0.2'"
+
+      uses: r0adkll/upload-google-play@v1
+      with:
+        serviceAccountJson: ${{ RELEASE_SERVICE_ACCOUNT_JSON }}
+        packageName: com.github.goldy1992.mp3player.full
+        releaseFiles: ${{ SIGNED_RELEASE_FILE }}
+        track: production
+        inAppUpdatePriority: 2
+        whatsNewDirectory: distrib/whatsnew
+        mappingFile: app/build/outputs/mapping/fullRelease/mapping.txt

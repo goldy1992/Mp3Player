@@ -22,9 +22,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.activities.SearchResultsFragmentViewModel
-import com.github.goldy1992.mp3player.databinding.FragmentSearchResultsBinding
+import com.github.goldy1992.mp3player.client.databinding.FragmentSearchResultsBinding
 import com.github.goldy1992.mp3player.client.listeners.MyGenericItemTouchListener
 import com.github.goldy1992.mp3player.client.views.adapters.MediaItemListRecyclerViewAdapter.Companion.buildEmptyListMediaItem
 import com.github.goldy1992.mp3player.client.views.adapters.SearchResultAdapterList

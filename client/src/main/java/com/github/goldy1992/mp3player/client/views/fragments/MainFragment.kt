@@ -12,8 +12,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.R
-import com.github.goldy1992.mp3player.databinding.FragmentMainBinding
+import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.databinding.FragmentMainBinding
 import com.github.goldy1992.mp3player.client.viewmodels.MainFragmentViewModel
 import com.github.goldy1992.mp3player.client.views.adapters.MyPagerAdapter
 import com.github.goldy1992.mp3player.client.views.fragments.viewpager.FolderListFragment

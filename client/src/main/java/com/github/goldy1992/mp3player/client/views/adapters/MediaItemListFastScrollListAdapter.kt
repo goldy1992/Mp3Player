@@ -8,7 +8,7 @@ import com.bumptech.glide.ListPreloader.PreloadModelProvider
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.views.viewholders.EmptyListViewHolder
 import com.github.goldy1992.mp3player.client.views.viewholders.MediaItemViewHolder
-import com.github.goldy1992.mp3player.databinding.EmptyItemMenuBinding
+import com.github.goldy1992.mp3player.client.databinding.EmptyItemMenuBinding
 import com.l4digital.fastscroll.FastScroller
 
 abstract class MediaItemListFastScrollListAdapter

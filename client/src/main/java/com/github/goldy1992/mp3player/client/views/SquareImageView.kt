@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.widget.AppCompatImageView
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 
 class SquareImageView
     @JvmOverloads

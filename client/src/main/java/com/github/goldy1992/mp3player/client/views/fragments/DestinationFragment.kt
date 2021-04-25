@@ -1,8 +1,6 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
-import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -11,7 +9,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.github.goldy1992.mp3player.client.activities.DrawerLayoutActivity
-import com.github.goldy1992.mp3player.client.activities.MainActivity
 
 abstract class DestinationFragment : Fragment() {
 

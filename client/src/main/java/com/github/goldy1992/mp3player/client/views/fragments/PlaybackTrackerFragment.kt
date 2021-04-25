@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.SeekerBarController2
-import com.github.goldy1992.mp3player.databinding.FragmentPlaybackTrackerBinding
+import com.github.goldy1992.mp3player.client.databinding.FragmentPlaybackTrackerBinding
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.client.views.TimeCounter
 import com.github.goldy1992.mp3player.commons.LogTagger

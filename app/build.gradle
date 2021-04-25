@@ -4,7 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
 apply plugin: 'dagger.hilt.android.plugin'
 
-    android {
+android {
     testBuildType "debug"
     packagingOptions {
         exclude 'META-INF/LICENSE.md'
@@ -16,8 +16,8 @@ apply plugin: 'dagger.hilt.android.plugin'
         applicationId "com.github.goldy1992.mp3player"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion PIE
-        versionCode ext.properties.get('version.code')
-        versionName ext.properties.get('version.name')
+        versionCode Integer.parseInt(project.properties['version.code']).intValue()
+        versionName project.properties['version.name']
         testInstrumentationRunner "com.github.goldy1992.mp3player.Mp3PlayerHiltTestRunner"
     }
 

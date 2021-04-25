@@ -1,0 +1,16 @@
+android {
+    // Read version information from local file and increment as appropriate
+    def versionPropsFile = file('version/version.properties')
+    def versionCode
+    def versionName
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+
+        FileInputStream fis = new FileInputStream(versionPropsFile)
+        versionProps.load(new FileInputStream(versionPropsFile))
+        fis.close()
+        versionCode = versionProps['version.code'].toInteger()
+        versionName = versionProps['version.name']
+
+    }
+}

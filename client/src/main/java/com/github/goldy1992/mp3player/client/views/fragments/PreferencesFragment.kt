@@ -12,7 +12,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.commons.Constants.CURRENT_THEME
 import com.github.goldy1992.mp3player.commons.Constants.DARK_MODE
 import com.github.goldy1992.mp3player.commons.LogTagger

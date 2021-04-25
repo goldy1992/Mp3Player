@@ -1,4 +1,4 @@
-name: develop-pull-requests-check
+name: master-pull-requests-check
 on:
   pull_request:
     types:
