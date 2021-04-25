@@ -3,7 +3,6 @@ package com.github.goldy1992.mp3player.client
 import android.content.Context
 import android.support.v4.media.MediaMetadataCompat
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.goldy1992.mp3player.R
 import com.github.goldy1992.mp3player.client.views.TimeCounter
 import com.google.android.material.slider.Slider
 import com.nhaarman.mockitokotlin2.mock

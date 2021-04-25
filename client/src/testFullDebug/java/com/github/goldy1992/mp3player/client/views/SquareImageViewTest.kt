@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player.client.views
 
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever

@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
-import com.github.goldy1992.mp3player.databinding.ViewHolderMediaPlayerBinding
+import com.github.goldy1992.mp3player.client.databinding.ViewHolderMediaPlayerBinding
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify

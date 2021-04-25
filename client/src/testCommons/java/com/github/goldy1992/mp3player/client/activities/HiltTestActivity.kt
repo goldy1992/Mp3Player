@@ -4,7 +4,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.github.goldy1992.mp3player.R
+import com.github.goldy1992.mp3player.client.R
 import dagger.hilt.android.AndroidEntryPoint
 
 
