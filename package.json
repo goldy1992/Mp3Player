@@ -24,7 +24,7 @@
         "@semantic-release/git",
         {
           "assets": [
-            "version/version.properties",
+            "gradle.properties",
             "CHANGELOG.md"
           ]
         }
