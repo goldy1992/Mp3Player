@@ -121,9 +121,9 @@ jobs:
       - name: Upload signed AAB to Playstore
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJson: ${{ RELEASE_SERVICE_ACCOUNT_JSON }}
+          serviceAccountJson: ${{ secrets.RELEASE_SERVICE_ACCOUNT_JSON }}
           packageName: com.github.goldy1992.mp3player.full
-          releaseFiles: ${{ SIGNED_RELEASE_FILE }}
+          releaseFiles: ${{ env.SIGNED_RELEASE_FILE }}
           track: production
           inAppUpdatePriority: 2
           whatsNewDirectory: distrib/whatsnew
