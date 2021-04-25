@@ -24,17 +24,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
+
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
 
       - name: Install Python dependencies - PyGithub
         run: pip install PyGithub
-
-      - name: Install Python dependencies - pyjavaproperties
-        run: pip install pyjavaproperties
-
-      - name: Make bump_versions.py executable
-        run: chmod +x ./.github/ci-scripts/release/bump_versions.py
 
       - name: Make quality_gate_check.py executable
         run: chmod +x ./.github/ci-scripts/quality_gate_check.py
@@ -47,23 +42,35 @@ jobs:
         run: \
           echo "Quality gate failed! Exiting with code 1."
           exit 1
-      - name: Setup Node.js
-        if: ${{ env.QUALITY_GATE_PASSED }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12
 
   semantic-release:
     needs: sonar-quality-gate-check
     runs-on: ubuntu-latest
     environment: release_env
     steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install Python dependencies - pyjavaproperties
+        run: pip install pyjavaproperties
+
+      - name: Make bump_versions.py executable
+        run: chmod +x ./.github/ci-scripts/release/bump_versions.py
+
       - name: Install Node.js dependencies
-        if: ${{ env.QUALITY_GATE_PASSED }}
         run: npm ci
 
       - name: Release
-        if: ${{ env.QUALITY_GATE_PASSED }}
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
