@@ -118,6 +118,7 @@ jobs:
         env:
           BUILD_TOOLS_VERSION: "29.0.2"
 
+    - name: Upload signed AAB to Playstore
       uses: r0adkll/upload-google-play@v1
       with:
         serviceAccountJson: ${{ RELEASE_SERVICE_ACCOUNT_JSON }}
