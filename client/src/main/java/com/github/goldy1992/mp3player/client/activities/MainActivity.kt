@@ -1,26 +1,20 @@
 package com.github.goldy1992.mp3player.client.activities
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
+import androidx.activity.compose.setContent
 import androidx.annotation.VisibleForTesting
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import androidx.navigation.ui.onNavDestinationSelected
-import androidx.navigation.ui.setupWithNavController
-import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.listeners.MyDrawerListener
+import com.github.goldy1992.mp3player.client.ui.ComposeApp
+import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
-import com.github.goldy1992.mp3player.client.databinding.ActivityMainBinding
+import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -31,8 +25,6 @@ open class MainActivity : Hilt_MainActivity(),
     CoroutineScope by GlobalScope,
     DrawerLayoutActivity
 {
-    @Inject
-    lateinit var myDrawerListener: MyDrawerListener
 
     @Inject
     lateinit var componentClassMapper: ComponentClassMapper
@@ -41,43 +33,26 @@ open class MainActivity : Hilt_MainActivity(),
 
     lateinit var navigationView: NavigationView
 
+    lateinit var mediaRepository : MediaRepository
+
     @get:VisibleForTesting
     var trackToPlay: Uri? = null
         private set
+
 
     override fun initialiseView(): Boolean {
         return true
     }
 
+    @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(logTag(), "onCreate called")
-        val binding : ActivityMainBinding = ActivityMainBinding.inflate(layoutInflater)
-        this.drawerLayout = binding.drawerLayout
-        drawerLayout.addDrawerListener(myDrawerListener)
-        this.navigationView = binding.navigationView
-        initNavigationView()
-        setContentView(binding.root)
-
-        val navController : NavController = findNavController(R.id.nav_host_container)
-        binding.navigationView.setupWithNavController(navController)
-
-        val intent = intent
-        if (Intent.ACTION_VIEW == intent.action) {
-
-            trackToPlay = intent.data
-            launch(Dispatchers.Default) {
-                mediaControllerAdapter.playFromUri(trackToPlay, null)
-            }
-            navController.navigate(R.id.go_to_media_player)
-            // navigate to media player fragment
+        initMediaRepository()
+        setContent {
+            ComposeApp(mediaRepository, mediaBrowserAdapter, mediaControllerAdapter)
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val navController : NavController = findNavController(R.id.nav_host_container)
-        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
-    }
 
     @VisibleForTesting
     fun onNavigationItemSelected(menuItem: MenuItem): Boolean { // set item as selected to persist highlight
@@ -87,6 +62,16 @@ open class MainActivity : Hilt_MainActivity(),
         // Add code here to update the UI based on the item selected
         // For example, swap UI fragments here
         return true
+    }
+
+    private fun initMediaRepository() {
+        mediaRepository = MediaRepository(mediaBrowserAdapter.subscribeToRoot())
+        mediaRepository.rootItems.observe(this) {
+            for (mediaItem in it) {
+                val id = MediaItemUtils.getMediaId(mediaItem)!!
+                mediaRepository.itemMap[MediaItemUtils.getRootMediaItemType(mediaItem)!!] = mediaBrowserAdapter.subscribe(id)
+            }
+        }
     }
 
     private fun initNavigationView() {

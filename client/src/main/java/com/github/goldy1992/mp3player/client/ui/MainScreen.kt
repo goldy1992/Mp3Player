@@ -1,0 +1,155 @@
+package com.github.goldy1992.mp3player.client.ui
+
+import android.support.v4.media.MediaBrowserCompat.MediaItem
+import android.util.Log
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
+import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import com.google.accompanist.pager.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+
+@ExperimentalPagerApi
+@Composable
+fun mainScreen(navController: NavController,
+               mediaRepository: MediaRepository,
+               mediaController: MediaControllerAdapter
+) {
+    val rootItems: List<MediaItem> by mediaRepository.rootItems.observeAsState(listOf(MediaItemUtils.getEmptyMediaItem()))
+    val pagerState = rememberPagerState(pageCount = rootItems.size)
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+
+    AppTheme {
+        Scaffold (
+            scaffoldState = scaffoldState,
+            topBar = {
+            HomeAppBar (
+                pagerState = pagerState,
+                scope = scope,
+                scaffoldState = scaffoldState,
+                rootItems = rootItems)
+        },
+            bottomBar = {BottomAppBar(Modifier.height(BOTTOM_BAR_SIZE)) {
+                PlayPauseButton(mediaController = mediaController)            }
+            },
+
+            content = {
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(bottom = BOTTOM_BAR_SIZE)) {
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier
+                            .fillMaxWidth(),
+
+                    ) { pageIndex ->
+
+                        val currentItem = rootItems[pageIndex]
+
+                        when (MediaItemUtils.getRootMediaItemType(currentItem)) {
+                            MediaItemType.SONGS -> {
+                                SongList(mediaRepository = mediaRepository, mediaController = mediaController)
+                            }
+                        }
+                    }
+                }
+            },
+            drawerContent = {
+                Text("Hello World")
+            })
+    }
+
+}
+
+@ExperimentalPagerApi
+@Composable
+fun HomeAppBar(pagerState: PagerState,
+               scope : CoroutineScope,
+               scaffoldState: ScaffoldState,
+               rootItems: List<MediaItem>) {
+
+    Column {
+        TopAppBar(
+            title = {
+                Text(text = "MP3 Player")
+            },
+            backgroundColor = MaterialTheme.colors.primary,
+            navigationIcon = {
+                IconButton(onClick = {
+                    scope.launch {
+                        if (scaffoldState.drawerState.isClosed) {
+                            scaffoldState.drawerState.open()
+                        }
+                    }
+                }) {
+                    Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu Btn")
+                }
+            },
+            actions = {
+                IconButton(onClick = { }) {
+                    Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+
+                }
+            },
+
+            contentColor = MaterialTheme.colors.onPrimary,
+        )
+        TabRow(
+            selectedTabIndex = pagerState.currentPage,
+            indicator =  { tabPositions ->
+                TabRowDefaults.Indicator(
+                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                )
+            }) {
+            if (rootItemsLoaded(rootItems)) {
+                rootItems.forEachIndexed { index, item ->
+                    Tab(content = {
+                        Text(
+                            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+                            text = MediaItemUtils.getRootTitle(item)!!
+                        )
+                    },
+                        onClick = {                    // Animate to the selected page when clicked
+                            scope.launch {
+                                Log.i("MainScreen", "Clicked to go to index ${index}, string: ${item.mediaId} ")
+                                pagerState.animateScrollToPage(index)
+                            }
+                        },
+                        selected = pagerState.currentPage == index
+                    )
+                }
+            } else {
+                Tab(
+                    content = { CircularProgressIndicator() },
+                    onClick = {                   },
+                    selected = pagerState.currentPage == 0)
+            }
+        }
+    }
+} // HomeAppBar
+
+
+
+
+
+fun rootItemsLoaded(items : List<MediaItem>) : Boolean {
+    return !(items.isEmpty() || MediaItemUtils.getMediaId(items.first()) == Constants.EMPTY_MEDIA_ITEM_ID)
+}

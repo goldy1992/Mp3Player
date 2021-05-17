@@ -52,6 +52,7 @@ object Constants {
     const val ID_DELIMITER = "\\|"
     const val DARK_MODE = "dark_mode"
     const val CURRENT_THEME = "current_theme"
+    const val EMPTY_MEDIA_ITEM_ID = "-1"
 
     init {
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_NONE, "STATE_NONE") // 0

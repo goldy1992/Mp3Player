@@ -13,7 +13,6 @@ import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.commons.LogTagger
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -157,6 +156,9 @@ constructor(private val context: Context,
     override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
         this.playbackState.postValue(state)
         this.playbackSpeed.postValue(state.playbackSpeed)
+        val playing = state.state == PlaybackStateCompat.STATE_PLAYING
+        this.isPlaying.postValue(playing)
+        Log.i(logTag(), "IS PLAYING: $playing")
     }
 
     override fun onQueueChanged(newQueue: MutableList<MediaSessionCompat.QueueItem>?) {
@@ -170,5 +172,11 @@ constructor(private val context: Context,
     override fun onShuffleModeChanged(shuffleMode: Int) {
         this.shuffleMode.postValue(shuffleMode)
     }
+
+
+    /**
+     * @return True if the current playback state is [PlaybackStateCompat.STATE_PLAYING].
+     */
+    val isPlaying = MutableLiveData<Boolean>(false)
 
 }

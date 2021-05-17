@@ -7,14 +7,14 @@ import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubsc
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
-import dagger.hilt.android.scopes.ActivityScoped
+import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 
-@InstallIn(ActivityComponent::class)
+@InstallIn(ActivityRetainedComponent::class)
 @Module
 class MediaBrowserAdapterModule {
 
-    @ActivityScoped
+    @ActivityRetainedScoped
     @Provides
     fun provideMediaBrowserAdapter(mediaBrowser: MediaBrowserCompat,
                                    mySubscriptionCallback: MediaIdSubscriptionCallback,

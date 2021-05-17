@@ -130,14 +130,14 @@ dependencies {
     // hilt
     implementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
     kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
-    implementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
-    kapt group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
+  //  implementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
+    kapt group: 'com.google.dagger', name: 'hilt-compiler', version: HILT_VERSION
     androidTestImplementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
     androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
     kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
-    androidTestImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
+ //   androidTestImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
 
-    kaptAndroidTest group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
+    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-compiler', version: HILT_VERSION
 
 
     androidTestImplementation junitUnitTests

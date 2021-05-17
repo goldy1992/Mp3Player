@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.databinding.FragmentPlaybackToolbarBinding
 import com.github.goldy1992.mp3player.client.views.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToNextButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToPreviousButton
@@ -34,12 +36,22 @@ class PlayToolbarFragment : Hilt_PlayToolbarFragment(), LogTagger {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val binding : FragmentPlaybackToolbarBinding = FragmentPlaybackToolbarBinding.inflate(layoutInflater)
-        playPauseBtn.init(binding.playPauseButton)
-        skipToPreviousBtn.init(binding.skipToPreviousButton)
-        skipToNextBtn.init(binding.skipToNextButton)
-        binding.playbackToolbar.setOnClickListener { goToMediaPlayerActivity() }
-        return binding.root
+//        val binding : FragmentPlaybackToolbarBinding = FragmentPlaybackToolbarBinding.inflate(layoutInflater)
+//        playPauseBtn.init(binding.playPauseButton)
+//        skipToPreviousBtn.init(binding.skipToPreviousButton)
+//        skipToNextBtn.init(binding.skipToNextButton)
+//        binding.playbackToolbar.setOnClickListener { goToMediaPlayerActivity() }
+//        return binding.root
+
+        return ComposeView(requireContext()).apply {
+            setContent {
+                MaterialTheme {
+                    // In Compose world
+                    Text("Hello Compose!")
+                }
+            }
+        }
+
     }
 
     override fun onViewCreated(view: View, bundle: Bundle?) {

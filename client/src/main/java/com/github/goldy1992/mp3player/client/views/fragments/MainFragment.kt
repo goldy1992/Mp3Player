@@ -3,11 +3,8 @@ package com.github.goldy1992.mp3player.client.views.fragments
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
@@ -100,6 +97,11 @@ class MainFragment : Hilt_MainFragment(), LogTagger {
 
         } // observe
              viewModel.menuCategories = mediaBrowserAdapter.subscribeToRoot() as MutableLiveData<List<MediaBrowserCompat.MediaItem>>
+    }
+
+    @Composable
+    fun createMainFragment() {
+
     }
 
     override fun lockDrawerLayout(): Boolean {

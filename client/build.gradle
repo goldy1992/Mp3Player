@@ -11,6 +11,11 @@ android {
 
     buildFeatures {
         viewBinding true
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.0.0-beta05'
     }
 
     defaultConfig {
@@ -133,13 +138,13 @@ dependencies {
     implementation group: 'androidx.recyclerview', name: 'recyclerview', version: RECYCLER_VIEW_VERSION
     implementation group: 'androidx.preference', name: 'preference-ktx', version: PREFERENCE_VERSION
 
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+ //   implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
-    testImplementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+ //   testImplementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     testImplementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     testImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
-    androidTestImplementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+  //  androidTestImplementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     androidTestImplementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     androidTestImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
 
@@ -147,9 +152,6 @@ dependencies {
     debugImplementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
     debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
 
-//    instrumentationImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
-//    instrumentationImplementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
-//    instrumentationImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
 
 
     implementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
@@ -169,23 +171,56 @@ dependencies {
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
 
 
+    def compose_version = '1.0.0-beta05'
+    implementation group: 'androidx.compose.ui', name: 'ui', version: compose_version
+    // Tooling support (Previews, etc.)
+    implementation group: 'androidx.compose.ui', name: 'ui-tooling', version: compose_version
+    // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
+    implementation group: 'androidx.compose.foundation', name: 'foundation', version: compose_version
+    // Material Design
+    implementation group: 'androidx.compose.material', name:'material', version: compose_version
+    // Material design icons
+    implementation group: 'androidx.compose.material', name:'material-icons-core', version: compose_version
+    implementation group: 'androidx.compose.material', name:'material-icons-extended', version: compose_version
+    // Integration with activities
+    implementation group: 'androidx.activity', name: 'activity-compose', version: '1.3.0-alpha07'
+    // Integration with ViewModels
+    implementation group: 'androidx.lifecycle', name: 'lifecycle-viewmodel-compose', version: '1.0.0-alpha04'
+    // Integration with observables
+    implementation group: 'androidx.compose.runtime', name: 'runtime-livedata', version: compose_version
+    implementation group: 'androidx.compose.runtime', name: 'runtime-rxjava2', version: compose_version
+    implementation group: 'androidx.navigation', name: 'navigation-compose', version: '1.0.0-alpha10'
+
+    def pagerVersion = "0.9.1"
+    implementation group: "com.google.accompanist", name: "accompanist-pager", version: pagerVersion
+    implementation group: "com.google.accompanist", name: "accompanist-pager-indicators", version: pagerVersion
+
+
+    def glide_version = '0.9.1'
+    implementation group: "com.google.accompanist", name: "accompanist-glide", version: glide_version
+
+    // UI Tests
+    androidTestImplementation group: 'androidx.compose.ui', name: 'ui-test-junit4', version: compose_version
+
+
     // hilt
     implementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
-    implementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
+    implementation group: 'androidx.hilt', name: 'hilt-navigation-compose', version: '1.0.0-alpha01'
+    //  implementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: '1.0.0-alpha03'
     kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
-    kapt group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
+    kapt group: 'com.google.dagger', name: 'hilt-compiler', version: HILT_VERSION
 
     testImplementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
     testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
-    testImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
+ //   testImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
     kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
-    kaptTest group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
+    kaptTest group: 'com.google.dagger', name: 'hilt-compiler', version: HILT_VERSION
 
     androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
     kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
 
-    androidTestImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
-    kaptAndroidTest group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
+  //  androidTestImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
+    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-compiler', version: HILT_VERSION
 
 
     //   automationImplementation project(':commons')
