@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 
+//import com.l4digital.fastscroll.FastScrollRecyclerView
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.view.LayoutInflater
@@ -7,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.ListPreloader
 import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
@@ -21,7 +20,6 @@ import com.github.goldy1992.mp3player.client.views.adapters.MediaItemListFastScr
 import com.github.goldy1992.mp3player.client.views.adapters.MediaItemListRecyclerViewAdapter.Companion.buildEmptyListMediaItem
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.l4digital.fastscroll.FastScrollRecyclerView
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 import javax.inject.Inject
 
@@ -53,7 +51,7 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener, LogTagg
     @Inject
     lateinit var mediaControllerAdapter: MediaControllerAdapter
 
-    lateinit var recyclerView : FastScrollRecyclerView
+   // lateinit var recyclerView : FastScrollRecyclerView
 
     fun getParentId() : String? {
         return arguments?.getString(PARENT_ID)
@@ -88,15 +86,15 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener, LogTagg
 
         myGenericItemTouchListener = MyGenericItemTouchListener(requireContext(), this)
         binding = FragmentViewPageBinding.inflate(inflater, container, false)
-        this.recyclerView = binding.recyclerView
-        binding.recyclerView.adapter = getViewAdapter()
-        binding.recyclerView.addOnItemTouchListener(myGenericItemTouchListener)
-        myGenericItemTouchListener.parentView = binding.recyclerView
-        binding.recyclerView.itemAnimator = DefaultItemAnimator()
-        binding.recyclerView.isAttachedToWindow
-        if (binding.recyclerView.layoutManager == null) {
-            binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        }
+//        this.recyclerView = binding.recyclerView
+//        binding.recyclerView.adapter = getViewAdapter()
+//        binding.recyclerView.addOnItemTouchListener(myGenericItemTouchListener)
+//        myGenericItemTouchListener.parentView = binding.recyclerView
+//        binding.recyclerView.itemAnimator = DefaultItemAnimator()
+//        binding.recyclerView.isAttachedToWindow
+//        if (binding.recyclerView.layoutManager == null) {
+//            binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+//        }
         subscribeUi(getViewAdapter())
         return binding.root
     }
@@ -105,8 +103,8 @@ abstract class MediaItemListFragment : Fragment(), ItemSelectedListener, LogTagg
         val preLoader = albumArtPainter
                 .createPreloader(getViewAdapter()
                         as ListPreloader.PreloadModelProvider<MediaItem>)
-        recyclerView.addOnScrollListener(preLoader)
-        recyclerView.setHideScrollbar(true)
+ //       recyclerView.addOnScrollListener(preLoader)
+   //     recyclerView.setHideScrollbar(true)
     }
 
 

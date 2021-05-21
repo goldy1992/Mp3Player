@@ -18,15 +18,15 @@ class SongListAdapter
         return "MY_VIEW_ADAPTER "
     }
 
-    override fun getSectionText(position: Int): String {
-        if (hasItems()) {
-            val title = getItem(position).description.title
-            if (null != title) {
-                return title.toString().substring(0, 1)
-            }
-        }
-        return ""
-    }
+//    override fun getSectionText(position: Int): String {
+//        if (hasItems()) {
+//            val title = getItem(position).description.title
+//            if (null != title) {
+//                return title.toString().substring(0, 1)
+//            }
+//        }
+//        return ""
+//    }
 
     override fun getPreloadItems(position: Int): List<MediaBrowserCompat.MediaItem> {
         return if (position >= itemCount) {

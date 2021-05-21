@@ -16,7 +16,7 @@ class MediaSessionConnectorModule {
     @Provides
     @ServiceScoped
     fun providesContentDataSource(@ApplicationContext context: Context?): ContentDataSource {
-        return ContentDataSource(context)
+        return ContentDataSource(context!!)
     }
 
     @Provides

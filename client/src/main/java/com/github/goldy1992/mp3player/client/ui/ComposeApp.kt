@@ -8,21 +8,41 @@ import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.google.accompanist.pager.ExperimentalPagerApi
+import kotlinx.coroutines.InternalCoroutinesApi
 
 
-
+@InternalCoroutinesApi
 @ExperimentalPagerApi
 @Composable
 fun ComposeApp(mediaRepository: MediaRepository,
         mediaBrowserAdapter: MediaBrowserAdapter,
         mediaControllerAdapter: MediaControllerAdapter) {
     val navController = rememberNavController()
-    NavHost(
-        navController =  navController,
-        startDestination = "mainScreen") {
-        composable("mainScreen") { mainScreen(navController,
-            mediaRepository = mediaRepository,
-            mediaController = mediaControllerAdapter) }
-        composable("mediaPlayer") { }
+    AppTheme {
+        NavHost(
+            navController = navController,
+            startDestination = MAIN_SCREEN
+        ) {
+            composable(MAIN_SCREEN) {
+                MainScreen(
+                    navController,
+                    mediaRepository = mediaRepository,
+                    mediaController = mediaControllerAdapter
+                )
+            }
+            composable(NOW_PLAYING_SCREEN) {
+                NowPlayingScreen(
+                    navController = navController,
+                    mediaController = mediaControllerAdapter
+                )
+            }
+            composable(SEARCH_SCREEN) {
+                SearchScreen(
+                    navController = navController,
+                    mediaBrowser = mediaBrowserAdapter,
+                    mediaController = mediaControllerAdapter
+                )
+            }
+        }
     }
 }

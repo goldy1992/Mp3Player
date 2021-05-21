@@ -1,13 +1,12 @@
 package com.github.goldy1992.mp3player.client.views.fragments.viewpager
 
+//import com.github.goldy1992.mp3player.client.views.fragments.MainFragmentDirections
 import android.support.v4.media.MediaBrowserCompat
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.github.goldy1992.mp3player.client.viewmodels.FolderListViewModel
 import com.github.goldy1992.mp3player.client.viewmodels.MediaListViewModel
 import com.github.goldy1992.mp3player.client.views.adapters.FolderListAdapter
 import com.github.goldy1992.mp3player.client.views.adapters.MediaItemListFastScrollListAdapter
-import com.github.goldy1992.mp3player.client.views.fragments.MainFragmentDirections
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -25,8 +24,8 @@ class FolderListFragment : Hilt_FolderListFragment() {
     }
 
     override fun itemSelected(item: MediaBrowserCompat.MediaItem?) {
-        val action = MainFragmentDirections.goToFolderFragment(item)
-        findNavController().navigate(action)
+//        val action = MainFragmentDirections.goToFolderFragment(item)
+//        findNavController().navigate(action)
     }
 
     override fun getViewAdapter(): MediaItemListFastScrollListAdapter {

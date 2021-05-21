@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class MediaSourceFactory @Inject constructor(private val fileDataSource: FileDataSource,
                                              private val contentDataSource: ContentDataSource) : LogTagger {
-    fun createMediaSource(uri: Uri?): MediaSource? {
+    fun createMediaSource(uri: Uri): MediaSource? {
         val dataSpec = DataSpec(uri)
         val dataSrcFactory = openDataSpec(dataSpec) ?: return null
         val factory = ProgressiveMediaSource.Factory(dataSrcFactory)

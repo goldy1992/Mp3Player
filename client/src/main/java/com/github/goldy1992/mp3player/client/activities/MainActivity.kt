@@ -15,6 +15,7 @@ import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
 /**
@@ -44,6 +45,7 @@ open class MainActivity : Hilt_MainActivity(),
         return true
     }
 
+    @InternalCoroutinesApi
     @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

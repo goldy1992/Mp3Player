@@ -10,6 +10,8 @@ import com.github.goldy1992.mp3player.client.MediaConnector
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
+import com.google.accompanist.pager.ExperimentalPagerApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
 abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowserConnectionListener {
@@ -44,6 +46,8 @@ abstract class MediaActivityCompat : AppCompatActivity(), LogTagger, MediaBrowse
     /**
      *
      */
+    @InternalCoroutinesApi
+    @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)

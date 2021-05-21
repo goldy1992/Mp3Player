@@ -22,16 +22,16 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.google.accompanist.glide.rememberGlidePainter
 
 @Composable
-fun songListItem(song : MediaItem,
+fun SongListItem(song : MediaItem,
                  onClick: () -> Unit) {
         Row(modifier = Modifier
-                .padding(8.dp)
                 .fillMaxWidth()
                 .background(Color.White)
                 .clickable(onClick = onClick),
                 verticalAlignment = Alignment.CenterVertically,
         ) {
-                Image( modifier = Modifier.size(75.dp, 75.dp),
+                Image(modifier = Modifier.size(50.dp, 50.dp)
+                        .padding(1.dp),
                         painter = rememberGlidePainter(
                           MediaItemUtils.getAlbumArtUri(song = song),
                             fadeIn = true
@@ -39,10 +39,11 @@ fun songListItem(song : MediaItem,
                         contentDescription = "")
                 Column(verticalArrangement = Arrangement.Center) {
                         Text(text = MediaItemUtils.getTitle(song),
-                                style = MaterialTheme.typography.subtitle1,
+                                style = MaterialTheme.typography.body1,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis)
-                        Row(Modifier.fillMaxWidth()) {
+                        Row(Modifier.fillMaxWidth()
+                                .padding(0.dp, 0.dp, 5.dp, 0.dp)) {
                                 Text(
                                         modifier = Modifier.weight(9f),
                                         text = MediaItemUtils.getArtist(song)!!,
@@ -69,7 +70,8 @@ fun SongItem() {
                 verticalAlignment = Alignment.CenterVertically,
         ) {
                 Image( painter = painterResource(id = R.drawable.test_album_art),
-                        modifier = Modifier.size(75.dp, 75.dp),
+                        modifier = Modifier.size(60.dp, 60.dp)
+                                .padding(1.dp),
                         /*rememberGlidePainter(
                            R.mipmap.headphone_icon,
                             fadeIn = true

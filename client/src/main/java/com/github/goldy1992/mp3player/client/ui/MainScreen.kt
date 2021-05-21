@@ -2,14 +2,15 @@ package com.github.goldy1992.mp3player.client.ui
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.util.Log
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -27,7 +28,7 @@ import kotlinx.coroutines.launch
 
 @ExperimentalPagerApi
 @Composable
-fun mainScreen(navController: NavController,
+fun MainScreen(navController: NavController,
                mediaRepository: MediaRepository,
                mediaController: MediaControllerAdapter
 ) {
@@ -36,55 +37,64 @@ fun mainScreen(navController: NavController,
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
 
-    AppTheme {
-        Scaffold (
+    Scaffold (
+        scaffoldState = scaffoldState,
+        topBar = {
+        HomeAppBar (
+            navController = navController,
+            pagerState = pagerState,
+            scope = scope,
             scaffoldState = scaffoldState,
-            topBar = {
-            HomeAppBar (
-                pagerState = pagerState,
-                scope = scope,
-                scaffoldState = scaffoldState,
-                rootItems = rootItems)
+            rootItems = rootItems)
         },
-            bottomBar = {BottomAppBar(Modifier.height(BOTTOM_BAR_SIZE)) {
-                PlayPauseButton(mediaController = mediaController)            }
-            },
+        bottomBar = {
+            PlayToolbar(mediaController = mediaController) {
+                navController.navigate(NOW_PLAYING_SCREEN)
+            }
+        },
 
-            content = {
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .padding(bottom = BOTTOM_BAR_SIZE)) {
-                    HorizontalPager(
-                        state = pagerState,
-                        modifier = Modifier
-                            .fillMaxWidth(),
+        content = {
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(bottom = BOTTOM_BAR_SIZE)) {
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .fillMaxWidth(),
 
-                    ) { pageIndex ->
+                ) { pageIndex ->
 
-                        val currentItem = rootItems[pageIndex]
+                    val currentItem = rootItems[pageIndex]
 
-                        when (MediaItemUtils.getRootMediaItemType(currentItem)) {
-                            MediaItemType.SONGS -> {
-                                SongList(mediaRepository = mediaRepository, mediaController = mediaController)
-                            }
+                    when (MediaItemUtils.getRootMediaItemType(currentItem)) {
+                        MediaItemType.SONGS -> {
+                            SongList(mediaRepository = mediaRepository, mediaController = mediaController)
+                        }
+                        MediaItemType.FOLDERS -> {
+                            FolderList(mediaRepository = mediaRepository, mediaController = mediaController)
+                        }
+                        else -> {
+                            Log.i("mainScreen", "unrecognised Media Item")
                         }
                     }
                 }
-            },
-            drawerContent = {
-                Text("Hello World")
-            })
-    }
+            }
+        },
+        drawerContent = {
+            Text("Hello World")
+        })
 
 }
 
 @ExperimentalPagerApi
 @Composable
-fun HomeAppBar(pagerState: PagerState,
-               scope : CoroutineScope,
-               scaffoldState: ScaffoldState,
-               rootItems: List<MediaItem>) {
+fun HomeAppBar(
+    navController: NavController,
+    pagerState: PagerState,
+    scope : CoroutineScope,
+    scaffoldState: ScaffoldState,
+    rootItems: List<MediaItem>) {
 
     Column {
         TopAppBar(
@@ -104,12 +114,11 @@ fun HomeAppBar(pagerState: PagerState,
                 }
             },
             actions = {
-                IconButton(onClick = { }) {
+                IconButton(onClick = { navController.navigate(SEARCH_SCREEN) }) {
                     Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
 
                 }
             },
-
             contentColor = MaterialTheme.colors.onPrimary,
         )
         TabRow(

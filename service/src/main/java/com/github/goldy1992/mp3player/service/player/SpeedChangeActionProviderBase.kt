@@ -35,7 +35,7 @@ abstract class SpeedChangeActionProviderBase : CustomActionProvider {
     private fun changeSpeed(newSpeed: Float, player: Player) {
         if (validSpeed(newSpeed)) {
             val newPlaybackParameters = PlaybackParameters(newSpeed)
-            player.playbackParameters = newPlaybackParameters
+            player.setPlaybackParameters(newPlaybackParameters)
         }
     }
 

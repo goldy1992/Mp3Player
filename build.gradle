@@ -20,7 +20,7 @@ buildscript {
         DAGGER_VERSION = '2.30.1'
         DRAWER_LAYOUT_VERSION = '1.0.0'
         ESPRESSO_CORE_VERSION = '3.3.0'
-        EXO_PLAYER_VERSION = '2.10.4'
+        EXO_PLAYER_VERSION = '2.13.3'
         FAST_SCROLL_VERSION = '2.0.1'
         FRAGMENT_VERSION = '1.3.0-beta01'
         GLIDE_VERSION = '4.11.0'
@@ -82,9 +82,12 @@ buildscript {
     }
 
     repositories {
+   //     mavenCentral()
         google()
-        jcenter()
+        mavenCentral()
+
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.0-alpha15'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -111,8 +114,7 @@ sonarqube {
 allprojects {
     repositories {
         google()
-        jcenter()
-        maven { url 'https://jitpack.io' }
+        mavenCentral()
     }
 
     tasks.withType(JavaCompile) {

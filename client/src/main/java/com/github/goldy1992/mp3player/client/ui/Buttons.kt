@@ -2,41 +2,64 @@ package com.github.goldy1992.mp3player.client.ui
 
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.res.painterResource
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.R
 
 
 @Composable
 fun PlayPauseButton(mediaController: MediaControllerAdapter) {
     val isPlaying by mediaController.isPlaying.observeAsState()
     if (isPlaying!!) {
-        pauseButton(mediaController = mediaController)
+        PauseButton(mediaController = mediaController)
     } else {
-        playButton(mediaController = mediaController)
+        PlayButton(mediaController = mediaController)
     }
 }
 
 
 
 @Composable
-fun playButton(mediaController : MediaControllerAdapter) {
+fun PlayButton(mediaController : MediaControllerAdapter) {
     Button(onClick = { mediaController.play()}) {
         Icon(
-            painter = painterResource(id = R.drawable.ic_baseline_play_arrow_24px),
+            Icons.Filled.PlayArrow,
             contentDescription = "Play"
         )
     }
 }
 
 @Composable
-fun pauseButton(mediaController : MediaControllerAdapter) {
+fun SkipToPreviousButton(mediaController: MediaControllerAdapter) {
+    Button(onClick = {mediaController.skipToPrevious()}) {
+        Icon(
+            Icons.Filled.SkipPrevious,
+            "Skip to Previous"
+        )
+    }
+}
+
+@Composable
+fun SkipToNextButton(mediaController: MediaControllerAdapter) {
+    Button(onClick = {mediaController.skipToNext()}) {
+        Icon(
+            Icons.Filled.SkipNext,
+            "Skip to Previous"
+        )
+    }
+}
+
+@Composable
+fun PauseButton(mediaController : MediaControllerAdapter) {
     Button(onClick = { mediaController.pause()}) {
         Icon(
-            painter = painterResource(id = R.drawable.ic_baseline_pause_24px),
+            Icons.Filled.Pause,
             contentDescription = "Pause"
         )
     }

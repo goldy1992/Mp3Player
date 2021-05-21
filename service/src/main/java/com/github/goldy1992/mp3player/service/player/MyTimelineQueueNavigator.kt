@@ -13,7 +13,7 @@ class MyTimelineQueueNavigator
     @Inject
     constructor(mediaSession: MediaSessionCompat?,
                 val playlistManager: PlaylistManager)
-    : TimelineQueueNavigator(mediaSession) {
+    : TimelineQueueNavigator(mediaSession!!) {
 
     override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat {
         val mediaItem = playlistManager.getItemAtIndex(windowIndex)

@@ -20,25 +20,26 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 
 @Composable
-fun SongList(mediaRepository: MediaRepository, mediaController: MediaControllerAdapter) {
-    val songsData = mediaRepository.itemMap[MediaItemType.SONGS]
-    if (songsData == null) {
-        EmptySongsList()
+fun FolderList(mediaRepository: MediaRepository, mediaController: MediaControllerAdapter) {
+    val foldersData = mediaRepository.itemMap[MediaItemType.FOLDERS]
+    if (foldersData == null) {
+        EmptyFoldersList()
     } else {
-        val songsState : State<List<MediaBrowserCompat.MediaItem>?> = songsData.observeAsState()
-        val songs = songsState.value
+        val foldersState : State<List<MediaBrowserCompat.MediaItem>?> = foldersData.observeAsState()
+        val folders = foldersState.value
 
-        if (isEmpty(songs)) {
-            EmptySongsList()
+        if (isEmpty(folders)) {
+            EmptyFoldersList()
         } else {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(count = songs!!.size) { itemIndex ->
+                items(count = folders!!.size) { itemIndex ->
                     run {
-                        val song = songs[itemIndex]
-                        SongListItem(song) {
+                        val song = folders[itemIndex]
+                        FolderListItem(song) {
                             val libraryId = MediaItemUtils.getLibraryId(song)
-                            Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
-                            mediaController.playFromMediaId(libraryId, null)
+                            Log.i("ON_CLICK_Folder", "clicked folder with id : $libraryId")
+                            //mediaController.playFromMediaId(libraryId, null)
+                            // TODO: Implement go to folder screen
                         }
                     }
                 }
@@ -49,11 +50,9 @@ fun SongList(mediaRepository: MediaRepository, mediaController: MediaControllerA
 
 @Preview
 @Composable
-fun EmptySongsList() {
-
+fun EmptyFoldersList() {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = "No audio tracks found on your device.",
-        textAlign = TextAlign.Center)
-
+        Text(text = "No folders containing audio tracks found on your device.",
+            textAlign = TextAlign.Center)
     }
 }

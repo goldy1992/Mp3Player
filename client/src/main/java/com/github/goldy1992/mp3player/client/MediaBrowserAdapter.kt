@@ -9,7 +9,6 @@ import com.github.goldy1992.mp3player.client.callbacks.search.SearchResultListen
 import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
 import com.github.goldy1992.mp3player.commons.LogTagger
 
-
 open class MediaBrowserAdapter
 
     constructor(private val mediaBrowser: MediaBrowserCompat?,
@@ -25,6 +24,14 @@ open class MediaBrowserAdapter
 
     open fun search(query: String?, extras: Bundle?) {
         mediaBrowser?.search(query!!, extras, mySearchCallback)
+    }
+
+    open fun searchResults() : LiveData<List<MediaItem>> {
+        return mySearchCallback.searchResults
+    }
+
+    open fun clearSearchResults() {
+        mySearchCallback.searchResults.postValue(emptyList())
     }
 
     /**
@@ -68,7 +75,7 @@ open class MediaBrowserAdapter
 
 
     fun registerSearchResultListener(searchResultListener: SearchResultListener?) {
-        mySearchCallback.registerSearchResultListener(searchResultListener!!)
+//        mySearchCallback.registerSearchResultListener(searchResultListener!!)
     }
 
     override fun logTag(): String {

@@ -7,18 +7,13 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.HIDE_IMPLICIT_ONLY
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.SearchView
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -86,8 +81,8 @@ open class SearchResultsFragment : Hilt_SearchResultsFragment(), MyGenericItemTo
             when (MediaItemUtils.getMediaItemType(item)) {
                 MediaItemType.SONG, MediaItemType.SONGS -> mediaControllerAdapter.playFromMediaId(MediaItemUtils.getLibraryId(item), null)
                 MediaItemType.FOLDER, MediaItemType.FOLDERS -> {
-                    val action = MainFragmentDirections.goToFolderFragment(item)
-                    findNavController().navigate(action)
+//                    val action = MainFragmentDirections.goToFolderFragment(item)
+//                    findNavController().navigate(action)
                 }
                 else -> return
             }

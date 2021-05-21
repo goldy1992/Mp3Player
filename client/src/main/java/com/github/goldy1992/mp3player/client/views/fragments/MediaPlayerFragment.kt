@@ -1,12 +1,10 @@
 package com.github.goldy1992.mp3player.client.views.fragments
 
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter

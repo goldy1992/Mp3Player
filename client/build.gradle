@@ -15,14 +15,12 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.0.0-beta05'
+        kotlinCompilerExtensionVersion '1.0.0-beta07'
     }
 
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERION
-        versionCode 1
-        versionName "1.0"
         testInstrumentationRunner "com.github.goldy1992.mp3player.client.CustomTestRunner"
         /*makes the Android Test Orchestrator run its "pm clear" command after each test invocation.
         Ensures app's state is completely cleared between tests. */
@@ -38,7 +36,6 @@ android {
         }
         debug {
             testCoverageEnabled true
-            debuggable true
             minifyEnabled false
         }
     }
@@ -118,7 +115,7 @@ dependencies {
     androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
     testImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
 
-    implementation group: 'com.l4digital.fastscroll', name: 'fastscroll', version: FAST_SCROLL_VERSION
+ //   implementation group: 'com.l4digital.fastscroll', name: 'fastscroll', version: FAST_SCROLL_VERSION
     implementation group: 'androidx.drawerlayout', name: 'drawerlayout', version: DRAWER_LAYOUT_VERSION
     implementation group: 'androidx.coordinatorlayout', name: 'coordinatorlayout', version: COORDINATOR_LAYOUT_VERSION
     implementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
@@ -171,7 +168,7 @@ dependencies {
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
 
 
-    def compose_version = '1.0.0-beta05'
+    def compose_version = '1.0.0-beta07'
     implementation group: 'androidx.compose.ui', name: 'ui', version: compose_version
     // Tooling support (Previews, etc.)
     implementation group: 'androidx.compose.ui', name: 'ui-tooling', version: compose_version
@@ -183,21 +180,19 @@ dependencies {
     implementation group: 'androidx.compose.material', name:'material-icons-core', version: compose_version
     implementation group: 'androidx.compose.material', name:'material-icons-extended', version: compose_version
     // Integration with activities
-    implementation group: 'androidx.activity', name: 'activity-compose', version: '1.3.0-alpha07'
+    implementation group: 'androidx.activity', name: 'activity-compose', version: '1.3.0-alpha08'
     // Integration with ViewModels
-    implementation group: 'androidx.lifecycle', name: 'lifecycle-viewmodel-compose', version: '1.0.0-alpha04'
+    implementation group: 'androidx.lifecycle', name: 'lifecycle-viewmodel-compose', version: '1.0.0-alpha05'
     // Integration with observables
     implementation group: 'androidx.compose.runtime', name: 'runtime-livedata', version: compose_version
     implementation group: 'androidx.compose.runtime', name: 'runtime-rxjava2', version: compose_version
-    implementation group: 'androidx.navigation', name: 'navigation-compose', version: '1.0.0-alpha10'
-
-    def pagerVersion = "0.9.1"
-    implementation group: "com.google.accompanist", name: "accompanist-pager", version: pagerVersion
-    implementation group: "com.google.accompanist", name: "accompanist-pager-indicators", version: pagerVersion
+    implementation "androidx.navigation:navigation-compose:2.4.0-alpha01"
 
 
-    def glide_version = '0.9.1'
-    implementation group: "com.google.accompanist", name: "accompanist-glide", version: glide_version
+    def accompanist_version = "0.10.0"
+    implementation group: "com.google.accompanist", name: "accompanist-pager", version: accompanist_version
+    implementation group: "com.google.accompanist", name: "accompanist-pager-indicators", version: accompanist_version
+    implementation group: "com.google.accompanist", name: "accompanist-glide", version: accompanist_version
 
     // UI Tests
     androidTestImplementation group: 'androidx.compose.ui', name: 'ui-test-junit4', version: compose_version

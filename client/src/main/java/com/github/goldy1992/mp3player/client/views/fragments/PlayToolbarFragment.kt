@@ -8,9 +8,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.views.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToNextButton
 import com.github.goldy1992.mp3player.client.views.buttons.SkipToPreviousButton
@@ -61,9 +59,9 @@ class PlayToolbarFragment : Hilt_PlayToolbarFragment(), LogTagger {
     }
 
     private fun goToMediaPlayerActivity() {
-        if (findNavController().currentDestination?.id != R.id.media_player_fragment) {
-            findNavController().navigate(R.id.go_to_media_player)
-        }
+//        if (findNavController().currentDestination?.id != R.id.media_player_fragment) {
+//            findNavController().navigate(R.id.go_to_media_player)
+//        }
     }
 
     override fun logTag(): String {

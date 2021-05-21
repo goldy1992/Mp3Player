@@ -87,25 +87,25 @@ object MediaItemUtils {
     }
 
     @JvmStatic
-    fun getDirectoryName(item: MediaItem): String? {
+    fun getDirectoryName(item: MediaItem): String {
         if (hasExtra(MetaDataKeys.META_DATA_DIRECTORY, item)) {
             val directory = getExtra(MetaDataKeys.META_DATA_DIRECTORY, item) as File?
             if (null != directory) {
                 return directory.name
             }
         }
-        return null
+        return Constants.UNKNOWN
     }
 
     @JvmStatic
-    fun getDirectoryPath(item: MediaItem): String? {
+    fun getDirectoryPath(item: MediaItem): String {
         if (hasExtra(MetaDataKeys.META_DATA_DIRECTORY, item)) {
             val directory = getExtra(MetaDataKeys.META_DATA_DIRECTORY, item) as File?
             if (null != directory) {
                 return directory.absolutePath
             }
         }
-        return null
+        return Constants.UNKNOWN
     }
 
     @JvmStatic

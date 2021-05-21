@@ -19,9 +19,9 @@ class MyMetadataProvider
     constructor(private val playlistManager: PlaylistManager)
     : MediaMetadataProvider {
 
-    override fun getMetadata(player: Player): MediaMetadataCompat? {
+    override fun getMetadata(player: Player): MediaMetadataCompat {
         val currentIndex = player.currentWindowIndex
-        val currentItem = playlistManager.getItemAtIndex(currentIndex) ?: return null
+        val currentItem = playlistManager.getItemAtIndex(currentIndex) ?: throw NullPointerException()
         val builder = MediaMetadataCompat.Builder()
         builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, getDuration(currentItem))
         val mediaId = getMediaId(currentItem)

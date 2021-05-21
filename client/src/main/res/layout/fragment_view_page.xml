@@ -7,14 +7,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <com.l4digital.fastscroll.FastScrollRecyclerView
-            android:id="@+id/recyclerView"
-            app:fastScrollAutoHide="false"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:bubbleColor="?colorPrimary"
-            app:bubbleTextColor="?colorOnPrimary"
-            app:handleColor="?colorPrimary"
-          />
+<!--    <com.l4digital.fastscroll.FastScrollRecyclerView-->
+<!--            android:id="@+id/recyclerView"-->
+<!--            app:fastScrollAutoHide="false"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            app:bubbleColor="?colorPrimary"-->
+<!--            app:bubbleTextColor="?colorOnPrimary"-->
+<!--            app:handleColor="?colorPrimary"-->
+<!--          />-->
 
     </FrameLayout>
