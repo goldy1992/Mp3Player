@@ -6,15 +6,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -24,6 +34,7 @@ import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import org.apache.commons.lang3.StringUtils
 
+@ExperimentalComposeUiApi
 @Composable
 fun SearchScreen(
     navController: NavController,
@@ -58,45 +69,66 @@ fun SearchScreen(
 
 
 
+@ExperimentalComposeUiApi
 @Composable
 fun SearchBar(navController: NavController,
               mediaBrowser: MediaBrowserAdapter) {
     val searchQuery = remember { mutableStateOf(TextFieldValue()) }
     val scope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
 
     Column(
-        Modifier
-            .focusModifier()
-            .fillMaxWidth()) {
-
+        Modifier.fillMaxWidth()
+    ) {
         TextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                .focusRequester(focusRequester = focusRequester).onFocusChanged {
+                    Log.i("SearchScreen", "Focus changed: $it")
+                    if (it == FocusState.Active) {
+                        keyboardController?.show()
+                    }},
             value = searchQuery.value,
             onValueChange = {
                 searchQuery.value = it
-                mediaBrowser.search(searchQuery.value.text, null)},
+                mediaBrowser.search(searchQuery.value.text, null)
+            },
             placeholder = {
                 Text(text = "Search Media")
             },
             leadingIcon = {
                 IconButton(onClick = {
                     scope.launch {
+                        mediaBrowser.clearSearchResults()
                         navController.popBackStack()
                     }
-                }){
+                }) {
                     Icon(Icons.Filled.ArrowBack, "Back")
                 }
             },
             trailingIcon = {
                 if (StringUtils.isNotEmpty(searchQuery.value.text)) {
-                    IconButton(onClick = { searchQuery.value = TextFieldValue()  }) {
-                        Icon(Icons.Outlined.Close, "Cancel")
+                    IconButton(onClick = { searchQuery.value = TextFieldValue()
                         mediaBrowser.clearSearchResults()
+                    }) {
+                        Icon(Icons.Outlined.Close, "Cancel")
                     }
                 }
-            })
+            },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(
+                onSearch = { keyboardController?.hide() }
+            )
+
+        )
 
     }
+
+    DisposableEffect(Unit) {
+        focusRequester.requestFocus()
+        onDispose { }
+    }
+
 }
 
 @Composable
@@ -116,9 +148,13 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter) {
                         FolderListItem(folder = mediaItem, onClick = {} )
                     }
                     MediaItemType.ROOT -> {
-                        Column(Modifier.fillMaxWidth()) {
-                            Text(text = MediaItemUtils.getTitle(mediaItem))
-                            // TODO: Add underscore line and padding.
+                        Column(Modifier.fillMaxWidth().padding(0.dp, 3.dp, 0.dp, 1.dp)) {
+                            Text(text = MediaItemUtils.getTitle(mediaItem),
+                            style = MaterialTheme.typography.subtitle1
+                            )
+                            Divider(
+                                color = Color.Black,
+                                modifier = Modifier.fillMaxWidth())
                         }
                     }
 
