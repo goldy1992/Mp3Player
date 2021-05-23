@@ -82,7 +82,7 @@ fun MainScreen(navController: NavController,
             }
         },
         drawerContent = {
-            Text("Hello World")
+            NavigationDrawer()
         })
 
 }

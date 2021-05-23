@@ -3,10 +3,7 @@ package com.github.goldy1992.mp3player.client.ui
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -15,7 +12,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.commons.QueueItemUtils
@@ -85,8 +84,7 @@ fun NowPlayingScreen(navController: NavController,
                     val currentQueuePosition = mediaController.calculateCurrentQueuePosition()
                     if (newPosition < 0 || currentQueuePosition == newPosition) {
 
-                    }
-                    else {
+                    } else {
                         if (isSkipToNext(newPosition, currentQueuePosition)) {
                             mediaController.skipToNext()
                         } else if (isSkipToPrevious(newPosition, currentQueuePosition)) {
@@ -104,10 +102,24 @@ fun NowPlayingScreen(navController: NavController,
 
                     ) { pageIndex ->
                     val item = queue!![pageIndex]
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                    Image(
+                        painter = rememberGlidePainter(
+                            request = QueueItemUtils.getAlbumArtUri(item)
+                        ),
+                        contentDescription = "Album Art",
+                        modifier = Modifier.size(300.dp, 300.dp)
+                    )
+                }
+            }
 
-                    Image(painter = rememberGlidePainter(
-                        request = QueueItemUtils.getAlbumArtUri(item)),
-                        contentDescription = "Album Art")
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+     //               ShuffleButton(mediaController = mediaController)
+    //                RepeatButton(mediaController = mediaController)
+                    SpeedController(mediaController = mediaController)
                 }
             }
         }

@@ -6,6 +6,7 @@ import com.github.goldy1992.mp3player.service.R
 import com.google.android.exoplayer2.Player
 import javax.inject.Inject
 
+@Deprecated(message = "User ChangeSpeedProvider")
 class DecreaseSpeedProvider @Inject constructor() : SpeedChangeActionProviderBase() {
     override fun getCustomAction(player: Player): PlaybackStateCompat.CustomAction {
         return PlaybackStateCompat.CustomAction.Builder(DECREASE_PLAYBACK_SPEED, DECREASE_PLAYBACK_SPEED, R.drawable.border).build()

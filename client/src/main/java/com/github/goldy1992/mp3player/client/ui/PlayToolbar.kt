@@ -6,6 +6,9 @@ import androidx.compose.material.BottomAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.ui.buttons.PlayPauseButton
+import com.github.goldy1992.mp3player.client.ui.buttons.SkipToNextButton
+import com.github.goldy1992.mp3player.client.ui.buttons.SkipToPreviousButton
 
 @Composable
 fun PlayToolbar(mediaController : MediaControllerAdapter, onClick : () -> Unit) {

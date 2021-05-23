@@ -15,6 +15,7 @@ object Constants {
     const val FIRST_ITEM = 0
     const val ONE_SECOND = 1000L
     const val UNKNOWN = "Unknown"
+    const val CHANGE_PLAYBACK_SPEED = "CHANGE_PLAYBACK_SPEED"
     const val INCREASE_PLAYBACK_SPEED = "INCREASE_PLAYBACK_SPEED"
     const val DECREASE_PLAYBACK_SPEED = "DECREASE_PLAYBACK_SPEED"
     const val REPEAT_MODE = "REPEAT_MODE"

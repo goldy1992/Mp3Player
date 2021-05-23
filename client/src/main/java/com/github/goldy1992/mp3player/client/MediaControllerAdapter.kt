@@ -12,6 +12,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
+import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
@@ -49,7 +50,7 @@ constructor(private val context: Context,
 
     open val shuffleMode : MutableLiveData<Int> = MutableLiveData()
 
-    open val playbackSpeed : MutableLiveData<Float> = MutableLiveData()
+    open val playbackSpeed : MutableLiveData<Float> = MutableLiveData(1f)
 
     override fun onConnected() {
         try {
@@ -117,6 +118,12 @@ constructor(private val context: Context,
 
     open fun sendCustomAction(customAction: String?, args: Bundle?) {
         transportControls.sendCustomAction(customAction, args)
+    }
+
+    open fun changePlaybackSpeed(speed : Float)  {
+        val extras = Bundle()
+        extras.putFloat(CHANGE_PLAYBACK_SPEED, speed)
+        transportControls.sendCustomAction(CHANGE_PLAYBACK_SPEED, extras)
     }
 
     @get:VisibleForTesting

@@ -119,7 +119,6 @@ fun SearchBar(navController: NavController,
             keyboardActions = KeyboardActions(
                 onSearch = { keyboardController?.hide() }
             )
-
         )
 
     }

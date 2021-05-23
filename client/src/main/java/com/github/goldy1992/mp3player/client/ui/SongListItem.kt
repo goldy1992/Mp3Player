@@ -11,12 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.google.accompanist.glide.rememberGlidePainter
@@ -63,41 +60,4 @@ fun SongListItem(song : MediaItem,
 
 }
 
-@Preview
-@Composable
-fun SongItem() {
-        Row(modifier = Modifier.padding(8.dp).fillMaxWidth().background(Color.White),
-                verticalAlignment = Alignment.CenterVertically,
-        ) {
-                Image( painter = painterResource(id = R.drawable.test_album_art),
-                        modifier = Modifier.size(60.dp, 60.dp)
-                                .padding(1.dp),
-                        /*rememberGlidePainter(
-                           R.mipmap.headphone_icon,
-                            fadeIn = true
-                        ) */
-                        contentDescription = "")
-                Column(verticalArrangement = Arrangement.Center) {
-                        Text(text = "My Song",
-                                style = MaterialTheme.typography.subtitle1,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis)
-                        Row(Modifier.fillMaxWidth()) {
-                                Text(
-                                        modifier = Modifier.weight(9f),
-                                        text = "My Artist",
-                                        maxLines = 1,
-                                        style = MaterialTheme.typography.body2,
-                                        overflow = TextOverflow.Ellipsis)
-                                Text(
-                                        modifier = Modifier.weight(2f),
-                                        text = "03:20",
-                                        maxLines = 1,
-                                        style = MaterialTheme.typography.body2,
-                                        textAlign = TextAlign.Right
-                                )
-                        }
-                }
-        }
-}
 

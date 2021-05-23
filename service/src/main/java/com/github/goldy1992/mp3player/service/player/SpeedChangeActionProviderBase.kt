@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.service.player
 
 import android.os.Bundle
 import android.util.Log
+import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED
 import com.google.android.exoplayer2.ControlDispatcher
@@ -17,6 +18,7 @@ abstract class SpeedChangeActionProviderBase : CustomActionProvider {
         when (action) {
             INCREASE_PLAYBACK_SPEED -> newSpeed += DEFAULT_PLAYBACK_SPEED_CHANGE
             DECREASE_PLAYBACK_SPEED -> newSpeed -= DEFAULT_PLAYBACK_SPEED_CHANGE
+            CHANGE_PLAYBACK_SPEED -> newSpeed = extras!!.getFloat(CHANGE_PLAYBACK_SPEED)
             else -> {
             }
         }

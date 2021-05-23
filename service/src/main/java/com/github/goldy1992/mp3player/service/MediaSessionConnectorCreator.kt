@@ -2,12 +2,7 @@ package com.github.goldy1992.mp3player.service
 
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import com.github.goldy1992.mp3player.service.player.DecreaseSpeedProvider
-import com.github.goldy1992.mp3player.service.player.IncreaseSpeedProvider
-import com.github.goldy1992.mp3player.service.player.MyMediaButtonEventHandler
-import com.github.goldy1992.mp3player.service.player.MyMetadataProvider
-import com.github.goldy1992.mp3player.service.player.MyPlaybackPreparer
-import com.github.goldy1992.mp3player.service.player.MyTimelineQueueNavigator
+import com.github.goldy1992.mp3player.service.player.*
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector.PlaybackActions
@@ -24,8 +19,7 @@ class MediaSessionConnectorCreator
         private val myControlDispatcher: MyControlDispatcher,
         private val myMetadataProvider: MyMetadataProvider,
         private val myTimelineQueueNavigator: MyTimelineQueueNavigator,
-        private val increaseSpeedProvider: IncreaseSpeedProvider,
-        private val decreaseSpeedProvider: DecreaseSpeedProvider,
+        private val changeSpeedProvider: ChangeSpeedProvider,
         private val myMediaButtonEventHandler: MyMediaButtonEventHandler) {
     private var mediaSessionConnector: MediaSessionConnector? = null
     fun create(): MediaSessionConnector? {
@@ -36,7 +30,7 @@ class MediaSessionConnectorCreator
             newMediaSessionConnector.setControlDispatcher(myControlDispatcher)
             newMediaSessionConnector.setMediaMetadataProvider(myMetadataProvider)
             newMediaSessionConnector.setQueueNavigator(myTimelineQueueNavigator)
-            newMediaSessionConnector.setCustomActionProviders(increaseSpeedProvider, decreaseSpeedProvider)
+            newMediaSessionConnector.setCustomActionProviders(changeSpeedProvider)
             newMediaSessionConnector.setMediaButtonEventHandler(myMediaButtonEventHandler)
             newMediaSessionConnector.setEnabledPlaybackActions(SUPPORTED_PLAYBACK_ACTIONS)
             mediaSessionConnector = newMediaSessionConnector
