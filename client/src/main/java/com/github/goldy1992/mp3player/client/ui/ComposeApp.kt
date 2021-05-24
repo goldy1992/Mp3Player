@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.compose.NavHost
@@ -12,6 +13,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
 
+@ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @InternalCoroutinesApi
 @ExperimentalPagerApi

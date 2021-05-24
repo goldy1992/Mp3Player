@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.compose.setContent
 import androidx.annotation.VisibleForTesting
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.drawerlayout.widget.DrawerLayout
 import com.github.goldy1992.mp3player.client.ui.ComposeApp
@@ -46,6 +47,7 @@ open class MainActivity : Hilt_MainActivity(),
         return true
     }
 
+    @ExperimentalMaterialApi
     @ExperimentalComposeUiApi
     @InternalCoroutinesApi
     @ExperimentalPagerApi

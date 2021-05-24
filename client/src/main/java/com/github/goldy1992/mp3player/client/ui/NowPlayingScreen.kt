@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
+import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.commons.QueueItemUtils
 import com.google.accompanist.glide.rememberGlidePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -73,11 +75,12 @@ fun NowPlayingScreen(navController: NavController,
 
         content = {
             Column(
-                Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colors.background)
-                    .padding(bottom = BOTTOM_BAR_SIZE)) {
+                    Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colors.background)
+                            .padding(bottom = BOTTOM_BAR_SIZE)) {
 
+                SpeedController(mediaController = mediaController)
                 LaunchedEffect(pagerState.currentPage) {
                     Log.i("NOW_PLAYING", "current page changed")
                     val newPosition = pagerState.currentPage
@@ -117,9 +120,11 @@ fun NowPlayingScreen(navController: NavController,
             }
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-     //               ShuffleButton(mediaController = mediaController)
-    //                RepeatButton(mediaController = mediaController)
-                    SpeedController(mediaController = mediaController)
+                    ShuffleButton(mediaController = mediaController)
+                    RepeatButton(mediaController = mediaController)
+                }
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    SeekBar(mediaController = mediaController, scope = scope)
                 }
             }
         }

@@ -26,6 +26,7 @@ import com.google.accompanist.pager.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
 fun MainScreen(navController: NavController,

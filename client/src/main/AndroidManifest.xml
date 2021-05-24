@@ -6,9 +6,9 @@
         android:theme="@style/AppTheme.Orange"
         tools:node="merge">
         <activity
-            android:name=".activities.SplashScreenEntryActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:name=".activities.SplashScreenEntryActivity"
+            android:exported="true">
+            <intent-filter>                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
