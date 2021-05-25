@@ -101,10 +101,8 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
     implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
-    implementation group: 'androidx.viewpager2', name: 'viewpager2', version: VIEW_PAGER2_VERSION
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: KOTLIN_COROUTINE_VERSION
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: KOTLIN_COROUTINE_VERSION
-    implementation group: 'androidx.recyclerview', name: 'recyclerview', version: '1.1.0'
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
     implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
@@ -113,11 +111,7 @@ dependencies {
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: EXO_PLAYER_VERSION
     implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
- //   implementation group: 'com.l4digital.fastscroll', name: 'fastscroll', version: FAST_SCROLL_VERSION
     implementation group: 'androidx.preference', name: 'preference-ktx', version: PREFERENCE_VERSION
-
-    // Glide
-    implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION
 
     //dagger
     implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION

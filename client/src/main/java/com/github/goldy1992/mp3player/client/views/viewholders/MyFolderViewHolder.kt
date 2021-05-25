@@ -3,17 +3,15 @@ package com.github.goldy1992.mp3player.client.views.viewholders
 import android.content.Context
 import android.support.v4.media.MediaBrowserCompat
 import android.widget.TextView
-import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.client.databinding.FolderItemMenuBinding
 
 class MyFolderViewHolder
 
     constructor(context : Context,
-                binding: FolderItemMenuBinding,
-                albumArtPainter: AlbumArtPainter?)
+                binding: FolderItemMenuBinding)
 
-    : MediaItemViewHolder<FolderItemMenuBinding>(context, binding, albumArtPainter) {
+    : MediaItemViewHolder<FolderItemMenuBinding>(context, binding) {
 
     private val folderName: TextView = binding.folderName
     private val folderPath: TextView = binding.folderPath

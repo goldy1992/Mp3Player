@@ -18,7 +18,6 @@ import com.github.goldy1992.mp3player.client.TestUtils.typeSearchViewText
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
 import com.github.goldy1992.mp3player.client.utils.IdlingResources
-import com.github.goldy1992.mp3player.client.utils.SearchResultFragmentAndroidTestImpl
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.nhaarman.mockitokotlin2.never

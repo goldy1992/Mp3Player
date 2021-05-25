@@ -14,8 +14,6 @@
         android:layout_width="75dp"
         android:layout_centerVertical="true"
         android:id="@+id/albumArt"
-        android:paddingLeft="@dimen/default_gap"
-        android:paddingRight="@dimen/default_gap"
         android:adjustViewBounds="true"
         android:contentDescription="@string/content_description"
          />

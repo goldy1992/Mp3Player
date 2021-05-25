@@ -115,14 +115,9 @@ dependencies {
     androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
     testImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
 
- //   implementation group: 'com.l4digital.fastscroll', name: 'fastscroll', version: FAST_SCROLL_VERSION
-    implementation group: 'androidx.drawerlayout', name: 'drawerlayout', version: DRAWER_LAYOUT_VERSION
-    implementation group: 'androidx.coordinatorlayout', name: 'coordinatorlayout', version: COORDINATOR_LAYOUT_VERSION
     implementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
     implementation group: 'org.apache.commons', name: 'commons-io', version: COMMONS_IO_VERSION
-    implementation group: 'androidx.constraintlayout', name: 'constraintlayout', version: CONSTRAINT_LAYOUT_VERSION
     implementation group: 'com.google.android.material', name: 'material', version: MATERIAL_VERSION
-    implementation group: 'androidx.gridlayout', name: 'gridlayout', version: GRID_LAYOUT_VERSION
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: KOTLIN_COROUTINE_VERSION
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: KOTLIN_COROUTINE_VERSION
     implementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
@@ -131,17 +126,12 @@ dependencies {
     implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
-    implementation group: 'androidx.viewpager2', name: 'viewpager2', version: VIEW_PAGER2_VERSION
-    implementation group: 'androidx.recyclerview', name: 'recyclerview', version: RECYCLER_VIEW_VERSION
     implementation group: 'androidx.preference', name: 'preference-ktx', version: PREFERENCE_VERSION
 
- //   implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
- //   testImplementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     testImplementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     testImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
-  //  androidTestImplementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     androidTestImplementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     androidTestImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
 
@@ -154,13 +144,6 @@ dependencies {
     implementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
     implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
     implementation group: 'androidx.fragment', name: 'fragment-ktx', version: FRAGMENT_VERSION
-
-    // Glide
-    implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION
-    implementation ("com.github.bumptech.glide:recyclerview-integration:$GLIDE_VERSION") {
-        // Excludes the support library because it's already included by Glide.
-        transitive = false
-    }
 
     // navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"

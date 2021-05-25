@@ -8,9 +8,7 @@ import androidx.core.view.GravityCompat
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.test.core.app.ActivityScenario
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.goldy1992.mp3player.client.dagger.modules.GlideModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserCompatModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
@@ -26,8 +24,7 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.LooperMode
 
 @HiltAndroidTest
-@UninstallModules(GlideModule::class,
-    MediaBrowserAdapterModule::class,
+@UninstallModules(MediaBrowserAdapterModule::class,
     MediaControllerAdapterModule::class)
 @RunWith(RobolectricTestRunner::class)
 @LooperMode(LooperMode.Mode.PAUSED)

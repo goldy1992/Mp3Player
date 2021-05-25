@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
-import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.client.databinding.SongItemMenuBinding
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.Constants
@@ -12,8 +11,8 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.MetaDataKeys
 import org.apache.commons.io.FilenameUtils
 
-class MySongViewHolder(context: Context, binding: SongItemMenuBinding, albumArtPainter: AlbumArtPainter?)
-    : MediaItemViewHolder<SongItemMenuBinding>(context, binding, albumArtPainter) {
+class MySongViewHolder(context: Context, binding: SongItemMenuBinding)
+    : MediaItemViewHolder<SongItemMenuBinding>(context, binding) {
 
     override fun bindMediaItem(item: MediaBrowserCompat.MediaItem) { // - get element from your dataset at this position
 // - replace the contents of the views with that element
@@ -25,7 +24,7 @@ class MySongViewHolder(context: Context, binding: SongItemMenuBinding, albumArtP
         binding.duration.text = duration
         val uri : Uri? = MediaItemUtils.getAlbumArtUri(item)
         if (null != uri) {
-            albumArtPainter!!.paintOnView(binding.albumArt, uri)
+    //        albumArtPainter!!.paintOnView(binding.albumArt, uri)
         }
     }
 

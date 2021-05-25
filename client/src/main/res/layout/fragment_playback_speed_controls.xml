@@ -28,7 +28,6 @@
         android:background="@null"
         android:id="@+id/playbackSpeedTextView"
         android:layout_gravity="center_vertical"
-        android:layout_margin="@dimen/default_gap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/PLAYBACK_SPEED_DEFAULT_VALUE" />

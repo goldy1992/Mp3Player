@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.client.dagger.modules
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
-import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever

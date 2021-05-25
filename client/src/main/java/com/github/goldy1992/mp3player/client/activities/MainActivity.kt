@@ -25,8 +25,7 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint(MediaActivityCompat::class)
 open class MainActivity : Hilt_MainActivity(),
-    CoroutineScope by GlobalScope,
-    DrawerLayoutActivity
+    CoroutineScope by GlobalScope
 {
 
     @Inject
@@ -86,10 +85,6 @@ open class MainActivity : Hilt_MainActivity(),
 
     override fun logTag(): String {
         return "MAIN_ACTIVITY"
-    }
-
-    override fun drawerLayout(): DrawerLayout? {
-        return drawerLayout
     }
 
 }

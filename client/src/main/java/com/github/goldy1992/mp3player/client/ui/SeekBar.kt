@@ -74,7 +74,6 @@ fun SeekBar(mediaController : MediaControllerAdapter, scope : CoroutineScope) {
                 touchTrackingPosition.value = it
             },
             onValueChangeFinished = {
-       //         Log.i(logTag, "onValueFinished ${touchTrackingPosition.value}")
                 isTouchTracking.value = false
                 anim1.value = Animatable(touchTrackingPosition.value)
                 mediaController.seekTo(touchTrackingPosition.value.toLong())

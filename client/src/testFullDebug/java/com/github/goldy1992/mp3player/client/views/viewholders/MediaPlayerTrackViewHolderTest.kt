@@ -5,12 +5,9 @@ import android.net.Uri
 import android.support.v4.media.session.MediaSessionCompat
 import android.view.LayoutInflater
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.goldy1992.mp3player.client.AlbumArtPainter
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.client.databinding.ViewHolderMediaPlayerBinding
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,15 +18,14 @@ class MediaPlayerTrackViewHolderTest {
 
     private lateinit var mediaPlayerTrackViewHolder: MediaPlayerTrackViewHolder
 
-    private val albumArtPainter: AlbumArtPainter = mock<AlbumArtPainter>()
-    private lateinit var view: ViewHolderMediaPlayerBinding //= mock<ViewHolderMediaPlayerBinding>()
+      private lateinit var view: ViewHolderMediaPlayerBinding //= mock<ViewHolderMediaPlayerBinding>()
     private val context : Context = InstrumentationRegistry.getInstrumentation().context
      @Before
     fun setup() {
         val inflater = LayoutInflater.from(InstrumentationRegistry.getInstrumentation().context)
 
             this.view = ViewHolderMediaPlayerBinding.inflate(inflater)
-            mediaPlayerTrackViewHolder = MediaPlayerTrackViewHolder(view, albumArtPainter, context)
+            mediaPlayerTrackViewHolder = MediaPlayerTrackViewHolder(view, context)
 
     }
 
@@ -41,7 +37,6 @@ class MediaPlayerTrackViewHolderTest {
                 .build()
         val queueItem = MediaSessionCompat.QueueItem(mediaItem.description, 1L)
         mediaPlayerTrackViewHolder.bindMediaItem(queueItem)
-        verify(albumArtPainter, times(1)).paintOnView(view.albumArt, expectedAlbumArtUri)
     }
 
     @Test
@@ -54,6 +49,5 @@ class MediaPlayerTrackViewHolderTest {
                 .build()
         val queueItem = MediaSessionCompat.QueueItem(mediaItem.description, 1L)
         mediaPlayerTrackViewHolder.bindMediaItem(queueItem)
-        verify(albumArtPainter, times(1)).paintOnView(view.albumArt, expectedAlbumArt)
-    }
+     }
 }
