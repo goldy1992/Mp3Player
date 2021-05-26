@@ -1,6 +1,9 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.BottomAppBar
 import androidx.compose.runtime.Composable
@@ -16,9 +19,11 @@ fun PlayToolbar(mediaController : MediaControllerAdapter, onClick : () -> Unit) 
         modifier = Modifier
             .height(BOTTOM_BAR_SIZE)
             .clickable { onClick() }) {
-        SkipToPreviousButton(mediaController = mediaController)
-        PlayPauseButton(mediaController = mediaController)
-        SkipToNextButton(mediaController = mediaController)
+        Row(horizontalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxWidth()) {
+            SkipToPreviousButton(mediaController = mediaController)
+            PlayPauseButton(mediaController = mediaController)
+            SkipToNextButton(mediaController = mediaController)
+        }
     }
-
 }

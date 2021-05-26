@@ -70,10 +70,10 @@ fun MainScreen(navController: NavController,
 
                     when (MediaItemUtils.getRootMediaItemType(currentItem)) {
                         MediaItemType.SONGS -> {
-                            SongList(mediaRepository = mediaRepository, mediaController = mediaController)
+                            SongList(songsData = mediaRepository.itemMap[MediaItemType.SONGS]!!, mediaController = mediaController)
                         }
                         MediaItemType.FOLDERS -> {
-                            FolderList(mediaRepository = mediaRepository, mediaController = mediaController)
+                            FolderList(foldersData = mediaRepository.itemMap[MediaItemType.FOLDERS]!!, navController = navController, mediaRepository = mediaRepository)
                         }
                         else -> {
                             Log.i("mainScreen", "unrecognised Media Item")
@@ -83,7 +83,7 @@ fun MainScreen(navController: NavController,
             }
         },
         drawerContent = {
-            NavigationDrawer()
+            NavigationDrawer(navController = navController)
         })
 
 }
@@ -117,7 +117,6 @@ fun HomeAppBar(
             actions = {
                 IconButton(onClick = { navController.navigate(SEARCH_SCREEN) }) {
                     Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
-
                 }
             },
             contentColor = MaterialTheme.colors.onPrimary,
@@ -155,10 +154,6 @@ fun HomeAppBar(
         }
     }
 } // HomeAppBar
-
-
-
-
 
 fun rootItemsLoaded(items : List<MediaItem>) : Boolean {
     return !(items.isEmpty() || MediaItemUtils.getMediaId(items.first()) == Constants.EMPTY_MEDIA_ITEM_ID)

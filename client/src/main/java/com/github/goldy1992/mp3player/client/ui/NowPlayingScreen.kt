@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.commons.QueueItemUtils
@@ -55,13 +56,9 @@ fun NowPlayingScreen(navController: NavController,
                 },
 
                 navigationIcon = {
-                     IconButton(onClick = {
-                         scope.launch {
-                             navController.popBackStack()
-                         }
-                     }){
-                         Icon(Icons.Filled.ArrowBack, "Back")
-                     }
+                    NavUpButton(
+                        navController = navController,
+                        scope = scope)
                 },
                 actions = {},
                 contentColor = MaterialTheme.colors.onPrimary

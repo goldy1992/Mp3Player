@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.client.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,12 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.R
 
 @ExperimentalMaterialApi
-@Preview
 @Composable
-fun NavigationDrawer() {
+fun NavigationDrawer(navController: NavController) {
     Column(modifier = Modifier
         .fillMaxWidth()
         .background(MaterialTheme.colors.background)) {
@@ -34,13 +35,11 @@ fun NavigationDrawer() {
 
             Divider()
             ListItem(icon = { Icon(Icons.Filled.Settings, contentDescription = "Settings") },
-                text = { Text("Settings")},
-
+                    text = { Text("Settings") },
+                    modifier = Modifier.clickable { navController.navigate(SETTINGS_SCREEN) }
             )
-
         }
-
-
     }
 
 }
+

@@ -44,8 +44,21 @@ fun ComposeApp(mediaRepository: MediaRepository,
                 SearchScreen(
                     navController = navController,
                     mediaBrowser = mediaBrowserAdapter,
-                    mediaController = mediaControllerAdapter
+                    mediaController = mediaControllerAdapter,
+                    mediaRepository = mediaRepository
                 )
+            }
+            composable(FOLDER_SCREEN) {
+                FolderScreen(
+                        folder = mediaRepository.currentFolder!!,
+                        navController = navController,
+                        mediaBrowser = mediaBrowserAdapter,
+                        mediaController = mediaControllerAdapter
+                )
+
+            }
+            composable(SETTINGS_SCREEN) {
+                SettingsScreen(navController = navController)
             }
         }
     }

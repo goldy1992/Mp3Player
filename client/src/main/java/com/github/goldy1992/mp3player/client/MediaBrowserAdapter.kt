@@ -3,11 +3,13 @@ package com.github.goldy1992.mp3player.client
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback
 import com.github.goldy1992.mp3player.client.callbacks.search.SearchResultListener
 import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
 import com.github.goldy1992.mp3player.commons.LogTagger
+import org.apache.commons.lang3.StringUtils.isEmpty
 
 open class MediaBrowserAdapter
 
@@ -23,7 +25,11 @@ open class MediaBrowserAdapter
     }
 
     open fun search(query: String?, extras: Bundle?) {
-        mediaBrowser?.search(query!!, extras, mySearchCallback)
+        if (isEmpty(query)) {
+            Log.w(logTag(), "Null or empty search query seen")
+        } else {
+            mediaBrowser?.search(query!!, extras, mySearchCallback)
+        }
     }
 
     open fun searchResults() : LiveData<List<MediaItem>> {

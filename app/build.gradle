@@ -113,9 +113,6 @@ dependencies {
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
     implementation group: 'androidx.preference', name: 'preference-ktx', version: PREFERENCE_VERSION
 
-    //dagger
-    implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
-
     // local libs
     implementation project(path: ':commons')
     implementation project(path: ':service')

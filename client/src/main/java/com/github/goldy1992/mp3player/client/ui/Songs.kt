@@ -8,33 +8,30 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.LiveData
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
-import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 
 @Composable
-fun SongList(mediaRepository: MediaRepository, mediaController: MediaControllerAdapter) {
-    val songsData = mediaRepository.itemMap[MediaItemType.SONGS]
-    if (songsData == null) {
-        EmptySongsList()
-    } else {
-        val songsState : State<List<MediaBrowserCompat.MediaItem>?> = songsData.observeAsState()
-        val songs = songsState.value
+fun SongList(songsData : LiveData<List<MediaBrowserCompat.MediaItem>>,
+             mediaController: MediaControllerAdapter) {
 
-        if (isEmpty(songs)) {
-            EmptySongsList()
-        } else {
+    val songs by songsData.observeAsState()
+    when {
+        songs == null -> LoadingIndicator()
+        isEmpty(songs) -> EmptySongsList()
+        else -> {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(count = songs!!.size) { itemIndex ->
                     run {
-                        val song = songs[itemIndex]
+                        val song = songs!![itemIndex]
                         SongListItem(song) {
                             val libraryId = MediaItemUtils.getLibraryId(song)
                             Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")

@@ -61,12 +61,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
 
-    //dagger
-    kapt group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
-    kaptTest group: 'com.google.dagger', name: 'dagger-compiler', version: DAGGER_VERSION
-    implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
-
-
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
 
     testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {

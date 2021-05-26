@@ -34,7 +34,7 @@ fun FolderListItem(folder : MediaItem,
         )
         Column(verticalArrangement = Arrangement.Center) {
             Text(text = MediaItemUtils.getDirectoryName(folder),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.body2,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis)
 

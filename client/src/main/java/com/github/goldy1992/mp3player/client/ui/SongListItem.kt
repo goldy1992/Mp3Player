@@ -24,7 +24,8 @@ fun SongListItem(song : MediaItem,
         Row(modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White)
-                .clickable(onClick = onClick),
+                .clickable(onClick = onClick)
+                .padding(start = DEFAULT_PADDING, end = DEFAULT_PADDING),
                 verticalAlignment = Alignment.CenterVertically,
         ) {
                 Image(modifier = Modifier.size(50.dp, 50.dp)
@@ -34,9 +35,10 @@ fun SongListItem(song : MediaItem,
                             fadeIn = true
                         ),
                         contentDescription = "")
-                Column(verticalArrangement = Arrangement.Center) {
+                Column(verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.padding(start = DEFAULT_PADDING)) {
                         Text(text = MediaItemUtils.getTitle(song),
-                                style = MaterialTheme.typography.body1,
+                                style = MaterialTheme.typography.body2,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis)
                         Row(Modifier.fillMaxWidth()
@@ -45,13 +47,13 @@ fun SongListItem(song : MediaItem,
                                         modifier = Modifier.weight(9f),
                                         text = MediaItemUtils.getArtist(song)!!,
                                         maxLines = 1,
-                                        style = MaterialTheme.typography.body2,
+                                        style = MaterialTheme.typography.caption,
                                         overflow = TextOverflow.Ellipsis)
                                 Text(
                                         modifier = Modifier.weight(2f),
                                         text = formatTime(MediaItemUtils.getDuration(song)),
                                         maxLines = 1,
-                                        style = MaterialTheme.typography.body2,
+                                        style = MaterialTheme.typography.caption,
                                         textAlign = TextAlign.Right
                                 )
                         }

@@ -16,8 +16,10 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -59,28 +61,17 @@ open class MainActivity : Hilt_MainActivity(),
     }
 
 
-    @VisibleForTesting
-    fun onNavigationItemSelected(menuItem: MenuItem): Boolean { // set item as selected to persist highlight
-        menuItem.isChecked = true
-        // close drawer when item is tapped
-        drawerLayout.closeDrawers()
-        // Add code here to update the UI based on the item selected
-        // For example, swap UI fragments here
-        return true
-    }
 
     private fun initMediaRepository() {
         mediaRepository = MediaRepository(mediaBrowserAdapter.subscribeToRoot())
         mediaRepository.rootItems.observe(this) {
-            for (mediaItem in it) {
-                val id = MediaItemUtils.getMediaId(mediaItem)!!
-                mediaRepository.itemMap[MediaItemUtils.getRootMediaItemType(mediaItem)!!] = mediaBrowserAdapter.subscribe(id)
+            launch(Dispatchers.Default) {
+                for (mediaItem in it) {
+                    val id = MediaItemUtils.getMediaId(mediaItem)!!
+                    mediaRepository.itemMap[MediaItemUtils.getRootMediaItemType(mediaItem)!!] = mediaBrowserAdapter.subscribe(id)
+                }
             }
         }
-    }
-
-    private fun initNavigationView() {
-        navigationView.setNavigationItemSelectedListener { menuItem: MenuItem -> onNavigationItemSelected(menuItem) }
     }
 
     override fun logTag(): String {

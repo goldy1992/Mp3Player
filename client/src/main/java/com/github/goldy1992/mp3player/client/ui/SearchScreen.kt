@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import kotlinx.coroutines.launch
@@ -39,7 +41,8 @@ import org.apache.commons.lang3.StringUtils
 fun SearchScreen(
     navController: NavController,
     mediaBrowser :  MediaBrowserAdapter,
-    mediaController : MediaControllerAdapter) {
+    mediaController : MediaControllerAdapter,
+    mediaRepository: MediaRepository) {
 
     val scaffoldState = rememberScaffoldState()
 
@@ -51,16 +54,16 @@ fun SearchScreen(
             mediaBrowser = mediaBrowser
         )},
         bottomBar = {
-        PlayToolbar(mediaController = mediaController) {
-            navController.navigate(NOW_PLAYING_SCREEN)
-        }
+            PlayToolbar(mediaController = mediaController) {
+                navController.navigate(NOW_PLAYING_SCREEN)
+            }
         },
         content = {
             Column(
                 Modifier
                     .fillMaxSize()
                     .padding(bottom = BOTTOM_BAR_SIZE)) {
-                SearchResults(mediaBrowser = mediaBrowser)
+                SearchResults(mediaBrowser = mediaBrowser, mediaController = mediaController, mediaRepository = mediaRepository, navController = navController)
             }
         }
     )
@@ -82,8 +85,11 @@ fun SearchBar(navController: NavController,
         Modifier.fillMaxWidth()
     ) {
         TextField(
-            modifier = Modifier.fillMaxWidth()
-                .focusRequester(focusRequester = focusRequester).onFocusChanged {
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colors.background)
+                .focusRequester(focusRequester = focusRequester)
+                .onFocusChanged {
                     Log.i("SearchScreen", "Focus changed: $it")
                     if (it == FocusState.Active) {
                         keyboardController?.show()
@@ -131,7 +137,10 @@ fun SearchBar(navController: NavController,
 }
 
 @Composable
-fun SearchResults(mediaBrowser: MediaBrowserAdapter) {
+fun SearchResults(mediaBrowser: MediaBrowserAdapter,
+                  mediaController: MediaControllerAdapter,
+                  mediaRepository: MediaRepository,
+                navController: NavController) {
 
     val searchResults by mediaBrowser.searchResults().observeAsState(emptyList())
 
@@ -141,19 +150,33 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter) {
                 val mediaItem = searchResults[itemIndex]
                 when(MediaItemUtils.getMediaItemType(mediaItem)) {
                     MediaItemType.SONG -> {
-                        SongListItem(song = mediaItem, onClick = {})
+                        SongListItem(song = mediaItem, onClick = {
+                            val libraryId = MediaItemUtils.getLibraryId(mediaItem)
+                            Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
+                            mediaController.playFromMediaId(libraryId, null)
+                        })
                     }
                     MediaItemType.FOLDER -> {
-                        FolderListItem(folder = mediaItem, onClick = {} )
+                        FolderListItem(folder = mediaItem, onClick = {
+                            mediaRepository.currentFolder = mediaItem
+                            navController.navigate(FOLDER_SCREEN)
+
+                        } )
                     }
                     MediaItemType.ROOT -> {
-                        Column(Modifier.fillMaxWidth().padding(0.dp, 3.dp, 0.dp, 1.dp)) {
-                            Text(text = MediaItemUtils.getTitle(mediaItem),
-                            style = MaterialTheme.typography.subtitle1
+                        Column(Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = DEFAULT_PADDING,
+                                top = 7.dp,
+                                bottom = 2.dp)) {
+                        Text(text = MediaItemUtils.getTitle(mediaItem),
+                            style = MaterialTheme.typography.subtitle2,
+                            modifier = Modifier.padding(2.dp)
                             )
                             Divider(
                                 color = Color.Black,
-                                modifier = Modifier.fillMaxWidth())
+                                modifier = Modifier.fillMaxWidth().padding(bottom = 2.dp))
                         }
                     }
 
