@@ -19,7 +19,6 @@ class ExoPlayerModule {
     @Provides
     @ServiceScoped
     fun provideExoPlayer(@ApplicationContext context: Context?): ExoPlayer {
-       // val simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(context)
         val simpleExoPlayer = SimpleExoPlayer.Builder(context!!).build()
         val audioAttributes = AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)

@@ -20,20 +20,26 @@ class MediaSessionConnectorCreator
         private val myMetadataProvider: MyMetadataProvider,
         private val myTimelineQueueNavigator: MyTimelineQueueNavigator,
         private val changeSpeedProvider: ChangeSpeedProvider,
-        private val myMediaButtonEventHandler: MyMediaButtonEventHandler) {
+        private val myMediaButtonEventHandler: MyMediaButtonEventHandler,
+        private val playlistManager: PlaylistManager) {
     private var mediaSessionConnector: MediaSessionConnector? = null
     fun create(): MediaSessionConnector? {
         if (null == mediaSessionConnector) {
+
+
             val newMediaSessionConnector = MediaSessionConnector(mediaSessionCompat)
-            newMediaSessionConnector.setPlayer(exoPlayer)
-            newMediaSessionConnector.setPlaybackPreparer(myPlaybackPreparer)
-            newMediaSessionConnector.setControlDispatcher(myControlDispatcher)
-            newMediaSessionConnector.setMediaMetadataProvider(myMetadataProvider)
-            newMediaSessionConnector.setQueueNavigator(myTimelineQueueNavigator)
-            newMediaSessionConnector.setCustomActionProviders(changeSpeedProvider)
-            newMediaSessionConnector.setMediaButtonEventHandler(myMediaButtonEventHandler)
-            newMediaSessionConnector.setEnabledPlaybackActions(SUPPORTED_PLAYBACK_ACTIONS)
             mediaSessionConnector = newMediaSessionConnector
+
+            if (!playlistManager.isEmpty()) {
+                newMediaSessionConnector.setPlaybackPreparer(myPlaybackPreparer)
+                newMediaSessionConnector.setControlDispatcher(myControlDispatcher)
+                newMediaSessionConnector.setMediaMetadataProvider(myMetadataProvider)
+                newMediaSessionConnector.setQueueNavigator(myTimelineQueueNavigator)
+                newMediaSessionConnector.setCustomActionProviders(changeSpeedProvider)
+                newMediaSessionConnector.setMediaButtonEventHandler(myMediaButtonEventHandler)
+                newMediaSessionConnector.setEnabledPlaybackActions(SUPPORTED_PLAYBACK_ACTIONS)
+                newMediaSessionConnector.setPlayer(exoPlayer)
+            }
         }
         return mediaSessionConnector
     }

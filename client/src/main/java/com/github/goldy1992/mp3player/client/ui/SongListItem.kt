@@ -10,7 +10,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -23,7 +22,7 @@ fun SongListItem(song : MediaItem,
                  onClick: () -> Unit) {
         Row(modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White)
+                .background(MaterialTheme.colors.background)
                 .clickable(onClick = onClick)
                 .padding(start = DEFAULT_PADDING, end = DEFAULT_PADDING),
                 verticalAlignment = Alignment.CenterVertically,

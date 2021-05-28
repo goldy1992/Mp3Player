@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.service
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import dagger.hilt.android.scopes.ServiceScoped
+import org.apache.commons.collections4.CollectionUtils
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -26,6 +27,11 @@ class PlaylistManager
         return if (validQueueIndex(index)) {
             playlist!![index]
         } else null
+    }
+
+    @Synchronized
+    fun isEmpty() : Boolean {
+        return CollectionUtils.isEmpty(playlist)
     }
 
     @get:Synchronized
