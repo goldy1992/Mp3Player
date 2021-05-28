@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -20,9 +21,10 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @Composable
 fun ComposeApp(mediaRepository: MediaRepository,
         mediaBrowserAdapter: MediaBrowserAdapter,
-        mediaControllerAdapter: MediaControllerAdapter) {
+        mediaControllerAdapter: MediaControllerAdapter,
+        userPreferencesRepository: UserPreferencesRepository) {
     val navController = rememberNavController()
-    AppTheme {
+    AppTheme(userPreferencesRepository = userPreferencesRepository) {
         NavHost(
             navController = navController,
             startDestination = MAIN_SCREEN
@@ -58,7 +60,14 @@ fun ComposeApp(mediaRepository: MediaRepository,
 
             }
             composable(SETTINGS_SCREEN) {
-                SettingsScreen(navController = navController)
+                SettingsScreen(navController = navController,
+                    userPreferencesRepository = userPreferencesRepository)
+            }
+            composable(THEME_SELECT_SCREEN) {
+                ThemeSelectScreen(
+                    navController = navController,
+                    userPreferencesRepository = userPreferencesRepository
+                )
             }
         }
     }

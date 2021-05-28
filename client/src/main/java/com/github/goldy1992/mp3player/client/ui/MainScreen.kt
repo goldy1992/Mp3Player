@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -133,7 +134,8 @@ fun HomeAppBar(
                     Tab(content = {
                         Text(
                             modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
-                            text = MediaItemUtils.getRootTitle(item)!!
+                            text = MediaItemUtils.getRootMediaItemType(item = item)!!.name,
+                            style = MaterialTheme.typography.button
                         )
                     },
                         onClick = {                    // Animate to the selected page when clicked

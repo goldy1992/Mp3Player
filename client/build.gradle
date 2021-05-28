@@ -172,6 +172,9 @@ dependencies {
     implementation group: "com.google.accompanist", name: "accompanist-pager-indicators", version: accompanist_version
     implementation group: "com.google.accompanist", name: "accompanist-glide", version: accompanist_version
 
+
+    implementation "androidx.datastore:datastore-preferences:1.0.0-beta01"
+
     // UI Tests
     androidTestImplementation group: 'androidx.compose.ui', name: 'ui-test-junit4', version: compose_version
 
