@@ -13,6 +13,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -70,20 +73,42 @@ fun NowPlayingScreen(navController: NavController,
         },
 
         content = {
-            Column(
-                    Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colors.background)
-                            .padding(bottom = BOTTOM_BAR_SIZE)) {
 
-                SpeedController(mediaController = mediaController)
-                ViewPager(mediaController = mediaController)
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                    ShuffleButton(mediaController = mediaController)
-                    RepeatButton(mediaController = mediaController)
+            Column(
+                modifier = Modifier.fillMaxSize()
+                    .padding(bottom = BOTTOM_BAR_SIZE)
+            ) {
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colors.background)
+                ) {
+
+                    SpeedController(mediaController = mediaController)
+                    ViewPager(mediaController = mediaController)
                 }
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                    SeekBar(mediaController = mediaController, scope = scope)
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colors.background),
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        ShuffleButton(mediaController = mediaController)
+                        RepeatButton(mediaController = mediaController)
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        SeekBar(mediaController = mediaController, scope = scope)
+                    }
                 }
             }
         }
@@ -96,8 +121,10 @@ fun ViewPager(mediaController: MediaControllerAdapter) {
     val queue by mediaController.queue.observeAsState(emptyList())
 
     if (isEmpty(queue)) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text("Empty Playlist", style = MaterialTheme.typography.h5)
+        Column(modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            Text("Empty Playlist", style = MaterialTheme.typography.h5,
+            textAlign = TextAlign.Center)
         }
     } else {
         val pagerState = rememberPagerState(pageCount = queue.size, initialPage = mediaController.calculateCurrentQueuePosition())
@@ -124,8 +151,8 @@ fun ViewPager(mediaController: MediaControllerAdapter) {
         HorizontalPager(
                 state = pagerState,
                 modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colors.background),
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colors.background),
 
                 ) { pageIndex ->
             val item: MediaSessionCompat.QueueItem = queue!![pageIndex]
@@ -152,4 +179,26 @@ private fun isSkipToNext(newPosition: Int, currentPosition : Int): Boolean {
 
 private fun isSkipToPrevious(newPosition: Int, currentPosition : Int): Boolean {
     return newPosition == (currentPosition - 1)
+}
+
+@Composable
+@Preview
+fun test() {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(Color.Cyan)) {
+
+        Column(Modifier.background(Color.Yellow)) {
+            Text("Top")
+        }
+
+        Column(
+            Modifier
+                .fillMaxSize()
+                .background(Color.Green)) {
+            Text("Bottom")
+        }
+
+    }
 }

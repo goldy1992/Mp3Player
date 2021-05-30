@@ -4,6 +4,7 @@ import android.support.v4.media.MediaBrowserCompat
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -49,8 +50,11 @@ fun FolderList(foldersData : LiveData<List<MediaBrowserCompat.MediaItem>>,
 @Preview
 @Composable
 fun EmptyFoldersList() {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(DEFAULT_PADDING)) {
         Text(text = "No folders containing audio tracks found on your device.",
+            modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center)
     }
 }

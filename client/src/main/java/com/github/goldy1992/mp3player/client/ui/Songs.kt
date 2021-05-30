@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -48,9 +49,12 @@ fun SongList(songsData : LiveData<List<MediaBrowserCompat.MediaItem>>,
 @Composable
 fun EmptySongsList() {
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(DEFAULT_PADDING)) {
         Text(text = "No audio tracks found on your device.",
-        textAlign = TextAlign.Center)
+        textAlign = TextAlign.Center,
+        modifier = Modifier.fillMaxWidth())
 
     }
 }

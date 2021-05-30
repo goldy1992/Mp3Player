@@ -6,9 +6,10 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback
-import com.github.goldy1992.mp3player.client.callbacks.search.SearchResultListener
 import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
 import com.github.goldy1992.mp3player.commons.LogTagger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.apache.commons.lang3.StringUtils.isEmpty
 
 open class MediaBrowserAdapter
@@ -74,15 +75,12 @@ open class MediaBrowserAdapter
     override fun onConnected() {
         mySubscriptionCallback.subscribeRoot(rootId)
         mediaBrowser?.subscribe(rootId, mySubscriptionCallback)
+
     }
 
     private val rootId: String
         get() = mediaBrowser!!.root
 
-
-    fun registerSearchResultListener(searchResultListener: SearchResultListener?) {
-//        mySearchCallback.registerSearchResultListener(searchResultListener!!)
-    }
 
     override fun logTag(): String {
         return "MDIA_BRWSR_ADPTR"

@@ -18,7 +18,8 @@ fun PlayToolbar(mediaController : MediaControllerAdapter, onClick : () -> Unit) 
     BottomAppBar(
         modifier = Modifier
             .height(BOTTOM_BAR_SIZE)
-            .clickable { onClick() }) {
+            .clickable { onClick() })
+    {
         Row(horizontalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxWidth()) {
             SkipToPreviousButton(mediaController = mediaController)

@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui
 
+import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
@@ -7,6 +8,7 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalConfiguration
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 
 enum class Theme(
@@ -23,6 +25,7 @@ val blueAppTheme = lightColors(
     primary = primaryBlue,
     primaryVariant = darkBlue,
     secondary = accentPink,
+    secondaryVariant = darkPink,
     background = white,
     error = red,
     surface = white,
@@ -50,7 +53,7 @@ val blueAppDarkTheme = darkColors(
 val orangeAppTheme = lightColors(
     primary = darkOrange,
     primaryVariant = darkBlue,
-    secondary = accentOrane,
+    secondary = accentOrange,
     background = white,
     error = red,
     surface = white,
@@ -87,7 +90,7 @@ fun AppTheme(systemInDarkTheme: Boolean = isSystemInDarkTheme(),
     val useSystemDarkThemePref = userPreferencesRepository.getSystemDarkMode().collectAsState(initial = false)
     val useDarkThemePref = userPreferencesRepository.getDarkMode().collectAsState(initial = false)
 
-
+    Log.i("logg", "config: ${LocalConfiguration.current.uiMode}")
     val useDarkTheme = if (useSystemDarkThemePref.value) {
         systemInDarkTheme
     } else {
