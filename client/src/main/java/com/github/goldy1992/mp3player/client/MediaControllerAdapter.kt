@@ -11,7 +11,6 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.annotation.VisibleForTesting
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.client.callbacks.connection.ConnectionStatus
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
@@ -28,15 +27,9 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 open class MediaControllerAdapter
 
 constructor(private val context: Context,
-            private var mediaBrowserCompat: MediaBrowserCompat)
+            private var mediaBrowser: MediaBrowserCompat)
     : MediaBrowserConnectionListener, LogTagger, MediaControllerCompat.Callback() {
 
-
-    private val mutex : Mutex = Mutex()
-
-    init {
-        runBlocking { mutex.lock() }
-    }
 
     private var mediaController: MediaControllerCompat? = null
 
@@ -54,8 +47,17 @@ constructor(private val context: Context,
 
     open val playbackSpeed : MutableLiveData<Float> = MutableLiveData(1f)
 
+    /**
+     * @return True if the mediaBrowser is connected
+     */
+    open fun isConnected() : Boolean {
+        return mediaBrowser != null && mediaBrowser.isConnected
+    }
+
     open fun prepareFromMediaId(mediaId: String?, extras: Bundle?) {
-        transportControls.prepareFromMediaId(mediaId, extras)
+        if (isConnected()) {
+            transportControls.prepareFromMediaId(mediaId, extras)
+        }
     }
 
     open fun playFromMediaId(mediaId: String?, extras: Bundle?) {
@@ -63,39 +65,55 @@ constructor(private val context: Context,
     }
 
     open suspend fun playFromUri(uri: Uri?, extras: Bundle?) {
-        mutex.withLock {  transportControls.playFromUri(uri, extras) }
+         transportControls.playFromUri(uri, extras)
     }
 
     open fun play() {
-        transportControls.play()
+        if (isConnected()) {
+            transportControls.play()
+        }
     }
 
     open fun pause() { //Log.i(LOG_TAG, "pause hit");
-        transportControls.pause()
+        if (isConnected()) {
+            transportControls.pause()
+        }
     }
 
     open fun seekTo(position: Long) {
-        transportControls.seekTo(position)
+        if (isConnected()) {
+            transportControls.seekTo(position)
+        }
     }
 
     open fun stop() {
-        transportControls.stop()
+        if (isConnected()) {
+            transportControls.stop()
+        }
     }
 
     open fun skipToNext() {
-        transportControls.skipToNext()
+        if (isConnected()) {
+            transportControls.skipToNext()
+        }
     }
 
     open fun skipToPrevious() {
-        transportControls.skipToPrevious()
+        if (isConnected()) {
+            transportControls.skipToPrevious()
+        }
     }
 
-    open fun setShuffleMode(shuffleMode : Int) {
-        transportControls.setShuffleMode(shuffleMode)
+    open fun setShuffleMode(shuffleMode: Int) {
+        if (isConnected()) {
+            transportControls.setShuffleMode(shuffleMode)
+        }
     }
 
-    open fun setRepeatMode(repeatMode : Int) {
-        transportControls.setRepeatMode(repeatMode)
+    open fun setRepeatMode(repeatMode: Int) {
+        if (isConnected()) {
+            transportControls.setRepeatMode(repeatMode)
+        }
     }
 
     open fun disconnect() {
@@ -108,7 +126,7 @@ constructor(private val context: Context,
         transportControls.sendCustomAction(customAction, args)
     }
 
-    open fun changePlaybackSpeed(speed : Float)  {
+    open fun changePlaybackSpeed(speed: Float) {
         val extras = Bundle()
         extras.putFloat(CHANGE_PLAYBACK_SPEED, speed)
         transportControls.sendCustomAction(CHANGE_PLAYBACK_SPEED, extras)
@@ -116,15 +134,15 @@ constructor(private val context: Context,
 
     @get:VisibleForTesting
     val transportControls: MediaControllerCompat.TransportControls
-        get() = mediaController!!.transportControls
+    get() = mediaController!!.transportControls
 
     open fun getActiveQueueItemId(): Long? {
         return playbackState.value?.activeQueueItemId
     }
 
-   open fun calculateCurrentQueuePosition() : Int {
-       val currentQueue = queue.value
-       val activeQueueItemId = getActiveQueueItemId()
+    open fun calculateCurrentQueuePosition(): Int {
+        val currentQueue = queue.value
+        val activeQueueItemId = getActiveQueueItemId()
         if (currentQueue != null) {
             for (i in currentQueue.indices) {
                 val queueItem = currentQueue[i]
@@ -136,7 +154,10 @@ constructor(private val context: Context,
         return -1
     }
 
-    open fun createMediaController(context: Context, token: MediaSessionCompat.Token) : MediaControllerCompat {
+    open fun createMediaController(
+        context: Context,
+        token: MediaSessionCompat.Token
+    ): MediaControllerCompat {
         return MediaControllerCompat(context, token)
     }
 
@@ -168,30 +189,22 @@ constructor(private val context: Context,
         this.shuffleMode.postValue(shuffleMode)
     }
 
-
     /**
      * @return True if the current playback state is [PlaybackStateCompat.STATE_PLAYING].
      */
     val isPlaying = MutableLiveData<Boolean>(false)
 
-    /** Called when the component has successfully connected to the MediaBrowserService. */
-    override fun onConnectionStatusChanged(connectionStatus: ConnectionStatus) {
-        when(connectionStatus) {
-            ConnectionStatus.CONNECTED -> {
-                try {
-                    this.token = mediaBrowserCompat.sessionToken
-                    mediaController =
-                        createMediaController(context, mediaBrowserCompat.sessionToken)
-                    mediaController!!.registerCallback(this)
-                    metadata.postValue(mediaController!!.metadata)
-                    playbackState.postValue(mediaController!!.playbackState)
-                    queue.postValue(mediaController!!.queue)
-                    runBlocking { mutex.unlock() }
-                } catch (ex: RemoteException) {
-                    Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
-                }
-            }
+    override fun onConnected() {
+        try {
+            this.token = mediaBrowser.sessionToken
+            mediaController =
+                createMediaController(context, mediaBrowser.sessionToken)
+            mediaController!!.registerCallback(this)
+            metadata.postValue(mediaController!!.metadata)
+            playbackState.postValue(mediaController!!.playbackState)
+            queue.postValue(mediaController!!.queue)
+        } catch (ex: RemoteException) {
+            Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
         }
     }
-
 }

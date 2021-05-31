@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.callbacks.connection
 
 import android.support.v4.media.MediaBrowserCompat
-import androidx.lifecycle.MutableLiveData
+import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
@@ -12,19 +12,40 @@ import javax.inject.Inject
 class MyConnectionCallback
 
     @Inject
-    constructor(private val connectionStatus: MutableLiveData<ConnectionStatus>)
+    constructor()
     :  MediaBrowserCompat.ConnectionCallback() {
 
+    private val listeners : MutableSet<MediaBrowserConnectionListener> = HashSet()
 
     override fun onConnected() {
-        connectionStatus.postValue(ConnectionStatus.CONNECTED)
+        for (listener in listeners) {
+            listener.onConnected()
+        }
     }
 
     override fun onConnectionSuspended() {
-        connectionStatus.postValue(ConnectionStatus.SUSPENDED)
+        for (listener in listeners) {
+            listener.onConnectionSuspended()
+        }
+        // The Service has crashed. Disable transport controls until it automatically reconnects
     }
 
     override fun onConnectionFailed() {
-        connectionStatus.postValue(ConnectionStatus.FAILED)
+        for (listener in listeners) {
+            listener.onConnectionFailed()
+        }
+        // The Service has refused our connection
+    }
+
+    fun registerListener(listener : MediaBrowserConnectionListener) {
+        listeners.add(listener)
+    }
+
+    fun registerListeners(listenerSet : Set<MediaBrowserConnectionListener>) {
+        listeners.addAll(listenerSet)
+    }
+
+    fun removeListener(listener : MediaBrowserConnectionListener) : Boolean {
+        return listeners.remove(listener)
     }
 }

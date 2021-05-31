@@ -32,7 +32,7 @@ fun FolderListItem(folder : MediaItem,
             Icons.Filled.Folder,
             contentDescription = "Play"
         )
-        Column(verticalArrangement = Arrangement.Center) {
+        Column(verticalArrangement = Arrangement.Center, modifier = Modifier.background(MaterialTheme.colors.background)) {
             Text(text = MediaItemUtils.getDirectoryName(folder),
                 style = MaterialTheme.typography.body2,
                 maxLines = 1,

@@ -7,10 +7,27 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.PermissionGranted
 import com.github.goldy1992.mp3player.client.PermissionsProcessor
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.UserPreferencesRepository
+import com.github.goldy1992.mp3player.client.ui.AppTheme
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -32,6 +49,9 @@ class SplashScreenEntryActivity : Hilt_SplashScreenEntryActivity(), PermissionGr
     @Inject
     lateinit var componentClassMapper: ComponentClassMapper
 
+    @Inject
+    lateinit var preferencesRepository: UserPreferencesRepository
+
     val permissionsProcessor: PermissionsProcessor = PermissionsProcessor(this, this)
 
     @Volatile
@@ -50,12 +70,33 @@ class SplashScreenEntryActivity : Hilt_SplashScreenEntryActivity(), PermissionGr
             return
         }
         super.onCreate(savedInstanceState)
-        val settings = applicationContext.getSharedPreferences(Constants.THEME, Context.MODE_PRIVATE)
-        setTheme(settings.getInt(Constants.THEME, R.style.AppTheme_Blue))
-        // TODO: have this injected so that a test implementation can be provided
+        setTheme(R.style.AppTheme)
+          // TODO: have this injected so that a test implementation can be provided
         mainActivityIntent = Intent(applicationContext, componentClassMapper.mainActivity)
         CoroutineScope(IO).launch { init()}
-        setContentView(R.layout.splash_screen);
+        setContent {
+            SplashScreen()
+        }
+    }
+
+
+    @Composable
+    fun SplashScreen() {
+        AppTheme(userPreferencesRepository = preferencesRepository) {
+            Column(
+                Modifier.fillMaxSize().background(MaterialTheme.colors.background),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.headphone_icon),
+                    contentDescription = "Splash Screen Icon"
+                )
+                Text(text = "Music Player",
+                    textAlign = TextAlign.Center,
+                    style = TextStyle(color = MaterialTheme.colors.onBackground))
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,

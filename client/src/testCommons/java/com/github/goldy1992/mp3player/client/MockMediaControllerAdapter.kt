@@ -8,9 +8,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.MutableLiveData
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
 
 open class MockMediaControllerAdapter(@ApplicationContext context: Context,
 mediaBrowserCompat: MediaBrowserCompat)

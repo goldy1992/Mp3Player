@@ -7,12 +7,12 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.callbacks.connection.ConnectionStatus
+import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
 import com.github.goldy1992.mp3player.client.ui.ComposeApp
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -39,6 +39,9 @@ open class MainActivity : Hilt_MainActivity(),
      */
     @Inject
     lateinit var mediaBrowserAdapter: MediaBrowserAdapter
+
+    @Inject
+    lateinit var connectionCallback : MyConnectionCallback
 
     /**
      * MediaControllerAdapter
@@ -99,10 +102,8 @@ open class MainActivity : Hilt_MainActivity(),
     }
 
     private fun connect() {
-        connectionStatus.observe(this) {
-            mediaBrowserAdapter.onConnectionStatusChanged(it)
-            mediaControllerAdapter.onConnectionStatusChanged(it)
-        }
+        connectionCallback.registerListener(mediaControllerAdapter)
+        connectionCallback.registerListener(mediaBrowserAdapter)
         mediaBrowserAdapter.connect()
     }
 

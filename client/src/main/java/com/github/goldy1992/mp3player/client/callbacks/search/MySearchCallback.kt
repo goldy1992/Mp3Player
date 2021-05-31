@@ -6,10 +6,10 @@ import android.support.v4.media.MediaBrowserCompat.SearchCallback
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.commons.LogTagger
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@ActivityRetainedScoped
+@Singleton
 class MySearchCallback
     @Inject
     constructor()
