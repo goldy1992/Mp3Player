@@ -111,7 +111,6 @@ dependencies {
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: EXO_PLAYER_VERSION
     implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
     implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
-    implementation group: 'androidx.preference', name: 'preference-ktx', version: PREFERENCE_VERSION
 
     // local libs
     implementation project(path: ':commons')
@@ -140,7 +139,6 @@ dependencies {
     androidTestImplementation group: 'androidx.test', name: 'runner', version: TEST_RUNNER_VERSION
     androidTestImplementation group: 'androidx.test', name: 'monitor', version: MIRROR_VERSION
     androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
-    androidTestImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
 
 
     androidTestImplementation(group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION) {
@@ -151,16 +149,8 @@ dependencies {
 
 
     debugImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
-    debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
-    implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
+
     implementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
-    implementation group: 'androidx.fragment', name: 'fragment-ktx', version: FRAGMENT_VERSION
-
-
-    // Kotlin
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-
 
 }
 

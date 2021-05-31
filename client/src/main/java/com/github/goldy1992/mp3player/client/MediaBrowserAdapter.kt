@@ -5,6 +5,9 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import com.github.goldy1992.mp3player.client.callbacks.connection.ConnectionStatus
 import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback
 import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -17,6 +20,7 @@ open class MediaBrowserAdapter
     constructor(private val mediaBrowser: MediaBrowserCompat?,
                 private val mySubscriptionCallback: MediaIdSubscriptionCallback,
                 private val mySearchCallback: MySearchCallback) : LogTagger, MediaBrowserConnectionListener {
+
 
     /**
      * Disconnects from the media browser service
@@ -71,19 +75,22 @@ open class MediaBrowserAdapter
         return mySubscriptionCallback.getRootLiveData()
     }
 
-         /** Called when the component has successfully connected to the MediaBrowserService. */
-    override fun onConnected() {
-        mySubscriptionCallback.subscribeRoot(rootId)
-        mediaBrowser?.subscribe(rootId, mySubscriptionCallback)
-
-    }
-
     private val rootId: String
         get() = mediaBrowser!!.root
 
 
     override fun logTag(): String {
         return "MDIA_BRWSR_ADPTR"
+    }
+
+    /** Called when the component has successfully connected to the MediaBrowserService. */
+    override fun onConnectionStatusChanged(connectionStatus: ConnectionStatus) {
+        when(connectionStatus) {
+            ConnectionStatus.CONNECTED -> {
+                mySubscriptionCallback.subscribeRoot(rootId)
+                mediaBrowser?.subscribe(rootId, mySubscriptionCallback)
+            }
+        }
     }
 
 }

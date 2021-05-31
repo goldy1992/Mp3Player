@@ -116,17 +116,18 @@ dependencies {
     testImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
 
     implementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
-    implementation group: 'org.apache.commons', name: 'commons-io', version: COMMONS_IO_VERSION
     implementation group: 'com.google.android.material', name: 'material', version: MATERIAL_VERSION
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: KOTLIN_COROUTINE_VERSION
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: KOTLIN_COROUTINE_VERSION
     implementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
     implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
-    implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
     implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
+
+    // apache
+    implementation group: 'org.apache.commons', name: 'commons-io', version: COMMONS_IO_VERSION
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
-    implementation group: 'androidx.preference', name: 'preference-ktx', version: PREFERENCE_VERSION
 
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
@@ -137,14 +138,10 @@ dependencies {
 
     debugImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     debugImplementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
-    debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
 
 
 
     implementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
-    implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
-    implementation group: 'androidx.fragment', name: 'fragment-ktx', version: FRAGMENT_VERSION
-
 
     def compose_version = '1.0.0-beta07'
     implementation group: 'androidx.compose.ui', name: 'ui', version: compose_version
@@ -177,25 +174,27 @@ dependencies {
 
     // UI Tests
     androidTestImplementation group: 'androidx.compose.ui', name: 'ui-test-junit4', version: compose_version
+    // Test rules and transitive dependencies:
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
+// Needed for createComposeRule, but not createAndroidComposeRule:
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
+
 
 
     // hilt
     implementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
     implementation group: 'androidx.hilt', name: 'hilt-navigation-compose', version: '1.0.0-alpha02'
-    //  implementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: '1.0.0-alpha03'
     kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
     kapt group: 'com.google.dagger', name: 'hilt-compiler', version: HILT_VERSION
 
     testImplementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
     testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
- //   testImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
     kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
     kaptTest group: 'com.google.dagger', name: 'hilt-compiler', version: HILT_VERSION
 
     androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
     kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
 
-  //  androidTestImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
     kaptAndroidTest group: 'com.google.dagger', name: 'hilt-compiler', version: HILT_VERSION
 
 
@@ -227,12 +226,17 @@ dependencies {
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN"
     androidTestImplementation 'com.github.tmurakami:dexopener:2.0.5'
     androidTestImplementation group: 'com.linkedin.dexmaker', name: 'dexmaker-mockito-inline-extended', version: '2.28.0'
-    androidTestImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-reflect:1.4.21"
+    androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: kotlin_version
 
     androidTestImplementation 'androidx.arch.core:core-common:2.1.0'
     androidTestImplementation 'androidx.arch.core:core-runtime:2.1.0'
     androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
+
+    // Test rules and transitive dependencies:
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
+// Needed for createComposeRule, but not createAndroidComposeRule:
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
+
 
 
     automationImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION

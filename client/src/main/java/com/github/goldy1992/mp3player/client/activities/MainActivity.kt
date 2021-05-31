@@ -1,17 +1,21 @@
 package com.github.goldy1992.mp3player.client.activities
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.annotation.VisibleForTesting
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
+import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
+import com.github.goldy1992.mp3player.client.callbacks.connection.ConnectionStatus
 import com.github.goldy1992.mp3player.client.ui.ComposeApp
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
-import com.github.goldy1992.mp3player.commons.ComponentClassMapper
+import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,33 +29,34 @@ import javax.inject.Inject
 /**
  * The Main Activity
  */
-@AndroidEntryPoint(MediaActivityCompat::class)
+@AndroidEntryPoint(AppCompatActivity::class)
 open class MainActivity : Hilt_MainActivity(),
+    LogTagger,
     CoroutineScope by GlobalScope
 {
+    /**
+     * MediaBrowserAdapter
+     */
+    @Inject
+    lateinit var mediaBrowserAdapter: MediaBrowserAdapter
 
-    private val USER_PREFERENCES_NAME = "user_prefs"
-
-    private val Context.dataStore by preferencesDataStore(
-            name = USER_PREFERENCES_NAME,
-    )
-
+    /**
+     * MediaControllerAdapter
+     */
+    @Inject
+    lateinit var mediaControllerAdapter: MediaControllerAdapter
 
     @Inject
-    lateinit var componentClassMapper: ComponentClassMapper
+    lateinit var connectionStatus : MutableLiveData<ConnectionStatus>
 
-    lateinit var mediaRepository : MediaRepository
+    private lateinit var mediaRepository : MediaRepository
 
+    @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
 
     @get:VisibleForTesting
     var trackToPlay: Uri? = null
         private set
-
-
-    override fun initialiseView(): Boolean {
-        return true
-    }
 
     @ExperimentalMaterialApi
     @ExperimentalComposeUiApi
@@ -59,8 +64,8 @@ open class MainActivity : Hilt_MainActivity(),
     @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        connect()
         initMediaRepository()
-        this.userPreferencesRepository = UserPreferencesRepository(dataStore)
 
         setContent {
             ComposeApp(
@@ -70,8 +75,6 @@ open class MainActivity : Hilt_MainActivity(),
                 userPreferencesRepository = userPreferencesRepository)
         }
     }
-
-
 
     private fun initMediaRepository() {
         mediaRepository = MediaRepository(mediaBrowserAdapter.subscribeToRoot())
@@ -87,6 +90,20 @@ open class MainActivity : Hilt_MainActivity(),
 
     override fun logTag(): String {
         return "MAIN_ACTIVITY"
+    }
+
+    public override fun onDestroy() {
+        super.onDestroy()
+        mediaControllerAdapter.disconnect()
+        mediaBrowserAdapter.disconnect()
+    }
+
+    private fun connect() {
+        connectionStatus.observe(this) {
+            mediaBrowserAdapter.onConnectionStatusChanged(it)
+            mediaControllerAdapter.onConnectionStatusChanged(it)
+        }
+        mediaBrowserAdapter.connect()
     }
 
 }

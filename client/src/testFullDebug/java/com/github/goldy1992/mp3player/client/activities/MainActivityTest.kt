@@ -4,20 +4,21 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Looper.getMainLooper
 import android.view.MenuItem
-import androidx.core.view.GravityCompat
-import androidx.navigation.ui.onNavDestinationSelected
 import androidx.test.core.app.ActivityScenario
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import org.junit.*
+import org.junit.Assert
 import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Ignore
+import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
@@ -49,7 +50,6 @@ class MainActivityTest {
     fun testOnItemSelected() {
         scenario.onActivity { activity: MainActivity ->
             val menuItem = mock<MenuItem>()
-            whenever(menuItem.onNavDestinationSelected(any())).thenReturn(true)
             val result = activity.onOptionsItemSelected(menuItem)
             shadowOf(getMainLooper()).idle()
             assertTrue(result)
@@ -77,7 +77,6 @@ class MainActivityTest {
             val menuItem = mock<MenuItem>()
             whenever(menuItem.itemId).thenReturn(android.R.id.home)
             activity.onOptionsItemSelected(menuItem)
-            activity.drawerLayout?.isDrawerOpen(GravityCompat.START)
         }
     }
 

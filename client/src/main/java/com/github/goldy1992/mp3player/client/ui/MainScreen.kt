@@ -6,16 +6,27 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
+import androidx.compose.material.TabRowDefaults
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -23,7 +34,11 @@ import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
-import com.google.accompanist.pager.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -71,10 +86,20 @@ fun MainScreen(navController: NavController,
 
                     when (MediaItemUtils.getRootMediaItemType(currentItem)) {
                         MediaItemType.SONGS -> {
-                            SongList(songsData = mediaRepository.itemMap[MediaItemType.SONGS]!!, mediaController = mediaController)
+                            val songs = mediaRepository.itemMap[MediaItemType.SONGS]
+                            if (songs == null) {
+                                CircularProgressIndicator()
+                            } else {
+                                SongList(songsData = songs, mediaController = mediaController)
+                            }
                         }
                         MediaItemType.FOLDERS -> {
-                            FolderList(foldersData = mediaRepository.itemMap[MediaItemType.FOLDERS]!!, navController = navController, mediaRepository = mediaRepository)
+                            val folders = mediaRepository.itemMap[MediaItemType.FOLDERS]
+                            if (folders == null) {
+                                CircularProgressIndicator()
+                            } else {
+                                FolderList(foldersData = folders, navController = navController, mediaRepository = mediaRepository)
+                            }
                         }
                         else -> {
                             Log.i("mainScreen", "unrecognised Media Item")

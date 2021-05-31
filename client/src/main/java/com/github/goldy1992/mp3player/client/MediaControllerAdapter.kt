@@ -11,7 +11,9 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.github.goldy1992.mp3player.client.callbacks.connection.ConnectionStatus
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.coroutines.runBlocking
@@ -51,20 +53,6 @@ constructor(private val context: Context,
     open val shuffleMode : MutableLiveData<Int> = MutableLiveData()
 
     open val playbackSpeed : MutableLiveData<Float> = MutableLiveData(1f)
-
-    override fun onConnected() {
-        try {
-            this.token = mediaBrowserCompat.sessionToken
-            mediaController = createMediaController(context, mediaBrowserCompat.sessionToken)
-            mediaController!!.registerCallback(this)
-            metadata.postValue(mediaController!!.metadata)
-            playbackState.postValue(mediaController!!.playbackState)
-            queue.postValue(mediaController!!.queue)
-            runBlocking { mutex.unlock() }
-        } catch (ex: RemoteException) {
-            Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
-        }
-    }
 
     open fun prepareFromMediaId(mediaId: String?, extras: Bundle?) {
         transportControls.prepareFromMediaId(mediaId, extras)
@@ -185,5 +173,25 @@ constructor(private val context: Context,
      * @return True if the current playback state is [PlaybackStateCompat.STATE_PLAYING].
      */
     val isPlaying = MutableLiveData<Boolean>(false)
+
+    /** Called when the component has successfully connected to the MediaBrowserService. */
+    override fun onConnectionStatusChanged(connectionStatus: ConnectionStatus) {
+        when(connectionStatus) {
+            ConnectionStatus.CONNECTED -> {
+                try {
+                    this.token = mediaBrowserCompat.sessionToken
+                    mediaController =
+                        createMediaController(context, mediaBrowserCompat.sessionToken)
+                    mediaController!!.registerCallback(this)
+                    metadata.postValue(mediaController!!.metadata)
+                    playbackState.postValue(mediaController!!.playbackState)
+                    queue.postValue(mediaController!!.queue)
+                    runBlocking { mutex.unlock() }
+                } catch (ex: RemoteException) {
+                    Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
+                }
+            }
+        }
+    }
 
 }

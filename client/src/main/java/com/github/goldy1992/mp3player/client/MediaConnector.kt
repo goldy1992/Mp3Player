@@ -11,10 +11,5 @@ class MediaConnector
                 mediaControllerAdapter: MediaControllerAdapter,
     myConnectionCallback: MyConnectionCallback) {
 
-    init {
-        myConnectionCallback.registerListener(mediaBrowserAdapter)
-        myConnectionCallback.registerListener(mediaControllerAdapter)
-    }
-
 
 }
