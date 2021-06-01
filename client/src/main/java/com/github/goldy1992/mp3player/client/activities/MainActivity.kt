@@ -1,11 +1,13 @@
 package com.github.goldy1992.mp3player.client.activities
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
@@ -70,8 +72,22 @@ open class MainActivity : Hilt_MainActivity(),
         connect()
         initMediaRepository()
 
+
+        val intent = intent
+        if (Intent.ACTION_VIEW == intent.action) {
+
+            trackToPlay = intent.data
+            launch(Dispatchers.Default) {
+                mediaControllerAdapter.playFromUri(trackToPlay, null)
+            }
+            /* TODO: Add functionallity to navigate to NowPlayingScreen.kt given an intent with an
+                     item to play */
+
+        }
+
+
         setContent {
-            ComposeApp(
+            Ui(
                 mediaRepository =  mediaRepository,
                 mediaBrowserAdapter = mediaBrowserAdapter,
                 mediaControllerAdapter = mediaControllerAdapter,
@@ -106,5 +122,22 @@ open class MainActivity : Hilt_MainActivity(),
         connectionCallback.registerListener(mediaBrowserAdapter)
         mediaBrowserAdapter.connect()
     }
+
+    @ExperimentalPagerApi
+    @OptIn(InternalCoroutinesApi::class)
+    @ExperimentalComposeUiApi
+    @ExperimentalMaterialApi
+    @Composable
+    open fun Ui(mediaRepository : MediaRepository,
+                    mediaBrowserAdapter : MediaBrowserAdapter,
+                    mediaControllerAdapter : MediaControllerAdapter,
+                    userPreferencesRepository : UserPreferencesRepository) {
+        ComposeApp(
+            mediaRepository =  mediaRepository,
+            mediaBrowserAdapter = mediaBrowserAdapter,
+            mediaControllerAdapter = mediaControllerAdapter,
+            userPreferencesRepository = userPreferencesRepository)
+    }
+
 
 }

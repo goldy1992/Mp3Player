@@ -11,6 +11,6 @@
         android:theme="@style/AppTheme.Orange"
         tools:node="merge">
 <!--        <activity android:name=".client.activities.MainActivityIdlingResourceImpl" />-->
-        <activity android:name=".activities.HiltTestActivity" />
+        <activity android:name=".MainActivityUnitTestImpl" />
     </application>
 </manifest>

@@ -41,7 +41,7 @@ class MediaControllerAdapterTest {
         whenever(mediaControllerCompat.metadata).thenReturn(mock<MediaMetadataCompat>())
         whenever(mediaControllerCompat.playbackState).thenReturn(mock<PlaybackStateCompat>())
         whenever(mediaControllerCompat.transportControls).thenReturn(mock<MediaControllerCompat.TransportControls>())
-        mediaControllerAdapter.onConnectionStatusChanged(ConnectionStatus.CONNECTED)
+//        mediaControllerAdapter.onConnectionStatusChanged(ConnectionStatus.CONNECTED)
     }
 
     @Test
