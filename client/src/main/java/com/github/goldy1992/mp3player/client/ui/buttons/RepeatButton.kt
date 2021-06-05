@@ -10,7 +10,9 @@ import androidx.compose.material.icons.filled.RepeatOneOn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.res.stringResource
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.R
 
 @Composable
 fun RepeatButton(mediaController : MediaControllerAdapter) {
@@ -25,21 +27,21 @@ fun RepeatButton(mediaController : MediaControllerAdapter) {
 @Composable
 fun RepeatOneButton(mediaController : MediaControllerAdapter) {
     IconButton(onClick = {mediaController.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL)}) {
-        Icon(Icons.Filled.RepeatOneOn, contentDescription = "Repeat One Button")
+        Icon(Icons.Filled.RepeatOneOn, contentDescription = stringResource(id = R.string.repeat_one))
     }
 }
 
 @Composable
 fun RepeatAllButton(mediaController : MediaControllerAdapter) {
     IconButton(onClick = {mediaController.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_NONE)}) {
-        Icon(Icons.Filled.RepeatOn, contentDescription = "Repeat All Button")
+        Icon(Icons.Filled.RepeatOn, contentDescription = stringResource(id = R.string.repeat_all))
     }
 }
 
 @Composable
 fun RepeatNoneButton(mediaController : MediaControllerAdapter) {
    IconButton(onClick = {mediaController.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ONE)}) {
-       Icon(Icons.Filled.Repeat, contentDescription = "Repeat None Button")
+       Icon(Icons.Filled.Repeat, contentDescription = stringResource(id = R.string.repeat_none))
    }
 }
 

@@ -20,7 +20,7 @@ import com.github.goldy1992.mp3player.client.R
 @Composable
 fun ShuffleButton(mediaController: MediaControllerAdapter) {
     val shuffleMode by mediaController.shuffleMode.observeAsState()
-    if (shuffleMode != PlaybackStateCompat.SHUFFLE_MODE_ALL) {
+    if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
         ShuffleOnButton(mediaController = mediaController)
     } else {
         ShuffleOffButton(mediaController = mediaController)

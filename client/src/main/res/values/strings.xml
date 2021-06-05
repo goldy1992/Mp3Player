@@ -2,6 +2,9 @@
     <string name="back">Back</string>
     <string name="pause">Pause</string>
     <string name="play">Play</string>
+    <string name="repeat_all">Repeat All</string>
+    <string name="repeat_none">Repeat None</string>
+    <string name="repeat_one">Repeat One</string>
     <string name="reset_speed">Reset Playback Speed</string>
     <string name="shuffle_off">Shuffle Off</string>
     <string name="shuffle_on">Shuffle On</string>

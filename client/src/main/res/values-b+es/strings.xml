@@ -3,6 +3,9 @@
     <string name="back">Volver</string>
     <string name="pause">Pausar</string>
     <string name="play">Play</string>
+    <string name="repeat_all">Repetir Todo</string>
+    <string name="repeat_none">No Repetir</string>
+    <string name="repeat_one">Repetir Uno</string>
     <string name="reset_speed">Reiniciar la velocidad de reproducción</string>
     <string name="shuffle_off">Modo Aleatorio Apagado</string>
     <string name="shuffle_on">Modo Aleatorio Activado</string>
