@@ -24,7 +24,8 @@ fun PlayPauseButton(mediaController: MediaControllerAdapter) {
 
 @Composable
 fun PlayButton(mediaController : MediaControllerAdapter) {
-    Button(onClick = { mediaController.play()}) {
+    Button(
+        onClick = { mediaController.play()}) {
         Icon(
             Icons.Filled.PlayArrow,
             contentDescription = "Play"

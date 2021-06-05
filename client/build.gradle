@@ -18,6 +18,13 @@ android {
         kotlinCompilerExtensionVersion '1.0.0-beta07'
     }
 
+    packagingOptions {
+        exclude 'META-INF/LICENSE.md'
+        exclude 'META-INF/LICENSE-notice.md'
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
+
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERION
@@ -225,8 +232,8 @@ dependencies {
     androidTestUtil group: "androidx.test", name: "orchestrator", version: test_orchestrator_version
     androidTestImplementation group: 'androidx.test', name: 'monitor', version: MIRROR_VERSION
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN"
-    androidTestImplementation 'com.github.tmurakami:dexopener:2.0.5'
-    androidTestImplementation group: 'com.linkedin.dexmaker', name: 'dexmaker-mockito-inline-extended', version: '2.28.0'
+//    androidTestImplementation 'com.github.tmurakami:dexopener:2.0.5'
+    androidTestImplementation group: 'com.linkedin.dexmaker', name: 'dexmaker-mockito-inline-extended', version: '2.28.1'
     androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: kotlin_version
 
     androidTestImplementation 'androidx.arch.core:core-common:2.1.0'

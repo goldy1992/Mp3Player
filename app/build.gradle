@@ -9,6 +9,8 @@ android {
     packagingOptions {
         exclude 'META-INF/LICENSE.md'
         exclude 'META-INF/LICENSE-notice.md'
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
     }
     compileSdkVersion TARGET_SDK_VERION
 	buildToolsVersion BUILD_TOOLS_VERSION
