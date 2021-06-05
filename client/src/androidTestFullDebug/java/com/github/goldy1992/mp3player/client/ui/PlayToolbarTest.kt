@@ -3,6 +3,8 @@ package com.github.goldy1992.mp3player.client.ui
 import android.content.Context
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.printToLog
 import androidx.lifecycle.MutableLiveData
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -40,7 +42,7 @@ class PlayToolbarTest {
                 // do nothing
             }
         }
-        composeTestRule.onAllNodes(hasContentDescription(expected))
+        composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true).assertExists()
     }
     /**
      * Tests that when the state of the [MediaControllerAdapter] says that Playback in playing
@@ -51,13 +53,13 @@ class PlayToolbarTest {
         val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
         val expected = context.resources.getString(R.string.pause)
         val isPlaying = true
-        // Set Media to be NOT Playing
+        // Set Media to be playing
         whenever(mockMediaController.isPlaying).thenReturn(MutableLiveData(isPlaying))
         composeTestRule.setContent {
             PlayToolbar(mediaController = mockMediaController) {
                 // do nothing
             }
         }
-        composeTestRule.onAllNodes(hasContentDescription(expected))
+        composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true).assertExists()
     }
 }
