@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="play">Play</string>
+    <string name="back">Volver</string>
     <string name="pause">Pausar</string>
+    <string name="play">Play</string>
+    <string name="reset_speed">Reiniciar la velocidad de reproducción</string>
+    <string name="shuffle_off">Modo Aleatorio Apagado</string>
+    <string name="shuffle_on">Modo Aleatorio Activado</string>
 
     <string name="action_settings">Settings</string>
 

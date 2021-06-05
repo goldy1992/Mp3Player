@@ -1,6 +1,10 @@
 <resources>
-    <string name="play">Play</string>
+    <string name="back">Back</string>
     <string name="pause">Pause</string>
+    <string name="play">Play</string>
+    <string name="reset_speed">Reset Playback Speed</string>
+    <string name="shuffle_off">Shuffle Off</string>
+    <string name="shuffle_on">Shuffle On</string>
 
     <string name="action_settings">Settings</string>
 

@@ -5,7 +5,9 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.github.goldy1992.mp3player.client.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -17,6 +19,6 @@ fun NavUpButton(navController : NavController,
             navController.popBackStack()
         }
     }){
-        Icon(Icons.Filled.ArrowBack, "Back")
+        Icon(Icons.Filled.ArrowBack, stringResource(id = R.string.back))
     }
 }
