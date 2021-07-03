@@ -3,10 +3,10 @@ buildscript {
         PIE = 28
         MARSHMALLOW = 23
         MIN_SDK_VERSION = 23
-        TARGET_SDK_VERION = 29
-        BUILD_TOOLS_VERSION = '29.0.2'
+        target_sdk_version = 30
+        build_tools_version = '30.0.2'
         nav_version = '2.3.2'
-        kotlin_version = '1.4.32'
+        kotlin_version = '1.5.10'
         ACTIVITY_VERSION = '1.1.0'
         ANDROIDX_CORE_KOTLIN_VERSION = '1.3.2'
         ANNOTATION_VERSION = '1.1.0-rc01'
@@ -14,6 +14,8 @@ buildscript {
         COMMONS_COLLECTIONS4_VERSION = '4.4'
         COMMONS_IO_VERSION = '1.3.2'
         COMMONS_LANG_VERSION = '3.9'
+        compose_version = '1.0.0-beta09'
+        compose_compiler_version = '1.0.0-rc01'
         CORE_VERSION = '1.0.1'
         ESPRESSO_CORE_VERSION = '3.3.0'
         EXO_PLAYER_VERSION = '2.13.3'
@@ -26,13 +28,13 @@ buildscript {
         KOTLIN_COROUTINE_VERSION = '1.3.2'
         MATERIAL_VERSION = '1.3.0-alpha02'
         MEDIA_VERSION = '1.3.1'
-        MIRROR_VERSION = '1.3.0'
+        monitor_version = '1.4.0-beta01'
         mockito_inline_version = '3.7.7'
         MOCKITO_VERSION = '3.6.0'
         MOCKITO_KOTLIN = '2.2.0'
         ROBOLECTRIC_VERSION = '4.5'
         ROOM_VERSION = '2.2.3'
-        TEST_CORE_VERSION = '1.3.0'
+        TEST_CORE_VERSION = '1.4.0-beta01'
         test_orchestrator_version = '1.3.0'
         TEST_RULES_VERSION = '1.3.0'
         TEST_RUNNER_VERSION = '1.3.0'
@@ -76,7 +78,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.0-alpha01'
+        classpath 'com.android.tools.build:gradle:7.1.0-alpha02'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$HILT_VERSION"
         def nav_version = "2.3.0"

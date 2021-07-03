@@ -11,10 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
@@ -53,7 +55,7 @@ fun EmptyFoldersList() {
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(DEFAULT_PADDING)) {
-        Text(text = "No folders containing audio tracks found on your device.",
+        Text(text = stringResource(id = R.string.no_folders_with_songs),
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center)
     }

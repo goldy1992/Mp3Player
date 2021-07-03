@@ -62,7 +62,7 @@ class AudioObserver
      * @param userId not used
      */
     @Suppress("UNUSED_PARAMETER")
-    fun onChange(selfChange: Boolean, uri: Uri?, userId: Int) {
+    override fun onChange(selfChange: Boolean, uri: Uri?, userId: Int) {
         if (startsWithUri(uri)) {
                 runBlocking {
                     updateSearchDatabase(uri)
@@ -78,7 +78,7 @@ class AudioObserver
     private suspend fun updateSearchDatabase(uri: Uri?) {
         var id = INVALID_ID
         try {
-            id = ContentUris.parseId(uri)
+            id = ContentUris.parseId(uri!!)
         } catch (ex: Exception) {
             Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
         }

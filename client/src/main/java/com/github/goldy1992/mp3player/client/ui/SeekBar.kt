@@ -16,13 +16,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.HorizontalAlignmentLine
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.SemanticsPropertyKey
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.MetadataUtils
 import kotlinx.coroutines.CoroutineScope
@@ -30,7 +33,7 @@ import kotlinx.coroutines.CoroutineScope
 const val logTag = "seekbar"
 
 @Composable
-fun SeekBar(mediaController : MediaControllerAdapter, scope : CoroutineScope) {
+fun SeekBar(mediaController : MediaControllerAdapter, scope : CoroutineScope = rememberCoroutineScope()) {
 
     Log.i(logTag, "seek bar created")
     val metadata by mediaController.metadata.observeAsState()
@@ -42,13 +45,13 @@ fun SeekBar(mediaController : MediaControllerAdapter, scope : CoroutineScope) {
 
     val durationAtSpeed = duration / playbackSpeed
     val animationTimeInMs = (durationAtSpeed * (1 - (currentPosition / duration))).toInt()
-
+    val durationDescription = stringResource(id = R.string.duration)
+    val currentPositionDescription = stringResource(id = R.string.current_position)
 
     val anim1 = remember(currentPosition) { mutableStateOf(Animatable(currentPosition)) }
   //  Log.i(logTag, "Anim1Value: ${anim1.value}")
 
-    if (playbackState?.state == PlaybackStateCompat.STATE_PLAYING)
-    {
+    if (playbackState?.state == PlaybackStateCompat.STATE_PLAYING) {
      //   Log.i(logTag, "playback state playing")
         LaunchedEffect(anim1) {
             anim1.value.animateTo(duration,
@@ -62,8 +65,12 @@ fun SeekBar(mediaController : MediaControllerAdapter, scope : CoroutineScope) {
     Row(modifier = Modifier.fillMaxWidth(),
     horizontalArrangement = Arrangement.SpaceEvenly) {
         Text(text = formatTime(duration.toLong()),
-            modifier = Modifier.weight(2f)
-                    .align(Alignment.CenterVertically),
+            modifier = Modifier
+                .weight(2f)
+                .align(Alignment.CenterVertically)
+                .semantics {
+                    contentDescription = durationDescription
+                },
                 textAlign = TextAlign.Center)
         Slider(
             modifier = Modifier.weight(5f),
@@ -79,7 +86,10 @@ fun SeekBar(mediaController : MediaControllerAdapter, scope : CoroutineScope) {
                 mediaController.seekTo(touchTrackingPosition.value.toLong())
             })
         Text(text = formatTime(if (isTouchTracking.value) touchTrackingPosition.value.toLong() else anim1.value.value.toLong()),
-                modifier = Modifier.weight(2f).align(Alignment.CenterVertically),
+                modifier = Modifier
+                    .weight(2f)
+                    .align(Alignment.CenterVertically)
+                    .semantics { contentDescription = currentPositionDescription },
         textAlign = TextAlign.Center)
     }
 

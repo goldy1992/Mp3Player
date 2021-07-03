@@ -30,7 +30,7 @@ class SongFromUriRetriever @Inject constructor(@ApplicationContext private val c
                 mediaItemBuilder.setAlbumArtImage(mmr.embeddedPicture)
                 mediaItemBuilder.setTitle(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE))
                 mediaItemBuilder.setArtist(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST))
-                mediaItemBuilder.setDuration(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong())
+                mediaItemBuilder.setDuration(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)!!.toLong())
                 mmr.release()
                 return mediaItemBuilder.build()
             } else {

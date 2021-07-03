@@ -27,13 +27,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -159,7 +162,7 @@ fun HomeAppBar(
                     Tab(content = {
                         Text(
                             modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
-                            text = MediaItemUtils.getRootMediaItemType(item = item)!!.name,
+                            text = getRootItemText(mediaItemType = getRootMediaItemType(item = item)!!),
                             style = MaterialTheme.typography.button
                         )
                     },
@@ -184,4 +187,13 @@ fun HomeAppBar(
 
 fun rootItemsLoaded(items : List<MediaItem>) : Boolean {
     return !(items.isEmpty() || MediaItemUtils.getMediaId(items.first()) == Constants.EMPTY_MEDIA_ITEM_ID)
+}
+
+@Composable
+fun getRootItemText(mediaItemType: MediaItemType): String {
+    return when (mediaItemType) {
+        MediaItemType.SONGS -> stringResource(id = R.string.songs)
+        MediaItemType.FOLDERS -> stringResource(id = R.string.folders)
+        else -> ""
+    }
 }

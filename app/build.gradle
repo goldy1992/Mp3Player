@@ -12,12 +12,12 @@ android {
         exclude 'META-INF/AL2.0'
         exclude 'META-INF/LGPL2.1'
     }
-    compileSdkVersion TARGET_SDK_VERION
-	buildToolsVersion BUILD_TOOLS_VERSION
+    compileSdkVersion target_sdk_version
+	buildToolsVersion build_tools_version
     defaultConfig {
         applicationId "com.github.goldy1992.mp3player"
         minSdkVersion MIN_SDK_VERSION
-        targetSdkVersion TARGET_SDK_VERION
+        targetSdkVersion target_sdk_version
         versionCode Integer.parseInt(project.properties['version.code']).intValue()
         versionName project.properties['version.name']
         testInstrumentationRunner "com.github.goldy1992.mp3player.Mp3PlayerHiltTestRunner"
@@ -139,7 +139,7 @@ dependencies {
     androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: JUNIT_EXT_VERSION
     androidTestImplementation group: 'androidx.test', name: 'rules', version: TEST_RULES_VERSION
     androidTestImplementation group: 'androidx.test', name: 'runner', version: TEST_RUNNER_VERSION
-    androidTestImplementation group: 'androidx.test', name: 'monitor', version: MIRROR_VERSION
+    androidTestImplementation group: 'androidx.test', name: 'monitor', version: monitor_version
     androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
 
 

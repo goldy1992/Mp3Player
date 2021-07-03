@@ -18,7 +18,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -91,7 +90,7 @@ fun SearchBar(navController: NavController,
                 .focusRequester(focusRequester = focusRequester)
                 .onFocusChanged {
                     Log.i("SearchScreen", "Focus changed: $it")
-                    if (it == FocusState.Active) {
+                    if (it.isFocused) {
                         keyboardController?.show()
                     }},
             value = searchQuery.value,

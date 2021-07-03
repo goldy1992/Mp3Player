@@ -1,15 +1,30 @@
 <resources>
+    <string name="action_settings">Settings</string>
     <string name="back">Back</string>
+    <string name="channel_description">channel description</string>
+    <string name="content_description">content description</string>
+    <string name="current_position">Current Position</string>
+    <string name="display">Display</string>
+    <string name="duration">Duration</string>
+    <string name="folders">Folders</string>
+    <string name="menu">Menu</string>
+    <string name="notification_channel_name">channel_name</string>
+    <string name="no_search_results_found">No search results found for query\: \"%1$s\"</string>
+    <string name="no_songs_on_device">No audio tracks found on your device.</string>
+    <string name="no_folders_with_songs">No folders containing audio tracks found on your device.</string>
     <string name="pause">Pause</string>
+    <string name="permission_denied">Permission denied, please enable storage permissions in settings in order to use the app</string>
     <string name="play">Play</string>
     <string name="repeat_all">Repeat All</string>
     <string name="repeat_none">Repeat None</string>
     <string name="repeat_one">Repeat One</string>
     <string name="reset_speed">Reset Playback Speed</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Search media</string>
+    <string name="settings">Settings</string>
     <string name="shuffle_off">Shuffle Off</string>
     <string name="shuffle_on">Shuffle On</string>
-
-    <string name="action_settings">Settings</string>
+    <string name="songs">Songs</string>
 
     <string name="SKIP_TO_NEXT">Skip to Next</string>
     <string name="SKIP_TO_PREVIOUS">Skip to Previous</string>
@@ -27,17 +42,11 @@
     <string name="APP_TITLE_H1"><![CDATA[<h1>Mike\'s MP3 Player</h1>]]></string>
     <string name="FOLDER_NAME">%1$s</string>
     <string name="NO_MEDIA_FOUND">No audio tracks found on your device.</string>
-    <string name="no_search_results_found">No search results found for query\: \"%1$s\"</string>
-    <string name="search_hint">Search media</string>
-    <string name="notification_channel_name">channel_name</string>
-    <string name="channel_description">channel description</string>
-    <string name="menu">Menu</string>
-    <string name="search">Search</string>
-    <string name="settings">Settings</string>
-    <string name="display">Display</string>
+
+
     <!-- THEME NAMES !-->
     <string name="themes_title">Themes</string>
     <string name="THEME_BLUE">Blue</string>
     <string name="THEME_ORANGE">Orange</string>
-    <string name="content_description">content description</string>
+
 </resources>

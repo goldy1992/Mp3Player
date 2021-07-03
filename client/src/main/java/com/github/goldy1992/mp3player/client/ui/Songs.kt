@@ -12,10 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import org.apache.commons.collections4.CollectionUtils.isEmpty
@@ -52,7 +54,7 @@ fun EmptySongsList() {
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(DEFAULT_PADDING)) {
-        Text(text = "No audio tracks found on your device.",
+        Text(text = stringResource(id = R.string.no_songs_on_device),
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth())
 

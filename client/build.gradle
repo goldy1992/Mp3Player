@@ -5,8 +5,8 @@ apply from: rootProject.file("jacoco-with-test-support.gradle")
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
-    compileSdkVersion TARGET_SDK_VERION
-    buildToolsVersion BUILD_TOOLS_VERSION
+    compileSdkVersion target_sdk_version
+    buildToolsVersion build_tools_version
     testBuildType "debug"
 
     buildFeatures {
@@ -15,7 +15,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.0.0-beta07'
+        kotlinCompilerExtensionVersion compose_compiler_version
     }
 
     packagingOptions {
@@ -27,7 +27,7 @@ android {
 
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION
-        targetSdkVersion TARGET_SDK_VERION
+        targetSdkVersion target_sdk_version
         testInstrumentationRunner "com.github.goldy1992.mp3player.client.CustomTestRunner"
         /*makes the Android Test Orchestrator run its "pm clear" command after each test invocation.
         Ensures app's state is completely cleared between tests. */
@@ -150,7 +150,7 @@ dependencies {
 
     implementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
 
-    def compose_version = '1.0.0-beta07'
+
     implementation group: 'androidx.compose.ui', name: 'ui', version: compose_version
     // Tooling support (Previews, etc.)
     implementation group: 'androidx.compose.ui', name: 'ui-tooling', version: compose_version
@@ -161,14 +161,17 @@ dependencies {
     // Material design icons
     implementation group: 'androidx.compose.material', name:'material-icons-core', version: compose_version
     implementation group: 'androidx.compose.material', name:'material-icons-extended', version: compose_version
+    // compiler
+    implementation group: 'androidx.compose.compiler', name: 'compiler', version: compose_compiler_version
+
     // Integration with activities
-    implementation group: 'androidx.activity', name: 'activity-compose', version: '1.3.0-alpha08'
+    implementation group: 'androidx.activity', name: 'activity-compose', version: '1.3.0-rc01'
     // Integration with ViewModels
-    implementation group: 'androidx.lifecycle', name: 'lifecycle-viewmodel-compose', version: '1.0.0-alpha05'
+    implementation group: 'androidx.lifecycle', name: 'lifecycle-viewmodel-compose', version: '1.0.0-alpha07'
     // Integration with observables
     implementation group: 'androidx.compose.runtime', name: 'runtime-livedata', version: compose_version
     implementation group: 'androidx.compose.runtime', name: 'runtime-rxjava2', version: compose_version
-    implementation "androidx.navigation:navigation-compose:2.4.0-alpha01"
+    implementation "androidx.navigation:navigation-compose:2.4.0-alpha04"
 
 
     def accompanist_version = "0.10.0"
@@ -177,21 +180,22 @@ dependencies {
     implementation group: "com.google.accompanist", name: "accompanist-glide", version: accompanist_version
 
 
-    implementation "androidx.datastore:datastore-preferences:1.0.0-beta01"
+    implementation "androidx.datastore:datastore-preferences:1.0.0-rc01"
 
+    def compose_test_version = '1.0.0-rc01'
     // UI Tests
     androidTestImplementation group: 'androidx.compose.ui', name: 'ui-test-junit4', version: compose_version
     // Test rules and transitive dependencies:
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
-    testImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_test_version")
+    testImplementation("androidx.compose.ui:ui-test-junit4:$compose_test_version")
 // Needed for createComposeRule, but not createAndroidComposeRule:
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_test_version")
 
 
 
     // hilt
     implementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
-    implementation group: 'androidx.hilt', name: 'hilt-navigation-compose', version: '1.0.0-alpha02'
+    implementation group: 'androidx.hilt', name: 'hilt-navigation-compose', version: '1.0.0-alpha03'
     kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
     kapt group: 'com.google.dagger', name: 'hilt-compiler', version: HILT_VERSION
 
@@ -229,7 +233,7 @@ dependencies {
     androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: JUNIT_EXT_VERSION
     androidTestImplementation group: 'androidx.test', name: 'runner', version: TEST_RUNNER_VERSION
     androidTestUtil group: "androidx.test", name: "orchestrator", version: test_orchestrator_version
-    androidTestImplementation group: 'androidx.test', name: 'monitor', version: MIRROR_VERSION
+    androidTestImplementation group: 'androidx.test', name: 'monitor', version: monitor_version
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN"
     androidTestImplementation group: 'com.linkedin.dexmaker', name: 'dexmaker-mockito-inline-extended', version: '2.28.1'
     androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: kotlin_version

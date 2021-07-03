@@ -5,12 +5,12 @@ apply plugin: 'dagger.hilt.android.plugin'
 apply from: rootProject.file("jacoco-with-test-support.gradle")
 
 android {
-    compileSdkVersion TARGET_SDK_VERION
-    buildToolsVersion BUILD_TOOLS_VERSION
+    compileSdkVersion target_sdk_version
+    buildToolsVersion build_tools_version
 
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION
-        targetSdkVersion TARGET_SDK_VERION
+        targetSdkVersion target_sdk_version
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
         javaCompileOptions {
