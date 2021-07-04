@@ -45,6 +45,13 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+/**
+ * The Main Screen of the app.
+ *
+ * @param navController The [NavController].
+ * @param mediaController The [MediaControllerAdapter].
+ * @param mediaRepository The [MediaRepository].
+ */
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
@@ -74,49 +81,79 @@ fun MainScreen(navController: NavController,
         },
 
         content = {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .padding(bottom = BOTTOM_BAR_SIZE)) {
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-
-                ) { pageIndex ->
-
-                    val currentItem = rootItems[pageIndex]
-
-                    when (MediaItemUtils.getRootMediaItemType(currentItem)) {
-                        MediaItemType.SONGS -> {
-                            val songs = mediaRepository.itemMap[MediaItemType.SONGS]
-                            if (songs == null) {
-                                CircularProgressIndicator()
-                            } else {
-                                SongList(songsData = songs, mediaController = mediaController)
-                            }
-                        }
-                        MediaItemType.FOLDERS -> {
-                            val folders = mediaRepository.itemMap[MediaItemType.FOLDERS]
-                            if (folders == null) {
-                                CircularProgressIndicator()
-                            } else {
-                                FolderList(foldersData = folders, navController = navController, mediaRepository = mediaRepository)
-                            }
-                        }
-                        else -> {
-                            Log.i("mainScreen", "unrecognised Media Item")
-                        }
-                    }
-                }
-            }
+            TabBarPages(navController = navController,
+                        mediaRepository = mediaRepository,
+                        mediaController = mediaController,
+                        pagerState = pagerState,
+                        rootItems = rootItems)
         },
         drawerContent = {
             NavigationDrawer(navController = navController)
         })
-
 }
 
+/**
+ * Displays the pages for each of the Home bar tabs.
+ * @param navController The [NavController].
+ * @param mediaController The [MediaControllerAdapter].
+ * @param mediaRepository The [MediaRepository].
+ * @param pagerState The [PagerState] of the Tab Bar.
+ * @param rootItems The [List] of [MediaItem]s to display on the Tab Bar.
+ */
+@ExperimentalPagerApi
+@Composable
+fun TabBarPages(navController: NavController,
+                mediaRepository: MediaRepository,
+                mediaController: MediaControllerAdapter,
+                pagerState: PagerState,
+                rootItems: List<MediaItem>) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(bottom = BOTTOM_BAR_SIZE)) {
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxWidth(),
+
+            ) { pageIndex ->
+
+            val currentItem = rootItems[pageIndex]
+
+            when (MediaItemUtils.getRootMediaItemType(currentItem)) {
+                MediaItemType.SONGS -> {
+                    val songs = mediaRepository.itemMap[MediaItemType.SONGS]
+                    if (songs == null) {
+                        CircularProgressIndicator()
+                    } else {
+                        SongList(songsData = songs, mediaController = mediaController)
+                    }
+                }
+                MediaItemType.FOLDERS -> {
+                    val folders = mediaRepository.itemMap[MediaItemType.FOLDERS]
+                    if (folders == null) {
+                        CircularProgressIndicator()
+                    } else {
+                        FolderList(foldersData = folders, navController = navController, mediaRepository = mediaRepository)
+                    }
+                }
+                else -> {
+                    Log.i("mainScreen", "unrecognised Media Item")
+                }
+            }
+        }
+    }
+}
+
+
+/**
+ * Contructs the AppBar on the HomeScreen
+ * @param navController The [NavController].
+ * @param pagerState The [PagerState] of the Tab Bar.
+ * @param scope The [CoroutineScope].
+ * @param scaffoldState The [ScaffoldState].
+ * @param rootItems The [List] of [MediaItem]s to display on the Tab Bar.
+ */
 @ExperimentalPagerApi
 @Composable
 fun HomeAppBar(
@@ -185,15 +222,22 @@ fun HomeAppBar(
     }
 } // HomeAppBar
 
-fun rootItemsLoaded(items : List<MediaItem>) : Boolean {
+/**
+ * Util method to check if the Root items are loaded.
+ */
+private fun rootItemsLoaded(items : List<MediaItem>) : Boolean {
     return !(items.isEmpty() || MediaItemUtils.getMediaId(items.first()) == Constants.EMPTY_MEDIA_ITEM_ID)
 }
 
+/**
+ * Util method to return the String of the [MediaItemType].
+ * @param mediaItemType The [MediaItemType] of which to get the String.
+ */
 @Composable
 fun getRootItemText(mediaItemType: MediaItemType): String {
     return when (mediaItemType) {
         MediaItemType.SONGS -> stringResource(id = R.string.songs)
         MediaItemType.FOLDERS -> stringResource(id = R.string.folders)
-        else -> ""
+        else -> "" // TOOO: Add a return for an unknown MediaItemType
     }
 }

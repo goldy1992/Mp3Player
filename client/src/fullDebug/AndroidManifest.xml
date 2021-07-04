@@ -11,6 +11,7 @@
         android:theme="@style/AppTheme.Orange"
         tools:node="merge">
 <!--        <activity android:name=".client.activities.MainActivityIdlingResourceImpl" />-->
-        <activity android:name=".MainActivityUnitTestImpl" />
+        <activity android:name=".activities.MainActivityUnitTestImpl" />
+        <activity android:name=".activities.SplashScreenEntryActivityUnitTestImpl" />
     </application>
 </manifest>

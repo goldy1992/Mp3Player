@@ -56,10 +56,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    hilt {
-        enableTransformForLocalTests = true
-    }
-
     kotlinOptions { jvmTarget = "1.8" }
 
     testOptions {

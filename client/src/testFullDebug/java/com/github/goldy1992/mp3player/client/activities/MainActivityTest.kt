@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Looper
 import androidx.test.core.app.ActivityScenario
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.goldy1992.mp3player.client.MainActivityUnitTestImpl
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
 import com.github.goldy1992.mp3player.client.dagger.modules.UserPreferencesModule

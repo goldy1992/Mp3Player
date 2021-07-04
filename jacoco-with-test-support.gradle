@@ -1,7 +1,7 @@
 apply plugin: 'jacoco'
 
 jacoco {
-    toolVersion = "$JACOCO_VERSION"
+    toolVersion = jacoco_version
 }
 
 def fileFilter = [
@@ -17,6 +17,8 @@ def fileFilter = [
         '**hilt_aggregated_deps**',
         '**/Hilt_**'
 ]
+
+def excludeUiCode = ['**/ui/**']
 
 def applicableProductFlavor = "full"
 
@@ -52,13 +54,14 @@ project.afterEvaluate {
             html.enabled = true
         }
 
+        def exclusions = fileFilter + excludeUiCode
         def mainSrc = "$project.projectDir/src/main/java"
-        def mainClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${buildVariant}", excludes: fileFilter)
-        def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/${buildVariant}", excludes: fileFilter)
+        def mainClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${buildVariant}", excludes: exclusions)
+        def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/${buildVariant}", excludes: exclusions)
 
         sourceDirectories.from = files([mainSrc])
         classDirectories.from = files([mainClasses, javaClasses])
-        executionData.from = "$projectDir/jacoco.exec"
+        executionData.from = "$buildDir/build/outputs/unit_test_code_coverage/test${buildVariantCapitalised}UnitTest.exec"
     }
     /**
      * Generates a JaCoCo Report that aggregates the test coverage for the unit tests and

@@ -45,7 +45,7 @@ import javax.inject.Inject
  *
  */
 @AndroidEntryPoint(AppCompatActivity::class)
-class SplashScreenEntryActivity : Hilt_SplashScreenEntryActivity(), PermissionGranted, LogTagger {
+open class SplashScreenEntryActivity : Hilt_SplashScreenEntryActivity(), PermissionGranted, LogTagger {
 
     @Inject
     lateinit var componentClassMapper: ComponentClassMapper
@@ -82,7 +82,7 @@ class SplashScreenEntryActivity : Hilt_SplashScreenEntryActivity(), PermissionGr
 
 
     @Composable
-    fun SplashScreen() {
+    open fun SplashScreen() {
         AppTheme(userPreferencesRepository = preferencesRepository) {
             Column(
                 Modifier

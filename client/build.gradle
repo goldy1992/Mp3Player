@@ -75,11 +75,11 @@ android {
 
     compileOptions {
         incremental = false
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
-    kotlinOptions { jvmTarget = "1.8" }
+    kotlinOptions { jvmTarget = "11" }
 
     testOptions {
         //execution 'ANDROIDX_TEST_ORCHESTRATOR'
@@ -91,7 +91,7 @@ android {
         }
         unitTests.all {
             testLogging {
-                events "passed", "skipped"//, "failed", "standardOut", "standardError"
+                events "passed", "skipped", "failed", "standardOut", "standardError"
                 outputs.upToDateWhen {false}
                 showStandardStreams = false
             }
@@ -145,9 +145,6 @@ dependencies {
 
     debugImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     debugImplementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
-
-
-
     implementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
 
 
@@ -173,7 +170,6 @@ dependencies {
     implementation group: 'androidx.compose.runtime', name: 'runtime-rxjava2', version: compose_version
     implementation "androidx.navigation:navigation-compose:2.4.0-alpha04"
 
-
     def accompanist_version = "0.10.0"
     implementation group: "com.google.accompanist", name: "accompanist-pager", version: accompanist_version
     implementation group: "com.google.accompanist", name: "accompanist-pager-indicators", version: accompanist_version
@@ -190,7 +186,6 @@ dependencies {
     testImplementation("androidx.compose.ui:ui-test-junit4:$compose_test_version")
 // Needed for createComposeRule, but not createAndroidComposeRule:
     debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_test_version")
-
 
 
     // hilt
@@ -246,8 +241,6 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
 // Needed for createComposeRule, but not createAndroidComposeRule:
     debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
-
-
 
     automationImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
     debugImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: ESPRESSO_CORE_VERSION

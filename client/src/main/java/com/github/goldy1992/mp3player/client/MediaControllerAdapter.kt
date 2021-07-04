@@ -185,6 +185,16 @@ constructor(private val context: Context,
         this.shuffleMode.postValue(shuffleMode)
     }
 
+    open fun getCurrentSongAlbumArtUri() : Uri? {
+        val albumArtUriPath = metadata.value!!.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI)
+
+        return try {
+            Uri.parse(albumArtUriPath)
+        } catch (ex: NullPointerException) {
+            Log.e(logTag(), "$albumArtUriPath: is an invalid Uri")
+            return null
+        }
+    }
     /**
      * @return True if the current playback state is [PlaybackStateCompat.STATE_PLAYING].
      */

@@ -28,7 +28,7 @@ import java.lang.reflect.Method
 @LooperMode(LooperMode.Mode.PAUSED)
 class SplashScreenEntryActivityTest {
 
-    private lateinit var scenario: ActivityScenario<SplashScreenEntryActivity>
+    private lateinit var scenario: ActivityScenario<SplashScreenEntryActivityUnitTestImpl>
 
     @Rule
     @JvmField
@@ -46,7 +46,7 @@ class SplashScreenEntryActivityTest {
         scenario.onActivity { splashActivity: SplashScreenEntryActivity ->
             val spiedActivity : SplashScreenEntryActivity = spy(splashActivity)
             val context = InstrumentationRegistry.getInstrumentation().context
-            val intent = Intent(context, SplashScreenEntryActivity::class.java)
+            val intent = Intent(context, SplashScreenEntryActivityUnitTestImpl::class.java)
 
             intent.addCategory(Intent.CATEGORY_LAUNCHER)
             intent.action = Intent.ACTION_MAIN
@@ -131,7 +131,7 @@ class SplashScreenEntryActivityTest {
 
     private fun launchActivity(intent: Intent?) {
         scenario = if (null == intent) {
-            ActivityScenario.launch(SplashScreenEntryActivity::class.java)
+            ActivityScenario.launch(SplashScreenEntryActivityUnitTestImpl::class.java)
         }
         else {
             ActivityScenario.launch(intent)
