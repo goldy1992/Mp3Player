@@ -61,7 +61,7 @@ project.afterEvaluate {
 
         sourceDirectories.from = files([mainSrc])
         classDirectories.from = files([mainClasses, javaClasses])
-        executionData.from = "$buildDir/build/outputs/unit_test_code_coverage/test${buildVariantCapitalised}UnitTest.exec"
+        executionData.from = "$buildDir/jacoco/test${buildVariantCapitalised}UnitTest.exec"
     }
     /**
      * Generates a JaCoCo Report that aggregates the test coverage for the unit tests and
@@ -86,6 +86,7 @@ project.afterEvaluate {
         classDirectories.from = files([mainClasses, javaClasses])
 
         // combine unit test jacoco.exec file with the android test coverage.ec file
+        // TODO: Update with exec directory of instrumented tests.
         executionData.from = fileTree(dir: "$projectDir", include: ["/jacoco.exec",
                                                                     "*.ec"])
     }

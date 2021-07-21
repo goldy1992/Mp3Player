@@ -22,18 +22,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            testCoverageEnabled true
+        //    testCoverageEnabled true
+        //    debuggable true
             minifyEnabled false
         }
     }
 
     compileOptions {
-        incremental = false
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+ //       incremental = false
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
-    kotlinOptions { jvmTarget = "1.8" }
+    kotlinOptions { jvmTarget = "11" }
 
     testOptions {
         unitTests {
@@ -70,7 +71,7 @@ dependencies {
     testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
     testImplementation group:'com.nhaarman.mockitokotlin2', name: 'mockito-kotlin', version: MOCKITO_KOTLIN
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: mockito_inline_version
-    testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
+  //  testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
     implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
 

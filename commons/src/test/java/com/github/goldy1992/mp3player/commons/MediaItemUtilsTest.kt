@@ -53,11 +53,11 @@ class MediaItemUtilsTest {
     }
 
     @Test
-    fun testGetTitleNull() {
+    fun testGetTitleWhenSetAsNull() {
         val mediaItem = MediaItemBuilder("id")
                 .setTitle(null)
                 .build()
-        assertNull(getTitle(mediaItem))
+        assertUnknown(getTitle(mediaItem))
     }
 
     @Test
@@ -107,7 +107,7 @@ class MediaItemUtilsTest {
     fun testGetDirectoryNameNull() {
         val mediaItem = MediaItemBuilder("id")
                 .build()
-        assertNull(getDirectoryName(mediaItem))
+        assertUnknown(getDirectoryName(mediaItem))
     }
 
     @Test
@@ -236,5 +236,9 @@ class MediaItemUtilsTest {
         val result = MediaItemUtils.getRootTitle(mediaItem)
 
         assertEquals(expectedRootTitle, result)
+    }
+
+    private fun assertUnknown(value : String?) {
+        assertEquals(Constants.UNKNOWN, value)
     }
 }
