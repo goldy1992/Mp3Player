@@ -1,18 +1,17 @@
 package com.github.goldy1992.mp3player.service.dagger.modules
 
 import android.content.Context
-import com.github.goldy1992.mp3player.commons.dagger.scopes.ComponentScope
 import com.github.goldy1992.mp3player.service.library.search.FolderDao
 import com.github.goldy1992.mp3player.service.library.search.SearchDatabase
 import com.github.goldy1992.mp3player.service.library.search.SongDao
 import dagger.Module
 import dagger.Provides
-import com.nhaarman.mockitokotlin2.*
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
-import javax.inject.Singleton
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 @InstallIn(ServiceComponent::class)
 @Module
