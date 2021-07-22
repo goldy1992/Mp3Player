@@ -4,7 +4,7 @@ import android.content.Intent
 import android.media.AudioManager
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.android.exoplayer2.ExoPlayer
-import com.nhaarman.mockitokotlin2.*
+import org.mockito.kotlin.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

@@ -11,8 +11,6 @@ android {
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion target_sdk_version
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
     }
 
@@ -22,19 +20,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-        //    testCoverageEnabled true
-        //    debuggable true
+            // testCoverageEnabled true
             minifyEnabled false
         }
     }
 
     compileOptions {
- //       incremental = false
+        incremental = false
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
 
-    kotlinOptions { jvmTarget = "11" }
+    kotlinOptions {
+        jvmTarget = "11"
+        useIR = true
+    }
 
     testOptions {
         unitTests {
@@ -57,24 +57,17 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
-
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
-
-    testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
-        exclude group: "com.google.auto.service", module: "auto-service"
-    }
-
-    testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
-    testImplementation group:'com.nhaarman.mockitokotlin2', name: 'mockito-kotlin', version: MOCKITO_KOTLIN
-    testImplementation group: 'org.mockito', name: 'mockito-inline', version: mockito_inline_version
-  //  testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
     implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
 
+    testImplementation("org.robolectric:robolectric:$robolectric_version") {
+        exclude group: "com.google.auto.service", module: "auto-service"
+    }
+    testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
+    testImplementation group: "org.mockito.kotlin", name: "mockito-kotlin", version: mockito_kotlin_version
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: mockito_inline_version
 }
 
 sonarqube {

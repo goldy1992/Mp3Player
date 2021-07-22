@@ -3,10 +3,10 @@ package com.github.goldy1992.mp3player.service.library.content.searcher
 import android.content.ContentResolver
 import android.database.Cursor
 import android.support.v4.media.MediaBrowserCompat
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.junit.Assert
 import org.junit.Test
 import java.util.*

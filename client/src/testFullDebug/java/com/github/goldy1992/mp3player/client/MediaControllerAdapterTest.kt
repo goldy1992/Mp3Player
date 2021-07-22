@@ -12,7 +12,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.callbacks.connection.ConnectionStatus
-import com.nhaarman.mockitokotlin2.*
+import org.mockito.kotlin.*
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Before

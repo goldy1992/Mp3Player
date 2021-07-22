@@ -6,7 +6,7 @@ import com.google.android.exoplayer2.upstream.ContentDataSource
 import com.google.android.exoplayer2.upstream.ContentDataSource.ContentDataSourceException
 import com.google.android.exoplayer2.upstream.FileDataSource
 import com.google.android.exoplayer2.upstream.FileDataSource.FileDataSourceException
-import com.nhaarman.mockitokotlin2.*
+import org.mockito.kotlin.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

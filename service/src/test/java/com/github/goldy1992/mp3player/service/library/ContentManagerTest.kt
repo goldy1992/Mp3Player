@@ -10,9 +10,9 @@ import com.github.goldy1992.mp3player.service.library.content.retriever.MediaIte
 import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.SongFromUriRetriever
 import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearcher
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

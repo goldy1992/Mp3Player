@@ -13,7 +13,7 @@ import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.search.managers.FolderDatabaseManager
 import com.github.goldy1992.mp3player.service.library.search.managers.SongDatabaseManager
-import com.nhaarman.mockitokotlin2.*
+import org.mockito.kotlin.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

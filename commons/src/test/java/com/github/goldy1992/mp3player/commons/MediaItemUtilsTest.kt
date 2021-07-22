@@ -15,7 +15,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaUri
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle
-import com.nhaarman.mockitokotlin2.mock
+import org.mockito.kotlin.mock
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -53,7 +53,7 @@ class MediaItemUtilsTest {
     }
 
     @Test
-    fun testGetTitleWhenSetAsNull() {
+    fun testGetTitleUnknown() {
         val mediaItem = MediaItemBuilder("id")
                 .setTitle(null)
                 .build()
@@ -104,7 +104,7 @@ class MediaItemUtilsTest {
     }
 
     @Test
-    fun testGetDirectoryNameNull() {
+    fun testGetDirectoryNameUnknown() {
         val mediaItem = MediaItemBuilder("id")
                 .build()
         assertUnknown(getDirectoryName(mediaItem))

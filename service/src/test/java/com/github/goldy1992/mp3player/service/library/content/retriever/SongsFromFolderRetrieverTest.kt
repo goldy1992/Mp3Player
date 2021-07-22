@@ -7,7 +7,7 @@ import com.github.goldy1992.mp3player.service.library.content.filter.SongsFromFo
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
 import com.github.goldy1992.mp3player.service.library.search.SongDao
-import com.nhaarman.mockitokotlin2.*
+import org.mockito.kotlin.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

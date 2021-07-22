@@ -8,7 +8,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
 import com.github.goldy1992.mp3player.client.dagger.modules.UserPreferencesModule
-import com.nhaarman.mockitokotlin2.mock
+import org.mockito.kotlin.mock
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules

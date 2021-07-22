@@ -5,9 +5,9 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.service.MyDescriptionAdapter
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

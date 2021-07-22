@@ -1,11 +1,11 @@
 package com.github.goldy1992.mp3player.client.dagger.modules
 
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
-import com.nhaarman.mockitokotlin2.mock
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
+import org.mockito.kotlin.mock
 import javax.inject.Singleton
 
 @Module

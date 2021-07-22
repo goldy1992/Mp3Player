@@ -9,7 +9,7 @@ import com.github.goldy1992.mp3player.service.dagger.modules.service.ContentMana
 import com.github.goldy1992.mp3player.service.dagger.modules.service.MediaSessionCompatModule
 import com.github.goldy1992.mp3player.service.dagger.modules.service.SearchDatabaseModule
 import com.github.goldy1992.mp3player.service.library.ContentManager
-import com.nhaarman.mockitokotlin2.*
+import org.mockito.kotlin.*
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication

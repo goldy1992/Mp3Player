@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.service
 
 import android.support.v4.media.MediaBrowserCompat
-import com.nhaarman.mockitokotlin2.mock
+import org.mockito.kotlin.mock
 
 import org.junit.Assert
 import org.junit.Before

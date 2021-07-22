@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.service.player
 import android.os.Looper
 import com.github.goldy1992.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED
 import com.google.android.exoplayer2.PlaybackParameters
-import com.nhaarman.mockitokotlin2.*
+import org.mockito.kotlin.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

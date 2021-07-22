@@ -6,7 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.media.MediaBrowserCompat
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
-import com.nhaarman.mockitokotlin2.mock
+import org.mockito.kotlin.mock
 
 import java.util.*
 

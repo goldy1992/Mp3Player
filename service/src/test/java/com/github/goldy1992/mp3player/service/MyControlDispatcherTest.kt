@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.service
 import com.github.goldy1992.mp3player.service.player.AudioBecomingNoisyBroadcastReceiver
 import com.github.goldy1992.mp3player.service.player.MyPlayerNotificationManager
 import com.google.android.exoplayer2.ExoPlayer
-import com.nhaarman.mockitokotlin2.*
+import org.mockito.kotlin.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
