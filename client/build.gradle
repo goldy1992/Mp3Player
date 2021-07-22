@@ -20,9 +20,12 @@ android {
     }
 
     packagingOptions {
+        exclude "**/attach_hotspot_windows.dll"
         exclude 'META-INF/LICENSE.md'
         exclude 'META-INF/LICENSE-notice.md'
         exclude 'META-INF/AL2.0'
+        exclude 'META-INF/ASM'
+        exclude 'META-INF/licenses/ASM'
         exclude 'META-INF/LGPL2.1'
     }
 
@@ -43,6 +46,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            testCoverageEnabled true
+            debuggable true
             minifyEnabled false
         }
     }

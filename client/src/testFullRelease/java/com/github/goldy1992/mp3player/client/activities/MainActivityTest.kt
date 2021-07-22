@@ -21,16 +21,16 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
 import org.robolectric.annotation.LooperMode
 
-@HiltAndroidTest
-@UninstallModules(
-    MediaBrowserAdapterModule::class,
-    MediaControllerAdapterModule::class,
-    UserPreferencesModule::class)
-@RunWith(RobolectricTestRunner::class)
-@LooperMode(LooperMode.Mode.PAUSED)
+//@HiltAndroidTest
+//@UninstallModules(
+//    MediaBrowserAdapterModule::class,
+//    MediaControllerAdapterModule::class,
+//    UserPreferencesModule::class)
+//@RunWith(RobolectricTestRunner::class)
+//@LooperMode(LooperMode.Mode.PAUSED)
 class MainActivityTest {
 
-    private lateinit var scenario : ActivityScenario<MainActivityUnitTestImpl>
+ /*   private lateinit var scenario : ActivityScenario<MainActivityUnitTestImpl>
 
     @Rule(order = 0)
     @JvmField
@@ -60,6 +60,9 @@ class MainActivityTest {
     private fun launchActivityAndConnect(intent : Intent) {
         scenario = ActivityScenario.launch(intent)
     }
+
+
+  */
 
 
 }
