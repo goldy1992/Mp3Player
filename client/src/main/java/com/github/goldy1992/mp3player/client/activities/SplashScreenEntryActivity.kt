@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client.activities
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
@@ -20,10 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.WindowCompat
 import com.github.goldy1992.mp3player.client.PermissionGranted
 import com.github.goldy1992.mp3player.client.PermissionsProcessor
 import com.github.goldy1992.mp3player.client.R
@@ -71,7 +69,7 @@ open class SplashScreenEntryActivity : Hilt_SplashScreenEntryActivity(), Permiss
             return
         }
         super.onCreate(savedInstanceState)
-        setTheme(R.style.AppTheme)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
           // TODO: have this injected so that a test implementation can be provided
         mainActivityIntent = Intent(applicationContext, componentClassMapper.mainActivity)
         CoroutineScope(IO).launch { init()}

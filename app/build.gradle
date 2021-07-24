@@ -87,8 +87,8 @@ android {
     }
     compileOptions {
         incremental = false
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions { jvmTarget = "1.8" }
@@ -97,20 +97,18 @@ android {
 dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
-    implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
-    implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
-    implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: commons_lang_version
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: commons_collections4_version
+    implementation group: 'androidx.media', name: 'media', version: media_version
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: coroutines_version
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: coroutines_version
-    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: exo_player_vesrion
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
     implementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
     implementation group: 'androidx.appcompat', name: 'appcompat', version: app_compat_version
-    implementation group: 'com.google.android.material', name: 'material', version: MATERIAL_VERSION
-    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: EXO_PLAYER_VERSION
-    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
-    implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: exo_player_vesrion
+    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: exo_player_vesrion
+    implementation group: 'androidx.room', name: 'room-runtime', version: room_version
 
     // local libs
     implementation project(path: ':commons')
@@ -118,22 +116,22 @@ dependencies {
     implementation project(path: ':client')
 
     // hilt
-    implementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
-    kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+    implementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
+    kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
   //  implementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
-    kapt group: 'com.google.dagger', name: 'hilt-compiler', version: HILT_VERSION
-    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
-    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
-    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+    kapt group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
+    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
+    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
+    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
  //   androidTestImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
 
-    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-compiler', version: HILT_VERSION
+    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
 
 
     androidTestImplementation junitUnitTests
 
     androidTestImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
-    androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
+    androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: annotation_version
     androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: JUNIT_EXT_VERSION
     androidTestImplementation group: 'androidx.test', name: 'rules', version: TEST_RULES_VERSION
     androidTestImplementation group: 'androidx.test', name: 'runner', version: TEST_RUNNER_VERSION

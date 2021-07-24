@@ -16,7 +16,6 @@ android {
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
-//                arguments += [ 'org.robolectric.annotation.processing.shadowPackage' : 'com.github.goldy1992.mp3player.service.shadows.MyShadowMediaPLayer' ]
             }
         }
     }
@@ -52,8 +51,8 @@ android {
 
     compileOptions {
         incremental = false
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions { jvmTarget = "1.8" }
@@ -82,14 +81,12 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
-    implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
-    implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
-    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: EXO_PLAYER_VERSION
-    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
-    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
+    implementation group: 'androidx.media', name: 'media', version: media_version
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: commons_collections4_version
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: commons_lang_version
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: exo_player_vesrion
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: exo_player_vesrion
+    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: exo_player_vesrion
     implementation group: 'androidx.appcompat', name: 'appcompat', version: app_compat_version
     implementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
@@ -97,9 +94,9 @@ dependencies {
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: coroutines_version
     implementation project(':commons')
 
-    implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
-    implementation group: 'androidx.room', name: 'room-ktx', version: ROOM_VERSION
-    kapt group: 'androidx.room', name: 'room-compiler', version: ROOM_VERSION
+    implementation group: 'androidx.room', name: 'room-runtime', version: room_version
+    implementation group: 'androidx.room', name: 'room-ktx', version: room_version
+    kapt group: 'androidx.room', name: 'room-compiler', version: room_version
 
 
     testImplementation junitUnitTests
@@ -114,11 +111,11 @@ dependencies {
     testImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: coroutines_version
 
     // hilt
-    implementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
-    kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+    implementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
+    kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
 
-    testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
-    kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
+    testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
+    kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
 
 }
 

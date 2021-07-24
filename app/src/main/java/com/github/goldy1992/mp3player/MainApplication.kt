@@ -8,6 +8,6 @@ import dagger.hilt.android.HiltAndroidApp
 open class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        setTheme(R.style.AppTheme)
+        //setTheme(R.style.AppTheme)
     }
 }

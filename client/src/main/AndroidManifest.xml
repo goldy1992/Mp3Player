@@ -3,12 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:theme="@style/AppTheme.Orange"
+        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         tools:node="merge">
         <activity
             android:name=".activities.SplashScreenEntryActivity"
             android:exported="true">
-            <intent-filter>                <action android:name="android.intent.action.MAIN" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

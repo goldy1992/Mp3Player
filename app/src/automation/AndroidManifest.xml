@@ -19,8 +19,7 @@
         android:icon="@mipmap/headphone_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        tools:node="replace"
-        android:theme="@style/AppTheme.Orange">
+        tools:node="replace" >
 
         <activity
             android:name=".client.activities.SplashScreenEntryActivity"

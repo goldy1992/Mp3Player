@@ -31,14 +31,14 @@ project.afterEvaluate {
         flavor -> flavor.name
     }
     def applicableProductFlavor = "full"
-    def uiTestBuildType = 'release'
-    def uiTestFlavor = getProductFlavor(applicableProductFlavor, productFlavors);
-    def (String unitTestBuildVariant, String unitTestBuildVariantCapitalised) = getBuildVariant(uiTestFlavor, uiTestBuildType)
+    def unitTestBuildType = 'release'
+    def unitTestFlavor = getProductFlavor(applicableProductFlavor, productFlavors);
+    def (String unitTestBuildVariant, String unitTestBuildVariantCapitalised) = getBuildVariant(unitTestFlavor, unitTestBuildType)
 
     /**
      * Generates a JaCoCo Report for the test coverage for the unit tests.
      */
-    task jacocoUnitTestReport(type: JacocoReport, dependsOn: ["test${unitTestBuildVariant}UnitTest"]) {
+    task jacocoUnitTestReport(type: JacocoReport, dependsOn: ["test${unitTestBuildVariantCapitalised}UnitTest"]) {
         group = "Reporting"
         description = "Generate Jacoco coverage reports on the ${unitTestBuildVariantCapitalised} build."
         reports {
@@ -58,8 +58,8 @@ project.afterEvaluate {
     }
 
 
-    uiTestBuildType = 'debug'
-    uiTestFlavor = getProductFlavor(applicableProductFlavor, productFlavors);
+    def uiTestBuildType = 'debug'
+    def uiTestFlavor = getProductFlavor(applicableProductFlavor, productFlavors);
     def (String uiTestBuildVariant, String uiTestBuildVariantCapitalised) = getBuildVariant(uiTestFlavor, uiTestBuildType)
 
     /**

@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application xmlns:tools="http://schemas.android.com/tools"
-        android:theme="@style/AppTheme.Orange"
         tools:node="merge">
 <!--        <activity android:name=".client.activities.MainActivityIdlingResourceImpl" />-->
 <!--        <activity android:name=".activities.MainActivityUnitTestImpl" />-->
