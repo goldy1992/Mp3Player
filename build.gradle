@@ -7,15 +7,15 @@ buildscript {
         build_tools_version = '30.0.3'
         nav_version = '2.3.2'
         kotlin_version = '1.5.10'
-        ACTIVITY_VERSION = '1.1.0'
-        ANDROIDX_CORE_KOTLIN_VERSION = '1.3.2'
+        activity_ktx_version = '1.2.4'
+        androidx_core_ktx_version = '1.3.2'
         ANNOTATION_VERSION = '1.1.0-rc01'
-        APP_COMPAT_VERSION = '1.2.0'
+        app_compat_version = '1.3.0'
         COMMONS_COLLECTIONS4_VERSION = '4.4'
         COMMONS_IO_VERSION = '1.3.2'
         COMMONS_LANG_VERSION = '3.9'
         compose_version = '1.0.0-rc02'
-        CORE_VERSION = '1.0.1'
+        CORE_VERSION = '1.6.0-rc01'
         ESPRESSO_CORE_VERSION = '3.3.0'
         EXO_PLAYER_VERSION = '2.13.3'
         GOOGLE_GUAVA_VERSION = '27.1-android'
@@ -23,8 +23,8 @@ buildscript {
         jacoco_version = '0.8.7'
         JUNIT_EXT_VERSION = '1.1.2'
         JUNIT4_VERSION = '4.12'
-        lifecycleVersion = '2.3.1'
-        KOTLIN_COROUTINE_VERSION = '1.3.2'
+        lifecycle_version = '2.3.1'
+        coroutines_version = '1.4.2'
         MATERIAL_VERSION = '1.3.0-alpha02'
         MEDIA_VERSION = '1.3.1'
         monitor_version = '1.4.0-beta01'
@@ -55,7 +55,7 @@ buildscript {
         junitUnitTests =  [
             "junit:junit:$JUNIT4_VERSION",
             "org.mockito.kotlin:mockito-kotlin:${mockito_kotlin_version}",
-            "androidx.core:core-ktx:$ANDROIDX_CORE_KOTLIN_VERSION"
+            "androidx.core:core-ktx:$androidx_core_ktx_version"
         ]
 
         // flavour dimensions
@@ -76,7 +76,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.0-alpha04'
+        classpath 'com.android.tools.build:gradle:7.1.0-alpha03'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$HILT_VERSION"
         def nav_version = "2.3.0"

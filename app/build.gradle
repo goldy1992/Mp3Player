@@ -101,12 +101,12 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
     implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
     implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
-    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: KOTLIN_COROUTINE_VERSION
-    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: KOTLIN_COROUTINE_VERSION
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: coroutines_version
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: coroutines_version
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
-    implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
-    implementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
+    implementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
+    implementation group: 'androidx.appcompat', name: 'appcompat', version: app_compat_version
     implementation group: 'com.google.android.material', name: 'material', version: MATERIAL_VERSION
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: EXO_PLAYER_VERSION
     implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
@@ -148,9 +148,9 @@ dependencies {
 
 
 
-    debugImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
+    debugImplementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
 
-    implementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
+    implementation group: 'androidx.activity', name: 'activity-ktx', version: activity_ktx_version
 
 }
 
