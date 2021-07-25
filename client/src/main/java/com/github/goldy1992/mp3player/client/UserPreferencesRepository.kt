@@ -24,7 +24,7 @@ data class UserPreferences(
 /**
  * Class that handles saving and retrieving user preferences
  */
-class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) : LogTagger {
+open class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) : LogTagger {
 
     private object PreferencesKeys {
         val THEME = stringPreferencesKey("theme")
@@ -73,20 +73,20 @@ class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) :
         }
     }
 
-    fun getTheme() : Flow<Theme> {
+    open fun getTheme() : Flow<Theme> {
         return userPreferencesFlow.map { preferences ->
             val currentTheme = preferences.theme
             Theme.valueOf(currentTheme)
         }
     }
 
-    fun getDarkMode() : Flow<Boolean> {
+    open fun getDarkMode() : Flow<Boolean> {
        return userPreferencesFlow.map { preferences ->
            preferences.darkMode
         }
     }
 
-    fun getSystemDarkMode() : Flow<Boolean> {
+    open fun getSystemDarkMode() : Flow<Boolean> {
         return userPreferencesFlow.map {
             preferences -> preferences.systemDarkMode
         }

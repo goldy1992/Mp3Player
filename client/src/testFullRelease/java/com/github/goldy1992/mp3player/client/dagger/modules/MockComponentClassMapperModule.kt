@@ -17,7 +17,6 @@ class MockComponentClassMapperModule {
         return ComponentClassMapper.Builder()
                 .service(ServiceComponent::class.java)
                 .mainActivity(ActivityComponent::class.java)
-                .splashActivity(ActivityComponent::class.java)
                 .build()
     }
 }

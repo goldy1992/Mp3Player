@@ -1,24 +1,29 @@
 package com.github.goldy1992.mp3player.client
 
 import android.Manifest.permission
+import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.github.goldy1992.mp3player.client.activities.SplashScreenEntryActivity
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.scopes.ActivityScoped
 import java.util.*
+import javax.inject.Inject
 
+@ActivityScoped
 class PermissionsProcessor
-
-    constructor(private val parentActivity: SplashScreenEntryActivity,
+    @Inject
+    constructor(@ActivityContext private val context : Context,
                 private val permissionGranted: PermissionGranted) {
 
 
     fun requestPermission(permission: String) { // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(parentActivity,
+        if (ContextCompat.checkSelfPermission(context,
                         permission)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(parentActivity, arrayOf(permission), PERMISSION_RQ_CODE_MAP[permission]!!)
+            ActivityCompat.requestPermissions(context as Activity, arrayOf(permission), PERMISSION_RQ_CODE_MAP[permission]!!)
         } else { // Permission has already been granted
             Log.i(LOG_TAG, "Permission has already been granted")
             permissionGranted.onPermissionGranted()

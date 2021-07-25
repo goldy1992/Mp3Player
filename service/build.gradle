@@ -107,7 +107,7 @@ dependencies {
     testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: robolectric_version
     testImplementation group: "org.mockito.kotlin", name: "mockito-kotlin", version: mockito_kotlin_version
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: mockito_inline_version
-    testImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
+    testImplementation group: 'androidx.test', name: 'core', version: test_core_version
     testImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: coroutines_version
 
     // hilt

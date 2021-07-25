@@ -5,7 +5,6 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.github.goldy1992.mp3player.client.callbacks.connection.ConnectionStatus
 import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback
 import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
 import com.github.goldy1992.mp3player.commons.LogTagger

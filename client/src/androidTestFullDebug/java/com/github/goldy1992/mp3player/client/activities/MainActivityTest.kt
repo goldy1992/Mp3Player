@@ -1,25 +1,25 @@
 package com.github.goldy1992.mp3player.client.activities
 
-import android.content.Intent
-import android.net.Uri
-import android.os.Looper
-import androidx.test.core.app.ActivityScenario
-import androidx.test.platform.app.InstrumentationRegistry
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
-import com.github.goldy1992.mp3player.client.dagger.modules.UserPreferencesModule
-import org.mockito.kotlin.mock
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.UninstallModules
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.Shadows
-import org.robolectric.annotation.LooperMode
+//import android.content.Intent
+//import android.net.Uri
+//import android.os.Looper
+//import androidx.test.core.app.ActivityScenario
+//import androidx.test.platform.app.InstrumentationRegistry
+//import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
+//import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
+//import com.github.goldy1992.mp3player.client.dagger.modules.UserPreferencesModule
+//import org.mockito.kotlin.mock
+//import dagger.hilt.android.testing.HiltAndroidRule
+//import dagger.hilt.android.testing.HiltAndroidTest
+//import dagger.hilt.android.testing.UninstallModules
+//import org.junit.Assert
+//import org.junit.Before
+//import org.junit.Rule
+//import org.junit.Test
+//import org.junit.runner.RunWith
+//import org.robolectric.RobolectricTestRunner
+//import org.robolectric.Shadows
+//import org.robolectric.annotation.LooperMode
 
 //@HiltAndroidTest
 //@UninstallModules(

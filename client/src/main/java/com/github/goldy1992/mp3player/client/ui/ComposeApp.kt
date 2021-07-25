@@ -22,12 +22,13 @@ import kotlinx.coroutines.InternalCoroutinesApi
 fun ComposeApp(mediaRepository: MediaRepository,
         mediaBrowserAdapter: MediaBrowserAdapter,
         mediaControllerAdapter: MediaControllerAdapter,
-        userPreferencesRepository: UserPreferencesRepository) {
+        userPreferencesRepository: UserPreferencesRepository,
+        showSplashScreen : Boolean = false) {
     val navController = rememberNavController()
     AppTheme(userPreferencesRepository = userPreferencesRepository) {
         NavHost(
             navController = navController,
-            startDestination = MAIN_SCREEN
+            startDestination = getStartDestination(showSplashScreen)
         ) {
             composable(MAIN_SCREEN) {
                 MainScreen(
@@ -69,6 +70,15 @@ fun ComposeApp(mediaRepository: MediaRepository,
                     userPreferencesRepository = userPreferencesRepository
                 )
             }
+            composable(SPLASH_SCREEN) {
+                SplashScreen(
+                    navController = navController,
+                    userPreferencesRepository = userPreferencesRepository)
+            }
         }
     }
+}
+
+private fun getStartDestination(showSplashScreen: Boolean) : String {
+    return  if (showSplashScreen)  SPLASH_SCREEN else MAIN_SCREEN
 }
