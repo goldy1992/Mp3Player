@@ -113,7 +113,7 @@ class EndToEndTest {
     }
 
     /**
-     * end to end test for the search functionality
+     * end to end testFullUnittest for the search functionality
      */
     @Test
     fun testSearch() {

@@ -30,8 +30,12 @@ project.afterEvaluate {
     def productFlavors = android.productFlavors.collect {
         flavor -> flavor.name
     }
+
+    def buildTypes = android.buildTypes.collect {
+        buildType -> buildType.name
+    } as Set
     def applicableProductFlavor = "full"
-    def unitTestBuildType = 'release'
+    def unitTestBuildType = buildTypes.contains("unittest") ? 'unittest' : 'debug'
     def unitTestFlavor = getProductFlavor(applicableProductFlavor, productFlavors);
     def (String unitTestBuildVariant, String unitTestBuildVariantCapitalised) = getBuildVariant(unitTestFlavor, unitTestBuildType)
 

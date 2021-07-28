@@ -9,7 +9,7 @@ android {
     buildToolsVersion build_tools_version
 
     defaultConfig {
-        minSdkVersion MIN_SDK_VERSION
+        minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -27,6 +27,11 @@ android {
         }
         debug {
             minifyEnabled false
+        }
+        unittest {
+            debuggable true
+            minifyEnabled false
+            matchingFallbacks = ['debug', 'release']
         }
     }
     flavorDimensions flavor_dimen_mode

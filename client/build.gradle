@@ -29,7 +29,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion MIN_SDK_VERSION
+        minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
         testInstrumentationRunner "com.github.goldy1992.mp3player.client.CustomTestRunner"
         /*makes the Android Test Orchestrator run its "pm clear" command after each test invocation.
@@ -48,6 +48,11 @@ android {
             testCoverageEnabled true
             debuggable true
             minifyEnabled false
+        }
+        unittest {
+            debuggable true
+            minifyEnabled false
+            matchingFallbacks = ['debug', 'release']
         }
     }
     flavorDimensions flavor_dimen_mode

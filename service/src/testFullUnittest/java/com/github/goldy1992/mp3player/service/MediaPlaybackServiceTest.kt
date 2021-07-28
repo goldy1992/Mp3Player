@@ -41,7 +41,7 @@ class MediaPlaybackServiceTest {
     @Rule @JvmField
     val rule : HiltAndroidRule = HiltAndroidRule(this)
 
-    /** object to test */
+    /** object to testFullUnittest */
     lateinit var mediaPlaybackService: MediaPlaybackService
 
     private val rootAuthenticator: RootAuthenticator = mock<RootAuthenticator>()

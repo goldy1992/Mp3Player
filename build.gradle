@@ -1,8 +1,6 @@
 buildscript {
     ext {
-        PIE = 28
-        MARSHMALLOW = 23
-        MIN_SDK_VERSION = 23
+        min_sdk_version = 23
         target_sdk_version = 31
         build_tools_version = '30.0.3'
         nav_version = '2.3.2'

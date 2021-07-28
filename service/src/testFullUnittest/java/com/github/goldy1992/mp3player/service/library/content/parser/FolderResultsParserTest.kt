@@ -15,7 +15,7 @@ import java.io.File
 import java.io.IOException
 
 /**
- * FolderResultsParser test
+ * FolderResultsParser testFullUnittest
  */
 @RunWith(RobolectricTestRunner::class)
 class FolderResultsParserTest : ResultsParserTestBase() {

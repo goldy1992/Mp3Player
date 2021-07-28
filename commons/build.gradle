@@ -9,7 +9,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion MIN_SDK_VERSION
+        minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
         consumerProguardFiles 'consumer-rules.pro'
     }
@@ -20,7 +20,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            // testCoverageEnabled true
             minifyEnabled false
         }
     }
