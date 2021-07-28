@@ -1,14 +1,10 @@
 package com.github.goldy1992.mp3player.client
 
-import com.github.goldy1992.mp3player.commons.LogTagger
 import android.util.Log
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.*
 import com.github.goldy1992.mp3player.client.ui.Theme
+import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -51,7 +47,8 @@ open class UserPreferencesRepository(private val dataStore: DataStore<Preference
 
             // Get our show completed value, defaulting to false if not set:
             val darkMode : Boolean = preferences[PreferencesKeys.DARK_MODE] ?: false
-            val systemDarkMode : Boolean = preferences[PreferencesKeys.USE_SYSTEM_DARK_MODE] ?: false
+            // default to System dark mode if no preferences are stored!
+            val systemDarkMode : Boolean = preferences[PreferencesKeys.USE_SYSTEM_DARK_MODE] ?: true
             UserPreferences(darkMode, systemDarkMode, theme.name)
         }
 

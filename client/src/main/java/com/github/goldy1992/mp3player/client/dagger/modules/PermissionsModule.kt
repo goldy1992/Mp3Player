@@ -1,8 +1,9 @@
 package com.github.goldy1992.mp3player.client.dagger.modules
 
 import android.content.Context
-import com.github.goldy1992.mp3player.client.PermissionsProcessor
 import com.github.goldy1992.mp3player.client.activities.MainActivity
+import com.github.goldy1992.mp3player.client.permissions.CompatWrapper
+import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +17,7 @@ class PermissionsModule {
 
     @ActivityScoped
     @Provides
-    fun providesPermissionProcessor(@ActivityContext context: Context) : PermissionsProcessor {
-        return PermissionsProcessor(context = context,permissionGranted = context as MainActivity)
+    fun providesPermissionProcessor(@ActivityContext context: Context, compatWrapper: CompatWrapper) : PermissionsProcessor {
+        return PermissionsProcessor(permissionGranted = context as MainActivity, compatWrapper =  compatWrapper)
     }
 }

@@ -79,15 +79,13 @@ val orangeAppDarkTheme = darkColors(
 )
 
 
-
-
 @Composable
 fun AppTheme(systemInDarkTheme: Boolean = isSystemInDarkTheme(),
              userPreferencesRepository: UserPreferencesRepository,
              content: @Composable() () -> Unit) {
     val theme = userPreferencesRepository.getTheme().collectAsState(initial = Theme.BLUE)
 
-    val useSystemDarkThemePref = userPreferencesRepository.getSystemDarkMode().collectAsState(initial = false)
+    val useSystemDarkThemePref = userPreferencesRepository.getSystemDarkMode().collectAsState(initial = true)
     val useDarkThemePref = userPreferencesRepository.getDarkMode().collectAsState(initial = false)
 
     Log.i("logg", "config: ${LocalConfiguration.current.uiMode}")

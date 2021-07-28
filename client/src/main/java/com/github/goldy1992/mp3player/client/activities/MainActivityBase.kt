@@ -8,17 +8,21 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.annotation.VisibleForTesting
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.ui.ExperimentalComposeUiApi
-import com.github.goldy1992.mp3player.client.*
+import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
+import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
+import com.github.goldy1992.mp3player.client.permissions.PermissionGranted
+import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
-import com.google.accompanist.pager.ExperimentalPagerApi
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 abstract class MainActivityBase : ComponentActivity(),
@@ -51,7 +55,6 @@ abstract class MainActivityBase : ComponentActivity(),
 
     var showSplashScreen: Boolean = false
 
-    @get:VisibleForTesting
     var trackToPlay: Uri? = null
         private set
 
@@ -74,7 +77,7 @@ abstract class MainActivityBase : ComponentActivity(),
             launch(Dispatchers.Default) {
                 mediaControllerAdapter.playFromUri(trackToPlay, null)
             }
-            /* TODO: Add functionallity to navigate to NowPlayingScreen.kt given an intent with an
+            /* TODO: Add functionality to navigate to NowPlayingScreen.kt given an intent with an
                      item to play */
 
         }
