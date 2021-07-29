@@ -35,21 +35,35 @@ fun NavigationDrawer(navController: NavController) {
             }
 
             Divider()
-            val library = stringResource(id = R.string.library)
-            ListItem(
-                icon = { Icon(Icons.Filled.LibraryMusic, contentDescription = library) },
-                text = { Text(library) },
-                 modifier = Modifier.clickable { /* TODO: Implement link to library. */ }
-            )
-
-            ListItem(
-                icon = { Icon(Icons.Filled.Settings, contentDescription = "Settings") },
-                text = { Text(stringResource(id = R.string.settings)) },
-                 modifier = Modifier.clickable { navController.navigate(SETTINGS_SCREEN) }
-            )
-
+            LibraryItem(navController = navController)
+            SettingsItem(navController = navController)
         }
     }
+
+}
+
+
+@ExperimentalMaterialApi
+@Composable
+private fun LibraryItem(navController: NavController) {
+    val library = stringResource(id = R.string.library)
+    ListItem(
+        icon = { Icon(Icons.Filled.LibraryMusic, contentDescription = library) },
+        text = { Text(library) },
+        modifier = Modifier.clickable { navController.navigate(MAIN_SCREEN) }
+    )
+}
+
+
+@ExperimentalMaterialApi
+@Composable
+private fun SettingsItem(navController: NavController) {
+    val settings = stringResource(id = R.string.settings)
+    ListItem(
+        icon = { Icon(Icons.Filled.Settings, contentDescription = settings) },
+        text = { Text(settings) },
+        modifier = Modifier.clickable { navController.navigate(SETTINGS_SCREEN) }
+    )
 
 }
 
