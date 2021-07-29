@@ -3,8 +3,12 @@
     <string name="action_settings">Settings</string>
     <string name="back">Volver</string>
     <string name="current_position">Posición Actual</string>
+    <string name="dark_mode">Modo Oscuro</string>
+    <string name="display">Pantalla</string>
     <string name="duration">Duración</string>
     <string name="folders">Carpetas</string>
+    <string name="help">Ayuda</string>
+    <string name="library">Colección</string>
     <string name="no_songs_on_device">Archivos de audio no encontrado en su dispositivo.</string>
     <string name="no_folders_with_songs">Carpetas con archivos de audio no encontrado en su dispositivo.</string>
     <string name="pause">Pausar</string>
@@ -14,9 +18,15 @@
     <string name="repeat_none">No Repetir</string>
     <string name="repeat_one">Repetir Uno</string>
     <string name="reset_speed">Reiniciar la velocidad de reproducción</string>
+    <string name="search">Búsqueda</string>
+    <string name="settings">Ajustes</string>
     <string name="shuffle_off">Modo Aleatorio Apagado</string>
     <string name="shuffle_on">Modo Aleatorio Activado</string>
     <string name="songs">Canciones</string>
+    <string name="support_and_feedback">Apoyo y Feedback</string>
+    <string name="theme">Tema</string>
+    <string name="use_system_dark_mode">Usar Modo Oscuro de Sistema</string>
+    <string name="version">Versión</string>
 
     <string name="SKIP_TO_NEXT">Skip to Next</string>
     <string name="SKIP_TO_PREVIOUS">Skip to Previous</string>
@@ -39,9 +49,7 @@
     <string name="notification_channel_name">channel_name</string>
     <string name="channel_description">channel description</string>
     <string name="menu">Menu</string>
-    <string name="search">Search</string>
-    <string name="settings">Settings</string>
-    <string name="display">Display</string>
+
     <!-- THEME NAMES !-->
     <string name="themes_title">Themes</string>
     <string name="THEME_BLUE">Blue</string>

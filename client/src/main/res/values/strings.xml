@@ -4,9 +4,12 @@
     <string name="channel_description">channel description</string>
     <string name="content_description">content description</string>
     <string name="current_position">Current Position</string>
+    <string name="dark_mode">Dark Mode</string>
     <string name="display">Display</string>
     <string name="duration">Duration</string>
     <string name="folders">Folders</string>
+    <string name="help">Help</string>
+    <string name="library">Library</string>
     <string name="menu">Menu</string>
     <string name="notification_channel_name">channel_name</string>
     <string name="no_search_results_found">No search results found for query\: \"%1$s\"</string>
@@ -25,6 +28,10 @@
     <string name="shuffle_off">Shuffle Off</string>
     <string name="shuffle_on">Shuffle On</string>
     <string name="songs">Songs</string>
+    <string name="support_and_feedback">Support and Feedback</string>
+    <string name="theme">Theme</string>
+    <string name="use_system_dark_mode">Use System Dark Mode</string>
+    <string name="version">Version</string>
 
     <string name="SKIP_TO_NEXT">Skip to Next</string>
     <string name="SKIP_TO_PREVIOUS">Skip to Previous</string>

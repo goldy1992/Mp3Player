@@ -8,11 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.R
@@ -34,10 +35,19 @@ fun NavigationDrawer(navController: NavController) {
             }
 
             Divider()
-            ListItem(icon = { Icon(Icons.Filled.Settings, contentDescription = "Settings") },
-                    text = { Text("Settings") },
-                    modifier = Modifier.clickable { navController.navigate(SETTINGS_SCREEN) }
+            val library = stringResource(id = R.string.library)
+            ListItem(
+                icon = { Icon(Icons.Filled.LibraryMusic, contentDescription = library) },
+                text = { Text(library) },
+                 modifier = Modifier.clickable { /* TODO: Implement link to library. */ }
             )
+
+            ListItem(
+                icon = { Icon(Icons.Filled.Settings, contentDescription = "Settings") },
+                text = { Text(stringResource(id = R.string.settings)) },
+                 modifier = Modifier.clickable { navController.navigate(SETTINGS_SCREEN) }
+            )
+
         }
     }
 
