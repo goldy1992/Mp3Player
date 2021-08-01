@@ -107,7 +107,7 @@ fun NowPlayingScreen(navController: NavController,
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        SeekBar(mediaController = mediaController, scope = scope)
+                        SeekBar(mediaController = mediaController)
                     }
                 }
             }

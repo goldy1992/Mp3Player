@@ -19,7 +19,6 @@ import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 
 @Composable
@@ -39,7 +38,7 @@ fun FolderList(foldersData : LiveData<List<MediaBrowserCompat.MediaItem>>,
 
                         FolderListItem(folder) {
                             mediaRepository.currentFolder = folder
-                            navController.navigate(FOLDER_SCREEN)
+                            navController.navigate(Screen.FOLDER.name)
                         }
                     }
                 }

@@ -50,7 +50,7 @@ private fun LibraryItem(navController: NavController) {
     ListItem(
         icon = { Icon(Icons.Filled.LibraryMusic, contentDescription = library) },
         text = { Text(library) },
-        modifier = Modifier.clickable { navController.navigate(MAIN_SCREEN) }
+        modifier = Modifier.clickable { navController.navigate(Screen.MAIN.name) }
     )
 }
 
@@ -62,7 +62,7 @@ private fun SettingsItem(navController: NavController) {
     ListItem(
         icon = { Icon(Icons.Filled.Settings, contentDescription = settings) },
         text = { Text(settings) },
-        modifier = Modifier.clickable { navController.navigate(SETTINGS_SCREEN) }
+        modifier = Modifier.clickable { navController.navigate(Screen.SETTINGS.name) }
     )
 
 }

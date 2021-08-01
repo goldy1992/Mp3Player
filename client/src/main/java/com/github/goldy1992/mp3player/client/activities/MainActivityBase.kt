@@ -15,6 +15,7 @@ import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
 import com.github.goldy1992.mp3player.client.permissions.PermissionGranted
 import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
+import com.github.goldy1992.mp3player.client.ui.Screen
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -53,17 +54,16 @@ abstract class MainActivityBase : ComponentActivity(),
     @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
 
-    var showSplashScreen: Boolean = false
+    var startScreen: Screen = Screen.SPLASH
 
     var trackToPlay: Uri? = null
         private set
 
-    abstract fun ui()
+    abstract fun ui(startScreen : Screen = Screen.SPLASH)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        connect()
-        initMediaRepository()
+
 
         val intent = intent
         if (!isTaskRoot
@@ -72,17 +72,13 @@ abstract class MainActivityBase : ComponentActivity(),
             finish()
             return
         }
-        if (Intent.ACTION_VIEW == intent.action) {
-            trackToPlay = intent.data
-            launch(Dispatchers.Default) {
-                mediaControllerAdapter.playFromUri(trackToPlay, null)
-            }
-            /* TODO: Add functionality to navigate to NowPlayingScreen.kt given an intent with an
-                     item to play */
 
+        // If app has already been created set the UI to initialise at the main screen.
+        val appAlreadyCreated = savedInstanceState != null
+        if (appAlreadyCreated) {
+            this.startScreen = Screen.MAIN
         }
 
-        this.showSplashScreen = savedInstanceState == null
         permissionsProcessor.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
     override fun onDestroy() {
@@ -100,7 +96,18 @@ abstract class MainActivityBase : ComponentActivity(),
     override fun onPermissionGranted() {
         Log.i(logTag(), "permission granted")
         createService()
-        CoroutineScope(Dispatchers.Main).launch { ui() }
+        connect()
+        initMediaRepository()
+        if (Intent.ACTION_VIEW == intent.action) {
+            trackToPlay = intent.data
+            launch(Dispatchers.Default) {
+                mediaControllerAdapter.playFromUri(trackToPlay, null)
+            }
+            this.startScreen = Screen.NOW_PLAYING
+        }
+        CoroutineScope(Dispatchers.Main).launch { ui(startScreen = startScreen) }
+
+
     }
 
     private fun initMediaRepository() {

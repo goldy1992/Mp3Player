@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.client.ui
 
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +23,7 @@ import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SongList(songsData : LiveData<List<MediaBrowserCompat.MediaItem>>,
              mediaController: MediaControllerAdapter) {

@@ -10,6 +10,7 @@
     <string name="folders">Folders</string>
     <string name="help">Help</string>
     <string name="library">Library</string>
+    <string name="navigation_drawer_menu_icon">Navigation Drawer Menu Icon</string>
     <string name="menu">Menu</string>
     <string name="notification_channel_name">channel_name</string>
     <string name="no_search_results_found">No search results found for query\: \"%1$s\"</string>

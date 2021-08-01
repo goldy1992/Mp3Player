@@ -1,9 +1,14 @@
 package com.github.goldy1992.mp3player.client.ui
 
-const val FOLDER_SCREEN = "FOLDER_SCREEN"
-const val MAIN_SCREEN = "MAIN_SCREEN"
-const val NOW_PLAYING_SCREEN = "NOW_PLAYING_SCREEN"
-const val SEARCH_SCREEN = "SEARCH_SCREEN"
-const val SETTINGS_SCREEN = "SETTINGS_SCREEN"
-const val SPLASH_SCREEN = "SPLASH_SCREEN"
-const val THEME_SELECT_SCREEN = "THEME_SELECT_SCREEN"
+/**
+ * Represents each of the Screens available in the Application.
+ */
+enum class Screen {
+    FOLDER,
+    MAIN,
+    NOW_PLAYING,
+    SEARCH,
+    SETTINGS,
+    SPLASH,
+    THEME_SELECT
+}

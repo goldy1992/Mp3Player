@@ -9,6 +9,7 @@
     <string name="folders">Carpetas</string>
     <string name="help">Ayuda</string>
     <string name="library">Colección</string>
+    <string name="navigation_drawer_menu_icon">Ícono del menú del panel lateral de navegación </string>
     <string name="no_songs_on_device">Archivos de audio no encontrado en su dispositivo.</string>
     <string name="no_folders_with_songs">Carpetas con archivos de audio no encontrado en su dispositivo.</string>
     <string name="pause">Pausar</string>

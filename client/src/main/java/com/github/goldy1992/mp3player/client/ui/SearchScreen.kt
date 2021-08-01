@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,6 +36,7 @@ import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import org.apache.commons.lang3.StringUtils
 
+@ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @Composable
 fun SearchScreen(
@@ -54,7 +56,7 @@ fun SearchScreen(
         )},
         bottomBar = {
             PlayToolbar(mediaController = mediaController) {
-                navController.navigate(NOW_PLAYING_SCREEN)
+                navController.navigate(Screen.NOW_PLAYING.name)
             }
         },
         content = {
@@ -135,6 +137,7 @@ fun SearchBar(navController: NavController,
 
 }
 
+@ExperimentalFoundationApi
 @Composable
 fun SearchResults(mediaBrowser: MediaBrowserAdapter,
                   mediaController: MediaControllerAdapter,
@@ -158,7 +161,7 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter,
                     MediaItemType.FOLDER -> {
                         FolderListItem(folder = mediaItem, onClick = {
                             mediaRepository.currentFolder = mediaItem
-                            navController.navigate(FOLDER_SCREEN)
+                            navController.navigate(Screen.FOLDER.name)
 
                         } )
                     }

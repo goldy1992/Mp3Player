@@ -16,6 +16,8 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -35,17 +37,21 @@ import kotlinx.coroutines.launch
  * @param navController The [NavController].
  * @param mediaController The [MediaControllerAdapter].
  * @param mediaRepository The [MediaRepository].
+ * @param scaffoldState The [ScaffoldState]. Optional, if not provided one will be created.
+ * @param pagerState The [PagerState]. Optional, if not provided one will be created using the [MediaRepository.rootItems].
  */
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
 fun MainScreen(navController: NavController,
                mediaRepository: MediaRepository,
-               mediaController: MediaControllerAdapter
+               mediaController: MediaControllerAdapter,
+               scaffoldState: ScaffoldState = rememberScaffoldState(),
+               pagerState: PagerState = rememberPagerState(pageCount = mediaRepository.rootItems.value!!.size)
 ) {
     val rootItems: List<MediaItem> by mediaRepository.rootItems.observeAsState(listOf(MediaItemUtils.getEmptyMediaItem()))
-    val pagerState = rememberPagerState(pageCount = rootItems.size)
-    val scaffoldState = rememberScaffoldState()
+ //   val pagerState = rememberPagerState(pageCount = rootItems.size)
+//    val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
 
     Scaffold (
@@ -60,7 +66,7 @@ fun MainScreen(navController: NavController,
         },
         bottomBar = {
             PlayToolbar(mediaController = mediaController) {
-                navController.navigate(NOW_PLAYING_SCREEN)
+                navController.navigate(Screen.NOW_PLAYING.name)
             }
         },
 
@@ -146,7 +152,7 @@ fun HomeAppBar(
     scope : CoroutineScope,
     scaffoldState: ScaffoldState,
     rootItems: List<MediaItem>) {
-
+    val navigationDrawerIconDescription = stringResource(id = R.string.navigation_drawer_menu_icon)
     Column {
         TopAppBar(
             title = {
@@ -160,12 +166,13 @@ fun HomeAppBar(
                             scaffoldState.drawerState.open()
                         }
                     }
-                }) {
+                }, modifier = Modifier.semantics { contentDescription = navigationDrawerIconDescription })
+                {
                     Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu Btn")
                 }
             },
             actions = {
-                IconButton(onClick = { navController.navigate(SEARCH_SCREEN) }) {
+                IconButton(onClick = { navController.navigate(Screen.SEARCH.name) }) {
                     Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
                 }
             },

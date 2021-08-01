@@ -67,7 +67,8 @@ class MyPlaybackPreparer @Inject constructor(private val exoPlayer: ExoPlayer,
             }
             val uriToPlayIndex = getIndexOfCurrentTrack(trackId, results)
             if (concatenatingMediaSource.size > 0) {
-                exoPlayer.prepare(concatenatingMediaSource)
+                exoPlayer.setMediaSource(concatenatingMediaSource)
+                exoPlayer.prepare()
                 myControlDispatcher.dispatchSeekTo(exoPlayer, uriToPlayIndex, 0L)
                 myControlDispatcher.dispatchSetPlayWhenReady(exoPlayer, playWhenReady)
             }

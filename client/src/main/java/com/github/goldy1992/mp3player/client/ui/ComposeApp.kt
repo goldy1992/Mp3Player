@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -14,6 +15,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @InternalCoroutinesApi
@@ -23,27 +25,27 @@ fun ComposeApp(mediaRepository: MediaRepository,
         mediaBrowserAdapter: MediaBrowserAdapter,
         mediaControllerAdapter: MediaControllerAdapter,
         userPreferencesRepository: UserPreferencesRepository,
-        showSplashScreen : Boolean = false) {
+        startScreen : Screen) {
     val navController = rememberNavController()
     AppTheme(userPreferencesRepository = userPreferencesRepository) {
         NavHost(
             navController = navController,
-            startDestination = getStartDestination(showSplashScreen)
+            startDestination = startScreen.name
         ) {
-            composable(MAIN_SCREEN) {
+            composable(Screen.MAIN.name) {
                 MainScreen(
                     navController,
                     mediaRepository = mediaRepository,
                     mediaController = mediaControllerAdapter
                 )
             }
-            composable(NOW_PLAYING_SCREEN) {
+            composable(Screen.NOW_PLAYING.name) {
                 NowPlayingScreen(
                     navController = navController,
                     mediaController = mediaControllerAdapter
                 )
             }
-            composable(SEARCH_SCREEN) {
+            composable(Screen.SEARCH.name) {
                 SearchScreen(
                     navController = navController,
                     mediaBrowser = mediaBrowserAdapter,
@@ -51,7 +53,7 @@ fun ComposeApp(mediaRepository: MediaRepository,
                     mediaRepository = mediaRepository
                 )
             }
-            composable(FOLDER_SCREEN) {
+            composable(Screen.FOLDER.name) {
                 FolderScreen(
                         folder = mediaRepository.currentFolder!!,
                         navController = navController,
@@ -60,25 +62,21 @@ fun ComposeApp(mediaRepository: MediaRepository,
                 )
 
             }
-            composable(SETTINGS_SCREEN) {
+            composable(Screen.SETTINGS.name) {
                 SettingsScreen(navController = navController,
                     userPreferencesRepository = userPreferencesRepository)
             }
-            composable(THEME_SELECT_SCREEN) {
+            composable(Screen.THEME_SELECT.name) {
                 ThemeSelectScreen(
                     navController = navController,
                     userPreferencesRepository = userPreferencesRepository
                 )
             }
-            composable(SPLASH_SCREEN) {
+            composable(Screen.SPLASH.name) {
                 SplashScreen(
                     navController = navController,
                     userPreferencesRepository = userPreferencesRepository)
             }
         }
     }
-}
-
-private fun getStartDestination(showSplashScreen: Boolean) : String {
-    return  if (showSplashScreen)  SPLASH_SCREEN else MAIN_SCREEN
 }

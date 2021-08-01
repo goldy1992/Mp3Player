@@ -87,7 +87,7 @@ private fun ThemeMenuItem(navController: NavController) {
     ListItem(
         icon = { Icon(Icons.Filled.Palette, contentDescription = theme) },
         text = { Text(theme, style = MaterialTheme.typography.subtitle1) },
-        modifier = Modifier.clickable { navController.navigate(THEME_SELECT_SCREEN)}
+        modifier = Modifier.clickable { navController.navigate(Screen.THEME_SELECT.name)}
     )
 }
 
