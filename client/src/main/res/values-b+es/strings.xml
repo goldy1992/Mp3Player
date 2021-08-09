@@ -23,6 +23,7 @@
     <string name="repeat_one">Repetir Uno</string>
     <string name="reset_speed">Reiniciar la velocidad de reproducción</string>
     <string name="search">Búsqueda</string>
+    <string name="search_hint">Bucar media</string>
     <string name="settings">Ajustes</string>
     <string name="shuffle_off">Modo Aleatorio Apagado</string>
     <string name="shuffle_on">Modo Aleatorio Activado</string>
@@ -52,7 +53,6 @@
     <string name="FOLDER_NAME">%1$s</string>
     <string name="NO_MEDIA_FOUND">No audio tracks found on your device.</string>
     <string name="no_search_results_found">No search results found for query\: \"%1$s\"</string>
-    <string name="search_hint">Search media</string>
     <string name="notification_channel_name">channel_name</string>
     <string name="channel_description">channel description</string>
     <string name="menu">Menu</string>

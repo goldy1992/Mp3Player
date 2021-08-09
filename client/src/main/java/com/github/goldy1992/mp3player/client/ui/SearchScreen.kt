@@ -23,12 +23,14 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
@@ -94,14 +96,15 @@ fun SearchBar(navController: NavController,
                     Log.i("SearchScreen", "Focus changed: $it")
                     if (it.isFocused) {
                         keyboardController?.show()
-                    }},
+                    }
+                },
             value = searchQuery.value,
             onValueChange = {
                 searchQuery.value = it
                 mediaBrowser.search(searchQuery.value.text, null)
             },
             placeholder = {
-                Text(text = "Search Media")
+                Text(text = stringResource(id = R.string.search_hint))
             },
             leadingIcon = {
                 IconButton(onClick = {
@@ -166,19 +169,23 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter,
                         } )
                     }
                     MediaItemType.ROOT -> {
-                        Column(Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                start = DEFAULT_PADDING,
-                                top = 7.dp,
-                                bottom = 2.dp)) {
+                        Column(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    start = DEFAULT_PADDING,
+                                    top = 7.dp,
+                                    bottom = 2.dp
+                                )) {
                         Text(text = MediaItemUtils.getTitle(mediaItem),
                             style = MaterialTheme.typography.subtitle2,
                             modifier = Modifier.padding(2.dp)
                             )
                             Divider(
                                 color = Color.Black,
-                                modifier = Modifier.fillMaxWidth().padding(bottom = 2.dp))
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 2.dp))
                         }
                     }
 
