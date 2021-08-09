@@ -162,7 +162,7 @@ fun ViewPager(mediaController: MediaControllerAdapter,
                 state = pagerState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colors.onError)
+                    .background(MaterialTheme.colors.background)
                     .semantics {
                         contentDescription = "viewPagerColumn"
                     },
@@ -181,7 +181,6 @@ fun ViewPager(mediaController: MediaControllerAdapter,
                         contentDescription = "Album Art",
                         modifier = Modifier.size(300.dp, 300.dp)
                 )
-                Text(item.description.title.toString())
             }
         }
     }

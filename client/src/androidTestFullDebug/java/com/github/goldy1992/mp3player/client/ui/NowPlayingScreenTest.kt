@@ -113,11 +113,39 @@ class NowPlayingScreenTest {
     @ExperimentalPagerApi
     @InternalCoroutinesApi
     @Test
+    fun testQueuePositionRightLeftWhenAtBeginning() {
+        val positionNotAtEnd = 0
+        runBlocking {
+            runPagerSwipeTest(positionNotAtEnd, swipeLeft = false)
+            verify(mockMediaController, never()).skipToNext()
+            verify(mockMediaController, never()).skipToPrevious()
+            verify(mockMediaController, never()).seekTo(0)
+        }
+    }
+
+    @ExperimentalTestApi
+    @ExperimentalPagerApi
+    @InternalCoroutinesApi
+    @Test
     fun testQueuePositionSwipeLeftWhenNotAtEnd() {
         val positionNotAtEnd = 1
         runBlocking {
             runPagerSwipeTest(positionNotAtEnd, swipeLeft = true)
             verify(mockMediaController, times(1)).skipToNext()
+            verify(mockMediaController, never()).skipToPrevious()
+            verify(mockMediaController, never()).seekTo(0)
+        }
+    }
+
+    @ExperimentalTestApi
+    @ExperimentalPagerApi
+    @InternalCoroutinesApi
+    @Test
+    fun testQueuePositionSwipeLeftWhenAtEnd() {
+        val positionNotAtEnd = 2
+        runBlocking {
+            runPagerSwipeTest(positionNotAtEnd, swipeLeft = true)
+            verify(mockMediaController, never()).skipToNext()
             verify(mockMediaController, never()).skipToPrevious()
             verify(mockMediaController, never()).seekTo(0)
         }
