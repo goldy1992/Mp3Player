@@ -5,6 +5,8 @@
     <string name="content_description">content description</string>
     <string name="current_position">Current Position</string>
     <string name="dark_mode">Dark Mode</string>
+    <string name="dark_mode_icon">System Dark Mode Icon</string>
+    <string name="dark_mode_switch">System Dark Mode Switch</string>
     <string name="display">Display</string>
     <string name="duration">Duration</string>
     <string name="folders">Folders</string>
@@ -29,7 +31,10 @@
     <string name="shuffle_off">Shuffle Off</string>
     <string name="shuffle_on">Shuffle On</string>
     <string name="songs">Songs</string>
+    <string name="song_title">Song Title</string>
     <string name="support_and_feedback">Support and Feedback</string>
+    <string name="system_dark_mode_icon">System Dark Mode Icon</string>
+    <string name="system_dark_mode_switch">System Dark Mode Switch</string>
     <string name="theme">Theme</string>
     <string name="use_system_dark_mode">Use System Dark Mode</string>
     <string name="version">Version</string>

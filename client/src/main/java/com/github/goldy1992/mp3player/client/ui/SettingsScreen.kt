@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui
 
-import android.content.pm.PackageInfo
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,11 +16,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
+import com.github.goldy1992.mp3player.client.utils.VersionUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -33,9 +35,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun SettingsScreen(
     userPreferencesRepository: UserPreferencesRepository,
-    navController : NavController) {
+    navController : NavController,
+    scope : CoroutineScope = rememberCoroutineScope(),
+    versionUtils: VersionUtils = VersionUtils(LocalContext.current)
+) {
 
-    val scope = rememberCoroutineScope()
     val useSystemDarkMode by userPreferencesRepository.getSystemDarkMode().collectAsState(initial = false)
     val isDarkMode by userPreferencesRepository.getDarkMode().collectAsState(initial = false)
 
@@ -65,7 +69,7 @@ fun SettingsScreen(
             Divider()
             HelpSubHeader()
             SupportAndFeedbackMenuItem(navController)
-            VersionMenuItem()
+            VersionMenuItem(versionUtils = versionUtils)
         }
     })
 }
@@ -96,9 +100,9 @@ private fun ThemeMenuItem(navController: NavController) {
 private fun SystemDarkModeMenuItem(userPreferencesRepository: UserPreferencesRepository,
                                     scope: CoroutineScope,
                                     useSystemDarkMode : Boolean) {
-
+    val switchDescription = stringResource(id = R.string.system_dark_mode_switch)
     ListItem(modifier = Modifier.fillMaxWidth(),
-        icon = { Icon(Icons.Default.DarkMode, contentDescription = "Use System Dark Mode") },
+        icon = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.system_dark_mode_icon)) },
         text = { Text(text = stringResource(id = R.string.use_system_dark_mode), style = MaterialTheme.typography.subtitle1)},
         trailing = {
             Switch(
@@ -108,7 +112,8 @@ private fun SystemDarkModeMenuItem(userPreferencesRepository: UserPreferencesRep
                         userPreferencesRepository.updateSystemDarkMode(isChecked)
                     }
                 },
-                colors = SwitchDefaults.colors()
+                colors = SwitchDefaults.colors(),
+                modifier = Modifier.semantics { contentDescription =  switchDescription }
             )
         }
     )
@@ -119,9 +124,10 @@ private fun SystemDarkModeMenuItem(userPreferencesRepository: UserPreferencesRep
 private fun DarkModeMenuItem(userPreferencesRepository: UserPreferencesRepository,
                             scope: CoroutineScope,
                             isDarkMode : Boolean,
-                            useSystemDarkMode: Boolean){
+                            useSystemDarkMode: Boolean) {
+    val switchDescription = stringResource(id = R.string.dark_mode_switch)
     ListItem(modifier = Modifier.fillMaxWidth(),
-        icon = { Icon(Icons.Default.DarkMode, contentDescription = "Dark Mode") },
+        icon = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.dark_mode_icon)) },
         text = { Text(text = stringResource(id = R.string.dark_mode)) },
         trailing = {
             Switch(
@@ -131,7 +137,8 @@ private fun DarkModeMenuItem(userPreferencesRepository: UserPreferencesRepositor
                     scope.launch {
                         userPreferencesRepository.updateDarkMode(isChecked)
                     }
-                })
+                },
+                modifier = Modifier.semantics { contentDescription = switchDescription })
         })
 
 }
@@ -163,18 +170,14 @@ private fun SupportAndFeedbackMenuItem(navController: NavController) {
 
 @ExperimentalMaterialApi
 @Composable
-private fun VersionMenuItem() {
-    val context = LocalContext.current
-    val pInfo: PackageInfo = context.packageManager
-        .getPackageInfo(context.packageName, 0)
-    val version = pInfo.versionName
+private fun VersionMenuItem(versionUtils : VersionUtils = VersionUtils(LocalContext.current)) {
     ListItem(
         icon={},
         text = {
             Column() {
                 Text(stringResource(id = R.string.version))
 
-                Text(version, style= MaterialTheme.typography.caption)
+                Text(versionUtils.getAppVersion(), style= MaterialTheme.typography.caption)
             }
         },
     )

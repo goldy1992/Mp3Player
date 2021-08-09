@@ -163,7 +163,7 @@ dependencies {
     implementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
     implementation group: 'androidx.hilt', name: 'hilt-navigation-compose', version: '1.0.0-alpha03'
     
-    def accompanist_version = "0.14.0"
+    def accompanist_version = "0.15.0"
     implementation group: "com.google.accompanist", name: "accompanist-pager", version: accompanist_version
     implementation group: "com.google.accompanist", name: "accompanist-pager-indicators", version: accompanist_version
     implementation group: "com.google.accompanist", name: "accompanist-glide", version: accompanist_version

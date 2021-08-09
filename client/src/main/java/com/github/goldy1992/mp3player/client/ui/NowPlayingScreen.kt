@@ -13,12 +13,14 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
@@ -26,19 +28,23 @@ import com.github.goldy1992.mp3player.commons.QueueItemUtils
 import com.google.accompanist.glide.rememberGlidePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.apache.commons.lang3.ObjectUtils.isEmpty
 
 @InternalCoroutinesApi
 @ExperimentalPagerApi
 @Composable
-fun NowPlayingScreen(navController: NavController,
-               mediaController: MediaControllerAdapter
-) {
-    val scope = rememberCoroutineScope()
-    val scaffoldState = rememberScaffoldState()
+fun NowPlayingScreen(
+    navController: NavController,
+    mediaController: MediaControllerAdapter,
+    scope : CoroutineScope = rememberCoroutineScope(),
+    scaffoldState: ScaffoldState = rememberScaffoldState()
 
+) {
+    val songTitleDescription = stringResource(id = R.string.song_title)
     Scaffold (
         scaffoldState = scaffoldState,
         topBar = {
@@ -50,7 +56,10 @@ fun NowPlayingScreen(navController: NavController,
                     val artist : String = metadata?.description?.subtitle.toString() ?: ""
                     Column {
                         Text(text = title,
-                            style = MaterialTheme.typography.h6
+                            style = MaterialTheme.typography.h6,
+                            modifier = Modifier.semantics {
+                                contentDescription = songTitleDescription
+                            }
                             )
                         Text(text = artist,
                             style = MaterialTheme.typography.subtitle2)
@@ -75,7 +84,8 @@ fun NowPlayingScreen(navController: NavController,
         content = {
 
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
                     .padding(bottom = BOTTOM_BAR_SIZE)
             ) {
 
@@ -117,7 +127,9 @@ fun NowPlayingScreen(navController: NavController,
 
 @ExperimentalPagerApi
 @Composable
-fun ViewPager(mediaController: MediaControllerAdapter) {
+fun ViewPager(mediaController: MediaControllerAdapter,
+            pagerState:PagerState = rememberPagerState(pageCount = mediaController.queue.observeAsState(
+                emptyList()).value.size, initialPage = mediaController.calculateCurrentQueuePosition())) {
     val queue by mediaController.queue.observeAsState(emptyList())
 
     if (isEmpty(queue)) {
@@ -127,15 +139,13 @@ fun ViewPager(mediaController: MediaControllerAdapter) {
             textAlign = TextAlign.Center)
         }
     } else {
-        val pagerState = rememberPagerState(pageCount = queue.size, initialPage = mediaController.calculateCurrentQueuePosition())
-
         LaunchedEffect(pagerState.currentPage) {
             Log.i("NOW_PLAYING", "current page changed")
             val newPosition = pagerState.currentPage
             val currentQueuePosition = mediaController.calculateCurrentQueuePosition()
 
-            val notAtBeginning = newPosition > 0
-            val notAtEnd = newPosition < queue.size
+            val notAtBeginning = currentQueuePosition > 0
+            val notAtEnd = currentQueuePosition < queue.size
             val notCurrentPosition = currentQueuePosition != newPosition
 
             if (notAtBeginning && notAtEnd && notCurrentPosition ) {
@@ -152,12 +162,16 @@ fun ViewPager(mediaController: MediaControllerAdapter) {
                 state = pagerState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colors.background),
+                    .background(MaterialTheme.colors.onError)
+                    .semantics {
+                        contentDescription = "viewPagerColumn"
+                    },
 
                 ) { pageIndex ->
             val item: MediaSessionCompat.QueueItem = queue!![pageIndex]
             Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
@@ -167,6 +181,7 @@ fun ViewPager(mediaController: MediaControllerAdapter) {
                         contentDescription = "Album Art",
                         modifier = Modifier.size(300.dp, 300.dp)
                 )
+                Text(item.description.title.toString())
             }
         }
     }
@@ -179,26 +194,4 @@ private fun isSkipToNext(newPosition: Int, currentPosition : Int): Boolean {
 
 private fun isSkipToPrevious(newPosition: Int, currentPosition : Int): Boolean {
     return newPosition == (currentPosition - 1)
-}
-
-@Composable
-@Preview
-fun test() {
-    Column(
-        Modifier
-            .fillMaxSize()
-            .background(Color.Cyan)) {
-
-        Column(Modifier.background(Color.Yellow)) {
-            Text("Top")
-        }
-
-        Column(
-            Modifier
-                .fillMaxSize()
-                .background(Color.Green)) {
-            Text("Bottom")
-        }
-
-    }
 }
