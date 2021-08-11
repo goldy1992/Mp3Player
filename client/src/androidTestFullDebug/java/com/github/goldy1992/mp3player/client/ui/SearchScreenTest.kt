@@ -3,13 +3,26 @@ package com.github.goldy1992.mp3player.client.ui
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.lifecycle.MutableLiveData
 import androidx.test.platform.app.InstrumentationRegistry
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
-import org.junit.Assert.assertTrue
+import com.github.goldy1992.mp3player.commons.MediaItemBuilder
+import com.github.goldy1992.mp3player.commons.MediaItemType
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.ArgumentCaptor
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import java.io.File
 
 /**
  * Test class for [SearchScreen].
@@ -38,8 +51,56 @@ class SearchScreenTest : MediaTestBase(){
     }
 
     @Test
-    fun test1() {
-        assertTrue(true)
+    fun testSearchBarOnValueChange() {
+        val searchTextFieldName = context.resources.getString(R.string.search_text_field)
+        val captor : ArgumentCaptor<String> = ArgumentCaptor.forClass(String::class.java)
+        runBlocking {
+            composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("a")
+            composeTestRule.awaitIdle()
+            composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("b")
+            composeTestRule.awaitIdle()
+        }
+        verify(mockMediaBrowser, times(2)).search(captor.capture(), anyOrNull())
+        assertEquals("a", captor.allValues[0])
+        assertEquals("ab", captor.allValues[1])
+    }
+
+    @Test
+    fun testSearchResultsPlaySong() {
+        val expectedLibId= "sdfsdf"
+        val songTitle = "songTitle"
+        val songItem = MediaItemBuilder("a")
+            .setLibraryId(expectedLibId)
+            .setMediaItemType(MediaItemType.SONG)
+            .setTitle(songTitle)
+            .build()
+        searchResultsLiveData.postValue(mutableListOf(songItem))
+
+        runBlocking {
+            composeTestRule.awaitIdle()
+            composeTestRule.onNodeWithText(songTitle).performClick()
+            composeTestRule.awaitIdle()
+            verify(mockMediaController, times(1)).playFromMediaId(expectedLibId, null)
+        }
+    }
+
+
+    @Test
+    fun testSearchResultsOpenFolder() {
+        val folderName = "/c/folder1"
+        val folderItem = MediaItemBuilder("a")
+            .setMediaItemType(MediaItemType.FOLDER)
+            .setTitle(folderName)
+            .setDirectoryFile(File(folderName))
+            .build()
+        searchResultsLiveData.postValue(mutableListOf(folderItem))
+
+        runBlocking {
+            composeTestRule.awaitIdle()
+            composeTestRule.onNodeWithText(folderName).performClick()
+            composeTestRule.awaitIdle()
+            verify(mockNavController, times(1)).navigate(Screen.FOLDER.name)
+        }
     }
 
 }

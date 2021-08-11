@@ -24,6 +24,7 @@
     <string name="reset_speed">Reiniciar la velocidad de reproducción</string>
     <string name="search">Búsqueda</string>
     <string name="search_hint">Bucar media</string>
+    <string name="search_text_field">Cuadro de Texto de Búsqueda</string>
     <string name="settings">Ajustes</string>
     <string name="shuffle_off">Modo Aleatorio Apagado</string>
     <string name="shuffle_on">Modo Aleatorio Activado</string>

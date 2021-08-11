@@ -24,6 +24,8 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -87,6 +89,7 @@ fun SearchBar(navController: NavController,
     Column(
         Modifier.fillMaxWidth()
     ) {
+        val searchTextFieldName = stringResource(id = R.string.search_text_field)
         TextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -97,6 +100,9 @@ fun SearchBar(navController: NavController,
                     if (it.isFocused) {
                         keyboardController?.show()
                     }
+                }
+                .semantics {
+                    contentDescription = searchTextFieldName
                 },
             value = searchQuery.value,
             onValueChange = {
