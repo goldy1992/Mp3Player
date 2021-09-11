@@ -2,11 +2,11 @@
 <resources>
     <string name="action_settings">Settings</string>
     <string name="back">Volver</string>
+    <string name="clear_search">Borrar</string>
     <string name="current_position">Posición Actual</string>
     <string name="dark_mode">Modo Oscuro</string>
     <string name="dark_mode_icon">Ícono del Modo Oscuro</string>
     <string name="dark_mode_switch">Cambio del Modo Oscuro</string>
-
     <string name="display">Pantalla</string>
     <string name="duration">Duración</string>
     <string name="folders">Carpetas</string>
@@ -24,6 +24,7 @@
     <string name="reset_speed">Reiniciar la velocidad de reproducción</string>
     <string name="search">Búsqueda</string>
     <string name="search_hint">Bucar media</string>
+    <string name="search_results_column">Columna de los resultados de búsqueda</string>
     <string name="search_text_field">Cuadro de Texto de Búsqueda</string>
     <string name="settings">Ajustes</string>
     <string name="shuffle_off">Modo Aleatorio Apagado</string>

@@ -2,11 +2,8 @@ package com.github.goldy1992.mp3player.client.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextInput
 import androidx.lifecycle.MutableLiveData
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
@@ -100,6 +97,28 @@ class SearchScreenTest : MediaTestBase(){
             composeTestRule.onNodeWithText(folderName).performClick()
             composeTestRule.awaitIdle()
             verify(mockNavController, times(1)).navigate(Screen.FOLDER.name)
+        }
+    }
+
+    @Test
+    fun testClearSearch() {
+        val clearSearchButton = context.resources.getString(R.string.clear_search)
+        val searchTextFieldName = context.resources.getString(R.string.search_text_field)
+        runBlocking {
+            composeTestRule.awaitIdle()
+            composeTestRule.onNodeWithContentDescription(clearSearchButton).assertDoesNotExist()
+            composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("a")
+            composeTestRule.awaitIdle()
+            composeTestRule.onNodeWithContentDescription(clearSearchButton).assertExists()
+            composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextReplacement("")
+            composeTestRule.awaitIdle()
+            composeTestRule.onNodeWithContentDescription(clearSearchButton).assertDoesNotExist()
+            composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("a")
+            composeTestRule.awaitIdle()
+            composeTestRule.onNodeWithContentDescription(clearSearchButton).assertExists().performClick()
+            composeTestRule.awaitIdle()
+            verify(mockMediaBrowser, times(1)).clearSearchResults()
+            composeTestRule.onNodeWithContentDescription(clearSearchButton).assertDoesNotExist()
         }
     }
 

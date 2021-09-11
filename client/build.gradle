@@ -46,11 +46,9 @@ android {
         }
         debug {
             testCoverageEnabled true
-            debuggable true
             minifyEnabled false
         }
         unittest {
-            debuggable true
             minifyEnabled false
             matchingFallbacks = ['debug', 'release']
         }
