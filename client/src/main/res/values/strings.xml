@@ -7,7 +7,7 @@
     <string name="current_position">Current Position</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="dark_mode_icon">System Dark Mode Icon</string>
-    <string name="dark_mode_switch">System Dark Mode Switch</string>
+    <string name="dark_mode_switch">Dark Mode Switch</string>
     <string name="display">Display</string>
     <string name="duration">Duration</string>
     <string name="folders">Folders</string>
