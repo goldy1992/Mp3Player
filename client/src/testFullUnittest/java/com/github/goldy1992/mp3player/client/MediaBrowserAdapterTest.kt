@@ -1,18 +1,14 @@
 package com.github.goldy1992.mp3player.client
 
+import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
+import androidx.lifecycle.LiveData
 import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback
 import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
-import kotlin.text.Typography.times
-
+import org.mockito.kotlin.*
 
 /**
  * Test class for [MediaBrowserAdapter].
@@ -45,6 +41,43 @@ class MediaBrowserAdapterTest {
         whenever(mockMediaBrowserCompat.isConnected).thenReturn(false)
         mediaBrowserAdapter.connect()
         verify(mockMediaBrowserCompat, times(1)).connect()
+
+    }
+
+    /** Tests [MediaBrowserAdapter.subscribe] */
+    @Test
+    fun testSubscribe() {
+        val id = "xyz"
+        val expectedLiveData = mock<LiveData<List<MediaBrowserCompat.MediaItem>>>()
+        whenever(mySubscriptionCallback.subscribe(id)).thenReturn(expectedLiveData)
+
+        val result = mediaBrowserAdapter.subscribe(id)
+        assertEquals(expectedLiveData, result)
+        verify(mySubscriptionCallback, times(1)).subscribe(id)
+        verify(mockMediaBrowserCompat, times(1)).subscribe(id, mySubscriptionCallback)
+    }
+
+    /** Tests [MediaBrowserAdapter.search] */
+    @Test
+    fun testSearch() {
+        val query = "query"
+        val extras = mock<Bundle>()
+
+        mediaBrowserAdapter.search(query, extras)
+
+        verify(mockMediaBrowserCompat, times(1)).search(query, extras, mySearchCallback)
+    }
+
+    /** Tests [MediaBrowserAdapter.onConnected] */
+    @Test
+    fun testOnConnected() {
+        val expectedRootId = "rootId"
+        whenever(mockMediaBrowserCompat.root).thenReturn(expectedRootId)
+
+        mediaBrowserAdapter.onConnected()
+
+        verify(mySubscriptionCallback, times(1)).subscribeRoot(expectedRootId)
+        verify(mockMediaBrowserCompat, times(1)).subscribe(expectedRootId, mySubscriptionCallback)
 
     }
 
