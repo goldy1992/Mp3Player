@@ -12,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,17 +47,17 @@ fun SplashScreen(
 fun SplashScreenContent() {
 
     Column(
-        Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background),
+            Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Image(
             painter = painterResource(id = R.drawable.headphone_icon),
-            contentDescription = "Splash Screen Icon"
+            contentDescription = stringResource(id = R.string.splash_screen_icon)
         )
-        Text(text = "Music Player",
+        Text(text = stringResource(id = R.string.app_title),
             textAlign = TextAlign.Center,
             style = TextStyle(color = MaterialTheme.colors.onBackground)
         )

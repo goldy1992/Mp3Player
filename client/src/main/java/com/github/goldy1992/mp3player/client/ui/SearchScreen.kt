@@ -177,7 +177,6 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter,
     if (isNotEmpty(searchResults)) {
         LazyColumn(modifier = Modifier
             .fillMaxSize()
-            .background(Color.Blue)
             .semantics {
                 contentDescription = searchResultsColumn
             },

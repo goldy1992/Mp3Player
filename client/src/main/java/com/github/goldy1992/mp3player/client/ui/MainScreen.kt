@@ -47,7 +47,7 @@ fun MainScreen(navController: NavController,
                mediaRepository: MediaRepository,
                mediaController: MediaControllerAdapter,
                scaffoldState: ScaffoldState = rememberScaffoldState(),
-               pagerState: PagerState = rememberPagerState(pageCount = mediaRepository.rootItems.value!!.size)
+               pagerState: PagerState = rememberPagerState(pageCount = mediaRepository.rootItems.value?.size ?: 0 )
 ) {
     val rootItems: List<MediaItem> by mediaRepository.rootItems.observeAsState(listOf(MediaItemUtils.getEmptyMediaItem()))
  //   val pagerState = rememberPagerState(pageCount = rootItems.size)

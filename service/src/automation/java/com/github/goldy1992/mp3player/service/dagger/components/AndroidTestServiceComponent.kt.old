@@ -4,7 +4,7 @@ package com.github.goldy1992.mp3player.dagger.components
 import android.content.Context
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.service.MediaPlaybackService
-import com.github.goldy1992.mp3player.service.dagger.components.ServiceComponent
+//import com.github.goldy1992.mp3player.service.dagger.components.ServiceComponent
 import com.github.goldy1992.mp3player.service.dagger.modules.AndroidTestContentRetrieversModule
 import com.github.goldy1992.mp3player.service.dagger.modules.AndroidTestContentSearchersModule
 import com.github.goldy1992.mp3player.service.dagger.modules.service.*

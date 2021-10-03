@@ -7,9 +7,12 @@ apply plugin: 'dagger.hilt.android.plugin'
 android {
     testBuildType "debug"
     packagingOptions {
+        exclude "**/attach_hotspot_windows.dll"
         exclude 'META-INF/LICENSE.md'
         exclude 'META-INF/LICENSE-notice.md'
         exclude 'META-INF/AL2.0'
+        exclude 'META-INF/ASM'
+        exclude 'META-INF/licenses/ASM'
         exclude 'META-INF/LGPL2.1'
     }
     compileSdkVersion target_sdk_version
@@ -53,6 +56,7 @@ android {
             applicationIdSuffix ".automation"
             versionNameSuffix "-automation"
             resValue "string", "app_name", "Test Music Player"
+            matchingFallbacks = ['full']
         }
     }
 
@@ -147,7 +151,12 @@ dependencies {
     androidTestImplementation(group: 'androidx.test.espresso', name: 'espresso-core', version: espresso_core_version) {
         exclude module: "support-annotations"
     }
-    androidTestImplementation group: 'androidx.test.uiautomator', name: 'uiautomator', version: TEST_UI_AUTOMATOR_VERSION
+    androidTestImplementation group: 'androidx.test.uiautomator', name: 'uiautomator', version: ui_automator_version
+
+    // UI Tests
+    androidTestImplementation group: 'androidx.compose.ui', name: 'ui-test-junit4', version: compose_version
+    // Test rules and transitive dependencies:
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
 
 
 

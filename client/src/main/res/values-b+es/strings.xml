@@ -31,6 +31,7 @@
     <string name="shuffle_on">Modo Aleatorio Activado</string>
     <string name="songs">Canciones</string>
     <string name="song_title">Nombre de Canción</string>
+    <string name="splash_screen_icon">Ícono de Splash Screen</string>
     <string name="support_and_feedback">Apoyo y Feedback</string>
     <string name="system_dark_mode_icon">Ícono del Modo Oscuro de Sistema</string>
     <string name="system_dark_mode_switch">Cambio del Modo Oscuro de Sistema</string>
@@ -50,7 +51,7 @@
     <string name="PLAYBACK_SPEED_DEFAULT_VALUE">1.00x</string>
     <string name="SEARCH_BUTTON_DESCRIPT">Search for an audio track</string>
     <string name="LOGO_DESCRIPTION">The title logo</string>
-    <string name="APP_TITLE">Music Player</string>
+    <string name="app_title">Music Player</string>
     <string name="APP_TITLE_H1"><![CDATA[<h1>Mike\'s MP3 Player</h1>]]></string>
     <string name="FOLDER_NAME">%1$s</string>
     <string name="NO_MEDIA_FOUND">No audio tracks found on your device.</string>

@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.service.dagger.modules.service
+package com.github.goldy1992.mp3player.service.dagger.modules
 
 import android.content.ContentResolver
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds

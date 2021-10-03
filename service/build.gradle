@@ -47,7 +47,7 @@ android {
         def names = variant.flavors*.name
 
         if (names.contains("automation")) {
-            if (variant.buildType.name == "release" || variant.buildType.name == "debug") {
+            if (variant.buildType.name == "release" || variant.buildType.name == "unittest") {
                 setIgnore(true)
             }
         }
