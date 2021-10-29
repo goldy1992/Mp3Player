@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client
 
 import android.content.Context
+import android.media.session.PlaybackState
 import android.net.Uri
 import android.os.Bundle
 import android.os.RemoteException
@@ -209,6 +210,7 @@ constructor(private val context: Context,
             metadata.postValue(mediaController!!.metadata)
             playbackState.postValue(mediaController!!.playbackState)
             queue.postValue(mediaController!!.queue)
+            isPlaying.postValue((mediaController!!.playbackState.playbackState as PlaybackState).state == PlaybackStateCompat.STATE_PLAYING)
         } catch (ex: RemoteException) {
             Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
         }

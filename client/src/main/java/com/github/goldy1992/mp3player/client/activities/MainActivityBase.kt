@@ -63,15 +63,15 @@ abstract class MainActivityBase : ComponentActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+    Log.i(logTag(), "on createee")
 
         val intent = intent
-        if (!isTaskRoot
-            && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
-            && intent.action != null && intent.action == Intent.ACTION_MAIN) {
-            finish()
-            return
-        }
+//        if (!isTaskRoot
+//            && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
+//            && intent.action != null && intent.action == Intent.ACTION_MAIN) {
+//            finish()
+//            return
+//        }
 
         // If app has already been created set the UI to initialise at the main screen.
         val appAlreadyCreated = savedInstanceState != null

@@ -137,7 +137,7 @@ class NowPlayingScreenTest : MediaTestBase() {
 
 
         composeTestRule.setContent {
-            val pagerState = rememberPagerState(pageCount = queueLiveData.value!!.size, initialPage = initialPosition)
+            val pagerState = rememberPagerState(initialPage = initialPosition)
             ViewPager(mediaController = mockMediaController,
                 pagerState = pagerState)
         }

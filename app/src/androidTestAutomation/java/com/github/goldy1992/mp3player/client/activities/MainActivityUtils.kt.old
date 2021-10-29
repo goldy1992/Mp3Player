@@ -15,10 +15,7 @@ import com.github.goldy1992.mp3player.client.views.viewholders.MySongViewHolder
 
 object MainActivityUtils {
 
-    fun togglePlayPauseButton(mDevice: UiDevice) {
-        val playPauseButton : String = TestUtils.resourceId("playPauseButton")
-        mDevice.findObject(UiSelector().resourceId(playPauseButton)).click()
-    }
+
 
     fun createAndRegisterIdlingResource() : AwaitingMediaControllerIdlingResource {
         val awaitingMediaControllerIdlingResource = AwaitingMediaControllerIdlingResource()

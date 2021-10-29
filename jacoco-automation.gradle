@@ -1,0 +1,71 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = jacoco_version
+}
+
+def fileFilter = [
+        '**/R.class',
+        '**/R$*.class',
+        '**/BuildConfig.*',
+        '**/Manifest*.*',
+        '**/*Test*.*',
+        'android/**/*.*',
+        '**/*$[0-9].*',
+        '**/dagger/**',
+        '**/databinding/**',
+        '**hilt_aggregated_deps**',
+        '**/Hilt_**'
+]
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
+project.afterEvaluate {
+
+    task jacocoAutomationReport(type: JacocoReport){//) {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports Automation."
+
+        reports {
+            xml.required = true
+            html.required = true
+        }
+
+        // app
+        def appBuildDir = "${rootDir}/app/build"
+        def appSrc = "${rootDir}/app/src/main/java"
+        def appClasses = fileTree(dir: "${appBuildDir}/tmp/kotlin-classes/", includes: ["automationDebug/**"], excludes: fileFilter)
+        def appJavaClasses = fileTree(dir: "${appBuildDir}/intermediates/javac/", includes: ["automationDebug/**"], excludes: fileFilter)
+
+
+        // client
+        def clientBuildDir = "${rootDir}/client/build"
+        def clientSrc = "${rootDir}/client/src/main/java"
+        def clientClasses = fileTree(dir: "${clientBuildDir}/tmp/kotlin-classes/", includes: ["fullDebug/**"], excludes: fileFilter)
+        def clientJavaClasses = fileTree(dir: "${clientBuildDir}/intermediates/javac/", includes: ["fullDebug/**"], excludes: fileFilter)
+
+        // service
+        def serviceBuildDir = "${rootDir}/service/build"
+        def serviceSrc = "${rootDir}/service/src/main/java"
+        def serviceClasses = fileTree(dir: "${serviceBuildDir}/tmp/kotlin-classes/", includes: ["automationDebug/**"], excludes: fileFilter)
+        def serviceJavaClasses = fileTree(dir: "${serviceBuildDir}/intermediates/javac/", includes: ["automationDebug/**"], excludes: fileFilter)
+
+        // commons
+        def commonsBuildDir = "${rootDir}/commons/build"
+        def commonsSrc = "${rootDir}/commons/src/main/java"
+        def commonsClasses = fileTree(dir: "${commonsBuildDir}/tmp/kotlin-classes/", includes: ["debug/**"], excludes: fileFilter)
+        def commonsJavaClasses = fileTree(dir: "${commonsBuildDir}/intermediates/javac/", includes: ["debug/**"], excludes: fileFilter)
+
+
+        sourceDirectories.from = files([appSrc, clientSrc, serviceSrc, commonsSrc])
+        classDirectories.from = files([appClasses, appJavaClasses,
+                                       clientClasses, clientJavaClasses,
+                                       serviceClasses, serviceJavaClasses,
+                                       commonsClasses, commonsJavaClasses])
+        executionData.from = fileTree(dir: "${appBuildDir}/outputs/code_coverage/automationDebugAndroidTest/connected/", include: ["**.ec"])
+
+
+    }
+}

@@ -6,18 +6,29 @@ package com.github.goldy1992.mp3player
 //import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.togglePlayPauseButton
 //import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.unregisterIdlingResource
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.*
+import com.github.goldy1992.mp3player.client.NotificationBarUtils.closeNotifications
+import com.github.goldy1992.mp3player.client.NotificationBarUtils.playFromNotificationBar
+import com.github.goldy1992.mp3player.client.PlayPauseButtonTestUtils.assertIsPlaying
+import com.github.goldy1992.mp3player.client.PlayPauseButtonTestUtils.assertNotPlaying
+import com.github.goldy1992.mp3player.client.PlayPauseButtonTestUtils.clickPause
+import com.github.goldy1992.mp3player.client.PlayPauseButtonTestUtils.waitForPlaying
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.buttons.PlayPauseButton
+import com.github.goldy1992.mp3player.testdata.Song
+import com.github.goldy1992.mp3player.testdata.Songs.SONGS
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Assert.assertTrue
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -29,7 +40,7 @@ import org.junit.runner.RunWith
 @LargeTest
 @HiltAndroidTest
 @RunWith(androidx.test.ext.junit.runners.AndroidJUnit4::class)
-class EndToEndTest {
+class EndToEndTest1 {
 
     private companion object {
         const val TEST_PACKAGE_NAME = "com.github.goldy1992.mp3player.automation"
@@ -55,25 +66,18 @@ class EndToEndTest {
      */
     @Before
     fun setup() {
-//        // Initialize UiDevice instance
+        // Initialize UiDevice instance
         mDevice = UiDevice.getInstance(getInstrumentation())
-//        startApp()
-
-    }
-
-    @Test
-    fun test1() {
-        assertTrue(true)
+        startApp()
+        assertSplashScreenActivity()
+        waitForMainActivityToLoad(composeTestRule)
     }
     /**
      * Asserts the first item in the song list is expected and when clicked the status of the
      * [PlayPauseButton] changes.
      */
-/*    @Test
+    @Test
     fun playSongTest() {
-          val scenario : ActivityScenario<MainActivity> = ActivityScenario.launch(MainActivity::class.java)
-        assertSplashScreenActivity()
-        waitForMainActivityToLoad(composeTestRule)
         println("starting test")
         val songsListContentDescr = context.getString(R.string.songs_list)
         val node = composeTestRule.onNodeWithContentDescription(songsListContentDescr) //    val awaitingMediaControllerIdlingResource = createAndRegisterIdlingResource()
@@ -163,7 +167,7 @@ class EndToEndTest {
             this?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         }
         context.startActivity(intent)
-    } */
+    }
 
     private fun waitForMainActivityToLoad(composeTestRule: ComposeTestRule) {
         val folders = context.getString(R.string.folders)

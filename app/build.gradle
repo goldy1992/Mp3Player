@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'jacoco'
+apply from: rootProject.file("jacoco-automation.gradle")
 apply plugin: 'dagger.hilt.android.plugin'
 
 android {
@@ -38,6 +38,8 @@ android {
         }
         debug {
             minifyEnabled false
+            debuggable true
+            testCoverageEnabled true
         }
         unittest {
             debuggable true
@@ -63,11 +65,20 @@ android {
     variantFilter { variant ->
         def names = variant.flavors*.name
 
-        if (names.contains("automation")) {
+        if (names.contains("unittest")) {
+            setIgnore(true)
+        }
+        else if (names.contains("automation")) {
             if (variant.buildType.name == "unittest" || variant.buildType.name == "release") {
                 setIgnore(true)
             }
         }
+        else if (names.contains("full")) {
+            if (variant.buildType.name == "unittest" || variant.buildType.name == "debug") {
+                setIgnore(true)
+            }
+        }
+
     }
 
 

@@ -11,13 +11,17 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
-import com.google.accompanist.glide.rememberGlidePainter
 
+@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @Composable
 fun SongListItem(song : MediaItem,
@@ -36,9 +40,8 @@ fun SongListItem(song : MediaItem,
         ) {
                 Image(modifier = Modifier.size(50.dp, 50.dp)
                         .padding(1.dp),
-                        painter = rememberGlidePainter(
-                          MediaItemUtils.getAlbumArtUri(song = song),
-                            fadeIn = true
+                        painter = rememberImagePainter(
+                          ImageRequest.Builder(LocalContext.current).data(MediaItemUtils.getAlbumArtUri(song = song)).build(),
                         ),
                         contentDescription = "")
                 Column(verticalArrangement = Arrangement.Center,

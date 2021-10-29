@@ -13,19 +13,21 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.commons.QueueItemUtils
-import com.google.accompanist.glide.rememberGlidePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -82,26 +84,29 @@ fun NowPlayingScreen(
         },
 
         content = {
-
+            val nowPlayingDescr = stringResource(id = R.string.now_playing_screen)
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = BOTTOM_BAR_SIZE)
+                        .fillMaxSize()
+                        .padding(bottom = BOTTOM_BAR_SIZE)
+                        .semantics {
+                            contentDescription = nowPlayingDescr
+                        }
             ) {
 
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colors.background)
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colors.background)
                 ) {
 
                     SpeedController(mediaController = mediaController)
                     ViewPager(mediaController = mediaController)
                 }
                 Column(
-                    Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colors.background),
+                        Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colors.background),
                     verticalArrangement = Arrangement.Bottom
                 ) {
 
@@ -128,8 +133,7 @@ fun NowPlayingScreen(
 @ExperimentalPagerApi
 @Composable
 fun ViewPager(mediaController: MediaControllerAdapter,
-            pagerState:PagerState = rememberPagerState(pageCount = mediaController.queue.observeAsState(
-                emptyList()).value.size, initialPage = mediaController.calculateCurrentQueuePosition())) {
+            pagerState:PagerState = rememberPagerState(initialPage = mediaController.calculateCurrentQueuePosition())) {
     val queue by mediaController.queue.observeAsState(emptyList())
 
     if (isEmpty(queue)) {
@@ -148,40 +152,47 @@ fun ViewPager(mediaController: MediaControllerAdapter,
             val notAtEnd = currentQueuePosition < queue.size
             val notCurrentPosition = currentQueuePosition != newPosition
 
-            if (notAtBeginning && notAtEnd && notCurrentPosition ) {
-                if (isSkipToNext(newPosition, currentQueuePosition)) {
+            if (notCurrentPosition ) {
+                if (notAtEnd && isSkipToNext(newPosition, currentQueuePosition)) {
                     mediaController.skipToNext()
-                } else if (isSkipToPrevious(newPosition, currentQueuePosition)) {
+                } else if (notAtBeginning && isSkipToPrevious(newPosition, currentQueuePosition)) {
                     mediaController.seekTo(0)
                     mediaController.skipToPrevious()
                 }
             }
         }
 
-        HorizontalPager(
+        mediaController.queue.value?.let {
+            HorizontalPager(
                 state = pagerState,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colors.background)
-                    .semantics {
-                        contentDescription = "viewPagerColumn"
-                    },
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colors.background)
+                        .semantics {
+                            contentDescription = "viewPagerColumn"
+                        },
+                count = it.size,
+                key = { page : Int ->
+                    val queueItem : MediaSessionCompat.QueueItem? = (mediaController.queue.value?.get(page) as MediaSessionCompat.QueueItem)
+                    queueItem?.description?.mediaId as Any
+                }
 
-                ) { pageIndex ->
+            ) { pageIndex ->
             val item: MediaSessionCompat.QueueItem = queue!![pageIndex]
             Column(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                            .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                        painter = rememberGlidePainter(
-                                request = QueueItemUtils.getAlbumArtUri(item as MediaSessionCompat.QueueItem)
+                        painter = rememberImagePainter(
+                                request =  ImageRequest.Builder(LocalContext.current).data(QueueItemUtils.getAlbumArtUri(item as MediaSessionCompat.QueueItem)).build()
                         ),
                         contentDescription = "Album Art",
                         modifier = Modifier.size(300.dp, 300.dp)
                 )
             }
+        }
         }
     }
 

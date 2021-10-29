@@ -2,23 +2,22 @@ package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Context
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.performClick
 import androidx.lifecycle.MutableLiveData
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.buttons.PauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.PlayButton
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 /**
  * Test class for [com.github.goldy1992.mp3player.client.ui.PlayToolbar].
@@ -82,5 +81,32 @@ class PlayToolbarTest {
             verify(mockMediaController, times(1)).pause()
         }
 
+    }
+
+    /**
+     * Ensures that the onClick function is called as expected
+     */
+    @Test
+    fun testOnClick() {
+        whenever(mockMediaController.isPlaying).thenReturn(MutableLiveData(true))
+        val bottomAppBarDescr = InstrumentationRegistry.getInstrumentation().context.getString(R.string.bottom_app_bar)
+        val mockOnClick = mock<MockOnClick>()
+        composeTestRule.setContent {
+            PlayToolbar(mediaController = mockMediaController, onClick = mockOnClick::onClick)
+        }
+        composeTestRule.onNodeWithContentDescription(bottomAppBarDescr).performGesture {
+            this.click(this.percentOffset(0.9f, 0.9f))
+        }
+
+        runBlocking {
+            composeTestRule.awaitIdle()
+        }
+
+        verify(mockOnClick, times(1)).onClick()
+    }
+
+    private class MockOnClick() {
+        fun onClick(){
+        }
     }
 }

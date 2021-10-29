@@ -47,7 +47,7 @@ fun MainScreen(navController: NavController,
                mediaRepository: MediaRepository,
                mediaController: MediaControllerAdapter,
                scaffoldState: ScaffoldState = rememberScaffoldState(),
-               pagerState: PagerState = rememberPagerState(pageCount = mediaRepository.rootItems.value?.size ?: 0 )
+               pagerState: PagerState = rememberPagerState()
 ) {
     val rootItems: List<MediaItem> by mediaRepository.rootItems.observeAsState(listOf(MediaItemUtils.getEmptyMediaItem()))
  //   val pagerState = rememberPagerState(pageCount = rootItems.size)
@@ -105,7 +105,7 @@ fun TabBarPages(navController: NavController,
             state = pagerState,
             modifier = Modifier
                 .fillMaxWidth(),
-
+            count = mediaRepository.rootItems.value?.size ?: 0
             ) { pageIndex ->
 
             val currentItem = rootItems[pageIndex]

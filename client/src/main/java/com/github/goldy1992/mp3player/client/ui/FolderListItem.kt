@@ -16,21 +16,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 
 @Composable
 fun FolderListItem(folder : MediaItem,
                    onClick: () -> Unit) {
     Row(modifier = Modifier
-        .fillMaxWidth()
-        .background(Color.White)
-        .clickable(onClick = onClick),
+            .fillMaxWidth()
+            .background(Color.White)
+            .clickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        val folderIconContentDescr = stringResource(id = R.string.folder_icon)
         Icon(
             Icons.Filled.Folder,
-            contentDescription = "Play"
+            contentDescription = folderIconContentDescr
         )
         Column(verticalArrangement = Arrangement.Center, modifier = Modifier.background(MaterialTheme.colors.background)) {
             Text(text = MediaItemUtils.getDirectoryName(folder),
