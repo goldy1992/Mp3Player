@@ -204,13 +204,12 @@ constructor(private val context: Context,
     override fun onConnected() {
         try {
             this.token = mediaBrowser.sessionToken
-            mediaController =
-                createMediaController(context, mediaBrowser.sessionToken)
-            mediaController!!.registerCallback(this)
+            this.mediaController = createMediaController(context, mediaBrowser.sessionToken)
+            this.mediaController!!.registerCallback(this)
             metadata.postValue(mediaController!!.metadata)
             playbackState.postValue(mediaController!!.playbackState)
             queue.postValue(mediaController!!.queue)
-            isPlaying.postValue((mediaController!!.playbackState.playbackState as PlaybackState).state == PlaybackStateCompat.STATE_PLAYING)
+            //isPlaying.postValue((mediaController!!.playbackState?.playbackState as PlaybackState).state == PlaybackStateCompat.STATE_PLAYING)
         } catch (ex: RemoteException) {
             Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
         }

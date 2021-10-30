@@ -5,6 +5,7 @@ import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import com.github.goldy1992.mp3player.client.ui.buttons.PlayPauseButton
+import kotlinx.coroutines.runBlocking
 
 
 /**
@@ -40,8 +41,11 @@ object PlayPauseButtonTestUtils {
     }
 
     fun clickPause(composeTestRule : ComposeTestRule, context: Context) {
-        val pauseButtonContentDescription = context.getString(R.string.pause)
-        composeTestRule.onNodeWithContentDescription(pauseButtonContentDescription).performClick()
+        runBlocking {
+            val pauseButtonContentDescription = context.getString(R.string.pause)
+            composeTestRule.onNodeWithContentDescription(pauseButtonContentDescription)
+                .performClick()
+        }
     }
 
 }

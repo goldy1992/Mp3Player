@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.service.library.content.parser
 import android.database.Cursor
 import android.provider.MediaStore
 import android.support.v4.media.MediaBrowserCompat.MediaItem
+import android.util.Log
 import com.github.goldy1992.mp3player.commons.ComparatorUtils
 import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
@@ -21,18 +22,23 @@ class FolderResultsParser
         val listToReturn = TreeSet(this)
         val directoryPathSet: MutableSet<String> = HashSet()
         while (cursor != null && cursor.moveToNext()) {
-            val path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
-            val file = File(path)
-            if (file.exists()) {
-                val directory = file.parentFile
-                var directoryPath: String
-                if (null != directory) {
-                    directoryPath = directory.absolutePath
-                    if (directoryPathSet.add(directoryPath)) {
-                        val mediaItem = createFolderMediaItem(directory, mediaIdPrefix!!)
-                        listToReturn.add(mediaItem)
+            val index = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
+            if (index >= 0) {
+                val path = cursor.getString(index)
+                val file = File(path)
+                if (file.exists()) {
+                    val directory = file.parentFile
+                    var directoryPath: String
+                    if (null != directory) {
+                        directoryPath = directory.absolutePath
+                        if (directoryPathSet.add(directoryPath)) {
+                            val mediaItem = createFolderMediaItem(directory, mediaIdPrefix!!)
+                            listToReturn.add(mediaItem)
+                        }
                     }
                 }
+            } else {
+                Log.e(logTag(), "Could not find column index")
             }
         }
         return ArrayList(listToReturn)
@@ -55,6 +61,13 @@ class FolderResultsParser
 
     override fun compare(m1: MediaItem, m2: MediaItem): Int {
         return ComparatorUtils.Companion.caseSensitiveStringCompare.compare(getDirectoryPath(m1), getDirectoryPath(m2))
+    }
+
+    /**
+     * @return the name of the log tag given to the class
+     */
+    override fun logTag(): String {
+        return "Flder_Res_Prser"
     }
 
     private fun buildLibraryId(prefix: String, childItemId: String): String {

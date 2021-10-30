@@ -189,8 +189,12 @@ class EndToEndTest1 {
                 Until.hasObject(By.descContains(splashIconContentDescription)),
                 LAUNCH_TIMEOUT
         )
-        composeTestRule.onNodeWithContentDescription(splashIconContentDescription).assertExists().assertIsDisplayed()
-        composeTestRule.onNodeWithText(appTitle).assertExists().assertIsDisplayed()
+        runBlocking {
+            composeTestRule.awaitIdle()
+            composeTestRule.onNodeWithContentDescription(splashIconContentDescription)
+                .assertExists().assertIsDisplayed()
+            composeTestRule.onNodeWithText(appTitle).assertExists().assertIsDisplayed()
+        }
     }
 
     private fun getUiObjectFromId(id : String) : UiObject {
