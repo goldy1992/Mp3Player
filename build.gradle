@@ -16,7 +16,7 @@ buildscript {
         compose_test_version = '1.0.4'
         CORE_VERSION = '1.6.0-rc01'
         espresso_core_version = '3.3.0'
-        exo_player_vesrion = '2.14.2'
+        exo_player_vesrion = '2.15.1'
         hilt_version = '2.37'
         jacoco_version = '0.8.7'
         junit_ext_version = '1.1.2'
