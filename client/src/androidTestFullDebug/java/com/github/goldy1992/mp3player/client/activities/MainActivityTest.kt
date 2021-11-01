@@ -1,10 +1,24 @@
 package com.github.goldy1992.mp3player.client.activities
 
+import android.content.Context
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.core.app.ActivityScenario
 import androidx.test.rule.GrantPermissionRule
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.Until
+import com.github.goldy1992.mp3player.client.R
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 
 import org.junit.Before
@@ -14,25 +28,65 @@ import org.junit.Test
 @HiltAndroidTest
 class MainActivityTest {
 
-    lateinit var scenario : ActivityScenario<MainActivity>
-
     @get:Rule
     var permissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
+    @get:Rule
+    val composeTestRule = createComposeRule()
+
+
+    lateinit var context : Context
+
+    lateinit var scenario : ActivityScenario<MainActivity>
+
+    private lateinit var mDevice: UiDevice
+
+
     @Before
     fun setUp() {
+        this.context = getInstrumentation().context
         this.scenario = ActivityScenario.launch(MainActivity::class.java)
+        this.mDevice = UiDevice.getInstance(getInstrumentation())
     }
 
     @Test
     fun testMain() {
-        scenario.onActivity { activity -> {
-            activity.onPermissionGranted()
-        } }
-        assertTrue(true)
+        assertSplashScreenActivity()
+        waitForMainActivityToLoad(composeTestRule = composeTestRule)
+    }
+
+    private fun assertSplashScreenActivity() {
+        val splashIconContentDescription = context.getString(R.string.splash_screen_icon)
+        val appTitle = context.getString(R.string.app_title)
+        mDevice.wait(
+            Until.hasObject(By.descContains(splashIconContentDescription)),
+            LAUNCH_TIMEOUT
+        )
+        runBlocking {
+            composeTestRule.awaitIdle()
+            composeTestRule.onNodeWithContentDescription(splashIconContentDescription)
+                .assertExists().assertIsDisplayed()
+            composeTestRule.onNodeWithText(appTitle).assertExists().assertIsDisplayed()
+        }
+    }
+
+private fun waitForMainActivityToLoad(composeTestRule: ComposeTestRule) {
+    val navigationIcon = context.getString(R.string.navigation_drawer_menu_icon)
+    composeTestRule.waitUntil(LAUNCH_TIMEOUT) {
+        try {
+            composeTestRule.onNodeWithContentDescription(navigationIcon).assertExists()
+            true
+        } catch (assertionError: AssertionError) {
+            false
+        }
+    }
+}
+
+
+    private companion object {
+        const val LAUNCH_TIMEOUT = 25000L
     }
 }

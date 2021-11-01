@@ -158,7 +158,7 @@ dependencies {
     implementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
     implementation group: 'androidx.hilt', name: 'hilt-navigation-compose', version: '1.0.0-alpha03'
     
-    def accompanist_version = '0.20.0'
+    def accompanist_version = '0.21.0-beta'
     implementation group: "com.google.accompanist", name: "accompanist-pager", version: accompanist_version
     implementation group: "com.google.accompanist", name: "accompanist-pager-indicators", version: accompanist_version
     //implementation group: "com.google.accompanist", name: "accompanist-glide", version: accompanist_version
@@ -218,6 +218,8 @@ dependencies {
 
     // Test rules and transitive dependencies:
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
+    androidTestImplementation group: 'androidx.test.uiautomator', name: 'uiautomator', version: ui_automator_version
+
     debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
     debugImplementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
     debugImplementation group: 'androidx.activity', name: 'activity-ktx', version: activity_ktx_version

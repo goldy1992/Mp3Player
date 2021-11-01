@@ -171,11 +171,11 @@ fun ViewPager(mediaController: MediaControllerAdapter,
                         .semantics {
                             contentDescription = "viewPagerColumn"
                         },
-                count = it.size,
-                key = { page : Int ->
-                    val queueItem : MediaSessionCompat.QueueItem? = (mediaController.queue.value?.get(page) as MediaSessionCompat.QueueItem)
-                    queueItem?.description?.mediaId as Any
-                }
+                count = it.size //,
+//                key = { page : Int ->
+//                    val queueItem : MediaSessionCompat.QueueItem? = (mediaController.queue.value?.get(page) as MediaSessionCompat.QueueItem)
+//                    queueItem?.description?.mediaId as Any
+//                }
 
             ) { pageIndex ->
             val item: MediaSessionCompat.QueueItem = queue!![pageIndex]

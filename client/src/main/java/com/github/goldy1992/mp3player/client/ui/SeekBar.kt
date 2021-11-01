@@ -28,7 +28,7 @@ const val logTag = "seekbar"
 @Composable
 fun SeekBar(mediaController : MediaControllerAdapter) {
 
-    Log.i(logTag, "seek bar created")
+    //Log.i(logTag, "seek bar created")
     val metadata by mediaController.metadata.observeAsState()
     val playbackState by mediaController.playbackState.observeAsState()
 
