@@ -158,6 +158,7 @@ class NowPlayingScreenTest : MediaTestBase() {
         val toReturn = mock<MediaSessionCompat.QueueItem>()
         val description = MediaDescriptionCompat.Builder()
             .setTitle(title)
+            .setMediaId(title)
             .build()
         whenever(toReturn.description).thenReturn(description)
         return toReturn

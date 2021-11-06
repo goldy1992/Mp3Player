@@ -4,18 +4,18 @@ import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
-import com.github.goldy1992.mp3player.service.MyControlDispatcher
 import com.github.goldy1992.mp3player.service.PlaylistManager
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.google.android.exoplayer2.ControlDispatcher
 import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.ForwardingPlayer
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.upstream.FileDataSource.FileDataSourceException
-import org.mockito.kotlin.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.*
 import org.robolectric.RobolectricTestRunner
 import java.util.*
 
@@ -28,7 +28,7 @@ class MyPlaybackPreparerTest {
 
     private val mediaSourceFactory: MediaSourceFactory = mock<MediaSourceFactory>()
 
-    private val myControlDispatcher: MyControlDispatcher = mock<MyControlDispatcher>()
+    private val myControlDispatcher: ForwardingPlayer = mock<ForwardingPlayer>()
 
     private val playlistManager: PlaylistManager = mock<PlaylistManager>()
 
@@ -57,9 +57,9 @@ class MyPlaybackPreparerTest {
     @Test
     @Throws(FileDataSourceException::class)
     fun testPreparePlaylistOnConstruct() { // don't play when being constructed
-        verify(myControlDispatcher, times(1)).dispatchSetPlayWhenReady(exoPlayer, false)
+        verify(myControlDispatcher, times(1)).playWhenReady =  false
         // should seek to the first index, position 0
-        verify(myControlDispatcher, times(1)).dispatchSeekTo(exoPlayer, 0, 0)
+        verify(myControlDispatcher, times(1)).seekTo( 0, 0)
     }
 
     @Test(expected = UnsupportedOperationException::class)
@@ -94,7 +94,7 @@ class MyPlaybackPreparerTest {
         items.add(testItem3)
         whenever(contentManager.getPlaylist(mediaId)).thenReturn(items)
         myPlaybackPreparer!!.onPrepareFromMediaId(mediaId, true, null)
-        verify(myControlDispatcher, times(1)).dispatchSeekTo(exoPlayer, 1, 0)
+        verify(myControlDispatcher, times(1)).seekTo(1, 0)
     }
 
     private fun assertContainsAction(@PlaybackStateCompat.Actions action: Long) {

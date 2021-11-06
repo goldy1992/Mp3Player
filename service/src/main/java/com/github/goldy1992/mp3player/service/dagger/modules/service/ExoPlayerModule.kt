@@ -1,35 +1,28 @@
 package com.github.goldy1992.mp3player.service.dagger.modules.service
 
-import android.content.Context
-import android.media.MediaMetadataRetriever
-import com.google.android.exoplayer2.C
+import com.github.goldy1992.mp3player.service.MyForwardingPlayer
 import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.ForwardingPlayer
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.audio.AudioAttributes
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ServiceComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.android.scopes.ServiceScoped
 
 @InstallIn(ServiceComponent::class)
 @Module
-class ExoPlayerModule {
-    @Provides
-    @ServiceScoped
-    fun provideExoPlayer(@ApplicationContext context: Context?): ExoPlayer {
-        val simpleExoPlayer = SimpleExoPlayer.Builder(context!!).build()
-        val audioAttributes = AudioAttributes.Builder()
-                .setUsage(C.USAGE_MEDIA)
-                .setContentType(C.CONTENT_TYPE_MUSIC)
-                .build()
-        simpleExoPlayer.setAudioAttributes(audioAttributes, true)
-        return simpleExoPlayer
-    }
+abstract class ExoPlayerModule {
 
-    @Provides
-    fun providesMediaMetadataRetriever(): MediaMetadataRetriever {
-        return MediaMetadataRetriever()
-    }
+    @Binds
+    abstract fun bindsExoPlayer(simpleExoPlayer : SimpleExoPlayer) : ExoPlayer
+
+    @Binds
+    abstract fun bindsForwardingPlayer(myForwardingPlayer: MyForwardingPlayer) : ForwardingPlayer
+
+    @Binds
+    abstract fun bindsPlayer(player: ForwardingPlayer) : Player
+
+
+
 }

@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.service
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import com.github.goldy1992.mp3player.service.player.*
-import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector.PlaybackActions
 import dagger.hilt.android.scopes.ServiceScoped
@@ -14,9 +14,8 @@ class MediaSessionConnectorCreator
     @Inject
     constructor(
         private val mediaSessionCompat: MediaSessionCompat,
-        private val exoPlayer: ExoPlayer,
+        private val exoPlayer: Player,
         private val myPlaybackPreparer: MyPlaybackPreparer,
-        private val myControlDispatcher: MyControlDispatcher,
         private val myMetadataProvider: MyMetadataProvider,
         private val myTimelineQueueNavigator: MyTimelineQueueNavigator,
         private val changeSpeedProvider: ChangeSpeedProvider,
@@ -32,7 +31,6 @@ class MediaSessionConnectorCreator
 
             if (!playlistManager.isEmpty()) {
                 newMediaSessionConnector.setPlaybackPreparer(myPlaybackPreparer)
-                newMediaSessionConnector.setControlDispatcher(myControlDispatcher)
                 newMediaSessionConnector.setMediaMetadataProvider(myMetadataProvider)
                 newMediaSessionConnector.setQueueNavigator(myTimelineQueueNavigator)
                 newMediaSessionConnector.setCustomActionProviders(changeSpeedProvider)

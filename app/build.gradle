@@ -64,16 +64,9 @@ android {
     variantFilter { variant ->
         def names = variant.flavors*.name
 
-        if (names.contains("unittest")) {
-            setIgnore(true)
-        }
-        else if (names.contains("automation")) {
+
+        if (names.contains("automation")) {
             if (variant.buildType.name == "unittest" || variant.buildType.name == "release") {
-                setIgnore(true)
-            }
-        }
-        else if (names.contains("full")) {
-            if (variant.buildType.name == "unittest" || variant.buildType.name == "debug") {
                 setIgnore(true)
             }
         }

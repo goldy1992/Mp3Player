@@ -9,8 +9,6 @@
 
     <application xmlns:tools="http://schemas.android.com/tools"
         tools:node="merge">
-<!--        <activity android:name=".client.activities.MainActivityIdlingResourceImpl" />-->
-<!--        <activity android:name=".activities.MainActivityUnitTestImpl" />-->
-<!--        <activity android:name=".activities.SplashScreenEntryActivityUnitTestImpl" />-->
+        <activity android:name=".activities.MainActivityUnitTestImpl" />
     </application>
 </manifest>

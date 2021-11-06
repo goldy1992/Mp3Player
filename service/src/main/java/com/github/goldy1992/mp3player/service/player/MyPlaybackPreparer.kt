@@ -8,11 +8,11 @@ import android.util.Log
 import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaId
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaUri
-import com.github.goldy1992.mp3player.service.MyControlDispatcher
 import com.github.goldy1992.mp3player.service.PlaylistManager
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.google.android.exoplayer2.ControlDispatcher
 import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.ForwardingPlayer
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class MyPlaybackPreparer @Inject constructor(private val exoPlayer: ExoPlayer,
                                              private val contentManager: ContentManager,
                                              private val mediaSourceFactory: MediaSourceFactory,
-                                             private val myControlDispatcher: MyControlDispatcher,
+                                             private val myControlDispatcher: ForwardingPlayer,
                                              private val playlistManager: PlaylistManager)
     : MediaSessionConnector.PlaybackPreparer {
     override fun getSupportedPrepareActions(): Long {
@@ -69,8 +69,8 @@ class MyPlaybackPreparer @Inject constructor(private val exoPlayer: ExoPlayer,
             if (concatenatingMediaSource.size > 0) {
                 exoPlayer.setMediaSource(concatenatingMediaSource)
                 exoPlayer.prepare()
-                myControlDispatcher.dispatchSeekTo(exoPlayer, uriToPlayIndex, 0L)
-                myControlDispatcher.dispatchSetPlayWhenReady(exoPlayer, playWhenReady)
+                myControlDispatcher.seekTo(uriToPlayIndex, 0L)
+                myControlDispatcher.playWhenReady = playWhenReady
             }
         } // if
     }
