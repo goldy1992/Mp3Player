@@ -13,7 +13,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -90,36 +89,34 @@ fun NowPlayingScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(bottom = BOTTOM_BAR_SIZE)
+                    .background(MaterialTheme.colors.background)
                     .semantics {
                         contentDescription = nowPlayingDescr
                     }
             ) {
+                SpeedController(mediaController = mediaController,
+                modifier = Modifier.weight(1f))
+                ViewPager(mediaController = mediaController,
+                scope = scope,
+                modifier = Modifier.weight(4f))
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colors.background)
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                        .weight(1f),
+                    horizontalArrangement = Arrangement.Center
                 ) {
-
-                    SpeedController(mediaController = mediaController)
-                    ViewPager(mediaController = mediaController,
-                    scope = scope)
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        ShuffleButton(mediaController = mediaController)
-                        RepeatButton(mediaController = mediaController)
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        SeekBar(mediaController = mediaController)
-                    }
+                    ShuffleButton(mediaController = mediaController)
+                    RepeatButton(mediaController = mediaController)
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                        .weight(1f),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    SeekBar(mediaController = mediaController)
                 }
             }
+
         }
     )
 }
@@ -128,13 +125,14 @@ fun NowPlayingScreen(
 @Composable
 fun ViewPager(mediaController: MediaControllerAdapter,
             pagerState:PagerState = rememberPagerState(initialPage = mediaController.calculateCurrentQueuePosition()),
-            scope: CoroutineScope = rememberCoroutineScope()) {
+            scope: CoroutineScope = rememberCoroutineScope(),
+            modifier: Modifier = Modifier) {
     val queue by mediaController.queue.observeAsState(emptyList())
     val metadata by mediaController.metadata.observeAsState()
     val currentQueuePosition = mediaController.calculateCurrentQueuePosition()
 
     if (isEmpty(queue)) {
-        Column(modifier = Modifier.fillMaxWidth(),
+        Column(modifier = modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally) {
             Text("Empty Playlist", style = MaterialTheme.typography.h5,
             textAlign = TextAlign.Center)
@@ -147,28 +145,27 @@ fun ViewPager(mediaController: MediaControllerAdapter,
         }
 
         LaunchedEffect(pagerState.currentPage) {
-            Log.i("NOW_PLAYING", "current page changed")
+            Log.i("NOW_PLAYING", "current page changed: ${pagerState.currentPage}")
             val newPosition = pagerState.currentPage
-            val notAtBeginning = currentQueuePosition > 0
-            val notAtEnd = currentQueuePosition < queue.size
-            val notCurrentPosition = currentQueuePosition != newPosition
+            val atBeginning = currentQueuePosition <= 0
+            val atEnd = (currentQueuePosition + 1) >= queue.size
+            val atCurrentPosition = currentQueuePosition == newPosition
 
-            if (notCurrentPosition ) {
-                if (notAtEnd && isSkipToNext(newPosition, currentQueuePosition)) {
+            if (!atCurrentPosition ) {
+                if (!atEnd && isSkipToNext(newPosition, currentQueuePosition)) {
                     mediaController.skipToNext()
-                } else if (notAtBeginning && isSkipToPrevious(newPosition, currentQueuePosition)) {
+                } else if (!atBeginning && isSkipToPrevious(newPosition, currentQueuePosition)) {
                     mediaController.seekTo(0)
                     mediaController.skipToPrevious()
                 }
             }
         }
+        Log.i("NOW_PLAYING_SCRN", "queue size: ${queue?.size ?: 0}")
 
         HorizontalPager(
                 state = pagerState,
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
-                    .background(
-                        Color.Magenta)
                     .semantics {
                         contentDescription = "viewPagerColumn"
                     },

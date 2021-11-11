@@ -1,28 +1,21 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Slider
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 
 @Composable
-fun SpeedController(mediaController : MediaControllerAdapter) {
+fun SpeedController(mediaController : MediaControllerAdapter,
+                    modifier: Modifier = Modifier) {
 
     var sliderPosition by remember { mutableStateOf(mediaController.playbackSpeed.value) }
 
-    Row {
+    Row(modifier = modifier) {
         Slider(
             modifier = Modifier.weight(4f),
             value = sliderPosition!!,
