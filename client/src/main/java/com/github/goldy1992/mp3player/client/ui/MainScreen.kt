@@ -6,11 +6,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -66,7 +66,6 @@ fun MainScreen(navController: NavController,
             if (isExpanded) {
                 LargeMainScreenContent(
                     navController = navController,
-                    pagerState = pagerState,
                     scope = scope,
                     rootItems = rootItems,
                     mediaController = mediaController,
@@ -122,7 +121,6 @@ private fun SmallMainScreenContent(
 @Composable
 private fun LargeMainScreenContent(
     navController: NavController,
-    pagerState: PagerState,
     scope: CoroutineScope,
     rootItems: List<MediaItem>,
     mediaController: MediaControllerAdapter,
@@ -132,6 +130,8 @@ private fun LargeMainScreenContent(
     if (rootItems.isEmpty()) {
         LoadingIndicator()
     } else {
+
+        val navigationItemSelected = remember { mutableStateOf(getRootMediaItemType(rootItems[0]))}
         Column(
             Modifier
                 .fillMaxSize()
@@ -141,17 +141,47 @@ private fun LargeMainScreenContent(
             Divider(thickness = 5.dp, color = MaterialTheme.colors.background)
 
             Row(Modifier.fillMaxSize()) {
+                NavigationRail(Modifier.align(Alignment.CenterVertically)) {
+                    if (rootItems.isEmpty()) {
+                        LoadingIndicator()
+                    } else {
+                        Column(verticalArrangement =  Arrangement.Center, modifier = Modifier.fillMaxHeight()) {
+                            rootItems.forEach() {
+                                NavigationRailItem(
+                                    selected = navigationItemSelected.value == getRootMediaItemType(it),
+                                    onClick = {
+                                        scope.launch {
+                                            navigationItemSelected.value = getRootMediaItemType(it)
+                                        }
+                                    },
+                                    label = { Text(MediaItemUtils.getTitle(it)) },
+                                    icon = { Icon(Icons.Filled.MusicNote, "") },
+                                )
+                            }
+                        }
+                    }
+
+                }
                 Column(Modifier.weight(0.5f)) {
+                    when(navigationItemSelected.value) {
+                        MediaItemType.SONGS -> {
+                            val songs = mediaRepository.itemMap[MediaItemType.SONGS]
+                            if (songs == null) {
+                                CircularProgressIndicator()
+                            } else {
+                                SongList(songsData = songs, mediaController = mediaController)
+                            }
+                        }
+                        MediaItemType.FOLDERS -> {
+                            val folders = mediaRepository.itemMap[MediaItemType.FOLDERS]
+                            if (folders == null) {
+                                CircularProgressIndicator()
+                            } else {
+                                FolderList(foldersData = folders, navController = navController, mediaRepository = mediaRepository)
+                            }
+                        }
+                    }
 
-                    MainTabs(pagerState = pagerState, rootItems = rootItems, scope = scope)
-
-                    TabBarPages(
-                        navController = navController,
-                        mediaRepository = mediaRepository,
-                        mediaController = mediaController,
-                        pagerState = pagerState,
-                        rootItems = rootItems
-                    )
                 }
                 Column(Modifier.weight(0.5f)) {
                     Text(text = "Item selected!")
