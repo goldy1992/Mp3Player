@@ -2,10 +2,7 @@ package com.github.goldy1992.mp3player.client.ui
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.util.Log
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -22,11 +19,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
+import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -44,42 +43,123 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 @Composable
 fun MainScreen(navController: NavController,
+               windowSize: WindowSize,
                mediaRepository: MediaRepository,
                mediaController: MediaControllerAdapter,
                scaffoldState: ScaffoldState = rememberScaffoldState(),
-               pagerState: PagerState = rememberPagerState()
+               pagerState: PagerState = rememberPagerState(initialPage = 0)
 ) {
-    val rootItems: List<MediaItem> by mediaRepository.rootItems.observeAsState(listOf(MediaItemUtils.getEmptyMediaItem()))
- //   val pagerState = rememberPagerState(pageCount = rootItems.size)
-//    val scaffoldState = rememberScaffoldState()
+    val isExpanded = windowSize == WindowSize.Expanded
+    val rootItems: List<MediaItem> by mediaRepository.rootItems.observeAsState(emptyList())
     val scope = rememberCoroutineScope()
 
-    Scaffold (
-        scaffoldState = scaffoldState,
-        topBar = {
-        HomeAppBar (
-            navController = navController,
-            pagerState = pagerState,
-            scope = scope,
-            scaffoldState = scaffoldState,
-            rootItems = rootItems)
-        },
-        bottomBar = {
-            PlayToolbar(mediaController = mediaController) {
-                navController.navigate(Screen.NOW_PLAYING.name)
+    CustomScaffold(            scaffoldState = scaffoldState,
+        navController = navController,
+        scope = scope,
+        mediaController = mediaController,
+        extendTopAppBar = {
+            if (!isExpanded) {
+                MainTabs(pagerState = pagerState, rootItems = rootItems, scope = scope)
             }
         },
-
         content = {
-            TabBarPages(navController = navController,
+            if (isExpanded) {
+                LargeMainScreenContent(
+                    navController = navController,
+                    pagerState = pagerState,
+                    scope = scope,
+                    rootItems = rootItems,
+                    mediaController = mediaController,
+                    mediaRepository = mediaRepository
+                )
+                // create large main screen
+            } else {
+                SmallMainScreenContent(
+                    navController = navController,
+                    pagerState = pagerState,
+                    rootItems = rootItems,
+                    mediaController = mediaController,
+                    mediaRepository = mediaRepository
+                )
+            }
+        }
+    )
+
+
+}
+
+@ExperimentalMaterialApi
+@ExperimentalPagerApi
+@Composable
+private fun SmallMainScreenContent(
+    navController: NavController,
+    pagerState: PagerState,
+    rootItems: List<MediaItem>,
+    mediaController: MediaControllerAdapter,
+    mediaRepository: MediaRepository
+) {
+    Row(
+        Modifier
+            .fillMaxSize()
+            .padding(bottom = BOTTOM_BAR_SIZE) ) {
+            if (rootItems.isEmpty() ) {
+                LoadingIndicator()
+            } else {
+                TabBarPages(
+                    navController = navController,
+                    mediaRepository = mediaRepository,
+                    mediaController = mediaController,
+                    pagerState = pagerState,
+                    rootItems = rootItems
+                )
+        }
+    }
+
+}
+
+@ExperimentalMaterialApi
+@ExperimentalPagerApi
+@Composable
+private fun LargeMainScreenContent(
+    navController: NavController,
+    pagerState: PagerState,
+    scope: CoroutineScope,
+    rootItems: List<MediaItem>,
+    mediaController: MediaControllerAdapter,
+    mediaRepository: MediaRepository
+) {
+
+    if (rootItems.isEmpty()) {
+        LoadingIndicator()
+    } else {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(bottom = BOTTOM_BAR_SIZE)
+        )
+        {
+            Divider(thickness = 5.dp, color = MaterialTheme.colors.background)
+
+            Row(Modifier.fillMaxSize()) {
+                Column(Modifier.weight(0.5f)) {
+
+                    MainTabs(pagerState = pagerState, rootItems = rootItems, scope = scope)
+
+                    TabBarPages(
+                        navController = navController,
                         mediaRepository = mediaRepository,
                         mediaController = mediaController,
                         pagerState = pagerState,
-                        rootItems = rootItems)
-        },
-        drawerContent = {
-            NavigationDrawer(navController = navController)
-        })
+                        rootItems = rootItems
+                    )
+                }
+                Column(Modifier.weight(0.5f)) {
+                    Text(text = "Item selected!")
+                }
+            }
+        }
+    }
+
 }
 
 /**
@@ -96,11 +176,10 @@ fun TabBarPages(navController: NavController,
                 mediaRepository: MediaRepository,
                 mediaController: MediaControllerAdapter,
                 pagerState: PagerState,
-                rootItems: List<MediaItem>) {
+                rootItems: List<MediaItem>,
+                modifier: Modifier = Modifier) {
     Column(
-        Modifier
-            .fillMaxSize()
-            .padding(bottom = BOTTOM_BAR_SIZE)) {
+       modifier = modifier) {
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
@@ -148,25 +227,26 @@ fun TabBarPages(navController: NavController,
 @Composable
 fun HomeAppBar(
     navController: NavController,
-    pagerState: PagerState,
     scope : CoroutineScope,
-    scaffoldState: ScaffoldState,
-    rootItems: List<MediaItem>) {
+    scaffoldState: ScaffoldState) {
     val navigationDrawerIconDescription = stringResource(id = R.string.navigation_drawer_menu_icon)
-    Column {
         TopAppBar(
             title = {
                 Text(text = "MP3 Player")
             },
             backgroundColor = MaterialTheme.colors.primary,
             navigationIcon = {
-                IconButton(onClick = {
-                    scope.launch {
-                        if (scaffoldState.drawerState.isClosed) {
-                            scaffoldState.drawerState.open()
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            if (scaffoldState.drawerState.isClosed) {
+                                scaffoldState.drawerState.open()
+                            }
                         }
-                    }
-                }, modifier = Modifier.semantics { contentDescription = navigationDrawerIconDescription })
+                    },
+                    modifier = Modifier.semantics {
+                        contentDescription = navigationDrawerIconDescription
+                    })
                 {
                     Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu Btn")
                 }
@@ -178,40 +258,53 @@ fun HomeAppBar(
             },
             contentColor = MaterialTheme.colors.onPrimary,
         )
-        TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            indicator =  { tabPositions ->
-                TabRowDefaults.Indicator(
-                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-                )
-            }) {
-            if (rootItemsLoaded(rootItems)) {
-                rootItems.forEachIndexed { index, item ->
-                    Tab(content = {
+} // HomeAppBar
+
+@ExperimentalPagerApi
+@Composable
+private fun MainTabs(
+    pagerState: PagerState,
+    rootItems: List<MediaItem>,
+    scope: CoroutineScope
+) {
+    TabRow(
+        selectedTabIndex = pagerState.currentPage,
+        indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+            )
+        }) {
+        if (rootItemsLoaded(rootItems)) {
+            rootItems.forEachIndexed { index, item ->
+                Tab(
+                    content = {
                         Text(
                             modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
                             text = getRootItemText(mediaItemType = getRootMediaItemType(item = item)!!),
                             style = MaterialTheme.typography.button
                         )
                     },
-                        onClick = {                    // Animate to the selected page when clicked
-                            scope.launch {
-                                Log.i("MainScreen", "Clicked to go to index ${index}, string: ${item.mediaId} ")
-                                pagerState.animateScrollToPage(index)
-                            }
-                        },
-                        selected = pagerState.currentPage == index
-                    )
-                }
-            } else {
-                Tab(
-                    content = { CircularProgressIndicator() },
-                    onClick = {                   },
-                    selected = pagerState.currentPage == 0)
+                    onClick = {                    // Animate to the selected page when clicked
+                        scope.launch {
+                            Log.i(
+                                "MainScreen",
+                                "Clicked to go to index ${index}, string: ${item.mediaId} "
+                            )
+                            pagerState.animateScrollToPage(index)
+                        }
+                    },
+                    selected = pagerState.currentPage == index
+                )
             }
+        } else {
+            Tab(
+                content = { CircularProgressIndicator() },
+                onClick = { },
+                selected = pagerState.currentPage == 0
+            )
         }
     }
-} // HomeAppBar
+}
 
 /**
  * Util method to check if the Root items are loaded.
@@ -231,4 +324,38 @@ fun getRootItemText(mediaItemType: MediaItemType): String {
         MediaItemType.FOLDERS -> stringResource(id = R.string.folders)
         else -> "" // TOOO: Add a return for an unknown MediaItemType
     }
+}
+
+@ExperimentalMaterialApi
+@ExperimentalPagerApi
+@Composable
+private fun CustomScaffold(
+    scaffoldState: ScaffoldState,
+    navController: NavController,
+    scope: CoroutineScope,
+    mediaController: MediaControllerAdapter,
+    extendTopAppBar: @Composable () -> Unit = {},
+    content : @Composable (PaddingValues) -> Unit = {}
+) {
+    Scaffold(
+        scaffoldState = scaffoldState,
+        topBar = {
+            Column(Modifier.fillMaxWidth()) {
+                HomeAppBar(
+                    navController = navController,
+                    scope = scope,
+                    scaffoldState = scaffoldState,
+                )
+                extendTopAppBar
+            }
+        },
+        bottomBar = {
+            PlayToolbar(mediaController = mediaController) {
+                navController.navigate(Screen.NOW_PLAYING.name)
+            }
+        },
+        drawerContent = {
+            NavigationDrawer(navController = navController)
+        },
+        content = content)
 }

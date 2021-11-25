@@ -9,7 +9,9 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaSessionCompat
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.Constants.MEDIA_SESSION
+import com.github.goldy1992.mp3player.commons.Constants.NAVIGATION_ROUTE
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle
+import com.github.goldy1992.mp3player.commons.Screen
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
@@ -33,6 +35,7 @@ class MyDescriptionAdapter
         // TODO: create intent that will allow android navigation to navigate to the MediaPlayerFragment
         val openUI = Intent(context, componentClassMapper.mainActivity)
         openUI.putExtra(MEDIA_SESSION, token)
+        openUI.putExtra(NAVIGATION_ROUTE, Screen.NOW_PLAYING.name)
         openUI.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         return PendingIntent.getActivity(
                 context, REQUEST_CODE, openUI, PendingIntent.FLAG_CANCEL_CURRENT)

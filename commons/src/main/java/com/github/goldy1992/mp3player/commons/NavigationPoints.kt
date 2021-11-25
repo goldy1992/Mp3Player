@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui
+package com.github.goldy1992.mp3player.commons
 
 /**
  * Represents each of the Screens available in the Application.

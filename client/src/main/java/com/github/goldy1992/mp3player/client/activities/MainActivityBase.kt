@@ -15,11 +15,11 @@ import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
 import com.github.goldy1992.mp3player.client.permissions.PermissionGranted
 import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
-import com.github.goldy1992.mp3player.client.ui.Screen
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -81,6 +81,10 @@ abstract class MainActivityBase : ComponentActivity(),
 
         permissionsProcessor.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
+
+    override fun onResume() {
+        super.onResume()
+    }
     override fun onDestroy() {
         super.onDestroy()
         mediaControllerAdapter.disconnect()
@@ -104,7 +108,7 @@ abstract class MainActivityBase : ComponentActivity(),
                 mediaControllerAdapter.playFromUri(trackToPlay, null)
             }
             this.startScreen = Screen.NOW_PLAYING
-        }
+        } 
         CoroutineScope(Dispatchers.Main).launch { ui(startScreen = startScreen) }
 
 
