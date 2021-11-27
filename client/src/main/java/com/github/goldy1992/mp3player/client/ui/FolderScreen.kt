@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.support.v4.media.MediaBrowserCompat
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -66,7 +67,11 @@ fun FolderScreen(
             },
 
             content = {
-                SongList(songsData = folderItems, mediaController = mediaController)
+                SongList(songsData = folderItems) {
+                    val libraryId = MediaItemUtils.getLibraryId(it)
+                    Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
+                    mediaController.playFromMediaId(libraryId, null)
+                }
             }
     )
 }

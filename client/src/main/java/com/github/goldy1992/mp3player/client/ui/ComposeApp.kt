@@ -42,7 +42,8 @@ fun ComposeApp(mediaRepository: MediaRepository,
                         navController,
                         windowSize = windowSize,
                         mediaRepository = mediaRepository,
-                        mediaController = mediaControllerAdapter
+                        mediaController = mediaControllerAdapter,
+                        mediaBrowserAdapter = mediaBrowserAdapter
                     )
                 }
                 composable(Screen.NOW_PLAYING.name) {

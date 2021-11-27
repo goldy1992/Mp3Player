@@ -1,11 +1,13 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.support.v4.media.MediaBrowserCompat
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,17 +17,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
-import androidx.navigation.NavController
+import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
-import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListItem
 import org.apache.commons.collections4.CollectionUtils.isEmpty
+import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 
 @Composable
-fun FolderList(foldersData : LiveData<List<MediaBrowserCompat.MediaItem>>,
-                navController: NavController,
-                mediaRepository: MediaRepository) {
+@Preview
+fun FolderList(foldersData : LiveData<List<MediaBrowserCompat.MediaItem>> = MutableLiveData(emptyList()),
+               onFolderSelected : (folder : MediaBrowserCompat.MediaItem?) -> Unit = {}) {
     val folders by foldersData.observeAsState()
 
     when {
@@ -33,13 +35,11 @@ fun FolderList(foldersData : LiveData<List<MediaBrowserCompat.MediaItem>>,
         isEmpty(folders) -> EmptyFoldersList()
         else -> {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(count = folders!!.size) { itemIndex ->
-                    run {
-                        val folder = folders!![itemIndex]
-
-                        FolderListItem(folder) {
-                            mediaRepository.currentFolder = folder
-                            navController.navigate(Screen.FOLDER.name)
+                if (isNotEmpty(folders)) {
+                    items(count = folders!!.size) { itemIndex ->
+                        run {
+                            val folder = folders!![itemIndex]
+                            FolderListItem(folder, onFolderSelected)
                         }
                     }
                 }
@@ -56,7 +56,8 @@ fun EmptyFoldersList() {
         .fillMaxSize()
         .padding(DEFAULT_PADDING)) {
         Text(text = stringResource(id = R.string.no_folders_with_songs),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                    .background(MaterialTheme.colors.background),
             textAlign = TextAlign.Center)
     }
 }

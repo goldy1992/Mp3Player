@@ -54,8 +54,8 @@ object MediaItemUtils {
         } else null
     }
 
-    private fun hasExtra(key: String?, item: MediaItem): Boolean {
-        return hasExtras(item) && item.description.extras!!.containsKey(key)
+    private fun hasExtra(key: String?, item: MediaItem?): Boolean {
+        return hasExtras(item) && item?.description?.extras!!.containsKey(key)
     }
 
     private fun hasArtist(mediaItem : MediaItem?) : Boolean {
@@ -87,7 +87,7 @@ object MediaItemUtils {
     }
 
     @JvmStatic
-    fun getDirectoryName(item: MediaItem): String {
+    fun getDirectoryName(item: MediaItem?): String {
         if (hasExtra(MetaDataKeys.META_DATA_DIRECTORY, item)) {
             val directory = getExtra(MetaDataKeys.META_DATA_DIRECTORY, item) as File?
             if (null != directory) {
@@ -98,7 +98,7 @@ object MediaItemUtils {
     }
 
     @JvmStatic
-    fun getDirectoryPath(item: MediaItem): String {
+    fun getDirectoryPath(item: MediaItem?): String {
         if (hasExtra(MetaDataKeys.META_DATA_DIRECTORY, item)) {
             val directory = getExtra(MetaDataKeys.META_DATA_DIRECTORY, item) as File?
             if (null != directory) {
@@ -152,6 +152,7 @@ object MediaItemUtils {
         } else ByteArray(0)
     }
 
+    @JvmStatic
     fun getRootTitle(song: MediaItem): String? {
         val extras = song.description.extras
         if (null != extras) {
@@ -164,5 +165,9 @@ object MediaItemUtils {
     @JvmStatic
     fun getEmptyMediaItem() : MediaItem {
         return MediaItemBuilder(EMPTY_MEDIA_ITEM_ID).build()
+    }
+
+    fun isEmptyMediaItem(mediaItem: MediaItem?) : Boolean {
+        return mediaItem?.mediaId == EMPTY_MEDIA_ITEM_ID
     }
 }

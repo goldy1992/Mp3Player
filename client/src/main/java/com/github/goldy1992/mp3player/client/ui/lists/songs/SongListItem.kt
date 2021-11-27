@@ -25,13 +25,13 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils
 @ExperimentalFoundationApi
 @Composable
 fun SongListItem(song : MediaItem,
-                 onClick: () -> Unit) {
+                 onClick: (item : MediaItem) -> Unit = {}) {
         var expanded by remember { mutableStateOf(false) }
         Row(modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colors.background)
                 .combinedClickable(
-                        onClick = onClick,
+                        onClick = {onClick(song)},
                         onLongClick = {
                                 expanded = true
                         })

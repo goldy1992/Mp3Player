@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui;
+package com.github.goldy1992.mp3player.client.ui.lists.folders;
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import androidx.compose.foundation.background
@@ -18,16 +18,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 
 @Composable
-fun FolderListItem(folder : MediaItem,
-                   onClick: () -> Unit) {
+fun FolderListItem(folder : MediaItem? = MediaItemUtils.getEmptyMediaItem(),
+                   onClick: (selectedFolder : MediaItem?) -> Unit = {}) {
     Row(modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
-            .clickable(onClick = onClick),
+            .clickable(onClick = {onClick(folder)}),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val folderIconContentDescr = stringResource(id = R.string.folder_icon)

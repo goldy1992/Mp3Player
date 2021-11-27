@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Search
@@ -17,14 +18,18 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
+import com.github.goldy1992.mp3player.client.ui.lists.folder.SongsInFolderList
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import com.github.goldy1992.mp3player.commons.MediaItemUtils.getEmptyMediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
+import com.github.goldy1992.mp3player.commons.MediaItemUtils.isEmptyMediaItem
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.CoroutineScope
@@ -46,6 +51,7 @@ fun MainScreen(navController: NavController,
                windowSize: WindowSize,
                mediaRepository: MediaRepository,
                mediaController: MediaControllerAdapter,
+               mediaBrowserAdapter : MediaBrowserAdapter,
                scaffoldState: ScaffoldState = rememberScaffoldState(),
                pagerState: PagerState = rememberPagerState(initialPage = 0)
 ) {
@@ -65,7 +71,7 @@ fun MainScreen(navController: NavController,
         content = {
             if (isExpanded) {
                 LargeMainScreenContent(
-                    navController = navController,
+                    mediaBrowser = mediaBrowserAdapter,
                     scope = scope,
                     rootItems = rootItems,
                     mediaController = mediaController,
@@ -98,9 +104,9 @@ private fun SmallMainScreenContent(
     mediaRepository: MediaRepository
 ) {
     Row(
-        Modifier
-            .fillMaxSize()
-            .padding(bottom = BOTTOM_BAR_SIZE) ) {
+            Modifier
+                    .fillMaxSize()
+                    .padding(bottom = BOTTOM_BAR_SIZE) ) {
             if (rootItems.isEmpty() ) {
                 LoadingIndicator()
             } else {
@@ -120,12 +126,13 @@ private fun SmallMainScreenContent(
 @ExperimentalPagerApi
 @Composable
 private fun LargeMainScreenContent(
-    navController: NavController,
+    mediaBrowser : MediaBrowserAdapter,
     scope: CoroutineScope,
     rootItems: List<MediaItem>,
     mediaController: MediaControllerAdapter,
     mediaRepository: MediaRepository
 ) {
+    val mediaItemSelected = remember { mutableStateOf(getEmptyMediaItem()) }
 
     if (rootItems.isEmpty()) {
         LoadingIndicator()
@@ -133,9 +140,9 @@ private fun LargeMainScreenContent(
 
         val navigationItemSelected = remember { mutableStateOf(getRootMediaItemType(rootItems[0]))}
         Column(
-            Modifier
-                .fillMaxSize()
-                .padding(bottom = BOTTOM_BAR_SIZE)
+           modifier = Modifier
+                   .fillMaxSize()
+                   .padding(bottom = BOTTOM_BAR_SIZE)
         )
         {
             Divider(thickness = 5.dp, color = MaterialTheme.colors.background)
@@ -151,11 +158,20 @@ private fun LargeMainScreenContent(
                                     selected = navigationItemSelected.value == getRootMediaItemType(it),
                                     onClick = {
                                         scope.launch {
-                                            navigationItemSelected.value = getRootMediaItemType(it)
+                                            val selectedItem = getRootMediaItemType(it)
+                                            if (navigationItemSelected.value != selectedItem) {
+                                                navigationItemSelected.value = getRootMediaItemType(it)
+                                                mediaItemSelected.value = getEmptyMediaItem()
+                                            }
                                         }
                                     },
                                     label = { Text(MediaItemUtils.getTitle(it)) },
-                                    icon = { Icon(Icons.Filled.MusicNote, "") },
+                                    icon = {
+                                        when(getRootMediaItemType(it)) {
+                                            MediaItemType.SONGS -> Icon(Icons.Filled.MusicNote, "")
+                                            MediaItemType.FOLDERS -> Icon(Icons.Filled.Folder, "")
+                                        }
+                                     },
                                 )
                             }
                         }
@@ -169,7 +185,12 @@ private fun LargeMainScreenContent(
                             if (songs == null) {
                                 CircularProgressIndicator()
                             } else {
-                                SongList(songsData = songs, mediaController = mediaController)
+                                SongList(songsData = songs) {
+                                    val libraryId = MediaItemUtils.getLibraryId(it)
+                                    Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
+                                    mediaController.playFromMediaId(libraryId, null)
+                                    mediaItemSelected.value = it
+                                }
                             }
                         }
                         MediaItemType.FOLDERS -> {
@@ -177,14 +198,31 @@ private fun LargeMainScreenContent(
                             if (folders == null) {
                                 CircularProgressIndicator()
                             } else {
-                                FolderList(foldersData = folders, navController = navController, mediaRepository = mediaRepository)
+                                FolderList(foldersData = folders) {
+                                    mediaRepository.currentFolder = it
+                                    mediaItemSelected.value = it!!
+                                }
                             }
                         }
                     }
 
                 }
                 Column(Modifier.weight(0.5f)) {
-                    Text(text = "Item selected!")
+                    if (isEmptyMediaItem(mediaItemSelected.value)) {
+                        Text(text = "Select a media item")
+                    }
+                    val currentItem = mediaItemSelected.value
+                    when (MediaItemUtils.getMediaItemType(currentItem)) {
+                        MediaItemType.SONG -> Text(text = "Selected ${MediaItemUtils.getTitle(currentItem)}")
+                        MediaItemType.FOLDER -> {
+                            val folderItems = remember(currentItem.mediaId) {mediaBrowser.subscribe(MediaItemUtils.getLibraryId(currentItem)!!) }
+                            SongsInFolderList(folder = currentItem, songsInFolders = folderItems) {
+                                val libraryId = MediaItemUtils.getLibraryId(it)
+                                Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
+                                mediaController.playFromMediaId(libraryId, null)
+                            } }
+                        else -> Text(text = "selected ${Constants.UNKNOWN}")
+                    }
                 }
             }
         }
@@ -219,21 +257,27 @@ fun TabBarPages(navController: NavController,
 
             val currentItem = rootItems[pageIndex]
 
-            when (MediaItemUtils.getRootMediaItemType(currentItem)) {
+            when (getRootMediaItemType(currentItem)) {
                 MediaItemType.SONGS -> {
                     val songs = mediaRepository.itemMap[MediaItemType.SONGS]
                     if (songs == null) {
                         CircularProgressIndicator()
                     } else {
-                        SongList(songsData = songs, mediaController = mediaController)
-                    }
+                        SongList(songsData = songs) {
+                            val libraryId = MediaItemUtils.getLibraryId(it)
+                            Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
+                            mediaController.playFromMediaId(libraryId, null)
+                        }                 }
                 }
                 MediaItemType.FOLDERS -> {
                     val folders = mediaRepository.itemMap[MediaItemType.FOLDERS]
                     if (folders == null) {
                         CircularProgressIndicator()
                     } else {
-                        FolderList(foldersData = folders, navController = navController, mediaRepository = mediaRepository)
+                        FolderList(foldersData = folders) {
+                            mediaRepository.currentFolder = it
+                            navController.navigate(Screen.FOLDER.name)
+                        }
                     }
                 }
                 else -> {
