@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.google.accompanist.pager.ExperimentalPagerApi

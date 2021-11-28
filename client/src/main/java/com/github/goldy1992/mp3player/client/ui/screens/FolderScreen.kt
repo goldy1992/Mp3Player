@@ -67,7 +67,7 @@ fun FolderScreen(
             },
 
             content = {
-                SongList(songsData = folderItems) {
+                SongList(songs = folderItems.value!!) {
                     val libraryId = MediaItemUtils.getLibraryId(it)
                     Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
                     mediaController.playFromMediaId(libraryId, null)

@@ -34,10 +34,10 @@ import org.apache.commons.collections4.CollectionUtils.isEmpty
 @OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
-fun SongList(songsData : LiveData<List<MediaBrowserCompat.MediaItem>> = MutableLiveData(),
+fun SongList(songs : List<MediaBrowserCompat.MediaItem> = emptyList(),
              onSongSelected : (song : MediaBrowserCompat.MediaItem) -> Unit = {}) {
 
-    val songs by songsData.observeAsState()
+    //val songs by songsData.observeAsState()
     when {
         songs == null -> LoadingIndicator()
         isEmpty(songs) -> EmptySongsList()
