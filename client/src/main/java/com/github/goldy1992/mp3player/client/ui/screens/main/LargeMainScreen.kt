@@ -62,13 +62,13 @@ fun LargeMainScreenContent(
                         modifier = Modifier.Companion.align(Alignment.CenterVertically))
                 NavigationPanel(
                         currentNavigationItem,
+                        mediaBrowser,
                         mediaRepository,
                         mediaController,
                         viewModel,
                         modifier = Modifier.Companion.weight(0.5f))
                 ChildNavigationPanel(
                         viewModel,
-                        mediaBrowser,
                         mediaController,
                         modifier = Modifier.Companion.weight(0.5f))
 
@@ -80,7 +80,6 @@ fun LargeMainScreenContent(
 
 @Composable
 fun ChildNavigationPanel(viewModel: LargeMainScreenViewModel,
-                         mediaBrowser: MediaBrowserAdapter,
                          mediaController: MediaControllerAdapter,
                          modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
@@ -92,7 +91,6 @@ fun ChildNavigationPanel(viewModel: LargeMainScreenViewModel,
         when (MediaItemUtils.getMediaItemType(mediaItemSelected)) {
             MediaItemType.SONG -> Text(text = "Selected ${MediaItemUtils.getTitle(mediaItemSelected!!)}")
             MediaItemType.FOLDER -> {
-                viewModel.mediaItemChildren = mediaBrowser.subscribe(MediaItemUtils.getLibraryId(mediaItemSelected)!!)
                 val folderItems = childItems
                 val mis = mediaItemSelected
                 if (folderItems != null && mis != null) {
@@ -110,6 +108,7 @@ fun ChildNavigationPanel(viewModel: LargeMainScreenViewModel,
 
 @Composable
 fun NavigationPanel(currentNavigationItem: MediaItemType?,
+                    mediaBrowser: MediaBrowserAdapter,
                     mediaRepository: MediaRepository,
                     mediaController: MediaControllerAdapter,
                     viewModel: LargeMainScreenViewModel,
@@ -136,6 +135,7 @@ fun NavigationPanel(currentNavigationItem: MediaItemType?,
                 } else {
                     FolderList(foldersData = folders) {
                         mediaRepository.currentFolder = it
+                        viewModel.mediaItemChildren = mediaBrowser.subscribe(MediaItemUtils.getLibraryId(it)!!)
                         viewModel.mediaItemSelected.postValue(it!!)
                     }
                 }
