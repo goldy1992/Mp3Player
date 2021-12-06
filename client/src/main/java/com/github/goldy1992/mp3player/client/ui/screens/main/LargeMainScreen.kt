@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -55,11 +56,11 @@ fun LargeMainScreenContent(
 
             Row(Modifier.fillMaxSize()) {
                 RootItemsNavigationRail(
+                    modifier = Modifier.Companion.align(Alignment.CenterVertically),
                         rootItems,
                         currentNavigationItem,
                         scope,
-                        viewModel,
-                        modifier = Modifier.Companion.align(Alignment.CenterVertically))
+                        viewModel)
                 NavigationPanel(
                         currentNavigationItem,
                         mediaBrowser,
@@ -147,11 +148,12 @@ fun NavigationPanel(currentNavigationItem: MediaItemType?,
 }
 
 @Composable
-fun RootItemsNavigationRail(rootItems: List<MediaBrowserCompat.MediaItem>?,
-                            currentNavigationItem : MediaItemType,
-                            scope: CoroutineScope,
-                            viewModel: LargeMainScreenViewModel,
-                            modifier : Modifier = Modifier) {
+fun RootItemsNavigationRail(modifier : Modifier = Modifier,
+                            rootItems: List<MediaBrowserCompat.MediaItem>? = emptyList(),
+                            currentNavigationItem : MediaItemType = MediaItemType.SONGS,
+                            scope: CoroutineScope = rememberCoroutineScope(),
+                            viewModel: LargeMainScreenViewModel = viewModel(),
+                            ) {
     NavigationRail(modifier = modifier) {
         if (isEmpty(rootItems)) {
             LoadingIndicator()
