@@ -15,10 +15,8 @@ import androidx.compose.material.icons.filled.Folder
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 
@@ -27,7 +25,7 @@ fun FolderListItem(folder : MediaItem? = MediaItemUtils.getEmptyMediaItem(),
                    onClick: (selectedFolder : MediaItem?) -> Unit = {}) {
     Row(modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
+            .background(MaterialTheme.colors.background)
             .clickable(onClick = {onClick(folder)}),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -36,7 +34,7 @@ fun FolderListItem(folder : MediaItem? = MediaItemUtils.getEmptyMediaItem(),
             Icons.Filled.Folder,
             contentDescription = folderIconContentDescr
         )
-        Column(verticalArrangement = Arrangement.Center, modifier = Modifier.background(MaterialTheme.colors.background)) {
+        Column(verticalArrangement = Arrangement.Center) {
             Text(text = MediaItemUtils.getDirectoryName(folder),
                 style = MaterialTheme.typography.body2,
                 maxLines = 1,

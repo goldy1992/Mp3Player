@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui
+package com.github.goldy1992.mp3player.client.ui.lists.folders
 
 import android.support.v4.media.MediaBrowserCompat
 import androidx.compose.foundation.background
@@ -19,8 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
-import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListItem
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 
