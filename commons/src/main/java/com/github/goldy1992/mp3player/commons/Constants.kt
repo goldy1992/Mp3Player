@@ -5,6 +5,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.SparseArray
 
 object Constants {
+    const val FILE_COUNT = "FILE_COUNT"
     const val MEDIA_SESSION = "mediaSession"
     const val NAVIGATION_ROUTE = "NavigationRoute"
     const val LIBRARY_ID = "LIBRARY_ID"

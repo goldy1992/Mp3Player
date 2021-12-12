@@ -21,6 +21,7 @@ import com.github.goldy1992.mp3player.client.ui.BOTTOM_BAR_SIZE
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
 import com.github.goldy1992.mp3player.client.ui.lists.folder.SongsInFolderList
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
+import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListHeader
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.Constants
@@ -49,8 +50,8 @@ fun LargeMainScreenContent(
     } else {
         Column(
                 modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = BOTTOM_BAR_SIZE)) {
+                    .fillMaxSize()
+                    .padding(bottom = BOTTOM_BAR_SIZE)) {
             val currentNavigationItem by viewModel.currentNavigationItem.observeAsState(MediaItemType.SONGS)
             Divider(thickness = 5.dp, color = MaterialTheme.colors.background)
 
@@ -95,6 +96,7 @@ fun ChildNavigationPanel(viewModel: LargeMainScreenViewModel,
                 val folderItems = childItems
                 val mis = mediaItemSelected
                 if (folderItems != null && mis != null) {
+                    FolderListHeader(mis)
                     SongsInFolderList(folder = mis, mediaController = mediaController, songsInFolders = folderItems) {
                         val libraryId = MediaItemUtils.getLibraryId(it)
                         Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")

@@ -48,6 +48,7 @@ fun SongList(songs : List<MediaBrowserCompat.MediaItem> = emptyList(),
             LazyColumn(modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background)
+                .padding(DEFAULT_PADDING)
                 .semantics {
                     contentDescription = songsListDescr
                 }) {

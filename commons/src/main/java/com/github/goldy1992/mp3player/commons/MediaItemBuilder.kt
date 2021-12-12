@@ -82,6 +82,11 @@ class MediaItemBuilder(private val mediaId: String) {
         return this
     }
 
+    fun setFileCount(fileCount : Int) : MediaItemBuilder {
+        extras.putInt(Constants.FILE_COUNT, fileCount)
+        return this
+    }
+
     fun build(): MediaBrowserCompat.MediaItem {
         val mediaDescription = MediaDescriptionCompat.Builder()
                 .setMediaId(mediaId)

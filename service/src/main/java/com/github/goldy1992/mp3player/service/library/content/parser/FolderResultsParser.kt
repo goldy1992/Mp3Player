@@ -11,7 +11,9 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryPath
 import java.io.File
 import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
+import kotlin.collections.HashMap
 
 class FolderResultsParser
 
@@ -20,7 +22,7 @@ class FolderResultsParser
 
     override fun create(cursor: Cursor?, mediaIdPrefix: String?): List<MediaItem> {
         val listToReturn = TreeSet(this)
-        val directoryPathSet: MutableSet<String> = HashSet()
+        val directoryPathMap : MutableMap<String, DirectoryInfo> = HashMap()
         while (cursor != null && cursor.moveToNext()) {
             val index = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
             if (index >= 0) {
@@ -28,12 +30,12 @@ class FolderResultsParser
                 val file = File(path)
                 if (file.exists()) {
                     val directory = file.parentFile
-                    var directoryPath: String
                     if (null != directory) {
-                        directoryPath = directory.absolutePath
-                        if (directoryPathSet.add(directoryPath)) {
-                            val mediaItem = createFolderMediaItem(directory, mediaIdPrefix!!)
-                            listToReturn.add(mediaItem)
+                        val directoryPath = directory.absolutePath
+                        if (directoryPathMap.containsKey(directoryPath)) {
+                            directoryPathMap[directoryPath]?.fileCount?.incrementAndGet()
+                        } else {
+                            directoryPathMap[directoryPath] = DirectoryInfo(directory)
                         }
                     }
                 }
@@ -41,20 +43,27 @@ class FolderResultsParser
                 Log.e(logTag(), "Could not find column index")
             }
         }
+
+        directoryPathMap.entries.forEach {
+            val mediaItem = createFolderMediaItem(it.value, mediaIdPrefix!!)
+            listToReturn.add(mediaItem)
+        }
         return ArrayList(listToReturn)
     }
 
     override val type: MediaItemType?
         get() = MediaItemType.FOLDER
 
-    private fun createFolderMediaItem(folder: File, parentId: String): MediaItem { /* append a file separator so that folders with an "extended" name are discarded...
+    private fun createFolderMediaItem(directoryInfo: DirectoryInfo, parentId: String) : MediaItem { /* append a file separator so that folders with an "extended" name are discarded...
          * e.g. Folder to accept: 'folder1'
          *      Folder to reject: 'folder1extended' */
+        val folder = directoryInfo.directory
         val filePath = folder.absolutePath + File.separator
         return MediaItemBuilder(filePath)
                 .setMediaItemType(MediaItemType.FOLDER)
                 .setLibraryId(buildLibraryId(parentId, filePath))
                 .setDirectoryFile(folder)
+                .setFileCount(directoryInfo.fileCount.get())
                 .setFlags(MediaItem.FLAG_BROWSABLE)
                 .build()
     }
@@ -76,5 +85,17 @@ class FolderResultsParser
                 .append(ID_SEPARATOR)
                 .append(childItemId)
                 .toString()
+    }
+
+    /**
+     * Used to store the Directory Information along with the number of files in the directory,
+     * which is incremented every time a file is found.
+     */
+    private data class DirectoryInfo(val directory : File) {
+        /**
+         * Assumes the object is created when the first occurrence of a file in the directory is
+         * found.
+         */
+        val fileCount : AtomicInteger = AtomicInteger(1)
     }
 }

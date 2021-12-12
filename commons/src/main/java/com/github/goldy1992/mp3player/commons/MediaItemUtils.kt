@@ -59,11 +59,15 @@ object MediaItemUtils {
     }
 
     private fun hasArtist(mediaItem : MediaItem?) : Boolean {
-        return hasExtras(mediaItem) && hasExtra(MediaMetadataCompat.METADATA_KEY_ARTIST, mediaItem!!)
+        return hasExtras(mediaItem) && hasExtra(MediaMetadataCompat.METADATA_KEY_ARTIST, mediaItem)
     }
 
     private fun hasDuration(mediaItem : MediaItem?) : Boolean {
-        return hasExtras(mediaItem) && hasExtra(MediaMetadataCompat.METADATA_KEY_DURATION, mediaItem!!)
+        return hasExtras(mediaItem) && hasExtra(MediaMetadataCompat.METADATA_KEY_DURATION, mediaItem)
+    }
+
+    private fun hasFileCount(mediaItem : MediaItem?) : Boolean {
+        return hasExtras(mediaItem) && hasExtra(Constants.FILE_COUNT, mediaItem)
     }
 
     @JvmStatic
@@ -120,6 +124,11 @@ object MediaItemUtils {
         } else {
             0L
         }
+    }
+
+    @JvmStatic
+    fun getFileCount(item : MediaItem?) : Int {
+        return if (hasFileCount(item)) getExtra(Constants.FILE_COUNT, item) as Int else -1
     }
 
     @JvmStatic

@@ -3,10 +3,7 @@ package com.github.goldy1992.mp3player.client.ui.lists.folders;
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -17,9 +14,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 
+@Preview
 @Composable
 fun FolderListItem(folder : MediaItem? = MediaItemUtils.getEmptyMediaItem(),
                    onClick: (selectedFolder : MediaItem?) -> Unit = {}) {
@@ -32,9 +33,11 @@ fun FolderListItem(folder : MediaItem? = MediaItemUtils.getEmptyMediaItem(),
         val folderIconContentDescr = stringResource(id = R.string.folder_icon)
         Icon(
             Icons.Filled.Folder,
-            contentDescription = folderIconContentDescr
+            contentDescription = folderIconContentDescr,
+            modifier = Modifier.padding(2.dp).size(50.dp)
         )
-        Column(verticalArrangement = Arrangement.Center) {
+        Column(verticalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(start = DEFAULT_PADDING)) {
             Text(text = MediaItemUtils.getDirectoryName(folder),
                 style = MaterialTheme.typography.body2,
                 maxLines = 1,

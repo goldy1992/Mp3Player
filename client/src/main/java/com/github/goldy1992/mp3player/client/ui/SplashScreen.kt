@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -60,7 +59,8 @@ fun SplashScreenContent() {
         )
         Text(text = stringResource(id = R.string.app_title),
             textAlign = TextAlign.Center,
-            style = TextStyle(color = MaterialTheme.colors.onBackground)
+            style = MaterialTheme.typography.h6
+
         )
     }
 }
