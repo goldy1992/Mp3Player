@@ -106,7 +106,6 @@ fun HomeAppBar(
             title = {
                 Text(text = "MP3 Player")
             },
-            backgroundColor = MaterialTheme.colors.primary,
             navigationIcon = {
                 IconButton(
                     onClick = {
@@ -128,7 +127,6 @@ fun HomeAppBar(
                     Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
                 }
             },
-            contentColor = MaterialTheme.colors.onPrimary,
         )
 } // HomeAppBar
 

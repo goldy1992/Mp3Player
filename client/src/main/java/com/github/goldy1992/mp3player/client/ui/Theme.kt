@@ -26,28 +26,16 @@ val blueAppTheme = lightColors(
     primaryVariant = darkBlue,
     secondary = accentPink,
     secondaryVariant = darkPink,
-    background = white,
     error = red,
-    surface = white,
-    onPrimary = white,
-    onSecondary = black,
-    onBackground = black,
-    onSurface = black,
-    onError = white
+
 )
 
 val blueAppDarkTheme = darkColors(
-    primary = grey,
+    primary = primaryBlue,
     primaryVariant = darkBlue,
     secondary = grey,
-    background = black,
     error = red,
-    surface = black,
-    onPrimary = white,
-    onSecondary = white,
-    onBackground = white,
-    onSurface = white,
-    onError = white
+
 )
 
 val orangeAppTheme = lightColors(

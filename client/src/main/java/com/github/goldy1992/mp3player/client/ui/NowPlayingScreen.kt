@@ -51,7 +51,7 @@ fun NowPlayingScreen(
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar (
-                backgroundColor = MaterialTheme.colors.primary,
+                backgroundColor = MaterialTheme.colors.primarySurface,
                 title = {
                     val metadata by mediaController.metadata.observeAsState()
                     val title : String = metadata?.description?.title.toString() ?: ""
@@ -59,6 +59,7 @@ fun NowPlayingScreen(
                     Column {
                         Text(text = title,
                             style = MaterialTheme.typography.h6,
+                  //          color = MaterialTheme.colors.onPrimary,
                             modifier = Modifier.semantics {
                                 contentDescription = songTitleDescription
                             }
@@ -74,7 +75,7 @@ fun NowPlayingScreen(
                         scope = scope)
                 },
                 actions = {},
-                contentColor = MaterialTheme.colors.onPrimary
+                //contentColor = MaterialTheme.colors.onPrimary
             )
         },
         bottomBar = {

@@ -59,7 +59,8 @@ fun SplashScreenContent() {
         )
         Text(text = stringResource(id = R.string.app_title),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h6
+            style = MaterialTheme.typography.h6,
+            color = MaterialTheme.colors.onBackground
 
         )
     }
