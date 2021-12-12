@@ -43,6 +43,7 @@ class MyPlaybackPreparer @Inject constructor(private val exoPlayer: ExoPlayer,
     }
 
     override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) {
+        // TODO: extract playlist from trackID
         val trackId = extractTrackId(mediaId)
         if (null != trackId) {
             val results = contentManager.getPlaylist(mediaId)

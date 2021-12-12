@@ -5,6 +5,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import android.support.v4.media.MediaBrowserCompat.MediaItem
+import android.util.Log
 import com.github.goldy1992.mp3player.commons.ComparatorUtils.Companion.uppercaseStringCompare
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
@@ -23,6 +24,7 @@ class SongResultsParser
     override fun create(cursor: Cursor?, mediaIdPrefix: String?): List<MediaItem> {
         val listToReturn = TreeSet(this)
         while (cursor != null && cursor.moveToNext()) {
+            Log.i(logTag(), "mediaIfPrefix: ${mediaIdPrefix ?: "null"}")
             val mediaItem = buildMediaItem(cursor, mediaIdPrefix!!)
             if (null != mediaItem) {
                 listToReturn.add(mediaItem)

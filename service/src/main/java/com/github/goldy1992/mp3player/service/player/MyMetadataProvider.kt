@@ -1,10 +1,12 @@
 package com.github.goldy1992.mp3player.service.player
 
 import android.support.v4.media.MediaMetadataCompat
+import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Constants.UNKNOWN
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getAlbumArtPath
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getArtist
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDuration
+import com.github.goldy1992.mp3player.commons.MediaItemUtils.getLibraryId
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaId
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle
 import com.github.goldy1992.mp3player.service.PlaylistManager
@@ -32,6 +34,8 @@ class MyMetadataProvider
         builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist ?: UNKNOWN)
         val albumArt = getAlbumArtPath(currentItem)
         builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, albumArt)
+        val libraryId = getLibraryId(currentItem)
+        builder.putString(Constants.LIBRARY_ID, libraryId)
         return builder.build()
     }
 

@@ -19,9 +19,9 @@ import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.ui.BOTTOM_BAR_SIZE
 import com.github.goldy1992.mp3player.client.ui.FolderList
-import com.github.goldy1992.mp3player.client.ui.SongList
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
 import com.github.goldy1992.mp3player.client.ui.lists.folder.SongsInFolderList
+import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -95,7 +95,7 @@ fun ChildNavigationPanel(viewModel: LargeMainScreenViewModel,
                 val folderItems = childItems
                 val mis = mediaItemSelected
                 if (folderItems != null && mis != null) {
-                    SongsInFolderList(folder = mis, songsInFolders = folderItems) {
+                    SongsInFolderList(folder = mis, mediaController = mediaController, songsInFolders = folderItems) {
                         val libraryId = MediaItemUtils.getLibraryId(it)
                         Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
                         mediaController.playFromMediaId(libraryId, null)
@@ -121,7 +121,7 @@ fun NavigationPanel(currentNavigationItem: MediaItemType?,
                 if (songs == null) {
                     CircularProgressIndicator()
                 } else {
-                    SongList(songs = songs.value!!) {
+                    SongList(songs = songs.value!!, mediaControllerAdapter = mediaController) {
                         val libraryId = MediaItemUtils.getLibraryId(it)
                         Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
                         mediaController.playFromMediaId(libraryId, null)
