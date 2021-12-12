@@ -51,11 +51,12 @@ fun SongList(songs : List<MediaBrowserCompat.MediaItem> = emptyList(),
                 .semantics {
                     contentDescription = songsListDescr
                 }) {
-                items(count = songs!!.size) { itemIndex ->
+                items(count = songs.size) { itemIndex ->
                     run {
-                        val song = songs!![itemIndex]
-                        val isItemPlaying = if (isPlaying == true) isItemPlaying(song, metadata)  else false
-                        SongListItem(song = song, isPlaying = isItemPlaying, onClick = onSongSelected)
+                        val song = songs[itemIndex]
+                        val isItemSelected = isItemSelected(song, metadata)
+                        val isItemPlaying = if (isPlaying == true) isItemSelected  else false
+                        SongListItem(song = song, isPlaying = isItemPlaying, isSelected = isItemSelected, onClick = onSongSelected)
                     }
                 }
             }
@@ -77,11 +78,10 @@ fun EmptySongsList() {
     }
 }
 
-private fun isItemPlaying(song : MediaBrowserCompat.MediaItem?, metadata: MediaMetadataCompat?) : Boolean {
+private fun isItemSelected(song : MediaBrowserCompat.MediaItem?, metadata: MediaMetadataCompat?) : Boolean {
     return if (song != null && metadata != null ) {
         val metaDataMediaId = MetadataUtils.getMediaId(metadata)
         val songMediaId = MediaItemUtils.getMediaId(song)
         StringUtils.equals(songMediaId, metaDataMediaId)
     } else false
-
 }

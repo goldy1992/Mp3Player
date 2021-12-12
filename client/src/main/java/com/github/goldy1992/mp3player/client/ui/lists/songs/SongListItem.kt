@@ -11,7 +11,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -31,11 +30,12 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils
 @ExperimentalFoundationApi
 @Composable
 fun SongListItem(song : MediaItem = MediaItemUtils.getEmptyMediaItem(),
-                 isPlaying : Boolean = true,
+                 isPlaying : Boolean = false,
+                 isSelected : Boolean = false,
                  onClick: (item : MediaItem) -> Unit = {}) {
         Row(modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.background)
+                .background(if (isSelected) MaterialTheme.colors.primary.copy(alpha = 0.12f) else MaterialTheme.colors.background)
                 .combinedClickable(
                         onClick = { onClick(song) },
                         onLongClick = {
