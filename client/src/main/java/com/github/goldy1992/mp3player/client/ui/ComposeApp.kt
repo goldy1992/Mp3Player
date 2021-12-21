@@ -11,6 +11,7 @@ import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.screens.FolderScreen
+import com.github.goldy1992.mp3player.client.ui.screens.LibraryScreen
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.Screen
@@ -47,6 +48,14 @@ fun ComposeApp(mediaRepository: MediaRepository,
                         mediaController = mediaControllerAdapter,
                         mediaBrowserAdapter = mediaBrowserAdapter
                     )
+                }
+                composable(Screen.LIBRARY.name) {
+                    LibraryScreen(
+                        navController = navController,
+                        windowSize = windowSize,
+                        mediaRepository = mediaRepository,
+                        mediaController = mediaControllerAdapter,
+                        mediaBrowserAdapter = mediaBrowserAdapter                    )
                 }
                 composable(Screen.NOW_PLAYING.name) {
                     NowPlayingScreen(

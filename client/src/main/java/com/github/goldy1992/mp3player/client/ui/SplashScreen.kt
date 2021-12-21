@@ -37,7 +37,7 @@ fun SplashScreen(
         GlobalScope.launch(Dispatchers.Main) {
             delay(5000)
             navController.popBackStack()
-            navController.navigate(Screen.MAIN.name)
+            navController.navigate(Screen.LIBRARY.name)
         }
     }
 }

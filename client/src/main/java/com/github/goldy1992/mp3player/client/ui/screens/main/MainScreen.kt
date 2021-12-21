@@ -1,19 +1,16 @@
 package com.github.goldy1992.mp3player.client.ui.screens.main
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -25,7 +22,6 @@ import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
-import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.CoroutineScope
@@ -51,40 +47,42 @@ fun MainScreen(navController: NavController,
                scaffoldState: ScaffoldState = rememberScaffoldState(),
                pagerState: PagerState = rememberPagerState(initialPage = 0)
 ) {
-    val isExpanded = windowSize == WindowSize.Expanded
-    val rootItems: List<MediaItem> by mediaRepository.rootItems.observeAsState(emptyList())
-    val scope = rememberCoroutineScope()
 
-    CustomScaffold(            scaffoldState = scaffoldState,
-        navController = navController,
-        scope = scope,
-        mediaController = mediaController,
-        extendTopAppBar = {
-            if (!isExpanded) {
-                MainTabs(pagerState = pagerState, rootItems = rootItems, scope = scope)
-            }
-        },
-        content = {
-            if (isExpanded) {
-                LargeMainScreenContent(
-                    mediaBrowser = mediaBrowserAdapter,
-                    scope = scope,
-                    rootItems = rootItems,
-                    mediaController = mediaController,
-                    mediaRepository = mediaRepository
-                )
-                // create large main screen
-            } else {
-                SmallMainScreenContent(
-                    navController = navController,
-                    pagerState = pagerState,
-                    rootItems = rootItems,
-                    mediaController = mediaController,
-                    mediaRepository = mediaRepository
-                )
-            }
-        }
-    )
+    Text("Welcome to the main screen")
+//    val isExpanded = windowSize == WindowSize.Expanded
+//    val rootItems: List<MediaItem> by mediaRepository.rootItems.observeAsState(emptyList())
+//    val scope = rememberCoroutineScope()
+//
+//    CustomScaffold(            scaffoldState = scaffoldState,
+//        navController = navController,
+//        scope = scope,
+//        mediaController = mediaController,
+//        extendTopAppBar = {
+//            if (!isExpanded) {
+//                MainTabs(pagerState = pagerState, rootItems = rootItems, scope = scope)
+//            }
+//        },
+//        content = {
+//            if (isExpanded) {
+//                LargeMainScreenContent(
+//                    mediaBrowser = mediaBrowserAdapter,
+//                    scope = scope,
+//                    rootItems = rootItems,
+//                    mediaController = mediaController,
+//                    mediaRepository = mediaRepository
+//                )
+//                // create large main screen
+//            } else {
+//                SmallMainScreenContent(
+//                    navController = navController,
+//                    pagerState = pagerState,
+//                    rootItems = rootItems,
+//                    mediaController = mediaController,
+//                    mediaRepository = mediaRepository
+//                )
+//            }
+//        }
+//    )
 }
 
 /**
@@ -130,51 +128,7 @@ fun HomeAppBar(
         )
 } // HomeAppBar
 
-@ExperimentalPagerApi
-@Composable
-private fun MainTabs(
-    pagerState: PagerState,
-    rootItems: List<MediaItem>,
-    scope: CoroutineScope
-) {
-    TabRow(
-        selectedTabIndex = pagerState.currentPage,
-        indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
-                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-            )
-        }) {
-        if (rootItemsLoaded(rootItems)) {
-            rootItems.forEachIndexed { index, item ->
-                Tab(
-                    content = {
-                        Text(
-                            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
-                            text = getRootItemText(mediaItemType = getRootMediaItemType(item = item)!!),
-                            style = MaterialTheme.typography.button
-                        )
-                    },
-                    onClick = {                    // Animate to the selected page when clicked
-                        scope.launch {
-                            Log.i(
-                                "MainScreen",
-                                "Clicked to go to index ${index}, string: ${item.mediaId} "
-                            )
-                            pagerState.animateScrollToPage(index)
-                        }
-                    },
-                    selected = pagerState.currentPage == index
-                )
-            }
-        } else {
-            Tab(
-                content = { CircularProgressIndicator() },
-                onClick = { },
-                selected = pagerState.currentPage == 0
-            )
-        }
-    }
-}
+
 
 /**
  * Util method to check if the Root items are loaded.

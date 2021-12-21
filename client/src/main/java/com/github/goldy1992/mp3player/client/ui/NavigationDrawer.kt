@@ -14,8 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.commons.Screen
 
@@ -44,14 +46,18 @@ fun NavigationDrawer(navController: NavController) {
 }
 
 
+@Preview
 @ExperimentalMaterialApi
 @Composable
-private fun LibraryItem(navController: NavController) {
+private fun LibraryItem(navController: NavController = rememberNavController(),
+                        selected : Boolean = true) {
     val library = stringResource(id = R.string.library)
     ListItem(
         icon = { Icon(Icons.Filled.LibraryMusic, contentDescription = library) },
         text = { Text(library) },
-        modifier = Modifier.clickable { navController.navigate(Screen.MAIN.name) }
+        modifier = Modifier.background(
+            if (selected)  MaterialTheme.colors.primary.copy(alpha = 0.12f) else MaterialTheme.colors.background
+        ).clickable { navController.navigate(Screen.MAIN.name) }
     )
 }
 
