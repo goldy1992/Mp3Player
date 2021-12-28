@@ -29,7 +29,7 @@ open class MainActivity : Hilt_MainActivity() {
         setContent{
             val windowSizeClass = rememberWindowSizeClass()
             ComposeApp(
-                mediaRepository =  this.mediaRepository,
+//                mediaRepository =  this.mediaRepository,
                 mediaBrowserAdapter = this.mediaBrowserAdapter,
                 mediaControllerAdapter = this.mediaControllerAdapter,
                 userPreferencesRepository = this.userPreferencesRepository,

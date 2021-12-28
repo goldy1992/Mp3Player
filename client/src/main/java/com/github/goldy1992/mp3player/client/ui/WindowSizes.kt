@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.app.Activity
-import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Size
@@ -56,7 +55,6 @@ private fun Activity.rememberWindowSize(): Size {
 /**
  * Partitions a [DpSize] into a enumerated [WindowSize] class.
  */
-@VisibleForTesting
 fun getWindowSizeClass(windowDpSize: DpSize): WindowSize = when {
     windowDpSize.width < 0.dp -> throw IllegalArgumentException("Dp value cannot be negative")
     windowDpSize.width < 600.dp -> WindowSize.Compact

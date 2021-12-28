@@ -82,9 +82,6 @@ abstract class MainActivityBase : ComponentActivity(),
         permissionsProcessor.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
     override fun onDestroy() {
         super.onDestroy()
         mediaControllerAdapter.disconnect()
@@ -101,7 +98,7 @@ abstract class MainActivityBase : ComponentActivity(),
         Log.i(logTag(), "permission granted")
         createService()
         connect()
-        initMediaRepository()
+        //initMediaRepository()
         if (Intent.ACTION_VIEW == intent.action) {
             trackToPlay = intent.data
             launch(Dispatchers.Default) {

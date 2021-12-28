@@ -41,7 +41,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(navController: NavController,
                windowSize: WindowSize,
-               mediaRepository: MediaRepository,
                mediaController: MediaControllerAdapter,
                mediaBrowserAdapter : MediaBrowserAdapter,
                scaffoldState: ScaffoldState = rememberScaffoldState(),

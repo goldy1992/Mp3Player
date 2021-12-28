@@ -20,6 +20,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
@@ -33,16 +35,17 @@ import org.apache.commons.lang3.StringUtils
 @ExperimentalCoilApi
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SongList(songs : List<MediaBrowserCompat.MediaItem> = emptyList(),
+fun SongList(songs : LiveData<List<MediaBrowserCompat.MediaItem>> = MutableLiveData(emptyList()),
              mediaControllerAdapter: MediaControllerAdapter,
              onSongSelected : (song : MediaBrowserCompat.MediaItem) -> Unit = {}) {
 
+    val songsList by songs.observeAsState()
     val isPlaying by mediaControllerAdapter.isPlaying.observeAsState()
     val metadata by mediaControllerAdapter.metadata.observeAsState()
-    //val songs by songsData.observeAsState()
+
     when {
-        songs == null -> LoadingIndicator()
-        isEmpty(songs) -> EmptySongsList()
+        songsList == null -> LoadingIndicator()
+        isEmpty(songsList) -> EmptySongsList()
         else -> {
             val songsListDescr = stringResource(id = R.string.songs_list)
             LazyColumn(modifier = Modifier
@@ -52,9 +55,9 @@ fun SongList(songs : List<MediaBrowserCompat.MediaItem> = emptyList(),
                 .semantics {
                     contentDescription = songsListDescr
                 }) {
-                items(count = songs.size) { itemIndex ->
+                items(count = songsList!!.size) { itemIndex ->
                     run {
-                        val song = songs[itemIndex]
+                        val song = songsList!![itemIndex]
                         val isItemSelected = isItemSelected(song, metadata)
                         val isItemPlaying = if (isPlaying == true) isItemSelected  else false
                         SongListItem(song = song, isPlaying = isItemPlaying, isSelected = isItemSelected, onClick = onSongSelected)

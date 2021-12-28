@@ -155,9 +155,9 @@ dependencies {
 
     implementation group: 'androidx.activity', name: 'activity-compose', version: '1.4.0'
 
-    implementation "androidx.navigation:navigation-compose:2.4.0-beta02"
+    implementation "androidx.navigation:navigation-compose:2.4.0-rc01"
     implementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
-    implementation group: 'androidx.hilt', name: 'hilt-navigation-compose', version: '1.0.0-beta01'
+    implementation group: 'androidx.hilt', name: 'hilt-navigation-compose', version: '1.0.0-rc01'
     
     def accompanist_version = '0.21.3-beta'
     implementation group: "com.google.accompanist", name: "accompanist-pager", version: accompanist_version

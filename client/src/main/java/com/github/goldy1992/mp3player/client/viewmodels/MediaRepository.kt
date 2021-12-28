@@ -10,7 +10,7 @@ data class MediaRepository
         val rootItems : LiveData<List<MediaBrowserCompat.MediaItem>>)
 
 {
-    val itemMap : HashMap<MediaItemType, LiveData<List<MediaBrowserCompat.MediaItem>>> = HashMap()
+    val itemMap : HashMap<MediaItemType, LiveData<List<MediaBrowserCompat.MediaItem>>?> = HashMap()
 
     var currentFolder : MediaBrowserCompat.MediaItem? = null
 

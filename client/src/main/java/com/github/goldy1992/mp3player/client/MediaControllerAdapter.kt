@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client
 
 import android.content.Context
-import android.media.session.PlaybackState
 import android.net.Uri
 import android.os.Bundle
 import android.os.RemoteException

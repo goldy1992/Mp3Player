@@ -53,7 +53,7 @@ fun SearchScreen(
     navController: NavController,
     mediaBrowser :  MediaBrowserAdapter,
     mediaController : MediaControllerAdapter,
-    mediaRepository: MediaRepository) {
+    mediaRepository: MediaRepository?) {
 
     val scaffoldState = rememberScaffoldState()
     val keyboardController : SoftwareKeyboardController? = LocalSoftwareKeyboardController.current
@@ -159,7 +159,7 @@ fun SearchBar(navController: NavController,
 @Composable
 fun SearchResults(mediaBrowser: MediaBrowserAdapter,
                   mediaController: MediaControllerAdapter,
-                  mediaRepository: MediaRepository,
+                  mediaRepository: MediaRepository?,
                   navController: NavController,
                   keyboardController : SoftwareKeyboardController? = LocalSoftwareKeyboardController.current,
                   focusRequester : FocusRequester = remember { FocusRequester() }) {
@@ -198,7 +198,7 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter,
                         }
                         MediaItemType.FOLDER -> {
                             FolderListItem(folder = mediaItem, onClick = {
-                                mediaRepository.currentFolder = mediaItem
+                                mediaRepository?.currentFolder = mediaItem
                                 navController.navigate(Screen.FOLDER.name)
 
                             })
