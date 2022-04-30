@@ -21,10 +21,9 @@ open class MainActivity : Hilt_MainActivity() {
     }
 
 
-    @ExperimentalPagerApi
-    @InternalCoroutinesApi
-    @ExperimentalComposeUiApi
-    @ExperimentalMaterialApi
+    @kotlin.OptIn(ExperimentalPagerApi::class, InternalCoroutinesApi::class,
+        ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class
+    )
     override fun ui(startScreen : Screen) {
         setContent{
             val windowSizeClass = rememberWindowSizeClass()

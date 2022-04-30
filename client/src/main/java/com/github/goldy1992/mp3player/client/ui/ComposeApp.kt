@@ -75,7 +75,7 @@ fun ComposeApp(
                 }
                 composable(Screen.FOLDER.name) {
                     FolderScreen(
-                       // folder = mediaRepository.currentFolder!!,
+//                        folder = mediaBrowserAdapter..currentFolder!!,
                         folder = MediaItemUtils.getEmptyMediaItem(),
                         navController = navController,
                         mediaBrowser = mediaBrowserAdapter,

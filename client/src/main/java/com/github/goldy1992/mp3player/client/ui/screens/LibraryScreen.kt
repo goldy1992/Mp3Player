@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.R
@@ -71,6 +72,7 @@ fun LibraryScreen(navController: NavController,
         drawerContent = {
             NavigationDrawer(navController = navController)
         },
+        drawerShape =MaterialTheme.shapes.small,
         content = {
             LibraryScreenContent(
                     navController = navController,
@@ -200,6 +202,7 @@ fun LibraryScreenContent(
     navController: NavController,
     pagerState: PagerState,
     rootItems: List<MediaItem>,
+    mediaRepository: MediaRepository = MediaRepository(MutableLiveData()),
     viewModel: LibraryScreenViewModel = viewModel()
 ) {
     Row(

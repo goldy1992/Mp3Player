@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.ui.ExperimentalComposeUiApi
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
@@ -20,10 +22,8 @@ import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.google.accompanist.pager.ExperimentalPagerApi
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 abstract class MainActivityBase : ComponentActivity(),
@@ -94,6 +94,9 @@ abstract class MainActivityBase : ComponentActivity(),
         mediaBrowserAdapter.connect()
     }
 
+    @OptIn(ExperimentalPagerApi::class, InternalCoroutinesApi::class,
+        ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class
+    )
     override fun onPermissionGranted() {
         Log.i(logTag(), "permission granted")
         createService()
