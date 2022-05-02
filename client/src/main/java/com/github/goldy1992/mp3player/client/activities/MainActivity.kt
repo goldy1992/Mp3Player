@@ -26,7 +26,7 @@ open class MainActivity : Hilt_MainActivity() {
     )
     override fun ui(startScreen : Screen) {
         setContent{
-            val windowSizeClass = rememberWindowSizeClass()
+            var windowSizeClass = rememberWindowSizeClass()
             ComposeApp(
 //                mediaRepository =  this.mediaRepository,
                 mediaBrowserAdapter = this.mediaBrowserAdapter,

@@ -54,7 +54,7 @@ abstract class MainActivityBase : ComponentActivity(),
     @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
 
-    var startScreen: Screen = Screen.SPLASH
+    var startScreen: Screen = Screen.LIBRARY
 
     var trackToPlay: Uri? = null
         private set

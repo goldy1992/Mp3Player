@@ -55,7 +55,8 @@ fun ComposeApp(
                     val viewModel = hiltViewModel<LibraryScreenViewModel>()
                     LibraryScreen(
                         navController = navController,
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        windowsSize = windowSize
                     )
 
                 }

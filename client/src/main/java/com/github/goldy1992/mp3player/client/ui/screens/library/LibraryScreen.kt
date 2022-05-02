@@ -1,29 +1,22 @@
-package com.github.goldy1992.mp3player.client.ui.screens
+package com.github.goldy1992.mp3player.client.ui.screens.library
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.ui.BOTTOM_BAR_SIZE
-import com.github.goldy1992.mp3player.client.ui.NavigationDrawer
-import com.github.goldy1992.mp3player.client.ui.PlayToolbar
+import com.github.goldy1992.mp3player.client.ui.*
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
@@ -51,72 +44,110 @@ import kotlinx.coroutines.launch
 fun LibraryScreen(navController: NavController,
                   scaffoldState: ScaffoldState = rememberScaffoldState(),
                   pagerState: PagerState = rememberPagerState(initialPage = 0),
-                  viewModel: LibraryScreenViewModel = viewModel()
+                  viewModel: LibraryScreenViewModel = viewModel(),
+                  windowsSize: WindowSize = WindowSize.Compact
 ) {
     val rootItems: List<MediaItem> by viewModel.mediaBrowserAdapter.subscribeToRoot().observeAsState(emptyList())
-    val navigationDrawerIconDescription = stringResource(id = R.string.navigation_drawer_menu_icon)
     val scope = rememberCoroutineScope()
-    Scaffold(
-        scaffoldState = scaffoldState,
-        topBar = {
-            Column {
-                LibraryAppBar(scope, scaffoldState, navigationDrawerIconDescription, navController)
-                LibraryTabs(pagerState = pagerState, rootItems = rootItems, scope = scope)
+    val isLargeScreen = windowsSize == WindowSize.Expanded
+
+    val topBar : @Composable () -> Unit  = {
+        Column {
+            LibraryAppBar(scope, scaffoldState, navController,windowsSize)
+            LibraryTabs(pagerState = pagerState, rootItems = rootItems, scope = scope)
+        }
+    }
+
+    val bottomBar : @Composable () -> Unit = {
+        PlayToolbar(mediaController = viewModel.mediaControllerAdapter) {
+            navController.navigate(Screen.NOW_PLAYING.name)
+        }
+    }
+
+    val content : @Composable (PaddingValues) -> Unit = {
+        LibraryScreenContent(
+            navController = navController,
+            pagerState = pagerState,
+            rootItems = rootItems,
+            viewModel = viewModel
+        )
+    }
+
+    if (isLargeScreen) {
+        LargeLibraryScreen(
+            topBar = topBar,
+            bottomBar = bottomBar,
+            content = content,
+            navigationColumn = {
+                LargeNavigationMenu()
             }
-        },
-        bottomBar = {
-            PlayToolbar(mediaController = viewModel.mediaControllerAdapter) {
-                navController.navigate(Screen.NOW_PLAYING.name)
-            }
-        },
-        drawerContent = {
-            NavigationDrawer(navController = navController)
-        },
-        drawerShape =MaterialTheme.shapes.small,
-        content = {
-            LibraryScreenContent(
-                    navController = navController,
-                    pagerState = pagerState,
-                    rootItems = rootItems,
-                    viewModel = viewModel
-                )
-            })
+        )
+    } else {
+        SmallLibraryScreen(topBar = topBar,
+            bottomBar = bottomBar,
+            drawerContent = { NavigationDrawer(navController = navController) }) {
+
+        }
+    }
+
 }
 
-
+/**
+ * The large Library Screen.
+ *
+ * @param scaffoldState The [ScaffoldState].
+ * @param topBar The Top Bar.
+ * @param bottomBar The Bottom Bar.
+ * @param navigationColumn The Navigation Column.
+ * @param content The content of the Library Screen.
+ */
+@ExperimentalMaterialApi
+@ExperimentalPagerApi
 @Composable
-private fun LibraryAppBar(
-    scope: CoroutineScope,
-    scaffoldState: ScaffoldState,
-    navigationDrawerIconDescription: String,
-    navController: NavController
-) {
-    TopAppBar(
-        title = {
-            Text(text = "Library")
-        },
-        navigationIcon = {
-            IconButton(
-                onClick = {
-                    scope.launch {
-                        if (scaffoldState.drawerState.isClosed) {
-                            scaffoldState.drawerState.open()
-                        }
-                    }
-                },
-                modifier = Modifier.semantics {
-                    contentDescription = navigationDrawerIconDescription
-                })
-            {
-                Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu Btn")
-            }
-        },
-        actions = {
-            IconButton(onClick = { navController.navigate(Screen.SEARCH.name) }) {
-                Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
-            }
-        })
+fun LargeLibraryScreen(
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    topBar : @Composable () -> Unit,
+    bottomBar : @Composable () -> Unit,
+    navigationColumn : @Composable () -> Unit,
+    content : @Composable (PaddingValues) -> Unit) {
+    Row {
+        navigationColumn()
+        Scaffold(
+            scaffoldState = scaffoldState,
+            topBar = topBar,
+            bottomBar = bottomBar,
+            content = content
+        )
+    }
 }
+
+/**
+ * The large Library Screen.
+ *
+ * @param scaffoldState The [ScaffoldState].
+ * @param topBar The Top Bar.
+ * @param bottomBar The Bottom Bar.
+ * @param navigationColumn The Navigation Column.
+ * @param content The content of the Library Screen.
+ */
+@ExperimentalMaterialApi
+@ExperimentalPagerApi
+@Composable
+fun SmallLibraryScreen(
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    topBar : @Composable () -> Unit,
+    bottomBar : @Composable () -> Unit,
+    drawerContent : @Composable (ColumnScope.() -> Unit),
+    content : @Composable (PaddingValues) -> Unit) {
+        Scaffold(
+            scaffoldState = scaffoldState,
+            topBar = topBar,
+            bottomBar = bottomBar,
+            drawerContent = drawerContent,
+            content = content
+        )
+}
+
 
 
 
