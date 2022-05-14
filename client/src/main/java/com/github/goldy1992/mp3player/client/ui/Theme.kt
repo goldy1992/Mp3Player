@@ -3,9 +3,11 @@ package com.github.goldy1992.mp3player.client.ui
 import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
-import androidx.compose.material.MaterialTheme
+//import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
+import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalConfiguration
@@ -73,6 +75,8 @@ fun AppTheme(systemInDarkTheme: Boolean = isSystemInDarkTheme(),
              content: @Composable() () -> Unit) {
     val theme = userPreferencesRepository.getTheme().collectAsState(initial = Theme.BLUE)
 
+   // val colorScheme = ColorScheme()
+
     val useSystemDarkThemePref = userPreferencesRepository.getSystemDarkMode().collectAsState(initial = true)
     val useDarkThemePref = userPreferencesRepository.getDarkMode().collectAsState(initial = false)
 
@@ -84,7 +88,7 @@ fun AppTheme(systemInDarkTheme: Boolean = isSystemInDarkTheme(),
     }
 
     MaterialTheme(
-        colors = if (useDarkTheme) theme.value.darkColors else theme.value.lightColors,
+//        colors = if (useDarkTheme) theme.value.darkColors else theme.value.lightColors,
         content = content
     )
 }

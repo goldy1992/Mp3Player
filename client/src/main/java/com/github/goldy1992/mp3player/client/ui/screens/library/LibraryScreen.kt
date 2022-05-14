@@ -2,19 +2,38 @@ package com.github.goldy1992.mp3player.client.ui.screens.library
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DismissibleNavigationDrawer
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.PermanentNavigationDrawer
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.*
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
@@ -38,23 +57,28 @@ import kotlinx.coroutines.launch
  * @param scaffoldState The [ScaffoldState]. Optional, if not provided one will be created.
  * @param pagerState The [PagerState]. Optional, if not provided one will be created using the [MediaRepository.rootItems].
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
 fun LibraryScreen(navController: NavController,
-                  scaffoldState: ScaffoldState = rememberScaffoldState(),
                   pagerState: PagerState = rememberPagerState(initialPage = 0),
                   viewModel: LibraryScreenViewModel = viewModel(),
                   windowsSize: WindowSize = WindowSize.Compact
 ) {
+
+    val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Open)
     val rootItems: List<MediaItem> by viewModel.mediaBrowserAdapter.subscribeToRoot().observeAsState(emptyList())
     val scope = rememberCoroutineScope()
     val isLargeScreen = windowsSize == WindowSize.Expanded
 
     val topBar : @Composable () -> Unit  = {
-        Column {
-            LibraryAppBar(scope, scaffoldState, navController,windowsSize)
-            LibraryTabs(pagerState = pagerState, rootItems = rootItems, scope = scope)
+        LibraryAppBar(scope, navController) {
+            if (drawerState.isClosed) {
+                drawerState.open()
+            } else {
+                drawerState.close()
+            }
         }
     }
 
@@ -66,6 +90,7 @@ fun LibraryScreen(navController: NavController,
 
     val content : @Composable (PaddingValues) -> Unit = {
         LibraryScreenContent(
+            scope = scope,
             navController = navController,
             pagerState = pagerState,
             rootItems = rootItems,
@@ -75,21 +100,19 @@ fun LibraryScreen(navController: NavController,
 
     if (isLargeScreen) {
         LargeLibraryScreen(
-            topBar = topBar,
-            bottomBar = bottomBar,
-            content = content,
-            navigationColumn = {
-                LargeNavigationMenu()
-            }
+            drawerState = drawerState,
+            viewModel = viewModel,
+            navController = navController,
+            rootItems = rootItems,
+            pagerState = pagerState
         )
     } else {
         SmallLibraryScreen(topBar = topBar,
+            drawerState = drawerState,
             bottomBar = bottomBar,
             drawerContent = { NavigationDrawer(navController = navController) }) {
-
         }
     }
-
 }
 
 /**
@@ -101,24 +124,57 @@ fun LibraryScreen(navController: NavController,
  * @param navigationColumn The Navigation Column.
  * @param content The content of the Library Screen.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
 fun LargeLibraryScreen(
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
-    topBar : @Composable () -> Unit,
-    bottomBar : @Composable () -> Unit,
-    navigationColumn : @Composable () -> Unit,
-    content : @Composable (PaddingValues) -> Unit) {
-    Row {
-        navigationColumn()
+    drawerState : DrawerState,
+    viewModel: LibraryScreenViewModel,
+    scope: CoroutineScope = rememberCoroutineScope(),
+    pagerState: PagerState = rememberPagerState(),
+    rootItems: List<MediaItem> = emptyList(),
+    navController: NavController = rememberNavController()) {
+
+
+    // TODO: Replace with DismissibleNavigationDrawer when better support for content resizing.
+    PermanentNavigationDrawer(
+        modifier = Modifier.fillMaxSize(),
+        drawerContainerColor = MaterialTheme.colorScheme.surfaceTint,
+        drawerContent = {
+            DismissibleNavigationDrawerContent(
+                navController = navController
+            ) },
+//        drawerState = drawerState,
+    ) {
         Scaffold(
-            scaffoldState = scaffoldState,
-            topBar = topBar,
-            bottomBar = bottomBar,
-            content = content
-        )
-    }
+            topBar = {
+                LibraryAppBar(scope, navController) {
+                    if (drawerState.isClosed) {
+                        drawerState.open()
+                    } else {
+                        drawerState.close()
+                    }
+                }
+
+            },
+            bottomBar = {
+                PlayToolbar(mediaController = viewModel.mediaControllerAdapter) {
+                    navController.navigate(Screen.NOW_PLAYING.name)
+                }
+
+            }
+            ) {
+            LibraryScreenContent(
+                scope = scope,
+                navController = navController,
+                pagerState = pagerState,
+                rootItems = rootItems,
+                viewModel = viewModel
+            )
+
+        }
+        }
 }
 
 /**
@@ -130,22 +186,25 @@ fun LargeLibraryScreen(
  * @param navigationColumn The Navigation Column.
  * @param content The content of the Library Screen.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
 fun SmallLibraryScreen(
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    drawerState : DrawerState = rememberDrawerState(DrawerValue.Closed),
     topBar : @Composable () -> Unit,
     bottomBar : @Composable () -> Unit,
     drawerContent : @Composable (ColumnScope.() -> Unit),
     content : @Composable (PaddingValues) -> Unit) {
+    ModalNavigationDrawer(drawerContent = drawerContent,
+    drawerState = drawerState) {
         Scaffold(
-            scaffoldState = scaffoldState,
             topBar = topBar,
             bottomBar = bottomBar,
-            drawerContent = drawerContent,
             content = content
         )
+
+    }
 }
 
 
@@ -181,17 +240,19 @@ private fun LibraryTabs(
     Row(
         Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.primary)) {
+    //        .background(MaterialTheme.colors.primary)
+    ) {
         Column(Modifier.weight(2f)) { }
         TabRow(
             modifier = Modifier.weight(6f),
             selectedTabIndex = pagerState.currentPage,
-            indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
-                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
-                    color = MaterialTheme.colors.secondary
-                )
-            }) {
+//            indicator = { tabPositions ->
+//                TabRowDefaults.Indicator(
+//                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
+//                   // color = MaterialTheme.colors.secondary
+//                )
+    //        }
+    ) {
             if (rootItemsLoaded(rootItems)) {
                 rootItems.forEachIndexed { index, item ->
                     Tab(
@@ -199,7 +260,6 @@ private fun LibraryTabs(
                             Text(
                                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
                                 text = getRootMediaItemType(item = item)?.name ?: Constants.UNKNOWN,
-                                style = MaterialTheme.typography.button
                             )
                         },
                         onClick = {                    // Animate to the selected page when clicked
@@ -231,24 +291,34 @@ private fun LibraryTabs(
 @Composable
 fun LibraryScreenContent(
     navController: NavController,
+    scope: CoroutineScope = rememberCoroutineScope(),
     pagerState: PagerState,
     rootItems: List<MediaItem>,
     mediaRepository: MediaRepository = MediaRepository(MutableLiveData()),
     viewModel: LibraryScreenViewModel = viewModel()
 ) {
-    Row(
-        Modifier
-            .fillMaxSize()
-            .padding(bottom = BOTTOM_BAR_SIZE) ) {
-        if (rootItems.isEmpty()) {
-            LoadingIndicator()
-        } else {
-            TabBarPages(
-                navController = navController,
-                pagerState = pagerState,
-                rootItems = rootItems,
-                viewModel = viewModel
-            )
+    Column(Modifier.fillMaxHeight()) {
+        LibraryTabs(
+            pagerState = pagerState,
+            rootItems = rootItems,
+            scope = scope
+        )
+
+        Row(
+            Modifier
+                .fillMaxSize()
+                .padding(bottom = BOTTOM_BAR_SIZE)
+        ) {
+            if (rootItems.isEmpty()) {
+                LoadingIndicator()
+            } else {
+                TabBarPages(
+                    navController = navController,
+                    pagerState = pagerState,
+                    rootItems = rootItems,
+                    viewModel = viewModel
+                )
+            }
         }
     }
 

@@ -6,13 +6,9 @@ apply plugin: 'dagger.hilt.android.plugin'
 android {
     testBuildType "debug"
     packagingOptions {
-        exclude "**/attach_hotspot_windows.dll"
-        exclude 'META-INF/LICENSE.md'
-        exclude 'META-INF/LICENSE-notice.md'
-        exclude 'META-INF/AL2.0'
-        exclude 'META-INF/ASM'
-        exclude 'META-INF/licenses/ASM'
-        exclude 'META-INF/LGPL2.1'
+        resources {
+            excludes += ['**/attach_hotspot_windows.dll', 'META-INF/LICENSE.md', 'META-INF/LICENSE-notice.md', 'META-INF/AL2.0', 'META-INF/ASM', 'META-INF/licenses/ASM', 'META-INF/LGPL2.1']
+        }
     }
     compileSdkVersion target_sdk_version
 	buildToolsVersion build_tools_version
@@ -92,11 +88,6 @@ android {
         }
     }
 
-    lintOptions {
-        disable 'GoogleAppIndexingWarning'
-        disable 'PrivateResource'
-        abortOnError false
-    }
     compileOptions {
         incremental = false
         sourceCompatibility JavaVersion.VERSION_11
@@ -104,6 +95,11 @@ android {
     }
 
     kotlinOptions { jvmTarget = "11" }
+    lint {
+        abortOnError false
+        disable 'GoogleAppIndexingWarning', 'PrivateResource'
+    }
+    namespace 'com.github.goldy1992.mp3player'
 }
 
 dependencies {

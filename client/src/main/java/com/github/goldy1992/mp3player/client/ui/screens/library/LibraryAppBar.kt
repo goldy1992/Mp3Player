@@ -1,10 +1,16 @@
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.*
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -13,7 +19,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -21,66 +26,25 @@ import kotlinx.coroutines.launch
 @Composable
 fun LibraryAppBar(
     scope: CoroutineScope,
-    scaffoldState: ScaffoldState,
     navController: NavController,
-    windowSize: WindowSize
+    onClickNavIcon : suspend () -> Unit
 ) {
-
-    val title : @Composable () -> Unit = {
-        Text(text = "Library")
-    }
-
-    val actions : @Composable RowScope.() -> Unit = {
-        IconButton(onClick = { navController.navigate(Screen.SEARCH.name) }) {
-            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
-        }
-    }
-
-    val isLargeScreen = windowSize == WindowSize.Expanded
-
-    if (isLargeScreen) {
-        LargeAppBar(title = title,
-        actions = actions)
-    } else {
-        SmallAppBar(
-            scaffoldState = scaffoldState,
-            scope = scope,
-            title = title,
-            actions = actions)
-    }
-}
-
-@Composable
-private fun LargeAppBar(
-    title : @Composable () -> Unit,
-    actions : @Composable RowScope.() -> Unit
-) {
-    TopAppBar(
-        title = title,
-        actions = actions)
-
-}
-
-@Composable
-private fun SmallAppBar(
-    scope: CoroutineScope = rememberCoroutineScope(),
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
-    title : @Composable () -> Unit,
-    actions : @Composable RowScope.() -> Unit
-) {
-
     val navigationDrawerIconDescription = stringResource(id = R.string.navigation_drawer_menu_icon)
 
-    TopAppBar(
-        title = title,
-        actions = actions,
+    SmallTopAppBar(
+        title = {
+            Text(text = "Library")
+        },
+        actions = {
+            IconButton(onClick = { navController.navigate(Screen.SEARCH.name) }) {
+            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+        }
+},
         navigationIcon = {
             IconButton(
                 onClick = {
                     scope.launch {
-                        if (scaffoldState.drawerState.isClosed) {
-                            scaffoldState.drawerState.open()
-                        }
+                        onClickNavIcon()
                     }
                 },
                 modifier = Modifier.semantics {
@@ -91,5 +55,8 @@ private fun SmallAppBar(
             }
         },
 
-    )
+        )
+
 }
+
+

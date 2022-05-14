@@ -17,16 +17,12 @@ android {
         kotlinCompilerExtensionVersion compose_version
         kotlinCompilerVersion compose_version
     }
-
     packagingOptions {
-        exclude "**/attach_hotspot_windows.dll"
-        exclude 'META-INF/LICENSE.md'
-        exclude 'META-INF/LICENSE-notice.md'
-        exclude 'META-INF/AL2.0'
-        exclude 'META-INF/ASM'
-        exclude 'META-INF/licenses/ASM'
-        exclude 'META-INF/LGPL2.1'
+        resources {
+            excludes += ['**/attach_hotspot_windows.dll', 'META-INF/LICENSE.md', 'META-INF/LICENSE-notice.md', 'META-INF/AL2.0', 'META-INF/ASM', 'META-INF/licenses/ASM', 'META-INF/LGPL2.1']
+        }
     }
+
 
     defaultConfig {
         minSdkVersion min_sdk_version
@@ -119,6 +115,7 @@ android {
             }
         }
     }
+    namespace 'com.github.goldy1992.mp3player.client'
 
 }
 
@@ -150,6 +147,9 @@ dependencies {
     implementation group: 'androidx.compose.material', name:'material', version: compose_version
     implementation group: 'androidx.compose.material', name:'material-icons-core', version: compose_version
     implementation group: 'androidx.compose.material', name:'material-icons-extended', version: compose_version
+    implementation group: 'androidx.compose.material3', name: 'material3', version: compose_material3_version
+    //implementation group: 'androidx.compose.material3', name: 'material3-window-size-class', version: compose_material3_version
+
     implementation group: 'androidx.compose.runtime', name: 'runtime-livedata', version: compose_version
     implementation group: 'androidx.compose.runtime', name: 'runtime-rxjava2', version: compose_version
 
@@ -159,7 +159,7 @@ dependencies {
     implementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
     implementation group: 'androidx.hilt', name: 'hilt-navigation-compose', version: '1.0.0-rc01'
     
-    def accompanist_version = '0.21.3-beta'
+    def accompanist_version = '0.23.0'
     implementation group: "com.google.accompanist", name: "accompanist-pager", version: accompanist_version
     implementation group: "com.google.accompanist", name: "accompanist-insets", version: accompanist_version
     implementation group: "com.google.accompanist", name: "accompanist-pager-indicators", version: accompanist_version
@@ -173,12 +173,10 @@ dependencies {
     // Test rules and transitive dependencies:
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
     testImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
-// Needed for createComposeRule, but not createAndroidComposeRule:
+    // Needed for createComposeRule, but not createAndroidComposeRule:
     debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
 
-
     // hilt
-
     kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
     kapt group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
 
