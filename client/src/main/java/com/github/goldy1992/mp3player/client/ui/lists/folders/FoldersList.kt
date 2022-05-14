@@ -44,7 +44,7 @@ fun FolderList(foldersData : LiveData<List<MediaBrowserCompat.MediaItem>> = Muta
         folders == null -> LoadingIndicator()
         isEmpty(folders) -> EmptyFoldersList()
         else -> {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
+            LazyColumn() {
                 if (isNotEmpty(folders)) {
                     items(count = folders!!.size) { itemIndex ->
                         run {

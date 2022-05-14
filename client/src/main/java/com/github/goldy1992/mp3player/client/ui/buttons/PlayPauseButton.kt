@@ -1,10 +1,11 @@
 package com.github.goldy1992.mp3player.client.ui.buttons
 
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -32,11 +33,12 @@ fun PlayPauseButton(mediaController: MediaControllerAdapter) {
  */
 @Composable
 fun PlayButton(mediaController : MediaControllerAdapter) {
-    Button(
+    IconButton(
         onClick = { mediaController.play()}) {
         Icon(
             Icons.Filled.PlayArrow,
-            contentDescription = stringResource(id = R.string.play)
+            contentDescription = stringResource(id = R.string.play),
+            tint = MaterialTheme.colorScheme.primary
         )
     }
 }
@@ -46,7 +48,7 @@ fun PlayButton(mediaController : MediaControllerAdapter) {
  */
 @Composable
 fun PauseButton(mediaController : MediaControllerAdapter) {
-    Button(onClick = { mediaController.pause()}) {
+    IconButton(onClick = { mediaController.pause()}) {
         Icon(
             Icons.Filled.Pause,
             contentDescription = stringResource(id = R.string.pause)

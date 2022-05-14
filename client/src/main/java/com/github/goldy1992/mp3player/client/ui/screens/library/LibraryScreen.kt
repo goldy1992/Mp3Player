@@ -4,31 +4,33 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material.ScaffoldState
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DismissibleNavigationDrawer
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.PermanentNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -49,6 +51,7 @@ import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 
 /**
  * The Main Screen of the app.
@@ -73,13 +76,7 @@ fun LibraryScreen(navController: NavController,
     val isLargeScreen = windowsSize == WindowSize.Expanded
 
     val topBar : @Composable () -> Unit  = {
-        LibraryAppBar(scope, navController) {
-            if (drawerState.isClosed) {
-                drawerState.open()
-            } else {
-                drawerState.close()
-            }
-        }
+
     }
 
     val bottomBar : @Composable () -> Unit = {
@@ -88,15 +85,6 @@ fun LibraryScreen(navController: NavController,
         }
     }
 
-    val content : @Composable (PaddingValues) -> Unit = {
-        LibraryScreenContent(
-            scope = scope,
-            navController = navController,
-            pagerState = pagerState,
-            rootItems = rootItems,
-            viewModel = viewModel
-        )
-    }
 
     if (isLargeScreen) {
         LargeLibraryScreen(
@@ -107,7 +95,9 @@ fun LibraryScreen(navController: NavController,
             pagerState = pagerState
         )
     } else {
-        SmallLibraryScreen(topBar = topBar,
+        SmallLibraryScreen(
+            navController = navController,
+            scope = scope,
             drawerState = drawerState,
             bottomBar = bottomBar,
             drawerContent = { NavigationDrawer(navController = navController) }) {
@@ -140,7 +130,6 @@ fun LargeLibraryScreen(
     // TODO: Replace with DismissibleNavigationDrawer when better support for content resizing.
     PermanentNavigationDrawer(
         modifier = Modifier.fillMaxSize(),
-        drawerContainerColor = MaterialTheme.colorScheme.surfaceTint,
         drawerContent = {
             DismissibleNavigationDrawerContent(
                 navController = navController
@@ -149,14 +138,21 @@ fun LargeLibraryScreen(
     ) {
         Scaffold(
             topBar = {
-                LibraryAppBar(scope, navController) {
-                    if (drawerState.isClosed) {
-                        drawerState.open()
-                    } else {
-                        drawerState.close()
-                    }
-                }
+                SmallTopAppBar(
+                    title = {
+                        Text(text = "Library",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
 
+
+                                )
+                    },
+                    actions = {
+                        IconButton(onClick = { navController.navigate(Screen.SEARCH.name) }) {
+                            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                    })
             },
             bottomBar = {
                 PlayToolbar(mediaController = viewModel.mediaControllerAdapter) {
@@ -165,14 +161,16 @@ fun LargeLibraryScreen(
 
             }
             ) {
-            LibraryScreenContent(
-                scope = scope,
-                navController = navController,
-                pagerState = pagerState,
-                rootItems = rootItems,
-                viewModel = viewModel
-            )
-
+            Surface(Modifier.width(500.dp)) {
+                LibraryScreenContent(
+                    scope = scope,
+                    navController = navController,
+                    pagerState = pagerState,
+                    rootItems = rootItems,
+                    viewModel = viewModel,
+                    modifier = Modifier.padding(it)
+                )
+            }
         }
         }
 }
@@ -192,14 +190,23 @@ fun LargeLibraryScreen(
 @Composable
 fun SmallLibraryScreen(
     drawerState : DrawerState = rememberDrawerState(DrawerValue.Closed),
-    topBar : @Composable () -> Unit,
+    navController: NavController = rememberNavController(),
+    scope : CoroutineScope = rememberCoroutineScope(),
     bottomBar : @Composable () -> Unit,
     drawerContent : @Composable (ColumnScope.() -> Unit),
     content : @Composable (PaddingValues) -> Unit) {
     ModalNavigationDrawer(drawerContent = drawerContent,
     drawerState = drawerState) {
         Scaffold(
-            topBar = topBar,
+            topBar = {
+                LibraryAppBar(scope, navController) {
+                    if (drawerState.isClosed) {
+                        drawerState.open()
+                    } else {
+                        drawerState.close()
+                    }
+                }
+            },
             bottomBar = bottomBar,
             content = content
         )
@@ -237,29 +244,29 @@ private fun LibraryTabs(
     rootItems: List<MediaItem>,
     scope: CoroutineScope
 ) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-    //        .background(MaterialTheme.colors.primary)
-    ) {
-        Column(Modifier.weight(2f)) { }
-        TabRow(
-            modifier = Modifier.weight(6f),
+
+    Column {
+        //   Column(Modifier.weight(2f)) { }
+        ScrollableTabRow(
             selectedTabIndex = pagerState.currentPage,
 //            indicator = { tabPositions ->
 //                TabRowDefaults.Indicator(
 //                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
 //                   // color = MaterialTheme.colors.secondary
 //                )
-    //        }
-    ) {
-            if (rootItemsLoaded(rootItems)) {
+            //        }
+        ) {
                 rootItems.forEachIndexed { index, item ->
+                    val isSelected = index == pagerState.currentPage
                     Tab(
+                        selected = isSelected,
+                        modifier = Modifier.height(48.dp),
                         content = {
                             Text(
-                                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+                                //       modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
                                 text = getRootMediaItemType(item = item)?.name ?: Constants.UNKNOWN,
+                                style = androidx.compose.material.MaterialTheme.typography.button,
+                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
                             )
                         },
                         onClick = {                    // Animate to the selected page when clicked
@@ -271,20 +278,15 @@ private fun LibraryTabs(
                                 pagerState.animateScrollToPage(index)
                             }
                         },
-                        selected = pagerState.currentPage == index
                     )
                 }
-            } else {
-                Tab(
-                    content = { CircularProgressIndicator() },
-                    onClick = { },
-                    selected = pagerState.currentPage == 0
-                )
-            }
         }
-        Column(Modifier.weight(2f)) { }
     }
 }
+
+       // Column(Modifier.weight(2f)) { }
+   // }
+
 
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
@@ -294,21 +296,21 @@ fun LibraryScreenContent(
     scope: CoroutineScope = rememberCoroutineScope(),
     pagerState: PagerState,
     rootItems: List<MediaItem>,
-    mediaRepository: MediaRepository = MediaRepository(MutableLiveData()),
-    viewModel: LibraryScreenViewModel = viewModel()
+    viewModel: LibraryScreenViewModel = viewModel(),
+    modifier: Modifier = Modifier
 ) {
-    Column(Modifier.fillMaxHeight()) {
-        LibraryTabs(
-            pagerState = pagerState,
-            rootItems = rootItems,
-            scope = scope
-        )
+    Column(modifier.fillMaxHeight()) {
+        if (isNotEmpty(rootItems)) {
+            LibraryTabs(
+                pagerState = pagerState,
+                rootItems = rootItems,
+                scope = scope
+            )
+        } else {
+            CircularProgressIndicator()
+        }
 
-        Row(
-            Modifier
-                .fillMaxSize()
-                .padding(bottom = BOTTOM_BAR_SIZE)
-        ) {
+        Row {
             if (rootItems.isEmpty()) {
                 LoadingIndicator()
             } else {
@@ -345,8 +347,6 @@ fun TabBarPages(navController: NavController,
         modifier = modifier) {
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier
-                .fillMaxWidth(),
             count = rootItems.size
         ) { pageIndex ->
             val currentItem = rootItems[pageIndex]

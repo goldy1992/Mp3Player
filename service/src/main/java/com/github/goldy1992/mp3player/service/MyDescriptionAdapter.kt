@@ -38,7 +38,7 @@ class MyDescriptionAdapter
         openUI.putExtra(NAVIGATION_ROUTE, Screen.NOW_PLAYING.name)
         openUI.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         return PendingIntent.getActivity(
-                context, REQUEST_CODE, openUI, PendingIntent.FLAG_CANCEL_CURRENT)
+                context, REQUEST_CODE, openUI, PendingIntent.FLAG_IMMUTABLE )
     }
 
     override fun getCurrentContentText(player: Player): String? {

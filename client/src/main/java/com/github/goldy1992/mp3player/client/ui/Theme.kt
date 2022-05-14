@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
@@ -8,9 +9,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionContext
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 
 enum class Theme(
@@ -73,6 +79,7 @@ val orangeAppDarkTheme = darkColors(
 fun AppTheme(systemInDarkTheme: Boolean = isSystemInDarkTheme(),
              userPreferencesRepository: UserPreferencesRepository,
              content: @Composable() () -> Unit) {
+    val context : Context = LocalContext.current
     val theme = userPreferencesRepository.getTheme().collectAsState(initial = Theme.BLUE)
 
    // val colorScheme = ColorScheme()
@@ -88,6 +95,7 @@ fun AppTheme(systemInDarkTheme: Boolean = isSystemInDarkTheme(),
     }
 
     MaterialTheme(
+        colorScheme = if (useDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context),
 //        colors = if (useDarkTheme) theme.value.darkColors else theme.value.lightColors,
         content = content
     )

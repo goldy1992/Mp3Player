@@ -93,12 +93,13 @@ fun SettingsItem(navController: NavController) {
 @Preview
 @Composable
 fun DismissibleNavigationDrawerContent(navController: NavController = rememberNavController()) {
-        Surface(Modifier.padding(vertical = 20.dp,horizontal = 12.dp)) {
-            Image(
-                painter = painterResource(id = R.drawable.headphone_icon),
-                contentDescription = "Menu icon"
-            )
-        }
+
+        Image(
+            modifier = Modifier.padding(vertical = 20.dp,horizontal = 12.dp),
+            painter = painterResource(id = R.drawable.headphone_icon),
+            contentDescription = "Menu icon"
+        )
+
         val settings = stringResource(id = R.string.settings)
         NavigationDrawerItem(
             modifier = Modifier.padding(horizontal = 12.dp),

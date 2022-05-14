@@ -48,11 +48,8 @@ fun SongList(songs : LiveData<List<MediaBrowserCompat.MediaItem>> = MutableLiveD
         isEmpty(songsList) -> EmptySongsList()
         else -> {
             val songsListDescr = stringResource(id = R.string.songs_list)
-            LazyColumn(modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background)
-                .padding(DEFAULT_PADDING)
-                .semantics {
+            LazyColumn(
+                Modifier.semantics {
                     contentDescription = songsListDescr
                 }) {
                 items(count = songsList!!.size) { itemIndex ->
