@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ListItem
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
@@ -50,7 +50,7 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
             Text(
                 text = MediaItemUtils.getArtist(song)!!,
                 maxLines = 1,
-                style = MaterialTheme.typography.caption,
+                style = MaterialTheme.typography.bodySmall,
                 overflow = TextOverflow.Ellipsis
             )
 
@@ -69,9 +69,8 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
                     modifier = Modifier.padding(start = 10.dp),
                     text = formatTime(MediaItemUtils.getDuration(song)),
                     maxLines = 1,
-                    style = MaterialTheme.typography.caption,
-                  //  textAlign = TextAlign.Right
-                )
+                    style = MaterialTheme.typography.bodySmall,
+                 )
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(Icons.Filled.MoreVert, contentDescription = "",
                     tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface)
@@ -82,245 +81,19 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
     ) {
         Text(
             text = MediaItemUtils.getTitle(song),
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.bodyMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-
     }
-//    Column {
-//        BoxWithConstraints(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .background(if (isSelected) MaterialTheme.colors.primary.copy(alpha = 0.12f) else MaterialTheme.colors.background)
-//                .combinedClickable(
-//                    onClick = { onClick(song) },
-//                    onLongClick = {
-//                    })
-//                .padding(start = DEFAULT_PADDING, end = DEFAULT_PADDING),
-//            contentAlignment = Alignment.Center
-//        ) {
-//
-//            when (getWindowSizeClass(DpSize(maxWidth, maxHeight))) {
-//                WindowSize.Expanded -> ExpandedSongItem(song, isPlaying, isSelected)
-//                WindowSize.Compact -> CompactSongItem(song, isPlaying, isSelected)
-//                else -> MediumSongItem(song, isPlaying, isSelected)
-//
-//            }
-//        }
-//        Divider()
-//    }
 }
-
-//@ExperimentalCoilApi
-//@Preview
-//@Composable
-//private fun ExpandedSongItem(
-//    song: MediaItem = getEmptyMediaItem(),
-//    isPlaying: Boolean = false,
-//    isSelected: Boolean = false
-//) {
-//    val backgroundColor = if (isSelected) MaterialTheme.colors.primary.copy(alpha = 0.12f) else MaterialTheme.colors.background
-//    Row(
-//        modifier = Modifier
-//            .background(backgroundColor)
-//            .fillMaxWidth()
-//            .height(IntrinsicSize.Min)
-//    ) {
-//        Box(
-//            Modifier
-//                .weight(1f)
-//                .align(Alignment.CenterVertically),
-//            contentAlignment = Alignment.CenterStart
-//            ) {
-//            AlbumArt(song = song)
-//        }
-//        Box(
-//            Modifier
-//                .weight(3f)
-//                .align(Alignment.CenterVertically)) {
-//            Text(
-//                text = MediaItemUtils.getTitle(song),
-//                style = MaterialTheme.typography.body2,
-//                maxLines = 1,
-//                overflow = TextOverflow.Ellipsis,
-//            )
-//        }
-//        Box(
-//            Modifier
-//                .weight(3f)
-//                .align(Alignment.CenterVertically)
-//        ) {
-//
-//            Text(
-//                text = MediaItemUtils.getArtist(song)!!,
-//                maxLines = 1,
-//                style = MaterialTheme.typography.caption,
-//                overflow = TextOverflow.Ellipsis
-//            )
-//        }
-//
-//        Row(
-//            horizontalArrangement = Arrangement.End,
-//            verticalAlignment = Alignment.CenterVertically,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .weight(2f)
-//                .align(Alignment.CenterVertically)
-//        ) {
-//            if (isPlaying) {
-//                Equalizer(
-//                    maxHeight = 20.dp,
-//                    numOfBars = 4,
-//                    barColors = RAINBOW_COLORS,
-//                    barWidth = 5.dp
-//                )
-//            }
-//            Text(
-//                modifier = Modifier.padding(start = 10.dp),
-//                text = formatTime(MediaItemUtils.getDuration(song)),
-//                maxLines = 1,
-//                style = MaterialTheme.typography.caption,
-//                textAlign = TextAlign.Right
-//            )
-//            IconButton(onClick = { /*TODO*/ }) {
-//                Icon(Icons.Filled.MoreVert, contentDescription = "")
-//            }
-//        }
-//    }
-//}
-//
-//@ExperimentalCoilApi
-//@ExperimentalFoundationApi
-//@Preview
-//@Composable
-//private fun CompactSongItem(
-//    song: MediaItem = getEmptyMediaItem(),
-//    isPlaying: Boolean = false,
-//    isSelected: Boolean = false,
-//    onClick: (item: MediaItem) -> Unit = {}
-//) {
-//    Row(modifier = Modifier
-//        .fillMaxWidth()
-//        .background(if (isSelected) MaterialTheme.colors.primary.copy(alpha = 0.12f) else MaterialTheme.colors.background)
-//        .combinedClickable(
-//            onClick = { onClick(song) },
-//            onLongClick = {
-//            }),
-//        verticalAlignment = Alignment.CenterVertically,
-//    ) {
-//        AlbumArt(song)
-//        Column(verticalArrangement = Arrangement.Center,
-//            modifier = Modifier.padding(start = DEFAULT_PADDING)) {
-//            Text(text = MediaItemUtils.getTitle(song),
-//                style = MaterialTheme.typography.body2,
-//                maxLines = 1,
-//                overflow = TextOverflow.Ellipsis)
-//
-//            Text(
-//                text = MediaItemUtils.getArtist(song)!!,
-//                maxLines = 1,
-//                style = MaterialTheme.typography.caption,
-//                overflow = TextOverflow.Ellipsis)
-//        }
-//        Row (horizontalArrangement = Arrangement.End,
-//            verticalAlignment = Alignment.CenterVertically,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(start = DEFAULT_PADDING)
-//        ) {
-//            if (isPlaying) {
-//                Equalizer(
-//                    maxHeight = 20.dp,
-//                    numOfBars = 4,
-//                    barColors = RAINBOW_COLORS,
-//                    barWidth = 5.dp
-//                )
-//            }
-//            Text(
-//                modifier = Modifier.padding(start = 10.dp),
-//                text = formatTime(MediaItemUtils.getDuration(song)),
-//                maxLines = 1,
-//                style = MaterialTheme.typography.caption,
-//                textAlign = TextAlign.Right
-//            )
-//            IconButton(onClick = { /*TODO*/ }) {
-//                Icon(Icons.Filled.MoreVert, contentDescription = "")
-//            }
-//
-//
-//        }
-//    }
-//}
-//
-//@ExperimentalFoundationApi
-//@Preview
-//@Composable
-//private fun MediumSongItem(
-//    song: MediaItem = getEmptyMediaItem(),
-//    isPlaying: Boolean = false,
-//    isSelected: Boolean = false,
-//    onClick: (item: MediaItem) -> Unit = {}
-//) {
-//    Row(modifier = Modifier
-//        .fillMaxWidth()
-//        .background(if (isSelected) MaterialTheme.colors.primary.copy(alpha = 0.12f) else MaterialTheme.colors.background)
-//        .combinedClickable(
-//            onClick = { onClick(song) },
-//            onLongClick = {
-//            }),
-//        verticalAlignment = Alignment.CenterVertically,
-//    ) {
-//        AlbumArt(song)
-//        Column(verticalArrangement = Arrangement.Center,
-//            modifier = Modifier.padding(start = DEFAULT_PADDING)) {
-//            Text(text = MediaItemUtils.getTitle(song),
-//                style = MaterialTheme.typography.body2,
-//                maxLines = 1,
-//                overflow = TextOverflow.Ellipsis)
-//
-//            Text(
-//                text = MediaItemUtils.getArtist(song)!!,
-//                maxLines = 1,
-//                style = MaterialTheme.typography.caption,
-//                overflow = TextOverflow.Ellipsis)
-//        }
-//        Row (horizontalArrangement = Arrangement.End,
-//            verticalAlignment = Alignment.CenterVertically,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(start = DEFAULT_PADDING)
-//        ) {
-//            if (isPlaying) {
-//                Equalizer(
-//                    maxHeight = 20.dp,
-//                    numOfBars = 4,
-//                    barColors = RAINBOW_COLORS,
-//                    barWidth = 5.dp
-//                )
-//            }
-//            Text(
-//                modifier = Modifier.padding(start = 10.dp),
-//                text = formatTime(MediaItemUtils.getDuration(song)),
-//                maxLines = 1,
-//                style = MaterialTheme.typography.caption,
-//                textAlign = TextAlign.Right
-//            )
-//            IconButton(onClick = { /*TODO*/ }) {
-//                Icon(Icons.Filled.MoreVert, contentDescription = "")
-//            }
-//
-//
-//        }
-//    }
-//}
 
 @ExperimentalCoilApi
 @Composable
 private fun AlbumArt(song: MediaItem) {
     Image(
         modifier = Modifier
-            .size(40.dp, 40.dp),//            .padding(1.dp),
+            .size(40.dp, 40.dp),
         painter = rememberImagePainter(
             ImageRequest.Builder(LocalContext.current)
                 .data(MediaItemUtils.getAlbumArtUri(song = song)).build(),

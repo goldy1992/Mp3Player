@@ -92,10 +92,11 @@ fun SettingsItem(navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun DismissibleNavigationDrawerContent(navController: NavController = rememberNavController()) {
+fun NavigationDrawerContent(navController: NavController = rememberNavController()) {
 
         Image(
-            modifier = Modifier.padding(vertical = 20.dp,horizontal = 12.dp),
+            modifier = Modifier.padding(vertical = 20.dp,horizontal = 12.dp)
+                .size(40.dp),
             painter = painterResource(id = R.drawable.headphone_icon),
             contentDescription = "Menu icon"
         )

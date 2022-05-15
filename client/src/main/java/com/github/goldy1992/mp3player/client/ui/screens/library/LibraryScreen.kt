@@ -7,7 +7,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerState
@@ -22,20 +21,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.*
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
@@ -51,6 +47,7 @@ import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.apache.commons.collections4.CollectionUtils.isEmpty
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 
 /**
@@ -70,14 +67,9 @@ fun LibraryScreen(navController: NavController,
                   windowsSize: WindowSize = WindowSize.Compact
 ) {
 
-    val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Open)
     val rootItems: List<MediaItem> by viewModel.mediaBrowserAdapter.subscribeToRoot().observeAsState(emptyList())
     val scope = rememberCoroutineScope()
     val isLargeScreen = windowsSize == WindowSize.Expanded
-
-    val topBar : @Composable () -> Unit  = {
-
-    }
 
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(mediaController = viewModel.mediaControllerAdapter) {
@@ -85,10 +77,9 @@ fun LibraryScreen(navController: NavController,
         }
     }
 
-
     if (isLargeScreen) {
         LargeLibraryScreen(
-            drawerState = drawerState,
+            scope = scope,
             viewModel = viewModel,
             navController = navController,
             rootItems = rootItems,
@@ -96,12 +87,12 @@ fun LibraryScreen(navController: NavController,
         )
     } else {
         SmallLibraryScreen(
+            viewModel = viewModel,
             navController = navController,
             scope = scope,
-            drawerState = drawerState,
             bottomBar = bottomBar,
-            drawerContent = { NavigationDrawer(navController = navController) }) {
-        }
+            rootItems = rootItems,
+            pagerState = pagerState)
     }
 }
 
@@ -119,7 +110,6 @@ fun LibraryScreen(navController: NavController,
 @ExperimentalPagerApi
 @Composable
 fun LargeLibraryScreen(
-    drawerState : DrawerState,
     viewModel: LibraryScreenViewModel,
     scope: CoroutineScope = rememberCoroutineScope(),
     pagerState: PagerState = rememberPagerState(),
@@ -131,10 +121,9 @@ fun LargeLibraryScreen(
     PermanentNavigationDrawer(
         modifier = Modifier.fillMaxSize(),
         drawerContent = {
-            DismissibleNavigationDrawerContent(
+            NavigationDrawerContent(
                 navController = navController
             ) },
-//        drawerState = drawerState,
     ) {
         Scaffold(
             topBar = {
@@ -143,14 +132,13 @@ fun LargeLibraryScreen(
                         Text(text = "Library",
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onSurface,
-
-
-                                )
+                        )
                     },
                     actions = {
                         IconButton(onClick = { navController.navigate(Screen.SEARCH.name) }) {
-                            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Icon(imageVector = Icons.Filled.Search,
+                                contentDescription = "Search",
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     })
             },
@@ -160,7 +148,7 @@ fun LargeLibraryScreen(
                 }
 
             }
-            ) {
+        ) {
             Surface(Modifier.width(500.dp)) {
                 LibraryScreenContent(
                     scope = scope,
@@ -189,17 +177,24 @@ fun LargeLibraryScreen(
 @ExperimentalPagerApi
 @Composable
 fun SmallLibraryScreen(
-    drawerState : DrawerState = rememberDrawerState(DrawerValue.Closed),
+    viewModel: LibraryScreenViewModel,
     navController: NavController = rememberNavController(),
     scope : CoroutineScope = rememberCoroutineScope(),
     bottomBar : @Composable () -> Unit,
-    drawerContent : @Composable (ColumnScope.() -> Unit),
-    content : @Composable (PaddingValues) -> Unit) {
-    ModalNavigationDrawer(drawerContent = drawerContent,
+    pagerState: PagerState = rememberPagerState(),
+    rootItems: List<MediaItem> = emptyList(),
+) {
+
+    val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    ModalNavigationDrawer(
+        drawerContent = {
+        NavigationDrawerContent(
+            navController = navController
+        ) },
     drawerState = drawerState) {
         Scaffold(
             topBar = {
-                LibraryAppBar(scope, navController) {
+                SmallLibraryAppBar(scope, navController) {
                     if (drawerState.isClosed) {
                         drawerState.open()
                     } else {
@@ -208,8 +203,18 @@ fun SmallLibraryScreen(
                 }
             },
             bottomBar = bottomBar,
-            content = content
-        )
+
+        ) {
+            LibraryScreenContent(
+                scope = scope,
+                navController = navController,
+                pagerState = pagerState,
+                rootItems = rootItems,
+                viewModel = viewModel,
+                modifier = Modifier.padding(it)
+            )
+
+        }
 
     }
 }
@@ -246,15 +251,8 @@ private fun LibraryTabs(
 ) {
 
     Column {
-        //   Column(Modifier.weight(2f)) { }
         ScrollableTabRow(
             selectedTabIndex = pagerState.currentPage,
-//            indicator = { tabPositions ->
-//                TabRowDefaults.Indicator(
-//                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
-//                   // color = MaterialTheme.colors.secondary
-//                )
-            //        }
         ) {
                 rootItems.forEachIndexed { index, item ->
                     val isSelected = index == pagerState.currentPage
@@ -263,7 +261,6 @@ private fun LibraryTabs(
                         modifier = Modifier.height(48.dp),
                         content = {
                             Text(
-                                //       modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
                                 text = getRootMediaItemType(item = item)?.name ?: Constants.UNKNOWN,
                                 style = androidx.compose.material.MaterialTheme.typography.button,
                                 color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
@@ -283,9 +280,6 @@ private fun LibraryTabs(
         }
     }
 }
-
-       // Column(Modifier.weight(2f)) { }
-   // }
 
 
 @ExperimentalMaterialApi
@@ -335,6 +329,7 @@ fun LibraryScreenContent(
  * @param modifier The [Modifier].
  * @param viewModel The [LibraryScreenViewModel].
  */
+@OptIn(ExperimentalCoilApi::class)
 @ExperimentalPagerApi
 @Composable
 fun TabBarPages(navController: NavController,
@@ -350,15 +345,17 @@ fun TabBarPages(navController: NavController,
             count = rootItems.size
         ) { pageIndex ->
             val currentItem = rootItems[pageIndex]
-            val children = viewModel.mediaBrowserAdapter.subscribe(MediaItemUtils.getMediaId(currentItem)!!)
+            val children by viewModel.mediaBrowserAdapter.subscribe(
+                id = MediaItemUtils.getMediaId(currentItem)!!)
+                .observeAsState()
 
-            if (children == null) {
+            if (isEmpty(children)) {
                 CircularProgressIndicator()
             } else {
                 when (getRootMediaItemType(currentItem)) {
                     MediaItemType.SONGS -> {
                         SongList(
-                            songs = children,
+                            songs = children!!,
                             mediaControllerAdapter = viewModel.mediaControllerAdapter
                         ) {
                             val libraryId = MediaItemUtils.getLibraryId(it)
@@ -367,7 +364,7 @@ fun TabBarPages(navController: NavController,
                         }
                     }
                     MediaItemType.FOLDERS -> {
-                        FolderList(foldersData = children!!) {
+                        FolderList(folders = children!!) {
                             //viewModel.currentFolder = it
                             navController.navigate(Screen.FOLDER.name)
                         }

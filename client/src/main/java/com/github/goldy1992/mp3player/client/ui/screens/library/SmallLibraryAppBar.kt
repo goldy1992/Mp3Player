@@ -19,7 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun LibraryAppBar(
+fun SmallLibraryAppBar(
     scope: CoroutineScope,
     navController: NavController,
     onClickNavIcon : suspend () -> Unit

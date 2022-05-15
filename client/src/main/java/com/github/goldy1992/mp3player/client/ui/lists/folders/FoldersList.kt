@@ -32,9 +32,8 @@ import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 
 @Composable
 @Preview
-fun FolderList(foldersData : LiveData<List<MediaBrowserCompat.MediaItem>> = MutableLiveData(emptyList()),
+fun FolderList(folders : List<MediaBrowserCompat.MediaItem> = emptyList(),
                onFolderSelected : (folder : MediaBrowserCompat.MediaItem?) -> Unit = {}) {
-    val folders by foldersData.observeAsState()
     
     Card() {
         

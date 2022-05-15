@@ -3,13 +3,11 @@ package com.github.goldy1992.mp3player.client.ui.lists.songs
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,8 +18,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
@@ -35,26 +31,25 @@ import org.apache.commons.lang3.StringUtils
 @ExperimentalCoilApi
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SongList(songs : LiveData<List<MediaBrowserCompat.MediaItem>> = MutableLiveData(emptyList()),
+fun SongList(songs : List<MediaBrowserCompat.MediaItem> = emptyList(),
              mediaControllerAdapter: MediaControllerAdapter,
              onSongSelected : (song : MediaBrowserCompat.MediaItem) -> Unit = {}) {
 
-    val songsList by songs.observeAsState()
     val isPlaying by mediaControllerAdapter.isPlaying.observeAsState()
     val metadata by mediaControllerAdapter.metadata.observeAsState()
 
     when {
-        songsList == null -> LoadingIndicator()
-        isEmpty(songsList) -> EmptySongsList()
+        songs == null -> LoadingIndicator()
+        isEmpty(songs) -> EmptySongsList()
         else -> {
             val songsListDescr = stringResource(id = R.string.songs_list)
             LazyColumn(
                 Modifier.semantics {
                     contentDescription = songsListDescr
                 }) {
-                items(count = songsList!!.size) { itemIndex ->
+                items(count = songs!!.size) { itemIndex ->
                     run {
-                        val song = songsList!![itemIndex]
+                        val song = songs!![itemIndex]
                         val isItemSelected = isItemSelected(song, metadata)
                         val isItemPlaying = if (isPlaying == true) isItemSelected  else false
                         SongListItem(song = song, isPlaying = isItemPlaying, isSelected = isItemSelected, onClick = onSongSelected)
