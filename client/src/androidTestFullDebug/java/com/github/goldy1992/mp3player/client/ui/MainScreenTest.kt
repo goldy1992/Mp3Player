@@ -5,9 +5,12 @@ import androidx.compose.material.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.test.platform.app.InstrumentationRegistry
+import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
@@ -31,6 +34,9 @@ class MainScreenTest {
 
     @Mock
     val mockMediaController = mock<MediaControllerAdapter>()
+
+    @Mock
+    val mockMediaBrowser = mock<MediaBrowserAdapter>()
 
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -65,7 +71,9 @@ class MainScreenTest {
         composeTestRule.setContent {
             MainScreen(
                 navController = navController,
-                mediaRepository = mediaRepository,
+                //mediaRepository = mediaRepository,
+                mediaBrowserAdapter = mockMediaBrowser,
+                windowSize = getWindowSizeClass(DpSize(400.dp, 400.dp)),
                 mediaController = mockMediaController,
                 scaffoldState = scaffoldState)
         }

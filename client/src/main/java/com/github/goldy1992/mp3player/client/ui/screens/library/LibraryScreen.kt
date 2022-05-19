@@ -1,7 +1,9 @@
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
+import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.util.Log
+import com.github.goldy1992.mp3player.client.ui.rememberWindowSizeClass
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ScaffoldState
@@ -64,12 +66,13 @@ import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 fun LibraryScreen(navController: NavController,
                   pagerState: PagerState = rememberPagerState(initialPage = 0),
                   viewModel: LibraryScreenViewModel = viewModel(),
-                  windowsSize: WindowSize = WindowSize.Compact
+                  windowSize: WindowSize = WindowSize.Compact
 ) {
+
 
     val rootItems: List<MediaItem> by viewModel.mediaBrowserAdapter.subscribeToRoot().observeAsState(emptyList())
     val scope = rememberCoroutineScope()
-    val isLargeScreen = windowsSize == WindowSize.Expanded
+    val isLargeScreen = windowSize == WindowSize.Expanded
 
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(mediaController = viewModel.mediaControllerAdapter) {
@@ -122,7 +125,8 @@ fun LargeLibraryScreen(
         modifier = Modifier.fillMaxSize(),
         drawerContent = {
             NavigationDrawerContent(
-                navController = navController
+                navController = navController,
+                currentScreen = Screen.LIBRARY
             ) },
     ) {
         Scaffold(
@@ -287,11 +291,12 @@ private fun LibraryTabs(
 @Composable
 fun LibraryScreenContent(
     navController: NavController,
+    modifier: Modifier = Modifier,
     scope: CoroutineScope = rememberCoroutineScope(),
     pagerState: PagerState,
     rootItems: List<MediaItem>,
-    viewModel: LibraryScreenViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    viewModel: LibraryScreenViewModel = viewModel()
+
 ) {
     Column(modifier.fillMaxHeight()) {
         if (isNotEmpty(rootItems)) {
@@ -304,7 +309,7 @@ fun LibraryScreenContent(
             CircularProgressIndicator()
         }
 
-        Row {
+        Row(modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)) {
             if (rootItems.isEmpty()) {
                 LoadingIndicator()
             } else {
@@ -365,8 +370,16 @@ fun TabBarPages(navController: NavController,
                     }
                     MediaItemType.FOLDERS -> {
                         FolderList(folders = children!!) {
-                            //viewModel.currentFolder = it
-                            navController.navigate(Screen.FOLDER.name)
+                            val folderLibraryId = MediaItemUtils.getLibraryId(it)
+                            val encodedFolderLibraryId = Uri.encode(folderLibraryId)
+                            val directoryPath = MediaItemUtils.getDirectoryPath(it)
+                            val encodedFolderPath = Uri.encode(directoryPath)
+                            val folderName = MediaItemUtils.getDirectoryName(it)
+                            navController.navigate(
+                                Screen.FOLDER.name
+                                    + "/" + encodedFolderLibraryId
+                                    + "/" + folderName
+                                    + "/" + encodedFolderPath)
                         }
                     }
                     else -> {

@@ -4,7 +4,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ListItem
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Help
@@ -19,7 +22,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
@@ -32,54 +37,141 @@ import kotlinx.coroutines.launch
 /**
  *
  */
-@ExperimentalMaterialApi
 @Composable
 fun SettingsScreen(
     userPreferencesRepository: UserPreferencesRepository,
     navController : NavController,
     scope : CoroutineScope = rememberCoroutineScope(),
-    versionUtils: VersionUtils = VersionUtils(LocalContext.current)
+    windowSize: WindowSize = WindowSize.Compact
 ) {
+
+    val isLargeScreen = windowSize == WindowSize.Expanded
+
+    if (isLargeScreen) {
+        LargeSettingsScreen(navController, scope, userPreferencesRepository)
+    } else {
+        SmallSettingsScreen(navController, scope, userPreferencesRepository)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LargeSettingsScreen(
+    navController: NavController,
+    scope: CoroutineScope,
+    userPreferencesRepository: UserPreferencesRepository
+) {
+    PermanentNavigationDrawer(drawerContent = {
+        NavigationDrawerContent(
+            navController = navController,
+            currentScreen = Screen.SETTINGS
+        )
+    }) {
+
+        Scaffold(topBar = {
+            SmallTopAppBar(title = { Text(text = stringResource(id = R.string.settings)) },
+                navigationIcon = {
+                    NavUpButton(
+                        navController = navController,
+                        scope = scope
+                    )
+                }
+            )
+        },
+            content = {
+                Surface(Modifier.width(500.dp)) {
+                    SettingsScreenContent(
+                        userPreferencesRepository = userPreferencesRepository,
+                        modifier = Modifier.padding(it),
+                        navController = navController,
+                        scope = scope
+                    )
+                }
+            })
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SmallSettingsScreen(
+    navController: NavController,
+    scope: CoroutineScope,
+    userPreferencesRepository: UserPreferencesRepository
+) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+        NavigationDrawerContent(
+            navController = navController,
+            currentScreen = Screen.SETTINGS
+        )
+    }) {
+
+        Scaffold(topBar = {
+            SmallTopAppBar(title = { Text(text = stringResource(id = R.string.settings)) },
+                navigationIcon = {
+                    NavUpButton(
+                        navController = navController,
+                        scope = scope
+                    )
+                }
+            )
+        },
+            content = {
+                Surface(Modifier.width(500.dp)) {
+                    SettingsScreenContent(
+                        userPreferencesRepository = userPreferencesRepository,
+                        modifier = Modifier.padding(it),
+                        navController = navController,
+                        scope = scope
+                    )
+                }
+            })
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun SettingsScreenContent(
+    userPreferencesRepository : UserPreferencesRepository,
+    modifier: Modifier = Modifier,
+    navController: NavController = rememberNavController(),
+    scope : CoroutineScope = rememberCoroutineScope(),
+    versionUtils: VersionUtils = VersionUtils(LocalContext.current)) {
 
     val useSystemDarkMode by userPreferencesRepository.getSystemDarkMode().collectAsState(initial = false)
     val isDarkMode by userPreferencesRepository.getDarkMode().collectAsState(initial = false)
 
-    Scaffold(topBar = {
-        TopAppBar(title = { Text(text = stringResource(id = R.string.settings))},
-        navigationIcon =  {
-            NavUpButton(
-                navController = navController,
-                scope = scope) },
-        backgroundColor = MaterialTheme.colors.primary)
-    },
-    content = {
-        Column(modifier = Modifier.padding(DEFAULT_PADDING)) {
-            ThemeSubheader()
-            ThemeMenuItem(navController)
-            SystemDarkModeMenuItem(
-                userPreferencesRepository = userPreferencesRepository,
-                scope = scope,
-                useSystemDarkMode = useSystemDarkMode
-            )
-            DarkModeMenuItem(
-                userPreferencesRepository = userPreferencesRepository,
-                scope = scope,
-                useSystemDarkMode = useSystemDarkMode,
-                isDarkMode = isDarkMode
-            )
-            Divider()
-            HelpSubHeader()
-            SupportAndFeedbackMenuItem(navController)
-            VersionMenuItem(versionUtils = versionUtils)
-        }
-    })
+    Column(modifier = modifier) {
+        ThemeSubheader()
+        ThemeMenuItem(navController)
+        SystemDarkModeMenuItem(
+            userPreferencesRepository = userPreferencesRepository,
+            scope = scope,
+            useSystemDarkMode = useSystemDarkMode
+        )
+        DarkModeMenuItem(
+            userPreferencesRepository = userPreferencesRepository,
+            scope = scope,
+            useSystemDarkMode = useSystemDarkMode,
+            isDarkMode = isDarkMode
+        )
+        Divider()
+        HelpSubHeader()
+        SupportAndFeedbackMenuItem(navController)
+        VersionMenuItem(versionUtils = versionUtils)
+    }
+
 }
 
+
+@OptIn(ExperimentalMaterialApi::class)
 @ExperimentalMaterialApi
 @Composable
 private fun ThemeSubheader() {
     ListItem(
-        text = { Text(stringResource(id = R.string.display), style = MaterialTheme.typography.subtitle2) },
+        text = { Text(stringResource(id = R.string.display), style = MaterialTheme.typography.titleSmall) },
         modifier = Modifier
             .fillMaxWidth()
     )
@@ -91,7 +183,7 @@ private fun ThemeMenuItem(navController: NavController) {
     val theme = stringResource(id = R.string.theme)
     ListItem(
         icon = { Icon(Icons.Filled.Palette, contentDescription = theme) },
-        text = { Text(theme, style = MaterialTheme.typography.subtitle1) },
+        text = { Text(theme, style = MaterialTheme.typography.titleMedium) },
         modifier = Modifier.clickable { navController.navigate(Screen.THEME_SELECT.name)}
     )
 }
@@ -104,7 +196,7 @@ private fun SystemDarkModeMenuItem(userPreferencesRepository: UserPreferencesRep
     val switchDescription = stringResource(id = R.string.system_dark_mode_switch)
     ListItem(modifier = Modifier.fillMaxWidth(),
         icon = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.system_dark_mode_icon)) },
-        text = { Text(text = stringResource(id = R.string.use_system_dark_mode), style = MaterialTheme.typography.subtitle1)},
+        text = { Text(text = stringResource(id = R.string.use_system_dark_mode), style = MaterialTheme.typography.titleMedium)},
         trailing = {
             Switch(
                 checked = useSystemDarkMode,
@@ -149,7 +241,7 @@ private fun DarkModeMenuItem(userPreferencesRepository: UserPreferencesRepositor
 @Composable
 private fun HelpSubHeader() {
     ListItem(
-        text = { Text(stringResource(id = R.string.help), style = MaterialTheme.typography.subtitle2) },
+        text = { Text(stringResource(id = R.string.help), style = MaterialTheme.typography.titleSmall) },
         modifier = Modifier
             .fillMaxWidth()
     )
@@ -178,7 +270,7 @@ private fun VersionMenuItem(versionUtils : VersionUtils = VersionUtils(LocalCont
             Column() {
                 Text(stringResource(id = R.string.version))
 
-                Text(versionUtils.getAppVersion(), style= MaterialTheme.typography.caption)
+                Text(versionUtils.getAppVersion(), style= MaterialTheme.typography.bodySmall)
             }
         },
     )

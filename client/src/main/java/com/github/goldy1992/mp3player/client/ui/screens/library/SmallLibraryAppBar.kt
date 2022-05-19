@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +29,10 @@ fun SmallLibraryAppBar(
 
     SmallTopAppBar(
         title = {
-            Text(text = "Library")
+            Text(text = "Library",
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
         },
         actions = {
             IconButton(onClick = { navController.navigate(Screen.SEARCH.name) }) {

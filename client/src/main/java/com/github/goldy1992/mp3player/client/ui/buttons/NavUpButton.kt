@@ -4,6 +4,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
@@ -19,6 +20,7 @@ fun NavUpButton(navController : NavController,
             navController.popBackStack()
         }
     }){
-        Icon(Icons.Filled.ArrowBack, stringResource(id = R.string.back))
+        Icon(Icons.Filled.ArrowBack, stringResource(id = R.string.back),
+        tint = MaterialTheme.colorScheme.onSurface)
     }
 }

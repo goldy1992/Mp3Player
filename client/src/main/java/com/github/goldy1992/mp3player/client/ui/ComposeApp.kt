@@ -1,13 +1,16 @@
 package com.github.goldy1992.mp3player.client.ui
 
+import android.support.v4.media.MediaBrowserCompat
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
@@ -56,7 +59,7 @@ fun ComposeApp(
                     LibraryScreen(
                         navController = navController,
                         viewModel = viewModel,
-                        windowsSize = windowSize
+                        windowSize = windowSize
                     )
 
                 }
@@ -71,23 +74,33 @@ fun ComposeApp(
                         navController = navController,
                         mediaBrowser = mediaBrowserAdapter,
                         mediaController = mediaControllerAdapter,
-                        mediaRepository = null
+                        mediaRepository = null,
+                        windowSize = windowSize
                     )
                 }
-                composable(Screen.FOLDER.name) {
+                composable(
+                    route = Screen.FOLDER.name + "/{folderId}/{folderName}/{folderPath}",
+                    arguments = listOf(
+                        navArgument("folderId") {type = NavType.StringType},
+                        navArgument("folderName") {type = NavType.StringType},
+                        navArgument("folderPath") {type = NavType.StringType}
+                )) {
                     FolderScreen(
-//                        folder = mediaBrowserAdapter..currentFolder!!,
-                        folder = MediaItemUtils.getEmptyMediaItem(),
+                        folderId = it.arguments?.get("folderId") as String,
+                        folderName = it.arguments?.get("folderName") as String,
+                        folderPath = it.arguments?.get("folderPath") as String,
                         navController = navController,
                         mediaBrowser = mediaBrowserAdapter,
-                        mediaController = mediaControllerAdapter
+                        mediaController = mediaControllerAdapter,
+                        windowSize = windowSize
                     )
 
                 }
                 composable(Screen.SETTINGS.name) {
                     SettingsScreen(
                         navController = navController,
-                        userPreferencesRepository = userPreferencesRepository
+                        userPreferencesRepository = userPreferencesRepository,
+                        windowSize = windowSize
                     )
                 }
                 composable(Screen.THEME_SELECT.name) {

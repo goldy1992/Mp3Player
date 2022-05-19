@@ -51,7 +51,8 @@ fun PauseButton(mediaController : MediaControllerAdapter) {
     IconButton(onClick = { mediaController.pause()}) {
         Icon(
             Icons.Filled.Pause,
-            contentDescription = stringResource(id = R.string.pause)
+            contentDescription = stringResource(id = R.string.pause),
+            tint = MaterialTheme.colorScheme.primary
         )
     }
 }

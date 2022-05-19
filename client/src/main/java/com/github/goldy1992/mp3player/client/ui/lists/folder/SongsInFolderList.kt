@@ -21,7 +21,7 @@ fun SongsInFolderList(
        ) {
     val songs by songsInFolders.observeAsState()
     Column(modifier = Modifier.fillMaxSize()) {
-        SongList(songs = songs!!, mediaControllerAdapter = mediaController, onFolderItemSelected)
+        SongList(songs = songs!!, mediaControllerAdapter = mediaController, onSongSelected = onFolderItemSelected)
     }
 
 }

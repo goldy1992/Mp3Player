@@ -8,14 +8,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.ListItem
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -46,6 +49,7 @@ import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import org.apache.commons.lang3.StringUtils
 
+@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @Composable
@@ -53,35 +57,120 @@ fun SearchScreen(
     navController: NavController,
     mediaBrowser :  MediaBrowserAdapter,
     mediaController : MediaControllerAdapter,
-    mediaRepository: MediaRepository?) {
+    mediaRepository: MediaRepository?,
+    windowSize: WindowSize) {
 
-    val scaffoldState = rememberScaffoldState()
-    val keyboardController : SoftwareKeyboardController? = LocalSoftwareKeyboardController.current
-
-    Scaffold (
-        scaffoldState = scaffoldState,
-        topBar = {
-        SearchBar(
+    val isLargeScreen = windowSize == WindowSize.Expanded
+    if (isLargeScreen) {
+        LargeSearchResults(
             navController = navController,
             mediaBrowser = mediaBrowser,
-            keyboardController = keyboardController
-        )},
-        bottomBar = {
-            PlayToolbar(mediaController = mediaController) {
-                navController.navigate(Screen.NOW_PLAYING.name)
-            }
-        },
-        content = {
-            SearchResults(mediaBrowser = mediaBrowser,
-                mediaController = mediaController,
-                mediaRepository = mediaRepository,
-                navController = navController)
-        }
+            mediaController = mediaController,
+            mediaRepository = mediaRepository
+        )
+    } else {
+        SmallSearchResults(
+            navController = navController,
+            mediaBrowser = mediaBrowser,
+            mediaController = mediaController,
+            mediaRepository = mediaRepository
+        )
 
-    )
+    }
+
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
+    ExperimentalFoundationApi::class
+)
+@Composable
+private fun SmallSearchResults(
+    navController: NavController,
+    mediaBrowser: MediaBrowserAdapter,
+    mediaController : MediaControllerAdapter,
+    mediaRepository: MediaRepository?) {
+    val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    ModalNavigationDrawer(
+        drawerContent = {
+            NavigationDrawerContent(
+                navController = navController
+            ) },
+        drawerState = drawerState) {
+
+        Scaffold(
+            topBar = {
+                SearchBar(
+                    navController = navController,
+                    mediaBrowser = mediaBrowser,
+                )
+            },
+            bottomBar = {
+                PlayToolbar(mediaController = mediaController) {
+                    navController.navigate(Screen.NOW_PLAYING.name)
+                }
+            },
+            content = {
+                SearchResults(
+                    mediaBrowser = mediaBrowser,
+                    mediaController = mediaController,
+                    mediaRepository = mediaRepository,
+                    navController = navController,
+                    modifier = Modifier.padding(it)
+                )
+            }
+
+        )
+    }
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
+    ExperimentalFoundationApi::class
+)
+@Composable
+private fun LargeSearchResults(
+    navController: NavController,
+    mediaBrowser: MediaBrowserAdapter,
+    mediaController : MediaControllerAdapter,
+    mediaRepository: MediaRepository?) {
+    PermanentNavigationDrawer(
+        modifier = Modifier.fillMaxSize(),
+        drawerContent = {
+            NavigationDrawerContent(
+                navController = navController,
+                currentScreen = Screen.SEARCH
+            ) },
+    ) {
+        Scaffold(
+            topBar = {
+                SearchBar(
+                    navController = navController,
+                    mediaBrowser = mediaBrowser,
+                )
+            },
+            bottomBar = {
+                PlayToolbar(mediaController = mediaController) {
+                    navController.navigate(Screen.NOW_PLAYING.name)
+                }
+            },
+            content = {
+                Surface(
+                    Modifier
+                        .width(500.dp)
+                        .padding(it)) {
+                    SearchResults(
+                        mediaBrowser = mediaBrowser,
+                        mediaController = mediaController,
+                        mediaRepository = mediaRepository,
+                        navController = navController,
+                        modifier = Modifier.padding(it)
+                    )
+                }
+            }
+        )
+    }
+}
 
 
 @ExperimentalComposeUiApi
@@ -93,7 +182,6 @@ fun SearchBar(navController: NavController,
     val searchQuery = remember { mutableStateOf(TextFieldValue()) }
     val scope = rememberCoroutineScope()
 
-
     Column(
         Modifier.fillMaxWidth()
     ) {
@@ -102,7 +190,7 @@ fun SearchBar(navController: NavController,
         TextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.background)
+                .background(MaterialTheme.colorScheme.background)
                 .focusRequester(focusRequester = focusRequester)
                 .onFocusChanged {
                     if (it.isFocused) {
@@ -161,6 +249,7 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter,
                   mediaController: MediaControllerAdapter,
                   mediaRepository: MediaRepository?,
                   navController: NavController,
+                  modifier : Modifier = Modifier,
                   keyboardController : SoftwareKeyboardController? = LocalSoftwareKeyboardController.current,
                   focusRequester : FocusRequester = remember { FocusRequester() }) {
     val searchResultsColumn = stringResource(id = R.string.search_results_column)
@@ -178,7 +267,7 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter,
 
 
     if (isNotEmpty(searchResults)) {
-        LazyColumn(modifier = Modifier
+        LazyColumn(modifier = modifier
             .fillMaxSize()
             .semantics {
                 contentDescription = searchResultsColumn
@@ -204,25 +293,19 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter,
                             })
                         }
                         MediaItemType.ROOT -> {
+
                             Column(
                                 Modifier
                                     .fillMaxWidth()
                                     .padding(
-                                        start = DEFAULT_PADDING,
-                                        top = 7.dp,
-                                        bottom = 2.dp
+                                        start = 16.dp,
+                                        top = 30.dp,
+                                        bottom = 10.dp
                                     )
                             ) {
                                 Text(
                                     text = MediaItemUtils.getTitle(mediaItem),
-                                    style = MaterialTheme.typography.subtitle2,
-                                    modifier = Modifier.padding(2.dp)
-                                )
-                                Divider(
-                                    color = Color.Black,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(bottom = 2.dp)
+                                    style = MaterialTheme.typography.titleMedium,
                                 )
                             }
                         }
@@ -235,9 +318,10 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter,
             }
         }
     } else {
-        Column(Modifier.fillMaxSize()
+        Column(Modifier
+            .fillMaxSize()
             .semantics {
-          contentDescription = searchResultsColumn
+                contentDescription = searchResultsColumn
             }
             .clickable {
                 keyboardController?.hide()

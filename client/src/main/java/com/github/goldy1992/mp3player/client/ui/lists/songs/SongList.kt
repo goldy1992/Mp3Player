@@ -31,9 +31,11 @@ import org.apache.commons.lang3.StringUtils
 @ExperimentalCoilApi
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SongList(songs : List<MediaBrowserCompat.MediaItem> = emptyList(),
-             mediaControllerAdapter: MediaControllerAdapter,
-             onSongSelected : (song : MediaBrowserCompat.MediaItem) -> Unit = {}) {
+fun SongList(
+    modifier : Modifier = Modifier,
+    songs : List<MediaBrowserCompat.MediaItem> = emptyList(),
+    mediaControllerAdapter: MediaControllerAdapter,
+    onSongSelected : (song : MediaBrowserCompat.MediaItem) -> Unit = {}) {
 
     val isPlaying by mediaControllerAdapter.isPlaying.observeAsState()
     val metadata by mediaControllerAdapter.metadata.observeAsState()
@@ -44,7 +46,7 @@ fun SongList(songs : List<MediaBrowserCompat.MediaItem> = emptyList(),
         else -> {
             val songsListDescr = stringResource(id = R.string.songs_list)
             LazyColumn(
-                Modifier.semantics {
+                modifier = modifier.semantics {
                     contentDescription = songsListDescr
                 }) {
                 items(count = songs!!.size) { itemIndex ->
