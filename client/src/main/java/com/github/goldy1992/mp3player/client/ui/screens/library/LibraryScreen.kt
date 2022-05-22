@@ -28,6 +28,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -68,8 +69,6 @@ fun LibraryScreen(navController: NavController,
                   viewModel: LibraryScreenViewModel = viewModel(),
                   windowSize: WindowSize = WindowSize.Compact
 ) {
-
-
     val rootItems: List<MediaItem> by viewModel.mediaBrowserAdapter.subscribeToRoot().observeAsState(emptyList())
     val scope = rememberCoroutineScope()
     val isLargeScreen = windowSize == WindowSize.Expanded
@@ -129,11 +128,13 @@ fun LargeLibraryScreen(
                 currentScreen = Screen.LIBRARY
             ) },
     ) {
+        val context = LocalContext.current
+        val libraryText = context.getString(R.string.library)
         Scaffold(
             topBar = {
                 SmallTopAppBar(
                     title = {
-                        Text(text = "Library",
+                        Text(text = libraryText,
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onSurface,
                         )
@@ -187,10 +188,10 @@ fun SmallLibraryScreen(
     bottomBar : @Composable () -> Unit,
     pagerState: PagerState = rememberPagerState(),
     rootItems: List<MediaItem> = emptyList(),
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 ) {
 
-    val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    ModalNavigationDrawer(
+   ModalNavigationDrawer(
         drawerContent = {
         NavigationDrawerContent(
             navController = navController

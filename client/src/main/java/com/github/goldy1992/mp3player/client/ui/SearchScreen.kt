@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,6 +37,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
@@ -49,7 +51,6 @@ import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import org.apache.commons.lang3.StringUtils
 
-@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @Composable
@@ -157,8 +158,11 @@ private fun LargeSearchResults(
             content = {
                 Surface(
                     Modifier
+                        .background(Color.Yellow)
                         .width(500.dp)
-                        .padding(it)) {
+                        .fillMaxHeight()
+                //        .padding(it)
+                ) {
                     SearchResults(
                         mediaBrowser = mediaBrowser,
                         mediaController = mediaController,
@@ -242,6 +246,7 @@ fun SearchBar(navController: NavController,
 
 }
 
+@OptIn(ExperimentalCoilApi::class)
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @Composable

@@ -41,7 +41,6 @@ fun SongList(
     val metadata by mediaControllerAdapter.metadata.observeAsState()
 
     when {
-        songs == null -> LoadingIndicator()
         isEmpty(songs) -> EmptySongsList()
         else -> {
             val songsListDescr = stringResource(id = R.string.songs_list)
@@ -49,9 +48,9 @@ fun SongList(
                 modifier = modifier.semantics {
                     contentDescription = songsListDescr
                 }) {
-                items(count = songs!!.size) { itemIndex ->
+                items(count = songs.size) { itemIndex ->
                     run {
-                        val song = songs!![itemIndex]
+                        val song = songs[itemIndex]
                         val isItemSelected = isItemSelected(song, metadata)
                         val isItemPlaying = if (isPlaying == true) isItemSelected  else false
                         SongListItem(song = song, isPlaying = isItemPlaying, isSelected = isItemSelected, onClick = onSongSelected)

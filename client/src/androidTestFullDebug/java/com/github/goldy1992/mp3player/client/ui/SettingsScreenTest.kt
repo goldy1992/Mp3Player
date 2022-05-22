@@ -58,8 +58,7 @@ class SettingsScreenTest {
         whenever(userPreferencesRepository.getSystemDarkMode()).thenReturn(flowOf(true))
         composeTestRule.setContent {
             SettingsScreen(userPreferencesRepository = userPreferencesRepository,
-                navController = navController,
-                versionUtils = versionUtils)
+                navController = navController)
         }
         composeTestRule.onNodeWithContentDescription(systemDarkModeSwitch).assertIsEnabled()
         composeTestRule.onNodeWithContentDescription(darkModeSwitch).assertIsNotEnabled()
@@ -77,8 +76,7 @@ class SettingsScreenTest {
         whenever(userPreferencesRepository.getSystemDarkMode()).thenReturn(flowOf(false))
         composeTestRule.setContent {
             SettingsScreen(userPreferencesRepository = userPreferencesRepository,
-                navController = navController,
-                versionUtils = versionUtils)
+                navController = navController)
         }
         composeTestRule.onNodeWithContentDescription(systemDarkModeSwitch).assertIsEnabled()
         composeTestRule.onNodeWithContentDescription(darkModeSwitch).assertIsEnabled()

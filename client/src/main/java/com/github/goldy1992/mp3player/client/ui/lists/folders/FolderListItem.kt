@@ -45,7 +45,7 @@ fun FolderListItem(folder : MediaItem? = MediaItemUtils.getEmptyMediaItem(),
         trailing = {
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(Icons.Filled.MoreVert, contentDescription = "",
-                    tint = MaterialTheme.colorScheme.onSurface)
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     ) {
@@ -64,7 +64,8 @@ private fun FolderIcon() {
         contentDescription = folderIconContentDescr,
         modifier = Modifier
             .padding(2.dp)
-            .size(40.dp)
+            .size(40.dp),
+        tint = MaterialTheme.colorScheme.onSurfaceVariant
     )
 }
 

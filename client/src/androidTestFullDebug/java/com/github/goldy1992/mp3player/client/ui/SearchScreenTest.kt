@@ -10,6 +10,7 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -31,8 +32,8 @@ class SearchScreenTest : MediaTestBase(){
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    @ExperimentalComposeUiApi
-    @ExperimentalFoundationApi
+    @kotlin.OptIn(ExperimentalComposeUiApi::class,
+        ExperimentalFoundationApi::class)
     @Before
     override fun setup() {
         super.setup()
@@ -42,7 +43,8 @@ class SearchScreenTest : MediaTestBase(){
                 navController = mockNavController,
                 mediaBrowser = mockMediaBrowser,
                 mediaController = mockMediaController,
-                mediaRepository = mockMediaRepo
+                mediaRepository = mockMediaRepo,
+                windowSize = WindowSize.Compact
             )
         }
     }

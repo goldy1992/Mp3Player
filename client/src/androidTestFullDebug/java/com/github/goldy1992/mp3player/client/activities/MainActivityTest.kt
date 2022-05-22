@@ -1,13 +1,17 @@
 package com.github.goldy1992.mp3player.client.activities
 
 import android.content.Context
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.printToLog
 import androidx.test.core.app.ActivityScenario
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
@@ -15,12 +19,7 @@ import androidx.test.uiautomator.Until
 import com.github.goldy1992.mp3player.client.R
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
-
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -54,7 +53,7 @@ class MainActivityTest {
 
     @Test
     fun testMain() {
-        assertSplashScreenActivity()
+       // assertSplashScreenActivity()
         waitForMainActivityToLoad(composeTestRule = composeTestRule)
     }
 
@@ -74,13 +73,20 @@ class MainActivityTest {
     }
 
 private fun waitForMainActivityToLoad(composeTestRule: ComposeTestRule) {
-    val navigationIcon = context.getString(R.string.navigation_drawer_menu_icon)
-    composeTestRule.waitUntil(LAUNCH_TIMEOUT) {
-        try {
-            composeTestRule.onNodeWithContentDescription(navigationIcon).assertExists()
-            true
-        } catch (assertionError: AssertionError) {
-            false
+    composeTestRule.onRoot(true).printToLog("tag")
+    val library = context.getString(R.string.library)
+
+    runBlocking {
+        composeTestRule.awaitIdle()
+           composeTestRule.waitUntil(LAUNCH_TIMEOUT) {
+            try {
+                val nodes = composeTestRule.onAllNodesWithText(library, substring = true, useUnmergedTree = true)
+                nodes.assertCountEquals(2)
+
+                true
+            } catch (assertionError: AssertionError) {
+                false
+            }
         }
     }
 }

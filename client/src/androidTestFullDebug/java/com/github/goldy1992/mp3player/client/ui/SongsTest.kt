@@ -1,15 +1,20 @@
 package com.github.goldy1992.mp3player.client.ui
 
+import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaMetadataCompat
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.test.platform.app.InstrumentationRegistry
+import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import kotlinx.coroutines.runBlocking
@@ -18,6 +23,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 class SongsTest {
 
@@ -29,24 +35,39 @@ class SongsTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    @OptIn(ExperimentalCoilApi::class)
     @Test
     fun displaySongs() {
+        val id1 : String = "id1"
+        val id2 : String = "id2"
+        val artist1 : String = "artist1"
+        val artist2 : String = "artist2"
+        val title1 : String = "title1"
+        val title2 : String = "title2"
+
+        val song1 = MediaItemBuilder(id1).setTitle(title1)
+            .setMediaItemType(MediaItemType.SONG)
+            .setArtist(artist1)
+            .build()
+        val song2 = MediaItemBuilder(id2).setTitle(title2)
+            .setMediaItemType(MediaItemType.SONG)
+            .setArtist(artist2)
+            .build()
+        whenever(mockMediaController.isPlaying).thenReturn(MutableLiveData(true))
+
+        val currentMetadata = MediaMetadataCompat.Builder()
+            .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist1)
+            .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title1)
+            .build()
+        whenever(mockMediaController.metadata).thenReturn(MutableLiveData(currentMetadata))
         val songsListContentDescr = context.getString(R.string.songs_list)
-        val song1 = MediaItemBuilder("id1").setTitle("title1")
-                .setMediaItemType(MediaItemType.SONG)
-                .setArtist("artist1")
-                .build()
-        val song2 = MediaItemBuilder("id2").setTitle("title2")
-                .setMediaItemType(MediaItemType.SONG)
-                .setArtist("artist2")
-                .build()
-        val list : List<MediaBrowserCompat.MediaItem> = listOf<MediaBrowserCompat.MediaItem>(song1, song2)
-        val songsData: MutableLiveData<List<MediaBrowserCompat.MediaItem>> = MutableLiveData()
-        songsData.postValue(list)
+
+        val songList : List<MediaBrowserCompat.MediaItem> = listOf(song1, song2)
 
         composeTestRule.setContent {
-            SongList(songsData,
-                    mockMediaController)
+            SongList(songs = songList,
+                    mediaControllerAdapter = mockMediaController,
+            onSongSelected = {})
         }
         runBlocking {
             composeTestRule.awaitIdle()

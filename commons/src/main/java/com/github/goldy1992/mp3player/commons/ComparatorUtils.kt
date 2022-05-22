@@ -2,6 +2,8 @@ package com.github.goldy1992.mp3player.commons
 
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem
+import java.util.*
+import kotlin.Comparator
 
 object ComparatorUtils {
 
@@ -49,7 +51,7 @@ object ComparatorUtils {
             } else if (null == string2) {
                 1
             } else {
-                string1.toUpperCase().compareTo(string2.toUpperCase())
+                string1.uppercase(Locale.ROOT).compareTo(string2.uppercase(Locale.ROOT))
             }
         }
         @JvmField

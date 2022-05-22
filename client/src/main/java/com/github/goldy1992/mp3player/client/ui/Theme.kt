@@ -12,6 +12,7 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionContext
 import androidx.compose.runtime.collectAsState
@@ -76,14 +77,18 @@ val orangeAppDarkTheme = darkColors(
 
 
 @Composable
-fun AppTheme(systemInDarkTheme: Boolean = isSystemInDarkTheme(),
-             userPreferencesRepository: UserPreferencesRepository,
+fun AppTheme(userPreferencesRepository: UserPreferencesRepository,
              content: @Composable() () -> Unit) {
+    MaterialTheme(
+        colorScheme = getColorScheme(userPreferencesRepository),
+        content = content
+    )
+}
+
+@Composable
+private fun getColorScheme(userPreferencesRepository: UserPreferencesRepository) : ColorScheme {
     val context : Context = LocalContext.current
-    val theme = userPreferencesRepository.getTheme().collectAsState(initial = Theme.BLUE)
-
-   // val colorScheme = ColorScheme()
-
+    val systemInDarkTheme = isSystemInDarkTheme()
     val useSystemDarkThemePref = userPreferencesRepository.getSystemDarkMode().collectAsState(initial = true)
     val useDarkThemePref = userPreferencesRepository.getDarkMode().collectAsState(initial = false)
 
@@ -94,10 +99,10 @@ fun AppTheme(systemInDarkTheme: Boolean = isSystemInDarkTheme(),
         useDarkThemePref.value
     }
 
-    MaterialTheme(
-        colorScheme = if (useDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context),
-//        colors = if (useDarkTheme) theme.value.darkColors else theme.value.lightColors,
-        content = content
-    )
-}
+    return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+        if (useDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    } else {
+        if (useDarkTheme) darkColorScheme() else lightColorScheme()
+    }
 
+}

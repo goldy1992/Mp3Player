@@ -29,6 +29,7 @@ android {
             minifyEnabled false
         }
         unittest {
+            enableUnitTestCoverage false
             minifyEnabled false
             matchingFallbacks = ['debug', 'release']
         }

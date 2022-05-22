@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -13,6 +13,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -36,6 +37,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.apache.commons.lang3.ObjectUtils.isEmpty
 
+@OptIn(ExperimentalMaterial3Api::class)
 @InternalCoroutinesApi
 @ExperimentalPagerApi
 @Composable
@@ -43,29 +45,27 @@ fun NowPlayingScreen(
     navController: NavController,
     mediaController: MediaControllerAdapter,
     scope : CoroutineScope = rememberCoroutineScope(),
-    scaffoldState: ScaffoldState = rememberScaffoldState()
-
 ) {
     val songTitleDescription = stringResource(id = R.string.song_title)
     Scaffold (
-        scaffoldState = scaffoldState,
+
         topBar = {
-            TopAppBar (
-                backgroundColor = MaterialTheme.colors.primarySurface,
+            SmallTopAppBar (
                 title = {
                     val metadata by mediaController.metadata.observeAsState()
                     val title : String = metadata?.description?.title.toString() ?: ""
                     val artist : String = metadata?.description?.subtitle.toString() ?: ""
                     Column {
                         Text(text = title,
-                            style = MaterialTheme.typography.h6,
-                  //          color = MaterialTheme.colors.onPrimary,
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.semantics {
                                 contentDescription = songTitleDescription
                             }
                             )
                         Text(text = artist,
-                            style = MaterialTheme.typography.subtitle2)
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSurface)
                     }
                 },
 
@@ -75,7 +75,7 @@ fun NowPlayingScreen(
                         scope = scope)
                 },
                 actions = {},
-                //contentColor = MaterialTheme.colors.onPrimary
+
             )
         },
         bottomBar = {
@@ -89,14 +89,17 @@ fun NowPlayingScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(bottom = BOTTOM_BAR_SIZE)
-                    .background(MaterialTheme.colors.background)
+                    .padding(it)
+                    .background(MaterialTheme.colorScheme.surface)
                     .semantics {
                         contentDescription = nowPlayingDescr
-                    }
+                    },
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 SpeedController(mediaController = mediaController,
-                modifier = Modifier.weight(1f))
+                    modifier = Modifier.weight(1f)
+                        .padding(start = 48.dp, end = 48.dp)
+                )
                 ViewPager(mediaController = mediaController,
                 scope = scope,
                 modifier = Modifier.weight(4f))
@@ -125,17 +128,18 @@ fun NowPlayingScreen(
 @ExperimentalPagerApi
 @Composable
 fun ViewPager(mediaController: MediaControllerAdapter,
+              modifier: Modifier = Modifier,
             pagerState:PagerState = rememberPagerState(initialPage = mediaController.calculateCurrentQueuePosition()),
-            scope: CoroutineScope = rememberCoroutineScope(),
-            modifier: Modifier = Modifier) {
+            scope: CoroutineScope = rememberCoroutineScope()
+           ) {
     val queue by mediaController.queue.observeAsState(emptyList())
     val metadata by mediaController.metadata.observeAsState()
     val currentQueuePosition = mediaController.calculateCurrentQueuePosition()
 
     if (isEmpty(queue)) {
-        Column(modifier = modifier.fillMaxWidth(),
+        Column(modifier = modifier.width(700.dp),
             horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("Empty Playlist", style = MaterialTheme.typography.h5,
+            Text("Empty Playlist", style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center)
         }
     } else {
@@ -165,8 +169,7 @@ fun ViewPager(mediaController: MediaControllerAdapter,
 
         HorizontalPager(
                 state = pagerState,
-                modifier = modifier
-                    .fillMaxWidth()
+                modifier = modifier.width(400.dp)
                     .semantics {
                         contentDescription = "viewPagerColumn"
                     },
@@ -180,7 +183,7 @@ fun ViewPager(mediaController: MediaControllerAdapter,
             val item: MediaSessionCompat.QueueItem = queue!![pageIndex]
             Column(
                     modifier = Modifier
-                            .fillMaxWidth(),
+                            .width(300.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(

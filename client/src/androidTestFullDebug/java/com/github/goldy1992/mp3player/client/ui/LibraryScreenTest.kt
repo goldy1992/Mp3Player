@@ -1,22 +1,30 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Context
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.MockMediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback
+import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
+import com.github.goldy1992.mp3player.client.ui.screens.library.SmallLibraryScreen
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
+import com.github.goldy1992.mp3player.client.viewmodels.LibraryScreenViewModel
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.rememberPagerState
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -30,13 +38,17 @@ import org.mockito.kotlin.whenever
 /**
  * Test class for the [MainScreen] composable function.
  */
-class MainScreenTest {
+@HiltAndroidTest
+class LibraryScreenTest {
 
     @Mock
     val mockMediaController = mock<MediaControllerAdapter>()
 
     @Mock
     val mockMediaBrowser = mock<MediaBrowserAdapter>()
+
+    @get:Rule
+    var hiltRule = HiltAndroidRule(this)
 
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -59,29 +71,27 @@ class MainScreenTest {
     /**
      * Tests the [NavigationDrawer] is opened when the Navigation menu icon is clicked.
      */
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
     @ExperimentalPagerApi
-    @ExperimentalMaterialApi
     @Test
     fun testNavigationDrawerOpen() {
 
-        val scaffoldState = ScaffoldState(drawerState = DrawerState(DrawerValue.Closed),
-            snackbarHostState = SnackbarHostState()
-        )
+        val drawerState = DrawerState(DrawerValue.Closed)
         val navigationIconDescription = context.getString(R.string.navigation_drawer_menu_icon)
         composeTestRule.setContent {
-            MainScreen(
+            SmallLibraryScreen(
                 navController = navController,
-                //mediaRepository = mediaRepository,
-                mediaBrowserAdapter = mockMediaBrowser,
-                windowSize = getWindowSizeClass(DpSize(400.dp, 400.dp)),
-                mediaController = mockMediaController,
-                scaffoldState = scaffoldState)
+                pagerState = rememberPagerState(initialPage = 0),
+              //  viewModel = hiltViewModel<LibraryScreenViewModel>(),
+               viewModel  = LibraryScreenViewModel(MockMediaBrowserAdapter(MediaIdSubscriptionCallback(), MySearchCallback()), mockMediaController),
+                bottomBar = {},
+            drawerState = drawerState)
         }
-        assertFalse(scaffoldState.drawerState.isOpen)
+        assertFalse(drawerState.isOpen)
         composeTestRule.onNodeWithContentDescription(navigationIconDescription).performClick()
         runBlocking {
             composeTestRule.awaitIdle()
-            assertTrue(scaffoldState.drawerState.isOpen)
+            assertTrue(drawerState.isOpen)
         }
     }
 }

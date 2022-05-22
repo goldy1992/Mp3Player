@@ -46,8 +46,8 @@ project.afterEvaluate {
         group = "Reporting"
         description = "Generate Jacoco coverage reports on the ${unitTestBuildVariantCapitalised} build."
         reports {
-            xml.enabled = true
-            html.enabled = true
+            xml.required = true
+            html.required = true
         }
 
         def exclusions = fileFilter + excludeUiCode
@@ -58,6 +58,9 @@ project.afterEvaluate {
 
         sourceDirectories.from = files([mainSrc])
         classDirectories.from = files([mainClasses, javaClasses])
+//        def execDataLoc = "$buildDir/outputs/unit_test_code_coverage/${unitTestBuildVariant}UnitTest/test${unitTestBuildVariantCapitalised}UnitTest.exec"
+//        print("exec file: ${execDataLoc}")
+//        executionData.from = execDataLoc
         executionData.from = "$buildDir/jacoco/test${unitTestBuildVariantCapitalised}UnitTest.exec"
     }
 
@@ -74,8 +77,8 @@ project.afterEvaluate {
         description = "Generate Jacoco coverage reports for both UI and Unit Tests on the ${uiTestBuildVariantCapitalised} build."
 
         reports {
-            xml.enabled = true
-            html.enabled = true
+            xml.required = true
+            html.required = true
         }
 
         def mainSrc = "$project.projectDir/src/main/java"
@@ -84,7 +87,12 @@ project.afterEvaluate {
 
         sourceDirectories.from = files([mainSrc])
         classDirectories.from = files([mainClasses, javaClasses])
-        executionData.from = fileTree(dir: "${buildDir}/outputs/code_coverage/${uiTestBuildVariant}AndroidTest/connected/", include: ["**.ec"])
+        def buildDir = "${buildDir}/outputs/code_coverage/${uiTestBuildVariant}AndroidTest/connected"
+        def buildFileTree = fileTree(buildDir){
+            include "**/*.ec"
+        }
+        executionData.from = buildFileTree
+
     }
 
 
@@ -104,8 +112,8 @@ project.afterEvaluate {
         description = "Generate Jacoco coverage reports for both UI and Unit Tests on the ${uiTestBuildVariantCapitalised} build."
 
         reports {
-            xml.enabled = true
-            html.enabled = true
+            xml.required = true
+            html.required = true
         }
 
         def mainSrc = "$project.projectDir/src/main/java"

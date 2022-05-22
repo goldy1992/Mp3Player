@@ -15,7 +15,6 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
-        kotlinCompilerVersion compose_version
     }
     packagingOptions {
         resources {
@@ -45,6 +44,7 @@ android {
             minifyEnabled false
         }
         unittest {
+            enableUnitTestCoverage false
             minifyEnabled false
             matchingFallbacks = ['debug', 'release']
         }
@@ -140,6 +140,7 @@ dependencies {
     implementation group: 'androidx.lifecycle', name: 'lifecycle-viewmodel-compose', version: lifecycle_version
 
     implementation group: 'androidx.activity', name: 'activity-ktx', version: activity_ktx_version
+    androidTestImplementation project(path: ':client')
     debugImplementation("androidx.customview:customview:1.2.0-alpha01")
     debugImplementation("androidx.customview:customview-poolingcontainer:1.0.0-beta01")
     implementation group: 'androidx.compose.ui', name: 'ui', version: compose_version
