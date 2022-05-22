@@ -8,6 +8,6 @@
 
     <application xmlns:tools="http://schemas.android.com/tools"
         tools:node="merge">
-
+        <activity android:name=".activities.MainActivityUnitTestImpl" />
     </application>
 </manifest>

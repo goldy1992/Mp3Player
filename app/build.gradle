@@ -36,11 +36,6 @@ android {
             debuggable true
             testCoverageEnabled true
         }
-        unittest {
-            debuggable true
-            minifyEnabled false
-            matchingFallbacks = ['debug']
-        }
     }
     flavorDimensions flavor_dimen_mode
     productFlavors {
@@ -62,7 +57,7 @@ android {
 
 
         if (names.contains("automation")) {
-            if (variant.buildType.name == "unittest" || variant.buildType.name == "release") {
+            if (variant.buildType.name == "release") {
                 setIgnore(true)
             }
         }

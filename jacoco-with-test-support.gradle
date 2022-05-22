@@ -31,14 +31,13 @@ project.afterEvaluate {
         flavor -> flavor.name
     }
 
-    def buildTypes = android.buildTypes.collect {
-        buildType -> buildType.name
-    } as Set
     def applicableProductFlavor = "full"
-    def unitTestBuildType = buildTypes.contains("unittest") ? 'unittest' : 'debug'
+    def unitTestBuildType ='debug'
     def unitTestFlavor = getProductFlavor(applicableProductFlavor, productFlavors);
     def (String unitTestBuildVariant, String unitTestBuildVariantCapitalised) = getBuildVariant(unitTestFlavor, unitTestBuildType)
 
+    def unitExecDir = "$buildDir/outputs/unit_test_code_coverage/${unitTestBuildVariant}UnitTest/test${unitTestBuildVariantCapitalised}UnitTest.exec"
+    def unitBuildFileTree = fileTree(unitExecDir)
     /**
      * Generates a JaCoCo Report for the test coverage for the unit tests.
      */
@@ -58,16 +57,18 @@ project.afterEvaluate {
 
         sourceDirectories.from = files([mainSrc])
         classDirectories.from = files([mainClasses, javaClasses])
-//        def execDataLoc = "$buildDir/outputs/unit_test_code_coverage/${unitTestBuildVariant}UnitTest/test${unitTestBuildVariantCapitalised}UnitTest.exec"
-//        print("exec file: ${execDataLoc}")
-//        executionData.from = execDataLoc
-        executionData.from = "$buildDir/jacoco/test${unitTestBuildVariantCapitalised}UnitTest.exec"
+        executionData.from = unitBuildFileTree
     }
-
 
     def uiTestBuildType = 'debug'
     def uiTestFlavor = getProductFlavor(applicableProductFlavor, productFlavors);
     def (String uiTestBuildVariant, String uiTestBuildVariantCapitalised) = getBuildVariant(uiTestFlavor, uiTestBuildType)
+
+
+    def uiBuildDir = "${buildDir}/outputs/code_coverage/${uiTestBuildVariant}AndroidTest/connected"
+    def uiBuildFileTree = fileTree(uiBuildDir){
+        include "**/*.ec"
+    }
 
     /**
      * Generates a JaCoCo Report for the test coverage for the UI tests.
@@ -87,11 +88,7 @@ project.afterEvaluate {
 
         sourceDirectories.from = files([mainSrc])
         classDirectories.from = files([mainClasses, javaClasses])
-        def buildDir = "${buildDir}/outputs/code_coverage/${uiTestBuildVariant}AndroidTest/connected"
-        def buildFileTree = fileTree(buildDir){
-            include "**/*.ec"
-        }
-        executionData.from = buildFileTree
+        executionData.from = uiBuildFileTree
 
     }
 
@@ -127,8 +124,7 @@ project.afterEvaluate {
 
         sourceDirectories.from = files([mainSrc])
         classDirectories.from = files([mainClasses, javaClasses])
-        executionData.from = fileTree(dir: buildDir, include: ["jacoco/test${unitTestBuildVariantCapitalised}UnitTest.exec",
-                                                                    "outputs/code_coverage/${uiTestBuildVariant}AndroidTest/connected/**.ec"])
+        executionData.from = unitBuildFileTree.plus(uiBuildFileTree)
     }
 }
 

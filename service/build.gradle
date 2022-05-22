@@ -26,12 +26,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            minifyEnabled false
-        }
-        unittest {
             enableUnitTestCoverage false
+            testCoverageEnabled true
             minifyEnabled false
-            matchingFallbacks = ['debug', 'release']
         }
     }
     flavorDimensions flavor_dimen_mode

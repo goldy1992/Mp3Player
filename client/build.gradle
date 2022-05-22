@@ -41,13 +41,10 @@ android {
         }
         debug {
             testCoverageEnabled true
-            minifyEnabled false
-        }
-        unittest {
             enableUnitTestCoverage false
             minifyEnabled false
-            matchingFallbacks = ['debug', 'release']
         }
+
     }
     flavorDimensions flavor_dimen_mode
     productFlavors {

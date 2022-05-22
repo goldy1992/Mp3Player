@@ -23,7 +23,7 @@ import org.robolectric.RobolectricTestRunner
 import java.io.IOException
 
 /**
- * SongResultsParser testFullUnittest
+ * SongResultsParser testFullDebug
  */
 @RunWith(RobolectricTestRunner::class)
 class SongResultsParserTest : ResultsParserTestBase() {
