@@ -2,14 +2,13 @@ package com.github.goldy1992.mp3player.client.activities
 
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
@@ -22,8 +21,10 @@ import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
-import com.google.accompanist.pager.ExperimentalPagerApi
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 abstract class MainActivityBase : ComponentActivity(),
@@ -65,21 +66,13 @@ abstract class MainActivityBase : ComponentActivity(),
         super.onCreate(savedInstanceState)
     Log.i(logTag(), "on createee")
 
-        val intent = intent
-//        if (!isTaskRoot
-//            && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
-//            && intent.action != null && intent.action == Intent.ACTION_MAIN) {
-//            finish()
-//            return
-//        }
-
         // If app has already been created set the UI to initialise at the main screen.
         val appAlreadyCreated = savedInstanceState != null
         if (appAlreadyCreated) {
             this.startScreen = Screen.MAIN
         }
 
-        permissionsProcessor.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        permissionsProcessor.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, permissionLauncher)
     }
 
     override fun onDestroy() {
@@ -94,9 +87,6 @@ abstract class MainActivityBase : ComponentActivity(),
         mediaBrowserAdapter.connect()
     }
 
-    @OptIn(ExperimentalPagerApi::class, InternalCoroutinesApi::class,
-        ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class
-    )
     override fun onPermissionGranted() {
         Log.i(logTag(), "permission granted")
         createService()
@@ -126,31 +116,24 @@ abstract class MainActivityBase : ComponentActivity(),
         }
     }
 
+    val permissionLauncher : ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        permissionGranted ->
+        run {
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
-        Log.i(logTag(), "permission result");
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        var permissionIsGranted = false
-        if (permissions.isNotEmpty() && grantResults.isNotEmpty()) {
-            permissions.forEach {
-                if (Manifest.permission.WRITE_EXTERNAL_STORAGE == it && grantResults.first() == PackageManager.PERMISSION_GRANTED) {
-                    permissionIsGranted = true
+            Log.i(logTag(), "permission result: $permissionGranted")
+            if (permissionGranted) {
+                onPermissionGranted()
+            } else {
+                CoroutineScope(Dispatchers.Main).launch {
+                    Toast.makeText(
+                        applicationContext,
+                        resources.getString(R.string.permission_denied),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
+                finish()
             }
-        }
-        Log.i(logTag(), "permission result: $permissionIsGranted")
-        if (permissionIsGranted) {
-            onPermissionGranted()
-        } else {
-            CoroutineScope(Dispatchers.Main).launch {
-                Toast.makeText(
-                    applicationContext,
-                    resources.getString(R.string.permission_denied),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-            finish()
+
         }
     }
 

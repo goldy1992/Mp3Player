@@ -94,7 +94,7 @@ class PlayToolbarTest {
         composeTestRule.setContent {
             PlayToolbar(mediaController = mockMediaController, onClick = mockOnClick::onClick)
         }
-        composeTestRule.onNodeWithContentDescription(bottomAppBarDescr).performGesture {
+        composeTestRule.onNodeWithContentDescription(bottomAppBarDescr).performTouchInput {
             this.click(this.percentOffset(0.9f, 0.9f))
         }
 

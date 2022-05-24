@@ -79,10 +79,11 @@ buildscript {
         def nav_version = '2.4.1'
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
     }
+
 }
 
 plugins {
-    id "org.sonarqube" version "3.0"
+    id "org.sonarqube" version "3.3"
 }
 
 sonarqube {
@@ -120,4 +121,8 @@ task preSonarQube() {
 
 tasks['sonarqube'].configure {
     mustRunAfter tasks['preSonarQube']
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
 }

@@ -47,7 +47,7 @@ constructor(private val context: Context,
      * @return True if the mediaBrowser is connected
      */
     open fun isConnected() : Boolean {
-        return mediaBrowser != null && mediaBrowser.isConnected
+        return mediaBrowser.isConnected
     }
 
     open fun prepareFromMediaId(mediaId: String?, extras: Bundle?) {

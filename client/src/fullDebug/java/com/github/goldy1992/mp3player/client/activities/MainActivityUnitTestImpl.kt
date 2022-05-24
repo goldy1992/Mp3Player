@@ -13,9 +13,6 @@ class MainActivityUnitTestImpl : MainActivity() {
 
 
 
-    @kotlin.OptIn(ExperimentalPagerApi::class, InternalCoroutinesApi::class,
-        ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class
-    )
     override fun ui(startScreen: Screen) {
         setContent {
             Column() {

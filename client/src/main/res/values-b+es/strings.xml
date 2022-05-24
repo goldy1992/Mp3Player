@@ -12,6 +12,7 @@
     <string name="duration">Duración</string>
     <string name="folders">Carpetas</string>
     <string name="folder_icon">Ícono de Carpeta</string>
+    <string name="folder_list">Lista de Carpetas</string>
     <string name="help">Ayuda</string>
     <string name="library">Colección</string>
     <string name="navigation_drawer_menu_icon">Ícono del menú del panel lateral de navegación </string>

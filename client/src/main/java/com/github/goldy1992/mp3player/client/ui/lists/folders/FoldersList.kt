@@ -4,24 +4,21 @@ import android.support.v4.media.MediaBrowserCompat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
@@ -34,16 +31,16 @@ import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 @Preview
 fun FolderList(folders : List<MediaBrowserCompat.MediaItem> = emptyList(),
                onFolderSelected : (folder : MediaBrowserCompat.MediaItem?) -> Unit = {}) {
-    
-    Card() {
-        
-    }
 
     when {
         folders == null -> LoadingIndicator()
         isEmpty(folders) -> EmptyFoldersList()
         else -> {
-            LazyColumn() {
+            val folderListDescr = stringResource(id = R.string.folder_list)
+
+            LazyColumn(Modifier.semantics {
+                contentDescription = folderListDescr
+            }) {
                 if (isNotEmpty(folders)) {
                     items(count = folders!!.size) { itemIndex ->
                         run {
@@ -66,43 +63,8 @@ fun EmptyFoldersList() {
         .padding(DEFAULT_PADDING)) {
         Text(text = stringResource(id = R.string.no_folders_with_songs),
             modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colors.background),
-            textAlign = TextAlign.Center)
+                .fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyMedium)
     }
-}
-
-@Preview
-@Composable
-fun FolderListHeader(folder: MediaBrowserCompat.MediaItem? = getEmptyMediaItem()) {
-    Row(
-        modifier = Modifier
-            .padding(DEFAULT_PADDING)
-            .background(Color.Transparent),
-        verticalAlignment = Alignment.CenterVertically) {
-
-        val folderIconContentDescr = stringResource(id = R.string.folder_icon)
-        Icon(
-            Icons.Filled.Folder,
-            contentDescription = folderIconContentDescr,
-            modifier = Modifier
-                .padding(2.dp)
-                .size(75.dp)
-        )
-
-        Column(verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = MediaItemUtils.getDirectoryName(folder),
-                style = MaterialTheme.typography.h6
-            )
-            Text(
-                text = MediaItemUtils.getDirectoryPath(folder),
-                style = MaterialTheme.typography.subtitle1
-            )
-            Text(text = "${MediaItemUtils.getFileCount(folder)} Items",
-                style = MaterialTheme.typography.caption)
-        }
-    }
-
 }
