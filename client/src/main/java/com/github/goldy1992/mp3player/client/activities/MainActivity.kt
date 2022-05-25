@@ -28,7 +28,6 @@ open class MainActivity : Hilt_MainActivity() {
         setContent{
             var windowSizeClass = rememberWindowSizeClass()
             ComposeApp(
-//                mediaRepository =  this.mediaRepository,
                 mediaBrowserAdapter = this.mediaBrowserAdapter,
                 mediaControllerAdapter = this.mediaControllerAdapter,
                 userPreferencesRepository = this.userPreferencesRepository,

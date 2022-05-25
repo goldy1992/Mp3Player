@@ -144,8 +144,7 @@ fun SettingsScreenContent(
     val isDarkMode by userPreferencesRepository.getDarkMode().collectAsState(initial = false)
 
     Column(modifier = modifier) {
-        ThemeSubheader()
-        ThemeMenuItem(navController)
+        DisplaySubheader()
         SystemDarkModeMenuItem(
             userPreferencesRepository = userPreferencesRepository,
             scope = scope,
@@ -157,6 +156,7 @@ fun SettingsScreenContent(
             useSystemDarkMode = useSystemDarkMode,
             isDarkMode = isDarkMode
         )
+        // TODO: Add Dynamic color option for android 12
         Divider()
         HelpSubHeader()
         SupportAndFeedbackMenuItem(navController)
@@ -169,13 +169,14 @@ fun SettingsScreenContent(
 @OptIn(ExperimentalMaterialApi::class)
 @ExperimentalMaterialApi
 @Composable
-private fun ThemeSubheader() {
+private fun DisplaySubheader() {
     ListItem(
         text = { Text(stringResource(id = R.string.display), style = MaterialTheme.typography.titleSmall) },
         modifier = Modifier
             .fillMaxWidth()
     )
 }
+
 
 @ExperimentalMaterialApi
 @Composable

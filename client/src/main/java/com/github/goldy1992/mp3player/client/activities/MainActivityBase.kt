@@ -91,7 +91,6 @@ abstract class MainActivityBase : ComponentActivity(),
         Log.i(logTag(), "permission granted")
         createService()
         connect()
-        //initMediaRepository()
         if (Intent.ACTION_VIEW == intent.action) {
             trackToPlay = intent.data
             launch(Dispatchers.Default) {
@@ -102,18 +101,6 @@ abstract class MainActivityBase : ComponentActivity(),
         CoroutineScope(Dispatchers.Main).launch { ui(startScreen = startScreen) }
 
 
-    }
-
-    private fun initMediaRepository() {
-        mediaRepository = MediaRepository(mediaBrowserAdapter.subscribeToRoot())
-        mediaRepository.rootItems.observe(this) {
-            launch(Dispatchers.Default) {
-                for (mediaItem in it) {
-                    val id = MediaItemUtils.getMediaId(mediaItem)!!
-                    mediaRepository.itemMap[MediaItemUtils.getRootMediaItemType(mediaItem)!!] = mediaBrowserAdapter.subscribe(id)
-                }
-            }
-        }
     }
 
     val permissionLauncher : ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) {

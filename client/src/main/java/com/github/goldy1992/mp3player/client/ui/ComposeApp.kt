@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui
 
-import android.support.v4.media.MediaBrowserCompat
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
@@ -18,7 +17,6 @@ import com.github.goldy1992.mp3player.client.ui.screens.FolderScreen
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreen
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
 import com.github.goldy1992.mp3player.client.viewmodels.LibraryScreenViewModel
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -101,18 +99,6 @@ fun ComposeApp(
                         navController = navController,
                         userPreferencesRepository = userPreferencesRepository,
                         windowSize = windowSize
-                    )
-                }
-                composable(Screen.THEME_SELECT.name) {
-                    ThemeSelectScreen(
-                        navController = navController,
-                        userPreferencesRepository = userPreferencesRepository
-                    )
-                }
-                composable(Screen.SPLASH.name) {
-                    SplashScreen(
-                        navController = navController,
-                        userPreferencesRepository = userPreferencesRepository
                     )
                 }
             }
