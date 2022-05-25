@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.net.Uri
 import android.util.Log
 import com.github.goldy1992.mp3player.commons.LogTagger
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.ContentDataSource
@@ -20,7 +21,7 @@ class MediaSourceFactory @Inject constructor(private val fileDataSource: FileDat
         val dataSpec = DataSpec(uri)
         val dataSrcFactory = openDataSpec(dataSpec) ?: return null
         val factory = ProgressiveMediaSource.Factory(dataSrcFactory)
-        return factory.createMediaSource(uri)
+        return factory.createMediaSource(MediaItem.fromUri(uri))
     }
 
     private fun openDataSpec(dataSpec: DataSpec): MyDataSourceFactory? {

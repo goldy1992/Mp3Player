@@ -6,7 +6,6 @@ import android.support.v4.media.session.PlaybackStateCompat
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.service.PlaylistManager
 import com.github.goldy1992.mp3player.service.library.ContentManager
-import com.google.android.exoplayer2.ControlDispatcher
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ForwardingPlayer
 import com.google.android.exoplayer2.source.MediaSource
@@ -78,7 +77,7 @@ class MyPlaybackPreparerTest {
 
     @Test
     fun testOnCommand() {
-        Assert.assertFalse(myPlaybackPreparer!!.onCommand(exoPlayer, mock<ControlDispatcher>(), "query", null, null))
+        Assert.assertFalse(myPlaybackPreparer!!.onCommand(exoPlayer,"query", null, null))
     }
 
     @Test

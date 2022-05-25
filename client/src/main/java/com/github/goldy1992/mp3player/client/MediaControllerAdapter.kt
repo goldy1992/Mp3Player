@@ -123,6 +123,7 @@ constructor(private val context: Context,
     }
 
     open fun changePlaybackSpeed(speed: Float) {
+        playbackSpeed.postValue(speed)
         val extras = Bundle()
         extras.putFloat(CHANGE_PLAYBACK_SPEED, speed)
         transportControls.sendCustomAction(CHANGE_PLAYBACK_SPEED, extras)
@@ -167,9 +168,11 @@ constructor(private val context: Context,
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
         this.playbackState.postValue(state)
-        this.playbackSpeed.postValue(state.playbackSpeed)
         val playing = state.state == PlaybackStateCompat.STATE_PLAYING
         this.isPlaying.postValue(playing)
+        if (playing) {
+            this.playbackSpeed.postValue(state.playbackSpeed)
+        }
         Log.i(logTag(), "IS PLAYING: $playing")
     }
 

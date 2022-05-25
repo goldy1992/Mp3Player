@@ -28,7 +28,7 @@ class MyDescriptionAdapter
                        private val componentClassMapper: ComponentClassMapper)
     : MediaDescriptionAdapter {
     override fun getCurrentContentTitle(player: Player): String {
-        return getTitle(getCurrentMediaItem(player)!!)!!
+        return getTitle(getCurrentMediaItem(player)!!)
     }
 
     override fun createCurrentContentIntent(player: Player): PendingIntent? {

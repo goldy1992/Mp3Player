@@ -5,13 +5,12 @@ import android.util.Log
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.Constants.DECREASE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.Constants.INCREASE_PLAYBACK_SPEED
-import com.google.android.exoplayer2.ControlDispatcher
 import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector.CustomActionProvider
 
 abstract class SpeedChangeActionProviderBase : CustomActionProvider {
-    override fun onCustomAction(player: Player, controlDispatcher: ControlDispatcher, action: String, extras: Bundle?) {
+    override fun onCustomAction(player: Player, action: String, extras: Bundle?) {
         Log.i(LOG_TAG, "hit speed change")
         val currentSpeed = player.playbackParameters.speed
         var newSpeed = currentSpeed

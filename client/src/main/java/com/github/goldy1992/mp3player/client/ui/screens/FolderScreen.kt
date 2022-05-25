@@ -49,7 +49,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun FolderScreen(
     folderId : String = Constants.UNKNOWN,
