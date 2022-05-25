@@ -42,7 +42,6 @@ class SongResultsParser
         val dataIndex = c.getColumnIndex(MediaStore.Audio.Media.DATA)
         val mediaFilePath = if (dataIndex >= 0) c.getString(dataIndex) else Constants.UNKNOWN
         val mediaFile = File(mediaFilePath)
-
         val directory = if (!mediaFile.exists()) {
             return null
         } else {

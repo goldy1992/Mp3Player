@@ -50,7 +50,7 @@ class MyDescriptionAdapter
     }
 
     private fun getCurrentMediaItem(player: Player): MediaBrowserCompat.MediaItem? {
-        val position = player.currentWindowIndex
+        val position = player.currentMediaItemIndex
         return playlistManager.getItemAtIndex(position)
     }
 

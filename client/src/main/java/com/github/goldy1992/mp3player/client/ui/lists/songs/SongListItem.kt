@@ -84,25 +84,6 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
     Divider(startIndent = 72.dp, color = MaterialTheme.colorScheme.surfaceVariant)
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalCoilApi::class)
-@Preview
-@Composable
-fun PreviewableSongListItem() {
-    val song = MediaItemBuilder("xd")
-        .setAlbumArtUri(null)
-        .setArtist("Artist")
-        .setTitle("Title")
-        .build()
-    MaterialTheme() {
-        SongListItem(
-            song = song,
-            isPlaying = true,
-            isSelected = false
-        )
-
-    }
-}
-
 @ExperimentalCoilApi
 @Composable
 private fun AlbumArt(song: MediaItem) {

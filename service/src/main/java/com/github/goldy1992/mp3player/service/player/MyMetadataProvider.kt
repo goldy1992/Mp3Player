@@ -22,7 +22,7 @@ class MyMetadataProvider
     : MediaMetadataProvider {
 
     override fun getMetadata(player: Player): MediaMetadataCompat {
-        val currentIndex = player.currentWindowIndex
+        val currentIndex = player.currentMediaItemIndex
         val currentItem = playlistManager.getItemAtIndex(currentIndex) ?: throw NullPointerException()
         val builder = MediaMetadataCompat.Builder()
         builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, getDuration(currentItem))

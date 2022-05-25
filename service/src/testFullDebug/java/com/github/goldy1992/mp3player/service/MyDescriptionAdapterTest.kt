@@ -42,7 +42,7 @@ class MyDescriptionAdapterTest {
                 .setTitle(expectedTitle)
                 .build()
         val index = 7
-        whenever(player.currentWindowIndex).thenReturn(index)
+        whenever(player.currentMediaItemIndex).thenReturn(index)
         whenever(playlistManager.getItemAtIndex(index)).thenReturn(testItem)
         val result = myDescriptionAdapter!!.getCurrentContentTitle(player)
         Assert.assertEquals(expectedTitle, result)

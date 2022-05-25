@@ -7,22 +7,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DismissibleNavigationDrawer
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.PermanentNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,8 +39,6 @@ import com.github.goldy1992.mp3player.client.ui.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
-import com.github.goldy1992.mp3player.client.ui.screens.library.LargeLibraryScreen
-import com.github.goldy1992.mp3player.client.ui.screens.library.SmallLibraryScreen
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
@@ -71,7 +68,6 @@ fun FolderScreen(
         LargeFolderScreen(
             folderName = folderName,
             navController = navController,
-            mediaBrowser = mediaBrowser,
             mediaController = mediaController,
             scope = scope,
             folderItems = folderItems
@@ -175,7 +171,6 @@ private fun SmallFolderScreen(
 private fun LargeFolderScreen(
     folderName : String = Constants.UNKNOWN,
     navController: NavController,
-    mediaBrowser : MediaBrowserAdapter,
     mediaController : MediaControllerAdapter,
     scope : CoroutineScope = rememberCoroutineScope(),
     folderItems : List<MediaBrowserCompat.MediaItem>?
