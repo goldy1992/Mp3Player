@@ -47,7 +47,6 @@ fun ComposeApp(
                     MainScreen(
                         navController,
                         windowSize = windowSize,
-                     //   mediaRepository = null,
                         mediaController = mediaControllerAdapter,
                         mediaBrowserAdapter = mediaBrowserAdapter
                     )
@@ -72,7 +71,6 @@ fun ComposeApp(
                         navController = navController,
                         mediaBrowser = mediaBrowserAdapter,
                         mediaController = mediaControllerAdapter,
-                        mediaRepository = null,
                         windowSize = windowSize
                     )
                 }

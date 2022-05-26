@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui
 
+import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.test.*
@@ -10,6 +11,7 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -43,7 +45,6 @@ class SearchScreenTest : MediaTestBase(){
                 navController = mockNavController,
                 mediaBrowser = mockMediaBrowser,
                 mediaController = mockMediaController,
-                mediaRepository = mockMediaRepo,
                 windowSize = WindowSize.Compact
             )
         }
@@ -87,18 +88,28 @@ class SearchScreenTest : MediaTestBase(){
     @Test
     fun testSearchResultsOpenFolder() {
         val folderName = "/c/folder1"
+        val libId = "3fk4"
+
         val folderItem = MediaItemBuilder("a")
             .setMediaItemType(MediaItemType.FOLDER)
             .setTitle(folderName)
+            .setLibraryId(libId)
             .setDirectoryFile(File(folderName))
             .build()
+        val folderLibraryId = MediaItemUtils.getLibraryId(folderItem)
+        val encodedFolderLibraryId = Uri.encode(folderLibraryId)
+        val directoryPath = MediaItemUtils.getDirectoryPath(folderItem)
+        val encodedFolderPath = Uri.encode(directoryPath)
+        val folderNameMi = MediaItemUtils.getDirectoryName(folderItem)
+
+       val expectedRoute = Screen.FOLDER.name + "/" + encodedFolderLibraryId+ "/" + folderNameMi+ "/" + encodedFolderPath
         searchResultsLiveData.postValue(mutableListOf(folderItem))
 
         runBlocking {
             composeTestRule.awaitIdle()
             composeTestRule.onNodeWithText(folderName).performClick()
             composeTestRule.awaitIdle()
-            verify(mockNavController, times(1)).navigate(Screen.FOLDER.name)
+            verify(mockNavController, times(1)).navigate(expectedRoute)
         }
     }
 

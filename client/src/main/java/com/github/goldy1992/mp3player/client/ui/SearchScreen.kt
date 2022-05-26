@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -74,7 +75,6 @@ fun SearchScreen(
     navController: NavController,
     mediaBrowser :  MediaBrowserAdapter,
     mediaController : MediaControllerAdapter,
-    mediaRepository: MediaRepository?,
     windowSize: WindowSize) {
 
     val isLargeScreen = windowSize == WindowSize.Expanded
@@ -83,14 +83,12 @@ fun SearchScreen(
             navController = navController,
             mediaBrowser = mediaBrowser,
             mediaController = mediaController,
-            mediaRepository = mediaRepository
         )
     } else {
         SmallSearchResults(
             navController = navController,
             mediaBrowser = mediaBrowser,
             mediaController = mediaController,
-            mediaRepository = mediaRepository
         )
 
     }
@@ -105,8 +103,7 @@ fun SearchScreen(
 private fun SmallSearchResults(
     navController: NavController,
     mediaBrowser: MediaBrowserAdapter,
-    mediaController : MediaControllerAdapter,
-    mediaRepository: MediaRepository?) {
+    mediaController : MediaControllerAdapter) {
     val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     ModalNavigationDrawer(
         drawerContent = {
@@ -131,7 +128,6 @@ private fun SmallSearchResults(
                 SearchResults(
                     mediaBrowser = mediaBrowser,
                     mediaController = mediaController,
-                    mediaRepository = mediaRepository,
                     navController = navController,
                     modifier = Modifier.padding(it)
                 )
@@ -149,8 +145,7 @@ private fun SmallSearchResults(
 private fun LargeSearchResults(
     navController: NavController,
     mediaBrowser: MediaBrowserAdapter,
-    mediaController : MediaControllerAdapter,
-    mediaRepository: MediaRepository?) {
+    mediaController : MediaControllerAdapter) {
     PermanentNavigationDrawer(
         modifier = Modifier.fillMaxSize(),
         drawerContent = {
@@ -177,12 +172,10 @@ private fun LargeSearchResults(
                         .background(Color.Yellow)
                         .width(500.dp)
                         .fillMaxHeight()
-                //        .padding(it)
                 ) {
                     SearchResults(
                         mediaBrowser = mediaBrowser,
                         mediaController = mediaController,
-                        mediaRepository = mediaRepository,
                         navController = navController,
                         modifier = Modifier.padding(it)
                     )
@@ -268,7 +261,6 @@ fun SearchBar(navController: NavController,
 @Composable
 fun SearchResults(mediaBrowser: MediaBrowserAdapter,
                   mediaController: MediaControllerAdapter,
-                  mediaRepository: MediaRepository?,
                   navController: NavController,
                   modifier : Modifier = Modifier,
                   keyboardController : SoftwareKeyboardController? = LocalSoftwareKeyboardController.current,
@@ -276,7 +268,6 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter,
     val searchResultsColumn = stringResource(id = R.string.search_results_column)
 
     val searchResults by mediaBrowser.searchResults().observeAsState(emptyList())
-    //val scrollState = rememberScrollState()
     val lazyLisState = rememberLazyListState()
     
     LaunchedEffect(lazyLisState.isScrollInProgress) {
@@ -308,9 +299,16 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter,
                         }
                         MediaItemType.FOLDER -> {
                             FolderListItem(folder = mediaItem, onClick = {
-                                mediaRepository?.currentFolder = mediaItem
-                                navController.navigate(Screen.FOLDER.name)
-
+                                val folderLibraryId = MediaItemUtils.getLibraryId(it)
+                                val encodedFolderLibraryId = Uri.encode(folderLibraryId)
+                                val directoryPath = MediaItemUtils.getDirectoryPath(it)
+                                val encodedFolderPath = Uri.encode(directoryPath)
+                                val folderName = MediaItemUtils.getDirectoryName(it)
+                                navController.navigate(
+                                    Screen.FOLDER.name
+                                            + "/" + encodedFolderLibraryId
+                                            + "/" + folderName
+                                            + "/" + encodedFolderPath)
                             })
                         }
                         MediaItemType.ROOT -> {
