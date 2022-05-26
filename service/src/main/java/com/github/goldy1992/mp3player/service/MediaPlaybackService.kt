@@ -68,10 +68,10 @@ open class MediaPlaybackService : MediaBrowserServiceCompat(),
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
-        val playbackState : Int = mediaSession.controller.playbackState.state
-        Log.i(logTag(), "TASK rEmOvEd, playback state: " + Constants.playbackStateDebugMap.get(playbackState))
+        val playbackState : Int? = mediaSession.controller.playbackState?.state
+        Log.i(logTag(), "TASK rEmOvEd, playback state: " + Constants.playbackStateDebugMap.get(playbackState ?: PlaybackStateCompat.STATE_NONE))
 
-        if (playbackState != PlaybackStateCompat.STATE_PLAYING) {
+        if (playbackState == null || playbackState != PlaybackStateCompat.STATE_PLAYING) {
             stopForeground(true)
         } else {
             stopForeground(false)

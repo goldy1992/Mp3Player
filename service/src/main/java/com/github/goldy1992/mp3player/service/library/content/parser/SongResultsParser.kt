@@ -5,7 +5,9 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import android.support.v4.media.MediaBrowserCompat.MediaItem
+import android.util.Log
 import com.github.goldy1992.mp3player.commons.ComparatorUtils.Companion.uppercaseStringCompare
+import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -22,6 +24,7 @@ class SongResultsParser
     override fun create(cursor: Cursor?, mediaIdPrefix: String?): List<MediaItem> {
         val listToReturn = TreeSet(this)
         while (cursor != null && cursor.moveToNext()) {
+            Log.i(logTag(), "mediaIfPrefix: ${mediaIdPrefix ?: "null"}")
             val mediaItem = buildMediaItem(cursor, mediaIdPrefix!!)
             if (null != mediaItem) {
                 listToReturn.add(mediaItem)
@@ -34,20 +37,28 @@ class SongResultsParser
         get() = MediaItemType.SONG
 
     private fun buildMediaItem(c: Cursor, libraryIdPrefix: String): MediaItem? {
-        val mediaId = c.getString(c.getColumnIndex(MediaStore.Audio.Media._ID))
-        val mediaFilePath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA))
+        val mediaIdIndex = c.getColumnIndex(MediaStore.Audio.Media._ID)
+        val mediaId = if (mediaIdIndex >= 0) c.getString(mediaIdIndex) else Constants.UNKNOWN
+        val dataIndex = c.getColumnIndex(MediaStore.Audio.Media.DATA)
+        val mediaFilePath = if (dataIndex >= 0) c.getString(dataIndex) else Constants.UNKNOWN
         val mediaFile = File(mediaFilePath)
-
         val directory = if (!mediaFile.exists()) {
             return null
         } else {
             mediaFile.parentFile
         }
         val mediaUri = Uri.fromFile(mediaFile)
-        val duration = c.getLong(c.getColumnIndex(MediaStore.Audio.Media.DURATION))
-        val artist = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST))
-        val title = c.getString(c.getColumnIndex(MediaStore.Audio.Media.TITLE))
-        val albumId = c.getLong(c.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))
+        val durationIndex = c.getColumnIndex(MediaStore.Audio.Media.DURATION)
+        val duration = if (durationIndex >= 0) c.getLong(durationIndex) else 0L
+
+        val artistIndex = c.getColumnIndex(MediaStore.Audio.Media.ARTIST)
+        val artist = if (artistIndex >= 0) c.getString(artistIndex) else Constants.UNKNOWN
+
+        val titleIndex = c.getColumnIndex(MediaStore.Audio.Media.TITLE)
+        val title = if (titleIndex >= 0) c.getString(titleIndex) else Constants.UNKNOWN
+
+        val albumIdIndex = c.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)
+        val albumId = if (albumIdIndex >= 0) c.getLong(albumIdIndex) else 0
         val fileName = mediaFile.name
         val sArtworkUri = Uri.parse(ALBUM_ART_URI_PREFIX)
         val albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId)
@@ -76,6 +87,13 @@ class SongResultsParser
         } else {
             mediaIdPrefix + ID_SEPARATOR + mediaIdSuffix
         }
+    }
+
+    /**
+     * @return the name of the log tag given to the class
+     */
+    override fun logTag(): String {
+        return "Sngs_Res_Prser"
     }
 
     companion object {

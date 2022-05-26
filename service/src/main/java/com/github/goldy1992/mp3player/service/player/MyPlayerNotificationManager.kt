@@ -25,14 +25,12 @@ class MyPlayerNotificationManager @Inject constructor(@ApplicationContext privat
 
     fun create(): PlayerNotificationManager? {
         if (null == playbackNotificationManager) {
-            playbackNotificationManager = PlayerNotificationManager.createWithNotificationChannel(
-                    context,
-                    CHANNEL_ID,
-                    R.string.notification_channel_name,
-                    R.string.channel_description,
-                    NOTIFICATION_ID,
-                    myDescriptionAdapter,
-                    notificationListener)
+            playbackNotificationManager = PlayerNotificationManager.Builder(context, NOTIFICATION_ID, CHANNEL_ID)
+                    .setChannelNameResourceId(R.string.notification_channel_name)
+                    .setChannelDescriptionResourceId(R.string.channel_description)
+                    .setMediaDescriptionAdapter(myDescriptionAdapter)
+                    .setNotificationListener(notificationListener)
+                    .build()
             playbackNotificationManager?.setPlayer(null)
             playbackNotificationManager?.setColor(Color.BLACK)
             playbackNotificationManager?.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)

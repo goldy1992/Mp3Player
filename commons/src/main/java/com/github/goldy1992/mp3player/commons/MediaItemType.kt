@@ -14,6 +14,8 @@ enum class MediaItemType(
     FOLDER(4, "Folder", null),
     NONE(5, "None", null);
 
+    // Add playlists
+
     val value = ordinal
 
     companion object {

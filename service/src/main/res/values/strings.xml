@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">service</string>
-    <string name="notification_channel_name">channel_name</string>
-    <string name="channel_description">channel description</string>
+    <string name="notification_channel_name">MP3 Player Channel</string>
+    <string name="channel_description">MP3 Player</string>
 </resources>

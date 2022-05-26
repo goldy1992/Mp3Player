@@ -2,26 +2,22 @@ package com.github.goldy1992.mp3player.client.callbacks.connection
 
 import android.support.v4.media.MediaBrowserCompat
 import com.github.goldy1992.mp3player.client.MediaBrowserConnectionListener
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import dagger.hilt.android.scopes.ActivityScoped
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 /**
  * Created by Mike on 04/10/2017.
  */
-@ActivityScoped
+@ActivityRetainedScoped
 class MyConnectionCallback
+
     @Inject
     constructor()
     :  MediaBrowserCompat.ConnectionCallback() {
 
-    private var mediaControllerAdapter : MediaControllerAdapter? = null
-
     private val listeners : MutableSet<MediaBrowserConnectionListener> = HashSet()
 
     override fun onConnected() {
-        mediaControllerAdapter?.onConnected()
-
         for (listener in listeners) {
             listener.onConnected()
         }
@@ -43,10 +39,6 @@ class MyConnectionCallback
 
     fun registerListener(listener : MediaBrowserConnectionListener) {
         listeners.add(listener)
-    }
-
-    fun registerMediaControllerAdapter(mediaControllerAdapter: MediaControllerAdapter) {
-        this.mediaControllerAdapter = mediaControllerAdapter
     }
 
     fun registerListeners(listenerSet : Set<MediaBrowserConnectionListener>) {

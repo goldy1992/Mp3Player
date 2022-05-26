@@ -18,7 +18,7 @@ object SearchFragmentUtils {
     }
 
     fun openSearchFragment() {
-        Espresso.onView(ViewMatchers.withId(R.id.action_search)).perform(ViewActions.click())
+        //Espresso.onView(ViewMatchers.withId(R.id.action_search)).perform(ViewActions.click())
     }
 
     fun closeSearchFragment() {

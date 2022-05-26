@@ -11,7 +11,8 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.test.platform.app.InstrumentationRegistry
-import com.nhaarman.mockitokotlin2.*
+import com.github.goldy1992.mp3player.client.callbacks.connection.ConnectionStatus
+import org.mockito.kotlin.*
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -35,6 +36,7 @@ class MediaControllerAdapterTest {
         context = InstrumentationRegistry.getInstrumentation().context
         token = createMediaSessionCompatToken()
         whenever(mediaBrowserCompat.sessionToken).thenReturn(token)
+        whenever(mediaBrowserCompat.isConnected).thenReturn(true)
         mediaControllerAdapter = spy(MediaControllerAdapter(context, mediaBrowserCompat))
         whenever(mediaControllerAdapter.createMediaController(context, token)).thenReturn(mediaControllerCompat)
         whenever(mediaControllerCompat.metadata).thenReturn(mock<MediaMetadataCompat>())
@@ -98,7 +100,7 @@ class MediaControllerAdapterTest {
 
     @Test
     fun testSetRepeatMode() {
-        @PlaybackStateCompat.State val repeatMode = PlaybackStateCompat.REPEAT_MODE_ALL
+        @PlaybackStateCompat.RepeatMode val repeatMode = PlaybackStateCompat.REPEAT_MODE_ALL
         mediaControllerAdapter.setRepeatMode(repeatMode)
         verify(mediaControllerAdapter, times(1)).setRepeatMode(repeatMode)
     }
@@ -121,26 +123,29 @@ class MediaControllerAdapterTest {
         assertEquals(expectedResult, result)
     }
 
-//    @Test
-//    fun testGetAlbumArtValidUri() {
-//        val expectedPath = "mockUriPath"
-//        val metadata = MediaMetadataCompat.Builder()
-//                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, expectedPath)
-//                .build()
-//        whenever(mediaControllerAdapter.metadata).thenReturn(metadata)
-//        val result = mediaControllerAdapter.
-//        Assert.assertEquals(result?.path, expectedPath)
- //   }
-//
-//    @Test
-//    fun testGetAlbumArtNullUri() {
-//        val metadata = MediaMetadataCompat.Builder()
-//                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, null)
-//                .build()
-//        whenever(mediaControllerAdapter.metadata).thenReturn(metadata)
-//        val result = mediaControllerAdapter.currentSongAlbumArtUri
-//        Assert.assertNull(result)
-//    }
+    @Test
+    fun testGetAlbumArtValidUri() {
+        val expectedPath = "mockUriPath"
+        val metadata = MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, expectedPath)
+                .build()
+        mediaControllerAdapter.metadata.postValue(metadata)
+        shadowOf(getMainLooper()).idle()
+        val result = mediaControllerAdapter.getCurrentSongAlbumArtUri()
+        assertEquals(result?.path, expectedPath)
+    }
+
+    @Test
+    fun testGetAlbumArtNullUri() {
+        val metadata = MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, null)
+                .build()
+        mediaControllerAdapter.metadata.postValue(metadata)
+        shadowOf(getMainLooper()).idle()
+        val result = mediaControllerAdapter.getCurrentSongAlbumArtUri()
+        Assert.assertNull(result)
+    }
+
     @Test
     fun testSendCustomAction() {
         val customAction = "DO_SOMETHING"
@@ -151,28 +156,22 @@ class MediaControllerAdapterTest {
 
     @Test
     fun testShuffleMode() {
-        @PlaybackStateCompat.State val shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_ALL
+        @PlaybackStateCompat.ShuffleMode val shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_ALL
         mediaControllerAdapter.setShuffleMode(shuffleMode)
         verify(mediaControllerAdapter, times(1)).setShuffleMode(shuffleMode)
     }
 
-//    @Test
-//    fun testNullGetPlaybackState() {
-//        val result = mediaControllerAdapter.playbackState
-//        Assert.assertEquals(0, result.toLong())
-//    }
-
-//    @Test
-//    fun testGetPlaybackState() {
-//        @PlaybackStateCompat.State val state = PlaybackStateCompat.STATE_PAUSED
-//        val expectedState = PlaybackStateCompat.Builder()
-//                .setState(state, 34L, 0.4f)
-//                .build()
-//        val mediaControllerCompat = mediaControllerAdapter.mediaController
-//        whenever(mediaControllerCompat?.playbackState).thenReturn(expectedState)
-//        @PlaybackStateCompat.State val result = mediaControllerAdapter.playbackState
-//        Assert.assertEquals(state.toLong(), result.toLong())
-//    }
+    @Test
+    fun testGetPlaybackState() {
+        @PlaybackStateCompat.State val state = PlaybackStateCompat.STATE_PAUSED
+        val expectedState = PlaybackStateCompat.Builder()
+                .setState(state, 34L, 0.4f)
+                .build()
+        mediaControllerAdapter.playbackState.postValue(expectedState)
+        shadowOf(getMainLooper()).idle()
+         val result = mediaControllerAdapter.playbackState
+        Assert.assertEquals(state.toLong(), result.value!!.state.toLong())
+    }
 
     @Test
     fun testGetPlaybackStateCompatWhenNull() {

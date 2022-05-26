@@ -5,7 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.commons.LogTagger
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MediaIdSubscriptionCallback
 
     @Inject

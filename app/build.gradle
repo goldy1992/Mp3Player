@@ -1,24 +1,25 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'jacoco'
 apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     testBuildType "debug"
     packagingOptions {
-        exclude 'META-INF/LICENSE.md'
-        exclude 'META-INF/LICENSE-notice.md'
+        resources {
+            excludes += ['**/attach_hotspot_windows.dll', 'META-INF/LICENSE.md', 'META-INF/LICENSE-notice.md', 'META-INF/AL2.0', 'META-INF/ASM', 'META-INF/licenses/ASM', 'META-INF/LGPL2.1']
+        }
     }
-    compileSdkVersion TARGET_SDK_VERION
-	buildToolsVersion BUILD_TOOLS_VERSION
+    compileSdkVersion target_sdk_version
+	buildToolsVersion build_tools_version
     defaultConfig {
         applicationId "com.github.goldy1992.mp3player"
-        minSdkVersion MIN_SDK_VERSION
-        targetSdkVersion TARGET_SDK_VERION
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
         versionCode Integer.parseInt(project.properties['version.code']).intValue()
         versionName project.properties['version.name']
         testInstrumentationRunner "com.github.goldy1992.mp3player.Mp3PlayerHiltTestRunner"
+        missingDimensionStrategy 'fullUnittest', 'fullDebug'
     }
 
     buildFeatures {
@@ -31,9 +32,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            testCoverageEnabled true
-            debuggable true
             minifyEnabled false
+            debuggable true
+            testCoverageEnabled true
         }
     }
     flavorDimensions flavor_dimen_mode
@@ -42,23 +43,25 @@ android {
             applicationIdSuffix ".full"
             versionNameSuffix "-full"
             resValue "string", "app_name", "Music Player"
-            missingDimensionStrategy flavor_dimen_mode, flavor_full, flavor_integration, flavor_unitTest
         }
         automation {
             applicationIdSuffix ".automation"
             versionNameSuffix "-automation"
             resValue "string", "app_name", "Test Music Player"
+            matchingFallbacks = ['full']
         }
     }
 
     variantFilter { variant ->
         def names = variant.flavors*.name
 
+
         if (names.contains("automation")) {
-            if (variant.buildType.name == "release" || variant.buildType.name == "debug") {
+            if (variant.buildType.name == "release") {
                 setIgnore(true)
             }
         }
+
     }
 
 
@@ -80,47 +83,35 @@ android {
         }
     }
 
-    lintOptions {
-        disable 'GoogleAppIndexingWarning'
-        disable 'PrivateResource'
-        abortOnError false
-    }
     compileOptions {
         incremental = false
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
-    kotlinOptions { jvmTarget = "1.8" }
+    kotlinOptions { jvmTarget = "11" }
+    lint {
+        abortOnError false
+        disable 'GoogleAppIndexingWarning', 'PrivateResource'
+    }
+    namespace 'com.github.goldy1992.mp3player'
 }
 
 dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
-    implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
-    implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
-    implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
-    implementation group: 'androidx.viewpager2', name: 'viewpager2', version: VIEW_PAGER2_VERSION
-    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: KOTLIN_COROUTINE_VERSION
-    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: KOTLIN_COROUTINE_VERSION
-    implementation group: 'androidx.recyclerview', name: 'recyclerview', version: '1.1.0'
-    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: EXO_PLAYER_VERSION
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: commons_lang_version
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: commons_collections4_version
+    implementation group: 'androidx.media', name: 'media', version: media_version
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: coroutines_version
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: coroutines_version
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: exo_player_vesrion
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
-    implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
-    implementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
-    implementation group: 'com.google.android.material', name: 'material', version: MATERIAL_VERSION
-    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: EXO_PLAYER_VERSION
-    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: EXO_PLAYER_VERSION
-    implementation group: 'androidx.room', name: 'room-runtime', version: ROOM_VERSION
-    implementation group: 'com.l4digital.fastscroll', name: 'fastscroll', version: FAST_SCROLL_VERSION
-    implementation group: 'androidx.preference', name: 'preference-ktx', version: PREFERENCE_VERSION
-
-    // Glide
-    implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION
-
-    //dagger
-    implementation group: 'com.google.dagger', name: 'dagger', version: DAGGER_VERSION
+    implementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
+    implementation group: 'androidx.appcompat', name: 'appcompat', version: app_compat_version
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: exo_player_vesrion
+    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: exo_player_vesrion
+    implementation group: 'androidx.room', name: 'room-runtime', version: room_version
 
     // local libs
     implementation project(path: ':commons')
@@ -128,48 +119,44 @@ dependencies {
     implementation project(path: ':client')
 
     // hilt
-    implementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
-    kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
-    implementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
-    kapt group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
-    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
-    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
-    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
-    androidTestImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
+    implementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
+    kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
+  //  implementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
+    kapt group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
+    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
+    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
+    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
+ //   androidTestImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
 
-    kaptAndroidTest group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
+    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
 
 
     androidTestImplementation junitUnitTests
 
-    androidTestImplementation group: 'androidx.test', name: 'core', version: TEST_CORE_VERSION
-    androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
-    androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: JUNIT_EXT_VERSION
-    androidTestImplementation group: 'androidx.test', name: 'rules', version: TEST_RULES_VERSION
-    androidTestImplementation group: 'androidx.test', name: 'runner', version: TEST_RUNNER_VERSION
-    androidTestImplementation group: 'androidx.test', name: 'monitor', version: MIRROR_VERSION
-    androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
-    androidTestImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+    androidTestImplementation group: 'androidx.test', name: 'core', version: test_core_version
+    androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: annotation_version
+    androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: junit_ext_version
+    androidTestImplementation group: 'androidx.test', name: 'rules', version: test_rules_version
+    androidTestImplementation group: 'androidx.test', name: 'runner', version: test_runner_version
+    androidTestImplementation group: 'androidx.test', name: 'monitor', version: monitor_version
+    androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: espresso_core_version
 
 
-    androidTestImplementation(group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION) {
+    androidTestImplementation(group: 'androidx.test.espresso', name: 'espresso-core', version: espresso_core_version) {
         exclude module: "support-annotations"
     }
-    androidTestImplementation group: 'androidx.test.uiautomator', name: 'uiautomator', version: TEST_UI_AUTOMATOR_VERSION
+    androidTestImplementation group: 'androidx.test.uiautomator', name: 'uiautomator', version: ui_automator_version
+
+    // UI Tests
+    androidTestImplementation group: 'androidx.compose.ui', name: 'ui-test-junit4', version: compose_version
+    // Test rules and transitive dependencies:
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
 
 
 
-    debugImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
-    debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
-    implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
-    implementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
-    implementation group: 'androidx.fragment', name: 'fragment-ktx', version: FRAGMENT_VERSION
+    debugImplementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
 
-
-    // Kotlin
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-
+    implementation group: 'androidx.activity', name: 'activity-ktx', version: activity_ktx_version
 
 }
 

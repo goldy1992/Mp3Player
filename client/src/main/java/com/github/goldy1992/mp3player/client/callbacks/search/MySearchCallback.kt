@@ -4,25 +4,19 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.SearchCallback
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.commons.LogTagger
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@ActivityRetainedScoped
+@Singleton
 class MySearchCallback
     @Inject
     constructor()
     : SearchCallback(), LogTagger  {
 
-    private val listeners: MutableSet<SearchResultListener> = mutableSetOf()
+    val searchResults : MutableLiveData<List<MediaBrowserCompat.MediaItem>> = MutableLiveData()
 
-    fun registerSearchResultListener(searchResultListener: SearchResultListener) {
-        listeners.add(searchResultListener)
-    }
-
-    fun unregisterSearchResultListener(searchResultListener: SearchResultListener?): Boolean {
-        return listeners.remove(searchResultListener)
-    }
 
     /**
      * {@inheritDoc}
@@ -33,9 +27,7 @@ class MySearchCallback
     override fun onSearchResult(query: String, extras: Bundle?,
                                 items: List<MediaBrowserCompat.MediaItem>) {
         Log.i(logTag(), "hit the onSearchResult callback")
-        for (listener in listeners) {
-            listener.onSearchResult(items)
-        }
+        searchResults.postValue(items)
     }
 
     override fun logTag(): String {

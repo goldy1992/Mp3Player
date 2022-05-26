@@ -62,7 +62,7 @@ class AudioObserver
      * @param userId not used
      */
     @Suppress("UNUSED_PARAMETER")
-    fun onChange(selfChange: Boolean, uri: Uri?, userId: Int) {
+    override fun onChange(selfChange: Boolean, uri: Uri?, userId: Int) {
         if (startsWithUri(uri)) {
                 runBlocking {
                     updateSearchDatabase(uri)
@@ -71,14 +71,14 @@ class AudioObserver
                 }
             }
             // when there is a "change" to the meta data the exact id will given as the uri
-            Log.i(logTag(), "hit on change")
+            Log.d(logTag(), "hit on change")
 
     }
 
     private suspend fun updateSearchDatabase(uri: Uri?) {
         var id = INVALID_ID
         try {
-            id = ContentUris.parseId(uri)
+            id = ContentUris.parseId(uri!!)
         } catch (ex: Exception) {
             Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
         }

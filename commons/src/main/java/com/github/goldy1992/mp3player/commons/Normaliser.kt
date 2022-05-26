@@ -8,6 +8,6 @@ object Normaliser {
     fun normalise(query: String): String {
         var toReturn = query
         toReturn = StringUtils.stripAccents(toReturn)
-        return toReturn.trim { it <= ' ' }.toUpperCase(Locale.getDefault())
+        return toReturn.trim { it <= ' ' }.uppercase(Locale.getDefault())
     }
 }

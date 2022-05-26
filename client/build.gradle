@@ -2,22 +2,29 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply from: rootProject.file("jacoco-with-test-support.gradle")
-apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
-    compileSdkVersion TARGET_SDK_VERION
-    buildToolsVersion BUILD_TOOLS_VERSION
+    compileSdkVersion target_sdk_version
+    buildToolsVersion build_tools_version
     testBuildType "debug"
 
     buildFeatures {
-        viewBinding true
+        compose true
     }
 
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
+    }
+    packagingOptions {
+        resources {
+            excludes += ['**/attach_hotspot_windows.dll', 'META-INF/LICENSE.md', 'META-INF/LICENSE-notice.md', 'META-INF/AL2.0', 'META-INF/ASM', 'META-INF/licenses/ASM', 'META-INF/LGPL2.1']
+        }
+    }
+
+
     defaultConfig {
-        minSdkVersion MIN_SDK_VERSION
-        targetSdkVersion TARGET_SDK_VERION
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
         testInstrumentationRunner "com.github.goldy1992.mp3player.client.CustomTestRunner"
         /*makes the Android Test Orchestrator run its "pm clear" command after each test invocation.
         Ensures app's state is completely cleared between tests. */
@@ -33,16 +40,14 @@ android {
         }
         debug {
             testCoverageEnabled true
-            debuggable true
+            enableUnitTestCoverage false
             minifyEnabled false
         }
+
     }
     flavorDimensions flavor_dimen_mode
     productFlavors {
         full {
-            dimension = flavor_dimen_mode
-        }
-        automation {
             dimension = flavor_dimen_mode
         }
     }
@@ -66,11 +71,14 @@ android {
 
     compileOptions {
         incremental = false
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
-    kotlinOptions { jvmTarget = "1.8" }
+    kotlinOptions {
+        jvmTarget = "11"
+        useIR = true
+    }
 
     testOptions {
         //execution 'ANDROIDX_TEST_ORCHESTRATOR'
@@ -82,7 +90,7 @@ android {
         }
         unitTests.all {
             testLogging {
-                events "passed", "skipped"//, "failed", "standardOut", "standardError"
+                events "passed", "skipped", "failed", "standardOut", "standardError"
                 outputs.upToDateWhen {false}
                 showStandardStreams = false
             }
@@ -103,131 +111,137 @@ android {
             }
         }
     }
+    namespace 'com.github.goldy1992.mp3player.client'
 
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':commons')
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
-    automationImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
-    androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
-    testImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: coroutines_version
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: coroutines_version
+    implementation group: 'androidx.annotation', name: 'annotation', version: annotation_version
+    implementation group: 'androidx.appcompat', name: 'appcompat', version: app_compat_version
+    implementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
+    implementation group: 'androidx.media', name: 'media', version: media_version
+    implementation group: 'org.apache.commons', name: 'commons-io', version: commons_io_version
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: commons_collections4_version
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: commons_lang_version
 
-    implementation group: 'com.l4digital.fastscroll', name: 'fastscroll', version: FAST_SCROLL_VERSION
-    implementation group: 'androidx.drawerlayout', name: 'drawerlayout', version: DRAWER_LAYOUT_VERSION
-    implementation group: 'androidx.coordinatorlayout', name: 'coordinatorlayout', version: COORDINATOR_LAYOUT_VERSION
-    implementation group: 'androidx.annotation', name: 'annotation', version: ANNOTATION_VERSION
-    implementation group: 'org.apache.commons', name: 'commons-io', version: COMMONS_IO_VERSION
-    implementation group: 'androidx.constraintlayout', name: 'constraintlayout', version: CONSTRAINT_LAYOUT_VERSION
-    implementation group: 'com.google.android.material', name: 'material', version: MATERIAL_VERSION
-    implementation group: 'androidx.gridlayout', name: 'gridlayout', version: GRID_LAYOUT_VERSION
-    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: KOTLIN_COROUTINE_VERSION
-    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: KOTLIN_COROUTINE_VERSION
-    implementation group: 'androidx.appcompat', name: 'appcompat', version: APP_COMPAT_VERSION
-    implementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
-    implementation group: 'org.apache.commons', name: 'commons-collections4', version: COMMONS_COLLECTIONS4_VERSION
-    implementation group: 'com.google.guava', name: 'guava', version: GOOGLE_GUAVA_VERSION
-    implementation group: 'androidx.media', name: 'media', version: MEDIA_VERSION
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: COMMONS_LANG_VERSION
-    implementation group: 'androidx.viewpager2', name: 'viewpager2', version: VIEW_PAGER2_VERSION
-    implementation group: 'androidx.recyclerview', name: 'recyclerview', version: RECYCLER_VIEW_VERSION
-    implementation group: 'androidx.preference', name: 'preference-ktx', version: PREFERENCE_VERSION
+    implementation group: 'androidx.lifecycle', name: 'lifecycle-runtime-ktx', version: lifecycle_version
+    implementation group: 'androidx.lifecycle', name: 'lifecycle-livedata-ktx', version: lifecycle_version
+    implementation group: 'androidx.lifecycle', name: 'lifecycle-viewmodel-savedstate', version: lifecycle_version
+    implementation group: 'androidx.lifecycle', name: 'lifecycle-viewmodel-ktx', version: lifecycle_version
+    implementation group: 'androidx.lifecycle', name: 'lifecycle-viewmodel-compose', version: lifecycle_version
 
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
-    testImplementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    testImplementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
-    testImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
-    androidTestImplementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    androidTestImplementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
-    androidTestImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    implementation group: 'androidx.activity', name: 'activity-ktx', version: activity_ktx_version
+    androidTestImplementation project(path: ':client')
 
-    debugImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
-    debugImplementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
-    debugImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+    // for use with compose previews
+    debugImplementation("androidx.customview:customview:1.2.0-alpha01")
+    debugImplementation("androidx.customview:customview-poolingcontainer:1.0.0-beta02")
 
-//    instrumentationImplementation group: 'androidx.core', name: 'core-ktx', version: ANDROIDX_CORE_KOTLIN_VERSION
-//    instrumentationImplementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
-//    instrumentationImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
+    implementation group: 'androidx.compose.ui', name: 'ui', version: compose_version
+    implementation group: 'androidx.compose.ui', name: 'ui-tooling', version: compose_version
+    implementation group: 'androidx.compose.foundation', name: 'foundation', version: compose_version
+    implementation group: "androidx.compose.foundation", name: "foundation-layout", version: compose_version
+    implementation group: 'androidx.compose.material', name:'material', version: compose_version
+    implementation group: 'androidx.compose.material', name:'material-icons-core', version: compose_version
+    implementation group: 'androidx.compose.material', name:'material-icons-extended', version: compose_version
+    implementation group: 'androidx.compose.material3', name: 'material3', version: compose_material3_version
+    //implementation group: 'androidx.compose.material3', name: 'material3-window-size-class', version: compose_material3_version
 
+    implementation group: 'androidx.compose.runtime', name: 'runtime-livedata', version: compose_version
+    implementation group: 'androidx.compose.runtime', name: 'runtime-rxjava2', version: compose_version
 
-    implementation group: 'androidx.activity', name: 'activity-ktx', version: ACTIVITY_VERSION
-    implementation group: 'androidx.fragment', name: 'fragment', version: FRAGMENT_VERSION
-    implementation group: 'androidx.fragment', name: 'fragment-ktx', version: FRAGMENT_VERSION
+    implementation group: 'androidx.activity', name: 'activity-compose', version: '1.4.0'
 
-    // Glide
-    implementation group: 'com.github.bumptech.glide', name: 'glide', version: GLIDE_VERSION
-    implementation ("com.github.bumptech.glide:recyclerview-integration:$GLIDE_VERSION") {
-        // Excludes the support library because it's already included by Glide.
-        transitive = false
-    }
+    implementation "androidx.navigation:navigation-compose:2.5.0-rc01"
+    implementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
+    implementation group: 'androidx.hilt', name: 'hilt-navigation-compose', version: '1.0.0'
+    
+    def accompanist_version = '0.23.0'
+    implementation group: "com.google.accompanist", name: "accompanist-pager", version: accompanist_version
+    implementation group: "com.google.accompanist", name: "accompanist-insets", version: accompanist_version
+    implementation group: "com.google.accompanist", name: "accompanist-pager-indicators", version: accompanist_version
+    implementation group: "io.coil-kt", name: "coil-compose", version: "1.3.2"
 
-    // navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-    androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+    implementation "androidx.window:window:1.0.0-beta04"
 
+    def datastore_preferences_version = '1.0.0'
+    implementation group: "androidx.datastore", name: "datastore-preferences", version: datastore_preferences_version
+
+    // UI Tests
+    androidTestImplementation group: 'androidx.compose.ui', name: 'ui-test-junit4', version: compose_version
+    // Test rules and transitive dependencies:
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
+    testImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
+    // Needed for createComposeRule, but not createAndroidComposeRule:
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
 
     // hilt
-    implementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
-    implementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
-    kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
-    kapt group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
-
-    testImplementation group: 'com.google.dagger', name: 'hilt-android', version: HILT_VERSION
-    testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
-    testImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
-    kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
-    kaptTest group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
-
-    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: HILT_VERSION
-    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: HILT_VERSION
-
-    androidTestImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
-    kaptAndroidTest group: 'androidx.hilt', name: 'hilt-compiler', version: HILT_JETPACK_VERSION
+    kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
+    kapt group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
 
 
-    //   automationImplementation project(':commons')
+    kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
+    kaptTest group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
+
+    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
+    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
+
+    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
+
+
     androidTestImplementation project(':commons')
-    implementation project(':commons')
 
-    testImplementation junitUnitTests
+
+    androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
     androidTestImplementation junitUnitTests
+    androidTestImplementation group: 'androidx.test', name: 'rules', version: test_rules_version
+    androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: espresso_core_version
+    androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: espresso_core_version
+    androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: espresso_core_version
+    androidTestImplementation group: 'androidx.test', name: 'core-ktx', version: test_core_version
+    androidTestImplementation group: 'androidx.test.espresso',  name: 'espresso-intents', version: '3.4.0'
 
-    testImplementation("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
-        exclude group: "com.google.auto.service", module: "auto-service"
-    }
-    testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: ROBOLECTRIC_VERSION
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN"
-    testImplementation group: 'org.mockito', name: 'mockito-inline', version: mockito_inline_version
-    testImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: KOTLIN_COROUTINE_VERSION
-
-    androidTestImplementation group: 'androidx.test', name: 'rules', version: TEST_RULES_VERSION
-    androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
-    androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: ESPRESSO_CORE_VERSION
-    androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
-    androidTestImplementation group: 'androidx.test', name: 'core-ktx', version: TEST_CORE_VERSION
-
-    androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: JUNIT_EXT_VERSION
-    androidTestImplementation group: 'androidx.test', name: 'runner', version: TEST_RUNNER_VERSION
+    androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: junit_ext_version
+    androidTestImplementation group: 'androidx.test', name: 'runner', version: test_runner_version
     androidTestUtil group: "androidx.test", name: "orchestrator", version: test_orchestrator_version
-    androidTestImplementation group: 'androidx.test', name: 'monitor', version: MIRROR_VERSION
-    androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_KOTLIN"
-    androidTestImplementation 'com.github.tmurakami:dexopener:2.0.5'
-    androidTestImplementation group: 'com.linkedin.dexmaker', name: 'dexmaker-mockito-inline-extended', version: '2.28.0'
-    androidTestImplementation group: 'androidx.fragment', name: 'fragment-testing', version: FRAGMENT_VERSION
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-reflect:1.4.21"
-
+    androidTestImplementation group: 'androidx.test', name: 'monitor', version: monitor_version
+    androidTestImplementation group: "org.mockito.kotlin", name: "mockito-kotlin", version: mockito_kotlin_version
+    androidTestImplementation group: 'com.linkedin.dexmaker', name: 'dexmaker-mockito-inline-extended', version: '2.28.1'
+    androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: kotlin_version
     androidTestImplementation 'androidx.arch.core:core-common:2.1.0'
     androidTestImplementation 'androidx.arch.core:core-runtime:2.1.0'
     androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
+    androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: espresso_core_version
+    androidTestImplementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    androidTestImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
+    // Test rules and transitive dependencies:
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
+    androidTestImplementation group: 'androidx.test.uiautomator', name: 'uiautomator', version: ui_automator_version
 
-    automationImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: ESPRESSO_CORE_VERSION
-    debugImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: ESPRESSO_CORE_VERSION
-    androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: ESPRESSO_CORE_VERSION
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
+    debugImplementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
+    debugImplementation group: 'androidx.activity', name: 'activity-ktx', version: activity_ktx_version
+    debugImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: espresso_core_version
 
+    testImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
+    testImplementation("org.robolectric:robolectric:$robolectric_version") {
+        exclude group: "com.google.auto.service", module: "auto-service"
+    }
+    testImplementation group: 'androidx.test', name: 'core-ktx', version: test_core_version
+    testImplementation group: "org.mockito.kotlin", name: "mockito-kotlin", version: mockito_kotlin_version
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: mockito_inline_version
+    testImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: coroutines_version
+    testImplementation junitUnitTests
+    testImplementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
+    testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
+    testImplementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    testImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 }
 
 kapt {

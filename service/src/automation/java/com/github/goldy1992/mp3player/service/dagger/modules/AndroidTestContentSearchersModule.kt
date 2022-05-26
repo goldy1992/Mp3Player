@@ -13,12 +13,15 @@ import com.github.goldy1992.mp3player.service.library.search.FolderDao
 import com.github.goldy1992.mp3player.service.library.search.SongDao
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ServiceComponent
+import dagger.hilt.android.scopes.ServiceScoped
 
+@InstallIn(ServiceComponent::class)
 @Module
 class AndroidTestContentSearchersModule {
     @Provides
-    @Singleton
+    @ServiceScoped
     fun providesSongSearcher(contentResolver: ContentResolver,
                              resultsParser: SongResultsParser,
                              mediaItemTypeIds: MediaItemTypeIds,
@@ -28,7 +31,7 @@ class AndroidTestContentSearchersModule {
     }
 
     @Provides
-    @Singleton
+    @ServiceScoped
     fun providesFolderSearcher(contentResolver: ContentResolver,
                                resultsParser: FolderResultsParser,
                                folderResultsFilter: FolderSearchResultsFilter,
