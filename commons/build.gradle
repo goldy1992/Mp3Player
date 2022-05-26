@@ -65,7 +65,7 @@ dependencies {
     testImplementation("org.robolectric:robolectric:$robolectric_version") {
         exclude group: "com.google.auto.service", module: "auto-service"
     }
-    testImplementation group: 'junit', name: 'junit', version: JUNIT4_VERSION
+    testImplementation group: 'junit', name: 'junit', version: junit4_version
     testImplementation group: "org.mockito.kotlin", name: "mockito-kotlin", version: mockito_kotlin_version
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: mockito_inline_version
 }
