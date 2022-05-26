@@ -30,15 +30,14 @@ object NotificationBarUtils {
 
     fun playFromNotificationBar(uiDevice: UiDevice) {
        // uiDevice.openNotification()
-        Log.i("clickObj", "opened notifications")
+        Log.d("clickObj", "opened notifications")
 
-        Log.i("clickObj", "opened notifications")
      //   val description = context.getString(R.string.channel_description)
         var selector : UiSelector = UiSelector()
                 .packageName(SYSTEM_UI_PACKAGE)
                 .className("android.widget.ImageButton")
                 .resourceId(ANDROID_PLAY_PAUSE_ICON_EXPANDED)
-        Log.i("clickObj", "awaited system ui")
+        Log.d("clickObj", "awaited system ui")
         var uiObject : UiObject = uiDevice.findObject(selector)
         if (!uiObject.exists()) {
 
@@ -50,7 +49,7 @@ object NotificationBarUtils {
         }
         uiObject.click()
 
-        Log.i("clickObj", "clicked play")
+        Log.d("clickObj", "clicked play")
 
     }
 

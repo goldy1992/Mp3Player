@@ -6,25 +6,30 @@ import android.os.ResultReceiver
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
 import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
+import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaId
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaUri
 import com.github.goldy1992.mp3player.service.PlaylistManager
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ForwardingPlayer
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
+import com.google.android.exoplayer2.source.MediaSource
 import org.apache.commons.collections4.CollectionUtils
+import java.lang.Exception
 import java.util.*
 import javax.inject.Inject
 
 class MyPlaybackPreparer @Inject constructor(private val exoPlayer: ExoPlayer,
                                              private val contentManager: ContentManager,
-                                             private val mediaSourceFactory: MediaSourceFactory,
+                                             private val mediaSourceFactory: MediaSource.Factory,
                                              private val myControlDispatcher: ForwardingPlayer,
                                              private val playlistManager: PlaylistManager)
-    : MediaSessionConnector.PlaybackPreparer {
+    : MediaSessionConnector.PlaybackPreparer, LogTagger {
     override fun getSupportedPrepareActions(): Long {
         return MediaSessionConnector.PlaybackPreparer.ACTIONS
     }
@@ -57,12 +62,16 @@ class MyPlaybackPreparer @Inject constructor(private val exoPlayer: ExoPlayer,
             val resultsIterator = results.listIterator()
             while (resultsIterator.hasNext()) {
                 val currentMediaItem = resultsIterator.next()
-                val currentUri = getMediaUri(currentMediaItem)
-                val src = mediaSourceFactory.createMediaSource(currentUri!!)
-                if (null != src) {
-                    concatenatingMediaSource.addMediaSource(src)
-                } else {
-                    resultsIterator.remove()
+                try {
+                    val currentUri : Uri = getMediaUri(currentMediaItem) ?: throw Exception()
+                    val src = mediaSourceFactory.createMediaSource(MediaItem.fromUri(currentUri))
+                    if (null != src) {
+                        concatenatingMediaSource.addMediaSource(src)
+                    } else {
+                        resultsIterator.remove()
+                    }
+                } catch (ex : Exception) {
+                    Log.e(logTag(), "Failed to read in Uri from MediaItem: ${currentMediaItem}")
                 }
             }
             val uriToPlayIndex = getIndexOfCurrentTrack(trackId, results)
@@ -124,5 +133,9 @@ class MyPlaybackPreparer @Inject constructor(private val exoPlayer: ExoPlayer,
             val trackId = getMediaId(currentPlaylist!![0])
             preparePlaylist(false, trackId, currentPlaylist)
         }
+    }
+
+    override fun logTag(): String {
+        return "MyPlaybackPreparer"
     }
 }

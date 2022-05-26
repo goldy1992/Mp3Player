@@ -71,7 +71,7 @@ class AudioObserver
                 }
             }
             // when there is a "change" to the meta data the exact id will given as the uri
-            Log.i(logTag(), "hit on change")
+            Log.d(logTag(), "hit on change")
 
     }
 

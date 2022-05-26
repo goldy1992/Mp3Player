@@ -8,6 +8,7 @@ import com.github.goldy1992.mp3player.service.PlaylistManager
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ForwardingPlayer
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.upstream.FileDataSource.FileDataSourceException
 import org.junit.Assert
@@ -25,7 +26,7 @@ class MyPlaybackPreparerTest {
     
     private val exoPlayer: ExoPlayer = mock<ExoPlayer>()
 
-    private val mediaSourceFactory: MediaSourceFactory = mock<MediaSourceFactory>()
+    private val mediaSourceFactory: MediaSource.Factory = mock<MediaSource.Factory>()
 
     private val myControlDispatcher: ForwardingPlayer = mock<ForwardingPlayer>()
 
@@ -38,7 +39,7 @@ class MyPlaybackPreparerTest {
     fun setup() {
         val testItem = MediaItemBuilder("id1").setMediaUri(Uri.parse("string")).build()
         whenever(playlistManager.playlist).thenReturn(mutableListOf(testItem))
-        whenever(mediaSourceFactory.createMediaSource(any<Uri>())).thenReturn(mediaSource)
+        whenever(mediaSourceFactory.createMediaSource(any<MediaItem>())).thenReturn(mediaSource)
         myPlaybackPreparer = MyPlaybackPreparer(exoPlayer, contentManager, mediaSourceFactory, myControlDispatcher, playlistManager)
     }
 

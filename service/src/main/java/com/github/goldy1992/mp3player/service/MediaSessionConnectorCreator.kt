@@ -44,8 +44,13 @@ class MediaSessionConnectorCreator
 
     companion object {
         @PlaybackActions
-        val SUPPORTED_PLAYBACK_ACTIONS = PlaybackStateCompat.ACTION_STOP or PlaybackStateCompat.ACTION_PAUSE or PlaybackStateCompat.ACTION_PLAY or
-                PlaybackStateCompat.ACTION_SET_REPEAT_MODE or PlaybackStateCompat.ACTION_SET_SHUFFLE_MODE or PlaybackStateCompat.ACTION_SEEK_TO
+        val SUPPORTED_PLAYBACK_ACTIONS =
+            PlaybackStateCompat.ACTION_STOP or
+            PlaybackStateCompat.ACTION_PAUSE or
+            PlaybackStateCompat.ACTION_PLAY or
+            PlaybackStateCompat.ACTION_SET_REPEAT_MODE or
+            PlaybackStateCompat.ACTION_SET_SHUFFLE_MODE or
+            PlaybackStateCompat.ACTION_SEEK_TO
     }
 
 }

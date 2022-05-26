@@ -7,10 +7,7 @@ import com.github.goldy1992.mp3player.service.player.AudioBecomingNoisyBroadcast
 import com.github.goldy1992.mp3player.service.player.MyPlayerNotificationManager
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ForwardingPlayer
-import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.audio.AudioAttributes
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,7 +22,8 @@ class ExoPlayerModule {
     @Provides
     @ServiceScoped
     fun provideExoPlayer(@ApplicationContext context: Context?): ExoPlayer {
-        val exoPlayer = ExoPlayer.Builder(context!!).build()
+        val exoPlayer = ExoPlayer.Builder(context!!)
+            .build()
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(C.USAGE_MEDIA)
             .setContentType(C.CONTENT_TYPE_MUSIC)
