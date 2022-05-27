@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/goldy1992/Mp3Player/compare/v1.2.2...v2.0.0) (2022-05-27)
+
+
+### Features
+
+* **jetpack-compose:** Migrated the client module to leverage Jetpack Compose ([f3b497d](https://github.com/goldy1992/Mp3Player/commit/f3b497d797c1ed0bf224fc43276eba668e7027c3))
+
+
+### BREAKING CHANGES
+
+* **jetpack-compose:** The whole application UI has been redesigned in Jetpack Compose with the addition of Material3 libraries and the latest version of ExoPlayer.
+
 ## [1.2.2](https://github.com/goldy1992/Mp3Player/compare/v1.2.1...v1.2.2) (2021-04-25)
 
 
