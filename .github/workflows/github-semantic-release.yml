@@ -1,0 +1,41 @@
+name: Github Semantic Release
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  runs-on: ubuntu-latest
+  environment: release_env
+  steps:
+    - uses: actions/checkout@v3.0.2
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v3.1.2
+      with:
+        python-version: 3.9
+
+    - name: Upgrade pip
+      run: python -m pip install --upgrade pip
+
+    - name: Install Python dependencies - pyjavaproperties
+      run: pip install pyjavaproperties
+
+    - name: Make bump_versions.py executable
+      run: chmod +x ./.github/ci-scripts/release/bump_versions.py
+
+    - name: Install Node.js dependencies
+      run: npm ci
+
+    - name: Release
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: npx semantic-release --ci
