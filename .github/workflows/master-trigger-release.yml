@@ -48,11 +48,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: release_env
     steps:
-      - uses: goldy1992/Mp3Player/.github/workflows/github-semantic-release
+      - uses: ./.github/workflows/github-semantic-release
 
   release-to-playstore:
     needs: semantic-release # needs semantic release so that the versions are incremented
     runs-on: ubuntu-latest
     environment: release_env
     steps:
-      - uses: goldy1992/Mp3Player/.github/workflows/google-play-store-release
+      - uses: ./.github/workflows/google-play-store-release
