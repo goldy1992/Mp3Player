@@ -1,5 +1,6 @@
 name: Master Check Run Completed Workflow
 on:
+  workflow_dispatch:
   check_run:
     types: [completed]
     branches:
