@@ -2,7 +2,7 @@ name: Master Build and Test Workflow
 on:
   push:
     branches:
-      - master-release-hotfix
+      - master
 jobs:
   master-build-and-test:
     permissions:
