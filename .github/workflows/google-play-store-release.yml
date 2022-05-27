@@ -50,7 +50,7 @@ jobs:
         run: echo '${{ secrets.RELEASE_SERVICE_ACCOUNT_JSON }}' > service_account.json
 
       - name: Upload signed AAB to Playstore
-        uses: r0adkll/upload-google-play@v1.0.16
+        uses: r0adkll/upload-google-play@v1.0.15
         with:
           serviceAccountJson: service_account.json
           packageName: com.github.goldy1992.mp3player.full
