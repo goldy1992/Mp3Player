@@ -1,0 +1,61 @@
+name: Google Play Store Release
+on:
+  workflow_dispatch:
+  workflow_call:
+    jobs:
+      release:
+        runs-on: ubuntu-latest
+        environment: release_env
+        steps:
+          - uses: actions/checkout@v3.0.2
+            with:
+              fetch-depth: 0
+
+          - name: Set up JDK 11
+            uses: actions/setup-java@v3.3.0
+            with:
+              distribution: corretto
+              java-version: 11
+
+          - name: Cache Gradle packages
+            uses: actions/cache@v3.0.2
+            with:
+              path: |
+                ~/.gradle/caches
+              key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+              restore-keys: ${{ runner.os }}-gradle
+
+          - name: Setup Android SDK
+            uses: android-actions/setup-android@v2
+
+          - name: Make gradlew executable
+            run: chmod +x ./gradlew
+
+          - name: Build with Gradle
+            run: ./gradlew bundleRelease --stacktrace -PdisablePreDex
+
+          - name: Sign AAB (Android App Bundle)
+            uses: r0adkll/sign-android-release@v1
+            id: sign_app
+            with:
+              releaseDirectory: app/build/outputs/bundle/fullRelease
+              signingKeyBase64: ${{ secrets.KEY_STORE_BASE64 }}
+              alias: ${{ secrets.KEY_ALIAS }}
+              keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+              keyPassword: ${{ secrets.KEY_PASSWORD }}
+            env:
+              BUILD_TOOLS_VERSION: 30.0.2'
+
+          - name: Create service_account.json FROM secrets.SERVICE_ACCOUNT_JSON
+            run: echo '${{ secrets.RELEASE_SERVICE_ACCOUNT_JSON }}' > service_account.json
+
+          - name: Upload signed AAB to Playstore
+            uses: r0adkll/upload-google-play@v1.0.16
+            with:
+              serviceAccountJson: service_account.json
+              packageName: com.github.goldy1992.mp3player.full
+              releaseFiles: ${{ env.SIGNED_RELEASE_FILE }}
+              track: production
+              inAppUpdatePriority: 2
+              whatsNewDirectory: distrib/whatsnew
+              mappingFile: app/build/outputs/mapping/fullRelease/mapping.txt
