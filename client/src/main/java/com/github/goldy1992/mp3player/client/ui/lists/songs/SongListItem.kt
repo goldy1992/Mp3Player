@@ -4,6 +4,7 @@ import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -53,7 +54,8 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
                     onClick = { onClick(song) },
                     onLongClick = { }
                 )
-                .requiredHeight(72.dp),
+                .requiredHeight(72.dp)
+                .background(if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface),
             icon = {
                 val albumArtUri = MediaItemUtils.getAlbumArtUri(song = song)
                 AlbumArt(
@@ -77,15 +79,6 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
-//                    // TODO: Move equalizer to overlay song album art image
-//                    if (isPlaying) {
-//                        Equalizer(
-//                            maxHeight = 20.dp,
-//                            numOfBars = 4,
-//                            barColors = RAINBOW_COLORS,
-//                            barWidth = 5.dp
-//                        )
-//                    }
         ) {
             Text(
                 text = MediaItemUtils.getTitle(song),

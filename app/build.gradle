@@ -20,6 +20,11 @@ android {
         versionName project.properties['version.name']
         testInstrumentationRunner "com.github.goldy1992.mp3player.Mp3PlayerHiltTestRunner"
         missingDimensionStrategy 'fullUnittest', 'fullDebug'
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+
     }
 
     buildFeatures {
@@ -66,6 +71,7 @@ android {
 
 
     testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
 
         unitTests {
             includeAndroidResources = true
@@ -99,21 +105,7 @@ android {
 
 dependencies {
 
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: commons_lang_version
-    implementation group: 'org.apache.commons', name: 'commons-collections4', version: commons_collections4_version
-    implementation group: 'androidx.media', name: 'media', version: media_version
-    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: coroutines_version
-    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: coroutines_version
-    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: exo_player_vesrion
-    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
-   // implementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
-   // implementation group: 'androidx.appcompat', name: 'appcompat', version: app_compat_version
-    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: exo_player_vesrion
-    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: exo_player_vesrion
-    implementation group: 'androidx.room', name: 'room-runtime', version: room_version
-
-    // local libs
+//    // local libs
     implementation project(path: ':commons')
     implementation project(path: ':service')
     implementation project(path: ':client')
@@ -121,7 +113,6 @@ dependencies {
     // hilt
     implementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
     kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
-  //  implementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
     kapt group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
     androidTestImplementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
     androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
@@ -129,33 +120,6 @@ dependencies {
  //   androidTestImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
 
     kaptAndroidTest group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
-
-
-    androidTestImplementation junitUnitTests
-
-    androidTestImplementation group: 'androidx.test', name: 'core', version: test_core_version
-    androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: annotation_version
-    androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: junit_ext_version
-    androidTestImplementation group: 'androidx.test', name: 'rules', version: test_rules_version
-    androidTestImplementation group: 'androidx.test', name: 'runner', version: test_runner_version
-    androidTestImplementation group: 'androidx.test', name: 'monitor', version: monitor_version
-    androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: espresso_core_version
-
-
-    androidTestImplementation(group: 'androidx.test.espresso', name: 'espresso-core', version: espresso_core_version) {
-        exclude module: "support-annotations"
-    }
-    androidTestImplementation group: 'androidx.test.uiautomator', name: 'uiautomator', version: ui_automator_version
-
-    // UI Tests
-    androidTestImplementation group: 'androidx.compose.ui', name: 'ui-test-junit4', version: compose_version
-    // Test rules and transitive dependencies:
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
-
-
-
-    debugImplementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
-
 
 }
 

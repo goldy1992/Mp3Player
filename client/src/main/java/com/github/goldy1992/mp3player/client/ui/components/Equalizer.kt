@@ -1,12 +1,14 @@
 package com.github.goldy1992.mp3player.client.ui.components
 
-import android.util.Log
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -15,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -26,24 +27,18 @@ import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.utils.calculateBarWidth
 import kotlin.random.Random
 
-private const val LOG_TAG = "Equalizer"
-
 @Preview
 @Composable
 fun Equalizer(
             modifier: Modifier = Modifier,
-              numOfBars : Int = 5,
-              barColors : List<Color> = listOf(MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)),
-              backgroundColor : Color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f),
-              barWidth : Dp = 10.dp,
-            spaceBetweenBars : Dp = 1.dp) {
+              numOfBars : Int = 4,
+              barColor : Color = MaterialTheme.colorScheme.secondary,
+              spaceBetweenBars : Dp = 1.dp) {
 
     var maxHeight by remember { mutableStateOf(0f)    }
 
-    BoxWithConstraints() {
+    BoxWithConstraints(modifier = modifier) {
         val bWidth = calculateBarWidth(containerWidth = maxWidth, numOfBars = numOfBars, spaceBetweenBars = spaceBetweenBars)
-
-        val multiColor = barColors.size >= numOfBars
 
         val list : ArrayList<State<Float>> = ArrayList()
         val barWidthPx : Float = LocalDensity.current.run { bWidth.toPx()}
@@ -51,23 +46,17 @@ fun Equalizer(
 
         Canvas(modifier = modifier
             .fillMaxSize()
-            .background(backgroundColor)
         ) {
 
             maxHeight = this.size.height
-            Log.i(LOG_TAG, "canvas maxHeight: ${maxHeight}")
-
             for ((idx, l) in list.withIndex()) {
                 val height = l.value
                 val offset : Float = height
                 drawRect(
-                    color = if (multiColor) barColors[idx] else barColors[0],
+                    color = barColor,
                     topLeft = Offset((barWidthPx * idx) + (spaceBetweenBarsPx * idx), offset),
                     size = Size(width = barWidthPx, height = maxHeight - height)
                 )
-                if (idx == 0) {
-                    Log.d("Equalizer", "Equalizer: topLeftHeight: $offset bottomHeight: mh(${maxHeight})-offset(${offset} = ${maxHeight - offset})" )
-                }
             }
         }
 
@@ -82,16 +71,5 @@ fun Equalizer(
                 )))
         }
     }
-}
-
-@Composable
-@Preview
-fun EqualizerPreview() {
-    Equalizer(modifier = Modifier.size(40.dp),
-    numOfBars = 3,
-    barColors = listOf(Color.Red),
-    //backgroundColor = backgroundColor,
-    //barWidth = barWidth,
-    spaceBetweenBars = 2.dp)
 }
 
