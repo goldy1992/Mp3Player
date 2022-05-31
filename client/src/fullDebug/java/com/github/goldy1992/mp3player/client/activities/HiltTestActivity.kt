@@ -1,9 +1,9 @@
 package com.github.goldy1992.mp3player.client.activities
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint(AppCompatActivity::class)
+@AndroidEntryPoint(ComponentActivity::class)
 class HiltTestActivity : Hilt_HiltTestActivity() {
 
 

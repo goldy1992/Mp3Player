@@ -197,7 +197,7 @@ private fun SystemDarkModeMenuItem(userPreferencesRepository: UserPreferencesRep
     val switchDescription = stringResource(id = R.string.system_dark_mode_switch)
     ListItem(modifier = Modifier.fillMaxWidth(),
         icon = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.system_dark_mode_icon)) },
-        text = { Text(text = stringResource(id = R.string.use_system_dark_mode), style = MaterialTheme.typography.titleMedium)},
+        text = { Text(text = stringResource(id = R.string.use_system_dark_mode))},
         trailing = {
             Switch(
                 checked = useSystemDarkMode,

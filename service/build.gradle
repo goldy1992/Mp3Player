@@ -90,8 +90,8 @@ dependencies {
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: exo_player_vesrion
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: exo_player_vesrion
     implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: exo_player_vesrion
-    implementation group: 'androidx.appcompat', name: 'appcompat', version: app_compat_version
-    implementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
+  //  implementation group: 'androidx.appcompat', name: 'appcompat', version: app_compat_version
+  //  implementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: coroutines_version
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: coroutines_version

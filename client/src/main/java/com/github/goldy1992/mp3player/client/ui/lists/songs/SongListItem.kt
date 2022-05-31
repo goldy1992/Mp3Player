@@ -5,13 +5,17 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ListItem
+import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Equalizer
+import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.QuestionAnswer
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -19,13 +23,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
+import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import com.github.goldy1992.mp3player.client.ui.components.Equalizer
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
@@ -39,14 +46,20 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
                  isPlaying : Boolean = false,
                  isSelected : Boolean = false,
                  onClick: (item : MediaItem) -> Unit = {}) {
-        ListItem(
+
+    ListItem(
             modifier = Modifier
                 .combinedClickable(
                     onClick = { onClick(song) },
                     onLongClick = { }
                 )
                 .requiredHeight(72.dp),
-            icon = { AlbumArt(song = (song)) },
+            icon = {
+                val albumArtUri = MediaItemUtils.getAlbumArtUri(song = song)
+                AlbumArt(
+                    uri = albumArtUri,
+                    isPlaying = isPlaying)
+            },
             secondaryText = {
                 Text(
                     text = MediaItemUtils.getArtist(song)!!,
@@ -85,22 +98,34 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
 }
 
 @ExperimentalCoilApi
+@Preview
 @Composable
-private fun AlbumArt(song: MediaItem) {
+private fun AlbumArt(uri : Uri? = null,
+                    isPlaying: Boolean = true) {
 
-    val uri : Uri? = MediaItemUtils.getAlbumArtUri(song)
-    if (uri != null) {
-    Image(
-        modifier = Modifier
-            .size(40.dp, 40.dp),
-        painter = rememberImagePainter(
-            ImageRequest.Builder(LocalContext.current)
-                .data(MediaItemUtils.getAlbumArtUri(song = song)).build(),
-        ),
-        contentDescription = ""
-    ) }
-    else {
-        Icon(Icons.Filled.QuestionAnswer, contentDescription = "", modifier = Modifier.size(40.dp))
+    Surface(Modifier.size(40.dp)) {
+        if (uri == null) {
+            Image(
+                modifier = Modifier.size(40.dp),
+                imageVector = Icons.Filled.Help,
+                contentDescription = ""
+            )
+        } else {
+            Image(
+                modifier = Modifier
+                    .size(40.dp),
+                painter = rememberImagePainter(
+                    ImageRequest.Builder(LocalContext.current)
+                        .data(uri).build()
+                ),
+                contentDescription = ""
+            )
+        }
+
+        if (isPlaying) {
+            Equalizer(modifier = Modifier.size(40.dp))
+        }
     }
 }
+
 
