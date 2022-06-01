@@ -18,6 +18,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
 import org.robolectric.annotation.LooperMode
 import java.io.File
+import java.util.*
 
 @LooperMode(LooperMode.Mode.PAUSED)
 @RunWith(RobolectricTestRunner::class)
@@ -95,7 +96,7 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
 
     companion object {
         private const val TEST_DIRECTORY_NAME = "fileName"
-        private val EXPECTED_DIRECTORY_NAME = TEST_DIRECTORY_NAME.toUpperCase()
+        private val EXPECTED_DIRECTORY_NAME = TEST_DIRECTORY_NAME.uppercase(Locale.ROOT)
         private val TEST_DIRECTORY_PATH = (File.separator
                 + "a" + File.separator
                 + "b" + File.separator

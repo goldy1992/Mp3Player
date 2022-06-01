@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
@@ -20,17 +21,13 @@ import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 abstract class MainActivityBase : ComponentActivity(),
     LogTagger,
-    CoroutineScope by GlobalScope,
     PermissionGranted {
     @Inject
     lateinit var componentClassMapper : ComponentClassMapper
@@ -95,17 +92,18 @@ abstract class MainActivityBase : ComponentActivity(),
         connect()
         if (Intent.ACTION_VIEW == intent.action) {
             trackToPlay = intent.data
-            launch(Dispatchers.Default) {
+            this.lifecycleScope.launch(Dispatchers.Default) {
                 mediaControllerAdapter.playFromUri(trackToPlay, null)
             }
             this.startScreen = Screen.NOW_PLAYING
-        } 
-        CoroutineScope(Dispatchers.Main).launch { ui(startScreen = startScreen) }
-
-
+        }
+        this.lifecycleScope.launch(Dispatchers.Main) {
+            ui(startScreen = startScreen)
+        }
     }
 
-    val permissionLauncher : ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+
+    private val permissionLauncher : ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
         permissionGranted ->
         run {
 
@@ -113,7 +111,7 @@ abstract class MainActivityBase : ComponentActivity(),
             if (permissionGranted) {
                 onPermissionGranted()
             } else {
-                CoroutineScope(Dispatchers.Main).launch {
+                this.lifecycleScope.launch(Dispatchers.Main) {
                     Toast.makeText(
                         applicationContext,
                         resources.getString(R.string.permission_denied),

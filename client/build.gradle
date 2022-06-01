@@ -78,6 +78,7 @@ android {
     kotlinOptions {
         jvmTarget = "11"
         useIR = true
+        freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
     }
 
     testOptions {
@@ -173,7 +174,6 @@ dependencies {
     androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: junit_ext_version
     androidTestImplementation group: 'androidx.test', name: 'runner', version: test_runner_version
     androidTestUtil group: "androidx.test", name: "orchestrator", version: test_orchestrator_version
-    androidTestImplementation group: "org.mockito.kotlin", name: "mockito-kotlin", version: mockito_kotlin_version
     androidTestImplementation group: 'com.linkedin.dexmaker', name: 'dexmaker-mockito-inline-extended', version: '2.28.1'
     androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: kotlin_version
     // Test rules and transitive dependencies:
@@ -184,12 +184,10 @@ dependencies {
     testImplementation("org.robolectric:robolectric:$robolectric_version") {
         exclude group: "com.google.auto.service", module: "auto-service"
     }
-    testImplementation group: "org.mockito.kotlin", name: "mockito-kotlin", version: mockito_kotlin_version
-    testImplementation group: 'org.mockito', name: 'mockito-inline', version: mockito_inline_version
     testImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: coroutines_version
     testImplementation junitUnitTests
     testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
-
+    kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
 }
 
 kapt {
