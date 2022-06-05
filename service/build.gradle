@@ -91,6 +91,7 @@ dependencies {
     implementation group: 'androidx.media', name: 'media', version: media_version
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: commons_collections4_version
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: commons_lang_version
+    implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: exo_player_vesrion
     implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: exo_player_vesrion
     implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: exo_player_vesrion
@@ -103,7 +104,6 @@ dependencies {
     // hilt
     implementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
     kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
-
 
     testImplementation junitUnitTests
     testImplementation("org.robolectric:robolectric:$robolectric_version") {
@@ -124,4 +124,5 @@ sonarqube {
         property 'sonar.sources', "${projectDir}/src/main/java"
     }
 }
+
 

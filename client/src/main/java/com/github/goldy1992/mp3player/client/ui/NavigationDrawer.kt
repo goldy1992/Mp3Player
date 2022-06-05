@@ -37,9 +37,9 @@ import com.github.goldy1992.mp3player.commons.Screen
 @Composable
 fun NavigationDrawer(navController: NavController,
                     modifier : Modifier = Modifier
-                        .background(MaterialTheme.colorScheme.surface)
-                        .fillMaxWidth()) {
-    Column(modifier = modifier) {
+                        ) {
+    Column(modifier = modifier.background(MaterialTheme.colorScheme.surface)
+        .fillMaxWidth()) {
 
         Column(modifier = Modifier.fillMaxWidth()) {
             Image(

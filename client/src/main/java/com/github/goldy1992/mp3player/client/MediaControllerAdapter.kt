@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client
 
 import android.content.Context
+import android.media.audiofx.Visualizer
 import android.net.Uri
 import android.os.Bundle
 import android.os.RemoteException
@@ -12,6 +13,10 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
+import com.github.goldy1992.mp3player.client.ui.components.MyDataCaptureListener
+import com.github.goldy1992.mp3player.commons.AudioSample
+import com.github.goldy1992.mp3player.commons.Constants.AUDIO_DATA
+import com.github.goldy1992.mp3player.commons.Constants.AUDIO_SESSION_ID
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.LogTagger
 import org.apache.commons.lang3.exception.ExceptionUtils
@@ -42,6 +47,10 @@ constructor(private val context: Context,
     open val shuffleMode : MutableLiveData<Int> = MutableLiveData()
 
     open val playbackSpeed : MutableLiveData<Float> = MutableLiveData(1f)
+
+    open val audioStream : MutableLiveData<AudioSample> = MutableLiveData(AudioSample.NONE)
+
+    private var visualizer : Visualizer? = null
 
     /**
      * @return True if the mediaBrowser is connected
@@ -167,11 +176,13 @@ constructor(private val context: Context,
     }
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
-        this.playbackState.postValue(state)
         val playing = state.state == PlaybackStateCompat.STATE_PLAYING
         this.isPlaying.postValue(playing)
         if (playing) {
             this.playbackSpeed.postValue(state.playbackSpeed)
+            visualizer?.setEnabled(true)
+        } else {
+            visualizer?.setEnabled(false)
         }
         Log.i(logTag(), "IS PLAYING: $playing")
     }
@@ -186,6 +197,15 @@ constructor(private val context: Context,
 
     override fun onShuffleModeChanged(shuffleMode: Int) {
         this.shuffleMode.postValue(shuffleMode)
+    }
+
+    override fun onSessionEvent(event: String?, extras: Bundle?) {
+        super.onSessionEvent(event, extras)
+        if (AUDIO_DATA == event) {
+            val audioSample = extras?.get(AUDIO_DATA) as AudioSample
+            audioStream.postValue(audioSample)
+            Log.d(logTag(), "Audio Data Received")
+        }
     }
 
     open fun getCurrentSongAlbumArtUri() : Uri? {
@@ -207,6 +227,8 @@ constructor(private val context: Context,
         try {
             this.token = mediaBrowser.sessionToken
             this.mediaController = createMediaController(context, mediaBrowser.sessionToken)
+        //    var audioSessionId : Int? = mediaController?.extras?.get(AUDIO_SESSION_ID) as Int
+         //   this.createVisualizer(audioSessionId?: -1)
             this.mediaController!!.registerCallback(this)
             metadata.postValue(mediaController!!.metadata)
             playbackState.postValue(mediaController!!.playbackState)
@@ -215,5 +237,14 @@ constructor(private val context: Context,
         } catch (ex: RemoteException) {
             Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
         }
+    }
+
+    private fun createVisualizer(audioSessionId : Int) {
+//        this.visualizer = Visualizer(audioSessionId)
+//        val myDataCaptureListener = MyDataCaptureListener(this.audioStream)
+//        this.visualizer!!.setEnabled(false)
+//        Log.d(logTag(), "captureSizeRange: ${Visualizer.getCaptureSizeRange()[0]}")
+//        this.visualizer!!.setCaptureSize(Visualizer.getCaptureSizeRange()[0]);
+//        this.visualizer!!.setDataCaptureListener(myDataCaptureListener, Visualizer.getMaxCaptureRate(), true, true)
     }
 }

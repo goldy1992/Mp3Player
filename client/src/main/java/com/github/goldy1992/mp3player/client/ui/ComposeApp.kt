@@ -14,6 +14,8 @@ import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.screens.FolderScreen
+import com.github.goldy1992.mp3player.client.ui.screens.VisualizerScreen
+import com.github.goldy1992.mp3player.client.ui.screens.VisualizerViewModel
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreen
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
 import com.github.goldy1992.mp3player.client.viewmodels.LibraryScreenViewModel
@@ -98,6 +100,10 @@ fun ComposeApp(
                         userPreferencesRepository = userPreferencesRepository,
                         windowSize = windowSize
                     )
+                }
+                composable(Screen.VISUALIZER.name){
+                    val viewModel = hiltViewModel<VisualizerViewModel>()
+                    VisualizerScreen()
                 }
             }
         }

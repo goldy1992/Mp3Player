@@ -53,7 +53,7 @@ abstract class MainActivityBase : ComponentActivity(),
     @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
 
-    var startScreen: Screen = Screen.LIBRARY
+    var startScreen: Screen = Screen.VISUALIZER
 
     var trackToPlay: Uri? = null
         private set
@@ -71,8 +71,9 @@ abstract class MainActivityBase : ComponentActivity(),
             this.startScreen = Screen.MAIN
         }
 
-        permissionsProcessor.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, permissionLauncher)
-    }
+        permissionsProcessor.requestPermissions(permissions = listOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            launcher = permissionLauncher)
+     }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -95,7 +96,7 @@ abstract class MainActivityBase : ComponentActivity(),
             this.lifecycleScope.launch(Dispatchers.Default) {
                 mediaControllerAdapter.playFromUri(trackToPlay, null)
             }
-            this.startScreen = Screen.NOW_PLAYING
+            this.startScreen = Screen.VISUALIZER
         }
         this.lifecycleScope.launch(Dispatchers.Main) {
             ui(startScreen = startScreen)
@@ -103,10 +104,13 @@ abstract class MainActivityBase : ComponentActivity(),
     }
 
 
-    private val permissionLauncher : ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-        permissionGranted ->
+    private val permissionLauncher : ActivityResultLauncher<Array<String>> = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+        permissionsGranted ->
         run {
-
+            var permissionGranted = true
+            for (i  in permissionsGranted.values) {
+                permissionGranted = permissionGranted && i
+            }
             Log.i(logTag(), "permission result: $permissionGranted")
             if (permissionGranted) {
                 onPermissionGranted()

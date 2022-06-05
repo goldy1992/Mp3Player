@@ -31,6 +31,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -63,8 +64,8 @@ fun NowPlayingScreen(
             SmallTopAppBar (
                 title = {
                     val metadata by mediaController.metadata.observeAsState()
-                    val title : String = metadata?.description?.title.toString() ?: ""
-                    val artist : String = metadata?.description?.subtitle.toString() ?: ""
+                    val title : String = metadata?.description?.title.toString()
+                    val artist : String = metadata?.description?.subtitle.toString()
                     Column {
                         Text(text = title,
                             style = MaterialTheme.typography.titleLarge,
@@ -111,7 +112,6 @@ fun NowPlayingScreen(
                         .padding(start = 48.dp, end = 48.dp)
                 )
                 ViewPager(mediaController = mediaController,
-                scope = scope,
                 modifier = Modifier.weight(4f))
 
                 Row(
@@ -135,12 +135,11 @@ fun NowPlayingScreen(
     )
 }
 
-@ExperimentalPagerApi
+@OptIn(ExperimentalCoilApi::class, ExperimentalPagerApi::class)
 @Composable
 fun ViewPager(mediaController: MediaControllerAdapter,
               modifier: Modifier = Modifier,
-            pagerState:PagerState = rememberPagerState(initialPage = mediaController.calculateCurrentQueuePosition()),
-            scope: CoroutineScope = rememberCoroutineScope()
+            pagerState:PagerState = rememberPagerState(initialPage = mediaController.calculateCurrentQueuePosition())
            ) {
     val queue by mediaController.queue.observeAsState(emptyList())
     val metadata by mediaController.metadata.observeAsState()
@@ -198,7 +197,7 @@ fun ViewPager(mediaController: MediaControllerAdapter,
             ) {
                 Image(
                         painter = rememberImagePainter(
-                                request =  ImageRequest.Builder(LocalContext.current).data(QueueItemUtils.getAlbumArtUri(item as MediaSessionCompat.QueueItem)).build()
+                                request =  ImageRequest.Builder(LocalContext.current).data(QueueItemUtils.getAlbumArtUri(item)).build()
                         ),
                         contentDescription = "Album Art",
                         modifier = Modifier.size(300.dp, 300.dp)

@@ -11,6 +11,8 @@ object Constants {
     const val LIBRARY_ID = "LIBRARY_ID"
     const val UNKNOWN = "Unknown"
     const val CHANGE_PLAYBACK_SPEED = "CHANGE_PLAYBACK_SPEED"
+    const val AUDIO_SESSION_ID = "AUDIO_SESSION_ID"
+    const val AUDIO_DATA = "AUDIO_DATA"
 
     val playbackStateDebugMap = SparseArray<String?>()
     val repeatModeDebugMap = SparseArray<String>()
