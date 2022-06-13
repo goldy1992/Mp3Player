@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,45 +32,68 @@ import kotlin.random.Random
 @Composable
 fun Equalizer(
             modifier: Modifier = Modifier,
-              numOfBars : Int = 4,
-              barColor : Color = MaterialTheme.colorScheme.secondary,
-              spaceBetweenBars : Dp = 1.dp) {
+            bars : List<Float> = emptyList(),
+            barColor : Color = MaterialTheme.colorScheme.secondary,
+            spaceBetweenBars : Dp = 1.dp,
+            maxHeight : MutableState<Float> = remember { mutableStateOf(0f) }) {
 
-    var maxHeight by remember { mutableStateOf(0f)    }
-
+    val scale = 1
     BoxWithConstraints(modifier = modifier) {
-        val bWidth = calculateBarWidth(containerWidth = maxWidth, numOfBars = numOfBars, spaceBetweenBars = spaceBetweenBars)
+        val bWidth = calculateBarWidth(
+            containerWidth = maxWidth,
+            numOfBars = bars.size,
+            spaceBetweenBars = spaceBetweenBars
+        )
 
-        val list : ArrayList<State<Float>> = ArrayList()
-        val barWidthPx : Float = LocalDensity.current.run { bWidth.toPx()}
-        val spaceBetweenBarsPx : Float = LocalDensity.current.run { spaceBetweenBars.toPx()}
+        val barWidthPx: Float = LocalDensity.current.run { bWidth.toPx() }
+        val spaceBetweenBarsPx: Float = LocalDensity.current.run { spaceBetweenBars.toPx() }
 
-        Canvas(modifier = modifier
-            .fillMaxSize()
+        Canvas(
+            modifier = Modifier
+                .fillMaxSize()
         ) {
 
-            maxHeight = this.size.height
-            for ((idx, l) in list.withIndex()) {
-                val height = l.value
-                val offset : Float = height
+            maxHeight.value = this.size.height
+            for ((idx, bar) in bars.withIndex()) {
+                val height = bar
+                val offset: Float = maxHeight.value - (height * scale)
                 drawRect(
                     color = barColor,
                     topLeft = Offset((barWidthPx * idx) + (spaceBetweenBarsPx * idx), offset),
-                    size = Size(width = barWidthPx, height = maxHeight - height)
+                    size = Size(width = barWidthPx, height = (height *scale))
                 )
             }
         }
-
-        for( bar in 1 .. numOfBars) {
-            val infiniteTransition = rememberInfiniteTransition()
-            val duration = remember {Random.nextInt(400, 600)}
-            list.add(infiniteTransition.animateFloat(initialValue = maxHeight,
-                targetValue = maxHeight * 0.1f,
-                animationSpec = infiniteRepeatable(
-                                animation = tween(duration, easing = LinearEasing),
-                                repeatMode = RepeatMode.Reverse
-                )))
-        }
     }
+}
+
+@Preview
+@Composable
+fun AnimatedEqualizer(
+    modifier: Modifier = Modifier,
+    numOfBars : Int = 4,
+    barColor : Color = MaterialTheme.colorScheme.secondary,
+    spaceBetweenBars : Dp = 1.dp) {
+    val list : ArrayList<State<Float>> = ArrayList()
+    val maxHeight = remember { mutableStateOf(0f) }
+
+    Equalizer(
+        modifier= modifier,
+        bars = list.map { v -> v.value },
+        barColor  = MaterialTheme.colorScheme.secondary,
+        spaceBetweenBars  = 1.dp,
+        maxHeight = maxHeight)
+
+    for(bar in 1 .. numOfBars) {
+        val infiniteTransition = rememberInfiniteTransition()
+        val duration = remember {Random.nextInt(400, 600)}
+        list.add(infiniteTransition.animateFloat(initialValue = maxHeight.value,
+            targetValue = maxHeight.value * 0.1f,
+            animationSpec = infiniteRepeatable(
+                            animation = tween(duration, easing = LinearEasing),
+                            repeatMode = RepeatMode.Reverse
+            )))
+    }
+
 }
 

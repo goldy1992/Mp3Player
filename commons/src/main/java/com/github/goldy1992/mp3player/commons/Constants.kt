@@ -24,6 +24,15 @@ object Constants {
     const val ID_SEPARATOR = "|"
     const val EMPTY_MEDIA_ITEM_ID = "-1"
 
+    val SUB_BASS = IntRange(20, 60)
+    val BASS = IntRange(61, 250)
+    val LOW_MIDRANGE = IntRange(251, 500)
+    val MIDRANGE = IntRange(501, 2000)
+    val UPPER_MIDRANGE = IntRange(2001, 4000)
+
+    val frequencyBands = listOf(SUB_BASS, BASS, LOW_MIDRANGE, MIDRANGE, UPPER_MIDRANGE)
+
+
     init {
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_NONE, "STATE_NONE") // 0
         playbackStateDebugMap.put(PlaybackStateCompat.STATE_STOPPED, "STATE_STOPPED") // 1

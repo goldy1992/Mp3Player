@@ -51,7 +51,6 @@ class FFTAudioProcessor
     private var audioTrackBufferSize = 0
 
     private val src = FloatArray(SAMPLE_SIZE)
-    private val dst = FloatArray(SAMPLE_SIZE + 2)
 
 
     init {
@@ -177,7 +176,6 @@ class FFTAudioProcessor
                 } else {
                     src[index / 2] =
                         (currentByte!!.toFloat() * Byte.MAX_VALUE + byte) / (Byte.MAX_VALUE * Byte.MAX_VALUE)
-                //    dst[index / 2] = 0f
                     currentByte = null
                 }
 

@@ -2,6 +2,9 @@ package com.github.goldy1992.mp3player.client.ui.lists.songs
 
 import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat.MediaItem
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
@@ -33,6 +37,7 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.ui.components.Equalizer
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
@@ -46,6 +51,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getEmptyMediaItem
 fun SongListItem(song : MediaItem = getEmptyMediaItem(),
                  isPlaying : Boolean = false,
                  isSelected : Boolean = false,
+                 mediaController: MediaControllerAdapter? = null,
                  onClick: (item : MediaItem) -> Unit = {}) {
 
     ListItem(
@@ -60,6 +66,7 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
                 val albumArtUri = MediaItemUtils.getAlbumArtUri(song = song)
                 AlbumArt(
                     uri = albumArtUri,
+                    mediaController = mediaController,
                     isPlaying = isPlaying)
             },
             secondaryText = {
@@ -94,6 +101,7 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
 @Preview
 @Composable
 private fun AlbumArt(uri : Uri? = null,
+                     mediaController: MediaControllerAdapter? = null,
                     isPlaying: Boolean = true) {
 
     Surface(Modifier.size(40.dp)) {
@@ -116,7 +124,18 @@ private fun AlbumArt(uri : Uri? = null,
         }
 
         if (isPlaying) {
-            Equalizer(modifier = Modifier.size(40.dp))
+
+            val list1: ArrayList<Float> = arrayListOf()
+            mediaController?.audioStream?.value?.frequencyMap?.forEachIndexed {
+                    indx, v ->
+                val height by animateFloatAsState(targetValue = v,
+                    animationSpec = tween(durationMillis = 1000, easing = LinearOutSlowInEasing)
+                )
+                list1.add(height)
+            }
+
+            Equalizer(modifier = Modifier.size(40.dp),
+            bars = list1)
         }
     }
 }

@@ -53,7 +53,7 @@ fun SongList(
                         val song = songs[itemIndex]
                         val isItemSelected = isItemSelected(song, metadata)
                         val isItemPlaying = if (isPlaying == true) isItemSelected  else false
-                        SongListItem(song = song, isPlaying = isItemPlaying, isSelected = isItemSelected, onClick = onSongSelected)
+                        SongListItem(song = song, isPlaying = isItemPlaying, mediaController = mediaControllerAdapter, isSelected = isItemSelected, onClick = onSongSelected)
                     }
                 }
             }

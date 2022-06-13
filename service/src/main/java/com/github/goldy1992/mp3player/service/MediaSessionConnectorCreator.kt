@@ -19,7 +19,7 @@ class MediaSessionConnectorCreator
         private val mediaSessionCompat: MediaSessionCompat,
         private val exoPlayer: ExoPlayer,
         private val myPlaybackPreparer: MyPlaybackPreparer,
-        private val myMetadataProvider: MyMetadataProvider,
+     //   private val myMetadataProvider: MyMetadataProvider,
         private val myTimelineQueueNavigator: MyTimelineQueueNavigator,
         private val changeSpeedProvider: ChangeSpeedProvider,
         private val myMediaButtonEventHandler: MyMediaButtonEventHandler,
@@ -36,7 +36,7 @@ class MediaSessionConnectorCreator
 
             if (!playlistManager.isEmpty()) {
                 newMediaSessionConnector.setPlaybackPreparer(myPlaybackPreparer)
-                newMediaSessionConnector.setMediaMetadataProvider(myMetadataProvider)
+                newMediaSessionConnector.setMediaMetadataProvider(MediaSessionConnector.DefaultMediaMetadataProvider(mediaSessionCompat.controller, null))
                 newMediaSessionConnector.setQueueNavigator(myTimelineQueueNavigator)
                 newMediaSessionConnector.setCustomActionProviders(changeSpeedProvider)
                 newMediaSessionConnector.setMediaButtonEventHandler(myMediaButtonEventHandler)

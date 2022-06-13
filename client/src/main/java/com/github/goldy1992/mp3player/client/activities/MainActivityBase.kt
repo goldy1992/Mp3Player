@@ -53,7 +53,7 @@ abstract class MainActivityBase : ComponentActivity(),
     @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
 
-    var startScreen: Screen = Screen.VISUALIZER
+    var startScreen: Screen = Screen.LIBRARY
 
     var trackToPlay: Uri? = null
         private set
@@ -96,7 +96,7 @@ abstract class MainActivityBase : ComponentActivity(),
             this.lifecycleScope.launch(Dispatchers.Default) {
                 mediaControllerAdapter.playFromUri(trackToPlay, null)
             }
-            this.startScreen = Screen.VISUALIZER
+            this.startScreen = Screen.LIBRARY
         }
         this.lifecycleScope.launch(Dispatchers.Main) {
             ui(startScreen = startScreen)
