@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.client.dagger.modules
 
 import android.content.Context
 import android.support.v4.media.MediaBrowserCompat
+import com.github.goldy1992.mp3player.client.AudioDataProcessor
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import dagger.Module
 import dagger.Provides
@@ -17,8 +18,9 @@ class MediaControllerAdapterModule {
     @ActivityRetainedScoped
     @Provides
     fun providesMediaControllerAdapter(@ApplicationContext context: Context,
-                                       mediaBrowserCompat: MediaBrowserCompat)
+                                       mediaBrowserCompat: MediaBrowserCompat,
+                                        audioDataProcessor : AudioDataProcessor)
             : MediaControllerAdapter {
-        return MediaControllerAdapter(context, mediaBrowserCompat)
+        return MediaControllerAdapter(context, mediaBrowserCompat, audioDataProcessor)
     }
 }

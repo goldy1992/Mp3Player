@@ -126,13 +126,13 @@ private fun AlbumArt(uri : Uri? = null,
         if (isPlaying) {
 
             val list1: ArrayList<Float> = arrayListOf()
-            mediaController?.audioStream?.value?.frequencyMap?.forEachIndexed {
-                    indx, v ->
-                val height by animateFloatAsState(targetValue = v,
-                    animationSpec = tween(durationMillis = 1000, easing = LinearOutSlowInEasing)
-                )
-                list1.add(height)
-            }
+//            mediaController?.audioStream?.value?.frequencyMap?.forEachIndexed {
+//                    indx, v ->
+//                val height by animateFloatAsState(targetValue = v,
+//                    animationSpec = tween(durationMillis = 1000, easing = LinearOutSlowInEasing)
+//                )
+//                list1.add(height)
+//            }
 
             Equalizer(modifier = Modifier.size(40.dp),
             bars = list1)

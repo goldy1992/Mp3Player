@@ -1,15 +1,13 @@
 package com.github.goldy1992.mp3player.client.utils
 
-import androidx.compose.ui.unit.Dp
+fun calculateBarWidth(containerWidth : Float, numOfBars : Int, spaceBetweenBars: Float) : Float {
 
-fun calculateBarWidth(containerWidth : Dp, numOfBars : Int, spaceBetweenBars: Dp) : Dp {
-
-    val numerator : Float = (containerWidth + (spaceBetweenBars * ( 1 - numOfBars))).value
+    val numerator : Float = containerWidth + (spaceBetweenBars * ( 1 - numOfBars))
     val barWidthFloat : Float = numerator / numOfBars
 
     val isValidConstraints = numerator > 0f
     if (isValidConstraints) {
-        return Dp(barWidthFloat)
+        return barWidthFloat
     }
-    return Dp(barWidthFloat)
+    return barWidthFloat
 }

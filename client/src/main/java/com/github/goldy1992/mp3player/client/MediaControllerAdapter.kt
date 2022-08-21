@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client
 
 import android.content.Context
-import android.media.audiofx.Visualizer
 import android.net.Uri
 import android.os.Bundle
 import android.os.RemoteException
@@ -13,10 +12,8 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
-import com.github.goldy1992.mp3player.client.ui.components.MyDataCaptureListener
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.Constants.AUDIO_DATA
-import com.github.goldy1992.mp3player.commons.Constants.AUDIO_SESSION_ID
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.LogTagger
 import org.apache.commons.lang3.exception.ExceptionUtils
@@ -28,7 +25,8 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 open class MediaControllerAdapter
 
 constructor(private val context: Context,
-            private var mediaBrowser: MediaBrowserCompat)
+            private var mediaBrowser: MediaBrowserCompat,
+            private val audioDataProcessor: AudioDataProcessor)
     : MediaBrowserConnectionListener, LogTagger, MediaControllerCompat.Callback() {
 
 
@@ -48,9 +46,6 @@ constructor(private val context: Context,
 
     open val playbackSpeed : MutableLiveData<Float> = MutableLiveData(1f)
 
-    open val audioStream : MutableLiveData<AudioSample> = MutableLiveData(AudioSample.NONE)
-
-    private var visualizer : Visualizer? = null
 
     /**
      * @return True if the mediaBrowser is connected
@@ -180,9 +175,6 @@ constructor(private val context: Context,
         this.isPlaying.postValue(playing)
         if (playing) {
             this.playbackSpeed.postValue(state.playbackSpeed)
-            visualizer?.setEnabled(true)
-        } else {
-            visualizer?.setEnabled(false)
         }
         Log.i(logTag(), "IS PLAYING: $playing")
     }
@@ -203,8 +195,8 @@ constructor(private val context: Context,
         super.onSessionEvent(event, extras)
         if (AUDIO_DATA == event) {
             val audioSample = extras?.get(AUDIO_DATA) as AudioSample
-            audioStream.postValue(audioSample)
-            Log.d(logTag(), "Audio Data Received")
+            this.audioDataProcessor.processAudioData(audioSample)
+//            Log.d(logTag(), "Audio Data Received")
         }
     }
 

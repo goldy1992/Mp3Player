@@ -186,7 +186,7 @@ class FFTAudioProcessor
             srcBuffer.position(srcBufferPosition)
 
 
-            val audioSample = createFftSample(src, this.inputAudioFormat.channelCount, this.inputAudioFormat.sampleRate)
+            val audioSample = createFftSample(src, this.inputAudioFormat.channelCount, SAMPLE_SIZE)
             postSampleToMediaSession(audioSample)
 
         }

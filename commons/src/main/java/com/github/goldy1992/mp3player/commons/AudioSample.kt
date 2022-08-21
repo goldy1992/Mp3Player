@@ -7,7 +7,7 @@ data class AudioSample
         val phase : Array<Double> = emptyArray(),
         val magnitude : Array<Double> = emptyArray(),
         val waveformData : FloatArray = FloatArray(0),
-        val frequencyMap : FloatArray = FloatArray(0),
+     //   val frequencyMap : FloatArray = FloatArray(0),
         val sampleHz : Int = 128000,
         val channelCount : Int = 2
     ) : Serializable {
@@ -24,7 +24,7 @@ data class AudioSample
 
         if (!phase.contentEquals(other.phase)) return false
         if (!magnitude.contentEquals(other.magnitude)) return false
-        if (!frequencyMap.contentEquals(other.frequencyMap)) return false
+    //    if (!frequencyMap.contentEquals(other.frequencyMap)) return false
         if (sampleHz != other.sampleHz) return false
         if (channelCount != other.channelCount) return false
 
@@ -34,7 +34,7 @@ data class AudioSample
     override fun hashCode(): Int {
         var result = phase.contentHashCode()
         result = 31 * result + magnitude.contentHashCode()
-        result = 31 * result + frequencyMap.contentHashCode()
+      //  result = 31 * result + frequencyMap.contentHashCode()
         result = 31 * result + sampleHz
         result = 31 * result + channelCount
         return result

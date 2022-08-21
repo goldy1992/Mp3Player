@@ -103,7 +103,7 @@ fun ComposeApp(
                 }
                 composable(Screen.VISUALIZER.name){
                     val viewModel = hiltViewModel<VisualizerViewModel>()
-                    VisualizerScreen()
+                    VisualizerScreen(viewModel = viewModel)
                 }
             }
         }

@@ -53,7 +53,7 @@ abstract class MainActivityBase : ComponentActivity(),
     @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
 
-    var startScreen: Screen = Screen.LIBRARY
+    var startScreen: Screen = Screen.VISUALIZER
 
     var trackToPlay: Uri? = null
         private set
@@ -63,14 +63,7 @@ abstract class MainActivityBase : ComponentActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-    Log.i(logTag(), "on createee")
-
-        // If app has already been created set the UI to initialise at the main screen.
-        val appAlreadyCreated = savedInstanceState != null
-        if (appAlreadyCreated) {
-            this.startScreen = Screen.MAIN
-        }
-
+        Log.i(logTag(), "on createee")
         permissionsProcessor.requestPermissions(permissions = listOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
             launcher = permissionLauncher)
      }
@@ -96,7 +89,7 @@ abstract class MainActivityBase : ComponentActivity(),
             this.lifecycleScope.launch(Dispatchers.Default) {
                 mediaControllerAdapter.playFromUri(trackToPlay, null)
             }
-            this.startScreen = Screen.LIBRARY
+            this.startScreen = Screen.VISUALIZER
         }
         this.lifecycleScope.launch(Dispatchers.Main) {
             ui(startScreen = startScreen)
