@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.client.views.audiobands.FrequencyBand
+import com.github.goldy1992.mp3player.client.views.audiobands.FrequencyBandFive
 import com.github.goldy1992.mp3player.client.views.audiobands.FrequencyBandThirtyOne
 import com.github.goldy1992.mp3player.client.views.audiobands.FrequencyBandTwentyFour
 import com.github.goldy1992.mp3player.commons.AudioSample
@@ -32,7 +33,7 @@ class AudioDataProcessor
 
     var maxFrequency : Float = 0f
 
-    private suspend fun calculateFrequencyBands(magnitudes: Array<Double>, frequencyBand: FrequencyBand = FrequencyBandTwentyFour()): FloatArray {
+    private suspend fun calculateFrequencyBands(magnitudes: Array<Double>, frequencyBand: FrequencyBand = FrequencyBandFive()): FloatArray {
         val frequencyBands = frequencyBand.frequencyBands()
         val toReturn = FloatArray(frequencyBands.size)
         val numOfFreq = magnitudes.size

@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.goldy1992.mp3player.client.ui.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.buttons.PlayPauseButton
+import com.github.goldy1992.mp3player.client.ui.components.AnimatedEqualizer
 import com.github.goldy1992.mp3player.client.ui.components.Equalizer
 import com.github.goldy1992.mp3player.commons.AudioSample
 
@@ -35,19 +36,20 @@ fun VisualizerScreen(viewModel: VisualizerViewModel = viewModel()) {
 
 
     Surface(Modifier.fillMaxSize()) {
-        val spaceBetweenBars = 10.dp
+        val spaceBetweenBars = 5f
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
           //  Text(text = "Frequency Range: 0 - ${audioSample.sampleHz}")
             PlayToolbar(mediaController = viewModel.mediaControllerAdapter) {
 
             }
-            Equalizer(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp),
-                bars = audioMagnitudes,
-                spaceBetweenBars = spaceBetweenBars
-            )
+//            Equalizer(
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .padding(10.dp),
+//                bars = audioMagnitudes,
+//                spaceBetweenBars = spaceBetweenBars
+//            )
+            AnimatedEqualizer(modifier = Modifier.fillMaxSize())
 
         }
 

@@ -38,6 +38,7 @@ import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.ui.components.AnimatedEqualizer
 import com.github.goldy1992.mp3player.client.ui.components.Equalizer
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
@@ -102,7 +103,7 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
 @Composable
 private fun AlbumArt(uri : Uri? = null,
                      mediaController: MediaControllerAdapter? = null,
-                    isPlaying: Boolean = true) {
+                        isPlaying: Boolean = true) {
 
     Surface(Modifier.size(40.dp)) {
         if (uri == null) {
@@ -134,8 +135,11 @@ private fun AlbumArt(uri : Uri? = null,
 //                list1.add(height)
 //            }
 
-            Equalizer(modifier = Modifier.size(40.dp),
-            bars = list1)
+            AnimatedEqualizer()
+//            Equalizer(modifier = Modifier.size(40.dp),
+//            bars = mediaController?.audioDataProcessor?.audioMagnitudes?.value ?: FloatArray(0),
+//
+//            )
         }
     }
 }

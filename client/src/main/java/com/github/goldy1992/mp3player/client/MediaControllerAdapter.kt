@@ -26,7 +26,7 @@ open class MediaControllerAdapter
 
 constructor(private val context: Context,
             private var mediaBrowser: MediaBrowserCompat,
-            private val audioDataProcessor: AudioDataProcessor)
+            val audioDataProcessor: AudioDataProcessor)
     : MediaBrowserConnectionListener, LogTagger, MediaControllerCompat.Callback() {
 
 

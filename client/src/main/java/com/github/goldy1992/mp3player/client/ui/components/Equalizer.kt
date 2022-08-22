@@ -15,10 +15,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.github.goldy1992.mp3player.client.utils.calculateBarWidth
+import com.github.goldy1992.mp3player.client.utils.calculateBarWidthPixels
 import kotlin.random.Random
 
-val MAX_AMPLITUDE = 400f
+const val MAX_AMPLITUDE = 400f
 
 @Preview
 @Composable
@@ -26,48 +26,50 @@ fun Equalizer(
     modifier: Modifier = Modifier,
     bars : FloatArray = floatArrayOf(),
     barColor : Color = MaterialTheme.colorScheme.secondary,
-    spaceBetweenBars : Dp = 1.dp,
+    spaceBetweenBars : Float = 5f,
     maxHeight : MutableState<Float> = remember { mutableStateOf(0f) },
     maxWidth : MutableState<Float> = remember { mutableStateOf(0f) }) {
     Equalizer(
         modifier = modifier,
         bars = bars.asList(),
         barColor = barColor,
-        spaceBetweenBars = spaceBetweenBars,
-        maxHeight = maxHeight
+        spaceBetweenBarsPx = spaceBetweenBars
     )
 }
 
 @Preview
 @Composable
 fun Equalizer(
-            modifier: Modifier = Modifier,
-            bars : List<Float> = emptyList(),
-            barColor : Color = MaterialTheme.colorScheme.secondary,
-            spaceBetweenBars : Dp = 1.dp,
-            maxHeight : MutableState<Float> = remember { mutableStateOf(0f) },
-            maxWidth : MutableState<Float> = remember { mutableStateOf(0f) }) {
+    modifier: Modifier = Modifier,
+    bars : List<Float> = emptyList(),
+    barColor : Color = MaterialTheme.colorScheme.secondary,
+    spaceBetweenBarsPx : Float = 5f,
+      ) {
 
-    BoxWithConstraints(modifier = modifier.background(Color.Blue)) {
 
-        val barWidthPx = calculateBarWidth(
+    BoxWithConstraints() {
+
+        val maxHeight : MutableState<Float> = remember { mutableStateOf(0f) }
+        val maxWidth : MutableState<Float> = remember { mutableStateOf(0f) }
+
+        val barWidthPx = calculateBarWidthPixels(
             containerWidth = maxWidth.value,
             numOfBars = bars.size,
-            spaceBetweenBars = spaceBetweenBars.value
+            spaceBetweenBars = spaceBetweenBarsPx
         )
 
         //val barWidthPx: Float = LocalDensity.current.run { bWidth.toPx() }
-        val spaceBetweenBarsPx = 1f
 
-        val equalizerWidthPx : Float = (bars.size * barWidthPx) + (spaceBetweenBarsPx * (barWidthPx+1))
-        val horizontalOffset : Float = (maxWidth.value - equalizerWidthPx) / 2
-//        Log.i("equalizer", "bar width: ${barWidthPx}")
-//        Log.i("equalizer", "max width val: ${maxWidth.value}")
-//        Log.i("equalizer", "equalizer width val: ${equalizerWidthPx}")
-//        Log.i("equalizer", "Equalizer: horizontal val: $horizontalOffset")
+
+        val equalizerWidthPx : Float = (bars.size * barWidthPx) + (spaceBetweenBarsPx * (bars.size+1))
+        val horizontalOffset : Float = ((maxWidth.value - equalizerWidthPx) / 2) + spaceBetweenBarsPx
+        Log.i("equalizer", "bar width: ${barWidthPx}")
+        Log.i("equalizer", "max width val: ${maxWidth.value}")
+        Log.i("equalizer", "equalizer width val: ${equalizerWidthPx}")
+        Log.i("equalizer", "Equalizer: horizontal val: $horizontalOffset")
         Canvas(
             modifier = Modifier
-                .background(Color.Red)
+                .background(Color.Blue)
                 .fillMaxSize()
         ) {
 
@@ -99,22 +101,21 @@ fun AnimatedEqualizer(
     modifier: Modifier = Modifier,
     numOfBars : Int = 4,
     barColor : Color = MaterialTheme.colorScheme.secondary,
-    spaceBetweenBars : Dp = 1.dp) {
+    spaceBetweenBarsPx : Float = 5f) {
+
     val list : ArrayList<State<Float>> = ArrayList()
-    val maxHeight = remember { mutableStateOf(0f) }
+
 
     Equalizer(
         modifier= modifier,
         bars = list.map { v -> v.value },
-        barColor  = MaterialTheme.colorScheme.secondary,
-        spaceBetweenBars  = 1.dp,
-        maxHeight = maxHeight)
+        barColor  = MaterialTheme.colorScheme.secondary)
 
     for(bar in 1 .. numOfBars) {
         val infiniteTransition = rememberInfiniteTransition()
         val duration = remember {Random.nextInt(400, 600)}
-        list.add(infiniteTransition.animateFloat(initialValue = maxHeight.value,
-            targetValue = maxHeight.value * 0.1f,
+        list.add(infiniteTransition.animateFloat(initialValue = MAX_AMPLITUDE,
+            targetValue = MAX_AMPLITUDE * 0.1f,
             animationSpec = infiniteRepeatable(
                             animation = tween(duration, easing = LinearEasing),
                             repeatMode = RepeatMode.Reverse

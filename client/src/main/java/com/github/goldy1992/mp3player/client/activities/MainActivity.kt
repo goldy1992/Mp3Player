@@ -9,7 +9,6 @@ import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlin.coroutines.CoroutineContext
 
 /**
  * The Main Activity

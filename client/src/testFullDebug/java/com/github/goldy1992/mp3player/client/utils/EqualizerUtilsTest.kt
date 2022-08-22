@@ -12,7 +12,8 @@ class EqualizerUtilsTest {
         val spacing = 2.dp
         val numOfBars = 3
         val expected = 12.dp
-        val result= calculateBarWidth(containerWidth = containerWidth,
+        val result= calculateBarWidthPixels(
+            containerWidth = containerWidth,
         numOfBars = numOfBars,
         spaceBetweenBars =  spacing)
 
