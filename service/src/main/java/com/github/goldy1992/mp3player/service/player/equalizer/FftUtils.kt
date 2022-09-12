@@ -22,10 +22,11 @@ fun createFftSample(original: FloatArray,
  //   val phase : Array<Double> = getPhase(ffTransformed)
     //     Log.d(logTag(), "phase: ${phase.joinToString(",")}")
     val magnitude : Array<Double> = getMagnitude(ffTransformed)
+    val phase : Array<Double> = getPhase(ffTransformed)
 
    // Log.d("FFtUtils", "sample Hz: ${sampleHz}")
     return AudioSample(
-      //  phase = phase,
+        phase = phase,
         magnitude =  magnitude,
         waveformData = original,
         sampleHz = sampleHz,

@@ -1,9 +1,8 @@
-package com.github.goldy1992.mp3player.client.ui.components
+package com.github.goldy1992.mp3player.client.ui.components.equalizer
 
 import android.util.Log
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -12,9 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.utils.calculateBarWidthPixels
 import kotlin.random.Random
 
@@ -22,14 +20,12 @@ const val MAX_AMPLITUDE = 400f
 
 @Preview
 @Composable
-fun Equalizer(
+fun BarEqualizer(
     modifier: Modifier = Modifier,
     bars : FloatArray = floatArrayOf(),
     barColor : Color = MaterialTheme.colorScheme.secondary,
-    spaceBetweenBars : Float = 5f,
-    maxHeight : MutableState<Float> = remember { mutableStateOf(0f) },
-    maxWidth : MutableState<Float> = remember { mutableStateOf(0f) }) {
-    Equalizer(
+    spaceBetweenBars : Float = 5f) {
+    BarEqualizer(
         modifier = modifier,
         bars = bars.asList(),
         barColor = barColor,
@@ -39,52 +35,49 @@ fun Equalizer(
 
 @Preview
 @Composable
-fun Equalizer(
+fun BarEqualizer(
     modifier: Modifier = Modifier,
     bars : List<Float> = emptyList(),
     barColor : Color = MaterialTheme.colorScheme.secondary,
     spaceBetweenBarsPx : Float = 5f,
-      ) {
+) {
+    var maxHeight by remember { mutableStateOf(0f) }
+    var maxWidth by remember { mutableStateOf(0f) }
 
 
-    BoxWithConstraints() {
-
-        val maxHeight : MutableState<Float> = remember { mutableStateOf(0f) }
-        val maxWidth : MutableState<Float> = remember { mutableStateOf(0f) }
-
-        val barWidthPx = calculateBarWidthPixels(
-            containerWidth = maxWidth.value,
+    val barWidthPx = remember(bars.size, maxWidth, spaceBetweenBarsPx) {
+        calculateBarWidthPixels(
+            containerWidth = maxWidth,
             numOfBars = bars.size,
             spaceBetweenBars = spaceBetweenBarsPx
         )
+    }
 
-        //val barWidthPx: Float = LocalDensity.current.run { bWidth.toPx() }
+    val equalizerWidthPx = remember(bars.size, barWidthPx, spaceBetweenBarsPx) { (bars.size * barWidthPx) + (spaceBetweenBarsPx * (bars.size+1)) }
 
-
-        val equalizerWidthPx : Float = (bars.size * barWidthPx) + (spaceBetweenBarsPx * (bars.size+1))
-        val horizontalOffset : Float = ((maxWidth.value - equalizerWidthPx) / 2) + spaceBetweenBarsPx
+    val horizontalOffset = remember(maxWidth, equalizerWidthPx, spaceBetweenBarsPx) { ((maxWidth - equalizerWidthPx) / 2) + spaceBetweenBarsPx }
         Log.i("equalizer", "bar width: ${barWidthPx}")
-        Log.i("equalizer", "max width val: ${maxWidth.value}")
+        Log.i("equalizer", "max width val: ${maxWidth}")
         Log.i("equalizer", "equalizer width val: ${equalizerWidthPx}")
         Log.i("equalizer", "Equalizer: horizontal val: $horizontalOffset")
         Canvas(
-            modifier = Modifier
-                .background(Color.Blue)
+            modifier = modifier
+                .onSizeChanged {
+                    maxHeight = it.height.toFloat()
+                    maxWidth = it.width.toFloat()
+                }
                 .fillMaxSize()
         ) {
 
-            maxHeight.value = this.size.height
-            Log.i("equalizer", "max_height: ${maxHeight.value}")
-            maxWidth.value = this.size.width
             for ((idx, bar) in bars.withIndex()) {
 
-                var currentBarHeight = if (bar > MAX_AMPLITUDE) {
+                val currentBarHeight = if (bar > MAX_AMPLITUDE) {
                      MAX_AMPLITUDE
                 } else {
                     bar
                 }
-                val barCanvasHeight = (currentBarHeight * maxHeight.value) / MAX_AMPLITUDE
-                val offset: Float = maxHeight.value - barCanvasHeight
+                val barCanvasHeight = (currentBarHeight * maxHeight) / MAX_AMPLITUDE
+                val offset: Float = maxHeight - barCanvasHeight
                 drawRect(
                     color = barColor,
                     topLeft = Offset( horizontalOffset + (barWidthPx * idx) + (spaceBetweenBarsPx * idx), offset),
@@ -92,35 +85,38 @@ fun Equalizer(
                 )
             }
         }
-    }
+
 }
 
 @Preview
 @Composable
-fun AnimatedEqualizer(
+fun AnimatedBarEqualizer(
     modifier: Modifier = Modifier,
     numOfBars : Int = 4,
     barColor : Color = MaterialTheme.colorScheme.secondary,
     spaceBetweenBarsPx : Float = 5f) {
-
+    Log.i("equalizer", "recomposing")
     val list : ArrayList<State<Float>> = ArrayList()
-
-
-    Equalizer(
-        modifier= modifier,
-        bars = list.map { v -> v.value },
-        barColor  = MaterialTheme.colorScheme.secondary)
 
     for(bar in 1 .. numOfBars) {
         val infiniteTransition = rememberInfiniteTransition()
         val duration = remember {Random.nextInt(400, 600)}
-        list.add(infiniteTransition.animateFloat(initialValue = MAX_AMPLITUDE,
+        val state: State<Float> = infiniteTransition.animateFloat(
+            initialValue = MAX_AMPLITUDE,
             targetValue = MAX_AMPLITUDE * 0.1f,
             animationSpec = infiniteRepeatable(
-                            animation = tween(duration, easing = LinearEasing),
-                            repeatMode = RepeatMode.Reverse
-            )))
+                animation = tween(duration, easing = LinearEasing),
+                repeatMode = RepeatMode.Reverse
+            )
+        )
+        list.add(state)
     }
+    BarEqualizer(
+        modifier= modifier,
+        bars = list.map { v -> v.value },
+        barColor  = barColor,
+        spaceBetweenBarsPx = spaceBetweenBarsPx,
+    )
 
 }
 

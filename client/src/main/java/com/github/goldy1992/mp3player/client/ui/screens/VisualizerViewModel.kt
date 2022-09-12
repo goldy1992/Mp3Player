@@ -18,4 +18,5 @@ class VisualizerViewModel
 
         val audioData : MutableLiveData<AudioSample> = audioDataProcessor.audioStream
         val audioMagnitudes : MutableLiveData<FloatArray> = audioDataProcessor.audioMagnitudes
-               }
+        val frequencyPhases : MutableLiveData<FloatArray> = audioDataProcessor.frequencyPhases
+}

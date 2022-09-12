@@ -2,15 +2,10 @@ package com.github.goldy1992.mp3player.client.ui.lists.songs
 
 import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat.MediaItem
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
@@ -18,30 +13,22 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ListItem
 import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Equalizer
 import androidx.compose.material.icons.filled.Help
-import androidx.compose.material.icons.filled.QuestionAnswer
 import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.ui.components.AnimatedEqualizer
-import com.github.goldy1992.mp3player.client.ui.components.Equalizer
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.AnimatedBarEqualizer
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
-import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getEmptyMediaItem
 
@@ -135,7 +122,7 @@ private fun AlbumArt(uri : Uri? = null,
 //                list1.add(height)
 //            }
 
-            AnimatedEqualizer()
+            AnimatedBarEqualizer()
 //            Equalizer(modifier = Modifier.size(40.dp),
 //            bars = mediaController?.audioDataProcessor?.audioMagnitudes?.value ?: FloatArray(0),
 //
