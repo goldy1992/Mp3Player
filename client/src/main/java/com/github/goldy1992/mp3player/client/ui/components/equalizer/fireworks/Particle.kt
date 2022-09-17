@@ -10,6 +10,7 @@ constructor(
     val initialVelocity : Float = 7.5f,
     val angle : Double = 90.0,
     val radius : Float = 50f,
+    var width : Float = 10f,
     val color : Color = Color.Blue,
     val x : Float = 0f,
     val y : Float = 0f,

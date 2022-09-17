@@ -10,9 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.goldy1992.mp3player.client.ui.PlayToolbar
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.BarEqualizer
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.LineEqualizerWithStateListCanvasOnly
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.fireworks.FireworkEqualizer
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.fireworks.FireworkWrapper
 
 @Composable
 fun VisualizerScreen(viewModel: VisualizerViewModel = viewModel()) {
@@ -47,7 +45,7 @@ fun VisualizerScreen(viewModel: VisualizerViewModel = viewModel()) {
 //            )
 
             //BarEqualizer(bars = audioMagnitudes)
-            FireworkEqualizer(frequencyPhases = audioMagnitudes.asList(), insetPx = 50f, isActive = isPlaying)
+            FireworkWrapper(frequencyPhases = audioMagnitudes.asList(), insetPx = 50f, isPlaying = isPlaying)
         //    AnimatedEqualizer(modifier = Modifier.fillMaxSize())
           //  LineEqualizerWithStateListCanvasOnly(frequencyPhases = frequencyPhases.asList())
         }
