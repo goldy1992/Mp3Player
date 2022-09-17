@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.client
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.github.goldy1992.mp3player.client.ui.screens.createFftSample
 import com.github.goldy1992.mp3player.client.views.audiobands.FrequencyBand
 import com.github.goldy1992.mp3player.client.views.audiobands.FrequencyBandFive
 import com.github.goldy1992.mp3player.commons.AudioSample
@@ -24,11 +25,12 @@ class AudioDataProcessor
 
     fun processAudioData(audioSample: AudioSample) {
         CoroutineScope(Dispatchers.Default).launch {
+            val processedAudioSample = createFftSample(audioSample.waveformData, audioSample.channelCount, audioSample.sampleHz)
             // process audio data on the background thread
             //val magnitudes: FloatArray = calculateFrequencyBands(audioSample.magnitude)
          //   val frequencyPhasesFloatArray : FloatArray = calculateFrequencyBandsAverages(audioSample.phase)
 //            val frequencyPhasesFloatArray : FloatArray = calculateReadValues(audioSample.magnitude, 50)
-            val magnitudesFloatArray : FloatArray = calculateReadValues(audioSample.magnitude, 10)
+            val magnitudesFloatArray : FloatArray = calculateReadValues(processedAudioSample.magnitude, 10)
             audioMagnitudes.postValue(magnitudesFloatArray)
            // frequencyPhases.postValue(frequencyPhasesFloatArray)
         }

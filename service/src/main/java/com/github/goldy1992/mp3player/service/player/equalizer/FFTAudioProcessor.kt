@@ -12,10 +12,14 @@ import com.google.android.exoplayer2.audio.AudioProcessor
 import com.google.android.exoplayer2.util.Assertions
 import com.google.android.exoplayer2.util.Util
 import dagger.hilt.android.scopes.ServiceScoped
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.Long.max
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import javax.inject.Inject
+
 
 @ServiceScoped
 class FFTAudioProcessor
@@ -186,7 +190,12 @@ class FFTAudioProcessor
             srcBuffer.position(srcBufferPosition)
 
 
-            val audioSample = createFftSample(src, this.inputAudioFormat.channelCount, SAMPLE_SIZE)
+            val audioSample = AudioSample(
+                waveformData = src,
+                channelCount = this.inputAudioFormat.channelCount,
+                sampleHz = SAMPLE_SIZE)
+
+//            val audioSample = createFftSample(src, this.inputAudioFormat.channelCount, SAMPLE_SIZE)
             postSampleToMediaSession(audioSample)
 
         }

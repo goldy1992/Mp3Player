@@ -162,6 +162,7 @@ dependencies {
     // for use with compose previews
     debugApi("androidx.customview:customview:1.1.0")
     debugApi("androidx.customview:customview-poolingcontainer:1.0.0-beta02")
+    implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 
 
     // Android tests

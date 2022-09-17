@@ -16,6 +16,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @AndroidEntryPoint(MainActivityBase::class)
 open class MainActivity : Hilt_MainActivity() {
 
+
     override fun logTag(): String {
         return "MAIN_ACTIVITY"
     }

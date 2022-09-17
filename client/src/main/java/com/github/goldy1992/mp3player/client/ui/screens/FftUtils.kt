@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.service.player.equalizer
+package com.github.goldy1992.mp3player.client.ui.screens
 
 import android.util.Log
 import com.github.goldy1992.mp3player.commons.AudioSample
@@ -11,7 +11,7 @@ import kotlin.math.hypot
 
 val fft = FastFourierTransformer(DftNormalization.STANDARD)
 
-fun createFftSample(original: FloatArray,
+suspend fun createFftSample(original: FloatArray,
                 channelCount : Int,
                 sampleHz : Int) : AudioSample {
 
@@ -22,11 +22,11 @@ fun createFftSample(original: FloatArray,
  //   val phase : Array<Double> = getPhase(ffTransformed)
     //     Log.d(logTag(), "phase: ${phase.joinToString(",")}")
     val magnitude : Array<Double> = getMagnitude(ffTransformed)
-    val phase : Array<Double> = getPhase(ffTransformed)
+   // val phase : Array<Double> = getPhase(ffTransformed)
 
    // Log.d("FFtUtils", "sample Hz: ${sampleHz}")
     return AudioSample(
-        phase = phase,
+  //      phase = phase,
         magnitude =  magnitude,
         waveformData = original,
         sampleHz = sampleHz,
