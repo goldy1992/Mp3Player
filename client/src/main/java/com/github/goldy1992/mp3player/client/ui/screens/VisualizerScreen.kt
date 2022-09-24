@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -16,8 +17,7 @@ import com.github.goldy1992.mp3player.client.ui.components.equalizer.fireworks.F
 fun VisualizerScreen(viewModel: VisualizerViewModel = viewModel()) {
 
     //val audioSample by viewModel.audioData.observeAsState(AudioSample.NONE)
-    val audioMagnitudes by viewModel.audioMagnitudes.observeAsState(floatArrayOf())
-    val frequencyPhases by viewModel.frequencyPhases.observeAsState(floatArrayOf())
+    val audioMagnitudes by viewModel.audioDataState.collectAsState()
     val isPlaying by viewModel.mediaControllerAdapter.isPlaying.observeAsState(false)
 
 //    val list1: ArrayList<Float> = arrayListOf()

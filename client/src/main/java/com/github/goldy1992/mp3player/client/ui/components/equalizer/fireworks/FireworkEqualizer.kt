@@ -11,7 +11,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.isActive
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import kotlin.math.*
 import kotlin.random.Random
@@ -27,8 +31,9 @@ fun FireworkWrapper(modifier: Modifier = Modifier,
                     isPlaying : Boolean = false,
                     insetPx : Float = 200f,
                     frequencyPhases : List<Float> = emptyList(),
+                    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
  ) {
-
+   // Log.i(logTag, "recomposing")
     var canvasWidth by remember { mutableStateOf(0f) }
     var canvasHeight by remember { mutableStateOf(0f) }
     val spawnPoints : List<Offset> = remember(insetPx, canvasWidth, canvasHeight, particleWidth, frequencyPhases.size) {
@@ -41,9 +46,10 @@ fun FireworkWrapper(modifier: Modifier = Modifier,
 
     val particles : MutableState<Map<Int, List<Particle>>> = remember { mutableStateOf(emptyMap()) }
 
-    LaunchedEffect(frequencyPhases, particles, isPlaying) {
-
-        while(isPlaying || particlesInMap(particles.value)) {
+    LaunchedEffect(frequencyPhases, particles, isPlaying, lifecycleOwner.lifecycle.currentState) {
+        
+        while(this.isActive && lifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED && (isPlaying || particlesInMap(particles.value)) ) {
+            Log.i(logTag, "generating particles")
             val newParticleMap = HashMap<Int, ArrayList<Particle>>()
             val frame = awaitFrame()
 

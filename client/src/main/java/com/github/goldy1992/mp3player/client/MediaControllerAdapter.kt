@@ -16,6 +16,10 @@ import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.Constants.AUDIO_DATA
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.LogTagger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.ChannelResult
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.*
 import org.apache.commons.lang3.exception.ExceptionUtils
 
 /**
@@ -26,7 +30,7 @@ open class MediaControllerAdapter
 
 constructor(private val context: Context,
             private var mediaBrowser: MediaBrowserCompat,
-            val audioDataProcessor: AudioDataProcessor)
+            private var scope : CoroutineScope)
     : MediaBrowserConnectionListener, LogTagger, MediaControllerCompat.Callback() {
 
 
@@ -193,12 +197,37 @@ constructor(private val context: Context,
 
     override fun onSessionEvent(event: String?, extras: Bundle?) {
         super.onSessionEvent(event, extras)
-        if (AUDIO_DATA == event) {
-            val audioSample = extras?.get(AUDIO_DATA) as AudioSample
-            this.audioDataProcessor.processAudioData(audioSample)
-//            Log.d(logTag(), "Audio Data Received")
         }
-    }
+
+    fun audioDataFlow(): Flow<AudioSample> = callbackFlow {
+
+        val messagesListener = object : MediaControllerCallbackImpl() {
+            override fun onSessionEvent(event: String?, extras: Bundle?) {
+                super.onSessionEvent(event, extras)
+                if (AUDIO_DATA == event && isPlaying.value == true) {
+
+                    val audioSample = extras?.get(AUDIO_DATA) as AudioSample
+                    val result : ChannelResult<Unit> = trySend(audioSample)
+              //      Log.i(logTag(), "sending audio sample, result: ${result.isSuccess}")
+                }
+
+            }
+        }
+
+
+        mediaController?.registerCallback(messagesListener)
+
+
+        // The callback inside awaitClose will be executed when the flow is
+        // either closed or cancelled.
+        // In this case, remove the callback from Firestore
+        awaitClose { mediaController?.unregisterCallback(messagesListener) }
+    }.shareIn(
+        scope,
+        replay = 1,
+        started = SharingStarted.WhileSubscribed()
+    )
+
 
     open fun getCurrentSongAlbumArtUri() : Uri? {
         val albumArtUriPath = metadata.value!!.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI)
@@ -231,12 +260,4 @@ constructor(private val context: Context,
         }
     }
 
-    private fun createVisualizer(audioSessionId : Int) {
-//        this.visualizer = Visualizer(audioSessionId)
-//        val myDataCaptureListener = MyDataCaptureListener(this.audioStream)
-//        this.visualizer!!.setEnabled(false)
-//        Log.d(logTag(), "captureSizeRange: ${Visualizer.getCaptureSizeRange()[0]}")
-//        this.visualizer!!.setCaptureSize(Visualizer.getCaptureSizeRange()[0]);
-//        this.visualizer!!.setDataCaptureListener(myDataCaptureListener, Visualizer.getMaxCaptureRate(), true, true)
-    }
 }

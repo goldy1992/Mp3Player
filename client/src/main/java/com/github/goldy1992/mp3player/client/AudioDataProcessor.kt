@@ -1,16 +1,14 @@
 package com.github.goldy1992.mp3player.client
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.client.ui.screens.createFftSample
 import com.github.goldy1992.mp3player.client.views.audiobands.FrequencyBand
 import com.github.goldy1992.mp3player.client.views.audiobands.FrequencyBandFive
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @ActivityRetainedScoped
@@ -19,21 +17,34 @@ class AudioDataProcessor
     @Inject
     constructor() : LogTagger {
 
-    open val audioStream: MutableLiveData<AudioSample> = MutableLiveData(AudioSample.NONE)
-    open val audioMagnitudes: MutableLiveData<FloatArray> = MutableLiveData(floatArrayOf())
-    open val frequencyPhases : MutableLiveData<FloatArray> = MutableLiveData(floatArrayOf())
+    suspend fun processAudioData(audioSample: AudioSample) : FloatArray {
+        return withContext(Dispatchers.IO) {
+         //   Log.i(logTag(), "processing audio sample")
+            if (audioSample.waveformData.isEmpty()) {
+                floatArrayOf()
+            }
+            else {
+                val processedAudioSample = createFftSample(
+                    audioSample.waveformData,
+                    audioSample.channelCount,
+                    audioSample.sampleHz
+                )
+                // process audio data on the background thread
+                val magnitudesFloatArray: FloatArray =
+                calculateReadValues(processedAudioSample.magnitude, 10)
 
-    fun processAudioData(audioSample: AudioSample) {
-        CoroutineScope(Dispatchers.Default).launch {
-            val processedAudioSample = createFftSample(audioSample.waveformData, audioSample.channelCount, audioSample.sampleHz)
-            // process audio data on the background thread
-            //val magnitudes: FloatArray = calculateFrequencyBands(audioSample.magnitude)
-         //   val frequencyPhasesFloatArray : FloatArray = calculateFrequencyBandsAverages(audioSample.phase)
-//            val frequencyPhasesFloatArray : FloatArray = calculateReadValues(audioSample.magnitude, 50)
-            val magnitudesFloatArray : FloatArray = calculateReadValues(processedAudioSample.magnitude, 10)
-            audioMagnitudes.postValue(magnitudesFloatArray)
-           // frequencyPhases.postValue(frequencyPhasesFloatArray)
+                var str = ""
+                for (f in magnitudesFloatArray) {
+                    str += "$f, "
+                }
+            //    Log.i(logTag(), "result array: $str")
+                magnitudesFloatArray
+            }
+
         }
+
+        // frequencyPhases.postValue(frequencyPhasesFloatArray)
+
     }
 
     var maxFrequency : Float = 0f
@@ -84,6 +95,8 @@ class AudioDataProcessor
             }
             return toReturn
     }
+
+
 
     /**
      * @return the name of the log tag given to the class

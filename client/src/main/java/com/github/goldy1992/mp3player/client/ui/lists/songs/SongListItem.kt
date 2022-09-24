@@ -122,7 +122,7 @@ private fun AlbumArt(uri : Uri? = null,
 //                list1.add(height)
 //            }
 
-            AnimatedBarEqualizer()
+            //AnimatedBarEqualizer()
 //            Equalizer(modifier = Modifier.size(40.dp),
 //            bars = mediaController?.audioDataProcessor?.audioMagnitudes?.value ?: FloatArray(0),
 //

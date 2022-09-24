@@ -29,6 +29,7 @@ import javax.inject.Inject
 abstract class MainActivityBase : ComponentActivity(),
     LogTagger,
     PermissionGranted {
+
     @Inject
     lateinit var componentClassMapper : ComponentClassMapper
     /**
@@ -63,6 +64,7 @@ abstract class MainActivityBase : ComponentActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         Log.i(logTag(), "on createee")
         permissionsProcessor.requestPermissions(permissions = listOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
             launcher = permissionLauncher)

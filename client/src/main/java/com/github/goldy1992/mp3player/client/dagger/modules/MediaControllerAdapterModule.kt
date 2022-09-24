@@ -10,6 +10,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.CoroutineScope
 
 @InstallIn(ActivityRetainedComponent::class)
 @Module
@@ -19,8 +20,8 @@ class MediaControllerAdapterModule {
     @Provides
     fun providesMediaControllerAdapter(@ApplicationContext context: Context,
                                        mediaBrowserCompat: MediaBrowserCompat,
-                                        audioDataProcessor : AudioDataProcessor)
+                                        scope : CoroutineScope)
             : MediaControllerAdapter {
-        return MediaControllerAdapter(context, mediaBrowserCompat, audioDataProcessor)
+        return MediaControllerAdapter(context, mediaBrowserCompat, scope)
     }
 }
