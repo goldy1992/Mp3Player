@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.client.dagger.modules
 import android.content.ComponentName
 import android.content.Context
 import android.support.v4.media.MediaBrowserCompat
-import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
+import com.github.goldy1992.mp3player.client.callbacks.connection.MediaBrowserCompatCallback
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import dagger.Module
 import dagger.Provides
@@ -20,9 +20,9 @@ class MediaBrowserCompatModule {
     @Provides
     fun provideMediaBrowserCompat(@ApplicationContext context: Context,
                                   componentClassMapper: ComponentClassMapper,
-                                  myConnectionCallback: MyConnectionCallback):
+                                  mediaBrowserCompatCallback: MediaBrowserCompatCallback):
             MediaBrowserCompat {
         val componentName = ComponentName(context, componentClassMapper.service!!)
-        return MediaBrowserCompat(context, componentName, myConnectionCallback, null)
+        return MediaBrowserCompat(context, componentName, mediaBrowserCompatCallback, null)
     }
 }

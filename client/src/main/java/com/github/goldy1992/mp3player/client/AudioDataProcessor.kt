@@ -1,21 +1,46 @@
 package com.github.goldy1992.mp3player.client
 
 import android.util.Log
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.github.goldy1992.mp3player.client.ui.screens.createFftSample
 import com.github.goldy1992.mp3player.client.views.audiobands.FrequencyBand
 import com.github.goldy1992.mp3player.client.views.audiobands.FrequencyBandFive
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-@ActivityRetainedScoped
+@ViewModelScoped
 class AudioDataProcessor
 
     @Inject
-    constructor() : LogTagger {
+    constructor() : LogTagger, DefaultLifecycleObserver {
+
+
+//    // Backing property to avoid state updates from other classes
+//    private val isScreenActiveMutableState = MutableStateFlow(floatArrayOf())
+//    // The UI collects from this StateFlow to get its state updates
+//    val isScreenActiveState: StateFlow<FloatArray> = audioDataMutableState
+//
+//
+//    val lifeResumedFlow : Flow<Boolean> = callbackFlow {
+//        val messagesListener = object : DefaultLifecycleObserver {
+//        override fun onResume(owner: LifecycleOwner) {
+//           trySend(true)
+//        }
+//
+//        override fun onPause(owner: LifecycleOwner) {
+//            trySend(false)
+//        }
+//    }
 
     suspend fun processAudioData(audioSample: AudioSample) : FloatArray {
         return withContext(Dispatchers.IO) {

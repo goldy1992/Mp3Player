@@ -9,7 +9,7 @@ import javax.inject.Inject
  * Created by Mike on 04/10/2017.
  */
 @ActivityRetainedScoped
-class MyConnectionCallback
+class MediaBrowserCompatCallback
 
     @Inject
     constructor()
@@ -47,5 +47,9 @@ class MyConnectionCallback
 
     fun removeListener(listener : MediaBrowserConnectionListener) : Boolean {
         return listeners.remove(listener)
+    }
+
+    fun removeListeners(listenersToRemove : Set<MediaBrowserConnectionListener>) : Boolean {
+        return listeners.removeAll(listenersToRemove)
     }
 }

@@ -29,14 +29,9 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 open class MediaControllerAdapter
 
 constructor(private val context: Context,
-            private var mediaBrowser: MediaBrowserCompat,
-            private var scope : CoroutineScope)
-    : MediaBrowserConnectionListener, LogTagger, MediaControllerCompat.Callback() {
+            private var mediaBrowser: MediaBrowserCompat)
+    : MediaAdapter(context, mediaBrowser) {
 
-
-    private var mediaController: MediaControllerCompat? = null
-
-    open var token: MediaSessionCompat.Token? = null
 
     open val metadata : MutableLiveData<MediaMetadataCompat> = MutableLiveData()
 
@@ -137,10 +132,6 @@ constructor(private val context: Context,
         transportControls.sendCustomAction(CHANGE_PLAYBACK_SPEED, extras)
     }
 
-    @get:VisibleForTesting
-    val transportControls: MediaControllerCompat.TransportControls
-    get() = mediaController!!.transportControls
-
     open fun getActiveQueueItemId(): Long? {
         return playbackState.value?.activeQueueItemId
     }
@@ -159,12 +150,7 @@ constructor(private val context: Context,
         return -1
     }
 
-    open fun createMediaController(
-        context: Context,
-        token: MediaSessionCompat.Token
-    ): MediaControllerCompat {
-        return MediaControllerCompat(context, token)
-    }
+
 
     override fun logTag(): String {
         return "MDIA_CNTRLLR_ADPTR"
@@ -199,34 +185,20 @@ constructor(private val context: Context,
         super.onSessionEvent(event, extras)
         }
 
-    fun audioDataFlow(): Flow<AudioSample> = callbackFlow {
 
-        val messagesListener = object : MediaControllerCallbackImpl() {
-            override fun onSessionEvent(event: String?, extras: Bundle?) {
-                super.onSessionEvent(event, extras)
-                if (AUDIO_DATA == event && isPlaying.value == true) {
 
-                    val audioSample = extras?.get(AUDIO_DATA) as AudioSample
-                    val result : ChannelResult<Unit> = trySend(audioSample)
-              //      Log.i(logTag(), "sending audio sample, result: ${result.isSuccess}")
-                }
+    override fun onConnected() {
 
-            }
+        try {
+            super.onConnected()
+            metadata.postValue(mediaController!!.metadata)
+            playbackState.postValue(mediaController!!.playbackState)
+            queue.postValue(mediaController!!.queue)
+            //isPlaying.postValue((mediaController!!.playbackState?.playbackState as PlaybackState).state == PlaybackStateCompat.STATE_PLAYING)
+        } catch (ex: RemoteException) {
+            Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
         }
-
-
-        mediaController?.registerCallback(messagesListener)
-
-
-        // The callback inside awaitClose will be executed when the flow is
-        // either closed or cancelled.
-        // In this case, remove the callback from Firestore
-        awaitClose { mediaController?.unregisterCallback(messagesListener) }
-    }.shareIn(
-        scope,
-        replay = 1,
-        started = SharingStarted.WhileSubscribed()
-    )
+    }
 
 
     open fun getCurrentSongAlbumArtUri() : Uri? {
@@ -244,20 +216,6 @@ constructor(private val context: Context,
      */
     val isPlaying = MutableLiveData<Boolean>(false)
 
-    override fun onConnected() {
-        try {
-            this.token = mediaBrowser.sessionToken
-            this.mediaController = createMediaController(context, mediaBrowser.sessionToken)
-        //    var audioSessionId : Int? = mediaController?.extras?.get(AUDIO_SESSION_ID) as Int
-         //   this.createVisualizer(audioSessionId?: -1)
-            this.mediaController!!.registerCallback(this)
-            metadata.postValue(mediaController!!.metadata)
-            playbackState.postValue(mediaController!!.playbackState)
-            queue.postValue(mediaController!!.queue)
-            //isPlaying.postValue((mediaController!!.playbackState?.playbackState as PlaybackState).state == PlaybackStateCompat.STATE_PLAYING)
-        } catch (ex: RemoteException) {
-            Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
-        }
-    }
+
 
 }

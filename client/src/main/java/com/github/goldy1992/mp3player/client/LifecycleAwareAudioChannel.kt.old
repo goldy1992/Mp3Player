@@ -1,0 +1,30 @@
+package com.github.goldy1992.mp3player.client
+
+import android.util.Log
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import com.github.goldy1992.mp3player.commons.AudioSample
+import com.github.goldy1992.mp3player.commons.LogTagger
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.dropWhile
+import javax.inject.Inject
+
+@ActivityRetainedScoped
+class LifecycleAwareAudioChannel
+
+    @Inject
+    constructor(mediaControllerAdapter: MediaControllerAdapter) : DefaultLifecycleObserver, LogTagger {
+
+
+
+  
+    val audioListenerFlow : Flow<AudioSample> = mediaControllerAdapter.audioDataFlow()
+        .dropWhile {
+            Log.i(logTag(), "isScreenVisible $isScreenVisible")
+            !isScreenVisible }
+
+    override fun logTag(): String {
+        return "LifeAwareAudioChnl"
+    }
+}

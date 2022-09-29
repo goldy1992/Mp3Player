@@ -18,7 +18,7 @@ fun VisualizerScreen(viewModel: VisualizerViewModel = viewModel()) {
 
     //val audioSample by viewModel.audioData.observeAsState(AudioSample.NONE)
     val audioMagnitudes by viewModel.audioDataState.collectAsState()
-    val isPlaying by viewModel.mediaControllerAdapter.isPlaying.observeAsState(false)
+    val isPlaying by viewModel.isPlaying.collectAsState(false)
 
 //    val list1: ArrayList<Float> = arrayListOf()
 //   audioMagnitudes.forEachIndexed {

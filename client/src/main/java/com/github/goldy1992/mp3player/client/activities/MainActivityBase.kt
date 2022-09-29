@@ -11,11 +11,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
-import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
+import com.github.goldy1992.mp3player.client.MediaConnector
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
-import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
 import com.github.goldy1992.mp3player.client.permissions.PermissionGranted
 import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
@@ -31,15 +30,13 @@ abstract class MainActivityBase : ComponentActivity(),
     PermissionGranted {
 
     @Inject
-    lateinit var componentClassMapper : ComponentClassMapper
-    /**
-     * MediaBrowserAdapter
-     */
-    @Inject
-    lateinit var mediaBrowserAdapter: MediaBrowserAdapter
+    lateinit var lifecycleObservers: LifecycleObservers
 
     @Inject
-    lateinit var connectionCallback: MyConnectionCallback
+    lateinit var componentClassMapper : ComponentClassMapper
+
+    @Inject
+    lateinit var mediaConnector: MediaConnector
 
     @Inject
     lateinit var permissionsProcessor: PermissionsProcessor
@@ -63,29 +60,30 @@ abstract class MainActivityBase : ComponentActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        for (observer in lifecycleObservers.observers) {
+            lifecycle.addObserver(observer)
+        }
+
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        Log.i(logTag(), "on createee")
+        Log.i(logTag(), "on create")
         permissionsProcessor.requestPermissions(permissions = listOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
             launcher = permissionLauncher)
      }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaControllerAdapter.disconnect()
-        mediaBrowserAdapter.disconnect()
-    }
-
-    private fun connect() {
-        connectionCallback.registerListener(mediaControllerAdapter)
-        connectionCallback.registerListener(mediaBrowserAdapter)
-        mediaBrowserAdapter.connect()
+        mediaConnector.disconnect()
+        for (observer in lifecycleObservers.observers) {
+            lifecycle.removeObserver(observer)
+        }
     }
 
     override fun onPermissionGranted() {
         Log.i(logTag(), "permission granted")
         createService()
-        connect()
+        mediaConnector.connect()
         if (Intent.ACTION_VIEW == intent.action) {
             trackToPlay = intent.data
             this.lifecycleScope.launch(Dispatchers.Default) {
@@ -119,7 +117,6 @@ abstract class MainActivityBase : ComponentActivity(),
                 }
                 finish()
             }
-
         }
     }
 
