@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player.service
 
 import android.os.Bundle
 import android.os.Looper
-import android.support.v4.media.MediaBrowserCompat.MediaItem
+import androidx.media3.common.MediaItem
 import androidx.media.MediaBrowserServiceCompat
 import androidx.media.MediaBrowserServiceCompat.Result
 import com.github.goldy1992.mp3player.service.dagger.modules.service.ContentManagerModule

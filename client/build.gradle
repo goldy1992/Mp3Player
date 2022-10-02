@@ -124,7 +124,7 @@ dependencies {
     implementation group: 'androidx.annotation', name: 'annotation', version: annotation_version
     implementation group: 'androidx.appcompat', name: 'appcompat', version: app_compat_version
     implementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
-    implementation group: 'androidx.media', name: 'media', version: media_version
+    implementation group: 'androidx.media3', name: 'media3-session', version: media3_version
     implementation group: 'org.apache.commons', name: 'commons-io', version: commons_io_version
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: commons_collections4_version
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: commons_lang_version

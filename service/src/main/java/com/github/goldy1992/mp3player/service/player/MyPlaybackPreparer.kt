@@ -29,7 +29,7 @@ class MyPlaybackPreparer @Inject constructor(private val exoPlayer: ExoPlayer,
                                              private val mediaSourceFactory: MediaSource.Factory,
                                              private val myControlDispatcher: ForwardingPlayer,
                                              private val playlistManager: PlaylistManager)
-    : MediaSessionConnector.PlaybackPreparer, LogTagger {
+    : PlaybackPreparer, LogTagger {
     override fun getSupportedPrepareActions(): Long {
         return MediaSessionConnector.PlaybackPreparer.ACTIONS
     }

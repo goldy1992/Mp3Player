@@ -58,7 +58,7 @@ android {
 
 dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: commons_lang_version
-    implementation group: 'androidx.media', name: 'media', version: media_version
+    implementation group: 'androidx.media3', name: 'media3-common', version: media3_version
     implementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
 

@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.commons
 
 
-import android.support.v4.media.MediaBrowserCompat.MediaItem
+import androidx.media3.common.MediaItem
 import java.util.*
 import kotlin.Comparator
 

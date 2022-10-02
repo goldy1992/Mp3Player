@@ -1,6 +1,8 @@
 package com.github.goldy1992.mp3player.client.activities
 
 import android.Manifest
+import android.app.Activity
+import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -9,6 +11,8 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.media3.session.MediaBrowser
+import androidx.media3.session.SessionToken
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
@@ -19,7 +23,6 @@ import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,6 +36,12 @@ abstract class MainActivityBase : ComponentActivity(),
     PermissionGranted {
     @Inject
     lateinit var componentClassMapper : ComponentClassMapper
+
+    /**
+     *
+     */
+    @Inject
+    lateinit var scope: CoroutineScope
     /**
      * MediaBrowserAdapter
      */
@@ -64,7 +73,21 @@ abstract class MainActivityBase : ComponentActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    Log.i(logTag(), "on createee")
+
+        launch {
+            val sessionToken =
+                SessionToken(applicationContext, ComponentName(applicationContext, componentClassMapper.service!!.javaClass))
+            val browser = MediaBrowser.Builder(applicationContext, sessionToken)
+            .buildAsync()
+
+            // Get the library root to start browsing the library.
+            root = browser.getLibraryRoot(/* params= */ null).await();
+            // Add a MediaController.Listener to listen to player state events.
+            browser.addListener(playerListener)
+            playerView.setPlayer(browser)
+        }
+
+        Log.i(logTag(), "on createee")
 
         // If app has already been created set the UI to initialise at the main screen.
         val appAlreadyCreated = savedInstanceState != null

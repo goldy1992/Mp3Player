@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.lists.folders;
 
-import android.support.v4.media.MediaBrowserCompat.MediaItem
+import androidx.media3.common.MediaItem
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.padding

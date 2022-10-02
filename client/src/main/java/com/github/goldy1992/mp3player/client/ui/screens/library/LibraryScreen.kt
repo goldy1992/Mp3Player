@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
 import android.net.Uri
-import android.support.v4.media.MediaBrowserCompat.MediaItem
+import androidx.media3.common.MediaItem
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi

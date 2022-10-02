@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.callbacks.subscription
 
 import android.os.Looper
-import android.support.v4.media.MediaBrowserCompat.MediaItem
+import androidx.media3.common.MediaItem
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.goldy1992.mp3player.client.MediaBrowserSubscriber

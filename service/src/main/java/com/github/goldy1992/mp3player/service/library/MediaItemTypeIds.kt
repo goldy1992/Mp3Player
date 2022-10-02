@@ -24,7 +24,7 @@ class MediaItemTypeIds
         val idSet = HashSet<String?>()
         for (mediaItemType in MediaItemType.values()) {
             var added = false
-            var id: String? = null
+            var id = ""
             while (!added) {
                 id = generateRootId(mediaItemType.name)
                 added = idSet.add(id)
@@ -37,8 +37,8 @@ class MediaItemTypeIds
         mediaItemTypeToIdMap = enumMap
     }
 
-    fun getId(mediaItemType: MediaItemType?): String? {
-        return mediaItemTypeToIdMap!![mediaItemType]
+    fun getId(mediaItemType: MediaItemType): String {
+        return mediaItemTypeToIdMap?.get(mediaItemType) ?: MediaItemType.NONE.name
     }
 
     fun getMediaItemType(id: String?): MediaItemType? {

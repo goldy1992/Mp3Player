@@ -1,8 +1,8 @@
 package com.github.goldy1992.mp3player.service.library.content.retriever
 
 import android.os.Bundle
-import android.support.v4.media.MediaBrowserCompat.MediaItem
-import android.support.v4.media.MediaDescriptionCompat
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.commons.ComparatorUtils.Companion.compareRootMediaItemsByMediaItemType
 import com.github.goldy1992.mp3player.commons.Constants.MEDIA_ITEM_TYPE
 import com.github.goldy1992.mp3player.commons.Constants.ROOT_ITEM_TYPE
@@ -22,8 +22,8 @@ class RootRetriever @Inject constructor(private val mediaItemTypeIds: MediaItemT
         return CHILDREN
     }
 
-    fun getRootItem(mediaItemType: MediaItemType?): MediaItem? {
-        return typeToMediaItemMap[mediaItemType]
+    fun getRootItem(mediaItemType: MediaItemType): MediaItem {
+        return typeToMediaItemMap[mediaItemType] ?: MediaItem.EMPTY
     }
 
     override val type: MediaItemType
@@ -36,13 +36,16 @@ class RootRetriever @Inject constructor(private val mediaItemTypeIds: MediaItemT
         val extras = Bundle()
         extras.putSerializable(MEDIA_ITEM_TYPE, MediaItemType.ROOT)
         extras.putSerializable(ROOT_ITEM_TYPE, category)
-        val mediaDescriptionCompat = MediaDescriptionCompat.Builder()
-                .setDescription(category.description)
-                .setTitle(category.title)
-                .setMediaId(mediaItemTypeIds.getId(category))
-                .setExtras(extras)
-                .build()
-        return MediaItem(mediaDescriptionCompat, 0)
+
+        val mediaMetadata = MediaMetadata.Builder()
+            .setDescription(category.description)
+            .setTitle(category.title)
+            .setExtras(extras)
+            .build()
+        return MediaItem.Builder()
+            .setMediaId(mediaItemTypeIds.getId(category))
+            .setMediaMetadata(mediaMetadata)
+            .build()
     }
 
     override fun compare(o1: MediaItem?, o2: MediaItem?): Int {

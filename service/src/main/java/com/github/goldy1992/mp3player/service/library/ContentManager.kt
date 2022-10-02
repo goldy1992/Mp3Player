@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.service.library
 
 import android.net.Uri
-import android.support.v4.media.MediaBrowserCompat.MediaItem
+import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.Normaliser.normalise
 import com.github.goldy1992.mp3player.service.library.content.ContentRetrievers
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequestParser
@@ -41,9 +41,9 @@ class ContentManager @Inject constructor(private val contentRetrievers: ContentR
      * @param query the search query
      * @return a list of media items which match the search query
      */
-    fun search(query: String): List<MediaItem?> {
+    fun search(query: String): List<MediaItem> {
         val normalisedQuery = normalise(query)
-        val results: MutableList<MediaItem?> = ArrayList()
+        val results: MutableList<MediaItem> = ArrayList()
         for (contentSearcher in contentSearchers.all) {
             val searchResults : List<MediaItem>? = contentSearcher.search(normalisedQuery)
             if (CollectionUtils.isNotEmpty(searchResults)) {

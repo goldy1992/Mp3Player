@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.screens.main
 
-import android.support.v4.media.MediaBrowserCompat.MediaItem
+import androidx.media3.common.MediaItem
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons

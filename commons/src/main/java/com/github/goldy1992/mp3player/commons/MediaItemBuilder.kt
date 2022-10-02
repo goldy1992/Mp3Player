@@ -1,10 +1,11 @@
 package com.github.goldy1992.mp3player.commons
 
+import android.media.MediaMetadata.METADATA_KEY_ALBUM_ART_URI
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.MediaDescriptionCompat
-import android.support.v4.media.MediaMetadataCompat
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
+
 import java.io.File
 
 class MediaItemBuilder(private val mediaId: String) {
@@ -13,7 +14,10 @@ class MediaItemBuilder(private val mediaId: String) {
 
     private var description: String? = null
     private var title: String? = null
+    private var artist : String? = null
     private var mediaUri: Uri? = null
+    private var albumArtUri : Uri? = null
+    private var albumArtData : ByteArray? = null
     private val extras: Bundle = Bundle()
     private var flags = 0
 
@@ -42,10 +46,10 @@ class MediaItemBuilder(private val mediaId: String) {
         return this
     }
 
-    fun setDuration(duration: Long): MediaItemBuilder {
-        extras.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
-        return this
-    }
+//    fun setDuration(duration: Long): MediaItemBuilder {
+//        extras.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
+//        return this
+//    }
 
     fun setLibraryId(libraryId: String?): MediaItemBuilder {
         extras.putString(Constants.LIBRARY_ID, libraryId)
@@ -58,12 +62,12 @@ class MediaItemBuilder(private val mediaId: String) {
     }
 
     fun setAlbumArtUri(albumArtUri: Uri?): MediaItemBuilder {
-        extras.putParcelable(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, albumArtUri)
+        this.albumArtUri = albumArtUri
         return this
     }
 
     fun setAlbumArtImage(bitmap: ByteArray?): MediaItemBuilder {
-        extras.putSerializable(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
+        this.albumArtData = bitmap
         return this
     }
 
@@ -78,7 +82,7 @@ class MediaItemBuilder(private val mediaId: String) {
     }
 
     fun setArtist(artist: String?): MediaItemBuilder {
-        extras.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
+        this.artist = artist
         return this
     }
 
@@ -87,14 +91,19 @@ class MediaItemBuilder(private val mediaId: String) {
         return this
     }
 
-    fun build(): MediaBrowserCompat.MediaItem {
-        val mediaDescription = MediaDescriptionCompat.Builder()
+    fun build(): MediaItem {
+        return MediaItem.Builder()
                 .setMediaId(mediaId)
-                .setMediaUri(mediaUri)
-                .setTitle(title)
-                .setDescription(description)
-                .setExtras(extras)
+                .setUri(mediaUri)
+                .setMediaMetadata(
+                    MediaMetadata.Builder()
+                        .setTitle(title)
+                        .setArtist(artist)
+                        .setArtworkUri(albumArtUri)
+                        .setArtworkData(this.albumArtData)
+                        .setExtras(extras)
+
+                    .build())
                 .build()
-        return MediaBrowserCompat.MediaItem(mediaDescription, flags)
     }
 }

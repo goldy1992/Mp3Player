@@ -6,7 +6,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
 import androidx.annotation.VisibleForTesting
-import com.google.android.exoplayer2.ExoPlayer
+import androidx.media3.exoplayer.ExoPlayer
+
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

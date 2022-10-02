@@ -2,78 +2,78 @@ package com.github.goldy1992.mp3player.commons
 
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.media.MediaBrowserCompat.MediaItem
-import android.support.v4.media.MediaMetadataCompat
+import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.Constants.EMPTY_MEDIA_ITEM_ID
 import java.io.File
 
 object MediaItemUtils {
     private fun hasExtras(item: MediaItem?): Boolean {
-        return item != null && item.description.extras != null
+        return item != null && item.mediaMetadata.extras != null
     }
 
     private fun hasTitle(item: MediaItem?): Boolean {
-        return item != null && item.description.title != null
+        return item != null && item.mediaMetadata.title != null
     }
 
     private fun hasDescription(item: MediaItem?): Boolean {
-        return item != null && item.description.description != null
+        return item != null && item.mediaMetadata.description != null
     }
 
     @JvmStatic
     fun getExtras(item: MediaItem): Bundle? {
         return if (!hasExtras(item)) {
             null
-        } else item.description.extras
+        } else item.mediaMetadata.extras
     }
 
     fun getExtra(key: String?, item: MediaItem?): Any? {
         if (item == null) {
             return null
         }
-        val extras = item.description.extras
+        val extras = item.mediaMetadata.extras
         return extras?.get(key)
     }
 
     @JvmStatic
     fun getMediaId(item: MediaItem?): String? {
-        return item?.description?.mediaId
+        return item?.mediaId
     }
 
     @JvmStatic
     fun getTitle(mediaItem: MediaItem): String {
         return if (hasTitle(mediaItem)) {
-            mediaItem.description.title.toString()
+            mediaItem.mediaMetadata.title.toString()
         } else Constants.UNKNOWN
     }
 
     @JvmStatic
     fun getDescription(item: MediaItem): String? {
         return if (hasDescription(item)) {
-            item.description.description.toString()
+            item.mediaMetadata.description.toString()
         } else null
     }
 
     private fun hasExtra(key: String?, item: MediaItem?): Boolean {
-        return hasExtras(item) && item?.description?.extras!!.containsKey(key)
+        return hasExtras(item) && item?.mediaMetadata?.extras!!.containsKey(key)
     }
 
-    private fun hasArtist(mediaItem : MediaItem?) : Boolean {
-        return hasExtras(mediaItem) && hasExtra(MediaMetadataCompat.METADATA_KEY_ARTIST, mediaItem)
+    private fun hasArtist(mediaItem : MediaItem) : Boolean {
+        return mediaItem.mediaMetadata.artist != null
     }
 
-    private fun hasDuration(mediaItem : MediaItem?) : Boolean {
-        return hasExtras(mediaItem) && hasExtra(MediaMetadataCompat.METADATA_KEY_DURATION, mediaItem)
+    private fun hasDuration(mediaItem : MediaItem) : Boolean {
+        return false
+      //  mediaItem.mediaMetadata.
+       // return hasExtras(mediaItem) && hasExtra(MediaMetadataCompat.METADATA_KEY_DURATION, mediaItem)
     }
 
     private fun hasFileCount(mediaItem : MediaItem?) : Boolean {
         return hasExtras(mediaItem) && hasExtra(Constants.FILE_COUNT, mediaItem)
     }
 
-    @JvmStatic
-    fun getArtist(item: MediaItem?): String? {
+    fun getArtist(item: MediaItem): String {
         return if (hasArtist(item)) {
-             getExtra(MediaMetadataCompat.METADATA_KEY_ARTIST, item) as String?
+            item.mediaMetadata.artist.toString()
         } else {
             Constants.UNKNOWN
         }
@@ -81,13 +81,7 @@ object MediaItemUtils {
 
     @JvmStatic
     fun getAlbumArtPath(item: MediaItem): String? {
-        if (hasExtra(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, item)) {
-            val uri = getExtra(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, item) as Uri?
-            if (uri != null) {
-                return uri.toString()
-            }
-        }
-        return null
+        return item.mediaMetadata.artworkUri?.toString()
     }
 
     @JvmStatic
@@ -114,16 +108,12 @@ object MediaItemUtils {
 
     @JvmStatic
     fun getMediaUri(item: MediaItem): Uri? {
-        return item.description.mediaUri
+        return item.localConfiguration?.uri
     }
 
     @JvmStatic
     fun getDuration(item: MediaItem?): Long {
-        return if (hasDuration(item)) {
-            getExtra(MediaMetadataCompat.METADATA_KEY_DURATION, item) as Long
-        } else {
-            0L
-        }
+        return 0L
     }
 
     @JvmStatic
@@ -147,23 +137,17 @@ object MediaItemUtils {
     }
 
     fun getAlbumArtUri(song: MediaItem): Uri? {
-        val extras = song.description.extras
-        return if (null != extras) {
-            extras[MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI] as? Uri
-        } else null
+        return song.mediaMetadata.artworkUri
     }
 
     @JvmStatic
-    fun getAlbumArtImage(song: MediaItem): ByteArray {
-        val extras = song.description.extras
-        return if (null != extras) {
-            extras.getSerializable(MediaMetadataCompat.METADATA_KEY_ALBUM_ART) as ByteArray
-        } else ByteArray(0)
+    fun getAlbumArtImage(song: MediaItem): ByteArray? {
+        return song.mediaMetadata.artworkData
     }
 
     @JvmStatic
     fun getRootTitle(song: MediaItem): String? {
-        val extras = song.description.extras
+        val extras = song.mediaMetadata.extras
         if (null != extras) {
             val mediaItemType : MediaItemType? = extras.getSerializable(Constants.ROOT_ITEM_TYPE) as MediaItemType
             return mediaItemType?.title
