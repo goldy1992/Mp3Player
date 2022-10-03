@@ -5,6 +5,8 @@ import android.support.v4.media.MediaBrowserCompat
 import androidx.media3.common.MediaItem
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.media3.common.Player
+import androidx.media3.session.MediaBrowser
 import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback
 import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -25,6 +27,8 @@ open class MediaBrowserAdapter
     }
 
     open fun search(query: String?, extras: Bundle?) {
+        val mediaBrowser : MediaBrowser
+        mediaBrowser.addListener(Player.Listener)
         if (isEmpty(query)) {
             Log.w(logTag(), "Null or empty search query seen")
         } else {

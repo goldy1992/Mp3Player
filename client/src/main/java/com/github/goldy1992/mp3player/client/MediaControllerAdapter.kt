@@ -1,36 +1,73 @@
 package com.github.goldy1992.mp3player.client
 
 import android.content.Context
+import android.media.session.PlaybackState
 import android.net.Uri
 import android.os.Bundle
 import android.os.RemoteException
-import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.MediaMetadataCompat
-import android.support.v4.media.session.MediaControllerCompat
-import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.annotation.VisibleForTesting
+import androidx.concurrent.futures.await
 import androidx.lifecycle.MutableLiveData
+import androidx.media3.common.Player
+import androidx.media3.session.MediaController
+import androidx.media3.session.SessionToken
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.LogTagger
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import org.apache.commons.lang3.exception.ExceptionUtils
 
 /**
  * An adapter that can be used to control the MediaPlaybackService by sending playback controls such
  * as play/pause to the service.
  */
+@ActivityRetainedScoped
 open class MediaControllerAdapter
 
-constructor(private val context: Context,
-            private var mediaBrowser: MediaBrowserCompat)
-    : MediaBrowserConnectionListener, LogTagger, MediaControllerCompat.Callback() {
+constructor(@ApplicationContext context: Context,
+            sessionToken : SessionToken,
+scope : CoroutineScope)
+    : MediaController.Listener, LogTagger {
 
 
-    private var mediaController: MediaControllerCompat? = null
+    private var mediaController: MediaController? = null
 
-    open var token: MediaSessionCompat.Token? = null
+    init {
+        val listener = this
+        scope.launch {
+            mediaController = MediaController.Builder(context, sessionToken)
+                .setListener(listener)
+                .buildAsync()
+                .await()
 
+        }
+    }
+
+    val isPlayingFlow : Flow<Int> = callbackFlow {
+        val messageListener = object : Player.Listener {
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                trySend(playbackState)
+            }
+        }
+        mediaController?.addListener(messageListener)
+
+
+        // The callback inside awaitClose will be executed when the flow is
+        // either closed or cancelled.
+        // In this case, remove the callback from Firestore
+        awaitClose { mediaController?.removeListener(messageListener) }
+    }.shareIn(
+        scope,
+        replay = 1,
+        started = SharingStarted.WhileSubscribed()
+    )
+
+    val isPlaying = MutableStateFlow(false)
     open val metadata : MutableLiveData<MediaMetadataCompat> = MutableLiveData()
 
     open val playbackState : MutableLiveData<PlaybackStateCompat> = MutableLiveData()

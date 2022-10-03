@@ -11,7 +11,10 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.concurrent.futures.await
 import androidx.media3.session.MediaBrowser
+import androidx.media3.session.MediaController
+import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.SessionToken
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -77,14 +80,28 @@ abstract class MainActivityBase : ComponentActivity(),
         launch {
             val sessionToken =
                 SessionToken(applicationContext, ComponentName(applicationContext, componentClassMapper.service!!.javaClass))
-            val browser = MediaBrowser.Builder(applicationContext, sessionToken)
+
+            val browser = MediaBrowser.
+            Builder(applicationContext, sessionToken)
+                .setListener(MediaBrowser.Listener)
             .buildAsync()
 
+            .await()
+
             // Get the library root to start browsing the library.
-            root = browser.getLibraryRoot(/* params= */ null).await();
+            //MediaLibraryService.LibraryParams()
+            val root = browser.getLibraryRoot(/* params= */ null)
+                .await()
+
+            val mediaController = MediaController.Builder(applicationContext, sessionToken)
+                .setListener(MC)
+                .buildAsync()
+                .await()
+
+//            mediaController.addListener(Player.Listener)
             // Add a MediaController.Listener to listen to player state events.
-            browser.addListener(playerListener)
-            playerView.setPlayer(browser)
+//            browser.addListener(playerListener)
+//            playerView.setPlayer(browser)
         }
 
         Log.i(logTag(), "on createee")
