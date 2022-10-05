@@ -88,7 +88,7 @@ open class MediaPlaybackService : MediaLibraryService(),
             // Send custom layout to legacy session.
             mediaSession.setCustomLayout(customLayout)
         }
-        mediaStoreObservers.init(this)
+        mediaStoreObservers.init(mediaSession)
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {

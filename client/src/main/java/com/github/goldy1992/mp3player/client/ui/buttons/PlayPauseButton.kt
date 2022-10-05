@@ -7,23 +7,31 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
+import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * This button will display the [PlayButton] if the [MediaControllerAdapter] says there is currently
  * no playback, otherwise it will display the [PauseButton].
  */
 @Composable
-fun PlayPauseButton(mediaController: MediaControllerAdapter) {
-    val isPlaying by mediaController.isPlaying.observeAsState()
-    if (isPlaying!!) {
-        PauseButton(mediaController = mediaController)
+fun PlayPauseButton(mediaController: MediaControllerAdapter,
+                    asyncPlayerListener: AsyncPlayerListener,
+                    scope: CoroutineScope = rememberCoroutineScope()) {
+    val playbackState by asyncPlayerListener.playbackStateFlow.collectAsState()
+    val isPlaying = asyncPlayerListener.isPlaying()
+    if (isPlaying) {
+        PauseButton(mediaController = mediaController, scope)
     } else {
-        PlayButton(mediaController = mediaController)
+        PlayButton(mediaController = mediaController, scope)
     }
 }
 
@@ -32,9 +40,9 @@ fun PlayPauseButton(mediaController: MediaControllerAdapter) {
  * [com.github.goldy1992.mp3player.client.ui.PlayToolbar].
  */
 @Composable
-fun PlayButton(mediaController : MediaControllerAdapter) {
+fun PlayButton(mediaController : MediaControllerAdapter, scope : CoroutineScope = rememberCoroutineScope()) {
     IconButton(
-        onClick = { mediaController.play()}) {
+        onClick = { scope.launch { mediaController.play()}}) {
         Icon(
             Icons.Filled.PlayArrow,
             contentDescription = stringResource(id = R.string.play),
@@ -47,8 +55,9 @@ fun PlayButton(mediaController : MediaControllerAdapter) {
  * [com.github.goldy1992.mp3player.client.ui.PlayToolbar].
  */
 @Composable
-fun PauseButton(mediaController : MediaControllerAdapter) {
-    IconButton(onClick = { mediaController.pause()}) {
+fun PauseButton(mediaController : MediaControllerAdapter,
+scope: CoroutineScope = rememberCoroutineScope()) {
+    IconButton(onClick = { scope.launch {  mediaController.pause()}}) {
         Icon(
             Icons.Filled.Pause,
             contentDescription = stringResource(id = R.string.pause),

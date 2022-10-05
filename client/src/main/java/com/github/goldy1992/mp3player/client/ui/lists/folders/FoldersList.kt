@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui.lists.folders
 
-import android.support.v4.media.MediaBrowserCompat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,6 +18,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
@@ -29,8 +29,8 @@ import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 
 @Composable
 @Preview
-fun FolderList(folders : List<MediaBrowserCompat.MediaItem> = emptyList(),
-               onFolderSelected : (folder : MediaBrowserCompat.MediaItem?) -> Unit = {}) {
+fun FolderList(folders : List<MediaItem> = emptyList(),
+               onFolderSelected : (folder : MediaItem?) -> Unit = {}) {
 
     when {
         folders == null -> LoadingIndicator()

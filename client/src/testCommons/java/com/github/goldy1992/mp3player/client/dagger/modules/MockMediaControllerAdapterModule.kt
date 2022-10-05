@@ -14,7 +14,7 @@ import dagger.hilt.testing.TestInstallIn
 @Module
 @TestInstallIn(
     components = [ActivityRetainedComponent::class],
-    replaces = [MediaControllerAdapterModule::class]
+    replaces = [MediaControllerModule::class]
 )
 class MockMediaControllerAdapterModule {
 

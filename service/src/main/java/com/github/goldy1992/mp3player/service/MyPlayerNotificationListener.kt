@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player.service
 
 import android.app.Notification
 import android.app.Service
-import com.google.android.exoplayer2.ui.PlayerNotificationManager
+import androidx.media3.ui.PlayerNotificationManager
 import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 

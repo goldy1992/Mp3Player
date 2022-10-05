@@ -76,7 +76,6 @@ class MediaLibrarySessionCallback
         customCommand: SessionCommand,
         args: Bundle
     ): ListenableFuture<SessionResult> {
-        customCommand.
         return super.onCustomCommand(session, controller, customCommand, args)
     }
 

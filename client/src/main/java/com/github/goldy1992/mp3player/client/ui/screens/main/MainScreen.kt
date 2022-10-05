@@ -12,12 +12,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.navigation.NavController
-import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.NavigationDrawer
 import com.github.goldy1992.mp3player.client.ui.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.WindowSize
+import com.github.goldy1992.mp3player.client.viewmodels.MainScreenViewModel
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -41,8 +43,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(navController: NavController,
                windowSize: WindowSize,
-               mediaController: MediaControllerAdapter,
-               mediaBrowserAdapter : MediaBrowserAdapter,
+               viewModel: MainScreenViewModel = viewModel(),
                scaffoldState: ScaffoldState = rememberScaffoldState(),
                pagerState: PagerState = rememberPagerState(initialPage = 0)
 ) {
@@ -99,32 +100,32 @@ fun HomeAppBar(
     scope : CoroutineScope,
     scaffoldState: ScaffoldState) {
     val navigationDrawerIconDescription = stringResource(id = R.string.navigation_drawer_menu_icon)
-        TopAppBar(
-            title = {
-                Text(text = "MP3 Player")
-            },
-            navigationIcon = {
-                IconButton(
-                    onClick = {
-                        scope.launch {
-                            if (scaffoldState.drawerState.isClosed) {
-                                scaffoldState.drawerState.open()
-                            }
+    TopAppBar(
+        title = {
+            Text(text = "MP3 Player")
+        },
+        navigationIcon = {
+            IconButton(
+                onClick = {
+                    scope.launch {
+                        if (scaffoldState.drawerState.isClosed) {
+                            scaffoldState.drawerState.open()
                         }
-                    },
-                    modifier = Modifier.semantics {
-                        contentDescription = navigationDrawerIconDescription
-                    })
-                {
-                    Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu Btn")
-                }
-            },
-            actions = {
-                IconButton(onClick = { navController.navigate(Screen.SEARCH.name) }) {
-                    Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
-                }
-            },
-        )
+                    }
+                },
+                modifier = Modifier.semantics {
+                    contentDescription = navigationDrawerIconDescription
+                })
+            {
+                Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu Btn")
+            }
+        },
+        actions = {
+            IconButton(onClick = { navController.navigate(Screen.SEARCH.name) }) {
+                Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+            }
+        },
+    )
 } // HomeAppBar
 
 
@@ -157,6 +158,7 @@ private fun CustomScaffold(
     navController: NavController,
     scope: CoroutineScope,
     mediaController: MediaControllerAdapter,
+    asyncPlayerListener: AsyncPlayerListener,
     extendTopAppBar: @Composable () -> Unit = {},
     content : @Composable (PaddingValues) -> Unit = {}
 ) {
@@ -173,7 +175,7 @@ private fun CustomScaffold(
             }
         },
         bottomBar = {
-            PlayToolbar(mediaController = mediaController) {
+            PlayToolbar(mediaController = mediaController, asyncPlayerListener = asyncPlayerListener, scope = scope) {
                 navController.navigate(Screen.NOW_PLAYING.name)
             }
         },

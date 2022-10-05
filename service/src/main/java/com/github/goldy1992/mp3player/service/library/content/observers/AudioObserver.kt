@@ -5,6 +5,7 @@ import android.content.ContentUris
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import androidx.media3.session.MediaLibraryService.LibraryParams
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryPath
@@ -66,8 +67,8 @@ class AudioObserver
         if (startsWithUri(uri)) {
                 runBlocking {
                     updateSearchDatabase(uri)
-                    mediaPlaybackService!!.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.SONGS)!!)
-                    mediaPlaybackService!!.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.FOLDERS)!!)
+                    mediaSession?.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.SONGS), 1, LibraryParams.Builder().build())
+                    mediaSession?.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.FOLDERS), 1, LibraryParams.Builder().build())
                 }
             }
             // when there is a "change" to the meta data the exact id will given as the uri
@@ -92,7 +93,7 @@ class AudioObserver
                 Log.i(logTag(), "UPDATED songs and folders")
                 val directoryPath = getDirectoryPath(result)
                 if (StringUtils.isNotEmpty(directoryPath)) {
-                    mediaPlaybackService!!.notifyChildrenChanged(directoryPath!!)
+                    mediaSession!!.notifyChildrenChanged(directoryPath, 1, LibraryParams.Builder().build())
                 }
             }
         } else {

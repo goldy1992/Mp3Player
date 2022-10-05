@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui
 
-import android.support.v4.media.session.PlaybackStateCompat
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FloatTweenSpec
 import androidx.compose.animation.core.LinearEasing
@@ -9,45 +8,47 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.MetadataUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 const val logTag = "seekbar"
 
 @Composable
-fun SeekBar(mediaController : MediaControllerAdapter) {
+fun SeekBar(asyncPlayerListener: AsyncPlayerListener,
+            mediaController : MediaControllerAdapter,
+            scope: CoroutineScope = rememberCoroutineScope()) {
 
     //Log.i(logTag, "seek bar created")
-    val metadata by mediaController.metadata.observeAsState()
-    val playbackState by mediaController.playbackState.observeAsState()
+    val metadata by asyncPlayerListener.mediaMetadataState.collectAsState()
+    val playbackState by asyncPlayerListener.playbackStateFlow.collectAsState()
+    val playbackParameters by asyncPlayerListener.playbackParametersState.collectAsState()
 
     val duration = MetadataUtils.getDuration(metadata).toFloat()
-    val playbackSpeed = playbackState?.playbackSpeed ?: 1f
-    val currentPosition = playbackState?.position?.toFloat() ?: 0f
+    val playbackSpeed = playbackParameters.speed
+    val currentPosition = mediaController.getCurrentPlaybackPosition()
 
     val durationAtSpeed = duration / playbackSpeed
     val animationTimeInMs = (durationAtSpeed * (1 - (currentPosition / duration))).toInt()
     val durationDescription = stringResource(id = R.string.duration)
     val currentPositionDescription = stringResource(id = R.string.current_position)
 
-    val anim1 = remember(currentPosition) { mutableStateOf(Animatable(currentPosition)) }
+    val anim1 = remember(currentPosition) { mutableStateOf(Animatable(currentPosition.toFloat())) }
   //  Log.i(logTag, "Anim1Value: ${anim1.value}")
 
-    if (playbackState?.state == PlaybackStateCompat.STATE_PLAYING) {
+    if (asyncPlayerListener.isPlaying()) {
      //   Log.i(logTag, "playback state playing")
         LaunchedEffect(anim1) {
             anim1.value.animateTo(duration,
@@ -79,7 +80,7 @@ fun SeekBar(mediaController : MediaControllerAdapter) {
             onValueChangeFinished = {
                 isTouchTracking.value = false
                 anim1.value = Animatable(touchTrackingPosition.value)
-                mediaController.seekTo(touchTrackingPosition.value.toLong())
+                scope.launch { mediaController.seekTo(touchTrackingPosition.value.toLong()) }
             })
         Text(text = formatTime(if (isTouchTracking.value) touchTrackingPosition.value.toLong() else anim1.value.value.toLong()),
                 modifier = Modifier

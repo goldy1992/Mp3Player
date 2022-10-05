@@ -10,21 +10,22 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun SpeedController(mediaController : MediaControllerAdapter? = null,
-                    modifier: Modifier = Modifier) {
+                    asyncPlayerListener: AsyncPlayerListener,
+                    modifier : Modifier = Modifier,
+                    scope: CoroutineScope = rememberCoroutineScope()) {
 
-    var sliderPosition by remember { mutableStateOf(if (mediaController != null) mediaController.playbackSpeed.value else 0.5f) }
+    var sliderPosition = 0f // by remember { mutableStateOf(if (mediaController != null) mediaController.playbackSpeed.value else 0.5f) }
 
     Column(modifier = modifier,
     horizontalAlignment = Alignment.CenterHorizontally) {
@@ -32,7 +33,8 @@ fun SpeedController(mediaController : MediaControllerAdapter? = null,
             value = sliderPosition!!,
             valueRange = 0.5f..1.5f,
             onValueChange = { sliderPosition = it },
-            onValueChangeFinished = { mediaController?.changePlaybackSpeed(sliderPosition!!)}
+            onValueChangeFinished = { scope.launch { mediaController?.changePlaybackSpeed(sliderPosition!!) }
+            }
         )
         Row(horizontalArrangement = Arrangement.Center) {
             Text(
@@ -45,7 +47,8 @@ fun SpeedController(mediaController : MediaControllerAdapter? = null,
 
             IconButton(
                 onClick = {
-                    mediaController?.changePlaybackSpeed(1f)
+
+                    scope.launch { mediaController?.changePlaybackSpeed(1f) }
                     sliderPosition = 1f
                 }
             ) {
@@ -60,5 +63,5 @@ fun SpeedController(mediaController : MediaControllerAdapter? = null,
 @Preview
 @Composable
 fun SpeedControllerPreview() {
-    SpeedController()
+   // SpeedController()
 }

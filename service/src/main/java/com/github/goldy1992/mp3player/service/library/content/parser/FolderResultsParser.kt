@@ -4,6 +4,7 @@ import android.database.Cursor
 import android.provider.MediaStore
 import androidx.media3.common.MediaItem
 import android.util.Log
+import androidx.media3.common.FlagSet
 import com.github.goldy1992.mp3player.commons.ComparatorUtils
 import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
@@ -64,7 +65,6 @@ class FolderResultsParser
                 .setLibraryId(buildLibraryId(parentId, filePath))
                 .setDirectoryFile(folder)
                 .setFileCount(directoryInfo.fileCount.get())
-                .setFlags(MediaItem.FLAG_BROWSABLE)
                 .build()
     }
 

@@ -1,8 +1,6 @@
 package com.github.goldy1992.mp3player.client.activities
 
 import android.Manifest
-import android.app.Activity
-import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,16 +9,9 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.concurrent.futures.await
-import androidx.media3.session.MediaBrowser
-import androidx.media3.session.MediaController
-import androidx.media3.session.MediaLibraryService
-import androidx.media3.session.SessionToken
-import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
-import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
 import com.github.goldy1992.mp3player.client.permissions.PermissionGranted
 import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
@@ -45,14 +36,6 @@ abstract class MainActivityBase : ComponentActivity(),
      */
     @Inject
     lateinit var scope: CoroutineScope
-    /**
-     * MediaBrowserAdapter
-     */
-    @Inject
-    lateinit var mediaBrowserAdapter: MediaBrowserAdapter
-
-    @Inject
-    lateinit var connectionCallback: MyConnectionCallback
 
     @Inject
     lateinit var permissionsProcessor: PermissionsProcessor
@@ -77,33 +60,6 @@ abstract class MainActivityBase : ComponentActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        launch {
-            val sessionToken =
-                SessionToken(applicationContext, ComponentName(applicationContext, componentClassMapper.service!!.javaClass))
-
-            val browser = MediaBrowser.
-            Builder(applicationContext, sessionToken)
-                .setListener(MediaBrowser.Listener)
-            .buildAsync()
-
-            .await()
-
-            // Get the library root to start browsing the library.
-            //MediaLibraryService.LibraryParams()
-            val root = browser.getLibraryRoot(/* params= */ null)
-                .await()
-
-            val mediaController = MediaController.Builder(applicationContext, sessionToken)
-                .setListener(MC)
-                .buildAsync()
-                .await()
-
-//            mediaController.addListener(Player.Listener)
-            // Add a MediaController.Listener to listen to player state events.
-//            browser.addListener(playerListener)
-//            playerView.setPlayer(browser)
-        }
-
         Log.i(logTag(), "on createee")
 
         // If app has already been created set the UI to initialise at the main screen.
@@ -115,22 +71,10 @@ abstract class MainActivityBase : ComponentActivity(),
         permissionsProcessor.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, permissionLauncher)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mediaControllerAdapter.disconnect()
-        mediaBrowserAdapter.disconnect()
-    }
-
-    private fun connect() {
-        connectionCallback.registerListener(mediaControllerAdapter)
-        connectionCallback.registerListener(mediaBrowserAdapter)
-        mediaBrowserAdapter.connect()
-    }
 
     override fun onPermissionGranted() {
         Log.i(logTag(), "permission granted")
         createService()
-        connect()
         if (Intent.ACTION_VIEW == intent.action) {
             trackToPlay = intent.data
             launch(Dispatchers.Default) {
@@ -139,8 +83,6 @@ abstract class MainActivityBase : ComponentActivity(),
             this.startScreen = Screen.NOW_PLAYING
         } 
         CoroutineScope(Dispatchers.Main).launch { ui(startScreen = startScreen) }
-
-
     }
 
     val permissionLauncher : ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) {

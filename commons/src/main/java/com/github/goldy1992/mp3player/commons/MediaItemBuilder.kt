@@ -4,7 +4,9 @@ import android.media.MediaMetadata.METADATA_KEY_ALBUM_ART_URI
 import android.net.Uri
 import android.os.Bundle
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaItem.ClippingConfiguration
 import androidx.media3.common.MediaMetadata
+import androidx.media3.common.Player
 
 import java.io.File
 
@@ -46,10 +48,10 @@ class MediaItemBuilder(private val mediaId: String) {
         return this
     }
 
-//    fun setDuration(duration: Long): MediaItemBuilder {
-//        extras.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
-//        return this
-//    }
+    fun setDuration(duration: Long): MediaItemBuilder {
+        extras.putLong(MetaDataKeys.DURATION, duration)
+        return this
+    }
 
     fun setLibraryId(libraryId: String?): MediaItemBuilder {
         extras.putString(Constants.LIBRARY_ID, libraryId)

@@ -71,7 +71,6 @@ class SongResultsParser
                 .setDirectoryFile(directory)
                 .setArtist(artist)
                 .setMediaItemType(MediaItemType.SONG)
-                .setFlags(MediaItem.FLAG_PLAYABLE)
                 .setAlbumArtUri(albumArtUri)
                 .build()
     }

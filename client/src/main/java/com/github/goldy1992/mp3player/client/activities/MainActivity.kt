@@ -21,15 +21,13 @@ open class MainActivity : Hilt_MainActivity() {
     }
 
 
-    @kotlin.OptIn(ExperimentalPagerApi::class, InternalCoroutinesApi::class,
+    @OptIn(ExperimentalPagerApi::class, InternalCoroutinesApi::class,
         ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class
     )
     override fun ui(startScreen : Screen) {
         setContent{
             var windowSizeClass = rememberWindowSizeClass()
             ComposeApp(
-                mediaBrowserAdapter = this.mediaBrowserAdapter,
-                mediaControllerAdapter = this.mediaControllerAdapter,
                 userPreferencesRepository = this.userPreferencesRepository,
                 windowSize = windowSizeClass,
                 startScreen = startScreen)

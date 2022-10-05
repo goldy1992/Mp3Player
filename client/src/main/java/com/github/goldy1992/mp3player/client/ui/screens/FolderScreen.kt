@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui.screens
 
-import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,6 +38,8 @@ import com.github.goldy1992.mp3player.client.ui.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
+import com.github.goldy1992.mp3player.client.viewmodels.FolderScreenViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
@@ -52,13 +53,12 @@ fun FolderScreen(
     folderName : String = Constants.UNKNOWN,
     folderPath : String = Constants.UNKNOWN,
     navController: NavController,
-    mediaBrowser : MediaBrowserAdapter,
-    mediaController : MediaControllerAdapter,
-    windowSize : WindowSize = WindowSize.Compact
+    windowSize : WindowSize = WindowSize.Compact,
+    viewModel: FolderScreenViewModel = viewModel()
 ) {
     val scope = rememberCoroutineScope()
 
-    val folderItems by mediaBrowser.subscribe(
+    val folderItems by viewModel.mediaBrowserAdapter.subscribe(
         id = folderId
     )
         .observeAsState()

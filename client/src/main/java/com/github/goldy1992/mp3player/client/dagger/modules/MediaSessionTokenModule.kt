@@ -32,9 +32,8 @@ class MediaSessionTokenModule {
 
     @ActivityRetainedScoped
     @Provides
-    suspend fun providesMediaBrowser(@ApplicationContext context: Context, sessionToken: SessionToken,
-    scope : CoroutineScope) : MediaBrowser {
-        return MediaBrowser.Builder(context, sessionToken).buildAsync().await()
+    fun providesMediaBrowser(@ApplicationContext context: Context, sessionToken: SessionToken) : ListenableFuture<MediaBrowser> {
+        return MediaBrowser.Builder(context, sessionToken).buildAsync()
     }
 
     @ActivityRetainedScoped

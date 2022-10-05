@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.net.Uri
+import android.os.Bundle
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -53,17 +54,23 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
+import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListItem
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongListItem
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
+import com.github.goldy1992.mp3player.client.viewmodels.SearchScreenViewModel
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import org.apache.commons.lang3.StringUtils
@@ -73,22 +80,27 @@ import org.apache.commons.lang3.StringUtils
 @Composable
 fun SearchScreen(
     navController: NavController,
-    mediaBrowser :  MediaBrowserAdapter,
-    mediaController : MediaControllerAdapter,
-    windowSize: WindowSize) {
+    windowSize: WindowSize,
+    viewModel : SearchScreenViewModel = viewModel(),
+    scope : CoroutineScope = rememberCoroutineScope()) {
 
     val isLargeScreen = windowSize == WindowSize.Expanded
     if (isLargeScreen) {
         LargeSearchResults(
             navController = navController,
-            mediaBrowser = mediaBrowser,
-            mediaController = mediaController,
+            mediaBrowser = viewModel.mediaBrowserAdapter,
+            mediaController = viewModel.mediaControllerAdapter,
+            asyncPlayerListener = viewModel.asyncPlayerListener,
+            scope = scope
+
         )
     } else {
         SmallSearchResults(
             navController = navController,
-            mediaBrowser = mediaBrowser,
-            mediaController = mediaController,
+            mediaBrowser = viewModel.mediaBrowserAdapter,
+            mediaController = viewModel.mediaControllerAdapter,
+            asyncPlayerListener = viewModel.asyncPlayerListener,
+            scope = scope
         )
 
     }
@@ -103,7 +115,9 @@ fun SearchScreen(
 private fun SmallSearchResults(
     navController: NavController,
     mediaBrowser: MediaBrowserAdapter,
-    mediaController : MediaControllerAdapter) {
+    mediaController : MediaControllerAdapter,
+    asyncPlayerListener: AsyncPlayerListener,
+    scope : CoroutineScope = rememberCoroutineScope()) {
     val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     ModalNavigationDrawer(
         drawerContent = {
@@ -120,7 +134,9 @@ private fun SmallSearchResults(
                 )
             },
             bottomBar = {
-                PlayToolbar(mediaController = mediaController) {
+                PlayToolbar(mediaController = mediaController,
+                            asyncPlayerListener = asyncPlayerListener,
+                            scope = scope) {
                     navController.navigate(Screen.NOW_PLAYING.name)
                 }
             },
@@ -145,7 +161,9 @@ private fun SmallSearchResults(
 private fun LargeSearchResults(
     navController: NavController,
     mediaBrowser: MediaBrowserAdapter,
-    mediaController : MediaControllerAdapter) {
+    mediaController : MediaControllerAdapter,
+    asyncPlayerListener: AsyncPlayerListener,
+    scope : CoroutineScope = rememberCoroutineScope()) {
     PermanentNavigationDrawer(
         modifier = Modifier.fillMaxSize(),
         drawerContent = {
@@ -162,7 +180,9 @@ private fun LargeSearchResults(
                 )
             },
             bottomBar = {
-                PlayToolbar(mediaController = mediaController) {
+                PlayToolbar(mediaController = mediaController,
+                            asyncPlayerListener = asyncPlayerListener,
+                            scope = scope) {
                     navController.navigate(Screen.NOW_PLAYING.name)
                 }
             },
@@ -216,7 +236,7 @@ fun SearchBar(navController: NavController,
             value = searchQuery.value,
             onValueChange = {
                 searchQuery.value = it
-                mediaBrowser.search(searchQuery.value.text, null)
+                mediaBrowser.search(searchQuery.value.text, Bundle())
             },
             placeholder = {
                 Text(text = stringResource(id = R.string.search_hint))
@@ -224,7 +244,7 @@ fun SearchBar(navController: NavController,
             leadingIcon = {
                 IconButton(onClick = {
                     scope.launch {
-                        mediaBrowser.clearSearchResults()
+                     //   mediaBrowser.clearSearchResults()
                         navController.popBackStack()
                     }
                 }) {
@@ -234,7 +254,7 @@ fun SearchBar(navController: NavController,
             trailingIcon = {
                 if (StringUtils.isNotEmpty(searchQuery.value.text)) {
                     IconButton(onClick = { searchQuery.value = TextFieldValue()
-                        mediaBrowser.clearSearchResults()
+                  //      mediaBrowser.clearSearchResults()
                     }) {
                         Icon(Icons.Outlined.Close, clearSearchDescr)
                     }
@@ -267,7 +287,7 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter,
                   focusRequester : FocusRequester = remember { FocusRequester() }) {
     val searchResultsColumn = stringResource(id = R.string.search_results_column)
 
-    val searchResults by mediaBrowser.searchResults().observeAsState(emptyList())
+    val searchResults = emptyList<MediaItem>() //viewModel..observeAsState(emptyList())
     val lazyLisState = rememberLazyListState()
     
     LaunchedEffect(lazyLisState.isScrollInProgress) {
@@ -294,7 +314,7 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter,
                             SongListItem(song = mediaItem, onClick = {
                                 val libraryId = MediaItemUtils.getLibraryId(mediaItem)
                                 Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
-                                mediaController.playFromMediaId(libraryId, null)
+                                mediaController.playFromMediaId(libraryId ?: "", Bundle())
                             })
                         }
                         MediaItemType.FOLDER -> {

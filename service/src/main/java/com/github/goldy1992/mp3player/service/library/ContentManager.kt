@@ -2,12 +2,14 @@ package com.github.goldy1992.mp3player.service.library
 
 import android.net.Uri
 import androidx.media3.common.MediaItem
+import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Normaliser.normalise
 import com.github.goldy1992.mp3player.service.library.content.ContentRetrievers
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequestParser
 import com.github.goldy1992.mp3player.service.library.content.retriever.MediaItemFromIdRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.SongFromUriRetriever
+import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearcher
 import dagger.hilt.android.scopes.ServiceScoped
 import org.apache.commons.collections4.CollectionUtils
 import java.util.*
@@ -32,9 +34,9 @@ class ContentManager @Inject constructor(private val contentRetrievers: ContentR
      * @param parentId the id of the children to get
      * @return all the children of the id specified by the parentId parameter
      */
-    fun getChildren(parentId: String?): List<MediaItem>? {
+    fun getChildren(parentId: String?): List<MediaItem> {
         val request = contentRequestParser.parse(parentId!!)
-        return contentRetrievers[request!!.contentRetrieverKey]?.getChildren(request)
+        return contentRetrievers[request!!.contentRetrieverKey]?.getChildren(request) ?: emptyList()
     }
 
     /**
@@ -48,7 +50,7 @@ class ContentManager @Inject constructor(private val contentRetrievers: ContentR
             val searchResults : List<MediaItem>? = contentSearcher.search(normalisedQuery)
             if (CollectionUtils.isNotEmpty(searchResults)) {
                 val searchCategory = contentSearcher.searchCategory
-                results.add(rootRetriever.getRootItem(searchCategory))
+                results.add(rootRetriever.getRootItem(searchCategory ?: MediaItemType.NONE))
                 results.addAll(searchResults as List<MediaItem>)
             }
         }

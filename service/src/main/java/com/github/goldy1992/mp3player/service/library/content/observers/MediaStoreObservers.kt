@@ -1,16 +1,15 @@
 package com.github.goldy1992.mp3player.service.library.content.observers
 
-import com.github.goldy1992.mp3player.service.MediaPlaybackService
+import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import dagger.hilt.android.scopes.ServiceScoped
-import java.util.*
 import javax.inject.Inject
 
 @ServiceScoped
 class MediaStoreObservers @Inject constructor(audioObserver: AudioObserver) {
     private val mediaStoreObserversList: MutableList<MediaStoreObserver>
-    fun init(mediaPlaybackService: MediaPlaybackService?) {
+    fun init(mediaLibrarySession: MediaLibrarySession) {
         for (mediaStoreObserver in mediaStoreObserversList) {
-            mediaStoreObserver.init(mediaPlaybackService)
+            mediaStoreObserver.init(mediaLibrarySession)
         }
         registerAll()
     }

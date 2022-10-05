@@ -10,13 +10,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.screens.FolderScreen
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreen
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
-import com.github.goldy1992.mp3player.client.viewmodels.LibraryScreenViewModel
+import com.github.goldy1992.mp3player.client.viewmodels.*
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -30,8 +29,6 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @ExperimentalPagerApi
 @Composable
 fun ComposeApp(
-        mediaBrowserAdapter: MediaBrowserAdapter,
-        mediaControllerAdapter: MediaControllerAdapter,
         userPreferencesRepository: UserPreferencesRepository,
         windowSize: WindowSize,
         startScreen : Screen
@@ -44,11 +41,11 @@ fun ComposeApp(
                 startDestination = startScreen.name
             ) {
                 composable(Screen.MAIN.name) {
+                    val viewModel = hiltViewModel<MainScreenViewModel>()
                     MainScreen(
                         navController,
                         windowSize = windowSize,
-                        mediaController = mediaControllerAdapter,
-                        mediaBrowserAdapter = mediaBrowserAdapter
+                        viewModel = viewModel
                     )
                 }
                 composable(Screen.LIBRARY.name) {
@@ -61,17 +58,18 @@ fun ComposeApp(
 
                 }
                 composable(Screen.NOW_PLAYING.name) {
+                    val viewModel = hiltViewModel<NowPlayingScreenViewModel>()
                     NowPlayingScreen(
                         navController = navController,
-                        mediaController = mediaControllerAdapter
+                        viewModel = viewModel
                     )
                 }
                 composable(Screen.SEARCH.name) {
+                    val viewModel = hiltViewModel<SearchScreenViewModel>()
                     SearchScreen(
                         navController = navController,
-                        mediaBrowser = mediaBrowserAdapter,
-                        mediaController = mediaControllerAdapter,
-                        windowSize = windowSize
+                        windowSize = windowSize,
+                        viewModel = viewModel
                     )
                 }
                 composable(
@@ -81,14 +79,14 @@ fun ComposeApp(
                         navArgument("folderName") {type = NavType.StringType},
                         navArgument("folderPath") {type = NavType.StringType}
                 )) {
+                    val viewModel = hiltViewModel<FolderScreenViewModel>()
                     FolderScreen(
                         folderId = it.arguments?.get("folderId") as String,
                         folderName = it.arguments?.get("folderName") as String,
                         folderPath = it.arguments?.get("folderPath") as String,
                         navController = navController,
-                        mediaBrowser = mediaBrowserAdapter,
-                        mediaController = mediaControllerAdapter,
-                        windowSize = windowSize
+                        windowSize = windowSize,
+                        viewModel = viewModel
                     )
 
                 }
