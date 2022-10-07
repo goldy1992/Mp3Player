@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.service.library.search.managers
 
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryName
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryPath
@@ -23,7 +23,7 @@ class FolderDatabaseManager
         searchDatabase.folderDao(),
         mediaItemTypeIds.getId(MediaItemType.FOLDERS)) {
 
-    public override fun createFromMediaItem(item: MediaBrowserCompat.MediaItem): Folder? {
+    public override fun createFromMediaItem(item: MediaItem): Folder? {
         val id = getDirectoryPath(item)
         val value = getDirectoryName(item)
         return if (null != value) {

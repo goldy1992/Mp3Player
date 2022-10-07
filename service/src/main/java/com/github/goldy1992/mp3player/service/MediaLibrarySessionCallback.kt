@@ -1,11 +1,15 @@
 package com.github.goldy1992.mp3player.service
 
 import android.os.Bundle
+import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Rating
 import androidx.media3.session.*
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
+import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.service.library.ContentManager
+import com.github.goldy1992.mp3player.service.player.ChangeSpeedProvider
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
@@ -13,13 +17,15 @@ import dagger.hilt.android.scopes.ServiceScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.apache.commons.lang3.StringUtils
 import javax.inject.Inject
 
 @ServiceScoped
 class MediaLibrarySessionCallback
 
     @Inject
-    constructor(private val contentManager: ContentManager) : MediaLibrarySession.Callback {
+    constructor(private val contentManager: ContentManager,
+                private val changeSpeedProvider: ChangeSpeedProvider) : MediaLibrarySession.Callback, LogTagger {
 
     override fun onConnect(
         session: MediaSession,
@@ -76,6 +82,10 @@ class MediaLibrarySessionCallback
         customCommand: SessionCommand,
         args: Bundle
     ): ListenableFuture<SessionResult> {
+        Log.i(logTag(), "On Custom Command: ${customCommand}, args: ${args}")
+        if (Constants.CHANGE_PLAYBACK_SPEED == customCommand.customAction) {
+            changeSpeedProvider.changeSpeed(session.player, args)
+        }
         return super.onCustomCommand(session, controller, customCommand, args)
     }
 
@@ -143,6 +153,10 @@ class MediaLibrarySessionCallback
     ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> {
         // TODO return search result
         return super.onGetSearchResult(session, browser, query, page, pageSize, params)
+    }
+
+    override fun logTag(): String {
+        return "MediaLibrarySessionCallback"
     }
 
 }

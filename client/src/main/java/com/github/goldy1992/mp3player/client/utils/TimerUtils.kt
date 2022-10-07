@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client.utils
 
 import android.os.SystemClock
-import android.support.v4.media.session.PlaybackStateCompat
 import java.text.SimpleDateFormat
 import java.util.*
 

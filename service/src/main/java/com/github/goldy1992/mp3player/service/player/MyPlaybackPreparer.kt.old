@@ -11,14 +11,6 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaId
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaUri
 import com.github.goldy1992.mp3player.service.PlaylistManager
 import com.github.goldy1992.mp3player.service.library.ContentManager
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ForwardingPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
-import com.google.android.exoplayer2.source.ConcatenatingMediaSource
-import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
-import com.google.android.exoplayer2.source.MediaSource
 import org.apache.commons.collections4.CollectionUtils
 import java.lang.Exception
 import java.util.*

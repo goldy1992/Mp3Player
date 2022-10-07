@@ -8,6 +8,7 @@ import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.Player.*
 import androidx.media3.session.MediaController
+import com.github.goldy1992.mp3player.client.eventholders.PlayerEventHolder
 
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -158,7 +159,7 @@ class AsyncPlayerListener
     )
 
 
-    private val eventsMutableState = MutableStateFlow(PlayerEventHolder(null, Player.Events(FlagSet.Builder().build())))
+    private val eventsMutableState = MutableStateFlow(PlayerEventHolder(null, Events(FlagSet.Builder().build())))
     val eventsState : StateFlow<PlayerEventHolder> = eventsMutableState
 
 

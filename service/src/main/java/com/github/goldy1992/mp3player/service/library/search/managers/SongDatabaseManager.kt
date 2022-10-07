@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.service.library.search.managers
 
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaId
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle
@@ -23,7 +23,7 @@ class SongDatabaseManager
         searchDatabase.songDao(),
         mediaItemTypeIds.getId(MediaItemType.SONGS)) {
 
-    override fun createFromMediaItem(item: MediaBrowserCompat.MediaItem): Song? {
+    override fun createFromMediaItem(item: MediaItem): Song? {
         val id = getMediaId(item)
         val value = getTitle(item)
         return if (null != value) {

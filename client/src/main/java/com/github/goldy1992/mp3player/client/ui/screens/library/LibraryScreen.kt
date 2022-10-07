@@ -68,12 +68,13 @@ fun LibraryScreen(navController: NavController,
                   viewModel: LibraryScreenViewModel = viewModel(),
                   windowSize: WindowSize = WindowSize.Compact
 ) {
-    val rootItems: List<MediaItem> by viewModel.mediaBrowserAdapter.subscribeToRoot().observeAsState(emptyList())
+    val rootItems: List<MediaItem> by viewModel.rootItems.collectAsState()
     val scope = rememberCoroutineScope()
     val isLargeScreen = windowSize == WindowSize.Expanded
 
     val bottomBar : @Composable () -> Unit = {
-        PlayToolbar(mediaController = viewModel.mediaControllerAdapter) {
+        PlayToolbar(mediaController = viewModel.mediaControllerAdapter,
+                    asyncPlayerListener = viewModel.asyncPlayerListener) {
             navController.navigate(Screen.NOW_PLAYING.name)
         }
     }
@@ -147,7 +148,8 @@ fun LargeLibraryScreen(
                     })
             },
             bottomBar = {
-                PlayToolbar(mediaController = viewModel.mediaControllerAdapter) {
+                PlayToolbar(mediaController = viewModel.mediaControllerAdapter,
+                    asyncPlayerListener = viewModel.asyncPlayerListener) {
                     navController.navigate(Screen.NOW_PLAYING.name)
                 }
 

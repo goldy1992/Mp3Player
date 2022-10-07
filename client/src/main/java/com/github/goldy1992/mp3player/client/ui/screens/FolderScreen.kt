@@ -23,8 +23,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +40,8 @@ import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.viewmodels.FolderScreenViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.media3.common.MediaItem
+import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
@@ -58,17 +60,15 @@ fun FolderScreen(
 ) {
     val scope = rememberCoroutineScope()
 
-    val folderItems by viewModel.mediaBrowserAdapter.subscribe(
-        id = folderId
-    )
-        .observeAsState()
+    val folderItems by viewModel.folderChildren.collectAsState()
 
     val isLargeScreen = windowSize == WindowSize.Expanded
     if (isLargeScreen) {
         LargeFolderScreen(
             folderName = folderName,
             navController = navController,
-            mediaController = mediaController,
+            mediaController = viewModel.mediaController,
+            asyncPlayerListener = viewModel.asyncPlayerListener,
             scope = scope,
             folderItems = folderItems
         )
@@ -76,8 +76,8 @@ fun FolderScreen(
         SmallFolderScreen(
             folderName = folderName,
             navController = navController,
-            mediaBrowser = mediaBrowser,
-            mediaController = mediaController,
+            mediaController = viewModel.mediaController,
+            asyncPlayerListener = viewModel.asyncPlayerListener,
             scope = scope,
             folderItems = folderItems
         )
@@ -91,10 +91,10 @@ private fun SmallFolderScreen(
     folderName : String = Constants.UNKNOWN,
     folderPath : String = Constants.UNKNOWN,
     navController: NavController,
-    mediaBrowser : MediaBrowserAdapter,
     mediaController : MediaControllerAdapter,
+    asyncPlayerListener: AsyncPlayerListener,
     scope : CoroutineScope = rememberCoroutineScope(),
-    folderItems : List<MediaBrowserCompat.MediaItem>?
+    folderItems : List<MediaItem>?
 ) {
     val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     ModalNavigationDrawer(
@@ -137,14 +137,18 @@ private fun SmallFolderScreen(
                 )
             },
             bottomBar = {
-                PlayToolbar(mediaController = mediaController) {
+                PlayToolbar(mediaController = mediaController,
+                            asyncPlayerListener = asyncPlayerListener) {
                     navController.navigate(Screen.NOW_PLAYING.name)
                 }
             },
 
             content = {
                 if (isEmpty(folderItems)) {
-                    Surface(Modifier.fillMaxSize().padding(it)) {
+                    Surface(
+                        Modifier
+                            .fillMaxSize()
+                            .padding(it)) {
                         Column(
                             Modifier.fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -154,8 +158,8 @@ private fun SmallFolderScreen(
                         }
                     }
                 } else {
-                    SongList(songs = folderItems!!, mediaControllerAdapter = mediaController) {
-                        val libraryId = MediaItemUtils.getLibraryId(it)
+                    SongList(songs = folderItems!!, mediaControllerAdapter = mediaController, asyncPlayerListener = asyncPlayerListener) {
+                        val libraryId = MediaItemUtils.getLibraryId(it) ?: ""
                         Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
                         mediaController.playFromMediaId(libraryId, null)
                     }
@@ -172,8 +176,9 @@ private fun LargeFolderScreen(
     folderName : String = Constants.UNKNOWN,
     navController: NavController,
     mediaController : MediaControllerAdapter,
+    asyncPlayerListener: AsyncPlayerListener,
     scope : CoroutineScope = rememberCoroutineScope(),
-    folderItems : List<MediaBrowserCompat.MediaItem>?
+    folderItems : List<MediaItem>?
 ) {
 
     PermanentNavigationDrawer(
@@ -218,13 +223,16 @@ private fun LargeFolderScreen(
                 )
             },
             bottomBar = {
-                PlayToolbar(mediaController = mediaController) {
+                PlayToolbar(mediaController = mediaController, asyncPlayerListener = asyncPlayerListener) {
                     navController.navigate(Screen.NOW_PLAYING.name)
                 }
             },
 
             content = {
-                Surface(Modifier.width(500.dp).padding(it)) {
+                Surface(
+                    Modifier
+                        .width(500.dp)
+                        .padding(it)) {
                     if (isEmpty(folderItems)) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -233,8 +241,8 @@ private fun LargeFolderScreen(
                             CircularProgressIndicator()
                         }
                     } else {
-                        SongList(songs = folderItems!!, mediaControllerAdapter = mediaController) {
-                            val libraryId = MediaItemUtils.getLibraryId(it)
+                        SongList(songs = folderItems!!, mediaControllerAdapter = mediaController, asyncPlayerListener = asyncPlayerListener) {
+                            val libraryId = MediaItemUtils.getLibraryId(it) ?: ""
                             Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
                             mediaController.playFromMediaId(libraryId, null)
                         }

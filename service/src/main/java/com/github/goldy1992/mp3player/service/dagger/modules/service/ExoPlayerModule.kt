@@ -7,7 +7,6 @@ import androidx.media3.common.C
 import androidx.media3.exoplayer.ExoPlayer
 import com.github.goldy1992.mp3player.service.MyForwardingPlayer
 import com.github.goldy1992.mp3player.service.player.AudioBecomingNoisyBroadcastReceiver
-import com.github.goldy1992.mp3player.service.player.MyPlayerNotificationManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,8 +34,7 @@ class ExoPlayerModule {
     @Provides
     @ServiceScoped
     fun provideForwardingPlayer(exoPlayer: ExoPlayer,
-                                audioBecomingNoisyBroadcastReceiver: AudioBecomingNoisyBroadcastReceiver,
-                                playerNotificationManager: MyPlayerNotificationManager
+                                audioBecomingNoisyBroadcastReceiver: AudioBecomingNoisyBroadcastReceiver
     ) : MyForwardingPlayer {
         return MyForwardingPlayer(exoPlayer, audioBecomingNoisyBroadcastReceiver)
     }

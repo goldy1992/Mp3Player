@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.service.library.content.retriever
 
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
 
@@ -12,7 +12,7 @@ abstract class ContentRetriever {
      * @param request the content request
      * @return a list of media items that match the content request
      */
-    abstract fun getChildren(request: ContentRequest): List<MediaBrowserCompat.MediaItem>?
+    abstract fun getChildren(request: ContentRequest): List<MediaItem>?
 
     /**
      * @return The type of MediaItem retrieved from the Content Retriever

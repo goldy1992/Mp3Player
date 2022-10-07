@@ -1,44 +1,37 @@
 package com.github.goldy1992.mp3player.service.player
 
 import android.os.Bundle
-import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
+import androidx.media3.common.PlaybackParameters
+import androidx.media3.common.Player
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.service.R
-import com.google.android.exoplayer2.PlaybackParameters
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
+
 import org.apache.commons.lang3.StringUtils
 import javax.inject.Inject
 
 class ChangeSpeedProvider
 
 @Inject
-constructor() : MediaSessionConnector.CustomActionProvider, LogTagger {
+constructor() : LogTagger {
 
-    override fun getCustomAction(player: Player): PlaybackStateCompat.CustomAction {
-        return PlaybackStateCompat.CustomAction.Builder(
-            Constants.CHANGE_PLAYBACK_SPEED,
-            Constants.CHANGE_PLAYBACK_SPEED,
-            R.drawable.border).build()
-    }
+//    override fun getCustomAction(player: Player): PlaybackStateCompat.CustomAction {
+//        return PlaybackStateCompat.CustomAction.Builder(
+//            Constants.CHANGE_PLAYBACK_SPEED,
+//            Constants.CHANGE_PLAYBACK_SPEED,
+//            R.drawable.border).build()
+//    }
 
-    override fun onCustomAction(player: Player, action: String, extras: Bundle?) {
+    fun changeSpeed(player: Player, args : Bundle) {
         Log.i(logTag(), "hit speed change")
-        if (!StringUtils.equals(Constants.CHANGE_PLAYBACK_SPEED, action)) {
-            Log.w(
-                logTag(), "ChangeSpeedProvider was called with invalid action, " +
-                        "only ${Constants.CHANGE_PLAYBACK_SPEED} is accepted!"
-            )
+        val newSpeed: Float? = args?.getFloat(Constants.CHANGE_PLAYBACK_SPEED)
+        if (newSpeed == null) {
+            Log.w(logTag(), "ChangeSpeedProvider invoked without a valid speed")
         } else {
-            val newSpeed: Float? = extras?.getFloat(Constants.CHANGE_PLAYBACK_SPEED)
-            if (newSpeed == null) {
-                Log.w(logTag(), "ChangeSpeedProvider invoked without a valid speed")
-            } else {
-                changeSpeed(newSpeed, player)
-            }
+            changeSpeed(newSpeed, player)
         }
+
     }
 
     /**

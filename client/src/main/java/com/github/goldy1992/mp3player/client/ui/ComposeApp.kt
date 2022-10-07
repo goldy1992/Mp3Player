@@ -81,10 +81,7 @@ fun ComposeApp(
                 )) {
                     val viewModel = hiltViewModel<FolderScreenViewModel>()
                     FolderScreen(
-                        folderId = it.arguments?.get("folderId") as String,
-                        folderName = it.arguments?.get("folderName") as String,
-                        folderPath = it.arguments?.get("folderPath") as String,
-                        navController = navController,
+                         navController = navController,
                         windowSize = windowSize,
                         viewModel = viewModel
                     )

@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.Nullable
 import androidx.concurrent.futures.await
 import androidx.lifecycle.LiveData
 import androidx.media3.common.MediaItem
@@ -12,6 +13,7 @@ import androidx.media3.session.MediaBrowser
 import androidx.media3.session.MediaController
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.SessionToken
+import com.github.goldy1992.mp3player.client.eventholders.OnChildrenChangedEventHolder
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.ListenableFuture
@@ -97,6 +99,7 @@ open class MediaBrowserAdapter
     open suspend fun subscribe(id: String) {
         scope.launch {
             mediaBrowser?.subscribe(id, getDefaultLibraryParams())?.await()
+            //mediaBrowser?.getChildren()
         }
     }
 
@@ -107,6 +110,35 @@ open class MediaBrowserAdapter
 
     override fun logTag(): String {
         return "MDIA_BRWSR_ADPTR"
+    }
+
+    val onChildrenChangedFlow : Flow<OnChildrenChangedEventHolder> = callbackFlow {
+        val messageListener = object : MediaBrowser.Listener {
+            override fun onChildrenChanged(
+                browser: MediaBrowser,
+                parentId: String,
+                itemCount: Int,
+                params: MediaLibraryService.LibraryParams?
+            ) {
+                trySend(OnChildrenChangedEventHolder(browser, parentId, itemCount, params))
+            }
+        }
+        asyncMediaBrowserListener.listeners.add(messageListener)
+        awaitClose { asyncMediaBrowserListener.listeners.remove(messageListener) }
+    }.shareIn(
+        scope,
+        replay = 1,
+        started = SharingStarted.WhileSubscribed()
+    )
+
+    suspend fun getChildren(parentId : String,
+                            @androidx.annotation.IntRange(from = 0) page : Int = 0,
+                            @androidx.annotation.IntRange(from = 1) pageSize : Int = 20,
+                            params : MediaLibraryService.LibraryParams = MediaLibraryService.LibraryParams.Builder().build()
+    ) : List<MediaItem> {
+        val children : LibraryResult<ImmutableList<MediaItem>> = mediaBrowser?.getChildren(parentId, page, pageSize, params)?.await() ?: LibraryResult.ofItemList(
+            emptyList(), params)
+        return children.value?.toList() ?: emptyList()
     }
 
 }
