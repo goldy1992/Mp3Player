@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.service.library.content.retriever
 import android.os.Bundle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import androidx.media3.common.MediaMetadata.FOLDER_TYPE_NONE
 import com.github.goldy1992.mp3player.commons.ComparatorUtils.Companion.compareRootMediaItemsByMediaItemType
 import com.github.goldy1992.mp3player.commons.Constants.MEDIA_ITEM_TYPE
 import com.github.goldy1992.mp3player.commons.Constants.ROOT_ITEM_TYPE
@@ -40,6 +41,8 @@ class RootRetriever @Inject constructor(private val mediaItemTypeIds: MediaItemT
         val mediaMetadata = MediaMetadata.Builder()
             .setDescription(category.description)
             .setTitle(category.title)
+            .setFolderType(FOLDER_TYPE_NONE)
+            .setIsPlayable(false)
             .setExtras(extras)
             .build()
         return MediaItem.Builder()

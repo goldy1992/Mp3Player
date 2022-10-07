@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.lists.songs
 
+import android.os.Bundle
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,10 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -36,6 +34,11 @@ fun SongList(
     asyncPlayerListener: AsyncPlayerListener,
     onSongSelected : (song : MediaItem) -> Unit = {}) {
 
+    LaunchedEffect(songs) {
+        if (songs.isNotEmpty()) {
+            mediaControllerAdapter.prepareFromMediaId(songs.get(0), Bundle())
+        }
+    }
     val metadata by asyncPlayerListener.mediaMetadataState.collectAsState()
     val isPlaying by asyncPlayerListener.isPlayingState.collectAsState()
     val currentMediaItem = remember (isPlaying, metadata) {

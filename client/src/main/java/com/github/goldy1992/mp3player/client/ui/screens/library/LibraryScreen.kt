@@ -352,9 +352,7 @@ fun TabBarPages(navController: NavController,
             count = rootItems.size
         ) { pageIndex ->
             val currentItem = rootItems[pageIndex]
-            val children by viewModel.mediaBrowserAdapter.subscribe(
-                id = MediaItemUtils.getMediaId(currentItem)!!)
-                .observeAsState()
+            val children by viewModel.rootItemMap[currentItem.mediaId]!!.collectAsState()
 
             if (isEmpty(children)) {
                 CircularProgressIndicator()
@@ -362,10 +360,11 @@ fun TabBarPages(navController: NavController,
                 when (getRootMediaItemType(currentItem)) {
                     MediaItemType.SONGS -> {
                         SongList(
-                            songs = children!!,
-                            mediaControllerAdapter = viewModel.mediaControllerAdapter
+                            songs = children,
+                            mediaControllerAdapter = viewModel.mediaControllerAdapter,
+                            asyncPlayerListener = viewModel.asyncPlayerListener
                         ) {
-                            val libraryId = MediaItemUtils.getLibraryId(it)
+                            val libraryId = MediaItemUtils.getLibraryId(it) ?: ""
                             Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
                             viewModel.mediaControllerAdapter.playFromMediaId(libraryId, null)
                         }

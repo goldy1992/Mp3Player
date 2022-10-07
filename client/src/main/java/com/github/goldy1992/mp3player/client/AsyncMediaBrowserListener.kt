@@ -7,9 +7,12 @@ import androidx.media3.session.MediaLibraryService.LibraryParams
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import javax.inject.Inject
 
 @ActivityRetainedScoped
-class AsyncMediaBrowserListener() : MediaBrowser.Listener {
+class AsyncMediaBrowserListener
+    @Inject
+    constructor() : MediaBrowser.Listener {
 
     val listeners : MutableSet<MediaBrowser.Listener> = mutableSetOf()
 

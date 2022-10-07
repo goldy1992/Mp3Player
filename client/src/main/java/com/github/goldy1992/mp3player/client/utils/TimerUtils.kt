@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.utils
 
-import android.os.SystemClock
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,18 +25,18 @@ object TimerUtils {
         return timerFormat.format(date)
     }
 
-    @JvmStatic
-    fun calculateCurrentPlaybackPosition(state: PlaybackStateCompat?): Long {
-        if (state == null) {
-            return 0L
-        }
-        return if (state.state != PlaybackStateCompat.STATE_PLAYING) {
-            state.position
-        } else {
-            val timestamp = state.lastPositionUpdateTime
-            val currentTime = SystemClock.elapsedRealtime()
-            val timeDiff = currentTime - timestamp
-            state.position + timeDiff
-        }
-    }
+//    @JvmStatic
+//    fun calculateCurrentPlaybackPosition(state: PlaybackStateCompat?): Long {
+//        if (state == null) {
+//            return 0L
+//        }
+//        return if (state.state != PlaybackStateCompat.STATE_PLAYING) {
+//            state.position
+//        } else {
+//            val timestamp = state.lastPositionUpdateTime
+//            val currentTime = SystemClock.elapsedRealtime()
+//            val timeDiff = currentTime - timestamp
+//            state.position + timeDiff
+//        }
+//    }
 }

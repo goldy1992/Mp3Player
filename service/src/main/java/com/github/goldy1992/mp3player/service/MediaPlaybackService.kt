@@ -70,18 +70,18 @@ open class MediaPlaybackService : MediaLibraryService(),
             searchDatabaseManagers.reindexAll()
         }
 
-        val sessionActivityPendingIntent =
-            TaskStackBuilder.create(this).run {
-//                addNextIntent(Intent(this@PlaybackService, MainActivity::class.java))
-//                addNextIntent(Intent(this@PlaybackService, PlayerActivity::class.java))
-
-                val immutableFlag = if (Build.VERSION.SDK_INT >= 23) FLAG_IMMUTABLE else 0
-                getPendingIntent(0, immutableFlag or FLAG_UPDATE_CURRENT)
-            }
+//        val sessionActivityPendingIntent =
+//            TaskStackBuilder.create(this).run {
+////                addNextIntent(Intent(this@PlaybackService, MainActivity::class.java))
+////                addNextIntent(Intent(this@PlaybackService, PlayerActivity::class.java))
+//
+//                val immutableFlag = if (Build.VERSION.SDK_INT >= 23) FLAG_IMMUTABLE else 0
+//                getPendingIntent(0, immutableFlag or FLAG_UPDATE_CURRENT)
+//            }
 
         mediaSession =
             MediaLibrarySession.Builder(this, player, mediaLibrarySessionCallback)
-                .setSessionActivity(sessionActivityPendingIntent)
+               // .setSessionActivity(sessionActivityPendingIntent)
                 .build()
 
         if (!customLayout.isEmpty()) {

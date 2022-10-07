@@ -7,6 +7,7 @@ import androidx.media3.common.Rating
 import androidx.media3.session.*
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME_KEY
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.player.ChangeSpeedProvider
@@ -14,10 +15,10 @@ import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.scopes.ServiceScoped
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.apache.commons.lang3.StringUtils
 import javax.inject.Inject
 
 @ServiceScoped
@@ -25,7 +26,9 @@ class MediaLibrarySessionCallback
 
     @Inject
     constructor(private val contentManager: ContentManager,
-                private val changeSpeedProvider: ChangeSpeedProvider) : MediaLibrarySession.Callback, LogTagger {
+                private val changeSpeedProvider: ChangeSpeedProvider,
+                private val rootAuthenticator: RootAuthenticator,
+                private val scope : CoroutineScope) : MediaLibrarySession.Callback, LogTagger {
 
     override fun onConnect(
         session: MediaSession,
@@ -94,7 +97,7 @@ class MediaLibrarySessionCallback
         controller: MediaSession.ControllerInfo,
         mediaItems: MutableList<MediaItem>
     ): ListenableFuture<MutableList<MediaItem>> {
-        return super.onAddMediaItems(mediaSession, controller, mediaItems)
+        return Futures.immediateFuture(mediaItems)
     }
 
     override fun onGetLibraryRoot(
@@ -102,9 +105,7 @@ class MediaLibrarySessionCallback
         browser: MediaSession.ControllerInfo,
         params: MediaLibraryService.LibraryParams?
     ): ListenableFuture<LibraryResult<MediaItem>> {
-        //   return rootAuthenticator!!.authenticate(clientPackageName, clientUid, rootHints)
-        return super.onGetLibraryRoot(session, browser, params)
-
+       return Futures.immediateFuture(rootAuthenticator.authenticate(params ?: MediaLibraryService.LibraryParams.Builder().build()))
     }
 
     override fun onGetChildren(
@@ -115,19 +116,19 @@ class MediaLibrarySessionCallback
         pageSize: Int,
         params: MediaLibraryService.LibraryParams?
     ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> {
-//        if (rootAuthenticator!!.rejectRootSubscription(parentId)) {
-//            result.sendResult(null)
-//            return
-//        }
+        if (rootAuthenticator.rejectRootSubscription(parentId)) {
+            return Futures.immediateFuture(LibraryResult.ofItemList(emptyList(), params))
+        }
+        var mediaItems = emptyList<MediaItem>()
         runBlocking {
             launch(Dispatchers.Default) {
                 // Assume for example that the music catalog is already loaded/cached.
-                val mediaItems = contentManager.getChildren(parentId)
+                mediaItems = contentManager.getChildren(parentId)
                 println("finish coroutine")
             }.join()
             println("finished on load children")
         }
-        return super.onGetChildren(session, browser, parentId, page, pageSize, params)
+        return Futures.immediateFuture(LibraryResult.ofItemList(mediaItems, params))
     }
 
 

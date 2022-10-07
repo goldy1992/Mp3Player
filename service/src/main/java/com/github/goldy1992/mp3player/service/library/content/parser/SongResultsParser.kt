@@ -6,6 +6,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.media3.common.MediaItem
 import android.util.Log
+import androidx.media3.common.MediaMetadata.FOLDER_TYPE_NONE
 import com.github.goldy1992.mp3player.commons.ComparatorUtils.Companion.uppercaseStringCompare
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
@@ -72,6 +73,8 @@ class SongResultsParser
                 .setArtist(artist)
                 .setMediaItemType(MediaItemType.SONG)
                 .setAlbumArtUri(albumArtUri)
+                .setIsPlayable(true)
+                .setFolderType(FOLDER_TYPE_NONE)
                 .build()
     }
 

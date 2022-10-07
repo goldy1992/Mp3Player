@@ -22,6 +22,7 @@ object Constants {
     const val ROOT_ITEM_TYPE = "ROOT_ITEM_TYPE"
     const val ID_SEPARATOR = "|"
     const val EMPTY_MEDIA_ITEM_ID = "-1"
+    const val PACKAGE_NAME_KEY = "package_name_key"
 
     init {
         playbackStateDebugMap.put(Player.STATE_IDLE, "STATE_IDLE") // 1

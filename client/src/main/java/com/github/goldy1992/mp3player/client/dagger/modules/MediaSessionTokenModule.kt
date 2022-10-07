@@ -29,16 +29,4 @@ class MediaSessionTokenModule {
         val componentName = ComponentName(context, componentClassMapper.service!!)
         return SessionToken(context, componentName)
     }
-
-    @ActivityRetainedScoped
-    @Provides
-    fun providesMediaBrowser(@ApplicationContext context: Context, sessionToken: SessionToken) : ListenableFuture<MediaBrowser> {
-        return MediaBrowser.Builder(context, sessionToken).buildAsync()
-    }
-
-    @ActivityRetainedScoped
-    @Provides
-    fun providesMediaController(@ApplicationContext context: Context, sessionToken: SessionToken) : ListenableFuture<MediaController> {
-        return MediaController.Builder(context, sessionToken).buildAsync()
-    }
 }

@@ -5,6 +5,7 @@ import android.provider.MediaStore
 import androidx.media3.common.MediaItem
 import android.util.Log
 import androidx.media3.common.FlagSet
+import androidx.media3.common.MediaMetadata.FOLDER_TYPE_MIXED
 import com.github.goldy1992.mp3player.commons.ComparatorUtils
 import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
@@ -61,11 +62,13 @@ class FolderResultsParser
         val folder = directoryInfo.directory
         val filePath = folder.absolutePath + File.separator
         return MediaItemBuilder(filePath)
-                .setMediaItemType(MediaItemType.FOLDER)
-                .setLibraryId(buildLibraryId(parentId, filePath))
-                .setDirectoryFile(folder)
-                .setFileCount(directoryInfo.fileCount.get())
-                .build()
+            .setMediaItemType(MediaItemType.FOLDER)
+            .setLibraryId(buildLibraryId(parentId, filePath))
+            .setDirectoryFile(folder)
+            .setFileCount(directoryInfo.fileCount.get())
+            .setFolderType(FOLDER_TYPE_MIXED)
+            .setIsPlayable(false)
+            .build()
     }
 
     override fun compare(m1: MediaItem, m2: MediaItem): Int {

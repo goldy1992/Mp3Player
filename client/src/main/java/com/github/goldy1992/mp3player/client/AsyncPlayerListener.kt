@@ -27,45 +27,10 @@ class AsyncPlayerListener
 
     private var mediaController : MediaController? = null
 
-    init {
-        scope.launch {
-            mediaController = mediaControllerFuture.await()
-        }
-        scope.launch {
-            playbackStateCallbackFlow.collect {
-                playbackStateMutableState.value = it
-            }
-        }
-        scope.launch {
-            mediaMetadataCallbackFlow.collect {
-                mediaMetadataMutableState.value = it
-            }
-        }
-        scope.launch {
-            repeatModeCallbackFlow.collect {
-                repeatModeMutableState.value = it
-            }
-        }
-        scope.launch {
-            shuffleModeCallbackFlow.collect {
-                shuffleModeMutableState.value = it
-            }
-        }
-        scope.launch {
-            queueFlow.collect {
-                queueMutableState.value = it
-            }
-        }
-        scope.launch {
-            isPlayingFlow.collect {
-                isPlayingMutableState.value = it
-            }
-        }
-    }
 
     private val playbackStateCallbackFlow : Flow<Int> = callbackFlow {
         val controller = mediaControllerFuture.await()
-        val messageListener = object : Player.Listener {
+        val messageListener = object : Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
                 trySend(playbackState)
             }
@@ -261,5 +226,42 @@ class AsyncPlayerListener
 //            return null
 //        }
 //    }
+
+    init {
+        scope.launch {
+            mediaController = mediaControllerFuture.await()
+        }
+        scope.launch {
+            playbackStateCallbackFlow.collect {
+                playbackStateMutableState.value = it
+            }
+        }
+        scope.launch {
+            mediaMetadataCallbackFlow.collect {
+                mediaMetadataMutableState.value = it
+            }
+        }
+        scope.launch {
+            repeatModeCallbackFlow.collect {
+                repeatModeMutableState.value = it
+            }
+        }
+        scope.launch {
+            shuffleModeCallbackFlow.collect {
+                shuffleModeMutableState.value = it
+            }
+        }
+        scope.launch {
+            queueFlow.collect {
+                queueMutableState.value = it
+            }
+        }
+        scope.launch {
+            isPlayingFlow.collect {
+                isPlayingMutableState.value = it
+            }
+        }
+    }
+
 
 }
