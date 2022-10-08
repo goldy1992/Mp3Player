@@ -1,9 +1,12 @@
 package com.github.goldy1992.mp3player.client
 
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.IntRange
 import androidx.media3.session.*
 import androidx.media3.session.MediaLibraryService.LibraryParams
+import com.github.goldy1992.mp3player.client.ui.logTag
+import com.github.goldy1992.mp3player.commons.LogTagger
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -12,7 +15,7 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 class AsyncMediaBrowserListener
     @Inject
-    constructor() : MediaBrowser.Listener {
+    constructor() : MediaBrowser.Listener, LogTagger {
 
     val listeners : MutableSet<MediaBrowser.Listener> = mutableSetOf()
 
@@ -22,6 +25,7 @@ class AsyncMediaBrowserListener
         @IntRange(from = 0.toLong()) itemCount: Int,
         params: LibraryParams?
     ) {
+        Log.i(logTag(), "children changed parent: $parentId, itemCount: $itemCount, params $params")
         listeners.forEach { listener -> listener.onChildrenChanged(browser, parentId, itemCount, params) }
     }
 
@@ -65,6 +69,10 @@ class AsyncMediaBrowserListener
     override fun onExtrasChanged(controller: MediaController, extras: Bundle) {
         listeners.forEach { listener -> listener.onExtrasChanged(controller, extras) }
 
+    }
+
+    override fun logTag(): String {
+       return "AsyncMediaBrowserListener"
     }
 
 }

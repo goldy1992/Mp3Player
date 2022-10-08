@@ -7,7 +7,6 @@ import androidx.media3.common.Rating
 import androidx.media3.session.*
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME_KEY
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.player.ChangeSpeedProvider
@@ -97,7 +96,7 @@ class MediaLibrarySessionCallback
         controller: MediaSession.ControllerInfo,
         mediaItems: MutableList<MediaItem>
     ): ListenableFuture<MutableList<MediaItem>> {
-        return Futures.immediateFuture(mediaItems)
+        return Futures.immediateFuture(contentManager.getMediaItems(mediaItems.map(MediaItem::mediaId)))
     }
 
     override fun onGetLibraryRoot(
@@ -128,8 +127,10 @@ class MediaLibrarySessionCallback
             }.join()
             println("finished on load children")
         }
+        session.notifyChildrenChanged(browser, parentId, mediaItems.size, params)
         return Futures.immediateFuture(LibraryResult.ofItemList(mediaItems, params))
     }
+
 
 
     override fun onSearch(

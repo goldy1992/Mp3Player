@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.service.library
 
 import android.net.Uri
 import androidx.media3.common.MediaItem
+import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Normaliser.normalise
 import com.github.goldy1992.mp3player.service.library.content.ContentRetrievers
@@ -9,11 +10,12 @@ import com.github.goldy1992.mp3player.service.library.content.request.ContentReq
 import com.github.goldy1992.mp3player.service.library.content.retriever.MediaItemFromIdRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.SongFromUriRetriever
-import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearcher
 import dagger.hilt.android.scopes.ServiceScoped
 import org.apache.commons.collections4.CollectionUtils
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 @ServiceScoped
 class ContentManager @Inject constructor(private val contentRetrievers: ContentRetrievers,
@@ -36,7 +38,15 @@ class ContentManager @Inject constructor(private val contentRetrievers: ContentR
      */
     fun getChildren(parentId: String?): List<MediaItem> {
         val request = contentRequestParser.parse(parentId!!)
-        return contentRetrievers[request!!.contentRetrieverKey]?.getChildren(request) ?: emptyList()
+        val result = contentRetrievers[request!!.contentRetrieverKey]?.getChildren(request) ?: emptyList()
+        val itemType = result.firstOrNull()?.mediaMetadata?.extras?.get(Constants.MEDIA_ITEM_TYPE) ?: MediaItemType.NONE
+        if (itemType != MediaItemType.NONE) {
+            for (item in result) {
+                itemMap[itemType]?.set(item.mediaId, item)
+            }
+
+        }
+        return result
     }
 
     /**
@@ -73,12 +83,28 @@ class ContentManager @Inject constructor(private val contentRetrievers: ContentR
     }
 
     /**
+     * This method assumes that each song is playable
+     */
+    fun getMediaItems(ids : Collection<String>) : MutableList<MediaItem> {
+        val toReturn = mutableListOf<MediaItem>()
+        for (id in ids) {
+            toReturn.add(itemMap[MediaItemType.SONG]?.get(id) ?: MediaItem.EMPTY)
+        }
+        return toReturn
+    }
+
+    /**
      *
      * @param id the id of the playlist
      * @return the playlist
      */
     fun getPlaylist(id: String?): List<MediaItem>? {
         return getChildren(id)
+    }
+
+    val itemMap : EnumMap<MediaItemType, HashMap<String, MediaItem>> = EnumMap(MediaItemType::class.java)
+    init {
+        MediaItemType.values().forEach { itemMap[it] = HashMap() }
     }
 
     companion object {

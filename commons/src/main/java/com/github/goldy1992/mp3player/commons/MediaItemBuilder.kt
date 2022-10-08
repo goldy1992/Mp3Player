@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.commons
 import android.net.Uri
 import android.os.Bundle
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaItem.RequestMetadata
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.MediaMetadata.FOLDER_TYPE_NONE
 import androidx.media3.common.MediaMetadata.FolderType
@@ -107,18 +108,20 @@ class MediaItemBuilder(private val mediaId: String) {
 
     fun build(): MediaItem {
         return MediaItem.Builder()
-                .setMediaId(mediaId)
-                .setUri(mediaUri)
-                .setMediaMetadata(
-                    MediaMetadata.Builder()
-                        .setTitle(title)
-                        .setArtist(artist)
-                        .setFolderType(folderType)
-                        .setIsPlayable(isPlayable)
-                        .setArtworkUri(albumArtUri)
-                        .setArtworkData(this.albumArtData)
-                        .setExtras(extras)
-                    .build())
-                .build()
+            .setMediaId(mediaId)
+            .setUri(mediaUri)
+            .setRequestMetadata(RequestMetadata.Builder().setMediaUri(mediaUri).build())
+            .setMediaMetadata(
+                MediaMetadata.Builder()
+                    .setTitle(title)
+                    .setArtist(artist)
+                    .setFolderType(folderType)
+                    .setIsPlayable(isPlayable)
+                    .setArtworkUri(albumArtUri)
+                    .setArtworkData(this.albumArtData)
+                    .setExtras(extras)
+                    .build()
+            )
+            .build()
     }
 }
