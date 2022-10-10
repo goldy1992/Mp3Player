@@ -47,23 +47,27 @@ class FolderResultsParser
         }
 
         directoryPathMap.entries.forEach {
-            val mediaItem = createFolderMediaItem(it.value, mediaIdPrefix!!)
+            val mediaItem = createFolderMediaItem(it.value, mediaIdPrefix)
             listToReturn.add(mediaItem)
         }
         return ArrayList(listToReturn)
     }
 
+    override fun create(cursor: Cursor): List<MediaItem> {
+        return create(cursor, null)
+    }
+
     override val type: MediaItemType?
         get() = MediaItemType.FOLDER
 
-    private fun createFolderMediaItem(directoryInfo: DirectoryInfo, parentId: String) : MediaItem { /* append a file separator so that folders with an "extended" name are discarded...
+    private fun createFolderMediaItem(directoryInfo: DirectoryInfo, parentId: String?) : MediaItem { /* append a file separator so that folders with an "extended" name are discarded...
          * e.g. Folder to accept: 'folder1'
          *      Folder to reject: 'folder1extended' */
         val folder = directoryInfo.directory
         val filePath = folder.absolutePath + File.separator
         return MediaItemBuilder(filePath)
             .setMediaItemType(MediaItemType.FOLDER)
-            .setLibraryId(buildLibraryId(parentId, filePath))
+            .setLibraryId(buildLibraryId(parentId ?: "null", filePath))
             .setDirectoryFile(folder)
             .setFileCount(directoryInfo.fileCount.get())
             .setFolderType(FOLDER_TYPE_MIXED)

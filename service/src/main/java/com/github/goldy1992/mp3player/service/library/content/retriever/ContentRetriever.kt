@@ -14,6 +14,10 @@ abstract class ContentRetriever {
      */
     abstract fun getChildren(request: ContentRequest): List<MediaItem>?
 
+    abstract fun getItems() : List<MediaItem>
+
+    abstract fun getChildren(parentId : String) : List<MediaItem>
+
     /**
      * @return The type of MediaItem retrieved from the Content Retriever
      */

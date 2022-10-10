@@ -19,7 +19,16 @@ class RootRetriever @Inject constructor(private val mediaItemTypeIds: MediaItemT
     private val CHILDREN: List<MediaItem>
     private val typeToMediaItemMap: MutableMap<MediaItemType, MediaItem>
 
-    override fun getChildren(request: ContentRequest): List<MediaItem>? {
+    override fun getChildren(request: ContentRequest): List<MediaItem> {
+        return CHILDREN
+    }
+
+    override fun getChildren(parentId: String): List<MediaItem> {
+        // TODO: Add check to ensure the correct parent id
+        return CHILDREN
+    }
+
+    override fun getItems(): List<MediaItem> {
         return CHILDREN
     }
 
@@ -35,7 +44,7 @@ class RootRetriever @Inject constructor(private val mediaItemTypeIds: MediaItemT
      */
     private fun createRootItem(category: MediaItemType): MediaItem {
         val extras = Bundle()
-        extras.putSerializable(MEDIA_ITEM_TYPE, MediaItemType.ROOT)
+        extras.putSerializable(MEDIA_ITEM_TYPE, category)
         extras.putSerializable(ROOT_ITEM_TYPE, category)
 
         val mediaMetadata = MediaMetadata.Builder()

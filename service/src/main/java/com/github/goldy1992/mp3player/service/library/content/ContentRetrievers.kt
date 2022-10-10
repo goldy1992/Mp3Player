@@ -16,10 +16,10 @@ class ContentRetrievers
 
     @Inject
     constructor(mediaItemTypeIds: MediaItemTypeIds,
-                rootRetriever: RootRetriever,
-                songsRetriever: SongsRetriever,
-                foldersRetriever: FoldersRetriever,
-                songsFromFolderRetriever: SongsFromFolderRetriever) {
+                private val rootRetriever: RootRetriever,
+                private val songsRetriever: SongsRetriever,
+                private val foldersRetriever: FoldersRetriever,
+                private val songsFromFolderRetriever: SongsFromFolderRetriever) {
     /**  */
     var contentRetrieverMap: Map<Class<out ContentRetriever>, ContentRetriever>
     /**  */
@@ -47,6 +47,17 @@ class ContentRetrievers
                     }
                 }
             }
+        }
+    }
+
+    fun getContentRetriever(mediaItemType: MediaItemType) : ContentRetriever? {
+        return when (mediaItemType) {
+            MediaItemType.ROOT -> root
+            MediaItemType.SONGS -> songsRetriever
+            MediaItemType.FOLDER -> songsFromFolderRetriever
+            MediaItemType.FOLDERS -> foldersRetriever
+            else -> null
+
         }
     }
 

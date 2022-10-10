@@ -21,6 +21,7 @@ import androidx.media3.ui.PlayerNotificationManager
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.service.library.ContentManager
+import com.github.goldy1992.mp3player.service.library.CustomMediaItemTree
 import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers
 import com.github.goldy1992.mp3player.service.library.search.managers.SearchDatabaseManagers
 import com.google.common.collect.ImmutableList
@@ -46,6 +47,9 @@ open class MediaPlaybackService : MediaLibraryService(),
     @Inject
     lateinit var mediaLibrarySessionCallback : MediaLibrarySessionCallback
 
+    @Inject
+    lateinit var rootAuthenticator: RootAuthenticator
+
     private var customLayout = ImmutableList.of<CommandButton>()
 
     private lateinit var mediaSession: MediaLibrarySession
@@ -62,6 +66,9 @@ open class MediaPlaybackService : MediaLibraryService(),
     @Inject
     lateinit var searchDatabaseManagers: SearchDatabaseManagers
 
+    @Inject
+    lateinit var customMediaItemTree: CustomMediaItemTree
+
     override fun onCreate() {
         Log.i(logTag(), "onCreate called")
         super.onCreate()
@@ -69,7 +76,7 @@ open class MediaPlaybackService : MediaLibraryService(),
         scope.launch(Dispatchers.IO) {
             searchDatabaseManagers.reindexAll()
         }
-
+        customMediaItemTree.initialise(rootItem = rootAuthenticator.getRootItem())
 //        val sessionActivityPendingIntent =
 //            TaskStackBuilder.create(this).run {
 ////                addNextIntent(Intent(this@PlaybackService, MainActivity::class.java))
@@ -111,7 +118,7 @@ open class MediaPlaybackService : MediaLibraryService(),
         super.onDestroy()
         this.mediaSession.release()
         Log.i(logTag(), "onDeStRoY")
-        mediaStoreObservers!!.unregisterAll()
+        mediaStoreObservers.unregisterAll()
     }
 
 

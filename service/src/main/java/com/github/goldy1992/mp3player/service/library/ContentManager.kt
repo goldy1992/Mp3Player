@@ -36,16 +36,20 @@ class ContentManager @Inject constructor(private val contentRetrievers: ContentR
      * @param parentId the id of the children to get
      * @return all the children of the id specified by the parentId parameter
      */
-    fun getChildren(parentId: String?): List<MediaItem> {
-        val request = contentRequestParser.parse(parentId!!)
+    fun getChildren(parentId: String): List<MediaItem> {
+        val cachedItems = getCachedMediaItems(parentId)
+        if (cachedItems != null) {
+            return cachedItems
+        }
+        val request = contentRequestParser.parse(parentId)
         val result = contentRetrievers[request!!.contentRetrieverKey]?.getChildren(request) ?: emptyList()
         val itemType = result.firstOrNull()?.mediaMetadata?.extras?.get(Constants.MEDIA_ITEM_TYPE) ?: MediaItemType.NONE
         if (itemType != MediaItemType.NONE) {
             for (item in result) {
-                itemMap[itemType]?.set(item.mediaId, item)
+                itemMap[itemType]?.set(item.mediaId, result)
             }
-
         }
+
         return result
     }
 
@@ -88,7 +92,7 @@ class ContentManager @Inject constructor(private val contentRetrievers: ContentR
     fun getMediaItems(ids : Collection<String>) : MutableList<MediaItem> {
         val toReturn = mutableListOf<MediaItem>()
         for (id in ids) {
-            toReturn.add(itemMap[MediaItemType.SONG]?.get(id) ?: MediaItem.EMPTY)
+            toReturn.add((itemMap[MediaItemType.SONG]?.get(id) ?: MediaItem.EMPTY) as MediaItem)
         }
         return toReturn
     }
@@ -98,13 +102,22 @@ class ContentManager @Inject constructor(private val contentRetrievers: ContentR
      * @param id the id of the playlist
      * @return the playlist
      */
-    fun getPlaylist(id: String?): List<MediaItem>? {
+    fun getPlaylist(id: String): List<MediaItem> {
         return getChildren(id)
     }
 
-    val itemMap : EnumMap<MediaItemType, HashMap<String, MediaItem>> = EnumMap(MediaItemType::class.java)
+    val itemMap : EnumMap<MediaItemType, HashMap<String, List<MediaItem>>> = EnumMap(MediaItemType::class.java)
     init {
         MediaItemType.values().forEach { itemMap[it] = HashMap() }
+    }
+
+    fun getCachedMediaItems(id : String) : List<MediaItem>? {
+        for (mediaItemType in itemMap.keys) {
+            if (itemMap[mediaItemType]?.containsKey(id) == true) {
+                return itemMap[mediaItemType]!![id] ?: emptyList()
+            }
+        }
+        return null
     }
 
     companion object {

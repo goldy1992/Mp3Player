@@ -75,7 +75,18 @@ class MediaLibrarySessionCallback
         parentId: String,
         params: MediaLibraryService.LibraryParams?
     ): ListenableFuture<LibraryResult<Void>> {
-        return super.onSubscribe(session, browser, parentId, params)
+        var mediaItems = emptyList<MediaItem>()
+        runBlocking {
+            launch(Dispatchers.Default) {
+                // Assume for example that the music catalog is already loaded/cached.
+                mediaItems = contentManager.getChildren(parentId)
+                println("finish coroutine")
+            }.join()
+            println("finished on load children")
+        }
+        Log.i(logTag(), "notifying children changed for browser ${browser}")
+        session.notifyChildrenChanged(browser, parentId, mediaItems.size, params)
+        return Futures.immediateFuture(LibraryResult.ofVoid())
     }
 
     override fun onCustomCommand(
@@ -127,7 +138,7 @@ class MediaLibrarySessionCallback
             }.join()
             println("finished on load children")
         }
-        session.notifyChildrenChanged(browser, parentId, mediaItems.size, params)
+        Log.i(logTag(), "notifying children changed for browser ${browser}")
         return Futures.immediateFuture(LibraryResult.ofItemList(mediaItems, params))
     }
 

@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,8 @@ import com.github.goldy1992.mp3player.client.AsyncMediaBrowserListener
 import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.ui.logTag
+import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +26,7 @@ class LibraryScreenViewModel
     constructor(
         val mediaBrowserAdapter: MediaBrowserAdapter,
         val mediaControllerAdapter: MediaControllerAdapter,
-        val asyncPlayerListener: AsyncPlayerListener) : ViewModel() {
+        val asyncPlayerListener: AsyncPlayerListener) : LogTagger, ViewModel() {
 
     private val _rootItems : MutableStateFlow<List<MediaItem>> = MutableStateFlow(emptyList())
     val rootItems : StateFlow<List<MediaItem>> = _rootItems
@@ -53,8 +56,10 @@ class LibraryScreenViewModel
 
         viewModelScope.launch {
             mediaBrowserAdapter.onChildrenChangedFlow.filter {
+                Log.i(logTag(), "filtering: id: ${it.parentId}")
                 it.parentId == rootItemId || rootItemMap.containsKey(it.parentId)
             }.collect {
+
                 if (it.parentId == rootItemId) {
                     val rootChildren = mediaBrowserAdapter.getChildren(it.parentId, 0, it.itemCount)
                     _rootItems.value = rootChildren
@@ -71,5 +76,9 @@ class LibraryScreenViewModel
             }
         }
 
+    }
+
+    override fun logTag(): String {
+        return "LibScrnViewModel"
     }
 }

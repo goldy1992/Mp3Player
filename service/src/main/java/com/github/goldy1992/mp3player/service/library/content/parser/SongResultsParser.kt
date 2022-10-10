@@ -26,7 +26,7 @@ class SongResultsParser
         val listToReturn = TreeSet(this)
         while (cursor != null && cursor.moveToNext()) {
             Log.i(logTag(), "mediaIfPrefix: ${mediaIdPrefix ?: "null"}")
-            val mediaItem = buildMediaItem(cursor, mediaIdPrefix!!)
+            val mediaItem = buildMediaItem(cursor, mediaIdPrefix)
             if (null != mediaItem) {
                 listToReturn.add(mediaItem)
             }
@@ -34,10 +34,14 @@ class SongResultsParser
         return ArrayList(listToReturn)
     }
 
+    override fun create(cursor: Cursor): List<MediaItem> {
+        return create(cursor, null)
+    }
+
     override val type: MediaItemType?
         get() = MediaItemType.SONG
 
-    private fun buildMediaItem(c: Cursor, libraryIdPrefix: String): MediaItem? {
+    private fun buildMediaItem(c: Cursor, libraryIdPrefix: String?): MediaItem? {
         val mediaIdIndex = c.getColumnIndex(MediaStore.Audio.Media._ID)
         val mediaId = if (mediaIdIndex >= 0) c.getString(mediaIdIndex) else Constants.UNKNOWN
         val dataIndex = c.getColumnIndex(MediaStore.Audio.Media.DATA)

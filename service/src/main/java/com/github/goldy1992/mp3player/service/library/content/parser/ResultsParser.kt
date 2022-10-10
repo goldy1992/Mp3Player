@@ -12,6 +12,8 @@ abstract class ResultsParser : Comparator<MediaItem>, LogTagger {
 
     abstract fun create(cursor: Cursor?, mediaIdPrefix: String?): List<MediaItem>
 
+    abstract fun create(cursor: Cursor) : List<MediaItem>
+
     abstract val type: MediaItemType?
 
     protected val extras: Bundle
