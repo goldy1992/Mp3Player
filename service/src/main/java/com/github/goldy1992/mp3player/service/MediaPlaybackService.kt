@@ -76,20 +76,20 @@ open class MediaPlaybackService : MediaLibraryService(),
         scope.launch(Dispatchers.IO) {
             searchDatabaseManagers.reindexAll()
         }
-        customMediaItemTree.initialise(rootItem = rootAuthenticator.getRootItem())
-//        val sessionActivityPendingIntent =
-//            TaskStackBuilder.create(this).run {
-////                addNextIntent(Intent(this@PlaybackService, MainActivity::class.java))
-////                addNextIntent(Intent(this@PlaybackService, PlayerActivity::class.java))
-//
-//                val immutableFlag = if (Build.VERSION.SDK_INT >= 23) FLAG_IMMUTABLE else 0
-//                getPendingIntent(0, immutableFlag or FLAG_UPDATE_CURRENT)
-//            }
-
+        val rootItem = rootAuthenticator.getRootItem()
+        customMediaItemTree.initialise(rootItem = rootItem)
         mediaSession =
             MediaLibrarySession.Builder(this, player, mediaLibrarySessionCallback)
-               // .setSessionActivity(sessionActivityPendingIntent)
+                // .setSessionActivity(sessionActivityPendingIntent)
                 .build()
+
+        // TODO: add queue manager
+        mediaSession.player.addMediaItems(   customMediaItemTree.rootNode?.getChildren()?.get(0)?.getChildren()?.map(CustomMediaItemTree.MediaItemNode::item)?.toMutableList() ?: mutableListOf())
+        mediaSession.player.prepare()
+
+
+
+
 
         if (!customLayout.isEmpty()) {
             // Send custom layout to legacy session.

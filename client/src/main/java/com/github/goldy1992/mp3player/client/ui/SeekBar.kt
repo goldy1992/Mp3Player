@@ -20,6 +20,7 @@ import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
+import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.MetadataUtils
 import kotlinx.coroutines.CoroutineScope
@@ -30,12 +31,13 @@ const val logTag = "seekbar"
 @Composable
 fun SeekBar(asyncPlayerListener: AsyncPlayerListener,
             isPlayingFlow: IsPlayingFlow,
+            metadataFlow: MetadataFlow,
             mediaController : MediaControllerAdapter,
             scope: CoroutineScope = rememberCoroutineScope()) {
 
     //Log.i(logTag, "seek bar created")
     val isPlaying by isPlayingFlow.state.collectAsState()
-    val metadata by asyncPlayerListener.mediaMetadataState.collectAsState()
+    val metadata by metadataFlow.state.collectAsState()
     val playbackState by asyncPlayerListener.playbackStateFlow.collectAsState()
     val playbackParameters by asyncPlayerListener.playbackParametersState.collectAsState()
 

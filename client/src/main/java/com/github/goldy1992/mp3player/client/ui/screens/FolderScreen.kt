@@ -41,8 +41,8 @@ import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.viewmodels.FolderScreenViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
-import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
+import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
@@ -69,7 +69,7 @@ fun FolderScreen(
             folderName = folderName,
             navController = navController,
             mediaController = viewModel.mediaController,
-            asyncPlayerListener = viewModel.asyncPlayerListener,
+            metadataFlow = viewModel.metadataFlow,
             isPlayingFlow = viewModel.isPlayingFlow,
             scope = scope,
             folderItems = folderItems
@@ -79,7 +79,7 @@ fun FolderScreen(
             folderName = folderName,
             navController = navController,
             mediaController = viewModel.mediaController,
-            asyncPlayerListener = viewModel.asyncPlayerListener,
+            metadataFlow = viewModel.metadataFlow,
             isPlayingFlow = viewModel.isPlayingFlow,
             scope = scope,
             folderItems = folderItems
@@ -96,7 +96,7 @@ private fun SmallFolderScreen(
     navController: NavController,
     mediaController : MediaControllerAdapter,
     isPlayingFlow: IsPlayingFlow,
-    asyncPlayerListener: AsyncPlayerListener,
+    metadataFlow: MetadataFlow,
     scope : CoroutineScope = rememberCoroutineScope(),
     folderItems : List<MediaItem>?
 ) {
@@ -162,7 +162,7 @@ private fun SmallFolderScreen(
                         }
                     }
                 } else {
-                    SongList(songs = folderItems!!, mediaControllerAdapter = mediaController, isPlayingFlow = isPlayingFlow, asyncPlayerListener = asyncPlayerListener) {
+                    SongList(songs = folderItems!!, mediaControllerAdapter = mediaController, isPlayingFlow = isPlayingFlow, metadataFlow = metadataFlow) {
                         val libraryId = MediaItemUtils.getLibraryId(it) ?: ""
                         Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
                         mediaController.playFromMediaId(libraryId, null)
@@ -180,7 +180,7 @@ private fun LargeFolderScreen(
     folderName : String = Constants.UNKNOWN,
     navController: NavController,
     mediaController : MediaControllerAdapter,
-    asyncPlayerListener: AsyncPlayerListener,
+    metadataFlow: MetadataFlow,
     isPlayingFlow: IsPlayingFlow,
     scope : CoroutineScope = rememberCoroutineScope(),
     folderItems : List<MediaItem>?
@@ -246,7 +246,7 @@ private fun LargeFolderScreen(
                             CircularProgressIndicator()
                         }
                     } else {
-                        SongList(songs = folderItems!!, mediaControllerAdapter = mediaController, asyncPlayerListener = asyncPlayerListener, isPlayingFlow = isPlayingFlow) {
+                        SongList(songs = folderItems!!, mediaControllerAdapter = mediaController, metadataFlow = metadataFlow, isPlayingFlow = isPlayingFlow) {
                             val libraryId = MediaItemUtils.getLibraryId(it) ?: ""
                             Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
                             mediaController.playFromMediaId(libraryId, null)

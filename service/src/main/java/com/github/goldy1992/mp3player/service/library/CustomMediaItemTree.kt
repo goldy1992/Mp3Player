@@ -44,6 +44,7 @@ class CustomMediaItemTree
     fun initialise(rootItem: MediaItem) {
         val rootNode = MediaItemNode(rootItem)
         build(rootNode)
+        this.rootNode = rootNode
         Log.i(logTag(), "built tree")
         val nodeMap : MutableMap<String, MediaItemNode> = HashMap()
         buildMediaNodeMap(rootNode, nodeMap)

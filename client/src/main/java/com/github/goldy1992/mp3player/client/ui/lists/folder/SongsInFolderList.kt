@@ -11,6 +11,7 @@ import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
+import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 
 @Composable
@@ -19,13 +20,13 @@ fun SongsInFolderList(
     songsInFolders : LiveData<List<MediaItem>>,
     showHeader : Boolean = true,
     mediaController : MediaControllerAdapter,
-    asyncPlayerListener: AsyncPlayerListener,
+    metadataFlow: MetadataFlow,
     isPlayingFlow: IsPlayingFlow,
     onFolderItemSelected: (folder : MediaItem) -> Unit,
        ) {
     val songs by songsInFolders.observeAsState()
     Column(modifier = Modifier.fillMaxSize()) {
-        SongList(songs = songs!!, mediaControllerAdapter = mediaController, onSongSelected = onFolderItemSelected, asyncPlayerListener = asyncPlayerListener, isPlayingFlow = isPlayingFlow)
+        SongList(songs = songs!!, mediaControllerAdapter = mediaController, onSongSelected = onFolderItemSelected, metadataFlow = metadataFlow, isPlayingFlow = isPlayingFlow)
     }
 
 }

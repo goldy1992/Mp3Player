@@ -8,6 +8,7 @@ import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
+import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -20,7 +21,7 @@ class FolderScreenViewModel
         savedStateHandle: SavedStateHandle,
         val mediaBrowser: MediaBrowserAdapter,
         val mediaController: MediaControllerAdapter,
-        val asyncPlayerListener: AsyncPlayerListener,
+        val metadataFlow: MetadataFlow,
         val isPlayingFlow: IsPlayingFlow) : ViewModel() {
 
     init {

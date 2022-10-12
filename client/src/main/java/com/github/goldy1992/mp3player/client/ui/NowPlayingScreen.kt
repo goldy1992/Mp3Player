@@ -16,16 +16,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
-import com.github.goldy1992.mp3player.client.viewmodels.LibraryScreenViewModel
 import com.github.goldy1992.mp3player.client.viewmodels.NowPlayingScreenViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -45,13 +46,14 @@ fun NowPlayingScreen(
     scope : CoroutineScope = rememberCoroutineScope(),
 ) {
     val songTitleDescription = stringResource(id = R.string.song_title)
+    val metadata by viewModel.metadataFlow.state.collectAsState()
+
     Scaffold (
 
         topBar = {
             SmallTopAppBar (
                 title = {
-                    val metadata by viewModel.asyncPlayerListener.mediaMetadataState.collectAsState()
-                    val title : String = metadata.title.toString()
+                       val title : String = metadata.title.toString()
                     val artist : String = metadata.artist.toString()
                     Column {
                         Text(text = title,
@@ -104,6 +106,7 @@ fun NowPlayingScreen(
                 )
                 ViewPager(mediaController = viewModel.mediaControllerAdapter,
                     playerListener = viewModel.asyncPlayerListener,
+                    metadata = metadata,
                 scope = scope,
                 modifier = Modifier.weight(4f))
 
@@ -114,7 +117,7 @@ fun NowPlayingScreen(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     ShuffleButton(mediaController = viewModel.mediaControllerAdapter, asyncPlayerListener = viewModel.asyncPlayerListener, scope = scope)
-                    RepeatButton(mediaController = viewModel.mediaControllerAdapter, asyncPlayerListener = viewModel.asyncPlayerListener, scope = scope)
+                    RepeatButton(mediaController = viewModel.mediaControllerAdapter, repeatModeFlow = viewModel.repeatModeFlow, scope = scope)
                 }
                 Row(
                     modifier = Modifier
@@ -123,8 +126,9 @@ fun NowPlayingScreen(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     SeekBar(mediaController = viewModel.mediaControllerAdapter,
-                    asyncPlayerListener = viewModel.asyncPlayerListener,
-                    isPlayingFlow = viewModel.isPlayingFlow)
+                        asyncPlayerListener = viewModel.asyncPlayerListener,
+                        metadataFlow = viewModel.metadataFlow,
+                        isPlayingFlow = viewModel.isPlayingFlow)
                 }
             }
 
@@ -136,12 +140,12 @@ fun NowPlayingScreen(
 @Composable
 fun ViewPager(mediaController: MediaControllerAdapter,
               playerListener: AsyncPlayerListener,
+              metadata : MediaMetadata,
               modifier: Modifier = Modifier,
             pagerState:PagerState = rememberPagerState(initialPage = mediaController.getCurrentQueuePosition()),
             scope: CoroutineScope = rememberCoroutineScope()
            ) {
     val queue by playerListener.queueState.collectAsState()
-    val metadata by playerListener.mediaMetadataState.collectAsState()
     val currentQueuePosition = mediaController.getCurrentQueuePosition()
 
     if (isEmpty(queue)) {

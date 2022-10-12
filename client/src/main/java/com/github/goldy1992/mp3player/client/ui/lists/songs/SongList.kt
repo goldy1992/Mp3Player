@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui.lists.songs
 
-import android.os.Bundle
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +7,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -17,10 +19,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
 import coil.annotation.ExperimentalCoilApi
-import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
+import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 import org.apache.commons.lang3.StringUtils
@@ -32,11 +34,11 @@ fun SongList(
     modifier : Modifier = Modifier,
     songs : List<MediaItem> = emptyList(),
     mediaControllerAdapter: MediaControllerAdapter,
-    asyncPlayerListener: AsyncPlayerListener,
+    metadataFlow: MetadataFlow,
     isPlayingFlow: IsPlayingFlow,
     onSongSelected : (song : MediaItem) -> Unit = {}) {
 
-    val metadata by asyncPlayerListener.mediaMetadataState.collectAsState()
+    val metadata by metadataFlow.state.collectAsState()
     val isPlaying by isPlayingFlow.state.collectAsState()
     val currentMediaItem = remember (isPlaying, metadata) {
         mediaControllerAdapter.getCurrentMediaItem()

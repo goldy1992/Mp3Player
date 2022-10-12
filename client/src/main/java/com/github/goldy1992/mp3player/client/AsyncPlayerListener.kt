@@ -45,48 +45,6 @@ class AsyncPlayerListener
     val playbackStateFlow : StateFlow<Int> = playbackStateMutableState
 
 
-    private val mediaMetadataCallbackFlow : Flow<MediaMetadata> = callbackFlow {
-        val controller = mediaControllerFuture.await()
-        val messageListener = object : Player.Listener {
-            override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
-                trySend(mediaMetadata)
-            }
-        }
-        controller.addListener(messageListener)
-        awaitClose { controller.removeListener(messageListener) }
-    }.shareIn(
-        scope,
-        replay = 1,
-        started = SharingStarted.WhileSubscribed()
-    )
-
-    private val mediaMetadataMutableState = MutableStateFlow(MediaMetadata.EMPTY)
-    val mediaMetadataState : StateFlow<MediaMetadata> = mediaMetadataMutableState
-
-
-
-
-    private val repeatModeCallbackFlow : Flow<Int> = callbackFlow {
-        val controller = mediaControllerFuture.await()
-        val messageListener = object : Player.Listener {
-            override fun onRepeatModeChanged(repeatMode: Int) {
-                trySend(repeatMode)
-            }
-        }
-        controller.addListener(messageListener)
-        awaitClose { controller.removeListener(messageListener) }
-    }.shareIn(
-        scope,
-        replay = 1,
-        started = SharingStarted.WhileSubscribed()
-    )
-
-    private val repeatModeMutableState = MutableStateFlow(Player.REPEAT_MODE_ALL)
-    val repeatModeState : StateFlow<Int> = repeatModeMutableState
-
-
-
-
     private val shuffleModeCallbackFlow : Flow<Boolean> = callbackFlow {
         val controller = mediaControllerFuture.await()
         val messageListener = object : Player.Listener {
@@ -161,25 +119,6 @@ class AsyncPlayerListener
 
 
 
-//    private val isPlayingFlow : Flow<Boolean> = callbackFlow {
-//        val controller = mediaControllerFuture.await()
-//        val messageListener = object : Listener {
-//            override fun onIsPlayingChanged(isPlaying: Boolean) {
-//                Log.i(logTag(), "onIsPlayingChanged: $isPlaying")
-//                trySend(isPlaying)
-//            }
-//        }
-//        controller.addListener(messageListener)
-//        awaitClose { controller.removeListener(messageListener) }
-//    }.shareIn(
-//        scope,
-//        replay = 1,
-//        started = SharingStarted.WhileSubscribed()
-//    )
-//
-//    private val isPlayingMutableState = MutableStateFlow(false)
-//    val isPlayingState : StateFlow<Boolean> = isPlayingMutableState
-
 //    open fun getActiveQueueItemId(): Long? {
 //        return playbackState.value?.activeQueueItemId
 //    }
@@ -234,16 +173,7 @@ class AsyncPlayerListener
                 playbackStateMutableState.value = it
             }
         }
-        scope.launch {
-            mediaMetadataCallbackFlow.collect {
-                mediaMetadataMutableState.value = it
-            }
-        }
-        scope.launch {
-            repeatModeCallbackFlow.collect {
-                repeatModeMutableState.value = it
-            }
-        }
+
         scope.launch {
             shuffleModeCallbackFlow.collect {
                 shuffleModeMutableState.value = it
