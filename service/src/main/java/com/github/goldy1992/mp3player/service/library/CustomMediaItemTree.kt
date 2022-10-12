@@ -15,7 +15,7 @@ class CustomMediaItemTree
     @Inject
     constructor(val contentRetrievers: ContentRetrievers) : LogTagger {
 
-    class MediaItemNode(item: MediaItem) {
+    class MediaItemNode(val item: MediaItem) {
         val id = item.mediaId
 
         val mediaItemType = MediaItemUtils.getMediaItemType(item)
@@ -51,6 +51,20 @@ class CustomMediaItemTree
         Log.i(logTag(), "MediaItemNode map built")
     }
 
+    fun getChildren(parentId : String) : List<MediaItem> {
+        if (this.nodeMap == null) {
+            return emptyList()
+        }
+        val parentNode: MediaItemNode? = nodeMap!![parentId]
+        val children = parentNode?.getChildren()
+        Log.i(logTag(), "parentId: ${parentId}, children count: ${children?.count() ?: 0}")
+        return children?.map(MediaItemNode::item) ?: emptyList()
+    }
+
+    fun getMediaItems(mediaIds : Collection<String>) : List<MediaItem> {
+        return mediaIds.mapNotNull { i -> nodeMap!![i]?.item }.toList()
+    }
+
 
     private fun buildMediaNodeMap(node : MediaItemNode, nodeMap: MutableMap<String, MediaItemNode>) {
         if (node.hasChildren()) {
@@ -59,7 +73,7 @@ class CustomMediaItemTree
         nodeMap[node.id] = node
     }
 
-    fun build(node : MediaItemNode) {
+    private fun build(node : MediaItemNode) {
         val children = contentRetrievers.getContentRetriever(node.mediaItemType ?: MediaItemType.NONE)?.getChildren(node.id)
         if (children != null) {
             for (child in children) {

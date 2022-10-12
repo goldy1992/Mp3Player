@@ -9,6 +9,7 @@ import com.github.goldy1992.mp3player.client.AsyncMediaBrowserListener
 import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.ui.logTag
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -26,7 +27,8 @@ class LibraryScreenViewModel
     constructor(
         val mediaBrowserAdapter: MediaBrowserAdapter,
         val mediaControllerAdapter: MediaControllerAdapter,
-        val asyncPlayerListener: AsyncPlayerListener) : LogTagger, ViewModel() {
+        val asyncPlayerListener: AsyncPlayerListener,
+        val isPlayingFlow: IsPlayingFlow) : LogTagger, ViewModel() {
 
     private val _rootItems : MutableStateFlow<List<MediaItem>> = MutableStateFlow(emptyList())
     val rootItems : StateFlow<List<MediaItem>> = _rootItems

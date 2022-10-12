@@ -78,7 +78,7 @@ fun NowPlayingScreen(
         },
         bottomBar = {
             PlayToolbar(mediaController = viewModel.mediaControllerAdapter,
-                        asyncPlayerListener = viewModel.asyncPlayerListener,
+                        isPlayingFlow = viewModel.isPlayingFlow,
                         scope = scope) {
                 // do Nothing
             }
@@ -123,7 +123,8 @@ fun NowPlayingScreen(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     SeekBar(mediaController = viewModel.mediaControllerAdapter,
-                    asyncPlayerListener = viewModel.asyncPlayerListener)
+                    asyncPlayerListener = viewModel.asyncPlayerListener,
+                    isPlayingFlow = viewModel.isPlayingFlow)
                 }
             }
 

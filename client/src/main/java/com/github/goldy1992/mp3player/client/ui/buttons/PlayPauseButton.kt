@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.buttons
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
@@ -9,25 +10,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
-import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+private const val LOG_TAG = "PlayPauseButton"
 /**
  * This button will display the [PlayButton] if the [MediaControllerAdapter] says there is currently
  * no playback, otherwise it will display the [PauseButton].
  */
 @Composable
 fun PlayPauseButton(mediaController: MediaControllerAdapter,
-                    asyncPlayerListener: AsyncPlayerListener,
+                    isPlayingFlow: IsPlayingFlow,
                     scope: CoroutineScope = rememberCoroutineScope()) {
-    val playbackState by asyncPlayerListener.playbackStateFlow.collectAsState()
-    val isPlaying = asyncPlayerListener.isPlaying()
+    val isPlaying by isPlayingFlow.state.collectAsState()
     if (isPlaying) {
         PauseButton(mediaController = mediaController, scope)
     } else {
@@ -42,7 +42,10 @@ fun PlayPauseButton(mediaController: MediaControllerAdapter,
 @Composable
 fun PlayButton(mediaController : MediaControllerAdapter, scope : CoroutineScope = rememberCoroutineScope()) {
     IconButton(
-        onClick = { scope.launch { mediaController.play()}}) {
+        onClick = { scope.launch {
+            Log.i(LOG_TAG, "calling play")
+            mediaController.play()}
+        }) {
         Icon(
             Icons.Filled.PlayArrow,
             contentDescription = stringResource(id = R.string.play),

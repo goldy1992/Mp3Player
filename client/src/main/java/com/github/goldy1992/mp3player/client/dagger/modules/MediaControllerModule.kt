@@ -20,6 +20,7 @@ class MediaControllerModule {
     fun providesMediaControllerFuture(@ApplicationContext context: Context,
                                         sessionToken: SessionToken)
             : ListenableFuture<MediaController> {
-        return MediaController.Builder(context, sessionToken).buildAsync()
+        return MediaController.Builder(context, sessionToken)
+            .buildAsync()
     }
 }

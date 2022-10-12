@@ -63,6 +63,7 @@ import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListItem
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongListItem
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
@@ -90,7 +91,7 @@ fun SearchScreen(
             navController = navController,
             mediaBrowser = viewModel.mediaBrowserAdapter,
             mediaController = viewModel.mediaControllerAdapter,
-            asyncPlayerListener = viewModel.asyncPlayerListener,
+            isPlayingFlow = viewModel.isPlayingFlow,
             scope = scope
 
         )
@@ -99,7 +100,7 @@ fun SearchScreen(
             navController = navController,
             mediaBrowser = viewModel.mediaBrowserAdapter,
             mediaController = viewModel.mediaControllerAdapter,
-            asyncPlayerListener = viewModel.asyncPlayerListener,
+            isPlayingFlow = viewModel.isPlayingFlow,
             scope = scope
         )
 
@@ -116,7 +117,7 @@ private fun SmallSearchResults(
     navController: NavController,
     mediaBrowser: MediaBrowserAdapter,
     mediaController : MediaControllerAdapter,
-    asyncPlayerListener: AsyncPlayerListener,
+    isPlayingFlow: IsPlayingFlow,
     scope : CoroutineScope = rememberCoroutineScope()) {
     val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     ModalNavigationDrawer(
@@ -135,7 +136,7 @@ private fun SmallSearchResults(
             },
             bottomBar = {
                 PlayToolbar(mediaController = mediaController,
-                            asyncPlayerListener = asyncPlayerListener,
+                            isPlayingFlow = isPlayingFlow,
                             scope = scope) {
                     navController.navigate(Screen.NOW_PLAYING.name)
                 }
@@ -162,7 +163,7 @@ private fun LargeSearchResults(
     navController: NavController,
     mediaBrowser: MediaBrowserAdapter,
     mediaController : MediaControllerAdapter,
-    asyncPlayerListener: AsyncPlayerListener,
+    isPlayingFlow: IsPlayingFlow,
     scope : CoroutineScope = rememberCoroutineScope()) {
     PermanentNavigationDrawer(
         modifier = Modifier.fillMaxSize(),
@@ -181,7 +182,7 @@ private fun LargeSearchResults(
             },
             bottomBar = {
                 PlayToolbar(mediaController = mediaController,
-                            asyncPlayerListener = asyncPlayerListener,
+                            isPlayingFlow = isPlayingFlow,
                             scope = scope) {
                     navController.navigate(Screen.NOW_PLAYING.name)
                 }

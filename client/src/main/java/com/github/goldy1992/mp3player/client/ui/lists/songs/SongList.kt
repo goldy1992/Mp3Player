@@ -20,6 +20,7 @@ import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 import org.apache.commons.lang3.StringUtils
@@ -32,15 +33,11 @@ fun SongList(
     songs : List<MediaItem> = emptyList(),
     mediaControllerAdapter: MediaControllerAdapter,
     asyncPlayerListener: AsyncPlayerListener,
+    isPlayingFlow: IsPlayingFlow,
     onSongSelected : (song : MediaItem) -> Unit = {}) {
 
-    LaunchedEffect(songs) {
-        if (songs.isNotEmpty()) {
-            mediaControllerAdapter.prepareFromMediaId(songs.get(0), Bundle())
-        }
-    }
     val metadata by asyncPlayerListener.mediaMetadataState.collectAsState()
-    val isPlaying by asyncPlayerListener.isPlayingState.collectAsState()
+    val isPlaying by isPlayingFlow.state.collectAsState()
     val currentMediaItem = remember (isPlaying, metadata) {
         mediaControllerAdapter.getCurrentMediaItem()
     }

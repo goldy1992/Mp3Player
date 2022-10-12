@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.MetadataUtils
 import kotlinx.coroutines.CoroutineScope
@@ -28,10 +29,12 @@ const val logTag = "seekbar"
 
 @Composable
 fun SeekBar(asyncPlayerListener: AsyncPlayerListener,
+            isPlayingFlow: IsPlayingFlow,
             mediaController : MediaControllerAdapter,
             scope: CoroutineScope = rememberCoroutineScope()) {
 
     //Log.i(logTag, "seek bar created")
+    val isPlaying by isPlayingFlow.state.collectAsState()
     val metadata by asyncPlayerListener.mediaMetadataState.collectAsState()
     val playbackState by asyncPlayerListener.playbackStateFlow.collectAsState()
     val playbackParameters by asyncPlayerListener.playbackParametersState.collectAsState()
@@ -48,7 +51,7 @@ fun SeekBar(asyncPlayerListener: AsyncPlayerListener,
     val anim1 = remember(currentPosition) { mutableStateOf(Animatable(currentPosition.toFloat())) }
   //  Log.i(logTag, "Anim1Value: ${anim1.value}")
 
-    if (asyncPlayerListener.isPlaying()) {
+    if (isPlaying) {
      //   Log.i(logTag, "playback state playing")
         LaunchedEffect(anim1) {
             anim1.value.animateTo(duration,

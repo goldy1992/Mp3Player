@@ -13,7 +13,7 @@ import androidx.media3.session.MediaBrowser
 import androidx.media3.session.MediaController
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.SessionToken
-import com.github.goldy1992.mp3player.client.eventholders.OnChildrenChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.eventholders.OnChildrenChangedEventHolder
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME_KEY
 import com.github.goldy1992.mp3player.commons.LogTagger

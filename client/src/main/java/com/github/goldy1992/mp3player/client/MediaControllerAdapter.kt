@@ -2,15 +2,20 @@ package com.github.goldy1992.mp3player.client
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.concurrent.futures.await
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
+import com.github.goldy1992.mp3player.commons.DefaultDispatcher
+import com.github.goldy1992.mp3player.commons.IoDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,7 +29,10 @@ open class MediaControllerAdapter
     @Inject
     constructor(
         private val mediaControllerFuture: ListenableFuture<MediaController>,
-        scope : CoroutineScope)
+        private val scope : CoroutineScope,
+        @IoDispatcher private val ioDispatcher : CoroutineDispatcher,
+        @MainDispatcher private val mainDispatcher : CoroutineDispatcher,
+        @DefaultDispatcher val defaultDispatcher: CoroutineDispatcher)
         : MediaController.Listener, LogTagger {
 
     private var mediaController: MediaController? = null
@@ -41,6 +49,10 @@ open class MediaControllerAdapter
 
     open suspend fun prepareFromMediaId(mediaItem: MediaItem, extras: Bundle?) {
         mediaControllerFuture.await().addMediaItem(mediaItem)
+        // call from application looper
+        scope.launch(mainDispatcher) {
+            mediaControllerFuture.await().prepare()
+        }
     }
 
     open fun playFromMediaId(mediaId: String, extras: Bundle?) {
@@ -55,7 +67,10 @@ open class MediaControllerAdapter
     }
 
     open suspend fun play() {
-        mediaControllerFuture.await().play()
+        val future = mediaControllerFuture.await()
+        Log.i(logTag(), "awaiting future for play")
+        future.play()
+        Log.i(logTag(), "calling play")
     }
 
     open suspend fun pause() { //Log.i(LOG_TAG, "pause hit");

@@ -16,6 +16,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.ui.NavigationDrawer
 import com.github.goldy1992.mp3player.client.ui.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.WindowSize
@@ -159,6 +160,7 @@ private fun CustomScaffold(
     scope: CoroutineScope,
     mediaController: MediaControllerAdapter,
     asyncPlayerListener: AsyncPlayerListener,
+    isPlayingFlow: IsPlayingFlow,
     extendTopAppBar: @Composable () -> Unit = {},
     content : @Composable (PaddingValues) -> Unit = {}
 ) {
@@ -175,7 +177,7 @@ private fun CustomScaffold(
             }
         },
         bottomBar = {
-            PlayToolbar(mediaController = mediaController, asyncPlayerListener = asyncPlayerListener, scope = scope) {
+            PlayToolbar(mediaController = mediaController, isPlayingFlow = isPlayingFlow, scope = scope) {
                 navController.navigate(Screen.NOW_PLAYING.name)
             }
         },

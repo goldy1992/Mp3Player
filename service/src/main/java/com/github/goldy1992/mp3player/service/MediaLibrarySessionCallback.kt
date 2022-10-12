@@ -9,6 +9,7 @@ import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.service.library.ContentManager
+import com.github.goldy1992.mp3player.service.library.CustomMediaItemTree
 import com.github.goldy1992.mp3player.service.player.ChangeSpeedProvider
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
@@ -27,12 +28,14 @@ class MediaLibrarySessionCallback
     constructor(private val contentManager: ContentManager,
                 private val changeSpeedProvider: ChangeSpeedProvider,
                 private val rootAuthenticator: RootAuthenticator,
+                private val customMediaItemTree: CustomMediaItemTree,
                 private val scope : CoroutineScope) : MediaLibrarySession.Callback, LogTagger {
 
     override fun onConnect(
         session: MediaSession,
         controller: MediaSession.ControllerInfo
     ): MediaSession.ConnectionResult {
+        Log.i(logTag(), "on Connect called")
         return super.onConnect(session, controller)
     }
 
@@ -79,7 +82,7 @@ class MediaLibrarySessionCallback
         runBlocking {
             launch(Dispatchers.Default) {
                 // Assume for example that the music catalog is already loaded/cached.
-                mediaItems = contentManager.getChildren(parentId)
+                mediaItems = customMediaItemTree.getChildren(parentId)
                 println("finish coroutine")
             }.join()
             println("finished on load children")
@@ -107,7 +110,9 @@ class MediaLibrarySessionCallback
         controller: MediaSession.ControllerInfo,
         mediaItems: MutableList<MediaItem>
     ): ListenableFuture<MutableList<MediaItem>> {
-        return Futures.immediateFuture(contentManager.getMediaItems(mediaItems.map(MediaItem::mediaId)))
+        return Futures.immediateFuture(
+            customMediaItemTree.getMediaItems(mediaItems.map(MediaItem::mediaId)).toMutableList()
+        )
     }
 
     override fun onGetLibraryRoot(
@@ -133,7 +138,7 @@ class MediaLibrarySessionCallback
         runBlocking {
             launch(Dispatchers.Default) {
                 // Assume for example that the music catalog is already loaded/cached.
-                mediaItems = contentManager.getChildren(parentId)
+                mediaItems = customMediaItemTree.getChildren(parentId)
                 println("finish coroutine")
             }.join()
             println("finished on load children")
