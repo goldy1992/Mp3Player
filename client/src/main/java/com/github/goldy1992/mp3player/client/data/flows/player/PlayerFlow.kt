@@ -1,7 +1,9 @@
 package com.github.goldy1992.mp3player.client.data.flows.player
 
 import androidx.media3.session.MediaController
+import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.util.concurrent.ListenableFuture
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,8 +14,9 @@ abstract class PlayerFlow<T>
 
 constructor(
     protected val mediaControllerFuture: ListenableFuture<MediaController>,
-    initialValue : T,
-    private val scope: CoroutineScope){
+    protected val scope: CoroutineScope,
+    @MainDispatcher protected val mainDispatcher: CoroutineDispatcher,
+    initialValue : T,){
 
     protected abstract fun flow() : Flow<T>
 
@@ -26,5 +29,8 @@ constructor(
                 backingState.value = it
             }
         }
+        scope.launch(mainDispatcher) { backingState.value = getInitialValue() }
     }
+
+    abstract suspend fun getInitialValue() : T
 }

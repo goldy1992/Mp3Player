@@ -5,6 +5,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material.icons.filled.ShuffleOn
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -13,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.flows.player.ShuffleModeFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -22,9 +24,9 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun ShuffleButton(mediaController: MediaControllerAdapter,
-                 asyncPlayerListener: AsyncPlayerListener,
+                 shuffleModeFlow: ShuffleModeFlow,
                  scope: CoroutineScope = rememberCoroutineScope()) {
-    val shuffleMode by asyncPlayerListener.shuffleModeState.collectAsState()
+    val shuffleMode by shuffleModeFlow.state.collectAsState()
     if (shuffleMode) {
         ShuffleOnButton(mediaController = mediaController, scope = scope)
     } else {
@@ -40,7 +42,8 @@ fun ShuffleOnButton(mediaController: MediaControllerAdapter,
                     scope: CoroutineScope = rememberCoroutineScope()) {
     IconButton(onClick = {scope.launch {mediaController.setShuffleMode(false)} })
     {
-        Icon(Icons.Filled.ShuffleOn, contentDescription = stringResource(id = R.string.shuffle_on))
+        Icon(Icons.Filled.ShuffleOn, contentDescription = stringResource(id = R.string.shuffle_on),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 /**
@@ -51,6 +54,7 @@ fun ShuffleOffButton(mediaController: MediaControllerAdapter,
                      scope: CoroutineScope = rememberCoroutineScope()) {
     IconButton(onClick = { scope.launch { mediaController.setShuffleMode(true)} })
     {
-        Icon(Icons.Filled.Shuffle, contentDescription = stringResource(id = R.string.shuffle_off))
+        Icon(Icons.Filled.Shuffle, contentDescription = stringResource(id = R.string.shuffle_off),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }

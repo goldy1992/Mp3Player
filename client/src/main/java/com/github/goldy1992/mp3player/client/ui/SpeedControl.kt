@@ -16,24 +16,36 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.data.flows.player.PlaybackSpeedFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun SpeedController(mediaController : MediaControllerAdapter? = null,
-                    asyncPlayerListener: AsyncPlayerListener,
+                    playbackSpeedFlow: PlaybackSpeedFlow,
                     modifier : Modifier = Modifier,
                     scope: CoroutineScope = rememberCoroutineScope()) {
 
-    var sliderPosition = 0f // by remember { mutableStateOf(if (mediaController != null) mediaController.playbackSpeed.value else 0.5f) }
+    val sliderPosition by playbackSpeedFlow.state.collectAsState()
+
+    var uiSliderPosition : Float by remember { mutableStateOf(1f)  }
+    var isTouchTracking by remember { mutableStateOf(false)   }
+    var touchTrackingPosition : Float by remember { mutableStateOf(0f) }
 
     Column(modifier = modifier,
     horizontalAlignment = Alignment.CenterHorizontally) {
         Slider(
-            value = sliderPosition!!,
+            value = if (isTouchTracking) touchTrackingPosition else uiSliderPosition,
             valueRange = 0.5f..1.5f,
-            onValueChange = { sliderPosition = it },
-            onValueChangeFinished = { scope.launch { mediaController?.changePlaybackSpeed(sliderPosition!!) }
+            onValueChange = {
+                isTouchTracking = true
+                touchTrackingPosition = it
+
+            },
+            onValueChangeFinished = {
+                isTouchTracking = false
+                uiSliderPosition = touchTrackingPosition
+                scope.launch { mediaController?.changePlaybackSpeed(uiSliderPosition) }
             }
         )
         Row(horizontalArrangement = Arrangement.Center) {
@@ -47,9 +59,8 @@ fun SpeedController(mediaController : MediaControllerAdapter? = null,
 
             IconButton(
                 onClick = {
-
                     scope.launch { mediaController?.changePlaybackSpeed(1f) }
-                    sliderPosition = 1f
+                    uiSliderPosition = 1f
                 }
             ) {
                 Icon(Icons.Filled.Refresh, contentDescription = "Reset to 1x Speed",

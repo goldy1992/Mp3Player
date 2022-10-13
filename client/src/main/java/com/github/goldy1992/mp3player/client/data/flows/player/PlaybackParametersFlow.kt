@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.data.flows.player
 
 import androidx.concurrent.futures.await
-import androidx.media3.common.MediaMetadata
+import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -15,22 +15,21 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class MetadataFlow
+class PlaybackParametersFlow
 @Inject
 constructor(mediaControllerFuture: ListenableFuture<MediaController>,
             scope : CoroutineScope,
             @MainDispatcher mainDispatcher: CoroutineDispatcher
-) : LogTagger, PlayerFlow<MediaMetadata>(mediaControllerFuture, scope, mainDispatcher, MediaMetadata.EMPTY) {
+) : LogTagger, PlayerFlow<PlaybackParameters>(mediaControllerFuture, scope, mainDispatcher, PlaybackParameters.DEFAULT) {
 
-    private val mediaMetadataCallbackFlow : Flow<MediaMetadata> = callbackFlow {
+    private val playbackParametersFlow : Flow<PlaybackParameters> = callbackFlow {
         val controller = mediaControllerFuture.await()
         val messageListener = object : Player.Listener {
-            override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
-                trySend(mediaMetadata)
+            override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
+                trySend(playbackParameters)
             }
         }
         controller.addListener(messageListener)
@@ -42,22 +41,18 @@ constructor(mediaControllerFuture: ListenableFuture<MediaController>,
     )
 
     override fun logTag(): String {
-        return "MetadataFlow"
+        return "PlaybackParametersFlow"
     }
 
-    override fun flow(): Flow<MediaMetadata> {
-        return mediaMetadataCallbackFlow
+    override fun flow(): Flow<PlaybackParameters> {
+        return playbackParametersFlow
+    }
+
+    override suspend fun getInitialValue(): PlaybackParameters {
+        return mediaControllerFuture.await().playbackParameters
     }
 
     init {
         initialise()
-        scope.launch {
-
-        }
     }
-
-    override suspend fun getInitialValue(): MediaMetadata {
-        return mediaControllerFuture.await().mediaMetadata
-    }
-
 }

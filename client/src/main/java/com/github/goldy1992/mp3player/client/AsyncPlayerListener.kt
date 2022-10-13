@@ -45,23 +45,6 @@ class AsyncPlayerListener
     val playbackStateFlow : StateFlow<Int> = playbackStateMutableState
 
 
-    private val shuffleModeCallbackFlow : Flow<Boolean> = callbackFlow {
-        val controller = mediaControllerFuture.await()
-        val messageListener = object : Player.Listener {
-            override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
-                trySend(shuffleModeEnabled)
-            }
-        }
-        controller.addListener(messageListener)
-        awaitClose { controller.removeListener(messageListener) }
-    }.shareIn(
-        scope,
-        replay = 1,
-        started = SharingStarted.WhileSubscribed()
-    )
-
-    private val shuffleModeMutableState = MutableStateFlow(false)
-    val shuffleModeState : StateFlow<Boolean> = shuffleModeMutableState
 
 
     private val eventsFlow : Flow<PlayerEventHolder> = callbackFlow {
@@ -70,6 +53,7 @@ class AsyncPlayerListener
             override fun onEvents(player: Player, events: Player.Events) {
                 trySend(PlayerEventHolder(player, events))
             }
+
         }
         controller.addListener(messageListener)
         awaitClose { controller.removeListener(messageListener) }
@@ -171,12 +155,6 @@ class AsyncPlayerListener
         scope.launch {
             playbackStateCallbackFlow.collect {
                 playbackStateMutableState.value = it
-            }
-        }
-
-        scope.launch {
-            shuffleModeCallbackFlow.collect {
-                shuffleModeMutableState.value = it
             }
         }
         scope.launch {

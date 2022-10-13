@@ -129,8 +129,6 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: commons_collections4_version
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: commons_lang_version
 
-    implementation group: 'androidx.lifecycle', name: 'lifecycle-runtime-ktx', version: lifecycle_version
-    implementation group: 'androidx.lifecycle', name: 'lifecycle-livedata-ktx', version: lifecycle_version
     implementation group: 'androidx.lifecycle', name: 'lifecycle-viewmodel-savedstate', version: lifecycle_version
     implementation group: 'androidx.lifecycle', name: 'lifecycle-viewmodel-ktx', version: lifecycle_version
     implementation group: 'androidx.lifecycle', name: 'lifecycle-viewmodel-compose', version: lifecycle_version
@@ -152,7 +150,6 @@ dependencies {
     implementation group: 'androidx.compose.material3', name: 'material3', version: compose_material3_version
     //implementation group: 'androidx.compose.material3', name: 'material3-window-size-class', version: compose_material3_version
 
-    implementation group: 'androidx.compose.runtime', name: 'runtime-livedata', version: compose_version
     implementation group: 'androidx.compose.runtime', name: 'runtime-rxjava2', version: compose_version
     implementation group: 'androidx.concurrent', name: 'concurrent-futures-ktx', version: '1.1.0'
     implementation group: 'androidx.activity', name: 'activity-compose', version: '1.4.0'
@@ -217,7 +214,6 @@ dependencies {
     androidTestImplementation 'androidx.arch.core:core-runtime:2.1.0'
     androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
     androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-idling-resource', version: espresso_core_version
-    androidTestImplementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     androidTestImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
     // Test rules and transitive dependencies:
@@ -240,7 +236,6 @@ dependencies {
     testImplementation junitUnitTests
     testImplementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
     testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
-    testImplementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     testImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 }
 

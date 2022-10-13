@@ -6,14 +6,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.RepeatOn
 import androidx.compose.material.icons.filled.RepeatOneOn
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import androidx.media3.common.Player
-import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.flows.player.RepeatModeFlow
@@ -36,7 +35,8 @@ fun RepeatButton(mediaController : MediaControllerAdapter,
 fun RepeatOneButton(mediaController : MediaControllerAdapter,
                     scope : CoroutineScope = rememberCoroutineScope()) {
     IconButton(onClick = { scope.launch { mediaController.setRepeatMode(Player.REPEAT_MODE_ALL)} }) {
-        Icon(Icons.Filled.RepeatOneOn, contentDescription = stringResource(id = R.string.repeat_one))
+        Icon(Icons.Filled.RepeatOneOn, contentDescription = stringResource(id = R.string.repeat_one),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
@@ -44,7 +44,8 @@ fun RepeatOneButton(mediaController : MediaControllerAdapter,
 fun RepeatAllButton(mediaController : MediaControllerAdapter,
                     scope: CoroutineScope = rememberCoroutineScope()) {
     IconButton(onClick = {scope.launch { mediaController.setRepeatMode(Player.REPEAT_MODE_OFF)}}) {
-        Icon(Icons.Filled.RepeatOn, contentDescription = stringResource(id = R.string.repeat_all))
+        Icon(Icons.Filled.RepeatOn, contentDescription = stringResource(id = R.string.repeat_all),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
@@ -52,7 +53,8 @@ fun RepeatAllButton(mediaController : MediaControllerAdapter,
 fun RepeatNoneButton(mediaController : MediaControllerAdapter,
                     scope: CoroutineScope = rememberCoroutineScope()) {
    IconButton(onClick = { scope.launch { mediaController.setRepeatMode(Player.REPEAT_MODE_ONE)}}) {
-       Icon(Icons.Filled.Repeat, contentDescription = stringResource(id = R.string.repeat_none))
+       Icon(Icons.Filled.Repeat, contentDescription = stringResource(id = R.string.repeat_none),
+           tint = MaterialTheme.colorScheme.onSurfaceVariant)
    }
 }
 

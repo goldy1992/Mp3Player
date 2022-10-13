@@ -20,10 +20,9 @@ import androidx.media3.common.MediaMetadata
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
-import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
+import com.github.goldy1992.mp3player.client.data.flows.player.QueueFlow
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
@@ -99,16 +98,16 @@ fun NowPlayingScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 SpeedController(mediaController = viewModel.mediaControllerAdapter,
-                    asyncPlayerListener = viewModel.asyncPlayerListener,
+                    playbackSpeedFlow = viewModel.playbackSpeedFlow,
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 48.dp, end = 48.dp)
                 )
                 ViewPager(mediaController = viewModel.mediaControllerAdapter,
-                    playerListener = viewModel.asyncPlayerListener,
                     metadata = metadata,
-                scope = scope,
-                modifier = Modifier.weight(4f))
+                    queueFlow = viewModel.queueFlow,
+                    scope = scope,
+                    modifier = Modifier.weight(4f))
 
                 Row(
                     modifier = Modifier
@@ -116,7 +115,7 @@ fun NowPlayingScreen(
                         .weight(1f),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    ShuffleButton(mediaController = viewModel.mediaControllerAdapter, asyncPlayerListener = viewModel.asyncPlayerListener, scope = scope)
+                    ShuffleButton(mediaController = viewModel.mediaControllerAdapter, shuffleModeFlow = viewModel.shuffleModeFlow, scope = scope)
                     RepeatButton(mediaController = viewModel.mediaControllerAdapter, repeatModeFlow = viewModel.repeatModeFlow, scope = scope)
                 }
                 Row(
@@ -139,13 +138,13 @@ fun NowPlayingScreen(
 @ExperimentalPagerApi
 @Composable
 fun ViewPager(mediaController: MediaControllerAdapter,
-              playerListener: AsyncPlayerListener,
               metadata : MediaMetadata,
+              queueFlow: QueueFlow,
               modifier: Modifier = Modifier,
             pagerState:PagerState = rememberPagerState(initialPage = mediaController.getCurrentQueuePosition()),
             scope: CoroutineScope = rememberCoroutineScope()
            ) {
-    val queue by playerListener.queueState.collectAsState()
+    val queue by queueFlow.state.collectAsState()
     val currentQueuePosition = mediaController.getCurrentQueuePosition()
 
     if (isEmpty(queue)) {

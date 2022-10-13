@@ -1,13 +1,11 @@
 package com.github.goldy1992.mp3player.commons
 
-import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 
 object MetadataUtils {
 
     fun getDuration(metadata : MediaMetadata) : Long {
-        return 0L
-       // return metadata.d?.getLong(MediaMetadata.METADATA_KEY_DURATION) ?: 0L
+        return metadata.extras?.getLong(MetaDataKeys.DURATION) ?: 0L
     }
 
 //    fun getMediaId(metadata : MediaMetadata) : String {
