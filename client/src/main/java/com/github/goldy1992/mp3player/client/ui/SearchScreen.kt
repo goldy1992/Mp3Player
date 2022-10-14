@@ -315,7 +315,7 @@ fun SearchResults(searchResultsState : StateFlow<List<MediaItem>>,
                                             + "/" + encodedFolderPath)
                             })
                         }
-                        MediaItemType.ROOT -> {
+                        MediaItemType.SONGS, MediaItemType.FOLDERS -> {
 
                             Column(
                                 Modifier

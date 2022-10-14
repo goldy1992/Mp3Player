@@ -122,8 +122,8 @@ object MediaItemUtils {
     }
 
     @JvmStatic
-    fun getMediaItemType(item: MediaItem?): MediaItemType? {
-        return getExtra(Constants.MEDIA_ITEM_TYPE, item) as MediaItemType?
+    fun getMediaItemType(item: MediaItem): MediaItemType? {
+        return item.mediaMetadata.extras?.get(Constants.MEDIA_ITEM_TYPE) as MediaItemType?
     }
 
     @JvmStatic
