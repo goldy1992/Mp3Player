@@ -86,16 +86,16 @@ class MediaLibrarySessionCallback
         params: MediaLibraryService.LibraryParams?
     ): ListenableFuture<LibraryResult<Void>> {
         var mediaItems = emptyList<MediaItem>()
-        runBlocking {
-            launch(Dispatchers.Default) {
-                // Assume for example that the music catalog is already loaded/cached.
-                mediaItems = customMediaItemTree.getChildren(parentId)
-                println("finish coroutine")
-            }.join()
-            println("finished on load children")
+
+        scope.launch(ioDispatcher) {
+            // Assume for example that the music catalog is already loaded/cached.
+            mediaItems = customMediaItemTree.getChildren(parentId)
+            println("finish coroutine")
+            Log.i(logTag(), "notifying children changed for browser ${browser}")
+            session.notifyChildrenChanged(browser, parentId, mediaItems.size, params)
         }
-        Log.i(logTag(), "notifying children changed for browser ${browser}")
-        session.notifyChildrenChanged(browser, parentId, mediaItems.size, params)
+        println("finished on load children")
+
         return Futures.immediateFuture(LibraryResult.ofVoid())
     }
 
@@ -105,8 +105,8 @@ class MediaLibrarySessionCallback
         customCommand: SessionCommand,
         args: Bundle
     ): ListenableFuture<SessionResult> {
-        Log.i(logTag(), "On Custom Command: ${customCommand}, args: ${args}")
-        if (Constants.CHANGE_PLAYBACK_SPEED == customCommand.customAction) {
+        Log.i(logTag(), "On Custom Command: ${customCommand}, args: $args")
+        if (CHANGE_PLAYBACK_SPEED == customCommand.customAction) {
             changeSpeedProvider.changeSpeed(session.player, args)
         }
         return super.onCustomCommand(session, controller, customCommand, args)
@@ -143,11 +143,12 @@ class MediaLibrarySessionCallback
         }
         var mediaItems = emptyList<MediaItem>()
         runBlocking {
-            launch(Dispatchers.Default) {
+            scope.launch(ioDispatcher) {
                 // Assume for example that the music catalog is already loaded/cached.
                 mediaItems = customMediaItemTree.getChildren(parentId)
                 println("finish coroutine")
             }.join()
+
             println("finished on load children")
         }
         Log.i(logTag(), "notifying children changed for browser ${browser}")

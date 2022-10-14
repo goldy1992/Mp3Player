@@ -75,9 +75,10 @@ open class MediaPlaybackService : MediaLibraryService(),
 
         scope.launch(Dispatchers.IO) {
             searchDatabaseManagers.reindexAll()
+            val rootItem = rootAuthenticator.getRootItem()
+            customMediaItemTree.initialise(rootItem = rootItem)
         }
-        val rootItem = rootAuthenticator.getRootItem()
-        customMediaItemTree.initialise(rootItem = rootItem)
+
         mediaSession =
             MediaLibrarySession.Builder(this, player, mediaLibrarySessionCallback)
                 // .setSessionActivity(sessionActivityPendingIntent)
