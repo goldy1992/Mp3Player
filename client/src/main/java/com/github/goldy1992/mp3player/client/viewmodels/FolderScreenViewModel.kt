@@ -7,6 +7,7 @@ import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnChildrenChangedFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +23,8 @@ class FolderScreenViewModel
         val mediaBrowser: MediaBrowserAdapter,
         val mediaController: MediaControllerAdapter,
         val metadataFlow: MetadataFlow,
-        val isPlayingFlow: IsPlayingFlow) : ViewModel() {
+        val isPlayingFlow: IsPlayingFlow,
+        val onChildrenChangedFlow: OnChildrenChangedFlow) : ViewModel() {
 
     init {
         viewModelScope.launch {
@@ -31,7 +33,7 @@ class FolderScreenViewModel
         }
 
         viewModelScope.launch {
-            mediaBrowser.onChildrenChangedFlow
+            onChildrenChangedFlow.flow
                 .filter { it.parentId == folderId }
                 .collect {
                     mediaBrowser.getChildren(parentId = folderId)

@@ -53,12 +53,21 @@ class ContentManager @Inject constructor(private val contentRetrievers: ContentR
         return result
     }
 
+    private val cachedSearchResults : MutableMap<String, List<MediaItem>> = HashMap()
     /**
      * @param query the search query
      * @return a list of media items which match the search query
      */
-    fun search(query: String): List<MediaItem> {
+    suspend fun search(query: String, checkCache : Boolean = false): List<MediaItem> {
         val normalisedQuery = normalise(query)
+
+
+        if (checkCache) {
+            val cachedResult : List<MediaItem>? = cachedSearchResults[query]
+            if (cachedResult != null) {
+                return cachedResult
+            }
+        }
         val results: MutableList<MediaItem> = ArrayList()
         for (contentSearcher in contentSearchers.all) {
             val searchResults : List<MediaItem>? = contentSearcher.search(normalisedQuery)
@@ -68,6 +77,7 @@ class ContentManager @Inject constructor(private val contentRetrievers: ContentR
                 results.addAll(searchResults as List<MediaItem>)
             }
         }
+        cachedSearchResults[query] = results
         return results
     }
 

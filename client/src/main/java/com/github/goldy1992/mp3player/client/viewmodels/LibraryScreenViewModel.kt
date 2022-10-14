@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnChildrenChangedFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -23,6 +24,7 @@ class LibraryScreenViewModel
     @Inject
     constructor(
         val mediaBrowserAdapter: MediaBrowserAdapter,
+        private val onChildrenChangedFlow: OnChildrenChangedFlow,
         val mediaControllerAdapter: MediaControllerAdapter,
         val metadataFlow: MetadataFlow,
         val isPlayingFlow: IsPlayingFlow) : LogTagger, ViewModel() {
@@ -54,7 +56,7 @@ class LibraryScreenViewModel
         }
 
         viewModelScope.launch {
-            mediaBrowserAdapter.onChildrenChangedFlow.filter {
+            onChildrenChangedFlow.flow.filter {
                 Log.i(logTag(), "filtering: id: ${it.parentId}")
                 it.parentId == rootItemId || rootItemMap.containsKey(it.parentId)
             }.collect {

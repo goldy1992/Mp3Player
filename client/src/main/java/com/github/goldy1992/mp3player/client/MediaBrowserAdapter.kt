@@ -17,10 +17,12 @@ import com.github.goldy1992.mp3player.client.data.eventholders.OnChildrenChanged
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME_KEY
 import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +40,7 @@ open class MediaBrowserAdapter
     constructor(@ApplicationContext context: Context,
                 sessionToken: SessionToken,
     private val scope: CoroutineScope,
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
     private val asyncMediaBrowserListener: AsyncMediaBrowserListener) : LogTagger, MediaBrowser.Listener {
 
     private var mediaBrowser : MediaBrowser? = null
@@ -49,41 +52,25 @@ open class MediaBrowserAdapter
         }
     }
 
-    open fun search(query: String, extras: Bundle) {
-        val params = MediaLibraryService.LibraryParams.Builder().setExtras(extras).build()
-        scope.launch { mediaBrowser?.search(query, params) }
+    open suspend fun search(query: String, extras: Bundle) {
         if (isEmpty(query)) {
             Log.w(logTag(), "Null or empty search query seen")
+        }
+        else {
+            val params = MediaLibraryService.LibraryParams.Builder().setExtras(extras).build()
+            scope.launch(mainDispatcher) { mediaBrowserLF.await().search(query, params) }
         }
     }
 
     open suspend fun getSearchResults(query: String, page : Int = 0, pageSize : Int = 20) : ImmutableList<MediaItem> {
         val result : LibraryResult<ImmutableList<MediaItem>> =
-            mediaBrowser?.getSearchResult(query, page, pageSize, getDefaultLibraryParams())?.await()
+            mediaBrowserLF.await()?.getSearchResult(query, page, pageSize, getDefaultLibraryParams())?.await()
                 ?:
             LibraryResult.ofItemList(emptyList(), getDefaultLibraryParams())
         return result.value ?: ImmutableList.of()
     }
 
-    private val searchResultsChangedFlow : Flow<String> = callbackFlow {
-        val messageListener = object : MediaBrowser.Listener {
-            override fun onSearchResultChanged(
-                browser: MediaBrowser,
-                query: String,
-                itemCount: Int,
-                params: MediaLibraryService.LibraryParams?
-            ) {
-                super.onSearchResultChanged(browser, query, itemCount, params)
-                trySend(query)
-            }
-        }
-        asyncMediaBrowserListener.listeners.add(messageListener)
-        awaitClose()
-    }.shareIn(
-        scope,
-        replay = 1,
-        started = SharingStarted.WhileSubscribed()
-    )
+
 
 
 //    open fun clearSearchResults() {
@@ -107,29 +94,6 @@ open class MediaBrowserAdapter
         return result.value ?: MediaItem.EMPTY
     }
 
-    override fun logTag(): String {
-        return "MDIA_BRWSR_ADPTR"
-    }
-
-    val onChildrenChangedFlow : Flow<OnChildrenChangedEventHolder> = callbackFlow {
-        val messageListener = object : MediaBrowser.Listener {
-            override fun onChildrenChanged(
-                browser: MediaBrowser,
-                parentId: String,
-                itemCount: Int,
-                params: MediaLibraryService.LibraryParams?
-            ) {
-                trySend(OnChildrenChangedEventHolder(browser, parentId, itemCount, params))
-            }
-        }
-        asyncMediaBrowserListener.listeners.add(messageListener)
-        awaitClose { asyncMediaBrowserListener.listeners.remove(messageListener) }
-    }.shareIn(
-        scope,
-        replay = 1,
-        started = SharingStarted.WhileSubscribed()
-    )
-
     suspend fun getChildren(parentId : String,
                             @androidx.annotation.IntRange(from = 0) page : Int = 0,
                             @androidx.annotation.IntRange(from = 1) pageSize : Int = 20,
@@ -137,6 +101,10 @@ open class MediaBrowserAdapter
     ) : List<MediaItem> {
         val children : LibraryResult<ImmutableList<MediaItem>> = mediaBrowserLF.await().getChildren(parentId, page, pageSize, params).await()
         return children.value?.toList() ?: emptyList()
+    }
+
+    override fun logTag(): String {
+        return "MDIA_BRWSR_ADPTR"
     }
 
 }

@@ -10,6 +10,7 @@ import androidx.media3.session.MediaSession.ConnectionResult
 import androidx.media3.session.SessionCommand.COMMAND_CODE_CUSTOM
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
+import com.github.goldy1992.mp3player.commons.IoDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MetaDataKeys
 import com.github.goldy1992.mp3player.service.library.ContentManager
@@ -19,10 +20,7 @@ import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.scopes.ServiceScoped
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @ServiceScoped
@@ -33,7 +31,8 @@ class MediaLibrarySessionCallback
                 private val changeSpeedProvider: ChangeSpeedProvider,
                 private val rootAuthenticator: RootAuthenticator,
                 private val customMediaItemTree: CustomMediaItemTree,
-                private val scope : CoroutineScope) : MediaLibrarySession.Callback, LogTagger {
+                private val scope : CoroutineScope,
+                @IoDispatcher private val ioDispatcher: CoroutineDispatcher) : MediaLibrarySession.Callback, LogTagger {
 
     override fun onConnect(
         session: MediaSession,
@@ -163,8 +162,11 @@ class MediaLibrarySessionCallback
         query: String,
         params: MediaLibraryService.LibraryParams?
     ): ListenableFuture<LibraryResult<Void>> {
-        val result = contentManager.search(query)
-        session.notifySearchResultChanged(browser,query, result.size, params)
+
+       scope.launch(ioDispatcher) {
+           val result = contentManager.search(query, true)
+           session.notifySearchResultChanged(browser, query, result.size, params)
+       }
         return Futures.immediateFuture(LibraryResult.ofVoid())
 
     }
@@ -177,8 +179,14 @@ class MediaLibrarySessionCallback
         pageSize: Int,
         params: MediaLibraryService.LibraryParams?
     ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> {
-        // TODO return search result
-        return super.onGetSearchResult(session, browser, query, page, pageSize, params)
+        var searchResults : List<MediaItem> = ArrayList()
+        runBlocking {
+            val searchJob = scope.launch(ioDispatcher) {
+                searchResults = contentManager.search(query, true)
+            }
+            searchJob.join()
+        }
+        return Futures.immediateFuture(LibraryResult.ofItemList(searchResults, params))
     }
 
     override fun logTag(): String {

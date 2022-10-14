@@ -45,6 +45,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import org.apache.commons.lang3.StringUtils
@@ -60,7 +61,8 @@ fun SearchScreen(
 
     val isLargeScreen = windowSize == WindowSize.Expanded
     if (isLargeScreen) {
-        LargeSearchResults(
+          LargeSearchResults(
+            searchResultsState = viewModel.searchResults,
             navController = navController,
             mediaBrowser = viewModel.mediaBrowserAdapter,
             mediaController = viewModel.mediaControllerAdapter,
@@ -70,6 +72,7 @@ fun SearchScreen(
         )
     } else {
         SmallSearchResults(
+            searchResultsState = viewModel.searchResults,
             navController = navController,
             mediaBrowser = viewModel.mediaBrowserAdapter,
             mediaController = viewModel.mediaControllerAdapter,
@@ -87,6 +90,7 @@ fun SearchScreen(
 )
 @Composable
 private fun SmallSearchResults(
+    searchResultsState : StateFlow<List<MediaItem>>,
     navController: NavController,
     mediaBrowser: MediaBrowserAdapter,
     mediaController : MediaControllerAdapter,
@@ -105,6 +109,7 @@ private fun SmallSearchResults(
                 SearchBar(
                     navController = navController,
                     mediaBrowser = mediaBrowser,
+                    scope = scope
                 )
             },
             bottomBar = {
@@ -116,7 +121,7 @@ private fun SmallSearchResults(
             },
             content = {
                 SearchResults(
-                    mediaBrowser = mediaBrowser,
+                    searchResultsState = searchResultsState,
                     mediaController = mediaController,
                     navController = navController,
                     modifier = Modifier.padding(it)
@@ -133,6 +138,7 @@ private fun SmallSearchResults(
 )
 @Composable
 private fun LargeSearchResults(
+    searchResultsState : StateFlow<List<MediaItem>>,
     navController: NavController,
     mediaBrowser: MediaBrowserAdapter,
     mediaController : MediaControllerAdapter,
@@ -151,6 +157,7 @@ private fun LargeSearchResults(
                 SearchBar(
                     navController = navController,
                     mediaBrowser = mediaBrowser,
+                    scope = scope
                 )
             },
             bottomBar = {
@@ -168,7 +175,7 @@ private fun LargeSearchResults(
                         .fillMaxHeight()
                 ) {
                     SearchResults(
-                        mediaBrowser = mediaBrowser,
+                        searchResultsState = searchResultsState,
                         mediaController = mediaController,
                         navController = navController,
                         modifier = Modifier.padding(it)
@@ -185,7 +192,8 @@ private fun LargeSearchResults(
 fun SearchBar(navController: NavController,
               mediaBrowser: MediaBrowserAdapter,
               keyboardController : SoftwareKeyboardController? = LocalSoftwareKeyboardController.current,
-              focusRequester : FocusRequester = remember { FocusRequester() }) {
+              focusRequester : FocusRequester = remember { FocusRequester() },
+                scope: CoroutineScope = rememberCoroutineScope()) {
     val searchQuery = remember { mutableStateOf(TextFieldValue()) }
     val scope = rememberCoroutineScope()
 
@@ -209,8 +217,10 @@ fun SearchBar(navController: NavController,
                 },
             value = searchQuery.value,
             onValueChange = {
-                searchQuery.value = it
-                mediaBrowser.search(searchQuery.value.text, Bundle())
+                scope.launch {
+                    searchQuery.value = it
+                    mediaBrowser.search(searchQuery.value.text, Bundle())
+                }
             },
             placeholder = {
                 Text(text = stringResource(id = R.string.search_hint))
@@ -253,7 +263,7 @@ fun SearchBar(navController: NavController,
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @Composable
-fun SearchResults(mediaBrowser: MediaBrowserAdapter,
+fun SearchResults(searchResultsState : StateFlow<List<MediaItem>>,
                   mediaController: MediaControllerAdapter,
                   navController: NavController,
                   modifier : Modifier = Modifier,
@@ -261,7 +271,7 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter,
                   focusRequester : FocusRequester = remember { FocusRequester() }) {
     val searchResultsColumn = stringResource(id = R.string.search_results_column)
 
-    val searchResults = emptyList<MediaItem>() //viewModel..observeAsState(emptyList())
+    val searchResults by searchResultsState.collectAsState()
     val lazyLisState = rememberLazyListState()
     
     LaunchedEffect(lazyLisState.isScrollInProgress) {
