@@ -124,5 +124,28 @@ open class MediaControllerAdapter
     override fun logTag(): String {
         return "MDIA_CNTRLLR_ADPTR"
     }
+//    open fun calculateCurrentQueuePosition(): Int {
+//        val currentQueue = queue.value
+//        val activeQueueItemId = getActiveQueueItemId()
+//        if (currentQueue != null) {
+//            for (i in currentQueue.indices) {
+//                val queueItem = currentQueue[i]
+//                if (queueItem.queueId == activeQueueItemId) {
+//                    return i
+//                }
+//            }
+//        }
+//        return -1
+//    }
+//    open fun getCurrentSongAlbumArtUri() : Uri? {
+//        val albumArtUriPath = metadata.value!!.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI)
+//
+//        return try {
+//            Uri.parse(albumArtUriPath)
+//        } catch (ex: NullPointerException) {
+//            Log.e(logTag(), "$albumArtUriPath: is an invalid Uri")
+//            return null
+//        }
+//    }
 
 }

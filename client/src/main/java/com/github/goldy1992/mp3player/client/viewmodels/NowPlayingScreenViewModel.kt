@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client.viewmodels
 
 import androidx.lifecycle.ViewModel
-import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.data.flows.player.*
@@ -14,7 +13,7 @@ class NowPlayingScreenViewModel
 constructor(
     val mediaBrowserAdapter: MediaBrowserAdapter,
     val mediaControllerAdapter: MediaControllerAdapter,
-    val asyncPlayerListener: AsyncPlayerListener,
+    val playbackParametersFlow: PlaybackParametersFlow,
     val isPlayingFlow: IsPlayingFlow,
     val metadataFlow: MetadataFlow,
     val repeatModeFlow: RepeatModeFlow,

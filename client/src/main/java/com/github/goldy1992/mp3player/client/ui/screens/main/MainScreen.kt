@@ -13,7 +13,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.goldy1992.mp3player.client.AsyncPlayerListener
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
@@ -159,7 +158,6 @@ private fun CustomScaffold(
     navController: NavController,
     scope: CoroutineScope,
     mediaController: MediaControllerAdapter,
-    asyncPlayerListener: AsyncPlayerListener,
     isPlayingFlow: IsPlayingFlow,
     extendTopAppBar: @Composable () -> Unit = {},
     content : @Composable (PaddingValues) -> Unit = {}

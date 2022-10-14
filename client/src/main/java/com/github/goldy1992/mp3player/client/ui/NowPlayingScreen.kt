@@ -125,7 +125,7 @@ fun NowPlayingScreen(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     SeekBar(mediaController = viewModel.mediaControllerAdapter,
-                        asyncPlayerListener = viewModel.asyncPlayerListener,
+                        playbackParametersFlow = viewModel.playbackParametersFlow,
                         metadataFlow = viewModel.metadataFlow,
                         isPlayingFlow = viewModel.isPlayingFlow)
                 }

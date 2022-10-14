@@ -10,7 +10,7 @@
 - Developed using the design principles in [Google's Android Audio App](https://developer.android.com/guide/topics/media-apps/audio-app/building-an-audio-app) tutorial.
 
 ## Features  
-- Implementation of a [Media Browser Service](https://developer.android.com/guide/topics/media-apps/audio-app/building-a-mediabrowserservice.html), a [Media Browser Client](https://developer.android.com/guide/topics/media-apps/audio-app/building-a-mediabrowser-client.html) and the respective [Media Session Callbacks](https://developer.android.com/guide/topics/media-apps/audio-app/mediasession-callbacks.html).  
+- Makes use of the AndroidX [Media3 Library](https://developer.android.com/guide/topics/media/media3).  
 - Dynamic loading of content using a [Content Resolver](https://developer.android.com/guide/topics/providers/content-provider-basics) on the Android [MediaStore](https://developer.android.com/reference/android/provider/MediaStore).  
 - Change of playback speed and different implementations to support different versions on the Android [MediaPlayer](https://developer.android.com/reference/android/media/MediaPlayer).  
 - Written in [Jetpack Compose](https://developer.android.com/jetpack/compose).
