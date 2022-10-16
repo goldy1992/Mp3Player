@@ -26,6 +26,10 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.LooperMode
 import java.util.*
 
+/**
+ * TODO: Move to integration test
+ */
+
 @RunWith(RobolectricTestRunner::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 @UninstallModules(

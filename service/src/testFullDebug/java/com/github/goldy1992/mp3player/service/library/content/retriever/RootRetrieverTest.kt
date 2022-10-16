@@ -28,17 +28,17 @@ class RootRetrieverTest {
         val result = rootRetriever!!.getChildren(mock<ContentRequest>())
         Assert.assertEquals(testRootItemMap.size.toLong(), result!!.size.toLong())
         val item1 = result[0]
-        assertValidRootItem(item1)
+        assertValidRootItem(item1, ROOT_TYPE_1)
         assertRootItemType(item1, ROOT_TYPE_1)
         val item2 = result[1]
-        assertValidRootItem(item2)
+        assertValidRootItem(item2, ROOT_TYPE_2)
         assertRootItemType(item2, ROOT_TYPE_2)
     }
 
     @Test
     fun testGetRootItem() {
         val result = rootRetriever!!.getRootItem(ROOT_TYPE_1)
-        assertValidRootItem(result)
+        assertValidRootItem(result, ROOT_TYPE_1)
         assertRootItemType(result, ROOT_TYPE_1)
     }
 
@@ -47,9 +47,9 @@ class RootRetrieverTest {
         Assert.assertEquals(MediaItemType.ROOT, rootRetriever!!.type)
     }
 
-    private fun assertValidRootItem(item: MediaItem) {
+    private fun assertValidRootItem(item: MediaItem, expectedType: MediaItemType) {
         val mediaItemType = getMediaItemType(item)
-        Assert.assertEquals(MediaItemType.ROOT, mediaItemType)
+        Assert.assertEquals(expectedType, mediaItemType)
     }
 
     private fun assertRootItemType(item: MediaItem?, expectedType: MediaItemType) {

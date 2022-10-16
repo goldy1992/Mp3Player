@@ -71,12 +71,12 @@ class ContentManagerTest {
     }
 
     @Test
-    fun testGetChildrenNull() {
+    fun testGetChildrenIncorrectIdReturnsEmptyList() {
         val incorrectId = "incorrectId"
         val contentRequest = ContentRequest("", incorrectId, null)
         whenever(contentRequestParser.parse(incorrectId)).thenReturn(contentRequest)
         val result = contentManager!!.getChildren(incorrectId)
-        Assert.assertNull(result)
+        Assert.assertTrue(result.isEmpty())
     }
 
     /**

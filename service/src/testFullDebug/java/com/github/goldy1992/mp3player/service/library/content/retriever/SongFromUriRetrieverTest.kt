@@ -23,6 +23,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import java.lang.Byte
 
 @RunWith(RobolectricTestRunner::class)
 class SongFromUriRetrieverTest {
@@ -46,7 +47,11 @@ class SongFromUriRetrieverTest {
     @Test
     fun testGetSongWithContentScheme() {
         whenever(testUri.scheme).thenReturn(ContentResolver.SCHEME_CONTENT)
-        val expectedEmbeddedPic = ByteArray(1)
+        val expectedEmbeddedPic = ByteArray(3)
+        expectedEmbeddedPic[0] = 3
+        expectedEmbeddedPic[1] = 24
+        expectedEmbeddedPic[2] = 37
+
         whenever(mmr.embeddedPicture).thenReturn(expectedEmbeddedPic)
         val expectedTitle = "TITLE"
         whenever(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)).thenReturn(expectedTitle)
@@ -56,7 +61,9 @@ class SongFromUriRetrieverTest {
         whenever(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)).thenReturn(expectedDuration.toString())
         val result = songFromUriRetriever!!.getSong(testUri)
         val actualEmbeddedPicture = getAlbumArtImage(result!!)
-        Assert.assertEquals(expectedEmbeddedPic, actualEmbeddedPicture)
+        Assert.assertEquals(expectedEmbeddedPic[0], actualEmbeddedPicture?.get(0)!!)
+        Assert.assertEquals(expectedEmbeddedPic[1], actualEmbeddedPicture?.get(1)!!)
+        Assert.assertEquals(expectedEmbeddedPic[2], actualEmbeddedPicture?.get(2)!!)
         val actualTitle = getTitle(result)
         Assert.assertEquals(expectedTitle, actualTitle)
         val actualArtist = getArtist(result)

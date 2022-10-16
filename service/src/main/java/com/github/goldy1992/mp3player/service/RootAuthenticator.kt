@@ -22,6 +22,12 @@ class RootAuthenticator @Inject constructor(ids: MediaItemTypeIds) {
         .setMediaItemType(MediaItemType.ROOT)
         .build()
 
+    private val rejectedRootItem = MediaItemBuilder(REJECTED_MEDIA_ROOT_ID)
+        .setFolderType(FOLDER_TYPE_NONE)
+        .setIsPlayable(false)
+        .setMediaItemType(MediaItemType.ROOT)
+        .build()
+
     @Suppress("UNUSED_PARAMETER")
     fun authenticate(params : MediaLibraryService.LibraryParams): LibraryResult<MediaItem> {
         val clientPackageName : String = params.extras.getString(PACKAGE_NAME_KEY) ?: ""
@@ -34,7 +40,7 @@ class RootAuthenticator @Inject constructor(ids: MediaItemTypeIds) {
                 params)
         } else { // Clients can connect, but this BrowserRoot is an empty hierachy
 // so onLoadChildren returns nothing. This disables the ability to browse for content.
-            LibraryResult.ofItem(MediaItem.Builder().setMediaId(REJECTED_MEDIA_ROOT_ID).build(), params)
+            LibraryResult.ofItem(rejectedRootItem, params)
         }
     }
 
