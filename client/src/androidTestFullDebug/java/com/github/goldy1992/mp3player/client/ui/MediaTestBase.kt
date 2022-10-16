@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Context
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -27,7 +27,7 @@ abstract class MediaTestBase {
 
     val queueLiveData = MutableLiveData<MutableList<MediaSessionCompat.QueueItem>>()
 
-    val searchResultsLiveData = MutableLiveData<List<MediaBrowserCompat.MediaItem>>()
+    val searchResultsLiveData = MutableLiveData<List<MediaItem>>()
 
     open fun setup() {
         context = InstrumentationRegistry.getInstrumentation().context

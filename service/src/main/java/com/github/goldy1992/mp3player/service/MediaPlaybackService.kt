@@ -45,6 +45,9 @@ open class MediaPlaybackService : MediaLibraryService(),
         PlayerNotificationManager.NotificationListener {
 
     @Inject
+    lateinit var mediaSessionCreator: MediaSessionCreator
+
+    @Inject
     lateinit var mediaLibrarySessionCallback : MediaLibrarySessionCallback
 
     @Inject
@@ -79,18 +82,11 @@ open class MediaPlaybackService : MediaLibraryService(),
             customMediaItemTree.initialise(rootItem = rootItem)
         }
 
-        mediaSession =
-            MediaLibrarySession.Builder(this, player, mediaLibrarySessionCallback)
-                // .setSessionActivity(sessionActivityPendingIntent)
-                .build()
+        mediaSession = mediaSessionCreator.create(this, player, mediaLibrarySessionCallback)
 
         // TODO: add queue manager
         mediaSession.player.addMediaItems(   customMediaItemTree.rootNode?.getChildren()?.get(0)?.getChildren()?.map(CustomMediaItemTree.MediaItemNode::item)?.toMutableList() ?: mutableListOf())
         mediaSession.player.prepare()
-
-
-
-
 
         if (!customLayout.isEmpty()) {
             // Send custom layout to legacy session.

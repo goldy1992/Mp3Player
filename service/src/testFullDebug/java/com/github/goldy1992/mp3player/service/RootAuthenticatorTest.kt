@@ -1,5 +1,9 @@
 package com.github.goldy1992.mp3player.service
 
+import android.os.Bundle
+import androidx.media3.session.MediaLibraryService
+import androidx.media3.session.MediaLibraryService.MediaLibrarySession
+import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
@@ -22,12 +26,13 @@ class RootAuthenticatorTest {
     @Test
     fun testGetAcceptedId() {
         val expectedMediaId = mediaItemTypeIds!!.getId(MediaItemType.ROOT)
-        val packageNameToAccept: String = StringBuilder()
-                .append("myPackage")
-                .append(PACKAGE_NAME)
-                .toString()
-        val result = rootAuthenticator!!.authenticate(packageNameToAccept, 0, null)
-        Assert.assertEquals(expectedMediaId, result.rootId)
+        val args = Bundle()
+        args.putString(Constants.PACKAGE_NAME_KEY, PACKAGE_NAME)
+        val params = MediaLibraryService.LibraryParams.Builder()
+            .setExtras(args)
+            .build()
+        val result = rootAuthenticator!!.authenticate(params)
+        Assert.assertEquals(expectedMediaId, result.value?.mediaId)
     }
 
     @Test
@@ -35,8 +40,14 @@ class RootAuthenticatorTest {
         val packageNameToAccept = StringBuilder()
                 .append("myPackage")
                 .toString()
-        val result = rootAuthenticator!!.authenticate(packageNameToAccept, 0, null)
-        Assert.assertEquals(RootAuthenticator.REJECTED_MEDIA_ROOT_ID, result.rootId)
+        val expectedMediaId = mediaItemTypeIds!!.getId(MediaItemType.ROOT)
+        val args = Bundle()
+        args.putString(Constants.PACKAGE_NAME_KEY, "rejected")
+        val params = MediaLibraryService.LibraryParams.Builder()
+            .setExtras(args)
+            .build()
+        val result = rootAuthenticator!!.authenticate(params)
+        Assert.assertEquals(RootAuthenticator.REJECTED_MEDIA_ROOT_ID, result.value?.mediaId)
     }
 
     @Test

@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.service.library.content.parser
 
 import android.net.Uri
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -33,10 +33,10 @@ class SongResultsParserTest : ResultsParserTestBase() {
     var temporaryFolder = TemporaryFolder()
 
     private val COMMON_TITLE = "a common title"
-    private var expectedMediaItem1: MediaBrowserCompat.MediaItem? = null
+    private var expectedMediaItem1: MediaItem? = null
     private val ALBUM_ID_1 = 2334L
     private val MEDIA_ID_1 = "id1"
-    private var expectedMediaItem2: MediaBrowserCompat.MediaItem? = null
+    private var expectedMediaItem2: MediaItem? = null
     private val ALBUM_ID_2 = 9268L
     private val ID_PREFIX = "sdfa"
     private val MEDIA_ID_2 = "id2"
@@ -86,13 +86,13 @@ class SongResultsParserTest : ResultsParserTestBase() {
     fun testCreate() {
         val mediaItems = getResultsForProjection(SONG_PROJECTION.toTypedArray(), ID_PREFIX)
         Assert.assertEquals(getTitle(expectedMediaItem1!!), getTitle(mediaItems[0]))
-        Assert.assertEquals(getArtist(expectedMediaItem1), getArtist(mediaItems[0]))
-        Assert.assertEquals(getDuration(expectedMediaItem1), getDuration(mediaItems[0]))
+        Assert.assertEquals(getArtist(expectedMediaItem1!!), getArtist(mediaItems[0]))
+        Assert.assertEquals(getDuration(expectedMediaItem1!!), getDuration(mediaItems[0]))
         //assertEquals(MediaItemUtils.getAlbumArtUri(expectedMediaItem1), MediaItemUtils.getAlbumArtUri(mediaItems.get(0)));
         Assert.assertEquals(getLibraryId(expectedMediaItem1), getLibraryId(mediaItems[0]))
         Assert.assertEquals(getTitle(expectedMediaItem2!!), getTitle(mediaItems[1]))
-        Assert.assertEquals(getArtist(expectedMediaItem2), getArtist(mediaItems[1]))
-        Assert.assertEquals(getDuration(expectedMediaItem2), getDuration(mediaItems[1]))
+        Assert.assertEquals(getArtist(expectedMediaItem2!!), getArtist(mediaItems[1]))
+        Assert.assertEquals(getDuration(expectedMediaItem2!!), getDuration(mediaItems[1]))
         //assertEquals(MediaItemUtils.getAlbumArtUri(expectedMediaItem2), MediaItemUtils.getAlbumArtUri(mediaItems.get(1)));
         Assert.assertEquals(getLibraryId(expectedMediaItem2), getLibraryId(mediaItems[1]))
     }
@@ -100,14 +100,14 @@ class SongResultsParserTest : ResultsParserTestBase() {
     public override fun createDataSet(): Array<Array<Any?>?> {
         val dataSet: Array<Array<Any?>?> = arrayOfNulls(2)
         dataSet[0] = arrayOf(getMediaUri(expectedMediaItem1!!),
-                getDuration(expectedMediaItem1),
-                getArtist(expectedMediaItem1),
+                getDuration(expectedMediaItem1!!),
+                getArtist(expectedMediaItem1!!),
                 getMediaId(expectedMediaItem1),
                 getTitle(expectedMediaItem1!!),
                 ALBUM_ID_1)
         dataSet[1] = arrayOf(getMediaUri(expectedMediaItem2!!),
-                getDuration(expectedMediaItem2),
-                getArtist(expectedMediaItem2),
+                getDuration(expectedMediaItem2!!),
+                getArtist(expectedMediaItem2!!),
                 getMediaId(expectedMediaItem2),
                 getTitle(expectedMediaItem2!!),
                 ALBUM_ID_2)

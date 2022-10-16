@@ -2,8 +2,8 @@ package com.github.goldy1992.mp3player.service.player
 
 import android.content.Intent
 import android.media.AudioManager
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.test.platform.app.InstrumentationRegistry
-import com.google.android.exoplayer2.ExoPlayer
 import org.mockito.kotlin.*
 import org.junit.Assert
 import org.junit.Before

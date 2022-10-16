@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.service.library.content.filter
 
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import org.junit.Assert
 import org.junit.Before
@@ -29,7 +29,7 @@ class SongsFromFolderResultsFilterTest {
         val toFilter = MediaItemBuilder("fds")
                 .setDirectoryFile(File("/a/otherDir"))
                 .build()
-        val items: MutableList<MediaBrowserCompat.MediaItem> = ArrayList()
+        val items: MutableList<MediaItem> = ArrayList()
         items.add(dontFilter)
         items.add(toFilter)
         val results = songsFromFolderResultsFilter!!.filter(query, items)

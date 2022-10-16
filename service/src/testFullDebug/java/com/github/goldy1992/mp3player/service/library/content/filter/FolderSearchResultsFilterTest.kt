@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.service.library.content.filter
 
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import org.junit.Assert
 import org.junit.Before
@@ -38,7 +38,7 @@ class FolderSearchResultsFilterTest {
         val item4Keep = MediaItemBuilder("id")
                 .setDirectoryFile(file4ToKeep)
                 .build()
-        val resultsToProcess: MutableList<MediaBrowserCompat.MediaItem> = ArrayList()
+        val resultsToProcess: MutableList<MediaItem> = ArrayList()
         resultsToProcess.add(item1Keep)
         resultsToProcess.add(item2Throw)
         resultsToProcess.add(item3Throw)

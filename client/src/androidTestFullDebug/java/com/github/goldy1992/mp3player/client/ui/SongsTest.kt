@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui
 
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import android.support.v4.media.MediaMetadataCompat
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.hasText
@@ -60,7 +60,7 @@ class SongsTest {
         whenever(mockMediaController.metadata).thenReturn(MutableLiveData(currentMetadata))
         val songsListContentDescr = context.getString(R.string.songs_list)
 
-        val songList : List<MediaBrowserCompat.MediaItem> = listOf(song1, song2)
+        val songList : List<MediaItem> = listOf(song1, song2)
 
         composeTestRule.setContent {
             SongList(songs = songList,

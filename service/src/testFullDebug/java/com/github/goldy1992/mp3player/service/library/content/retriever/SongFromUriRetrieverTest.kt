@@ -4,7 +4,7 @@ import android.content.ContentResolver
 import android.database.Cursor
 import android.media.MediaMetadataRetriever
 import android.net.Uri
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getAlbumArtImage
@@ -69,7 +69,7 @@ class SongFromUriRetrieverTest {
 
     @Test
     fun testGetSongWithNonContentScheme() {
-        val expectedMediaItem = mock<MediaBrowserCompat.MediaItem>()
+        val expectedMediaItem = mock<MediaItem>()
         val cursor = mock<Cursor>()
         whenever(contentResolver.query(any(), any(), eq(null), eq(null), eq(null)))
                 .thenReturn(cursor)

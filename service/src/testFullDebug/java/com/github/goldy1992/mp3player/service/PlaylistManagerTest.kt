@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.service
 
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import org.mockito.kotlin.mock
 
 import org.junit.Assert
@@ -19,21 +19,21 @@ class PlaylistManagerTest {
     private var playlistManager: PlaylistManager? = null
     @Before
     fun setup() {
-        val queueItems: List<MediaBrowserCompat.MediaItem> = ArrayList()
+        val queueItems: List<MediaItem> = ArrayList()
         playlistManager = PlaylistManager(queueItems.toMutableList())
     }
 
     @Test
     fun testCreateNewPlaylist() {
-        val originalPlaylist: List<MediaBrowserCompat.MediaItem> = emptyList()
+        val originalPlaylist: List<MediaItem> = emptyList()
         playlistManager = PlaylistManager(originalPlaylist.toMutableList())
         Assert.assertEquals(originalPlaylist, playlistManager!!.playlist)
-        val newPlaylist: List<MediaBrowserCompat.MediaItem?> = emptyList()
+        val newPlaylist: List<MediaItem?> = emptyList()
         playlistManager!!.createNewPlaylist(newPlaylist)
         Assert.assertEquals(newPlaylist, playlistManager!!.playlist)
     }
 
     companion object {
-        private val MOCK_QUEUE_ITEM = mock<MediaBrowserCompat.MediaItem>()
+        private val MOCK_QUEUE_ITEM = mock<MediaItem>()
     }
 }

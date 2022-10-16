@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.service.library.content.retriever
 
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
@@ -47,12 +47,12 @@ class RootRetrieverTest {
         Assert.assertEquals(MediaItemType.ROOT, rootRetriever!!.type)
     }
 
-    private fun assertValidRootItem(item: MediaBrowserCompat.MediaItem?) {
+    private fun assertValidRootItem(item: MediaItem) {
         val mediaItemType = getMediaItemType(item)
         Assert.assertEquals(MediaItemType.ROOT, mediaItemType)
     }
 
-    private fun assertRootItemType(item: MediaBrowserCompat.MediaItem?, expectedType: MediaItemType) {
+    private fun assertRootItemType(item: MediaItem?, expectedType: MediaItemType) {
         val mediaItemType = getRootMediaItemType(item)
         Assert.assertEquals(expectedType, mediaItemType)
     }

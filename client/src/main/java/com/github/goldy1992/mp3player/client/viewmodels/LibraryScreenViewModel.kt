@@ -39,11 +39,11 @@ class LibraryScreenViewModel
     var currentNavigationItem : MutableLiveData<MediaItemType> = MutableLiveData(MediaItemType.SONGS)
 
 
-    //        var mediaItemSelected : MutableLiveData<MediaBrowserCompat.MediaItem> = MutableLiveData(
+    //        var mediaItemSelected : MutableLiveData<MediaItem> = MutableLiveData(
 //            MediaItemUtils.getEmptyMediaItem()
 //        )
 //
-//        var mediaItemChildren : LiveData<List<MediaBrowserCompat.MediaItem>> = MutableLiveData(emptyList())
+//        var mediaItemChildren : LiveData<List<MediaItem>> = MutableLiveData(emptyList())
 
     var rootItem : MediaItem? = null
     var rootItemId : String? = null

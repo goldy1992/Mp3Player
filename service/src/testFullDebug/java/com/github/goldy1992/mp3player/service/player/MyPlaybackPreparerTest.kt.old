@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.service.player
 
 import android.net.Uri
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import android.support.v4.media.session.PlaybackStateCompat
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.service.PlaylistManager
@@ -73,7 +73,7 @@ class MyPlaybackPreparerTest {
         val testItem = MediaItemBuilder("id1").setMediaUri(Uri.parse("string")).build()
         whenever(contentManager.getItem(testUri)).thenReturn(testItem)
         myPlaybackPreparer!!.onPrepareFromUri(testUri, true, null)
-        verify(playlistManager, times(1)).createNewPlaylist(any<List<MediaBrowserCompat.MediaItem?>>())
+        verify(playlistManager, times(1)).createNewPlaylist(any<List<MediaItem?>>())
     }
 
     @Test
@@ -88,7 +88,7 @@ class MyPlaybackPreparerTest {
         val testItem1 = MediaItemBuilder("id1").setMediaUri(Uri.parse("string")).build()
         val testItem2 = MediaItemBuilder(trackId).setMediaUri(Uri.parse("string")).build()
         val testItem3 = MediaItemBuilder("id3").setMediaUri(Uri.parse("string")).build()
-        val items: MutableList<MediaBrowserCompat.MediaItem> = ArrayList()
+        val items: MutableList<MediaItem> = ArrayList()
         items.add(testItem1)
         items.add(testItem2)
         items.add(testItem3)

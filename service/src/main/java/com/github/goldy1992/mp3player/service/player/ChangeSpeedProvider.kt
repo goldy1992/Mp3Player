@@ -7,21 +7,16 @@ import androidx.media3.common.Player
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.service.R
+import dagger.hilt.android.scopes.ServiceScoped
 
 import org.apache.commons.lang3.StringUtils
 import javax.inject.Inject
 
+@ServiceScoped
 class ChangeSpeedProvider
 
 @Inject
 constructor() : LogTagger {
-
-//    override fun getCustomAction(player: Player): PlaybackStateCompat.CustomAction {
-//        return PlaybackStateCompat.CustomAction.Builder(
-//            Constants.CHANGE_PLAYBACK_SPEED,
-//            Constants.CHANGE_PLAYBACK_SPEED,
-//            R.drawable.border).build()
-//    }
 
     fun changeSpeed(player: Player, args : Bundle) {
         Log.i(logTag(), "hit speed change")
