@@ -298,7 +298,7 @@ fun SearchResults(searchResultsState : StateFlow<List<MediaItem>>,
                             SongListItem(song = mediaItem, onClick = {
                                 val libraryId = MediaItemUtils.getLibraryId(mediaItem)
                                 Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
-                                mediaController.playFromMediaId(libraryId ?: "", Bundle())
+                                mediaController.playFromMediaId(mediaItem)
                             })
                         }
                         MediaItemType.FOLDER -> {

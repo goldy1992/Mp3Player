@@ -30,9 +30,7 @@ open class MediaControllerAdapter
     constructor(
         private val mediaControllerFuture: ListenableFuture<MediaController>,
         private val scope : CoroutineScope,
-        @IoDispatcher private val ioDispatcher : CoroutineDispatcher,
-        @MainDispatcher private val mainDispatcher : CoroutineDispatcher,
-        @DefaultDispatcher val defaultDispatcher: CoroutineDispatcher)
+        @MainDispatcher private val mainDispatcher : CoroutineDispatcher)
         : MediaController.Listener, LogTagger {
 
     private var mediaController: MediaController? = null
@@ -47,17 +45,23 @@ open class MediaControllerAdapter
         return mediaController?.currentMediaItemIndex ?: 0
     }
 
-    open suspend fun prepareFromMediaId(mediaItem: MediaItem, extras: Bundle?) {
-        mediaControllerFuture.await().addMediaItem(mediaItem)
+    open suspend fun prepareFromMediaId(mediaItem: MediaItem) {
+
         // call from application looper
         scope.launch(mainDispatcher) {
-            mediaControllerFuture.await().prepare()
+            val mediaController = mediaControllerFuture.await()
+            mediaController.addMediaItem(mediaItem)
+            mediaController.prepare()
         }
     }
 
-    open fun playFromMediaId(mediaId: String, extras: Bundle?) {
-        val mediaItem = MediaItem.Builder().setMediaId(mediaId).build()
-        mediaController?.addMediaItem(mediaItem)
+    open fun playFromMediaId(mediaItem : MediaItem) {
+        scope.launch(mainDispatcher) {
+            val mediaController = mediaControllerFuture.await()
+            mediaController.addMediaItem(mediaItem)
+            mediaController.prepare()
+            mediaController.play()
+        }
     }
 
     open suspend fun playFromUri(uri: Uri?, extras: Bundle?) {
@@ -90,7 +94,7 @@ open class MediaControllerAdapter
     }
 
     open suspend fun skipToPrevious() {
-        mediaControllerFuture.await().seekToPrevious()
+        mediaControllerFuture.await().seekToPreviousMediaItem()
     }
 
     open suspend fun setShuffleMode(shuffleModeEnabled : Boolean) {

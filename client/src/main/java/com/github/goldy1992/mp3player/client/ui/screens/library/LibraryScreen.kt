@@ -352,7 +352,7 @@ fun TabBarPages(navController: NavController,
                         ) {
                             val libraryId = MediaItemUtils.getLibraryId(it) ?: ""
                             Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
-                            viewModel.mediaControllerAdapter.playFromMediaId(libraryId, null)
+                            viewModel.mediaControllerAdapter.playFromMediaId(it)
                         }
                     }
                     MediaItemType.FOLDERS -> {

@@ -165,7 +165,7 @@ private fun SmallFolderScreen(
                     SongList(songs = folderItems!!, mediaControllerAdapter = mediaController, isPlayingFlow = isPlayingFlow, metadataFlow = metadataFlow) {
                         val libraryId = MediaItemUtils.getLibraryId(it) ?: ""
                         Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
-                        mediaController.playFromMediaId(libraryId, null)
+                        mediaController.playFromMediaId(it)
                     }
                 }
             }
@@ -249,7 +249,7 @@ private fun LargeFolderScreen(
                         SongList(songs = folderItems!!, mediaControllerAdapter = mediaController, metadataFlow = metadataFlow, isPlayingFlow = isPlayingFlow) {
                             val libraryId = MediaItemUtils.getLibraryId(it) ?: ""
                             Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
-                            mediaController.playFromMediaId(libraryId, null)
+                            mediaController.playFromMediaId(it)
                         }
                     }
             }
