@@ -6,16 +6,10 @@ import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import org.junit.Assert
 import org.junit.BeforeClass
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
-import org.robolectric.shadows.ShadowSystemClock
 
 /**
  * Test class for the TimerUtils class
  */
-@RunWith(RobolectricTestRunner::class)
-@Config(manifest = Config.NONE, sdk = [26], shadows = [ShadowSystemClock::class])
 class TimerUtilsTest {
     @Test
     fun testConvertToSecondsOneSecond() {
