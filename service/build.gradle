@@ -161,7 +161,8 @@ dependencies {
     androidTestImplementation group: 'com.linkedin.dexmaker', name: 'dexmaker-mockito-inline-extended', version: '2.28.1'
     androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: kotlin_version
     androidTestImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: coroutines_version
-
+    androidTestImplementation group: 'androidx.concurrent', name: 'concurrent-futures-ktx', version: '1.1.0'
+    implementation group: 'androidx.concurrent', name: 'concurrent-futures-ktx', version: '1.1.0'
 }
 
 sonarqube {

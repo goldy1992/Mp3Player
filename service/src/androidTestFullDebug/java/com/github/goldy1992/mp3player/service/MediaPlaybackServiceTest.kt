@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
+import androidx.concurrent.futures.await
 import androidx.media3.session.IMediaSessionService
 import androidx.media3.session.MediaBrowser
 import androidx.media3.session.MediaLibraryService
