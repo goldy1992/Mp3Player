@@ -39,7 +39,7 @@ project.afterEvaluate {
     def unitTestFlavor = getProductFlavor(applicableProductFlavor, productFlavors);
     def (String unitTestBuildVariant, String unitTestBuildVariantCapitalised) = getBuildVariant(unitTestFlavor, unitTestBuildType)
 
-    def unitExecDir = "$buildDir/jacoco/test${unitTestBuildVariantCapitalised}UnitTest.exec"
+    def unitExecDir = "$buildDir/outputs/unit_test_code_coverage/${unitTestBuildVariant}UnitTest/test${unitTestBuildVariantCapitalised}UnitTest.exec"
     def unitBuildFileTree = fileTree(unitExecDir)
     /**
      * Generates a JaCoCo Report for the test coverage for the unit tests.

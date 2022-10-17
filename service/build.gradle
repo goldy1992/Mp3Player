@@ -11,7 +11,10 @@ android {
     defaultConfig {
         minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.github.goldy1992.mp3player.service.CustomTestRunner"
+        /*makes the Android Test Orchestrator run its "pm clear" command after each test invocation.
+        Ensures app's state is completely cleared between tests. */
+        testInstrumentationRunnerArguments clearPackageData: 'true'
         consumerProguardFiles 'consumer-rules.pro'
         javaCompileOptions {
             annotationProcessorOptions {
@@ -26,7 +29,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            enableUnitTestCoverage false
+            enableUnitTestCoverage true
             testCoverageEnabled true
             minifyEnabled false
         }
@@ -60,7 +63,7 @@ android {
     kotlinOptions { jvmTarget = "11" }
 
     testOptions {
-        execution 'ANDROID_TEST_ORCHESTRATOR'
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
         animationsDisabled true
 
         unitTests {
@@ -91,9 +94,6 @@ dependencies {
     implementation group: 'androidx.media3', name: 'media3-ui', version: media3_version
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: commons_collections4_version
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: commons_lang_version
-//    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-core', version: exo_player_vesrion
-//    implementation group: 'com.google.android.exoplayer', name: 'exoplayer-ui', version: exo_player_vesrion
-//    implementation group: 'com.google.android.exoplayer', name: 'extension-mediasession', version: exo_player_vesrion
     implementation group: 'androidx.appcompat', name: 'appcompat', version: app_compat_version
     implementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
@@ -123,6 +123,26 @@ dependencies {
 
     testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
     kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
+
+
+    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
+    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
+
+    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
+
+
+    androidTestImplementation project(':commons')
+    androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
+    androidTestImplementation junitUnitTests
+    androidTestImplementation group: 'androidx.test', name: 'rules', version: test_rules_version
+    androidTestImplementation group: 'androidx.test', name: 'core-ktx', version: test_core_version
+    androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: junit_ext_version
+    androidTestImplementation group: 'androidx.test', name: 'runner', version: test_runner_version
+    androidTestUtil group: "androidx.test", name: "orchestrator", version: test_orchestrator_version
+    androidTestImplementation group: 'androidx.test', name: 'monitor', version: monitor_version
+    androidTestImplementation group: "org.mockito.kotlin", name: "mockito-kotlin", version: mockito_kotlin_version
+    androidTestImplementation group: 'com.linkedin.dexmaker', name: 'dexmaker-mockito-inline-extended', version: '2.28.1'
+    androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: kotlin_version
 
 }
 

@@ -20,7 +20,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            enableUnitTestCoverage false
+            enableUnitTestCoverage true
             testCoverageEnabled true
             minifyEnabled false
         }
@@ -38,7 +38,7 @@ android {
     }
 
     testOptions {
-        execution 'ANDROID_TEST_ORCHESTRATOR'
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
         unitTests {
             includeAndroidResources = true
             returnDefaultValues = true
