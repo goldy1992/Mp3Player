@@ -44,6 +44,23 @@ android {
         }
     }
 
+    sourceSets {
+        String sharedTestSrcDir = 'src/testCommons/java'
+        String sharedTestResDir = 'src/testCommons/res'
+        full {
+            debug {
+                test {
+                    java.srcDirs += [sharedTestSrcDir]
+                    resources.srcDirs += [sharedTestResDir]
+                }
+                androidTest {
+                    java.srcDirs += [sharedTestSrcDir]
+                    resources.srcDirs += [sharedTestResDir]
+                }
+            }
+        }
+    }
+
     variantFilter { variant ->
         def names = variant.flavors*.name
 
@@ -63,7 +80,7 @@ android {
     kotlinOptions { jvmTarget = "11" }
 
     testOptions {
-        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    //    execution 'ANDROIDX_TEST_ORCHESTRATOR'
         animationsDisabled true
 
         unitTests {
@@ -143,6 +160,7 @@ dependencies {
     androidTestImplementation group: "org.mockito.kotlin", name: "mockito-kotlin", version: mockito_kotlin_version
     androidTestImplementation group: 'com.linkedin.dexmaker', name: 'dexmaker-mockito-inline-extended', version: '2.28.1'
     androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: kotlin_version
+    androidTestImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: coroutines_version
 
 }
 

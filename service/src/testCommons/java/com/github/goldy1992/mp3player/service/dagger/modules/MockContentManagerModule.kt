@@ -5,12 +5,12 @@ import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
-import org.mockito.kotlin.mock
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.scopes.ServiceScoped
+import org.mockito.kotlin.mock
 import javax.inject.Named
 
 @InstallIn(ServiceComponent::class)
