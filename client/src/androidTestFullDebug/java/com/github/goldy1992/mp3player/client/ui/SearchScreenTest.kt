@@ -74,7 +74,7 @@ class SearchScreenTest : MediaTestBase(){
             .setMediaItemType(MediaItemType.SONG)
             .setTitle(songTitle)
             .build()
-        searchResultsLiveData.postValue(mutableListOf(songItem))
+        searchResultsState.postValue(mutableListOf(songItem))
 
         runBlocking {
             composeTestRule.awaitIdle()
@@ -103,7 +103,7 @@ class SearchScreenTest : MediaTestBase(){
         val folderNameMi = MediaItemUtils.getDirectoryName(folderItem)
 
        val expectedRoute = Screen.FOLDER.name + "/" + encodedFolderLibraryId+ "/" + folderNameMi+ "/" + encodedFolderPath
-        searchResultsLiveData.postValue(mutableListOf(folderItem))
+        searchResultsState.postValue(mutableListOf(folderItem))
 
         runBlocking {
             composeTestRule.awaitIdle()

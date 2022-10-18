@@ -12,10 +12,10 @@ import androidx.navigation.NavController
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.MockMediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback
-import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
+import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnChildrenChangedFlow
+import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
+import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.ui.screens.library.SmallLibraryScreen
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
 import com.github.goldy1992.mp3player.client.viewmodels.LibraryScreenViewModel
@@ -25,6 +25,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -47,6 +48,15 @@ class LibraryScreenTest {
     @Mock
     val mockMediaBrowser = mock<MediaBrowserAdapter>()
 
+    @Mock
+    val onChildrenChangedFlow = mock<OnChildrenChangedFlow>()
+
+    @Mock
+    val metadataFlow = mock<MetadataFlow>()
+
+    @Mock
+    val isPlayingFLow = mock<IsPlayingFlow>()
+
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
@@ -65,7 +75,7 @@ class LibraryScreenTest {
     @Before
     fun setup() {
         this.context = InstrumentationRegistry.getInstrumentation().context
-        whenever(mockMediaController.isPlaying).thenReturn(MutableLiveData(true))
+        whenever(isPlayingFLow.state).thenReturn(MutableStateFlow(true))
     }
 
     /**
@@ -83,7 +93,12 @@ class LibraryScreenTest {
                 navController = navController,
                 pagerState = rememberPagerState(initialPage = 0),
               //  viewModel = hiltViewModel<LibraryScreenViewModel>(),
-               viewModel  = LibraryScreenViewModel(MockMediaBrowserAdapter(MediaIdSubscriptionCallback(), MySearchCallback()), mockMediaController),
+               viewModel  = LibraryScreenViewModel(
+                                mediaBrowserAdapter = mockMediaBrowser,
+                                onChildrenChangedFlow = onChildrenChangedFlow,
+                                mediaControllerAdapter = mockMediaController,
+                                metadataFlow = metadataFlow,
+                                isPlayingFlow = isPlayingFLow),
                 bottomBar = {},
             drawerState = drawerState)
         }

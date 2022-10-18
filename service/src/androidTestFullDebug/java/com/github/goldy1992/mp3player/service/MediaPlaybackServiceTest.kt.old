@@ -66,6 +66,18 @@ class MediaPlaybackServiceTest {
 
     @Test
     @Throws(TimeoutException::class)
+    fun testWithMediaBrowser() = runTest(dispatcher) {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val sessionToken = SessionToken(context, ComponentName(context, MediaPlaybackService::class.java))
+        val mblf : ListenableFuture<MediaBrowser> = MediaBrowser.Builder(context, sessionToken).buildAsync()
+        val mb = mblf.await()
+        Log.i("", "")
+        // Verify that the service is working correctly.
+     //   assertThat(service.getRandomInt(), `is`(any(Int::class.java)))
+    }
+
+    @Test
+    @Throws(TimeoutException::class)
     fun testWithBoundService() = runTest(dispatcher) {
         val context = ApplicationProvider.getApplicationContext<Context>()
         // Create the service Intent.
@@ -79,20 +91,17 @@ class MediaPlaybackServiceTest {
         }
 
         // Bind the service and grab a reference to the binder.
-        //val binder: IBinder = serviceRule.bindService(serviceIntent)
+        val binder: IBinder = serviceRule.bindService(serviceIntent)
 
 
         // Get the reference to the service, or you can call
         // public methods on the binder directly.
 
-      //  val service: IMediaSessionService = (binder as IMediaSessionService)
-
-        val sessionToken = SessionToken(context, ComponentName(context, MediaPlaybackService::class.java))
-        val mblf : ListenableFuture<MediaBrowser> = MediaBrowser.Builder(context, sessionToken).buildAsync()
-        mblf.await()
+        val service: IMediaSessionService = (binder as IMediaSessionService)
+        service.asBinder().
         Log.i("", "")
         // Verify that the service is working correctly.
-     //   assertThat(service.getRandomInt(), `is`(any(Int::class.java)))
+        //   assertThat(service.getRandomInt(), `is`(any(Int::class.java)))
     }
 
 
