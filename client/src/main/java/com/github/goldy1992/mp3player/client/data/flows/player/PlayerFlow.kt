@@ -5,6 +5,7 @@ import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,11 +25,6 @@ constructor(
     val state : StateFlow<T> = backingState
 
     protected fun initialise() {
-        scope.launch {
-            flow().collect {
-                backingState.value = it
-            }
-        }
         scope.launch(mainDispatcher) { backingState.value = getInitialValue() }
     }
 

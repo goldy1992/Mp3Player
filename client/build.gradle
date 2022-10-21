@@ -13,7 +13,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerExtensionVersion '1.3.2'
     }
     packagingOptions {
         resources {
@@ -77,11 +77,10 @@ android {
 
     kotlinOptions {
         jvmTarget = "11"
-        useIR = true
     }
 
     testOptions {
-        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+  //      execution 'ANDROIDX_TEST_ORCHESTRATOR'
         animationsDisabled true
 
         unitTests {
@@ -158,7 +157,7 @@ dependencies {
     implementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
     implementation group: 'androidx.hilt', name: 'hilt-navigation-compose', version: '1.0.0'
     
-    def accompanist_version = '0.23.0'
+    def accompanist_version = '0.26.5-rc'
     implementation group: "com.google.accompanist", name: "accompanist-pager", version: accompanist_version
     implementation group: "com.google.accompanist", name: "accompanist-insets", version: accompanist_version
     implementation group: "com.google.accompanist", name: "accompanist-pager-indicators", version: accompanist_version

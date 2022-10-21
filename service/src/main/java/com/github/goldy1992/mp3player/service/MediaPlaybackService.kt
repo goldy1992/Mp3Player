@@ -19,7 +19,9 @@ import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import androidx.media3.session.MediaSession
 import androidx.media3.ui.PlayerNotificationManager
 import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.IoDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.CustomMediaItemTree
 import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers
@@ -46,6 +48,14 @@ open class MediaPlaybackService : MediaLibraryService(),
 
     @Inject
     lateinit var mediaSessionCreator: MediaSessionCreator
+
+    @Inject
+    @IoDispatcher
+    lateinit var ioDispatcher: CoroutineDispatcher
+
+    @Inject
+    @MainDispatcher
+    lateinit var mainDispatcher: CoroutineDispatcher
 
     @Inject
     lateinit var mediaLibrarySessionCallback : MediaLibrarySessionCallback
@@ -76,17 +86,18 @@ open class MediaPlaybackService : MediaLibraryService(),
         Log.i(logTag(), "onCreate called")
         super.onCreate()
 
-        scope.launch(Dispatchers.IO) {
+        scope.launch(ioDispatcher) {
             searchDatabaseManagers.reindexAll()
             val rootItem = rootAuthenticator.getRootItem()
             customMediaItemTree.initialise(rootItem = rootItem)
+            withContext(mainDispatcher) {
+                // TODO: add queue manager
+                mediaSession.player.addMediaItems(   customMediaItemTree.rootNode?.getChildren()?.get(0)?.getChildren()?.map(CustomMediaItemTree.MediaItemNode::item)?.toMutableList() ?: mutableListOf())
+                mediaSession.player.prepare()
+            }
         }
 
         mediaSession = mediaSessionCreator.create(this, player, mediaLibrarySessionCallback)
-
-        // TODO: add queue manager
-        mediaSession.player.addMediaItems(   customMediaItemTree.rootNode?.getChildren()?.get(0)?.getChildren()?.map(CustomMediaItemTree.MediaItemNode::item)?.toMutableList() ?: mutableListOf())
-        mediaSession.player.prepare()
 
         if (!customLayout.isEmpty()) {
             // Send custom layout to legacy session.

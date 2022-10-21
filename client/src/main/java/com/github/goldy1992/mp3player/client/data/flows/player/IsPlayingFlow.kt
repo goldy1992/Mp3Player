@@ -33,7 +33,9 @@ constructor(mediaControllerFuture: ListenableFuture<MediaController>,
             }
         }
         controller.addListener(messageListener)
-        awaitClose { controller.removeListener(messageListener) }
+        awaitClose {
+            controller.removeListener(messageListener)
+        }
     }.shareIn(
         scope,
         replay = 1,

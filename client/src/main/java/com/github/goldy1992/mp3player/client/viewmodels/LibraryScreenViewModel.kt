@@ -76,7 +76,6 @@ class LibraryScreenViewModel
                 }
             }
         }
-
     }
 
     override fun logTag(): String {

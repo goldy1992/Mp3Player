@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.data.flows.player
 
+import android.util.Log
 import androidx.concurrent.futures.await
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
@@ -11,10 +12,7 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,11 +28,15 @@ constructor(mediaControllerFuture: ListenableFuture<MediaController>,
         val controller = mediaControllerFuture.await()
         val messageListener = object : Player.Listener {
             override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
+                Log.i(logTag(), "onMediaMetadataChanged: $mediaMetadata")
                 trySend(mediaMetadata)
             }
         }
         controller.addListener(messageListener)
-        awaitClose { controller.removeListener(messageListener) }
+        awaitClose {
+
+            controller.removeListener(messageListener)
+        }
     }.shareIn(
         scope,
         replay = 1,
@@ -49,15 +51,14 @@ constructor(mediaControllerFuture: ListenableFuture<MediaController>,
         return mediaMetadataCallbackFlow
     }
 
-    init {
-        initialise()
-        scope.launch {
 
-        }
-    }
 
     override suspend fun getInitialValue(): MediaMetadata {
         return mediaControllerFuture.await().mediaMetadata
+    }
+
+    init {
+        initialise()
     }
 
 }
