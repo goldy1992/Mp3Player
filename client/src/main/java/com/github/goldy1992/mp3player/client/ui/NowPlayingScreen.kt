@@ -22,7 +22,6 @@ import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.flows.player.QueueFlow
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
@@ -33,6 +32,7 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.StateFlow
 import org.apache.commons.lang3.ObjectUtils.isEmpty
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,8 +44,9 @@ fun NowPlayingScreen(
     navController: NavController,
     scope : CoroutineScope = rememberCoroutineScope(),
 ) {
+
     val songTitleDescription = stringResource(id = R.string.song_title)
-    val metadata by viewModel.metadataFlow.state.collectAsState()
+    val metadata by viewModel.metadata.collectAsState()
 
     Scaffold (
 
@@ -79,7 +80,7 @@ fun NowPlayingScreen(
         },
         bottomBar = {
             PlayToolbar(mediaController = viewModel.mediaControllerAdapter,
-                        isPlayingFlow = viewModel.isPlayingFlow,
+                        isPlayingState = viewModel.isPlaying,
                         scope = scope) {
                 // do Nothing
             }
@@ -98,14 +99,14 @@ fun NowPlayingScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 SpeedController(mediaController = viewModel.mediaControllerAdapter,
-                    playbackSpeedFlow = viewModel.playbackSpeedFlow,
+                    playbackSpeedState = viewModel.playbackSpeed,
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 48.dp, end = 48.dp)
                 )
                 ViewPager(mediaController = viewModel.mediaControllerAdapter,
                     metadata = metadata,
-                    queueFlow = viewModel.queueFlow,
+                    queueState = viewModel.queue,
                     scope = scope,
                     modifier = Modifier.weight(4f))
 
@@ -115,8 +116,8 @@ fun NowPlayingScreen(
                         .weight(1f),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    ShuffleButton(mediaController = viewModel.mediaControllerAdapter, shuffleModeFlow = viewModel.shuffleModeFlow, scope = scope)
-                    RepeatButton(mediaController = viewModel.mediaControllerAdapter, repeatModeFlow = viewModel.repeatModeFlow, scope = scope)
+                    ShuffleButton(mediaController = viewModel.mediaControllerAdapter, shuffleModeState = viewModel.shuffleMode, scope = scope)
+                    RepeatButton(mediaController = viewModel.mediaControllerAdapter, repeatModeState = viewModel.repeatMode, scope = scope)
                 }
                 Row(
                     modifier = Modifier
@@ -125,9 +126,9 @@ fun NowPlayingScreen(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     SeekBar(mediaController = viewModel.mediaControllerAdapter,
-                        playbackParametersFlow = viewModel.playbackParametersFlow,
-                        metadataFlow = viewModel.metadataFlow,
-                        isPlayingFlow = viewModel.isPlayingFlow)
+                        playbackSpeedState = viewModel.playbackSpeed,
+                        metadataState = viewModel.metadata,
+                        isPlayingState = viewModel.isPlaying)
                 }
             }
 
@@ -139,12 +140,12 @@ fun NowPlayingScreen(
 @Composable
 fun ViewPager(mediaController: MediaControllerAdapter,
               metadata : MediaMetadata,
-              queueFlow: QueueFlow,
+              queueState: StateFlow<List<MediaItem>>,
               modifier: Modifier = Modifier,
-            pagerState:PagerState = rememberPagerState(initialPage = mediaController.getCurrentQueuePosition()),
-            scope: CoroutineScope = rememberCoroutineScope()
+              pagerState:PagerState = rememberPagerState(initialPage = mediaController.getCurrentQueuePosition()),
+              scope: CoroutineScope = rememberCoroutineScope()
            ) {
-    val queue by queueFlow.state.collectAsState()
+    val queue by queueState.collectAsState()
     val currentQueuePosition = mediaController.getCurrentQueuePosition()
 
     if (isEmpty(queue)) {

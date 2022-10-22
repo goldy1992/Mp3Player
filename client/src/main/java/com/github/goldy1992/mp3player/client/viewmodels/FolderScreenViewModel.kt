@@ -1,15 +1,21 @@
 package com.github.goldy1992.mp3player.client.viewmodels
 
+import androidx.concurrent.futures.await
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
+import androidx.media3.session.MediaController
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnChildrenChangedFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
+import com.github.goldy1992.mp3player.commons.MainDispatcher
+import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,9 +27,12 @@ class FolderScreenViewModel
         savedStateHandle: SavedStateHandle,
         val mediaBrowser: MediaBrowserAdapter,
         val mediaController: MediaControllerAdapter,
-        val metadataFlow: MetadataFlow,
-        val isPlayingFlow: IsPlayingFlow,
-        val onChildrenChangedFlow: OnChildrenChangedFlow) : ViewModel() {
+        private val isPlayingFlow: IsPlayingFlow,
+        private val metadataFlow: MetadataFlow,
+        private val onChildrenChangedFlow: OnChildrenChangedFlow,
+        @MainDispatcher private val mainDispatcher: CoroutineDispatcher) : ViewModel() {
+
+    private val mediaControllerAsync : ListenableFuture<MediaController> = mediaController.mediaControllerFuture
 
     init {
         viewModelScope.launch {
@@ -48,4 +57,34 @@ class FolderScreenViewModel
     val folderChildren : StateFlow<List<MediaItem>> = _folderChildren
 
 
+    // isPlaying
+    private val _isPlayingState = MutableStateFlow(false)
+    val isPlaying : StateFlow<Boolean> = _isPlayingState
+
+    init {
+        viewModelScope.launch(mainDispatcher) {
+            _isPlayingState.value = mediaControllerAsync.await().isPlaying
+        }
+        viewModelScope.launch {
+            isPlayingFlow.flow().collect {
+                _isPlayingState.value = it
+            }
+        }
+    }
+
+
+    // metadata
+    private val _metadataState = MutableStateFlow(MediaMetadata.EMPTY)
+    val metadata : StateFlow<MediaMetadata> = _metadataState
+
+    init {
+        viewModelScope.launch(mainDispatcher) {
+            _metadataState.value = mediaControllerAsync.await().mediaMetadata
+        }
+        viewModelScope.launch {
+            metadataFlow.flow().collect {
+                _metadataState.value = it
+            }
+        }
+    }
 }

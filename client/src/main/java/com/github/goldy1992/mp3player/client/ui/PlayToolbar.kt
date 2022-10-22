@@ -14,15 +14,15 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.ui.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.SkipToNextButton
 import com.github.goldy1992.mp3player.client.ui.buttons.SkipToPreviousButton
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun PlayToolbar(mediaController : MediaControllerAdapter,
-                isPlayingFlow: IsPlayingFlow,
+                isPlayingState: StateFlow<Boolean>,
                 scope: CoroutineScope = rememberCoroutineScope(),
                 onClick : () -> Unit) {
     val bottomAppBarDescr = stringResource(id = R.string.bottom_app_bar)
@@ -38,7 +38,7 @@ fun PlayToolbar(mediaController : MediaControllerAdapter,
         modifier = Modifier.fillMaxWidth()
                 ) {
             SkipToPreviousButton(mediaController = mediaController, scope=scope)
-            PlayPauseButton(mediaController = mediaController, isPlayingFlow = isPlayingFlow, scope=scope)
+            PlayPauseButton(mediaController = mediaController, isPlayingState = isPlayingState, scope=scope)
             SkipToNextButton(mediaController = mediaController, scope=scope)
         }
     }

@@ -7,15 +7,12 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 private const val LOG_TAG = "PlayPauseButton"
@@ -25,10 +22,10 @@ private const val LOG_TAG = "PlayPauseButton"
  */
 @Composable
 fun PlayPauseButton(mediaController: MediaControllerAdapter,
-                    isPlayingFlow: IsPlayingFlow,
+                    isPlayingState: StateFlow<Boolean>,
                     scope: CoroutineScope = rememberCoroutineScope()) {
-    val isPlaying by isPlayingFlow.state.collectAsState()
-    if (isPlaying) {
+    val isPlayingValue by isPlayingState.collectAsState()
+    if (isPlayingValue) {
         PauseButton(mediaController = mediaController, scope)
     } else {
         PlayButton(mediaController = mediaController, scope)

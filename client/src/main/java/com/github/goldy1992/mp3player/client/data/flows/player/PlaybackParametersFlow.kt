@@ -21,9 +21,8 @@ import javax.inject.Inject
 class PlaybackParametersFlow
 @Inject
 constructor(mediaControllerFuture: ListenableFuture<MediaController>,
-            scope : CoroutineScope,
-            @MainDispatcher mainDispatcher: CoroutineDispatcher
-) : LogTagger, PlayerFlow<PlaybackParameters>(mediaControllerFuture, scope, mainDispatcher, PlaybackParameters.DEFAULT) {
+            scope : CoroutineScope
+) : LogTagger, PlayerFlow<PlaybackParameters>(mediaControllerFuture, scope) {
 
     private val playbackParametersFlow : Flow<PlaybackParameters> = callbackFlow {
         val controller = mediaControllerFuture.await()
@@ -46,13 +45,5 @@ constructor(mediaControllerFuture: ListenableFuture<MediaController>,
 
     override fun flow(): Flow<PlaybackParameters> {
         return playbackParametersFlow
-    }
-
-    override suspend fun getInitialValue(): PlaybackParameters {
-        return mediaControllerFuture.await().playbackParameters
-    }
-
-    init {
-        initialise()
     }
 }

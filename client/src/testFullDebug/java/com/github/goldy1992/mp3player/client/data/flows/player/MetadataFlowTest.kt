@@ -2,6 +2,8 @@ package com.github.goldy1992.mp3player.client.data.flows.player
 
 import androidx.media3.common.MediaMetadata
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.test.*
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -14,25 +16,29 @@ class MetadataFlowTest : MediaControllerFlowTestBase() {
     @Before
     override fun setup() {
         whenever(mediaController.mediaMetadata).thenReturn(MediaMetadata.EMPTY)
-
         super.setup()
 
     }
 
 
-    @Test(expected = Exception::class)
+    @Test
     fun testMetadata() = testScope.runTest {
         val expectedArtist = "artist"
         val expectedMetadata = MediaMetadata.Builder().setArtist(expectedArtist).build()
-        val metadataFlow = MetadataFlow(mediaControllerListenableFuture, testScope, dispatcher)
+        val metadataFlow = MetadataFlow(mediaControllerListenableFuture, testScope)
 
+        var result : MediaMetadata? = null
+        val collectJob = launch(UnconfinedTestDispatcher()) {
+            metadataFlow.flow().collect {
+                result = it
+            }
+        }
         advanceUntilIdle()
-        val metadataListener = metadataFlow.state
         listener?.onMediaMetadataChanged(expectedMetadata)
         advanceUntilIdle()
-        val actualMetadata = metadataListener.value
-        assertEquals( expectedMetadata.artist, actualMetadata.artist)
-        testScope.cancel()
+        assertEquals( expectedMetadata.artist, result?.artist)
+        collectJob.cancel()
+        advanceUntilIdle()
     }
 
 

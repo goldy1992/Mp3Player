@@ -5,7 +5,6 @@ import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
-import androidx.lifecycle.MutableLiveData
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
@@ -15,8 +14,6 @@ import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleOffButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleOnButton
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
@@ -48,7 +45,7 @@ class ShuffleButtonTest {
         // Set Shuffle Mode to be Off
         whenever(shuffleModeFlow.state).thenReturn(MutableStateFlow(false))
         composeTestRule.setContent {
-            ShuffleButton(mediaController = mockMediaController, shuffleModeFlow = shuffleModeFlow)
+            ShuffleButton(mediaController = mockMediaController, shuffleModeState = shuffleModeFlow)
         }
         composeTestRule.onNodeWithContentDescription(expected, useUnmergedTree = true).assertExists()
         val shuffleOffButton = composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true)
@@ -74,7 +71,7 @@ class ShuffleButtonTest {
         // Set Shuffle Mode to be On
      //   whenever(mockMediaController.shuffleMode).thenReturn(MutableLiveData(SHUFFLE_ON))
         composeTestRule.setContent {
-            ShuffleButton(mediaController = mockMediaController, shuffleModeFlow = shuffleModeFlow)
+            ShuffleButton(mediaController = mockMediaController, shuffleModeState = shuffleModeFlow)
         }
         composeTestRule.onNodeWithContentDescription(expected, useUnmergedTree = true).assertExists()
         val shuffleOnButton = composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true)

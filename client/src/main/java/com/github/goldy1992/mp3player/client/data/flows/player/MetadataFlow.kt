@@ -20,9 +20,8 @@ import javax.inject.Inject
 class MetadataFlow
 @Inject
 constructor(mediaControllerFuture: ListenableFuture<MediaController>,
-            scope : CoroutineScope,
-            @MainDispatcher mainDispatcher: CoroutineDispatcher
-) : LogTagger, PlayerFlow<MediaMetadata>(mediaControllerFuture, scope, mainDispatcher, MediaMetadata.EMPTY) {
+            scope : CoroutineScope
+) : LogTagger, PlayerFlow<MediaMetadata>(mediaControllerFuture, scope) {
 
     private val mediaMetadataCallbackFlow : Flow<MediaMetadata> = callbackFlow {
         val controller = mediaControllerFuture.await()
@@ -49,16 +48,6 @@ constructor(mediaControllerFuture: ListenableFuture<MediaController>,
 
     override fun flow(): Flow<MediaMetadata> {
         return mediaMetadataCallbackFlow
-    }
-
-
-
-    override suspend fun getInitialValue(): MediaMetadata {
-        return mediaControllerFuture.await().mediaMetadata
-    }
-
-    init {
-        initialise()
     }
 
 }

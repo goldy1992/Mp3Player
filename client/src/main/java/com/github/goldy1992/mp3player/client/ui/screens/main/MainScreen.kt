@@ -27,6 +27,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -158,7 +159,7 @@ private fun CustomScaffold(
     navController: NavController,
     scope: CoroutineScope,
     mediaController: MediaControllerAdapter,
-    isPlayingFlow: IsPlayingFlow,
+    isPlayingState: StateFlow<Boolean>,
     extendTopAppBar: @Composable () -> Unit = {},
     content : @Composable (PaddingValues) -> Unit = {}
 ) {
@@ -175,7 +176,7 @@ private fun CustomScaffold(
             }
         },
         bottomBar = {
-            PlayToolbar(mediaController = mediaController, isPlayingFlow = isPlayingFlow, scope = scope) {
+            PlayToolbar(mediaController = mediaController, isPlayingState = isPlayingState, scope = scope) {
                 navController.navigate(Screen.NOW_PLAYING.name)
             }
         },

@@ -15,6 +15,7 @@ import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.flows.player.ShuffleModeFlow
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -23,9 +24,9 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun ShuffleButton(mediaController: MediaControllerAdapter,
-                 shuffleModeFlow: ShuffleModeFlow,
-                 scope: CoroutineScope = rememberCoroutineScope()) {
-    val shuffleMode by shuffleModeFlow.state.collectAsState()
+                  shuffleModeState: StateFlow<Boolean>,
+                  scope: CoroutineScope = rememberCoroutineScope()) {
+    val shuffleMode by shuffleModeState.collectAsState()
     if (shuffleMode) {
         ShuffleOnButton(mediaController = mediaController, scope = scope)
     } else {

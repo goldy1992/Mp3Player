@@ -4,10 +4,8 @@ import androidx.concurrent.futures.await
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -20,9 +18,8 @@ import javax.inject.Inject
 class ShuffleModeFlow
     @Inject
     constructor(mediaControllerFuture: ListenableFuture<MediaController>,
-                scope : CoroutineScope,
-                @MainDispatcher mainDispatcher: CoroutineDispatcher
-    ) : LogTagger, PlayerFlow<Boolean>(mediaControllerFuture, scope, mainDispatcher, false) {
+                scope : CoroutineScope
+    ) : LogTagger, PlayerFlow<Boolean>(mediaControllerFuture, scope) {
 
         private val shuffleModeCallbackFlow : Flow<Boolean> = callbackFlow {
             val controller = mediaControllerFuture.await()
@@ -45,15 +42,4 @@ class ShuffleModeFlow
         override fun logTag(): String {
             return "ShuffleModeFlow"
         }
-
-
-
-        override suspend fun getInitialValue(): Boolean {
-            return mediaControllerFuture.await().shuffleModeEnabled
-        }
-
-        init {
-            initialise()
-        }
-
     }

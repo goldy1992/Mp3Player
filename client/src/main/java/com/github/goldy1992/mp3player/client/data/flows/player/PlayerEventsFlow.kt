@@ -22,9 +22,8 @@ class PlayerEventsFlow
 
 @Inject
 constructor(mediaControllerFuture: ListenableFuture<MediaController>,
-            scope : CoroutineScope,
-            @MainDispatcher mainDispatcher: CoroutineDispatcher
-) : LogTagger, PlayerFlow<PlayerEventHolder>(mediaControllerFuture, scope, mainDispatcher, PlayerEventHolder.EMPTY) {
+            scope : CoroutineScope
+) : LogTagger, PlayerFlow<PlayerEventHolder>(mediaControllerFuture, scope) {
 
     private val eventsFlow : Flow<PlayerEventHolder> = callbackFlow {
         val controller = mediaControllerFuture.await()
@@ -47,16 +46,5 @@ constructor(mediaControllerFuture: ListenableFuture<MediaController>,
 
     override fun flow(): Flow<PlayerEventHolder> {
         return eventsFlow
-    }
-
-    init {
-        initialise()
-        scope.launch {
-
-        }
-    }
-
-    override suspend fun getInitialValue(): PlayerEventHolder {
-        return PlayerEventHolder.EMPTY
     }
 }

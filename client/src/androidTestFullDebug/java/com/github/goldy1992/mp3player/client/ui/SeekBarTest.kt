@@ -6,7 +6,6 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.lifecycle.MutableLiveData
 import androidx.media3.common.MediaMetadata
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -60,7 +59,7 @@ class SeekBarTest {
         composeTestRule.setContent {
             SeekBar(mediaController = mockMediaController,
                     metadataFlow = metadataFlow,
-                    isPlayingFlow = isPlayingFlow,
+                    isPlayingState = isPlayingFlow,
                     playbackParametersFlow = playbackParametersFlow)
         }
 

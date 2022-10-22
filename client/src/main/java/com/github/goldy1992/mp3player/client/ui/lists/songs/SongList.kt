@@ -18,12 +18,13 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
-import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
+import kotlinx.coroutines.flow.StateFlow
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 import org.apache.commons.lang3.StringUtils
 
@@ -34,12 +35,12 @@ fun SongList(
     modifier : Modifier = Modifier,
     songs : List<MediaItem> = emptyList(),
     mediaControllerAdapter: MediaControllerAdapter,
-    metadataFlow: MetadataFlow,
-    isPlayingFlow: IsPlayingFlow,
+    metadataState: StateFlow<MediaMetadata>,
+    isPlayingState: StateFlow<Boolean>,
     onSongSelected : (song : MediaItem) -> Unit = {}) {
 
-    val metadata by metadataFlow.state.collectAsState()
-    val isPlaying by isPlayingFlow.state.collectAsState()
+    val metadata by metadataState.collectAsState()
+    val isPlaying by isPlayingState.collectAsState()
     val currentMediaItem = remember (isPlaying, metadata) {
         mediaControllerAdapter.getCurrentMediaItem()
     }

@@ -66,7 +66,7 @@ fun SearchScreen(
             navController = navController,
             mediaBrowser = viewModel.mediaBrowserAdapter,
             mediaController = viewModel.mediaControllerAdapter,
-            isPlayingFlow = viewModel.isPlayingFlow,
+            isPlayingState = viewModel.isPlaying,
             scope = scope
 
         )
@@ -76,7 +76,7 @@ fun SearchScreen(
             navController = navController,
             mediaBrowser = viewModel.mediaBrowserAdapter,
             mediaController = viewModel.mediaControllerAdapter,
-            isPlayingFlow = viewModel.isPlayingFlow,
+            isPlayingState = viewModel.isPlaying,
             scope = scope
         )
 
@@ -94,7 +94,7 @@ private fun SmallSearchResults(
     navController: NavController,
     mediaBrowser: MediaBrowserAdapter,
     mediaController : MediaControllerAdapter,
-    isPlayingFlow: IsPlayingFlow,
+    isPlayingState: StateFlow<Boolean>,
     scope : CoroutineScope = rememberCoroutineScope()) {
     val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     ModalNavigationDrawer(
@@ -114,7 +114,7 @@ private fun SmallSearchResults(
             },
             bottomBar = {
                 PlayToolbar(mediaController = mediaController,
-                            isPlayingFlow = isPlayingFlow,
+                            isPlayingState = isPlayingState,
                             scope = scope) {
                     navController.navigate(Screen.NOW_PLAYING.name)
                 }
@@ -142,7 +142,7 @@ private fun LargeSearchResults(
     navController: NavController,
     mediaBrowser: MediaBrowserAdapter,
     mediaController : MediaControllerAdapter,
-    isPlayingFlow: IsPlayingFlow,
+    isPlayingState: StateFlow<Boolean>,
     scope : CoroutineScope = rememberCoroutineScope()) {
     PermanentNavigationDrawer(
         modifier = Modifier.fillMaxSize(),
@@ -162,7 +162,7 @@ private fun LargeSearchResults(
             },
             bottomBar = {
                 PlayToolbar(mediaController = mediaController,
-                            isPlayingFlow = isPlayingFlow,
+                            isPlayingState = isPlayingState,
                             scope = scope) {
                     navController.navigate(Screen.NOW_PLAYING.name)
                 }

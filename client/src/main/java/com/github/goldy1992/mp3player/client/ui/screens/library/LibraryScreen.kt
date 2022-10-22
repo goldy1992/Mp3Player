@@ -59,7 +59,7 @@ fun LibraryScreen(navController: NavController,
 
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(mediaController = viewModel.mediaControllerAdapter,
-                    isPlayingFlow = viewModel.isPlayingFlow) {
+                    isPlayingState = viewModel.isPlaying) {
             navController.navigate(Screen.NOW_PLAYING.name)
         }
     }
@@ -134,7 +134,7 @@ fun LargeLibraryScreen(
             },
             bottomBar = {
                 PlayToolbar(mediaController = viewModel.mediaControllerAdapter,
-                    isPlayingFlow = viewModel.isPlayingFlow) {
+                    isPlayingState = viewModel.isPlaying) {
                     navController.navigate(Screen.NOW_PLAYING.name)
                 }
 
@@ -347,8 +347,8 @@ fun TabBarPages(navController: NavController,
                         SongList(
                             songs = children,
                             mediaControllerAdapter = viewModel.mediaControllerAdapter,
-                            metadataFlow = viewModel.metadataFlow,
-                            isPlayingFlow = viewModel.isPlayingFlow
+                            metadataState = viewModel.metadata,
+                            isPlayingState = viewModel.isPlaying
                         ) {
                             val libraryId = MediaItemUtils.getLibraryId(it) ?: ""
                             Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")

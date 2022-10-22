@@ -15,34 +15,31 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
-import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
-import com.github.goldy1992.mp3player.client.data.flows.player.PlaybackParametersFlow
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.MetadataUtils
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 const val logTag = "seekbar"
 
 @Composable
-fun SeekBar(isPlayingFlow: IsPlayingFlow,
-            metadataFlow: MetadataFlow,
-            playbackParametersFlow : PlaybackParametersFlow,
+fun SeekBar(isPlayingState: StateFlow<Boolean>,
+            metadataState: StateFlow<MediaMetadata>,
+            playbackSpeedState : StateFlow<Float>,
             mediaController : MediaControllerAdapter,
             scope: CoroutineScope = rememberCoroutineScope()) {
 
     //Log.i(logTag, "seek bar created")
-    val isPlaying by isPlayingFlow.state.collectAsState()
-    val metadata by metadataFlow.state.collectAsState()
-    val playbackParameters by playbackParametersFlow.state.collectAsState()
-
+    val isPlaying by isPlayingState.collectAsState()
+    val metadata by metadataState.collectAsState()
+    val playbackSpeed by playbackSpeedState.collectAsState()
     val duration = MetadataUtils.getDuration(metadata).toFloat()
-    val playbackSpeed = playbackParameters.speed
     val currentPosition = mediaController.getCurrentPlaybackPosition()
-
     val durationAtSpeed = duration / playbackSpeed
     val animationTimeInMs = (durationAtSpeed * (1 - (currentPosition / duration))).toInt()
     val durationDescription = stringResource(id = R.string.duration)

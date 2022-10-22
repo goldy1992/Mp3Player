@@ -51,7 +51,7 @@ class RepeatButtonTest {
         whenever(repeatModeFlow.state).thenReturn(MutableStateFlow(REPEAT_MODE_ONE))
         composeTestRule.setContent {
             RepeatButton(mediaController = mockMediaController,
-                        repeatModeFlow = repeatModeFlow)
+                        repeatModeState = repeatModeFlow)
         }
 
         val repeatOneButton = composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true)
@@ -77,7 +77,7 @@ class RepeatButtonTest {
         whenever(repeatModeFlow.state).thenReturn(MutableStateFlow(REPEAT_MODE_OFF))
         composeTestRule.setContent {
             RepeatButton(mediaController = mockMediaController,
-                        repeatModeFlow = repeatModeFlow)
+                        repeatModeState = repeatModeFlow)
         }
 
         val repeatNoneButton = composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true)
@@ -103,7 +103,7 @@ class RepeatButtonTest {
         whenever(repeatModeFlow.state).thenReturn(MutableStateFlow(REPEAT_MODE_ALL))
         composeTestRule.setContent {
             RepeatButton(mediaController = mockMediaController,
-                        repeatModeFlow = repeatModeFlow)
+                        repeatModeState = repeatModeFlow)
         }
 
         val repeatAllButton = composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true)

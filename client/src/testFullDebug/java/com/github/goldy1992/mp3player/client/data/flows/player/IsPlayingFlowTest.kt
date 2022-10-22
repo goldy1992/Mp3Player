@@ -2,6 +2,8 @@ package com.github.goldy1992.mp3player.client.data.flows.player
 
 import androidx.media3.common.MediaMetadata
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -27,35 +29,19 @@ class IsPlayingFlowTest : MediaControllerFlowTestBase() {
     }
 
     private fun testIsPlaying(isPlaying : Boolean) = runTest(dispatcher) {
-        val isPlayingFLow = IsPlayingFlow(mediaControllerListenableFuture, testScope, dispatcher)
+        val isPlayingFLow = IsPlayingFlow(mediaControllerListenableFuture, testScope)
         // await flow to initialise
         advanceUntilIdle()
-        val flowlistener = isPlayingFLow.state
-
+        var result : Boolean? = null
+        val collectJob = launch(UnconfinedTestDispatcher()) {
+            isPlayingFLow.flow().collect {
+                result = it
+            }
+        }
         listener?.onIsPlayingChanged(isPlaying)
         // await listener invocation to complete
         advanceUntilIdle()
-        assertEquals(isPlaying, flowlistener.value)
+        assertEquals(isPlaying, result)
+        collectJob.cancel()
     }
-
-    @Test
-    fun testMetadata() = runTest(dispatcher) {
-        val expectedArtist = "artist"
-        val expectedMetadata = MediaMetadata.Builder().setArtist(expectedArtist).build()
-        performTest(expectedMetadata)
-    }
-
-    private fun performTest(metadata: MediaMetadata) = runTest(dispatcher) {
-        val metadataFlow = MetadataFlow(mediaControllerListenableFuture, testScope, dispatcher)
-
-        advanceUntilIdle()
-        val metadataListener = metadataFlow.state
-        listener?.onMediaMetadataChanged(metadata)
-        advanceUntilIdle()
-        val actualMetadata = metadataListener.value
-        assertEquals( metadata.artist, actualMetadata.artist)
-
-    }
-
-
 }

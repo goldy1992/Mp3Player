@@ -28,7 +28,7 @@ import javax.inject.Inject
 open class MediaControllerAdapter
     @Inject
     constructor(
-        private val mediaControllerFuture: ListenableFuture<MediaController>,
+        val mediaControllerFuture: ListenableFuture<MediaController>,
         private val scope : CoroutineScope,
         @MainDispatcher private val mainDispatcher : CoroutineDispatcher)
         : MediaController.Listener, LogTagger {

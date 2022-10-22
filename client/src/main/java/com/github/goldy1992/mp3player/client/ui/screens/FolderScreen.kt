@@ -32,7 +32,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
-import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.ui.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.PlayToolbar
@@ -41,20 +40,19 @@ import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.viewmodels.FolderScreenViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 
 @Composable
 fun FolderScreen(
-    folderId : String = Constants.UNKNOWN,
-    folderName : String = Constants.UNKNOWN,
-    folderPath : String = Constants.UNKNOWN,
     navController: NavController,
     windowSize : WindowSize = WindowSize.Compact,
     viewModel: FolderScreenViewModel = viewModel()
@@ -66,21 +64,21 @@ fun FolderScreen(
     val isLargeScreen = windowSize == WindowSize.Expanded
     if (isLargeScreen) {
         LargeFolderScreen(
-            folderName = folderName,
+            folderName = viewModel.folderName,
             navController = navController,
             mediaController = viewModel.mediaController,
-            metadataFlow = viewModel.metadataFlow,
-            isPlayingFlow = viewModel.isPlayingFlow,
+            metadataState = viewModel.metadata,
+            isPlayingState = viewModel.isPlaying,
             scope = scope,
             folderItems = folderItems
         )
     } else {
         SmallFolderScreen(
-            folderName = folderName,
+            folderName = viewModel.folderName,
             navController = navController,
             mediaController = viewModel.mediaController,
-            metadataFlow = viewModel.metadataFlow,
-            isPlayingFlow = viewModel.isPlayingFlow,
+            metadataState = viewModel.metadata,
+            isPlayingState = viewModel.isPlaying,
             scope = scope,
             folderItems = folderItems
         )
@@ -95,8 +93,8 @@ private fun SmallFolderScreen(
     folderPath : String = Constants.UNKNOWN,
     navController: NavController,
     mediaController : MediaControllerAdapter,
-    isPlayingFlow: IsPlayingFlow,
-    metadataFlow: MetadataFlow,
+    isPlayingState: StateFlow<Boolean>,
+    metadataState: StateFlow<MediaMetadata>,
     scope : CoroutineScope = rememberCoroutineScope(),
     folderItems : List<MediaItem>?
 ) {
@@ -142,7 +140,7 @@ private fun SmallFolderScreen(
             },
             bottomBar = {
                 PlayToolbar(mediaController = mediaController,
-                            isPlayingFlow = isPlayingFlow) {
+                            isPlayingState = isPlayingState) {
                     navController.navigate(Screen.NOW_PLAYING.name)
                 }
             },
@@ -162,7 +160,7 @@ private fun SmallFolderScreen(
                         }
                     }
                 } else {
-                    SongList(songs = folderItems!!, mediaControllerAdapter = mediaController, isPlayingFlow = isPlayingFlow, metadataFlow = metadataFlow) {
+                    SongList(songs = folderItems!!, mediaControllerAdapter = mediaController, isPlayingState = isPlayingState, metadataState = metadataState) {
                         val libraryId = MediaItemUtils.getLibraryId(it) ?: ""
                         Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
                         mediaController.playFromMediaId(it)
@@ -180,8 +178,8 @@ private fun LargeFolderScreen(
     folderName : String = Constants.UNKNOWN,
     navController: NavController,
     mediaController : MediaControllerAdapter,
-    metadataFlow: MetadataFlow,
-    isPlayingFlow: IsPlayingFlow,
+    metadataState: StateFlow<MediaMetadata>,
+    isPlayingState: StateFlow<Boolean>,
     scope : CoroutineScope = rememberCoroutineScope(),
     folderItems : List<MediaItem>?
 ) {
@@ -228,7 +226,7 @@ private fun LargeFolderScreen(
                 )
             },
             bottomBar = {
-                PlayToolbar(mediaController = mediaController, isPlayingFlow = isPlayingFlow) {
+                PlayToolbar(mediaController = mediaController, isPlayingState = isPlayingState) {
                     navController.navigate(Screen.NOW_PLAYING.name)
                 }
             },
@@ -246,7 +244,7 @@ private fun LargeFolderScreen(
                             CircularProgressIndicator()
                         }
                     } else {
-                        SongList(songs = folderItems!!, mediaControllerAdapter = mediaController, metadataFlow = metadataFlow, isPlayingFlow = isPlayingFlow) {
+                        SongList(songs = folderItems!!, mediaControllerAdapter = mediaController, metadataState = metadataState, isPlayingState = isPlayingState) {
                             val libraryId = MediaItemUtils.getLibraryId(it) ?: ""
                             Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
                             mediaController.playFromMediaId(it)

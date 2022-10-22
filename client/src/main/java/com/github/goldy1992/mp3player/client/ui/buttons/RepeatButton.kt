@@ -13,17 +13,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import androidx.media3.common.Player
+import androidx.media3.common.Player.RepeatMode
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.flows.player.RepeatModeFlow
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @Composable
 fun RepeatButton(mediaController : MediaControllerAdapter,
-                repeatModeFlow: RepeatModeFlow,
-                scope: CoroutineScope = rememberCoroutineScope()) {
-    val repeatMode by repeatModeFlow.state.collectAsState()
+                 repeatModeState: StateFlow<@RepeatMode Int>,
+                 scope: CoroutineScope = rememberCoroutineScope()) {
+    val repeatMode by repeatModeState.collectAsState()
     when (repeatMode) {
         Player.REPEAT_MODE_ONE -> RepeatOneButton(mediaController = mediaController, scope = scope)
         Player.REPEAT_MODE_ALL -> RepeatAllButton(mediaController = mediaController, scope = scope)

@@ -67,8 +67,8 @@ class SongsTest {
         composeTestRule.setContent {
             SongList(songs = songList,
                     mediaControllerAdapter = mockMediaController,
-                    metadataFlow = metadataFlow,
-                    isPlayingFlow = isPlayingFlow,
+                    metadataState = metadataFlow,
+                    isPlayingState = isPlayingFlow,
             onSongSelected = {})
         }
         runBlocking {
