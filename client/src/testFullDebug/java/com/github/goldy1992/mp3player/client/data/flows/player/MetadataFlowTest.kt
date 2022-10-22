@@ -17,12 +17,11 @@ class MetadataFlowTest : MediaControllerFlowTestBase() {
     override fun setup() {
         whenever(mediaController.mediaMetadata).thenReturn(MediaMetadata.EMPTY)
         super.setup()
-
     }
 
 
     @Test
-    fun testMetadata() = testScope.runTest {
+    fun testMetadata() = runTest {
         val expectedArtist = "artist"
         val expectedMetadata = MediaMetadata.Builder().setArtist(expectedArtist).build()
         val metadataFlow = MetadataFlow(mediaControllerListenableFuture, testScope)
@@ -33,15 +32,13 @@ class MetadataFlowTest : MediaControllerFlowTestBase() {
                 result = it
             }
         }
-        advanceUntilIdle()
+        testScope.advanceUntilIdle()
         listener?.onMediaMetadataChanged(expectedMetadata)
         advanceUntilIdle()
+        testScope.advanceUntilIdle()
         assertEquals( expectedMetadata.artist, result?.artist)
         collectJob.cancel()
-        advanceUntilIdle()
+        testScope.advanceUntilIdle()
     }
-
-
-
 
 }

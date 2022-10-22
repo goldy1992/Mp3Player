@@ -19,12 +19,12 @@ class IsPlayingFlowTest : MediaControllerFlowTestBase() {
     }
 
     @Test
-    fun testIsPlayingFlowWhenPlaying() = runTest(dispatcher) {
+    fun testIsPlayingFlowWhenPlaying() {
         testIsPlaying(true)
     }
 
     @Test
-    fun testIsPlayingFlowNotPlaying() = runTest(dispatcher) {
+    fun testIsPlayingFlowNotPlaying() {
         testIsPlaying(false)
     }
 
@@ -32,16 +32,20 @@ class IsPlayingFlowTest : MediaControllerFlowTestBase() {
         val isPlayingFLow = IsPlayingFlow(mediaControllerListenableFuture, testScope)
         // await flow to initialise
         advanceUntilIdle()
+
         var result : Boolean? = null
         val collectJob = launch(UnconfinedTestDispatcher()) {
             isPlayingFLow.flow().collect {
                 result = it
             }
         }
+        testScope.advanceUntilIdle()
         listener?.onIsPlayingChanged(isPlaying)
         // await listener invocation to complete
         advanceUntilIdle()
+        testScope.advanceUntilIdle()
         assertEquals(isPlaying, result)
         collectJob.cancel()
+        testScope.advanceUntilIdle()
     }
 }

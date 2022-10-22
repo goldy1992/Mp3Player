@@ -21,7 +21,7 @@ buildscript {
         junit_ext_version = '1.1.2'
         junit4_version = '4.12'
         lifecycle_version = '2.5.1'
-        coroutines_version = '1.6.3'
+        coroutines_version = '1.6.4'
         media_version = '1.6.0'
         media3_version = '1.0.0-beta02'
         monitor_version = '1.4.0-beta01'
