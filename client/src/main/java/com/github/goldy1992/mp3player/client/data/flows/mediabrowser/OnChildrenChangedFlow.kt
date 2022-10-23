@@ -14,15 +14,13 @@ import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-
-
 class OnChildrenChangedFlow
     @Inject
     constructor(
         private val asyncMediaBrowserListener: AsyncMediaBrowserListener,
         private val scope : CoroutineScope) {
 
-    val flow : Flow<OnChildrenChangedEventHolder> = callbackFlow {
+    val flow : Flow<OnChildrenChangedEventHolder> = callbackFlow<OnChildrenChangedEventHolder> {
         val messageListener = object : MediaBrowser.Listener {
             override fun onChildrenChanged(
                 browser: MediaBrowser,
@@ -30,11 +28,13 @@ class OnChildrenChangedFlow
                 itemCount: Int,
                 params: MediaLibraryService.LibraryParams?
             ) {
-                trySend(OnChildrenChangedEventHolder(browser, parentId, itemCount, params))
+                val x = OnChildrenChangedEventHolder(browser, parentId, itemCount, params)
+                trySend(x)
             }
         }
         asyncMediaBrowserListener.listeners.add(messageListener)
-        awaitClose { asyncMediaBrowserListener.listeners.remove(messageListener) }
+        awaitClose {
+            asyncMediaBrowserListener.listeners.remove(messageListener) }
     }.shareIn(
         scope,
         replay = 1,

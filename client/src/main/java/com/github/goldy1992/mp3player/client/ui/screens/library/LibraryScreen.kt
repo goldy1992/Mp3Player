@@ -347,7 +347,7 @@ fun TabBarPages(navController: NavController,
                         SongList(
                             songs = children,
                             mediaControllerAdapter = viewModel.mediaControllerAdapter,
-                            metadataState = viewModel.metadata,
+                            metadataState = viewModel.metadata.state,
                             isPlayingState = viewModel.isPlaying.state
                         ) {
                             val libraryId = MediaItemUtils.getLibraryId(it) ?: ""

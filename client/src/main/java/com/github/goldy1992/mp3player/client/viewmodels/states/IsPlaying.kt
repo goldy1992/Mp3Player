@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.session.MediaController
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
+import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.PlayerFlow
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.util.concurrent.ListenableFuture
@@ -27,10 +28,10 @@ class IsPlaying
 
     companion object {
         fun initialise(viewModel: ViewModel,
-                        playerFlow: PlayerFlow<Boolean>,
+                        playerFlow: IsPlayingFlow,
                         @MainDispatcher dispatcher: CoroutineDispatcher,
                        mediaControllerAsync : ListenableFuture<MediaController>) : IsPlaying {
-            return IsPlaying(viewModel.viewModelScope, playerFlow as IsPlayingFlow, dispatcher, mediaControllerAsync)
+            return IsPlaying(viewModel.viewModelScope, playerFlow, dispatcher, mediaControllerAsync)
         }
     }
 

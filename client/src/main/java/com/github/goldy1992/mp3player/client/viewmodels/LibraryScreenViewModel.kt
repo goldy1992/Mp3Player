@@ -14,6 +14,7 @@ import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnChildrenC
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.viewmodels.states.IsPlaying
+import com.github.goldy1992.mp3player.client.viewmodels.states.Metadata
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -65,12 +66,16 @@ class LibraryScreenViewModel
 
                 if (it.parentId == rootItemId) {
                     val rootChildren = mediaBrowserAdapter.getChildren(it.parentId, 0, it.itemCount)
-                    _rootItems.value = rootChildren
-                    for (mediaItem : MediaItem in rootChildren) {
-                        val mediaItemId = mediaItem.mediaId
-                        mediaBrowserAdapter.subscribe(mediaItemId)
-                        _rootItemMap[mediaItemId] = MutableStateFlow(emptyList())
-                        rootItemMap[mediaItemId] = _rootItemMap[mediaItemId]!!
+                    if (rootChildren.isEmpty()) {
+                        Log.w(logTag(), "No root children found")
+                    } else {
+                        _rootItems.value = rootChildren
+                        for (mediaItem: MediaItem in rootChildren) {
+                            val mediaItemId = mediaItem.mediaId
+                            mediaBrowserAdapter.subscribe(mediaItemId)
+                            _rootItemMap[mediaItemId] = MutableStateFlow(emptyList())
+                            rootItemMap[mediaItemId] = _rootItemMap[mediaItemId]!!
+                        }
                     }
                 } else if (rootItemMap.containsKey(it.parentId)) {
                     val children = mediaBrowserAdapter.getChildren(it.parentId, 0, it.itemCount)
@@ -84,22 +89,7 @@ class LibraryScreenViewModel
     private val mediaControllerAsync : ListenableFuture<MediaController> = mediaControllerAdapter.mediaControllerFuture
 
     val isPlaying = IsPlaying.initialise(this, isPlayingFlow, mainDispatcher, mediaControllerAsync)
-
-
-    // metadata
-    private val _metadataState = MutableStateFlow(MediaMetadata.EMPTY)
-    val metadata : StateFlow<MediaMetadata> = _metadataState
-
-    init {
-        viewModelScope.launch(mainDispatcher) {
-            _metadataState.value = mediaControllerAsync.await().mediaMetadata
-        }
-        viewModelScope.launch {
-            metadataFlow.flow().collect {
-                _metadataState.value = it
-            }
-        }
-    }
+    val metadata = Metadata.initialise(this, metadataFlow, mainDispatcher, mediaControllerAsync)
 
     override fun logTag(): String {
         return "LibScrnViewModel"
