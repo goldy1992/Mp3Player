@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.data.flows.player
 
-import androidx.media3.common.MediaMetadata
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

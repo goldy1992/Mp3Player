@@ -13,6 +13,7 @@ import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnChildrenChangedFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
+import com.github.goldy1992.mp3player.client.viewmodels.states.IsPlaying
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -82,20 +83,21 @@ class LibraryScreenViewModel
 
     private val mediaControllerAsync : ListenableFuture<MediaController> = mediaControllerAdapter.mediaControllerFuture
 
-    // isPlaying
-    private val _isPlayingState = MutableStateFlow(false)
-    val isPlaying : StateFlow<Boolean> = _isPlayingState
-
-    init {
-        viewModelScope.launch(mainDispatcher) {
-            _isPlayingState.value = mediaControllerAsync.await().isPlaying
-        }
-        viewModelScope.launch {
-            isPlayingFlow.flow().collect {
-                _isPlayingState.value = it
-            }
-        }
-    }
+    val isPlaying = IsPlaying.initialise(this, isPlayingFlow, mainDispatcher, mediaControllerAsync)
+//    // isPlaying
+//    private val _isPlayingState = MutableStateFlow(false)
+//    val isPlaying : StateFlow<Boolean> = _isPlayingState
+//
+//    init {
+//        viewModelScope.launch(mainDispatcher) {
+//            _isPlayingState.value = mediaControllerAsync.await().isPlaying
+//        }
+//        viewModelScope.launch {
+//            isPlayingFlow.flow().collect {
+//                _isPlayingState.value = it
+//            }
+//        }
+//    }
 
 
     // metadata
