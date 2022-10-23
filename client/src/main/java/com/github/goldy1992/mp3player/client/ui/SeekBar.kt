@@ -18,7 +18,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.MetadataUtils
 import kotlinx.coroutines.CoroutineScope

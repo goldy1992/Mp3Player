@@ -4,7 +4,6 @@ import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.search.SearchDao
 import com.github.goldy1992.mp3player.service.library.search.SearchEntity
-import java.util.*
 
 abstract class SearchDatabaseManager<T : SearchEntity>(private val contentManager: ContentManager,
                                                         private val dao: SearchDao<T>,

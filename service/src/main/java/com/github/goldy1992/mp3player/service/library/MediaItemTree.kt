@@ -4,9 +4,7 @@ import android.content.res.AssetManager
 import android.net.Uri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import androidx.media3.common.MediaMetadata.FOLDER_TYPE_MIXED
-import androidx.media3.common.MediaMetadata.FOLDER_TYPE_NONE
-import androidx.media3.common.MediaMetadata.FOLDER_TYPE_PLAYLISTS
+import androidx.media3.common.MediaMetadata.*
 import androidx.media3.common.util.Util
 import com.google.common.collect.ImmutableList
 import org.json.JSONObject

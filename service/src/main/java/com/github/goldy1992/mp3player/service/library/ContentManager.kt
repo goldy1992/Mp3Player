@@ -14,8 +14,6 @@ import dagger.hilt.android.scopes.ServiceScoped
 import org.apache.commons.collections4.CollectionUtils
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 @ServiceScoped
 class ContentManager @Inject constructor(private val contentRetrievers: ContentRetrievers,

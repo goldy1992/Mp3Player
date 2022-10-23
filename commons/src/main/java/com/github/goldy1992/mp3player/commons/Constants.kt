@@ -1,8 +1,8 @@
 package com.github.goldy1992.mp3player.commons
 
 import android.net.Uri
-import androidx.media3.common.Player
 import android.util.SparseArray
+import androidx.media3.common.Player
 
 object Constants {
     const val FILE_COUNT = "FILE_COUNT"

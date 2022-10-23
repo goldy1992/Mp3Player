@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Handler
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.service.MediaPlaybackService
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 
 abstract class MediaStoreObserver(private val contentResolver: ContentResolver,

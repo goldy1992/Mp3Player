@@ -6,7 +6,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityOptionsCompat
-import org.checkerframework.checker.units.qual.A
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

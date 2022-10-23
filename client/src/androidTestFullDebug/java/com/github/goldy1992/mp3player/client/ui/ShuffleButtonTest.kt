@@ -13,12 +13,12 @@ import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleOffButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleOnButton
 import kotlinx.coroutines.flow.MutableStateFlow
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 /**
  * Test class for the [ShuffleButton]

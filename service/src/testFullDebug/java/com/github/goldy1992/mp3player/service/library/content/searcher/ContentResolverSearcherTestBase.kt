@@ -4,14 +4,16 @@ import android.content.ContentResolver
 import android.database.Cursor
 import androidx.media3.common.MediaItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.*
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestCoroutineScheduler
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert
+import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.junit.Assert
-import org.junit.Test
-import java.util.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 abstract class ContentResolverSearcherTestBase<T : ContentResolverSearcher<*>?> {

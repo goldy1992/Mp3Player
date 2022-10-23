@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.annotation.IntRange
 import androidx.media3.session.*
 import androidx.media3.session.MediaLibraryService.LibraryParams
-import com.github.goldy1992.mp3player.client.ui.logTag
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture

@@ -1,8 +1,8 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Context
-import androidx.media3.common.MediaItem
 import androidx.lifecycle.MutableLiveData
+import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.navigation.NavController
 import androidx.test.platform.app.InstrumentationRegistry

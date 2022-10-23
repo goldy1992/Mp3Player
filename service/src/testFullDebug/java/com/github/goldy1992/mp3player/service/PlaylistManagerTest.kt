@@ -1,17 +1,12 @@
 package com.github.goldy1992.mp3player.service
 
 import androidx.media3.common.MediaItem
-import org.mockito.kotlin.mock
-
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
+import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
-
-import kotlin.collections.ArrayList
-import kotlin.collections.emptyList
 
 
 @RunWith(RobolectricTestRunner::class)

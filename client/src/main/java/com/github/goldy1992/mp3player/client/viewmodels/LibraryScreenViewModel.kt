@@ -84,20 +84,6 @@ class LibraryScreenViewModel
     private val mediaControllerAsync : ListenableFuture<MediaController> = mediaControllerAdapter.mediaControllerFuture
 
     val isPlaying = IsPlaying.initialise(this, isPlayingFlow, mainDispatcher, mediaControllerAsync)
-//    // isPlaying
-//    private val _isPlayingState = MutableStateFlow(false)
-//    val isPlaying : StateFlow<Boolean> = _isPlayingState
-//
-//    init {
-//        viewModelScope.launch(mainDispatcher) {
-//            _isPlayingState.value = mediaControllerAsync.await().isPlaying
-//        }
-//        viewModelScope.launch {
-//            isPlayingFlow.flow().collect {
-//                _isPlayingState.value = it
-//            }
-//        }
-//    }
 
 
     // metadata

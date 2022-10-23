@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.service
 
 import androidx.annotation.VisibleForTesting
 import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import androidx.media3.common.MediaMetadata.FOLDER_TYPE_NONE
 import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaLibraryService

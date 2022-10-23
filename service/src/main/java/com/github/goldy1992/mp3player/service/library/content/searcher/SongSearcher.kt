@@ -11,9 +11,7 @@ import com.github.goldy1992.mp3player.service.library.content.parser.SongResults
 import com.github.goldy1992.mp3player.service.library.search.Song
 import com.github.goldy1992.mp3player.service.library.search.SongDao
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
 import org.apache.commons.lang3.StringUtils
-import java.util.*
 
 open class SongSearcher
 

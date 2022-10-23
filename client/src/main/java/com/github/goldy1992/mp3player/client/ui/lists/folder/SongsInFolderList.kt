@@ -7,8 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
-import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import kotlinx.coroutines.flow.StateFlow
 

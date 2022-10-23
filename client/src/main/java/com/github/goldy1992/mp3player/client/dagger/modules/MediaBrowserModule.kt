@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.client.dagger.modules
 
 import android.content.Context
 import androidx.media3.session.MediaBrowser
-import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.github.goldy1992.mp3player.client.AsyncMediaBrowserListener
 import com.google.common.util.concurrent.ListenableFuture

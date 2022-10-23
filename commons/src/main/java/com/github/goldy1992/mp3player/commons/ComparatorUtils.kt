@@ -3,7 +3,6 @@ package com.github.goldy1992.mp3player.commons
 
 import androidx.media3.common.MediaItem
 import java.util.*
-import kotlin.Comparator
 
 object ComparatorUtils {
 

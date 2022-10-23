@@ -2,9 +2,8 @@ package com.github.goldy1992.mp3player.service.library.content.parser
 
 import android.database.Cursor
 import android.provider.MediaStore
-import androidx.media3.common.MediaItem
 import android.util.Log
-import androidx.media3.common.FlagSet
+import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata.FOLDER_TYPE_MIXED
 import com.github.goldy1992.mp3player.commons.ComparatorUtils
 import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
@@ -15,7 +14,6 @@ import java.io.File
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
-import kotlin.collections.HashMap
 
 class FolderResultsParser
 
