@@ -33,7 +33,7 @@ fun ThemeSelectScreen(
             backgroundColor = MaterialTheme.colors.primary)
     },
         content = {
-            Column {
+            Column(Modifier.padding(it)) {
                 ThemeSelector(
                     userPreferencesRepository = userPreferencesRepository,
                     scope = scope)            }

@@ -146,8 +146,9 @@ fun NavigationDrawerContent(navController: NavController = rememberNavController
             modifier = Modifier.size(24.dp)) },
         selected = currentScreen == Screen.SETTINGS,
         onClick = {
-            if (currentScreen != Screen.SETTINGS)
-            navController.navigate(Screen.SETTINGS.name)
+            if (currentScreen != Screen.SETTINGS) {
+                navController.navigate(Screen.SETTINGS.name)
+            }
         })
 
       Divider(

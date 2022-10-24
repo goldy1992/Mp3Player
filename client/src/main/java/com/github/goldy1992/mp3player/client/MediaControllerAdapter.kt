@@ -112,7 +112,7 @@ open class MediaControllerAdapter
         val extras = Bundle()
         extras.putFloat(CHANGE_PLAYBACK_SPEED, speed)
         val changePlaybackSpeedCommand = SessionCommand(CHANGE_PLAYBACK_SPEED, extras)
-        mediaControllerFuture.await().sendCustomCommand(changePlaybackSpeedCommand, extras)?.await()
+        mediaControllerFuture.await().sendCustomCommand(changePlaybackSpeedCommand, extras).await()
     }
 
     open fun getCurrentPlaybackPosition() : Long {

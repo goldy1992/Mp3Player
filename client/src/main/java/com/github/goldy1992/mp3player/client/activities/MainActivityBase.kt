@@ -15,18 +15,12 @@ import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.permissions.PermissionGranted
 import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
-import com.github.goldy1992.mp3player.commons.ComponentClassMapper
-import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.Screen
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.github.goldy1992.mp3player.commons.*
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 abstract class MainActivityBase : ComponentActivity(),
     LogTagger,
-    CoroutineScope by GlobalScope,
     PermissionGranted {
     @Inject
     lateinit var componentClassMapper : ComponentClassMapper
@@ -36,6 +30,14 @@ abstract class MainActivityBase : ComponentActivity(),
      */
     @Inject
     lateinit var scope: CoroutineScope
+
+    @Inject
+    @MainDispatcher
+    lateinit var mainDispatcher: CoroutineDispatcher
+
+    @Inject
+    @DefaultDispatcher
+    lateinit var defaultDispatcher: CoroutineDispatcher
 
     @Inject
     lateinit var permissionsProcessor: PermissionsProcessor
@@ -77,12 +79,12 @@ abstract class MainActivityBase : ComponentActivity(),
         createService()
         if (Intent.ACTION_VIEW == intent.action) {
             trackToPlay = intent.data
-            launch(Dispatchers.Default) {
+            scope.launch(defaultDispatcher) {
                 mediaControllerAdapter.playFromUri(trackToPlay, null)
             }
             this.startScreen = Screen.NOW_PLAYING
         } 
-        CoroutineScope(Dispatchers.Main).launch { ui(startScreen = startScreen) }
+        scope.launch(mainDispatcher) { ui(startScreen = startScreen) }
     }
 
     val permissionLauncher : ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) {

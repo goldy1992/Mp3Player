@@ -19,6 +19,6 @@ constructor(private val context: Context){
     fun getAppVersion() : String {
         val pInfo: PackageInfo = context.packageManager
             .getPackageInfo(context.packageName, 0)
-            return pInfo.versionName ?: Constants.UNKNOWN
+        return pInfo.versionName ?: Constants.UNKNOWN
     }
 }

@@ -46,9 +46,7 @@ open class MediaBrowserAdapter
 
     open suspend fun getSearchResults(query: String, page : Int = 0, pageSize : Int = 20) : ImmutableList<MediaItem> {
         val result : LibraryResult<ImmutableList<MediaItem>> =
-            mediaBrowserLF.await()?.getSearchResult(query, page, pageSize, getDefaultLibraryParams())?.await()
-                ?:
-            LibraryResult.ofItemList(emptyList(), getDefaultLibraryParams())
+            mediaBrowserLF.await().getSearchResult(query, page, pageSize, getDefaultLibraryParams()).await()
         return result.value ?: ImmutableList.of()
     }
 
