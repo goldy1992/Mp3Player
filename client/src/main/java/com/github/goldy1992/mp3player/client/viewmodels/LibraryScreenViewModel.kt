@@ -46,8 +46,6 @@ class LibraryScreenViewModel
     private val _rootItemMap = HashMap<String, MutableStateFlow<List<MediaItem>>>()
     val rootItemMap = HashMap<String, StateFlow<List<MediaItem>>>()
 
-    var currentNavigationItem : MutableLiveData<MediaItemType> = MutableLiveData(MediaItemType.SONGS)
-
     var rootItem : MediaItem? = null
     var rootItemId : String? = null
     init {
