@@ -153,7 +153,7 @@ fun NavigationDrawerContent(navController: NavController = rememberNavController
       Divider(
         modifier = Modifier.padding(top = 16.dp,
         end = 28.dp),
-        startIndent = 28.dp,
+     //   startIndent = 28.dp,
         color = MaterialTheme.colorScheme.outline)
 }
 

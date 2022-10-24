@@ -89,4 +89,20 @@ class FolderScreenViewModel
             }
         }
     }
+
+
+    // current media item
+    private val _currentMediaItemState = MutableStateFlow(MediaItem.EMPTY)
+    val currentMediaItem : StateFlow<MediaItem> = _currentMediaItemState
+
+    init {
+        viewModelScope.launch(mainDispatcher) {
+            _currentMediaItemState.value = mediaControllerAsync.await().currentMediaItem ?: MediaItem.EMPTY
+        }
+        viewModelScope.launch {
+            metadataFlow.flow().collect {
+                _currentMediaItemState.value = mediaControllerAsync.await().currentMediaItem ?: MediaItem.EMPTY
+            }
+        }
+    }
 }

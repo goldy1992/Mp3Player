@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.lists.songs
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,10 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -18,14 +16,14 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import coil.annotation.ExperimentalCoilApi
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import kotlinx.coroutines.flow.StateFlow
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 import org.apache.commons.lang3.StringUtils
+
+private const val logTag = "SongList"
 
 @ExperimentalCoilApi
 @OptIn(ExperimentalFoundationApi::class)
@@ -33,16 +31,12 @@ import org.apache.commons.lang3.StringUtils
 fun SongList(
     modifier : Modifier = Modifier,
     songs : List<MediaItem> = emptyList(),
-    mediaControllerAdapter: MediaControllerAdapter,
-    metadataState: StateFlow<MediaMetadata>,
     isPlayingState: StateFlow<Boolean>,
+    currentMediaItemState : StateFlow<MediaItem>,
     onSongSelected : (song : MediaItem) -> Unit = {}) {
 
-    val metadata by metadataState.collectAsState()
     val isPlaying by isPlayingState.collectAsState()
-    val currentMediaItem = remember (isPlaying, metadata) {
-        mediaControllerAdapter.getCurrentMediaItem()
-    }
+    val currentMediaItem by currentMediaItemState.collectAsState()
 
     when {
         isEmpty(songs) -> EmptySongsList()
@@ -56,7 +50,8 @@ fun SongList(
                     run {
                         val song = songs[itemIndex]
                         val isItemSelected = isItemSelected(song, currentMediaItem)
-                        val isItemPlaying = if (isPlaying == true) isItemSelected  else false
+                        Log.i(logTag, "isItemSelected: $isItemSelected isPlaying: ${isPlaying}")
+                        val isItemPlaying = if (isPlaying) isItemSelected  else false
                         SongListItem(song = song, isPlaying = isItemPlaying, isSelected = isItemSelected, onClick = onSongSelected)
                     }
                 }
@@ -80,5 +75,6 @@ fun EmptySongsList() {
 }
 
 private fun isItemSelected(song : MediaItem, currentItem : MediaItem) : Boolean {
+    Log.i(logTag, "songId: ${song.mediaId}, currentItemId: ${currentItem.mediaId}")
     return StringUtils.equals(song.mediaId, currentItem.mediaId)
 }

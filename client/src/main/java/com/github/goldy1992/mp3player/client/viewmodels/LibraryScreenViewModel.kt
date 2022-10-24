@@ -13,6 +13,7 @@ import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnChildrenChangedFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
+import com.github.goldy1992.mp3player.client.viewmodels.states.CurrentMediaItemState
 import com.github.goldy1992.mp3player.client.viewmodels.states.IsPlaying
 import com.github.goldy1992.mp3player.client.viewmodels.states.Metadata
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -88,6 +89,7 @@ class LibraryScreenViewModel
 
     val isPlaying = IsPlaying.initialise(this, isPlayingFlow, mainDispatcher, mediaControllerAsync)
     val metadata = Metadata.initialise(this, metadataFlow, mainDispatcher, mediaControllerAsync)
+    val currentMediaItem = CurrentMediaItemState.initialise(this, metadataFlow, mainDispatcher, mediaControllerAsync)
 
     override fun logTag(): String {
         return "LibScrnViewModel"

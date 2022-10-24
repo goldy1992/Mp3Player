@@ -119,8 +119,8 @@ open class MediaControllerAdapter
         return mediaController?.currentPosition ?: 0L
     }
 
-    open fun getCurrentMediaItem() : MediaItem {
-        return mediaController?.currentMediaItem ?: MediaItem.EMPTY
+    open suspend fun getCurrentMediaItem() : MediaItem {
+        return mediaControllerFuture.await().currentMediaItem ?: MediaItem.EMPTY
     }
 
     override fun logTag(): String {

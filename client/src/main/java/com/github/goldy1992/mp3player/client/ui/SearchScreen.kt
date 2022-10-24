@@ -186,6 +186,7 @@ private fun LargeSearchResults(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalComposeUiApi
 @Composable
 fun SearchBar(navController: NavController,

@@ -15,6 +15,7 @@ import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SmallLibraryAppBar(
     scope: CoroutineScope,

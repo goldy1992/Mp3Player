@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client.ui.lists.songs
 import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
@@ -17,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -41,6 +43,8 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
                 .combinedClickable(
                     onClick = { onClick(song) },
                     onLongClick = { }
+                )
+                .background(color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface,
                 )
                 .requiredHeight(72.dp),
             icon = { AlbumArt(song = (song)) },
@@ -78,7 +82,8 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
                 overflow = TextOverflow.Ellipsis,
             )
         }
-    Divider(startIndent = 72.dp, color = MaterialTheme.colorScheme.surfaceVariant)
+    Divider(//startIndent = 72.dp,
+        color = MaterialTheme.colorScheme.surfaceVariant)
 }
 
 @ExperimentalCoilApi
