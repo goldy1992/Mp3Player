@@ -37,11 +37,11 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getEmptyMediaItem
 fun SongListItem(song : MediaItem = getEmptyMediaItem(),
                  isPlaying : Boolean = false,
                  isSelected : Boolean = false,
-                 onClick: (item : MediaItem) -> Unit = {}) {
+                 onClick: () -> Unit = {}) {
         ListItem(
             modifier = Modifier
                 .combinedClickable(
-                    onClick = { onClick(song) },
+                    onClick = { onClick() },
                     onLongClick = { }
                 )
                 .background(color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface,
@@ -50,7 +50,7 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
             icon = { AlbumArt(song = (song)) },
             secondaryText = {
                 Text(
-                    text = MediaItemUtils.getArtist(song)!!,
+                    text = MediaItemUtils.getArtist(song),
                     maxLines = 1,
                     style = MaterialTheme.typography.bodySmall,
                     overflow = TextOverflow.Ellipsis

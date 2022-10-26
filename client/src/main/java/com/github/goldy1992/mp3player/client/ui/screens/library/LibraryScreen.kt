@@ -117,7 +117,7 @@ fun LargeLibraryScreen(
         val libraryText = context.getString(R.string.library)
         Scaffold(
             topBar = {
-                SmallTopAppBar(
+                TopAppBar(
                     title = {
                         Text(text = libraryText,
                             style = MaterialTheme.typography.titleLarge,
@@ -130,7 +130,8 @@ fun LargeLibraryScreen(
                                 contentDescription = "Search",
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
-                    })
+                    },
+                    )
             },
             bottomBar = {
                 PlayToolbar(mediaController = viewModel.mediaControllerAdapter,
@@ -179,10 +180,11 @@ fun SmallLibraryScreen(
 
    ModalNavigationDrawer(
         drawerContent = {
-        NavigationDrawerContent(
-            navController = navController
-        ) },
-    drawerState = drawerState) {
+            NavigationDrawerContent(
+                navController = navController
+            )
+        },
+        drawerState = drawerState) {
         Scaffold(
             topBar = {
                 SmallLibraryAppBar(scope, navController) {
@@ -348,16 +350,16 @@ fun TabBarPages(navController: NavController,
                             songs = children,
                             isPlayingState = viewModel.isPlaying.state,
                             currentMediaItemState = viewModel.currentMediaItem.state
-                        ) {
-                            val libraryId = MediaItemUtils.getLibraryId(it) ?: ""
-                            Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
-                            viewModel.mediaControllerAdapter.playFromMediaId(it)
+                        ) { itemIndex, mediaItemList ->
+                            val mediaItem = mediaItemList[itemIndex]
+                            Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")
+                            viewModel.mediaControllerAdapter.playFromSongList(itemIndex, mediaItemList)
                         }
                     }
                     MediaItemType.FOLDERS -> {
-                        FolderList(folders = children!!) {
-                            val folderLibraryId = MediaItemUtils.getLibraryId(it)
-                            val encodedFolderLibraryId = Uri.encode(folderLibraryId)
+                        FolderList(folders = children) {
+                            val folderId = it.mediaId
+                            val encodedFolderLibraryId = Uri.encode(folderId)
                             val directoryPath = MediaItemUtils.getDirectoryPath(it)
                             val encodedFolderPath = Uri.encode(directoryPath)
                             val folderName = MediaItemUtils.getDirectoryName(it)

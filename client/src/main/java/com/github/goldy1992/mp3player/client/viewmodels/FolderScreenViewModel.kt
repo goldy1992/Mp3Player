@@ -12,6 +12,7 @@ import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnChildrenChangedFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
+import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,9 +33,16 @@ class FolderScreenViewModel
         private val isPlayingFlow: IsPlayingFlow,
         private val metadataFlow: MetadataFlow,
         private val onChildrenChangedFlow: OnChildrenChangedFlow,
-        @MainDispatcher private val mainDispatcher: CoroutineDispatcher) : ViewModel() {
+        @MainDispatcher private val mainDispatcher: CoroutineDispatcher) : ViewModel(), LogTagger {
 
+    val folderId : String = checkNotNull(savedStateHandle["folderId"])
+    val folderName : String = checkNotNull(savedStateHandle["folderName"])
+    val folderPath : String = checkNotNull(savedStateHandle["folderPath"])
     private val mediaControllerAsync : ListenableFuture<MediaController> = mediaController.mediaControllerFuture
+
+    private val _folderChildren : MutableStateFlow<List<MediaItem>> = MutableStateFlow(emptyList())
+    // The UI collects from this StateFlow to get its state updates
+    val folderChildren : StateFlow<List<MediaItem>> = _folderChildren
 
     init {
         viewModelScope.launch {
@@ -50,13 +58,6 @@ class FolderScreenViewModel
                 }
         }
       }
-    val folderId : String = checkNotNull(savedStateHandle["folderId"])
-    val folderName : String = checkNotNull(savedStateHandle["folderName"])
-    val folderPath : String = checkNotNull(savedStateHandle["folderPath"])
-
-    private val _folderChildren : MutableStateFlow<List<MediaItem>> = MutableStateFlow(emptyList())
-    // The UI collects from this StateFlow to get its state updates
-    val folderChildren : StateFlow<List<MediaItem>> = _folderChildren
 
 
     // isPlaying
@@ -104,5 +105,9 @@ class FolderScreenViewModel
                 _currentMediaItemState.value = mediaControllerAsync.await().currentMediaItem ?: MediaItem.EMPTY
             }
         }
+    }
+
+    override fun logTag(): String {
+        return "FolderScreenViewModel"
     }
 }

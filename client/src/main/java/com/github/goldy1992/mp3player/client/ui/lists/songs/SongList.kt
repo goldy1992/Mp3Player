@@ -33,7 +33,7 @@ fun SongList(
     songs : List<MediaItem> = emptyList(),
     isPlayingState: StateFlow<Boolean>,
     currentMediaItemState : StateFlow<MediaItem>,
-    onSongSelected : (song : MediaItem) -> Unit = {}) {
+    onSongSelected : (itemIndex: Int, songs : List<MediaItem>) -> Unit = { _, _ -> }) {
 
     val isPlaying by isPlayingState.collectAsState()
     val currentMediaItem by currentMediaItemState.collectAsState()
@@ -52,7 +52,7 @@ fun SongList(
                         val isItemSelected = isItemSelected(song, currentMediaItem)
                         Log.i(logTag, "isItemSelected: $isItemSelected isPlaying: ${isPlaying}")
                         val isItemPlaying = if (isPlaying) isItemSelected  else false
-                        SongListItem(song = song, isPlaying = isItemPlaying, isSelected = isItemSelected, onClick = onSongSelected)
+                        SongListItem(song = song, isPlaying = isItemPlaying, isSelected = isItemSelected, onClick =  {onSongSelected(itemIndex, songs) })
                     }
                 }
             }

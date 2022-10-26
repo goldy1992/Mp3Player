@@ -24,7 +24,7 @@ import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 @Composable
 @Preview
 fun FolderList(folders : List<MediaItem> = emptyList(),
-               onFolderSelected : (folder : MediaItem?) -> Unit = {}) {
+               onFolderSelected : (folder : MediaItem) -> Unit = {}) {
 
     when {
         folders == null -> LoadingIndicator()

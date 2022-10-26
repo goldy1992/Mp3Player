@@ -62,6 +62,17 @@ open class MediaControllerAdapter
         }
     }
 
+    open fun playFromSongList(itemIndex : Int, items : List<MediaItem>) {
+        scope.launch(mainDispatcher) {
+            val mediaController = mediaControllerFuture.await()
+            mediaController.clearMediaItems()
+            mediaController.addMediaItems(items)
+            mediaController.seekTo(itemIndex, 0L)
+            mediaController.prepare()
+            mediaController.play()
+        }
+    }
+
     open suspend fun playFromUri(uri: Uri?, extras: Bundle?) {
         val mediaItem = MediaItem.Builder().setUri(uri).build()
         mediaController?.addMediaItem(mediaItem)

@@ -51,7 +51,7 @@ fun NowPlayingScreen(
     Scaffold (
 
         topBar = {
-            SmallTopAppBar (
+            TopAppBar (
                 title = {
                        val title : String = metadata.title.toString()
                     val artist : String = metadata.artist.toString()
@@ -68,14 +68,13 @@ fun NowPlayingScreen(
                             color = MaterialTheme.colorScheme.onSurface)
                     }
                 },
-
                 navigationIcon = {
                     NavUpButton(
                         navController = navController,
                         scope = scope)
                 },
                 actions = {},
-
+                windowInsets = TopAppBarDefaults.windowInsets
             )
         },
         bottomBar = {

@@ -77,7 +77,7 @@ private fun SmallFolderScreen(
     isPlayingState: StateFlow<Boolean>,
     currentMediaItemState : StateFlow<MediaItem>,
     scope : CoroutineScope = rememberCoroutineScope(),
-    folderItems : List<MediaItem>?
+    folderItems : List<MediaItem>
 ) {
     val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     ModalNavigationDrawer(
@@ -141,10 +141,15 @@ private fun SmallFolderScreen(
                         }
                     }
                 } else {
-                    SongList(songs = folderItems!!, isPlayingState = isPlayingState, currentMediaItemState = currentMediaItemState) {
-                        val libraryId = MediaItemUtils.getLibraryId(it) ?: ""
-                        Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
-                        mediaController.playFromMediaId(it)
+                    SongList(
+                        songs = folderItems!!,
+                        isPlayingState = isPlayingState,
+                        currentMediaItemState = currentMediaItemState) {
+                        itemIndex, mediaItemList ->
+                        val mediaItem = mediaItemList[itemIndex]
+                        Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")
+                        mediaController.playFromSongList(itemIndex, mediaItemList)
+
                     }
                 }
             }
@@ -226,9 +231,11 @@ private fun LargeFolderScreen(
                         }
                     } else {
                         SongList(songs = folderItems!!, currentMediaItemState = currentMediaItemState, isPlayingState = isPlayingState) {
-                            val libraryId = MediaItemUtils.getLibraryId(it) ?: ""
-                            Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
-                            mediaController.playFromMediaId(it)
+                            itemIndex, mediaItemList ->
+                            val mediaItem = mediaItemList[itemIndex]
+                            Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")
+                            mediaController.playFromSongList(itemIndex, mediaItemList)
+
                         }
                     }
             }

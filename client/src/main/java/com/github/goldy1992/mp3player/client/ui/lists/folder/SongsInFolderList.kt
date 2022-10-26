@@ -21,7 +21,7 @@ fun SongsInFolderList(
     Column(modifier = Modifier.fillMaxSize()) {
         SongList(
             songs = songs,
-            onSongSelected = onFolderItemSelected,
+           // onSongSelected = onFolderItemSelected,
             isPlayingState = isPlayingState,
             currentMediaItemState = currentMediaItemState)
     }

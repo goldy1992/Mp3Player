@@ -26,8 +26,8 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Preview
 @Composable
-fun FolderListItem(folder : MediaItem? = MediaItemUtils.getEmptyMediaItem(),
-                   onClick: (selectedFolder : MediaItem?) -> Unit = {}) {
+fun FolderListItem(folder : MediaItem = MediaItemUtils.getEmptyMediaItem(),
+                   onClick: (selectedFolder : MediaItem) -> Unit = {}) {
     ListItem(
         modifier = Modifier.combinedClickable(
             onClick = { onClick(folder) },
