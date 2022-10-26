@@ -24,7 +24,7 @@ fun SmallLibraryAppBar(
 ) {
     val navigationDrawerIconDescription = stringResource(id = R.string.navigation_drawer_menu_icon)
 
-    SmallTopAppBar(
+    TopAppBar(
         title = {
             Text(text = "Library",
                 style = MaterialTheme.typography.titleLarge,

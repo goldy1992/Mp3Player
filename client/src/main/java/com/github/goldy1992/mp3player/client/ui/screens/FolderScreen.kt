@@ -15,7 +15,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -25,7 +24,6 @@ import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.viewmodels.FolderScreenViewModel
 import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
@@ -127,29 +125,29 @@ private fun SmallFolderScreen(
             },
 
             content = {
-                if (isEmpty(folderItems)) {
-                    Surface(
-                        Modifier
-                            .fillMaxSize()
-                            .padding(it)) {
-                        Column(
-                            Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
+                val modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+                Column(modifier = modifier) {
+                    if (isEmpty(folderItems)) {
+                        Surface(
+                            modifier = modifier
+                                .align(Alignment.CenterHorizontally)
                         ) {
                             CircularProgressIndicator()
                         }
                     }
-                } else {
-                    SongList(
-                        songs = folderItems!!,
-                        isPlayingState = isPlayingState,
-                        currentMediaItemState = currentMediaItemState) {
-                        itemIndex, mediaItemList ->
-                        val mediaItem = mediaItemList[itemIndex]
-                        Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")
-                        mediaController.playFromSongList(itemIndex, mediaItemList)
+                    else {
+                        SongList(
+                            songs = folderItems!!,
+                            isPlayingState = isPlayingState,
+                            currentMediaItemState = currentMediaItemState
+                        ) { itemIndex, mediaItemList ->
+                            val mediaItem = mediaItemList[itemIndex]
+                            Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")
+                            mediaController.playFromSongList(itemIndex, mediaItemList)
 
+                        }
                     }
                 }
             }
@@ -218,10 +216,12 @@ private fun LargeFolderScreen(
             },
 
             content = {
+                val modifier = Modifier
+                    .width(500.dp)
+                    .fillMaxHeight()
+                    .padding(it)
                 Surface(
-                    Modifier
-                        .width(500.dp)
-                        .padding(it)) {
+                    modifier = modifier) {
                     if (isEmpty(folderItems)) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,

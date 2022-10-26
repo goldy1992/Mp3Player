@@ -12,7 +12,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
@@ -37,6 +36,7 @@ import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 
+private const val logTag = "LibraryScreen"
 /**
  * The Main Screen of the app.
  *
@@ -212,29 +212,6 @@ fun SmallLibraryScreen(
     }
 }
 
-
-
-
-/**
- * Util method to check if the Root items are loaded.
- */
-private fun rootItemsLoaded(items : List<MediaItem>) : Boolean {
-    return !(items.isEmpty() || MediaItemUtils.getMediaId(items.first()) == Constants.EMPTY_MEDIA_ITEM_ID)
-}
-
-/**
- * Util method to return the String of the [MediaItemType].
- * @param mediaItemType The [MediaItemType] of which to get the String.
- */
-@Composable
-fun getRootItemText(mediaItemType: MediaItemType): String {
-    return when (mediaItemType) {
-        MediaItemType.SONGS -> stringResource(id = R.string.songs)
-        MediaItemType.FOLDERS -> stringResource(id = R.string.folders)
-        else -> "" // TOOO: Add a return for an unknown MediaItemType
-    }
-}
-
 @ExperimentalPagerApi
 @Composable
 private fun LibraryTabs(
@@ -294,8 +271,6 @@ fun LibraryScreenContent(
                 rootItems = rootItems,
                 scope = scope
             )
-        } else {
-            CircularProgressIndicator()
         }
 
         Row(modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)) {
@@ -355,6 +330,7 @@ fun TabBarPages(navController: NavController,
                             Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")
                             viewModel.mediaControllerAdapter.playFromSongList(itemIndex, mediaItemList)
                         }
+                        Log.i(logTag, "last song name: ${children.last().mediaMetadata.title}")
                     }
                     MediaItemType.FOLDERS -> {
                         FolderList(folders = children) {
