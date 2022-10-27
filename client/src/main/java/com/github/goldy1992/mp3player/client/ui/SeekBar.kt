@@ -24,7 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-const val logTag = "seekbar"
+private const val logTag = "seekbar"
 
 @Composable
 fun SeekBar(isPlayingState: StateFlow<Boolean>,

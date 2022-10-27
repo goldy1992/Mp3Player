@@ -78,12 +78,14 @@ abstract class MainActivityBase : ComponentActivity(),
         Log.i(logTag(), "permission granted")
         createService()
         if (Intent.ACTION_VIEW == intent.action) {
-            trackToPlay = intent.data
-            scope.launch(defaultDispatcher) {
-                mediaControllerAdapter.playFromUri(trackToPlay, null)
+            if (intent.data != null) {
+                trackToPlay = intent.data
+                scope.launch(defaultDispatcher) {
+                    mediaControllerAdapter.playFromUri(trackToPlay, null)
+                }
             }
             this.startScreen = Screen.NOW_PLAYING
-        } 
+        }
         scope.launch(mainDispatcher) { ui(startScreen = startScreen) }
     }
 

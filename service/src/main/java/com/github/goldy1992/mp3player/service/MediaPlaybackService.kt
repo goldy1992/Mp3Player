@@ -8,10 +8,7 @@ import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
 import androidx.media3.ui.PlayerNotificationManager
-import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.commons.IoDispatcher
-import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.MainDispatcher
+import com.github.goldy1992.mp3player.commons.*
 import com.github.goldy1992.mp3player.service.library.CustomMediaItemTree
 import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers
 import com.github.goldy1992.mp3player.service.library.search.managers.SearchDatabaseManagers
@@ -46,6 +43,9 @@ open class MediaPlaybackService : MediaLibraryService(),
     @Inject
     @MainDispatcher
     lateinit var mainDispatcher: CoroutineDispatcher
+
+    @Inject
+    lateinit var componentClassMapper : ComponentClassMapper
 
     @Inject
     lateinit var mediaLibrarySessionCallback : MediaLibrarySessionCallback
@@ -87,7 +87,8 @@ open class MediaPlaybackService : MediaLibraryService(),
             }
         }
 
-        mediaSession = mediaSessionCreator.create(this, player, mediaLibrarySessionCallback)
+        mediaSession = mediaSessionCreator.create(this, componentClassMapper, player, mediaLibrarySessionCallback)
+
 
         if (!customLayout.isEmpty()) {
             // Send custom layout to legacy session.
@@ -110,6 +111,10 @@ open class MediaPlaybackService : MediaLibraryService(),
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? {
        return mediaSession
+    }
+
+    override fun onUpdateNotification(session: MediaSession) {
+        super.onUpdateNotification(session)
     }
 
     override fun onDestroy() {
