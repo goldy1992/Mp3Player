@@ -24,6 +24,8 @@ object Constants {
     const val EMPTY_MEDIA_ITEM_ID = "-1"
     const val PACKAGE_NAME_KEY = "package_name_key"
 
+    const val ROOT_APP_URI_PATH = "com.github.goldy1992.mp3player"
+
     init {
         playbackStateDebugMap.put(Player.STATE_IDLE, "STATE_IDLE") // 1
         playbackStateDebugMap.put(Player.STATE_BUFFERING, "STATE_BUFFERING") // 2

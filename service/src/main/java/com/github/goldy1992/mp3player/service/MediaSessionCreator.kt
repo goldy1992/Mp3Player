@@ -9,6 +9,7 @@ import androidx.media3.common.Player
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
+import com.github.goldy1992.mp3player.commons.Constants.ROOT_APP_URI_PATH
 import com.github.goldy1992.mp3player.commons.Screen
 
 open class MediaSessionCreator {
@@ -19,7 +20,7 @@ open class MediaSessionCreator {
 
         val intent = Intent(
             Intent.ACTION_VIEW,
-            "com.github.goldy1992.mp3player/${Screen.NOW_PLAYING.name}".toUri(),
+            "${ROOT_APP_URI_PATH}/${Screen.NOW_PLAYING.name}".toUri(),
             service,
             componentClassMapper.mainActivity)
 

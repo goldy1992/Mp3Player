@@ -19,6 +19,7 @@ import com.github.goldy1992.mp3player.client.ui.screens.FolderScreen
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreen
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
 import com.github.goldy1992.mp3player.client.viewmodels.*
+import com.github.goldy1992.mp3player.commons.Constants.ROOT_APP_URI_PATH
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -61,8 +62,8 @@ fun ComposeApp(
 
             }
             composable(Screen.NOW_PLAYING.name,
-                        deepLinks = listOf<NavDeepLink>(navDeepLink {
-                            uriPattern = "com.github.goldy1992.mp3player/${Screen.NOW_PLAYING.name}"
+                        deepLinks = listOf(navDeepLink {
+                            uriPattern = "${ROOT_APP_URI_PATH}/${Screen.NOW_PLAYING.name}"
                             action = Intent.ACTION_VIEW })
             ) {
                 val viewModel = hiltViewModel<NowPlayingScreenViewModel>()
