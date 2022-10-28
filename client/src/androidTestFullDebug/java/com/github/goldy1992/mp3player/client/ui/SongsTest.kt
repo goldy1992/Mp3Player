@@ -15,6 +15,7 @@ import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -66,10 +67,11 @@ class SongsTest {
 
         composeTestRule.setContent {
             SongList(songs = songList,
-                    mediaControllerAdapter = mockMediaController,
-                    metadataState = metadataFlow,
-                    isPlayingState = isPlayingFlow,
-            onSongSelected = {})
+                    //mediaControllerAdapter = mockMediaController,
+                 //   metadataState = metadataFlow,
+                    isPlayingState = MutableStateFlow(false),
+                currentMediaItemState = MutableStateFlow(MediaItem.EMPTY),
+            onSongSelected = {_,_ ->})
         }
         runBlocking {
             composeTestRule.awaitIdle()

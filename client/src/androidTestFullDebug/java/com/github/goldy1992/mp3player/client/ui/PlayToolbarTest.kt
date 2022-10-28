@@ -43,10 +43,11 @@ class PlayToolbarTest {
         val expected = context.resources.getString(R.string.play)
         val isPlaying = false
         // Set Media to be NOT Playing
-        whenever(isPlayingFlow.state).thenReturn(MutableStateFlow(isPlaying))
+        //  whenever(isPlayingFlow.state).thenReturn(MutableStateFlow(isPlaying))
         composeTestRule.setContent {
             PlayToolbar(mediaController = mockMediaController,
-                        isPlayingFlow = isPlayingFlow) {
+                        isPlayingState = MutableStateFlow(true)
+            ) {
                 // do nothing
             }
         }
@@ -70,10 +71,11 @@ class PlayToolbarTest {
         val expected = context.resources.getString(R.string.pause)
         val isPlaying = true
         // Set Media to be playing
-        whenever(isPlayingFlow.state).thenReturn(MutableStateFlow(isPlaying))
+       // whenever(isPlayingFlow.state).thenReturn(MutableStateFlow(isPlaying))
         composeTestRule.setContent {
             PlayToolbar(mediaController = mockMediaController,
-                        isPlayingFlow = isPlayingFlow) {
+                        isPlayingState = MutableStateFlow(false)
+            ) {
                 // do nothing
             }
         }
@@ -92,11 +94,10 @@ class PlayToolbarTest {
      */
     @Test
     fun testOnClick() {
-        whenever(isPlayingFlow.state).thenReturn(MutableStateFlow(true))
         val bottomAppBarDescr = InstrumentationRegistry.getInstrumentation().context.getString(R.string.bottom_app_bar)
         val mockOnClick = mock<MockOnClick>()
         composeTestRule.setContent {
-            PlayToolbar(mediaController = mockMediaController, isPlayingFlow = isPlayingFlow, onClick = mockOnClick::onClick)
+            PlayToolbar(mediaController = mockMediaController, isPlayingState = MutableStateFlow(true), onClick = mockOnClick::onClick)
         }
         composeTestRule.onNodeWithContentDescription(bottomAppBarDescr).performTouchInput {
             this.click(this.percentOffset(0.9f, 0.9f))

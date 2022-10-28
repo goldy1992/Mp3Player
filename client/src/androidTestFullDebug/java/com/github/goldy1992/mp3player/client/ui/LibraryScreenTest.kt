@@ -24,8 +24,12 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTestOnTestScope
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -39,22 +43,17 @@ import org.mockito.kotlin.whenever
  * Test class for the [MainScreen] composable function.
  */
 @HiltAndroidTest
-class LibraryScreenTest {
+class LibraryScreenTest : MediaTestBase() {
 
-    @Mock
-    val mockMediaController = mock<MediaControllerAdapter>()
-
-    @Mock
-    val mockMediaBrowser = mock<MediaBrowserAdapter>()
 
     @Mock
     val onChildrenChangedFlow = mock<OnChildrenChangedFlow>()
 
     @Mock
-    val metadataFlow = mock<MetadataFlow>()
+    val isPlayingFLow = mock<IsPlayingFlow>()
 
     @Mock
-    val isPlayingFLow = mock<IsPlayingFlow>()
+    val mainDispatcher : CoroutineDispatcher = mock<CoroutineDispatcher>()
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -66,15 +65,30 @@ class LibraryScreenTest {
 
     private val navController = mock<NavController>()
 
-    private lateinit var context : Context
+    override lateinit var context : Context
+
+    private lateinit var libraryScreenViewModel: LibraryScreenViewModel
 
     /**
      * Setup method.
      */
     @Before
-    fun setup() {
+    override fun setup() {
+        val scope : CoroutineScope
+        val mainDispatcher = Dispatchers.Main
+        runBlocking {
+            scope = this
+        }
+        super.setup(scope, mainDispatcher)
         this.context = InstrumentationRegistry.getInstrumentation().context
-        whenever(isPlayingFLow.state).thenReturn(MutableStateFlow(true))
+        this.libraryScreenViewModel = LibraryScreenViewModel(
+            mediaBrowserAdapter = mediaBrowserAdapter,
+            onChildrenChangedFlow = onChildrenChangedFlow,
+            mediaControllerAdapter = mediaControllerAdapter,
+            metadataFlow = metadataFlow,
+            isPlayingFlow = isPlayingFLow,
+            mainDispatcher = mainDispatcher)
+//        whenever(isPlayingFLow).thenReturn(MutableStateFlow(true))
     }
 
     /**
@@ -91,13 +105,7 @@ class LibraryScreenTest {
             SmallLibraryScreen(
                 navController = navController,
                 pagerState = rememberPagerState(initialPage = 0),
-              //  viewModel = hiltViewModel<LibraryScreenViewModel>(),
-               viewModel  = LibraryScreenViewModel(
-                                mediaBrowserAdapter = mockMediaBrowser,
-                                onChildrenChangedFlow = onChildrenChangedFlow,
-                                mediaControllerAdapter = mockMediaController,
-                                metadataFlow = metadataFlow,
-                                isPlayingFlow = isPlayingFLow),
+                viewModel  = libraryScreenViewModel,
                 bottomBar = {},
             drawerState = drawerState)
         }

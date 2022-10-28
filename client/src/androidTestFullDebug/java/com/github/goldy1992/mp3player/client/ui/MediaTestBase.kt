@@ -4,27 +4,41 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import androidx.media3.session.MediaBrowser
+import androidx.media3.session.MediaController
 import androidx.navigation.NavController
-import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.MediaTestUtils
 import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnSearchResultsChangedFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.QueueFlow
+import com.github.goldy1992.mp3player.commons.MainDispatcher
+import com.google.common.util.concurrent.Futures
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 abstract class MediaTestBase {
 
-    val mockMediaBrowser : MediaBrowserAdapter = mock<MediaBrowserAdapter>()
+    lateinit var mediaBrowserAdapter : MediaBrowserAdapter
+    lateinit var mediaControllerAdapter : MediaControllerAdapter
 
-    val mockMediaController : MediaControllerAdapter = mock<MediaControllerAdapter>()
+    val mockMediaController = mock<MediaController>()
+    val mediaControllerListenableFuture = Futures.immediateFuture(mockMediaController)
+
+    val mockMediaBrowser = mock<MediaBrowser>()
+    val mediaBrowserListenableFuture = Futures.immediateFuture(mockMediaBrowser)
+
+
 
     val mockNavController : NavController = mock<NavController>()
 
-    lateinit var context : Context
+    open lateinit var context : Context
 
     val metadataLiveData = MutableLiveData<MediaMetadata>()
 
@@ -39,20 +53,20 @@ abstract class MediaTestBase {
     val isPlayingFlow = mock<IsPlayingFlow>()
 
     open fun setup() {
-        context = InstrumentationRegistry.getInstrumentation().context
-     //   whenever(mockMediaBrowser.searchResults()).thenReturn(searchResultsState)
-        whenever(queueFlow.state).thenReturn(MutableStateFlow(emptyList()))
-     //   whenever(metadataFlow.state).thenReturn(metadataLiveData)
-        whenever(isPlayingFlow.state).thenReturn(MutableStateFlow(true))
-//        whenever(mockMediaController.playbackSpeed).thenReturn(MutableLiveData(1.0f))
-//        whenever(mockMediaController.shuffleMode).thenReturn(MutableLiveData(PlaybackStateCompat.SHUFFLE_MODE_ALL))
-//        whenever(mockMediaController.repeatMode).thenReturn(MutableLiveData(PlaybackStateCompat.REPEAT_MODE_ALL))
-//        whenever(mockMediaController.playbackState).thenReturn(
-//            MutableLiveData(
-//                PlaybackStateCompat.Builder()
-//            .setState(PlaybackStateCompat.STATE_PLAYING, 0L, 1.0f)
-//            .build())
-//        )
+
+    }
+    fun setup(scope : CoroutineScope,
+            @MainDispatcher mainDispatcher: CoroutineDispatcher) {
+
+        whenever(mockMediaBrowser.getLibraryRoot(any())).thenReturn(null)
+        mediaBrowserAdapter = MediaBrowserAdapter(
+            mediaBrowserLF = mediaBrowserListenableFuture,
+            scope = scope,
+            mainDispatcher = mainDispatcher)
+        mediaControllerAdapter = MediaControllerAdapter(
+            mediaControllerFuture = mediaControllerListenableFuture,
+            scope = scope,
+            mainDispatcher = mainDispatcher)
 
     }
 }

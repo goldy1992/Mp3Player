@@ -43,9 +43,9 @@ class ShuffleButtonTest {
         val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
         val expected = context.resources.getString(R.string.shuffle_off)
         // Set Shuffle Mode to be Off
-        whenever(shuffleModeFlow.state).thenReturn(MutableStateFlow(false))
+       // whenever(shuffleModeFlow.state).thenReturn(MutableStateFlow(false))
         composeTestRule.setContent {
-            ShuffleButton(mediaController = mockMediaController, shuffleModeState = shuffleModeFlow)
+            ShuffleButton(mediaController = mockMediaController, shuffleModeState = MutableStateFlow(false))
         }
         composeTestRule.onNodeWithContentDescription(expected, useUnmergedTree = true).assertExists()
         val shuffleOffButton = composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true)
@@ -71,7 +71,7 @@ class ShuffleButtonTest {
         // Set Shuffle Mode to be On
      //   whenever(mockMediaController.shuffleMode).thenReturn(MutableLiveData(SHUFFLE_ON))
         composeTestRule.setContent {
-            ShuffleButton(mediaController = mockMediaController, shuffleModeState = shuffleModeFlow)
+            ShuffleButton(mediaController = mockMediaController, shuffleModeState = MutableStateFlow(true))
         }
         composeTestRule.onNodeWithContentDescription(expected, useUnmergedTree = true).assertExists()
         val shuffleOnButton = composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true)

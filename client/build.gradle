@@ -78,8 +78,11 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    testFixtures {
+        enable true
+    }
 
-    testOptions {
+        testOptions {
   //      execution 'ANDROIDX_TEST_ORCHESTRATOR'
         animationsDisabled true
 

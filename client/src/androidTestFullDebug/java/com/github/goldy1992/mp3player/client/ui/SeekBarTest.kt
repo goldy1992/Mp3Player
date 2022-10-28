@@ -50,7 +50,7 @@ class SeekBarTest {
         val metadata = MediaMetadata.Builder()
             .setExtras(extras)
             .build()
-        whenever(metadataFlow.state).thenReturn(MutableStateFlow(metadata))
+     //   whenever(metadataFlow.state).thenReturn(MutableStateFlow(metadata))
 //        val playbackState = PlaybackStateCompat.Builder()
 //            .setState(PAUSED, currentPosition, 1.0f)
 //            .build()
@@ -58,9 +58,10 @@ class SeekBarTest {
 
         composeTestRule.setContent {
             SeekBar(mediaController = mockMediaController,
-                    metadataFlow = metadataFlow,
-                    isPlayingState = isPlayingFlow,
-                    playbackParametersFlow = playbackParametersFlow)
+                    metadataState = MutableStateFlow(MediaMetadata.EMPTY),
+                    isPlayingState = MutableStateFlow(false),
+                    playbackSpeedState = MutableStateFlow(1.0f)
+            )
         }
 
         runBlocking {

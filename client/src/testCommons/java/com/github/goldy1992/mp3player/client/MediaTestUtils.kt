@@ -7,16 +7,20 @@ import androidx.media3.session.MediaLibraryService
 object MediaTestUtils {
 
     @JvmStatic
+    fun createTestMediaMetaData() : MediaMetadata {
+        return MediaMetadata
+            .Builder()
+            .setFolderType(MediaMetadata.FOLDER_TYPE_NONE)
+            .setIsPlayable(true)
+            .build()
+    }
+
+    @JvmStatic
     fun createTestMediaItem(mediaId : String) : MediaItem {
         return MediaItem
             .Builder()
             .setMediaId(mediaId)
-            .setMediaMetadata(
-                MediaMetadata
-                    .Builder()
-                    .setFolderType(MediaMetadata.FOLDER_TYPE_NONE)
-                    .setIsPlayable(true)
-                    .build())
+            .setMediaMetadata(createTestMediaMetaData())
             .build()
     }
 

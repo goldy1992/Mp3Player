@@ -48,10 +48,11 @@ class RepeatButtonTest {
         val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
         val expected = context.resources.getString(R.string.repeat_one)
         // Set Repeat Mode One
-        whenever(repeatModeFlow.state).thenReturn(MutableStateFlow(REPEAT_MODE_ONE))
+      //  whenever(repeatModeFlow.state).thenReturn(MutableStateFlow(REPEAT_MODE_ONE))
         composeTestRule.setContent {
             RepeatButton(mediaController = mockMediaController,
-                        repeatModeState = repeatModeFlow)
+                        repeatModeState = MutableStateFlow(REPEAT_MODE_ONE)
+            )
         }
 
         val repeatOneButton = composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true)
@@ -74,10 +75,11 @@ class RepeatButtonTest {
         val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
         val expected = context.resources.getString(R.string.repeat_none)
         // Set Repeat Mode One
-        whenever(repeatModeFlow.state).thenReturn(MutableStateFlow(REPEAT_MODE_OFF))
+     //   whenever(repeatModeFlow.state).thenReturn(MutableStateFlow(REPEAT_MODE_OFF))
         composeTestRule.setContent {
             RepeatButton(mediaController = mockMediaController,
-                        repeatModeState = repeatModeFlow)
+                        repeatModeState = MutableStateFlow(REPEAT_MODE_OFF)
+            )
         }
 
         val repeatNoneButton = composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true)
@@ -100,10 +102,10 @@ class RepeatButtonTest {
         val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
         val expected = context.resources.getString(R.string.repeat_all)
         // Set Repeat Mode One
-        whenever(repeatModeFlow.state).thenReturn(MutableStateFlow(REPEAT_MODE_ALL))
         composeTestRule.setContent {
             RepeatButton(mediaController = mockMediaController,
-                        repeatModeState = repeatModeFlow)
+                        repeatModeState = MutableStateFlow(REPEAT_MODE_ALL)
+            )
         }
 
         val repeatAllButton = composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true)
