@@ -127,7 +127,8 @@ fun NowPlayingScreen(
                     SeekBar(mediaController = viewModel.mediaControllerAdapter,
                         playbackSpeedState = viewModel.playbackSpeed,
                         metadataState = viewModel.metadata,
-                        isPlayingState = viewModel.isPlaying)
+                        isPlayingState = viewModel.isPlaying,
+                        playbackPositionState = viewModel.playbackPosition.state)
                 }
             }
 

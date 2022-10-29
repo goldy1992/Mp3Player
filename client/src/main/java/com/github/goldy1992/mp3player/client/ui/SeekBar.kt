@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui
 
+import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FloatTweenSpec
 import androidx.compose.animation.core.LinearEasing
@@ -18,18 +19,30 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.eventholders.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
+import com.github.goldy1992.mp3player.client.viewmodels.states.PlaybackPosition
 import com.github.goldy1992.mp3player.commons.MetadataUtils
+import com.github.goldy1992.mp3player.commons.TimerUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 private const val logTag = "seekbar"
 
+private fun calculateCurrentPosition(playbackPositionEvent: PlaybackPositionEvent) : Long {
+    return if (playbackPositionEvent.isPlaying) {
+        playbackPositionEvent.currentPosition + (TimerUtils.getSystemTime() - playbackPositionEvent.systemTime)
+    } else {
+        playbackPositionEvent.currentPosition
+    }
+}
+
 @Composable
 fun SeekBar(isPlayingState: StateFlow<Boolean>,
             metadataState: StateFlow<MediaMetadata>,
             playbackSpeedState : StateFlow<Float>,
+            playbackPositionState: StateFlow<PlaybackPositionEvent>,
             mediaController : MediaControllerAdapter,
             scope: CoroutineScope = rememberCoroutineScope()) {
 
@@ -37,13 +50,14 @@ fun SeekBar(isPlayingState: StateFlow<Boolean>,
     val isPlaying by isPlayingState.collectAsState()
     val metadata by metadataState.collectAsState()
     val playbackSpeed by playbackSpeedState.collectAsState()
+    val playbackPositionEvent by playbackPositionState.collectAsState()
     val duration = MetadataUtils.getDuration(metadata).toFloat()
-    val currentPosition = mediaController.getCurrentPlaybackPosition()
+    val currentPosition = calculateCurrentPosition(playbackPositionEvent)
+    Log.i(logTag, "current playback position: $currentPosition")
     val durationAtSpeed = duration / playbackSpeed
     val animationTimeInMs = (durationAtSpeed * (1 - (currentPosition / duration))).toInt()
     val durationDescription = stringResource(id = R.string.duration)
     val currentPositionDescription = stringResource(id = R.string.current_position)
-
     val anim1 = remember(currentPosition) { mutableStateOf(Animatable(currentPosition.toFloat())) }
   //  Log.i(logTag, "Anim1Value: ${anim1.value}")
 

@@ -43,6 +43,10 @@ open class MediaControllerAdapter
         return mediaController?.currentMediaItemIndex ?: 0
     }
 
+    open suspend fun getCurrentQueuePositionAsync() : Int {
+        return mediaControllerFuture.await().currentMediaItemIndex
+    }
+
     open suspend fun prepareFromMediaId(mediaItem: MediaItem) {
 
         // call from application looper

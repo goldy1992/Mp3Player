@@ -7,14 +7,12 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.MutableLiveData
+import androidx.media3.session.MediaLibraryService
 import androidx.navigation.NavController
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.eventholders.OnChildrenChangedEventHolder
 import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnChildrenChangedFlow
-import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
-import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.ui.screens.library.SmallLibraryScreen
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
 import com.github.goldy1992.mp3player.client.viewmodels.LibraryScreenViewModel
@@ -29,7 +27,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTestOnTestScope
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -46,11 +43,14 @@ import org.mockito.kotlin.whenever
 class LibraryScreenTest : MediaTestBase() {
 
 
-    @Mock
-    val onChildrenChangedFlow = mock<OnChildrenChangedFlow>()
+    val onChildrenChangedFlowObj = mock<OnChildrenChangedFlow>()
+    val onChildrenChangedFlow = MutableStateFlow(
+                                    OnChildrenChangedEventHolder(mockMediaBrowser,
+                                        "",
+                                        1,
+                                        MediaLibraryService.LibraryParams.Builder().build())
+    )
 
-    @Mock
-    val isPlayingFLow = mock<IsPlayingFlow>()
 
     @Mock
     val mainDispatcher : CoroutineDispatcher = mock<CoroutineDispatcher>()
@@ -81,12 +81,14 @@ class LibraryScreenTest : MediaTestBase() {
         }
         super.setup(scope, mainDispatcher)
         this.context = InstrumentationRegistry.getInstrumentation().context
+        whenever(onChildrenChangedFlowObj.flow).thenReturn(onChildrenChangedFlow)
+
         this.libraryScreenViewModel = LibraryScreenViewModel(
             mediaBrowserAdapter = mediaBrowserAdapter,
-            onChildrenChangedFlow = onChildrenChangedFlow,
+            onChildrenChangedFlow = onChildrenChangedFlowObj,
             mediaControllerAdapter = mediaControllerAdapter,
-            metadataFlow = metadataFlow,
-            isPlayingFlow = isPlayingFLow,
+            metadataFlow = metadataFlowObj,
+            isPlayingFlow = isPlayingFlowObj,
             mainDispatcher = mainDispatcher)
 //        whenever(isPlayingFLow).thenReturn(MutableStateFlow(true))
     }

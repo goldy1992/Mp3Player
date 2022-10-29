@@ -52,23 +52,6 @@ android {
         }
     }
 
-    sourceSets {
-        String sharedTestSrcDir = 'src/testCommons/java'
-        String sharedTestResDir = 'src/testCommons/res'
-        full {
-            debug {
-                test {
-                    java.srcDirs += [sharedTestSrcDir]
-                    resources.srcDirs += [sharedTestResDir]
-                }
-                androidTest {
-                    java.srcDirs += [sharedTestSrcDir]
-                    resources.srcDirs += [sharedTestResDir]
-                }
-            }
-        }
-    }
-
     compileOptions {
         incremental = false
         sourceCompatibility JavaVersion.VERSION_11
@@ -167,8 +150,6 @@ dependencies {
     implementation group: "io.coil-kt", name: "coil-compose", version: "1.3.2"
 
     implementation "androidx.window:window:1.0.0-beta04"
-
-    def datastore_preferences_version = '1.0.0'
     implementation group: "androidx.datastore", name: "datastore-preferences", version: datastore_preferences_version
 
     // UI Tests
@@ -182,19 +163,19 @@ dependencies {
     // hilt
     kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
     kapt group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
-
-
     kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
     kaptTest group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
+    kaptTestFixtures group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
+    kaptTestFixtures group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
 
     androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
     kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
-
     kaptAndroidTest group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
 
-
     androidTestImplementation project(':commons')
-
+    testFixturesImplementation project(':commons')
+    androidTestImplementation testFixtures(project(":client"))
+ //   testImplementation testFixtures(project(":client:testcommons"))
 
     androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
     androidTestImplementation junitUnitTests
@@ -239,6 +220,13 @@ dependencies {
     testImplementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
     testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
     testImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+
+    testFixturesImplementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
+    testFixturesImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
+    testFixturesImplementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
+    testFixturesImplementation group: 'androidx.media3', name: 'media3-session', version: media3_version
+    testFixturesImplementation group: "org.mockito.kotlin", name: "mockito-kotlin", version: mockito_kotlin_version
+    testFixturesImplementation group: "androidx.datastore", name: "datastore-preferences", version: datastore_preferences_version
 }
 
 kapt {

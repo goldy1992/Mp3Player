@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client
+package com.github.goldy1992.mp3player.client.dagger.modules
 
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import dagger.Module

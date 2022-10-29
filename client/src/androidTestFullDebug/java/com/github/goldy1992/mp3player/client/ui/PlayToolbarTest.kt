@@ -46,7 +46,7 @@ class PlayToolbarTest {
         //  whenever(isPlayingFlow.state).thenReturn(MutableStateFlow(isPlaying))
         composeTestRule.setContent {
             PlayToolbar(mediaController = mockMediaController,
-                        isPlayingState = MutableStateFlow(true)
+                        isPlayingState = MutableStateFlow(isPlaying)
             ) {
                 // do nothing
             }
@@ -74,7 +74,7 @@ class PlayToolbarTest {
        // whenever(isPlayingFlow.state).thenReturn(MutableStateFlow(isPlaying))
         composeTestRule.setContent {
             PlayToolbar(mediaController = mockMediaController,
-                        isPlayingState = MutableStateFlow(false)
+                        isPlayingState = MutableStateFlow(isPlaying)
             ) {
                 // do nothing
             }

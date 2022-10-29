@@ -6,6 +6,7 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.concurrent.futures.await
 import androidx.media3.common.MediaMetadata
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -14,8 +15,11 @@ import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.PlaybackParametersFlow
 import com.github.goldy1992.mp3player.commons.MetaDataKeys
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
@@ -25,16 +29,23 @@ import org.mockito.kotlin.whenever
 /**
  * Test class for [SeekBar].
  */
-class SeekBarTest {
+class SeekBarTest : MediaTestBase() {
 
-    @Mock
-    val mockMediaController = mock<MediaControllerAdapter>()
-
-    val isPlayingFlow = mock<IsPlayingFlow>()
-    val metadataFlow = mock<MetadataFlow>()
     val playbackParametersFlow = mock<PlaybackParametersFlow>()
     @get:Rule
     val composeTestRule = createComposeRule()
+
+    lateinit var scope : CoroutineScope
+
+    @Before
+    override fun setup() {
+        val mainDispatcher = Dispatchers.Main
+        runBlocking {
+            scope = this
+        }
+        super.setup(scope, mainDispatcher)
+        scope.
+    }
 
     @Test
     fun firstTest() {
@@ -50,15 +61,13 @@ class SeekBarTest {
         val metadata = MediaMetadata.Builder()
             .setExtras(extras)
             .build()
-     //   whenever(metadataFlow.state).thenReturn(MutableStateFlow(metadata))
-//        val playbackState = PlaybackStateCompat.Builder()
-//            .setState(PAUSED, currentPosition, 1.0f)
-//            .build()
-//        whenever(mockMediaController.playbackState).thenReturn(MutableLiveData(playbackState))
+        metadataFlow.value =metadata
 
+        whenever(mockMediaController.currentPosition).thenReturn(currentPosition)
+    //   scope.
         composeTestRule.setContent {
-            SeekBar(mediaController = mockMediaController,
-                    metadataState = MutableStateFlow(MediaMetadata.EMPTY),
+            SeekBar(mediaController = mediaControllerAdapter,
+                    metadataState = MutableStateFlow(metadata),
                     isPlayingState = MutableStateFlow(false),
                     playbackSpeedState = MutableStateFlow(1.0f)
             )

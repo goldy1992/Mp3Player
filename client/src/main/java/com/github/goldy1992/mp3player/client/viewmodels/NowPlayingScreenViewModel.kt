@@ -11,6 +11,7 @@ import androidx.media3.session.MediaController
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.data.flows.player.*
+import com.github.goldy1992.mp3player.client.viewmodels.states.PlaybackPosition
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,6 +30,7 @@ constructor(
     private val isPlayingFlow: IsPlayingFlow,
     private val metadataFlow: MetadataFlow,
     private val playbackSpeedFlow: PlaybackSpeedFlow,
+    val playbackPosition : PlaybackPosition,
     private val queueFlow: QueueFlow,
     private val repeatModeFlow: RepeatModeFlow,
     private val shuffleModeFlow: ShuffleModeFlow,

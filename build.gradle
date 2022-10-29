@@ -14,6 +14,7 @@ buildscript {
         compose_version = '1.2.1'
         compose_material3_version = '1.0.0'
         compose_test_version = '1.0.4'
+        datastore_preferences_version = '1.0.0'
         espresso_core_version = '3.3.0'
         exo_player_vesrion = '2.17.1'
         hilt_version = '2.42'

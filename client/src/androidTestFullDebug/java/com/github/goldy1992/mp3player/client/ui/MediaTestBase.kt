@@ -4,16 +4,18 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaBrowser
 import androidx.media3.session.MediaController
+import androidx.media3.session.MediaLibraryService
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.MediaTestUtils
 import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnSearchResultsChangedFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.QueueFlow
+import com.github.goldy1992.mp3player.client.MediaTestUtils.createTestMediaItem
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.util.concurrent.Futures
 import kotlinx.coroutines.CoroutineDispatcher
@@ -40,17 +42,18 @@ abstract class MediaTestBase {
 
     open lateinit var context : Context
 
-    val metadataLiveData = MutableLiveData<MediaMetadata>()
 
     val queueFlow = mock<QueueFlow>()
 
     val searchResultsChangedFlow = mock<OnSearchResultsChangedFlow>()
 
-    val metadataFlow = mock<MetadataFlow>()
+    val metadataFlowObj = mock<MetadataFlow>()
+    val metadataFlow = MutableStateFlow(MediaMetadata.EMPTY)
 
     val searchResultsState = MutableStateFlow<List<MediaItem>>(emptyList())
 
-    val isPlayingFlow = mock<IsPlayingFlow>()
+    val isPlayingFlowObj = mock<IsPlayingFlow>()
+    val isPlayingFlow = MutableStateFlow(false)
 
     open fun setup() {
 
@@ -58,7 +61,16 @@ abstract class MediaTestBase {
     fun setup(scope : CoroutineScope,
             @MainDispatcher mainDispatcher: CoroutineDispatcher) {
 
-        whenever(mockMediaBrowser.getLibraryRoot(any())).thenReturn(null)
+        whenever(mockMediaController.mediaMetadata).thenReturn(MediaMetadata.EMPTY)
+        whenever(isPlayingFlowObj.flow()).thenReturn(isPlayingFlow)
+        whenever(metadataFlowObj.flow()).thenReturn(metadataFlow)
+        whenever(mockMediaBrowser.getLibraryRoot(any()))
+            .thenReturn(
+                Futures
+                    .immediateFuture(LibraryResult
+                        .ofItem(createTestMediaItem("id"),
+                                MediaLibraryService.LibraryParams.Builder().build()))
+            )
         mediaBrowserAdapter = MediaBrowserAdapter(
             mediaBrowserLF = mediaBrowserListenableFuture,
             scope = scope,

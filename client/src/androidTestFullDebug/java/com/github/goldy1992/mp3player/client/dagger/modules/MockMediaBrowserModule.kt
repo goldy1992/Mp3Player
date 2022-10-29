@@ -1,11 +1,9 @@
 package com.github.goldy1992.mp3player.client.dagger.modules
 
-import androidx.media3.common.MediaItem
 import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaBrowser
 import androidx.media3.session.MediaLibraryService
-import com.github.goldy1992.mp3player.client.MediaTestUtils
-import com.google.common.collect.ImmutableList
+import com.github.goldy1992.mp3player.client.MediaTestUtils.createTestMediaItem
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.Module
@@ -29,7 +27,7 @@ class MockMediaBrowserModule {
     fun providesMockMediaBrowser() : ListenableFuture<MediaBrowser> {
         val mockMediaBrowser = mock<MediaBrowser>()
         whenever(mockMediaBrowser.getLibraryRoot(any())).thenReturn(Futures.immediateFuture(
-            LibraryResult.ofItem(MediaTestUtils.createTestMediaItem("mockId"), MediaLibraryService.LibraryParams.Builder().build())
+            LibraryResult.ofItem(createTestMediaItem("mockId"), MediaLibraryService.LibraryParams.Builder().build())
         ))
         return Futures.immediateFuture(mockMediaBrowser)
     }
