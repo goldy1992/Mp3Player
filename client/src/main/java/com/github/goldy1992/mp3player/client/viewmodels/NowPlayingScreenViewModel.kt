@@ -30,7 +30,8 @@ constructor(
     private val isPlayingFlow: IsPlayingFlow,
     private val metadataFlow: MetadataFlow,
     private val playbackSpeedFlow: PlaybackSpeedFlow,
-    val playbackPosition : PlaybackPosition,
+    private val playbackPositionFlow: PlaybackPositionFlow,
+
     private val queueFlow: QueueFlow,
     private val repeatModeFlow: RepeatModeFlow,
     private val shuffleModeFlow: ShuffleModeFlow,
@@ -39,6 +40,7 @@ constructor(
 
     private val mediaControllerAsync : ListenableFuture<MediaController> = mediaControllerAdapter.mediaControllerFuture
 
+    val playbackPosition : PlaybackPosition = PlaybackPosition.initialise(this, playbackPositionFlow, mainDispatcher, mediaControllerAsync)
     // isPlaying
     private val _isPlayingState = MutableStateFlow(false)
     val isPlaying : StateFlow<Boolean> = _isPlayingState

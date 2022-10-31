@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui
+package com.github.goldy1992.mp3player.client.ui.components.seekbar
 
 import android.util.Log
 import androidx.compose.animation.core.Animatable
@@ -20,23 +20,15 @@ import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekbarUtils.calculateAnimationTime
+import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekbarUtils.calculateCurrentPosition
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
-import com.github.goldy1992.mp3player.client.viewmodels.states.PlaybackPosition
 import com.github.goldy1992.mp3player.commons.MetadataUtils
-import com.github.goldy1992.mp3player.commons.TimerUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 private const val logTag = "seekbar"
-
-private fun calculateCurrentPosition(playbackPositionEvent: PlaybackPositionEvent) : Long {
-    return if (playbackPositionEvent.isPlaying) {
-        playbackPositionEvent.currentPosition + (TimerUtils.getSystemTime() - playbackPositionEvent.systemTime)
-    } else {
-        playbackPositionEvent.currentPosition
-    }
-}
 
 @Composable
 fun SeekBar(isPlayingState: StateFlow<Boolean>,
@@ -52,28 +44,50 @@ fun SeekBar(isPlayingState: StateFlow<Boolean>,
     val playbackSpeed by playbackSpeedState.collectAsState()
     val playbackPositionEvent by playbackPositionState.collectAsState()
     val duration = MetadataUtils.getDuration(metadata).toFloat()
-    val currentPosition = calculateCurrentPosition(playbackPositionEvent)
+    val currentPosition = calculateCurrentPosition(playbackPositionEvent).toFloat()
     Log.i(logTag, "current playback position: $currentPosition")
-    val durationAtSpeed = duration / playbackSpeed
-    val animationTimeInMs = (durationAtSpeed * (1 - (currentPosition / duration))).toInt()
+    val animationTimeInMs = calculateAnimationTime(currentPosition, duration, playbackSpeed)
     val durationDescription = stringResource(id = R.string.duration)
     val currentPositionDescription = stringResource(id = R.string.current_position)
-    val anim1 = remember(currentPosition) { mutableStateOf(Animatable(currentPosition.toFloat())) }
-  //  Log.i(logTag, "Anim1Value: ${anim1.value}")
+
+    SeekBarUi(
+        currentPosition = currentPosition,
+        duration = duration,
+        isPlaying = isPlaying,
+        animationTimeInMs = animationTimeInMs,
+        durationDescription = durationDescription,
+        currentPositionDescription = currentPositionDescription,
+        scope = scope,
+        mediaController = mediaController
+    )
+}
+
+@Composable
+private fun SeekBarUi(currentPosition : Float,
+                      duration : Float,
+                      isPlaying : Boolean,
+                      animationTimeInMs : Int,
+                      durationDescription : String,
+                      currentPositionDescription : String,
+                      scope: CoroutineScope,
+                      mediaController : MediaControllerAdapter
+                    ) {
+    val seekBarAnimation = remember(animationTimeInMs) { mutableStateOf(Animatable(currentPosition)) }
+    //  Log.i(logTag, "Anim1Value: ${anim1.value}")
 
     if (isPlaying) {
-     //   Log.i(logTag, "playback state playing")
-        LaunchedEffect(anim1) {
-            anim1.value.animateTo(duration,
-            animationSpec = FloatTweenSpec(animationTimeInMs.toInt(), 0, LinearEasing))
-      //      Log.i(logTag, "animating")
+        //   Log.i(logTag, "playback state playing")
+        LaunchedEffect(seekBarAnimation) {
+            seekBarAnimation.value.animateTo(duration,
+                animationSpec = FloatTweenSpec(animationTimeInMs, 0, LinearEasing))
+            //      Log.i(logTag, "animating")
         }
     }
     val isTouchTracking = remember { mutableStateOf(false)   }
     val touchTrackingPosition = remember { mutableStateOf(0f) }
 
     Row(modifier = Modifier.fillMaxWidth(),
-    horizontalArrangement = Arrangement.SpaceEvenly) {
+        horizontalArrangement = Arrangement.SpaceEvenly) {
         Text(text = formatTime(duration.toLong()),
             modifier = Modifier
                 .weight(2f)
@@ -81,10 +95,10 @@ fun SeekBar(isPlayingState: StateFlow<Boolean>,
                 .semantics {
                     contentDescription = durationDescription
                 },
-                textAlign = TextAlign.Center)
+            textAlign = TextAlign.Center)
         Slider(
             modifier = Modifier.weight(5f),
-            value = if (isTouchTracking.value) touchTrackingPosition.value else anim1.value.value ,
+            value = if (isTouchTracking.value) touchTrackingPosition.value else seekBarAnimation.value.value ,
             valueRange = 0f..duration,
             onValueChange = {
                 isTouchTracking.value = true
@@ -92,15 +106,14 @@ fun SeekBar(isPlayingState: StateFlow<Boolean>,
             },
             onValueChangeFinished = {
                 isTouchTracking.value = false
-                anim1.value = Animatable(touchTrackingPosition.value)
+                seekBarAnimation.value = Animatable(touchTrackingPosition.value)
                 scope.launch { mediaController.seekTo(touchTrackingPosition.value.toLong()) }
             })
-        Text(text = formatTime(if (isTouchTracking.value) touchTrackingPosition.value.toLong() else anim1.value.value.toLong()),
-                modifier = Modifier
-                    .weight(2f)
-                    .align(Alignment.CenterVertically)
-                    .semantics { contentDescription = currentPositionDescription },
-        textAlign = TextAlign.Center)
+        Text(text = formatTime(if (isTouchTracking.value) touchTrackingPosition.value.toLong() else seekBarAnimation.value.value.toLong()),
+            modifier = Modifier
+                .weight(2f)
+                .align(Alignment.CenterVertically)
+                .semantics { contentDescription = currentPositionDescription },
+            textAlign = TextAlign.Center)
     }
-
 }

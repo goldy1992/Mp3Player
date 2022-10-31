@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client.data.flows.player
 import android.os.SystemClock
 import android.util.Log
 import androidx.concurrent.futures.await
+import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import com.github.goldy1992.mp3player.client.data.eventholders.PlaybackPositionEvent
@@ -29,6 +30,11 @@ constructor(mediaControllerFuture: ListenableFuture<MediaController>,
         val messageListener = object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 Log.i(logTag(), "onIsPlayingChanged: $isPlaying")
+                trySend(PlaybackPositionEvent(isPlaying, controller.currentPosition, TimerUtils.getSystemTime()))
+            }
+
+            override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
+                val isPlaying = controller.isPlaying
                 trySend(PlaybackPositionEvent(isPlaying, controller.currentPosition, TimerUtils.getSystemTime()))
             }
         }

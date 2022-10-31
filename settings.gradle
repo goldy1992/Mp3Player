@@ -1,5 +1,4 @@
 include ':app',
         ':service',
         ':commons',
-        ':client',
-        ':client:testcommons'
+        ':client'

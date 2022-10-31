@@ -3,10 +3,8 @@ package com.github.goldy1992.mp3player.client.viewmodels.states
 import androidx.concurrent.futures.await
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.MediaMetadata
 import androidx.media3.session.MediaController
 import com.github.goldy1992.mp3player.client.data.eventholders.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.PlaybackPositionFlow
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.github.goldy1992.mp3player.commons.TimerUtils
@@ -30,10 +28,10 @@ private constructor(scope: CoroutineScope,
 
     companion object {
         fun initialise(viewModel: ViewModel,
-                       metadataFlow: PlaybackPositionFlow,
+                       playbackPositionFlow: PlaybackPositionFlow,
                        @MainDispatcher dispatcher: CoroutineDispatcher,
                        mediaControllerAsync : ListenableFuture<MediaController>) : PlaybackPosition {
-            return PlaybackPosition(viewModel.viewModelScope, metadataFlow, dispatcher, mediaControllerAsync)
+            return PlaybackPosition(viewModel.viewModelScope, playbackPositionFlow, dispatcher, mediaControllerAsync)
         }
     }
 

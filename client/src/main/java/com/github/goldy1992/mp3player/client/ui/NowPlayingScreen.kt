@@ -25,6 +25,7 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
+import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
 import com.github.goldy1992.mp3player.client.viewmodels.NowPlayingScreenViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
