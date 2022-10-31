@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalAnimationApi::class)
+
 package com.github.goldy1992.mp3player.client.ui
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,13 +27,15 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.commons.Screen
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 
 @ExperimentalMaterialApi
 @Composable
 fun NavigationDrawer(navController: NavController,
                     modifier : Modifier = Modifier) {
-    Column(modifier = modifier.background(MaterialTheme.colorScheme.surface)
+    Column(modifier = modifier
+        .background(MaterialTheme.colorScheme.surface)
         .fillMaxWidth()) {
 
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -54,7 +59,7 @@ fun NavigationDrawer(navController: NavController,
 @Preview
 @ExperimentalMaterialApi
 @Composable
-fun LibraryItem(navController: NavController = rememberNavController(),
+fun LibraryItem(navController: NavController = rememberAnimatedNavController(),
                 selected : Boolean = true) {
     val library = stringResource(id = R.string.library)
     ListItem(
@@ -85,7 +90,7 @@ fun SettingsItem(navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun NavigationDrawerContent(navController: NavController = rememberNavController(),
+fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavController(),
                             currentScreen : Screen = Screen.LIBRARY) {
 
     ModalDrawerSheet() {

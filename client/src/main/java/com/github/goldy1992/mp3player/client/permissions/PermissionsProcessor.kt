@@ -14,9 +14,12 @@ class PermissionsProcessor
                 private val compatWrapper: CompatWrapper
     ): LogTagger {
 
+    var askedForPermissions = false
+
 
     fun requestPermission(permission: String, permissionLauncher : ActivityResultLauncher<String>) { // Here, thisActivity is the current activity
         if (compatWrapper.checkPermissions(permission) != PackageManager.PERMISSION_GRANTED) {
+            askedForPermissions = true
             permissionLauncher.launch(permission)
         } else { // Permission has already been granted
             Log.i(logTag(), "Permission has already been granted")

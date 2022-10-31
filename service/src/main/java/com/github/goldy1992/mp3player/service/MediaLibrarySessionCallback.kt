@@ -10,6 +10,7 @@ import androidx.media3.session.MediaSession.ConnectionResult
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.IoDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.CustomMediaItemTree
 import com.github.goldy1992.mp3player.service.player.ChangeSpeedProvider
@@ -17,10 +18,7 @@ import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.scopes.ServiceScoped
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @ServiceScoped
@@ -32,6 +30,7 @@ class MediaLibrarySessionCallback
                 private val rootAuthenticator: RootAuthenticator,
                 private val customMediaItemTree: CustomMediaItemTree,
                 private val scope : CoroutineScope,
+                @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
                 @IoDispatcher private val ioDispatcher: CoroutineDispatcher) : MediaLibrarySession.Callback, LogTagger {
 
     override fun onConnect(
@@ -39,6 +38,8 @@ class MediaLibrarySessionCallback
         controller: MediaSession.ControllerInfo
     ): ConnectionResult {
         Log.i(logTag(), "on Connect called")
+
+
         val connectionResult = super.onConnect(session, controller)
         // add change playback speed command to list of available commands
         val sessionCommand = SessionCommand(CHANGE_PLAYBACK_SPEED, Bundle())
@@ -48,6 +49,19 @@ class MediaLibrarySessionCallback
 
     override fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo) {
         super.onPostConnect(session, controller)
+        val rootItem = rootAuthenticator.getRootItem()
+        customMediaItemTree.initialise(rootItem = rootItem)
+        scope.launch {
+            withContext(mainDispatcher) {
+                // TODO: add queue manager
+                session.player.addMediaItems(
+                    customMediaItemTree.rootNode?.getChildren()?.get(0)?.getChildren()
+                        ?.map(CustomMediaItemTree.MediaItemNode::item)?.toMutableList()
+                        ?: mutableListOf()
+                )
+                session.player.prepare()
+            }
+        }
     }
 
     override fun onDisconnected(session: MediaSession, controller: MediaSession.ControllerInfo) {

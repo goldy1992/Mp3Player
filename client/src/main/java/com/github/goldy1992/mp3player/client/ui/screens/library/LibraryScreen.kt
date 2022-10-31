@@ -1,7 +1,10 @@
+@file:OptIn(ExperimentalAnimationApi::class)
+
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
 import android.net.Uri
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ScaffoldState
@@ -30,6 +33,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -92,7 +96,7 @@ fun LibraryScreen(navController: NavController,
  * @param navigationColumn The Navigation Column.
  * @param content The content of the Library Screen.
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
@@ -101,7 +105,7 @@ fun LargeLibraryScreen(
     scope: CoroutineScope = rememberCoroutineScope(),
     pagerState: PagerState = rememberPagerState(),
     rootItems: List<MediaItem> = emptyList(),
-    navController: NavController = rememberNavController()) {
+    navController: NavController = rememberAnimatedNavController()) {
 
 
     // TODO: Replace with DismissibleNavigationDrawer when better support for content resizing.
@@ -170,7 +174,7 @@ fun LargeLibraryScreen(
 @Composable
 fun SmallLibraryScreen(
     viewModel: LibraryScreenViewModel,
-    navController: NavController = rememberNavController(),
+    navController: NavController = rememberAnimatedNavController(),
     scope : CoroutineScope = rememberCoroutineScope(),
     bottomBar : @Composable () -> Unit,
     pagerState: PagerState = rememberPagerState(),

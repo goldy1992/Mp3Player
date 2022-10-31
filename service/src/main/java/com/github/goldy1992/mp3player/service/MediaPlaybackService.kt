@@ -1,7 +1,11 @@
 package com.github.goldy1992.mp3player.service
 
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.content.ContextWrapper
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.media3.common.Player.STATE_READY
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.CommandButton
@@ -72,19 +76,19 @@ open class MediaPlaybackService : MediaLibraryService(),
     @Inject
     lateinit var customMediaItemTree: CustomMediaItemTree
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.i(logTag(), "on start command")
+        return super.onStartCommand(intent, flags, startId)
+    }
+
     override fun onCreate() {
+
+
         Log.i(logTag(), "onCreate called")
         super.onCreate()
 
         scope.launch(ioDispatcher) {
             searchDatabaseManagers.reindexAll()
-            val rootItem = rootAuthenticator.getRootItem()
-            customMediaItemTree.initialise(rootItem = rootItem)
-            withContext(mainDispatcher) {
-                // TODO: add queue manager
-                mediaSession.player.addMediaItems(   customMediaItemTree.rootNode?.getChildren()?.get(0)?.getChildren()?.map(CustomMediaItemTree.MediaItemNode::item)?.toMutableList() ?: mutableListOf())
-                mediaSession.player.prepare()
-            }
         }
 
         mediaSession = mediaSessionCreator.create(this, componentClassMapper, player, mediaLibrarySessionCallback)

@@ -2,16 +2,14 @@ package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Intent
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
@@ -21,26 +19,31 @@ import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
 import com.github.goldy1992.mp3player.client.viewmodels.*
 import com.github.goldy1992.mp3player.commons.Constants.ROOT_APP_URI_PATH
 import com.github.goldy1992.mp3player.commons.Screen
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
 
 private const val logTag = "ComposeApp"
 
-@OptIn(ExperimentalFoundationApi::class)
-@ExperimentalMaterialApi
-@ExperimentalComposeUiApi
-@InternalCoroutinesApi
-@ExperimentalPagerApi
+@OptIn(
+    ExperimentalAnimationApi::class,
+    ExperimentalComposeUiApi::class,
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterialApi::class,
+    ExperimentalPagerApi::class,
+    InternalCoroutinesApi::class,
+)
 @Composable
 fun ComposeApp(
         userPreferencesRepository: UserPreferencesRepository,
         windowSize: WindowSize,
         startScreen : Screen
 ) {
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController()
     AppTheme(userPreferencesRepository = userPreferencesRepository) {
-        NavHost(
+        AnimatedNavHost(
             navController = navController,
             startDestination = Screen.LIBRARY.name
         ) {
