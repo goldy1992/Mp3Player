@@ -23,7 +23,7 @@ fun SpeedController(mediaController : MediaControllerAdapter? = null,
 
     val sliderPosition by playbackSpeedState.collectAsState()
 
-    var uiSliderPosition : Float by remember { mutableStateOf(1f)  }
+    var uiSliderPosition : Float by remember { mutableStateOf(sliderPosition)  }
     var isTouchTracking by remember { mutableStateOf(false)   }
     var touchTrackingPosition : Float by remember { mutableStateOf(0f) }
 
