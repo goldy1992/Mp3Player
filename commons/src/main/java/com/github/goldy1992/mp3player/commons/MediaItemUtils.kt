@@ -113,7 +113,7 @@ object MediaItemUtils {
 
     @JvmStatic
     fun getDuration(item: MediaItem): Long {
-        return item.mediaMetadata.extras?.get(MetaDataKeys.DURATION) as Long ?: 0L
+        return item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION) as Long ?: 0L
     }
 
     @JvmStatic

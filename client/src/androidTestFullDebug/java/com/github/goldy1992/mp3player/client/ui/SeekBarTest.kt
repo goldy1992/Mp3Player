@@ -9,6 +9,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.media3.common.MediaMetadata
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.eventholders.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.client.data.flows.player.PlaybackParametersFlow
 import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
 import com.github.goldy1992.mp3player.commons.MetaDataKeys
@@ -40,7 +41,7 @@ class SeekBarTest : MediaTestBase() {
             scope = this
         }
         super.setup(scope, mainDispatcher)
-        scope.
+     //   scope.
     }
 
     @Test
@@ -65,7 +66,8 @@ class SeekBarTest : MediaTestBase() {
             SeekBar(mediaController = mediaControllerAdapter,
                     metadataState = MutableStateFlow(metadata),
                     isPlayingState = MutableStateFlow(false),
-                    playbackSpeedState = MutableStateFlow(1.0f)
+                    playbackSpeedState = MutableStateFlow(1.0f),
+                    playbackPositionState = MutableStateFlow(PlaybackPositionEvent(false, currentPosition, 0L))
             )
         }
 

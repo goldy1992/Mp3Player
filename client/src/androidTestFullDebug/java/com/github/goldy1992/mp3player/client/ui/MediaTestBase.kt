@@ -16,6 +16,8 @@ import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.QueueFlow
 import com.github.goldy1992.mp3player.client.MediaTestUtils.createTestMediaItem
+import com.github.goldy1992.mp3player.client.data.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.data.flows.player.PlaybackPositionFlow
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.util.concurrent.Futures
 import kotlinx.coroutines.CoroutineDispatcher
@@ -45,8 +47,6 @@ abstract class MediaTestBase {
 
     val queueFlow = mock<QueueFlow>()
 
-    val searchResultsChangedFlow = mock<OnSearchResultsChangedFlow>()
-
     val metadataFlowObj = mock<MetadataFlow>()
     val metadataFlow = MutableStateFlow(MediaMetadata.EMPTY)
 
@@ -54,6 +54,9 @@ abstract class MediaTestBase {
 
     val isPlayingFlowObj = mock<IsPlayingFlow>()
     val isPlayingFlow = MutableStateFlow(false)
+
+    val playbackPositionFlowObj = mock<PlaybackPositionFlow>()
+    val playbackPositionFlow = MutableStateFlow(PlaybackPositionEvent.DEFAULT)
 
     open fun setup() {
 
@@ -64,6 +67,7 @@ abstract class MediaTestBase {
         whenever(mockMediaController.mediaMetadata).thenReturn(MediaMetadata.EMPTY)
         whenever(isPlayingFlowObj.flow()).thenReturn(isPlayingFlow)
         whenever(metadataFlowObj.flow()).thenReturn(metadataFlow)
+        whenever(playbackPositionFlowObj.flow()).thenReturn(playbackPositionFlow)
         whenever(mockMediaBrowser.getLibraryRoot(any()))
             .thenReturn(
                 Futures

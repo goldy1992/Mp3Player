@@ -78,20 +78,10 @@ open class MediaPlaybackService : MediaLibraryService(),
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i(logTag(), "on start command")
-        return super.onStartCommand(intent, flags, startId)
-    }
-
-    override fun onCreate() {
-
-
-        Log.i(logTag(), "onCreate called")
-        super.onCreate()
-
         scope.launch(ioDispatcher) {
             searchDatabaseManagers.reindexAll()
         }
 
-        mediaSession = mediaSessionCreator.create(this, componentClassMapper, player, mediaLibrarySessionCallback)
 
 
         if (!customLayout.isEmpty()) {
@@ -99,6 +89,13 @@ open class MediaPlaybackService : MediaLibraryService(),
             mediaSession.setCustomLayout(customLayout)
         }
         mediaStoreObservers.init(mediaSession)
+        return super.onStartCommand(intent, flags, startId)
+    }
+
+    override fun onCreate() {
+        Log.i(logTag(), "onCreate called")
+        super.onCreate()
+        mediaSession = mediaSessionCreator.create(this, componentClassMapper, player, mediaLibrarySessionCallback)
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {

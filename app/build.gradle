@@ -20,6 +20,7 @@ android {
         versionName project.properties['version.name']
         testInstrumentationRunner "com.github.goldy1992.mp3player.Mp3PlayerHiltTestRunner"
         missingDimensionStrategy 'fullUnittest', 'fullDebug'
+        signingConfig signingConfigs.debug
     }
 
     buildFeatures {

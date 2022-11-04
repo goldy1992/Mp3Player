@@ -40,8 +40,9 @@ open class MediaBrowserAdapter
         }
         else {
             val params = MediaLibraryService.LibraryParams.Builder().setExtras(extras).build()
-            scope.launch(mainDispatcher) { mediaBrowserLF.await().search(query, params) }
+            mediaBrowserLF.await().search(query, params)
         }
+
     }
 
     open suspend fun getSearchResults(query: String, page : Int = 0, pageSize : Int = 20) : ImmutableList<MediaItem> {

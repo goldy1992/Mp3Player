@@ -49,10 +49,12 @@ class MediaLibrarySessionCallback
 
     override fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo) {
         super.onPostConnect(session, controller)
+        Log.i(logTag(), "onPostConnect")
         val rootItem = rootAuthenticator.getRootItem()
         customMediaItemTree.initialise(rootItem = rootItem)
         scope.launch {
             withContext(mainDispatcher) {
+                Log.i(logTag(), "adding to queue")
                 // TODO: add queue manager
                 session.player.addMediaItems(
                     customMediaItemTree.rootNode?.getChildren()?.get(0)?.getChildren()

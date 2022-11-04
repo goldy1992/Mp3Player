@@ -2,14 +2,17 @@ package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Intent
 import android.util.Log
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
-import com.google.accompanist.navigation.animation.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
@@ -20,13 +23,14 @@ import com.github.goldy1992.mp3player.client.viewmodels.*
 import com.github.goldy1992.mp3player.commons.Constants.ROOT_APP_URI_PATH
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
 
 private const val logTag = "ComposeApp"
-
+private const val transitionTime = 2000
 @OptIn(
     ExperimentalAnimationApi::class,
     ExperimentalComposeUiApi::class,
@@ -65,6 +69,32 @@ fun ComposeApp(
 
             }
             composable(Screen.NOW_PLAYING.name,
+                enterTransition = {
+                    Log.i(logTag, "enterTransition called")
+////                    slideInVertically(
+////                        animationSpec = tween(7000000),
+////                    ) {
+////                        it + 1000
+////                    }
+//                        fadeIn(tween(70000, 0, LinearOutSlowInEasing))
+                    slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Up, animationSpec = tween(transitionTime)
+                    )
+                },
+                popEnterTransition = {
+                    Log.i(logTag, "PopenterTransition called")
+                    slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Up, animationSpec = tween(transitionTime)
+                    )
+                },
+                exitTransition = {
+                    Log.i(logTag, "exit called")
+                   slideOutOfContainer(AnimatedContentScope.SlideDirection.Down, animationSpec = tween(transitionTime))
+                },
+                popExitTransition = {
+                    Log.i(logTag, "pop exitTransition called")
+                    slideOutOfContainer(AnimatedContentScope.SlideDirection.Down, animationSpec = tween(transitionTime))
+                },
                         deepLinks = listOf(navDeepLink {
                             uriPattern = "${ROOT_APP_URI_PATH}/${Screen.NOW_PLAYING.name}"
                             action = Intent.ACTION_VIEW })
