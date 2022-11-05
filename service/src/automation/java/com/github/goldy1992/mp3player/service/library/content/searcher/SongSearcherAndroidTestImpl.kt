@@ -9,6 +9,7 @@ import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
 import com.github.goldy1992.mp3player.service.library.search.Song
 import com.github.goldy1992.mp3player.service.library.search.SongDao
+import kotlinx.coroutines.CoroutineScope
 import org.apache.commons.lang3.StringUtils
 import java.util.ArrayList
 
@@ -17,13 +18,15 @@ class SongSearcherAndroidTestImpl
     constructor(contentResolver: ContentResolver,
                 resultsParser: SongResultsParser,
                 private val mediaItemTypeIds: MediaItemTypeIds,
-                songDao: SongDao)
+                songDao: SongDao,
+                scope : CoroutineScope)
     : SongSearcher(contentResolver,
         resultsParser,
         mediaItemTypeIds,
-songDao) {
+        songDao,
+        scope) {
 
-    override fun performSearchQuery(query: String?): Cursor? {
+    override suspend fun performSearchQuery(query: String?): Cursor? {
         val results: List<Song>? = searchDatabase.query(query)
         val parameters: MutableList<String> = ArrayList()
         val parameterSymbols: MutableList<String?> = ArrayList()

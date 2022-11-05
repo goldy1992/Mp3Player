@@ -35,7 +35,7 @@ class FolderSearcherTest : ContentResolverSearcherTestBase<FolderSearcher?>() {
         idPrefix = mediaItemTypeIds!!.getId(MediaItemType.FOLDER)
         filter = mock<FolderSearchResultsFilter>()
         whenever(filter.filter(ContentResolverSearcherTestBase.Companion.VALID_QUERY, ContentResolverSearcherTestBase.Companion.expectedResult)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
-        searcher = spy(FolderSearcher(contentResolver, resultsParser, filter, mediaItemTypeIds!!, folderDao, testScope))
+        searcher = FolderSearcher(contentResolver, resultsParser, filter, mediaItemTypeIds!!, folderDao, testScope)
     }
 
 

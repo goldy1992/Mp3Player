@@ -31,7 +31,7 @@ class SongSearcherTest : ContentResolverSearcherTestBase<SongSearcher?>() {
     fun setup() {
         mediaItemTypeIds = MediaItemTypeIds()
         idPrefix = mediaItemTypeIds!!.getId(MediaItemType.SONG)
-        searcher = spy(SongSearcher(contentResolver, resultsParser, mediaItemTypeIds!!, songDao, testScope))
+        searcher = SongSearcher(contentResolver, resultsParser, mediaItemTypeIds!!, songDao, testScope)
     }
 
 

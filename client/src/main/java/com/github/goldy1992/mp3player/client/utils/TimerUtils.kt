@@ -24,19 +24,4 @@ object TimerUtils {
         //Log.d(LOG_TAG, "returning formatted time: " + formattedTime);
         return timerFormat.format(date)
     }
-
-//    @JvmStatic
-//    fun calculateCurrentPlaybackPosition(state: PlaybackStateCompat?): Long {
-//        if (state == null) {
-//            return 0L
-//        }
-//        return if (state.state != PlaybackStateCompat.STATE_PLAYING) {
-//            state.position
-//        } else {
-//            val timestamp = state.lastPositionUpdateTime
-//            val currentTime = SystemClock.elapsedRealtime()
-//            val timeDiff = currentTime - timestamp
-//            state.position + timeDiff
-//        }
-//    }
 }
