@@ -76,21 +76,17 @@ abstract class MainActivityBase : ComponentActivity(),
 
     override fun onPermissionGranted() {
         Log.i(logTag(), "permission granted")
-        if (permissionsProcessor.askedForPermissions) {
-            this.recreate()
-        } else {
-            createService()
-            if (Intent.ACTION_VIEW == intent.action) {
-                if (intent.data != null) {
-                    trackToPlay = intent.data
-                    scope.launch(defaultDispatcher) {
-                        mediaControllerAdapter.playFromUri(trackToPlay, null)
-                    }
+
+        if (Intent.ACTION_VIEW == intent.action) {
+            if (intent.data != null) {
+                trackToPlay = intent.data
+                scope.launch(defaultDispatcher) {
+                    mediaControllerAdapter.playFromUri(trackToPlay, null)
                 }
-                this.startScreen = Screen.NOW_PLAYING
             }
-            scope.launch(mainDispatcher) { ui(startScreen = startScreen) }
+            this.startScreen = Screen.NOW_PLAYING
         }
+        scope.launch(mainDispatcher) { ui(startScreen = startScreen) }
     }
 
     val permissionLauncher : ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
