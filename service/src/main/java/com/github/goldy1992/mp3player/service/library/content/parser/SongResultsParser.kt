@@ -25,7 +25,7 @@ class SongResultsParser
     override fun create(cursor: Cursor?, mediaIdPrefix: String?): List<MediaItem> {
         val listToReturn = TreeSet(this)
         while (cursor != null && cursor.moveToNext()) {
-            Log.i(logTag(), "mediaIfPrefix: ${mediaIdPrefix ?: "null"}")
+           // Log.i(logTag(), "mediaIfPrefix: ${mediaIdPrefix ?: "null"}")
             val mediaItem = buildMediaItem(cursor, mediaIdPrefix)
             if (null != mediaItem) {
                 listToReturn.add(mediaItem)

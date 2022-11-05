@@ -35,6 +35,7 @@ fun SongList(
     currentMediaItemState : StateFlow<MediaItem>,
     onSongSelected : (itemIndex: Int, songs : List<MediaItem>) -> Unit = { _, _ -> }) {
 
+    Log.i(logTag, "song list size: ${songs.size}")
     val isPlaying by isPlayingState.collectAsState()
     val currentMediaItem by currentMediaItemState.collectAsState()
 
@@ -75,6 +76,6 @@ fun EmptySongsList() {
 }
 
 private fun isItemSelected(song : MediaItem, currentItem : MediaItem) : Boolean {
-    Log.i(logTag, "songId: ${song.mediaId}, currentItemId: ${currentItem.mediaId}")
+    //Log.i(logTag, "songId: ${song.mediaId}, currentItemId: ${currentItem.mediaId}")
     return StringUtils.equals(song.mediaId, currentItem.mediaId)
 }
