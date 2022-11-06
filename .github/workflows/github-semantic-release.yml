@@ -37,5 +37,6 @@ jobs:
 
       - name: Release
         env:
+          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
         run: npx semantic-release --ci
