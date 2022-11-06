@@ -6,7 +6,6 @@ on:
 jobs:
   semantic-release:
     runs-on: ubuntu-latest
-    permissions: write-all
     environment: release_env
     steps:
       - uses: actions/checkout@v3.1.0
@@ -38,6 +37,6 @@ jobs:
 
       - name: Release
         env:
-          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+          #GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
         run: npx semantic-release --ci
