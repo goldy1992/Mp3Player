@@ -31,26 +31,20 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew bundleRelease --stacktrace -PdisablePreDex
+      - name: Write Base64 Encoded Key Store value to File
+        run: echo ${{ secrets.KEY_STORE_BASE64 }} > "signing_key_file"
 
-      - name: Sign AAB (Android App Bundle)
-        uses: r0adkll/sign-android-release@v1
-        id: sign_app
-        with:
-          releaseDirectory: app/build/outputs/bundle/fullRelease
-          signingKeyBase64: ${{ secrets.KEY_STORE_BASE64 }}
-          alias: ${{ secrets.KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-        env:
-          BUILD_TOOLS_VERSION: 30.0.2'
+      - name: Make signing_key_file executable
+        run: chmod +x ./signing_key_file
+
+      - name: Build release bundle with Gradle
+        run: ./gradlew bundleRelease --stacktrace -PdisablePreDex -Pfull_release_storePassword=${{ secrets.KEY_STORE_PASSWORD }} -Pfull_release_keyAlias=${{ secrets.KEY_ALIAS }} -P=full_release_keyPassword=${{ secrets.KEY_PASSWORD }} -P=full_release_storeFile=signing_key_file
 
       - name: Create service_account.json FROM secrets.SERVICE_ACCOUNT_JSON
         run: echo '${{ secrets.RELEASE_SERVICE_ACCOUNT_JSON }}' > service_account.json
 
       - name: Upload signed AAB to Playstore
-        uses: r0adkll/upload-google-play@v1.0.15
+        uses: r0adkll/upload-google-play@v1.0.19
         with:
           serviceAccountJson: service_account.json
           packageName: com.github.goldy1992.mp3player.full

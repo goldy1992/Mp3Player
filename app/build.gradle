@@ -22,6 +22,15 @@ android {
         missingDimensionStrategy 'fullUnittest', 'fullDebug'
     }
 
+    signingConfigs {
+        release {
+            storeFile file(full_release_storeFile)
+            storePassword full_release_storePassword
+            keyAlias full_release_keyAlias
+            keyPassword full_release_keyPassword
+        }
+    }
+
     buildFeatures {
         viewBinding true
     }
