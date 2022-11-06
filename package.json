@@ -5,7 +5,7 @@
     "@semantic-release/git": "10.0.1",
     "semantic-release": "19.0.5",
     "trim-newlines": "4.0.2",
-    "normalize-url": "7.0.3"
+    "normalize-url": "8.0.0"
   },
   "scripts": {
     "semantic-release": "semantic-release"
