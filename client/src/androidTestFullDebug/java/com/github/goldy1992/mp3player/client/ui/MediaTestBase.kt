@@ -1,49 +1,88 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Context
-import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.MediaMetadataCompat
-import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.MutableLiveData
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
+import androidx.media3.session.LibraryResult
+import androidx.media3.session.MediaBrowser
+import androidx.media3.session.MediaController
+import androidx.media3.session.MediaLibraryService
 import androidx.navigation.NavController
-import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnSearchResultsChangedFlow
+import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
+import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
+import com.github.goldy1992.mp3player.client.data.flows.player.QueueFlow
+import com.github.goldy1992.mp3player.client.MediaTestUtils.createTestMediaItem
+import com.github.goldy1992.mp3player.client.data.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.data.flows.player.PlaybackPositionFlow
+import com.github.goldy1992.mp3player.commons.MainDispatcher
+import com.google.common.util.concurrent.Futures
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 abstract class MediaTestBase {
 
-    val mockMediaBrowser : MediaBrowserAdapter = mock<MediaBrowserAdapter>()
+    lateinit var mediaBrowserAdapter : MediaBrowserAdapter
+    lateinit var mediaControllerAdapter : MediaControllerAdapter
 
-    val mockMediaController : MediaControllerAdapter = mock<MediaControllerAdapter>()
+    val mockMediaController = mock<MediaController>()
+    val mediaControllerListenableFuture = Futures.immediateFuture(mockMediaController)
+
+    val mockMediaBrowser = mock<MediaBrowser>()
+    val mediaBrowserListenableFuture = Futures.immediateFuture(mockMediaBrowser)
+
+
 
     val mockNavController : NavController = mock<NavController>()
 
-    lateinit var context : Context
+    open lateinit var context : Context
 
-    val metadataLiveData = MutableLiveData<MediaMetadataCompat>()
 
-    val queueLiveData = MutableLiveData<MutableList<MediaSessionCompat.QueueItem>>()
+    val queueFlow = mock<QueueFlow>()
 
-    val searchResultsLiveData = MutableLiveData<List<MediaBrowserCompat.MediaItem>>()
+    val metadataFlowObj = mock<MetadataFlow>()
+    val metadataFlow = MutableStateFlow(MediaMetadata.EMPTY)
+
+    val searchResultsState = MutableStateFlow<List<MediaItem>>(emptyList())
+
+    val isPlayingFlowObj = mock<IsPlayingFlow>()
+    val isPlayingFlow = MutableStateFlow(false)
+
+    val playbackPositionFlowObj = mock<PlaybackPositionFlow>()
+    val playbackPositionFlow = MutableStateFlow(PlaybackPositionEvent.DEFAULT)
 
     open fun setup() {
-        context = InstrumentationRegistry.getInstrumentation().context
-        whenever(mockMediaBrowser.searchResults()).thenReturn(searchResultsLiveData)
-        whenever(mockMediaController.queue).thenReturn(queueLiveData)
-        whenever(mockMediaController.metadata).thenReturn(metadataLiveData)
-        whenever(mockMediaController.isPlaying).thenReturn(MutableLiveData(true))
-        whenever(mockMediaController.playbackSpeed).thenReturn(MutableLiveData(1.0f))
-        whenever(mockMediaController.shuffleMode).thenReturn(MutableLiveData(PlaybackStateCompat.SHUFFLE_MODE_ALL))
-        whenever(mockMediaController.repeatMode).thenReturn(MutableLiveData(PlaybackStateCompat.REPEAT_MODE_ALL))
-        whenever(mockMediaController.playbackState).thenReturn(
-            MutableLiveData(
-                PlaybackStateCompat.Builder()
-            .setState(PlaybackStateCompat.STATE_PLAYING, 0L, 1.0f)
-            .build())
-        )
+
+    }
+    fun setup(scope : CoroutineScope,
+            @MainDispatcher mainDispatcher: CoroutineDispatcher) {
+
+        whenever(mockMediaController.mediaMetadata).thenReturn(MediaMetadata.EMPTY)
+        whenever(isPlayingFlowObj.flow()).thenReturn(isPlayingFlow)
+        whenever(metadataFlowObj.flow()).thenReturn(metadataFlow)
+        whenever(playbackPositionFlowObj.flow()).thenReturn(playbackPositionFlow)
+        whenever(mockMediaBrowser.getLibraryRoot(any()))
+            .thenReturn(
+                Futures
+                    .immediateFuture(LibraryResult
+                        .ofItem(createTestMediaItem("id"),
+                                MediaLibraryService.LibraryParams.Builder().build()))
+            )
+        mediaBrowserAdapter = MediaBrowserAdapter(
+            mediaBrowserLF = mediaBrowserListenableFuture,
+            scope = scope,
+            mainDispatcher = mainDispatcher)
+        mediaControllerAdapter = MediaControllerAdapter(
+            mediaControllerFuture = mediaControllerListenableFuture,
+            scope = scope,
+            mainDispatcher = mainDispatcher)
 
     }
 }

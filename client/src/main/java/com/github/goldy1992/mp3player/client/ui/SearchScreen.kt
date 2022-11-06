@@ -1,16 +1,12 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.net.Uri
+import android.os.Bundle
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
@@ -18,27 +14,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.PermanentNavigationDrawer
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -53,6 +30,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
@@ -60,10 +39,12 @@ import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListItem
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongListItem
-import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
+import com.github.goldy1992.mp3player.client.viewmodels.SearchScreenViewModel
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import org.apache.commons.lang3.StringUtils
@@ -73,22 +54,29 @@ import org.apache.commons.lang3.StringUtils
 @Composable
 fun SearchScreen(
     navController: NavController,
-    mediaBrowser :  MediaBrowserAdapter,
-    mediaController : MediaControllerAdapter,
-    windowSize: WindowSize) {
+    windowSize: WindowSize,
+    viewModel : SearchScreenViewModel = viewModel(),
+    scope : CoroutineScope = rememberCoroutineScope()) {
 
     val isLargeScreen = windowSize == WindowSize.Expanded
     if (isLargeScreen) {
-        LargeSearchResults(
+          LargeSearchResults(
+            searchResultsState = viewModel.searchResults,
             navController = navController,
-            mediaBrowser = mediaBrowser,
-            mediaController = mediaController,
+            mediaBrowser = viewModel.mediaBrowserAdapter,
+            mediaController = viewModel.mediaControllerAdapter,
+            isPlayingState = viewModel.isPlaying,
+            scope = scope
+
         )
     } else {
         SmallSearchResults(
+            searchResultsState = viewModel.searchResults,
             navController = navController,
-            mediaBrowser = mediaBrowser,
-            mediaController = mediaController,
+            mediaBrowser = viewModel.mediaBrowserAdapter,
+            mediaController = viewModel.mediaControllerAdapter,
+            isPlayingState = viewModel.isPlaying,
+            scope = scope
         )
 
     }
@@ -101,9 +89,12 @@ fun SearchScreen(
 )
 @Composable
 private fun SmallSearchResults(
+    searchResultsState : StateFlow<List<MediaItem>>,
     navController: NavController,
     mediaBrowser: MediaBrowserAdapter,
-    mediaController : MediaControllerAdapter) {
+    mediaController : MediaControllerAdapter,
+    isPlayingState: StateFlow<Boolean>,
+    scope : CoroutineScope = rememberCoroutineScope()) {
     val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     ModalNavigationDrawer(
         drawerContent = {
@@ -117,16 +108,19 @@ private fun SmallSearchResults(
                 SearchBar(
                     navController = navController,
                     mediaBrowser = mediaBrowser,
+                    scope = scope
                 )
             },
             bottomBar = {
-                PlayToolbar(mediaController = mediaController) {
+                PlayToolbar(mediaController = mediaController,
+                            isPlayingState = isPlayingState,
+                            scope = scope) {
                     navController.navigate(Screen.NOW_PLAYING.name)
                 }
             },
             content = {
                 SearchResults(
-                    mediaBrowser = mediaBrowser,
+                    searchResultsState = searchResultsState,
                     mediaController = mediaController,
                     navController = navController,
                     modifier = Modifier.padding(it)
@@ -143,9 +137,12 @@ private fun SmallSearchResults(
 )
 @Composable
 private fun LargeSearchResults(
+    searchResultsState : StateFlow<List<MediaItem>>,
     navController: NavController,
     mediaBrowser: MediaBrowserAdapter,
-    mediaController : MediaControllerAdapter) {
+    mediaController : MediaControllerAdapter,
+    isPlayingState: StateFlow<Boolean>,
+    scope : CoroutineScope = rememberCoroutineScope()) {
     PermanentNavigationDrawer(
         modifier = Modifier.fillMaxSize(),
         drawerContent = {
@@ -159,10 +156,13 @@ private fun LargeSearchResults(
                 SearchBar(
                     navController = navController,
                     mediaBrowser = mediaBrowser,
+                    scope = scope
                 )
             },
             bottomBar = {
-                PlayToolbar(mediaController = mediaController) {
+                PlayToolbar(mediaController = mediaController,
+                            isPlayingState = isPlayingState,
+                            scope = scope) {
                     navController.navigate(Screen.NOW_PLAYING.name)
                 }
             },
@@ -174,7 +174,7 @@ private fun LargeSearchResults(
                         .fillMaxHeight()
                 ) {
                     SearchResults(
-                        mediaBrowser = mediaBrowser,
+                        searchResultsState = searchResultsState,
                         mediaController = mediaController,
                         navController = navController,
                         modifier = Modifier.padding(it)
@@ -186,12 +186,14 @@ private fun LargeSearchResults(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalComposeUiApi
 @Composable
 fun SearchBar(navController: NavController,
               mediaBrowser: MediaBrowserAdapter,
               keyboardController : SoftwareKeyboardController? = LocalSoftwareKeyboardController.current,
-              focusRequester : FocusRequester = remember { FocusRequester() }) {
+              focusRequester : FocusRequester = remember { FocusRequester() },
+                scope: CoroutineScope = rememberCoroutineScope()) {
     val searchQuery = remember { mutableStateOf(TextFieldValue()) }
     val scope = rememberCoroutineScope()
 
@@ -215,8 +217,10 @@ fun SearchBar(navController: NavController,
                 },
             value = searchQuery.value,
             onValueChange = {
-                searchQuery.value = it
-                mediaBrowser.search(searchQuery.value.text, null)
+                scope.launch {
+                    searchQuery.value = it
+                    mediaBrowser.search(searchQuery.value.text, Bundle())
+                }
             },
             placeholder = {
                 Text(text = stringResource(id = R.string.search_hint))
@@ -224,7 +228,7 @@ fun SearchBar(navController: NavController,
             leadingIcon = {
                 IconButton(onClick = {
                     scope.launch {
-                        mediaBrowser.clearSearchResults()
+                     //   mediaBrowser.clearSearchResults()
                         navController.popBackStack()
                     }
                 }) {
@@ -234,7 +238,7 @@ fun SearchBar(navController: NavController,
             trailingIcon = {
                 if (StringUtils.isNotEmpty(searchQuery.value.text)) {
                     IconButton(onClick = { searchQuery.value = TextFieldValue()
-                        mediaBrowser.clearSearchResults()
+                  //      mediaBrowser.clearSearchResults()
                     }) {
                         Icon(Icons.Outlined.Close, clearSearchDescr)
                     }
@@ -259,7 +263,7 @@ fun SearchBar(navController: NavController,
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @Composable
-fun SearchResults(mediaBrowser: MediaBrowserAdapter,
+fun SearchResults(searchResultsState : StateFlow<List<MediaItem>>,
                   mediaController: MediaControllerAdapter,
                   navController: NavController,
                   modifier : Modifier = Modifier,
@@ -267,7 +271,7 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter,
                   focusRequester : FocusRequester = remember { FocusRequester() }) {
     val searchResultsColumn = stringResource(id = R.string.search_results_column)
 
-    val searchResults by mediaBrowser.searchResults().observeAsState(emptyList())
+    val searchResults by searchResultsState.collectAsState()
     val lazyLisState = rememberLazyListState()
     
     LaunchedEffect(lazyLisState.isScrollInProgress) {
@@ -294,7 +298,7 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter,
                             SongListItem(song = mediaItem, onClick = {
                                 val libraryId = MediaItemUtils.getLibraryId(mediaItem)
                                 Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
-                                mediaController.playFromMediaId(libraryId, null)
+                                mediaController.playFromMediaId(mediaItem)
                             })
                         }
                         MediaItemType.FOLDER -> {
@@ -311,7 +315,7 @@ fun SearchResults(mediaBrowser: MediaBrowserAdapter,
                                             + "/" + encodedFolderPath)
                             })
                         }
-                        MediaItemType.ROOT -> {
+                        MediaItemType.SONGS, MediaItemType.FOLDERS -> {
 
                             Column(
                                 Modifier

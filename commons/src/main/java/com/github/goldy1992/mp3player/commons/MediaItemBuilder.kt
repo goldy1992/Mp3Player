@@ -2,9 +2,11 @@ package com.github.goldy1992.mp3player.commons
 
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.MediaDescriptionCompat
-import android.support.v4.media.MediaMetadataCompat
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaItem.RequestMetadata
+import androidx.media3.common.MediaMetadata
+import androidx.media3.common.MediaMetadata.FOLDER_TYPE_NONE
+import androidx.media3.common.MediaMetadata.FolderType
 import java.io.File
 
 class MediaItemBuilder(private val mediaId: String) {
@@ -13,8 +15,15 @@ class MediaItemBuilder(private val mediaId: String) {
 
     private var description: String? = null
     private var title: String? = null
+    private var artist : String? = null
     private var mediaUri: Uri? = null
+    private var isPlayable : Boolean = false
+    @FolderType
+    private var folderType : Int = FOLDER_TYPE_NONE
+    private var albumArtUri : Uri? = null
+    private var albumArtData : ByteArray? = null
     private val extras: Bundle = Bundle()
+
     private var flags = 0
 
     fun setFlags(flags: Int): MediaItemBuilder {
@@ -42,8 +51,18 @@ class MediaItemBuilder(private val mediaId: String) {
         return this
     }
 
+    fun setIsPlayable(isPlayable : Boolean) : MediaItemBuilder {
+        this.isPlayable = isPlayable
+        return this
+    }
+
+    fun setFolderType(@FolderType folderType : Int) : MediaItemBuilder {
+        this.folderType = folderType
+        return this
+    }
+
     fun setDuration(duration: Long): MediaItemBuilder {
-        extras.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
+        extras.putLong(MetaDataKeys.DURATION, duration)
         return this
     }
 
@@ -58,12 +77,15 @@ class MediaItemBuilder(private val mediaId: String) {
     }
 
     fun setAlbumArtUri(albumArtUri: Uri?): MediaItemBuilder {
-        extras.putParcelable(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, albumArtUri)
+        this.albumArtUri = albumArtUri
         return this
     }
 
+    @Deprecated(message = "albumArtData deprecated in androidx.media3.common.MediaItem",
+                replaceWith = ReplaceWith("MediaItemBuilder.setAlbumArtUri"),
+                level = DeprecationLevel.WARNING)
     fun setAlbumArtImage(bitmap: ByteArray?): MediaItemBuilder {
-        extras.putSerializable(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
+        this.albumArtData = bitmap
         return this
     }
 
@@ -78,7 +100,7 @@ class MediaItemBuilder(private val mediaId: String) {
     }
 
     fun setArtist(artist: String?): MediaItemBuilder {
-        extras.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
+        this.artist = artist
         return this
     }
 
@@ -87,14 +109,23 @@ class MediaItemBuilder(private val mediaId: String) {
         return this
     }
 
-    fun build(): MediaBrowserCompat.MediaItem {
-        val mediaDescription = MediaDescriptionCompat.Builder()
-                .setMediaId(mediaId)
-                .setMediaUri(mediaUri)
-                .setTitle(title)
-                .setDescription(description)
-                .setExtras(extras)
-                .build()
-        return MediaBrowserCompat.MediaItem(mediaDescription, flags)
+    fun build(): MediaItem {
+        return MediaItem.Builder()
+            .setMediaId(mediaId)
+            .setUri(mediaUri)
+            .setRequestMetadata(RequestMetadata.Builder().setMediaUri(mediaUri).build())
+            .setMediaMetadata(
+                MediaMetadata.Builder()
+                    .setTitle(title)
+                    .setDescription(description)
+                    .setArtist(artist)
+                    .setFolderType(folderType)
+                    .setIsPlayable(isPlayable)
+                    .setArtworkUri(albumArtUri)
+                    .setArtworkData(this.albumArtData)
+                    .setExtras(extras)
+                    .build()
+            )
+            .build()
     }
 }

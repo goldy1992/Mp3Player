@@ -4,15 +4,15 @@ import android.content.ContentResolver
 import android.database.ContentObserver
 import android.net.Uri
 import android.os.Handler
+import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.service.MediaPlaybackService
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 
 abstract class MediaStoreObserver(private val contentResolver: ContentResolver,
                                   val mediaItemTypeIds: MediaItemTypeIds) : ContentObserver(Handler()), LogTagger {
-    var mediaPlaybackService: MediaPlaybackService? = null
-    fun init(mediaPlaybackService: MediaPlaybackService?) {
-        this.mediaPlaybackService = mediaPlaybackService
+    var mediaSession: MediaLibrarySession? = null
+    fun init(mediaLibrarySession: MediaLibrarySession) {
+        this.mediaSession = mediaLibrarySession
     }
 
     fun register() {

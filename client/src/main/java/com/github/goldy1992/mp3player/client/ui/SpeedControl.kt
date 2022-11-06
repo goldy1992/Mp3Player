@@ -5,34 +5,43 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Slider
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 @Composable
 fun SpeedController(mediaController : MediaControllerAdapter? = null,
-                    modifier: Modifier = Modifier) {
+                    playbackSpeedState: StateFlow<Float>,
+                    modifier : Modifier = Modifier,
+                    scope: CoroutineScope = rememberCoroutineScope()) {
 
-    var sliderPosition by remember { mutableStateOf(if (mediaController != null) mediaController.playbackSpeed.value else 0.5f) }
+    val sliderPosition by playbackSpeedState.collectAsState()
+
+    var uiSliderPosition : Float by remember { mutableStateOf(sliderPosition)  }
+    var isTouchTracking by remember { mutableStateOf(false)   }
+    var touchTrackingPosition : Float by remember { mutableStateOf(0f) }
 
     Column(modifier = modifier,
     horizontalAlignment = Alignment.CenterHorizontally) {
         Slider(
-            value = sliderPosition!!,
+            value = if (isTouchTracking) touchTrackingPosition else uiSliderPosition,
             valueRange = 0.5f..1.5f,
-            onValueChange = { sliderPosition = it },
-            onValueChangeFinished = { mediaController?.changePlaybackSpeed(sliderPosition!!)}
+            onValueChange = {
+                isTouchTracking = true
+                touchTrackingPosition = it
+
+            },
+            onValueChangeFinished = {
+                isTouchTracking = false
+                uiSliderPosition = touchTrackingPosition
+                scope.launch { mediaController?.changePlaybackSpeed(uiSliderPosition) }
+            }
         )
         Row(horizontalArrangement = Arrangement.Center) {
             Text(
@@ -45,8 +54,8 @@ fun SpeedController(mediaController : MediaControllerAdapter? = null,
 
             IconButton(
                 onClick = {
-                    mediaController?.changePlaybackSpeed(1f)
-                    sliderPosition = 1f
+                    scope.launch { mediaController?.changePlaybackSpeed(1f) }
+                    uiSliderPosition = 1f
                 }
             ) {
                 Icon(Icons.Filled.Refresh, contentDescription = "Reset to 1x Speed",
@@ -60,5 +69,5 @@ fun SpeedController(mediaController : MediaControllerAdapter? = null,
 @Preview
 @Composable
 fun SpeedControllerPreview() {
-    SpeedController()
+   // SpeedController()
 }

@@ -1,22 +1,14 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ListItem
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RadioButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
@@ -41,7 +33,7 @@ fun ThemeSelectScreen(
             backgroundColor = MaterialTheme.colors.primary)
     },
         content = {
-            Column {
+            Column(Modifier.padding(it)) {
                 ThemeSelector(
                     userPreferencesRepository = userPreferencesRepository,
                     scope = scope)            }

@@ -3,11 +3,7 @@ package com.github.goldy1992.mp3player.client.ui.screens.library
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallTopAppBar
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -19,6 +15,7 @@ import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SmallLibraryAppBar(
     scope: CoroutineScope,
@@ -27,7 +24,7 @@ fun SmallLibraryAppBar(
 ) {
     val navigationDrawerIconDescription = stringResource(id = R.string.navigation_drawer_menu_icon)
 
-    SmallTopAppBar(
+    TopAppBar(
         title = {
             Text(text = "Library",
                 style = MaterialTheme.typography.titleLarge,

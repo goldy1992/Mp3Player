@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui.lists.folders;
 
-import android.support.v4.media.MediaBrowserCompat.MediaItem
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.padding
@@ -20,14 +19,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Preview
 @Composable
-fun FolderListItem(folder : MediaItem? = MediaItemUtils.getEmptyMediaItem(),
-                   onClick: (selectedFolder : MediaItem?) -> Unit = {}) {
+fun FolderListItem(folder : MediaItem = MediaItemUtils.getEmptyMediaItem(),
+                   onClick: (selectedFolder : MediaItem) -> Unit = {}) {
     ListItem(
         modifier = Modifier.combinedClickable(
             onClick = { onClick(folder) },

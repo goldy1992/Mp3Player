@@ -1,105 +1,142 @@
 package com.github.goldy1992.mp3player.client.ui
 
+import android.content.Intent
+import android.util.Log
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import androidx.navigation.navDeepLink
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.screens.FolderScreen
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreen
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
-import com.github.goldy1992.mp3player.client.viewmodels.LibraryScreenViewModel
+import com.github.goldy1992.mp3player.client.viewmodels.*
+import com.github.goldy1992.mp3player.commons.Constants.ROOT_APP_URI_PATH
 import com.github.goldy1992.mp3player.commons.Screen
-import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
 
-@OptIn(ExperimentalFoundationApi::class)
-@ExperimentalMaterialApi
-@ExperimentalComposeUiApi
-@InternalCoroutinesApi
-@ExperimentalPagerApi
+private const val logTag = "ComposeApp"
+private const val transitionTime = 2000
+@OptIn(
+    ExperimentalAnimationApi::class,
+    ExperimentalComposeUiApi::class,
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterialApi::class,
+    ExperimentalPagerApi::class,
+    InternalCoroutinesApi::class,
+)
 @Composable
 fun ComposeApp(
-        mediaBrowserAdapter: MediaBrowserAdapter,
-        mediaControllerAdapter: MediaControllerAdapter,
         userPreferencesRepository: UserPreferencesRepository,
         windowSize: WindowSize,
         startScreen : Screen
 ) {
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController()
     AppTheme(userPreferencesRepository = userPreferencesRepository) {
-        ProvideWindowInsets {
-            NavHost(
-                navController = navController,
-                startDestination = startScreen.name
+        AnimatedNavHost(
+            navController = navController,
+            startDestination = Screen.LIBRARY.name
+        ) {
+            composable(Screen.MAIN.name) {
+                val viewModel = hiltViewModel<MainScreenViewModel>()
+                MainScreen(
+                    navController,
+                    windowSize = windowSize,
+                    viewModel = viewModel
+                )
+            }
+            composable(Screen.LIBRARY.name) {
+                val viewModel = hiltViewModel<LibraryScreenViewModel>()
+                LibraryScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    windowSize = windowSize
+                )
+
+            }
+            composable(Screen.NOW_PLAYING.name,
+                enterTransition = {
+                    Log.i(logTag, "enterTransition called")
+////                    slideInVertically(
+////                        animationSpec = tween(7000000),
+////                    ) {
+////                        it + 1000
+////                    }
+//                        fadeIn(tween(70000, 0, LinearOutSlowInEasing))
+                    slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Up, animationSpec = tween(transitionTime)
+                    )
+                },
+                popEnterTransition = {
+                    Log.i(logTag, "PopenterTransition called")
+                    slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Up, animationSpec = tween(transitionTime)
+                    )
+                },
+                exitTransition = {
+                    Log.i(logTag, "exit called")
+                   slideOutOfContainer(AnimatedContentScope.SlideDirection.Down, animationSpec = tween(transitionTime))
+                },
+                popExitTransition = {
+                    Log.i(logTag, "pop exitTransition called")
+                    slideOutOfContainer(AnimatedContentScope.SlideDirection.Down, animationSpec = tween(transitionTime))
+                },
+                        deepLinks = listOf(navDeepLink {
+                            uriPattern = "${ROOT_APP_URI_PATH}/${Screen.NOW_PLAYING.name}"
+                            action = Intent.ACTION_VIEW })
             ) {
-                composable(Screen.MAIN.name) {
-                    MainScreen(
-                        navController,
-                        windowSize = windowSize,
-                        mediaController = mediaControllerAdapter,
-                        mediaBrowserAdapter = mediaBrowserAdapter
-                    )
-                }
-                composable(Screen.LIBRARY.name) {
-                    val viewModel = hiltViewModel<LibraryScreenViewModel>()
-                    LibraryScreen(
-                        navController = navController,
-                        viewModel = viewModel,
-                        windowSize = windowSize
-                    )
+                val viewModel = hiltViewModel<NowPlayingScreenViewModel>()
+                NowPlayingScreen(
+                    navController = navController,
+                    viewModel = viewModel
+                )
+            }
+            composable(Screen.SEARCH.name) {
+                val viewModel = hiltViewModel<SearchScreenViewModel>()
+                SearchScreen(
+                    navController = navController,
+                    windowSize = windowSize,
+                    viewModel = viewModel
+                )
+            }
+            composable(
+                route = Screen.FOLDER.name + "/{folderId}/{folderName}/{folderPath}",
+                arguments = listOf(
+                    navArgument("folderId") {type = NavType.StringType},
+                    navArgument("folderName") {type = NavType.StringType},
+                    navArgument("folderPath") {type = NavType.StringType}
+            )) {
+                val viewModel = hiltViewModel<FolderScreenViewModel>()
+                FolderScreen(
+                     navController = navController,
+                    windowSize = windowSize,
+                    viewModel = viewModel
+                )
 
-                }
-                composable(Screen.NOW_PLAYING.name) {
-                    NowPlayingScreen(
-                        navController = navController,
-                        mediaController = mediaControllerAdapter
-                    )
-                }
-                composable(Screen.SEARCH.name) {
-                    SearchScreen(
-                        navController = navController,
-                        mediaBrowser = mediaBrowserAdapter,
-                        mediaController = mediaControllerAdapter,
-                        windowSize = windowSize
-                    )
-                }
-                composable(
-                    route = Screen.FOLDER.name + "/{folderId}/{folderName}/{folderPath}",
-                    arguments = listOf(
-                        navArgument("folderId") {type = NavType.StringType},
-                        navArgument("folderName") {type = NavType.StringType},
-                        navArgument("folderPath") {type = NavType.StringType}
-                )) {
-                    FolderScreen(
-                        folderId = it.arguments?.get("folderId") as String,
-                        folderName = it.arguments?.get("folderName") as String,
-                        folderPath = it.arguments?.get("folderPath") as String,
-                        navController = navController,
-                        mediaBrowser = mediaBrowserAdapter,
-                        mediaController = mediaControllerAdapter,
-                        windowSize = windowSize
-                    )
-
-                }
-                composable(Screen.SETTINGS.name) {
-                    SettingsScreen(
-                        navController = navController,
-                        userPreferencesRepository = userPreferencesRepository,
-                        windowSize = windowSize
-                    )
-                }
+            }
+            composable(Screen.SETTINGS.name) {
+                SettingsScreen(
+                    navController = navController,
+                    userPreferencesRepository = userPreferencesRepository,
+                    windowSize = windowSize
+                )
             }
         }
+        Log.i(logTag, "hit this line")
     }
+
 }

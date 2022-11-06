@@ -5,15 +5,11 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.search.Folder
 import com.github.goldy1992.mp3player.service.library.search.FolderDao
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.*
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
 import org.robolectric.annotation.LooperMode

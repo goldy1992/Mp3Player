@@ -9,6 +9,7 @@ import com.github.goldy1992.mp3player.service.library.content.filter.FolderSearc
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
 import com.github.goldy1992.mp3player.service.library.search.Folder
 import com.github.goldy1992.mp3player.service.library.search.FolderDao
+import kotlinx.coroutines.CoroutineScope
 import org.apache.commons.lang3.StringUtils
 import java.util.ArrayList
 
@@ -18,14 +19,16 @@ class FolderSearcherAndroidTestImpl
                 resultsParser: FolderResultsParser,
                 folderSearchResultsFilter: FolderSearchResultsFilter,
                 mediaItemTypeIds: MediaItemTypeIds,
-                folderDao: FolderDao)
+                folderDao: FolderDao,
+                scope : CoroutineScope)
             : FolderSearcher(contentResolver,
             resultsParser,
             folderSearchResultsFilter,
             mediaItemTypeIds,
-            folderDao) {
+            folderDao,
+            scope) {
 
-    override fun performSearchQuery(query: String?): Cursor? {
+    override suspend fun performSearchQuery(query: String?): Cursor? {
         val results: List<Folder>? = searchDatabase.query(query)
         if (results != null && results.isNotEmpty()) {
             val parameters: MutableList<String> = ArrayList()

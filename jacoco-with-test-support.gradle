@@ -32,6 +32,9 @@ project.afterEvaluate {
     }
 
     def applicableProductFlavor = "full"
+    if (project.name.equals("commons")) {
+        applicableProductFlavor = ""
+    }
     def unitTestBuildType ='debug'
     def unitTestFlavor = getProductFlavor(applicableProductFlavor, productFlavors);
     def (String unitTestBuildVariant, String unitTestBuildVariantCapitalised) = getBuildVariant(unitTestFlavor, unitTestBuildType)

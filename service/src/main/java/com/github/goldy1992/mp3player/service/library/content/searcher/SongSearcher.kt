@@ -10,22 +10,24 @@ import com.github.goldy1992.mp3player.service.library.content.Projections
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
 import com.github.goldy1992.mp3player.service.library.search.Song
 import com.github.goldy1992.mp3player.service.library.search.SongDao
+import kotlinx.coroutines.CoroutineScope
 import org.apache.commons.lang3.StringUtils
-import java.util.*
 
 open class SongSearcher
 
     constructor(contentResolver: ContentResolver,
                resultsParser: SongResultsParser,
                private val mediaItemTypeIds: MediaItemTypeIds,
-               songDao: SongDao)
+               songDao: SongDao,
+                scope: CoroutineScope)
     : ContentResolverSearcher<Song>(
         contentResolver,
         resultsParser,
         null,
-        songDao) {
+        songDao,
+        scope) {
     override val idPrefix: String
-        get() = mediaItemTypeIds.getId(MediaItemType.SONG)!!
+        get() = mediaItemTypeIds.getId(MediaItemType.SONG)
 
     override val projection: Array<String?>
         get() = Projections.SONG_PROJECTION.toTypedArray()
@@ -33,7 +35,7 @@ open class SongSearcher
     override val searchCategory: MediaItemType?
         get() = MediaItemType.SONGS
 
-    override fun performSearchQuery(query: String?): Cursor? {
+    override suspend fun performSearchQuery(query: String?): Cursor? {
         val results: List<Song>? = searchDatabase.query(query)
         val ids: MutableList<String> = ArrayList()
         val parameters: MutableList<String?> = ArrayList()

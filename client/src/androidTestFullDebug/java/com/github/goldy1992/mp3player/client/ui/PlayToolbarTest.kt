@@ -1,15 +1,15 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Context
-import android.support.v4.media.session.PlaybackStateCompat
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.lifecycle.MutableLiveData
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.ui.buttons.PauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.PlayButton
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
@@ -27,6 +27,8 @@ class PlayToolbarTest {
     @Mock
     val mockMediaController = mock<MediaControllerAdapter>()
 
+    val isPlayingFlow = mock<IsPlayingFlow>()
+
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -41,9 +43,11 @@ class PlayToolbarTest {
         val expected = context.resources.getString(R.string.play)
         val isPlaying = false
         // Set Media to be NOT Playing
-        whenever(mockMediaController.isPlaying).thenReturn(MutableLiveData(isPlaying))
+        //  whenever(isPlayingFlow.state).thenReturn(MutableStateFlow(isPlaying))
         composeTestRule.setContent {
-            PlayToolbar(mediaController = mockMediaController) {
+            PlayToolbar(mediaController = mockMediaController,
+                        isPlayingState = MutableStateFlow(isPlaying)
+            ) {
                 // do nothing
             }
         }
@@ -67,9 +71,11 @@ class PlayToolbarTest {
         val expected = context.resources.getString(R.string.pause)
         val isPlaying = true
         // Set Media to be playing
-        whenever(mockMediaController.isPlaying).thenReturn(MutableLiveData(isPlaying))
+       // whenever(isPlayingFlow.state).thenReturn(MutableStateFlow(isPlaying))
         composeTestRule.setContent {
-            PlayToolbar(mediaController = mockMediaController) {
+            PlayToolbar(mediaController = mockMediaController,
+                        isPlayingState = MutableStateFlow(isPlaying)
+            ) {
                 // do nothing
             }
         }
@@ -88,11 +94,10 @@ class PlayToolbarTest {
      */
     @Test
     fun testOnClick() {
-        whenever(mockMediaController.isPlaying).thenReturn(MutableLiveData(true))
         val bottomAppBarDescr = InstrumentationRegistry.getInstrumentation().context.getString(R.string.bottom_app_bar)
         val mockOnClick = mock<MockOnClick>()
         composeTestRule.setContent {
-            PlayToolbar(mediaController = mockMediaController, onClick = mockOnClick::onClick)
+            PlayToolbar(mediaController = mockMediaController, isPlayingState = MutableStateFlow(true), onClick = mockOnClick::onClick)
         }
         composeTestRule.onNodeWithContentDescription(bottomAppBarDescr).performTouchInput {
             this.click(this.percentOffset(0.9f, 0.9f))

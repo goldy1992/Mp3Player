@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.commons
 
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -172,7 +172,7 @@ class ComparatorUtilsTest {
      */
     @Test
     fun testCompareMediaItemByIdAgainstNull() {
-        val nullMediaItem: MediaBrowserCompat.MediaItem? = null
+        val nullMediaItem: MediaItem? = null
         val mediaItem = MediaItemBuilder(LESSER_STRING).build()
         var result: Int = ComparatorUtils.Companion.compareMediaItemById.compare(nullMediaItem, mediaItem)
         Assert.assertTrue(result < 0)

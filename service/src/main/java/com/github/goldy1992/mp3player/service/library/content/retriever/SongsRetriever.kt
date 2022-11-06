@@ -20,6 +20,7 @@ open class SongsRetriever constructor(contentResolver: ContentResolver,
                 null, null, null)
     }
 
+
     override val projection: Array<String?>?
         get() = SONG_PROJECTION.toTypedArray()
 }

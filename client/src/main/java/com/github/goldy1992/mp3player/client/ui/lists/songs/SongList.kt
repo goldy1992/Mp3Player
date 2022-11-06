@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.lists.songs
 
-import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.MediaMetadataCompat
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,36 +8,36 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.media3.common.MediaItem
 import coil.annotation.ExperimentalCoilApi
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
-import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
-import com.github.goldy1992.mp3player.commons.MetadataUtils
+import kotlinx.coroutines.flow.StateFlow
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 import org.apache.commons.lang3.StringUtils
+
+private const val logTag = "SongList"
 
 @ExperimentalCoilApi
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SongList(
     modifier : Modifier = Modifier,
-    songs : List<MediaBrowserCompat.MediaItem> = emptyList(),
-    mediaControllerAdapter: MediaControllerAdapter,
-    onSongSelected : (song : MediaBrowserCompat.MediaItem) -> Unit = {}) {
+    songs : List<MediaItem> = emptyList(),
+    isPlayingState: StateFlow<Boolean>,
+    currentMediaItemState : StateFlow<MediaItem>,
+    onSongSelected : (itemIndex: Int, songs : List<MediaItem>) -> Unit = { _, _ -> }) {
 
-    val isPlaying by mediaControllerAdapter.isPlaying.observeAsState()
-    val metadata by mediaControllerAdapter.metadata.observeAsState()
+    Log.i(logTag, "song list size: ${songs.size}")
+    val isPlaying by isPlayingState.collectAsState()
+    val currentMediaItem by currentMediaItemState.collectAsState()
 
     when {
         isEmpty(songs) -> EmptySongsList()
@@ -51,9 +50,10 @@ fun SongList(
                 items(count = songs.size) { itemIndex ->
                     run {
                         val song = songs[itemIndex]
-                        val isItemSelected = isItemSelected(song, metadata)
-                        val isItemPlaying = if (isPlaying == true) isItemSelected  else false
-                        SongListItem(song = song, isPlaying = isItemPlaying, isSelected = isItemSelected, onClick = onSongSelected)
+                        val isItemSelected = isItemSelected(song, currentMediaItem)
+                        Log.i(logTag, "isItemSelected: $isItemSelected isPlaying: ${isPlaying}")
+                        val isItemPlaying = if (isPlaying) isItemSelected  else false
+                        SongListItem(song = song, isPlaying = isItemPlaying, isSelected = isItemSelected, onClick =  {onSongSelected(itemIndex, songs) })
                     }
                 }
             }
@@ -75,10 +75,7 @@ fun EmptySongsList() {
     }
 }
 
-private fun isItemSelected(song : MediaBrowserCompat.MediaItem?, metadata: MediaMetadataCompat?) : Boolean {
-    return if (song != null && metadata != null ) {
-        val metaDataMediaId = MetadataUtils.getMediaId(metadata)
-        val songMediaId = MediaItemUtils.getMediaId(song)
-        StringUtils.equals(songMediaId, metaDataMediaId)
-    } else false
+private fun isItemSelected(song : MediaItem, currentItem : MediaItem) : Boolean {
+    //Log.i(logTag, "songId: ${song.mediaId}, currentItemId: ${currentItem.mediaId}")
+    return StringUtils.equals(song.mediaId, currentItem.mediaId)
 }

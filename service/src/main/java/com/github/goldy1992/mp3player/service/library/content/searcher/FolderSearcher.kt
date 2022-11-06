@@ -11,15 +11,16 @@ import com.github.goldy1992.mp3player.service.library.content.filter.FolderSearc
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
 import com.github.goldy1992.mp3player.service.library.search.Folder
 import com.github.goldy1992.mp3player.service.library.search.FolderDao
+import kotlinx.coroutines.CoroutineScope
 import org.apache.commons.lang3.StringUtils
-import java.util.*
 
 open class FolderSearcher constructor(contentResolver: ContentResolver,
                                          resultsParser: FolderResultsParser,
                                          folderSearchResultsFilter: FolderSearchResultsFilter?,
                                          private val mediaItemTypeIds: MediaItemTypeIds,
-                                         folderDao: FolderDao) : ContentResolverSearcher<Folder>(contentResolver, resultsParser, folderSearchResultsFilter, folderDao) {
-    override fun performSearchQuery(query: String?): Cursor? {
+                                         folderDao: FolderDao,
+                                        scope: CoroutineScope) : ContentResolverSearcher<Folder>(contentResolver, resultsParser, folderSearchResultsFilter, folderDao, scope) {
+    override suspend fun performSearchQuery(query: String?): Cursor? {
         val results: List<Folder>? = searchDatabase.query(query)
         if (results != null && !results.isEmpty()) {
             val ids: MutableList<String> = ArrayList()

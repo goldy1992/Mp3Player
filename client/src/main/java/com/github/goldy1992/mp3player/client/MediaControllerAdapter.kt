@@ -1,219 +1,144 @@
 package com.github.goldy1992.mp3player.client
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.os.RemoteException
-import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.MediaMetadataCompat
-import android.support.v4.media.session.MediaControllerCompat
-import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
-import androidx.annotation.VisibleForTesting
-import androidx.lifecycle.MutableLiveData
+import androidx.concurrent.futures.await
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.session.MediaController
+import androidx.media3.session.SessionCommand
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
+import com.github.goldy1992.mp3player.commons.DefaultDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
-import org.apache.commons.lang3.exception.ExceptionUtils
+import com.github.goldy1992.mp3player.commons.MainDispatcher
+import com.google.common.util.concurrent.ListenableFuture
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.*
+import javax.inject.Inject
 
 /**
  * An adapter that can be used to control the MediaPlaybackService by sending playback controls such
  * as play/pause to the service.
  */
+@ActivityRetainedScoped
 open class MediaControllerAdapter
+    @Inject
+    constructor(
+        val mediaControllerFuture: ListenableFuture<MediaController>,
+        private val scope : CoroutineScope,
+        @MainDispatcher private val mainDispatcher : CoroutineDispatcher)
+        : MediaController.Listener, LogTagger {
 
-constructor(private val context: Context,
-            private var mediaBrowser: MediaBrowserCompat)
-    : MediaBrowserConnectionListener, LogTagger, MediaControllerCompat.Callback() {
+    private var mediaController: MediaController? = null
 
-
-    private var mediaController: MediaControllerCompat? = null
-
-    open var token: MediaSessionCompat.Token? = null
-
-    open val metadata : MutableLiveData<MediaMetadataCompat> = MutableLiveData()
-
-    open val playbackState : MutableLiveData<PlaybackStateCompat> = MutableLiveData()
-
-    open val queue : MutableLiveData<MutableList<MediaSessionCompat.QueueItem>> = MutableLiveData()
-
-    open val repeatMode : MutableLiveData<Int> = MutableLiveData()
-
-    open val shuffleMode : MutableLiveData<Int> = MutableLiveData()
-
-    open val playbackSpeed : MutableLiveData<Float> = MutableLiveData(1f)
-
-    /**
-     * @return True if the mediaBrowser is connected
-     */
-    open fun isConnected() : Boolean {
-        return mediaBrowser.isConnected
-    }
-
-    open fun prepareFromMediaId(mediaId: String?, extras: Bundle?) {
-        if (isConnected()) {
-            transportControls.prepareFromMediaId(mediaId, extras)
+    init {
+        scope.launch {
+            mediaController = mediaControllerFuture.await()
         }
     }
 
-    open fun playFromMediaId(mediaId: String?, extras: Bundle?) {
-        transportControls.playFromMediaId(mediaId, extras)
+    open fun getCurrentQueuePosition() : Int {
+        return mediaController?.currentMediaItemIndex ?: 0
+    }
+
+    open suspend fun getCurrentQueuePositionAsync() : Int {
+        return mediaControllerFuture.await().currentMediaItemIndex
+    }
+
+    open suspend fun prepareFromMediaId(mediaItem: MediaItem) {
+
+        // call from application looper
+        scope.launch(mainDispatcher) {
+            val mediaController = mediaControllerFuture.await()
+            mediaController.addMediaItem(mediaItem)
+            mediaController.prepare()
+        }
+    }
+
+    open fun playFromMediaId(mediaItem : MediaItem) {
+        scope.launch(mainDispatcher) {
+            val mediaController = mediaControllerFuture.await()
+            mediaController.addMediaItem(mediaItem)
+            mediaController.prepare()
+            mediaController.play()
+        }
+    }
+
+    open fun playFromSongList(itemIndex : Int, items : List<MediaItem>) {
+        scope.launch(mainDispatcher) {
+            val mediaController = mediaControllerFuture.await()
+            mediaController.clearMediaItems()
+            mediaController.addMediaItems(items)
+            mediaController.seekTo(itemIndex, 0L)
+            mediaController.prepare()
+            mediaController.play()
+        }
     }
 
     open suspend fun playFromUri(uri: Uri?, extras: Bundle?) {
-         transportControls.playFromUri(uri, extras)
+        val mediaItem = MediaItem.Builder().setUri(uri).build()
+        mediaController?.addMediaItem(mediaItem)
+
     }
 
-    open fun play() {
-        if (isConnected()) {
-            transportControls.play()
-        }
+    open suspend fun play() {
+        val future = mediaControllerFuture.await()
+        Log.i(logTag(), "awaiting future for play")
+        future.play()
+        Log.i(logTag(), "calling play")
     }
 
-    open fun pause() { //Log.i(LOG_TAG, "pause hit");
-        if (isConnected()) {
-            transportControls.pause()
-        }
+    open suspend fun pause() { //Log.i(LOG_TAG, "pause hit");
+        mediaControllerFuture.await().pause()
     }
 
-    open fun seekTo(position: Long) {
-        if (isConnected()) {
-            transportControls.seekTo(position)
-        }
+    open suspend fun seekTo(position: Long) {
+        mediaControllerFuture.await().seekTo(position)
     }
 
-    open fun stop() {
-        if (isConnected()) {
-            transportControls.stop()
-        }
+    open suspend fun stop() {
+        mediaControllerFuture.await().stop()
     }
 
-    open fun skipToNext() {
-        if (isConnected()) {
-            transportControls.skipToNext()
-        }
+    open suspend fun skipToNext() {
+        mediaControllerFuture.await().seekToNextMediaItem()
     }
 
-    open fun skipToPrevious() {
-        if (isConnected()) {
-            transportControls.skipToPrevious()
-        }
+    open suspend fun skipToPrevious() {
+        mediaControllerFuture.await().seekToPreviousMediaItem()
     }
 
-    open fun setShuffleMode(shuffleMode: Int) {
-        if (isConnected()) {
-            transportControls.setShuffleMode(shuffleMode)
-        }
+    open suspend fun setShuffleMode(shuffleModeEnabled : Boolean) {
+        mediaControllerFuture.await().shuffleModeEnabled = shuffleModeEnabled
     }
 
-    open fun setRepeatMode(repeatMode: Int) {
-        if (isConnected()) {
-            transportControls.setRepeatMode(repeatMode)
-        }
+    open suspend fun setRepeatMode(@Player.RepeatMode repeatMode: Int) {
+        mediaControllerFuture.await().repeatMode = repeatMode
     }
 
-    open fun disconnect() {
-        if (mediaController != null) {
-            mediaController!!.unregisterCallback(this)
-        }
+    open suspend fun sendCustomAction(customAction: String, args: Bundle) {
+        val sessionCommand = SessionCommand(customAction, args)
+        mediaControllerFuture.await().sendCustomCommand(sessionCommand, args)
     }
 
-    open fun sendCustomAction(customAction: String?, args: Bundle?) {
-        transportControls.sendCustomAction(customAction, args)
-    }
-
-    open fun changePlaybackSpeed(speed: Float) {
-        playbackSpeed.postValue(speed)
+    open suspend fun changePlaybackSpeed(speed: Float) {
         val extras = Bundle()
         extras.putFloat(CHANGE_PLAYBACK_SPEED, speed)
-        transportControls.sendCustomAction(CHANGE_PLAYBACK_SPEED, extras)
+        val changePlaybackSpeedCommand = SessionCommand(CHANGE_PLAYBACK_SPEED, extras)
+        mediaControllerFuture.await().sendCustomCommand(changePlaybackSpeedCommand, extras).await()
     }
 
-    @get:VisibleForTesting
-    val transportControls: MediaControllerCompat.TransportControls
-    get() = mediaController!!.transportControls
-
-    open fun getActiveQueueItemId(): Long? {
-        return playbackState.value?.activeQueueItemId
+    open fun getCurrentPlaybackPosition() : Long {
+        return mediaController?.currentPosition ?: 0L
     }
 
-    open fun calculateCurrentQueuePosition(): Int {
-        val currentQueue = queue.value
-        val activeQueueItemId = getActiveQueueItemId()
-        if (currentQueue != null) {
-            for (i in currentQueue.indices) {
-                val queueItem = currentQueue[i]
-                if (queueItem.queueId == activeQueueItemId) {
-                    return i
-                }
-            }
-        }
-        return -1
-    }
-
-    open fun createMediaController(
-        context: Context,
-        token: MediaSessionCompat.Token
-    ): MediaControllerCompat {
-        return MediaControllerCompat(context, token)
+    open suspend fun getCurrentMediaItem() : MediaItem {
+        return mediaControllerFuture.await().currentMediaItem ?: MediaItem.EMPTY
     }
 
     override fun logTag(): String {
         return "MDIA_CNTRLLR_ADPTR"
     }
 
-    override fun onMetadataChanged(metadata: MediaMetadataCompat) {
-        this.metadata.postValue(metadata)
-    }
-
-    override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
-        this.playbackState.postValue(state)
-        val playing = state.state == PlaybackStateCompat.STATE_PLAYING
-        this.isPlaying.postValue(playing)
-        if (playing) {
-            this.playbackSpeed.postValue(state.playbackSpeed)
-        }
-        Log.i(logTag(), "IS PLAYING: $playing")
-    }
-
-    override fun onQueueChanged(newQueue: MutableList<MediaSessionCompat.QueueItem>?) {
-        this.queue.postValue(newQueue!!)
-    }
-
-    override fun onRepeatModeChanged(repeatMode: Int) {
-        this.repeatMode.postValue(repeatMode)
-    }
-
-    override fun onShuffleModeChanged(shuffleMode: Int) {
-        this.shuffleMode.postValue(shuffleMode)
-    }
-
-    open fun getCurrentSongAlbumArtUri() : Uri? {
-        val albumArtUriPath = metadata.value!!.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI)
-
-        return try {
-            Uri.parse(albumArtUriPath)
-        } catch (ex: NullPointerException) {
-            Log.e(logTag(), "$albumArtUriPath: is an invalid Uri")
-            return null
-        }
-    }
-    /**
-     * @return True if the current playback state is [PlaybackStateCompat.STATE_PLAYING].
-     */
-    val isPlaying = MutableLiveData<Boolean>(false)
-
-    override fun onConnected() {
-        try {
-            this.token = mediaBrowser.sessionToken
-            this.mediaController = createMediaController(context, mediaBrowser.sessionToken)
-            this.mediaController!!.registerCallback(this)
-            metadata.postValue(mediaController!!.metadata)
-            playbackState.postValue(mediaController!!.playbackState)
-            queue.postValue(mediaController!!.queue)
-            //isPlaying.postValue((mediaController!!.playbackState?.playbackState as PlaybackState).state == PlaybackStateCompat.STATE_PLAYING)
-        } catch (ex: RemoteException) {
-            Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
-        }
-    }
 }

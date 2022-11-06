@@ -5,7 +5,7 @@ import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.provider.MediaStore
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
@@ -21,7 +21,7 @@ class SongFromUriRetriever @Inject constructor(@ApplicationContext private val c
                                                private val mmr: MediaMetadataRetriever,
                                                mediaItemTypeIds: MediaItemTypeIds) {
     private val idPrefix: String?
-    fun getSong(uri: Uri?): MediaBrowserCompat.MediaItem? {
+    fun getSong(uri: Uri?): MediaItem? {
         if (uri != null && uri.scheme != null) {
             if (ContentResolver.SCHEME_CONTENT == uri.scheme) {
                 mmr.setDataSource(context, uri)

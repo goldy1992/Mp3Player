@@ -1,8 +1,8 @@
 package com.github.goldy1992.mp3player.commons
 
 import android.net.Uri
-import android.support.v4.media.session.PlaybackStateCompat
 import android.util.SparseArray
+import androidx.media3.common.Player
 
 object Constants {
     const val FILE_COUNT = "FILE_COUNT"
@@ -14,6 +14,7 @@ object Constants {
 
     val playbackStateDebugMap = SparseArray<String?>()
     val repeatModeDebugMap = SparseArray<String>()
+
     /* LIBRARY CONSTANTS */
     val ARTWORK_URI_PATH = Uri.parse("content://media/external/audio/albumart")
     const val PACKAGE_NAME = "com.github.goldy1992.mp3player"
@@ -21,25 +22,18 @@ object Constants {
     const val ROOT_ITEM_TYPE = "ROOT_ITEM_TYPE"
     const val ID_SEPARATOR = "|"
     const val EMPTY_MEDIA_ITEM_ID = "-1"
+    const val PACKAGE_NAME_KEY = "package_name_key"
+
+    const val ROOT_APP_URI_PATH = "com.github.goldy1992.mp3player"
 
     init {
-        playbackStateDebugMap.put(PlaybackStateCompat.STATE_NONE, "STATE_NONE") // 0
-        playbackStateDebugMap.put(PlaybackStateCompat.STATE_STOPPED, "STATE_STOPPED") // 1
-        playbackStateDebugMap.put(PlaybackStateCompat.STATE_PAUSED, "STATE_PAUSED") // 2
-        playbackStateDebugMap.put(PlaybackStateCompat.STATE_PLAYING, "STATE_PLAYING") // 3
-        playbackStateDebugMap.put(PlaybackStateCompat.STATE_FAST_FORWARDING, "STATE_FAST_FORWARDING") // 4
-        playbackStateDebugMap.put(PlaybackStateCompat.STATE_REWINDING, "STATE_REWINDING") // 5
-        playbackStateDebugMap.put(PlaybackStateCompat.STATE_BUFFERING, "STATE_BUFFERING") // 6
-        playbackStateDebugMap.put(PlaybackStateCompat.STATE_ERROR, "STATE_ERROR") // 7
-        playbackStateDebugMap.put(PlaybackStateCompat.STATE_CONNECTING, "STATE_CONNECTING") // 8
-        playbackStateDebugMap.put(PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS, "STATE_SKIPPING_TO_PREVIOUS") // 9
-        playbackStateDebugMap.put(PlaybackStateCompat.STATE_SKIPPING_TO_NEXT, "STATE_SKIPPING_TO_NEXT") // 10
-        playbackStateDebugMap.put(PlaybackStateCompat.STATE_SKIPPING_TO_QUEUE_ITEM, "STATE_SKIPPING_TO_QUEUE_ITEM") // 11
-    }
+        playbackStateDebugMap.put(Player.STATE_IDLE, "STATE_IDLE") // 1
+        playbackStateDebugMap.put(Player.STATE_BUFFERING, "STATE_BUFFERING") // 2
+        playbackStateDebugMap.put(Player.STATE_READY, "STATE_READY") // 3
+        playbackStateDebugMap.put(Player.STATE_ENDED, "STATE_ENDED") // 4
 
-    init {
-        repeatModeDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ALL, "REPEAT_MODE_ALL") // 2
-        repeatModeDebugMap.put(PlaybackStateCompat.REPEAT_MODE_NONE, "REPEAT_MODE_NONE") // 0
-        repeatModeDebugMap.put(PlaybackStateCompat.REPEAT_MODE_ONE, "REPEAT_MODE_ONE") // 1
+        repeatModeDebugMap.put(Player.REPEAT_MODE_OFF, "REPEAT_MODE_OFF") // 0
+        repeatModeDebugMap.put(Player.REPEAT_MODE_ONE, "REPEAT_MODE_ONE") // 1
+        repeatModeDebugMap.put(Player.REPEAT_MODE_ALL, "REPEAT_MODE_ALL") // 2
     }
 }

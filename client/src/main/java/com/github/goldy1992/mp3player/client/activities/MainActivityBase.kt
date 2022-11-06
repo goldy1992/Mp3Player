@@ -9,38 +9,35 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
-import com.github.goldy1992.mp3player.client.callbacks.connection.MyConnectionCallback
 import com.github.goldy1992.mp3player.client.permissions.PermissionGranted
 import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
-import com.github.goldy1992.mp3player.commons.ComponentClassMapper
-import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
-import com.github.goldy1992.mp3player.commons.Screen
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.github.goldy1992.mp3player.commons.*
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 abstract class MainActivityBase : ComponentActivity(),
     LogTagger,
-    CoroutineScope by GlobalScope,
     PermissionGranted {
     @Inject
     lateinit var componentClassMapper : ComponentClassMapper
+
     /**
-     * MediaBrowserAdapter
+     *
      */
     @Inject
-    lateinit var mediaBrowserAdapter: MediaBrowserAdapter
+    lateinit var scope: CoroutineScope
 
     @Inject
-    lateinit var connectionCallback: MyConnectionCallback
+    @MainDispatcher
+    lateinit var mainDispatcher: CoroutineDispatcher
+
+    @Inject
+    @DefaultDispatcher
+    lateinit var defaultDispatcher: CoroutineDispatcher
 
     @Inject
     lateinit var permissionsProcessor: PermissionsProcessor
@@ -64,7 +61,8 @@ abstract class MainActivityBase : ComponentActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    Log.i(logTag(), "on createee")
+
+        Log.i(logTag(), "on createee")
 
         // If app has already been created set the UI to initialise at the main screen.
         val appAlreadyCreated = savedInstanceState != null
@@ -75,32 +73,20 @@ abstract class MainActivityBase : ComponentActivity(),
         permissionsProcessor.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, permissionLauncher)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mediaControllerAdapter.disconnect()
-        mediaBrowserAdapter.disconnect()
-    }
-
-    private fun connect() {
-        connectionCallback.registerListener(mediaControllerAdapter)
-        connectionCallback.registerListener(mediaBrowserAdapter)
-        mediaBrowserAdapter.connect()
-    }
 
     override fun onPermissionGranted() {
         Log.i(logTag(), "permission granted")
-        createService()
-        connect()
+
         if (Intent.ACTION_VIEW == intent.action) {
-            trackToPlay = intent.data
-            launch(Dispatchers.Default) {
-                mediaControllerAdapter.playFromUri(trackToPlay, null)
+            if (intent.data != null) {
+                trackToPlay = intent.data
+                scope.launch(defaultDispatcher) {
+                    mediaControllerAdapter.playFromUri(trackToPlay, null)
+                }
             }
             this.startScreen = Screen.NOW_PLAYING
-        } 
-        CoroutineScope(Dispatchers.Main).launch { ui(startScreen = startScreen) }
-
-
+        }
+        scope.launch(mainDispatcher) { ui(startScreen = startScreen) }
     }
 
     val permissionLauncher : ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) {

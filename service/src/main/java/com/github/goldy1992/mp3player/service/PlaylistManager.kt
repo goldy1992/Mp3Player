@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.service
 
-import android.support.v4.media.MediaBrowserCompat.MediaItem
+import androidx.media3.common.MediaItem
 import dagger.hilt.android.scopes.ServiceScoped
 import org.apache.commons.collections4.CollectionUtils
 import javax.inject.Inject

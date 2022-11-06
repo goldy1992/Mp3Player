@@ -2,12 +2,11 @@ package com.github.goldy1992.mp3player.service.dagger.modules.service
 
 import android.content.Context
 import android.media.MediaMetadataRetriever
+import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
+import androidx.media3.exoplayer.ExoPlayer
 import com.github.goldy1992.mp3player.service.MyForwardingPlayer
 import com.github.goldy1992.mp3player.service.player.AudioBecomingNoisyBroadcastReceiver
-import com.github.goldy1992.mp3player.service.player.MyPlayerNotificationManager
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.audio.AudioAttributes
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,12 +20,12 @@ class ExoPlayerModule {
 
     @Provides
     @ServiceScoped
-    fun provideExoPlayer(@ApplicationContext context: Context?): ExoPlayer {
-        val exoPlayer = ExoPlayer.Builder(context!!)
+    fun provideExoPlayer(@ApplicationContext context: Context): ExoPlayer {
+        val exoPlayer = ExoPlayer.Builder(context)
             .build()
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(C.USAGE_MEDIA)
-            .setContentType(C.CONTENT_TYPE_MUSIC)
+            .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
             .build()
         exoPlayer.setAudioAttributes(audioAttributes, true)
         return exoPlayer
@@ -35,10 +34,9 @@ class ExoPlayerModule {
     @Provides
     @ServiceScoped
     fun provideForwardingPlayer(exoPlayer: ExoPlayer,
-                                audioBecomingNoisyBroadcastReceiver: AudioBecomingNoisyBroadcastReceiver,
-                                playerNotificationManager: MyPlayerNotificationManager
+                                audioBecomingNoisyBroadcastReceiver: AudioBecomingNoisyBroadcastReceiver
     ) : MyForwardingPlayer {
-        return MyForwardingPlayer(exoPlayer, audioBecomingNoisyBroadcastReceiver, playerNotificationManager)
+        return MyForwardingPlayer(exoPlayer, audioBecomingNoisyBroadcastReceiver)
     }
 
     @Provides

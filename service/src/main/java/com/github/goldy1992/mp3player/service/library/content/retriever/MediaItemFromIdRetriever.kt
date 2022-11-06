@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.service.library.content.retriever
 import android.content.ContentResolver
 import android.provider.BaseColumns
 import android.provider.MediaStore
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.service.library.content.Projections.SONG_PROJECTION
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
 import dagger.hilt.android.scopes.ServiceScoped
@@ -13,7 +13,7 @@ import javax.inject.Inject
 @ServiceScoped
 class MediaItemFromIdRetriever @Inject constructor(private val contentResolver: ContentResolver,
                                                    private val songResultsParser: SongResultsParser) {
-    fun getItem(id: Long): MediaBrowserCompat.MediaItem? {
+    fun getItem(id: Long): MediaItem? {
         val where = BaseColumns._ID + " = ?"
         val whereArgs = arrayOf(id.toString())
         val cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,

@@ -1,36 +1,23 @@
+@file:OptIn(ExperimentalAnimationApi::class)
+
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
 import android.net.Uri
-import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.PermanentNavigationDrawer
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScrollableTabRow
-import androidx.compose.material3.SmallTopAppBar
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Tab
-import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
@@ -46,12 +33,14 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 
+private const val logTag = "LibraryScreen"
 /**
  * The Main Screen of the app.
  *
@@ -68,12 +57,13 @@ fun LibraryScreen(navController: NavController,
                   viewModel: LibraryScreenViewModel = viewModel(),
                   windowSize: WindowSize = WindowSize.Compact
 ) {
-    val rootItems: List<MediaItem> by viewModel.mediaBrowserAdapter.subscribeToRoot().observeAsState(emptyList())
+    val rootItems: List<MediaItem> by viewModel.rootItems.collectAsState()
     val scope = rememberCoroutineScope()
     val isLargeScreen = windowSize == WindowSize.Expanded
 
     val bottomBar : @Composable () -> Unit = {
-        PlayToolbar(mediaController = viewModel.mediaControllerAdapter) {
+        PlayToolbar(mediaController = viewModel.mediaControllerAdapter,
+                    isPlayingState = viewModel.isPlaying.state) {
             navController.navigate(Screen.NOW_PLAYING.name)
         }
     }
@@ -106,7 +96,7 @@ fun LibraryScreen(navController: NavController,
  * @param navigationColumn The Navigation Column.
  * @param content The content of the Library Screen.
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
@@ -115,7 +105,7 @@ fun LargeLibraryScreen(
     scope: CoroutineScope = rememberCoroutineScope(),
     pagerState: PagerState = rememberPagerState(),
     rootItems: List<MediaItem> = emptyList(),
-    navController: NavController = rememberNavController()) {
+    navController: NavController = rememberAnimatedNavController()) {
 
 
     // TODO: Replace with DismissibleNavigationDrawer when better support for content resizing.
@@ -131,7 +121,7 @@ fun LargeLibraryScreen(
         val libraryText = context.getString(R.string.library)
         Scaffold(
             topBar = {
-                SmallTopAppBar(
+                TopAppBar(
                     title = {
                         Text(text = libraryText,
                             style = MaterialTheme.typography.titleLarge,
@@ -144,10 +134,12 @@ fun LargeLibraryScreen(
                                 contentDescription = "Search",
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
-                    })
+                    },
+                    )
             },
             bottomBar = {
-                PlayToolbar(mediaController = viewModel.mediaControllerAdapter) {
+                PlayToolbar(mediaController = viewModel.mediaControllerAdapter,
+                    isPlayingState = viewModel.isPlaying.state) {
                     navController.navigate(Screen.NOW_PLAYING.name)
                 }
 
@@ -182,7 +174,7 @@ fun LargeLibraryScreen(
 @Composable
 fun SmallLibraryScreen(
     viewModel: LibraryScreenViewModel,
-    navController: NavController = rememberNavController(),
+    navController: NavController = rememberAnimatedNavController(),
     scope : CoroutineScope = rememberCoroutineScope(),
     bottomBar : @Composable () -> Unit,
     pagerState: PagerState = rememberPagerState(),
@@ -192,10 +184,11 @@ fun SmallLibraryScreen(
 
    ModalNavigationDrawer(
         drawerContent = {
-        NavigationDrawerContent(
-            navController = navController
-        ) },
-    drawerState = drawerState) {
+            NavigationDrawerContent(
+                navController = navController
+            )
+        },
+        drawerState = drawerState) {
         Scaffold(
             topBar = {
                 SmallLibraryAppBar(scope, navController) {
@@ -220,29 +213,6 @@ fun SmallLibraryScreen(
 
         }
 
-    }
-}
-
-
-
-
-/**
- * Util method to check if the Root items are loaded.
- */
-private fun rootItemsLoaded(items : List<MediaItem>) : Boolean {
-    return !(items.isEmpty() || MediaItemUtils.getMediaId(items.first()) == Constants.EMPTY_MEDIA_ITEM_ID)
-}
-
-/**
- * Util method to return the String of the [MediaItemType].
- * @param mediaItemType The [MediaItemType] of which to get the String.
- */
-@Composable
-fun getRootItemText(mediaItemType: MediaItemType): String {
-    return when (mediaItemType) {
-        MediaItemType.SONGS -> stringResource(id = R.string.songs)
-        MediaItemType.FOLDERS -> stringResource(id = R.string.folders)
-        else -> "" // TOOO: Add a return for an unknown MediaItemType
     }
 }
 
@@ -305,8 +275,6 @@ fun LibraryScreenContent(
                 rootItems = rootItems,
                 scope = scope
             )
-        } else {
-            CircularProgressIndicator()
         }
 
         Row(modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)) {
@@ -350,9 +318,7 @@ fun TabBarPages(navController: NavController,
             count = rootItems.size
         ) { pageIndex ->
             val currentItem = rootItems[pageIndex]
-            val children by viewModel.mediaBrowserAdapter.subscribe(
-                id = MediaItemUtils.getMediaId(currentItem)!!)
-                .observeAsState()
+            val children by viewModel.rootItemMap[currentItem.mediaId]!!.collectAsState()
 
             if (isEmpty(children)) {
                 CircularProgressIndicator()
@@ -360,18 +326,20 @@ fun TabBarPages(navController: NavController,
                 when (getRootMediaItemType(currentItem)) {
                     MediaItemType.SONGS -> {
                         SongList(
-                            songs = children!!,
-                            mediaControllerAdapter = viewModel.mediaControllerAdapter
-                        ) {
-                            val libraryId = MediaItemUtils.getLibraryId(it)
-                            Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
-                            viewModel.mediaControllerAdapter.playFromMediaId(libraryId, null)
+                            songs = children,
+                            isPlayingState = viewModel.isPlaying.state,
+                            currentMediaItemState = viewModel.currentMediaItem.state
+                        ) { itemIndex, mediaItemList ->
+                            val mediaItem = mediaItemList[itemIndex]
+                            Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")
+                            viewModel.mediaControllerAdapter.playFromSongList(itemIndex, mediaItemList)
                         }
+                        Log.i(logTag, "last song name: ${children.last().mediaMetadata.title}")
                     }
                     MediaItemType.FOLDERS -> {
-                        FolderList(folders = children!!) {
-                            val folderLibraryId = MediaItemUtils.getLibraryId(it)
-                            val encodedFolderLibraryId = Uri.encode(folderLibraryId)
+                        FolderList(folders = children) {
+                            val folderId = it.mediaId
+                            val encodedFolderLibraryId = Uri.encode(folderId)
                             val directoryPath = MediaItemUtils.getDirectoryPath(it)
                             val encodedFolderPath = Uri.encode(directoryPath)
                             val folderName = MediaItemUtils.getDirectoryName(it)

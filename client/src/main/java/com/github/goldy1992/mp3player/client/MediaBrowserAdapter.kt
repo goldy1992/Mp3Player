@@ -1,58 +1,54 @@
 package com.github.goldy1992.mp3player.client
 
 import android.os.Bundle
-import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.util.Log
-import androidx.lifecycle.LiveData
-import com.github.goldy1992.mp3player.client.callbacks.search.MySearchCallback
-import com.github.goldy1992.mp3player.client.callbacks.subscription.MediaIdSubscriptionCallback
+import androidx.concurrent.futures.await
+import androidx.media3.common.MediaItem
+import androidx.media3.session.LibraryResult
+import androidx.media3.session.MediaBrowser
+import androidx.media3.session.MediaLibraryService
+import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME
+import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME_KEY
 import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.commons.MainDispatcher
+import com.google.common.collect.ImmutableList
+import com.google.common.util.concurrent.ListenableFuture
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.apache.commons.lang3.StringUtils.isEmpty
+import javax.inject.Inject
 
+@ActivityRetainedScoped
 open class MediaBrowserAdapter
 
-    constructor(private val mediaBrowser: MediaBrowserCompat?,
-                private val mySubscriptionCallback: MediaIdSubscriptionCallback,
-                private val mySearchCallback: MySearchCallback) : LogTagger, MediaBrowserConnectionListener {
+    @Inject
+    constructor(private val mediaBrowserLF : ListenableFuture<MediaBrowser>,
+    private val scope: CoroutineScope,
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher) : LogTagger, MediaBrowser.Listener {
 
-
-    /**
-     * Disconnects from the media browser service
-     */
-    open fun disconnect() {
-        mediaBrowser?.disconnect()
+    companion object {
+        private fun getDefaultLibraryParams() : MediaLibraryService.LibraryParams {
+            return MediaLibraryService.LibraryParams.Builder().build()
+        }
     }
 
-    open fun search(query: String?, extras: Bundle?) {
+    open suspend fun search(query: String, extras: Bundle) {
         if (isEmpty(query)) {
             Log.w(logTag(), "Null or empty search query seen")
-        } else {
-            mediaBrowser?.search(query!!, extras, mySearchCallback)
         }
-    }
-
-    open fun searchResults() : LiveData<List<MediaItem>> {
-        return mySearchCallback.searchResults
-    }
-
-    open fun clearSearchResults() {
-        mySearchCallback.searchResults.postValue(emptyList())
-    }
-
-    /**
-     * @return True if the mediaBrowser is connected
-     */
-    open fun isConnected() : Boolean {
-        return mediaBrowser != null && mediaBrowser.isConnected
-    }
-    /**
-     * Connects to the media browser service
-     */
-    open fun connect() {
-        if (!isConnected()) {
-            mediaBrowser?.connect()
+        else {
+            val params = MediaLibraryService.LibraryParams.Builder().setExtras(extras).build()
+            mediaBrowserLF.await().search(query, params)
         }
+
+    }
+
+    open suspend fun getSearchResults(query: String, page : Int = 0, pageSize : Int = 20) : ImmutableList<MediaItem> {
+        val result : LibraryResult<ImmutableList<MediaItem>> =
+            mediaBrowserLF.await().getSearchResult(query, page, pageSize, getDefaultLibraryParams()).await()
+        return result.value ?: ImmutableList.of()
     }
 
     /**
@@ -60,27 +56,29 @@ open class MediaBrowserAdapter
      * ID when communicating with the MediaPlaybackService.
      * @param id the id of the media item to be subscribed to
      */
-    open fun subscribe(id: String) : LiveData<List<MediaItem>> {
-        val toReturn = mySubscriptionCallback.subscribe(id)
-        mediaBrowser?.subscribe(id, mySubscriptionCallback)
-        return toReturn
+    open suspend fun subscribe(id: String) {
+        mediaBrowserLF.await().subscribe(id, getDefaultLibraryParams())
     }
 
-    open fun subscribeToRoot() : LiveData<List<MediaItem>> {
-        return mySubscriptionCallback.getRootLiveData()
+    open suspend fun getLibraryRoot() : MediaItem {
+        val args = Bundle()
+        args.putString(PACKAGE_NAME_KEY, PACKAGE_NAME)
+        val params = MediaLibraryService.LibraryParams.Builder().setExtras(args).build()
+        val result = mediaBrowserLF.await().getLibraryRoot(params).await()
+        return result.value ?: MediaItem.EMPTY
     }
 
-    private val rootId: String
-        get() = mediaBrowser?.root ?: ""
-
+    suspend fun getChildren(parentId : String,
+                            @androidx.annotation.IntRange(from = 0) page : Int = 0,
+                            @androidx.annotation.IntRange(from = 1) pageSize : Int = 20,
+                            params : MediaLibraryService.LibraryParams = MediaLibraryService.LibraryParams.Builder().build()
+    ) : List<MediaItem> {
+        val children : LibraryResult<ImmutableList<MediaItem>> = mediaBrowserLF.await().getChildren(parentId, page, pageSize, params).await()
+        return children.value?.toList() ?: emptyList()
+    }
 
     override fun logTag(): String {
         return "MDIA_BRWSR_ADPTR"
-    }
-
-    override fun onConnected() {
-        mySubscriptionCallback.subscribeRoot(rootId)
-        mediaBrowser?.subscribe(rootId, mySubscriptionCallback)
     }
 
 }

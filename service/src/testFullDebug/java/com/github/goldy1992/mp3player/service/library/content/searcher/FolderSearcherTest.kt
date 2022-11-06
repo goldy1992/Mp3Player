@@ -1,23 +1,25 @@
 package com.github.goldy1992.mp3player.service.library.content.searcher
 
 import android.provider.MediaStore
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.filter.FolderSearchResultsFilter
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
 import com.github.goldy1992.mp3player.service.library.search.Folder
 import com.github.goldy1992.mp3player.service.library.search.FolderDao
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.spy
-import org.mockito.kotlin.whenever
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.spy
+import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
-import java.util.*
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 class FolderSearcherTest : ContentResolverSearcherTestBase<FolderSearcher?>() {
     private lateinit var filter: FolderSearchResultsFilter
@@ -33,11 +35,12 @@ class FolderSearcherTest : ContentResolverSearcherTestBase<FolderSearcher?>() {
         idPrefix = mediaItemTypeIds!!.getId(MediaItemType.FOLDER)
         filter = mock<FolderSearchResultsFilter>()
         whenever(filter.filter(ContentResolverSearcherTestBase.Companion.VALID_QUERY, ContentResolverSearcherTestBase.Companion.expectedResult)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
-        searcher = spy(FolderSearcher(contentResolver, resultsParser, filter, mediaItemTypeIds!!, folderDao))
+        searcher = FolderSearcher(contentResolver, resultsParser, filter, mediaItemTypeIds!!, folderDao, testScope)
     }
 
+
     @Test
-    override fun testSearchValidMultipleArguments() {
+    override fun testSearchValidMultipleArguments() = runTest(dispatcher) {
         val expectedDbResult: MutableList<Folder?> = ArrayList()
         val id1 = "id1"
         val id2 = "id2"
@@ -62,7 +65,7 @@ class FolderSearcherTest : ContentResolverSearcherTestBase<FolderSearcher?>() {
                 searcher!!.likeParam(id3))
         whenever(contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, searcher!!.projection, EXPECTED_WHERE, EXPECTED_WHERE_ARGS, null))
                 .thenReturn(cursor)
-        whenever<List<MediaBrowserCompat.MediaItem?>>(resultsParser.create(cursor, idPrefix!!)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
+        whenever<List<MediaItem?>>(resultsParser.create(cursor, idPrefix!!)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
         val result = searcher!!.search(ContentResolverSearcherTestBase.Companion.VALID_QUERY)
         Assert.assertEquals(ContentResolverSearcherTestBase.Companion.expectedResult, result)
     }

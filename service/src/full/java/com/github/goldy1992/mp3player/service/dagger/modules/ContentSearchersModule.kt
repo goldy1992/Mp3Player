@@ -14,6 +14,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.scopes.ServiceScoped
+import kotlinx.coroutines.CoroutineScope
 
 @InstallIn(ServiceComponent::class)
 @Module
@@ -24,9 +25,10 @@ class ContentSearchersModule {
     fun providesSongSearcher(contentResolver: ContentResolver,
                              resultsParser: SongResultsParser,
                              mediaItemTypeIds: MediaItemTypeIds,
-                             songDao: SongDao
+                             songDao: SongDao,
+                             scope: CoroutineScope
                              ) : SongSearcher {
-        return SongSearcher(contentResolver, resultsParser, mediaItemTypeIds, songDao)
+        return SongSearcher(contentResolver, resultsParser, mediaItemTypeIds, songDao, scope)
     }
 
     @Provides
@@ -35,13 +37,15 @@ class ContentSearchersModule {
                                resultsParser: FolderResultsParser,
                                folderResultsFilter : FolderSearchResultsFilter,
                                mediaItemTypeIds: MediaItemTypeIds,
-                               folderDao: FolderDao
+                               folderDao: FolderDao,
+                               scope: CoroutineScope
     ) : FolderSearcher {
         return FolderSearcher(contentResolver,
                 resultsParser,
                 folderResultsFilter,
                 mediaItemTypeIds,
-                folderDao)
+                folderDao,
+                scope)
     }
 
 }

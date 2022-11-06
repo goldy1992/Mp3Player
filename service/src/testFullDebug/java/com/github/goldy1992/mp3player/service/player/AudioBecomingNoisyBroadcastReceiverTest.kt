@@ -1,15 +1,15 @@
 package com.github.goldy1992.mp3player.service.player
 
+import android.Manifest
 import android.content.Intent
 import android.media.AudioManager
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.test.platform.app.InstrumentationRegistry
-import com.google.android.exoplayer2.ExoPlayer
-import org.mockito.kotlin.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
+import org.mockito.kotlin.*
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
@@ -42,13 +42,13 @@ class AudioBecomingNoisyBroadcastReceiverTest {
         Assert.assertFalse(audioBecomingNoisyBroadcastReceiver!!.isRegistered)
         audioBecomingNoisyBroadcastReceiver!!.register()
         // assert that register receiver is called
-        verify(context, times(1)).registerReceiver(any(), any())
+        verify(context, times(1)).registerReceiver(any(), any(), eq(Manifest.permission.MODIFY_AUDIO_SETTINGS), eq(null))
         Assert.assertTrue(audioBecomingNoisyBroadcastReceiver!!.isRegistered)
         // reset invocation count
         reset(context)
         audioBecomingNoisyBroadcastReceiver!!.register()
         // assert that register receiver is never called if there is already a receiver registered
-        verify(context, never()).registerReceiver(any(), any())
+        verify(context, never()).registerReceiver(any(), any(), eq(Manifest.permission.MODIFY_AUDIO_SETTINGS), eq(null))
     }
 
     @Test
@@ -62,6 +62,6 @@ class AudioBecomingNoisyBroadcastReceiverTest {
         audioBecomingNoisyBroadcastReceiver!!.register()
         // assert that register receiver is never called if there is already a receiver registered
         audioBecomingNoisyBroadcastReceiver!!.unregister()
-        verify(context, times(1)).registerReceiver(any(), any())
+        verify(context, times(1)).registerReceiver(any(), any(), eq(Manifest.permission.MODIFY_AUDIO_SETTINGS), eq(null))
     }
 }

@@ -1,10 +1,12 @@
 package com.github.goldy1992.mp3player.service.library
 
 import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.service.SecureRandomUtils
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import dagger.hilt.android.scopes.ServiceScoped
 import org.apache.commons.lang3.RandomStringUtils
+import java.security.SecureRandom
 import java.util.*
 import javax.inject.Inject
 
@@ -24,7 +26,7 @@ class MediaItemTypeIds
         val idSet = HashSet<String?>()
         for (mediaItemType in MediaItemType.values()) {
             var added = false
-            var id: String? = null
+            var id = ""
             while (!added) {
                 id = generateRootId(mediaItemType.name)
                 added = idSet.add(id)
@@ -37,8 +39,8 @@ class MediaItemTypeIds
         mediaItemTypeToIdMap = enumMap
     }
 
-    fun getId(mediaItemType: MediaItemType?): String? {
-        return mediaItemTypeToIdMap!![mediaItemType]
+    fun getId(mediaItemType: MediaItemType): String {
+        return mediaItemTypeToIdMap?.get(mediaItemType) ?: MediaItemType.NONE.name
     }
 
     fun getMediaItemType(id: String?): MediaItemType? {
@@ -47,7 +49,7 @@ class MediaItemTypeIds
 
     companion object {
         fun generateRootId(prefix: String): String {
-            return prefix + RandomStringUtils.randomAlphanumeric(15)
+            return prefix + SecureRandomUtils.randomAlphaNumeric(15)
         }
     }
 

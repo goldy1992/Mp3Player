@@ -2,8 +2,9 @@ package com.github.goldy1992.mp3player.service.library.content.parser
 
 import android.database.Cursor
 import android.provider.MediaStore
-import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.util.Log
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata.FOLDER_TYPE_MIXED
 import com.github.goldy1992.mp3player.commons.ComparatorUtils
 import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
@@ -13,7 +14,6 @@ import java.io.File
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
-import kotlin.collections.HashMap
 
 class FolderResultsParser
 
@@ -45,27 +45,32 @@ class FolderResultsParser
         }
 
         directoryPathMap.entries.forEach {
-            val mediaItem = createFolderMediaItem(it.value, mediaIdPrefix!!)
+            val mediaItem = createFolderMediaItem(it.value, mediaIdPrefix)
             listToReturn.add(mediaItem)
         }
         return ArrayList(listToReturn)
     }
 
+    override fun create(cursor: Cursor): List<MediaItem> {
+        return create(cursor, null)
+    }
+
     override val type: MediaItemType?
         get() = MediaItemType.FOLDER
 
-    private fun createFolderMediaItem(directoryInfo: DirectoryInfo, parentId: String) : MediaItem { /* append a file separator so that folders with an "extended" name are discarded...
+    private fun createFolderMediaItem(directoryInfo: DirectoryInfo, parentId: String?) : MediaItem { /* append a file separator so that folders with an "extended" name are discarded...
          * e.g. Folder to accept: 'folder1'
          *      Folder to reject: 'folder1extended' */
         val folder = directoryInfo.directory
         val filePath = folder.absolutePath + File.separator
         return MediaItemBuilder(filePath)
-                .setMediaItemType(MediaItemType.FOLDER)
-                .setLibraryId(buildLibraryId(parentId, filePath))
-                .setDirectoryFile(folder)
-                .setFileCount(directoryInfo.fileCount.get())
-                .setFlags(MediaItem.FLAG_BROWSABLE)
-                .build()
+            .setMediaItemType(MediaItemType.FOLDER)
+            .setLibraryId(buildLibraryId(parentId ?: "null", filePath))
+            .setDirectoryFile(folder)
+            .setFileCount(directoryInfo.fileCount.get())
+            .setFolderType(FOLDER_TYPE_MIXED)
+            .setIsPlayable(false)
+            .build()
     }
 
     override fun compare(m1: MediaItem, m2: MediaItem): Int {

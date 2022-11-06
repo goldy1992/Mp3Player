@@ -4,8 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import androidx.test.core.app.ActivityScenario
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserAdapterModule
-import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerAdapterModule
+import com.github.goldy1992.mp3player.client.dagger.modules.MediaBrowserModule
+import com.github.goldy1992.mp3player.client.dagger.modules.MediaControllerModule
+import com.github.goldy1992.mp3player.client.dagger.modules.MediaSessionTokenModule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -19,8 +20,9 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.LooperMode
 
 @HiltAndroidTest
-@UninstallModules(MediaBrowserAdapterModule::class,
-    MediaControllerAdapterModule::class)
+@UninstallModules(MediaControllerModule::class,
+                MediaBrowserModule::class,
+                MediaSessionTokenModule::class)
 @RunWith(RobolectricTestRunner::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 class MainActivityTest {
@@ -45,6 +47,7 @@ class MainActivityTest {
         intent.data = expectedUri
         scenario = ActivityScenario.launch(intent)
         scenario.onActivity { activity: MainActivity ->
+            activity.permissionsProcessor.askedForPermissions = false
             activity.onPermissionGranted()
             Assert.assertEquals(expectedUri, activity.trackToPlay)
         }

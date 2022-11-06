@@ -1,8 +1,7 @@
 package com.github.goldy1992.mp3player.commons
 
 import android.net.Uri
-import android.support.v4.media.MediaBrowserCompat.MediaItem
-import android.support.v4.media.MediaDescriptionCompat
+import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getAlbumArtPath
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getArtist
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDescription
@@ -15,24 +14,21 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaUri
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle
-import org.mockito.kotlin.mock
 import org.junit.Assert
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
+import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
 import java.io.File
+import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
 class MediaItemUtilsTest {
     @Test
     fun testGetExtrasNull() {
-        val mediaDescription = MediaDescriptionCompat.Builder()
-                .setMediaId("anId")
-                .build()
-        val mediaItem = MediaItem(mediaDescription, 0)
+        val mediaItem = MediaItem.EMPTY
         assertNull(getExtras(mediaItem))
     }
 
@@ -70,11 +66,11 @@ class MediaItemUtilsTest {
     }
 
     @Test
-    fun testGetArtistNull() {
+    fun testGetArtistReturnsUnknownWhenSetToNull() {
         val mediaItem = MediaItemBuilder("id")
                 .setArtist(null)
                 .build()
-        assertNull(getArtist(mediaItem))
+        assertEquals(Constants.UNKNOWN, getArtist(mediaItem))
     }
 
     @Test
@@ -223,7 +219,7 @@ class MediaItemUtilsTest {
                 .setAlbumArtImage(expectedImage)
                 .build()
         val result = MediaItemUtils.getAlbumArtImage(mediaItem)
-        assertEquals(expectedImage, result)
+        assertTrue(Arrays.equals(expectedImage, result))
     }
 
     @Test

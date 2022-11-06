@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalAnimationApi::class)
+
 package com.github.goldy1992.mp3player.client.ui
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -7,11 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ListItem
-import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,6 +33,7 @@ import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.utils.VersionUtils
 import com.github.goldy1992.mp3player.commons.Screen
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -136,7 +140,7 @@ private fun SmallSettingsScreen(
 fun SettingsScreenContent(
     userPreferencesRepository : UserPreferencesRepository,
     modifier: Modifier = Modifier,
-    navController: NavController = rememberNavController(),
+    navController: NavController = rememberAnimatedNavController(),
     scope : CoroutineScope = rememberCoroutineScope(),
     versionUtils: VersionUtils = VersionUtils(LocalContext.current)) {
 

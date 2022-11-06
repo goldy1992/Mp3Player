@@ -1,11 +1,10 @@
 package com.github.goldy1992.mp3player.client.ui.lists.songs
 
 import android.net.Uri
-import android.support.v4.media.MediaBrowserCompat.MediaItem
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
@@ -21,15 +20,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.MediaItem
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
-import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getEmptyMediaItem
+
+private const val logTag = "SongListItem"
 
 @OptIn(ExperimentalMaterialApi::class)
 @ExperimentalCoilApi
@@ -38,18 +38,20 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getEmptyMediaItem
 fun SongListItem(song : MediaItem = getEmptyMediaItem(),
                  isPlaying : Boolean = false,
                  isSelected : Boolean = false,
-                 onClick: (item : MediaItem) -> Unit = {}) {
+                 onClick: () -> Unit = {}) {
         ListItem(
             modifier = Modifier
                 .combinedClickable(
-                    onClick = { onClick(song) },
+                    onClick = { onClick() },
                     onLongClick = { }
+                )
+                .background(color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface,
                 )
                 .requiredHeight(72.dp),
             icon = { AlbumArt(song = (song)) },
             secondaryText = {
                 Text(
-                    text = MediaItemUtils.getArtist(song)!!,
+                    text = MediaItemUtils.getArtist(song),
                     maxLines = 1,
                     style = MaterialTheme.typography.bodySmall,
                     overflow = TextOverflow.Ellipsis
@@ -81,7 +83,8 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
                 overflow = TextOverflow.Ellipsis,
             )
         }
-    Divider(startIndent = 72.dp, color = MaterialTheme.colorScheme.surfaceVariant)
+    Divider(//startIndent = 72.dp,
+        color = MaterialTheme.colorScheme.surfaceVariant)
 }
 
 @ExperimentalCoilApi

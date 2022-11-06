@@ -4,11 +4,11 @@ import android.content.ContentResolver
 import android.database.Cursor
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
-import org.mockito.kotlin.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.*
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)

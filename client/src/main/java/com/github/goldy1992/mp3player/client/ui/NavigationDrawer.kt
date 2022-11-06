@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalAnimationApi::class)
+
 package com.github.goldy1992.mp3player.client.ui
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,14 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -31,15 +27,16 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.commons.Screen
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @ExperimentalMaterialApi
 @Composable
 fun NavigationDrawer(navController: NavController,
-                    modifier : Modifier = Modifier
-                        .background(MaterialTheme.colorScheme.surface)
-                        .fillMaxWidth()) {
-    Column(modifier = modifier) {
+                    modifier : Modifier = Modifier) {
+    Column(modifier = modifier
+        .background(MaterialTheme.colorScheme.surface)
+        .fillMaxWidth()) {
 
         Column(modifier = Modifier.fillMaxWidth()) {
             Image(
@@ -62,7 +59,7 @@ fun NavigationDrawer(navController: NavController,
 @Preview
 @ExperimentalMaterialApi
 @Composable
-fun LibraryItem(navController: NavController = rememberNavController(),
+fun LibraryItem(navController: NavController = rememberAnimatedNavController(),
                 selected : Boolean = true) {
     val library = stringResource(id = R.string.library)
     ListItem(
@@ -93,74 +90,91 @@ fun SettingsItem(navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun NavigationDrawerContent(navController: NavController = rememberNavController(),
+fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavController(),
                             currentScreen : Screen = Screen.LIBRARY) {
 
-    Image(
-        modifier = Modifier.padding(vertical = 20.dp,horizontal = 12.dp)
-            .size(40.dp),
-        painter = painterResource(id = R.drawable.headphone_icon),
-        contentDescription = "Menu icon"
-    )
-    val library = stringResource(id = R.string.library)
-    NavigationDrawerItem(
-        modifier = Modifier.padding(horizontal = 12.dp),
-        label = {
-            Text(
-                text = library,
-                fontSize = MaterialTheme.typography.labelLarge.fontSize
-            )
-        },
-        icon = { Icon(Icons.Filled.LibraryMusic, contentDescription = library) },
-        selected = currentScreen == Screen.LIBRARY,
-        onClick = {
-            if (currentScreen != Screen.LIBRARY) {
-                navController.navigate(Screen.LIBRARY.name)
-            }
-        }
-    )
+    ModalDrawerSheet() {
 
-    val search = stringResource(id = R.string.search)
-    NavigationDrawerItem(
-        modifier = Modifier.padding(horizontal = 12.dp),
-        label = {
-            Text(
-                text = search,
-                fontSize = MaterialTheme.typography.labelLarge.fontSize
-            )
-        },
-        icon = { Icon(Icons.Filled.Search,
-            contentDescription = search,
-            modifier = Modifier.size(24.dp)) },
-        selected = currentScreen == Screen.SEARCH,
-        onClick = {
+
+        Image(
+            modifier = Modifier
+                .padding(vertical = 20.dp, horizontal = 12.dp)
+                .size(40.dp),
+            painter = painterResource(id = R.drawable.headphone_icon),
+            contentDescription = "Menu icon"
+        )
+        val library = stringResource(id = R.string.library)
+        NavigationDrawerItem(
+            modifier = Modifier.padding(horizontal = 12.dp),
+            label = {
+                Text(
+                    text = library,
+                    fontSize = MaterialTheme.typography.labelLarge.fontSize
+                )
+            },
+            icon = { Icon(Icons.Filled.LibraryMusic, contentDescription = library) },
+            selected = currentScreen == Screen.LIBRARY,
+            onClick = {
+                if (currentScreen != Screen.LIBRARY) {
+                    navController.navigate(Screen.LIBRARY.name)
+                }
+            }
+        )
+
+        val search = stringResource(id = R.string.search)
+        NavigationDrawerItem(
+            modifier = Modifier.padding(horizontal = 12.dp),
+            label = {
+                Text(
+                    text = search,
+                    fontSize = MaterialTheme.typography.labelLarge.fontSize
+                )
+            },
+            icon = {
+                Icon(
+                    Icons.Filled.Search,
+                    contentDescription = search,
+                    modifier = Modifier.size(24.dp)
+                )
+            },
+            selected = currentScreen == Screen.SEARCH,
+            onClick = {
                 if (currentScreen != Screen.SEARCH) {
                     navController.navigate(Screen.SEARCH.name)
                 }
             })
 
-    val settings = stringResource(id = R.string.settings)
-    NavigationDrawerItem(
-        modifier = Modifier.padding(horizontal = 12.dp),
-        label = {
-            Text(
-                text = settings,
-                fontSize = MaterialTheme.typography.labelLarge.fontSize
-            )
-        },
-        icon = { Icon(Icons.Filled.Settings,
-            contentDescription = settings,
-            modifier = Modifier.size(24.dp)) },
-        selected = currentScreen == Screen.SETTINGS,
-        onClick = {
-            if (currentScreen != Screen.SETTINGS)
-            navController.navigate(Screen.SETTINGS.name)
-        })
+        val settings = stringResource(id = R.string.settings)
+        NavigationDrawerItem(
+            modifier = Modifier.padding(horizontal = 12.dp),
+            label = {
+                Text(
+                    text = settings,
+                    fontSize = MaterialTheme.typography.labelLarge.fontSize
+                )
+            },
+            icon = {
+                Icon(
+                    Icons.Filled.Settings,
+                    contentDescription = settings,
+                    modifier = Modifier.size(24.dp)
+                )
+            },
+            selected = currentScreen == Screen.SETTINGS,
+            onClick = {
+                if (currentScreen != Screen.SETTINGS) {
+                    navController.navigate(Screen.SETTINGS.name)
+                }
+            })
 
-      Divider(
-        modifier = Modifier.padding(top = 16.dp,
-        end = 28.dp),
-        startIndent = 28.dp,
-        color = MaterialTheme.colorScheme.outline)
+        Divider(
+            modifier = Modifier.padding(
+                top = 16.dp,
+                end = 28.dp
+            ),
+            //   startIndent = 28.dp,
+            color = MaterialTheme.colorScheme.outline
+        )
+    }
 }
 

@@ -1,19 +1,18 @@
 package com.github.goldy1992.mp3player.service.library.content.retriever
 
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
-import org.mockito.kotlin.mock
 import org.junit.Assert
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
-import kotlin.collections.HashMap
 
 @RunWith(RobolectricTestRunner::class)
 class RootRetrieverTest {
@@ -28,17 +27,17 @@ class RootRetrieverTest {
         val result = rootRetriever!!.getChildren(mock<ContentRequest>())
         Assert.assertEquals(testRootItemMap.size.toLong(), result!!.size.toLong())
         val item1 = result[0]
-        assertValidRootItem(item1)
+        assertValidRootItem(item1, ROOT_TYPE_1)
         assertRootItemType(item1, ROOT_TYPE_1)
         val item2 = result[1]
-        assertValidRootItem(item2)
+        assertValidRootItem(item2, ROOT_TYPE_2)
         assertRootItemType(item2, ROOT_TYPE_2)
     }
 
     @Test
     fun testGetRootItem() {
         val result = rootRetriever!!.getRootItem(ROOT_TYPE_1)
-        assertValidRootItem(result)
+        assertValidRootItem(result, ROOT_TYPE_1)
         assertRootItemType(result, ROOT_TYPE_1)
     }
 
@@ -47,12 +46,12 @@ class RootRetrieverTest {
         Assert.assertEquals(MediaItemType.ROOT, rootRetriever!!.type)
     }
 
-    private fun assertValidRootItem(item: MediaBrowserCompat.MediaItem?) {
+    private fun assertValidRootItem(item: MediaItem, expectedType: MediaItemType) {
         val mediaItemType = getMediaItemType(item)
-        Assert.assertEquals(MediaItemType.ROOT, mediaItemType)
+        Assert.assertEquals(expectedType, mediaItemType)
     }
 
-    private fun assertRootItemType(item: MediaBrowserCompat.MediaItem?, expectedType: MediaItemType) {
+    private fun assertRootItemType(item: MediaItem?, expectedType: MediaItemType) {
         val mediaItemType = getRootMediaItemType(item)
         Assert.assertEquals(expectedType, mediaItemType)
     }

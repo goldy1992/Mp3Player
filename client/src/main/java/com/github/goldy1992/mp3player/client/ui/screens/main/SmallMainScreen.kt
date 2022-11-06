@@ -1,12 +1,12 @@
 package com.github.goldy1992.mp3player.client.ui.screens.main
 
-import android.support.v4.media.MediaBrowserCompat
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.ui.BOTTOM_BAR_SIZE
@@ -19,11 +19,11 @@ import com.google.accompanist.pager.PagerState
 @ExperimentalPagerApi
 @Composable
 fun SmallMainScreenContent(
-        navController: NavController,
-        pagerState: PagerState,
-        rootItems: List<MediaBrowserCompat.MediaItem>,
-        mediaController: MediaControllerAdapter,
-        mediaRepository: MediaRepository
+    navController: NavController,
+    pagerState: PagerState,
+    rootItems: List<MediaItem>,
+    mediaController: MediaControllerAdapter,
+    mediaRepository: MediaRepository
 ) {
     Row(
             Modifier

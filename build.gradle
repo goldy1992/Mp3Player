@@ -1,9 +1,9 @@
 buildscript {
     ext {
         min_sdk_version = 23
-        target_sdk_version = 31
+        target_sdk_version = 33
         build_tools_version = '30.0.3'
-        kotlin_version = '1.6.10'
+        kotlin_version = '1.7.20'
         activity_ktx_version = '1.2.4'
         androidx_core_ktx_version = '1.3.2'
         annotation_version = '1.1.0-rc01'
@@ -11,18 +11,18 @@ buildscript {
         commons_collections4_version = '4.4'
         commons_io_version = '1.3.2'
         commons_lang_version = '3.9'
-        compose_version = '1.1.1'
-        compose_material3_version = '1.0.0-alpha11'
+        compose_version = '1.3.0'
+        compose_material3_version = '1.0.0'
         compose_test_version = '1.0.4'
+        datastore_preferences_version = '1.0.0'
         espresso_core_version = '3.3.0'
-        exo_player_vesrion = '2.17.1'
         hilt_version = '2.42'
         jacoco_version = '0.8.7'
         junit_ext_version = '1.1.2'
         junit4_version = '4.12'
-        lifecycle_version = '2.4.1'
-        coroutines_version = '1.4.2'
-        media_version = '1.6.0'
+        lifecycle_version = '2.5.1'
+        coroutines_version = '1.6.4'
+        media3_version = '1.0.0-beta02'
         monitor_version = '1.4.0-beta01'
         mockito_inline_version = '3.7.7'
         mockito_kotlin_version = '3.2.0'
@@ -64,7 +64,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.0'
+        classpath 'com.android.tools.build:gradle:7.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
     }

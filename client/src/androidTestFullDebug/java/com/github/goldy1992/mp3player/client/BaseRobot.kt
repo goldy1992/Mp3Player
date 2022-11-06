@@ -1,12 +1,8 @@
 package com.github.goldy1992.mp3player.client
 
 import android.view.View
+import androidx.test.espresso.*
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
-import androidx.test.espresso.ViewAssertion
-import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.util.TreeIterables
 import org.hamcrest.Matcher

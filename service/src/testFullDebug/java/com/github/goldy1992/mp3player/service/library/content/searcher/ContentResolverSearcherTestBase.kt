@@ -2,15 +2,20 @@ package com.github.goldy1992.mp3player.service.library.content.searcher
 
 import android.content.ContentResolver
 import android.database.Cursor
-import android.support.v4.media.MediaBrowserCompat
+import androidx.media3.common.MediaItem
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestCoroutineScheduler
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert
+import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.junit.Assert
-import org.junit.Test
-import java.util.*
 
+@OptIn(ExperimentalCoroutinesApi::class)
 abstract class ContentResolverSearcherTestBase<T : ContentResolverSearcher<*>?> {
     var searcher: T? = null
     var idPrefix: String? = null
@@ -19,22 +24,26 @@ abstract class ContentResolverSearcherTestBase<T : ContentResolverSearcher<*>?> 
 
     var cursor: Cursor = mock<Cursor>()
 
+    private val testScheduler = TestCoroutineScheduler()
+    protected val dispatcher  = StandardTestDispatcher(testScheduler)
+    protected val testScope = TestScope(dispatcher)
+
     companion object {
         const val VALID_QUERY = "VALID_QUERY"
         const val INVALID_QUERY = "INVALID_QUERY"
-        var expectedResult: MutableList<MediaBrowserCompat.MediaItem> = ArrayList()
+        var expectedResult: MutableList<MediaItem> = ArrayList()
 
         init {
-            expectedResult.add(mock<MediaBrowserCompat.MediaItem>())
+            expectedResult.add(mock<MediaItem>())
         }
     }
 
     abstract fun testGetMediaType()
     abstract fun testSearchValidMultipleArguments()
     @Test
-    fun testSearchInvalid() {
+    fun testSearchInvalid() = runTest(dispatcher)  {
         whenever(searcher!!.resultsParser.create(eq(any<Cursor>()), idPrefix!!)).thenReturn(expectedResult)
-        val result: List<*>? = searcher!!.search(INVALID_QUERY)
+        var result: List<*>? = searcher!!.search(INVALID_QUERY)
         Assert.assertNotEquals(expectedResult, result)
     }
 }

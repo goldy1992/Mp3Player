@@ -1,27 +1,11 @@
 package com.github.goldy1992.mp3player.client.ui
 
-import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,6 +14,9 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
@@ -38,13 +25,15 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
-import com.github.goldy1992.mp3player.commons.QueueItemUtils
+import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
+import com.github.goldy1992.mp3player.client.viewmodels.NowPlayingScreenViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.StateFlow
 import org.apache.commons.lang3.ObjectUtils.isEmpty
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,19 +41,21 @@ import org.apache.commons.lang3.ObjectUtils.isEmpty
 @ExperimentalPagerApi
 @Composable
 fun NowPlayingScreen(
+    viewModel: NowPlayingScreenViewModel = viewModel(),
     navController: NavController,
-    mediaController: MediaControllerAdapter,
     scope : CoroutineScope = rememberCoroutineScope(),
 ) {
+
     val songTitleDescription = stringResource(id = R.string.song_title)
+    val metadata by viewModel.metadata.collectAsState()
+
     Scaffold (
 
         topBar = {
-            SmallTopAppBar (
+            TopAppBar (
                 title = {
-                    val metadata by mediaController.metadata.observeAsState()
-                    val title : String = metadata?.description?.title.toString() ?: ""
-                    val artist : String = metadata?.description?.subtitle.toString() ?: ""
+                       val title : String = metadata.title.toString()
+                    val artist : String = metadata.artist.toString()
                     Column {
                         Text(text = title,
                             style = MaterialTheme.typography.titleLarge,
@@ -78,18 +69,19 @@ fun NowPlayingScreen(
                             color = MaterialTheme.colorScheme.onSurface)
                     }
                 },
-
                 navigationIcon = {
                     NavUpButton(
                         navController = navController,
                         scope = scope)
                 },
                 actions = {},
-
+                windowInsets = TopAppBarDefaults.windowInsets
             )
         },
         bottomBar = {
-            PlayToolbar(mediaController = mediaController) {
+            PlayToolbar(mediaController = viewModel.mediaControllerAdapter,
+                        isPlayingState = viewModel.isPlaying,
+                        scope = scope) {
                 // do Nothing
             }
         },
@@ -106,28 +98,38 @@ fun NowPlayingScreen(
                     },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                SpeedController(mediaController = mediaController,
-                    modifier = Modifier.weight(1f)
+                SpeedController(mediaController = viewModel.mediaControllerAdapter,
+                    playbackSpeedState = viewModel.playbackSpeed,
+                    modifier = Modifier
+                        .weight(1f)
                         .padding(start = 48.dp, end = 48.dp)
                 )
-                ViewPager(mediaController = mediaController,
-                scope = scope,
-                modifier = Modifier.weight(4f))
+                ViewPager(mediaController = viewModel.mediaControllerAdapter,
+                    metadata = metadata,
+                    queueState = viewModel.queue,
+                    scope = scope,
+                    modifier = Modifier.weight(4f))
 
                 Row(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .weight(1f),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    ShuffleButton(mediaController = mediaController)
-                    RepeatButton(mediaController = mediaController)
+                    ShuffleButton(mediaController = viewModel.mediaControllerAdapter, shuffleModeState = viewModel.shuffleMode, scope = scope)
+                    RepeatButton(mediaController = viewModel.mediaControllerAdapter, repeatModeState = viewModel.repeatMode, scope = scope)
                 }
                 Row(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .weight(1f),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    SeekBar(mediaController = mediaController)
+                    SeekBar(mediaController = viewModel.mediaControllerAdapter,
+                        playbackSpeedState = viewModel.playbackSpeed,
+                        metadataState = viewModel.metadata,
+                        isPlayingState = viewModel.isPlaying,
+                        playbackPositionState = viewModel.playbackPosition.state)
                 }
             }
 
@@ -138,13 +140,14 @@ fun NowPlayingScreen(
 @ExperimentalPagerApi
 @Composable
 fun ViewPager(mediaController: MediaControllerAdapter,
+              metadata : MediaMetadata,
+              queueState: StateFlow<List<MediaItem>>,
               modifier: Modifier = Modifier,
-            pagerState:PagerState = rememberPagerState(initialPage = mediaController.calculateCurrentQueuePosition()),
-            scope: CoroutineScope = rememberCoroutineScope()
+              pagerState:PagerState = rememberPagerState(initialPage = mediaController.getCurrentQueuePosition()),
+              scope: CoroutineScope = rememberCoroutineScope()
            ) {
-    val queue by mediaController.queue.observeAsState(emptyList())
-    val metadata by mediaController.metadata.observeAsState()
-    val currentQueuePosition = mediaController.calculateCurrentQueuePosition()
+    val queue by queueState.collectAsState()
+    val currentQueuePosition = mediaController.getCurrentQueuePosition()
 
     if (isEmpty(queue)) {
         Column(modifier = modifier.width(700.dp),
@@ -179,18 +182,16 @@ fun ViewPager(mediaController: MediaControllerAdapter,
 
         HorizontalPager(
                 state = pagerState,
-                modifier = modifier.width(400.dp)
+                modifier = modifier
+                    .width(400.dp)
                     .semantics {
                         contentDescription = "viewPagerColumn"
                     },
-                count = queue?.size ?: 0 ,
-                key = { page : Int ->
-                    val queueItem : MediaSessionCompat.QueueItem? = (mediaController.queue.value?.get(page) as MediaSessionCompat.QueueItem)
-                    queueItem?.description?.mediaId as Any
-                }
+                count = queue.size  ,
+                key = { page : Int -> queue[page].mediaId }
 
             ) { pageIndex ->
-            val item: MediaSessionCompat.QueueItem = queue!![pageIndex]
+            val item: MediaItem = queue[pageIndex]
             Column(
                     modifier = Modifier
                             .width(300.dp),
@@ -198,7 +199,7 @@ fun ViewPager(mediaController: MediaControllerAdapter,
             ) {
                 Image(
                         painter = rememberImagePainter(
-                                request =  ImageRequest.Builder(LocalContext.current).data(QueueItemUtils.getAlbumArtUri(item as MediaSessionCompat.QueueItem)).build()
+                                request =  ImageRequest.Builder(LocalContext.current).data(item.mediaMetadata.artworkUri).build()
                         ),
                         contentDescription = "Album Art",
                         modifier = Modifier.size(300.dp, 300.dp)
