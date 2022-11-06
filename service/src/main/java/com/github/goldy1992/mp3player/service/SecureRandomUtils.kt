@@ -5,13 +5,12 @@ import java.security.SecureRandom
 
 object SecureRandomUtils {
 
-    private val random = SecureRandom()
-
     /**
      * Generates a random alphanumeric string using a [SecureRandom] object.
      * @return An alphanumeric number of size count.
      */
     fun randomAlphaNumeric(count : Int) : String {
-        return RandomStringUtils.random(count, 0, 0, true, true,null, random)
+        val secureRandom = SecureRandom()
+        return RandomStringUtils.random(count, 0, 0, true, true,null, secureRandom)
     }
 }
