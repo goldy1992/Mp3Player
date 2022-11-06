@@ -17,6 +17,8 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.screens.FolderScreen
+import com.github.goldy1992.mp3player.client.ui.screens.VisualizerScreen
+import com.github.goldy1992.mp3player.client.ui.screens.VisualizerViewModel
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreen
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
 import com.github.goldy1992.mp3player.client.viewmodels.*
@@ -127,16 +129,20 @@ fun ComposeApp(
                     viewModel = viewModel
                 )
 
-            }
-            composable(Screen.SETTINGS.name) {
-                SettingsScreen(
-                    navController = navController,
-                    userPreferencesRepository = userPreferencesRepository,
-                    windowSize = windowSize
-                )
+                }
+                composable(Screen.SETTINGS.name) {
+                    SettingsScreen(
+                        navController = navController,
+                        userPreferencesRepository = userPreferencesRepository,
+                        windowSize = windowSize
+                    )
+                }
+                composable(Screen.VISUALIZER.name){
+                    val viewModel = hiltViewModel<VisualizerViewModel>()
+                    VisualizerScreen(viewModel = viewModel)
+                }
             }
         }
         Log.i(logTag, "hit this line")
     }
 
-}

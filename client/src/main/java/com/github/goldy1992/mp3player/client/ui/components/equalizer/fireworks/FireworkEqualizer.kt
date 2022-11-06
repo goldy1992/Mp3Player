@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.isActive
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import kotlin.math.*
@@ -28,11 +29,12 @@ private var maxFreqVal = 0f
 @Composable
 fun FireworkWrapper(modifier: Modifier = Modifier,
                     particleWidth : Float = 10f,
-                    isPlaying : Boolean = false,
+                    isPlayingState : StateFlow<Boolean>,
                     insetPx : Float = 200f,
                     frequencyPhases : List<Float> = emptyList(),
                     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
  ) {
+    val isPlaying by isPlayingState.collectAsState()
    // Log.i(logTag, "recomposing")
     var canvasWidth by remember { mutableStateOf(0f) }
     var canvasHeight by remember { mutableStateOf(0f) }

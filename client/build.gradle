@@ -161,6 +161,8 @@ dependencies {
     // Needed for createComposeRule, but not createAndroidComposeRule:
     debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
 
+    implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+
     // hilt
     kapt group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
     kapt group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version

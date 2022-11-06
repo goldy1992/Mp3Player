@@ -5,8 +5,10 @@ import android.media.MediaMetadataRetriever
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.RenderersFactory
 import com.github.goldy1992.mp3player.service.MyForwardingPlayer
 import com.github.goldy1992.mp3player.service.player.AudioBecomingNoisyBroadcastReceiver
+import com.github.goldy1992.mp3player.service.player.MyAnalyticsListener
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,14 +22,21 @@ class ExoPlayerModule {
 
     @Provides
     @ServiceScoped
-    fun provideExoPlayer(@ApplicationContext context: Context): ExoPlayer {
+    fun provideExoPlayer(@ApplicationContext context: Context,
+                         analyticsListener: MyAnalyticsListener,
+                         renderersFactory: RenderersFactory
+    ): ExoPlayer {
+
         val exoPlayer = ExoPlayer.Builder(context)
+            .setRenderersFactory(renderersFactory)
             .build()
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(C.USAGE_MEDIA)
             .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
             .build()
         exoPlayer.setAudioAttributes(audioAttributes, true)
+        exoPlayer.addAnalyticsListener(analyticsListener)
+
         return exoPlayer
     }
 

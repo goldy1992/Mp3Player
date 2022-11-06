@@ -11,5 +11,6 @@ enum class Screen {
     SEARCH,
     SETTINGS,
     SPLASH,
-    THEME_SELECT
+    THEME_SELECT,
+    VISUALIZER
 }
