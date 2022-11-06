@@ -20,8 +20,8 @@ import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.eventholders.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekbarUtils.calculateAnimationTime
-import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekbarUtils.calculateCurrentPosition
+import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateAnimationTime
+import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateCurrentPosition
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.MetadataUtils
 import kotlinx.coroutines.CoroutineScope

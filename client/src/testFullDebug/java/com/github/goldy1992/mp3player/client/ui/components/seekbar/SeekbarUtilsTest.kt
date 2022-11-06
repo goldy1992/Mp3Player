@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.components.seekbar
 
+import com.github.goldy1992.mp3player.client.utils.SeekbarUtils
 import org.junit.Assert.*
 import org.junit.Test
 

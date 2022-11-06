@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.components.seekbar
+package com.github.goldy1992.mp3player.client.utils
 
 import com.github.goldy1992.mp3player.client.data.eventholders.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.commons.TimerUtils
