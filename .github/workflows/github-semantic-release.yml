@@ -6,6 +6,9 @@ on:
 jobs:
   semantic-release:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
     environment: release_env
     steps:
       - uses: actions/checkout@v3.1.0
@@ -37,6 +40,3 @@ jobs:
 
       - name: Release
         run: npx semantic-release --ci
-        env:
-          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
