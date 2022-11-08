@@ -46,7 +46,9 @@ jobs:
   semantic-release:
     needs: sonar-quality-gate-check
     uses: ./.github/workflows/github-semantic-release.yml
+    environment: release_env
 
   release-to-playstore:
     needs: semantic-release # needs semantic release so that the versions are incremented
     uses: ./.github/workflows/google-play-store-release.yml
+    environment: release_env

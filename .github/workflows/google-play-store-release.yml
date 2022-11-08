@@ -2,6 +2,17 @@ name: Google Play Store Release
 on:
   workflow_dispatch:
   workflow_call:
+    secrets:
+      KEY_STORE_BASE64:
+        required: true
+      SIGNED_RELEASE_FILE:
+        required: true
+      RELEASE_SERVICE_ACCOUNT_JSON:
+        required: true
+      KEY_STORE_PASSWORD:
+        required: true
+      KEY_STORE_ALIAS:
+        required: true
 jobs:
   release:
     runs-on: ubuntu-latest

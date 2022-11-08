@@ -2,6 +2,9 @@ name: Github Semantic Release
 on:
   workflow_dispatch:
   workflow_call:
+    secrets:
+      SEMANTIC_RELEASE_FINE_GRAINED_TOKEN:
+        required: true
 
 jobs:
   semantic-release:
