@@ -15,6 +15,8 @@ on:
         required: true
 jobs:
   release:
+    env: 
+      SIGNING_KEY_FILE: signing_key_file.jks
     runs-on: ubuntu-latest
     environment: release_env
     steps:
@@ -42,14 +44,19 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Write Base64 Encoded Key Store value to File
-        run: echo ${{ secrets.KEY_STORE_BASE64 }} > "signing_key_file"
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4.3.0
+        with:
+          python-version: 3.9
 
-      - name: Make signing_key_file executable
-        run: chmod +x ./signing_key_file
+      - name: Write Base64 Encoded Key Store value to File Named $SIGNING_KEY_FILE
+        run: |
+          chmod +x ./.github/ci-scripts/release/generate_signing_key_file.py
+          python ./.github/ci-scripts/release/generate_signing_key_file.py $SIGNING_KEY_FILE ${{ secrets.KEY_STORE_BASE64 }}
+          chmod +x $SIGNING_KEY_FILE
 
       - name: Build release bundle with Gradle
-        run: ./gradlew bundleRelease --stacktrace -PdisablePreDex -Pfull_release_storePassword=${{ secrets.KEY_STORE_PASSWORD }} -Pfull_release_keyAlias=${{ secrets.KEY_ALIAS }} -P=full_release_keyPassword=${{ secrets.KEY_PASSWORD }} -P=full_release_storeFile=signing_key_file
+        run: ./gradlew bundleRelease --stacktrace -PdisablePreDex -Pfull_release_storePassword=${{ secrets.KEY_STORE_PASSWORD }} -Pfull_release_keyAlias=${{ secrets.KEY_ALIAS }} -P=full_release_keyPassword=${{ secrets.KEY_PASSWORD }} -P=full_release_storeFile=$SIGNING_KEY_FILE
 
       - name: Create service_account.json FROM secrets.SERVICE_ACCOUNT_JSON
         run: echo '${{ secrets.RELEASE_SERVICE_ACCOUNT_JSON }}' > service_account.json
@@ -59,7 +66,7 @@ jobs:
         with:
           serviceAccountJson: service_account.json
           packageName: com.github.goldy1992.mp3player.full
-          releaseFiles: ${{ env.SIGNED_RELEASE_FILE }}
+          releaseFiles: app/build/outputs/bundle/fullRelease/app-full-release.aab
           track: production
           inAppUpdatePriority: 2
           whatsNewDirectory: distrib/whatsnew

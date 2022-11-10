@@ -46,6 +46,8 @@ jobs:
   semantic-release:
     needs: sonar-quality-gate-check
     uses: ./.github/workflows/github-semantic-release.yml
+    # Secrets for the env, declared in reusuable workflow must be "declared" in the parent file
+    # See: https://github.com/orgs/community/discussions/25238
     secrets:
       SEMANTIC_RELEASE_FINE_GRAINED_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
 
