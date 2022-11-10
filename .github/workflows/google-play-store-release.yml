@@ -53,7 +53,7 @@ jobs:
         run: chmod +x ./.github/ci-scripts/release/generate_signing_key_file.py
 
       - name: Write Base64 Encoded Key Store value to File Named $SIGNING_KEY_FILE
-        run: python ./.github/ci-scripts/release/generate_signing_key_file.py $SIGNING_KEY_FILE ${{ secrets.KEY_STORE_BASE64 }} 
+        run: python3 ./.github/ci-scripts/release/generate_signing_key_file.py $SIGNING_KEY_FILE ${{ secrets.KEY_STORE_BASE64 }} 
           
       - name: Make $SIGNING_KEY_FILE executable
         run: chmod +x $SIGNING_KEY_FILE
@@ -64,13 +64,13 @@ jobs:
       - name: Create service_account.json FROM secrets.SERVICE_ACCOUNT_JSON
         run: echo '${{ secrets.RELEASE_SERVICE_ACCOUNT_JSON }}' > service_account.json
 
-      - name: Upload signed AAB to Playstore
-        uses: r0adkll/upload-google-play@v1.0.19
-        with:
-          serviceAccountJson: service_account.json
-          packageName: com.github.goldy1992.mp3player.full
-          releaseFiles: app/build/outputs/bundle/fullRelease/app-full-release.aab
-          track: production
-          inAppUpdatePriority: 2
-          whatsNewDirectory: distrib/whatsnew
-          mappingFile: app/build/outputs/mapping/fullRelease/mapping.txt
+      # - name: Upload signed AAB to Playstore
+      #   uses: r0adkll/upload-google-play@v1.0.19
+      #   with:
+      #     serviceAccountJson: service_account.json
+      #     packageName: com.github.goldy1992.mp3player.full
+      #     releaseFiles: app/build/outputs/bundle/fullRelease/app-full-release.aab
+      #     track: production
+      #     inAppUpdatePriority: 2
+      #     whatsNewDirectory: distrib/whatsnew
+      #     mappingFile: app/build/outputs/mapping/fullRelease/mapping.txt
