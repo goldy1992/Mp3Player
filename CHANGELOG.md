@@ -1,3 +1,13 @@
+# [3.0.0](https://github.com/goldy1992/Mp3Player/compare/v2.0.0...v3.0.0) (2022-11-08)
+
+
+* Feature/issue 161/media3 - Migrated to use the androidx.media3 Library (#162) ([c8030cd](https://github.com/goldy1992/Mp3Player/commit/c8030cd7d3b634a7018aea38521ddbf5d0c19327)), closes [#162](https://github.com/goldy1992/Mp3Player/issues/162)
+
+
+### BREAKING CHANGES
+
+* Many core classes have now been reimplemented.
+
 # [2.0.0](https://github.com/goldy1992/Mp3Player/compare/v1.2.2...v2.0.0) (2022-05-27)
 
 
