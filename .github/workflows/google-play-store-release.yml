@@ -44,16 +44,8 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v4.3.0
-        with:
-          python-version: 3.9
-
-      - name: Make generate_signing_key_file.py executable
-        run: chmod +x ./.github/ci-scripts/release/generate_signing_key_file.py
-
       - name: Write Base64 Encoded Key Store value to File Named $SIGNING_KEY_FILE
-        run: python3 ./.github/ci-scripts/release/generate_signing_key_file.py $SIGNING_KEY_FILE ${{ secrets.KEY_STORE_BASE64 }} 
+        run: echo "${{ secrets.KEY_STORE_BASE64 }}" >> $SIGNING_KEY_FILE
           
       - name: Make $SIGNING_KEY_FILE executable
         run: chmod +x $SIGNING_KEY_FILE
