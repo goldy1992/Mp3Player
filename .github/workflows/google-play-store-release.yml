@@ -63,6 +63,7 @@ jobs:
           packageName: com.github.goldy1992.mp3player.full
           releaseFiles: app/build/outputs/bundle/fullRelease/app-full-release.aab
           track: production
+          status: completed
           inAppUpdatePriority: 2
           whatsNewDirectory: distrib/whatsnew
           mappingFile: app/build/outputs/mapping/fullRelease/mapping.txt
