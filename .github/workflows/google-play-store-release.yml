@@ -50,8 +50,8 @@ jobs:
       - name: Make $SIGNING_KEY_FILE executable
         run: chmod +x $SIGNING_KEY_FILE
 
-      - name: Build release bundle with Gradle
-        run: ./gradlew bundleRelease --stacktrace -PdisablePreDex -Pfull_release_storePassword=${{ secrets.KEY_STORE_PASSWORD }} -Pfull_release_keyAlias=${{ secrets.KEY_ALIAS }} -P=full_release_keyPassword=${{ secrets.KEY_PASSWORD }} -P=full_release_storeFile=$SIGNING_KEY_FILE
+      - name: Build and Sign Release Bundle with Gradle
+        run: ./gradlew signFullReleaseBundle --stacktrace -PdisablePreDex -Pfull_release_storePassword=${{ secrets.KEY_STORE_PASSWORD }} -Pfull_release_keyAlias=${{ secrets.KEY_ALIAS }} -P=full_release_keyPassword=${{ secrets.KEY_PASSWORD }} -P=full_release_storeFile=$SIGNING_KEY_FILE
 
       - name: Create service_account.json FROM secrets.SERVICE_ACCOUNT_JSON
         run: echo '${{ secrets.RELEASE_SERVICE_ACCOUNT_JSON }}' > service_account.json
