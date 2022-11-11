@@ -44,8 +44,12 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Write Base64 Encoded Key Store value to File Named $SIGNING_KEY_FILE
-        run: echo "${{ secrets.KEY_STORE_BASE64 }}" >> $SIGNING_KEY_FILE
+      - name: Base64 Decode Key Store value and write to file named $SIGNING_KEY_FILE
+        run: |
+          echo "${{ secrets.KEY_STORE_BASE64 }}" >> $SIGNING_KEY_DECODED
+          base64 -d $SIGNING_KEY_DECODED > $SIGNING_KEY_FILE
+        env:
+          SIGNING_KEY_DECODED: signing_key_decoded.txt
           
       - name: Make $SIGNING_KEY_FILE executable
         run: chmod +x $SIGNING_KEY_FILE
