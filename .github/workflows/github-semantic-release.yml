@@ -2,10 +2,16 @@ name: Github Semantic Release
 on:
   workflow_dispatch:
   workflow_call:
+    secrets:
+      SEMANTIC_RELEASE_FINE_GRAINED_TOKEN:
+        required: true
 
 jobs:
   semantic-release:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
     environment: release_env
     steps:
       - uses: actions/checkout@v3.1.0
@@ -16,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3.5.1
         with:
-          node-version: 16
+          node-version: 18.12.1
 
       - name: Set up Python 3.9
         uses: actions/setup-python@v4.3.0
@@ -36,7 +42,4 @@ jobs:
         run: npm ci
 
       - name: Release
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release --ci
