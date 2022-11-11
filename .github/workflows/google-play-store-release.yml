@@ -16,7 +16,7 @@ on:
 jobs:
   release:
     env: 
-      SIGNING_KEY_FILE: signing_key_file.jks
+      SIGNING_KEY_FILE: app/signing_key_file.jks
     runs-on: ubuntu-latest
     environment: release_env
     steps:
