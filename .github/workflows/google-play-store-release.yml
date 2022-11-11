@@ -3,11 +3,11 @@ on:
   workflow_dispatch:
   workflow_call:
     secrets:
-      KEY_STORE_ALIAS:
+      KEY_ALIAS:
         required: true
       KEY_STORE_BASE64:
         required: true
-      KEY_STORE_PASSWORD:
+      KEY_PASSWORD:
         required: true
       RELEASE_SERVICE_ACCOUNT_JSON:
         required: true
