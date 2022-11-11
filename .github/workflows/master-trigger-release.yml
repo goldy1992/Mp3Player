@@ -57,6 +57,6 @@ jobs:
     secrets:
       KEY_STORE_BASE64: ${{ secrets.KEY_STORE_BASE64 }}
       KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-      KEY_ALIAS: ${{ secrets.KEY_STORE_ALIAS }}
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
       KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       RELEASE_SERVICE_ACCOUNT_JSON: ${{ secrets.RELEASE_SERVICE_ACCOUNT_JSON }}
