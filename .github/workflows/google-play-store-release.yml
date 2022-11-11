@@ -69,6 +69,7 @@ jobs:
           releaseFiles: app/build/outputs/bundle/fullRelease/app-full-release.aab
           track: production
           status: completed
+          changesNotSentForReview: true
           inAppUpdatePriority: 2
           whatsNewDirectory: distrib/whatsnew
           mappingFile: app/build/outputs/mapping/fullRelease/mapping.txt
