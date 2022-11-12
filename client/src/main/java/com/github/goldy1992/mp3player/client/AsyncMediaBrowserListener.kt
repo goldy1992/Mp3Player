@@ -62,7 +62,6 @@ class AsyncMediaBrowserListener
     override fun onCustomCommand(
         controller: MediaController, command: SessionCommand, args: Bundle
     ): ListenableFuture<SessionResult> {
-        Log.i(logTag(), "onCustomCommand")
         listeners.forEach { listener -> listener.onCustomCommand(controller, command, args) }
         return Futures.immediateFuture(SessionResult(SessionResult.RESULT_ERROR_NOT_SUPPORTED))
     }

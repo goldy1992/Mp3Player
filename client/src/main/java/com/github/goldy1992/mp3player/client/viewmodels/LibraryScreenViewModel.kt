@@ -1,12 +1,9 @@
 package com.github.goldy1992.mp3player.client.viewmodels
 
 import android.util.Log
-import androidx.concurrent.futures.await
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import androidx.media3.session.MediaController
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -18,7 +15,6 @@ import com.github.goldy1992.mp3player.client.viewmodels.states.IsPlaying
 import com.github.goldy1992.mp3player.client.viewmodels.states.Metadata
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MainDispatcher
-import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

@@ -73,12 +73,6 @@ fun ComposeApp(
             composable(Screen.NOW_PLAYING.name,
                 enterTransition = {
                     Log.i(logTag, "enterTransition called")
-////                    slideInVertically(
-////                        animationSpec = tween(7000000),
-////                    ) {
-////                        it + 1000
-////                    }
-//                        fadeIn(tween(70000, 0, LinearOutSlowInEasing))
                     slideIntoContainer(
                         AnimatedContentScope.SlideDirection.Up, animationSpec = tween(transitionTime)
                     )
@@ -139,7 +133,9 @@ fun ComposeApp(
                 }
                 composable(Screen.VISUALIZER.name){
                     val viewModel = hiltViewModel<VisualizerViewModel>()
-                    VisualizerScreen(viewModel = viewModel)
+                    VisualizerScreen(
+                        navController = navController,
+                        viewModel = viewModel)
                 }
             }
         }

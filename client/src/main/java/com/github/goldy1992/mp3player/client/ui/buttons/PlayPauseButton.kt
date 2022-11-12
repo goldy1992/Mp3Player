@@ -35,6 +35,23 @@ fun PlayPauseButton(mediaController: MediaControllerAdapter,
     }
 }
 
+
+/**
+ * This button will display the [PlayButton] if the [MediaControllerAdapter] says there is currently
+ * no playback, otherwise it will display the [PauseButton].
+ */
+@Composable
+fun PlayPauseButton(isPlayingState: StateFlow<Boolean>,
+                    onClickPlay: () -> Unit = {},
+                    onClickPause: () -> Unit = {}
+) {
+    val isPlayingValue by isPlayingState.collectAsState()
+    if (isPlayingValue) {
+        PauseButton(onClickPause)
+    } else {
+        PlayButton(onClickPlay)
+    }
+}
 /**
  * Represents the Play button to be displayed on the
  * [com.github.goldy1992.mp3player.client.ui.PlayToolbar].
@@ -53,6 +70,22 @@ fun PlayButton(mediaController : MediaControllerAdapter, scope : CoroutineScope 
         )
     }
 }
+
+/**
+ * Represents the Play button to be displayed on the
+ * [com.github.goldy1992.mp3player.client.ui.PlayToolbar].
+ */
+@Composable
+fun PlayButton(onClick : () -> Unit =  {}) {
+    IconButton(
+        onClick = { onClick() }) {
+        Icon(
+            Icons.Filled.PlayArrow,
+            contentDescription = stringResource(id = R.string.play),
+            tint = MaterialTheme.colorScheme.primary
+        )
+    }
+}
 /**
  * Represents the Pause button to be displayed on the
  * [com.github.goldy1992.mp3player.client.ui.PlayToolbar].
@@ -61,6 +94,21 @@ fun PlayButton(mediaController : MediaControllerAdapter, scope : CoroutineScope 
 fun PauseButton(mediaController : MediaControllerAdapter,
 scope: CoroutineScope = rememberCoroutineScope()) {
     IconButton(onClick = { scope.launch {  mediaController.pause()}}) {
+        Icon(
+            Icons.Filled.Pause,
+            contentDescription = stringResource(id = R.string.pause),
+            tint = MaterialTheme.colorScheme.primary
+        )
+    }
+}
+
+/**
+ * Represents the Pause button to be displayed on the
+ * [com.github.goldy1992.mp3player.client.ui.PlayToolbar].
+ */
+@Composable
+fun PauseButton(onClick: () -> Unit) {
+    IconButton(onClick = { onClick() }) {
         Icon(
             Icons.Filled.Pause,
             contentDescription = stringResource(id = R.string.pause),

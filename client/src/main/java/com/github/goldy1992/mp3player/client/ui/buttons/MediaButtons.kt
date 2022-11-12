@@ -26,9 +26,31 @@ scope : CoroutineScope = rememberCoroutineScope()) {
 }
 
 @Composable
+fun SkipToPreviousButton(onClick : () -> Unit = {} ) {
+    IconButton(onClick = { onClick() }){
+        Icon(
+            Icons.Filled.SkipPrevious,
+            "Skip to Previous",
+            tint = MaterialTheme.colorScheme.primary
+        )
+    }
+}
+
+@Composable
 fun SkipToNextButton(mediaController: MediaControllerAdapter,
 scope: CoroutineScope = rememberCoroutineScope()) {
     IconButton(onClick = { scope.launch { mediaController.skipToNext()}}) {
+        Icon(
+            Icons.Filled.SkipNext,
+            "Skip to Previous",
+            tint = MaterialTheme.colorScheme.primary
+        )
+    }
+}
+
+@Composable
+fun SkipToNextButton(onClick: () -> Unit = {}) {
+    IconButton(onClick = { onClick() }) {
         Icon(
             Icons.Filled.SkipNext,
             "Skip to Previous",
