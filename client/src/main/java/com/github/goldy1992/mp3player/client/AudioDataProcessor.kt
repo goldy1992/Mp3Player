@@ -1,20 +1,14 @@
 package com.github.goldy1992.mp3player.client
 
 import android.util.Log
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
+import com.github.goldy1992.mp3player.client.data.audiobands.FrequencyBand
+import com.github.goldy1992.mp3player.client.data.audiobands.FrequencyBandFive
 import com.github.goldy1992.mp3player.client.ui.screens.createFftSample
-import com.github.goldy1992.mp3player.client.views.audiobands.FrequencyBand
-import com.github.goldy1992.mp3player.client.views.audiobands.FrequencyBandFive
 import com.github.goldy1992.mp3player.commons.AudioSample
+import com.github.goldy1992.mp3player.commons.IoDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import dagger.hilt.android.scopes.ViewModelScoped
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -22,7 +16,7 @@ import javax.inject.Inject
 class AudioDataProcessor
 
     @Inject
-    constructor() : LogTagger, DefaultLifecycleObserver {
+    constructor(@IoDispatcher private val dispatcher: CoroutineDispatcher) : LogTagger {
 
 
 //    // Backing property to avoid state updates from other classes
@@ -43,7 +37,7 @@ class AudioDataProcessor
 //    }
 
     suspend fun processAudioData(audioSample: AudioSample) : FloatArray {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
          //   Log.i(logTag(), "processing audio sample")
             if (audioSample.waveformData.isEmpty()) {
                 floatArrayOf()

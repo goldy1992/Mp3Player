@@ -1,12 +1,11 @@
 package com.github.goldy1992.mp3player.client.ui.screens;
 
 import android.util.Log
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.goldy1992.mp3player.client.AudioDataAdapter
 import com.github.goldy1992.mp3player.client.AudioDataProcessor
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
+import com.github.goldy1992.mp3player.client.data.flows.player.AudioDataFlow
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.viewmodels.states.IsPlaying
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -24,12 +23,12 @@ class VisualizerViewModel
 constructor(
     private val audioDataProcessor: AudioDataProcessor,
     val mediaControllerAdapter: MediaControllerAdapter,
+    val audioDataFlow: AudioDataFlow,
     @MainDispatcher val mainDispatcher: CoroutineDispatcher,
-    val audioDataAdapter: AudioDataAdapter,
     private val isPlayingFlow: IsPlayingFlow) : LogTagger, ViewModel() {
 
     val isPlaying = IsPlaying.initialise(this, isPlayingFlow, mainDispatcher, mediaControllerAdapter.mediaControllerFuture)
-    val equalizerPlayState : MediatorLiveData<EqualizerState> = MediatorLiveData()
+
 
     // Backing property to avoid state updates from other classes
     private val audioDataMutableState = MutableStateFlow(floatArrayOf())
@@ -41,11 +40,13 @@ constructor(
         Log.i(logTag(), "creating viewmodel!")
 
         viewModelScope.launch {
-            audioDataAdapter.audioDataFlow
+            audioDataFlow.flow()
                 .collect { audioData ->
-                    Log.i(logTag(), "collecting audio data")
-                    audioDataMutableState.value = audioDataProcessor.processAudioData(audioData)
-                    //    Log.i(logTag(), "finished collecting audio data")
+                    if (isPlaying.state.value) {
+                        Log.i(logTag(), "collecting audio data")
+                        audioDataMutableState.value = audioDataProcessor.processAudioData(audioData)
+                        Log.i(logTag(), "finished collecting audio data")
+                    }
                 }
         }
 
@@ -60,11 +61,6 @@ constructor(
         super.onCleared()
     }
 
-//    fun canProcessAudioData() : Boolean {
-//        val result = isActivityVisible.value ?: false && isEqualizerActive.value ?: false
-//        Log.i(logTag(), "isActivityVisible: ${isActivityVisible.value}, isEqualizerVisible: ${isActivityVisible.value}")
-//        return result
-//    }
 
     data class EqualizerState constructor(val isEqualizerActive : Boolean,
                                           val isActivityVisible : Boolean)

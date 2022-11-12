@@ -2,17 +2,12 @@ package com.github.goldy1992.mp3player.service.dagger.modules.service
 
 import android.content.Context
 import android.os.Handler
-import android.support.v4.media.session.MediaSessionCompat
+import androidx.media3.exoplayer.DefaultRenderersFactory
+import androidx.media3.exoplayer.Renderer
+import androidx.media3.exoplayer.RenderersFactory
+import androidx.media3.exoplayer.audio.*
+import androidx.media3.exoplayer.mediacodec.MediaCodecSelector
 import com.github.goldy1992.mp3player.service.player.equalizer.FFTAudioProcessor
-import com.google.android.exoplayer2.DefaultRenderersFactory
-import com.google.android.exoplayer2.Renderer
-import com.google.android.exoplayer2.RenderersFactory
-import com.google.android.exoplayer2.audio.AudioCapabilities
-import com.google.android.exoplayer2.audio.AudioRendererEventListener
-import com.google.android.exoplayer2.audio.AudioSink
-import com.google.android.exoplayer2.audio.DefaultAudioSink
-import com.google.android.exoplayer2.audio.MediaCodecAudioRenderer
-import com.google.android.exoplayer2.mediacodec.MediaCodecSelector
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,7 +20,7 @@ class ExoPlayerRendersFactoryModule {
 
     @Provides
     fun providesCustomRenderersFactory(@ApplicationContext context: Context,
-                                       mediaSessionCompat: MediaSessionCompat) : RenderersFactory {
+                                       fftAudioProcessor: FFTAudioProcessor) : RenderersFactory {
         val renderersFactory = object : DefaultRenderersFactory(context) {
 
             override fun buildAudioRenderers(
@@ -46,7 +41,7 @@ class ExoPlayerRendersFactoryModule {
                         eventHandler,
                         eventListener,
                         DefaultAudioSink.Builder().setAudioCapabilities(AudioCapabilities.getCapabilities(context))
-                            .setAudioProcessors(arrayOf(FFTAudioProcessor(mediaSessionCompat)))
+                            .setAudioProcessors(arrayOf(fftAudioProcessor))
                             .build()
                     )
                 )

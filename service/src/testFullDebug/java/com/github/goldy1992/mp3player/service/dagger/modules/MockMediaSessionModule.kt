@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.service.dagger.modules
 
 import com.github.goldy1992.mp3player.service.MediaSessionCreator
 import com.github.goldy1992.mp3player.service.MockMediaSessionCreator
-import com.github.goldy1992.mp3player.service.dagger.modules.service.MediaSessionCreatorModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.android.components.ServiceComponent

@@ -3,18 +3,17 @@ package com.github.goldy1992.mp3player.service.player.equalizer
 import android.media.AudioTrack
 import android.media.AudioTrack.ERROR_BAD_VALUE
 import android.os.Bundle
-import android.support.v4.media.session.MediaSessionCompat
+import androidx.media3.common.C
+import androidx.media3.common.Format
+import androidx.media3.common.Player
+import androidx.media3.common.util.Assertions
+import androidx.media3.common.util.Util
+import androidx.media3.exoplayer.audio.AudioProcessor
+import androidx.media3.session.MediaSession
+import androidx.media3.session.SessionCommand
 import com.github.goldy1992.mp3player.commons.AudioSample
-import com.github.goldy1992.mp3player.commons.Constants
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.Format
-import com.google.android.exoplayer2.audio.AudioProcessor
-import com.google.android.exoplayer2.util.Assertions
-import com.google.android.exoplayer2.util.Util
+import com.github.goldy1992.mp3player.commons.Constants.AUDIO_DATA
 import dagger.hilt.android.scopes.ServiceScoped
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.lang.Long.max
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -23,9 +22,11 @@ import javax.inject.Inject
 
 @ServiceScoped
 class FFTAudioProcessor
-    @Inject
-    constructor(private val mediaSession : MediaSessionCompat) : AudioProcessor {
 
+    @Inject
+    constructor() : AudioProcessor {
+
+    var mediaSession : MediaSession? = null
     companion object {
         const val SAMPLE_SIZE = 4096
 
@@ -229,8 +230,13 @@ class FFTAudioProcessor
     }
 
     private fun postSampleToMediaSession(sample : AudioSample) {
-        val bundle = Bundle()
-        bundle.putSerializable(Constants.AUDIO_DATA, sample)
-        mediaSession.sendSessionEvent(Constants.AUDIO_DATA, bundle)
+        if (mediaSession != null) {
+            val bundle = Bundle()
+            bundle.putSerializable(AUDIO_DATA, sample)
+            val sessionCommand = SessionCommand(AUDIO_DATA, bundle)
+            mediaSession?.connectedControllers?.forEach {
+                mediaSession?.sendCustomCommand(it, sessionCommand, Bundle.EMPTY)
+            }
+        }
     }
 }

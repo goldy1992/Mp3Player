@@ -26,7 +26,7 @@ open class MediaBrowserAdapter
     @Inject
     constructor(private val mediaBrowserLF : ListenableFuture<MediaBrowser>,
     private val scope: CoroutineScope,
-    @MainDispatcher private val mainDispatcher: CoroutineDispatcher) : LogTagger, MediaBrowser.Listener {
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher) : LogTagger {
 
     companion object {
         private fun getDefaultLibraryParams() : MediaLibraryService.LibraryParams {

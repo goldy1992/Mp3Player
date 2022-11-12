@@ -8,6 +8,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
+import androidx.media3.session.SessionResult
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.DefaultDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -63,6 +64,14 @@ open class MediaControllerAdapter
             mediaController.prepare()
             mediaController.play()
         }
+    }
+
+    override fun onCustomCommand(
+        controller: MediaController,
+        command: SessionCommand,
+        args: Bundle
+    ): ListenableFuture<SessionResult> {
+        return super.onCustomCommand(controller, command, args)
     }
 
     open fun playFromSongList(itemIndex : Int, items : List<MediaItem>) {

@@ -57,7 +57,7 @@ open class MediaPlaybackService : MediaLibraryService(),
     @Inject
     lateinit var rootAuthenticator: RootAuthenticator
 
-    private var customLayout = ImmutableList.of<CommandButton>()
+    private var customLayout = listOf<CommandButton>()
 
     private lateinit var mediaSession: MediaLibrarySession
 

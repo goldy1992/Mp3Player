@@ -2,58 +2,32 @@ package com.github.goldy1992.mp3player.client
 
 import android.content.Context
 import android.os.Bundle
-import android.os.RemoteException
-import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.session.MediaControllerCompat
-import android.support.v4.media.session.PlaybackStateCompat
-import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.media3.session.MediaBrowser
+import com.github.goldy1992.mp3player.client.data.flows.player.AudioDataFlow
+import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.ChannelResult
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
-import org.apache.commons.lang3.exception.ExceptionUtils
 
 @ActivityRetainedScoped
 class AudioDataAdapter
 
     (context: Context,
-     mediaBrowser: MediaBrowser,
+     isPlayingFlow: IsPlayingFlow,
+        audioDataFlow: AudioDataFlow,
      private var scope : CoroutineScope
-) : MediaBrowserConnectionListener,
-    LogTagger, DefaultLifecycleObserver, MediaAdapter(context, mediaBrowser) {
+) :
+    LogTagger, DefaultLifecycleObserver {
 
     var isScreenVisible = false
 
-    val isPlayingFlow : Flow<PlaybackStateCompat> = callbackFlow {
-        val messageListener = object : MediaControllerCallbackImpl() {
-            override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
-                if (state?.state == PlaybackStateCompat.STATE_PLAYING) {
-                    trySend(state)
-                }
-            }
-        }
 
-        mediaController?.registerCallback(messageListener)
-
-
-        // The callback inside awaitClose will be executed when the flow is
-        // either closed or cancelled.
-        // In this case, remove the callback from Firestore
-        awaitClose { mediaController?.unregisterCallback(messageListener) }
-    }.shareIn(
-        scope,
-        replay = 1,
-        started = SharingStarted.WhileSubscribed()
-    )
 
     val isPlaying = MutableStateFlow(false)
 

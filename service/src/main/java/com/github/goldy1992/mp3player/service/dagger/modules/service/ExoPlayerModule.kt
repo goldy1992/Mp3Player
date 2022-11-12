@@ -23,7 +23,6 @@ class ExoPlayerModule {
     @Provides
     @ServiceScoped
     fun provideExoPlayer(@ApplicationContext context: Context,
-                         analyticsListener: MyAnalyticsListener,
                          renderersFactory: RenderersFactory
     ): ExoPlayer {
 
@@ -35,8 +34,7 @@ class ExoPlayerModule {
             .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
             .build()
         exoPlayer.setAudioAttributes(audioAttributes, true)
-        exoPlayer.addAnalyticsListener(analyticsListener)
-
+     //  exoPlayer.addAnalyticsListener(MyAnalyticsListener(mediaSession = m))
         return exoPlayer
     }
 

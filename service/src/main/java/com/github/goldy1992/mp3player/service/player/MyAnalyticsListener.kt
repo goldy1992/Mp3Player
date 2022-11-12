@@ -10,9 +10,8 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 
-@ServiceScoped
 class MyAnalyticsListener
-    @Inject
+
     constructor(private val mediaSession : MediaSession) : AnalyticsListener, LogTagger {
 
 

@@ -43,7 +43,7 @@ fun VisualizerScreen(viewModel: VisualizerViewModel = viewModel()) {
 //            )
 
             //BarEqualizer(bars = audioMagnitudes)
-            FireworkWrapper(frequencyPhases = audioMagnitudes.asList(), insetPx = 50f, isPlaying = viewModel.isPlaying.state)
+            FireworkWrapper(frequencyPhases = audioMagnitudes.asList(), insetPx = 50f, isPlayingState = viewModel.isPlaying.state)
             //    AnimatedEqualizer(modifier = Modifier.fillMaxSize())
             //  LineEqualizerWithStateListCanvasOnly(frequencyPhases = frequencyPhases.asList())
         }
