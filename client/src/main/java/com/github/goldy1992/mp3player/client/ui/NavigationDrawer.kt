@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ListItem
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Equalizer
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -82,6 +83,17 @@ fun SettingsItem(navController: NavController) {
         icon = { Icon(Icons.Filled.Settings, contentDescription = settings) },
         text = { Text(settings) },
         modifier = Modifier.clickable { navController.navigate(Screen.SETTINGS.name) }
+    )
+
+}
+
+@ExperimentalMaterialApi
+@Composable
+fun VisualizerItem(navController: NavController) {
+    ListItem(
+        icon = { Icon(Icons.Filled.Equalizer, contentDescription = "Equalizer") },
+        text = { Text("Equalizer") },
+        modifier = Modifier.clickable { navController.navigate(Screen.VISUALIZER.name) }
     )
 
 }
@@ -165,6 +177,22 @@ fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavCo
                 if (currentScreen != Screen.SETTINGS) {
                     navController.navigate(Screen.SETTINGS.name)
                 }
+            })
+        NavigationDrawerItem(
+            modifier = Modifier.padding(horizontal = 12.dp),
+            label = {
+                Text(
+                    text = "Equalizer",
+                    fontSize = MaterialTheme.typography.labelLarge.fontSize
+                )
+            },
+            icon = { Icon(Icons.Filled.Equalizer,
+                contentDescription = "Equalizer",
+                modifier = Modifier.size(24.dp)) },
+            selected = currentScreen == Screen.VISUALIZER,
+            onClick = {
+                if (currentScreen != Screen.VISUALIZER)
+                    navController.navigate(Screen.VISUALIZER.name)
             })
 
         Divider(

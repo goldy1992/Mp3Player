@@ -1,10 +1,12 @@
 package com.github.goldy1992.mp3player.client.data.flows.mediabrowser
 
 import android.os.Bundle
+import android.util.Log
 import androidx.media3.session.*
 import com.github.goldy1992.mp3player.client.AsyncMediaBrowserListener
 import com.github.goldy1992.mp3player.client.data.eventholders.OnChildrenChangedEventHolder
 import com.github.goldy1992.mp3player.client.data.eventholders.SessionCommandEventHolder
+import com.github.goldy1992.mp3player.commons.LogTagger
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -21,7 +23,7 @@ class OnCustomCommandFlow
     @Inject
     constructor(
         private val asyncMediaBrowserListener: AsyncMediaBrowserListener,
-        private val scope : CoroutineScope) {
+        private val scope : CoroutineScope) : LogTagger {
 
     val flow : Flow<SessionCommandEventHolder> = callbackFlow<SessionCommandEventHolder> {
         val messageListener = object : MediaBrowser.Listener {
@@ -30,6 +32,7 @@ class OnCustomCommandFlow
                 command: SessionCommand,
                 args: Bundle
             ): ListenableFuture<SessionResult> {
+                Log.i(logTag(), "onCustomCommand")
                 trySend(SessionCommandEventHolder(controller, command, args))
                 return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
             }
@@ -42,4 +45,8 @@ class OnCustomCommandFlow
         replay = 1,
         started = SharingStarted.WhileSubscribed()
     )
+
+    override fun logTag(): String {
+        return "OnCustomCommandFlow"
+    }
 }

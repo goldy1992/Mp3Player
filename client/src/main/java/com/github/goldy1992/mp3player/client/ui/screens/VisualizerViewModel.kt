@@ -23,7 +23,7 @@ class VisualizerViewModel
 constructor(
     private val audioDataProcessor: AudioDataProcessor,
     val mediaControllerAdapter: MediaControllerAdapter,
-    val audioDataFlow: AudioDataFlow,
+    private val audioDataFlow: AudioDataFlow,
     @MainDispatcher val mainDispatcher: CoroutineDispatcher,
     private val isPlayingFlow: IsPlayingFlow) : LogTagger, ViewModel() {
 

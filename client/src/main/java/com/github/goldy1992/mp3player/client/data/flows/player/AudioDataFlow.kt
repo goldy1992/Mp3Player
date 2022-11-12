@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.client.data.flows.player
 
 import android.annotation.TargetApi
 import android.os.Build.VERSION_CODES.TIRAMISU
+import android.util.Log
 import com.github.goldy1992.mp3player.client.data.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnCustomCommandFlow
 import com.github.goldy1992.mp3player.commons.AudioSample
@@ -20,7 +21,9 @@ constructor(customCommandFlow: OnCustomCommandFlow,
             scope : CoroutineScope
 ) : LogTagger {
 
-    private val audioDataFlow : Flow<AudioSample> = customCommandFlow.flow.filter {
+    private val audioDataFlow : Flow<AudioSample> = customCommandFlow.flow
+    .filter {
+        Log.i(logTag(), "audioDataFlow filter")
         AUDIO_DATA == it.command.customAction
     }.map {
         getAudioSample(it)
@@ -29,7 +32,6 @@ constructor(customCommandFlow: OnCustomCommandFlow,
         replay = 1,
         started = SharingStarted.WhileSubscribed()
     )
-
 
     override fun logTag(): String {
         return "AudioDataFlow"
@@ -49,12 +51,14 @@ constructor(customCommandFlow: OnCustomCommandFlow,
     }
     @TargetApi(TIRAMISU)
     private fun getAudioSampleApi33AndAbove(eventHolder : SessionCommandEventHolder) : AudioSample {
-        return eventHolder.args.getSerializable(AUDIO_DATA,AudioSample::class.java) as AudioSample
+        val command = eventHolder.command
+        return command.customExtras.getSerializable(AUDIO_DATA,AudioSample::class.java) as AudioSample
     }
 
     @Suppress("DEPRECATION")
     private fun getAudioSampleBelowApi33(eventHolder : SessionCommandEventHolder) : AudioSample {
-        return eventHolder.args.getSerializable(AUDIO_DATA) as AudioSample
+        val command = eventHolder.command
+        return command.customExtras.getSerializable(AUDIO_DATA) as AudioSample
     }
 
 

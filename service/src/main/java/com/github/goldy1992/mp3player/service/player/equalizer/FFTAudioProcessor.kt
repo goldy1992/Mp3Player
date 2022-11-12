@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.service.player.equalizer
 import android.media.AudioTrack
 import android.media.AudioTrack.ERROR_BAD_VALUE
 import android.os.Bundle
+import android.util.Log
 import androidx.media3.common.C
 import androidx.media3.common.Format
 import androidx.media3.common.Player
@@ -13,6 +14,7 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.SessionCommand
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.Constants.AUDIO_DATA
+import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.scopes.ServiceScoped
 import java.lang.Long.max
 import java.nio.ByteBuffer
@@ -24,7 +26,7 @@ import javax.inject.Inject
 class FFTAudioProcessor
 
     @Inject
-    constructor() : AudioProcessor {
+    constructor() : AudioProcessor, LogTagger {
 
     var mediaSession : MediaSession? = null
     companion object {
@@ -238,5 +240,9 @@ class FFTAudioProcessor
                 mediaSession?.sendCustomCommand(it, sessionCommand, Bundle.EMPTY)
             }
         }
+    }
+
+    override fun logTag(): String {
+        return "FFTAudioProcessor"
     }
 }
