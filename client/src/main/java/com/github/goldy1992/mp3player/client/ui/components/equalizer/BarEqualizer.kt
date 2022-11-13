@@ -3,10 +3,10 @@ package com.github.goldy1992.mp3player.client.ui.components.equalizer
 import android.util.Log
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -14,10 +14,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.utils.calculateBarWidthPixels
-
 import kotlin.random.Random
 
 const val MAX_AMPLITUDE = 400f
+private const val logTag = "BarEqualizer"
 
 @Preview
 @Composable
@@ -56,6 +56,16 @@ fun BarEqualizer(
 
     val equalizerWidthPx = remember(bars.size, barWidthPx, spaceBetweenBarsPx) { (bars.size * barWidthPx) + (spaceBetweenBarsPx * (bars.size+1)) }
 
+    val barStates : SnapshotStateList<Float> = remember(bars.size) {
+        mutableStateListOf<Float>().apply {
+            Log.i(logTag, "retrigger remember")
+            for (i in bars) add( 0f) }
+    }
+
+    for (i in bars.indices) {
+        val currentPhase by animateFloatAsState(targetValue = bars[i], animationSpec = tween(300))
+        barStates[i] = currentPhase
+    }
     val horizontalOffset = remember(maxWidth, equalizerWidthPx, spaceBetweenBarsPx) { ((maxWidth - equalizerWidthPx) / 2) + spaceBetweenBarsPx }
         Log.i("equalizer", "bar width: ${barWidthPx}")
         Log.i("equalizer", "max width val: ${maxWidth}")
@@ -70,7 +80,7 @@ fun BarEqualizer(
                 .fillMaxSize()
         ) {
 
-            for ((idx, bar) in bars.withIndex()) {
+            for ((idx, bar) in barStates.withIndex()) {
 
                 val currentBarHeight = if (bar > MAX_AMPLITUDE) {
                      MAX_AMPLITUDE
