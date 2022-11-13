@@ -14,8 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.utils.calculateBarWidthPixels
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 private const val MAX_AMPLITUDE = 400f
@@ -29,7 +27,7 @@ fun BarEqualizer(
     barColor : Color = MaterialTheme.colorScheme.secondary,
     spaceBetweenBars : Float = 5f) {
     BarEqualizer(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier,
         bars = bars.asList(),
         barColor = barColor,
         spaceBetweenBarsPx = spaceBetweenBars
@@ -43,7 +41,6 @@ fun BarEqualizer(
     bars : List<Float> = emptyList(),
     barColor : Color = MaterialTheme.colorScheme.secondary,
     spaceBetweenBarsPx : Float = 5f,
-    scope : CoroutineScope = rememberCoroutineScope()
 ) {
     var maxHeight by remember { mutableStateOf(0f) }
     var maxWidth by remember { mutableStateOf(0f) }
@@ -59,50 +56,46 @@ fun BarEqualizer(
 
     val equalizerWidthPx = remember(bars.size, barWidthPx, spaceBetweenBarsPx) { (bars.size * barWidthPx) + (spaceBetweenBarsPx * (bars.size+1)) }
 
-    val barStates : SnapshotStateList<Animatable<Float, AnimationVector1D>> = remember(bars.size) {
-        mutableStateListOf<Animatable<Float, AnimationVector1D>>().apply {
+    val barStates : SnapshotStateList<Float> = remember(bars.size) {
+        mutableStateListOf<Float>().apply {
             Log.i(logTag, "retrigger remember")
-            for (i in bars) add( Animatable(i)) }
+            for (i in bars) add( 0f) }
     }
 
-    LaunchedEffect(bars) {
-        Log.i(logTag, "Triggered launch effect")
-        for (i in bars.indices) {
-            scope.launch { barStates[i].animateTo(targetValue = bars[i], animationSpec = tween(300)) }
-        }
+    for (i in bars.indices) {
+        val currentPhase by animateFloatAsState(targetValue = bars[i], animationSpec = tween(300))
+        barStates[i] = currentPhase
     }
-
     val horizontalOffset = remember(maxWidth, equalizerWidthPx, spaceBetweenBarsPx) { ((maxWidth - equalizerWidthPx) / 2) + spaceBetweenBarsPx }
 //        Log.i("equalizer", "bar width: ${barWidthPx}")
 //        Log.i("equalizer", "max width val: ${maxWidth}")
 //        Log.i("equalizer", "equalizer width val: ${equalizerWidthPx}")
 //        Log.i("equalizer", "Equalizer: horizontal val: $horizontalOffset")
-    Canvas(
-        modifier = modifier
-            .onSizeChanged {
-                maxHeight = it.height.toFloat()
-                maxWidth = it.width.toFloat()
+        Canvas(
+            modifier = modifier
+                .onSizeChanged {
+                    maxHeight = it.height.toFloat()
+                    maxWidth = it.width.toFloat()
+                }
+                .fillMaxSize()
+        ) {
+
+            for ((idx, bar) in barStates.withIndex()) {
+
+                val currentBarHeight = if (bar > MAX_AMPLITUDE) {
+                     MAX_AMPLITUDE
+                } else {
+                    bar
+                }
+                val barCanvasHeight = (currentBarHeight * maxHeight) / MAX_AMPLITUDE
+                val offset: Float = maxHeight - barCanvasHeight
+                drawRect(
+                    color = barColor,
+                    topLeft = Offset( horizontalOffset + (barWidthPx * idx) + (spaceBetweenBarsPx * idx), offset),
+                    size = Size(width = barWidthPx, height = (barCanvasHeight))
+                )
             }
-            .fillMaxSize()
-
-    ) {
-
-        for ((idx, bar) in barStates.withIndex()) {
-
-            val currentBarHeight = if (bar.value > MAX_AMPLITUDE) {
-                MAX_AMPLITUDE
-            } else {
-                bar.value
-            }
-            val barCanvasHeight = (currentBarHeight * maxHeight) / MAX_AMPLITUDE
-            val offset: Float = maxHeight - barCanvasHeight
-            drawRect(
-                color = barColor,
-                topLeft = Offset( horizontalOffset + (barWidthPx * idx) + (spaceBetweenBarsPx * idx), offset),
-                size = Size(width = barWidthPx, height = (barCanvasHeight))
-            )
         }
-    }
 
 }
 

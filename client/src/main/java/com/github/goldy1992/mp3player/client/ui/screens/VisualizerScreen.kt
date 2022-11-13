@@ -2,9 +2,7 @@ package com.github.goldy1992.mp3player.client.ui.screens
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,6 +18,7 @@ import com.github.goldy1992.mp3player.client.ui.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.BarEqualizer
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.LineEqualizerWithStateListCanvasOnly
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.SmoothLineEqualizer
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.fireworks.FireworkWrapper
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
@@ -33,9 +32,7 @@ fun VisualizerScreen(
     viewModel: VisualizerViewModel = viewModel(),
     scope : CoroutineScope = rememberCoroutineScope()) {
 
-    //val audioSample by viewModel.audioData.observeAsState(AudioSample.NONE)
     val audioMagnitudes by viewModel.audioDataState.collectAsState()
-
     val mediaControllerAdapter = viewModel.mediaControllerAdapter
 
     Scaffold(
@@ -60,20 +57,10 @@ fun VisualizerScreen(
         VisualizerContent(
             modifier = Modifier.padding(it),
             audioMagnitudes = audioMagnitudes,
-            isPlaying = viewModel.isPlaying.state
+            isPlaying = viewModel.isPlaying.state,
+            scope = scope
         )
     }
-
-//    val list1: ArrayList<Float> = arrayListOf()
-//   audioMagnitudes.forEachIndexed {
-//       indx, v ->
-//       val height by animateFloatAsState(targetValue = v,
-//       animationSpec = tween(durationMillis = 1000, easing = LinearOutSlowInEasing))
-//       list1.add(height)
-//    }
-
-
-
 
 }
 
@@ -105,7 +92,8 @@ private fun TopBar(navIcon: @Composable () -> Unit = {}) {
 private fun VisualizerContent(
     modifier: Modifier = Modifier,
     audioMagnitudes : FloatArray = FloatArray(5),
-    isPlaying : StateFlow<Boolean> = MutableStateFlow(true)) {
+    isPlaying : StateFlow<Boolean> = MutableStateFlow(true),
+    scope: CoroutineScope = rememberCoroutineScope()) {
 
         Surface(
             modifier = modifier
@@ -141,21 +129,24 @@ private fun VisualizerContent(
                         targetState ->
                         when(targetState) {
                             EqualizerType.BAR -> {
-                                BarEqualizer(
-                                    modifier = modifier
-                                        .fillMaxSize()
-                                        .padding(10.dp),
-                                    bars = audioMagnitudes,
-                                    spaceBetweenBars = spaceBetweenBars
-                                )
+                                Column(Modifier.fillMaxSize()) {
+                                    BarEqualizer(
+                                        modifier = modifier
+                                            .padding(10.dp)
+                                            .fillMaxWidth(),
+                                        bars = audioMagnitudes,
+                                        spaceBetweenBars = spaceBetweenBars
+                                    )
+                                }
                             }
                             EqualizerType.FIREWORK -> {
                                 FireworkWrapper(frequencyPhases = audioMagnitudes.asList(), insetPx = 50f, isPlayingState = isPlaying)
                             }
                             EqualizerType.LINE -> {
-                                LineEqualizerWithStateListCanvasOnly(
+                                SmoothLineEqualizer(
                                     modifier = modifier,
-                                    frequencyPhases = audioMagnitudes.asList()
+                                    frequencyPhases = audioMagnitudes.asList(),
+                                    scope = scope
                                 )
                             }
                         }
