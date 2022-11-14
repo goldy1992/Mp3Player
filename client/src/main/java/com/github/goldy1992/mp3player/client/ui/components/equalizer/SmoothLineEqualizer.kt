@@ -5,7 +5,6 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -43,17 +42,25 @@ fun SmoothLineEqualizer(modifier: Modifier = Modifier,
 
     val numberOfPhases : Int = frequencyPhases.size
     val phaseSpacing = remember(canvasSize, frequencyPhases.size) { (canvasSize.width - (2 * insetPx ) ) / (numberOfPhases + 1) }
-    val lineHeight = remember(canvasSize) { canvasSize.height / 2 }
-
-
-    val coordinates : List<Offset> =
+    val lineHeight = remember(canvasSize) { canvasSize.height.toFloat() * 0.9f }
+    val startOffset = remember(lineHeight) { Offset(0f, lineHeight) }
+    val waveStartOffset = remember(startOffset, insetPx) { Offset(startOffset.x + insetPx, lineHeight)  }
+    val waveEndOffset = remember (frequencyPhases.size, waveStartOffset) { Offset(waveStartOffset.x + (phaseSpacing * (frequencyPhases.size+1)), y = lineHeight) }
+    val endOffset = remember (frequencyPhases.size, waveStartOffset, canvasSize) { Offset(canvasSize.width.toFloat(), y = lineHeight) }
+    val coordinates : MutableList<Offset> = mutableListOf()
+    coordinates.add(0, startOffset)
+    coordinates.add(1, waveStartOffset)
+    val frequencyCoordinates : List<Offset> =
         (frequencyPhases.indices)
         .map {
             Offset(
-                x =insetPx + (phaseSpacing * it),
+                x = waveStartOffset.x + (phaseSpacing * (it+1)),
                 y = lineHeight - (frequencyAnimatableList[it].value * AMPLITUDE)
             ) }
         .toList()
+    coordinates.addAll(frequencyCoordinates)
+    coordinates.add(waveEndOffset)
+    coordinates.add(endOffset)
 
     val controlPoints1 : List<Offset> =
         (1 until coordinates.size)
@@ -86,7 +93,7 @@ fun SmoothLineEqualizer(modifier: Modifier = Modifier,
         .onSizeChanged {
             canvasSize = it
         }) {
-        val stroke = Path().apply {
+        val curvePath = Path().apply {
             reset()
             if (coordinates.isNotEmpty()) {
                 moveTo(coordinates.first().x, coordinates.first().y)
@@ -101,28 +108,25 @@ fun SmoothLineEqualizer(modifier: Modifier = Modifier,
         }
 
         /** filling the area under the path */
-        val fillPath = android.graphics.Path(stroke.asAndroidPath())
+        val fillPath = android.graphics.Path(curvePath.asAndroidPath())
             .asComposePath()
             .apply {
-                if (coordinates.isNotEmpty()) {
-                    lineTo(coordinates.last().x, lineHeight.toFloat())
-                    lineTo(0f, lineHeight.toFloat())
-                    close()
-                }
+                lineTo(coordinates.last().x, lineHeight)
+                lineTo(0f, lineHeight)
+                close()
             }
         drawPath(
             fillPath,
             brush = Brush.verticalGradient(
                 colors = listOf(
-                    Color.Cyan,
+                    lineColor,
                     Color.Transparent,
                 ),
                 endY = lineHeight.toFloat()
             ),
         )
-
         drawPath(
-            stroke,
+            path = curvePath,
             color = lineColor,
             style = Stroke(
                 width = 5f,
