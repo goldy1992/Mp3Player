@@ -2,12 +2,16 @@ package com.github.goldy1992.mp3player.client.ui.screens
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,13 +21,47 @@ import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.ui.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.BarEqualizer
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.LineEqualizerWithStateListCanvasOnly
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.SmoothLineEqualizer
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.fireworks.FireworkWrapper
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+
+@Preview
+@Composable
+fun VisualizerCard() {
+    val density = LocalDensity.current
+    var size = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, density)
+    val padding = DpPxSize.createDpPxSizeFromDp(10.dp, 10.dp, density)
+
+    Card(border = BorderStroke(2.dp, Color.Red),
+        modifier = Modifier
+            .width(size.widthDp)
+            .height(size.heightDp),
+        elevation = CardDefaults.outlinedCardElevation()) {
+
+        Column(Modifier.padding(padding.widthDp)) {
+            var equalizerSize by remember { mutableStateOf(DpPxSize.createDpPxSizeFromPx(size.widthPx - (padding.widthPx*2), (size.heightPx - (padding.widthPx*2)) * (5f/7f), density)) }
+            Row(
+                Modifier
+                    .weight(9f)
+                    .onSizeChanged {
+                        equalizerSize = DpPxSize.createDpPxSizeFromPx(it.width.toFloat(), it.height.toFloat(), density)
+                    }) {
+                SmoothLineEqualizer(
+                    frequencyPhases = listOf(100f, 200f, 300f, 150f),
+                    waveAmplitude = 0.25f,
+                    canvasDpPxSize = equalizerSize
+                )
+            }
+            Column(Modifier.weight(1f),
+                    verticalArrangement = Arrangement.Center) {
+                Text("Smooth Line")
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
