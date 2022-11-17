@@ -31,9 +31,9 @@ constructor(
 
 
     // Backing property to avoid state updates from other classes
-    private val audioDataMutableState = MutableStateFlow(floatArrayOf())
+    private val audioDataMutableState = MutableStateFlow(emptyList<Float>())
     // The UI collects from this StateFlow to get its state updates
-    val audioDataState: StateFlow<FloatArray> = audioDataMutableState
+    val audioDataState: StateFlow<List<Float>> = audioDataMutableState
 
 
     init {
@@ -44,7 +44,7 @@ constructor(
                 .collect { audioData ->
                     if (isPlaying.state.value) {
                         Log.i(logTag(), "collecting audio data")
-                        audioDataMutableState.value = audioDataProcessor.processAudioData(audioData)
+                        audioDataMutableState.value = audioDataProcessor.processAudioData(audioData).toList()
                         Log.i(logTag(), "finished collecting audio data")
                     }
                 }

@@ -122,8 +122,8 @@ dependencies {
     androidTestImplementation project(path: ':client')
 
     // for use with compose previews
-    debugImplementation("androidx.customview:customview:1.2.0-alpha01")
-    debugImplementation("androidx.customview:customview-poolingcontainer:1.0.0-beta02")
+    debugImplementation("androidx.customview:customview:1.2.0-alpha02")
+    debugImplementation("androidx.customview:customview-poolingcontainer:1.0.0")
 
     implementation group: 'androidx.compose.ui', name: 'ui', version: compose_version
     implementation group: 'androidx.compose.ui', name: 'ui-tooling', version: compose_version

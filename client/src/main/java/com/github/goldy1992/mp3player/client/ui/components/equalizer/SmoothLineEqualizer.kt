@@ -5,10 +5,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -17,7 +14,6 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.unit.*
 import com.github.goldy1992.mp3player.client.ui.screens.DpPxSize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -29,14 +25,14 @@ private const val logTag = "SmoothLineEqualizer"
 
 @Composable
 fun SmoothLineEqualizer(modifier: Modifier = Modifier,
-                        frequencyPhases : List<Float> = emptyList(),
+                        frequencyPhasesState : () -> List<Float> = {listOf(100f, 200f, 300f, 150f)},
                         lineColor : Color = MaterialTheme.colorScheme.onPrimaryContainer,
                         insetPx : Float = 10f,
                         waveAmplitude : Float = 5f,
                         canvasDpPxSize : DpPxSize = DpPxSize.ZERO,
                         scope : CoroutineScope = rememberCoroutineScope()) {
 
-
+    val frequencyPhases = frequencyPhasesState()
     val frequencyAnimatableList: SnapshotStateList<Animatable<Float, AnimationVector1D>> =
         remember(frequencyPhases.size) {
             mutableStateListOf<Animatable<Float, AnimationVector1D>>().apply {
@@ -120,8 +116,7 @@ fun SmoothLineEqualizer(modifier: Modifier = Modifier,
 
     Canvas(modifier = modifier
         .fillMaxSize()
-//        .width(canvasDpPxSize.widthDp)
-//        .height(canvasDpPxSize.heightDp)
+
  ) {
         drawRoundRect(color = surfaceColor, size = this.size, cornerRadius = CornerRadius(5f, 5f))
         val curvePath = Path().apply {
