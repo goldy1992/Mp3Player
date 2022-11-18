@@ -3,7 +3,6 @@ package com.github.goldy1992.mp3player.client.ui.screens
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Scaffold
@@ -25,8 +24,9 @@ import com.github.goldy1992.mp3player.client.ui.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.BarEqualizer
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.BarEqualizerCardImpl
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.EqualizerCard
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.EqualizerCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.SmoothLineEqualizer
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.BarCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.fireworks.FireworkWrapper
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
@@ -128,29 +128,30 @@ fun BarCardOld(
 }
 
 
-@Preview
-@Composable
-fun BarCard(
-    modifier : Modifier = Modifier,
-    density: Density = LocalDensity.current,
-    initialCanvasSizeDpPx: DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, density),
-    initialPaddingDpPx : DpPxSize = DpPxSize.createDpPxSizeFromDp(10.dp, 10.dp, density),
-    frequencyPhases : () -> List<Float> = {  listOf(100f, 200f, 300f, 150f) },
-    scope: CoroutineScope = rememberCoroutineScope()
-) {
-    EqualizerCard(modifier = modifier,
-                title = "Bars",
-                initialCanvasSizeDpPx = initialCanvasSizeDpPx,
-                initialPaddingDpPx = initialPaddingDpPx) {
-        BarEqualizerCardImpl(
-            scope = scope,
-            barsState = frequencyPhases,
-            canvasDpPxSize = it,
-            waveScaleFactor = 0.25f,
-        )
-    }
-
-}
+//@Preview
+//@Composable
+//fun BarCard(
+//    modifier : Modifier = Modifier,
+//    density: Density = LocalDensity.current,
+//    initialCanvasSizeDpPx: DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, density),
+//    initialPaddingDpPx : DpPxSize = DpPxSize.createDpPxSizeFromDp(10.dp, 10.dp, density),
+//    frequencyPhases : () -> List<Float> = {  listOf(100f, 200f, 300f, 150f) },
+//    scope: CoroutineScope = rememberCoroutineScope()
+//) {
+//    EqualizerCard(
+//        modifier = modifier,
+//                title = "Bars",
+//                initialCanvasSizeDpPx = initialCanvasSizeDpPx,
+//                initialPaddingDpPx = initialPaddingDpPx) {
+//        BarEqualizerCardImpl(
+//            scope = scope,
+//            barsState = frequencyPhases,
+//            canvasDpPxSize = it,
+//            waveScaleFactor = 0.25f,
+//        )
+//    }
+//
+//}
 
 
 
@@ -302,7 +303,8 @@ fun VisualizerContentCardCollection(
         item {
             BarCard(
                 modifier = modifier,
-                frequencyPhases = audioMagnitudes
+                frequencyValues = audioMagnitudes,
+                scope = scope
             )
         }
         item {
