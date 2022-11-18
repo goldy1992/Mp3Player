@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.components.equalizer
+package com.github.goldy1992.mp3player.client.ui.components.equalizer.smoothline
 
 import android.util.Log
 import androidx.compose.animation.core.Animatable

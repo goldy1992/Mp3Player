@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.cards
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,49 +26,40 @@ fun EqualizerCard(
     density: Density = LocalDensity.current,
     scope: CoroutineScope = rememberCoroutineScope(),
     frequencyValues: () -> List<Float> =  {listOf(100f, 200f, 300f, 150f)},
-    initialCanvasSizeDpPx: DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, density),
-    initialPaddingDpPx: DpPxSize = DpPxSize.createDpPxSizeFromDp(10.dp, 10.dp, density),
     equalizer: @Composable (
         frequencyValues : () -> List<Float>,
         canvasSize : DpPxSize,
         modifier: Modifier) -> Unit = { _, _, _ -> }
 ) {
-    var size = initialCanvasSizeDpPx
-    val padding = initialPaddingDpPx
 
     Card(border = BorderStroke(2.dp, Color.Red),
-        modifier = modifier
-            .width(size.widthDp)
-            .height(size.heightDp)
-        ,
+        modifier = modifier,
         elevation = CardDefaults.outlinedCardElevation()) {
         Column(
-            Modifier
-                .fillMaxSize()
-                .padding(all = padding.widthDp)) {
+            modifier = Modifier.fillMaxSize()
+        ){
 
             var equalizerSize by remember {
                 mutableStateOf(
+
                     DpPxSize.createDpPxSizeFromPx(
-                        size.widthPx - (padding.widthPx * 2),
-                        (size.heightPx - (padding.widthPx * 2)) * (5f / 7f),
-                        density
+                        0f, 0f, density
                     )
                 )
             }
 
             Row(
                 Modifier
-                    .padding(horizontal = padding.widthDp)
                     .weight(8f)
+                    .fillMaxSize()
                     .onSizeChanged {
                         equalizerSize = DpPxSize.createDpPxSizeFromPx(
-                            it.width.toFloat() - padding.widthPx,
-                            it.height.toFloat() - padding.widthPx,
+                            it.width.toFloat(),
+                            it.height.toFloat(),
                             density
                         )
                     }) {
-                EqualizerContainer(  modifier = modifier,
+                EqualizerContainer(
                     frequencyValues  = frequencyValues,
                     scope = scope,
                     containerSize = equalizerSize,
@@ -81,7 +73,8 @@ fun EqualizerCard(
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .weight(2f),
+                    .weight(2f)
+                    .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(text = title)
