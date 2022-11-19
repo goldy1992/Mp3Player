@@ -2,16 +2,23 @@ package com.github.goldy1992.mp3player.client.ui.screens
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -170,17 +177,35 @@ fun VisualizerContentCardCollection(
     audioMagnitudes : () -> List<Float> = { listOf(100f, 200f, 300f, 150f)},
     scope: CoroutineScope = rememberCoroutineScope()) {
 
-    LazyColumn(modifier.fillMaxSize()) {
+    val density = LocalDensity.current
+    var gridSizePx = remember { IntSize(400, 400) }
+    var cardLengthDp = remember(gridSizePx) {
+        var lengthDp: Dp
+        with (density) {
+            lengthDp = gridSizePx.width.toDp()
+        }
+        lengthDp
+  }
+    LazyVerticalGrid(columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp) ,
+        modifier = Modifier
+        .fillMaxSize()
+        .onSizeChanged { gridSizePx = it }) {
         item {
             BarCard(
-                modifier = Modifier.width(200.dp).height(200.dp),
+                modifier = Modifier
+                    .width(cardLengthDp)
+                    .height(cardLengthDp),
                 frequencyValues = audioMagnitudes,
                 scope = scope
             )
         }
         item {
             SmoothLineCard(
-                modifier = Modifier.width(200.dp).height(200.dp),
+                modifier = Modifier
+                    .width(cardLengthDp)
+                    .height(cardLengthDp),
                 frequencyPhases = audioMagnitudes,
                 scope = scope
             )
@@ -193,6 +218,24 @@ enum class EqualizerType {
     BAR,
     FIREWORK,
     LINE
+}
+
+@Preview
+@Composable
+fun TestPadding() {
+    Box(modifier = Modifier
+        .width(200.dp)
+        .height(200.dp)
+        .background(Color.Red)) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .background(Color.Green)
+                .padding(10.dp)
+                ) {
+
+        }
+    }
 }
 
 
