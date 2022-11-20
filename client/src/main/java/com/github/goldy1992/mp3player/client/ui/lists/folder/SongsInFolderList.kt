@@ -19,8 +19,9 @@ fun SongsInFolderList(
         SongList(
             songs = songs,
            // onSongSelected = onFolderItemSelected,
-            isPlayingState = isPlayingState,
-            currentMediaItemProvider = currentMediaItemState)
+         //   isPlayingState = isPlayingState,
+        )
+        //    currentMediaItemProvider = currentMediaItemState)
     }
 
 }

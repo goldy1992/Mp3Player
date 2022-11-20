@@ -37,8 +37,8 @@ import com.google.accompanist.pager.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isEmpty
+import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import java.util.*
-import kotlin.collections.HashMap
 
 private const val logTag = "LibraryScreen"
 /**
@@ -61,6 +61,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
     val rootItems by viewModel.rootItems.collectAsState()
     val rootItemsMap by viewModel.rootItemMap.collectAsState()
     val isPlaying by viewModel.isPlaying.state.collectAsState()
+    val currentMediaItem by viewModel.currentMediaItem.state.collectAsState()
 
     val onSongSelected : (Int, List<MediaItem>) -> Unit =  {
             itemIndex, mediaItemList ->
@@ -79,6 +80,9 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
                     + "/" + folderName
                     + "/" + encodedFolderPath)
     }
+    val onItemSelectedMap : EnumMap<MediaItemType, Any> = EnumMap(MediaItemType::class.java)
+    onItemSelectedMap[MediaItemType.SONGS] = onSongSelected
+    onItemSelectedMap[MediaItemType.FOLDERS] = onFolderSelected
 
     val navDrawerContent : @Composable () -> Unit = {
         NavigationDrawerContent(
@@ -86,62 +90,67 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
             currentScreen = Screen.LIBRARY
         )
     }
+    val libraryScreenContent : @Composable (PaddingValues) -> Unit = {
+        LibraryScreenContent(
+            scope = scope,
+            pagerState = pagerState,
+            rootItemsProvider =  { rootItems },
+            onItemSelectedMapProvider = { onItemSelectedMap },
+            rootItemsMapProvider = { rootItemsMap },
+            currentMediaItemProvider = { currentMediaItem },
+            isPlayingProvider = { isPlaying },
+            modifier = Modifier.padding(it)
+        )
 
-    val m : EnumMap<MediaItemType, Any> = EnumMap(MediaItemType::class.java)
-    m[MediaItemType.SONGS] = onSongSelected
-    m[MediaItemType.FOLDERS] = onFolderSelected
-
+    }
     val isLargeScreen = windowSize == WindowSize.Expanded
-
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(isPlaying= { isPlaying },
             mediaController = viewModel.mediaControllerAdapter,
             navController = navController,
             scope = scope)
     }
-    val topBar : @Composable () -> Unit =
-        if (isLargeScreen) {
-            {
-                LargeAppBar(title = "Library") {
+    val context = LocalContext.current
+    val libraryText = remember {context.getString(R.string.library) }
+
+    if (isLargeScreen) {
+        LargeLibraryScreen(
+            navDrawerContent = navDrawerContent,
+            topBar =  {
+                LargeAppBar(title = libraryText) {
                     scope.launch {
                         navController.navigate(Screen.SEARCH.name)
                     }
                 }
-            }
-        } else {
-            {
-                val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+            },
+            bottomBar = bottomBar,
+            content = libraryScreenContent
+        )
+    } else {
+        val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+        SmallLibraryScreen(
+            bottomBar = bottomBar,
+            topBar = {
                 SmallLibraryAppBar(
+                    title = libraryText,
                     onClickNavIcon = {
                         scope.launch {
-                            if (drawerState.isClosed) {
-                                drawerState.open()
-                            } else {
-                                drawerState.close()
-                            }
-                        }
+                    if (drawerState.isClosed) {
+                        drawerState.open()
+                    } else {
+                        drawerState.close()
+                    }
+                }
                     },
                     onClickSearchIcon = {
                         navController.navigate(Screen.SEARCH.name)
                     }
                 )
-            }
-        }
-
-    if (isLargeScreen) {
-        LargeLibraryScreen(
-            scope = scope,
+            },
             navDrawerContent = navDrawerContent,
-            rootItems = rootItems,
-            pagerState = pagerState
+            drawerState = drawerState,
+            content = libraryScreenContent
         )
-    } else {
-        SmallLibraryScreen(
-            navController = navController,
-            scope = scope,
-            bottomBar = bottomBar,
-            rootItems = {rootItems},
-            pagerState = pagerState)
     }
 }
 
@@ -159,44 +168,22 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
 @ExperimentalPagerApi
 @Composable
 fun LargeLibraryScreen(
-    scope: CoroutineScope = rememberCoroutineScope(),
-    pagerState: PagerState = rememberPagerState(),
     navDrawerContent : @Composable () -> Unit = {},
     bottomBar : @Composable () -> Unit,
     topBar : @Composable () -> Unit,
-    rootItemsProvider: () -> List<MediaItem>,
-    onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
-    rootItemsMapProvider : () -> HashMap<String, List<MediaItem>> = { HashMap() },
-    currentMediaItemProvider : () -> MediaItem = {MediaItem.EMPTY},
-    isPlayingProvider : () -> Boolean = {false}
+    content : @Composable (PaddingValues) -> Unit = {}
 ) {
-
-
     // TODO: Replace with DismissibleNavigationDrawer when better support for content resizing.
     PermanentNavigationDrawer(
         modifier = Modifier.fillMaxSize(),
         drawerContent = navDrawerContent,
     ) {
-        val context = LocalContext.current
-        val libraryText = context.getString(R.string.library)
         Scaffold(
             topBar = topBar,
-            bottomBar = bottomBar
-        ) {
-            Surface(Modifier.width(500.dp)) {
-                LibraryScreenContent(
-                    scope = scope,
-                    pagerState = pagerState,
-                    rootItemsProvider =  rootItemsProvider,
-                    onItemSelectedMapProvider = onItemSelectedMapProvider,
-                    rootItemsMapProvider = rootItemsMapProvider,
-                    currentMediaItemProvider = currentMediaItemProvider,
-                    isPlayingProvider = isPlayingProvider,
-                    modifier = Modifier.padding(it)
-                )
-            }
-        }
-        }
+            bottomBar = bottomBar,
+            content = { content(it)}
+        )
+    }
 }
 
 /**
@@ -213,47 +200,25 @@ fun LargeLibraryScreen(
 @ExperimentalPagerApi
 @Composable
 fun SmallLibraryScreen(
-    navController: NavController = rememberAnimatedNavController(),
-    scope : CoroutineScope = rememberCoroutineScope(),
     bottomBar : @Composable () -> Unit,
-    pagerState: PagerState = rememberPagerState(),
-    rootItems: () -> List<MediaItem> = {emptyList() },
-
+    topBar : @Composable () -> Unit,
+    navDrawerContent : @Composable () -> Unit = {},
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+    content: @Composable (PaddingValues) -> Unit
 ) {
 
    ModalNavigationDrawer(
-        drawerContent = {
-            NavigationDrawerContent(
-                navController = navController
-            )
-        },
+        drawerContent = navDrawerContent,
         drawerState = drawerState) {
         Scaffold(
-            topBar = {
-                SmallLibraryAppBar(scope, navController) {
-                    if (drawerState.isClosed) {
-                        drawerState.open()
-                    } else {
-                        drawerState.close()
-                    }
-                }
-            },
+            topBar = topBar,
             bottomBar = bottomBar,
-
-        ) {
-            LibraryScreenContent(
-                scope = scope,
-                navController = navController,
-                pagerState = pagerState,
-                mediaItemMap = {rootItemMap},
-                viewModel = viewModel,
-                modifier = Modifier.padding(it)
-            )
-
-        }
-
+            content = {content(it)}
+        )
     }
+
 }
+
 
 @ExperimentalPagerApi
 @Composable
@@ -265,32 +230,34 @@ private fun LibraryTabs(
 
     val rootItems = rootItemsProvider()
 
-    Column {
-        ScrollableTabRow(
-            selectedTabIndex = pagerState.currentPage,
-        ) {
-            rootItems.forEachIndexed { index, item ->
-                val isSelected = index == pagerState.currentPage
-                Tab(
-                    selected = isSelected,
-                    modifier = Modifier.height(48.dp),
-                    content = {
-                        Text(
-                            text = getRootMediaItemType(item = item)?.name ?: Constants.UNKNOWN,
-                            style = androidx.compose.material.MaterialTheme.typography.button,
-                            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
-                        )
-                    },
-                    onClick = {                    // Animate to the selected page when clicked
-                        scope.launch {
-                            Log.i(
-                                "MainScreen",
-                                "Clicked to go to index ${index}, string: ${item.mediaId} "
+    if (isNotEmpty(rootItems)) {
+        Column {
+            ScrollableTabRow(
+                selectedTabIndex = pagerState.currentPage,
+            ) {
+                rootItems.forEachIndexed { index, item ->
+                    val isSelected = index == pagerState.currentPage
+                    Tab(
+                        selected = isSelected,
+                        modifier = Modifier.height(48.dp),
+                        content = {
+                            Text(
+                                text = getRootMediaItemType(item = item)?.name ?: Constants.UNKNOWN,
+                                style = androidx.compose.material.MaterialTheme.typography.button,
+                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
                             )
-                            pagerState.animateScrollToPage(index)
-                        }
-                    },
-                )
+                        },
+                        onClick = {                    // Animate to the selected page when clicked
+                            scope.launch {
+                                Log.i(
+                                    "MainScreen",
+                                    "Clicked to go to index ${index}, string: ${item.mediaId} "
+                                )
+                                pagerState.animateScrollToPage(index)
+                            }
+                        },
+                    )
+                }
             }
         }
     }
@@ -303,7 +270,7 @@ private fun LibraryTabs(
 fun LibraryScreenContent(
     modifier: Modifier = Modifier,
     scope: CoroutineScope = rememberCoroutineScope(),
-    pagerState: PagerState,
+    pagerState: PagerState = rememberPagerState(initialPage = 0),
     rootItemsProvider: () -> List<MediaItem>,
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
     rootItemsMapProvider : () -> HashMap<String, List<MediaItem>> = { HashMap() },
@@ -323,6 +290,7 @@ fun LibraryScreenContent(
             TabBarPages(
                 pagerState = pagerState,
                 rootItemsMapProvider = rootItemsMapProvider,
+                rootItemsProvider = rootItemsProvider,
                 currentMediaItemProvider = currentMediaItemProvider,
                 onItemSelectedMapProvider = onItemSelectedMapProvider,
                 isPlayingProvider = isPlayingProvider
@@ -348,6 +316,7 @@ fun TabBarPages(
     modifier: Modifier = Modifier,
     pagerState: PagerState = rememberPagerState(),
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
+    rootItemsProvider : () -> List<MediaItem> = { emptyList() },
     rootItemsMapProvider : () -> HashMap<String, List<MediaItem>> = { HashMap() },
     currentMediaItemProvider : () -> MediaItem = {MediaItem.EMPTY},
     isPlayingProvider : () -> Boolean = {false}
@@ -355,15 +324,15 @@ fun TabBarPages(
 ) {
     val onItemSelectedMap = onItemSelectedMapProvider()
     val rootItemMap = rootItemsMapProvider()
-    val currentItem = currentMediaItemProvider()
-    val mapKeys = rootItemMap.keys.toList()
+    val rootItems = rootItemsProvider()
     Column(
         modifier = modifier) {
         HorizontalPager(
             state = pagerState,
             count = rootItemMap.size
         ) { pageIndex ->
-            val children = rootItemMap[mapKeys[pageIndex]] ?: emptyList()
+            val currentRootItem = rootItems[pageIndex]
+            val children = rootItemMap[currentRootItem.mediaId] ?: emptyList()
             if (isEmpty(children)) {
                 Column(modifier = Modifier.fillMaxSize(),
                        horizontalAlignment = Alignment.CenterHorizontally,
@@ -372,7 +341,7 @@ fun TabBarPages(
                 }
 
             } else {
-                when (getRootMediaItemType(currentItem)) {
+                when (getRootMediaItemType(currentRootItem)) {
                     MediaItemType.SONGS -> {
                         SongList(
                             songs = children,

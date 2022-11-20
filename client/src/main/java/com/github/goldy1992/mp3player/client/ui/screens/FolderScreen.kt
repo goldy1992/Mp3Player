@@ -140,8 +140,9 @@ private fun SmallFolderScreen(
                     else {
                         SongList(
                             songs = folderItems!!,
-                            isPlayingState = isPlayingState,
-                            currentMediaItemProvider = currentMediaItemState
+                            // TODO: Replace
+                       //     isPlayingState = isPlayingState,
+     //                       currentMediaItemProvider = currentMediaItemState
                         ) { itemIndex, mediaItemList ->
                             val mediaItem = mediaItemList[itemIndex]
                             Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")
@@ -230,7 +231,9 @@ private fun LargeFolderScreen(
                             CircularProgressIndicator()
                         }
                     } else {
-                        SongList(songs = folderItems!!, currentMediaItemProvider = currentMediaItemState, isPlayingState = isPlayingState) {
+                        SongList(
+                            //songs = folderItems!!, currentMediaItemProvider = currentMediaItemState, isPlayingState = isPlayingState
+                            ) {
                             itemIndex, mediaItemList ->
                             val mediaItem = mediaItemList[itemIndex]
                             Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")

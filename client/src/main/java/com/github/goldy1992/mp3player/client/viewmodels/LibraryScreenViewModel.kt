@@ -41,8 +41,8 @@ class LibraryScreenViewModel
     val rootItems : StateFlow<List<MediaItem>> = _rootItems
 
 
-    private val _rootItemMap = MutableStateFlow<Map<String, List<MediaItem>>>(emptyMap())
-    val rootItemMap : StateFlow<Map<String, List<MediaItem>>> = _rootItemMap
+    private val _rootItemMap = MutableStateFlow<HashMap<String, List<MediaItem>>>(HashMap())
+    val rootItemMap : StateFlow<HashMap<String, List<MediaItem>>> = _rootItemMap
 
 //    private val _rootItemMap : MutableStateFlow<HashMap<String, MutableStateFlow<List<MediaItem>>>> = MutableStateFlow(HashMap())
 //    val rootItemMap : StateFlow<HashMap<String, StateFlow<List<MediaItem>>>> = _rootItemMap as StateFlow<HashMap<String, StateFlow<List<MediaItem>>>>
@@ -58,10 +58,12 @@ class LibraryScreenViewModel
         }
 
         viewModelScope.launch {
-            onChildrenChangedFlow.flow.filter {
-                Log.i(logTag(), "filtering: id: ${it.parentId}")
-                it.parentId == rootItemId || rootItemMap.value.containsKey(it.parentId)
-            }.collect {
+            onChildrenChangedFlow.flow
+                //.filter {
+                //Log.i(logTag(), "filtering: id: ${it.parentId}")
+              //  it.parentId == rootItemId || rootItemMap.value.containsKey(it.parentId)
+           // }
+                .collect {
 
                 if (it.parentId == rootItemId) {
                     val rootChildren = mediaBrowserAdapter.getChildren(it.parentId, 0, it.itemCount)

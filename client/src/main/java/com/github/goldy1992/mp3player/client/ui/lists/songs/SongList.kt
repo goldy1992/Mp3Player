@@ -46,7 +46,8 @@ fun SongList(
                 modifier = modifier.semantics {
                     contentDescription = songsListDescr
                 }) {
-                items(count = songs.size) { itemIndex ->
+                items(count = songs.size,
+                        key = { songs[it].mediaId}) { itemIndex ->
                     run {
                         val song = songs[itemIndex]
                         val isItemSelected = isItemSelected(song, currentMediaItem)

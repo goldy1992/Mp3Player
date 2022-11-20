@@ -14,6 +14,7 @@ import com.github.goldy1992.mp3player.client.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SmallLibraryAppBar(
+    title : String = "title",
     onClickSearchIcon : () -> Unit,
     onClickNavIcon : () -> Unit
 ) {
@@ -21,7 +22,7 @@ fun SmallLibraryAppBar(
 
     TopAppBar(
         title = {
-            Text(text = "",
+            Text(text = title,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
             )
