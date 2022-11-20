@@ -105,7 +105,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
     }
     val isLargeScreen = windowSize == WindowSize.Expanded
     val bottomBar : @Composable () -> Unit = {
-        PlayToolbar(isPlaying= { isPlaying },
+        PlayToolbar(isPlayingProvider= { isPlaying },
             mediaController = viewModel.mediaControllerAdapter,
             navController = navController,
             scope = scope)

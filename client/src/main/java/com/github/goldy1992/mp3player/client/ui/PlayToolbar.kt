@@ -79,11 +79,11 @@ fun PlayToolbar(isPlaying : () -> Boolean = {false} ,
 }
 
 @Composable
-fun PlayToolbar(isPlaying : () -> Boolean = {false},
+fun PlayToolbar(isPlayingProvider : () -> Boolean = {false},
                 mediaController : MediaControllerAdapter,
                 navController: NavController,
                 scope : CoroutineScope) {
-    PlayToolbar(isPlaying = isPlaying,
+    PlayToolbar(isPlaying = isPlayingProvider,
         onClickPause = { scope.launch { mediaController.pause() } },
         onClickPlaying = { scope.launch { mediaController.play() } },
         onClickSkipNext = { scope.launch { mediaController.skipToNext() } },

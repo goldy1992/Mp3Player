@@ -56,7 +56,7 @@ fun VisualizerScreen(
         bottomBar = {
             PlayToolbar(
                 mediaController = mediaControllerAdapter,
-                isPlaying = { isPlaying },
+                isPlayingProvider = { isPlaying },
                 scope = scope,
                 navController = navController
             )

@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.screens
 
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -25,160 +26,61 @@ import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.viewmodels.FolderScreenViewModel
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Screen
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun FolderScreen(
-    navController: NavController,
+    navController: NavController = rememberAnimatedNavController(),
     windowSize : WindowSize = WindowSize.Compact,
     viewModel: FolderScreenViewModel = viewModel()
 ) {
     val scope = rememberCoroutineScope()
-
+    val isPlaying by viewModel.isPlaying.collectAsState()
+    val mediaController = viewModel.mediaController
     val folderItems by viewModel.folderChildren.collectAsState()
+    val currentMediaItem by viewModel.currentMediaItem.collectAsState()
+    val folderName = viewModel.folderName
+
+    val onSongSelected : (Int, List<MediaItem>) -> Unit = { itemIndex, mediaItemList ->
+        val mediaItem = mediaItemList[itemIndex]
+        Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")
+        mediaController.playFromSongList(itemIndex, mediaItemList)
+    }
+
+    val bottomBar : @Composable () -> Unit = {
+        PlayToolbar(isPlayingProvider= { isPlaying },
+            mediaController = viewModel.mediaController,
+            navController = navController,
+            scope = scope)
+    }
+
+    val navDrawerContent : @Composable () -> Unit = {
+        NavigationDrawerContent(
+            navController = navController,
+            currentScreen = Screen.FOLDER
+        )
+    }
+
+    val screenContent : @Composable (PaddingValues) -> Unit = {
+        FolderScreenContent(
+            modifier = Modifier.padding(it),
+            isPlayingProvider = {isPlaying},
+            folderItemsProvider = { folderItems},
+            currentMediaItemProvider = { currentMediaItem },
+            onSongSelected = onSongSelected
+        )
+    }
 
     val isLargeScreen = windowSize == WindowSize.Expanded
     if (isLargeScreen) {
         LargeFolderScreen(
-            folderName = viewModel.folderName,
-            navController = navController,
-            mediaController = viewModel.mediaController,
-            currentMediaItemState = viewModel.currentMediaItem,
-            isPlayingState = viewModel.isPlaying,
-            scope = scope,
-            folderItems = folderItems
-        )
-    } else {
-        SmallFolderScreen(
-            folderName = viewModel.folderName,
-            navController = navController,
-            mediaController = viewModel.mediaController,
-            currentMediaItemState = viewModel.currentMediaItem,
-            isPlayingState = viewModel.isPlaying,
-            scope = scope,
-            folderItems = folderItems
-        )
-
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SmallFolderScreen(
-    folderName : String = Constants.UNKNOWN,
-    folderPath : String = Constants.UNKNOWN,
-    navController: NavController,
-    mediaController : MediaControllerAdapter,
-    isPlayingState: StateFlow<Boolean>,
-    currentMediaItemState : StateFlow<MediaItem>,
-    scope : CoroutineScope = rememberCoroutineScope(),
-    folderItems : List<MediaItem>
-) {
-    val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    ModalNavigationDrawer(
-        drawerContent = {
-            NavigationDrawerContent(
-                navController = navController
-            ) },
-        drawerState = drawerState) {
-        Scaffold(
             topBar = {
-                SmallTopAppBar(
-                    title = {
-                        Column {
-                            Text(
-                                text = folderName,
-                                style = MaterialTheme.typography.titleLarge,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-//                            Text(
-//                                text = folderPath,
-//                                style = MaterialTheme.typography.subtitle2,
-//                                maxLines = 1,
-//                                overflow = TextOverflow.Ellipsis
-//                            )
-                        }
-                    },
-
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            scope.launch {
-                                navController.popBackStack()
-                            }
-                        }) {
-                            Icon(Icons.Filled.ArrowBack, "Back")
-                        }
-                    },
-                    actions = {},
-                )
-            },
-            bottomBar = {
-                PlayToolbar(mediaController = mediaController,
-                            isPlayingState = isPlayingState) {
-                    navController.navigate(Screen.NOW_PLAYING.name)
-                }
-            },
-
-            content = {
-                val modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-                Column(modifier = modifier) {
-                    if (isEmpty(folderItems)) {
-                        Surface(
-                            modifier = modifier
-                                .align(Alignment.CenterHorizontally)
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
-                    else {
-                        SongList(
-                            songs = folderItems!!,
-                            // TODO: Replace
-                       //     isPlayingState = isPlayingState,
-     //                       currentMediaItemProvider = currentMediaItemState
-                        ) { itemIndex, mediaItemList ->
-                            val mediaItem = mediaItemList[itemIndex]
-                            Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")
-                            mediaController.playFromSongList(itemIndex, mediaItemList)
-
-                        }
-                    }
-                }
-            }
-        )
-    }
-
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
-@Composable
-private fun LargeFolderScreen(
-    folderName : String = Constants.UNKNOWN,
-    navController: NavController,
-    mediaController : MediaControllerAdapter,
-    currentMediaItemState: StateFlow<MediaItem>,
-    isPlayingState: StateFlow<Boolean>,
-    scope : CoroutineScope = rememberCoroutineScope(),
-    folderItems : List<MediaItem>?
-) {
-
-    PermanentNavigationDrawer(
-        drawerContent = {
-            NavigationDrawerContent(
-                navController = navController,
-                currentScreen = Screen.FOLDER
-            ) },
-    ) {
-        Scaffold(
-            topBar = {
-                SmallTopAppBar(
+                TopAppBar(
                     title = {
                         Column {
                             Text(
@@ -210,39 +112,118 @@ private fun LargeFolderScreen(
                     actions = {},
                 )
             },
-            bottomBar = {
-                PlayToolbar(mediaController = mediaController, isPlayingState = isPlayingState) {
-                    navController.navigate(Screen.NOW_PLAYING.name)
-                }
+            bottomBar = bottomBar,
+            navDrawerContent = navDrawerContent,
+            folderName = folderName,
+            content = screenContent
+        )
+    } else {
+        SmallFolderScreen(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Column {
+                            Text(
+                                text = folderName,
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+//                            Text(
+//                                text = folderPath,
+//                                style = MaterialTheme.typography.subtitle2,
+//                                maxLines = 1,
+//                                overflow = TextOverflow.Ellipsis
+//                            )
+                        }
+                    },
+
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            scope.launch {
+                                navController.popBackStack()
+                            }
+                        }) {
+                            Icon(Icons.Filled.ArrowBack, "Back")
+                        }
+                    },
+                    actions = {},
+                )
             },
+        )
 
-            content = {
-                val modifier = Modifier
-                    .width(500.dp)
-                    .fillMaxHeight()
-                    .padding(it)
-                Surface(
-                    modifier = modifier) {
-                    if (isEmpty(folderItems)) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    } else {
-                        SongList(
-                            //songs = folderItems!!, currentMediaItemProvider = currentMediaItemState, isPlayingState = isPlayingState
-                            ) {
-                            itemIndex, mediaItemList ->
-                            val mediaItem = mediaItemList[itemIndex]
-                            Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")
-                            mediaController.playFromSongList(itemIndex, mediaItemList)
+    }
+}
 
-                        }
-                    }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SmallFolderScreen(
+    topBar: @Composable () -> Unit = {},
+    bottomBar: @Composable () -> Unit = {},
+    navDrawerContent: @Composable () -> Unit = {},
+    drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+    content: @Composable (PaddingValues) -> Unit = {}
+) {
+    ModalNavigationDrawer(
+        drawerContent = navDrawerContent,
+        drawerState = drawerState) {
+        Scaffold(
+            topBar = topBar,
+            bottomBar = bottomBar,
+            content = content
+        )
+    }
+
+}
+
+
+@OptIn(ExperimentalCoilApi::class)
+@Composable
+private fun FolderScreenContent(modifier : Modifier = Modifier,
+    folderItemsProvider : () -> List<MediaItem> = { emptyList() },
+    isPlayingProvider : () -> Boolean = { false},
+    currentMediaItemProvider : () -> MediaItem = {MediaItem.EMPTY},
+    onSongSelected : (Int, List<MediaItem>) -> Unit = {_,_ ->}) {
+    Column(modifier = modifier) {
+        val folderItems = folderItemsProvider()
+        if (isEmpty(folderItems)) {
+            Surface(
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                CircularProgressIndicator()
             }
-        })
+        }
+        else {
+            SongList(
+                songs = folderItems,
+                isPlayingProvider = isPlayingProvider,
+                currentMediaItemProvider = currentMediaItemProvider,
+                onSongSelected = onSongSelected
+            )
+        }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
+@Composable
+private fun LargeFolderScreen(
+    folderName : String = Constants.UNKNOWN,
+    navDrawerContent : @Composable () -> Unit,
+    topBar : @Composable () -> Unit,
+    bottomBar : @Composable () -> Unit,
+    content : @Composable (PaddingValues) -> Unit
+) {
+
+    PermanentNavigationDrawer(
+        drawerContent = navDrawerContent,
+    ) {
+        Scaffold(
+            topBar = topBar,
+            bottomBar = bottomBar,
+            content = content)
     }
 
 }
