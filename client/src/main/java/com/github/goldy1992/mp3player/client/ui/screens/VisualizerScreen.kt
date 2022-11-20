@@ -43,6 +43,7 @@ fun VisualizerScreen(
     val audioMagnitudes by viewModel.audioDataState.collectAsState()
     val mediaControllerAdapter = viewModel.mediaControllerAdapter
 
+    val isPlaying by viewModel.isPlaying.state.collectAsState()
     Scaffold(
         topBar = {
             TopBar {
@@ -54,20 +55,14 @@ fun VisualizerScreen(
          },
         bottomBar = {
             PlayToolbar(
-                mediaControllerAdapter = mediaControllerAdapter,
-                isPlayingState = viewModel.isPlaying.state,
+                mediaController = mediaControllerAdapter,
+                isPlaying = { isPlaying },
                 scope = scope,
                 navController = navController
             )
         },
     ) {
 
-//        VisualizerContent(
-//            modifier = Modifier.padding(it),
-//       //     audioMagnitudes = audioMagnitudes,
-//            isPlaying = viewModel.isPlaying.state,
-//            scope = scope
-//        )
         VisualizerContentCardCollection(modifier = Modifier.padding(it),
                 audioMagnitudes = {audioMagnitudes})
     }
@@ -190,8 +185,8 @@ fun VisualizerContentCardCollection(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp) ,
         modifier = Modifier
-        .fillMaxSize()
-        .onSizeChanged { gridSizePx = it }) {
+            .fillMaxSize()
+            .onSizeChanged { gridSizePx = it }) {
         item {
             BarCard(
                 modifier = Modifier

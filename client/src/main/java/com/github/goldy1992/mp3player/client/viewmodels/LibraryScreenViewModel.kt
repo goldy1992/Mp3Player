@@ -15,6 +15,7 @@ import com.github.goldy1992.mp3player.client.viewmodels.states.IsPlaying
 import com.github.goldy1992.mp3player.client.viewmodels.states.Metadata
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MainDispatcher
+import com.google.common.collect.ImmutableMap
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -40,11 +41,14 @@ class LibraryScreenViewModel
     val rootItems : StateFlow<List<MediaItem>> = _rootItems
 
 
-    private val _rootItemMap = HashMap<String, MutableStateFlow<List<MediaItem>>>()
-    val rootItemMap = HashMap<String, StateFlow<List<MediaItem>>>()
+    private val _rootItemMap = MutableStateFlow<Map<String, List<MediaItem>>>(emptyMap())
+    val rootItemMap : StateFlow<Map<String, List<MediaItem>>> = _rootItemMap
+
+//    private val _rootItemMap : MutableStateFlow<HashMap<String, MutableStateFlow<List<MediaItem>>>> = MutableStateFlow(HashMap())
+//    val rootItemMap : StateFlow<HashMap<String, StateFlow<List<MediaItem>>>> = _rootItemMap as StateFlow<HashMap<String, StateFlow<List<MediaItem>>>>
 
     var rootItem : MediaItem? = null
-    var rootItemId : String? = null
+    private var rootItemId : String? = null
     init {
         viewModelScope.launch {
             val collectedRootItem = mediaBrowserAdapter.getLibraryRoot()
@@ -56,7 +60,7 @@ class LibraryScreenViewModel
         viewModelScope.launch {
             onChildrenChangedFlow.flow.filter {
                 Log.i(logTag(), "filtering: id: ${it.parentId}")
-                it.parentId == rootItemId || rootItemMap.containsKey(it.parentId)
+                it.parentId == rootItemId || rootItemMap.value.containsKey(it.parentId)
             }.collect {
 
                 if (it.parentId == rootItemId) {
@@ -68,13 +72,15 @@ class LibraryScreenViewModel
                         for (mediaItem: MediaItem in rootChildren) {
                             val mediaItemId = mediaItem.mediaId
                             mediaBrowserAdapter.subscribe(mediaItemId)
-                            _rootItemMap[mediaItemId] = MutableStateFlow(emptyList())
-                            rootItemMap[mediaItemId] = _rootItemMap[mediaItemId]!!
+//                            _rootItemMap.value[mediaItemId] = MutableStateFlow(emptyList())
+//                            rootItemMap.value[mediaItemId] = _rootItemMap.value[mediaItemId]!!
                         }
                     }
-                } else if (rootItemMap.containsKey(it.parentId)) {
+                } else {//if (rootItemMap.value.containsKey(it.parentId)) {
                     val children = mediaBrowserAdapter.getChildren(it.parentId, 0, it.itemCount)
-                    _rootItemMap[it.parentId]?.value = children
+                    val newMap = HashMap(_rootItemMap.value)
+                    newMap[it.parentId] = children
+                    _rootItemMap.value = newMap
                 }
             }
         }

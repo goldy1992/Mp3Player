@@ -66,7 +66,7 @@ class SongsTest {
                     //mediaControllerAdapter = mockMediaController,
                  //   metadataState = metadataFlow,
                     isPlayingState = MutableStateFlow(false),
-                currentMediaItemState = MutableStateFlow(MediaItem.EMPTY),
+                currentMediaItemProvider = MutableStateFlow(MediaItem.EMPTY),
             onSongSelected = {_,_ ->})
         }
         runBlocking {

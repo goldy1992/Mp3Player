@@ -141,7 +141,7 @@ private fun SmallFolderScreen(
                         SongList(
                             songs = folderItems!!,
                             isPlayingState = isPlayingState,
-                            currentMediaItemState = currentMediaItemState
+                            currentMediaItemProvider = currentMediaItemState
                         ) { itemIndex, mediaItemList ->
                             val mediaItem = mediaItemList[itemIndex]
                             Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")
@@ -230,7 +230,7 @@ private fun LargeFolderScreen(
                             CircularProgressIndicator()
                         }
                     } else {
-                        SongList(songs = folderItems!!, currentMediaItemState = currentMediaItemState, isPlayingState = isPlayingState) {
+                        SongList(songs = folderItems!!, currentMediaItemProvider = currentMediaItemState, isPlayingState = isPlayingState) {
                             itemIndex, mediaItemList ->
                             val mediaItem = mediaItemList[itemIndex]
                             Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")

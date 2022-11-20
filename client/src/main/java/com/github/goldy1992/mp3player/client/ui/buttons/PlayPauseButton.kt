@@ -41,11 +41,11 @@ fun PlayPauseButton(mediaController: MediaControllerAdapter,
  * no playback, otherwise it will display the [PauseButton].
  */
 @Composable
-fun PlayPauseButton(isPlayingState: StateFlow<Boolean>,
+fun PlayPauseButton(isPlaying : () -> Boolean = {false},
                     onClickPlay: () -> Unit = {},
                     onClickPause: () -> Unit = {}
 ) {
-    val isPlayingValue by isPlayingState.collectAsState()
+    val isPlayingValue = isPlaying()
     if (isPlayingValue) {
         PauseButton(onClickPause)
     } else {

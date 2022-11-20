@@ -9,40 +9,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.commons.Screen
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SmallLibraryAppBar(
-    scope: CoroutineScope,
-    navController: NavController,
-    onClickNavIcon : suspend () -> Unit
+    onClickSearchIcon : () -> Unit,
+    onClickNavIcon : () -> Unit
 ) {
     val navigationDrawerIconDescription = stringResource(id = R.string.navigation_drawer_menu_icon)
 
     TopAppBar(
         title = {
-            Text(text = "Library",
+            Text(text = "",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
             )
         },
         actions = {
-            IconButton(onClick = { navController.navigate(Screen.SEARCH.name) }) {
+            IconButton(onClick = onClickSearchIcon) {
             Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
         }
 },
         navigationIcon = {
             IconButton(
-                onClick = {
-                    scope.launch {
-                        onClickNavIcon()
-                    }
-                },
+                onClick = onClickNavIcon,
                 modifier = Modifier.semantics {
                     contentDescription = navigationDrawerIconDescription
                 })
@@ -51,7 +42,7 @@ fun SmallLibraryAppBar(
             }
         },
 
-        )
+    )
 
 }
 

@@ -1,7 +1,10 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -18,7 +21,6 @@ import com.github.goldy1992.mp3player.client.ui.buttons.SkipToNextButton
 import com.github.goldy1992.mp3player.client.ui.buttons.SkipToPreviousButton
 import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -49,7 +51,7 @@ fun PlayToolbar(mediaController : MediaControllerAdapter,
 
 @Preview
 @Composable
-fun PlayToolbar(isPlayingState: StateFlow<Boolean> = MutableStateFlow(true),
+fun PlayToolbar(isPlaying : () -> Boolean = {false} ,
                 onClickPlaying: () -> Unit = {},
                 onClickPause: () -> Unit = {},
                 onClickSkipNext: () -> Unit = {},
@@ -68,7 +70,7 @@ fun PlayToolbar(isPlayingState: StateFlow<Boolean> = MutableStateFlow(true),
             modifier = Modifier.fillMaxWidth()
         ) {
             SkipToPreviousButton(onClick = onClickSkipPrevious)
-            PlayPauseButton(isPlayingState = isPlayingState,
+            PlayPauseButton(isPlaying = isPlaying,
                             onClickPlay = onClickPlaying,
                             onClickPause = onClickPause)
             SkipToNextButton(onClick = onClickSkipNext)
@@ -77,15 +79,15 @@ fun PlayToolbar(isPlayingState: StateFlow<Boolean> = MutableStateFlow(true),
 }
 
 @Composable
-fun PlayToolbar(isPlayingState: StateFlow<Boolean>,
-                mediaControllerAdapter : MediaControllerAdapter,
+fun PlayToolbar(isPlaying : () -> Boolean = {false},
+                mediaController : MediaControllerAdapter,
                 navController: NavController,
                 scope : CoroutineScope) {
-    PlayToolbar(isPlayingState = isPlayingState,
-        onClickPause = { scope.launch { mediaControllerAdapter.pause() } },
-        onClickPlaying = { scope.launch { mediaControllerAdapter.play() } },
-        onClickSkipNext = { scope.launch { mediaControllerAdapter.skipToNext() } },
-        onClickSkipPrevious = { scope.launch { mediaControllerAdapter.skipToPrevious() } }
+    PlayToolbar(isPlaying = isPlaying,
+        onClickPause = { scope.launch { mediaController.pause() } },
+        onClickPlaying = { scope.launch { mediaController.play() } },
+        onClickSkipNext = { scope.launch { mediaController.skipToNext() } },
+        onClickSkipPrevious = { scope.launch { mediaController.skipToPrevious() } }
     ) {
         navController.navigate(Screen.NOW_PLAYING.name)
     }
