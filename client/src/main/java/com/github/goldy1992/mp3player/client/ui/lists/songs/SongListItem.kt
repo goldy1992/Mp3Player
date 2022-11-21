@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.lists.songs
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,15 +37,16 @@ private const val logTag = "SongListItem"
 fun SongListItem(song : MediaItem = getEmptyMediaItem(),
                  isSelected : Boolean = false,
                  onClick: () -> Unit = {}) {
-        ListItem(
+    Log.i(logTag, "isSelected: $isSelected, songId: ${song.mediaId}, title: ${song.mediaMetadata.title}")
+    val containerColor = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+    ListItem(
             modifier = Modifier
                 .combinedClickable(
                     onClick = { onClick() },
                     onLongClick = { }
                 )
-                .background(color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface,
-                )
                 .requiredHeight(72.dp),
+        colors = ListItemDefaults.colors(containerColor = containerColor) ,
             headlineText = {
                 Text(
                 text = MediaItemUtils.getTitle(song),

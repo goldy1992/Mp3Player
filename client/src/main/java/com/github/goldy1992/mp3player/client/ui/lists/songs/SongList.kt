@@ -52,7 +52,7 @@ fun SongList(
                         val song = songs[itemIndex]
                         val isItemSelected = isItemSelected(song, currentMediaItem)
                         Log.i(logTag, "isItemSelected: $isItemSelected isPlaying: ${isPlaying}")
-                        val isItemPlaying = if (isPlaying) isItemSelected  else false
+                        //val isItemPlaying = if (isPlaying) isItemSelected  else false
                         SongListItem(song = song, isSelected = isItemSelected, onClick =  {onSongSelected(itemIndex, songs) })
                     }
                 }
@@ -76,6 +76,7 @@ fun EmptySongsList() {
 }
 
 private fun isItemSelected(song : MediaItem, currentItem : MediaItem) : Boolean {
-    //Log.i(logTag, "songId: ${song.mediaId}, currentItemId: ${currentItem.mediaId}")
-    return StringUtils.equals(song.mediaId, currentItem.mediaId)
+    val isSelected = StringUtils.equals(song.mediaId, currentItem.mediaId)
+    Log.i(logTag, "isSelected: $isSelected, songId: ${song.mediaId}, currentItemId: ${currentItem.mediaId}")
+    return isSelected
 }

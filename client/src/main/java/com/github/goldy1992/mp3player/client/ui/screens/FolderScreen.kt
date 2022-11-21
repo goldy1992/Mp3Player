@@ -13,22 +13,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.ui.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.viewmodels.FolderScreenViewModel
-import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 
@@ -114,7 +109,6 @@ fun FolderScreen(
             },
             bottomBar = bottomBar,
             navDrawerContent = navDrawerContent,
-            folderName = folderName,
             content = screenContent
         )
     } else {
@@ -151,6 +145,9 @@ fun FolderScreen(
                     actions = {},
                 )
             },
+            navDrawerContent = navDrawerContent,
+            bottomBar = bottomBar,
+            content = screenContent
         )
 
     }
@@ -207,10 +204,9 @@ private fun FolderScreenContent(modifier : Modifier = Modifier,
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LargeFolderScreen(
-    folderName : String = Constants.UNKNOWN,
     navDrawerContent : @Composable () -> Unit,
     topBar : @Composable () -> Unit,
     bottomBar : @Composable () -> Unit,

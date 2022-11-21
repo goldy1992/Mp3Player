@@ -325,6 +325,7 @@ fun TabBarPages(
     val onItemSelectedMap = onItemSelectedMapProvider()
     val rootItemMap = rootItemsMapProvider()
     val rootItems = rootItemsProvider()
+    Log.i(logTag, "rootItemsMap: ${rootItemMap}")
     Column(
         modifier = modifier) {
         HorizontalPager(
@@ -360,7 +361,7 @@ fun TabBarPages(
                         FolderList(folders = children) {
 
                             val callable =
-                                onItemSelectedMap[MediaItemType.SONGS] as? (MediaItem) -> Unit
+                                onItemSelectedMap[MediaItemType.FOLDERS] as? (MediaItem) -> Unit
                             if (callable != null) {
                                 callable(it)
                             }

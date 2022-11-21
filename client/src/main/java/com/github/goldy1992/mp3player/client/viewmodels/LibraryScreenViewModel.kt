@@ -59,10 +59,12 @@ class LibraryScreenViewModel
 
         viewModelScope.launch {
             onChildrenChangedFlow.flow
-                //.filter {
-                //Log.i(logTag(), "filtering: id: ${it.parentId}")
-              //  it.parentId == rootItemId || rootItemMap.value.containsKey(it.parentId)
-           // }
+                .filter {
+                    Log.i(logTag(), "filtering: id: ${it.parentId}")
+                    val isChildOfARootItem = rootItems.value.map { m -> m.mediaId }.toList().contains(it.parentId)
+                    val isRootItem = it.parentId == rootItemId
+                    isRootItem || isChildOfARootItem
+                }
                 .collect {
 
                 if (it.parentId == rootItemId) {
