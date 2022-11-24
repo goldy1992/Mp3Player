@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.viewmodels
 
+import android.os.Bundle
 import android.util.Log
 import androidx.concurrent.futures.await
 import androidx.lifecycle.ViewModel
@@ -18,6 +19,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.apache.commons.lang3.StringUtils.isEmpty
+import org.apache.commons.lang3.StringUtils.isNotEmpty
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,6 +35,18 @@ class SearchScreenViewModel
 
     : ViewModel(), LogTagger {
 
+    val searchQuery : StateFlow<String> = mediaBrowserAdapter.currentSearchQuery
+
+    fun setSearchQuery(query: String) {
+        viewModelScope.launch {
+            if (isEmpty(query)) {
+                _searchResults.value = emptyList()
+            }
+            mediaBrowserAdapter.search(query, Bundle())
+            Log.i(logTag(), "New searchQueryValue: ${query}")
+        }
+    }
+
     private val mediaControllerAsync : ListenableFuture<MediaController> = mediaControllerAdapter.mediaControllerFuture
 
 
@@ -40,10 +55,11 @@ class SearchScreenViewModel
     init {
         viewModelScope.launch {
             onSearchResultsChangedFlow.flow.collect {
-                if (it.itemCount > 0) {
+                if (isNotEmpty(searchQuery.value) && it.itemCount > 0) {
                     val results = mediaBrowserAdapter.getSearchResults(it.query, 0, it.itemCount)
                     _searchResults.value = results
                 } else {
+                    _searchResults.value = emptyList()
                     Log.i(logTag(), "No search results returned")
                 }
             }

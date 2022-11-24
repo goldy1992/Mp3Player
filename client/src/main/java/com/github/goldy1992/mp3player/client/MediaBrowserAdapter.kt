@@ -16,7 +16,8 @@ import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.apache.commons.lang3.StringUtils.isEmpty
 import javax.inject.Inject
 
@@ -34,7 +35,11 @@ open class MediaBrowserAdapter
         }
     }
 
+    private val _currentSearchQuery = MutableStateFlow("")
+    val currentSearchQuery : StateFlow<String> = _currentSearchQuery
+
     open suspend fun search(query: String, extras: Bundle) {
+        _currentSearchQuery.value = query
         if (isEmpty(query)) {
             Log.w(logTag(), "Null or empty search query seen")
         }
@@ -46,6 +51,10 @@ open class MediaBrowserAdapter
     }
 
     open suspend fun getSearchResults(query: String, page : Int = 0, pageSize : Int = 20) : ImmutableList<MediaItem> {
+        if (isEmpty(query)) {
+            Log.i(logTag(), "getSearchResults called with query \"\"")
+            return ImmutableList.of()
+        }
         val result : LibraryResult<ImmutableList<MediaItem>> =
             mediaBrowserLF.await().getSearchResult(query, page, pageSize, getDefaultLibraryParams()).await()
         return result.value ?: ImmutableList.of()

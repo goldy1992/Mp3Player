@@ -1,7 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui
 
-import android.net.Uri
-import android.os.Bundle
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -21,12 +19,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -34,21 +32,23 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
-import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListItem
+import com.github.goldy1992.mp3player.client.ui.lists.onSelectedMap
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongListItem
 import com.github.goldy1992.mp3player.client.viewmodels.SearchScreenViewModel
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import org.apache.commons.lang3.StringUtils
+import java.util.*
 
+private const val logTag = "SearchScreen"
+
+@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @Composable
@@ -58,129 +58,116 @@ fun SearchScreen(
     viewModel : SearchScreenViewModel = viewModel(),
     scope : CoroutineScope = rememberCoroutineScope()) {
 
+    val searchResults by viewModel.searchResults.collectAsState()
+    val searchQuery by viewModel.searchQuery.collectAsState()
+    val isPlaying by viewModel.isPlaying.collectAsState()
+    val onSelectedMap = { onSelectedMap(navController, viewModel.mediaControllerAdapter) }
+
+    val navDrawerContent : @Composable () -> Unit = {
+        NavigationDrawerContent(
+            navController = navController,
+            currentScreen = Screen.SEARCH
+        )
+    }
+
+    val onNavUpPressed : () -> Unit = {
+        scope.launch {
+            //   mediaBrowser.clearSearchResults()
+            navController.popBackStack()
+        }
+    }
+
+    val topBar : @Composable () -> Unit = {
+        SearchBar(
+            currentSearchQuery = { searchQuery },
+            onNavUpPressed = onNavUpPressed,
+            onSearchQueryUpdated = {
+                scope.launch {
+                    viewModel.setSearchQuery(it)
+                }
+            },
+            onSearchQueryCleared = {
+                scope.launch {
+                    viewModel.setSearchQuery("")
+                }
+            },
+            scope = scope
+        )
+    }
+
+    val bottomBar : @Composable () -> Unit = {
+        PlayToolbar(isPlayingProvider= { isPlaying },
+            mediaController = viewModel.mediaControllerAdapter,
+            navController = navController,
+            scope = scope)
+    }
+
+
     val isLargeScreen = windowSize == WindowSize.Expanded
     if (isLargeScreen) {
-          LargeSearchResults(
-            searchResultsState = viewModel.searchResults,
-            navController = navController,
-            mediaBrowser = viewModel.mediaBrowserAdapter,
-            mediaController = viewModel.mediaControllerAdapter,
-            isPlayingState = viewModel.isPlaying,
-            scope = scope
-
-        )
+        LargeSearchResults(
+            topBar = topBar,
+            navDrawerContent = navDrawerContent,
+            bottomBar = bottomBar) {
+            SearchResultsContent(
+                modifier = Modifier.padding(it),
+                searchResultsProvider = { searchResults },
+                onSelectedMapProvider = onSelectedMap
+            )
+          }
     } else {
         SmallSearchResults(
-            searchResultsState = viewModel.searchResults,
-            navController = navController,
-            mediaBrowser = viewModel.mediaBrowserAdapter,
-            mediaController = viewModel.mediaControllerAdapter,
-            isPlayingState = viewModel.isPlaying,
-            scope = scope
-        )
+          topBar = topBar,
+            navDrawerContent = navDrawerContent,
+            bottomBar = bottomBar) {
+            SearchResultsContent(
+                modifier = Modifier.padding(it),
+                searchResultsProvider = { searchResults },
+                onSelectedMapProvider = onSelectedMap
+            )
+        }
 
     }
 
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
-    ExperimentalFoundationApi::class
-)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SmallSearchResults(
-    searchResultsState : StateFlow<List<MediaItem>>,
-    navController: NavController,
-    mediaBrowser: MediaBrowserAdapter,
-    mediaController : MediaControllerAdapter,
-    isPlayingState: StateFlow<Boolean>,
-    scope : CoroutineScope = rememberCoroutineScope()) {
-    val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    topBar : @Composable () -> Unit = {},
+    navDrawerContent : @Composable () -> Unit = {},
+    bottomBar : @Composable () -> Unit = {},
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+    content : @Composable (PaddingValues) -> Unit = {}
+    ) {
     ModalNavigationDrawer(
-        drawerContent = {
-            NavigationDrawerContent(
-                navController = navController
-            ) },
+        drawerContent = navDrawerContent,
         drawerState = drawerState) {
-
         Scaffold(
-            topBar = {
-                SearchBar(
-                    navController = navController,
-                    mediaBrowser = mediaBrowser,
-                    scope = scope
-                )
-            },
-            bottomBar = {
-                PlayToolbar(mediaController = mediaController,
-                            isPlayingState = isPlayingState,
-                            scope = scope) {
-                    navController.navigate(Screen.NOW_PLAYING.name)
-                }
-            },
-            content = {
-                SearchResults(
-                    searchResultsState = searchResultsState,
-                    mediaController = mediaController,
-                    navController = navController,
-                    modifier = Modifier.padding(it)
-                )
-            }
-
+            topBar = topBar,
+            bottomBar = bottomBar,
+            content = content
         )
     }
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
-    ExperimentalFoundationApi::class
-)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LargeSearchResults(
-    searchResultsState : StateFlow<List<MediaItem>>,
-    navController: NavController,
-    mediaBrowser: MediaBrowserAdapter,
-    mediaController : MediaControllerAdapter,
-    isPlayingState: StateFlow<Boolean>,
-    scope : CoroutineScope = rememberCoroutineScope()) {
+    topBar : @Composable () -> Unit = {},
+    navDrawerContent : @Composable () -> Unit = {},
+    bottomBar : @Composable () -> Unit = {},
+    content : @Composable (PaddingValues) -> Unit = {}) {
     PermanentNavigationDrawer(
         modifier = Modifier.fillMaxSize(),
-        drawerContent = {
-            NavigationDrawerContent(
-                navController = navController,
-                currentScreen = Screen.SEARCH
-            ) },
+        drawerContent = navDrawerContent,
     ) {
         Scaffold(
-            topBar = {
-                SearchBar(
-                    navController = navController,
-                    mediaBrowser = mediaBrowser,
-                    scope = scope
-                )
-            },
-            bottomBar = {
-                PlayToolbar(mediaController = mediaController,
-                            isPlayingState = isPlayingState,
-                            scope = scope) {
-                    navController.navigate(Screen.NOW_PLAYING.name)
-                }
-            },
-            content = {
-                Surface(
-                    Modifier
-                        .background(Color.Yellow)
-                        .width(500.dp)
-                        .fillMaxHeight()
-                ) {
-                    SearchResults(
-                        searchResultsState = searchResultsState,
-                        mediaController = mediaController,
-                        navController = navController,
-                        modifier = Modifier.padding(it)
-                    )
-                }
-            }
+            topBar = topBar,
+            bottomBar = bottomBar,
+            content = content
         )
     }
 }
@@ -189,14 +176,25 @@ private fun LargeSearchResults(
 @OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalComposeUiApi
 @Composable
-fun SearchBar(navController: NavController,
-              mediaBrowser: MediaBrowserAdapter,
+fun SearchBar(currentSearchQuery : () -> String = { "No search query specified" },
+              onNavUpPressed : () -> Unit = {},
+              onSearchQueryUpdated : (String) -> Unit = {},
+              onSearchQueryCleared : () -> Unit = {},
               keyboardController : SoftwareKeyboardController? = LocalSoftwareKeyboardController.current,
               focusRequester : FocusRequester = remember { FocusRequester() },
                 scope: CoroutineScope = rememberCoroutineScope()) {
-    val searchQuery = remember { mutableStateOf(TextFieldValue()) }
-    val scope = rememberCoroutineScope()
+  //  val searchQuery = remember { mutableStateOf(TextFieldValue()) }
 
+    val currentSearchQueryValue = currentSearchQuery()
+    Log.i(logTag, "currentSearchQueryValue : $currentSearchQueryValue")
+    var textFieldValueState by remember(currentSearchQueryValue) {
+        mutableStateOf(
+            TextFieldValue(
+                text =  currentSearchQueryValue,
+                selection = TextRange(currentSearchQueryValue.length)
+            )
+        )
+    }
     Column(
         Modifier.fillMaxWidth()
     ) {
@@ -215,30 +213,24 @@ fun SearchBar(navController: NavController,
                 .semantics {
                     contentDescription = searchTextFieldName
                 },
-            value = searchQuery.value,
+            value = textFieldValueState,
             onValueChange = {
-                scope.launch {
-                    searchQuery.value = it
-                    mediaBrowser.search(searchQuery.value.text, Bundle())
-                }
+                onSearchQueryUpdated(it.text)
+                textFieldValueState = it
             },
             placeholder = {
                 Text(text = stringResource(id = R.string.search_hint))
             },
             leadingIcon = {
-                IconButton(onClick = {
-                    scope.launch {
-                     //   mediaBrowser.clearSearchResults()
-                        navController.popBackStack()
-                    }
-                }) {
+                IconButton(onClick = onNavUpPressed) {
                     Icon(Icons.Filled.ArrowBack, "Back")
                 }
             },
             trailingIcon = {
-                if (StringUtils.isNotEmpty(searchQuery.value.text)) {
-                    IconButton(onClick = { searchQuery.value = TextFieldValue()
-                  //      mediaBrowser.clearSearchResults()
+                if (StringUtils.isNotEmpty(currentSearchQuery())) {
+                    IconButton(onClick = {
+                        onSearchQueryCleared()
+                        textFieldValueState = TextFieldValue()
                     }) {
                         Icon(Icons.Outlined.Close, clearSearchDescr)
                     }
@@ -246,9 +238,9 @@ fun SearchBar(navController: NavController,
             },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(
-                onSearch = { keyboardController?.hide() }
-            )
+            onSearch = { keyboardController?.hide() }
         )
+    )
 
     }
 
@@ -263,24 +255,25 @@ fun SearchBar(navController: NavController,
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @Composable
-fun SearchResults(searchResultsState : StateFlow<List<MediaItem>>,
-                  mediaController: MediaControllerAdapter,
-                  navController: NavController,
-                  modifier : Modifier = Modifier,
-                  keyboardController : SoftwareKeyboardController? = LocalSoftwareKeyboardController.current,
-                  focusRequester : FocusRequester = remember { FocusRequester() }) {
-    val searchResultsColumn = stringResource(id = R.string.search_results_column)
+fun SearchResultsContent(
+    modifier : Modifier = Modifier,
+    searchResultsProvider : () -> List<MediaItem> = { emptyList() },
+    onSelectedMapProvider : () -> EnumMap<MediaItemType, Any> = { EnumMap(MediaItemType::class.java) },
+    keyboardController : SoftwareKeyboardController? = LocalSoftwareKeyboardController.current,
+    focusRequester : FocusRequester = remember { FocusRequester() }) {
 
-    val searchResults by searchResultsState.collectAsState()
-    val lazyLisState = rememberLazyListState()
+
+    val searchResultsColumn = stringResource(id = R.string.search_results_column)
+    val onSelectedMap = onSelectedMapProvider()
+    val searchResults = searchResultsProvider()
+    val lazyListState = rememberLazyListState()
     
-    LaunchedEffect(lazyLisState.isScrollInProgress) {
+    LaunchedEffect(lazyListState.isScrollInProgress) {
         Log.i("launchedEffect", "called launch effect")
-        if (lazyLisState.isScrollInProgress) {
+        if (lazyListState.isScrollInProgress) {
             keyboardController?.hide()
         }
     }
-
 
     if (isNotEmpty(searchResults)) {
         LazyColumn(modifier = modifier
@@ -288,7 +281,7 @@ fun SearchResults(searchResultsState : StateFlow<List<MediaItem>>,
             .semantics {
                 contentDescription = searchResultsColumn
             },
-        state = lazyLisState
+        state = lazyListState
         ) {
             items(count = searchResults.size) { itemIndex ->
                 run {
@@ -296,23 +289,14 @@ fun SearchResults(searchResultsState : StateFlow<List<MediaItem>>,
                     when (MediaItemUtils.getMediaItemType(mediaItem)) {
                         MediaItemType.SONG -> {
                             SongListItem(song = mediaItem, onClick = {
-                                val libraryId = MediaItemUtils.getLibraryId(mediaItem)
-                                Log.i("ON_CLICK_SONG", "clicked song with id : $libraryId")
-                                mediaController.playFromMediaId(mediaItem)
+                                val onSongSelected = onSelectedMap[MediaItemType.SONG] as (MediaItem) -> Unit
+                                onSongSelected(mediaItem)
                             })
                         }
                         MediaItemType.FOLDER -> {
                             FolderListItem(folder = mediaItem, onClick = {
-                                val folderLibraryId = MediaItemUtils.getLibraryId(it)
-                                val encodedFolderLibraryId = Uri.encode(folderLibraryId)
-                                val directoryPath = MediaItemUtils.getDirectoryPath(it)
-                                val encodedFolderPath = Uri.encode(directoryPath)
-                                val folderName = MediaItemUtils.getDirectoryName(it)
-                                navController.navigate(
-                                    Screen.FOLDER.name
-                                            + "/" + encodedFolderLibraryId
-                                            + "/" + folderName
-                                            + "/" + encodedFolderPath)
+                                val onFolderSelected = onSelectedMap[MediaItemType.FOLDER] as (MediaItem) -> Unit
+                                onFolderSelected(mediaItem)
                             })
                         }
                         MediaItemType.SONGS, MediaItemType.FOLDERS -> {

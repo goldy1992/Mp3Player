@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.data.flows.player
 
-import android.os.SystemClock
 import android.util.Log
 import androidx.concurrent.futures.await
 import androidx.media3.common.PlaybackParameters
@@ -10,6 +9,7 @@ import com.github.goldy1992.mp3player.client.data.eventholders.PlaybackPositionE
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.TimerUtils
 import com.google.common.util.concurrent.ListenableFuture
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
+@ActivityRetainedScoped
 class PlaybackPositionFlow
 
 @Inject
