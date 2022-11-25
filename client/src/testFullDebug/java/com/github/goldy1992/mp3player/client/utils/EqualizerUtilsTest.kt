@@ -1,17 +1,16 @@
 package com.github.goldy1992.mp3player.client.utils
 
-import androidx.compose.ui.unit.dp
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class EqualizerUtilsTest {
 
     @Test
     fun testCalculateBarWidth() {
-        val containerWidth = 40.dp
-        val spacing = 2.dp
+        val containerWidth = 38f
+        val spacing = 2f
         val numOfBars = 3
-        val expected = 12.dp
+        val expected = 10f
         val result= calculateBarWidthPixels(
             containerWidth = containerWidth,
         numOfBars = numOfBars,

@@ -31,18 +31,18 @@ import kotlinx.coroutines.launch
 private const val logTag = "seekbar"
 
 @Composable
-fun SeekBar(isPlayingState: StateFlow<Boolean>,
-            metadataState: StateFlow<MediaMetadata>,
-            playbackSpeedState : StateFlow<Float>,
-            playbackPositionState: StateFlow<PlaybackPositionEvent>,
+fun SeekBar(isPlayingProvider: () -> Boolean,
+            metadataProvider: () -> MediaMetadata,
+            playbackSpeedProvider : () ->  Float,
+            playbackPositionProvider: () -> PlaybackPositionEvent,
             mediaController : MediaControllerAdapter,
             scope: CoroutineScope = rememberCoroutineScope()) {
 
     //Log.i(logTag, "seek bar created")
-    val isPlaying by isPlayingState.collectAsState()
-    val metadata by metadataState.collectAsState()
-    val playbackSpeed by playbackSpeedState.collectAsState()
-    val playbackPositionEvent by playbackPositionState.collectAsState()
+    val isPlaying = isPlayingProvider()
+    val metadata = metadataProvider()
+    val playbackSpeed = playbackSpeedProvider()
+    val playbackPositionEvent = playbackPositionProvider()
     val duration = MetadataUtils.getDuration(metadata).toFloat()
     val currentPosition = calculateCurrentPosition(playbackPositionEvent).toFloat()
     Log.i(logTag, "current playback position: $currentPosition")

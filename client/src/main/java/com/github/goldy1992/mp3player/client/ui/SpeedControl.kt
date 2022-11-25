@@ -12,16 +12,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @Composable
-fun SpeedController(mediaController : MediaControllerAdapter? = null,
-                    playbackSpeedState: StateFlow<Float>,
-                    modifier : Modifier = Modifier,
+fun SpeedController(modifier : Modifier = Modifier,
+                    mediaController : MediaControllerAdapter? = null,
+                    playbackSpeedProvider: () -> Float,
                     scope: CoroutineScope = rememberCoroutineScope()) {
 
-    val sliderPosition by playbackSpeedState.collectAsState()
+    val sliderPosition = playbackSpeedProvider()
 
     var uiSliderPosition : Float by remember { mutableStateOf(sliderPosition)  }
     var isTouchTracking by remember { mutableStateOf(false)   }

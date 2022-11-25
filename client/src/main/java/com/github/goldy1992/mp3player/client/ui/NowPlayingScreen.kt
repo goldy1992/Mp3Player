@@ -18,6 +18,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
@@ -46,15 +47,20 @@ fun NowPlayingScreen(
     scope : CoroutineScope = rememberCoroutineScope(),
 ) {
 
+    val mediaController = viewModel.mediaControllerAdapter
     val songTitleDescription = stringResource(id = R.string.song_title)
     val metadata by viewModel.metadata.collectAsState()
+    val playbackPosition by viewModel.playbackPosition.state.collectAsState()
+    val playbackSpeed by viewModel.playbackSpeed.collectAsState()
+    val isPlaying by viewModel.isPlaying.collectAsState()
+    val queue by viewModel.queue.collectAsState()
 
     Scaffold (
 
         topBar = {
             TopAppBar (
                 title = {
-                       val title : String = metadata.title.toString()
+                    val title : String = metadata.title.toString()
                     val artist : String = metadata.artist.toString()
                     Column {
                         Text(text = title,
@@ -79,11 +85,10 @@ fun NowPlayingScreen(
             )
         },
         bottomBar = {
-            PlayToolbar(mediaController = viewModel.mediaControllerAdapter,
-                        isPlayingState = viewModel.isPlaying,
-                        scope = scope) {
-                // do Nothing
-            }
+            PlayToolbar(isPlayingProvider= { isPlaying },
+                mediaController = mediaController,
+                navController = navController,
+                scope = scope)
         },
 
         content = {
@@ -98,15 +103,15 @@ fun NowPlayingScreen(
                     },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                SpeedController(mediaController = viewModel.mediaControllerAdapter,
-                    playbackSpeedState = viewModel.playbackSpeed,
+                SpeedController(mediaController = mediaController,
+                    playbackSpeedProvider = { playbackSpeed },
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 48.dp, end = 48.dp)
                 )
                 ViewPager(mediaController = viewModel.mediaControllerAdapter,
-                    metadata = metadata,
-                    queueState = viewModel.queue,
+                    metadata = { metadata },
+                    queueProvider =  {queue },
                     scope = scope,
                     modifier = Modifier.weight(4f))
 
@@ -125,11 +130,11 @@ fun NowPlayingScreen(
                         .weight(1f),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    SeekBar(mediaController = viewModel.mediaControllerAdapter,
-                        playbackSpeedState = viewModel.playbackSpeed,
-                        metadataState = viewModel.metadata,
-                        isPlayingState = viewModel.isPlaying,
-                        playbackPositionState = viewModel.playbackPosition.state)
+                    SeekBar(mediaController = mediaController,
+                        playbackSpeedProvider = { playbackSpeed },
+                        metadataProvider = {  metadata },
+                        isPlayingProvider = { isPlaying },
+                        playbackPositionProvider = {  playbackPosition })
                 }
             }
 
@@ -140,13 +145,13 @@ fun NowPlayingScreen(
 @ExperimentalPagerApi
 @Composable
 fun ViewPager(mediaController: MediaControllerAdapter,
-              metadata : MediaMetadata,
-              queueState: StateFlow<List<MediaItem>>,
+              metadata : () -> MediaMetadata,
+              queueProvider: () -> List<MediaItem>,
               modifier: Modifier = Modifier,
               pagerState:PagerState = rememberPagerState(initialPage = mediaController.getCurrentQueuePosition()),
               scope: CoroutineScope = rememberCoroutineScope()
            ) {
-    val queue by queueState.collectAsState()
+    val queue = queueProvider()
     val currentQueuePosition = mediaController.getCurrentQueuePosition()
 
     if (isEmpty(queue)) {
@@ -156,7 +161,7 @@ fun ViewPager(mediaController: MediaControllerAdapter,
             textAlign = TextAlign.Center)
         }
     } else {
-        LaunchedEffect(metadata){
+        LaunchedEffect(metadata()){
             if (currentQueuePosition < pagerState.pageCount) {
                 pagerState.scrollToPage(currentQueuePosition)
             }
@@ -198,8 +203,8 @@ fun ViewPager(mediaController: MediaControllerAdapter,
                     horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                        painter = rememberImagePainter(
-                                request =  ImageRequest.Builder(LocalContext.current).data(item.mediaMetadata.artworkUri).build()
+                        painter = rememberAsyncImagePainter(
+                            model = ImageRequest.Builder(LocalContext.current).data(item.mediaMetadata.artworkUri).build()
                         ),
                         contentDescription = "Album Art",
                         modifier = Modifier.size(300.dp, 300.dp)
