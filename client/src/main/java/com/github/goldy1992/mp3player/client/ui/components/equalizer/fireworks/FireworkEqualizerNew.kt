@@ -77,7 +77,7 @@ fun FireworkWrapperNew(modifier: Modifier = Modifier,
                     newParticleList.add(
                         createParticle(
                             spawnPoints[entry.key], initialVelocity = initialVelocity,
-                            color = if (entry.key % 2 == 0) Color.Blue else particleColor
+                            color = particleColor
                         )
 
                     )
@@ -104,7 +104,7 @@ fun FireworkWrapperNew(modifier: Modifier = Modifier,
                     val valueIterator = entry.value.iterator()
                     while (valueIterator.hasNext()) {
                         val currentParticle = valueIterator.next()
-                        if (currentParticle.y < (canvasSize.heightPx + 10)) {
+                        if (currentParticle.y < (canvasSize.heightPx +1)) {
                             Log.i(logTag, "updatingparticle")
                             newList.add(updateParticle(currentParticle, frame))
                         }
@@ -147,15 +147,23 @@ private fun FireworkEqualizer(
 
         for (particleLists in particles.values) {
             for (p in particleLists) {
-                drawParticle(p)
+                drawCircleParticle(p)
             }
         }
     }
 
 }
 
+private fun DrawScope.drawCircleParticle(particle: Particle) {
+    drawCircle(
+        color = particle.color,
+        radius = particle.radius,
+        center = Offset(particle.x, particle.y)
+    )
+}
 
-private fun DrawScope.drawParticle(particle: Particle, brush : Brush) {
+
+private fun DrawScope.drawLineParticle(particle: Particle, brush : Brush) {
 //    drawCircle(
 //        //       color = particle.color,
 //        brush = brush,
@@ -181,7 +189,7 @@ private fun DrawScope.drawParticle(particle: Particle) {
 private fun createParticle(startOffset: Offset, initialVelocity : Float, color : Color) : Particle {
     val startY = startOffset.y
     val startX = startOffset.x
-    val radius = Random.nextDouble(30.0, 55.0)
+    val radius = Random.nextDouble(2.0, 5.0)
     val angle = Random.nextDouble(85.0, 95.0)
     return Particle(
         x = startX,
