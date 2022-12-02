@@ -62,12 +62,12 @@ class SongsTest {
         val songList : List<MediaItem> = listOf(song1, song2)
 
         composeTestRule.setContent {
-            SongList(songs = songList,
-                    //mediaControllerAdapter = mockMediaController,
-                 //   metadataState = metadataFlow,
-                    isPlayingState = MutableStateFlow(false),
-                currentMediaItemProvider = MutableStateFlow(MediaItem.EMPTY),
-            onSongSelected = {_,_ ->})
+//            SongList(songs = songList,
+//                    //mediaControllerAdapter = mockMediaController,
+//                 //   metadataState = metadataFlow,
+//                    isPlayingState = MutableStateFlow(false),
+//                currentMediaItemProvider = MutableStateFlow(MediaItem.EMPTY),
+//            onSongSelected = {_,_ ->})
         }
         runBlocking {
             composeTestRule.awaitIdle()

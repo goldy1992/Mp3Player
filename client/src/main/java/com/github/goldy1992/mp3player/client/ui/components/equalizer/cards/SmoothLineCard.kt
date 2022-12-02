@@ -64,11 +64,9 @@ fun SmoothLineCard(
 ) {
     EqualizerCard(
         modifier = modifier,
-        frequencyValues = frequencyPhases,
-        title = "Smooth Line",
-        scope = scope) { frequencies, canvasSize, containerModifier ->
+        title = "Smooth Line",) { canvasSize, containerModifier ->
         SmoothLineEqualizerCanvas(
-            frequencyPhasesState = frequencies,
+            frequencyPhasesState = frequencyPhases,
             canvasSize = canvasSize,
             modifier = containerModifier)
     }

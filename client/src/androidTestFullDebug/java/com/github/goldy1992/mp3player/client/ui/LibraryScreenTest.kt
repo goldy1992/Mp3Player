@@ -104,12 +104,12 @@ class LibraryScreenTest : MediaTestBase() {
         val drawerState = DrawerState(DrawerValue.Closed)
         val navigationIconDescription = context.getString(R.string.navigation_drawer_menu_icon)
         composeTestRule.setContent {
-            SmallLibraryScreen(
-                navController = navController,
-                pagerState = rememberPagerState(initialPage = 0),
-                viewModel  = libraryScreenViewModel,
-                bottomBar = {},
-            drawerState = drawerState)
+//            SmallLibraryScreen(
+//                navController = navController,
+//                pagerState = rememberPagerState(initialPage = 0),
+//                viewModel  = libraryScreenViewModel,
+//                bottomBar = {},
+//            drawerState = drawerState)
         }
         assertFalse(drawerState.isOpen)
         composeTestRule.onNodeWithContentDescription(navigationIconDescription).performClick()

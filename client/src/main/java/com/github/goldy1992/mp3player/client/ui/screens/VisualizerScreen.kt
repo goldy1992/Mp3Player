@@ -26,6 +26,7 @@ import com.github.goldy1992.mp3player.client.ui.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.BarCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.SmoothLineCard
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.fireworks.FireworkEqualizerCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.fireworks.FireworkWrapper
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
@@ -64,7 +65,8 @@ fun VisualizerScreen(
     ) {
 
         VisualizerContentCardCollection(modifier = Modifier.padding(it),
-                audioMagnitudes = {audioMagnitudes})
+                audioMagnitudes = {audioMagnitudes},
+                isPlayingProvider = { isPlaying })
     }
 
 }
@@ -145,7 +147,7 @@ private fun VisualizerContent(
                                 }
                             }
                             EqualizerType.FIREWORK -> {
-                                FireworkWrapper(frequencyPhases = audioMagnitudes.asList(), insetPx = 50f, isPlayingState = isPlaying)
+                           //     FireworkWrapper(frequencyPhases = audioMagnitudes.asList(), insetPx = 50f, isPlayingState = isPlaying)
                             }
                             EqualizerType.LINE -> {
 //                                SmoothLineEqualizer(
@@ -170,6 +172,7 @@ private fun VisualizerContent(
 fun VisualizerContentCardCollection(
     modifier: Modifier = Modifier,
     audioMagnitudes : () -> List<Float> = { listOf(100f, 200f, 300f, 150f)},
+    isPlayingProvider : () -> Boolean = { false},
     scope: CoroutineScope = rememberCoroutineScope()) {
 
     val density = LocalDensity.current
@@ -183,7 +186,8 @@ fun VisualizerContentCardCollection(
   }
     LazyVerticalGrid(columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp) ,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier
             .fillMaxSize()
             .onSizeChanged { gridSizePx = it }) {
@@ -202,6 +206,17 @@ fun VisualizerContentCardCollection(
                     .width(cardLengthDp)
                     .height(cardLengthDp),
                 frequencyPhases = audioMagnitudes,
+                scope = scope
+            )
+        }
+
+        item {
+            FireworkEqualizerCard(
+                modifier = Modifier
+                    .width(cardLengthDp)
+                    .height(cardLengthDp),
+                frequencyPhases = audioMagnitudes,
+                isPlayingProvider = isPlayingProvider,
                 scope = scope
             )
         }

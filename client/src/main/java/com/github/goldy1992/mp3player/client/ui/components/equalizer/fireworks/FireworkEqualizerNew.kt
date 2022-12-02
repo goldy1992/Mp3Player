@@ -1,22 +1,26 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.fireworks
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
+import com.github.goldy1992.mp3player.client.ui.screens.DpPxSize
 import kotlinx.coroutines.android.awaitFrame
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.isActive
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import kotlin.math.*
 import kotlin.random.Random
@@ -26,85 +30,93 @@ private const val logTag = "FireworksEqualizer"
 private const val MAX_FREQUENCY = 150
 
 private var maxFreqVal = 0f
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
-fun FireworkWrapper(modifier: Modifier = Modifier,
-                    particleWidth : Float = 10f,
-                    isPlayingState : StateFlow<Boolean>,
-                    insetPx : Float = 200f,
-                    frequencyPhases : List<Float> = emptyList(),
-                    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+fun FireworkWrapperNew(modifier: Modifier = Modifier,
+                    canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
+                    particleWidthPx : Float = 10f,
+                    insetPx : Float =70f,
+                    frequencyPhasesProvider : () -> List<Float> = { emptyList() },
+                    particleColor : Color = MaterialTheme.colorScheme.onPrimaryContainer,
  ) {
-    val isPlaying by isPlayingState.collectAsState()
+    val frequencyPhases = frequencyPhasesProvider()
    // Log.i(logTag, "recomposing")
-    var canvasWidth by remember { mutableStateOf(0f) }
-    var canvasHeight by remember { mutableStateOf(0f) }
-    val spawnPoints : List<Offset> = remember(insetPx, canvasWidth, canvasHeight, particleWidth, frequencyPhases.size) {
-        generateSpawnPoints(canvasWidth = canvasWidth,
-            canvasHeight = canvasHeight,
+    val spawnPoints : List<Offset> = remember(insetPx, canvasSize, particleWidthPx, frequencyPhases.size) {
+        generateSpawnPoints(canvasWidth = canvasSize.widthPx,
+            canvasHeight = canvasSize.heightPx,
             insetPx = insetPx,
-            particleWidth = particleWidth,
+            particleWidth = particleWidthPx,
             numberOfFrequencies = frequencyPhases.size
         ) }
+   // Log.i(logTag, "spawnPoints: $spawnPoints")
 
-    val particles : MutableState<Map<Int, List<Particle>>> = remember { mutableStateOf(emptyMap()) }
+    val particles : SnapshotStateMap<Int, List<Particle>> = remember(spawnPoints) {
+        Log.i(logTag, "new particles map")
+        val map : SnapshotStateMap<Int, List<Particle>> = mutableStateMapOf()
+        spawnPoints.indices.forEach { idx -> map[idx] = listOf() }
+        map
+    }
 
-    LaunchedEffect(frequencyPhases, particles, isPlaying, lifecycleOwner.lifecycle.currentState) {
-        
-        while(this.isActive && lifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED && (isPlaying || particlesInMap(particles.value)) ) {
-            Log.i(logTag, "generating particles")
-            val newParticleMap = HashMap<Int, ArrayList<Particle>>()
-            val frame = awaitFrame()
-
-            for (i in 1 .. frequencyPhases.size) {
-                newParticleMap[i] = arrayListOf()
-            }
-
-            particles.value.entries.forEach { entry ->
-                entry.value.forEach { value ->
-                    if (value.y < (canvasHeight + 100)) {
-                        newParticleMap[entry.key]?.add(updateParticle(value, frame))
-                    }
+    // TODO: separate into 2 separate flows, 1. add new particles 2. update animation
+    LaunchedEffect(frequencyPhases, particles) {
+        val frame = awaitFrame()
+        val newParticleMap : MutableMap<Int, List<Particle>> = mutableMapOf()
+        particles.entries.forEach { entry ->
+            val newList : MutableList<Particle> = mutableListOf()
+            for (v in entry.value) {
+                if (v.y < (canvasSize.heightPx + 10)) {
+                    newList.add(updateParticle(v, frame))
                 }
             }
+            if (newList.size < 15) {
+                Log.i(logTag, "adding new particle to freq: ${entry.key}")
+                val currentFreq = frequencyPhases[entry.key]
+                val frac = currentFreq / MAX_FREQUENCY
+                val hmax = canvasSize.heightPx * frac
+                val angle = Math.toRadians(Random.nextDouble(85.0, 95.0))
+                val initialVelocity = calculateInitialVelocityGivenHmax(hmax, angle)
 
-            newParticleMap.entries.forEach { entry ->
-                if (isPlaying) {
-                    val currentFreq = frequencyPhases[entry.key - 1]
-                    val frac = currentFreq / MAX_FREQUENCY
-                    val hmax = canvasHeight * frac
-                    val angle = Math.toRadians(Random.nextDouble(85.0, 95.0))
-                    val initialVelocity = calculateInitialVelocityGivenHmax(hmax, angle)
-                    entry.value.add(
-                        createParticle(spawnPoints[entry.key -1], initialVelocity = initialVelocity,
-                            color = if (entry.key % 2 == 0) Color.Blue else Color.Green)
+                newList.add(
+                    createParticle(
+                        spawnPoints[entry.key], initialVelocity = initialVelocity,
+                        color = if (entry.key % 2 == 0) Color.Blue else particleColor
                     )
-                }
+
+                )
             }
-            particles.value = newParticleMap
+            newParticleMap[entry.key] = newList.toList() ?: emptyList()
+        }
+        for (i in particles.entries) {
+            particles.replace(i.key, newParticleMap[i.key] ?: emptyList())
         }
     }
 
     FireworkEqualizer(
         modifier = modifier,
-        particles = particles.value) {
-            width, height ->
-            canvasWidth = width
-            canvasHeight = height
-    }
+        particles = particles
+    )
+//    {
+//            width, height ->
+//            canvasWidth = width
+//            canvasHeight = height
+//    }
 }
 
 @Composable
-fun FireworkEqualizer(
+private fun FireworkEqualizer(
     particles : Map<Int, List<Particle>>,
     modifier: Modifier = Modifier,
-    onOffsetChanged : (width : Float, height : Float) -> Unit) {
-
+    surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer
+) {
+    var msg = "equalizer called with: "
+    for (p in particles.entries) {
+        msg += "${p.key}: ${p.value}\n"
+    }
+    Log.i(logTag, msg)
     Canvas( modifier = modifier
         .fillMaxSize()
-        .background(Color.Red)
-        .onSizeChanged {
-            onOffsetChanged(it.width.toFloat(), it.height.toFloat())
-        }) {
+    ) {
+        drawRoundRect(color = surfaceColor, size = this.size, cornerRadius = CornerRadius(5f, 5f))
 
         for (particleLists in particles.values) {
             for (p in particleLists) {
@@ -194,7 +206,7 @@ private fun generateSpawnPoints(canvasWidth : Float,
                                 insetPx: Float,
                                 particleWidth: Float,
                                 numberOfFrequencies : Int) : List<Offset> {
-    val spawnHeight : Float = canvasHeight + 10f
+    val spawnHeight : Float = canvasHeight //+ 10f
     val widthBetweenSpawns : Float = (canvasWidth - (insetPx * 2) - (particleWidth * numberOfFrequencies)) / (numberOfFrequencies - 1)
 
     val toReturn = arrayListOf<Offset>()
@@ -203,7 +215,7 @@ private fun generateSpawnPoints(canvasWidth : Float,
                             y = spawnHeight)
         toReturn.add(offsetValue)
     }
-    return toReturn
+    return toReturn.toList()
 }
 
 /**

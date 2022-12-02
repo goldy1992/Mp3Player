@@ -11,9 +11,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.EqualizerContainer
 import com.github.goldy1992.mp3player.client.ui.screens.DpPxSize
-import kotlinx.coroutines.CoroutineScope
 
 @Preview
 @Composable
@@ -21,12 +19,9 @@ fun EqualizerCard(
     modifier: Modifier = Modifier,
     title: String = "Title",
     density: Density = LocalDensity.current,
-    scope: CoroutineScope = rememberCoroutineScope(),
-    frequencyValues: () -> List<Float> =  {listOf(100f, 200f, 300f, 150f)},
     equalizer: @Composable (
-        frequencyValues : () -> List<Float>,
         canvasSize : DpPxSize,
-        modifier: Modifier) -> Unit = { _, _, _ -> }
+        modifier: Modifier) -> Unit = { _, _-> }
 ) {
 
     Card(
@@ -34,7 +29,7 @@ fun EqualizerCard(
         elevation = CardDefaults.outlinedCardElevation()) {
         Column(
             modifier = Modifier.fillMaxSize()
-        ){
+        ) {
 
             var equalizerSize by remember {
                 mutableStateOf(
@@ -47,8 +42,8 @@ fun EqualizerCard(
 
             Row(
                 Modifier
+                    .fillMaxWidth()
                     .weight(8f)
-                    .fillMaxSize()
                     .onSizeChanged {
                         equalizerSize = DpPxSize.createDpPxSizeFromPx(
                             it.width.toFloat(),
@@ -56,16 +51,10 @@ fun EqualizerCard(
                             density
                         )
                     }) {
-                EqualizerContainer(
-                    frequencyValues  = frequencyValues,
-                    scope = scope,
-                    containerSize = equalizerSize,
-                ) { frequencies, canvasSize, containerModifier ->
-                    equalizer(frequencyValues = frequencies,
-                        canvasSize = canvasSize,
-                        modifier = containerModifier)
-                }
-
+                    equalizer(
+                        canvasSize = equalizerSize,
+                        modifier = Modifier.fillMaxSize()
+                    )
             }
             Column(
                 Modifier
@@ -78,5 +67,5 @@ fun EqualizerCard(
             }
         }
     }
-
 }
+

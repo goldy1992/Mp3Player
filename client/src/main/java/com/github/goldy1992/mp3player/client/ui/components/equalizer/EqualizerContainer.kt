@@ -26,6 +26,7 @@ fun EqualizerContainer(
         canvasSize : DpPxSize,
         modifier: Modifier) -> Unit) {
 
+    //Log.i(logTag, "canvasSize: $containerSize")
     val frequencyPhases = frequencyValues()
     val frequencyAnimatableList : SnapshotStateList<Animatable<Float, AnimationVector1D>> =
         remember(frequencyPhases.size) {
@@ -35,9 +36,9 @@ fun EqualizerContainer(
             }
     }
     LaunchedEffect(frequencyPhases) {
-        Log.i(logTag, "Triggered launch effect")
+    //    Log.i(logTag, "Triggered launch effect: frequencyPhases $frequencyPhases")
         for (i in frequencyPhases.indices) {
-            scope.launch { frequencyAnimatableList[i].animateTo(targetValue = frequencyPhases[i], animationSpec = tween(300)) }
+            this.launch { frequencyAnimatableList[i].animateTo(targetValue = frequencyPhases[i], animationSpec = tween(300)) }
         }
     }
 

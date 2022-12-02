@@ -1,10 +1,17 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.smoothline
 
+import android.util.Log
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector1D
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -13,6 +20,9 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.ui.screens.DpPxSize
+import kotlinx.coroutines.launch
+
+private const val logTag = "SmoothEqualizer"
 
 @Composable
 fun SmoothLineEqualizerCanvas(modifier: Modifier = Modifier,
@@ -22,7 +32,20 @@ fun SmoothLineEqualizerCanvas(modifier: Modifier = Modifier,
                               surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer,
                               lineColor : Color = MaterialTheme.colorScheme.onPrimaryContainer,
 ) {
-    val frequencies = frequencyPhasesState()
+    val frequencyPhases = frequencyPhasesState()
+    val frequencies : SnapshotStateList<Animatable<Float, AnimationVector1D>> =
+        remember(frequencyPhases.size) {
+            mutableStateListOf<Animatable<Float, AnimationVector1D>>().apply {
+                Log.i(logTag, "retrigger remember")
+                for (i in frequencyPhases) add(Animatable(i))
+            }
+        }
+    LaunchedEffect(frequencyPhases) {
+        //    Log.i(logTag, "Triggered launch effect: frequencyPhases $frequencyPhases")
+        for (i in frequencyPhases.indices) {
+            this.launch { frequencies[i].animateTo(targetValue = frequencyPhases[i], animationSpec = tween(300)) }
+        }
+    }
     val numberOfPhases: Int = frequencies.size
     val phaseSpacing = remember(
         canvasSize,
@@ -54,7 +77,7 @@ fun SmoothLineEqualizerCanvas(modifier: Modifier = Modifier,
             .map {
                 Offset(
                     x = waveStartOffset.x + (phaseSpacing * (it + 1)),
-                    y = lineHeight - frequencies[it]
+                    y = lineHeight - frequencies[it].value
                 )
             }
             .toList()

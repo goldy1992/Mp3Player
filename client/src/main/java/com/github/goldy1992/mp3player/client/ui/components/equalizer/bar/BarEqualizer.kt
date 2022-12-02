@@ -1,140 +1,106 @@
+@file:JvmName("BarEqualizerKt")
+
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.bar
 
 import android.util.Log
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector1D
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.goldy1992.mp3player.client.utils.calculateBarWidthPixels
+import androidx.compose.ui.unit.dp
+import com.github.goldy1992.mp3player.client.ui.screens.DpPxSize
+import com.github.goldy1992.mp3player.client.utils.calculateBarSpacingPixels
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 private const val MAX_AMPLITUDE = 400f
 private const val logTag = "BarEqualizer"
 
-@Preview
-@Composable
-fun BarEqualizer(
-    modifier: Modifier = Modifier,
-    bars : FloatArray = floatArrayOf(),
-    barColor : Color = MaterialTheme.colorScheme.secondary,
-    spaceBetweenBars : Float = 5f) {
-    BarEqualizer(
-        modifier = modifier.fillMaxSize(),
-        bars = bars.asList(),
-        barColor = barColor,
-        spaceBetweenBarsPx = spaceBetweenBars
-    )
-}
 
 @Preview
 @Composable
-fun BarEqualizer(
-    modifier: Modifier = Modifier,
-    bars : List<Float> = emptyList(),
-    barColor : Color = MaterialTheme.colorScheme.secondary,
-    spaceBetweenBarsPx : Float = 5f,
-    scope : CoroutineScope = rememberCoroutineScope()
-) {
-    var maxHeight by remember { mutableStateOf(0f) }
-    var maxWidth by remember { mutableStateOf(0f) }
+fun BarEqualizer(modifier: Modifier = Modifier,
+                 frequencyValues : () -> List<Float> = {listOf(100f, 200f, 300f, 150f)},
+                 canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
+                 barWidthPx : Float = 20f,
+                 barColor : Color = MaterialTheme.colorScheme.secondary,
+                 surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer,
+                 scope: CoroutineScope = rememberCoroutineScope()
+                       ) {
 
-
-    val barWidthPx = remember(bars.size, maxWidth, spaceBetweenBarsPx) {
-        calculateBarWidthPixels(
-            containerWidth = maxWidth,
-            numOfBars = bars.size,
-            spaceBetweenBars = spaceBetweenBarsPx
-        )
-    }
-
-    val equalizerWidthPx = remember(bars.size, barWidthPx, spaceBetweenBarsPx) { (bars.size * barWidthPx) + (spaceBetweenBarsPx * (bars.size+1)) }
-
-    val barStates : SnapshotStateList<Animatable<Float, AnimationVector1D>> = remember(bars.size) {
-        mutableStateListOf<Animatable<Float, AnimationVector1D>>().apply {
-            Log.i(logTag, "retrigger remember")
-            for (i in bars) add( Animatable(i)) }
-    }
-
-    LaunchedEffect(bars) {
-        Log.i(logTag, "Triggered launch effect")
-        for (i in bars.indices) {
-            scope.launch { barStates[i].animateTo(targetValue = bars[i], animationSpec = tween(300)) }
+    val frequencyPhases = frequencyValues()
+    val frequencyAnimatableList : SnapshotStateList<Animatable<Float, AnimationVector1D>> =
+        remember(frequencyPhases.size) {
+            mutableStateListOf<Animatable<Float, AnimationVector1D>>().apply {
+                Log.i(logTag, "retrigger remember")
+                for (i in frequencyPhases) add(Animatable(i))
+            }
+        }
+    LaunchedEffect(frequencyPhases) {
+        //    Log.i(logTag, "Triggered launch effect: frequencyPhases $frequencyPhases")
+        for (i in frequencyPhases.indices) {
+            this.launch { frequencyAnimatableList[i].animateTo(targetValue = frequencyPhases[i], animationSpec = tween(300)) }
         }
     }
 
-    val horizontalOffset = remember(maxWidth, equalizerWidthPx, spaceBetweenBarsPx) { ((maxWidth - equalizerWidthPx) / 2) + spaceBetweenBarsPx }
-//        Log.i("equalizer", "bar width: ${barWidthPx}")
-//        Log.i("equalizer", "max width val: ${maxWidth}")
-//        Log.i("equalizer", "equalizer width val: ${equalizerWidthPx}")
-//        Log.i("equalizer", "Equalizer: horizontal val: $horizontalOffset")
+    val bars = frequencyAnimatableList.map { it.value }.toList()
+    val numberOfBars = bars.size
+    val spaceBetweenBarsPx = remember(numberOfBars, barWidthPx, canvasSize.widthPx){
+        calculateBarSpacingPixels(
+            containerWidthPx = canvasSize.widthPx,
+            numOfBars = bars.size,
+            barWidthPx = barWidthPx
+        )
+    }
+
+    val barHorizontalOffsets = remember(spaceBetweenBarsPx, numberOfBars, barWidthPx, canvasSize.widthPx) {
+        val list : MutableList<Float> = mutableListOf()
+        for (i in bars.indices) {
+            val offset = (spaceBetweenBarsPx * (i + 1)) + (barWidthPx * i)
+            list.add(offset)
+        }
+        list.toList()
+    }
+
+    val barTopLeftVerticalOffsets : MutableList<Float> = mutableListOf()
+    val barHeights : MutableList<Float> = mutableListOf()
+    for (i in bars.indices) {
+        var barHeight = canvasSize.heightPx * (bars[i] / MAX_AMPLITUDE)
+        if (barHeight > canvasSize.heightPx) {
+            barHeight = canvasSize.heightPx
+        }
+        barHeights.add(barHeight)
+        val offset = canvasSize.heightPx - barHeight
+        barTopLeftVerticalOffsets.add(offset)
+    }
+
     Canvas(
         modifier = modifier
-            .onSizeChanged {
-                maxHeight = it.height.toFloat()
-                maxWidth = it.width.toFloat()
-            }
-            .fillMaxSize()
+            .width(canvasSize.widthDp)
+            .height(height = canvasSize.heightDp)
 
     ) {
+        drawRoundRect(color = surfaceColor, size = this.size, cornerRadius = CornerRadius(5f, 5f))
 
-        for ((idx, bar) in barStates.withIndex()) {
-
-            val currentBarHeight = if (bar.value > MAX_AMPLITUDE) {
-                MAX_AMPLITUDE
-            } else {
-                bar.value
-            }
-            val barCanvasHeight = (currentBarHeight * maxHeight) / MAX_AMPLITUDE
-            val offset: Float = maxHeight - barCanvasHeight
+        for (idx in bars.indices) {
             drawRect(
                 color = barColor,
-                topLeft = Offset( horizontalOffset + (barWidthPx * idx) + (spaceBetweenBarsPx * idx), offset),
-                size = Size(width = barWidthPx, height = (barCanvasHeight))
+                topLeft = Offset( barHorizontalOffsets[idx], barTopLeftVerticalOffsets[idx]),
+                size = Size(width = barWidthPx, height = (barHeights[idx]))
             )
         }
     }
 
 }
-
-@Preview
-@Composable
-fun AnimatedBarEqualizer(
-    modifier: Modifier = Modifier,
-    numOfBars : Int = 4,
-    barColor : Color = MaterialTheme.colorScheme.secondary,
-    spaceBetweenBarsPx : Float = 5f) {
-    Log.i("equalizer", "recomposing")
-    val list : ArrayList<State<Float>> = ArrayList()
-
-    for(bar in 1 .. numOfBars) {
-        val infiniteTransition = rememberInfiniteTransition()
-        val duration = remember {Random.nextInt(400, 600)}
-        val state: State<Float> = infiniteTransition.animateFloat(
-            initialValue = MAX_AMPLITUDE,
-            targetValue = MAX_AMPLITUDE * 0.1f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(duration, easing = LinearEasing),
-                repeatMode = RepeatMode.Reverse
-            )
-        )
-        list.add(state)
-    }
-    BarEqualizer(
-        modifier= modifier,
-        bars = list.map { v -> v.value },
-        barColor  = barColor,
-        spaceBetweenBarsPx = spaceBetweenBarsPx,
-    )
-
-}
-
