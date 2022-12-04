@@ -7,7 +7,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -18,7 +17,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.ui.screens.DpPxSize
 import kotlinx.coroutines.android.awaitFrame
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import kotlin.math.*
@@ -62,6 +60,7 @@ fun FireworkWrapperNew(modifier: Modifier = Modifier,
                 Log.i(logTag, "frequencyPhases updated, new launchedeffect")
             val entryIterator = particles.entries.iterator()
             val newMap = mutableMapOf<Int, List<Particle>>()
+            val frame = awaitFrame()
             while (entryIterator.hasNext()) {
                 val entry = entryIterator.next()
                 val currentParticleList = entry.value
@@ -71,12 +70,15 @@ fun FireworkWrapperNew(modifier: Modifier = Modifier,
                     val currentFreq = frequencyPhases[entry.key]
                     val frac = currentFreq / MAX_FREQUENCY
                     val hmax = canvasSize.heightPx * frac
+                    Log.i(logTag, "hmax: $hmax")
                     val angle = Math.toRadians(Random.nextDouble(85.0, 95.0))
                     val initialVelocity = calculateInitialVelocityGivenHmax(hmax, angle)
-
+                    val timeToReachHmax = abs((hmax - initialVelocity) / g)
                     newParticleList.add(
                         createParticle(
                             spawnPoints[entry.key], initialVelocity = initialVelocity,
+                            currentFrame = frame,
+                            timeToReachHmax = timeToReachHmax,
                             color = particleColor
                         )
 
@@ -107,6 +109,8 @@ fun FireworkWrapperNew(modifier: Modifier = Modifier,
                         if (currentParticle.y < (canvasSize.heightPx +1)) {
                             Log.i(logTag, "updatingparticle")
                             newList.add(updateParticle(currentParticle, frame))
+                        } else {
+                            Log.i(logTag, "removing particle of y: ${currentParticle.y}")
                         }
                     }
                     newMap[entry.key] = newList.toList()
@@ -186,7 +190,11 @@ private fun DrawScope.drawParticle(particle: Particle) {
     )
 }
 
-private fun createParticle(startOffset: Offset, initialVelocity : Float, color : Color) : Particle {
+private fun createParticle(startOffset: Offset,
+                           initialVelocity : Float,
+                           timeToReachHmax : Float,
+                           currentFrame : Long,
+                           color : Color) : Particle {
     val startY = startOffset.y
     val startX = startOffset.x
     val radius = Random.nextDouble(2.0, 5.0)
@@ -194,6 +202,8 @@ private fun createParticle(startOffset: Offset, initialVelocity : Float, color :
     return Particle(
         x = startX,
         y = startY,
+        timeToReachHmaxMs = timeToReachHmax,
+        currentFrameTimeNs = currentFrame,
         startPosition = Offset(startX, startY),
         initialVelocity = initialVelocity.toFloat(),
         radius = radius.toFloat(),
@@ -205,28 +215,28 @@ private const val g = -9.8f
 
 private fun updateParticle(particle: Particle, frame : Long) : Particle {
     var currentFrameTime = 0L
-    var t : Float = 0f
+    var elapsedTimeSecs : Float = 0f
     var x : Float = 0f
     var y : Float = 0f
-    if (particle.currentFrameTime == 0L) {
-        currentFrameTime = frame
-    } else {
-        val timeDiffNanoSecs = frame - particle.currentFrameTime
-        // TODO: define time in seconds or milliseconds!
-        t = particle.t + timeDiffNanoSecs * 10.0.pow(-8.0).toFloat()
-        currentFrameTime = frame
-        x = particle.startPosition.x + (particle.initialVelocity * cos(Math.toRadians(particle.angle)).toFloat() * particle.t)
-        y = particle.startPosition.y + ((particle.initialVelocity * sin(Math.toRadians(particle.angle)).toFloat() * particle.t) - ((-9.8f * particle.t * particle.t) / 2f))
 
-    }
-   val newAlpha = if (t > 18f) 0f else (1-(t / 18f))
+    val timeDiffNanoSecs = frame - particle.currentFrameTimeNs
+//    val timeDiffSecs = (timeDiffNanoSecs)
+    elapsedTimeSecs = particle.elapsedTimeSecs + convertNanoSecondsToRuntimeSpeed(timeDiffNanoSecs)
+    currentFrameTime = frame
+    x = particle.startPosition.x + (particle.initialVelocity * cos(Math.toRadians(particle.angle)).toFloat() * particle.elapsedTimeSecs)
+    y = particle.startPosition.y + ((particle.initialVelocity * sin(Math.toRadians(particle.angle)).toFloat() * particle.elapsedTimeSecs) - ((g * particle.elapsedTimeSecs * particle.elapsedTimeSecs) / 2f))
+
+    Log.i(logTag, "currenty: ${particle.y}, newY: ${y}, timetoReachHmax: ${particle.timeToReachHmaxMs}, initialVel: ${particle.initialVelocity}, elapsedTime: ${particle.elapsedTimeSecs}")
+
+   val newAlpha = if (elapsedTimeSecs > 18f) 0f else (1-(elapsedTimeSecs / 18f))
     return Particle(
         startPosition = particle.startPosition,
         initialVelocity = particle.initialVelocity,
-        currentFrameTime = currentFrameTime,
+        timeToReachHmaxMs = particle.timeToReachHmaxMs,
+        currentFrameTimeNs = currentFrameTime,
         x = x,
         y = y,
-        t = t,
+        elapsedTimeSecs = elapsedTimeSecs,
         color = Color(
                     red=particle.color.red,
                     green=particle.color.green,
@@ -291,5 +301,17 @@ private fun particlesInMap(particleMap : Map<Int, List<Particle>>) : Boolean {
     }
     Log.i(logTag, "defaulting to particlesInMap: false")
     return false
+}
+
+private fun nanoSecondsToMilliseconds(valueNs : Long) : Float {
+    return valueNs / 10.0.pow(6.0).toFloat()
+}
+
+private fun nanoSecondsToSeconds(valueNs : Long) : Float {
+    return valueNs / 10.0.pow(9.0).toFloat()
+}
+
+private fun convertNanoSecondsToRuntimeSpeed(valueNs: Long) : Float {
+    return valueNs * 10.0.pow(-8.0).toFloat()
 }
 

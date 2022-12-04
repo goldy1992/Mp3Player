@@ -139,7 +139,7 @@ private fun DrawScope.drawParticle(particle: Particle) {
     )
 }
 
-private fun createParticle(startOffset: Offset, initialVelocity : Float, color : Color) : Particle {
+private fun createParticle(startOffset: Offset, initialVelocity : Float, color : Color, currentFrameNs : Long) : Particle {
     val startY = startOffset.y
     val startX = startOffset.x
     val radius = Random.nextDouble(30.0, 55.0)
@@ -147,11 +147,13 @@ private fun createParticle(startOffset: Offset, initialVelocity : Float, color :
     return Particle(
         x = startX,
         y = startY,
+        currentFrame = currentFrameNs,
         startPosition = Offset(startX, startY),
         initialVelocity = initialVelocity.toFloat(),
         radius = radius.toFloat(),
         color = color,
-        angle = angle)
+        angle = angle,
+    timeToReachHmax = 0f)
 }
 
 private const val g = -9.8f
@@ -161,10 +163,10 @@ private fun updateParticle(particle: Particle, frame : Long) : Particle {
     var t : Float = 0f
     var x : Float = 0f
     var y : Float = 0f
-    if (particle.currentFrameTime == 0L) {
+    if (particle.currentFrameTimeNs == 0L) {
         currentFrameTime = frame
     } else {
-        val timeDiffNanoSecs = frame - particle.currentFrameTime
+        val timeDiffNanoSecs = frame - particle.currentFrameTimeNs
         // TODO: define time in seconds or milliseconds!
         t = particle.t + timeDiffNanoSecs * 10.0.pow(-8.0).toFloat()
         currentFrameTime = frame
@@ -176,7 +178,7 @@ private fun updateParticle(particle: Particle, frame : Long) : Particle {
     return Particle(
         startPosition = particle.startPosition,
         initialVelocity = particle.initialVelocity,
-        currentFrameTime = currentFrameTime,
+        currentFrameTimeNs = currentFrameTime,
         x = x,
         y = y,
         t = t,
@@ -186,7 +188,8 @@ private fun updateParticle(particle: Particle, frame : Long) : Particle {
                     blue= particle.color.blue,
                     alpha=newAlpha),
         angle = particle.angle,
-        radius = particle.radius)
+        radius = particle.radius,
+    timeToReachHmax = 0f)
 }
 
 private fun generateSpawnPoints(canvasWidth : Float,
