@@ -1,31 +1,27 @@
-package com.github.goldy1992.mp3player.client.ui.components.equalizer.fireworks
+package com.github.goldy1992.mp3player.client.ui.components.equalizer.cards
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.EqualizerCard
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainspring.FountainSpringEqualizer
 import kotlinx.coroutines.CoroutineScope
 
-
-@RequiresApi(Build.VERSION_CODES.N)
 @Preview
 @Composable
-fun FireworkEqualizerCard(
+fun FountainSpringCard(
     modifier : Modifier = Modifier,
     frequencyPhases : () -> List<Float> = {  listOf(100f, 200f, 300f, 150f) },
-    isPlayingProvider : () -> Boolean = { false },
     scope: CoroutineScope = rememberCoroutineScope()
 ) {
     EqualizerCard(
         modifier = modifier,
-        title = "Fireworks",
+        title = "Fountain",
     ) { canvasSize, containerModifier ->
-        FireworkWrapperNew(
+        FountainSpringEqualizer(
             frequencyPhasesProvider = frequencyPhases,
             canvasSize = canvasSize,
+            insetPx = canvasSize.heightPx * 0.05f,
             modifier = containerModifier)
     }
 

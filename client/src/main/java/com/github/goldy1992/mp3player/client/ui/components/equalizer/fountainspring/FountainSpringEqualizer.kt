@@ -1,8 +1,6 @@
-package com.github.goldy1992.mp3player.client.ui.components.equalizer.fireworks
+package com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainspring
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -27,14 +25,14 @@ private const val logTag = "FireworksEqualizer"
 private const val MAX_FREQUENCY = 150
 
 private var maxFreqVal = 0f
-@RequiresApi(Build.VERSION_CODES.N)
 @Composable
-fun FireworkWrapperNew(modifier: Modifier = Modifier,
-                    canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
-                    particleWidthPx : Float = 10f,
-                    insetPx : Float =70f,
-                    frequencyPhasesProvider : () -> List<Float> = { emptyList() },
-                    particleColor : Color = MaterialTheme.colorScheme.onPrimaryContainer,
+fun FountainSpringEqualizer(modifier: Modifier = Modifier,
+                            canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
+                            particleWidthPx : Float = 10f,
+                            insetPx : Float =70f,
+                            frequencyPhasesProvider : () -> List<Float> = { emptyList() },
+                            particleColor : Color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            maxParticlesPerSpring : Int = 15
  ) {
     val frequencyPhases = frequencyPhasesProvider()
    // Log.i(logTag, "recomposing")
@@ -54,7 +52,7 @@ fun FireworkWrapperNew(modifier: Modifier = Modifier,
         mutableStateOf(map.toMap())
     }
 
-    // TODO: separate into 2 separate flows, 1. add new particles 2. update animation
+    // LaunchedEffect for CREATING new particles
     LaunchedEffect(frequencyPhases) {
         this.launch {
                 Log.i(logTag, "frequencyPhases updated, new launchedeffect")
@@ -65,7 +63,7 @@ fun FireworkWrapperNew(modifier: Modifier = Modifier,
                 val entry = entryIterator.next()
                 val currentParticleList = entry.value
                 val newParticleList = currentParticleList.toMutableList()
-                if (newParticleList.size < 15) {
+                if (newParticleList.size < maxParticlesPerSpring) {
 //                    Log.i(logTag, "adding new particle to freq: ${entry.key}")
                     val currentFreq = frequencyPhases[entry.key]
                     val frac = currentFreq / MAX_FREQUENCY
@@ -73,15 +71,13 @@ fun FireworkWrapperNew(modifier: Modifier = Modifier,
                     Log.i(logTag, "hmax: $hmax")
                     val angle = Math.toRadians(Random.nextDouble(85.0, 95.0))
                     val initialVelocity = calculateInitialVelocityGivenHmax(hmax, angle)
-                    val timeToReachHmax = abs((hmax - initialVelocity) / g)
                     newParticleList.add(
                         createParticle(
                             spawnPoints[entry.key], initialVelocity = initialVelocity,
                             currentFrame = frame,
-                            timeToReachHmax = timeToReachHmax,
+                            hmax = hmax,
                             color = particleColor
                         )
-
                     )
                 }
                 newMap[entry.key] = newParticleList.toList()
@@ -91,7 +87,7 @@ fun FireworkWrapperNew(modifier: Modifier = Modifier,
         }
     }
 
-
+    // LaunchedEffect for UPDATING and REMOVING particles.
     LaunchedEffect(particles) {
         this.launch {
             Log.i(logTag, "launching new while particles in map corouting")
@@ -106,8 +102,7 @@ fun FireworkWrapperNew(modifier: Modifier = Modifier,
                     val valueIterator = entry.value.iterator()
                     while (valueIterator.hasNext()) {
                         val currentParticle = valueIterator.next()
-                        if (currentParticle.y < (canvasSize.heightPx +1)) {
-                            Log.i(logTag, "updatingparticle")
+                        if (!shouldRemoveParticle(currentParticle)) {
                             newList.add(updateParticle(currentParticle, frame))
                         } else {
                             Log.i(logTag, "removing particle of y: ${currentParticle.y}")
@@ -122,28 +117,30 @@ fun FireworkWrapperNew(modifier: Modifier = Modifier,
         }
     }
 
-    FireworkEqualizer(
+    FountainSpringCanvas(
         modifier = modifier,
         particles = particles
     )
-//    {
-//            width, height ->
-//            canvasWidth = width
-//            canvasHeight = height
-//    }
+}
+
+
+private fun shouldRemoveParticle(currentParticle: Particle) : Boolean {
+    val isFalling = currentParticle.isFalling
+    val currentY = currentParticle.y
+    val startY = currentParticle.startPosition.y
+    val hmax = currentParticle.hMax
+    val removePoint = (startY * 0.9f)
+    val result = currentParticle.isFalling && (currentY > removePoint)
+    Log.i(logTag, "should remove particle: $result because, isFalling: $isFalling, currentY: $currentY, startY: $startY hmax: $hmax remove at point: $removePoint, elapsedTime: ${currentParticle.elapsedTimeDeciseconds}")
+    return result
 }
 
 @Composable
-private fun FireworkEqualizer(
+private fun FountainSpringCanvas(
     particles : Map<Int, List<Particle>>,
     modifier: Modifier = Modifier,
     surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer
 ) {
-//    var msg = "equalizer called with: "
-//    for (p in particles.entries) {
-//        msg += "${p.key}: ${p.value}\n"
-//    }
-//    Log.i(logTag, msg)
     Canvas( modifier = modifier
         .fillMaxSize()
     ) {
@@ -168,13 +165,6 @@ private fun DrawScope.drawCircleParticle(particle: Particle) {
 
 
 private fun DrawScope.drawLineParticle(particle: Particle, brush : Brush) {
-//    drawCircle(
-//        //       color = particle.color,
-//        brush = brush,
-//        radius = particle.radius,
-//        center = Offset(particle.x, particle.y)
-//    )
-
     drawLine(brush = brush,
             start = Offset(particle.x, particle.y),
             strokeWidth = 10f,
@@ -192,7 +182,7 @@ private fun DrawScope.drawParticle(particle: Particle) {
 
 private fun createParticle(startOffset: Offset,
                            initialVelocity : Float,
-                           timeToReachHmax : Float,
+                           hmax: Float,
                            currentFrame : Long,
                            color : Color) : Particle {
     val startY = startOffset.y
@@ -202,7 +192,8 @@ private fun createParticle(startOffset: Offset,
     return Particle(
         x = startX,
         y = startY,
-        timeToReachHmaxMs = timeToReachHmax,
+        hMax = hmax,
+        isFalling = false,
         currentFrameTimeNs = currentFrame,
         startPosition = Offset(startX, startY),
         initialVelocity = initialVelocity.toFloat(),
@@ -220,29 +211,27 @@ private fun updateParticle(particle: Particle, frame : Long) : Particle {
     var y : Float = 0f
 
     val timeDiffNanoSecs = frame - particle.currentFrameTimeNs
-//    val timeDiffSecs = (timeDiffNanoSecs)
-    elapsedTimeSecs = particle.elapsedTimeSecs + convertNanoSecondsToRuntimeSpeed(timeDiffNanoSecs)
+    elapsedTimeSecs = particle.elapsedTimeDeciseconds + convertNanoSecondsToRuntimeSpeed(timeDiffNanoSecs)
     currentFrameTime = frame
-    x = particle.startPosition.x + (particle.initialVelocity * cos(Math.toRadians(particle.angle)).toFloat() * particle.elapsedTimeSecs)
-    y = particle.startPosition.y + ((particle.initialVelocity * sin(Math.toRadians(particle.angle)).toFloat() * particle.elapsedTimeSecs) - ((g * particle.elapsedTimeSecs * particle.elapsedTimeSecs) / 2f))
-
-    Log.i(logTag, "currenty: ${particle.y}, newY: ${y}, timetoReachHmax: ${particle.timeToReachHmaxMs}, initialVel: ${particle.initialVelocity}, elapsedTime: ${particle.elapsedTimeSecs}")
+    x = particle.startPosition.x + (particle.initialVelocity * cos(Math.toRadians(particle.angle)).toFloat() * particle.elapsedTimeDeciseconds)
+    y = particle.startPosition.y + ((particle.initialVelocity * sin(Math.toRadians(particle.angle)).toFloat() * particle.elapsedTimeDeciseconds) - ((g * particle.elapsedTimeDeciseconds * particle.elapsedTimeDeciseconds) / 2f))
 
    val newAlpha = if (elapsedTimeSecs > 18f) 0f else (1-(elapsedTimeSecs / 18f))
     return Particle(
         startPosition = particle.startPosition,
         initialVelocity = particle.initialVelocity,
-        timeToReachHmaxMs = particle.timeToReachHmaxMs,
+        isFalling = y > particle.y,
         currentFrameTimeNs = currentFrameTime,
         x = x,
         y = y,
-        elapsedTimeSecs = elapsedTimeSecs,
+        elapsedTimeDeciseconds = elapsedTimeSecs,
         color = Color(
                     red=particle.color.red,
                     green=particle.color.green,
                     blue= particle.color.blue,
                     alpha=newAlpha),
         angle = particle.angle,
+        hMax = particle.hMax,
         radius = particle.radius)
 }
 
@@ -252,10 +241,11 @@ private fun generateSpawnPoints(canvasWidth : Float,
                                 particleWidth: Float,
                                 numberOfFrequencies : Int) : List<Offset> {
     val spawnHeight : Float = canvasHeight //+ 10f
-    val widthBetweenSpawns : Float = (canvasWidth - (insetPx * 2) - (particleWidth * numberOfFrequencies)) / (numberOfFrequencies - 1)
+    val lengthOfDivision : Float = canvasWidth - (insetPx * 2) - (particleWidth * numberOfFrequencies)
+    val widthBetweenSpawns : Float = lengthOfDivision / (numberOfFrequencies + 1)//if (numberOfFrequencies <= 1) lengthOfDivision else lengthOfDivision / (numberOfFrequencies - 1)
 
     val toReturn = arrayListOf<Offset>()
-    for (i in 0 until numberOfFrequencies) {
+    for (i in 1 .. numberOfFrequencies) {
         val offsetValue = Offset(x = insetPx + (widthBetweenSpawns * i) + (particleWidth * i),
                             y = spawnHeight)
         toReturn.add(offsetValue)
@@ -311,6 +301,10 @@ private fun nanoSecondsToSeconds(valueNs : Long) : Float {
     return valueNs / 10.0.pow(9.0).toFloat()
 }
 
+/**
+ * From nano seconds (i.e. 10^-9)
+ * Runtime speed is Deciseconds (i.e. 10^-1)
+ */
 private fun convertNanoSecondsToRuntimeSpeed(valueNs: Long) : Float {
     return valueNs * 10.0.pow(-8.0).toFloat()
 }

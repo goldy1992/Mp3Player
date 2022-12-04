@@ -25,8 +25,8 @@ import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.ui.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.BarCard
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.FountainSpringCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.SmoothLineCard
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.fireworks.FireworkEqualizerCard
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,8 +64,7 @@ fun VisualizerScreen(
     ) {
 
         VisualizerContentCardCollection(modifier = Modifier.padding(it),
-                audioMagnitudes = {audioMagnitudes},
-                isPlayingProvider = { isPlaying })
+                audioMagnitudes = {audioMagnitudes})
     }
 
 }
@@ -171,7 +170,6 @@ private fun VisualizerContent(
 fun VisualizerContentCardCollection(
     modifier: Modifier = Modifier,
     audioMagnitudes : () -> List<Float> = { listOf(100f, 200f, 300f, 150f)},
-    isPlayingProvider : () -> Boolean = { false},
     scope: CoroutineScope = rememberCoroutineScope()) {
 
     val density = LocalDensity.current
@@ -210,12 +208,11 @@ fun VisualizerContentCardCollection(
         }
 
         item {
-            FireworkEqualizerCard(
+            FountainSpringCard(
                 modifier = Modifier
                     .width(cardLengthDp)
                     .height(cardLengthDp),
                 frequencyPhases = audioMagnitudes,
-                isPlayingProvider = isPlayingProvider,
                 scope = scope
             )
         }

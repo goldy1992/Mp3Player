@@ -1,13 +1,12 @@
-package com.github.goldy1992.mp3player.client.ui.components.equalizer.fireworks
+package com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainspring
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.FountainSpringCard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -51,15 +50,13 @@ val testAudio =  flow<List<Float>> {
     started = SharingStarted.WhileSubscribed()
 )
 
-@RequiresApi(Build.VERSION_CODES.N)
 @Preview
 @Composable
 fun DisplayFireworkEqualizer() {
-   val testAudio by testAudio.collectAsState(listOf<Float>(0f, 0f, 0f, 0f))
+   val testAudio by testAudio.collectAsState(listOf<Float>(0f))
 
-    FireworkEqualizerCard(
+    FountainSpringCard(
         modifier = Modifier.fillMaxSize(),
         frequencyPhases =  {testAudio},
-  //  isPlayingProvider = {true},
     scope = scope)
 }

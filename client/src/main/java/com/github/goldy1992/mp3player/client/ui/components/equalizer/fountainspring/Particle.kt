@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.components.equalizer.fireworks
+package com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainspring
 
 
 import androidx.compose.ui.geometry.Offset
@@ -9,7 +9,9 @@ private const val logTag = "Particle"
 data class Particle
 constructor(
     val startPosition : Offset,
-    val timeToReachHmaxMs : Float,
+    //val timeToReachHmaxSecs : Float,
+    val hMax : Float,
+    val isFalling : Boolean,
     val initialVelocity : Float = 7.5f,
     val angle : Double = 90.0,
     val radius : Float = 50f,
@@ -18,13 +20,11 @@ constructor(
 
     val x : Float = 0f,
     val y : Float = 0f,
-    val elapsedTimeSecs : Float = 0f,
+    val elapsedTimeDeciseconds : Float = 0f,
     val currentFrameTimeNs :  Long) {
 
-    val isFalling : Boolean = elapsedTimeSecs > timeToReachHmaxMs
-
     override fun toString(): String {
-        return "x: ${x}, y: ${y}, elapsedTimeSecs: ${elapsedTimeSecs}, startPos: ${startPosition}, initialVelocity: ${initialVelocity}, timeToReachHmax: ${timeToReachHmaxMs}, angle ${angle}, currentFrameTimeNs: $currentFrameTimeNs"
+        return "x: ${x}, y: ${y}, elapsedTimeSecs: ${elapsedTimeDeciseconds}, startPos: ${startPosition}, initialVelocity: ${initialVelocity}, angle ${angle}, currentFrameTimeNs: $currentFrameTimeNs"
     }
 }
 
