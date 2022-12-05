@@ -9,6 +9,7 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.ui.buttons.PauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.PlayButton
+import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
@@ -17,7 +18,6 @@ import org.mockito.Mock
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 
 /**
  * Test class for [com.github.goldy1992.mp3player.client.ui.PlayToolbar].

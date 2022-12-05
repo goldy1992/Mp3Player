@@ -18,4 +18,32 @@ class EqualizerUtilsTest {
 
         assertEquals(expected, result)
     }
+
+    @Test
+    fun testCalculateBarSpacing() {
+        val containerWidth = 42f
+        val barWidth = 2f
+        val numOfBars = 3
+        val expected = 9f
+        val result= calculateBarSpacingPixels(
+            containerWidthPx = containerWidth,
+            numOfBars = numOfBars,
+            barWidthPx =  barWidth)
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testCalculateBarSpacingInvalidNumberOfBars() {
+        val containerWidth = 42f
+        val barWidth = 2f
+        val numOfBars = -3
+        val expected = 0f
+        val result= calculateBarSpacingPixels(
+            containerWidthPx = containerWidth,
+            numOfBars = numOfBars,
+            barWidthPx =  barWidth)
+
+        assertEquals(expected, result)
+    }
 }

@@ -44,23 +44,6 @@ android {
         }
     }
 
-    sourceSets {
-        String sharedTestSrcDir = 'src/testCommons/java'
-        String sharedTestResDir = 'src/testCommons/res'
-        full {
-            debug {
-                test {
-                    java.srcDirs += [sharedTestSrcDir]
-                    resources.srcDirs += [sharedTestResDir]
-                }
-                androidTest {
-                    java.srcDirs += [sharedTestSrcDir]
-                    resources.srcDirs += [sharedTestResDir]
-                }
-            }
-        }
-    }
-
     variantFilter { variant ->
         def names = variant.flavors*.name
 

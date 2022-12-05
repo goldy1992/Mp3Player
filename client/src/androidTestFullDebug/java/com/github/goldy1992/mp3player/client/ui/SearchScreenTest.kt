@@ -12,6 +12,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.eventholders.OnSearchResultsChangedEventHolder
 import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnSearchResultsChangedFlow
+import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreen
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.client.viewmodels.SearchScreenViewModel
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder

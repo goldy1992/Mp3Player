@@ -57,27 +57,3 @@ fun calculateFrequencyBandsAverages(values: Array<Double>, frequencyBand: Freque
     return toReturn
 }
 
-fun covertFrequencyPhases(originalFrequencyPhases : Array<Double>) : FloatArray {
-    val toReturn = FloatArray(originalFrequencyPhases.size)
-    originalFrequencyPhases.forEachIndexed {idx, value -> toReturn[idx] = value.toFloat()}
-    return toReturn
-}
-
-fun calculateReadValues(values: Array<Double>, readCount : Int) : FloatArray {
-    val valuesCount = values.size
-    if (readCount > valuesCount) {
-        Log.w(logTag, "readCount ($readCount) >= values array size ($valuesCount), returning empty list")
-        return floatArrayOf()
-    }
-
-    val toReturn = FloatArray(readCount)
-    var count = 0
-    val stepsOf = valuesCount / readCount
-    for (i in 0 until readCount) {
-        toReturn[i] = values[count].toFloat()
-        count += stepsOf
-    }
-    return toReturn
-}
-
-

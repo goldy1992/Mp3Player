@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
+import com.github.goldy1992.mp3player.client.ui.screens.SettingsScreen
 import com.github.goldy1992.mp3player.client.utils.VersionUtils
 import kotlinx.coroutines.flow.flowOf
 import org.junit.Before
