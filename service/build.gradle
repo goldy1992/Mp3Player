@@ -128,7 +128,7 @@ dependencies {
     testImplementation("org.robolectric:robolectric:$robolectric_version") {
         exclude group: "com.google.auto.service", module: "auto-service"
     }
-    testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: robolectric_version
+    //testImplementation group: 'org.robolectric', name: 'shadows-supportv4', version: robolectric_version
     testImplementation group: "org.mockito.kotlin", name: "mockito-kotlin", version: mockito_kotlin_version
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: mockito_inline_version
     testImplementation group: 'androidx.test', name: 'core', version: test_core_version

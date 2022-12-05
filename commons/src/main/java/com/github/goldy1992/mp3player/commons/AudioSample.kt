@@ -7,7 +7,6 @@ data class AudioSample
         val phase : Array<Double> = emptyArray(),
         val magnitude : Array<Double> = emptyArray(),
         val waveformData : FloatArray = FloatArray(0),
-     //   val frequencyMap : FloatArray = FloatArray(0),
         val sampleHz : Int = 128000,
         val channelCount : Int = 2
     ) : Serializable {
@@ -38,5 +37,9 @@ data class AudioSample
         result = 31 * result + sampleHz
         result = 31 * result + channelCount
         return result
+    }
+
+    override fun toString(): String {
+        return super.toString()
     }
 }

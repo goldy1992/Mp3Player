@@ -198,7 +198,6 @@ class FFTAudioProcessor
                 channelCount = this.inputAudioFormat.channelCount,
                 sampleHz = SAMPLE_SIZE)
 
-//            val audioSample = createFftSample(src, this.inputAudioFormat.channelCount, SAMPLE_SIZE)
             postSampleToMediaSession(audioSample)
 
         }
