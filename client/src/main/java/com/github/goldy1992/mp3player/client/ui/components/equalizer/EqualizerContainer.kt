@@ -9,7 +9,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import com.github.goldy1992.mp3player.client.ui.screens.DpPxSize
+import com.github.goldy1992.mp3player.client.data.DpPxSize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

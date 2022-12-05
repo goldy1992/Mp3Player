@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui
+package com.github.goldy1992.mp3player.client.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.ui.BOTTOM_BAR_SIZE
 import com.github.goldy1992.mp3player.client.ui.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.SkipToNextButton
 import com.github.goldy1992.mp3player.client.ui.buttons.SkipToPreviousButton

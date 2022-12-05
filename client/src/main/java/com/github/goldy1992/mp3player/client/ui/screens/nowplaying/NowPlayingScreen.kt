@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui
+package com.github.goldy1992.mp3player.client.ui.screens.nowplaying
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -19,13 +19,14 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
+import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
+import com.github.goldy1992.mp3player.client.ui.components.SpeedController
 import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
 import com.github.goldy1992.mp3player.client.viewmodels.NowPlayingScreenViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -34,7 +35,6 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.flow.StateFlow
 import org.apache.commons.lang3.ObjectUtils.isEmpty
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.screens
+package com.github.goldy1992.mp3player.client.ui.screens.visualizer
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -22,11 +22,12 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.github.goldy1992.mp3player.client.ui.PlayToolbar
+import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.BarCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.FountainSpringCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.SmoothLineCard
+import com.github.goldy1992.mp3player.client.viewmodels.VisualizerViewModel
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow

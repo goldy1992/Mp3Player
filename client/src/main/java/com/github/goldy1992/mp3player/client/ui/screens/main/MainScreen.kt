@@ -15,8 +15,8 @@ import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.ui.NavigationDrawer
-import com.github.goldy1992.mp3player.client.ui.PlayToolbar
+import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawer
+import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.viewmodels.MainScreenViewModel
 import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository

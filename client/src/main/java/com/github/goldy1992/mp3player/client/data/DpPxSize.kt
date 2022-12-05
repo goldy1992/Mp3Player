@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.screens
+package com.github.goldy1992.mp3player.client.data
 
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp

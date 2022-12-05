@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import com.github.goldy1992.mp3player.client.ui.screens.DpPxSize
+import com.github.goldy1992.mp3player.client.data.DpPxSize
 import kotlinx.coroutines.launch
 
 private const val logTag = "SmoothEqualizer"

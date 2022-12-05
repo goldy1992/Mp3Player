@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import com.github.goldy1992.mp3player.client.ui.screens.DpPxSize
+import com.github.goldy1992.mp3player.client.data.DpPxSize
 import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty

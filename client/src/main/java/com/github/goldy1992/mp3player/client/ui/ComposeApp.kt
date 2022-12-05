@@ -4,9 +4,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
@@ -17,10 +15,13 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.screens.FolderScreen
-import com.github.goldy1992.mp3player.client.ui.screens.VisualizerScreen
-import com.github.goldy1992.mp3player.client.ui.screens.VisualizerViewModel
+import com.github.goldy1992.mp3player.client.ui.screens.SettingsScreen
+import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerScreen
+import com.github.goldy1992.mp3player.client.viewmodels.VisualizerViewModel
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreen
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
+import com.github.goldy1992.mp3player.client.ui.screens.nowplaying.NowPlayingScreen
+import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreen
 import com.github.goldy1992.mp3player.client.viewmodels.*
 import com.github.goldy1992.mp3player.commons.Constants.ROOT_APP_URI_PATH
 import com.github.goldy1992.mp3player.commons.Screen

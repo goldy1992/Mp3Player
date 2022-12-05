@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalAnimationApi::class)
 
-package com.github.goldy1992.mp3player.client.ui
+package com.github.goldy1992.mp3player.client.ui.components.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image

@@ -17,8 +17,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
-import com.github.goldy1992.mp3player.client.ui.NavigationDrawerContent
-import com.github.goldy1992.mp3player.client.ui.PlayToolbar
+import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
+import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.viewmodels.FolderScreenViewModel

@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.screens;
+package com.github.goldy1992.mp3player.client.viewmodels;
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

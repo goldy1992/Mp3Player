@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui
+package com.github.goldy1992.mp3player.client.ui.screens.search
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -33,6 +33,9 @@ import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
+import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
+import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListItem
 import com.github.goldy1992.mp3player.client.ui.lists.onSelectedMap
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongListItem
