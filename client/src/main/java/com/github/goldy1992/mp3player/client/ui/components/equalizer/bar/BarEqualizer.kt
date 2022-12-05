@@ -51,7 +51,7 @@ fun BarEqualizer(modifier: Modifier = Modifier,
     LaunchedEffect(frequencyPhases) {
         //    Log.i(logTag, "Triggered launch effect: frequencyPhases $frequencyPhases")
         for (i in frequencyPhases.indices) {
-            this.launch { frequencyAnimatableList[i].animateTo(targetValue = frequencyPhases[i], animationSpec = tween(300)) }
+            this.launch { frequencyAnimatableList[i].animateTo(targetValue = frequencyPhases[i], animationSpec = tween(150)) }
         }
     }
 

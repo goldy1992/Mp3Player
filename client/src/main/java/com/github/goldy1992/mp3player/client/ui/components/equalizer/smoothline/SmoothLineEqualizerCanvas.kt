@@ -43,7 +43,7 @@ fun SmoothLineEqualizerCanvas(modifier: Modifier = Modifier,
     LaunchedEffect(frequencyPhases) {
         //    Log.i(logTag, "Triggered launch effect: frequencyPhases $frequencyPhases")
         for (i in frequencyPhases.indices) {
-            this.launch { frequencies[i].animateTo(targetValue = frequencyPhases[i], animationSpec = tween(300)) }
+            this.launch { frequencies[i].animateTo(targetValue = frequencyPhases[i], animationSpec = tween(150)) }
         }
     }
     val numberOfPhases: Int = frequencies.size

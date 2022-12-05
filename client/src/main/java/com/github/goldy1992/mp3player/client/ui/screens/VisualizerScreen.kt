@@ -187,6 +187,7 @@ fun VisualizerContentCardCollection(
         verticalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
             .onSizeChanged { gridSizePx = it }) {
         item {
             BarCard(
