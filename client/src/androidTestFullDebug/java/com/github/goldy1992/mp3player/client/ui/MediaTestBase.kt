@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.session.LibraryResult
@@ -11,13 +10,12 @@ import androidx.media3.session.MediaLibraryService
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnSearchResultsChangedFlow
-import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
-import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
-import com.github.goldy1992.mp3player.client.data.flows.player.QueueFlow
+import com.github.goldy1992.mp3player.client.ui.flows.player.IsPlayingFlow
+import com.github.goldy1992.mp3player.client.ui.flows.player.MetadataFlow
+import com.github.goldy1992.mp3player.client.ui.flows.player.QueueFlow
 import com.github.goldy1992.mp3player.client.MediaTestUtils.createTestMediaItem
-import com.github.goldy1992.mp3player.client.data.eventholders.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.client.data.flows.player.PlaybackPositionFlow
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.ui.flows.player.PlaybackPositionFlow
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.util.concurrent.Futures
 import kotlinx.coroutines.CoroutineDispatcher

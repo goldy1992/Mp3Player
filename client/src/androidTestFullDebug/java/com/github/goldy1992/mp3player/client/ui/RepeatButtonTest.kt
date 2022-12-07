@@ -8,7 +8,7 @@ import androidx.media3.common.Player.*
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.flows.player.RepeatModeFlow
+import com.github.goldy1992.mp3player.client.ui.flows.player.RepeatModeFlow
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatAllButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatNoneButton
@@ -21,7 +21,6 @@ import org.mockito.Mock
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 
 /**
  * Test class for the [RepeatButton]

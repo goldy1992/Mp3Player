@@ -27,7 +27,6 @@ import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.BarCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.FountainSpringCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.SmoothLineCard
-import com.github.goldy1992.mp3player.client.viewmodels.VisualizerViewModel
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow

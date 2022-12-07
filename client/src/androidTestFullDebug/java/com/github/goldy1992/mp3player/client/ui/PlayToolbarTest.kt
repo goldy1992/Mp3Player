@@ -6,7 +6,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
+import com.github.goldy1992.mp3player.client.ui.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.ui.buttons.PauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.PlayButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar

@@ -8,7 +8,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.flows.player.ShuffleModeFlow
+import com.github.goldy1992.mp3player.client.ui.flows.player.ShuffleModeFlow
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleOffButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleOnButton
@@ -18,7 +18,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 /**
  * Test class for the [ShuffleButton]

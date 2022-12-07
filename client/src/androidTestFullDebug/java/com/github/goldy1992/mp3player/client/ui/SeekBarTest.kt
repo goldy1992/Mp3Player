@@ -9,13 +9,11 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.media3.common.MediaMetadata
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.eventholders.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.client.data.flows.player.PlaybackParametersFlow
+import com.github.goldy1992.mp3player.client.ui.flows.player.PlaybackParametersFlow
 import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
 import com.github.goldy1992.mp3player.commons.MetaDataKeys
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule

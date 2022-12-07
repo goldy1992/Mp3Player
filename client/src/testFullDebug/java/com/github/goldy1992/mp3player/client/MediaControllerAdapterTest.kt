@@ -4,8 +4,11 @@ import android.os.Bundle
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
-import com.github.goldy1992.mp3player.client.MediaTestUtils
+import androidx.media3.session.SessionResult
+import androidx.media3.session.SessionResult.RESULT_SUCCESS
+import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.google.common.util.concurrent.Futures
+import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
 import org.junit.Assert.assertEquals
@@ -14,9 +17,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
+import org.mockito.kotlin.*
 import org.robolectric.RobolectricTestRunner
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -136,5 +137,24 @@ class MediaControllerAdapterTest {
         val customExtras = bundleCaptor.value
         assertTrue(customExtras.containsKey(key))
         assertEquals(value, customExtras.getString(key))
+    }
+
+    @Test
+    fun testChangePlaybackSpeed() = runTest(dispatcher) {
+        val expectedCustomAction = CHANGE_PLAYBACK_SPEED
+        val expectedSpeed = 1.13f
+        val key = expectedCustomAction
+        val value = expectedSpeed
+        whenever(mockMediaController.sendCustomCommand(any(), any())).thenReturn(Futures.immediateFuture(SessionResult(RESULT_SUCCESS, Bundle())))
+        mediaControllerAdapter.changePlaybackSpeed(expectedSpeed)
+        val captor = ArgumentCaptor.forClass(SessionCommand::class.java)
+        val bundleCaptor = ArgumentCaptor.forClass(Bundle::class.java)
+        verify(mockMediaController, times(1)).sendCustomCommand(captor.capture(), bundleCaptor.capture())
+        val sessionCommand = captor.value
+        assertEquals(expectedCustomAction, sessionCommand.customAction)
+
+        val customExtras = bundleCaptor.value
+        assertTrue(customExtras.containsKey(key))
+        assertEquals(value, customExtras.getFloat(key))
     }
 }

@@ -14,7 +14,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
-import com.github.goldy1992.mp3player.client.data.DpPxSize
+import com.github.goldy1992.mp3player.client.ui.DpPxSize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

@@ -11,7 +11,6 @@ import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.ui.BOTTOM_BAR_SIZE
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
-import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 
@@ -23,7 +22,6 @@ fun SmallMainScreenContent(
     pagerState: PagerState,
     rootItems: List<MediaItem>,
     mediaController: MediaControllerAdapter,
-    mediaRepository: MediaRepository
 ) {
     Row(
             Modifier

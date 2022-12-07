@@ -28,7 +28,6 @@ import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.SpeedController
 import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
-import com.github.goldy1992.mp3player.client.viewmodels.NowPlayingScreenViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState

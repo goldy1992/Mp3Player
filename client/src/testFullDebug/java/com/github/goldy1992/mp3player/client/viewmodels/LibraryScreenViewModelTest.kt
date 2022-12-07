@@ -8,10 +8,11 @@ import androidx.media3.session.MediaLibraryService
 import com.github.goldy1992.mp3player.client.CoroutineTestBase
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.data.eventholders.OnChildrenChangedEventHolder
-import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnChildrenChangedFlow
-import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
-import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
+import com.github.goldy1992.mp3player.client.ui.flows.mediabrowser.OnChildrenChangedFlow
+import com.github.goldy1992.mp3player.client.ui.flows.player.IsPlayingFlow
+import com.github.goldy1992.mp3player.client.ui.flows.player.MetadataFlow
+import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreenViewModel
 import com.google.common.util.concurrent.Futures
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -45,7 +46,8 @@ class LibraryScreenViewModelTest : CoroutineTestBase() {
     private val metadataProducerFlow = MutableStateFlow(MediaMetadata.EMPTY)
     private val onChildrenChangedProducerFlow = MutableStateFlow(
         OnChildrenChangedEventHolder(mock<MediaBrowser>(),
-            "", 0, MediaLibraryService.LibraryParams.Builder().build()))
+            "", 0, MediaLibraryService.LibraryParams.Builder().build())
+    )
 
 
     @Before

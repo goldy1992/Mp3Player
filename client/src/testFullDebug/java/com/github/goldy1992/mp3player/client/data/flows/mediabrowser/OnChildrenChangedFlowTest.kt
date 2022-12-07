@@ -1,7 +1,8 @@
 package com.github.goldy1992.mp3player.client.data.flows.mediabrowser
 
 import androidx.media3.session.MediaLibraryService
-import com.github.goldy1992.mp3player.client.data.eventholders.OnChildrenChangedEventHolder
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
+import com.github.goldy1992.mp3player.client.ui.flows.mediabrowser.OnChildrenChangedFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.*

@@ -10,18 +10,16 @@ import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaLibraryService
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.eventholders.OnSearchResultsChangedEventHolder
-import com.github.goldy1992.mp3player.client.data.flows.mediabrowser.OnSearchResultsChangedFlow
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
+import com.github.goldy1992.mp3player.client.ui.flows.mediabrowser.OnSearchResultsChangedFlow
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreen
-import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
-import com.github.goldy1992.mp3player.client.viewmodels.SearchScreenViewModel
+import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreenViewModel
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
-import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,13 +44,15 @@ class SearchScreenTest : MediaTestBase(){
 
     private lateinit var searchScreenViewModel: SearchScreenViewModel
 
-    private val searchResultsChangedFlow = MutableStateFlow(OnSearchResultsChangedEventHolder(
+    private val searchResultsChangedFlow = MutableStateFlow(
+        OnSearchResultsChangedEventHolder(
         mockMediaBrowser,
         "",
         1,
         MediaLibraryService.LibraryParams.Builder().build()
 
-    ))
+    )
+    )
     private val searchResultsChangedFlowObj = mock<OnSearchResultsChangedFlow>()
 
     @get:Rule

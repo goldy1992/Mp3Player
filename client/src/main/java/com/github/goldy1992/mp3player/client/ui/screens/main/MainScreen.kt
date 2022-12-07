@@ -18,8 +18,6 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawer
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.WindowSize
-import com.github.goldy1992.mp3player.client.viewmodels.MainScreenViewModel
-import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils

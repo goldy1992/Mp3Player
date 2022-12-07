@@ -16,8 +16,6 @@ import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -44,10 +42,6 @@ open class MediaControllerAdapter
 
     open fun getCurrentQueuePosition() : Int {
         return mediaController?.currentMediaItemIndex ?: 0
-    }
-
-    open suspend fun getCurrentQueuePositionAsync() : Int {
-        return mediaControllerFuture.await().currentMediaItemIndex
     }
 
     open suspend fun prepareFromMediaId(mediaItem: MediaItem) {
@@ -139,14 +133,6 @@ open class MediaControllerAdapter
         extras.putFloat(CHANGE_PLAYBACK_SPEED, speed)
         val changePlaybackSpeedCommand = SessionCommand(CHANGE_PLAYBACK_SPEED, extras)
         mediaControllerFuture.await().sendCustomCommand(changePlaybackSpeedCommand, extras).await()
-    }
-
-    open fun getCurrentPlaybackPosition() : Long {
-        return mediaController?.currentPosition ?: 0L
-    }
-
-    open suspend fun getCurrentMediaItem() : MediaItem {
-        return mediaControllerFuture.await().currentMediaItem ?: MediaItem.EMPTY
     }
 
     override fun logTag(): String {

@@ -39,7 +39,6 @@ import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListItem
 import com.github.goldy1992.mp3player.client.ui.lists.onSelectedMap
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongListItem
-import com.github.goldy1992.mp3player.client.viewmodels.SearchScreenViewModel
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen

@@ -14,7 +14,6 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.permissions.PermissionGranted
 import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
-import com.github.goldy1992.mp3player.client.viewmodels.MediaRepository
 import com.github.goldy1992.mp3player.commons.*
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -46,8 +45,6 @@ abstract class MainActivityBase : ComponentActivity(),
      */
     @Inject
     lateinit var mediaControllerAdapter: MediaControllerAdapter
-
-    lateinit var mediaRepository: MediaRepository
 
     @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
