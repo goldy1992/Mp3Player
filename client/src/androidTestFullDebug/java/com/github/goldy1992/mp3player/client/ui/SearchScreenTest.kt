@@ -40,7 +40,6 @@ import java.io.File
     ExperimentalFoundationApi::class)
 class SearchScreenTest : MediaTestBase(){
 
-    private val mockMediaRepo : MediaRepository = MediaRepository(MutableLiveData())
 
     private lateinit var searchScreenViewModel: SearchScreenViewModel
 

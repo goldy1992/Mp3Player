@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.dagger.modules
 
 import com.github.goldy1992.mp3player.client.MockUserPreferencesRepository
-import com.github.goldy1992.mp3player.client.UserPreferencesRepository
+import com.github.goldy1992.mp3player.client.preferences.UserPreferencesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent

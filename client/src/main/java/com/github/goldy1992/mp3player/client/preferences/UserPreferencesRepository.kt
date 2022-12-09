@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client
+package com.github.goldy1992.mp3player.client.preferences
 
 import android.util.Log
 import androidx.datastore.core.DataStore
@@ -15,7 +15,11 @@ data class UserPreferences(
     val darkMode: Boolean,
     val systemDarkMode : Boolean,
     val theme: String
-)
+)  {
+    companion object {
+        val DEFAULT = UserPreferences(darkMode = false, systemDarkMode = false, theme = "None")
+    }
+}
 
 /**
  * Class that handles saving and retrieving user preferences
@@ -40,7 +44,7 @@ open class UserPreferencesRepository(private val dataStore: DataStore<Preference
             } else {
                 throw exception
             }
-        }.map { preferences ->
+        }.map { preferences : Preferences ->
             // Get the sort order from preferences and convert it to a [SortOrder] object
             val themeString : String? = preferences[PreferencesKeys.THEME]
             val theme : Theme = if (themeString != null) Theme.valueOf(themeString) else Theme.BLUE
