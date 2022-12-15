@@ -12,6 +12,7 @@ import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.ui.flows.player.*
 import com.github.goldy1992.mp3player.client.ui.states.PlaybackPosition
+import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -90,12 +91,12 @@ constructor(
 
 
     // queue
-    private val _queue = MutableStateFlow(emptyList<MediaItem>())
-    val queue : StateFlow<List<MediaItem>> = _queue
+    private val _queue = MutableStateFlow(QueueState.EMPTY)
+    val queue : StateFlow<QueueState> = _queue
 
     init {
         viewModelScope.launch(mainDispatcher) {
-           _queue.value = queueFlow.getQueue(mediaControllerAsync.await())
+       //    _queue.value = queueFlow.getQueue(mediaControllerAsync.await())
         }
         viewModelScope.launch {
             queueFlow.flow().collect {

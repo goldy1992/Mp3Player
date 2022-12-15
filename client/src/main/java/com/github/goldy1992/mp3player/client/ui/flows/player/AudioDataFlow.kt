@@ -9,7 +9,6 @@ import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.Constants.AUDIO_DATA
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
@@ -17,9 +16,7 @@ import javax.inject.Inject
 class AudioDataFlow
 
 @Inject
-constructor(customCommandFlow: OnCustomCommandFlow,
-            scope : CoroutineScope
-) : LogTagger {
+constructor(customCommandFlow: OnCustomCommandFlow) : LogTagger {
 
     private val audioDataFlow : Flow<AudioSample> = customCommandFlow.flow
     .filter {
@@ -27,11 +24,7 @@ constructor(customCommandFlow: OnCustomCommandFlow,
         AUDIO_DATA == it.command.customAction
     }.map {
         getAudioSample(it)
-    }.shareIn(
-        scope,
-        replay = 1,
-        started = SharingStarted.WhileSubscribed()
-    )
+    }
 
     override fun logTag(): String {
         return "AudioDataFlow"
