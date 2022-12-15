@@ -34,7 +34,7 @@ fun SeekBar(isPlayingProvider: () -> Boolean,
             metadataProvider: () -> MediaMetadata,
             playbackSpeedProvider : () ->  Float,
             playbackPositionProvider: () -> PlaybackPositionEvent,
-            mediaController : MediaControllerAdapter,
+            seekTo: (value: Long) -> Unit,
             scope: CoroutineScope = rememberCoroutineScope()) {
 
     //Log.i(logTag, "seek bar created")
@@ -57,7 +57,7 @@ fun SeekBar(isPlayingProvider: () -> Boolean,
         durationDescription = durationDescription,
         currentPositionDescription = currentPositionDescription,
         scope = scope,
-        mediaController = mediaController
+        seekTo = seekTo
     )
 }
 
@@ -69,7 +69,7 @@ private fun SeekBarUi(currentPosition : Float,
                       durationDescription : String,
                       currentPositionDescription : String,
                       scope: CoroutineScope,
-                      mediaController : MediaControllerAdapter
+                      seekTo : (value : Long) -> Unit
                     ) {
     val seekBarAnimation = remember(animationTimeInMs) { mutableStateOf(Animatable(currentPosition)) }
     //  Log.i(logTag, "Anim1Value: ${anim1.value}")
@@ -106,7 +106,7 @@ private fun SeekBarUi(currentPosition : Float,
             onValueChangeFinished = {
                 isTouchTracking.value = false
                 seekBarAnimation.value = Animatable(touchTrackingPosition.value)
-                scope.launch { mediaController.seekTo(touchTrackingPosition.value.toLong()) }
+                scope.launch { seekTo(touchTrackingPosition.value.toLong()) }
             })
         Text(text = formatTime(if (isTouchTracking.value) touchTrackingPosition.value.toLong() else seekBarAnimation.value.value.toLong()),
             modifier = Modifier

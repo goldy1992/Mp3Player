@@ -57,3 +57,34 @@ fun ShuffleOffButton(mediaController: MediaControllerAdapter,
             tint = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
+
+@Composable
+fun ShuffleButton(shuffleEnabledProvider : () -> Boolean,
+        onClick : (isEnabled : Boolean) -> Unit) {
+    val isShuffleEnabled = shuffleEnabledProvider()
+    if (isShuffleEnabled) {
+        ShuffleOffButton(onClick = { onClick(true) })
+    } else {
+        ShuffleOnButton(onClick = {onClick(false)})
+    }
+}
+
+
+@Composable
+fun ShuffleOnButton(onClick : () -> Unit = {}) {
+    IconButton(onClick = onClick)
+    {
+        Icon(Icons.Filled.Shuffle, contentDescription = stringResource(id = R.string.shuffle_on),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+
+@Composable
+fun ShuffleOffButton(onClick : () -> Unit = {}) {
+    IconButton(onClick = onClick)
+    {
+        Icon(Icons.Filled.Shuffle, contentDescription = stringResource(id = R.string.shuffle_off),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}

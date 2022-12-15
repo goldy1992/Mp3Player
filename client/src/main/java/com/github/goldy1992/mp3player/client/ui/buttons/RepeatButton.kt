@@ -33,6 +33,18 @@ fun RepeatButton(mediaController : MediaControllerAdapter,
 }
 
 @Composable
+fun RepeatButton(repeatModeProvider : () -> @RepeatMode Int,
+                 onClick : (repeatMode : @RepeatMode Int) -> Unit) {
+
+    val currentRepeatMode = repeatModeProvider()
+    when (repeatModeProvider()) {
+        Player.REPEAT_MODE_ONE -> RepeatOneButton(onClick = {onClick(currentRepeatMode)})
+        Player.REPEAT_MODE_ALL -> RepeatAllButton(onClick = {onClick(currentRepeatMode)})
+        else -> RepeatNoneButton(onClick = {onClick(currentRepeatMode)})
+    }
+}
+
+@Composable
 fun RepeatOneButton(mediaController : MediaControllerAdapter,
                     scope : CoroutineScope = rememberCoroutineScope()) {
     IconButton(onClick = { scope.launch { mediaController.setRepeatMode(Player.REPEAT_MODE_ALL)} }) {
@@ -59,3 +71,27 @@ fun RepeatNoneButton(mediaController : MediaControllerAdapter,
    }
 }
 
+
+@Composable
+fun RepeatOneButton(onClick : () -> Unit) {
+    IconButton(onClick = onClick) {
+        Icon(Icons.Filled.RepeatOneOn, contentDescription = stringResource(id = R.string.repeat_one),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+@Composable
+fun RepeatAllButton(onClick : () -> Unit) {
+    IconButton(onClick = onClick) {
+        Icon(Icons.Filled.RepeatOn, contentDescription = stringResource(id = R.string.repeat_all),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+@Composable
+fun RepeatNoneButton(onClick : () -> Unit) {
+    IconButton(onClick = onClick) {
+        Icon(Icons.Filled.Repeat, contentDescription = stringResource(id = R.string.repeat_none),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}

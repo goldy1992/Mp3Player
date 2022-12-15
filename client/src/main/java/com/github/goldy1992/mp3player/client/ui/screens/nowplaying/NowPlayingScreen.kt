@@ -29,12 +29,14 @@ import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.SpeedController
 import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
+import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.launch
 import org.apache.commons.lang3.ObjectUtils.isEmpty
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,6 +54,8 @@ fun NowPlayingScreen(
     val playbackSpeed by viewModel.playbackSpeed.collectAsState()
     val isPlaying by viewModel.isPlaying.collectAsState()
     val queue by viewModel.queue.collectAsState()
+    val shuffleEnabled by viewModel.shuffleMode.collectAsState()
+    val repeatMode by viewModel.repeatMode.collectAsState()
 
     Scaffold (
 
@@ -83,10 +87,12 @@ fun NowPlayingScreen(
             )
         },
         bottomBar = {
-            PlayToolbar(isPlayingProvider= { isPlaying },
-                mediaController = mediaController,
-                navController = navController,
-                scope = scope)
+            PlayToolbar(
+                onClickPlaying = { viewModel.play() },
+                onClickPause = {viewModel.pause() },
+                onClickSkipPrevious = { viewModel.skipToPrevious() },
+                onClickSkipNext = { viewModel.skipToNext() }
+            )
         },
 
         content = {
@@ -119,8 +125,14 @@ fun NowPlayingScreen(
                         .weight(1f),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    ShuffleButton(mediaController = viewModel.mediaControllerAdapter, shuffleModeState = viewModel.shuffleMode, scope = scope)
-                    RepeatButton(mediaController = viewModel.mediaControllerAdapter, repeatModeState = viewModel.repeatMode, scope = scope)
+                    ShuffleButton(
+                        shuffleEnabledProvider = { shuffleEnabled },
+                        onClick = { isEnabled -> viewModel.setShuffleMode(!isEnabled) }
+                    )
+                    RepeatButton(
+                        repeatModeProvider = { repeatMode },
+                        onClick = { currentRepeatMode -> viewModel.setRepeatMode(RepeatModeUtils.getNextRepeatMode(currentRepeatMode)) }
+                    )
                 }
                 Row(
                     modifier = Modifier
@@ -128,11 +140,12 @@ fun NowPlayingScreen(
                         .weight(1f),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    SeekBar(mediaController = mediaController,
+                    SeekBar(
                         playbackSpeedProvider = { playbackSpeed },
                         metadataProvider = {  metadata },
                         isPlayingProvider = { isPlaying },
-                        playbackPositionProvider = {  playbackPosition })
+                        playbackPositionProvider = {  playbackPosition },
+                        seekTo = { value -> viewModel.seekTo(value)})
                 }
             }
 

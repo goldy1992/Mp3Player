@@ -5,13 +5,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.Player.RepeatMode
-import com.github.goldy1992.mp3player.client.data.audiobands.media.browser.MediaBrowserRepository
 import com.github.goldy1992.mp3player.client.data.audiobands.media.controller.PlaybackStateRepository
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.commons.MainDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -146,5 +143,33 @@ constructor(
                 _shuffleMode.value = it
             }
         }
+    }
+
+    fun play() {
+        viewModelScope.launch { playbackStateRepository.play() }
+    }
+
+    fun pause() {
+        viewModelScope.launch { playbackStateRepository.play() }
+    }
+
+    fun skipToNext() {
+        viewModelScope.launch { playbackStateRepository.skipToNext() }
+    }
+
+    fun skipToPrevious() {
+        viewModelScope.launch { playbackStateRepository.skipToPrevious() }
+    }
+
+    fun seekTo(value : Long) {
+        viewModelScope.launch { playbackStateRepository.seekTo(value) }
+    }
+
+    fun setShuffleMode(isEnabled: Boolean) {
+        viewModelScope.launch { playbackStateRepository.setShuffleMode(isEnabled) }
+    }
+
+    fun setRepeatMode(repeatMode: @RepeatMode Int) {
+        viewModelScope.launch { playbackStateRepository.setRepeatMode(repeatMode) }
     }
 }
