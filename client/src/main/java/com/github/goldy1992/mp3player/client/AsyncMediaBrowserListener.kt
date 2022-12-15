@@ -38,7 +38,6 @@ class AsyncMediaBrowserListener
 
     }
 
-
     override fun onDisconnected(controller: MediaController) {
         listeners.forEach { listener -> listener.onDisconnected(controller) }
 
