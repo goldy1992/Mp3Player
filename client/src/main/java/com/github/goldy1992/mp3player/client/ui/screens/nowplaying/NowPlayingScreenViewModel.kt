@@ -1,24 +1,21 @@
 package com.github.goldy1992.mp3player.client.ui.screens.nowplaying
 
-import androidx.concurrent.futures.await
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.Player.RepeatMode
-import androidx.media3.session.MediaController
-import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.ui.flows.player.*
-import com.github.goldy1992.mp3player.client.ui.states.PlaybackPosition
+import com.github.goldy1992.mp3player.client.data.audiobands.media.browser.MediaBrowserRepository
+import com.github.goldy1992.mp3player.client.data.audiobands.media.controller.PlaybackStateRepository
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.commons.MainDispatcher
-import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,32 +23,38 @@ import javax.inject.Inject
 class NowPlayingScreenViewModel
     @Inject
 constructor(
-        val mediaBrowserAdapter: MediaBrowserAdapter,
-        val mediaControllerAdapter: MediaControllerAdapter,
-        private val isPlayingFlow: IsPlayingFlow,
-        private val metadataFlow: MetadataFlow,
-        private val playbackSpeedFlow: PlaybackSpeedFlow,
-        private val playbackPositionFlow: PlaybackPositionFlow,
-
-        private val queueFlow: QueueFlow,
-        private val repeatModeFlow: RepeatModeFlow,
-        private val shuffleModeFlow: ShuffleModeFlow,
-        @MainDispatcher private val mainDispatcher: CoroutineDispatcher
+    private val playbackStateRepository: PlaybackStateRepository,
 ) : ViewModel() {
 
-    private val mediaControllerAsync : ListenableFuture<MediaController> = mediaControllerAdapter.mediaControllerFuture
+    // playbackPosition
+    private val _playbackPositionState = MutableStateFlow(PlaybackPositionEvent.DEFAULT)
+    val playbackPosition : StateFlow<PlaybackPositionEvent> = _playbackPositionState
 
-    val playbackPosition : PlaybackPosition = PlaybackPosition.initialise(this, playbackPositionFlow, mainDispatcher, mediaControllerAsync)
+    init {
+        viewModelScope.launch {
+            playbackStateRepository.playbackPosition().
+            shareIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                replay = 1
+            ).collect {
+                _playbackPositionState.value = it
+            }
+        }
+    }
+
     // isPlaying
     private val _isPlayingState = MutableStateFlow(false)
     val isPlaying : StateFlow<Boolean> = _isPlayingState
 
     init {
-        viewModelScope.launch(mainDispatcher) {
-            _isPlayingState.value = mediaControllerAsync.await().isPlaying
-        }
         viewModelScope.launch {
-            isPlayingFlow.flow().collect {
+            playbackStateRepository.isPlaying().
+                shareIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(),
+                    replay = 1
+                ).collect {
                 _isPlayingState.value = it
             }
         }
@@ -63,11 +66,14 @@ constructor(
     val metadata : StateFlow<MediaMetadata> = _metadataState
 
     init {
-        viewModelScope.launch(mainDispatcher) {
-            _metadataState.value = mediaControllerAsync.await().mediaMetadata
-        }
+
         viewModelScope.launch {
-            metadataFlow.flow().collect {
+            playbackStateRepository.metadata().
+            shareIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                replay = 1
+            ).collect {
                 _metadataState.value = it
             }
         }
@@ -79,11 +85,13 @@ constructor(
     val playbackSpeed : StateFlow<Float> = _playbackSpeed
 
     init {
-        viewModelScope.launch(mainDispatcher) {
-            _playbackSpeed.value = mediaControllerAsync.await().playbackParameters.speed
-        }
         viewModelScope.launch {
-            playbackSpeedFlow.flow().collect {
+            playbackStateRepository.playbackSpeed().
+            shareIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                replay = 1
+            ).collect {
                 _playbackSpeed.value = it
             }
         }
@@ -95,11 +103,12 @@ constructor(
     val queue : StateFlow<QueueState> = _queue
 
     init {
-        viewModelScope.launch(mainDispatcher) {
-       //    _queue.value = queueFlow.getQueue(mediaControllerAsync.await())
-        }
         viewModelScope.launch {
-            queueFlow.flow().collect {
+            playbackStateRepository.queue().            shareIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                replay = 1
+            ).collect {
                 _queue.value = it
             }
         }
@@ -111,11 +120,12 @@ constructor(
     val repeatMode : StateFlow<@RepeatMode Int> = _repeatMode
 
     init {
-        viewModelScope.launch(mainDispatcher) {
-            _repeatMode.value = mediaControllerAsync.await().repeatMode
-        }
         viewModelScope.launch {
-            repeatModeFlow.flow().collect {
+            playbackStateRepository.repeatMode().            shareIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                replay = 1
+            ).collect {
                 _repeatMode.value = it
             }
         }
@@ -127,11 +137,12 @@ constructor(
     val shuffleMode : StateFlow<Boolean> = _shuffleMode
 
     init {
-        viewModelScope.launch(mainDispatcher) {
-            _shuffleMode.value = mediaControllerAsync.await().shuffleModeEnabled
-        }
         viewModelScope.launch {
-            shuffleModeFlow.flow().collect {
+            playbackStateRepository.isShuffleModeEnabled().            shareIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                replay = 1
+            ).collect {
                 _shuffleMode.value = it
             }
         }

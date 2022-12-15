@@ -28,6 +28,7 @@ import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.SpeedController
 import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
+import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -45,11 +46,9 @@ fun NowPlayingScreen(
     navController: NavController,
     scope : CoroutineScope = rememberCoroutineScope(),
 ) {
-
-    val mediaController = viewModel.mediaControllerAdapter
     val songTitleDescription = stringResource(id = R.string.song_title)
     val metadata by viewModel.metadata.collectAsState()
-    val playbackPosition by viewModel.playbackPosition.state.collectAsState()
+    val playbackPosition by viewModel.playbackPosition.collectAsState()
     val playbackSpeed by viewModel.playbackSpeed.collectAsState()
     val isPlaying by viewModel.isPlaying.collectAsState()
     val queue by viewModel.queue.collectAsState()
@@ -145,15 +144,15 @@ fun NowPlayingScreen(
 @Composable
 fun ViewPager(mediaController: MediaControllerAdapter,
               metadata : () -> MediaMetadata,
-              queueProvider: () -> List<MediaItem>,
+              queueProvider: () -> QueueState,
               modifier: Modifier = Modifier,
-              pagerState:PagerState = rememberPagerState(initialPage = mediaController.getCurrentQueuePosition()),
+              pagerState:PagerState = rememberPagerState(initialPage = queueProvider().currentIndex),
               scope: CoroutineScope = rememberCoroutineScope()
            ) {
-    val queue = queueProvider()
-    val currentQueuePosition = mediaController.getCurrentQueuePosition()
+    val queueState = queueProvider()
+    val currentQueuePosition = queueState.currentIndex
 
-    if (isEmpty(queue)) {
+    if (isEmpty(queueState.items)) {
         Column(modifier = modifier.width(700.dp),
             horizontalAlignment = Alignment.CenterHorizontally) {
             Text("Empty Playlist", style = MaterialTheme.typography.titleLarge,
@@ -170,7 +169,7 @@ fun ViewPager(mediaController: MediaControllerAdapter,
             Log.i("NOW_PLAYING", "current page changed: ${pagerState.currentPage}")
             val newPosition = pagerState.currentPage
             val atBeginning = currentQueuePosition <= 0
-            val atEnd = (currentQueuePosition + 1) >= queue.size
+            val atEnd = (currentQueuePosition + 1) >= queueState.items.size
             val atCurrentPosition = currentQueuePosition == newPosition
 
             if (!atCurrentPosition ) {
@@ -182,7 +181,7 @@ fun ViewPager(mediaController: MediaControllerAdapter,
                 }
             }
         }
-        Log.i("NOW_PLAYING_SCRN", "queue size: ${queue?.size ?: 0}")
+        Log.i("NOW_PLAYING_SCRN", "queue size: ${queueState.items.size}")
 
         HorizontalPager(
                 state = pagerState,
@@ -191,11 +190,11 @@ fun ViewPager(mediaController: MediaControllerAdapter,
                     .semantics {
                         contentDescription = "viewPagerColumn"
                     },
-                count = queue.size  ,
-                key = { page : Int -> queue[page].mediaId }
+                count = queueState.items.size  ,
+                key = { page : Int -> queueState.items[page].mediaId }
 
             ) { pageIndex ->
-            val item: MediaItem = queue[pageIndex]
+            val item: MediaItem = queueState.items[pageIndex]
             Column(
                     modifier = Modifier
                             .width(300.dp),
