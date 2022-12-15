@@ -158,10 +158,10 @@ dependencies {
     // UI Tests
     androidTestImplementation group: 'androidx.compose.ui', name: 'ui-test-junit4', version: compose_version
     // Test rules and transitive dependencies:
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
-    testImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_test_version")
+    testImplementation("androidx.compose.ui:ui-test-junit4:$compose_test_version")
     // Needed for createComposeRule, but not createAndroidComposeRule:
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_test_version")
 
     implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 

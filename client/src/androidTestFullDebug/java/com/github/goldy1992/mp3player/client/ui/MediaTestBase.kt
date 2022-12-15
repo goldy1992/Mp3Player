@@ -20,12 +20,23 @@ import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.util.concurrent.Futures
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestCoroutineScheduler
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.setMain
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
+@OptIn(ExperimentalCoroutinesApi::class)
 abstract class MediaTestBase {
+
+    protected val testScheduler = TestCoroutineScheduler()
+    protected val dispatcher  = StandardTestDispatcher(testScheduler)
+    protected val testScope = TestScope(dispatcher)
 
     lateinit var mediaBrowserAdapter : MediaBrowserAdapter
     lateinit var mediaControllerAdapter : MediaControllerAdapter
@@ -57,11 +68,6 @@ abstract class MediaTestBase {
     val playbackPositionFlow = MutableStateFlow(PlaybackPositionEvent.DEFAULT)
 
     open fun setup() {
-
-    }
-    fun setup(scope : CoroutineScope,
-            @MainDispatcher mainDispatcher: CoroutineDispatcher) {
-
         whenever(mockMediaController.mediaMetadata).thenReturn(MediaMetadata.EMPTY)
         whenever(isPlayingFlowObj.flow()).thenReturn(isPlayingFlow)
         whenever(metadataFlowObj.flow()).thenReturn(metadataFlow)
@@ -75,12 +81,12 @@ abstract class MediaTestBase {
             )
         mediaBrowserAdapter = MediaBrowserAdapter(
             mediaBrowserLF = mediaBrowserListenableFuture,
-            scope = scope,
-            mainDispatcher = mainDispatcher)
+            scope = testScope,
+            mainDispatcher = dispatcher)
         mediaControllerAdapter = MediaControllerAdapter(
             mediaControllerFuture = mediaControllerListenableFuture,
-            scope = scope,
-            mainDispatcher = mainDispatcher)
+            scope = testScope,
+            mainDispatcher = dispatcher)
 
     }
 }

@@ -2,18 +2,15 @@ package com.github.goldy1992.mp3player.client.ui.screens.search
 
 import android.os.Bundle
 import android.util.Log
-import androidx.concurrent.futures.await
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
-import androidx.media3.session.MediaController
 import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.ui.flows.mediabrowser.OnSearchResultsChangedFlow
 import com.github.goldy1992.mp3player.client.ui.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MainDispatcher
-import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,9 +44,6 @@ class SearchScreenViewModel
         }
     }
 
-    private val mediaControllerAsync : ListenableFuture<MediaController> = mediaControllerAdapter.mediaControllerFuture
-
-
     private val _searchResults : MutableStateFlow<List<MediaItem>> = MutableStateFlow(emptyList())
     val searchResults : StateFlow<List<MediaItem>> = _searchResults
     init {
@@ -72,8 +66,8 @@ class SearchScreenViewModel
     val isPlaying : StateFlow<Boolean> = _isPlayingState
 
     init {
-        viewModelScope.launch(mainDispatcher) {
-            _isPlayingState.value = mediaControllerAsync.await().isPlaying
+        viewModelScope.launch {
+            _isPlayingState.value = mediaControllerAdapter.isPlaying()
         }
         viewModelScope.launch {
             isPlayingFlow.flow().collect {

@@ -79,7 +79,7 @@ class LibraryScreenTest : MediaTestBase() {
         runBlocking {
             scope = this
         }
-        super.setup(scope, mainDispatcher)
+        super.setup()
         this.context = InstrumentationRegistry.getInstrumentation().context
         whenever(onChildrenChangedFlowObj.flow).thenReturn(onChildrenChangedFlow)
 

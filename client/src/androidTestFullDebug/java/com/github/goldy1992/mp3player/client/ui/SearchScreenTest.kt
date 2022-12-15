@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.test.*
@@ -9,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaLibraryService
 import androidx.test.platform.app.InstrumentationRegistry
+import com.github.goldy1992.mp3player.client.AsyncMediaBrowserListener
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
 import com.github.goldy1992.mp3player.client.ui.flows.mediabrowser.OnSearchResultsChangedFlow
@@ -22,51 +24,49 @@ import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.kotlin.*
 import java.io.File
 
 /**
  * Test class for [SearchScreen].
  */
-@OptIn(ExperimentalComposeUiApi::class,
+@OptIn(
+    ExperimentalComposeUiApi::class,
+    ExperimentalCoroutinesApi::class,
     ExperimentalFoundationApi::class)
 class SearchScreenTest : MediaTestBase(){
 
-
     private lateinit var searchScreenViewModel: SearchScreenViewModel
 
-    private val searchResultsChangedFlow = MutableStateFlow(
+    private val defaultSearchResultEventHolder =
         OnSearchResultsChangedEventHolder(
-        mockMediaBrowser,
-        "",
-        1,
-        MediaLibraryService.LibraryParams.Builder().build()
+            browser = mockMediaBrowser,
+            query = "query",
+            itemCount = 1,
+            params = MediaLibraryService.LibraryParams.Builder().build()
+        )
 
-    )
-    )
+    private val searchResultsChangedFlow = MutableStateFlow(defaultSearchResultEventHolder)
+
     private val searchResultsChangedFlowObj = mock<OnSearchResultsChangedFlow>()
 
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    @OptIn(ExperimentalComposeUiApi::class,
-        ExperimentalFoundationApi::class)
     @Before
     override fun setup() {
-        val scope : CoroutineScope
-        val mainDispatcher = Dispatchers.Main
-        runBlocking {
-            scope = this
-        }
-        super.setup(scope, mainDispatcher)
+        super.setup()
         whenever(searchResultsChangedFlowObj.flow).thenReturn(searchResultsChangedFlow)
         whenever(mockMediaBrowser.getSearchResult(any(), any(), any(), any()))
             .thenReturn(
@@ -82,6 +82,17 @@ class SearchScreenTest : MediaTestBase(){
             isPlayingFlow = isPlayingFlowObj,
             mainDispatcher = Dispatchers.Main
         )
+        doAnswer {
+            Log.i("SearchScreenTest", "hit do answer")
+            searchResultsChangedFlow.value = OnSearchResultsChangedEventHolder(
+                browser = mockMediaBrowser,
+                query = it.arguments[0] as String,
+                itemCount = 1,
+                params = MediaLibraryService.LibraryParams.Builder().build()
+            )
+            Futures.immediateFuture(LibraryResult.ofVoid())
+        }.whenever(this.mockMediaBrowser).search(anyString(), any())
+        reset(mockMediaBrowser)
     }
 
     @Test
@@ -126,7 +137,7 @@ class SearchScreenTest : MediaTestBase(){
                     LibraryResult.ofItemList(
                         ImmutableList.of(songItem),
                         MediaLibraryService.LibraryParams.Builder().build())))
-
+        val searchTextFieldName = context.resources.getString(R.string.search_text_field)
         composeTestRule.setContent {
             SearchScreen(
                 viewModel = searchScreenViewModel,
@@ -136,6 +147,9 @@ class SearchScreenTest : MediaTestBase(){
         }
         runBlocking {
             composeTestRule.awaitIdle()
+            composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("a")
+
+            composeTestRule.awaitIdle()
             composeTestRule.onNodeWithText(songTitle).performClick()
             composeTestRule.awaitIdle()
        //     verify(mockMediaController, times(1)).playFromMediaId(expectedLibId, null)
@@ -144,7 +158,7 @@ class SearchScreenTest : MediaTestBase(){
 
 
     @Test
-    fun testSearchResultsOpenFolder() = runTest {
+    fun testSearchResultsOpenFolder() = testScope.runTest {
 
         val folderName = "/c/folder1"
         val libId = "3fk4"
@@ -155,29 +169,29 @@ class SearchScreenTest : MediaTestBase(){
             .setLibraryId(libId)
             .setDirectoryFile(File(folderName))
             .build()
-        val folderLibraryId = MediaItemUtils.getLibraryId(folderItem)
-        val encodedFolderLibraryId = Uri.encode(folderLibraryId)
         val directoryPath = MediaItemUtils.getDirectoryPath(folderItem)
         val encodedFolderPath = Uri.encode(directoryPath)
         val folderNameMi = MediaItemUtils.getDirectoryName(folderItem)
 
-       val expectedRoute = Screen.FOLDER.name + "/" + encodedFolderLibraryId+ "/" + folderNameMi+ "/" + encodedFolderPath
+       val expectedRoute = Screen.FOLDER.name + "/" + folderItem.mediaId+ "/" + folderNameMi+ "/" + encodedFolderPath
         val expectedResult = Futures.immediateFuture(LibraryResult.ofItemList(mutableListOf(folderItem), MediaLibraryService.LibraryParams.Builder().build()))
         whenever(mockMediaBrowser.getSearchResult(any(), any(), any(), any())).thenReturn(expectedResult)
-
+        val searchTextFieldName = context.resources.getString(R.string.search_text_field)
         composeTestRule.setContent {
             SearchScreen(
                 viewModel = searchScreenViewModel,
                 navController = mockNavController,
-                windowSize = WindowSize.Compact
+                windowSize = WindowSize.Compact,
+                scope = this
             )
         }
-        runBlocking {
-            composeTestRule.awaitIdle()
+        //    composeTestRule.awaitIdle()
+            composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("a")
+           composeTestRule.awaitIdle()
             composeTestRule.onNodeWithText(folderName).performClick()
-            composeTestRule.awaitIdle()
+     //       composeTestRule.awaitIdle()
             verify(mockNavController, times(1)).navigate(expectedRoute)
-        }
+
     }
 
     @Test

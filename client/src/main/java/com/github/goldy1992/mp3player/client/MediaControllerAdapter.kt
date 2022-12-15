@@ -135,6 +135,10 @@ open class MediaControllerAdapter
         mediaControllerFuture.await().sendCustomCommand(changePlaybackSpeedCommand, extras).await()
     }
 
+    open suspend fun isPlaying() : Boolean {
+        return mediaControllerFuture.await().isPlaying
+    }
+
     override fun logTag(): String {
         return "MDIA_CNTRLLR_ADPTR"
     }
