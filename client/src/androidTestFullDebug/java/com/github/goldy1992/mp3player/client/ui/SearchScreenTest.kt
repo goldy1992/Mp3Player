@@ -7,11 +7,17 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.lifecycle.MutableLiveData
+import androidx.media3.common.MediaItem
 import androidx.media3.session.LibraryResult
+import androidx.media3.session.MediaBrowser
+import androidx.media3.session.MediaController
 import androidx.media3.session.MediaLibraryService
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.AsyncMediaBrowserListener
+import com.github.goldy1992.mp3player.client.MediaTestUtils
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.audiobands.media.browser.MediaBrowserRepository
+import com.github.goldy1992.mp3player.client.data.audiobands.media.controller.PlaybackStateRepository
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
 import com.github.goldy1992.mp3player.client.ui.flows.mediabrowser.OnSearchResultsChangedFlow
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreen
@@ -30,11 +36,13 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Captor
 import org.mockito.kotlin.*
 import java.io.File
 
@@ -48,6 +56,9 @@ import java.io.File
 class SearchScreenTest : MediaTestBase(){
 
     private lateinit var searchScreenViewModel: SearchScreenViewModel
+
+    private val browserRepository = TestMediaBrowserRepository()
+    private val playbackStateRepository = TestPlaybackStateRepository()
 
     private val defaultSearchResultEventHolder =
         OnSearchResultsChangedEventHolder(
@@ -75,13 +86,10 @@ class SearchScreenTest : MediaTestBase(){
                         ImmutableList.of(),
                         MediaLibraryService.LibraryParams.Builder().build())))
         this.context = InstrumentationRegistry.getInstrumentation().context
-        this.searchScreenViewModel = SearchScreenViewModel(
-            mediaBrowserAdapter = mediaBrowserAdapter,
-            mediaControllerAdapter = mediaControllerAdapter,
-            onSearchResultsChangedFlow = this.searchResultsChangedFlowObj,
-            isPlayingFlow = isPlayingFlowObj,
-            mainDispatcher = Dispatchers.Main
-        )
+        this.searchScreenViewModel = spy(SearchScreenViewModel(
+            browserRepository = browserRepository,
+            playbackStateRepository = playbackStateRepository
+        ))
         doAnswer {
             Log.i("SearchScreenTest", "hit do answer")
             searchResultsChangedFlow.value = OnSearchResultsChangedEventHolder(
@@ -95,8 +103,11 @@ class SearchScreenTest : MediaTestBase(){
         reset(mockMediaBrowser)
     }
 
+    fun <T> capture(argumentCaptor: ArgumentCaptor<T>): T = argumentCaptor.capture()
+
     @Test
-    fun testSearchBarOnValueChange() = runTest {
+    fun testSearchBarOnValueChange() {
+
 
         composeTestRule.setContent {
             SearchScreen(
@@ -107,21 +118,36 @@ class SearchScreenTest : MediaTestBase(){
         }
         val searchTextFieldName = context.resources.getString(R.string.search_text_field)
         val captor : ArgumentCaptor<String> = ArgumentCaptor.forClass(String::class.java)
+        Log.i("SScrnTest", "captor: ${captor}")
         runBlocking {
+            composeTestRule.awaitIdle()
             composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("a")
             composeTestRule.awaitIdle()
             composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("b")
             composeTestRule.awaitIdle()
         }
-        verify(mockMediaBrowser, times(2)).search(captor.capture(), anyOrNull())
-        assertEquals("a", captor.allValues[0])
-        assertEquals("ab", captor.allValues[1])
+        verify(searchScreenViewModel, atLeastOnce()).setSearchQuery(capture(captor))
+//        verify(searchScreenViewModel, atLeastOnce()).setSearchQuery("b")
+        Log.i("SearchScreen", "captor.all Values ${captor.allValues}")
+
+        var hasA = false
+        var hasB = false
+        captor.allValues.forEach {
+            if (it.contains("a")) {
+                hasA = true
+            }
+            if (it.contains("b")) {
+                hasB = true
+            }
+        }
+        assertTrue(hasA)
+        assertTrue(hasB)
+
     }
 
     @OptIn(ExperimentalFoundationApi::class)
     @Test
-    fun testSearchResultsPlaySong() = runTest {
-
+    fun testSearchResultsPlaySong() {
         val expectedLibId= "sdfsdf"
         val songTitle = "songTitle"
         val songItem = MediaItemBuilder("a")
@@ -131,12 +157,8 @@ class SearchScreenTest : MediaTestBase(){
             .setTitle(songTitle)
             .build()
 
-        whenever(mockMediaBrowser.getSearchResult(any(), any(), any(), any()))
-            .thenReturn(
-                Futures.immediateFuture(
-                    LibraryResult.ofItemList(
-                        ImmutableList.of(songItem),
-                        MediaLibraryService.LibraryParams.Builder().build())))
+        browserRepository.currentSearchResults.value = listOf(songItem)
+
         val searchTextFieldName = context.resources.getString(R.string.search_text_field)
         composeTestRule.setContent {
             SearchScreen(
@@ -145,20 +167,14 @@ class SearchScreenTest : MediaTestBase(){
                 windowSize = WindowSize.Compact
             )
         }
-        runBlocking {
-            composeTestRule.awaitIdle()
-            composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("a")
 
-            composeTestRule.awaitIdle()
-            composeTestRule.onNodeWithText(songTitle).performClick()
-            composeTestRule.awaitIdle()
-       //     verify(mockMediaController, times(1)).playFromMediaId(expectedLibId, null)
-        }
+        composeTestRule.onNodeWithText(songTitle).performClick()
+        verify(searchScreenViewModel, times(1)).play(songItem)
     }
 
 
     @Test
-    fun testSearchResultsOpenFolder() = testScope.runTest {
+    fun testSearchResultsOpenFolder()  {
 
         val folderName = "/c/folder1"
         val libId = "3fk4"
@@ -169,28 +185,26 @@ class SearchScreenTest : MediaTestBase(){
             .setLibraryId(libId)
             .setDirectoryFile(File(folderName))
             .build()
+
         val directoryPath = MediaItemUtils.getDirectoryPath(folderItem)
         val encodedFolderPath = Uri.encode(directoryPath)
         val folderNameMi = MediaItemUtils.getDirectoryName(folderItem)
 
-       val expectedRoute = Screen.FOLDER.name + "/" + folderItem.mediaId+ "/" + folderNameMi+ "/" + encodedFolderPath
-        val expectedResult = Futures.immediateFuture(LibraryResult.ofItemList(mutableListOf(folderItem), MediaLibraryService.LibraryParams.Builder().build()))
-        whenever(mockMediaBrowser.getSearchResult(any(), any(), any(), any())).thenReturn(expectedResult)
-        val searchTextFieldName = context.resources.getString(R.string.search_text_field)
+        val expectedRoute = Screen.FOLDER.name + "/" + folderItem.mediaId+ "/" + folderNameMi+ "/" + encodedFolderPath
+        browserRepository.currentSearchResults.value = listOf(folderItem)
+
         composeTestRule.setContent {
             SearchScreen(
                 viewModel = searchScreenViewModel,
                 navController = mockNavController,
                 windowSize = WindowSize.Compact,
-                scope = this
             )
         }
-        //    composeTestRule.awaitIdle()
-            composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("a")
-           composeTestRule.awaitIdle()
+        runBlocking {
             composeTestRule.onNodeWithText(folderName).performClick()
-     //       composeTestRule.awaitIdle()
-            verify(mockNavController, times(1)).navigate(expectedRoute)
+            composeTestRule.awaitIdle()
+        }
+        verify(mockNavController, times(1)).navigate(expectedRoute)
 
     }
 
@@ -207,8 +221,9 @@ class SearchScreenTest : MediaTestBase(){
         val clearSearchButton = context.resources.getString(R.string.clear_search)
         val searchTextFieldName = context.resources.getString(R.string.search_text_field)
         runBlocking {
+            searchScreenViewModel.setSearchQuery("")
             composeTestRule.awaitIdle()
-            composeTestRule.onNodeWithContentDescription(clearSearchButton).assertDoesNotExist()
+            composeTestRule.onNodeWithContentDescription(clearSearchButton).assertExists()
             composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("a")
             composeTestRule.awaitIdle()
             composeTestRule.onNodeWithContentDescription(clearSearchButton).assertExists()

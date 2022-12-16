@@ -26,7 +26,7 @@ interface MediaBrowserRepository {
 
     suspend fun getLibraryRoot() : MediaItem
 
-    suspend fun getSearchResults(query: String, page : Int = 0, pageSize : Int = 20)
+    suspend fun getSearchResults(query: String, page : Int = 0, pageSize : Int = 20) : List<MediaItem>
 
     suspend fun search(query: String, extras: Bundle)
 

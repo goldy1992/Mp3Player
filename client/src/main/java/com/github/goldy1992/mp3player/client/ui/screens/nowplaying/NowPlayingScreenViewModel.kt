@@ -135,7 +135,8 @@ constructor(
 
     init {
         viewModelScope.launch {
-            playbackStateRepository.isShuffleModeEnabled().            shareIn(
+            playbackStateRepository.isShuffleModeEnabled().
+            shareIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
                 replay = 1

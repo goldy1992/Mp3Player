@@ -36,7 +36,9 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.WindowSize
+import com.github.goldy1992.mp3player.client.ui.lists.buildOnSelectedMap
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListItem
+import com.github.goldy1992.mp3player.client.ui.lists.onFolderSelected
 import com.github.goldy1992.mp3player.client.ui.lists.onSelectedMap
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongListItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -63,7 +65,18 @@ fun SearchScreen(
     val searchResults by viewModel.searchResults.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
     val isPlaying by viewModel.isPlaying.collectAsState()
-    val onSelectedMap = { onSelectedMap(navController, viewModel.mediaControllerAdapter) }
+    val onSelectedMap = {
+        buildOnSelectedMap(
+            onFolderSelected = onFolderSelected(navController),
+            onSongsSelected = {
+                itemIndex : Int, mediaItemList : List<MediaItem> ->
+                    viewModel.playFromList(itemIndex, mediaItemList)
+            },
+            onSongSelected = {
+                song -> viewModel.play(song)
+            }
+        )
+    }
 
     val navDrawerContent : @Composable () -> Unit = {
         NavigationDrawerContent(
@@ -84,24 +97,21 @@ fun SearchScreen(
             currentSearchQuery = { searchQuery },
             onNavUpPressed = onNavUpPressed,
             onSearchQueryUpdated = {
-                scope.launch {
-                    viewModel.setSearchQuery(it)
-                }
-            },
-            onSearchQueryCleared = {
-                scope.launch {
-                    viewModel.setSearchQuery("")
-                }
-            },
+                Log.i(logTag, "setting searchQuery with value: ${it}")
+                viewModel.setSearchQuery(it) },
+            onSearchQueryCleared = { viewModel.setSearchQuery("") },
             scope = scope
         )
     }
 
     val bottomBar : @Composable () -> Unit = {
-        PlayToolbar(isPlayingProvider= { isPlaying },
-            mediaController = viewModel.mediaControllerAdapter,
-            navController = navController,
-            scope = scope)
+        PlayToolbar(isPlaying = { isPlaying },
+            onClickSkipNext = { viewModel.skipToNext() },
+            onClickSkipPrevious = { viewModel.skipToPrevious() },
+            onClickPause = { viewModel.pause() },
+            onClickPlaying = { viewModel.play() },
+            onClickBar = {navController.navigate(Screen.NOW_PLAYING.name)}
+           )
     }
 
 

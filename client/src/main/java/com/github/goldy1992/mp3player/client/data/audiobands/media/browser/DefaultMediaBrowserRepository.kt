@@ -71,8 +71,9 @@ class DefaultMediaBrowserRepository
         val result = mediaBrowserLF.await().getLibraryRoot(params).await()
         return result.value ?: MediaItem.EMPTY
     }
-    override suspend fun getSearchResults(query: String, page: Int, pageSize: Int) {
-        TODO("Not yet implemented")
+    override suspend fun getSearchResults(query: String, page: Int, pageSize: Int) : List<MediaItem> {
+        val browser = mediaBrowserLF.await()
+        return browser.getSearchResult(query, page, pageSize, getDefaultLibraryParams()).await().value ?: emptyList()
     }
 
     override suspend fun search(query: String, extras: Bundle) {

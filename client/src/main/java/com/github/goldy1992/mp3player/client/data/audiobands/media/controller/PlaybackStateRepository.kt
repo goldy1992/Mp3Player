@@ -37,6 +37,8 @@ interface PlaybackStateRepository {
 
     suspend fun play()
 
+    suspend fun play(mediaItem : MediaItem)
+
     suspend fun playFromSongList(itemIndex : Int, items : List<MediaItem>)
 
     suspend fun playFromUri(uri: Uri?, extras: Bundle?)

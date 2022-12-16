@@ -94,6 +94,13 @@ class DefaultPlaybackStateRepository
         Log.i(logTag(), "calling play")
     }
 
+    override suspend fun play(mediaItem: MediaItem) {
+        val mediaController = mediaControllerFuture.await()
+        mediaController.addMediaItem(mediaItem)
+        mediaController.prepare()
+        mediaController.play()
+    }
+
     override suspend fun playFromSongList(itemIndex: Int, items: List<MediaItem>) {
         val mediaController = mediaControllerFuture.await()
         mediaController.clearMediaItems()

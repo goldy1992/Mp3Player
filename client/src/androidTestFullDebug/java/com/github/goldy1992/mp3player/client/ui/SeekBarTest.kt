@@ -62,12 +62,12 @@ class SeekBarTest : MediaTestBase() {
         whenever(mockMediaController.currentPosition).thenReturn(currentPosition)
     //   scope.
         composeTestRule.setContent {
-            SeekBar(mediaController = mediaControllerAdapter,
-                    metadataProvider =  {metadata },
-                    isPlayingProvider = {  false },
-                    playbackSpeedProvider = { 1.0f },
-                    playbackPositionProvider ={ PlaybackPositionEvent(false, currentPosition, 0L) }
-            )
+//            SeekBar(mediaController = mediaControllerAdapter,
+//                    metadataProvider =  {metadata },
+//                    isPlayingProvider = {  false },
+//                    playbackSpeedProvider = { 1.0f },
+//                    playbackPositionProvider ={ PlaybackPositionEvent(false, currentPosition, 0L) }
+//            )
         }
 
         runBlocking {
