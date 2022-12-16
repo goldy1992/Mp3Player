@@ -77,12 +77,17 @@ open class MediaBrowserAdapter
     }
 
     suspend fun getChildren(parentId : String,
-                            @androidx.annotation.IntRange(from = 0) page : Int = 0,
+                            @androidx.annotation.IntRange(from = 0) page : Int = 1,
                             @androidx.annotation.IntRange(from = 1) pageSize : Int = 20,
                             params : MediaLibraryService.LibraryParams = MediaLibraryService.LibraryParams.Builder().build()
     ) : List<MediaItem> {
-        val children : LibraryResult<ImmutableList<MediaItem>> = mediaBrowserLF.await().getChildren(parentId, page, pageSize, params).await()
-        return children.value?.toList() ?: emptyList()
+        return if (pageSize < 1) {
+            emptyList()
+        } else {
+            val children: LibraryResult<ImmutableList<MediaItem>> =
+                mediaBrowserLF.await().getChildren(parentId, page, pageSize, params).await()
+            return children.value?.toList() ?: emptyList()
+        }
     }
 
     override fun logTag(): String {

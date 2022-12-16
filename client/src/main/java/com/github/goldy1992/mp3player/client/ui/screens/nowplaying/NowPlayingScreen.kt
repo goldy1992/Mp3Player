@@ -107,16 +107,18 @@ fun NowPlayingScreen(
                     },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                SpeedController(mediaController = mediaController,
+                SpeedController(
                     playbackSpeedProvider = { playbackSpeed },
+                    changePlaybackSpeed = { newSpeed : Float -> viewModel.changePlaybackSpeed(newSpeed)},
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 48.dp, end = 48.dp)
                 )
-                ViewPager(mediaController = viewModel.mediaControllerAdapter,
+                ViewPager(
                     metadata = { metadata },
                     queueProvider =  {queue },
-                    scope = scope,
+                    skipToNext = { viewModel.skipToNext()},
+                    skipToPrevious = { viewModel.skipToPrevious() },
                     modifier = Modifier.weight(4f))
 
                 Row(
@@ -155,12 +157,12 @@ fun NowPlayingScreen(
 
 @ExperimentalPagerApi
 @Composable
-fun ViewPager(mediaController: MediaControllerAdapter,
-              metadata : () -> MediaMetadata,
+fun ViewPager(metadata : () -> MediaMetadata,
               queueProvider: () -> QueueState,
+              skipToNext : () -> Unit,
+              skipToPrevious : () -> Unit,
               modifier: Modifier = Modifier,
               pagerState:PagerState = rememberPagerState(initialPage = queueProvider().currentIndex),
-              scope: CoroutineScope = rememberCoroutineScope()
            ) {
     val queueState = queueProvider()
     val currentQueuePosition = queueState.currentIndex
@@ -187,10 +189,11 @@ fun ViewPager(mediaController: MediaControllerAdapter,
 
             if (!atCurrentPosition ) {
                 if (!atEnd && isSkipToNext(newPosition, currentQueuePosition)) {
-                    mediaController.skipToNext()
+                    skipToNext()
                 } else if (!atBeginning && isSkipToPrevious(newPosition, currentQueuePosition)) {
-                    mediaController.seekTo(0)
-                    mediaController.skipToPrevious()
+//                    mediaController.seekTo(0)
+//                    mediaController.skipToPrevious()
+                    skipToPrevious()
                 }
             }
         }

@@ -145,6 +145,10 @@ constructor(
         }
     }
 
+    fun changePlaybackSpeed(speed : Float) {
+        viewModelScope.launch { playbackStateRepository.changePlaybackSpeed(speed) }
+    }
+
     fun play() {
         viewModelScope.launch { playbackStateRepository.play() }
     }
