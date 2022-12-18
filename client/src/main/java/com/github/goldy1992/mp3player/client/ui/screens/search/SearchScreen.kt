@@ -239,7 +239,7 @@ fun SearchBar(currentSearchQuery : () -> String = { "No search query specified" 
                 }
             },
             trailingIcon = {
-                if (StringUtils.isNotEmpty(currentSearchQuery())) {
+                if (StringUtils.isNotEmpty(currentSearchQueryValue)) {
                     IconButton(onClick = {
                         onSearchQueryCleared()
                         textFieldValueState = TextFieldValue()
