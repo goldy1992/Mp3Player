@@ -4,66 +4,89 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.goldy1992.mp3player.client.AudioDataProcessor
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.ui.flows.player.AudioDataFlow
-import com.github.goldy1992.mp3player.client.ui.flows.player.IsPlayingFlow
-import com.github.goldy1992.mp3player.client.ui.states.IsPlaying
+import com.github.goldy1992.mp3player.client.data.audiobands.media.controller.PlaybackStateRepository
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.MainDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * [ViewModel] implementation for the [VisualizerScreen].
+ */
 @HiltViewModel
 class VisualizerViewModel
 @Inject
 constructor(
     private val audioDataProcessor: AudioDataProcessor,
-    val mediaControllerAdapter: MediaControllerAdapter,
-    private val audioDataFlow: AudioDataFlow,
-    @MainDispatcher val mainDispatcher: CoroutineDispatcher,
-    private val isPlayingFlow: IsPlayingFlow
+    private val playbackStateRepository: PlaybackStateRepository,
 ) : LogTagger, ViewModel() {
 
-    val isPlaying = IsPlaying.initialise(this, isPlayingFlow, mainDispatcher, mediaControllerAdapter.mediaControllerFuture)
+    // isPlaying
+    private val _isPlayingState = MutableStateFlow(false)
+    val isPlaying : StateFlow<Boolean> = _isPlayingState
 
+    init {
+        viewModelScope.launch {
+            playbackStateRepository
+                .isPlaying()
+                .shareIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(),
+                    replay = 1
+                )
+                .collect {
+                    _isPlayingState.value = it
+                }
+        }
+    }
 
     // Backing property to avoid state updates from other classes
-    private val audioDataMutableState = MutableStateFlow(emptyList<Float>())
+    private val _audioData = MutableStateFlow(emptyList<Float>())
     // The UI collects from this StateFlow to get its state updates
-    val audioDataState: StateFlow<List<Float>> = audioDataMutableState
+    val audioData: StateFlow<List<Float>> = _audioData
 
 
     init {
-        Log.i(logTag(), "creating viewmodel!")
-
         viewModelScope.launch {
-            audioDataFlow.flow()
-                .collect { audioData ->
-                    if (isPlaying.state.value) {
-                        Log.i(logTag(), "collecting audio data")
-                        audioDataMutableState.value = audioDataProcessor.processAudioData(audioData).toList()
-                        Log.i(logTag(), "finished collecting audio data")
-                    }
+            playbackStateRepository.audioData()
+            .shareIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                replay = 1
+            )
+            .collect { audioData ->
+                if (isPlaying.value) {
+                    Log.i(logTag(), "collecting audio data")
+                    _audioData.value = audioDataProcessor.processAudioData(audioData).toList()
+                    Log.i(logTag(), "finished collecting audio data")
                 }
+            }
         }
 
-        }
+    }
+
+    fun play() {
+        viewModelScope.launch { playbackStateRepository.play() }
+    }
+
+    fun pause() {
+        viewModelScope.launch { playbackStateRepository.play() }
+    }
+
+    fun skipToNext() {
+        viewModelScope.launch { playbackStateRepository.skipToNext() }
+    }
+
+    fun skipToPrevious() {
+        viewModelScope.launch { playbackStateRepository.skipToPrevious() }
+    }
 
     override fun logTag(): String {
         return "VisualizerViewModel"
     }
-
-    override fun onCleared() {
-        Log.i(logTag(), "Calling on Cleared")
-        super.onCleared()
-    }
-
-
-    data class EqualizerState constructor(val isEqualizerActive : Boolean,
-                                          val isActivityVisible : Boolean)
 
 }

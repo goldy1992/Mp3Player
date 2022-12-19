@@ -84,12 +84,8 @@ class LibraryScreenTest : MediaTestBase() {
         whenever(onChildrenChangedFlowObj.flow).thenReturn(onChildrenChangedFlow)
 
         this.libraryScreenViewModel = LibraryScreenViewModel(
-            mediaBrowserAdapter = mediaBrowserAdapter,
-            onChildrenChangedFlow = onChildrenChangedFlowObj,
-            mediaControllerAdapter = mediaControllerAdapter,
-            metadataFlow = metadataFlowObj,
-            isPlayingFlow = isPlayingFlowObj,
-            mainDispatcher = mainDispatcher)
+           playbackStateRepository = playbackStateRepository,
+            browserRepository = browserRepository)
 //        whenever(isPlayingFLow).thenReturn(MutableStateFlow(true))
     }
 

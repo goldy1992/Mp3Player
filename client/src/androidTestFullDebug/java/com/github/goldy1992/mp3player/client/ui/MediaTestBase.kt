@@ -38,8 +38,8 @@ abstract class MediaTestBase {
     protected val dispatcher  = StandardTestDispatcher(testScheduler)
     protected val testScope = TestScope(dispatcher)
 
-    lateinit var mediaBrowserAdapter : MediaBrowserAdapter
-    lateinit var mediaControllerAdapter : MediaControllerAdapter
+    val playbackStateRepository = TestPlaybackStateRepository()
+    val browserRepository = TestMediaBrowserRepository()
 
     val mockMediaController = mock<MediaController>()
     val mediaControllerListenableFuture = Futures.immediateFuture(mockMediaController)
@@ -79,14 +79,6 @@ abstract class MediaTestBase {
                         .ofItem(createTestMediaItem("id"),
                                 MediaLibraryService.LibraryParams.Builder().build()))
             )
-        mediaBrowserAdapter = MediaBrowserAdapter(
-            mediaBrowserLF = mediaBrowserListenableFuture,
-            scope = testScope,
-            mainDispatcher = dispatcher)
-        mediaControllerAdapter = MediaControllerAdapter(
-            mediaControllerFuture = mediaControllerListenableFuture,
-            scope = testScope,
-            mainDispatcher = dispatcher)
 
     }
 }

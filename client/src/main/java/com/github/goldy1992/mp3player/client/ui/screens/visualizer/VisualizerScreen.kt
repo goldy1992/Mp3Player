@@ -27,6 +27,7 @@ import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.BarCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.FountainSpringCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.SmoothLineCard
+import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,10 +41,9 @@ fun VisualizerScreen(
     viewModel: VisualizerViewModel = viewModel(),
     scope : CoroutineScope = rememberCoroutineScope()) {
 
-    val audioMagnitudes by viewModel.audioDataState.collectAsState()
-    val mediaControllerAdapter = viewModel.mediaControllerAdapter
+    val audioMagnitudes by viewModel.audioData.collectAsState()
+    val isPlaying by viewModel.isPlaying.collectAsState()
 
-    val isPlaying by viewModel.isPlaying.state.collectAsState()
     Scaffold(
         topBar = {
             TopBar {
@@ -55,10 +55,12 @@ fun VisualizerScreen(
          },
         bottomBar = {
             PlayToolbar(
-                mediaController = mediaControllerAdapter,
                 isPlayingProvider = { isPlaying },
-                scope = scope,
-                navController = navController
+                onClickPlay = { viewModel.play() },
+                onClickPause = {viewModel.pause() },
+                onClickSkipPrevious = { viewModel.skipToPrevious() },
+                onClickSkipNext = { viewModel.skipToNext() },
+                onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)}
             )
         },
     ) {

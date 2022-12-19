@@ -1,18 +1,13 @@
 package com.github.goldy1992.mp3player.client.ui.screens.main
 
-import androidx.concurrent.futures.await
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.session.MediaController
-import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.ui.flows.player.IsPlayingFlow
-import com.github.goldy1992.mp3player.commons.MainDispatcher
-import com.google.common.util.concurrent.ListenableFuture
+import com.github.goldy1992.mp3player.client.data.audiobands.media.controller.PlaybackStateRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,23 +15,24 @@ import javax.inject.Inject
 class MainScreenViewModel
     @Inject
     constructor(
-        val mediaBrowserAdapter: MediaBrowserAdapter,
-        val mediaControllerAdapter: MediaControllerAdapter,
-        private val isPlayingFlow: IsPlayingFlow,
-        @MainDispatcher private val mainDispatcher: CoroutineDispatcher
+        private val playbackStateRepository: PlaybackStateRepository
     ) : ViewModel() {
-    private val mediaControllerAsync : ListenableFuture<MediaController> = mediaControllerAdapter.mediaControllerFuture
+
 
     // is playing
     private val _isPlayingState = MutableStateFlow(false)
     val isPlaying : StateFlow<Boolean> = _isPlayingState
 
     init {
-        viewModelScope.launch(mainDispatcher) {
-            _isPlayingState.value = mediaControllerAsync.await().isPlaying
-        }
         viewModelScope.launch {
-            isPlayingFlow.flow().collect {
+            playbackStateRepository
+            .isPlaying()
+            .shareIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                replay = 1
+            )
+            .collect {
                 _isPlayingState.value = it
             }
         }

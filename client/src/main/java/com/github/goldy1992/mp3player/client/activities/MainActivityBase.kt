@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.audiobands.media.controller.PlaybackStateRepository
 import com.github.goldy1992.mp3player.client.preferences.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.permissions.PermissionGranted
 import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
@@ -41,10 +42,10 @@ abstract class MainActivityBase : ComponentActivity(),
     @Inject
     lateinit var permissionsProcessor: PermissionsProcessor
     /**
-     * MediaControllerAdapter
+     * PlaybackStateRepo
      */
     @Inject
-    lateinit var mediaControllerAdapter: MediaControllerAdapter
+    lateinit var playbackStateRepository: PlaybackStateRepository
 
     @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
@@ -78,7 +79,7 @@ abstract class MainActivityBase : ComponentActivity(),
             if (intent.data != null) {
                 trackToPlay = intent.data
                 scope.launch(defaultDispatcher) {
-                    mediaControllerAdapter.playFromUri(trackToPlay, null)
+                    playbackStateRepository.playFromUri(trackToPlay, null)
                 }
             }
             this.startScreen = Screen.NOW_PLAYING
