@@ -39,7 +39,6 @@ import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.lists.buildOnSelectedMap
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListItem
 import com.github.goldy1992.mp3player.client.ui.lists.onFolderSelected
-import com.github.goldy1992.mp3player.client.ui.lists.onSelectedMap
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongListItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
@@ -105,11 +104,11 @@ fun SearchScreen(
     }
 
     val bottomBar : @Composable () -> Unit = {
-        PlayToolbar(isPlaying = { isPlaying },
+        PlayToolbar(isPlayingProvider = { isPlaying },
             onClickSkipNext = { viewModel.skipToNext() },
             onClickSkipPrevious = { viewModel.skipToPrevious() },
             onClickPause = { viewModel.pause() },
-            onClickPlaying = { viewModel.play() },
+            onClickPlay = { viewModel.play() },
             onClickBar = {navController.navigate(Screen.NOW_PLAYING.name)}
            )
     }

@@ -52,8 +52,8 @@ fun PlayToolbar(mediaController : MediaControllerAdapter,
 
 @Preview
 @Composable
-fun PlayToolbar(isPlaying : () -> Boolean = {false} ,
-                onClickPlaying: () -> Unit = {},
+fun PlayToolbar(isPlayingProvider : () -> Boolean = {false},
+                onClickPlay: () -> Unit = {},
                 onClickPause: () -> Unit = {},
                 onClickSkipNext: () -> Unit = {},
                 onClickSkipPrevious: () -> Unit = {},
@@ -71,8 +71,8 @@ fun PlayToolbar(isPlaying : () -> Boolean = {false} ,
             modifier = Modifier.fillMaxWidth()
         ) {
             SkipToPreviousButton(onClick = onClickSkipPrevious)
-            PlayPauseButton(isPlaying = isPlaying,
-                            onClickPlay = onClickPlaying,
+            PlayPauseButton(isPlaying = isPlayingProvider,
+                            onClickPlay = onClickPlay,
                             onClickPause = onClickPause)
             SkipToNextButton(onClick = onClickSkipNext)
         }
@@ -84,9 +84,9 @@ fun PlayToolbar(isPlayingProvider : () -> Boolean = {false},
                 mediaController : MediaControllerAdapter,
                 navController: NavController,
                 scope : CoroutineScope) {
-    PlayToolbar(isPlaying = isPlayingProvider,
+    PlayToolbar(isPlayingProvider = isPlayingProvider,
         onClickPause = { scope.launch { mediaController.pause() } },
-        onClickPlaying = { scope.launch { mediaController.play() } },
+        onClickPlay = { scope.launch { mediaController.play() } },
         onClickSkipNext = { scope.launch { mediaController.skipToNext() } },
         onClickSkipPrevious = { scope.launch { mediaController.skipToPrevious() } }
     ) {

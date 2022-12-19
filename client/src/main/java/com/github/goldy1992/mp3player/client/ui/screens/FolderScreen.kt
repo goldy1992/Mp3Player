@@ -35,7 +35,6 @@ fun FolderScreen(
 ) {
     val scope = rememberCoroutineScope()
     val isPlaying by viewModel.isPlaying.collectAsState()
-    val mediaController = viewModel.mediaController
     val folderItems by viewModel.folderChildren.collectAsState()
     val currentMediaItem by viewModel.currentMediaItem.collectAsState()
     val folderName = viewModel.folderName
@@ -43,14 +42,18 @@ fun FolderScreen(
     val onSongSelected : (Int, List<MediaItem>) -> Unit = { itemIndex, mediaItemList ->
         val mediaItem = mediaItemList[itemIndex]
         Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")
-        mediaController.playFromSongList(itemIndex, mediaItemList)
+        viewModel.playFromSongList(itemIndex, mediaItemList)
     }
 
     val bottomBar : @Composable () -> Unit = {
-        PlayToolbar(isPlayingProvider= { isPlaying },
-            mediaController = viewModel.mediaController,
-            navController = navController,
-            scope = scope)
+        PlayToolbar(
+            isPlayingProvider = { isPlaying },
+            onClickPlay = { viewModel.play() },
+            onClickPause = {viewModel.pause() },
+            onClickSkipPrevious = { viewModel.skipToPrevious() },
+            onClickSkipNext = { viewModel.skipToNext() },
+            onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)}
+        )
     }
 
     val navDrawerContent : @Composable () -> Unit = {

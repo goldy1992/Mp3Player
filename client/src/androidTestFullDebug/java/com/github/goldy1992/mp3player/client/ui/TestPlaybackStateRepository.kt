@@ -18,6 +18,11 @@ class TestPlaybackStateRepository() : PlaybackStateRepository {
         TODO("Not yet implemented")
     }
 
+    val currentMediaItemValue = MutableStateFlow(MediaItem.EMPTY)
+    override fun currentMediaItem(): Flow<MediaItem> {
+        return currentMediaItemValue
+    }
+
     val isPlayingValue = MutableStateFlow(true)
     override fun isPlaying(): Flow<Boolean> {
         return isPlayingValue

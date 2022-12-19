@@ -30,6 +30,7 @@ class DefaultPlaybackStateRepository
     constructor(
         private val mediaControllerFuture : ListenableFuture<MediaController>,
         private val audioDataFlow: AudioDataFlow,
+        private val currentMediaItemFlow: CurrentMediaItemFlow,
         private val isPlayingFlow: IsPlayingFlow,
         private val metadataFlow: MetadataFlow,
         private val playbackParametersFlow: PlaybackParametersFlow,
@@ -43,6 +44,10 @@ class DefaultPlaybackStateRepository
 
     override fun audioData(): Flow<AudioSample> {
         return audioDataFlow.flow()
+    }
+
+    override fun currentMediaItem() : Flow<MediaItem> {
+        return currentMediaItemFlow.flow()
     }
 
     override fun isPlaying(): Flow<Boolean> {

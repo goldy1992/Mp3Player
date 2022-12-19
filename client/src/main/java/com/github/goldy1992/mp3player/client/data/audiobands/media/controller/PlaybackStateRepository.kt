@@ -15,6 +15,8 @@ interface PlaybackStateRepository {
 
     fun audioData() : Flow<AudioSample>
 
+    fun currentMediaItem() : Flow<MediaItem>
+
     fun isPlaying() : Flow<Boolean>
 
     fun isShuffleModeEnabled() : Flow<Boolean>

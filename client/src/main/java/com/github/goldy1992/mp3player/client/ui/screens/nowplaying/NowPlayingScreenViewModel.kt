@@ -155,7 +155,7 @@ constructor(
     }
 
     fun pause() {
-        viewModelScope.launch { playbackStateRepository.play() }
+        viewModelScope.launch { playbackStateRepository.pause() }
     }
 
     fun skipToNext() {

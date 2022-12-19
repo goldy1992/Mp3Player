@@ -5,16 +5,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
-import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.data.audiobands.media.browser.MediaBrowserRepository
 import com.github.goldy1992.mp3player.client.data.audiobands.media.controller.PlaybackStateRepository
-import com.github.goldy1992.mp3player.client.ui.flows.mediabrowser.OnSearchResultsChangedFlow
-import com.github.goldy1992.mp3player.client.ui.flows.player.IsPlayingFlow
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.MainDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -28,13 +22,8 @@ import javax.inject.Inject
 class SearchScreenViewModel
     @Inject
     constructor(
-        val playbackStateRepository: PlaybackStateRepository,
-        val browserRepository: MediaBrowserRepository)
-//        val mediaBrowserAdapter: MediaBrowserAdapter,
-//        val mediaControllerAdapter: MediaControllerAdapter,
-//        private val onSearchResultsChangedFlow: OnSearchResultsChangedFlow,
-//        private val isPlayingFlow: IsPlayingFlow,
-//        @MainDispatcher private val mainDispatcher: CoroutineDispatcher)
+        private val playbackStateRepository: PlaybackStateRepository,
+        private val browserRepository: MediaBrowserRepository)
 
     : ViewModel(), LogTagger {
 

@@ -20,7 +20,6 @@ import androidx.media3.common.MediaMetadata
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
@@ -36,7 +35,6 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.launch
 import org.apache.commons.lang3.ObjectUtils.isEmpty
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,8 +86,9 @@ fun NowPlayingScreen(
         },
         bottomBar = {
             PlayToolbar(
-                onClickPlaying = { viewModel.play() },
-                onClickPause = {viewModel.pause() },
+                isPlayingProvider = { isPlaying },
+                onClickPlay = { viewModel.pause() },
+                onClickPause = {viewModel.play() },
                 onClickSkipPrevious = { viewModel.skipToPrevious() },
                 onClickSkipNext = { viewModel.skipToNext() }
             )
