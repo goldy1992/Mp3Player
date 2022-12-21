@@ -33,9 +33,9 @@ import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
-import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.WindowSize
+import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
+import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.lists.buildOnSelectedMap
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListItem
 import com.github.goldy1992.mp3player.client.ui.lists.onFolderSelected
@@ -43,8 +43,6 @@ import com.github.goldy1992.mp3player.client.ui.lists.songs.SongListItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import org.apache.commons.lang3.StringUtils
 import java.util.*
@@ -58,8 +56,7 @@ private const val logTag = "SearchScreen"
 fun SearchScreen(
     navController: NavController,
     windowSize: WindowSize,
-    viewModel : SearchScreenViewModel = viewModel(),
-    scope : CoroutineScope = rememberCoroutineScope()) {
+    viewModel : SearchScreenViewModel = viewModel()) {
 
     val searchResults by viewModel.searchResults.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
@@ -84,12 +81,7 @@ fun SearchScreen(
         )
     }
 
-    val onNavUpPressed : () -> Unit = {
-        scope.launch {
-            //   mediaBrowser.clearSearchResults()
-            navController.popBackStack()
-        }
-    }
+    val onNavUpPressed : () -> Unit = {  navController.popBackStack() }
 
     val topBar : @Composable () -> Unit = {
         SearchBar(
@@ -99,7 +91,6 @@ fun SearchScreen(
                 Log.i(logTag, "setting searchQuery with value: ${it}")
                 viewModel.setSearchQuery(it) },
             onSearchQueryCleared = { viewModel.setSearchQuery("") },
-            scope = scope
         )
     }
 
@@ -192,9 +183,7 @@ fun SearchBar(currentSearchQuery : () -> String = { "No search query specified" 
               onSearchQueryUpdated : (String) -> Unit = {},
               onSearchQueryCleared : () -> Unit = {},
               keyboardController : SoftwareKeyboardController? = LocalSoftwareKeyboardController.current,
-              focusRequester : FocusRequester = remember { FocusRequester() },
-                scope: CoroutineScope = rememberCoroutineScope()) {
-  //  val searchQuery = remember { mutableStateOf(TextFieldValue()) }
+              focusRequester : FocusRequester = remember { FocusRequester() }) {
 
     val currentSearchQueryValue = currentSearchQuery()
     Log.i(logTag, "currentSearchQueryValue : $currentSearchQueryValue")

@@ -16,7 +16,6 @@ import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
-import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -68,13 +67,8 @@ class SearchScreenTest {
         val searchTextFieldName = context.resources.getString(R.string.search_text_field)
         val captor : ArgumentCaptor<String> = ArgumentCaptor.forClass(String::class.java)
         Log.i("SScrnTest", "captor: ${captor}")
-        runBlocking {
-            composeTestRule.awaitIdle()
-            composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("a")
-            composeTestRule.awaitIdle()
-            composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("b")
-            composeTestRule.awaitIdle()
-        }
+        composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("a")
+        composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("b")
         verify(searchScreenViewModel, atLeastOnce()).setSearchQuery(capture(captor))
         Log.i("SearchScreen", "captor.all Values ${captor.allValues}")
 
@@ -94,7 +88,6 @@ class SearchScreenTest {
         }
         assertTrue(hasA)
         assertTrue(hasB)
-
     }
 
     /**
@@ -156,10 +149,7 @@ class SearchScreenTest {
                 windowSize = WindowSize.Compact,
             )
         }
-        runBlocking {
-            composeTestRule.onNodeWithText(folderName).performClick()
-            composeTestRule.awaitIdle()
-        }
+        composeTestRule.onNodeWithText(folderName, useUnmergedTree = true).performClick()
         verify(mockNavController, times(1)).navigate(expectedRoute)
 
     }

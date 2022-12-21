@@ -9,6 +9,7 @@ import com.github.goldy1992.mp3player.client.data.audiobands.media.browser.Media
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
+import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDefaultLibraryParams
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.mockito.kotlin.mock
@@ -19,8 +20,15 @@ class TestMediaBrowserRepository() : MediaBrowserRepository {
         return currentSearchQuery
     }
 
+    val currentOnChildrenChanged = MutableStateFlow(
+        OnChildrenChangedEventHolder(
+            browser = mock<MediaBrowser>(),
+            parentId = "",
+            itemCount = 1,
+            params = getDefaultLibraryParams()))
+
     override fun onChildrenChanged(): Flow<OnChildrenChangedEventHolder> {
-        TODO("Not yet implemented")
+        return currentOnChildrenChanged
     }
 
     override fun onCustomCommand(): Flow<SessionCommandEventHolder> {
@@ -45,11 +53,11 @@ class TestMediaBrowserRepository() : MediaBrowserRepository {
         pageSize: Int,
         params: MediaLibraryService.LibraryParams
     ): List<MediaItem> {
-        TODO("Not yet implemented")
+        return listOf<MediaItem>()
     }
 
     override suspend fun getLibraryRoot(): MediaItem {
-        TODO("Not yet implemented")
+        return MediaItem.EMPTY
     }
 
     val currentSearchResults = MutableStateFlow<List<MediaItem>>(emptyList())
@@ -66,6 +74,6 @@ class TestMediaBrowserRepository() : MediaBrowserRepository {
     }
 
     override suspend fun subscribe(id: String) {
-        TODO("Not yet implemented")
+
     }
 }

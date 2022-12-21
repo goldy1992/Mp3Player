@@ -32,8 +32,9 @@ class TestPlaybackStateRepository() : PlaybackStateRepository {
         TODO("Not yet implemented")
     }
 
+    val currentMetadata = MutableStateFlow(MediaMetadata.EMPTY)
     override fun metadata(): Flow<MediaMetadata> {
-        TODO("Not yet implemented")
+        return currentMetadata
     }
 
     override fun playbackParameters(): Flow<PlaybackParameters> {

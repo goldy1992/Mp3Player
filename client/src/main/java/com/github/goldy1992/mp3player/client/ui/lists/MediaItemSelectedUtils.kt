@@ -33,12 +33,14 @@ fun onFolderSelected(navController : NavController) : (MediaItem) -> Unit {
         val directoryPath = MediaItemUtils.getDirectoryPath(it)
         val encodedFolderPath = Uri.encode(directoryPath)
         val folderName = MediaItemUtils.getDirectoryName(it)
-        navController.navigate(
-            Screen.FOLDER.name
-                    + "/" + encodedFolderLibraryId
-                    + "/" + folderName
-                    + "/" + encodedFolderPath
-        )
+
+        val navRoute = Screen.FOLDER.name +
+            "/" + encodedFolderLibraryId +
+            "/" + folderName +
+            "/" + encodedFolderPath
+
+        Log.i(logTag, "navigating to $navRoute")
+        navController.navigate(navRoute)
     }
 }
 

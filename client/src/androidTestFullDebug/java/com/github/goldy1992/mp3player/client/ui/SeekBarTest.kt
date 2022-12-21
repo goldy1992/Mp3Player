@@ -27,10 +27,10 @@ import org.mockito.kotlin.whenever
  */
 class SeekBarTest : MediaTestBase() {
 
-    val playbackParametersFlow = mock<PlaybackParametersFlow>()
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    private val mockSeekTo = mock<MockSeekTo>()
     lateinit var scope : CoroutineScope
 
     @Before
@@ -62,12 +62,13 @@ class SeekBarTest : MediaTestBase() {
         whenever(mockMediaController.currentPosition).thenReturn(currentPosition)
     //   scope.
         composeTestRule.setContent {
-//            SeekBar(mediaController = mediaControllerAdapter,
-//                    metadataProvider =  {metadata },
-//                    isPlayingProvider = {  false },
-//                    playbackSpeedProvider = { 1.0f },
-//                    playbackPositionProvider ={ PlaybackPositionEvent(false, currentPosition, 0L) }
-//            )
+            SeekBar(
+                isPlayingProvider = {  false },
+                metadataProvider =  {metadata },
+                playbackSpeedProvider = { 1.0f },
+                playbackPositionProvider ={ PlaybackPositionEvent(false, currentPosition, 0L) },
+                seekTo = { mockSeekTo.seekTo(it) }
+            )
         }
 
         runBlocking {
@@ -83,6 +84,10 @@ class SeekBarTest : MediaTestBase() {
             .assertExists()
             .assert(hasText(expectedCurrentPosition))
 
+    }
+
+    private class MockSeekTo {
+        fun seekTo(value : Long) {}
     }
 
 }
