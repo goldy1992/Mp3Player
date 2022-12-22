@@ -23,9 +23,9 @@ import javax.inject.Inject
  * An adapter that can be used to control the MediaPlaybackService by sending playback controls such
  * as play/pause to the service.
  */
-@ActivityRetainedScoped
+
 open class MediaControllerAdapter
-    @Inject
+
     constructor(
         val mediaControllerFuture: ListenableFuture<MediaController>,
         private val scope : CoroutineScope,

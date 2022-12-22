@@ -5,7 +5,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.session.MediaBrowser
 import androidx.media3.session.MediaLibraryService
 import com.github.goldy1992.mp3player.client.MediaTestUtils
-import com.github.goldy1992.mp3player.client.data.audiobands.media.browser.MediaBrowserRepository
+import com.github.goldy1992.mp3player.client.data.repositories.media.browser.MediaBrowserRepository
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder

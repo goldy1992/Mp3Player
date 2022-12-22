@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.data.audiobands.media.browser
+package com.github.goldy1992.mp3player.client.data.repositories.media.browser
 
 import android.os.Bundle
 import android.util.Log

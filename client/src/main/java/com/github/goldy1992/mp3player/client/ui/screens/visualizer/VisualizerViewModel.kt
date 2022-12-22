@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.goldy1992.mp3player.client.AudioDataProcessor
-import com.github.goldy1992.mp3player.client.data.audiobands.media.controller.PlaybackStateRepository
+import com.github.goldy1992.mp3player.client.data.repositories.media.controller.PlaybackStateRepository
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

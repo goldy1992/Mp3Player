@@ -9,14 +9,16 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.audiobands.media.controller.PlaybackStateRepository
-import com.github.goldy1992.mp3player.client.preferences.UserPreferencesRepository
+import com.github.goldy1992.mp3player.client.data.repositories.media.controller.PlaybackStateRepository
 import com.github.goldy1992.mp3player.client.permissions.PermissionGranted
 import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
+import com.github.goldy1992.mp3player.client.preferences.UserPreferencesRepository
 import com.github.goldy1992.mp3player.commons.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 abstract class MainActivityBase : ComponentActivity(),

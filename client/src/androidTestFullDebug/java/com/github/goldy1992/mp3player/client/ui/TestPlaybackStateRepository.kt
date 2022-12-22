@@ -6,7 +6,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.session.MediaController
-import com.github.goldy1992.mp3player.client.data.audiobands.media.controller.PlaybackStateRepository
+import com.github.goldy1992.mp3player.client.data.repositories.media.controller.PlaybackStateRepository
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.commons.AudioSample

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.Player.RepeatMode
-import com.github.goldy1992.mp3player.client.data.audiobands.media.controller.PlaybackStateRepository
+import com.github.goldy1992.mp3player.client.data.repositories.media.controller.PlaybackStateRepository
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class NowPlayingScreenViewModel
     @Inject
 constructor(
-    private val playbackStateRepository: PlaybackStateRepository,
+        private val playbackStateRepository: PlaybackStateRepository,
 ) : ViewModel() {
 
     // playbackPosition

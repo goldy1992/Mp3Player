@@ -16,7 +16,7 @@ import javax.inject.Inject
 class IsPlayingFlow
 
 @Inject
-constructor(mediaControllerFuture: ListenableFuture<MediaController>) : LogTagger, PlayerFlow<Boolean>(mediaControllerFuture) {
+constructor(mediaControllerFuture: ListenableFuture<Player>) : LogTagger, PlayerFlow<Boolean>(mediaControllerFuture) {
 
     private val isPlayingFlow : Flow<Boolean> = callbackFlow {
         val controller = mediaControllerFuture.await()

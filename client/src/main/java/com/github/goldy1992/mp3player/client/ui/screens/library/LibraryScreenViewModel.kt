@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import com.github.goldy1992.mp3player.client.data.audiobands.media.browser.MediaBrowserRepository
-import com.github.goldy1992.mp3player.client.data.audiobands.media.controller.PlaybackStateRepository
+import com.github.goldy1992.mp3player.client.data.repositories.media.browser.MediaBrowserRepository
+import com.github.goldy1992.mp3player.client.data.repositories.media.controller.PlaybackStateRepository
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*

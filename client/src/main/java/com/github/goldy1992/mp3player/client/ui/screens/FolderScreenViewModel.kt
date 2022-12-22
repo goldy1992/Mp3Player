@@ -1,24 +1,14 @@
 package com.github.goldy1992.mp3player.client.ui.screens
 
-import androidx.concurrent.futures.await
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import androidx.media3.session.MediaController
-import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.data.audiobands.media.browser.MediaBrowserRepository
-import com.github.goldy1992.mp3player.client.data.audiobands.media.controller.PlaybackStateRepository
-import com.github.goldy1992.mp3player.client.ui.flows.mediabrowser.OnChildrenChangedFlow
-import com.github.goldy1992.mp3player.client.ui.flows.player.IsPlayingFlow
-import com.github.goldy1992.mp3player.client.ui.flows.player.MetadataFlow
+import com.github.goldy1992.mp3player.client.data.repositories.media.browser.MediaBrowserRepository
+import com.github.goldy1992.mp3player.client.data.repositories.media.controller.PlaybackStateRepository
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.MainDispatcher
-import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
