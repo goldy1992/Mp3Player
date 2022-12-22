@@ -12,14 +12,18 @@ import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.session.*
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.*
 import com.github.goldy1992.mp3player.client.utils.AudioDataUtils.getAudioSample
+import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDefaultLibraryParams
+import com.github.goldy1992.mp3player.client.utils.QueueUtils.getQueue
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
+import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME
+import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME_KEY
 import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.commons.TimerUtils
+import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -28,8 +32,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import org.apache.commons.lang3.StringUtils.isEmpty
 import javax.inject.Inject
 
+/**
+ * Default implementation of the [IMediaBrowser].
+ */
 class DefaultMediaBrowser
     @Inject
     constructor(
@@ -44,6 +52,17 @@ class DefaultMediaBrowser
                 .Builder(context, sessionToken)
                 .setListener(this)
                 .buildAsync()
+    }
+
+    private val _playerEventsFlow : Flow<PlayerEventHolder> = callbackFlow {
+        val controller = mediaBrowserFuture.await()
+        val messageListener = object : Player.Listener {
+            override fun onEvents(player: Player, events: Player.Events) {
+                trySend(PlayerEventHolder(player, events))
+            }
+        }
+        controller.addListener(messageListener)
+        awaitClose { controller.removeListener(messageListener) }
     }
 
     private val _onCustomCommandFlow : Flow<SessionCommandEventHolder> = callbackFlow<SessionCommandEventHolder> {
@@ -104,10 +123,6 @@ class DefaultMediaBrowser
         return _currentMediaItemFlow
     }
 
-    override fun currentSearchQuery(): Flow<String> {
-        TODO("Not yet implemented")
-    }
-
     private val _isPlayingFlow : Flow<Boolean> = callbackFlow {
         val controller = mediaBrowserFuture.await()
         val messageListener = object : Player.Listener {
@@ -125,15 +140,24 @@ class DefaultMediaBrowser
         return _isPlayingFlow
     }
 
+    private val _shuffleModeFlow : Flow<Boolean> = callbackFlow {
+        val controller = mediaBrowserFuture.await()
+        val messageListener = object : Player.Listener {
+            override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+                trySend(shuffleModeEnabled)
+            }
+        }
+        controller.addListener(messageListener)
+        awaitClose { controller.removeListener(messageListener) }
+    }
     override fun isShuffleModeEnabled(): Flow<Boolean> {
-        TODO("Not yet implemented")
+        return _shuffleModeFlow
     }
 
 
     override fun metadata(): Flow<MediaMetadata> {
         return _metadataFlow
     }
-
 
     private val _onChildrenChangedFlow : Flow<OnChildrenChangedEventHolder> = callbackFlow<OnChildrenChangedEventHolder> {
         val messageListener = object : MediaBrowser.Listener {
@@ -151,11 +175,9 @@ class DefaultMediaBrowser
         awaitClose {
             listeners.remove(messageListener) }
     }
-     override fun onChildrenChanged(): Flow<OnChildrenChangedEventHolder> {
+    override fun onChildrenChanged(): Flow<OnChildrenChangedEventHolder> {
         return _onChildrenChangedFlow
     }
-
-
 
     override fun onCustomCommand(): Flow<SessionCommandEventHolder> {
         return _onCustomCommandFlow
@@ -179,28 +201,84 @@ class DefaultMediaBrowser
         return _onSearchResultChangedFlow
     }
 
+    private val _playbackParametersFlow : Flow<PlaybackParameters> = callbackFlow {
+        val controller = mediaBrowserFuture.await()
+        val messageListener = object : Player.Listener {
+            override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
+                trySend(playbackParameters)
+            }
+        }
+        controller.addListener(messageListener)
+        awaitClose { controller.removeListener(messageListener) }
+    }
     override fun playbackParameters(): Flow<PlaybackParameters> {
-        TODO("Not yet implemented")
+        return _playbackParametersFlow
     }
 
+    private val _playbackPositionFlow : Flow<PlaybackPositionEvent> = callbackFlow {
+        val controller = mediaBrowserFuture.await()
+        val messageListener = object : Player.Listener {
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                Log.i(logTag(), "onIsPlayingChanged: $isPlaying")
+                trySend(PlaybackPositionEvent(isPlaying, controller.currentPosition, TimerUtils.getSystemTime()))
+            }
+
+            override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
+                val isPlaying = controller.isPlaying
+                trySend(PlaybackPositionEvent(isPlaying, controller.currentPosition, TimerUtils.getSystemTime()))
+            }
+        }
+        controller.addListener(messageListener)
+        awaitClose {
+            controller.removeListener(messageListener)
+        }
+    }
     override fun playbackPosition(): Flow<PlaybackPositionEvent> {
-        TODO("Not yet implemented")
+        return _playbackPositionFlow
     }
 
+    private val _playbackSpeedFlow : Flow<Float> = _playbackParametersFlow
+        .map {
+            it.speed
+        }
     override fun playbackSpeed(): Flow<Float> {
-        TODO("Not yet implemented")
+        return _playbackSpeedFlow
     }
+
+    private val events : @Player.Event IntArray = intArrayOf(
+        Player.EVENT_MEDIA_ITEM_TRANSITION,
+        Player.EVENT_TIMELINE_CHANGED
+    )
+    private val _queueFlow : Flow<QueueState> = _playerEventsFlow
+        .filter { it.events.containsAny( *events ) }
+        .map {
+            getQueue(it.player!!)
+        }
 
     override fun queue(): Flow<QueueState> {
-        TODO("Not yet implemented")
+        return _queueFlow
     }
 
+    private val _repeatModeFlow : Flow<@Player.RepeatMode Int> = callbackFlow {
+        val controller = mediaBrowserFuture.await()
+        val messageListener = object : Player.Listener {
+            override fun onRepeatModeChanged(@Player.RepeatMode repeatMode: Int) {
+                trySend(repeatMode)
+            }
+        }
+        controller.addListener(messageListener)
+        awaitClose { controller.removeListener(messageListener) }
+    }
     override fun repeatMode(): Flow<Int> {
-        TODO("Not yet implemented")
+        return _repeatModeFlow
     }
 
     override suspend fun changePlaybackSpeed(speed: Float) {
-        TODO("Not yet implemented")
+        val extras = Bundle()
+        extras.putFloat(CHANGE_PLAYBACK_SPEED, speed)
+        val changePlaybackSpeedCommand = SessionCommand(CHANGE_PLAYBACK_SPEED, extras)
+        mediaBrowserFuture.await().sendCustomCommand(changePlaybackSpeedCommand, extras).await()
+
     }
 
     override suspend fun getChildren(
@@ -209,11 +287,21 @@ class DefaultMediaBrowser
         pageSize: Int,
         params: MediaLibraryService.LibraryParams
     ): List<MediaItem> {
-        TODO("Not yet implemented")
+        return if (pageSize < 1) {
+            emptyList()
+        } else {
+            val children: LibraryResult<ImmutableList<MediaItem>> =
+                mediaBrowserFuture.await().getChildren(parentId, page, pageSize, params).await()
+            return children.value?.toList() ?: emptyList()
+        }
     }
 
     override suspend fun getLibraryRoot(): MediaItem {
-        TODO("Not yet implemented")
+        val args = Bundle()
+        args.putString(PACKAGE_NAME_KEY, PACKAGE_NAME)
+        val params = MediaLibraryService.LibraryParams.Builder().setExtras(args).build()
+        val result = mediaBrowserFuture.await().getLibraryRoot(params).await()
+        return result.value ?: MediaItem.EMPTY
     }
 
     override suspend fun getSearchResults(
@@ -221,66 +309,88 @@ class DefaultMediaBrowser
         page: Int,
         pageSize: Int
     ): List<MediaItem> {
-        TODO("Not yet implemented")
+        if (isEmpty(query)) {
+            Log.i(logTag(), "getSearchResults called with query \"\"")
+            return ImmutableList.of()
+        }
+        val result : LibraryResult<ImmutableList<MediaItem>> =
+            mediaBrowserFuture.await().getSearchResult(query, page, pageSize, getDefaultLibraryParams()).await()
+        return result.value ?: ImmutableList.of()
     }
 
     override suspend fun pause() {
-        TODO("Not yet implemented")
+        mediaBrowserFuture.await().pause()
     }
 
     override suspend fun play() {
-        TODO("Not yet implemented")
+        mediaBrowserFuture.await().play()
     }
 
     override suspend fun play(mediaItem: MediaItem) {
-        TODO("Not yet implemented")
+        val mediaBrowser = mediaBrowserFuture.await()
+        mediaBrowser.addMediaItem(mediaItem)
+        mediaBrowser.prepare()
+        mediaBrowser.play()
+
     }
 
     override suspend fun playFromSongList(itemIndex: Int, items: List<MediaItem>) {
-        TODO("Not yet implemented")
+        val mediaBrowser = mediaBrowserFuture.await()
+        mediaBrowser.clearMediaItems()
+        mediaBrowser.addMediaItems(items)
+        mediaBrowser.seekTo(itemIndex, 0L)
+        mediaBrowser.prepare()
+        mediaBrowser.play()
     }
 
     override suspend fun playFromUri(uri: Uri?, extras: Bundle?) {
-        TODO("Not yet implemented")
+        val mediaItem = MediaItem.Builder().setUri(uri).build()
+        mediaBrowserFuture.await().addMediaItem(mediaItem)
     }
 
     override suspend fun prepareFromMediaId(mediaItem: MediaItem) {
-        TODO("Not yet implemented")
+        // call from application looper
+        val mediaController = mediaBrowserFuture.await()
+        mediaController.addMediaItem(mediaItem)
+        mediaController.prepare()
     }
 
     override suspend fun search(query: String, extras: Bundle) {
-        TODO("Not yet implemented")
+        mediaBrowserFuture.await()
+            .search(query, MediaLibraryService
+                .LibraryParams
+                .Builder()
+                .setExtras(extras)
+                .build())
     }
 
     override suspend fun seekTo(position: Long) {
-        TODO("Not yet implemented")
+        mediaBrowserFuture.await().seekTo(position)
     }
 
     override suspend fun setRepeatMode(repeatMode: Int) {
-        TODO("Not yet implemented")
+        mediaBrowserFuture.await().repeatMode = repeatMode
     }
 
     override suspend fun setShuffleMode(shuffleModeEnabled: Boolean) {
-        TODO("Not yet implemented")
+        mediaBrowserFuture.await().shuffleModeEnabled = shuffleModeEnabled
     }
 
     override suspend fun skipToNext() {
-        TODO("Not yet implemented")
+        mediaBrowserFuture.await().seekToNextMediaItem()
     }
 
     override suspend fun skipToPrevious() {
-        TODO("Not yet implemented")
+        mediaBrowserFuture.await().seekToPreviousMediaItem()
     }
 
     override suspend fun stop() {
-        TODO("Not yet implemented")
+        mediaBrowserFuture.await().stop()
     }
 
     override suspend fun subscribe(id: String) {
-        TODO("Not yet implemented")
+        mediaBrowserFuture.await().subscribe(id, MediaLibraryService.LibraryParams.Builder().build())
     }
-
-
 
     // The set of all listeners which are made by the Callback Flows
     private val listeners : MutableSet<MediaBrowser.Listener> = mutableSetOf()
@@ -306,9 +416,7 @@ class DefaultMediaBrowser
 
     override fun onDisconnected(controller: MediaController) {
         listeners.forEach { listener -> listener.onDisconnected(controller) }
-
     }
-
 
     override fun onSetCustomLayout(
         controller: MediaController, layout: List<CommandButton>

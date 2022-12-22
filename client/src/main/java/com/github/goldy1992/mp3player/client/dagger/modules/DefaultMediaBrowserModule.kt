@@ -14,7 +14,7 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 
 @InstallIn(ActivityRetainedComponent::class)
 @Module
-class MediaBrowserModule {
+object DefaultMediaBrowserModule {
 
     @ActivityRetainedScoped
     @Provides
@@ -28,4 +28,6 @@ class MediaBrowserModule {
             .setListener(asyncMediaBrowserListener)
             .buildAsync()
     }
+
+
 }

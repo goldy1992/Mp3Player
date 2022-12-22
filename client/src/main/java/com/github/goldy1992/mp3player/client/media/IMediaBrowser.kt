@@ -21,8 +21,6 @@ interface IMediaBrowser {
 
     fun currentMediaItem() : Flow<MediaItem>
 
-    fun currentSearchQuery() : Flow<String>
-
     fun isPlaying() : Flow<Boolean>
 
     fun isShuffleModeEnabled() : Flow<Boolean>
