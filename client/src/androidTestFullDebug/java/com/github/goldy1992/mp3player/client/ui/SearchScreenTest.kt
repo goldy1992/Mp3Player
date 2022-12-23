@@ -140,7 +140,7 @@ class SearchScreenTest {
         val folderNameMi = MediaItemUtils.getDirectoryName(folderItem)
 
         val expectedRoute = Screen.FOLDER.name + "/" + folderItem.mediaId+ "/" + folderNameMi+ "/" + encodedFolderPath
-        testMediaRepository.searchResultsState.value = listOf(folderItem)
+        testMediaRepository.searchResults = listOf(folderItem)
 
         composeTestRule.setContent {
             SearchScreen(

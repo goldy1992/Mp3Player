@@ -17,8 +17,15 @@ import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionComma
 import com.github.goldy1992.mp3player.commons.AudioSample
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
-class TestMediaRepository : MediaRepository {
+/**
+ * AndroidTest implementation of [MediaRepository]
+ */
+class TestMediaRepository
+    @Inject
+    constructor() : MediaRepository {
+
     override fun audioData(): Flow<AudioSample> {
         TODO("Not yet implemented")
     }
@@ -58,8 +65,9 @@ class TestMediaRepository : MediaRepository {
         TODO("Not yet implemented")
     }
 
+    val searchResultsChangedState = MutableStateFlow(OnSearchResultsChangedEventHolder.DEFAULT)
     override fun onSearchResultsChanged(): Flow<OnSearchResultsChangedEventHolder> {
-        TODO("Not yet implemented")
+        return searchResultsChangedState
     }
 
     override fun playbackParameters(): Flow<PlaybackParameters> {
@@ -105,12 +113,13 @@ class TestMediaRepository : MediaRepository {
     }
 
     val searchResultsState = MutableStateFlow<List<MediaItem>>(emptyList())
+    var searchResults : List<MediaItem> = emptyList()
     override suspend fun getSearchResults(
         query: String,
         page: Int,
         pageSize: Int
     ): List<MediaItem> {
-        return searchResultsState.value
+        return searchResults
     }
 
     override suspend fun pause() {
@@ -137,9 +146,7 @@ class TestMediaRepository : MediaRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun search(query: String, extras: Bundle) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun search(query: String, extras: Bundle) { }
 
     override suspend fun seekTo(position: Long) {
         TODO("Not yet implemented")

@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.client.data.sources
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
@@ -18,6 +19,7 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import org.apache.commons.lang3.StringUtils.isEmpty
 import javax.inject.Inject
 
 @ActivityRetainedScoped
@@ -139,7 +141,14 @@ class DefaultMediaDataSource
 
     override suspend fun search(query: String, extras: Bundle) {
         this._currentSearchQuery.value = query
-        mediaBrowser.search(query, extras)
+
+        if (isEmpty(query)) {
+            Log.w(logTag(), "Null or empty search query seen")
+        }
+        else {
+            mediaBrowser.search(query, extras)
+        }
+
     }
 
     override suspend fun seekTo(position: Long) {

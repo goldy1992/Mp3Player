@@ -226,7 +226,7 @@ class DefaultMediaBrowser
                 itemCount: Int,
                 params: MediaLibraryService.LibraryParams?
             ) {
-                trySend(OnSearchResultsChangedEventHolder(browser, query, itemCount, params))
+                trySend(OnSearchResultsChangedEventHolder(query, itemCount, params))
             }
         }
         listeners.add(messageListener)
