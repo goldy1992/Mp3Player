@@ -20,8 +20,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.LooperMode
 
 @HiltAndroidTest
-@UninstallModules(MediaControllerModule::class,
-                DefaultMediaBrowserModule::class,
+@UninstallModules(DefaultMediaBrowserModule::class,
                 MediaSessionTokenModule::class)
 @RunWith(RobolectricTestRunner::class)
 @LooperMode(LooperMode.Mode.PAUSED)

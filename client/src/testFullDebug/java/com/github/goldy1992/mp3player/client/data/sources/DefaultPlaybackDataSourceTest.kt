@@ -8,6 +8,5 @@ import org.mockito.kotlin.stub
 class DefaultPlaybackDataSourceTest {
     @Before
     fun setup() {
-        MediaBrowser.Builder().setListener(MediaBrowser.Listener).stub {  }
     }
 }
