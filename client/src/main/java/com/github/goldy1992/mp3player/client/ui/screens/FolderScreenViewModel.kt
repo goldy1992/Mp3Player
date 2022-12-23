@@ -5,8 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import com.github.goldy1992.mp3player.client.data.repositories.media.browser.MediaBrowserRepository
-import com.github.goldy1992.mp3player.client.data.repositories.media.controller.PlaybackStateRepository
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -18,8 +17,7 @@ class FolderScreenViewModel
     @Inject
     constructor(
         savedStateHandle: SavedStateHandle,
-        private val browserRepository: MediaBrowserRepository,
-        private val playbackStateRepository: PlaybackStateRepository
+        private val mediaRepository: MediaRepository,
     ) : ViewModel(), LogTagger {
 
     val folderId : String = checkNotNull(savedStateHandle["folderId"])
@@ -32,12 +30,12 @@ class FolderScreenViewModel
 
     init {
         viewModelScope.launch {
-            browserRepository.subscribe(folderId)
-            _folderChildren.value = browserRepository.getChildren(folderId).toList()
+            mediaRepository.subscribe(folderId)
+            _folderChildren.value = mediaRepository.getChildren(folderId).toList()
         }
 
         viewModelScope.launch {
-            browserRepository.onChildrenChanged()
+            mediaRepository.onChildrenChanged()
             .shareIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
@@ -45,7 +43,7 @@ class FolderScreenViewModel
             )
             .filter { it.parentId == folderId }
             .collect {
-                browserRepository.getChildren(parentId = folderId)
+                mediaRepository.getChildren(parentId = folderId)
             }
         }
     }
@@ -57,12 +55,8 @@ class FolderScreenViewModel
 
     init {
         viewModelScope.launch {
-            playbackStateRepository.isPlaying().
-            shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                replay = 1
-            ).collect {
+            mediaRepository.isPlaying()
+            .collect {
                 _isPlayingState.value = it
             }
         }
@@ -74,12 +68,8 @@ class FolderScreenViewModel
 
     init {
         viewModelScope.launch {
-            playbackStateRepository.metadata().
-            shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                replay = 1
-            ).collect {
+            mediaRepository.metadata()
+            .collect {
                 _metadataState.value = it
             }
         }
@@ -91,35 +81,31 @@ class FolderScreenViewModel
 
     init {
         viewModelScope.launch {
-            playbackStateRepository.currentMediaItem().
-            shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                replay = 1
-            ).collect {
+            mediaRepository.currentMediaItem()
+            .collect {
                 _currentMediaItemState.value = it
             }
         }
     }
 
     fun play() {
-        viewModelScope.launch { playbackStateRepository.play() }
+        viewModelScope.launch { mediaRepository.play() }
     }
 
     fun pause() {
-        viewModelScope.launch { playbackStateRepository.play() }
+        viewModelScope.launch { mediaRepository.play() }
     }
 
     fun skipToNext() {
-        viewModelScope.launch { playbackStateRepository.skipToNext() }
+        viewModelScope.launch { mediaRepository.skipToNext() }
     }
 
     fun skipToPrevious() {
-        viewModelScope.launch { playbackStateRepository.skipToPrevious() }
+        viewModelScope.launch { mediaRepository.skipToPrevious() }
     }
 
     fun playFromSongList(index : Int, songs : List<MediaItem>) {
-        viewModelScope.launch { playbackStateRepository.playFromSongList(index, songs) }
+        viewModelScope.launch { mediaRepository.playFromSongList(index, songs) }
     }
 
     override fun logTag(): String {

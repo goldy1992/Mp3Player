@@ -5,8 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
-import com.github.goldy1992.mp3player.client.data.repositories.media.browser.MediaBrowserRepository
-import com.github.goldy1992.mp3player.client.data.repositories.media.controller.PlaybackStateRepository
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,12 +17,14 @@ import org.apache.commons.lang3.StringUtils.isEmpty
 import org.apache.commons.lang3.StringUtils.isNotEmpty
 import javax.inject.Inject
 
+/**
+ * [ViewModel] implementation from the [SearchScreen].
+ */
 @HiltViewModel
 class SearchScreenViewModel
     @Inject
     constructor(
-        private val playbackStateRepository: PlaybackStateRepository,
-        private val browserRepository: MediaBrowserRepository
+        private val mediaRepository: MediaRepository
     )
 
     : ViewModel(), LogTagger {
@@ -33,7 +34,7 @@ class SearchScreenViewModel
 
     init {
         viewModelScope.launch {
-            browserRepository.currentSearchQuery()
+            mediaRepository.currentSearchQuery()
                 .shareIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(),
@@ -49,7 +50,7 @@ class SearchScreenViewModel
             if (isEmpty(query)) {
                 _searchResults.value = emptyList()
             }
-            browserRepository.search(query, Bundle())
+            mediaRepository.search(query, Bundle())
             Log.i(logTag(), "New searchQueryValue: ${query}")
         }
     }
@@ -58,7 +59,7 @@ class SearchScreenViewModel
     val searchResults : StateFlow<List<MediaItem>> = _searchResults
     init {
         viewModelScope.launch {
-            browserRepository
+            mediaRepository
             .onSearchResultsChanged()
             .shareIn(
                 scope = viewModelScope,
@@ -66,7 +67,7 @@ class SearchScreenViewModel
                 replay = 1
             ).collect {
                 if (isNotEmpty(searchQuery.value) && it.itemCount > 0) {
-                    val results = browserRepository.getSearchResults(it.query, 0, it.itemCount)
+                    val results = mediaRepository.getSearchResults(it.query, 0, it.itemCount)
                     _searchResults.value = results
                 } else {
                     _searchResults.value = emptyList()
@@ -84,7 +85,7 @@ class SearchScreenViewModel
 
     init {
         viewModelScope.launch {
-            playbackStateRepository.isPlaying().
+            mediaRepository.isPlaying().
             shareIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
@@ -97,7 +98,7 @@ class SearchScreenViewModel
 
     fun play(mediaItem: MediaItem) {
         viewModelScope.launch {
-            playbackStateRepository.play(mediaItem)
+            mediaRepository.play(mediaItem)
         }
     }
 
@@ -106,19 +107,19 @@ class SearchScreenViewModel
     }
 
     fun play() {
-        viewModelScope.launch { playbackStateRepository.play() }
+        viewModelScope.launch { mediaRepository.play() }
     }
 
     fun pause() {
-        viewModelScope.launch { playbackStateRepository.play() }
+        viewModelScope.launch { mediaRepository.play() }
     }
 
     fun skipToNext() {
-        viewModelScope.launch { playbackStateRepository.skipToNext() }
+        viewModelScope.launch { mediaRepository.skipToNext() }
     }
 
     fun skipToPrevious() {
-        viewModelScope.launch { playbackStateRepository.skipToPrevious() }
+        viewModelScope.launch { mediaRepository.skipToPrevious() }
     }
 
 

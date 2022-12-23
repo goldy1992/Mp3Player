@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.Player.RepeatMode
-import com.github.goldy1992.mp3player.client.data.repositories.media.controller.PlaybackStateRepository
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -22,7 +22,7 @@ import javax.inject.Inject
 class NowPlayingScreenViewModel
     @Inject
 constructor(
-        private val playbackStateRepository: PlaybackStateRepository,
+        private val mediaRepository: MediaRepository,
 ) : ViewModel(), LogTagger {
 
     // playbackPosition
@@ -31,7 +31,7 @@ constructor(
 
     init {
         viewModelScope.launch {
-            playbackStateRepository.playbackPosition().
+            mediaRepository.playbackPosition().
             shareIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
@@ -49,7 +49,7 @@ constructor(
     init {
         Log.i(logTag(), "init")
         viewModelScope.launch {
-            playbackStateRepository.isPlaying()
+            mediaRepository.isPlaying()
             .collect {
                 Log.i(logTag(), "isPlaying newState: $it")
                 _isPlayingState.value = it
@@ -64,7 +64,7 @@ constructor(
 
     init {
         viewModelScope.launch {
-            playbackStateRepository.metadata()
+            mediaRepository.metadata()
             .collect {
                 _metadataState.value = it
             }
@@ -78,7 +78,7 @@ constructor(
 
     init {
         viewModelScope.launch {
-            playbackStateRepository.playbackSpeed()
+            mediaRepository.playbackSpeed()
             .collect {
                 _playbackSpeed.value = it
             }
@@ -92,7 +92,7 @@ constructor(
 
     init {
         viewModelScope.launch {
-            playbackStateRepository.queue()
+            mediaRepository.queue()
             .collect {
                 _queue.value = it
             }
@@ -106,7 +106,7 @@ constructor(
 
     init {
         viewModelScope.launch {
-            playbackStateRepository.repeatMode()
+            mediaRepository.repeatMode()
             .collect {
                 _repeatMode.value = it
             }
@@ -120,7 +120,7 @@ constructor(
 
     init {
         viewModelScope.launch {
-            playbackStateRepository.isShuffleModeEnabled()
+            mediaRepository.isShuffleModeEnabled()
             .collect {
                 _shuffleMode.value = it
             }
@@ -128,35 +128,35 @@ constructor(
     }
 
     fun changePlaybackSpeed(speed : Float) {
-        viewModelScope.launch { playbackStateRepository.changePlaybackSpeed(speed) }
+        viewModelScope.launch { mediaRepository.changePlaybackSpeed(speed) }
     }
 
     fun play() {
-        viewModelScope.launch { playbackStateRepository.play() }
+        viewModelScope.launch { mediaRepository.play() }
     }
 
     fun pause() {
-        viewModelScope.launch { playbackStateRepository.pause() }
+        viewModelScope.launch { mediaRepository.pause() }
     }
 
     fun skipToNext() {
-        viewModelScope.launch { playbackStateRepository.skipToNext() }
+        viewModelScope.launch { mediaRepository.skipToNext() }
     }
 
     fun skipToPrevious() {
-        viewModelScope.launch { playbackStateRepository.skipToPrevious() }
+        viewModelScope.launch { mediaRepository.skipToPrevious() }
     }
 
     fun seekTo(value : Long) {
-        viewModelScope.launch { playbackStateRepository.seekTo(value) }
+        viewModelScope.launch { mediaRepository.seekTo(value) }
     }
 
     fun setShuffleMode(isEnabled: Boolean) {
-        viewModelScope.launch { playbackStateRepository.setShuffleMode(isEnabled) }
+        viewModelScope.launch { mediaRepository.setShuffleMode(isEnabled) }
     }
 
     fun setRepeatMode(repeatMode: @RepeatMode Int) {
-        viewModelScope.launch { playbackStateRepository.setRepeatMode(repeatMode) }
+        viewModelScope.launch { mediaRepository.setRepeatMode(repeatMode) }
     }
 
     override fun logTag(): String {

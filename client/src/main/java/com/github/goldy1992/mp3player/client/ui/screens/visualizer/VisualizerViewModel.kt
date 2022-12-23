@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.goldy1992.mp3player.client.AudioDataProcessor
-import com.github.goldy1992.mp3player.client.data.repositories.media.controller.PlaybackStateRepository
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +22,7 @@ class VisualizerViewModel
 @Inject
 constructor(
     private val audioDataProcessor: AudioDataProcessor,
-    private val playbackStateRepository: PlaybackStateRepository,
+    private val mediaRepository: MediaRepository,
 ) : LogTagger, ViewModel() {
 
     // isPlaying
@@ -31,7 +31,7 @@ constructor(
 
     init {
         viewModelScope.launch {
-            playbackStateRepository
+            mediaRepository
                 .isPlaying()
                 .shareIn(
                     scope = viewModelScope,
@@ -52,7 +52,7 @@ constructor(
 
     init {
         viewModelScope.launch {
-            playbackStateRepository.audioData()
+            mediaRepository.audioData()
             .shareIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
@@ -70,19 +70,19 @@ constructor(
     }
 
     fun play() {
-        viewModelScope.launch { playbackStateRepository.play() }
+        viewModelScope.launch { mediaRepository.play() }
     }
 
     fun pause() {
-        viewModelScope.launch { playbackStateRepository.play() }
+        viewModelScope.launch { mediaRepository.play() }
     }
 
     fun skipToNext() {
-        viewModelScope.launch { playbackStateRepository.skipToNext() }
+        viewModelScope.launch { mediaRepository.skipToNext() }
     }
 
     fun skipToPrevious() {
-        viewModelScope.launch { playbackStateRepository.skipToPrevious() }
+        viewModelScope.launch { mediaRepository.skipToPrevious() }
     }
 
     override fun logTag(): String {

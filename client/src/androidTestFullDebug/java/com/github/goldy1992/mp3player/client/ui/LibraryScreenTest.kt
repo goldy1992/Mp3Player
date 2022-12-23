@@ -7,27 +7,20 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
-import androidx.lifecycle.MutableLiveData
-import androidx.media3.session.MediaLibraryService
 import androidx.navigation.NavController
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.flows.mediabrowser.OnChildrenChangedFlow
-import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreen
-import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreenViewModel
 import com.github.goldy1992.mp3player.client.ui.screens.library.SmallLibraryAppBar
 import com.github.goldy1992.mp3player.client.ui.screens.library.SmallLibraryScreen
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -35,7 +28,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 /**
  * Test class for the [MainScreen] composable function.
@@ -44,13 +36,14 @@ import org.mockito.kotlin.whenever
 class LibraryScreenTest : MediaTestBase() {
 
 
-    val onChildrenChangedFlowObj = mock<OnChildrenChangedFlow>()
-    val onChildrenChangedFlow = MutableStateFlow(
-                                    OnChildrenChangedEventHolder(mockMediaBrowser,
-                                        "",
-                                        1,
-                                        MediaLibraryService.LibraryParams.Builder().build())
-    )
+    private val testMediaRepository = TestMediaRepository()
+//    val onChildrenChangedFlowObj = mock<OnChildrenChangedFlow>()
+//    val onChildrenChangedFlow = MutableStateFlow(
+//                                    OnChildrenChangedEventHolder(mockMediaBrowser,
+//                                        "",
+//                                        1,
+//                                        MediaLibraryService.LibraryParams.Builder().build())
+//    )
 
 
     @Mock
@@ -81,11 +74,12 @@ class LibraryScreenTest : MediaTestBase() {
         }
         super.setup()
         this.context = InstrumentationRegistry.getInstrumentation().context
-        whenever(onChildrenChangedFlowObj.flow).thenReturn(onChildrenChangedFlow)
+    //    whenever(onChildrenChangedFlowObj.flow).thenReturn(onChildrenChangedFlow)
+        //testMediaRepository.o
 
         this.libraryScreenViewModel = LibraryScreenViewModel(
-           playbackStateRepository = playbackStateRepository,
-            browserRepository = browserRepository)
+            mediaRepository = testMediaRepository
+        )
 //        whenever(isPlayingFLow).thenReturn(MutableStateFlow(true))
     }
 

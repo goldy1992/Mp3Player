@@ -14,7 +14,6 @@ import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPosi
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.commons.AudioSample
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 interface IMediaBrowser {
 

@@ -198,7 +198,7 @@ class DefaultMediaBrowser
                 itemCount: Int,
                 params: MediaLibraryService.LibraryParams?
             ) {
-                val x = OnChildrenChangedEventHolder(browser, parentId, itemCount, params)
+                val x = OnChildrenChangedEventHolder(parentId, itemCount, params)
                 trySend(x)
             }
         }

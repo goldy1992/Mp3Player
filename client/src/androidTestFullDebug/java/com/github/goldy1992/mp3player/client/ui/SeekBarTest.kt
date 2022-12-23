@@ -9,7 +9,6 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.media3.common.MediaMetadata
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.ui.flows.player.PlaybackParametersFlow
 import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.commons.MetaDataKeys
@@ -57,10 +56,7 @@ class SeekBarTest : MediaTestBase() {
         val metadata = MediaMetadata.Builder()
             .setExtras(extras)
             .build()
-        metadataFlow.value =metadata
 
-        whenever(mockMediaController.currentPosition).thenReturn(currentPosition)
-    //   scope.
         composeTestRule.setContent {
             SeekBar(
                 isPlayingProvider = {  false },

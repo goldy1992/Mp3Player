@@ -5,8 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import com.github.goldy1992.mp3player.client.data.repositories.media.browser.MediaBrowserRepository
-import com.github.goldy1992.mp3player.client.data.repositories.media.controller.PlaybackStateRepository
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -20,8 +19,7 @@ import javax.inject.Inject
 class LibraryScreenViewModel
     @Inject
     constructor(
-        private val playbackStateRepository: PlaybackStateRepository,
-        private val browserRepository: MediaBrowserRepository
+        private val mediaRepository: MediaRepository,
     ) : LogTagger, ViewModel() {
 
     private val _rootItems : MutableStateFlow<List<MediaItem>> = MutableStateFlow(emptyList())
@@ -35,19 +33,14 @@ class LibraryScreenViewModel
     private var rootItemId : String? = null
     init {
         viewModelScope.launch {
-            val collectedRootItem = browserRepository.getLibraryRoot()
+            val collectedRootItem = mediaRepository.getLibraryRoot()
             rootItem = collectedRootItem
             rootItemId = collectedRootItem.mediaId
-            browserRepository.subscribe(collectedRootItem.mediaId)
+            mediaRepository.subscribe(collectedRootItem.mediaId)
         }
 
         viewModelScope.launch {
-            browserRepository.onChildrenChanged()
-                .shareIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(),
-                    replay = 1
-                )
+            mediaRepository.onChildrenChanged()
                 .filter {
                     Log.i(logTag(), "filtering: id: ${it.parentId}")
                     val isChildOfARootItem = rootItems.value.map { m -> m.mediaId }.toList().contains(it.parentId)
@@ -57,18 +50,18 @@ class LibraryScreenViewModel
                 .collect {
 
                 if (it.parentId == rootItemId) {
-                    val rootChildren = browserRepository.getChildren(it.parentId, 0, it.itemCount)
+                    val rootChildren = mediaRepository.getChildren(it.parentId, 0, it.itemCount)
                     if (rootChildren.isEmpty()) {
                         Log.w(logTag(), "No root children found")
                     } else {
                         _rootItems.value = rootChildren
                         for (mediaItem: MediaItem in rootChildren) {
                             val mediaItemId = mediaItem.mediaId
-                            browserRepository.subscribe(mediaItemId)
+                            mediaRepository.subscribe(mediaItemId)
                         }
                     }
                 } else {
-                    val children = browserRepository.getChildren(it.parentId, 0, it.itemCount)
+                    val children = mediaRepository.getChildren(it.parentId, 0, it.itemCount)
                     val newMap = HashMap(_rootItemMap.value)
                     newMap[it.parentId] = children
                     _rootItemMap.value = newMap
@@ -85,12 +78,8 @@ class LibraryScreenViewModel
     init {
         Log.i(logTag(), "init isPlaying")
         viewModelScope.launch {
-            playbackStateRepository.isPlaying().
-            shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                replay = 1
-            ).collect {
+            mediaRepository.isPlaying()
+            .collect {
                 Log.i(logTag(), "Current isPlaying: $it")
                 _isPlayingState.value = it
             }
@@ -103,12 +92,8 @@ class LibraryScreenViewModel
 
     init {
         viewModelScope.launch {
-            playbackStateRepository.metadata().
-            shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                replay = 1
-            ).collect {
+            mediaRepository.metadata()
+            .collect {
                 _metadataState.value = it
             }
         }
@@ -120,35 +105,31 @@ class LibraryScreenViewModel
 
     init {
         viewModelScope.launch {
-            playbackStateRepository.currentMediaItem().
-            shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                replay = 1
-            ).collect {
+            mediaRepository.currentMediaItem()
+            .collect {
                 _currentMediaItemState.value = it
             }
         }
     }
 
     fun playFromSongList(index : Int, songs : List<MediaItem>) {
-        viewModelScope.launch { playbackStateRepository.playFromSongList(index, songs) }
+        viewModelScope.launch { mediaRepository.playFromSongList(index, songs) }
     }
 
     fun play() {
-        viewModelScope.launch { playbackStateRepository.play() }
+        viewModelScope.launch { mediaRepository.play() }
     }
 
     fun pause() {
-        viewModelScope.launch { playbackStateRepository.pause() }
+        viewModelScope.launch { mediaRepository.pause() }
     }
 
     fun skipToNext() {
-        viewModelScope.launch { playbackStateRepository.skipToNext() }
+        viewModelScope.launch { mediaRepository.skipToNext() }
     }
 
     fun skipToPrevious() {
-        viewModelScope.launch { playbackStateRepository.skipToPrevious() }
+        viewModelScope.launch { mediaRepository.skipToPrevious() }
     }
 
     override fun logTag(): String {

@@ -1,37 +1,40 @@
-package com.github.goldy1992.mp3player.client.data.repositories.media.controller
+package com.github.goldy1992.mp3player.client.data.repositories.media
 
 import android.net.Uri
 import android.os.Bundle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
+import androidx.media3.session.MediaLibraryService
 import com.github.goldy1992.mp3player.client.data.sources.MediaDataSource
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-/**
- *
- */
 @ActivityRetainedScoped
-class DefaultPlaybackStateRepository
-
+class DefaultMediaRepository
     @Inject
     constructor(
-        private val mediaDataSource: MediaDataSource
-
-    ) : PlaybackStateRepository, LogTagger {
+        private val mediaDataSource : MediaDataSource
+    ) : MediaRepository, LogTagger {
 
     override fun audioData(): Flow<AudioSample> {
         return mediaDataSource.audioData()
     }
 
-    override fun currentMediaItem() : Flow<MediaItem> {
+    override fun currentMediaItem(): Flow<MediaItem> {
         return mediaDataSource.currentMediaItem()
+    }
+
+    override fun currentSearchQuery(): Flow<String> {
+        return mediaDataSource.currentSearchQuery()
     }
 
     override fun isPlaying(): Flow<Boolean> {
@@ -46,8 +49,20 @@ class DefaultPlaybackStateRepository
         return mediaDataSource.metadata()
     }
 
+    override fun onChildrenChanged(): Flow<OnChildrenChangedEventHolder> {
+        return mediaDataSource.onChildrenChanged()
+    }
+
+    override fun onCustomCommand() : Flow<SessionCommandEventHolder> {
+        return mediaDataSource.onCustomCommand()
+    }
+
+    override fun onSearchResultsChanged() : Flow<OnSearchResultsChangedEventHolder> {
+        return mediaDataSource.onSearchResultsChanged()
+    }
+
     override fun playbackParameters(): Flow<PlaybackParameters> {
-       return mediaDataSource.playbackParameters()
+        return mediaDataSource.playbackParameters()
     }
 
     override fun playbackPosition(): Flow<PlaybackPositionEvent> {
@@ -66,8 +81,25 @@ class DefaultPlaybackStateRepository
         return mediaDataSource.repeatMode()
     }
 
-    override suspend fun changePlaybackSpeed(speed: Float) {     val extras = Bundle()
+    override suspend fun changePlaybackSpeed(speed: Float) {
         mediaDataSource.changePlaybackSpeed(speed)
+    }
+
+    override suspend fun getChildren(
+        parentId: String,
+        page: Int,
+        pageSize: Int,
+        params: MediaLibraryService.LibraryParams
+    ): List<MediaItem> {
+        return mediaDataSource.getChildren(parentId, page, pageSize, params)
+    }
+
+    override suspend fun getLibraryRoot(): MediaItem {
+        return mediaDataSource.getLibraryRoot()
+    }
+
+    override suspend fun getSearchResults(query: String, page: Int, pageSize: Int) : List<MediaItem> {
+        return mediaDataSource.getSearchResults(query, page, pageSize)
     }
 
     override suspend fun pause() {
@@ -94,6 +126,10 @@ class DefaultPlaybackStateRepository
         mediaDataSource.prepareFromMediaId(mediaItem)
     }
 
+    override suspend fun search(query: String, extras: Bundle) {
+        mediaDataSource.search(query, extras)
+    }
+
     override suspend fun seekTo(position: Long) {
         mediaDataSource.seekTo(position)
     }
@@ -118,7 +154,11 @@ class DefaultPlaybackStateRepository
         mediaDataSource.stop()
     }
 
+    override suspend fun subscribe(id : String) {
+        mediaDataSource.subscribe(id)
+    }
+
     override fun logTag(): String {
-        return "DefaultPlaybackStateRepo"
+        return "DefaultMediaBrowserRepo"
     }
 }

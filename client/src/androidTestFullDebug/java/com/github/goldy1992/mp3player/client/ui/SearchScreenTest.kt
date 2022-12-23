@@ -10,6 +10,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.navigation.NavController
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreen
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreenViewModel
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
@@ -36,8 +37,8 @@ class SearchScreenTest {
     private val mockNavController = mock<NavController>()
     private lateinit var searchScreenViewModel: SearchScreenViewModel
 
-    private val browserRepository = TestMediaBrowserRepository()
-    private val playbackStateRepository = TestPlaybackStateRepository()
+    private val testMediaRepository = TestMediaRepository()
+
 
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -46,8 +47,7 @@ class SearchScreenTest {
     fun setup() {
         this.context = InstrumentationRegistry.getInstrumentation().context
         this.searchScreenViewModel = spy(SearchScreenViewModel(
-            browserRepository = browserRepository,
-            playbackStateRepository = playbackStateRepository
+            mediaRepository = testMediaRepository
         ))
     }
 
@@ -105,7 +105,7 @@ class SearchScreenTest {
             .setTitle(songTitle)
             .build()
 
-        browserRepository.currentSearchResults.value = listOf(songItem)
+        testMediaRepository.searchResultsState.value = listOf(songItem)
 
         composeTestRule.setContent {
             SearchScreen(
@@ -140,7 +140,7 @@ class SearchScreenTest {
         val folderNameMi = MediaItemUtils.getDirectoryName(folderItem)
 
         val expectedRoute = Screen.FOLDER.name + "/" + folderItem.mediaId+ "/" + folderNameMi+ "/" + encodedFolderPath
-        browserRepository.currentSearchResults.value = listOf(folderItem)
+        testMediaRepository.searchResultsState.value = listOf(folderItem)
 
         composeTestRule.setContent {
             SearchScreen(

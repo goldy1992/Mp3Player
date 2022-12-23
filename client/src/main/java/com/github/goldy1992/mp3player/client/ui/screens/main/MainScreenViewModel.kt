@@ -2,12 +2,10 @@ package com.github.goldy1992.mp3player.client.ui.screens.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.goldy1992.mp3player.client.data.repositories.media.controller.PlaybackStateRepository
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,7 +13,7 @@ import javax.inject.Inject
 class MainScreenViewModel
     @Inject
     constructor(
-        private val playbackStateRepository: PlaybackStateRepository
+        private val mediaRepository: MediaRepository
     ) : ViewModel() {
 
 
@@ -25,13 +23,8 @@ class MainScreenViewModel
 
     init {
         viewModelScope.launch {
-            playbackStateRepository
+            mediaRepository
             .isPlaying()
-            .shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                replay = 1
-            )
             .collect {
                 _isPlayingState.value = it
             }
