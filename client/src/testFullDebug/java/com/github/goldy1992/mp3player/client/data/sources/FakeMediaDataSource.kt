@@ -13,30 +13,38 @@ import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPosi
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.commons.AudioSample
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class FakeMediaDataSource : MediaDataSource {
+
+    val audioDataState = MutableStateFlow(AudioSample.NONE)
     override fun audioData(): Flow<AudioSample> {
-        TODO("Not yet implemented")
+        return audioDataState
     }
 
+    val currentMediaItemState = MutableStateFlow(MediaItem.EMPTY)
     override fun currentMediaItem(): Flow<MediaItem> {
-        TODO("Not yet implemented")
+        return currentMediaItemState
     }
 
+    val currentSearchQueryState = MutableStateFlow("")
     override fun currentSearchQuery(): Flow<String> {
-        TODO("Not yet implemented")
+        return currentSearchQueryState
     }
 
+    val isPlayingState = MutableStateFlow(false)
     override fun isPlaying(): Flow<Boolean> {
-        TODO("Not yet implemented")
+        return isPlayingState
     }
 
+    val isShuffleEnabledState = MutableStateFlow(false)
     override fun isShuffleModeEnabled(): Flow<Boolean> {
-        TODO("Not yet implemented")
+        return isShuffleEnabledState
     }
 
+    val metadataState = MutableStateFlow(MediaMetadata.EMPTY)
     override fun metadata(): Flow<MediaMetadata> {
-        TODO("Not yet implemented")
+        return metadataState
     }
 
     override fun onChildrenChanged(): Flow<OnChildrenChangedEventHolder> {
@@ -84,71 +92,43 @@ class FakeMediaDataSource : MediaDataSource {
         TODO("Not yet implemented")
     }
 
+    val libraryRootState = MediaItem.EMPTY
     override suspend fun getLibraryRoot(): MediaItem {
-        TODO("Not yet implemented")
+        return libraryRootState
     }
 
+    val searchResultsState : List<MediaItem> = emptyList()
     override suspend fun getSearchResults(
         query: String,
         page: Int,
         pageSize: Int
-    ): List<MediaItem> {
-        TODO("Not yet implemented")
-    }
+    ): List<MediaItem> {  return searchResultsState  }
 
-    override suspend fun pause() {
-        TODO("Not yet implemented")
-    }
+    override suspend fun pause() {    }
 
-    override suspend fun play() {
-        TODO("Not yet implemented")
-    }
+    override suspend fun play() {    }
 
-    override suspend fun play(mediaItem: MediaItem) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun play(mediaItem: MediaItem) {    }
 
-    override suspend fun playFromSongList(itemIndex: Int, items: List<MediaItem>) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun playFromSongList(itemIndex: Int, items: List<MediaItem>) {    }
 
-    override suspend fun playFromUri(uri: Uri?, extras: Bundle?) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun playFromUri(uri: Uri?, extras: Bundle?) { }
 
-    override suspend fun prepareFromMediaId(mediaItem: MediaItem) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun prepareFromMediaId(mediaItem: MediaItem) {   }
 
-    override suspend fun search(query: String, extras: Bundle) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun search(query: String, extras: Bundle) {  }
 
-    override suspend fun seekTo(position: Long) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun seekTo(position: Long) {    }
 
-    override suspend fun setRepeatMode(repeatMode: Int) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun setRepeatMode(repeatMode: Int) {   }
 
-    override suspend fun setShuffleMode(shuffleModeEnabled: Boolean) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun setShuffleMode(shuffleModeEnabled: Boolean) {  }
 
-    override suspend fun skipToNext() {
-        TODO("Not yet implemented")
-    }
+    override suspend fun skipToNext() {  }
 
-    override suspend fun skipToPrevious() {
-        TODO("Not yet implemented")
-    }
+    override suspend fun skipToPrevious() { }
 
-    override suspend fun stop() {
-        TODO("Not yet implemented")
-    }
+    override suspend fun stop() { }
 
-    override suspend fun subscribe(id: String) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun subscribe(id: String) {}
 }
