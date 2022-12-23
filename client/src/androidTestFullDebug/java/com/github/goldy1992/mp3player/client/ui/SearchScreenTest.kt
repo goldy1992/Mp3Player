@@ -46,6 +46,7 @@ class SearchScreenTest {
     @Before
     fun setup() {
         this.context = InstrumentationRegistry.getInstrumentation().context
+        this.testMediaRepository.currentSearchQuery.value = "query"
         this.searchScreenViewModel = spy(SearchScreenViewModel(
             mediaRepository = testMediaRepository
         ))
@@ -105,7 +106,7 @@ class SearchScreenTest {
             .setTitle(songTitle)
             .build()
 
-        testMediaRepository.searchResultsState.value = listOf(songItem)
+        testMediaRepository.searchResults = listOf(songItem)
 
         composeTestRule.setContent {
             SearchScreen(

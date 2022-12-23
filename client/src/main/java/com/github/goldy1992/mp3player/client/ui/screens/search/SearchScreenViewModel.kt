@@ -35,11 +35,7 @@ class SearchScreenViewModel
     init {
         viewModelScope.launch {
             mediaRepository.currentSearchQuery()
-                .shareIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(),
-                    replay = 1
-                ).collect {
+                .collect {
                     _searchQuery.value = it
                 }
         }
@@ -61,11 +57,7 @@ class SearchScreenViewModel
         viewModelScope.launch {
             mediaRepository
             .onSearchResultsChanged()
-            .shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                replay = 1
-            ).collect {
+            .collect {
                 if (isNotEmpty(searchQuery.value) && it.itemCount > 0) {
                     val results = mediaRepository.getSearchResults(it.query, 0, it.itemCount)
                     _searchResults.value = results

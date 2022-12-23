@@ -130,9 +130,7 @@ class TestMediaRepository
         TODO("Not yet implemented")
     }
 
-    override suspend fun play(mediaItem: MediaItem) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun play(mediaItem: MediaItem) {    }
 
     override suspend fun playFromSongList(itemIndex: Int, items: List<MediaItem>) {
         TODO("Not yet implemented")
@@ -146,7 +144,9 @@ class TestMediaRepository
         TODO("Not yet implemented")
     }
 
-    override suspend fun search(query: String, extras: Bundle) { }
+    override suspend fun search(query: String, extras: Bundle) {
+        this.currentSearchQuery.value = query
+    }
 
     override suspend fun seekTo(position: Long) {
         TODO("Not yet implemented")
