@@ -87,8 +87,8 @@ fun NowPlayingScreen(
         bottomBar = {
             PlayToolbar(
                 isPlayingProvider = { isPlaying },
-                onClickPlay = { viewModel.pause() },
-                onClickPause = {viewModel.play() },
+                onClickPlay = { viewModel.play() },
+                onClickPause = { viewModel.pause() },
                 onClickSkipPrevious = { viewModel.skipToPrevious() },
                 onClickSkipNext = { viewModel.skipToNext() }
             )

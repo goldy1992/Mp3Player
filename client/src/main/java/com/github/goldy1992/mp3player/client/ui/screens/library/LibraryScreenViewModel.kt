@@ -83,6 +83,7 @@ class LibraryScreenViewModel
     val isPlaying : StateFlow<Boolean> = _isPlayingState
 
     init {
+        Log.i(logTag(), "init isPlaying")
         viewModelScope.launch {
             playbackStateRepository.isPlaying().
             shareIn(
@@ -90,6 +91,7 @@ class LibraryScreenViewModel
                 started = SharingStarted.WhileSubscribed(),
                 replay = 1
             ).collect {
+                Log.i(logTag(), "Current isPlaying: $it")
                 _isPlayingState.value = it
             }
         }

@@ -16,22 +16,19 @@ import com.github.goldy1992.mp3player.client.ui.states.eventholders.*
 import com.github.goldy1992.mp3player.client.utils.AudioDataUtils.getAudioSample
 import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDefaultLibraryParams
 import com.github.goldy1992.mp3player.client.utils.QueueUtils.getQueue
-import com.github.goldy1992.mp3player.commons.AudioSample
-import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.*
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME_KEY
-import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.TimerUtils
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.StringUtils.isEmpty
 import javax.inject.Inject
 
@@ -42,7 +39,9 @@ class DefaultMediaBrowser
     @Inject
     constructor(
         @ApplicationContext context: Context,
-        sessionToken: SessionToken) : IMediaBrowser, MediaBrowser.Listener, LogTagger {
+        sessionToken: SessionToken,
+        private val scope : CoroutineScope,
+        @MainDispatcher private val mainDispatcher : CoroutineDispatcher) : IMediaBrowser, MediaBrowser.Listener, LogTagger {
 
     private val mediaBrowserFuture: ListenableFuture<MediaBrowser>
 
@@ -63,7 +62,11 @@ class DefaultMediaBrowser
         }
         controller.addListener(messageListener)
         awaitClose { controller.removeListener(messageListener) }
-    }
+    }.shareIn(
+        scope = scope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1
+    )
 
     private val _onCustomCommandFlow : Flow<SessionCommandEventHolder> = callbackFlow<SessionCommandEventHolder> {
         val messageListener = object : MediaBrowser.Listener {
@@ -81,7 +84,11 @@ class DefaultMediaBrowser
         awaitClose {
             listeners.remove(messageListener)
         }
-    }
+    }.shareIn(
+        scope = scope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1
+    )
 
     private val _metadataFlow : Flow<MediaMetadata> = callbackFlow {
         val controller = mediaBrowserFuture.await()
@@ -96,7 +103,11 @@ class DefaultMediaBrowser
 
             controller.removeListener(messageListener)
         }
-    }
+    }.shareIn(
+        scope = scope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1
+    )
 
     private val audioDataFlow: Flow<AudioSample> = _onCustomCommandFlow
         .filter {
@@ -104,26 +115,38 @@ class DefaultMediaBrowser
             Constants.AUDIO_DATA == it.command.customAction
         }.map {
             getAudioSample(it)
-        }
+        }.shareIn(
+            scope = scope,
+            started = SharingStarted.WhileSubscribed(),
+            replay = 1
+        )
 
     override fun audioData(): Flow<AudioSample> {
         return audioDataFlow
     }
 
     private val _currentMediaItemFlow : Flow<MediaItem> = _metadataFlow.map {
-        val mediaItem : MediaItem? = mediaBrowserFuture.await().currentMediaItem
+        val mediaBrowser : MediaBrowser = mediaBrowserFuture.await()
+        var mediaItem: MediaItem?
+
+        runBlocking(mainDispatcher) {
+            mediaItem = mediaBrowser.currentMediaItem
+        }
         if (mediaItem == null) {
             Log.w(logTag(), "Current MediaItem is null")
-            MediaItem.EMPTY
-        } else {
-            mediaItem
         }
-    }
+        mediaItem ?: MediaItem.EMPTY
+
+    }.shareIn(
+        scope = scope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1
+    )
     override fun currentMediaItem(): Flow<MediaItem> {
         return _currentMediaItemFlow
     }
 
-    private val _isPlayingFlow : Flow<Boolean> = callbackFlow {
+    private val _isPlayingFlow : Flow<Boolean> = callbackFlow<Boolean> {
         val controller = mediaBrowserFuture.await()
         val messageListener = object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -135,7 +158,12 @@ class DefaultMediaBrowser
         awaitClose {
             controller.removeListener(messageListener)
         }
-    }
+    }.shareIn(
+        scope= scope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1
+    )
+
     override fun isPlaying(): Flow<Boolean> {
         return _isPlayingFlow
     }
@@ -149,11 +177,14 @@ class DefaultMediaBrowser
         }
         controller.addListener(messageListener)
         awaitClose { controller.removeListener(messageListener) }
-    }
+    }.shareIn(
+        scope = scope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1
+    )
     override fun isShuffleModeEnabled(): Flow<Boolean> {
         return _shuffleModeFlow
     }
-
 
     override fun metadata(): Flow<MediaMetadata> {
         return _metadataFlow
@@ -174,7 +205,11 @@ class DefaultMediaBrowser
         listeners.add(messageListener)
         awaitClose {
             listeners.remove(messageListener) }
-    }
+    }.shareIn(
+        scope = scope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1
+    )
     override fun onChildrenChanged(): Flow<OnChildrenChangedEventHolder> {
         return _onChildrenChangedFlow
     }
@@ -196,7 +231,11 @@ class DefaultMediaBrowser
         }
         listeners.add(messageListener)
         awaitClose()
-    }
+    }.shareIn(
+        scope = scope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1
+    )
     override fun onSearchResultsChanged(): Flow<OnSearchResultsChangedEventHolder> {
         return _onSearchResultChangedFlow
     }
@@ -210,7 +249,11 @@ class DefaultMediaBrowser
         }
         controller.addListener(messageListener)
         awaitClose { controller.removeListener(messageListener) }
-    }
+    }.shareIn(
+        scope = scope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1
+    )
     override fun playbackParameters(): Flow<PlaybackParameters> {
         return _playbackParametersFlow
     }
@@ -232,7 +275,11 @@ class DefaultMediaBrowser
         awaitClose {
             controller.removeListener(messageListener)
         }
-    }
+    }.shareIn(
+        scope = scope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1
+    )
     override fun playbackPosition(): Flow<PlaybackPositionEvent> {
         return _playbackPositionFlow
     }
@@ -240,7 +287,11 @@ class DefaultMediaBrowser
     private val _playbackSpeedFlow : Flow<Float> = _playbackParametersFlow
         .map {
             it.speed
-        }
+        }.shareIn(
+            scope = scope,
+            started = SharingStarted.WhileSubscribed(),
+            replay = 1
+        )
     override fun playbackSpeed(): Flow<Float> {
         return _playbackSpeedFlow
     }
@@ -253,7 +304,11 @@ class DefaultMediaBrowser
         .filter { it.events.containsAny( *events ) }
         .map {
             getQueue(it.player!!)
-        }
+        }.shareIn(
+            scope = scope,
+            started = SharingStarted.WhileSubscribed(),
+            replay = 1
+        )
 
     override fun queue(): Flow<QueueState> {
         return _queueFlow
@@ -268,7 +323,11 @@ class DefaultMediaBrowser
         }
         controller.addListener(messageListener)
         awaitClose { controller.removeListener(messageListener) }
-    }
+    }.shareIn(
+        scope = scope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1
+    )
     override fun repeatMode(): Flow<Int> {
         return _repeatModeFlow
     }
