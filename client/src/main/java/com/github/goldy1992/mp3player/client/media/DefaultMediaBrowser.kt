@@ -76,7 +76,7 @@ class DefaultMediaBrowser
                 args: Bundle
             ): ListenableFuture<SessionResult> {
                 Log.i(logTag(), "onCustomCommand")
-                trySend(SessionCommandEventHolder(controller, command, args))
+                trySend(SessionCommandEventHolder(command, args))
                 return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
             }
         }

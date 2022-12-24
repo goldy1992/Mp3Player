@@ -4,9 +4,14 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import androidx.media3.session.MediaLibraryService
+import androidx.media3.common.Player
+import androidx.media3.common.Player.RepeatMode
+import androidx.media3.session.SessionCommand
 import com.github.goldy1992.mp3player.client.data.sources.FakeMediaDataSource
-import com.github.goldy1992.mp3player.client.data.sources.MediaDataSource
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
+import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDefaultLibraryParams
 import com.github.goldy1992.mp3player.commons.AudioSample
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -14,7 +19,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
@@ -123,94 +127,161 @@ class DefaultMediaRepositoryTest {
         assertEquals(testArtist, result?.artist)
         collectJob.cancel()
     }
-
-    fun testonChildrenChanged() {
-  
+    @Test
+    fun testOnChildrenChanged() = runTest {
+        val expectedParentId = "expecPId"
+        val expectedItemCount = 44
+        val expectedParams = getDefaultLibraryParams()
+        val expectedOnChildrenChangedEventHolder = OnChildrenChangedEventHolder(
+                                parentId = expectedParentId,
+                                itemCount = expectedItemCount,
+                                params = expectedParams)
+        var result : OnChildrenChangedEventHolder? = null
+        val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
+            defaultMediaRepository.onChildrenChanged().collect {
+                result = it
+            }
+        }
+        fakeMediaDataSource.onChildrenChangedState.value = expectedOnChildrenChangedEventHolder
+        assertEquals(expectedParentId, result?.parentId)
+        assertEquals(expectedItemCount, result?.itemCount)
+        assertEquals(expectedParams, result?.params)
+        collectJob.cancel()
     }
-
-    fun testonCustomCommand() {
-
+    @Test
+    fun testOnCustomCommand()  = runTest {
+        val expectedCommandCode = SessionCommand.COMMAND_CODE_LIBRARY_SEARCH
+        val expectedSessionCommand = SessionCommand(expectedCommandCode)
+        val customCommand = SessionCommandEventHolder(expectedSessionCommand, Bundle())
+        var result : SessionCommandEventHolder? = null
+        val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
+            defaultMediaRepository.onCustomCommand().collect {
+                result = it
+            }
+        }
+        fakeMediaDataSource.onCustomCommandState.value = customCommand
+        assertEquals(expectedCommandCode, result?.command?.commandCode)
+        collectJob.cancel()
     }
-
-    fun testonSearchResultsChanged() {
-
+    @Test
+    fun testOnSearchResultsChanged()  = runTest {
+        val expectedQuery = "expecPQueryy"
+        val expectedItemCount = 44
+        val expectedParams = getDefaultLibraryParams()
+        val expectedSearchResults =
+            OnSearchResultsChangedEventHolder(
+                query = expectedQuery,
+                itemCount =  expectedItemCount,
+                params = expectedParams
+            )
+        var result : OnSearchResultsChangedEventHolder? = null
+        val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
+            defaultMediaRepository.onSearchResultsChanged().collect {
+                result = it
+            }
+        }
+        fakeMediaDataSource.onSearchResultsChangedState.value = expectedSearchResults
+        assertEquals(expectedQuery, result?.query)
+        assertEquals(expectedItemCount, result?.itemCount)
+        assertEquals(expectedParams, result?.params)
+        collectJob.cancel()
     }
-
-    fun testplaybackParameters() {
-
-    }
-
-    fun testplaybackPosition() {
-
-    }
-
-    fun testplaybackSpeed() {
-
-    }
-
-    fun testqueue() {
-
-    }
-
-    fun testrepeatMode() {
-
-    }
-
-    fun testchangePlaybackSpeed(speed: Float) {
-
-    }
-
-    fun testgetChildren(
-        parentId: String,
-        page: Int,
-        pageSize: Int,
-        params: MediaLibraryService.LibraryParams
-    ){
-
-    }
-
-    fun testgetLibraryRoot(){
-
-    }
-
-    fun testgetSearchResults(query: String, page: Int, pageSize: Int)  {
- 
-    }
-
-    fun testpause() {
-
-    }
-
-    fun testplay() {
-
-    }
-
-    fun testplay(mediaItem: MediaItem) {
+    @Test
+    fun testPlaybackParameters()  = runTest {
 
     }
+    @Test
+    fun testPlaybackPosition()  = runTest {
 
-    fun testplayFromSongList(itemIndex: Int, items: List<MediaItem>) {
+    }
+    @Test
+    fun testPlaybackSpeed()  = runTest {
+
+    }
+    @Test
+    fun testQueue()  = runTest {
+
+    }
+    @Test
+    fun testRepeatMode()  = runTest {
+
+    }
+    @Test
+    fun testChangePlaybackSpeed() = runTest {
+
+    }
+    @Test
+    fun testGetChildren() = runTest {
+
+    }
+    @Test
+    fun testGetLibraryRoot() = runTest {
+
+    }
+    @Test
+    fun testGetSearchResults() = runTest {
+        val mediaItem1Id = "id1"
+        val mediaItem1 = MediaItem.Builder().setMediaId(mediaItem1Id).build()
+        val mediaItem2Id = "id2"
+        val mediaItem2 = MediaItem.Builder().setMediaId(mediaItem2Id).build()
+        val expectedSearchResult = listOf(mediaItem1, mediaItem2)
+
+    }
+    @Test
+    fun testPause()  = runTest {
+        defaultMediaRepository.pause()
+        verify(fakeMediaDataSource, times(1)).pause()
+    }
+
+    @Test
+    fun testPlay() = runTest {
+        defaultMediaRepository.play()
+        verify(fakeMediaDataSource, times(1)).play()
+    }
+
+    @Test
+    fun testPlayFromSongList() = runTest {
+        val expectedIndex = 4
+        val songList = emptyList<MediaItem>()
+        defaultMediaRepository.playFromSongList(expectedIndex, songList)
+        verify(fakeMediaDataSource, times(1)).playFromSongList(expectedIndex, songList)
+    }
+    @Test
+    fun testPlayFromUri() = runTest {
+        val uri = Uri.EMPTY
+        val extras = Bundle()
+        defaultMediaRepository.playFromUri(uri, extras)
+        verify(fakeMediaDataSource, times(1)).playFromUri(uri, extras)
+
+    }
+    @Test
+    fun testPrepareFromMediaId() = runTest {
+        val expectedMediaItem = MediaItem.EMPTY
+        defaultMediaRepository.prepareFromMediaId(expectedMediaItem)
+        verify(fakeMediaDataSource, times(1)).prepareFromMediaId(expectedMediaItem)
 
     }
 
-    fun testplayFromUri(uri: Uri?, extras: Bundle?) {
-
+    @Test
+    fun testSearch() = runTest {
+        val searchQuery = "queryyy"
+        val extras = Bundle()
+        defaultMediaRepository.search(searchQuery, extras)
+        verify(fakeMediaDataSource, times(1)).search(searchQuery, extras)
     }
 
-    fun testprepareFromMediaId(mediaItem: MediaItem) {
-
+    @Test
+    fun testSeekTo() = runTest {
+        val expectedSeekTo = 99L
+        defaultMediaRepository.seekTo(expectedSeekTo)
+        verify(fakeMediaDataSource, times(1)).seekTo(expectedSeekTo)
     }
 
-    fun testsearch(query: String, extras: Bundle) {
-
-    }
-
-    fun testseekTo(position: Long) {
-
-    }
-
-    fun testsetRepeatMode(repeatMode: Int) {
-
+    @Test
+    fun testSetRepeatMode()  = runTest {
+        val expectedRepeatMode : @RepeatMode Int = Player.REPEAT_MODE_ALL
+        defaultMediaRepository.setRepeatMode(expectedRepeatMode)
+        verify(fakeMediaDataSource, times(1)).setRepeatMode(expectedRepeatMode)
     }
 
     @Test
@@ -218,7 +289,6 @@ class DefaultMediaRepositoryTest {
         val expectedShuffleModeEnabled = false
         defaultMediaRepository.setShuffleMode(expectedShuffleModeEnabled)
         verify(fakeMediaDataSource, times(1)).setShuffleMode(expectedShuffleModeEnabled)
-
     }
 
     @Test

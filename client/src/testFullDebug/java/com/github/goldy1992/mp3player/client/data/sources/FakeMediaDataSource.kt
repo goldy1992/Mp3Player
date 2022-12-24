@@ -47,16 +47,19 @@ class FakeMediaDataSource : MediaDataSource {
         return metadataState
     }
 
+    val onChildrenChangedState = MutableStateFlow(OnChildrenChangedEventHolder.DEFAULT)
     override fun onChildrenChanged(): Flow<OnChildrenChangedEventHolder> {
-        TODO("Not yet implemented")
+        return onChildrenChangedState
     }
 
+    val onCustomCommandState = MutableStateFlow(SessionCommandEventHolder.DEFAULT)
     override fun onCustomCommand(): Flow<SessionCommandEventHolder> {
-        TODO("Not yet implemented")
+        return onCustomCommandState
     }
 
+    val onSearchResultsChangedState = MutableStateFlow(OnSearchResultsChangedEventHolder.DEFAULT)
     override fun onSearchResultsChanged(): Flow<OnSearchResultsChangedEventHolder> {
-        TODO("Not yet implemented")
+        return onSearchResultsChangedState
     }
 
     override fun playbackParameters(): Flow<PlaybackParameters> {
