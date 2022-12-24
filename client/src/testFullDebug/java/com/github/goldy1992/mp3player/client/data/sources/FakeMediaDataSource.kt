@@ -62,45 +62,49 @@ class FakeMediaDataSource : MediaDataSource {
         return onSearchResultsChangedState
     }
 
+    val playbackParametersState = MutableStateFlow(PlaybackParameters.DEFAULT)
     override fun playbackParameters(): Flow<PlaybackParameters> {
-        TODO("Not yet implemented")
+        return playbackParametersState
     }
 
+    var playbackPositionState = MutableStateFlow(PlaybackPositionEvent.DEFAULT)
     override fun playbackPosition(): Flow<PlaybackPositionEvent> {
-        TODO("Not yet implemented")
+        return playbackPositionState
     }
 
+    val playbackSpeedState = MutableStateFlow(0f)
     override fun playbackSpeed(): Flow<Float> {
-        TODO("Not yet implemented")
+        return playbackSpeedState
     }
 
+    val queueState = MutableStateFlow(QueueState.EMPTY)
     override fun queue(): Flow<QueueState> {
-        TODO("Not yet implemented")
+        return queueState
     }
 
+    val repeatModeState = MutableStateFlow(0)
     override fun repeatMode(): Flow<Int> {
-        TODO("Not yet implemented")
+        return repeatModeState
     }
 
-    override suspend fun changePlaybackSpeed(speed: Float) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun changePlaybackSpeed(speed: Float) { }
 
+    var getChildrenValue = emptyList<MediaItem>()
     override suspend fun getChildren(
         parentId: String,
         page: Int,
         pageSize: Int,
         params: MediaLibraryService.LibraryParams
     ): List<MediaItem> {
-        TODO("Not yet implemented")
+        return getChildrenValue
     }
 
-    val libraryRootState = MediaItem.EMPTY
+    var libraryRootState = MediaItem.EMPTY
     override suspend fun getLibraryRoot(): MediaItem {
         return libraryRootState
     }
 
-    val searchResultsState : List<MediaItem> = emptyList()
+    var searchResultsState : List<MediaItem> = emptyList()
     override suspend fun getSearchResults(
         query: String,
         page: Int,

@@ -4,12 +4,16 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
+import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.common.Player.RepeatMode
 import androidx.media3.session.SessionCommand
 import com.github.goldy1992.mp3player.client.data.sources.FakeMediaDataSource
+import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDefaultLibraryParams
 import com.github.goldy1992.mp3player.commons.AudioSample
@@ -188,35 +192,116 @@ class DefaultMediaRepositoryTest {
     }
     @Test
     fun testPlaybackParameters()  = runTest {
+        val expectedSpeed = 66f
+        val expectedPlaybackParams = PlaybackParameters(expectedSpeed)
 
+        var result : PlaybackParameters? = null
+        val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
+            defaultMediaRepository.playbackParameters().collect {
+                result = it
+            }
+        }
+        fakeMediaDataSource.playbackParametersState.value = expectedPlaybackParams
+        assertEquals(expectedSpeed, result?.speed)
+        collectJob.cancel()
     }
     @Test
     fun testPlaybackPosition()  = runTest {
+        val expectedIsPlaying = false
+        val expectedCurrentPosition = 111L
+        val expectedSystemTime = 2234L
+        val expectedPlaybackPosition = PlaybackPositionEvent(
+            isPlaying = expectedIsPlaying,
+            currentPosition = expectedCurrentPosition,
+            systemTime = expectedSystemTime
+        )
 
+        var result : PlaybackPositionEvent? = null
+        val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
+            defaultMediaRepository.playbackPosition().collect {
+                result = it
+            }
+        }
+        fakeMediaDataSource.playbackPositionState.value = expectedPlaybackPosition
+        assertEquals(expectedIsPlaying, result?.isPlaying)
+        assertEquals(expectedCurrentPosition, result?.currentPosition)
+        assertEquals(expectedSystemTime, result?.systemTime)
+        collectJob.cancel()
     }
     @Test
     fun testPlaybackSpeed()  = runTest {
+        val expectedPlaybackSpeed = 45f
 
+        var result : Float? = null
+        val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
+            defaultMediaRepository.playbackSpeed().collect {
+                result = it
+            }
+        }
+        fakeMediaDataSource.playbackSpeedState.value = expectedPlaybackSpeed
+        assertEquals(expectedPlaybackSpeed, result)
+        collectJob.cancel()
     }
+
     @Test
     fun testQueue()  = runTest {
+        val mediaItem1Id = "id1"
+        val mediaItem1 = MediaItem.Builder().setMediaId(mediaItem1Id).build()
+        val mediaItem2Id = "id2"
+        val mediaItem2 = MediaItem.Builder().setMediaId(mediaItem2Id).build()
+        val expectedCurrentIndex = 1
+        val expectedQueueState = QueueState(items = listOf(mediaItem1, mediaItem2), currentIndex = expectedCurrentIndex)
 
+        var result : QueueState? = null
+        val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
+            defaultMediaRepository.queue().collect {
+                result = it
+            }
+        }
+        fakeMediaDataSource.queueState.value = expectedQueueState
+
+        assertEquals(expectedCurrentIndex, result?.currentIndex)
+        assertEquals(mediaItem1Id, result?.items?.get(0)?.mediaId)
+        assertEquals(mediaItem2Id, result?.items?.get(1)?.mediaId)
+        collectJob.cancel()
     }
     @Test
     fun testRepeatMode()  = runTest {
+        val expectedRepeatMode : @RepeatMode Int = REPEAT_MODE_ALL
 
+        var result : @RepeatMode Int? = null
+        val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
+            defaultMediaRepository.repeatMode().collect {
+                result = it
+            }
+        }
+        fakeMediaDataSource.repeatModeState.value = expectedRepeatMode
+        assertEquals(expectedRepeatMode, result)
+        collectJob.cancel()
     }
     @Test
     fun testChangePlaybackSpeed() = runTest {
+        val expectedSpeed = 678f
+        defaultMediaRepository.changePlaybackSpeed(expectedSpeed)
+        verify(fakeMediaDataSource, times(1)).changePlaybackSpeed(expectedSpeed)
 
     }
     @Test
     fun testGetChildren() = runTest {
-
+        val expectedRootItemId = "rootId"
+        val expectedMediaItem = MediaItem.Builder().setMediaId(expectedRootItemId).build()
+        fakeMediaDataSource.getChildrenValue = listOf(expectedMediaItem)
+        val result : List<MediaItem> = fakeMediaDataSource.getChildren("id", 2, 1, getDefaultLibraryParams())
+        assertEquals(1, result.size)
+        assertEquals(expectedRootItemId, result[0].mediaId)
     }
     @Test
     fun testGetLibraryRoot() = runTest {
-
+        val expectedRootItemId = "rootId"
+        val expectedMediaItem = MediaItem.Builder().setMediaId(expectedRootItemId).build()
+        fakeMediaDataSource.libraryRootState = expectedMediaItem
+        val result : MediaItem = defaultMediaRepository.getLibraryRoot()
+        assertEquals(expectedRootItemId, result.mediaId)
     }
     @Test
     fun testGetSearchResults() = runTest {
@@ -225,6 +310,12 @@ class DefaultMediaRepositoryTest {
         val mediaItem2Id = "id2"
         val mediaItem2 = MediaItem.Builder().setMediaId(mediaItem2Id).build()
         val expectedSearchResult = listOf(mediaItem1, mediaItem2)
+
+        fakeMediaDataSource.searchResultsState = expectedSearchResult
+        val result = defaultMediaRepository.getSearchResults("id", 4, 4)
+        assertEquals(2, result.size)
+        assertEquals(mediaItem1Id, result[0].mediaId)
+        assertEquals(mediaItem2Id, result[1].mediaId)
 
     }
     @Test
@@ -252,7 +343,6 @@ class DefaultMediaRepositoryTest {
         val extras = Bundle()
         defaultMediaRepository.playFromUri(uri, extras)
         verify(fakeMediaDataSource, times(1)).playFromUri(uri, extras)
-
     }
     @Test
     fun testPrepareFromMediaId() = runTest {
