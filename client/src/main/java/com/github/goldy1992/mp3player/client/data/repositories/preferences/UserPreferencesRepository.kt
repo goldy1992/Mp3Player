@@ -8,7 +8,6 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
 import java.io.IOException
 
 
@@ -25,7 +24,7 @@ data class UserPreferences(
 /**
  * Class that handles saving and retrieving user preferences
  */
-open class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) : LogTagger {
+open class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) : IUserPreferencesRepository, LogTagger {
 
     private object PreferencesKeys {
         val THEME = stringPreferencesKey("theme")
@@ -57,38 +56,38 @@ open class UserPreferencesRepository(private val dataStore: DataStore<Preference
             UserPreferences(darkMode, systemDarkMode, theme.name)
         }
 
-    suspend fun updateTheme(newTheme: Theme) {
+    override suspend fun updateTheme(newTheme: Theme) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.THEME] = newTheme.name
         }
     }
 
-    suspend fun updateDarkMode(darkMode: Boolean) {
+    override suspend fun updateDarkMode(darkMode: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.DARK_MODE] = darkMode
         }
     }
 
-    suspend fun updateSystemDarkMode(useSystemDarkMode: Boolean) {
+    override suspend fun updateSystemDarkMode(useSystemDarkMode: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.USE_SYSTEM_DARK_MODE] = useSystemDarkMode
         }
     }
 
-    open fun getTheme() : Flow<Theme> {
+    override open fun getTheme() : Flow<Theme> {
         return userPreferencesFlow.map { preferences ->
             val currentTheme = preferences.theme
             Theme.valueOf(currentTheme)
         }
     }
 
-    open fun getDarkMode() : Flow<Boolean> {
+    override open fun getDarkMode() : Flow<Boolean> {
        return userPreferencesFlow.map { preferences ->
            preferences.darkMode
         }
     }
 
-    open fun getSystemDarkMode() : Flow<Boolean> {
+    override open fun getSystemDarkMode() : Flow<Boolean> {
         return userPreferencesFlow.map {
             preferences -> preferences.systemDarkMode
         }

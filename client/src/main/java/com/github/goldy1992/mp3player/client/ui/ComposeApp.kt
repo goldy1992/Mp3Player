@@ -13,6 +13,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.screens.FolderScreen
 import com.github.goldy1992.mp3player.client.ui.screens.FolderScreenViewModel
@@ -49,9 +50,9 @@ private const val transitionTime = 2000
 )
 @Composable
 fun ComposeApp(
-        userPreferencesRepository: UserPreferencesRepository,
-        windowSize: WindowSize,
-        startScreen : Screen
+    userPreferencesRepository: IUserPreferencesRepository,
+    windowSize: WindowSize,
+    startScreen : Screen
 ) {
     val navController = rememberAnimatedNavController()
     AppTheme(userPreferencesRepository = userPreferencesRepository) {

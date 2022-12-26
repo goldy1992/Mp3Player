@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.client.ui.screens.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.Theme
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -16,7 +17,7 @@ class SettingsScreenViewModel
 
     @Inject
     constructor(
-        private val userPreferencesRepository: UserPreferencesRepository
+        private val userPreferencesRepository: IUserPreferencesRepository
     ) : ViewModel(), LogTagger {
 
     private val _setting = MutableStateFlow(Settings())
@@ -67,7 +68,7 @@ class SettingsScreenViewModel
     }
 
     fun setDarkMode(useDarkMode : Boolean) {
-        viewModelScope.launch { userPreferencesRepository.updateDarkMode(darkMode = useDarkMode) }
+        viewModelScope.launch { userPreferencesRepository.updateDarkMode(useDarkMode = useDarkMode) }
     }
 
     fun setUseSystemDarkMode(useSystemDarkMode : Boolean) {

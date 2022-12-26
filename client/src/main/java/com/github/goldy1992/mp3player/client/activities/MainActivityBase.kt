@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
+import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
 import com.github.goldy1992.mp3player.client.permissions.PermissionGranted
 import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
@@ -50,7 +51,7 @@ abstract class MainActivityBase : ComponentActivity(),
     lateinit var mediaRepository: MediaRepository
 
     @Inject
-    lateinit var userPreferencesRepository: UserPreferencesRepository
+    lateinit var userPreferencesRepository: IUserPreferencesRepository
 
     var startScreen: Screen = Screen.LIBRARY
 

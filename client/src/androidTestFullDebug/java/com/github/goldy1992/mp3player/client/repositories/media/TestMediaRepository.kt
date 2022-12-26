@@ -61,6 +61,7 @@ class TestMediaRepository
         return onChildrenChangedState
     }
 
+
     override fun onCustomCommand(): Flow<SessionCommandEventHolder> {
         TODO("Not yet implemented")
     }
@@ -70,8 +71,9 @@ class TestMediaRepository
         return searchResultsChangedState
     }
 
+    val playbackParametersState = MutableStateFlow(PlaybackParameters.DEFAULT)
     override fun playbackParameters(): Flow<PlaybackParameters> {
-        TODO("Not yet implemented")
+        return playbackParametersState
     }
 
     val playbackPositionEventState = MutableStateFlow(PlaybackPositionEvent.DEFAULT)
@@ -79,8 +81,9 @@ class TestMediaRepository
         return playbackPositionEventState
     }
 
+    val playbackSpeedState = MutableStateFlow(1.0f)
     override fun playbackSpeed(): Flow<Float> {
-        TODO("Not yet implemented")
+        return playbackSpeedState
     }
 
     val queueState = MutableStateFlow(QueueState.EMPTY)

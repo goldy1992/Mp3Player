@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
-class UserPreferencesTest {
+class UserPreferencesRepositoryTest {
 
     private val testScheduler : TestCoroutineScheduler = TestCoroutineScheduler()
     private val dispatcher : TestDispatcher = UnconfinedTestDispatcher(testScheduler)
