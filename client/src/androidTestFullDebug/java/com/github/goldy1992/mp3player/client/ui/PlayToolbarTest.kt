@@ -43,10 +43,7 @@ class PlayToolbarTest {
         val playButton = composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true)
         playButton.assertExists()
         playButton.performClick()
-        runBlocking {
-            composeTestRule.awaitIdle()
-            verify(mockOnClick, times(1)).onClick()
-        }
+        verify(mockOnClick, times(1)).onClick()
     }
     /**
      * WHEN: the playback state IS playing

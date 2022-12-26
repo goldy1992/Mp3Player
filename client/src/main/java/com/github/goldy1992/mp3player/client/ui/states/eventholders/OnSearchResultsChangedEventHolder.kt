@@ -6,7 +6,7 @@ import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDef
 data class OnSearchResultsChangedEventHolder constructor(
     val query: String,
     val itemCount: Int,
-    val params: MediaLibraryService.LibraryParams?
+    val params: MediaLibraryService.LibraryParams? = getDefaultLibraryParams()
 ) {
     companion object {
         val DEFAULT = OnSearchResultsChangedEventHolder(

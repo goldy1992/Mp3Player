@@ -13,10 +13,12 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreen
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreenViewModel
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -142,6 +144,8 @@ class SearchScreenTest {
 
         val expectedRoute = Screen.FOLDER.name + "/" + folderItem.mediaId+ "/" + folderNameMi+ "/" + encodedFolderPath
         testMediaRepository.searchResults = listOf(folderItem)
+        // push a change of state of change to search results
+        testMediaRepository.searchResultsChangedState.value = OnSearchResultsChangedEventHolder("newQuery", 1)
 
         composeTestRule.setContent {
             SearchScreen(

@@ -59,8 +59,10 @@ class SearchScreenViewModel
             .onSearchResultsChanged()
             .collect {
                 if (isNotEmpty(searchQuery.value) && it.itemCount > 0) {
+
                     val results = mediaRepository.getSearchResults(it.query, 0, it.itemCount)
                     _searchResults.value = results
+                    Log.i(logTag(), "got search results ${results}")
                 } else {
                     _searchResults.value = emptyList()
                     Log.i(logTag(), "No search results returned")
