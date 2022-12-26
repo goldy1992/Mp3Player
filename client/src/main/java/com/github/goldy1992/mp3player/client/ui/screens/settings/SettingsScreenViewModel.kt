@@ -66,6 +66,18 @@ class SettingsScreenViewModel
         }
     }
 
+    fun setDarkMode(useDarkMode : Boolean) {
+        viewModelScope.launch { userPreferencesRepository.updateDarkMode(darkMode = useDarkMode) }
+    }
+
+    fun setUseSystemDarkMode(useSystemDarkMode : Boolean) {
+        viewModelScope.launch { userPreferencesRepository.updateSystemDarkMode(useSystemDarkMode = useSystemDarkMode) }
+    }
+
+    fun setTheme(theme : Theme) {
+        viewModelScope.launch { userPreferencesRepository.updateTheme(theme) }
+    }
+
 
     override fun logTag(): String {
         return "SettingsScrnViewModel"

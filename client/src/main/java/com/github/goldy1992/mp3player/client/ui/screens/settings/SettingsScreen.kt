@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
+import com.github.goldy1992.mp3player.client.ui.Theme
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
@@ -37,7 +37,7 @@ import com.github.goldy1992.mp3player.client.utils.VersionUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import java.util.*
 
 
 /**
@@ -52,14 +52,25 @@ fun SettingsScreen(
 ) {
 
     val settings by viewModel.settings.collectAsState()
-
+    val settingsOnClickMap = EnumMap<Settings.Type, Any>(Settings.Type::class.java)
+    settingsOnClickMap[Settings.Type.DARK_MODE] = { newDarkMode : Boolean -> viewModel.setDarkMode(newDarkMode)}
+    settingsOnClickMap[Settings.Type.USE_SYSTEM_DARK_MODE] = { useSystemDarkMode : Boolean -> viewModel.setUseSystemDarkMode(useSystemDarkMode)}
+    settingsOnClickMap[Settings.Type.THEME] = { newTheme : Theme -> viewModel.setTheme(newTheme)}
 
     val isLargeScreen = windowSize == WindowSize.Expanded
 
     if (isLargeScreen) {
-        LargeSettingsScreen(navController, scope, userPreferencesRepository)
+        LargeSettingsScreen(
+            navController = navController,
+            scope = scope,
+            settingsProvider = { settings},
+            settingsOnClickMap = settingsOnClickMap)
     } else {
-        SmallSettingsScreen(navController, scope, userPreferencesRepository)
+        SmallSettingsScreen(
+            navController = navController,
+            scope = scope,
+            settingsProvider = { settings},
+            settingsOnClickMap = settingsOnClickMap)
     }
 }
 
@@ -68,7 +79,8 @@ fun SettingsScreen(
 private fun LargeSettingsScreen(
     navController: NavController,
     scope: CoroutineScope,
-    settings: Settings
+    settingsProvider: () -> Settings,
+    settingsOnClickMap: EnumMap<Settings.Type, Any>
 ) {
     PermanentNavigationDrawer(drawerContent = {
         NavigationDrawerContent(
@@ -78,7 +90,7 @@ private fun LargeSettingsScreen(
     }) {
 
         Scaffold(topBar = {
-            SmallTopAppBar(title = { Text(text = stringResource(id = R.string.settings)) },
+            TopAppBar(title = { Text(text = stringResource(id = R.string.settings)) },
                 navigationIcon = {
                     NavUpButton(
                         navController = navController,
@@ -90,10 +102,10 @@ private fun LargeSettingsScreen(
             content = {
                 Surface(Modifier.width(500.dp)) {
                     SettingsScreenContent(
-                        settings = settings,
+                        settingsProvider = settingsProvider,
+                        settingsOnClickMap = settingsOnClickMap,
                         modifier = Modifier.padding(it),
                         navController = navController,
-                        scope = scope
                     )
                 }
             })
@@ -103,9 +115,10 @@ private fun LargeSettingsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SmallSettingsScreen(
+    settingsProvider: () -> Settings,
+    settingsOnClickMap: EnumMap<Settings.Type, Any>,
     navController: NavController,
     scope: CoroutineScope,
-    userPreferencesRepository: UserPreferencesRepository
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     ModalNavigationDrawer(
@@ -130,10 +143,10 @@ private fun SmallSettingsScreen(
             content = {
                 Surface(Modifier.width(500.dp)) {
                     SettingsScreenContent(
-                        userPreferencesRepository = userPreferencesRepository,
+                        settingsProvider = settingsProvider,
+                        settingsOnClickMap = settingsOnClickMap,
                         modifier = Modifier.padding(it),
-                        navController = navController,
-                        scope = scope
+                        navController = navController
                     )
                 }
             })
@@ -143,27 +156,24 @@ private fun SmallSettingsScreen(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingsScreenContent(
-    settings: Settings,
+    settingsOnClickMap : EnumMap<Settings.Type, Any>,
     modifier: Modifier = Modifier,
+    settingsProvider: () -> Settings = {Settings()},
     navController: NavController = rememberAnimatedNavController(),
-    scope : CoroutineScope = rememberCoroutineScope(),
     versionUtils: VersionUtils = VersionUtils(LocalContext.current)) {
 
-    val useSystemDarkMode by userPreferencesRepository.getSystemDarkMode().collectAsState(initial = false)
-    val isDarkMode by userPreferencesRepository.getDarkMode().collectAsState(initial = false)
 
+    val settings = settingsProvider()
     Column(modifier = modifier) {
         DisplaySubheader()
         SystemDarkModeMenuItem(
-            userPreferencesRepository = userPreferencesRepository,
-            scope = scope,
-            useSystemDarkMode = useSystemDarkMode
+            useSystemDarkMode = settings.useSystemDarkMode,
+            onUpdate = settingsOnClickMap[Settings.Type.USE_SYSTEM_DARK_MODE] as (Boolean) -> Unit
         )
         DarkModeMenuItem(
-            userPreferencesRepository = userPreferencesRepository,
-            scope = scope,
-            useSystemDarkMode = useSystemDarkMode,
-            isDarkMode = isDarkMode
+            useSystemDarkMode = settings.useSystemDarkMode,
+            isDarkMode = settings.darkMode,
+            onUpdate = settingsOnClickMap[Settings.Type.DARK_MODE] as (Boolean) -> Unit
         )
         // TODO: Add Dynamic color option for android 12
         Divider()
@@ -200,9 +210,8 @@ private fun ThemeMenuItem(navController: NavController) {
 
 @ExperimentalMaterialApi
 @Composable
-private fun SystemDarkModeMenuItem(userPreferencesRepository: UserPreferencesRepository,
-                                    scope: CoroutineScope,
-                                    useSystemDarkMode : Boolean) {
+private fun SystemDarkModeMenuItem(useSystemDarkMode : Boolean,
+                                   onUpdate : (newValue : Boolean) -> Unit = {_ ->}) {
     val switchDescription = stringResource(id = R.string.system_dark_mode_switch)
     ListItem(modifier = Modifier.fillMaxWidth(),
         icon = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.system_dark_mode_icon)) },
@@ -210,11 +219,7 @@ private fun SystemDarkModeMenuItem(userPreferencesRepository: UserPreferencesRep
         trailing = {
             Switch(
                 checked = useSystemDarkMode,
-                onCheckedChange = { isChecked ->
-                    scope.launch {
-                        userPreferencesRepository.updateSystemDarkMode(isChecked)
-                    }
-                },
+                onCheckedChange = { isChecked -> onUpdate(isChecked) },
                 colors = SwitchDefaults.colors(),
                 modifier = Modifier.semantics { contentDescription =  switchDescription }
             )
@@ -224,10 +229,9 @@ private fun SystemDarkModeMenuItem(userPreferencesRepository: UserPreferencesRep
 
 @ExperimentalMaterialApi
 @Composable
-private fun DarkModeMenuItem(userPreferencesRepository: UserPreferencesRepository,
-                            scope: CoroutineScope,
-                            isDarkMode : Boolean,
-                            useSystemDarkMode: Boolean) {
+private fun DarkModeMenuItem(isDarkMode : Boolean,
+                            useSystemDarkMode: Boolean,
+                            onUpdate: (newValue: Boolean) -> Unit) {
     val switchDescription = stringResource(id = R.string.dark_mode_switch)
     ListItem(modifier = Modifier.fillMaxWidth(),
         icon = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.dark_mode_icon)) },
@@ -236,11 +240,7 @@ private fun DarkModeMenuItem(userPreferencesRepository: UserPreferencesRepositor
             Switch(
                 checked = isDarkMode,
                 enabled = !useSystemDarkMode,
-                onCheckedChange = { isChecked ->
-                    scope.launch {
-                        userPreferencesRepository.updateDarkMode(isChecked)
-                    }
-                },
+                onCheckedChange = { isChecked -> onUpdate(isChecked) },
                 modifier = Modifier.semantics { contentDescription = switchDescription })
         })
 
