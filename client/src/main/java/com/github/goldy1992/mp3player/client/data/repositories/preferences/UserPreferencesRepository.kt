@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.preferences
+package com.github.goldy1992.mp3player.client.data.repositories.preferences
 
 import android.util.Log
 import androidx.datastore.core.DataStore

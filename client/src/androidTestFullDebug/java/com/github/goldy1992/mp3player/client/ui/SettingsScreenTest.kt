@@ -9,7 +9,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.navigation.NavController
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.preferences.UserPreferencesRepository
+import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.screens.SettingsScreen
 import com.github.goldy1992.mp3player.client.utils.VersionUtils
 import kotlinx.coroutines.flow.flowOf
@@ -81,6 +81,4 @@ class SettingsScreenTest {
         composeTestRule.onNodeWithContentDescription(darkModeSwitch).assertIsEnabled()
     }
 
-
-    
 }

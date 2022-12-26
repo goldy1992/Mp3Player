@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import com.github.goldy1992.mp3player.client.preferences.UserPreferencesRepository
+import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
 
 enum class Theme(
     val displayName : String,

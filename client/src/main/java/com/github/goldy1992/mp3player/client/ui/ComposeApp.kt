@@ -13,7 +13,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.github.goldy1992.mp3player.client.preferences.UserPreferencesRepository
+import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.screens.FolderScreen
 import com.github.goldy1992.mp3player.client.ui.screens.FolderScreenViewModel
 import com.github.goldy1992.mp3player.client.ui.screens.SettingsScreen

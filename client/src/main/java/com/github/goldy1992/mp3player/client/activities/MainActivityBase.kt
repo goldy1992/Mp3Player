@@ -13,7 +13,7 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.permissions.PermissionGranted
 import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
-import com.github.goldy1992.mp3player.client.preferences.UserPreferencesRepository
+import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
 import com.github.goldy1992.mp3player.commons.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
