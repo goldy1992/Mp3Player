@@ -8,6 +8,7 @@ import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import java.io.IOException
 
 

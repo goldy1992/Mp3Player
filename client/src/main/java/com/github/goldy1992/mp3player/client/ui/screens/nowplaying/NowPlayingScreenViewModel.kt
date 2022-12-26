@@ -31,12 +31,8 @@ constructor(
 
     init {
         viewModelScope.launch {
-            mediaRepository.playbackPosition().
-            shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                replay = 1
-            ).collect {
+            mediaRepository.playbackPosition()
+            .collect {
                 _playbackPositionState.value = it
             }
         }

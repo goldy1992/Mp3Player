@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalAnimationApi::class)
 
-package com.github.goldy1992.mp3player.client.ui.screens
+package com.github.goldy1992.mp3player.client.ui.screens.settings
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
@@ -26,6 +26,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
@@ -44,11 +45,14 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun SettingsScreen(
-    userPreferencesRepository: UserPreferencesRepository,
+    viewModel : SettingsScreenViewModel = viewModel(),
     navController : NavController,
     scope : CoroutineScope = rememberCoroutineScope(),
     windowSize: WindowSize = WindowSize.Compact
 ) {
+
+    val settings by viewModel.settings.collectAsState()
+
 
     val isLargeScreen = windowSize == WindowSize.Expanded
 
@@ -64,7 +68,7 @@ fun SettingsScreen(
 private fun LargeSettingsScreen(
     navController: NavController,
     scope: CoroutineScope,
-    userPreferencesRepository: UserPreferencesRepository
+    settings: Settings
 ) {
     PermanentNavigationDrawer(drawerContent = {
         NavigationDrawerContent(
@@ -86,7 +90,7 @@ private fun LargeSettingsScreen(
             content = {
                 Surface(Modifier.width(500.dp)) {
                     SettingsScreenContent(
-                        userPreferencesRepository = userPreferencesRepository,
+                        settings = settings,
                         modifier = Modifier.padding(it),
                         navController = navController,
                         scope = scope
@@ -139,7 +143,7 @@ private fun SmallSettingsScreen(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingsScreenContent(
-    userPreferencesRepository : UserPreferencesRepository,
+    settings: Settings,
     modifier: Modifier = Modifier,
     navController: NavController = rememberAnimatedNavController(),
     scope : CoroutineScope = rememberCoroutineScope(),
