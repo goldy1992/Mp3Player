@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client.dagger.modules
 import android.content.Context
 import com.github.goldy1992.mp3player.client.activities.MainActivity
 import com.github.goldy1992.mp3player.client.permissions.CompatWrapper
+import com.github.goldy1992.mp3player.client.permissions.PermissionGranted
 import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
 import dagger.Module
 import dagger.Provides
@@ -18,6 +19,10 @@ class PermissionsModule {
     @ActivityScoped
     @Provides
     fun providesPermissionProcessor(@ActivityContext context: Context, compatWrapper: CompatWrapper) : PermissionsProcessor {
-        return PermissionsProcessor(permissionGranted = context as MainActivity, compatWrapper =  compatWrapper)
+        return PermissionsProcessor(permissionGranted = object : PermissionGranted {
+            override fun onPermissionGranted() {
+
+            }
+        }, compatWrapper =  compatWrapper)
     }
 }

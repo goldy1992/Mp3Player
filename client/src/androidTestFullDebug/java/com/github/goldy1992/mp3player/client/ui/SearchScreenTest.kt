@@ -18,7 +18,6 @@ import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
-import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -109,6 +108,9 @@ class SearchScreenTest {
             .build()
 
         testMediaRepository.searchResults = listOf(songItem)
+        // push a change of state of change to search results
+        testMediaRepository.searchResultsChangedState.value = OnSearchResultsChangedEventHolder("newQuery", 1)
+
 
         composeTestRule.setContent {
             SearchScreen(

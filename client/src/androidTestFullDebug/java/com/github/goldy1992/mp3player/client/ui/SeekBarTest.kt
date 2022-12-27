@@ -24,23 +24,15 @@ import org.mockito.kotlin.whenever
 /**
  * Test class for [SeekBar].
  */
-class SeekBarTest : MediaTestBase() {
+class SeekBarTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
 
     private val mockSeekTo = mock<MockSeekTo>()
-    lateinit var scope : CoroutineScope
 
     @Before
-    override fun setup() {
-        val mainDispatcher = Dispatchers.Main
-        runBlocking {
-            scope = this
-        }
-        super.setup()
-
-    }
+    fun setup() { }
 
     @Test
     fun testSeekBarDisplaysCorrectly() {
@@ -67,15 +59,10 @@ class SeekBarTest : MediaTestBase() {
             )
         }
 
-        runBlocking {
-            composeTestRule.awaitIdle()
-
-        }
         composeTestRule.onNodeWithContentDescription(durationDescription)
             .assertExists()
             .assert(hasText(expectedDisplayedDuration))
 
-       // composeTestRule.onNode().fetchSemanticsNode().config.
         composeTestRule.onNodeWithContentDescription(currentPositionDescription)
             .assertExists()
             .assert(hasText(expectedCurrentPosition))

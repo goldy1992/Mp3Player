@@ -33,7 +33,7 @@ import org.mockito.kotlin.mock
  * Test class for the [MainScreen] composable function.
  */
 @HiltAndroidTest
-class LibraryScreenTest : MediaTestBase() {
+class LibraryScreenTest {
 
 
     private val testMediaRepository = TestMediaRepository()
@@ -58,7 +58,7 @@ class LibraryScreenTest : MediaTestBase() {
 
     private val navController = mock<NavController>()
 
-    override lateinit var context : Context
+    lateinit var context : Context
 
     private lateinit var libraryScreenViewModel: LibraryScreenViewModel
 
@@ -66,21 +66,11 @@ class LibraryScreenTest : MediaTestBase() {
      * Setup method.
      */
     @Before
-    override fun setup() {
-        val scope : CoroutineScope
-        val mainDispatcher = Dispatchers.Main
-        runBlocking {
-            scope = this
-        }
-        super.setup()
+    fun setup() {
         this.context = InstrumentationRegistry.getInstrumentation().context
-    //    whenever(onChildrenChangedFlowObj.flow).thenReturn(onChildrenChangedFlow)
-        //testMediaRepository.o
-
         this.libraryScreenViewModel = LibraryScreenViewModel(
             mediaRepository = testMediaRepository
         )
-//        whenever(isPlayingFLow).thenReturn(MutableStateFlow(true))
     }
 
     /**
@@ -90,7 +80,6 @@ class LibraryScreenTest : MediaTestBase() {
     @ExperimentalPagerApi
     @Test
     fun testNavigationDrawerOpen() {
-
         val drawerState = DrawerState(DrawerValue.Closed)
         val navigationIconDescription = context.getString(R.string.navigation_drawer_menu_icon)
         composeTestRule.setContent {
@@ -123,9 +112,6 @@ class LibraryScreenTest : MediaTestBase() {
         }
         assertFalse(drawerState.isOpen)
         composeTestRule.onNodeWithContentDescription(navigationIconDescription).performClick()
-        runBlocking {
-            composeTestRule.awaitIdle()
-            assertTrue(drawerState.isOpen)
-        }
+        assertTrue(drawerState.isOpen)
     }
 }

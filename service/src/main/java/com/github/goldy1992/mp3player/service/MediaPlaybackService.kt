@@ -1,11 +1,7 @@
 package com.github.goldy1992.mp3player.service
 
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-import android.content.ContextWrapper
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.util.Log
-import androidx.core.content.ContextCompat
 import androidx.media3.common.Player.STATE_READY
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.CommandButton
@@ -16,7 +12,6 @@ import com.github.goldy1992.mp3player.commons.*
 import com.github.goldy1992.mp3player.service.library.CustomMediaItemTree
 import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers
 import com.github.goldy1992.mp3player.service.library.search.managers.SearchDatabaseManagers
-import com.google.common.collect.ImmutableList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -89,6 +84,21 @@ open class MediaPlaybackService : MediaLibraryService(),
             mediaSession.setCustomLayout(customLayout)
         }
         mediaStoreObservers.init(mediaSession)
+
+        val rootItem = rootAuthenticator.getRootItem()
+        customMediaItemTree.initialise(rootItem = rootItem)
+        scope.launch {
+            withContext(mainDispatcher) {
+                Log.i(logTag(), "adding to queue")
+                // TODO: add queue manager
+                mediaSession.player.addMediaItems(
+                    customMediaItemTree.rootNode?.getChildren()?.get(0)?.getChildren()
+                        ?.map(CustomMediaItemTree.MediaItemNode::item)?.toMutableList()
+                        ?: mutableListOf()
+                )
+                mediaSession.player.prepare()
+            }
+        }
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -100,7 +110,7 @@ open class MediaPlaybackService : MediaLibraryService(),
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
-        val playbackState : Int = mediaSession.player.playbackState
+        val playbackState : Int = mediaSession?.player?.playbackState ?: 0
         Log.i(logTag(), "TASK rEmOvEd, playback state: " + Constants.playbackStateDebugMap.get(playbackState))
 
         if (playbackState != STATE_READY) {
@@ -115,12 +125,12 @@ open class MediaPlaybackService : MediaLibraryService(),
     }
 
     override fun onUpdateNotification(session: MediaSession) {
-        super.onUpdateNotification(session)
+      //  super.onUpdateNotification(session)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        this.mediaSession.release()
+        this.mediaSession?.release()
         Log.i(logTag(), "onDeStRoY")
         mediaStoreObservers.unregisterAll()
     }

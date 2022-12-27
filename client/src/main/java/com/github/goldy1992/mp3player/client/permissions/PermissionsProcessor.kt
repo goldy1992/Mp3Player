@@ -20,7 +20,7 @@ class PermissionsProcessor
     fun requestPermission(permission: String, permissionLauncher : ActivityResultLauncher<String>) { // Here, thisActivity is the current activity
         if (compatWrapper.checkPermissions(permission) != PackageManager.PERMISSION_GRANTED) {
             askedForPermissions = true
-            permissionLauncher.launch(permission)
+            requestPermission(permission, permissionLauncher)
         } else { // Permission has already been granted
             Log.i(logTag(), "Permission has already been granted")
             permissionGranted.onPermissionGranted()
