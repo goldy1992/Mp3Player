@@ -2,8 +2,11 @@
 
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
+import android.Manifest
 import android.net.Uri
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
@@ -24,6 +27,7 @@ import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.*
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
+import com.github.goldy1992.mp3player.client.ui.components.StoragePermissions
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
@@ -34,6 +38,10 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemTyp
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.*
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isEmpty
@@ -198,9 +206,9 @@ fun LargeLibraryScreen(
  * @param navigationColumn The Navigation Column.
  * @param content The content of the Library Screen.
  */
-@OptIn(ExperimentalMaterial3Api::class)
-@ExperimentalMaterialApi
-@ExperimentalPagerApi
+@OptIn(ExperimentalMaterial3Api::class
+)
+
 @Composable
 fun SmallLibraryScreen(
     bottomBar : @Composable () -> Unit,
