@@ -150,7 +150,6 @@ dependencies {
     implementation group: "com.google.accompanist", name: "accompanist-insets", version: accompanist_version
     implementation group: "com.google.accompanist", name: "accompanist-pager-indicators", version: accompanist_version
     implementation group: "com.google.accompanist", name: "accompanist-navigation-animation", version: accompanist_version
-    implementation group: "com.google.accompanist", name: "accompanist-permissions", version: accompanist_version
     implementation group: "io.coil-kt", name: "coil-compose", version: "2.2.2"
 
     implementation "androidx.window:window:1.0.0-beta04"
