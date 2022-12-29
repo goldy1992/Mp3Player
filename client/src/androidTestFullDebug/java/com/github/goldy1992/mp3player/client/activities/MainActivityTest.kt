@@ -11,18 +11,21 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.dagger.modules.MediaRepositoryModule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@UninstallModules(MediaRepositoryModule::class)
 @HiltAndroidTest
 class MainActivityTest {
 
     @get:Rule
-    var permissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    var permissionRule = GrantPermissionRule.grant(*MainActivity.calculatePermissions())
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

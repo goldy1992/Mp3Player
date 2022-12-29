@@ -4,89 +4,66 @@ import android.content.Context
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.ui.flows.player.IsPlayingFlow
-import com.github.goldy1992.mp3player.client.ui.buttons.PauseButton
-import com.github.goldy1992.mp3player.client.ui.buttons.PlayButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mock
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 
 /**
- * Test class for [com.github.goldy1992.mp3player.client.ui.PlayToolbar].
+ * Test class for [PlayToolbar].
  */
 class PlayToolbarTest {
 
-    @Mock
-    val mockMediaController = mock<MediaControllerAdapter>()
-
-    val isPlayingFlow = mock<IsPlayingFlow>()
+    private val mockOnClick : MockOnClick = mock()
 
     @get:Rule
     val composeTestRule = createComposeRule()
 
     /**
-     * Tests that when the state of the [MediaControllerAdapter] playback state is
-     * [PlaybackStateCompat.STATE_PAUSED] then the [PlayButton] is displayed.
-     * When the [PlayButton] is clicked then [MediaControllerAdapter.pause] should be called
+     * WHEN: the playback state IS paused
+     * THEN: the play button is displayed.
+     * AND WHEN: The play button is clicked:
+     * THEN: onPlay is invoked.
      */
     @Test
     fun testPlayButtonDisplayedWhenPaused() {
         val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
         val expected = context.resources.getString(R.string.play)
         val isPlaying = false
-        // Set Media to be NOT Playing
-        //  whenever(isPlayingFlow.state).thenReturn(MutableStateFlow(isPlaying))
         composeTestRule.setContent {
-            PlayToolbar(mediaController = mockMediaController,
-                        isPlayingState = MutableStateFlow(isPlaying)
-            ) {
-                // do nothing
-            }
+            PlayToolbar(isPlayingProvider = { isPlaying },
+                        onClickPlay = { mockOnClick.onClick() })
         }
+
         composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true).assertExists()
         val playButton = composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true)
         playButton.assertExists()
         playButton.performClick()
-        runBlocking {
-            composeTestRule.awaitIdle()
-            verify(mockMediaController, times(1)).play()
-        }
+        verify(mockOnClick, times(1)).onClick()
     }
     /**
-     * Tests that when the state of the [MediaControllerAdapter] playback state is
-     * [PlaybackStateCompat.STATE_PLAYING] then the [PauseButton] is displayed.
-     * When the [PauseButton] is clicked then [MediaControllerAdapter.play] should be called
+     * WHEN: the playback state IS playing
+     * THEN: the pause button is displayed.
+     * AND WHEN: The pause button is clicked:
+     * THEN: onPause is invoked.
      */
     @Test
     fun testPauseButtonDisplayedWhenPlaying() {
         val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
         val expected = context.resources.getString(R.string.pause)
         val isPlaying = true
-        // Set Media to be playing
-       // whenever(isPlayingFlow.state).thenReturn(MutableStateFlow(isPlaying))
         composeTestRule.setContent {
-            PlayToolbar(mediaController = mockMediaController,
-                        isPlayingState = MutableStateFlow(isPlaying)
-            ) {
-                // do nothing
-            }
+            PlayToolbar(isPlayingProvider = { isPlaying },
+                    onClickPause = { mockOnClick.onClick() })
         }
         val pauseButton = composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true)
         pauseButton.assertExists()
         pauseButton.performClick()
-        runBlocking {
-            composeTestRule.awaitIdle()
-            verify(mockMediaController, times(1)).pause()
-        }
-
+        verify(mockOnClick, times(1)).onClick()
     }
 
     /**
@@ -95,22 +72,17 @@ class PlayToolbarTest {
     @Test
     fun testOnClick() {
         val bottomAppBarDescr = InstrumentationRegistry.getInstrumentation().context.getString(R.string.bottom_app_bar)
-        val mockOnClick = mock<MockOnClick>()
+
         composeTestRule.setContent {
-            PlayToolbar(mediaController = mockMediaController, isPlayingState = MutableStateFlow(true), onClick = mockOnClick::onClick)
+            PlayToolbar(onClickBar = { mockOnClick.onClick()})
         }
         composeTestRule.onNodeWithContentDescription(bottomAppBarDescr).performTouchInput {
             this.click(this.percentOffset(0.9f, 0.9f))
         }
-
-        runBlocking {
-            composeTestRule.awaitIdle()
-        }
-
         verify(mockOnClick, times(1)).onClick()
     }
 
-    private class MockOnClick() {
+    private class MockOnClick {
         fun onClick(){
         }
     }

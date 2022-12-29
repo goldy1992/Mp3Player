@@ -9,7 +9,7 @@ class MainActivityUnitTestImpl : MainActivity() {
 
 
 
-    override fun ui(startScreen: Screen) {
+    override fun ui() {
         setContent {
             Column() {
                 // Do nothing

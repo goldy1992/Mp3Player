@@ -5,41 +5,48 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
-import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.ui.flows.mediabrowser.OnSearchResultsChangedFlow
-import com.github.goldy1992.mp3player.client.ui.flows.player.IsPlayingFlow
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.MainDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import org.apache.commons.lang3.StringUtils.isEmpty
 import org.apache.commons.lang3.StringUtils.isNotEmpty
 import javax.inject.Inject
 
+/**
+ * [ViewModel] implementation from the [SearchScreen].
+ */
 @HiltViewModel
 class SearchScreenViewModel
     @Inject
     constructor(
-        val mediaBrowserAdapter: MediaBrowserAdapter,
-        val mediaControllerAdapter: MediaControllerAdapter,
-        private val onSearchResultsChangedFlow: OnSearchResultsChangedFlow,
-        private val isPlayingFlow: IsPlayingFlow,
-        @MainDispatcher private val mainDispatcher: CoroutineDispatcher)
+        private val mediaRepository: MediaRepository
+    )
 
     : ViewModel(), LogTagger {
 
-    val searchQuery : StateFlow<String> = mediaBrowserAdapter.currentSearchQuery
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery : StateFlow<String> = _searchQuery
+
+    init {
+        viewModelScope.launch {
+            mediaRepository.currentSearchQuery()
+                .collect {
+                    _searchQuery.value = it
+                }
+        }
+    }
 
     fun setSearchQuery(query: String) {
         viewModelScope.launch {
             if (isEmpty(query)) {
                 _searchResults.value = emptyList()
             }
-            mediaBrowserAdapter.search(query, Bundle())
+            mediaRepository.search(query, Bundle())
             Log.i(logTag(), "New searchQueryValue: ${query}")
         }
     }
@@ -48,14 +55,19 @@ class SearchScreenViewModel
     val searchResults : StateFlow<List<MediaItem>> = _searchResults
     init {
         viewModelScope.launch {
-            onSearchResultsChangedFlow.flow.collect {
+            mediaRepository
+            .onSearchResultsChanged()
+            .collect {
                 if (isNotEmpty(searchQuery.value) && it.itemCount > 0) {
-                    val results = mediaBrowserAdapter.getSearchResults(it.query, 0, it.itemCount)
+
+                    val results = mediaRepository.getSearchResults(it.query, 0, it.itemCount)
                     _searchResults.value = results
+                    Log.i(logTag(), "got search results ${results}")
                 } else {
                     _searchResults.value = emptyList()
                     Log.i(logTag(), "No search results returned")
                 }
+
             }
         }
     }
@@ -67,14 +79,43 @@ class SearchScreenViewModel
 
     init {
         viewModelScope.launch {
-            _isPlayingState.value = mediaControllerAdapter.isPlaying()
-        }
-        viewModelScope.launch {
-            isPlayingFlow.flow().collect {
+            mediaRepository.isPlaying().
+            shareIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                replay = 1
+            ).collect {
                 _isPlayingState.value = it
             }
         }
     }
+
+    fun play(mediaItem: MediaItem) {
+        viewModelScope.launch {
+            mediaRepository.play(mediaItem)
+        }
+    }
+
+    fun playFromList(itemIndex : Int, mediaItemList : List<MediaItem>) {
+
+    }
+
+    fun play() {
+        viewModelScope.launch { mediaRepository.play() }
+    }
+
+    fun pause() {
+        viewModelScope.launch { mediaRepository.play() }
+    }
+
+    fun skipToNext() {
+        viewModelScope.launch { mediaRepository.skipToNext() }
+    }
+
+    fun skipToPrevious() {
+        viewModelScope.launch { mediaRepository.skipToPrevious() }
+    }
+
 
     override fun logTag(): String {
         return "SrchScrnViewModel"

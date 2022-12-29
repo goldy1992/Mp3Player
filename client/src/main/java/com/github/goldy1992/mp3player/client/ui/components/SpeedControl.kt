@@ -10,15 +10,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun SpeedController(modifier : Modifier = Modifier,
-                    mediaController : MediaControllerAdapter? = null,
                     playbackSpeedProvider: () -> Float,
-                    scope: CoroutineScope = rememberCoroutineScope()) {
+                    changePlaybackSpeed : (speed : Float) -> Unit) {
 
     val sliderPosition = playbackSpeedProvider()
 
@@ -39,7 +35,7 @@ fun SpeedController(modifier : Modifier = Modifier,
             onValueChangeFinished = {
                 isTouchTracking = false
                 uiSliderPosition = touchTrackingPosition
-                scope.launch { mediaController?.changePlaybackSpeed(uiSliderPosition) }
+                changePlaybackSpeed(uiSliderPosition)
             }
         )
         Row(horizontalArrangement = Arrangement.Center) {
@@ -53,7 +49,7 @@ fun SpeedController(modifier : Modifier = Modifier,
 
             IconButton(
                 onClick = {
-                    scope.launch { mediaController?.changePlaybackSpeed(1f) }
+                    changePlaybackSpeed(1f)
                     uiSliderPosition = 1f
                 }
             ) {

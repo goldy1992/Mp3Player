@@ -2,8 +2,11 @@
 
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
+import android.Manifest
 import android.net.Uri
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
@@ -24,6 +27,7 @@ import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.*
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
+import com.github.goldy1992.mp3player.client.ui.components.StoragePermissions
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
@@ -34,6 +38,10 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemTyp
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.*
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isEmpty
@@ -45,8 +53,8 @@ private const val logTag = "LibraryScreen"
  * The Main Screen of the app.
  *
  * @param navController The [NavController].
- * @param scaffoldState The [ScaffoldState]. Optional, if not provided one will be created.
- * @param pagerState The [PagerState]. Optional, if not provided one will be created using the [MediaRepository.rootItems].
+ * @param pagerState The [PagerState].
+ * @param viewModel The [LibraryScreenViewModel].
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalMaterialApi
@@ -60,12 +68,12 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
 ) {
     val rootItems by viewModel.rootItems.collectAsState()
     val rootItemsMap by viewModel.rootItemMap.collectAsState()
-    val isPlaying by viewModel.isPlaying.state.collectAsState()
-    val currentMediaItem by viewModel.currentMediaItem.state.collectAsState()
+    val isPlaying by viewModel.isPlaying.collectAsState()
+    val currentMediaItem by viewModel.currentMediaItem.collectAsState()
 
     val onSongSelected : (Int, List<MediaItem>) -> Unit =  {
             itemIndex, mediaItemList ->
-        viewModel.mediaControllerAdapter.playFromSongList(itemIndex, mediaItemList)
+        viewModel.playFromSongList(itemIndex, mediaItemList)
     }
     val onFolderSelected : (MediaItem) -> Unit = {
 
@@ -105,10 +113,14 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
     }
     val isLargeScreen = windowSize == WindowSize.Expanded
     val bottomBar : @Composable () -> Unit = {
-        PlayToolbar(isPlayingProvider= { isPlaying },
-            mediaController = viewModel.mediaControllerAdapter,
-            navController = navController,
-            scope = scope)
+        PlayToolbar(
+            isPlayingProvider = { isPlaying },
+            onClickPlay = { viewModel.play() },
+            onClickPause = {viewModel.pause() },
+            onClickSkipPrevious = { viewModel.skipToPrevious() },
+            onClickSkipNext = { viewModel.skipToNext() },
+            onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)}
+        )
     }
     val context = LocalContext.current
     val libraryText = remember {context.getString(R.string.library) }
@@ -157,13 +169,12 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
 /**
  * The large Library Screen.
  *
- * @param scaffoldState The [ScaffoldState].
+ * @param navDrawerContent The content of the navigation drawer.
  * @param topBar The Top Bar.
  * @param bottomBar The Bottom Bar.
- * @param navigationColumn The Navigation Column.
  * @param content The content of the Library Screen.
  */
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
@@ -195,9 +206,9 @@ fun LargeLibraryScreen(
  * @param navigationColumn The Navigation Column.
  * @param content The content of the Library Screen.
  */
-@OptIn(ExperimentalMaterial3Api::class)
-@ExperimentalMaterialApi
-@ExperimentalPagerApi
+@OptIn(ExperimentalMaterial3Api::class
+)
+
 @Composable
 fun SmallLibraryScreen(
     bottomBar : @Composable () -> Unit,

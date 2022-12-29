@@ -17,7 +17,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.media3.common.MediaMetadata
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateAnimationTime
@@ -34,7 +33,7 @@ fun SeekBar(isPlayingProvider: () -> Boolean,
             metadataProvider: () -> MediaMetadata,
             playbackSpeedProvider : () ->  Float,
             playbackPositionProvider: () -> PlaybackPositionEvent,
-            mediaController : MediaControllerAdapter,
+            seekTo: (value: Long) -> Unit,
             scope: CoroutineScope = rememberCoroutineScope()) {
 
     //Log.i(logTag, "seek bar created")
@@ -57,7 +56,7 @@ fun SeekBar(isPlayingProvider: () -> Boolean,
         durationDescription = durationDescription,
         currentPositionDescription = currentPositionDescription,
         scope = scope,
-        mediaController = mediaController
+        seekTo = seekTo
     )
 }
 
@@ -69,7 +68,7 @@ private fun SeekBarUi(currentPosition : Float,
                       durationDescription : String,
                       currentPositionDescription : String,
                       scope: CoroutineScope,
-                      mediaController : MediaControllerAdapter
+                      seekTo : (value : Long) -> Unit
                     ) {
     val seekBarAnimation = remember(animationTimeInMs) { mutableStateOf(Animatable(currentPosition)) }
     //  Log.i(logTag, "Anim1Value: ${anim1.value}")
@@ -106,7 +105,7 @@ private fun SeekBarUi(currentPosition : Float,
             onValueChangeFinished = {
                 isTouchTracking.value = false
                 seekBarAnimation.value = Animatable(touchTrackingPosition.value)
-                scope.launch { mediaController.seekTo(touchTrackingPosition.value.toLong()) }
+                scope.launch { seekTo(touchTrackingPosition.value.toLong()) }
             })
         Text(text = formatTime(if (isTouchTracking.value) touchTrackingPosition.value.toLong() else seekBarAnimation.value.value.toLong()),
             modifier = Modifier

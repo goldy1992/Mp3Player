@@ -1,33 +1,37 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Context
+import android.os.Bundle
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.lifecycle.MutableLiveData
-import androidx.media3.session.MediaLibraryService
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.navigation.NavController
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.flows.mediabrowser.OnChildrenChangedFlow
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreen
-import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreenViewModel
 import com.github.goldy1992.mp3player.client.ui.screens.library.SmallLibraryAppBar
 import com.github.goldy1992.mp3player.client.ui.screens.library.SmallLibraryScreen
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
+import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDefaultLibraryParams
+import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -35,22 +39,25 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 /**
  * Test class for the [MainScreen] composable function.
  */
+@OptIn(ExperimentalMaterialApi::class,
+    ExperimentalPagerApi::class)
 @HiltAndroidTest
-class LibraryScreenTest : MediaTestBase() {
+class LibraryScreenTest {
 
 
-    val onChildrenChangedFlowObj = mock<OnChildrenChangedFlow>()
-    val onChildrenChangedFlow = MutableStateFlow(
-                                    OnChildrenChangedEventHolder(mockMediaBrowser,
-                                        "",
-                                        1,
-                                        MediaLibraryService.LibraryParams.Builder().build())
-    )
+    private val testMediaRepository = TestMediaRepository()
+
+//    val onChildrenChangedFlowObj = mock<OnChildrenChangedFlow>()
+//    val onChildrenChangedFlow = MutableStateFlow(
+//                                    OnChildrenChangedEventHolder(mockMediaBrowser,
+//                                        "",
+//                                        1,
+//                                        MediaLibraryService.LibraryParams.Builder().build())
+//    )
 
 
     @Mock
@@ -65,77 +72,54 @@ class LibraryScreenTest : MediaTestBase() {
 
     private val navController = mock<NavController>()
 
-    override lateinit var context : Context
+    lateinit var context : Context
 
     private lateinit var libraryScreenViewModel: LibraryScreenViewModel
+
+    companion object{
+        private const val TEST_ROOT_ID = "rootId"
+        private val testRootItem =  MediaItem.Builder().setMediaId(TEST_ROOT_ID).build()
+    }
 
     /**
      * Setup method.
      */
     @Before
-    override fun setup() {
-        val scope : CoroutineScope
-        val mainDispatcher = Dispatchers.Main
-        runBlocking {
-            scope = this
-        }
-        super.setup()
+    fun setup() {
         this.context = InstrumentationRegistry.getInstrumentation().context
-        whenever(onChildrenChangedFlowObj.flow).thenReturn(onChildrenChangedFlow)
-
+        this.testMediaRepository.libraryRootState = testRootItem
         this.libraryScreenViewModel = LibraryScreenViewModel(
-            mediaBrowserAdapter = mediaBrowserAdapter,
-            onChildrenChangedFlow = onChildrenChangedFlowObj,
-            mediaControllerAdapter = mediaControllerAdapter,
-            metadataFlow = metadataFlowObj,
-            isPlayingFlow = isPlayingFlowObj,
-            mainDispatcher = mainDispatcher)
-//        whenever(isPlayingFLow).thenReturn(MutableStateFlow(true))
+            mediaRepository = testMediaRepository
+        )
     }
 
-    /**
-     * Tests the [NavigationDrawer] is opened when the Navigation menu icon is clicked.
-     */
-    @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
-    @ExperimentalPagerApi
     @Test
-    fun testNavigationDrawerOpen() {
+    fun testDisplay() {
 
-        val drawerState = DrawerState(DrawerValue.Closed)
-        val navigationIconDescription = context.getString(R.string.navigation_drawer_menu_icon)
         composeTestRule.setContent {
-            val scope = rememberCoroutineScope()
-            SmallLibraryScreen(
-                bottomBar = {},
-                topBar = {          SmallLibraryAppBar(
-                    title = "libraryText",
-                    onClickNavIcon = {
-                        scope.launch {
-                            if (drawerState.isClosed) {
-                                drawerState.open()
-                            } else {
-                                drawerState.close()
-                            }
-                        }
-                    },
-                    onClickSearchIcon = {}
-                )
-                },
-                navDrawerContent= {
-                    NavigationDrawerContent(
-                        navController = navController,
-                        currentScreen = Screen.LIBRARY
-                    )
-                },
-                drawerState = drawerState) {
+            LibraryScreen(
+                navController = navController,
+                viewModel = libraryScreenViewModel
+            )
+        }
+        val songsId = "SongsId"
+        val songExtras = Bundle()
+        songExtras.putSerializable(Constants.ROOT_ITEM_TYPE, MediaItemType.SONGS)
+        val songsItem = MediaItem.Builder().setMediaId(songsId).setMediaMetadata(
+            MediaMetadata.Builder().setExtras(songExtras).build()
+        )
+            .build()
+        testMediaRepository.getChildrenState = listOf(songsItem)
+        testMediaRepository.onChildrenChangedState.value = OnChildrenChangedEventHolder(TEST_ROOT_ID, itemCount = 1, getDefaultLibraryParams())
 
-            }
+
+        composeTestRule.waitUntil(5000L) {
+            composeTestRule.onAllNodesWithText(MediaItemType.SONGS.name).fetchSemanticsNodes()
+                .isNotEmpty()
         }
-        assertFalse(drawerState.isOpen)
-        composeTestRule.onNodeWithContentDescription(navigationIconDescription).performClick()
-        runBlocking {
-            composeTestRule.awaitIdle()
-            assertTrue(drawerState.isOpen)
-        }
+
+        assertTrue(true)
     }
+
+
 }

@@ -3,10 +3,8 @@ package com.github.goldy1992.mp3player.service.player.equalizer
 import android.media.AudioTrack
 import android.media.AudioTrack.ERROR_BAD_VALUE
 import android.os.Bundle
-import android.util.Log
 import androidx.media3.common.C
 import androidx.media3.common.Format
-import androidx.media3.common.Player
 import androidx.media3.common.util.Assertions
 import androidx.media3.common.util.Util
 import androidx.media3.exoplayer.audio.AudioProcessor

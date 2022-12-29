@@ -1,23 +1,20 @@
 package com.github.goldy1992.mp3player.client.ui.screens.nowplaying
 
-import androidx.concurrent.futures.await
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.Player.RepeatMode
-import androidx.media3.session.MediaController
-import com.github.goldy1992.mp3player.client.MediaBrowserAdapter
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import com.github.goldy1992.mp3player.client.ui.flows.player.*
-import com.github.goldy1992.mp3player.client.ui.states.PlaybackPosition
-import com.github.goldy1992.mp3player.commons.MainDispatcher
-import com.google.common.util.concurrent.ListenableFuture
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
+import com.github.goldy1992.mp3player.client.ui.states.QueueState
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,32 +22,32 @@ import javax.inject.Inject
 class NowPlayingScreenViewModel
     @Inject
 constructor(
-        val mediaBrowserAdapter: MediaBrowserAdapter,
-        val mediaControllerAdapter: MediaControllerAdapter,
-        private val isPlayingFlow: IsPlayingFlow,
-        private val metadataFlow: MetadataFlow,
-        private val playbackSpeedFlow: PlaybackSpeedFlow,
-        private val playbackPositionFlow: PlaybackPositionFlow,
+        private val mediaRepository: MediaRepository,
+) : ViewModel(), LogTagger {
 
-        private val queueFlow: QueueFlow,
-        private val repeatModeFlow: RepeatModeFlow,
-        private val shuffleModeFlow: ShuffleModeFlow,
-        @MainDispatcher private val mainDispatcher: CoroutineDispatcher
-) : ViewModel() {
+    // playbackPosition
+    private val _playbackPositionState = MutableStateFlow(PlaybackPositionEvent.DEFAULT)
+    val playbackPosition : StateFlow<PlaybackPositionEvent> = _playbackPositionState
 
-    private val mediaControllerAsync : ListenableFuture<MediaController> = mediaControllerAdapter.mediaControllerFuture
+    init {
+        viewModelScope.launch {
+            mediaRepository.playbackPosition()
+            .collect {
+                _playbackPositionState.value = it
+            }
+        }
+    }
 
-    val playbackPosition : PlaybackPosition = PlaybackPosition.initialise(this, playbackPositionFlow, mainDispatcher, mediaControllerAsync)
     // isPlaying
     private val _isPlayingState = MutableStateFlow(false)
     val isPlaying : StateFlow<Boolean> = _isPlayingState
 
     init {
-        viewModelScope.launch(mainDispatcher) {
-            _isPlayingState.value = mediaControllerAsync.await().isPlaying
-        }
+        Log.i(logTag(), "init")
         viewModelScope.launch {
-            isPlayingFlow.flow().collect {
+            mediaRepository.isPlaying()
+            .collect {
+                Log.i(logTag(), "isPlaying newState: $it")
                 _isPlayingState.value = it
             }
         }
@@ -62,11 +59,9 @@ constructor(
     val metadata : StateFlow<MediaMetadata> = _metadataState
 
     init {
-        viewModelScope.launch(mainDispatcher) {
-            _metadataState.value = mediaControllerAsync.await().mediaMetadata
-        }
         viewModelScope.launch {
-            metadataFlow.flow().collect {
+            mediaRepository.metadata()
+            .collect {
                 _metadataState.value = it
             }
         }
@@ -78,11 +73,9 @@ constructor(
     val playbackSpeed : StateFlow<Float> = _playbackSpeed
 
     init {
-        viewModelScope.launch(mainDispatcher) {
-            _playbackSpeed.value = mediaControllerAsync.await().playbackParameters.speed
-        }
         viewModelScope.launch {
-            playbackSpeedFlow.flow().collect {
+            mediaRepository.playbackSpeed()
+            .collect {
                 _playbackSpeed.value = it
             }
         }
@@ -90,15 +83,13 @@ constructor(
 
 
     // queue
-    private val _queue = MutableStateFlow(emptyList<MediaItem>())
-    val queue : StateFlow<List<MediaItem>> = _queue
+    private val _queue = MutableStateFlow(QueueState.EMPTY)
+    val queue : StateFlow<QueueState> = _queue
 
     init {
-        viewModelScope.launch(mainDispatcher) {
-           _queue.value = queueFlow.getQueue(mediaControllerAsync.await())
-        }
         viewModelScope.launch {
-            queueFlow.flow().collect {
+            mediaRepository.queue()
+            .collect {
                 _queue.value = it
             }
         }
@@ -110,11 +101,9 @@ constructor(
     val repeatMode : StateFlow<@RepeatMode Int> = _repeatMode
 
     init {
-        viewModelScope.launch(mainDispatcher) {
-            _repeatMode.value = mediaControllerAsync.await().repeatMode
-        }
         viewModelScope.launch {
-            repeatModeFlow.flow().collect {
+            mediaRepository.repeatMode()
+            .collect {
                 _repeatMode.value = it
             }
         }
@@ -126,13 +115,47 @@ constructor(
     val shuffleMode : StateFlow<Boolean> = _shuffleMode
 
     init {
-        viewModelScope.launch(mainDispatcher) {
-            _shuffleMode.value = mediaControllerAsync.await().shuffleModeEnabled
-        }
         viewModelScope.launch {
-            shuffleModeFlow.flow().collect {
+            mediaRepository.isShuffleModeEnabled()
+            .collect {
                 _shuffleMode.value = it
             }
         }
+    }
+
+    fun changePlaybackSpeed(speed : Float) {
+        viewModelScope.launch { mediaRepository.changePlaybackSpeed(speed) }
+    }
+
+    fun play() {
+        viewModelScope.launch { mediaRepository.play() }
+    }
+
+    fun pause() {
+        viewModelScope.launch { mediaRepository.pause() }
+    }
+
+    fun skipToNext() {
+        viewModelScope.launch { mediaRepository.skipToNext() }
+    }
+
+    fun skipToPrevious() {
+        viewModelScope.launch { mediaRepository.skipToPrevious() }
+    }
+
+    fun seekTo(value : Long) {
+        viewModelScope.launch { mediaRepository.seekTo(value) }
+    }
+
+    fun setShuffleMode(isEnabled: Boolean) {
+        viewModelScope.launch { mediaRepository.setShuffleMode(isEnabled) }
+    }
+
+    fun setRepeatMode(repeatMode: @RepeatMode Int) {
+        viewModelScope.launch { mediaRepository.setRepeatMode(repeatMode) }
+    }
+
+    override fun logTag(): String {
+        return "NowPlayingViewModel"
     }
 }

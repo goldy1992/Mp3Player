@@ -1,10 +1,13 @@
 package com.github.goldy1992.mp3player.client.ui.states.eventholders
 
-import androidx.media3.session.MediaBrowser
 import androidx.media3.session.MediaLibraryService
+import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDefaultLibraryParams
 
 data class OnChildrenChangedEventHolder(
-    val browser: MediaBrowser,
     val parentId: String,
     val itemCount: Int,
-    val params: MediaLibraryService.LibraryParams?)
+    val params: MediaLibraryService.LibraryParams?) {
+    companion object {
+        val DEFAULT = OnChildrenChangedEventHolder("", 1, getDefaultLibraryParams())
+    }
+}

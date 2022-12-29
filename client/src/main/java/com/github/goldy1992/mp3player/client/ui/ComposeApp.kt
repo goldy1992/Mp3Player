@@ -13,12 +13,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.github.goldy1992.mp3player.client.preferences.UserPreferencesRepository
+import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
+import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.screens.FolderScreen
 import com.github.goldy1992.mp3player.client.ui.screens.FolderScreenViewModel
-import com.github.goldy1992.mp3player.client.ui.screens.SettingsScreen
-import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerScreen
-import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerViewModel
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreen
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreenViewModel
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
@@ -27,6 +25,10 @@ import com.github.goldy1992.mp3player.client.ui.screens.nowplaying.NowPlayingScr
 import com.github.goldy1992.mp3player.client.ui.screens.nowplaying.NowPlayingScreenViewModel
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreen
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreenViewModel
+import com.github.goldy1992.mp3player.client.ui.screens.settings.SettingsScreen
+import com.github.goldy1992.mp3player.client.ui.screens.settings.SettingsScreenViewModel
+import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerScreen
+import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerViewModel
 import com.github.goldy1992.mp3player.commons.Constants.ROOT_APP_URI_PATH
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -48,9 +50,9 @@ private const val transitionTime = 2000
 )
 @Composable
 fun ComposeApp(
-        userPreferencesRepository: UserPreferencesRepository,
-        windowSize: WindowSize,
-        startScreen : Screen
+    userPreferencesRepository: IUserPreferencesRepository,
+    windowSize: WindowSize,
+    startScreen : Screen
 ) {
     val navController = rememberAnimatedNavController()
     AppTheme(userPreferencesRepository = userPreferencesRepository) {
@@ -130,9 +132,10 @@ fun ComposeApp(
 
                 }
                 composable(Screen.SETTINGS.name) {
+                    val viewModel = hiltViewModel<SettingsScreenViewModel>()
                     SettingsScreen(
                         navController = navController,
-                        userPreferencesRepository = userPreferencesRepository,
+                        viewModel = viewModel,
                         windowSize = windowSize
                     )
                 }
