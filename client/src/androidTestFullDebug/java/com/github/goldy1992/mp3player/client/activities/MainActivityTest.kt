@@ -25,7 +25,7 @@ import org.junit.Test
 class MainActivityTest {
 
     @get:Rule
-    var permissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    var permissionRule = GrantPermissionRule.grant(*MainActivity.calculatePermissions())
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

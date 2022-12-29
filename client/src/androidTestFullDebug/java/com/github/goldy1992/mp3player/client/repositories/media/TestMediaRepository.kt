@@ -55,8 +55,7 @@ class TestMediaRepository
         return metadataState
     }
 
-    val onChildrenChangedState = MutableStateFlow<OnChildrenChangedEventHolder>(
-        OnChildrenChangedEventHolder.DEFAULT)
+    var onChildrenChangedState = MutableStateFlow(OnChildrenChangedEventHolder.DEFAULT)
     override fun onChildrenChanged(): Flow<OnChildrenChangedEventHolder> {
         return onChildrenChangedState
     }
@@ -100,19 +99,19 @@ class TestMediaRepository
 
     }
 
-    val getChildrenState = MutableStateFlow<List<MediaItem>>(emptyList())
+    var getChildrenState = emptyList<MediaItem>()
     override suspend fun getChildren(
         parentId: String,
         page: Int,
         pageSize: Int,
         params: MediaLibraryService.LibraryParams
     ): List<MediaItem> {
-        return getChildrenState.value
+        return getChildrenState
     }
 
-    val libraryRootState = MutableStateFlow(MediaItem.EMPTY)
+    var libraryRootState = MediaItem.EMPTY
     override suspend fun getLibraryRoot(): MediaItem {
-        return libraryRootState.value
+        return libraryRootState
     }
 
     val searchResultsState = MutableStateFlow<List<MediaItem>>(emptyList())

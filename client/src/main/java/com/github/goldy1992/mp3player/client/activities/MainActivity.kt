@@ -78,6 +78,13 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionGranted {
 
         private val STANDARD_PERMISSIONS = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
 
+        fun calculatePermissions() : Array<String> {
+            return if (Build.VERSION.SDK_INT >= TIRAMISU) {
+                TIRAMISU_PERMISSIONS
+            } else {
+                STANDARD_PERMISSIONS
+            }
+        }
 
     }
 
@@ -124,13 +131,7 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionGranted {
         }
     }
 
-    private fun calculatePermissions() : Array<String> {
-        return if (Build.VERSION.SDK_INT >= TIRAMISU) {
-            TIRAMISU_PERMISSIONS
-        } else {
-            STANDARD_PERMISSIONS
-        }
-    }
+
 
 
     override fun onPermissionGranted() {
