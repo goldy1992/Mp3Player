@@ -46,7 +46,6 @@ class MainActivityTest {
         intent.data = expectedUri
         scenario = ActivityScenario.launch(intent)
         scenario.onActivity { activity: MainActivity ->
-            activity.permissionsProcessor.askedForPermissions = false
             activity.onPermissionGranted()
             Assert.assertEquals(expectedUri, activity.trackToPlay)
         }

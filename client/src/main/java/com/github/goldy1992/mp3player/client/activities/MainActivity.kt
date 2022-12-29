@@ -19,7 +19,6 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
 import com.github.goldy1992.mp3player.client.permissions.PermissionGranted
-import com.github.goldy1992.mp3player.client.permissions.PermissionsProcessor
 import com.github.goldy1992.mp3player.client.ui.ComposeApp
 import com.github.goldy1992.mp3player.client.ui.rememberWindowSizeClass
 import com.github.goldy1992.mp3player.commons.*
