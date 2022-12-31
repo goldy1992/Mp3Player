@@ -27,6 +27,7 @@ import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.BarCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.FountainSpringCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.SmoothLineCard
+import com.github.goldy1992.mp3player.client.ui.modifiers.drawDiagonalLabel
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
@@ -76,6 +77,7 @@ fun VisualizerScreen(
 @Composable
 private fun TopBar(navIcon: @Composable () -> Unit = {}) {
     TopAppBar(
+        modifier = Modifier.drawDiagonalLabel("Beta", color = MaterialTheme.colorScheme.error),
        title = {
            Text(text = "Equalizer",
                style = MaterialTheme.typography.titleLarge,

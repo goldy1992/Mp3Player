@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.ui.modifiers.drawDiagonalLabel
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
@@ -121,7 +122,7 @@ fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavCo
             label = {
                 Text(
                     text = library,
-                    fontSize = MaterialTheme.typography.labelLarge.fontSize
+                    style = MaterialTheme.typography.labelLarge
                 )
             },
             icon = { Icon(Icons.Filled.LibraryMusic, contentDescription = library) },
@@ -139,7 +140,7 @@ fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavCo
             label = {
                 Text(
                     text = search,
-                    fontSize = MaterialTheme.typography.labelLarge.fontSize
+                    style = MaterialTheme.typography.labelLarge
                 )
             },
             icon = {
@@ -162,7 +163,7 @@ fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavCo
             label = {
                 Text(
                     text = settings,
-                    fontSize = MaterialTheme.typography.labelLarge.fontSize
+                    style = MaterialTheme.typography.labelLarge
                 )
             },
             icon = {
@@ -179,17 +180,21 @@ fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavCo
                 }
             })
         NavigationDrawerItem(
-            modifier = Modifier.padding(horizontal = 12.dp),
+            modifier = Modifier
+                .padding(horizontal = 12.dp),
             label = {
                 Text(
                     text = "Equalizer",
-                    fontSize = MaterialTheme.typography.labelLarge.fontSize
+                    style = MaterialTheme.typography.labelLarge
                 )
             },
             icon = { Icon(Icons.Filled.Equalizer,
                 contentDescription = "Equalizer",
                 modifier = Modifier.size(24.dp)) },
             selected = currentScreen == Screen.VISUALIZER,
+            badge = {
+               Text(text = "Beta", style = MaterialTheme.typography.labelLarge)
+            },
             onClick = {
                 if (currentScreen != Screen.VISUALIZER)
                     navController.navigate(Screen.VISUALIZER.name)
