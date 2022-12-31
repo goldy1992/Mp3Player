@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.random.Random
 
-
+// TODO: Add warning about animator duration scale!
 @Composable
 @Preview
 fun Equalizer(maxHeight : Dp = 30.dp,
