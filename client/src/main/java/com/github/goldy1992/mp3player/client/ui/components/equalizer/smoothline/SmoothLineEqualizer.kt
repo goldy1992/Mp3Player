@@ -1,82 +1,66 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.smoothline
 
-import android.util.Log
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationVector1D
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.ui.DpPxSize
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
-private const val AMPLITUDE = 15f
-
-private const val logTag = "SmoothLineEqualizer"
-
+private const val logTag = "SmoothEqualizer"
 
 @Composable
 fun SmoothLineEqualizer(modifier: Modifier = Modifier,
                         frequencyPhasesState : () -> List<Float> = {listOf(100f, 200f, 300f, 150f)},
-                        lineColor : Color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
                         insetPx : Float = 10f,
-                        waveAmplitude : Float = 5f,
-                        canvasDpPxSize : DpPxSize = DpPxSize.ZERO,
-                        scope : CoroutineScope = rememberCoroutineScope()) {
-
+                        surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer,
+                        lineColor : Color = MaterialTheme.colorScheme.onPrimaryContainer,
+) {
     val frequencyPhases = frequencyPhasesState()
-    val frequencyAnimatableList: SnapshotStateList<Animatable<Float, AnimationVector1D>> =
-        remember(frequencyPhases.size) {
-            mutableStateListOf<Animatable<Float, AnimationVector1D>>().apply {
-                Log.i(logTag, "retrigger remember")
-                for (i in frequencyPhases) add(Animatable(i))
-            }
-        }
-
-
     val numberOfPhases: Int = frequencyPhases.size
     val phaseSpacing = remember(
-        canvasDpPxSize,
-        frequencyPhases.size
-    ) { (canvasDpPxSize.widthPx - (2 * insetPx)) / (numberOfPhases + 1) }
-    val lineHeight = remember(canvasDpPxSize) { (canvasDpPxSize.heightPx * 0.9f)}
+        canvasSize,
+        numberOfPhases
+    ) { (canvasSize.widthPx - (2 * insetPx)) / (numberOfPhases + 1) }
+    val lineHeight = remember(canvasSize) { (canvasSize.heightPx * 0.9f)}
     val startOffset = remember(lineHeight) { Offset(0f, lineHeight) }
     val waveStartOffset =
         remember(startOffset, insetPx) { Offset(startOffset.x + insetPx, lineHeight) }
     val waveEndOffset = remember(
-        frequencyPhases.size,
+        numberOfPhases,
         waveStartOffset
     ) {
         Offset(
-            waveStartOffset.x + (phaseSpacing * (frequencyPhases.size + 1)),
+            waveStartOffset.x + (phaseSpacing * (numberOfPhases + 1)),
             y = lineHeight
         )
     }
     val endOffset = remember(
-        frequencyPhases.size,
+        numberOfPhases,
         waveStartOffset,
-        canvasDpPxSize
-    ) { Offset(canvasDpPxSize.widthPx, y = lineHeight) }
+        canvasSize
+    ) { Offset(canvasSize.widthPx, y = lineHeight) }
     val coordinates: MutableList<Offset> = mutableListOf()
     coordinates.add(0, startOffset)
     coordinates.add(1, waveStartOffset)
-    val frequencyCoordinates: List<Offset> =
-        (frequencyPhases.indices)
-            .map {
-                Offset(
-                    x = waveStartOffset.x + (phaseSpacing * (it + 1)),
-                    y = lineHeight - (frequencyAnimatableList[it].value * waveAmplitude)
-                )
-            }
-            .toList()
+
+    val frequencyCoordinates = mutableListOf<Offset>()
+    for (i in frequencyPhases.indices) {
+        val currentANimatedValue by animateFloatAsState(targetValue = frequencyPhases[i])
+        frequencyCoordinates.add(Offset(
+            x = waveStartOffset.x + (phaseSpacing * (i + 1)),
+            y = lineHeight - currentANimatedValue
+        ))
+    }
+
     coordinates.addAll(frequencyCoordinates)
     coordinates.add(waveEndOffset)
     coordinates.add(endOffset)
@@ -101,23 +85,10 @@ fun SmoothLineEqualizer(modifier: Modifier = Modifier,
             }
             .toList()
 
-    val surfaceColor = MaterialTheme.colorScheme.primaryContainer
-
-    LaunchedEffect(key1 = frequencyPhases) {
-        for (i in frequencyPhases.indices) {
-            scope.launch {
-                frequencyAnimatableList[i].animateTo(
-                    frequencyPhases[i],
-                    animationSpec = tween(300)
-                )
-            }
-        }
-    }
-
     Canvas(modifier = modifier
         .fillMaxSize()
 
- ) {
+    ) {
         drawRoundRect(color = surfaceColor, size = this.size, cornerRadius = CornerRadius(5f, 5f))
         val curvePath = Path().apply {
             reset()
@@ -133,6 +104,7 @@ fun SmoothLineEqualizer(modifier: Modifier = Modifier,
             }
         }
 
+        /** filling the area under the path */
         /** filling the area under the path */
         val fillPath = android.graphics.Path(curvePath.asAndroidPath())
             .asComposePath()
@@ -161,6 +133,3 @@ fun SmoothLineEqualizer(modifier: Modifier = Modifier,
         )
     }
 }
-
-
-

@@ -33,7 +33,6 @@ fun EqualizerCard(
 
             var equalizerSize by remember {
                 mutableStateOf(
-
                     DpPxSize.createDpPxSizeFromPx(
                         0f, 0f, density
                     )

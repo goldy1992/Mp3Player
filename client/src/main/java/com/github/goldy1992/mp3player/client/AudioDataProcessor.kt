@@ -1,8 +1,7 @@
 package com.github.goldy1992.mp3player.client
 
 import android.util.Log
-import com.github.goldy1992.mp3player.client.data.audiobands.FrequencyBand
-import com.github.goldy1992.mp3player.client.data.audiobands.FrequencyBandFive
+import com.github.goldy1992.mp3player.client.data.audiobands.FrequencyBandTwentyFour
 import com.github.goldy1992.mp3player.client.utils.calculateFrequencyBandsAverages
 import com.github.goldy1992.mp3player.client.utils.createFftTransformedAudioSample
 import com.github.goldy1992.mp3player.commons.AudioSample
@@ -31,7 +30,7 @@ class AudioDataProcessor
                 val processedAudioSample = createFftTransformedAudioSample(audioSample)
                 // process audio data on the background thread
                 val magnitudesFloatArray: FloatArray =
-                calculateFrequencyBandsAverages(values = processedAudioSample.magnitude, frequencyBand = FrequencyBandFive())
+                calculateFrequencyBandsAverages(values = processedAudioSample.magnitude, frequencyBand = FrequencyBandTwentyFour())
                 magnitudesFloatArray
             }
 

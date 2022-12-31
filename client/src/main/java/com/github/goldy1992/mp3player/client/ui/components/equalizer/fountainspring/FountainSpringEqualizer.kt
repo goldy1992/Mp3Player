@@ -46,7 +46,7 @@ fun FountainSpringEqualizer(modifier: Modifier = Modifier,
    // Log.i(logTag, "spawnPoints: $spawnPoints")
 
     var particles : Map<Int, List<Particle>> by remember(spawnPoints) {
-        Log.i(logTag, "new particles map")
+    //    Log.i(logTag, "new particles map")
         val map : MutableMap<Int, List<Particle>> = mutableMapOf()
         spawnPoints.indices.forEach { idx -> map[idx] = listOf() }
         mutableStateOf(map.toMap())
@@ -55,7 +55,7 @@ fun FountainSpringEqualizer(modifier: Modifier = Modifier,
     // LaunchedEffect for CREATING new particles
     LaunchedEffect(frequencyPhases) {
         this.launch {
-                Log.i(logTag, "frequencyPhases updated, new launchedeffect")
+        //        Log.i(logTag, "frequencyPhases updated, new launchedeffect")
             val entryIterator = particles.entries.iterator()
             val newMap = mutableMapOf<Int, List<Particle>>()
             val frame = awaitFrame()
@@ -68,7 +68,7 @@ fun FountainSpringEqualizer(modifier: Modifier = Modifier,
                     val currentFreq = frequencyPhases[entry.key]
                     val frac = currentFreq / MAX_FREQUENCY
                     val hmax = canvasSize.heightPx * frac
-                    Log.i(logTag, "hmax: $hmax")
+                //    Log.i(logTag, "hmax: $hmax")
                     val angle = Math.toRadians(Random.nextDouble(85.0, 95.0))
                     val initialVelocity = calculateInitialVelocityGivenHmax(hmax, angle)
                     newParticleList.add(
@@ -83,16 +83,16 @@ fun FountainSpringEqualizer(modifier: Modifier = Modifier,
                 newMap[entry.key] = newParticleList.toList()
             }
             particles = newMap
-            Log.i(logTag, "set new map after creating new particles")
+          //  Log.i(logTag, "set new map after creating new particles")
         }
     }
 
     // LaunchedEffect for UPDATING and REMOVING particles.
     LaunchedEffect(particles) {
         this.launch {
-            Log.i(logTag, "launching new while particles in map corouting")
+           // Log.i(logTag, "launching new while particles in map corouting")
             while (particlesInMap(particles)) {
-                Log.i(logTag, "while Particles in map, update particles")
+           //     Log.i(logTag, "while Particles in map, update particles")
                 val frame = awaitFrame()
                 val entryIterator = particles.entries.iterator()
                 val newMap = mutableMapOf<Int, List<Particle>>()
@@ -105,13 +105,13 @@ fun FountainSpringEqualizer(modifier: Modifier = Modifier,
                         if (!shouldRemoveParticle(currentParticle)) {
                             newList.add(updateParticle(currentParticle, frame))
                         } else {
-                            Log.i(logTag, "removing particle of y: ${currentParticle.y}")
+                    //        Log.i(logTag, "removing particle of y: ${currentParticle.y}")
                         }
                     }
                     newMap[entry.key] = newList.toList()
                 }
                 particles = newMap
-                Log.i(logTag, "set new map after updating particles")
+           //     Log.i(logTag, "set new map after updating particles")
 
             }
         }
@@ -131,7 +131,7 @@ private fun shouldRemoveParticle(currentParticle: Particle) : Boolean {
     val hmax = currentParticle.hMax
     val removePoint = (startY * 0.9f)
     val result = currentParticle.isFalling && (currentY > removePoint)
-    Log.i(logTag, "should remove particle: $result because, isFalling: $isFalling, currentY: $currentY, startY: $startY hmax: $hmax remove at point: $removePoint, elapsedTime: ${currentParticle.elapsedTimeDeciseconds}")
+  //  Log.i(logTag, "should remove particle: $result because, isFalling: $isFalling, currentY: $currentY, startY: $startY hmax: $hmax remove at point: $removePoint, elapsedTime: ${currentParticle.elapsedTimeDeciseconds}")
     return result
 }
 
@@ -279,17 +279,17 @@ private fun calculateInitialVelocityGivenHmax(hmax : Float, angle : Double) : Fl
 
 private fun particlesInMap(particleMap : Map<Int, List<Particle>>) : Boolean {
     if (particleMap.isEmpty()) {
-        Log.i(logTag, "particles map empty, returning false")
+      //  Log.i(logTag, "particles map empty, returning false")
         return false
     }
 
     particleMap.entries.forEach { entry ->
         if (isNotEmpty(entry.value)) {
-            Log.i(logTag, "non-empty list present,, returning true")
+      //      Log.i(logTag, "non-empty list present,, returning true")
             return true
         }
     }
-    Log.i(logTag, "defaulting to particlesInMap: false")
+ //   Log.i(logTag, "defaulting to particlesInMap: false")
     return false
 }
 

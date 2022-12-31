@@ -33,11 +33,6 @@ constructor(
         viewModelScope.launch {
             mediaRepository
                 .isPlaying()
-                .shareIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(),
-                    replay = 1
-                )
                 .collect {
                     _isPlayingState.value = it
                 }
@@ -74,7 +69,7 @@ constructor(
     }
 
     fun pause() {
-        viewModelScope.launch { mediaRepository.play() }
+        viewModelScope.launch { mediaRepository.pause() }
     }
 
     fun skipToNext() {

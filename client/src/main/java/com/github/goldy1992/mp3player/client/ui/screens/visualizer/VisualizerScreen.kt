@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
+import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.BarCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.FountainSpringCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.SmoothLineCard
@@ -33,6 +33,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
+private const val logTag = "VisualizerScreen"
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -64,7 +65,6 @@ fun VisualizerScreen(
             )
         },
     ) {
-
         VisualizerContentCardCollection(modifier = Modifier.padding(it),
                 audioMagnitudes = {audioMagnitudes})
     }
