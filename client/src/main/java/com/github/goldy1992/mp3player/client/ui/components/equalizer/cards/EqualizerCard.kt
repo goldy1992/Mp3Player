@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client.ui.components.equalizer.cards
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -62,7 +63,8 @@ fun EqualizerCard(
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = title)
+                Text(text = title,
+                    style = MaterialTheme.typography.titleMedium)
             }
         }
     }

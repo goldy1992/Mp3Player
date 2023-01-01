@@ -3,6 +3,7 @@
 package com.github.goldy1992.mp3player.client.ui.modifiers
 
 import androidx.compose.animation.core.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier

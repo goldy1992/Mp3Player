@@ -57,7 +57,6 @@
     <string name="SEARCH_BUTTON_DESCRIPT">Search for an audio track</string>
     <string name="LOGO_DESCRIPTION">The title logo</string>
     <string name="app_title">Music Player</string>
-    <string name="APP_TITLE_H1"><![CDATA[<h1>Mike\'s MP3 Player</h1>]]></string>
     <string name="FOLDER_NAME">%1$s</string>
     <string name="NO_MEDIA_FOUND">No audio tracks found on your device.</string>
     <string name="no_search_results_found">No search results found for query\: \"%1$s\"</string>

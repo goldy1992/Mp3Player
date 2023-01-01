@@ -16,10 +16,13 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
@@ -77,7 +80,13 @@ fun VisualizerScreen(
 @Composable
 private fun TopBar(navIcon: @Composable () -> Unit = {}) {
     TopAppBar(
-        modifier = Modifier.drawDiagonalLabel("Beta", color = MaterialTheme.colorScheme.error),
+        modifier = Modifier.drawDiagonalLabel("Beta", color = MaterialTheme.colorScheme.error,
+            style = TextStyle(
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onError
+            ),
+        ),
        title = {
            Text(text = "Equalizer",
                style = MaterialTheme.typography.titleLarge,
