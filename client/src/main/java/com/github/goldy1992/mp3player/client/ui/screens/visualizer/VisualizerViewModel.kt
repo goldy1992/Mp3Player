@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.goldy1992.mp3player.client.AudioDataProcessor
+import com.github.goldy1992.mp3player.client.data.audiobands.FrequencyBandTwentyFour
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -56,7 +57,7 @@ constructor(
             .collect { audioData ->
                 if (isPlaying.value) {
                     Log.i(logTag(), "collecting audio data")
-                    _audioData.value = audioDataProcessor.processAudioData(audioData).toList()
+                    _audioData.value = audioDataProcessor.processAudioData(audioData, FrequencyBandTwentyFour()).toList()
                     Log.i(logTag(), "finished collecting audio data")
                 }
             }

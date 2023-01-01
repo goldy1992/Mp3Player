@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client
 
 import com.github.goldy1992.mp3player.client.data.audiobands.FrequencyBandFive
+import com.github.goldy1992.mp3player.client.data.audiobands.FrequencyBandTwentyFour
 import com.github.goldy1992.mp3player.commons.AudioSample
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,7 +32,7 @@ class AudioDataProcessorTest : CoroutineTestBase() {
      * */
     @Test
     fun testProcessEmptySample()= testScope.runTest {
-        val result : FloatArray = audioDataProcessor.processAudioData(AudioSample.NONE)
+        val result : FloatArray = audioDataProcessor.processAudioData(AudioSample.NONE, FrequencyBandTwentyFour())
         assertEquals(0, result.size)
     }
 
@@ -50,7 +51,7 @@ class AudioDataProcessorTest : CoroutineTestBase() {
         }
         val testSample = AudioSample(waveformData = testArray)
 
-        val result = audioDataProcessor.processAudioData(testSample)
+        val result = audioDataProcessor.processAudioData(testSample, FrequencyBandFive())
         assertEquals(5, result.size)
     }
 }
