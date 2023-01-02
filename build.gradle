@@ -81,7 +81,7 @@ sonarqube {
         property "sonar.projectKey", "goldy1992_Mp3Player"
         property "sonar.organization", "goldy1992-github"
         property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.coverage.exclusions", "**Test**,**IAudioService.java,**dagger**,**Injector**,**LoggingUtils.*,**android**,**/res/**,**/databinding/**,**hilt_aggregated_deps**,**/Hilt_**,**/FFTAudioProcessor**,"
+        property "sonar.coverage.exclusions", "**Test**,**IAudioService.java,**dagger**,**Injector**,**LoggingUtils.*,**android**,**/res/**,**/databinding/**,**hilt_aggregated_deps**,**/Hilt_**,**/FFTAudioProcessor**,**/DefaultMediaBrowser"
         property "sonar.coverage.inclusions", "**/main/**"
     }
 }
