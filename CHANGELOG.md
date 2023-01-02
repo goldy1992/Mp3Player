@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/goldy1992/Mp3Player/compare/v3.0.0...v3.1.0) (2023-01-02)
+
+
+### Features
+
+* **equalizer:** Added a beta Equalizer Screen. ([05a373d](https://github.com/goldy1992/Mp3Player/commit/05a373d9c3dbf2b61fd8dd62f9712f3f2b75858c))
+
 # [3.0.0](https://github.com/goldy1992/Mp3Player/compare/v2.0.0...v3.0.0) (2022-11-08)
 
 
