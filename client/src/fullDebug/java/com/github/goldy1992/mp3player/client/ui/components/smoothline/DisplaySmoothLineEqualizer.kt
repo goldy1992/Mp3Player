@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.components.equalizer.smoothline
+package com.github.goldy1992.mp3player.client.ui.components.smoothline
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -62,5 +62,6 @@ fun DisplaySmoothLineEqualizer() {
         modifier = Modifier.fillMaxSize(),
         frequencyPhases =  {testAudio},
   //  isPlayingProvider = {true},
-    scope = scope)
+    scope = scope
+    )
 }
