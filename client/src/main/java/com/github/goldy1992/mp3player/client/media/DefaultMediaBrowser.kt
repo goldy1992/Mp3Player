@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.media
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -23,7 +22,6 @@ import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME_KEY
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
@@ -38,20 +36,11 @@ import javax.inject.Inject
 class DefaultMediaBrowser
     @Inject
     constructor(
-        @ApplicationContext context: Context,
-        sessionToken: SessionToken,
+        asyncMediaBrowserProvider: AsyncMediaBrowserProvider,
         private val scope : CoroutineScope,
         @MainDispatcher private val mainDispatcher : CoroutineDispatcher) : IMediaBrowser, MediaBrowser.Listener, LogTagger {
 
-    private val mediaBrowserFuture: ListenableFuture<MediaBrowser>
-
-    init {
-        mediaBrowserFuture =
-            MediaBrowser
-                .Builder(context, sessionToken)
-                .setListener(this)
-                .buildAsync()
-    }
+    private val mediaBrowserFuture: ListenableFuture<MediaBrowser> = asyncMediaBrowserProvider.getAsyncMediaBrowser(this)
 
     private val _playerEventsFlow : Flow<PlayerEventHolder> = callbackFlow {
         val controller = mediaBrowserFuture.await()
