@@ -17,32 +17,30 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.media3.common.MediaMetadata
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateAnimationTime
 import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateCurrentPosition
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.MetadataUtils
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 private const val logTag = "seekbar"
 
 @Composable
-fun SeekBar(isPlayingState: StateFlow<Boolean>,
-            metadataState: StateFlow<MediaMetadata>,
-            playbackSpeedState : StateFlow<Float>,
-            playbackPositionState: StateFlow<PlaybackPositionEvent>,
-            mediaController : MediaControllerAdapter,
+fun SeekBar(isPlayingProvider: () -> Boolean,
+            metadataProvider: () -> MediaMetadata,
+            playbackSpeedProvider : () ->  Float,
+            playbackPositionProvider: () -> PlaybackPositionEvent,
+            seekTo: (value: Long) -> Unit,
             scope: CoroutineScope = rememberCoroutineScope()) {
 
     //Log.i(logTag, "seek bar created")
-    val isPlaying by isPlayingState.collectAsState()
-    val metadata by metadataState.collectAsState()
-    val playbackSpeed by playbackSpeedState.collectAsState()
-    val playbackPositionEvent by playbackPositionState.collectAsState()
+    val isPlaying = isPlayingProvider()
+    val metadata = metadataProvider()
+    val playbackSpeed = playbackSpeedProvider()
+    val playbackPositionEvent = playbackPositionProvider()
     val duration = MetadataUtils.getDuration(metadata).toFloat()
     val currentPosition = calculateCurrentPosition(playbackPositionEvent).toFloat()
     Log.i(logTag, "current playback position: $currentPosition")
@@ -58,7 +56,7 @@ fun SeekBar(isPlayingState: StateFlow<Boolean>,
         durationDescription = durationDescription,
         currentPositionDescription = currentPositionDescription,
         scope = scope,
-        mediaController = mediaController
+        seekTo = seekTo
     )
 }
 
@@ -70,7 +68,7 @@ private fun SeekBarUi(currentPosition : Float,
                       durationDescription : String,
                       currentPositionDescription : String,
                       scope: CoroutineScope,
-                      mediaController : MediaControllerAdapter
+                      seekTo : (value : Long) -> Unit
                     ) {
     val seekBarAnimation = remember(animationTimeInMs) { mutableStateOf(Animatable(currentPosition)) }
     //  Log.i(logTag, "Anim1Value: ${anim1.value}")
@@ -107,7 +105,7 @@ private fun SeekBarUi(currentPosition : Float,
             onValueChangeFinished = {
                 isTouchTracking.value = false
                 seekBarAnimation.value = Animatable(touchTrackingPosition.value)
-                scope.launch { mediaController.seekTo(touchTrackingPosition.value.toLong()) }
+                scope.launch { seekTo(touchTrackingPosition.value.toLong()) }
             })
         Text(text = formatTime(if (isTouchTracking.value) touchTrackingPosition.value.toLong() else seekBarAnimation.value.value.toLong()),
             modifier = Modifier

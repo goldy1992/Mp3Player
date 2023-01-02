@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.lists.songs
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,22 +9,18 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ListItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.QuestionAnswer
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.MediaItem
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
@@ -31,25 +28,34 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getEmptyMediaItem
 
 private const val logTag = "SongListItem"
 
-@OptIn(ExperimentalMaterialApi::class)
+
+@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalCoilApi
 @ExperimentalFoundationApi
+@Preview
 @Composable
 fun SongListItem(song : MediaItem = getEmptyMediaItem(),
-                 isPlaying : Boolean = false,
                  isSelected : Boolean = false,
                  onClick: () -> Unit = {}) {
-        ListItem(
+    Log.i(logTag, "isSelected: $isSelected, songId: ${song.mediaId}, title: ${song.mediaMetadata.title}")
+    val containerColor = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+    ListItem(
             modifier = Modifier
                 .combinedClickable(
                     onClick = { onClick() },
                     onLongClick = { }
                 )
-                .background(color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface,
-                )
                 .requiredHeight(72.dp),
-            icon = { AlbumArt(song = (song)) },
-            secondaryText = {
+        colors = ListItemDefaults.colors(containerColor = containerColor) ,
+            headlineText = {
+                Text(
+                text = MediaItemUtils.getTitle(song),
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )},
+            leadingContent = { AlbumArt(song = (song)) },
+            supportingText = {
                 Text(
                     text = MediaItemUtils.getArtist(song),
                     maxLines = 1,
@@ -58,7 +64,7 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
                 )
 
             },
-            trailing = {
+            trailingContent = {
                 Text(
                     modifier = Modifier.padding(start = 10.dp, top = 10.dp),
                     text = formatTime(MediaItemUtils.getDuration(song)),
@@ -75,14 +81,7 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
 //                            barWidth = 5.dp
 //                        )
 //                    }
-        ) {
-            Text(
-                text = MediaItemUtils.getTitle(song),
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
+        )
     Divider(//startIndent = 72.dp,
         color = MaterialTheme.colorScheme.surfaceVariant)
 }
@@ -93,15 +92,16 @@ private fun AlbumArt(song: MediaItem) {
 
     val uri : Uri? = MediaItemUtils.getAlbumArtUri(song)
     if (uri != null) {
-    Image(
-        modifier = Modifier
-            .size(40.dp, 40.dp),
-        painter = rememberImagePainter(
-            ImageRequest.Builder(LocalContext.current)
-                .data(MediaItemUtils.getAlbumArtUri(song = song)).build(),
-        ),
-        contentDescription = ""
-    ) }
+        Image(
+            modifier = Modifier
+                .size(40.dp, 40.dp),
+            painter = rememberAsyncImagePainter(
+                ImageRequest.Builder(LocalContext.current)
+                    .data(MediaItemUtils.getAlbumArtUri(song = song)).build()
+            ),
+            contentDescription = ""
+        )
+    }
     else {
         Icon(Icons.Filled.QuestionAnswer, contentDescription = "", modifier = Modifier.size(40.dp))
     }

@@ -18,8 +18,6 @@ def fileFilter = [
         '**/Hilt_**'
 ]
 
-def excludeUiCode = ['**/ui/**']
-
 
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
@@ -27,6 +25,7 @@ tasks.withType(Test) {
 
 project.afterEvaluate {
 
+    def uiTestSrcSet = ['**/ui/**', '**/preferences/**', '**/activities/**']
     def productFlavors = android.productFlavors.collect {
         flavor -> flavor.name
     }
@@ -52,11 +51,11 @@ project.afterEvaluate {
             html.required = true
         }
 
-        def exclusions = fileFilter + excludeUiCode
-        def mainSrc = "$project.projectDir/src/main/java"
+        def unitTestExclusions = fileFilter + uiTestSrcSet
+        def mainSrc = fileTree(dir: "$project.projectDir/src/main/java", excludes: unitTestExclusions)
 
-        def mainClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${unitTestBuildVariant}", excludes: exclusions)
-        def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/${unitTestBuildVariant}", excludes: exclusions)
+        def mainClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${unitTestBuildVariant}", excludes: unitTestExclusions)
+        def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/${unitTestBuildVariant}", excludes: unitTestExclusions)
 
         sourceDirectories.from = files([mainSrc])
         classDirectories.from = files([mainClasses, javaClasses])
@@ -66,8 +65,6 @@ project.afterEvaluate {
     def uiTestBuildType = 'debug'
     def uiTestFlavor = getProductFlavor(applicableProductFlavor, productFlavors);
     def (String uiTestBuildVariant, String uiTestBuildVariantCapitalised) = getBuildVariant(uiTestFlavor, uiTestBuildType)
-
-
     def uiBuildDir = "${buildDir}/outputs/code_coverage/${uiTestBuildVariant}AndroidTest/connected"
     def uiBuildFileTree = fileTree(uiBuildDir){
         include "**/*.ec"
@@ -85,7 +82,8 @@ project.afterEvaluate {
             html.required = true
         }
 
-        def mainSrc = "$project.projectDir/src/main/java"
+
+        def mainSrc = fileTree(dir: "$project.projectDir/src/main/java", includes: uiTestSrcSet, excludes: fileFilter)
         def mainClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/", includes: ["${uiTestBuildVariant}/**"], excludes: fileFilter)
         def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/", includes: ["${uiTestBuildVariant}/**"], excludes: fileFilter)
 
@@ -116,7 +114,7 @@ project.afterEvaluate {
             html.required = true
         }
 
-        def mainSrc = "$project.projectDir/src/main/java"
+        def mainSrc = fileTree(dir: "$project.projectDir/src/main/java", excludes: fileFilter)
         def releaseKotlinClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${unitTestBuildVariant}", excludes: fileFilter + ["com/github/goldy1992/mp3player/client/ui**"])
         def debugKotlinClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${uiTestBuildVariant}/com/github/goldy1992/mp3player/client/ui/", excludes:fileFilter)
         def releaseJavaClasses = fileTree(dir: "${buildDir}/intermediates/javac/${unitTestBuildVariant}", excludes: fileFilter + ["com/github/goldy1992/mp3player/client/ui**"])

@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.client
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.Theme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

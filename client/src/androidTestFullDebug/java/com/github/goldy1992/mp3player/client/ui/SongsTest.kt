@@ -8,28 +8,15 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.media3.common.MediaItem
 import androidx.test.platform.app.InstrumentationRegistry
 import coil.annotation.ExperimentalCoilApi
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.flows.player.IsPlayingFlow
-import com.github.goldy1992.mp3player.client.data.flows.player.MetadataFlow
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.kotlin.mock
 
 class SongsTest {
-
-    @Mock
-    private val mockMediaController = mock<MediaControllerAdapter>()
-
-    private val isPlayingFlow = mock<IsPlayingFlow>()
-    private val metadataFlow = mock<MetadataFlow>()
 
     private val context = InstrumentationRegistry.getInstrumentation().context
 
@@ -63,19 +50,15 @@ class SongsTest {
 
         composeTestRule.setContent {
             SongList(songs = songList,
-                    //mediaControllerAdapter = mockMediaController,
-                 //   metadataState = metadataFlow,
-                    isPlayingState = MutableStateFlow(false),
-                currentMediaItemState = MutableStateFlow(MediaItem.EMPTY),
-            onSongSelected = {_,_ ->})
+                isPlayingProvider = { false },
+                currentMediaItemProvider = { MediaItem.EMPTY  },
+                onSongSelected = {_,_ ->})
         }
-        runBlocking {
-            composeTestRule.awaitIdle()
-            val node = composeTestRule.onNodeWithContentDescription(songsListContentDescr)
-            node.onChildAt(0).assert(hasText("title1"))
-            node.onChildAt(1).assert(hasText("title2"))
-            val children = node.fetchSemanticsNode().children
-            assertEquals(2, children.size)
-        }
+
+        val node = composeTestRule.onNodeWithContentDescription(songsListContentDescr)
+        node.onChildAt(0).assert(hasText("title1"))
+        node.onChildAt(1).assert(hasText("title2"))
+        val children = node.fetchSemanticsNode().children
+        assertEquals(2, children.size)
     }
 }

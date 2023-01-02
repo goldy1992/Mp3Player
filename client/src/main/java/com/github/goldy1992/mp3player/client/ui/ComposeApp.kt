@@ -4,9 +4,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
@@ -15,11 +13,22 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.github.goldy1992.mp3player.client.UserPreferencesRepository
+import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
+import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.screens.FolderScreen
+import com.github.goldy1992.mp3player.client.ui.screens.FolderScreenViewModel
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreen
+import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreenViewModel
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
-import com.github.goldy1992.mp3player.client.viewmodels.*
+import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreenViewModel
+import com.github.goldy1992.mp3player.client.ui.screens.nowplaying.NowPlayingScreen
+import com.github.goldy1992.mp3player.client.ui.screens.nowplaying.NowPlayingScreenViewModel
+import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreen
+import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreenViewModel
+import com.github.goldy1992.mp3player.client.ui.screens.settings.SettingsScreen
+import com.github.goldy1992.mp3player.client.ui.screens.settings.SettingsScreenViewModel
+import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerScreen
+import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerViewModel
 import com.github.goldy1992.mp3player.commons.Constants.ROOT_APP_URI_PATH
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -41,9 +50,9 @@ private const val transitionTime = 2000
 )
 @Composable
 fun ComposeApp(
-        userPreferencesRepository: UserPreferencesRepository,
-        windowSize: WindowSize,
-        startScreen : Screen
+    userPreferencesRepository: IUserPreferencesRepository,
+    windowSize: WindowSize,
+    startScreen : Screen
 ) {
     val navController = rememberAnimatedNavController()
     AppTheme(userPreferencesRepository = userPreferencesRepository) {
@@ -71,12 +80,6 @@ fun ComposeApp(
             composable(Screen.NOW_PLAYING.name,
                 enterTransition = {
                     Log.i(logTag, "enterTransition called")
-////                    slideInVertically(
-////                        animationSpec = tween(7000000),
-////                    ) {
-////                        it + 1000
-////                    }
-//                        fadeIn(tween(70000, 0, LinearOutSlowInEasing))
                     slideIntoContainer(
                         AnimatedContentScope.SlideDirection.Up, animationSpec = tween(transitionTime)
                     )
@@ -127,16 +130,23 @@ fun ComposeApp(
                     viewModel = viewModel
                 )
 
-            }
-            composable(Screen.SETTINGS.name) {
-                SettingsScreen(
-                    navController = navController,
-                    userPreferencesRepository = userPreferencesRepository,
-                    windowSize = windowSize
-                )
+                }
+                composable(Screen.SETTINGS.name) {
+                    val viewModel = hiltViewModel<SettingsScreenViewModel>()
+                    SettingsScreen(
+                        navController = navController,
+                        viewModel = viewModel,
+                        windowSize = windowSize
+                    )
+                }
+                composable(Screen.VISUALIZER.name){
+                    val viewModel = hiltViewModel<VisualizerViewModel>()
+                    VisualizerScreen(
+                        navController = navController,
+                        viewModel = viewModel)
+                }
             }
         }
         Log.i(logTag, "hit this line")
     }
 
-}

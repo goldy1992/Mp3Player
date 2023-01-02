@@ -7,6 +7,7 @@ import androidx.media3.common.Rating
 import androidx.media3.session.*
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import androidx.media3.session.MediaSession.ConnectionResult
+import com.github.goldy1992.mp3player.commons.Constants.AUDIO_DATA
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.IoDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -42,28 +43,21 @@ class MediaLibrarySessionCallback
 
         val connectionResult = super.onConnect(session, controller)
         // add change playback speed command to list of available commands
-        val sessionCommand = SessionCommand(CHANGE_PLAYBACK_SPEED, Bundle())
-        val updatedSessionCommands = connectionResult.availableSessionCommands.buildUpon().add(sessionCommand).build()
+        val changePlaybackSpeed = SessionCommand(CHANGE_PLAYBACK_SPEED, Bundle())
+        val audioDataCommand = SessionCommand(AUDIO_DATA, Bundle())
+        val updatedSessionCommands = connectionResult
+            .availableSessionCommands
+            .buildUpon()
+            .add(changePlaybackSpeed)
+            .add(audioDataCommand)
+            .build()
         return ConnectionResult.accept(updatedSessionCommands,connectionResult.availablePlayerCommands)
     }
 
     override fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo) {
         super.onPostConnect(session, controller)
         Log.i(logTag(), "onPostConnect")
-        val rootItem = rootAuthenticator.getRootItem()
-        customMediaItemTree.initialise(rootItem = rootItem)
-        scope.launch {
-            withContext(mainDispatcher) {
-                Log.i(logTag(), "adding to queue")
-                // TODO: add queue manager
-                session.player.addMediaItems(
-                    customMediaItemTree.rootNode?.getChildren()?.get(0)?.getChildren()
-                        ?.map(CustomMediaItemTree.MediaItemNode::item)?.toMutableList()
-                        ?: mutableListOf()
-                )
-                session.player.prepare()
-            }
-        }
+
     }
 
     override fun onDisconnected(session: MediaSession, controller: MediaSession.ControllerInfo) {

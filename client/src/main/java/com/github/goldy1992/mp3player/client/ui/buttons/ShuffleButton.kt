@@ -4,54 +4,45 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Shuffle
-import androidx.compose.material.icons.filled.ShuffleOn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
 import com.github.goldy1992.mp3player.client.R
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
 /**
  * This button will display the either [ShuffleOnButton] or the [ShuffleOffButton] depending on the
- * current shuffle mode indicated by the [MediaControllerAdapter].
+ * current shuffle mode indicated by the shuffleEnabledProvider.
+ * @param shuffleEnabledProvider Provides the current shuffle mode, i.e. enabled/disabled.
+ * @param onClick The code to be invoked when the button is pressed.
  */
 @Composable
-fun ShuffleButton(mediaController: MediaControllerAdapter,
-                  shuffleModeState: StateFlow<Boolean>,
-                  scope: CoroutineScope = rememberCoroutineScope()) {
-    val shuffleMode by shuffleModeState.collectAsState()
-    if (shuffleMode) {
-        ShuffleOnButton(mediaController = mediaController, scope = scope)
+fun ShuffleButton(shuffleEnabledProvider : () -> Boolean,
+        onClick : (isEnabled : Boolean) -> Unit) {
+    val isShuffleEnabled = shuffleEnabledProvider()
+    if (isShuffleEnabled) {
+        ShuffleOnButton(onClick = {onClick(false)})
     } else {
-        ShuffleOffButton(mediaController = mediaController, scope = scope)
+        ShuffleOffButton(onClick = { onClick(true) })
     }
 }
-
 /**
  * Represents the Shuffle On Button
  */
 @Composable
-fun ShuffleOnButton(mediaController: MediaControllerAdapter,
-                    scope: CoroutineScope = rememberCoroutineScope()) {
-    IconButton(onClick = {scope.launch {mediaController.setShuffleMode(false)} })
+fun ShuffleOnButton(onClick : () -> Unit = {}) {
+    IconButton(onClick = onClick)
     {
-        Icon(Icons.Filled.ShuffleOn, contentDescription = stringResource(id = R.string.shuffle_on),
+        Icon(Icons.Filled.Shuffle, contentDescription = stringResource(id = R.string.shuffle_on),
             tint = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
+
 /**
  * Represents the Shuffle Off Button
  */
 @Composable
-fun ShuffleOffButton(mediaController: MediaControllerAdapter,
-                     scope: CoroutineScope = rememberCoroutineScope()) {
-    IconButton(onClick = { scope.launch { mediaController.setShuffleMode(true)} })
+fun ShuffleOffButton(onClick : () -> Unit = {}) {
+    IconButton(onClick = onClick)
     {
         Icon(Icons.Filled.Shuffle, contentDescription = stringResource(id = R.string.shuffle_off),
             tint = MaterialTheme.colorScheme.onSurfaceVariant)

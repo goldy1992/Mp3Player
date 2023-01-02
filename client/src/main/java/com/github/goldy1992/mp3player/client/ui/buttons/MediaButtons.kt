@@ -7,16 +7,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import com.github.goldy1992.mp3player.client.MediaControllerAdapter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Composable
-fun SkipToPreviousButton(mediaController: MediaControllerAdapter,
-scope : CoroutineScope = rememberCoroutineScope()) {
-    IconButton(onClick = {
-        scope.launch { mediaController.skipToPrevious() }}) {
+fun SkipToPreviousButton(onClick : () -> Unit = {} ) {
+    IconButton(onClick = { onClick() }){
         Icon(
             Icons.Filled.SkipPrevious,
             "Skip to Previous",
@@ -26,9 +20,8 @@ scope : CoroutineScope = rememberCoroutineScope()) {
 }
 
 @Composable
-fun SkipToNextButton(mediaController: MediaControllerAdapter,
-scope: CoroutineScope = rememberCoroutineScope()) {
-    IconButton(onClick = { scope.launch { mediaController.skipToNext()}}) {
+fun SkipToNextButton(onClick: () -> Unit = {}) {
+    IconButton(onClick = { onClick() }) {
         Icon(
             Icons.Filled.SkipNext,
             "Skip to Previous",

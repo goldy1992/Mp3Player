@@ -11,7 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import com.github.goldy1992.mp3player.client.UserPreferencesRepository
+import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
+import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
 
 enum class Theme(
     val displayName : String,
@@ -70,7 +71,7 @@ val orangeAppDarkTheme = darkColors(
 
 
 @Composable
-fun AppTheme(userPreferencesRepository: UserPreferencesRepository,
+fun AppTheme(userPreferencesRepository: IUserPreferencesRepository,
              content: @Composable() () -> Unit) {
     MaterialTheme(
         colorScheme = getColorScheme(userPreferencesRepository),
@@ -79,7 +80,7 @@ fun AppTheme(userPreferencesRepository: UserPreferencesRepository,
 }
 
 @Composable
-private fun getColorScheme(userPreferencesRepository: UserPreferencesRepository) : ColorScheme {
+private fun getColorScheme(userPreferencesRepository: IUserPreferencesRepository) : ColorScheme {
     val context : Context = LocalContext.current
     val systemInDarkTheme = isSystemInDarkTheme()
     val useSystemDarkThemePref = userPreferencesRepository.getSystemDarkMode().collectAsState(initial = true)

@@ -19,7 +19,6 @@ import androidx.media3.common.MediaItem
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
-import kotlinx.coroutines.flow.StateFlow
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 import org.apache.commons.lang3.StringUtils
 
@@ -31,13 +30,13 @@ private const val logTag = "SongList"
 fun SongList(
     modifier : Modifier = Modifier,
     songs : List<MediaItem> = emptyList(),
-    isPlayingState: StateFlow<Boolean>,
-    currentMediaItemState : StateFlow<MediaItem>,
+    isPlayingProvider : () -> Boolean = {false},
+    currentMediaItemProvider : () -> MediaItem = {MediaItem.EMPTY},
     onSongSelected : (itemIndex: Int, songs : List<MediaItem>) -> Unit = { _, _ -> }) {
 
     Log.i(logTag, "song list size: ${songs.size}")
-    val isPlaying by isPlayingState.collectAsState()
-    val currentMediaItem by currentMediaItemState.collectAsState()
+    val isPlaying = isPlayingProvider()
+    val currentMediaItem = currentMediaItemProvider()
 
     when {
         isEmpty(songs) -> EmptySongsList()
@@ -47,13 +46,14 @@ fun SongList(
                 modifier = modifier.semantics {
                     contentDescription = songsListDescr
                 }) {
-                items(count = songs.size) { itemIndex ->
+                items(count = songs.size,
+                        key = { songs[it].mediaId}) { itemIndex ->
                     run {
                         val song = songs[itemIndex]
                         val isItemSelected = isItemSelected(song, currentMediaItem)
                         Log.i(logTag, "isItemSelected: $isItemSelected isPlaying: ${isPlaying}")
-                        val isItemPlaying = if (isPlaying) isItemSelected  else false
-                        SongListItem(song = song, isPlaying = isItemPlaying, isSelected = isItemSelected, onClick =  {onSongSelected(itemIndex, songs) })
+                        //val isItemPlaying = if (isPlaying) isItemSelected  else false
+                        SongListItem(song = song, isSelected = isItemSelected, onClick =  {onSongSelected(itemIndex, songs) })
                     }
                 }
             }
@@ -76,6 +76,7 @@ fun EmptySongsList() {
 }
 
 private fun isItemSelected(song : MediaItem, currentItem : MediaItem) : Boolean {
-    //Log.i(logTag, "songId: ${song.mediaId}, currentItemId: ${currentItem.mediaId}")
-    return StringUtils.equals(song.mediaId, currentItem.mediaId)
+    val isSelected = StringUtils.equals(song.mediaId, currentItem.mediaId)
+    Log.i(logTag, "isSelected: $isSelected, songId: ${song.mediaId}, currentItemId: ${currentItem.mediaId}")
+    return isSelected
 }

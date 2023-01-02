@@ -14,19 +14,6 @@ object LoggingUtils {
         Log.i(tag, log)
     }
 
-    fun logMetaData(metadataCompat: MediaMetadata, tag: String?) {
-        val sb = StringBuilder()
-        if (metadataCompat != null && metadataCompat.description != null) {
-            val description = metadataCompat.description
-            val title = "title: " + metadataCompat.title.toString()
-          //  val duration = "duration: " + metadataCompat.extras.get(MediaMetadata.)
-           // val log = sb.append(title).append("\n").append(duration).toString()
-            //Log.i(tag, log)
-        } else {
-            Log.i(tag, sb.append("null metadat or description").toString())
-        }
-    }
-
     fun logRepeatMode(repeatMode: Int, tag: String?) {
         val sb = StringBuilder()
         sb.append("Repeat mode is: ")
