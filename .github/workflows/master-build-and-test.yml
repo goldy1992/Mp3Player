@@ -42,20 +42,19 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Create Aggregrated JaCoCo Test Report and run SonarQube.
-        run: ./gradlew clean jacocoUnitTestReport
+      - name: Gradle Clean
+        run: ./gradlew clean
 
       - name: Assemble debug and androidTest APKs
         run: ./gradlew assembleDebug assembleAndroidTest
 
       - id: 'auth'
-        uses: 'google-github-actions/auth@v0.8.0'
+        uses: google-github-actions/auth@v1.0.0
         with:
           credentials_json: ${{ secrets.RELEASE_SERVICE_ACCOUNT_JSON }}
 
-
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v0.6.2
+        uses: google-github-actions/setup-gcloud@v1.0.1
 
       - name: Run firebase tests on gcloud and pull coverage data
         run: |
@@ -90,11 +89,12 @@ jobs:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Create JaCoCo Test Reports.
-        run: ./gradlew createDebugUnitTestCoverageReport createFullDebugUnitTestCoverageReport
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+      - name: Gradle and create Debug test report
+        run: ./gradlew createDebugUnitTestCoverageReport
+      - name: Gradle and create FullDebug test report
+        run: ./gradlew createFullDebugUnitTestCoverageReport
+      - name: Run Lint
+        run: ./gradlew lint
       - name: Run Sonar
         run: ./gradlew sonar --info --stacktrace
         env:
