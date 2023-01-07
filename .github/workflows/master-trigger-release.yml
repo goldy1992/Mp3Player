@@ -53,7 +53,7 @@ jobs:
 
   release-to-playstore:
     needs: [semantic-release] # needs semantic release so that the versions are incremented
-      if: needs.semantic-release.outputs.SHOULD_RELEASE_TO_PLAYSTORE == 'true'
+    if: needs.semantic-release.outputs.SHOULD_RELEASE_TO_PLAYSTORE == 'true'
     uses: ./.github/workflows/google-play-store-release.yml
     secrets:
       KEY_STORE_BASE64: ${{ secrets.KEY_STORE_BASE64 }}
