@@ -40,16 +40,11 @@ jobs:
         run: chmod +x ./.github/ci-scripts/quality_gate_check.py
 
       - name: Check Sonar Quality Gate
-        run: echo "QUALITY_GATE_PASSED=$(python3 .github/ci-scripts/quality_gate_check.py event.json | tail -1)" >> $GITHUB_ENV ;
-
-      - name: Check Quality Gate Passed
-        if: ${{ !env.QUALITY_GATE_PASSED }}
-        run: \
-          echo "Quality gate failed! Exiting with code 1."
-          exit 1
+        run: echo "QUALITY_GATE_PASSED=$(python3 .github/ci-scripts/quality_gate_check.py event.json | tail -1)" >> $GITHUB_OUTPUT ;
 
   semantic-release:
-    needs: sonar-quality-gate-check
+    needs: [sonar-quality-gate-check]
+    if: needs.sonar-quality-gate-check.outputs.QUALITY_GATE_PASSED == '1'
     uses: ./.github/workflows/github-semantic-release.yml
     # Secrets for the env, declared in reusuable workflow must be "declared" in the parent file
     # See: https://github.com/orgs/community/discussions/25238
@@ -57,8 +52,8 @@ jobs:
       SEMANTIC_RELEASE_FINE_GRAINED_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
 
   release-to-playstore:
-    if: ${{env.SHOULD_RELEASE_TO_PLAYSTORE == 'true'}}
-    needs: semantic-release # needs semantic release so that the versions are incremented
+    needs: [semantic-release] # needs semantic release so that the versions are incremented
+      if: needs.semantic-release.outputs.SHOULD_RELEASE_TO_PLAYSTORE == 'true'
     uses: ./.github/workflows/google-play-store-release.yml
     secrets:
       KEY_STORE_BASE64: ${{ secrets.KEY_STORE_BASE64 }}
