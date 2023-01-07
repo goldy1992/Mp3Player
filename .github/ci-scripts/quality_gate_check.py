@@ -64,11 +64,11 @@ def is_workflow_dispatch(event_obj):
     result = False
     if 'event_name' in event_obj:
         event_name = event_obj['event_name']
-        if event_name == 'workflow_dispatch'
+        if event_name == 'workflow_dispatch':
             result = True
     if result:
         print('event identified as workflow_dispatch')
-    else
+    else:
         print('event is NOT a workflow_dispatch')
     return result
 
