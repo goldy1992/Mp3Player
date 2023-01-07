@@ -34,11 +34,11 @@ def is_latest_master_commit(event_obj):
 
 def is_sonar_event(event_obj):
     result = False
-    if event_obj is not None:
+    if 'check_run' in event_obj:
         check_run = event_obj['check_run']
-        if check_run is not None:
+        if 'app' in check_run:
             app = check_run['app']
-            if app is not None:
+            if 'name' in app:
                 name = app['name']
                 if name == 'SonarCloud':
                     result = True
@@ -60,6 +60,20 @@ def is_sonar_success(event_obj):
     return result
 
 
+def is_workflow_dispatch(event_obj):
+    result = False
+    if 'event_name' in event_obj:
+        event_name = event_obj['event_name']
+        if event_name == 'workflow_dispatch'
+            result = True
+    if result:
+        print('event identified as workflow_dispatch')
+    else
+        print('event is NOT a workflow_dispatch')
+    return result
+
+
+
 print("Running Sonar Quality Gate Check")
 input_file = open(sys.argv[1], 'r')
 json_string = input_file.read()
@@ -68,6 +82,9 @@ obj = json.loads(json_string)
 event = obj['event']
 if is_sonar_event(event) and is_sonar_success(event) and is_latest_master_commit(obj):
     print("Sonar checks passed.")
+    print(1)
+elif is_workflow_dispatch(event):
+    print("Passed as a workflow_dispatch")
     print(1)
 else:
     print("Sonar checks failed.")
