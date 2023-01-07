@@ -17,6 +17,8 @@ jobs:
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
       QUALITY_GATE_PASSED: 0
+    outputs:
+      QUALITY_GATE_PASSED: ${{ steps.quality-check.outputs.QUALITY_GATE_PASSED }}
     steps:
       - uses: actions/checkout@v3.1.0
         with:
@@ -39,7 +41,8 @@ jobs:
       - name: Make quality_gate_check.py executable
         run: chmod +x ./.github/ci-scripts/quality_gate_check.py
 
-      - name: Check Sonar Quality Gate
+      - id: 'quality-check'
+        name: Check Sonar Quality Gate
         run: echo "QUALITY_GATE_PASSED=$(python3 .github/ci-scripts/quality_gate_check.py event.json | tail -1)" >> $GITHUB_OUTPUT ;
 
   semantic-release:
