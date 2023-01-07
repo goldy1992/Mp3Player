@@ -6,6 +6,11 @@ on:
     branches:
       - master
 
+env:
+  IS_MASTER: false
+  QUALITY_GATE_PASSED: false
+  SHOULD_RELEASE_TO_PLAYSTORE: false
+
 jobs:
   sonar-quality-gate-check:
     runs-on: ubuntu-latest
@@ -52,6 +57,7 @@ jobs:
       SEMANTIC_RELEASE_FINE_GRAINED_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
 
   release-to-playstore:
+    if: ${{env.SHOULD_RELEASE_TO_PLAYSTORE == 'true'}}
     needs: semantic-release # needs semantic release so that the versions are incremented
     uses: ./.github/workflows/google-play-store-release.yml
     secrets:

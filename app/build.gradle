@@ -42,14 +42,16 @@ android {
             signingConfig signingConfigs.release
         }
         debug {
+            getIsDefault().set(true)
             minifyEnabled false
             debuggable true
-            testCoverageEnabled true
+            testCoverageEnabled false
         }
     }
     flavorDimensions flavor_dimen_mode
     productFlavors {
         full {
+            getIsDefault().set(true)
             applicationIdSuffix ".full"
             versionNameSuffix "-full"
             resValue "string", "app_name", "Music Player"
@@ -86,9 +88,6 @@ android {
                 events "passed", "skipped", "failed", "standardOut", "standardError"
                 outputs.upToDateWhen {false}
                 showStandardStreams = true
-            }
-            jacoco {
-                includeNoLocationClasses=true
             }
         }
     }

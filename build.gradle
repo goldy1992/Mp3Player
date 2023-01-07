@@ -18,7 +18,7 @@ buildscript {
         datastore_preferences_version = '1.0.0'
         espresso_core_version = '3.3.0'
         hilt_version = '2.42'
-        jacoco_version = '0.8.7'
+        jacoco_version = '0.8.8'
         junit_ext_version = '1.1.2'
         junit4_version = '4.12'
         lifecycle_version = '2.5.1'
@@ -45,7 +45,9 @@ buildscript {
                 '**/Manifest*.*',
                 '**/*Test*.*',
                 'android/**/*.*',
-                '**/*$[0-9].*'
+                // added ui exclusions due to https://issuetracker.google.com/issues/231616123
+                // https://github.com/jacoco/jacoco/issues/1312
+                '**/ui/**'
         ]
 
         junitUnitTests =  [
@@ -73,7 +75,8 @@ buildscript {
 }
 
 plugins {
-    id "org.sonarqube" version "3.3"
+    id "org.sonarqube" version "3.5.0.2730"
+    id "org.jetbrains.kotlinx.kover" version "0.6.1"
 }
 
 sonarqube {
@@ -81,7 +84,9 @@ sonarqube {
         property "sonar.projectKey", "goldy1992_Mp3Player"
         property "sonar.organization", "goldy1992-github"
         property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.coverage.exclusions", "**Test**,**IAudioService.java,**dagger**,**Injector**,**LoggingUtils.*,**android**,**/res/**,**/databinding/**,**hilt_aggregated_deps**,**/Hilt_**,**/FFTAudioProcessor**,**/DefaultMediaBrowser**"
+        // added ui exclusions due to https://issuetracker.google.com/issues/231616123
+        // https://github.com/jacoco/jacoco/issues/1312
+        property "sonar.coverage.exclusions", "**Test**,**dagger**,**Injector**,**LoggingUtils.*,**android**,**/databinding/**,**hilt_aggregated_deps**,**/Hilt_**,**/FFTAudioProcessor**,**/DefaultMediaBrowser**,**/ui/**"
         property "sonar.coverage.inclusions", "**/main/**"
     }
 }
@@ -95,23 +100,24 @@ allprojects {
 
 }
 
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-task preSonarQube() {
-    def reportName = "jacocoUnitTestReport"
+//task preSonarQube() {
+//    def reportName = "jacocoUnitTestReport"
+//
+//    if (project.gradle.startParameter.taskNames.join(",").contains("jacocoCombinedUnitTestAndroidTestReport")) {
+//        reportName = "jacocoCombinedUnitTestAndroidTestReport"
+//    }
+//
+//    rootProject.ext.set("jacaco_report_name", reportName)
+//}
 
-    if (project.gradle.startParameter.taskNames.join(",").contains("jacocoCombinedUnitTestAndroidTestReport")) {
-        reportName = "jacocoCombinedUnitTestAndroidTestReport"
-    }
-
-    rootProject.ext.set("jacaco_report_name", reportName)
-}
-
-tasks['sonarqube'].configure {
-    mustRunAfter tasks['preSonarQube']
-}
+//tasks['sonarqube'].configure {
+//    mustRunAfter tasks['preSonarQube']
+//}
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"

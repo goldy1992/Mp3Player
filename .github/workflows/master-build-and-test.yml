@@ -42,20 +42,19 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Create Aggregrated JaCoCo Test Report and run SonarQube.
-        run: ./gradlew clean jacocoUnitTestReport
+      - name: Gradle Clean
+        run: ./gradlew clean
 
       - name: Assemble debug and androidTest APKs
         run: ./gradlew assembleDebug assembleAndroidTest
 
       - id: 'auth'
-        uses: 'google-github-actions/auth@v0.8.0'
+        uses: google-github-actions/auth@v1.0.0
         with:
           credentials_json: ${{ secrets.RELEASE_SERVICE_ACCOUNT_JSON }}
 
-
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v0.6.2
+        uses: google-github-actions/setup-gcloud@v1.0.1
 
       - name: Run firebase tests on gcloud and pull coverage data
         run: |
@@ -68,24 +67,36 @@ jobs:
           gcloud firebase test android run ${{github.workspace}}/.github/workflows/arguments/firebase-testlab-arguments.yml:client-ui-tests \
             --app ${{ github.workspace }}/app/build/outputs/apk/full/debug/app-full-debug.apk \
             --test ${{ github.workspace }}/client/build/outputs/apk/androidTest/full/debug/client-full-debug-androidTest.apk \
+            --type instrumentation \
+            --app ${{ github.workspace }}/app/build/outputs/apk/full/debug/app-full-debug.apk \
+            --test ${{ github.workspace }}/client/build/outputs/apk/androidTest/full/debug/client-full-debug-androidTest.apk \
+            --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec \
+            --device model=Pixel2,version=29,locale=en,orientation=portrait \
+            --directories-to-pull /sdcard \
+            --no-record-video \
+            --results-bucket \
+            --results-dir \
              | tee $GCLOUD_OUTPUT_LOG
           BUCKET_ID=`cat $GCLOUD_OUTPUT_LOG | sed -n -E 's#^.+test-lab-(.+)/.+#\1#p'`
 
 
       - name: Grab remote reports and arifacts and store locally
         run: gsutil -m cp -R -U gs://test-lab-$BUCKET_ID/**/sdcard/coverage.ec $TEST_OUTPUT_FOLDER || true
-          --type instrumentation \
-          --app ${{ github.workspace }}/app/build/outputs/apk/full/debug/app-full-debug.apk \
-          --test ${{ github.workspace }}/client/build/outputs/apk/androidTest/full/debug/client-full-debug-androidTest.apk \
-          --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec \
-          --device model=Pixel2,version=29,locale=en,orientation=portrait \
-          --directories-to-pull /sdcard \
-          --no-record-video \
-          --results-bucket \
-          --results-dir \
 
-      - name: Create Aggregrated JaCoCo Test Report and eun SonarQube.
-        run: ./gradlew jacocoCombinedUnitTestAndroidTestReport sonarqube --stacktrace -PdisablePreDex
+#      - name: Create Aggregrated JaCoCo Test Report.
+#        run: ./gradlew jacocoCombinedUnitTestAndroidTestReport --stacktrace -PdisablePreDex
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Gradle and create Debug test report
+        run: ./gradlew createDebugUnitTestCoverageReport
+      - name: Gradle and create FullDebug test report
+        run: ./gradlew createFullDebugUnitTestCoverageReport
+      - name: Run Lint
+        run: ./gradlew lint
+      - name: Run Sonar
+        run: ./gradlew sonar --info --stacktrace
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
