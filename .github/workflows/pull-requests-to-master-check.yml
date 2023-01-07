@@ -35,13 +35,16 @@ jobs:
         uses: android-actions/setup-android@v2.0.10
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-      - name: Build with Gradle
-        run: ./gradlew clean createDebugUnitTestCoverageReport createFullDebugUnitTestCoverageReport
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Gradle Clean
+        run: ./gradlew clean
+      - name: Gradle and create Debug test report
+        run: ./gradlew createDebugUnitTestCoverageReport
+      - name: Gradle and create FullDebug test report
+        run: ./gradlew createFullDebugUnitTestCoverageReport
+      - name: Run Lint
+        run: ./gradlew lint
       - name: Run Sonar
-        run: ./gradlew sonar --stacktrace -PdisablePreDex
+        run: ./gradlew sonar --info --stacktrace
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
