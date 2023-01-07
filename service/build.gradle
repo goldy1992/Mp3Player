@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
-apply from: rootProject.file("jacoco-with-test-support.gradle")
 
 android {
     compileSdkVersion target_sdk_version
@@ -29,6 +28,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            getIsDefault().set(true)
             enableUnitTestCoverage true
             testCoverageEnabled true
             minifyEnabled false
@@ -37,6 +37,7 @@ android {
     flavorDimensions flavor_dimen_mode
     productFlavors {
         full {
+            getIsDefault().set(true)
             dimension = flavor_dimen_mode
         }
         automation {
@@ -104,7 +105,7 @@ dependencies {
     implementation group: 'androidx.room', name: 'room-runtime', version: room_version
     implementation group: 'androidx.room', name: 'room-ktx', version: room_version
     kapt group: 'androidx.room', name: 'room-compiler', version: room_version
-
+    implementation group: 'androidx.concurrent', name: 'concurrent-futures-ktx', version: '1.1.0'
 
     testImplementation junitUnitTests
 
@@ -124,36 +125,15 @@ dependencies {
     testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
     kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
 
-
-    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
-    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
-
-    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
-
-
-    androidTestImplementation project(':commons')
-    androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
-    androidTestImplementation junitUnitTests
-    androidTestImplementation group: 'androidx.test', name: 'rules', version: test_rules_version
-    androidTestImplementation group: 'androidx.test', name: 'core-ktx', version: test_core_version
-    androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: junit_ext_version
-    androidTestImplementation group: 'androidx.test', name: 'runner', version: test_runner_version
-    androidTestUtil group: "androidx.test", name: "orchestrator", version: test_orchestrator_version
-    androidTestImplementation group: 'androidx.test', name: 'monitor', version: monitor_version
-    androidTestImplementation group: "org.mockito.kotlin", name: "mockito-kotlin", version: mockito_kotlin_version
-    androidTestImplementation group: 'com.linkedin.dexmaker', name: 'dexmaker-mockito-inline-extended', version: '2.28.1'
-    androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: kotlin_version
-    androidTestImplementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: coroutines_version
-    androidTestImplementation group: 'androidx.concurrent', name: 'concurrent-futures-ktx', version: '1.1.0'
-    implementation group: 'androidx.concurrent', name: 'concurrent-futures-ktx', version: '1.1.0'
 }
 
 sonarqube {
     androidVariant 'fullDebug'
     properties {
         property 'sonar.java.binaries', "${project.buildDir}/intermediates/javac/fullDebug/classes"
-        property 'sonar.coverage.jacoco.xmlReportPaths', "${project.buildDir}/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
-        property 'sonar.sources', "${projectDir}/src/main/java"
+        property 'sonar.java.test.binaries', "${project.buildDir}/intermediates/javac/fullDebugUnitTest/classes, ${project.buildDir}/tmp/kotlin-classes/fullDebugUnitTest"
+        property 'sonar.coverage.jacoco.xmlReportPaths', "${project.buildDir}/reports/coverage/test/full/debug/report.xml"
+        property 'sonar.junit.reportPaths', "${project.buildDir}/test-results/testFullDebugUnitTest/TEST-*.xml"
     }
 }
 
