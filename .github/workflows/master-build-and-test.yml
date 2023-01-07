@@ -90,8 +90,13 @@ jobs:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Create Aggregrated JaCoCo Test Report and Run SonarQube.
-          run: ./gradlew createDebugUnitTestCoverageReport createFullDebugUnitTestCoverageReport  sonarqube --stacktrace -PdisablePreDex
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Create JaCoCo Test Reports.
+        run: ./gradlew createDebugUnitTestCoverageReport createFullDebugUnitTestCoverageReport
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Sonar
+        run: ./gradlew sonar --info --stacktrace
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
