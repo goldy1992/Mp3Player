@@ -21,7 +21,7 @@
         "@semantic-release/exec",
         {
           "prepareCmd": "python3 .github/ci-scripts/release/bump_versions.py gradle.properties ${nextRelease.version}",
-          "successCmd": "echo \"SHOULD_RELEASE_TO_PLAYSTORE=true\" >> $GITHUB_OUTPUT"
+          "successCmd": "echo \"performed_release=true\" >> $GITHUB_OUTPUT"
         }
       ],
       [

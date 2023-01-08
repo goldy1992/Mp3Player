@@ -2,6 +2,11 @@ name: Github Semantic Release
 on:
   workflow_dispatch:
   workflow_call:
+    outputs:
+      performed_release:
+        description: "A flag output from semantic release to notify whether a new release version \
+        has been created."
+        value: ${{ jobs.semantic-release.outputs.performed_release }}
     secrets:
       SEMANTIC_RELEASE_FINE_GRAINED_TOKEN:
         required: true
@@ -13,6 +18,8 @@ jobs:
       GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
     environment: release_env
+    outputs:
+      performed_release: ${{ steps.release.outputs.performed_release}}
     steps:
       - uses: actions/checkout@v3.1.0
         with:
@@ -42,4 +49,5 @@ jobs:
         run: npm ci
 
       - name: Release
+        id: "release"
         run: npx semantic-release --ci

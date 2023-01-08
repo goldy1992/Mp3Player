@@ -50,6 +50,8 @@ jobs:
 
   semantic-release:
     needs: [sonar-quality-gate-check]
+    outputs:
+      SHOULD_RELEASE_TO_PLAYSTORE: ${{ steps.quality-check.outputs.QUALITY_GATE_PASSED }}
     if: needs.sonar-quality-gate-check.outputs.QUALITY_GATE_PASSED == '1'
     uses: ./.github/workflows/github-semantic-release.yml
     # Secrets for the env, declared in reusuable workflow must be "declared" in the parent file
@@ -59,7 +61,7 @@ jobs:
 
   release-to-playstore:
     needs: [semantic-release] # needs semantic release so that the versions are incremented
-    if: needs.semantic-release.outputs.SHOULD_RELEASE_TO_PLAYSTORE == 'true'
+    if: needs.semantic-release.outputs.performed_release == 'true'
     uses: ./.github/workflows/google-play-store-release.yml
     secrets:
       KEY_STORE_BASE64: ${{ secrets.KEY_STORE_BASE64 }}
