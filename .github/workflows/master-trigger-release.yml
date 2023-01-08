@@ -16,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
-      QUALITY_GATE_PASSED: 0
     outputs:
       QUALITY_GATE_PASSED: ${{ steps.quality-check.outputs.QUALITY_GATE_PASSED }}
     steps:
@@ -43,7 +42,9 @@ jobs:
 
       - id: 'quality-check'
         name: Check Sonar Quality Gate
-        run: echo "QUALITY_GATE_PASSED=$(python3 .github/ci-scripts/quality_gate_check.py event.json | tail -1)" >> $GITHUB_OUTPUT ;
+        run: |
+          quality_output = python3 .github/ci-scripts/quality_gate_check.py event.json | tail -1
+          echo "QUALITY_GATE_PASSED=${quality_output}" >> $GITHUB_OUTPUT ;
 
   semantic-release:
     needs: [sonar-quality-gate-check]
