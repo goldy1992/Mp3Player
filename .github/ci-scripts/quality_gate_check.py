@@ -60,12 +60,10 @@ def is_sonar_success(event_obj):
     return result
 
 
-def is_workflow_dispatch(event_obj):
+def is_workflow_dispatch(event_name):
     result = False
-    if 'event_name' in event_obj:
-        event_name = event_obj['event_name']
-        if event_name == 'workflow_dispatch':
-            result = True
+    if event_name == 'workflow_dispatch':
+        result = True
     if result:
         print('event identified as workflow_dispatch')
     else:
@@ -80,10 +78,11 @@ json_string = input_file.read()
 input_file.close()
 obj = json.loads(json_string)
 event = obj['event']
+event_name = obj['event_name']
 if is_sonar_event(event) and is_sonar_success(event) and is_latest_master_commit(obj):
     print("Sonar checks passed.")
     print(1)
-elif is_workflow_dispatch(event):
+elif is_workflow_dispatch(event_name):
     print("Passed as a workflow_dispatch")
     print(1)
 else:
