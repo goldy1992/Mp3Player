@@ -74,8 +74,6 @@ jobs:
             --device model=Pixel2,version=29,locale=en,orientation=portrait \
             --directories-to-pull /sdcard \
             --no-record-video \
-            --results-bucket \
-            --results-dir \
              | tee $GCLOUD_OUTPUT_LOG
           BUCKET_ID=`cat $GCLOUD_OUTPUT_LOG | sed -n -E 's#^.+test-lab-(.+)/.+#\1#p'`
 
