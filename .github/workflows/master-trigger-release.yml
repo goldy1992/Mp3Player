@@ -43,7 +43,8 @@ jobs:
       - id: 'quality-check'
         name: Check Sonar Quality Gate
         run: |
-          quality_output = python3 .github/ci-scripts/quality_gate_check.py event.json | tail -1
+          quality_output=$(python3 .github/ci-scripts/quality_gate_check.py event.json | tail -1)
+          echo "quality_gate_output: ${quality_output}"
           echo "QUALITY_GATE_PASSED=${quality_output}" >> $GITHUB_OUTPUT ;
 
   semantic-release:
