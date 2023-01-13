@@ -54,7 +54,7 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )},
-            leadingContent = { AlbumArt(song = (song)) },
+            leadingContent = { AlbumArt(song = song, modifier = Modifier.size(40.dp)) },
             supportingText = {
                 Text(
                     text = MediaItemUtils.getArtist(song),
@@ -88,13 +88,13 @@ fun SongListItem(song : MediaItem = getEmptyMediaItem(),
 
 @ExperimentalCoilApi
 @Composable
-private fun AlbumArt(song: MediaItem) {
+fun AlbumArt(song: MediaItem,
+            modifier : Modifier = Modifier.size(40.dp)) {
 
     val uri : Uri? = MediaItemUtils.getAlbumArtUri(song)
     if (uri != null) {
         Image(
-            modifier = Modifier
-                .size(40.dp, 40.dp),
+            modifier = modifier,
             painter = rememberAsyncImagePainter(
                 ImageRequest.Builder(LocalContext.current)
                     .data(MediaItemUtils.getAlbumArtUri(song = song)).build()
@@ -103,7 +103,7 @@ private fun AlbumArt(song: MediaItem) {
         )
     }
     else {
-        Icon(Icons.Filled.QuestionAnswer, contentDescription = "", modifier = Modifier.size(40.dp))
+        Icon(Icons.Filled.QuestionAnswer, contentDescription = "", modifier = modifier)
     }
 }
 

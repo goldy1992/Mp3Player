@@ -1,12 +1,15 @@
 package com.github.goldy1992.mp3player.commons
 
 import android.net.Uri
+import android.os.Build
+import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
+import android.util.Log
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.Constants.EMPTY_MEDIA_ITEM_ID
 import java.io.File
 
-object MediaItemUtils {
+object MediaItemUtils : LogTagger {
     private fun hasExtras(item: MediaItem?): Boolean {
         return item != null && item.mediaMetadata.extras != null
     }
@@ -122,13 +125,20 @@ object MediaItemUtils {
     }
 
     @JvmStatic
-    fun getMediaItemType(item: MediaItem): MediaItemType? {
-        return item.mediaMetadata.extras?.get(Constants.MEDIA_ITEM_TYPE) as MediaItemType?
-    }
-
-    @JvmStatic
-    fun getLibraryId(item: MediaItem?): String? {
-        return getExtra(Constants.LIBRARY_ID, item) as String?
+    fun getMediaItemType(item: MediaItem): MediaItemType {
+        val mediaItemType : MediaItemType? = if (Build.VERSION.SDK_INT >= TIRAMISU) {
+            item.mediaMetadata.extras?.getSerializable(
+                Constants.MEDIA_ITEM_TYPE,
+                MediaItemType::class.java
+            )
+        } else {
+            item.mediaMetadata.extras?.getSerializable(
+                Constants.MEDIA_ITEM_TYPE) as MediaItemType?
+        }
+        if (mediaItemType == null) {
+            Log.w(logTag(), "no MediaItemType found for item ${item.mediaId}")
+        }
+        return mediaItemType ?: MediaItemType.NONE
     }
 
     @JvmStatic
@@ -162,5 +172,13 @@ object MediaItemUtils {
 
     fun isEmptyMediaItem(mediaItem: MediaItem?) : Boolean {
         return mediaItem?.mediaId == EMPTY_MEDIA_ITEM_ID
+    }
+
+    fun noResultsFound(mediaItems : List<MediaItem>) : Boolean {
+        return mediaItems.size == 1 && isEmptyMediaItem(mediaItems.get(0))
+    }
+
+    override fun logTag(): String {
+        return "MediaItemUtils"
     }
 }

@@ -100,9 +100,16 @@ class MediaLibrarySessionCallback
         scope.launch(ioDispatcher) {
             // Assume for example that the music catalog is already loaded/cached.
             mediaItems = customMediaItemTree.getChildren(parentId)
+            var numberOfResults = mediaItems.size
+
+            if (numberOfResults <= 0) {
+                Log.i(logTag(), "No results found or parentId $parentId")
+                // set the number of results to one to account for the empty media item
+                numberOfResults = 1
+            }
             println("finish coroutine")
             Log.i(logTag(), "notifying children changed for browser ${browser}")
-            session.notifyChildrenChanged(browser, parentId, mediaItems.size, params)
+            session.notifyChildrenChanged(browser, parentId, numberOfResults, params)
         }
         println("finished on load children")
 
@@ -156,7 +163,12 @@ class MediaLibrarySessionCallback
             scope.launch(ioDispatcher) {
                 // Assume for example that the music catalog is already loaded/cached.
                 mediaItems = customMediaItemTree.getChildren(parentId)
-                println("finish coroutine")
+
+                if (mediaItems.isEmpty()) {
+                    Log.i(logTag(), "Setting results for parentId $parentId to be the empty media item")
+                    // set the number of results to one to account for the empty media item
+
+                }
             }.join()
 
             println("finished on load children")

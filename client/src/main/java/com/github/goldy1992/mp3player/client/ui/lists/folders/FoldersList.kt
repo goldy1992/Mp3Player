@@ -18,6 +18,9 @@ import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
+import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
+import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 
@@ -27,8 +30,8 @@ fun FolderList(folders : List<MediaItem> = emptyList(),
                onFolderSelected : (folder : MediaItem) -> Unit = {}) {
 
     when {
-        folders == null -> LoadingIndicator()
-        isEmpty(folders) -> EmptyFoldersList()
+        isEmpty(folders) -> LoadingIndicator()
+        MediaItemUtils.noResultsFound(folders) -> NoResultsFound(mediaItemType = MediaItemType.FOLDERS)
         else -> {
             val folderListDescr = stringResource(id = R.string.folder_list)
 

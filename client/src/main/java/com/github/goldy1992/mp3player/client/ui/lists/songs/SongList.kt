@@ -19,6 +19,9 @@ import androidx.media3.common.MediaItem
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
+import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
+import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.commons.MediaItemUtils.noResultsFound
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 import org.apache.commons.lang3.StringUtils
 
@@ -40,6 +43,7 @@ fun SongList(
 
     when {
         isEmpty(songs) -> EmptySongsList()
+        noResultsFound(songs) -> NoResultsFound(mediaItemType = MediaItemType.SONGS)
         else -> {
             val songsListDescr = stringResource(id = R.string.songs_list)
             LazyColumn(

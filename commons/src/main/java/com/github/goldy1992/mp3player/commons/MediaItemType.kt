@@ -12,7 +12,9 @@ enum class MediaItemType(
     SONG(2, "Song", null),
     FOLDERS(3, "Folders", null),
     FOLDER(4, "Folder", null),
-    NONE(5, "None", null);
+    ALBUMS(5, "Albums", null),
+    ALBUM(6, "Album", null),
+    NONE(7, "None", null);
 
     // Add playlists
 
@@ -21,7 +23,9 @@ enum class MediaItemType(
     companion object {
         @JvmField
         var PARENT_TO_CHILD_MAP = mapOf(
-                ROOT    to EnumSet.of(SONGS, FOLDERS),
+                ROOT    to EnumSet.of(SONGS, ALBUMS, FOLDERS),
+                ALBUMS  to EnumSet.of(ALBUM),
+                ALBUM   to EnumSet.of(SONG),
                 SONGS   to EnumSet.of(SONG),
                 SONG    to EnumSet.noneOf(MediaItemType::class.java),
                 FOLDERS to EnumSet.of(FOLDER),

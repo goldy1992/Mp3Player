@@ -8,7 +8,6 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDescription
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryName
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDuration
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getExtras
-import com.github.goldy1992.mp3player.commons.MediaItemUtils.getLibraryId
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaId
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaUri
@@ -153,16 +152,6 @@ class MediaItemUtilsTest {
                 .build()
         val result = getRootMediaItemType(mediaItem)
         assertEquals(expectedMediaItemType, result)
-    }
-
-    @Test
-    fun testGetLibraryId() {
-        val expectedLibraryId = "libraryId"
-        val mediaItem = MediaItemBuilder("id")
-                .setLibraryId(expectedLibraryId)
-                .build()
-        val result = getLibraryId(mediaItem)
-        assertEquals(expectedLibraryId, result)
     }
 
     @Test
