@@ -6,12 +6,16 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.commons.MediaItemBuilder
-import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.commons.*
+import dagger.hilt.android.scopes.ServiceScoped
 import java.util.*
+import javax.inject.Inject
 
-class AlbumsResultsParser() : ResultsParser() {
+@ServiceScoped
+class AlbumsResultsParser
+
+    @Inject
+    constructor() : ResultsParser() {
 
     override val type: MediaItemType?
         get() = MediaItemType.ALBUM
@@ -32,8 +36,25 @@ class AlbumsResultsParser() : ResultsParser() {
         return ArrayList(listToReturn)
     }
 
-    override fun compare(o1: MediaItem?, o2: MediaItem?): Int {
-        TODO("Not yet implemented")
+    override fun compare(m1: MediaItem?, m2: MediaItem?): Int {
+        if (m1 == null && m2 == null) {
+            return 0
+        } else if (m1 == null) {
+            return -1
+        } else if (m2 == null) {
+            return 1
+        }
+        val result: Int = ComparatorUtils.Companion.uppercaseStringCompare.compare(
+            MediaItemUtils.getAlbumTitle(
+                m1
+            ), MediaItemUtils.getAlbumTitle(m2)
+        )
+        return if (result == 0) MediaItemUtils.getAlbumArtist(m1).compareTo(
+            MediaItemUtils.getAlbumArtist(
+                m2
+            )
+        ) else result
+
     }
 
     override fun logTag(): String {

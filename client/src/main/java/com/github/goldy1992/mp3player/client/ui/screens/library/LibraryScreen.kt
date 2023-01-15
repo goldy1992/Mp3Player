@@ -392,7 +392,7 @@ fun TabBarPages(
                         }
                     }
                     MediaItemType.ALBUMS -> {
-                        AlbumsList(albums = currentChildState.results)
+                        AlbumsList(albums = currentChildState)
                     }
                     else -> {
                         Log.i("mainScreen", "unrecognised Media Item")

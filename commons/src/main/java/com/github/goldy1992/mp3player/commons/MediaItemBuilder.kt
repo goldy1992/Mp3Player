@@ -124,8 +124,8 @@ class MediaItemBuilder(private val mediaId: String) {
         return this
     }
 
-    fun setAlbumArtist(artist: String?): MediaItemBuilder {
-        this.artist = artist
+    fun setAlbumArtist(albumArtist: String?): MediaItemBuilder {
+        this.albumArtist = albumArtist
         return this
     }
 

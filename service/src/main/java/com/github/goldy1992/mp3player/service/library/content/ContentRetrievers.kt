@@ -14,6 +14,7 @@ class ContentRetrievers
                 private val rootRetriever: RootRetriever,
                 private val songsRetriever: SongsRetriever,
                 private val foldersRetriever: FoldersRetriever,
+                private val albumsRetriever: AlbumsRetriever,
                 private val songsFromFolderRetriever: SongsFromFolderRetriever) {
     /**  */
     var contentRetrieverMap: Map<Class<out ContentRetriever>, ContentRetriever>
@@ -37,6 +38,7 @@ class ContentRetrievers
                     MediaItemType.SONGS, MediaItemType.SONG -> addToIdToContentRetrieverMap(key, SongsRetriever::class.java)
                     MediaItemType.FOLDER -> addToIdToContentRetrieverMap(key, SongsFromFolderRetriever::class.java)
                     MediaItemType.FOLDERS -> addToIdToContentRetrieverMap(key, FoldersRetriever::class.java)
+                    MediaItemType.ALBUMS -> addToIdToContentRetrieverMap(key, AlbumsRetriever::class.java)
                     MediaItemType.ROOT -> addToIdToContentRetrieverMap(key, RootRetriever::class.java)
                     else -> {
                     }
@@ -51,6 +53,7 @@ class ContentRetrievers
             MediaItemType.SONGS -> songsRetriever
             MediaItemType.FOLDER -> songsFromFolderRetriever
             MediaItemType.FOLDERS -> foldersRetriever
+            MediaItemType.ALBUMS -> albumsRetriever
             else -> null
 
         }
@@ -68,6 +71,7 @@ class ContentRetrievers
         mapToReturn[RootRetriever::class.java] = rootRetriever
         mapToReturn[SongsRetriever::class.java] = songsRetriever
         mapToReturn[FoldersRetriever::class.java] = foldersRetriever
+        mapToReturn[AlbumsRetriever::class.java] = albumsRetriever
         mapToReturn[SongsFromFolderRetriever::class.java] = songsFromFolderRetriever
         contentRetrieverMap = mapToReturn
         createIdMap(mediaItemTypeIds)

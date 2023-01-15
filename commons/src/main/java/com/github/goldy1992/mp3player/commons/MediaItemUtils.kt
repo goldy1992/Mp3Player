@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.Constants.EMPTY_MEDIA_ITEM_ID
+import com.github.goldy1992.mp3player.commons.Constants.UNKNOWN
 import java.io.File
 
 object MediaItemUtils : LogTagger {
@@ -177,6 +178,15 @@ object MediaItemUtils : LogTagger {
     fun noResultsFound(mediaItems : List<MediaItem>) : Boolean {
         return mediaItems.size == 1 && isEmptyMediaItem(mediaItems.get(0))
     }
+
+    fun getAlbumTitle(mediaItem: MediaItem) : String {
+        return mediaItem.mediaMetadata.albumTitle.toString()
+    }
+
+    fun getAlbumArtist(mediaItem: MediaItem) : String {
+        return mediaItem.mediaMetadata.albumArtist.toString()
+    }
+
 
     override fun logTag(): String {
         return "MediaItemUtils"
