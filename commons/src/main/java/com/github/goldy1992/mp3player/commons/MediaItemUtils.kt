@@ -111,6 +111,17 @@ object MediaItemUtils : LogTagger {
     }
 
     @JvmStatic
+    fun getDirectoryUri(item: MediaItem?): Uri? {
+        if (hasExtra(MetaDataKeys.META_DATA_DIRECTORY, item)) {
+            val directory = getExtra(MetaDataKeys.META_DATA_DIRECTORY, item) as File?
+            if (null != directory) {
+                return Uri.fromFile(directory)
+            }
+        }
+        return null
+    }
+
+    @JvmStatic
     fun getMediaUri(item: MediaItem): Uri? {
         return item.localConfiguration?.uri
     }
@@ -185,6 +196,14 @@ object MediaItemUtils : LogTagger {
 
     fun getAlbumArtist(mediaItem: MediaItem) : String {
         return mediaItem.mediaMetadata.albumArtist.toString()
+    }
+
+    fun getAlbumRecordingYear(mediaItem: MediaItem) : String {
+        return mediaItem.mediaMetadata.recordingYear.toString()
+    }
+
+    fun getAlbumReleaseYear(mediaItem: MediaItem) : String {
+        return mediaItem.mediaMetadata.releaseYear.toString()
     }
 
 

@@ -5,6 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import com.github.goldy1992.mp3player.client.data.Albums
+import com.github.goldy1992.mp3player.client.data.Folders
+import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createAlbums
+import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createFolders
+import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSong
+import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSongs
+import com.github.goldy1992.mp3player.client.data.Song
+import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState
 import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState.Companion.loaded
@@ -13,6 +21,7 @@ import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState.Compan
 import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState.Companion.notLoaded
 import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,14 +48,14 @@ class LibraryScreenViewModel
     private var rootItem : MediaItem? = null
     private var rootItemId : String? = null
 
-    private val _songs : MutableStateFlow<LibraryResultState> = MutableStateFlow(notLoaded(MediaItemType.SONGS))
-    val songs : StateFlow<LibraryResultState> = _songs
+    private val _songs : MutableStateFlow<Songs> = MutableStateFlow(Songs.NOT_LOADED)
+    val songs : StateFlow<Songs> = _songs
 
-    private val _folders : MutableStateFlow<LibraryResultState> = MutableStateFlow(notLoaded(MediaItemType.FOLDERS))
-    val folders : StateFlow<LibraryResultState> = _folders
+    private val _folders : MutableStateFlow<Folders> = MutableStateFlow(Folders(State.NOT_LOADED))
+    val folders : StateFlow<Folders> = _folders
 
-    private val _albums : MutableStateFlow<LibraryResultState> = MutableStateFlow(notLoaded(MediaItemType.ALBUMS))
-    val albums : StateFlow<LibraryResultState> = _albums
+    private val _albums : MutableStateFlow<Albums> = MutableStateFlow(Albums(State.NOT_LOADED))
+    val albums : StateFlow<Albums> = _albums
     
 
     init {
@@ -85,9 +94,9 @@ class LibraryScreenViewModel
                             val mediaItemType = MediaItemUtils.getMediaItemType(mediaItem)
                             idToMediaItemTypeMap[mediaItemId] = mediaItemType
                             when (mediaItemType) {
-                                MediaItemType.ALBUMS -> _albums.value = loading(MediaItemType.ALBUMS)
-                                MediaItemType.SONGS -> _songs.value = loading(MediaItemType.SONGS)
-                                MediaItemType.FOLDERS -> _folders.value = loading(MediaItemType.FOLDERS)
+                                MediaItemType.ALBUMS -> _albums.value = Albums(State.LOADING)
+                                MediaItemType.SONGS -> _songs.value = Songs(State.LOADING)
+                                MediaItemType.FOLDERS -> _folders.value = Folders(State.LOADING)
                                 MediaItemType.ROOT -> _rootItems.value = loading(MediaItemType.ROOT)
                                 else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")
                             }
@@ -99,17 +108,17 @@ class LibraryScreenViewModel
 
                     if (isEmpty(children)) {
                         when (mediaItemType) {
-                            MediaItemType.ALBUMS -> _albums.value = noResults(MediaItemType.ALBUMS)
-                            MediaItemType.SONGS -> _songs.value = noResults(MediaItemType.SONGS)
-                            MediaItemType.FOLDERS -> _folders.value = noResults(MediaItemType.FOLDERS)
+                            MediaItemType.ALBUMS -> _albums.value = Albums(State.NO_RESULTS)
+                            MediaItemType.SONGS -> _songs.value = Songs(State.NOT_LOADED)
+                            MediaItemType.FOLDERS -> _folders.value = Folders(State.NO_RESULTS)
                             MediaItemType.ROOT -> _rootItems.value = noResults(MediaItemType.ROOT)
                             else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")
                         }
                     } else {
                         when (mediaItemType) {
-                            MediaItemType.ALBUMS -> _albums.value = loaded(MediaItemType.ALBUMS, children)
-                            MediaItemType.SONGS -> _songs.value = loaded(MediaItemType.SONGS, children)
-                            MediaItemType.FOLDERS -> _folders.value = loaded(MediaItemType.FOLDERS, children)
+                            MediaItemType.ALBUMS -> _albums.value = createAlbums(State.LOADED, children)
+                            MediaItemType.SONGS -> _songs.value = createSongs(State.LOADED, children)
+                            MediaItemType.FOLDERS -> _folders.value = createFolders(State.LOADED, children)
                             MediaItemType.ROOT -> _rootItems.value = loaded(MediaItemType.ROOT, children)
                             else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")
                         }
@@ -149,20 +158,21 @@ class LibraryScreenViewModel
     }
 
     // currentMediaItem
-    private val _currentMediaItemState = MutableStateFlow(MediaItem.EMPTY)
-    val currentMediaItem : StateFlow<MediaItem> = _currentMediaItemState
+    private val _currentMediaItemState = MutableStateFlow(Song())
+    val currentMediaItem : StateFlow<Song> = _currentMediaItemState
 
     init {
         viewModelScope.launch {
             mediaRepository.currentMediaItem()
             .collect {
-                _currentMediaItemState.value = it
+                _currentMediaItemState.value = createSong(it)
             }
         }
     }
 
-    fun playFromSongList(index : Int, songs : List<MediaItem>) {
-        viewModelScope.launch { mediaRepository.playFromSongList(index, songs) }
+    fun playFromSongList(index : Int, songs : Songs) {
+        val mediaItems = songs.songs.map { MediaItemBuilder(it.id).build() }
+        viewModelScope.launch { mediaRepository.playFromSongList(index, mediaItems) }
     }
 
     fun play() {
@@ -189,9 +199,4 @@ class LibraryScreenViewModel
         return "LibScrnViewModel"
     }
 
-    private fun <K, V> appendToMap(map : Map<K, V>, key : K, value : V) : Map<K, V> {
-        val newMap = HashMap(map)
-        newMap[key] = value
-        return newMap
-    }
 }

@@ -33,6 +33,8 @@ import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.SearchResults
+import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
@@ -65,7 +67,7 @@ fun SearchScreen(
         buildOnSelectedMap(
             onFolderSelected = onFolderSelected(navController),
             onSongsSelected = {
-                itemIndex : Int, mediaItemList : List<MediaItem> ->
+                itemIndex : Int, mediaItemList : Songs ->
                     viewModel.playFromList(itemIndex, mediaItemList)
             },
             onSongSelected = {
@@ -257,7 +259,7 @@ fun SearchBar(currentSearchQuery : () -> String = { "No search query specified" 
 @Composable
 fun SearchResultsContent(
     modifier : Modifier = Modifier,
-    searchResultsProvider : () -> List<MediaItem> = { emptyList() },
+    searchResultsProvider : () -> SearchResults = { SearchResults.NO_RESULTS },
     onSelectedMapProvider : () -> EnumMap<MediaItemType, Any> = { EnumMap(MediaItemType::class.java) },
     keyboardController : SoftwareKeyboardController? = LocalSoftwareKeyboardController.current,
     focusRequester : FocusRequester = remember { FocusRequester() }) {

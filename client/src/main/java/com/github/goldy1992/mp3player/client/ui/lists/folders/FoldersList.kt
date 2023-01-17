@@ -16,9 +16,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.Folder
+import com.github.goldy1992.mp3player.client.data.Folders
+import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
 import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
+import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import org.apache.commons.collections4.CollectionUtils.isEmpty
@@ -26,28 +30,30 @@ import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 
 @Composable
 @Preview
-fun FolderList(folders : List<MediaItem> = emptyList(),
-               onFolderSelected : (folder : MediaItem) -> Unit = {}) {
+fun FolderList(folders : Folders = Folders(State.NOT_LOADED),
+               onFolderSelected : (folder : Folder) -> Unit = {}) {
 
-    when {
-        isEmpty(folders) -> LoadingIndicator()
-        MediaItemUtils.noResultsFound(folders) -> NoResultsFound(mediaItemType = MediaItemType.FOLDERS)
-        else -> {
+    when (folders.state) {
+        State.LOADING -> LoadingIndicator()
+        State.NO_RESULTS -> NoResultsFound(mediaItemType = MediaItemType.FOLDERS)
+        State.LOADED -> {
             val folderListDescr = stringResource(id = R.string.folder_list)
 
-            LazyColumn(Modifier.semantics {
-                contentDescription = folderListDescr
-            }) {
-                if (isNotEmpty(folders)) {
-                    items(count = folders!!.size) { itemIndex ->
+            LazyColumn(
+                modifier = Modifier.semantics { contentDescription = folderListDescr }
+            ) {
+                val folderItems = folders.folders
+                if (isNotEmpty(folderItems)) {
+                    items(count = folderItems.size) { itemIndex ->
                         run {
-                            val folder = folders!![itemIndex]
+                            val folder = folderItems[itemIndex]
                             FolderListItem(folder, onFolderSelected)
                         }
                     }
                 }
             }
         }
+        else -> {}
     }
 
 }

@@ -22,6 +22,7 @@ import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.*
 import com.github.goldy1992.mp3player.client.ui.*
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
@@ -40,7 +41,6 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.apache.commons.collections4.CollectionUtils.isEmpty
 import java.util.*
 
 private const val logTag = "LibraryScreen"
@@ -51,9 +51,11 @@ private const val logTag = "LibraryScreen"
  * @param pagerState The [PagerState].
  * @param viewModel The [LibraryScreenViewModel].
  */
-@OptIn(ExperimentalMaterial3Api::class)
-@ExperimentalMaterialApi
-@ExperimentalPagerApi
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalAnimationApi::class,
+    ExperimentalMaterialApi::class,
+    ExperimentalPagerApi::class)
 @Composable
 fun LibraryScreen(navController: NavController = rememberAnimatedNavController(),
                   pagerState: PagerState = rememberPagerState(initialPage = 0),
@@ -69,7 +71,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
     val isPlaying by viewModel.isPlaying.collectAsState()
     val currentMediaItem by viewModel.currentMediaItem.collectAsState()
 
-    val onSongSelected : (Int, List<MediaItem>) -> Unit =  {
+    val onSongSelected : (Int, Songs) -> Unit =  {
             itemIndex, mediaItemList ->
         viewModel.playFromSongList(itemIndex, mediaItemList)
     }
@@ -285,10 +287,10 @@ fun LibraryScreenContent(
     pagerState: PagerState = rememberPagerState(initialPage = 0),
     rootItemsProvider: () -> LibraryResultState,
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
-    songs : () -> LibraryResultState = { notLoaded(MediaItemType.SONGS) },
-    folders : () -> LibraryResultState = { notLoaded(MediaItemType.FOLDERS) },
-    albums : () -> LibraryResultState = { notLoaded(MediaItemType.ALBUMS) },
-    currentMediaItemProvider : () -> MediaItem = {MediaItem.EMPTY},
+    songs : () -> Songs = { Songs(State.NOT_LOADED) },
+    folders : () -> Folders = { Folders(State.NOT_LOADED) },
+    albums : () -> Albums = { Albums(State.NOT_LOADED) },
+    currentMediaItemProvider : () -> Song = {Song()},
     isPlayingProvider : () -> Boolean = {false}
 
 ) {
@@ -331,10 +333,10 @@ fun TabBarPages(
     modifier: Modifier = Modifier,
     pagerState: PagerState = rememberPagerState(),
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
-    songs : () -> LibraryResultState = { notLoaded(MediaItemType.SONGS) },
-    folders : () -> LibraryResultState = { notLoaded(MediaItemType.FOLDERS) },
-    albums : () -> LibraryResultState = { notLoaded(MediaItemType.ALBUMS) },
-    currentMediaItemProvider : () -> MediaItem = {MediaItem.EMPTY},
+    songs : () -> Songs = { Songs(State.NOT_LOADED) },
+    folders : () -> Folders = { Folders(State.NOT_LOADED) },
+    albums : () -> Albums = { Albums(State.NOT_LOADED) },
+    currentMediaItemProvider : () -> Song = {Song()},
     isPlayingProvider : () -> Boolean = {false}
 
 ) {
@@ -347,56 +349,34 @@ fun TabBarPages(
             state = pagerState,
             count = tabPages.size
         ) { pageIndex ->
-            val currentMediaItemType = tabPages[pageIndex]
-            val currentChildState = when (currentMediaItemType) {
-                MediaItemType.SONGS -> songs()
-                MediaItemType.FOLDERS -> folders()
-                MediaItemType.ALBUMS -> albums()
-                else -> songs()
-            }
-
-            if (currentChildState.state == State.NOT_LOADED) {
-
-            }
-            else if (currentChildState.state == State.LOADING) {
-                Column(modifier = Modifier.fillMaxSize(),
-                       horizontalAlignment = Alignment.CenterHorizontally,
-                       verticalArrangement = Arrangement.Center) {
-                    CircularProgressIndicator()
-                }
-
-            } else if (currentChildState.state == State.LOADED ||
-                        currentChildState.state == State.NO_RESULTS) {
-                when (currentMediaItemType) {
-                    MediaItemType.SONGS -> {
-                        SongList(
-                            songs = currentChildState.results,
-                            isPlayingProvider = isPlayingProvider,
-                            currentMediaItemProvider = currentMediaItemProvider
-                        ) { itemIndex, mediaItemList ->
-                            val callable = onItemSelectedMap[MediaItemType.SONGS] as? (Int, List<MediaItem>) -> Unit
+            val currentDataType = tabPages[pageIndex]
+            when (currentDataType) {
+                MediaItemType.SONGS ->
+                    SongList(
+                        songs = songs(),
+                        isPlayingProvider = isPlayingProvider,
+                        currentSongProvider = { currentMediaItemProvider() }) {
+                            itemIndex, mediaItemList ->
+                            val callable = onItemSelectedMap[MediaItemType.SONGS] as? (Int, Songs) -> Unit
                             if (callable != null) {
                                 callable(itemIndex, mediaItemList)
                             }
-                            Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItemList[itemIndex].mediaId}")
-                        }
                     }
-                    MediaItemType.FOLDERS -> {
-                        FolderList(folders = currentChildState.results) {
+                MediaItemType.FOLDERS -> {
+                    FolderList(folders = folders()) {
 
-                            val callable =
-                                onItemSelectedMap[MediaItemType.FOLDERS] as? (MediaItem) -> Unit
-                            if (callable != null) {
-                                callable(it)
-                            }
+                        val callable =
+                            onItemSelectedMap[MediaItemType.FOLDERS] as? (Folder) -> Unit
+                        if (callable != null) {
+                            callable(it)
                         }
                     }
-                    MediaItemType.ALBUMS -> {
-                        AlbumsList(albums = currentChildState)
-                    }
-                    else -> {
-                        Log.i("mainScreen", "unrecognised Media Item")
-                    }
+                }
+                MediaItemType.ALBUMS -> {
+                    AlbumsList(albums = albums())
+                }
+                else -> {
+                    Log.i("mainScreen", "unrecognised Media Item")
                 }
             }
         }

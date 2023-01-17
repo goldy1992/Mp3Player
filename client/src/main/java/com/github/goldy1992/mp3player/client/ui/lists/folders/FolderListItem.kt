@@ -19,15 +19,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import com.github.goldy1992.mp3player.client.data.Folder
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Preview
 @Composable
-fun FolderListItem(folder : MediaItem = MediaItemUtils.getEmptyMediaItem(),
-                   onClick: (selectedFolder : MediaItem) -> Unit = {}) {
+fun FolderListItem(folder : Folder = Folder(),
+                   onClick: (selectedFolder : Folder) -> Unit = {}) {
     ListItem(
         modifier = Modifier.combinedClickable(
             onClick = { onClick(folder) },
@@ -35,9 +34,8 @@ fun FolderListItem(folder : MediaItem = MediaItemUtils.getEmptyMediaItem(),
         ),
         icon = { FolderIcon()},
         secondaryText = {
-
             Text(
-                text = MediaItemUtils.getDirectoryPath(folder),
+                text = folder.path,
                 maxLines = 1,
                 style = MaterialTheme.typography.bodySmall,
                 overflow = TextOverflow.Ellipsis)
@@ -49,7 +47,7 @@ fun FolderListItem(folder : MediaItem = MediaItemUtils.getEmptyMediaItem(),
             }
         }
     ) {
-        Text(text = MediaItemUtils.getDirectoryName(folder),
+        Text(text = folder.name,
             style = MaterialTheme.typography.bodyMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis)

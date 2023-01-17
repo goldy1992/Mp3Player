@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui.screens
 
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -14,17 +13,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
-import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
-import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
+import com.github.goldy1992.mp3player.client.data.Folder
+import com.github.goldy1992.mp3player.client.data.Song
+import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.WindowSize
+import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
+import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
+import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.launch
-import org.apache.commons.collections4.CollectionUtils.isEmpty
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
@@ -35,13 +36,10 @@ fun FolderScreen(
 ) {
     val scope = rememberCoroutineScope()
     val isPlaying by viewModel.isPlaying.collectAsState()
-    val folderItems by viewModel.folderChildren.collectAsState()
-    val currentMediaItem by viewModel.currentMediaItem.collectAsState()
-    val folderName = viewModel.folderName
+    val currentSong by viewModel.currentMediaItem.collectAsState()
+    val folder : Folder by viewModel.folder.collectAsState()
 
-    val onSongSelected : (Int, List<MediaItem>) -> Unit = { itemIndex, mediaItemList ->
-        val mediaItem = mediaItemList[itemIndex]
-        Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")
+    val onSongSelected : (Int, Songs) -> Unit = { itemIndex, mediaItemList ->
         viewModel.playFromSongList(itemIndex, mediaItemList)
     }
 
@@ -67,8 +65,8 @@ fun FolderScreen(
         FolderScreenContent(
             modifier = Modifier.padding(it),
             isPlayingProvider = {isPlaying},
-            folderItemsProvider = { folderItems},
-            currentMediaItemProvider = { currentMediaItem },
+            folderSongs = { folder.songs },
+            currentSong = { currentSong },
             onSongSelected = onSongSelected
         )
     }
@@ -81,14 +79,14 @@ fun FolderScreen(
                     title = {
                         Column {
                             Text(
-                                text = folderName,
+                                text = folder.name,
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
 //                            Text(
-//                                text = folderPath,
+//                                text = folder.path,
 //                                style = MaterialTheme.typography.subtitle2,
 //                                maxLines = 1,
 //                                overflow = TextOverflow.Ellipsis
@@ -120,14 +118,14 @@ fun FolderScreen(
                     title = {
                         Column {
                             Text(
-                                text = folderName,
+                                text = folder.name,
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
 //                            Text(
-//                                text = folderPath,
+//                                text = folder.path,
 //                                style = MaterialTheme.typography.subtitle2,
 //                                maxLines = 1,
 //                                overflow = TextOverflow.Ellipsis
@@ -180,27 +178,31 @@ private fun SmallFolderScreen(
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 private fun FolderScreenContent(modifier : Modifier = Modifier,
-    folderItemsProvider : () -> List<MediaItem> = { emptyList() },
-    isPlayingProvider : () -> Boolean = { false},
-    currentMediaItemProvider : () -> MediaItem = {MediaItem.EMPTY},
-    onSongSelected : (Int, List<MediaItem>) -> Unit = {_,_ ->}) {
+                                folderSongs : () -> Songs = { Songs.NOT_LOADED },
+                                isPlayingProvider : () -> Boolean = { false},
+                                currentSong : () -> Song = {Song()},
+                                onSongSelected : (Int, Songs) -> Unit = {_,_ ->}) {
     Column(modifier = modifier) {
-        val folderItems = folderItemsProvider()
-        if (isEmpty(folderItems)) {
-            Surface(
-                modifier = modifier
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                CircularProgressIndicator()
+        val folderItems = folderSongs()
+        when (folderItems.state) {
+            State.LOADING -> {
+                Surface(
+                    modifier = modifier
+                        .align(Alignment.CenterHorizontally)
+                ) {
+                    CircularProgressIndicator()
+                }
             }
-        }
-        else {
-            SongList(
-                songs = folderItems,
-                isPlayingProvider = isPlayingProvider,
-                currentMediaItemProvider = currentMediaItemProvider,
-                onSongSelected = onSongSelected
-            )
+            State.LOADED -> {
+                SongList(
+                    songs = folderItems,
+                    isPlayingProvider = isPlayingProvider,
+                    currentSongProvider = currentSong,
+                    onSongSelected = onSongSelected
+                )
+            }
+            else -> {
+            }
         }
     }
 }

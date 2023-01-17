@@ -18,11 +18,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.MediaItem
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.Song
+import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
+import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.MediaItemUtils.noResultsFound
-import org.apache.commons.collections4.CollectionUtils.isEmpty
 import org.apache.commons.lang3.StringUtils
 
 private const val logTag = "SongList"
@@ -32,29 +33,29 @@ private const val logTag = "SongList"
 @Composable
 fun SongList(
     modifier : Modifier = Modifier,
-    songs : List<MediaItem> = emptyList(),
+    songs : Songs = Songs(State.NOT_LOADED),
     isPlayingProvider : () -> Boolean = {false},
-    currentMediaItemProvider : () -> MediaItem = {MediaItem.EMPTY},
-    onSongSelected : (itemIndex: Int, songs : List<MediaItem>) -> Unit = { _, _ -> }) {
+    currentSongProvider : () -> Song = { Song() },
+    onSongSelected : (itemIndex: Int, songs : Songs) -> Unit = { _, _ -> }) {
 
-    Log.i(logTag, "song list size: ${songs.size}")
+    Log.i(logTag, "song list size: ${songs.songs.size}")
     val isPlaying = isPlayingProvider()
-    val currentMediaItem = currentMediaItemProvider()
+    val currentMediaItem = currentSongProvider()
 
-    when {
-        isEmpty(songs) -> EmptySongsList()
-        noResultsFound(songs) -> NoResultsFound(mediaItemType = MediaItemType.SONGS)
-        else -> {
+    when (songs.state) {
+        State.NO_RESULTS -> NoResultsFound(mediaItemType = MediaItemType.SONGS)
+        State.LOADED -> {
+            val songList = songs.songs
             val songsListDescr = stringResource(id = R.string.songs_list)
             LazyColumn(
                 modifier = modifier.semantics {
                     contentDescription = songsListDescr
                 }) {
-                items(count = songs.size,
-                        key = { songs[it].mediaId}) { itemIndex ->
+                items(count = songList.size,
+                        key = { songList[it].id}) { itemIndex ->
                     run {
-                        val song = songs[itemIndex]
-                        val isItemSelected = isItemSelected(song, currentMediaItem)
+                        val song = songList[itemIndex]
+                        val isItemSelected = isSongItemSelected(song, currentMediaItem)
                         Log.i(logTag, "isItemSelected: $isItemSelected isPlaying: ${isPlaying}")
                         //val isItemPlaying = if (isPlaying) isItemSelected  else false
                         SongListItem(song = song, isSelected = isItemSelected, onClick =  {onSongSelected(itemIndex, songs) })
@@ -62,6 +63,7 @@ fun SongList(
                 }
             }
         }
+        else -> EmptySongsList()
     }
 }
 
@@ -82,5 +84,11 @@ fun EmptySongsList() {
 private fun isItemSelected(song : MediaItem, currentItem : MediaItem) : Boolean {
     val isSelected = StringUtils.equals(song.mediaId, currentItem.mediaId)
     Log.i(logTag, "isSelected: $isSelected, songId: ${song.mediaId}, currentItemId: ${currentItem.mediaId}")
+    return isSelected
+}
+
+private fun isSongItemSelected(song : Song, currentItem : Song) : Boolean {
+    val isSelected = StringUtils.equals(song.id, currentItem.id)
+    Log.i(logTag, "isSelected: $isSelected, songId: ${song.id}, currentItemId: ${currentItem.id}")
     return isSelected
 }

@@ -9,35 +9,35 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.media3.common.MediaItem
+import com.github.goldy1992.mp3player.client.data.Album
+import com.github.goldy1992.mp3player.client.data.Albums
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
 import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
-import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState
 import com.github.goldy1992.mp3player.client.ui.states.State
-import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 
 @Composable
-fun AlbumsList(albums : LibraryResultState) {
+fun AlbumsList(albums : Albums) {
     when(albums.state) {
         State.LOADING -> LoadingIndicator()
         State.NO_RESULTS -> NoResultsFound(mediaItemType = MediaItemType.ALBUMS)
-        State.LOADED -> AlbumListImpl(albums.results)
+        State.LOADED -> AlbumListImpl(albums = albums.albums)
         else -> Text(text = "Unknown album state")
     }
 }
 
-val testAlbuList = listOf(
-    MediaItemBuilder("").setAlbumTitle("title1").setAlbumArtist("artist1").build(),
-    MediaItemBuilder("").setAlbumTitle("title2").setAlbumArtist("artist2").build())
+val testAlbumList = listOf(
+    Album(id = "id1", albumTitle = "title1", albumArtist = "artist1" ),
+    Album(id = "id2", albumTitle = "title2", albumArtist = "artist2" )
+)
 @Preview
 @Composable
-private fun AlbumListImpl(albums : List<MediaItem> = testAlbuList,
-                            modifier : Modifier = Modifier) {
-
+private fun AlbumListImpl(modifier : Modifier = Modifier,
+                          albums : List<Album> = testAlbumList,
+) {
     LazyVerticalGrid(columns = GridCells.Fixed(2)) {
         items(albums.size) {
-            Column(Modifier.padding(5.dp)) {
+            Column(modifier.padding(5.dp)) {
                 AlbumListItem(album = albums[it])
             }
 

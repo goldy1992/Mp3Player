@@ -51,7 +51,7 @@ class SongsTest {
         composeTestRule.setContent {
             SongList(songs = songList,
                 isPlayingProvider = { false },
-                currentMediaItemProvider = { MediaItem.EMPTY  },
+                currentSongProvider = { MediaItem.EMPTY  },
                 onSongSelected = {_,_ ->})
         }
 

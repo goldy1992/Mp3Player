@@ -16,11 +16,11 @@ fun SongsInFolderList(
        ) {
     val songs = emptyList<MediaItem>()
     Column(modifier = Modifier.fillMaxSize()) {
-        SongList(
-            songs = songs,
+//        SongList(
+//            songs = songs,
            // onSongSelected = onFolderItemSelected,
          //   isPlayingState = isPlayingState,
-        )
+       // )
         //    currentMediaItemProvider = currentMediaItemState)
     }
 
