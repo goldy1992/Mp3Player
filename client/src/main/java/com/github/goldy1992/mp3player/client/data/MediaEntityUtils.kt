@@ -12,7 +12,8 @@ object MediaEntityUtils {
             id = mediaItem.mediaId,
             title = MediaItemUtils.getTitle(mediaItem),
             artist = MediaItemUtils.getArtist(mediaItem),
-            duration = MediaItemUtils.getDuration(mediaItem)
+            duration = MediaItemUtils.getDuration(mediaItem),
+            albumArt = MediaItemUtils.getAlbumArtUri(mediaItem) ?: Uri.EMPTY
         )
     }
 

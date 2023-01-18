@@ -5,10 +5,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
-import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createAlbums
-import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createFolders
+import com.github.goldy1992.mp3player.client.SearchResult
+import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createAlbum
+import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createFolder
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSong
-import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSongs
 import com.github.goldy1992.mp3player.client.data.SearchResults
 import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.Songs
@@ -127,24 +127,22 @@ class SearchScreenViewModel
     }
 
     private fun mapResults(mediaItemList: List<MediaItem>) : SearchResults {
-        val songItems : MutableList<MediaItem> = mutableListOf()
-        val folderItems : MutableList<MediaItem> = mutableListOf()
-        val albumItems : MutableList<MediaItem> = mutableListOf()
+        val resultsMap = mutableListOf<SearchResult>()
 
         mediaItemList.forEach {
-            when (MediaItemUtils.getMediaItemType(it)) {
-                MediaItemType.SONG -> songItems.add(it)
-                MediaItemType.FOLDER -> folderItems.add(it)
-                MediaItemType.ALBUMS -> albumItems.add(it)
-                else -> Log.w(logTag(), "Unkown MediaItem returned from search results")
+            val result : SearchResult =
+                when (MediaItemUtils.getMediaItemType(it)) {
+                    MediaItemType.SONG -> SearchResult(MediaItemType.SONG, createSong(it))
+                    MediaItemType.FOLDER -> SearchResult(MediaItemType.FOLDER, createFolder(it))
+                    MediaItemType.ALBUM -> SearchResult(MediaItemType.ALBUM, createAlbum(it))
+                    else -> SearchResult(MediaItemUtils.getMediaItemType(it), Any())
             }
+            resultsMap.add(result)
         }
 
         return SearchResults(
             state = State.LOADED,
-            songs = createSongs(State.LOADED, songItems),
-            folders = createFolders(State.LOADED, folderItems),
-            albums = createAlbums(State.LOADED, albumItems)
+            resultsMap = resultsMap
         )
     }
 

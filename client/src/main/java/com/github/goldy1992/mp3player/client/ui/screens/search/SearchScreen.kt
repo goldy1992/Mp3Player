@@ -29,11 +29,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.Folder
 import com.github.goldy1992.mp3player.client.data.SearchResults
+import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
@@ -43,9 +44,7 @@ import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListItem
 import com.github.goldy1992.mp3player.client.ui.lists.onFolderSelected
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongListItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
-import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import org.apache.commons.lang3.StringUtils
 import java.util.*
 
@@ -277,7 +276,7 @@ fun SearchResultsContent(
         }
     }
 
-    if (isNotEmpty(searchResults)) {
+    if (searchResults.hasResults()) {
         LazyColumn(modifier = modifier
             .fillMaxSize()
             .semantics {
@@ -285,24 +284,25 @@ fun SearchResultsContent(
             },
         state = lazyListState
         ) {
-            items(count = searchResults.size) { itemIndex ->
+            items(count = searchResults.resultsMap.size) { itemIndex ->
                 run {
-                    val mediaItem = searchResults[itemIndex]
-                    when (MediaItemUtils.getMediaItemType(mediaItem)) {
+                    val searchResult = searchResults.getResult(itemIndex)
+                    when (searchResult.mediaItemType) {
                         MediaItemType.SONG -> {
-                            SongListItem(song = mediaItem, onClick = {
-                                val onSongSelected = onSelectedMap[MediaItemType.SONG] as (MediaItem) -> Unit
-                                onSongSelected(mediaItem)
+                            val song = searchResult.value as Song
+                            SongListItem(song = song, onClick = {
+                                val onSongSelected = onSelectedMap[MediaItemType.SONG] as (Song) -> Unit
+                                onSongSelected(song)
                             })
                         }
                         MediaItemType.FOLDER -> {
-                            FolderListItem(folder = mediaItem, onClick = {
-                                val onFolderSelected = onSelectedMap[MediaItemType.FOLDER] as (MediaItem) -> Unit
-                                onFolderSelected(mediaItem)
+                            val folder = searchResult.value as Folder
+                            FolderListItem(folder = folder, onClick = {
+                                val onFolderSelected = onSelectedMap[MediaItemType.FOLDER] as (Folder) -> Unit
+                                onFolderSelected(folder)
                             })
                         }
-                        MediaItemType.SONGS, MediaItemType.FOLDERS -> {
-
+                        MediaItemType.SONGS, MediaItemType.FOLDERS, MediaItemType.ALBUMS -> {
                             Column(
                                 Modifier
                                     .fillMaxWidth()
@@ -313,7 +313,7 @@ fun SearchResultsContent(
                                     )
                             ) {
                                 Text(
-                                    text = MediaItemUtils.getTitle(mediaItem),
+                                    text = searchResult.mediaItemType.name,
                                     style = MaterialTheme.typography.titleMedium,
                                 )
                             }

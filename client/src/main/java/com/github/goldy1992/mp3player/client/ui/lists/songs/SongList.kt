@@ -15,7 +15,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.media3.common.MediaItem
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.Song
@@ -79,12 +78,6 @@ fun EmptySongsList() {
         modifier = Modifier.fillMaxWidth())
 
     }
-}
-
-private fun isItemSelected(song : MediaItem, currentItem : MediaItem) : Boolean {
-    val isSelected = StringUtils.equals(song.mediaId, currentItem.mediaId)
-    Log.i(logTag, "isSelected: $isSelected, songId: ${song.mediaId}, currentItemId: ${currentItem.mediaId}")
-    return isSelected
 }
 
 private fun isSongItemSelected(song : Song, currentItem : Song) : Boolean {
