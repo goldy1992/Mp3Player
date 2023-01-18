@@ -17,11 +17,15 @@ import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.commons.MediaItemType
 
 @Composable
-fun AlbumsList(albums : Albums) {
+fun AlbumsList(modifier : Modifier = Modifier,
+               albums : Albums) {
     when(albums.state) {
         State.LOADING -> LoadingIndicator()
         State.NO_RESULTS -> NoResultsFound(mediaItemType = MediaItemType.ALBUMS)
-        State.LOADED -> AlbumListImpl(albums = albums.albums)
+        State.LOADED -> AlbumListImpl(
+                            modifier = modifier,
+                            albums = albums.albums
+                        )
         else -> Text(text = "Unknown album state")
     }
 }

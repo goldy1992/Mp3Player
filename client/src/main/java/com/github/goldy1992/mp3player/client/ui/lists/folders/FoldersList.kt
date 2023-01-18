@@ -26,7 +26,8 @@ import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 
 @Composable
 @Preview
-fun FolderList(folders : Folders = Folders(State.NOT_LOADED),
+fun FolderList(modifier : Modifier = Modifier,
+        folders : Folders = Folders(State.NOT_LOADED),
                onFolderSelected : (folder : Folder) -> Unit = {}) {
 
     when (folders.state) {
@@ -36,7 +37,7 @@ fun FolderList(folders : Folders = Folders(State.NOT_LOADED),
             val folderListDescr = stringResource(id = R.string.folder_list)
 
             LazyColumn(
-                modifier = Modifier.semantics { contentDescription = folderListDescr }
+                modifier = modifier.semantics { contentDescription = folderListDescr }
             ) {
                 val folderItems = folders.folders
                 if (isNotEmpty(folderItems)) {

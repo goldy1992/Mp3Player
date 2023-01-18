@@ -363,7 +363,8 @@ fun TabBarPages(
                             }
                     }
                 MediaItemType.FOLDERS -> {
-                    FolderList(folders = folders()) {
+                    FolderList(folders = folders(),
+                    modifier = Modifier.fillMaxSize()) {
 
                         val callable =
                             onItemSelectedMap[MediaItemType.FOLDERS] as? (Folder) -> Unit
@@ -373,7 +374,8 @@ fun TabBarPages(
                     }
                 }
                 MediaItemType.ALBUMS -> {
-                    AlbumsList(albums = albums())
+                    AlbumsList(modifier = Modifier.fillMaxSize(),
+                        albums = albums())
                 }
                 else -> {
                     Log.i("mainScreen", "unrecognised Media Item")
