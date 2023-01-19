@@ -44,7 +44,7 @@ fun FolderList(modifier : Modifier = Modifier,
                     items(count = folderItems.size) { itemIndex ->
                         run {
                             val folder = folderItems[itemIndex]
-                            FolderListItem(folder, onFolderSelected)
+                            FolderListItem(folder = folder, onClick = onFolderSelected)
                         }
                     }
                 }

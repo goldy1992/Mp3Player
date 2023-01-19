@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.lists.folders;
+package com.github.goldy1992.mp3player.client.ui.lists.albums;
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -17,34 +17,33 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.Folder
+import com.github.goldy1992.mp3player.client.data.Album
+import com.github.goldy1992.mp3player.client.ui.lists.songs.AlbumArt
 
-@OptIn(
-    ExperimentalFoundationApi::class,
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class,
     ExperimentalMaterial3Api::class
 )
 @Preview
 @Composable
-fun FolderListItem(folder : Folder = Folder(),
+fun AlbumSearchResultItem(album : Album = Album(),
                    containerColor : Color = MaterialTheme.colorScheme.surface,
-                   onClick: (selectedFolder : Folder) -> Unit = {}) {
+                   onClick: (selectedAlbum : Album) -> Unit = {}) {
     ListItem(
-        modifier = Modifier
-            .combinedClickable(
-                onClick = { onClick(folder) },
-                onLongClick = { }
-            ),
-        colors = ListItemDefaults.colors(containerColor = containerColor) ,
-        leadingContent = { FolderIcon()},
+        modifier = Modifier.combinedClickable(
+            onClick = { onClick(album) },
+            onLongClick = { }
+        ),
+        colors = ListItemDefaults.colors(containerColor = containerColor),
+        leadingContent = { AlbumArt(uri = album.albumArt, modifier = Modifier.size(40.dp))},
         headlineText = {
-            Text(text = folder.name,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis)
-        },
+                Text(text = album.albumTitle,
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis)
+            },
         supportingText = {
             Text(
-                text = folder.path,
+                text = album.albumArtist,
                 maxLines = 1,
                 style = MaterialTheme.typography.bodySmall,
                 overflow = TextOverflow.Ellipsis)
@@ -54,8 +53,8 @@ fun FolderListItem(folder : Folder = Folder(),
                 Icon(Icons.Filled.MoreVert, contentDescription = "",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-        },
-)
+        }
+    )
 }
 
 @Composable

@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.client.ui.lists.albums
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -31,8 +32,10 @@ fun AlbumListItem(modifier: Modifier = Modifier,
         elevation = CardDefaults.outlinedCardElevation()) {
         Column(Modifier.fillMaxSize()) {
             AlbumArt(album.albumArt, modifier = modifier.align(Alignment.CenterHorizontally).size(width))
-            Text(album.albumTitle, style = MaterialTheme.typography.bodyMedium)
-            Text(album.albumArtist, style = MaterialTheme.typography.bodySmall)
+            Column(Modifier.padding(start = 16.dp)) {
+                Text(album.albumTitle, style = MaterialTheme.typography.bodyLarge)
+                Text(album.albumArtist, style = MaterialTheme.typography.bodyMedium)
+            }
         }
     }
 }

@@ -32,13 +32,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.Folder
-import com.github.goldy1992.mp3player.client.data.SearchResults
-import com.github.goldy1992.mp3player.client.data.Song
-import com.github.goldy1992.mp3player.client.data.Songs
+import com.github.goldy1992.mp3player.client.data.*
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
+import com.github.goldy1992.mp3player.client.ui.lists.albums.AlbumSearchResultItem
 import com.github.goldy1992.mp3player.client.ui.lists.buildOnSelectedMap
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListItem
 import com.github.goldy1992.mp3player.client.ui.lists.onFolderSelected
@@ -302,6 +300,13 @@ fun SearchResultsContent(
                                 onFolderSelected(folder)
                             })
                         }
+                        MediaItemType.ALBUM -> {
+                            val album = searchResult.value as Album
+                            AlbumSearchResultItem(album = album, onClick = {
+                                val onAlbumSelected = onSelectedMap[MediaItemType.ALBUM] as (Album) -> Unit
+                                onAlbumSelected(album)
+                            })
+                        }
                         MediaItemType.SONGS, MediaItemType.FOLDERS, MediaItemType.ALBUMS -> {
                             Column(
                                 Modifier
@@ -318,6 +323,7 @@ fun SearchResultsContent(
                                 )
                             }
                         }
+
 
                         else -> {
                             Log.i("SearchScreen", "Item found with no MediaItemType")

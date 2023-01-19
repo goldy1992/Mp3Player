@@ -3,10 +3,13 @@ package com.github.goldy1992.mp3player.service.dagger.modules
 import android.content.ContentResolver
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.filter.FolderSearchResultsFilter
+import com.github.goldy1992.mp3player.service.library.content.parser.AlbumsResultsParser
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
+import com.github.goldy1992.mp3player.service.library.content.searcher.AlbumSearcher
 import com.github.goldy1992.mp3player.service.library.content.searcher.FolderSearcher
 import com.github.goldy1992.mp3player.service.library.content.searcher.SongSearcher
+import com.github.goldy1992.mp3player.service.library.search.AlbumDao
 import com.github.goldy1992.mp3player.service.library.search.FolderDao
 import com.github.goldy1992.mp3player.service.library.search.SongDao
 import dagger.Module
@@ -46,6 +49,21 @@ class ContentSearchersModule {
                 mediaItemTypeIds,
                 folderDao,
                 scope)
+    }
+
+    @Provides
+    @ServiceScoped
+    fun providesAlbumSearcher(contentResolver: ContentResolver,
+                              resultsParser: AlbumsResultsParser,
+                              mediaItemTypeIds: MediaItemTypeIds,
+                              albumDao: AlbumDao,
+                              scope: CoroutineScope
+    ) : AlbumSearcher {
+        return AlbumSearcher(contentResolver,
+            resultsParser,
+            mediaItemTypeIds,
+            albumDao,
+            scope)
     }
 
 }

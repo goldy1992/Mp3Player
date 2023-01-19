@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.service.dagger.modules.service
 
 import android.content.Context
 import androidx.room.Room
+import com.github.goldy1992.mp3player.service.library.search.AlbumDao
 import com.github.goldy1992.mp3player.service.library.search.FolderDao
 import com.github.goldy1992.mp3player.service.library.search.SearchDatabase
 import com.github.goldy1992.mp3player.service.library.search.SearchDatabase.Companion.getDatabase
@@ -33,6 +34,12 @@ class SearchDatabaseModule {
     @ServiceScoped
     fun provideFolderDao(searchDatabase: SearchDatabase): FolderDao {
         return searchDatabase.folderDao()
+    }
+
+    @Provides
+    @ServiceScoped
+    fun provideAlbumDao(searchDatabase: SearchDatabase): AlbumDao {
+        return searchDatabase.albumDao()
     }
 
     companion object {

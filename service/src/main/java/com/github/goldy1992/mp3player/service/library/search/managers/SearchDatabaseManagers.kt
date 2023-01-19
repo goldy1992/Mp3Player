@@ -7,7 +7,8 @@ import javax.inject.Inject
 
 @ServiceScoped
 class SearchDatabaseManagers @Inject constructor(songDatabaseManager: SongDatabaseManager,
-                                                 folderDatabaseManager: FolderDatabaseManager) {
+                                                 folderDatabaseManager: FolderDatabaseManager,
+                                                albumDatabaseManager: AlbumDatabaseManager) {
     val dbManagerMap: EnumMap<MediaItemType, SearchDatabaseManager<*>>
     /**
      * reindexes all of the search database tables.
@@ -27,5 +28,6 @@ class SearchDatabaseManagers @Inject constructor(songDatabaseManager: SongDataba
         dbManagerMap = EnumMap(MediaItemType::class.java)
         dbManagerMap[MediaItemType.SONGS] = songDatabaseManager
         dbManagerMap[MediaItemType.FOLDERS] = folderDatabaseManager
+        dbManagerMap[MediaItemType.ALBUMS] = albumDatabaseManager
     }
 }

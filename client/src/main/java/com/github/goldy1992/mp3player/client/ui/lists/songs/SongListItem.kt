@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.QuestionAnswer
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,9 +34,9 @@ private const val logTag = "SongListItem"
 @Composable
 fun SongListItem(song : Song = Song(),
                  isSelected : Boolean = false,
-                 onClick: () -> Unit = {}) {
+                 onClick: () -> Unit = {},
+                containerColor : Color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface) {
     Log.i(logTag, "isSelected: $isSelected, songId: ${song.id}, title: ${song.title}")
-    val containerColor = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
     ListItem(
             modifier = Modifier
                 .combinedClickable(
