@@ -56,7 +56,6 @@ class LibraryScreenViewModel
 
     private val _albums : MutableStateFlow<Albums> = MutableStateFlow(Albums(State.NOT_LOADED))
     val albums : StateFlow<Albums> = _albums
-    
 
     init {
         viewModelScope.launch {
@@ -109,7 +108,7 @@ class LibraryScreenViewModel
                     if (isEmpty(children)) {
                         when (mediaItemType) {
                             MediaItemType.ALBUMS -> _albums.value = Albums(State.NO_RESULTS)
-                            MediaItemType.SONGS -> _songs.value = Songs(State.NOT_LOADED)
+                            MediaItemType.SONGS -> _songs.value = Songs(State.NO_RESULTS)
                             MediaItemType.FOLDERS -> _folders.value = Folders(State.NO_RESULTS)
                             MediaItemType.ROOT -> _rootItems.value = noResults(MediaItemType.ROOT)
                             else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")

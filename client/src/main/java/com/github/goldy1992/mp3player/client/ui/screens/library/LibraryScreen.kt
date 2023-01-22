@@ -2,7 +2,6 @@
 
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
-import android.net.Uri
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
@@ -13,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -30,11 +28,9 @@ import com.github.goldy1992.mp3player.client.ui.lists.albums.AlbumsList
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState
-import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState.Companion.notLoaded
 import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -75,19 +71,18 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
             itemIndex, mediaItemList ->
         viewModel.playFromSongList(itemIndex, mediaItemList)
     }
-    val onFolderSelected : (MediaItem) -> Unit = {
-
-        val folderId = it.mediaId
-        val encodedFolderLibraryId = Uri.encode(folderId)
-        val directoryPath = MediaItemUtils.getDirectoryPath(it)
-        val encodedFolderPath = Uri.encode(directoryPath)
-        val folderName = MediaItemUtils.getDirectoryName(it)
+    val onFolderSelected : (Folder) -> Unit = {
+        val encodedFolderLibraryId = it.encodedLibraryId
+        val encodedFolderPath = it.encodedPath
+        val folderName = it.name
+        Log.w(logTag, "Folder name: ${folderName}")
         navController.navigate(
             Screen.FOLDER.name
                     + "/" + encodedFolderLibraryId
                     + "/" + folderName
                     + "/" + encodedFolderPath)
     }
+
     val onItemSelectedMap : EnumMap<MediaItemType, Any> = EnumMap(MediaItemType::class.java)
     onItemSelectedMap[MediaItemType.SONGS] = onSongSelected
     onItemSelectedMap[MediaItemType.FOLDERS] = onFolderSelected
@@ -98,13 +93,14 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
             currentScreen = Screen.LIBRARY
         )
     }
+
     val libraryScreenContent : @Composable (PaddingValues) -> Unit = {
         LibraryScreenContent(
             scope = scope,
             pagerState = pagerState,
             rootItemsProvider =  { rootItems },
             onItemSelectedMapProvider = { onItemSelectedMap },
-            songs = {songs},
+            songs = { songs },
             folders = { folders },
             albums = { albums },
             currentMediaItemProvider = { currentMediaItem },

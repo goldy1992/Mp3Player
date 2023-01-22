@@ -57,8 +57,11 @@ object MediaEntityUtils {
                     songs: Songs = Songs()
     ) : Folder {
         return Folder(
+            id = mediaItem.mediaId,
             name = MediaItemUtils.getDirectoryName(mediaItem),
+            encodedLibraryId = Uri.encode(mediaItem.mediaId),
             path = MediaItemUtils.getDirectoryPath(mediaItem),
+            encodedPath = Uri.encode(MediaItemUtils.getDirectoryPath(mediaItem)),
             uri = MediaItemUtils.getDirectoryUri(mediaItem) ?: Uri.EMPTY,
             songs = songs
         )

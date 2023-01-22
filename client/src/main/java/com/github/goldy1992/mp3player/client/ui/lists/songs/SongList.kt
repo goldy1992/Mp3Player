@@ -2,24 +2,24 @@ package com.github.goldy1992.mp3player.client.ui.lists.songs
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
+import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
 import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
 import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -62,6 +62,12 @@ fun SongList(
                 }
             }
         }
+        State.LOADING -> {
+            LoadingSongsList()
+        }
+        State.NOT_LOADED -> {
+
+        }
         else -> EmptySongsList()
     }
 }
@@ -77,6 +83,18 @@ fun EmptySongsList() {
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth())
 
+    }
+}
+
+@Preview
+@Composable
+fun LoadingSongsList() {
+    Column(
+        modifier = Modifier.padding(10.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally)    {
+        Text("Loading Songs")
+        LoadingIndicator()
     }
 }
 

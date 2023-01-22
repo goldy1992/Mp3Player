@@ -6,8 +6,10 @@ import com.github.goldy1992.mp3player.commons.Constants
 
 class Folder constructor(
     val id : String = Constants.UNKNOWN,
+    val encodedLibraryId : String = Constants.UNKNOWN,
     val name : String = Constants.UNKNOWN,
     val path : String = Constants.UNKNOWN,
+    val encodedPath : String = Constants.UNKNOWN,
     val uri: Uri = Uri.EMPTY,
     val songs: Songs= Songs(),
     val state: State = State.NOT_LOADED,

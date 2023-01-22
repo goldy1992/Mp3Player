@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
@@ -33,8 +34,11 @@ fun AlbumListItem(modifier: Modifier = Modifier,
         Column(Modifier.fillMaxSize()) {
             AlbumArt(album.albumArt, modifier = modifier.align(Alignment.CenterHorizontally).size(width))
             Column(Modifier.padding(start = 16.dp)) {
-                Text(album.albumTitle, style = MaterialTheme.typography.bodyLarge)
-                Text(album.albumArtist, style = MaterialTheme.typography.bodyMedium)
+                Text(text = album.albumTitle,
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines=1,
+                    overflow = TextOverflow.Ellipsis)
+                Text(album.albumArtist, style = MaterialTheme.typography.bodySmall, maxLines=1)
             }
         }
     }
