@@ -62,7 +62,6 @@
     <string name="LOGO_DESCRIPTION">The title logo</string>
     <string name="app_title">Music Player</string>
     <string name="FOLDER_NAME">%1$s</string>
-    <string name="NO_MEDIA_FOUND">No audio tracks found on your device.</string>
 
 
     <!-- THEME NAMES !-->

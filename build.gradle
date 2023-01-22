@@ -13,7 +13,7 @@ buildscript {
         commons_lang_version = '3.9'
         compose_version = '1.3.0'
         compose_test_version = '1.3.2'
-        compose_material3_version = '1.0.0'
+        compose_material3_version = '1.0.1'
         compose_test_version = '1.0.4'
         datastore_preferences_version = '1.0.0'
         espresso_core_version = '3.3.0'
