@@ -2,6 +2,7 @@
 
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
+import android.util.Base64
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
@@ -83,9 +84,24 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
                     + "/" + encodedFolderPath)
     }
 
+    val onAlbumSelected : (Album) -> Unit = {
+        val albumId = it.id
+        val albumTitle = it.albumTitle
+        val albumArtist = it.albumArtist
+        val albumArtUriBase64 = Base64.encodeToString(it.albumArt.toString().encodeToByteArray(), Base64.DEFAULT)
+        Log.w(logTag, "Album title name: ${albumTitle}")
+        navController.navigate(
+            Screen.ALBUM.name
+                    + "/" + albumId
+                    + "/" + albumTitle
+                    + "/" + albumArtist
+                    + "/" + albumArtUriBase64)
+    }
+
     val onItemSelectedMap : EnumMap<MediaItemType, Any> = EnumMap(MediaItemType::class.java)
     onItemSelectedMap[MediaItemType.SONGS] = onSongSelected
     onItemSelectedMap[MediaItemType.FOLDERS] = onFolderSelected
+    onItemSelectedMap[MediaItemType.ALBUMS] = onAlbumSelected
 
     val navDrawerContent : @Composable () -> Unit = {
         NavigationDrawerContent(
@@ -371,7 +387,13 @@ fun TabBarPages(
                 }
                 MediaItemType.ALBUMS -> {
                     AlbumsList(modifier = Modifier.fillMaxSize(),
-                        albums = albums())
+                        albums = albums()) {
+                            val callable =
+                                onItemSelectedMap[MediaItemType.ALBUMS] as? (Album) -> Unit
+                            if (callable != null) {
+                                callable(it)
+                            }
+                        }
                 }
                 else -> {
                     Log.i("mainScreen", "unrecognised Media Item")
@@ -388,7 +410,8 @@ fun LargeAppBar(title : String,
 ) {
     TopAppBar(
         title = {
-            Text(text = title,
+            Text(
+                text = title,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
             )

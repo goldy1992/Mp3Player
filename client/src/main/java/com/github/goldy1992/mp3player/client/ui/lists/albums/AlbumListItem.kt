@@ -1,5 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.lists.albums
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,14 +23,19 @@ import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.data.Album
 import com.github.goldy1992.mp3player.client.ui.lists.songs.AlbumArt
 
-@OptIn(ExperimentalCoilApi::class)
+@OptIn(ExperimentalCoilApi::class, ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun AlbumListItem(modifier: Modifier = Modifier,
                 album : Album = Album(),
-                localDensity: Density = LocalDensity.current) {
+                localDensity: Density = LocalDensity.current,
+                onClick : () -> Unit = {}) {
     var width by remember { mutableStateOf(0.dp) }
     Card(modifier= modifier.fillMaxSize()
+        .combinedClickable(
+            onClick = { onClick()},
+            onLongClick = {}
+        )
         .onSizeChanged { width = (it.width.toFloat() / localDensity.density).dp },
         elevation = CardDefaults.outlinedCardElevation()) {
         Column(Modifier.fillMaxSize()) {

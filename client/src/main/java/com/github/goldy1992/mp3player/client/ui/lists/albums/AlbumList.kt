@@ -18,13 +18,15 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 
 @Composable
 fun AlbumsList(modifier : Modifier = Modifier,
-               albums : Albums) {
+               albums : Albums,
+                onAlbumSelected : (Album) -> Unit = {}) {
     when(albums.state) {
         State.LOADING -> LoadingIndicator()
         State.NO_RESULTS -> NoResultsFound(mediaItemType = MediaItemType.ALBUMS)
         State.LOADED -> AlbumListImpl(
                             modifier = modifier,
-                            albums = albums.albums
+                            albums = albums.albums,
+                            onAlbumSelected = onAlbumSelected
                         )
         else -> Text(text = "Unknown album state")
     }
@@ -38,11 +40,14 @@ val testAlbumList = listOf(
 @Composable
 private fun AlbumListImpl(modifier : Modifier = Modifier,
                           albums : List<Album> = testAlbumList,
+                          onAlbumSelected : (Album) -> Unit = {}
 ) {
     LazyVerticalGrid(columns = GridCells.Fixed(2)) {
         items(albums.size) {
+            val currentAlbum = albums[it]
             Column(modifier.padding(5.dp)) {
-                AlbumListItem(album = albums[it])
+                AlbumListItem(album = currentAlbum,
+                onClick = { onAlbumSelected(currentAlbum)})
             }
 
         }
