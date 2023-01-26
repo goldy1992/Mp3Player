@@ -14,8 +14,10 @@ class ContentRetrievers
                 private val rootRetriever: RootRetriever,
                 private val songsRetriever: SongsRetriever,
                 private val foldersRetriever: FoldersRetriever,
+                private val songsFromFolderRetriever: SongsFromFolderRetriever,
                 private val albumsRetriever: AlbumsRetriever,
-                private val songsFromFolderRetriever: SongsFromFolderRetriever) {
+                private val songsFromAlbumRetriever: SongsFromAlbumRetriever,
+                ) {
     /**  */
     var contentRetrieverMap: Map<Class<out ContentRetriever>, ContentRetriever>
     /**  */
@@ -33,12 +35,13 @@ class ContentRetrievers
         idToContentRetrieverMap = HashMap()
         for (mediaItemTypeInfo in MediaItemType.values()) {
             val key = mediaItemTypeIds.getId(mediaItemTypeInfo)
-            if (null != key) {
+            if (MediaItemType.NONE.name != key) {
                 when (mediaItemTypeInfo) {
                     MediaItemType.SONGS, MediaItemType.SONG -> addToIdToContentRetrieverMap(key, SongsRetriever::class.java)
                     MediaItemType.FOLDER -> addToIdToContentRetrieverMap(key, SongsFromFolderRetriever::class.java)
                     MediaItemType.FOLDERS -> addToIdToContentRetrieverMap(key, FoldersRetriever::class.java)
                     MediaItemType.ALBUMS -> addToIdToContentRetrieverMap(key, AlbumsRetriever::class.java)
+                    MediaItemType.ALBUM -> addToIdToContentRetrieverMap(key, SongsFromAlbumRetriever::class.java)
                     MediaItemType.ROOT -> addToIdToContentRetrieverMap(key, RootRetriever::class.java)
                     else -> {
                     }
@@ -54,6 +57,7 @@ class ContentRetrievers
             MediaItemType.FOLDER -> songsFromFolderRetriever
             MediaItemType.FOLDERS -> foldersRetriever
             MediaItemType.ALBUMS -> albumsRetriever
+            MediaItemType.ALBUM -> songsFromAlbumRetriever
             else -> null
 
         }

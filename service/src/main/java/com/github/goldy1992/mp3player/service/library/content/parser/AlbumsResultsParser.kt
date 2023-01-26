@@ -4,6 +4,7 @@ import android.content.ContentUris
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.commons.*
@@ -72,6 +73,7 @@ class AlbumsResultsParser
     private fun buildMediaItem(c: Cursor): MediaItem? {
         val albumIdIndex = c.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)
         val albumId = if (albumIdIndex >= 0) c.getLong(albumIdIndex) else 0
+        Log.d(logTag(), "album_id: ${albumId}")
 
         val albumTitleIndex = c.getColumnIndex(MediaStore.Audio.Media.ALBUM)
         val albumTitle = if (albumTitleIndex >= 0) c.getString(albumTitleIndex) else Constants.UNKNOWN

@@ -33,6 +33,7 @@ object MediaEntityUtils {
                     songs: Songs = Songs()
     ) : Album {
         return Album(
+            id = mediaItem.mediaId,
             albumTitle = MediaItemUtils.getAlbumTitle(mediaItem),
             albumArtist = MediaItemUtils.getAlbumArtist(mediaItem),
             recordingYear = MediaItemUtils.getAlbumRecordingYear(mediaItem),

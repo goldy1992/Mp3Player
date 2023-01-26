@@ -59,7 +59,9 @@ constructor(savedStateHandle: SavedStateHandle,
                     started = SharingStarted.WhileSubscribed(),
                     replay = 1
                 )
-                .filter { it.parentId == albumId }
+                .filter {
+                    it.parentId == albumId
+                }
                 .collect {
                     mediaRepository.getChildren(parentId = albumId)
                 }
