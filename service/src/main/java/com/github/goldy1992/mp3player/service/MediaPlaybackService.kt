@@ -75,6 +75,11 @@ open class MediaPlaybackService : MediaLibraryService(),
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i(logTag(), "on start command")
+        val rootItem = rootAuthenticator.getRootItem()
+        runBlocking {
+            contentManager.initialise(rootMediaItem = rootItem)
+        }
+
         scope.launch(ioDispatcher) {
             searchDatabaseManagers.reindexAll()
         }
@@ -87,10 +92,6 @@ open class MediaPlaybackService : MediaLibraryService(),
         }
         mediaStoreObservers.init(mediaSession)
 
-        val rootItem = rootAuthenticator.getRootItem()
-        runBlocking {
-            contentManager.initialise(rootMediaItem = rootItem)
-        }
         scope.launch {
             withContext(mainDispatcher) {
                 Log.i(logTag(), "adding to queue")

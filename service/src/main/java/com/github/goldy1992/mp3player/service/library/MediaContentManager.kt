@@ -6,7 +6,6 @@ import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Normaliser.normalise
-import com.github.goldy1992.mp3player.service.PlaylistManager
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetrievers
 import com.github.goldy1992.mp3player.service.library.content.retriever.MediaItemFromIdRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever
@@ -22,8 +21,7 @@ import javax.inject.Inject
 class MediaContentManager @Inject constructor(private val contentRetrievers: ContentRetrievers,
                                               private val contentSearchers: ContentSearchers,
                                               private val songFromUriRetriever: SongFromUriRetriever,
-                                              private val mediaItemFromIdRetriever: MediaItemFromIdRetriever,
-                                              private val playlistManager: PlaylistManager) :
+                                              private val mediaItemFromIdRetriever: MediaItemFromIdRetriever) :
     ContentManager {
     private val rootRetriever: RootRetriever = contentRetrievers.root
     override suspend fun initialise(rootMediaItem: MediaItem) {
@@ -125,27 +123,9 @@ class MediaContentManager @Inject constructor(private val contentRetrievers: Con
         return toReturn
     }
 
-    /**
-     *
-     * @param id the id of the playlist
-     * @return the playlist
-     */
-    fun getPlaylist(): List<MediaItem> {
-        return playlistManager.getCurrentPlaylist()
-    }
-
     private val itemMap : EnumMap<MediaItemType, HashMap<String, List<MediaItem>>> = EnumMap(MediaItemType::class.java)
     init {
         MediaItemType.values().forEach { itemMap[it] = HashMap() }
-    }
-
-    private fun getCachedMediaItems(id : String) : List<MediaItem>? {
-        for (mediaItemType in itemMap.keys) {
-            if (itemMap[mediaItemType]?.containsKey(id) == true) {
-                return itemMap[mediaItemType]!![id] ?: emptyList()
-            }
-        }
-        return null
     }
 
     companion object {

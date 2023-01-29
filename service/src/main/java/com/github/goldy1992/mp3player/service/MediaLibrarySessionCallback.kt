@@ -12,6 +12,7 @@ import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.IoDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MainDispatcher
+import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.player.ChangeSpeedProvider
 import com.google.common.collect.ImmutableList
@@ -54,6 +55,9 @@ class MediaLibrarySessionCallback
 
     override fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo) {
         super.onPostConnect(session, controller)
+        runBlocking {
+            session.player.setMediaItems(contentManager.getChildren(MediaItemType.SONG))
+        }
         Log.i(logTag(), "onPostConnect")
 
     }
@@ -132,6 +136,7 @@ class MediaLibrarySessionCallback
         controller: MediaSession.ControllerInfo,
         mediaItems: MutableList<MediaItem>
     ): ListenableFuture<MutableList<MediaItem>> {
+        super.onAddMediaItems(mediaSession, controller, mediaItems)
         val mediaItems = mutableListOf<MediaItem>()
         runBlocking {
             for (item in mediaItems) {
