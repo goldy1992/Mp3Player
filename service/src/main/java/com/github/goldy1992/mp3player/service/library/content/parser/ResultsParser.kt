@@ -9,9 +9,9 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 
 abstract class ResultsParser : Comparator<MediaItem>, LogTagger {
 
-    abstract fun create(cursor: Cursor?, mediaIdPrefix: String?): List<MediaItem>
+    //abstract fun create(cursor: Cursor?, mediaIdPrefix: String?): List<MediaItem>
 
-    abstract fun create(cursor: Cursor) : List<MediaItem>
+    abstract fun create(cursor: Cursor?) : List<MediaItem>
 
     abstract val type: MediaItemType?
 

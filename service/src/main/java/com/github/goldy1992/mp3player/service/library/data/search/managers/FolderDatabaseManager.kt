@@ -1,35 +1,34 @@
-package com.github.goldy1992.mp3player.service.library.search.managers
+package com.github.goldy1992.mp3player.service.library.data.search.managers
 
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.MediaItemUtils.getAlbumTitle
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryName
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryPath
-import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaId
 import com.github.goldy1992.mp3player.commons.Normaliser.normalise
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
-import com.github.goldy1992.mp3player.service.library.search.Album
-import com.github.goldy1992.mp3player.service.library.search.SearchDatabase
+import com.github.goldy1992.mp3player.service.library.data.search.Folder
+import com.github.goldy1992.mp3player.service.library.data.search.SearchDatabase
 import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 
 @ServiceScoped
-class AlbumDatabaseManager
+class FolderDatabaseManager
     @Inject
     constructor(contentManager: ContentManager,
                 mediaItemTypeIds: MediaItemTypeIds,
-                searchDatabase: SearchDatabase)
-    : SearchDatabaseManager<Album>(
+                searchDatabase: SearchDatabase
+    )
+    : SearchDatabaseManager<Folder>(
         contentManager,
-        searchDatabase.albumDao(),
-        mediaItemTypeIds.getId(MediaItemType.ALBUMS)) {
+        searchDatabase.folderDao(),
+        mediaItemTypeIds.getId(MediaItemType.FOLDERS)) {
 
-    override fun createFromMediaItem(item: MediaItem): Album? {
-        val id = getMediaId(item)
-        val value = getAlbumTitle(item)
+    public override fun createFromMediaItem(item: MediaItem): Folder? {
+        val id = getDirectoryPath(item)
+        val value = getDirectoryName(item)
         return if (null != value) {
-            Album(id, normalise(value))
+            Folder(id, normalise(value))
         } else null
     }
 }

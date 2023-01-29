@@ -1,22 +1,21 @@
 package com.github.goldy1992.mp3player.service
 
 import android.content.Intent
+import android.os.Build
 import android.util.Log
 import androidx.media3.common.Player.STATE_READY
+import androidx.media3.common.Player.State
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
 import androidx.media3.ui.PlayerNotificationManager
 import com.github.goldy1992.mp3player.commons.*
-import com.github.goldy1992.mp3player.service.library.CustomMediaItemTree
+import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers
-import com.github.goldy1992.mp3player.service.library.search.managers.SearchDatabaseManagers
+import com.github.goldy1992.mp3player.service.library.data.search.managers.SearchDatabaseManagers
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 /**
@@ -69,7 +68,10 @@ open class MediaPlaybackService : MediaLibraryService(),
     lateinit var searchDatabaseManagers: SearchDatabaseManagers
 
     @Inject
-    lateinit var customMediaItemTree: CustomMediaItemTree
+    lateinit var contentManager: ContentManager
+
+    @Inject
+    lateinit var playlistManager: PlaylistManager
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i(logTag(), "on start command")
@@ -86,16 +88,13 @@ open class MediaPlaybackService : MediaLibraryService(),
         mediaStoreObservers.init(mediaSession)
 
         val rootItem = rootAuthenticator.getRootItem()
-        customMediaItemTree.initialise(rootItem = rootItem)
+        runBlocking {
+            contentManager.initialise(rootMediaItem = rootItem)
+        }
         scope.launch {
             withContext(mainDispatcher) {
                 Log.i(logTag(), "adding to queue")
-                // TODO: add queue manager
-                mediaSession.player.addMediaItems(
-                    customMediaItemTree.rootNode?.getChildren()?.get(0)?.getChildren()
-                        ?.map(CustomMediaItemTree.MediaItemNode::item)?.toMutableList()
-                        ?: mutableListOf()
-                )
+                mediaSession.player.addMediaItems(playlistManager.getCurrentPlaylist())
                 mediaSession.player.prepare()
             }
         }
@@ -113,13 +112,28 @@ open class MediaPlaybackService : MediaLibraryService(),
         val playbackState : Int = mediaSession?.player?.playbackState ?: 0
         Log.i(logTag(), "TASK rEmOvEd, playback state: " + Constants.playbackStateDebugMap.get(playbackState))
 
-        if (playbackState != STATE_READY) {
-            stopForeground(true)
-        } else {
-            stopForeground(false)
-        }
+        stopForegroundService(playbackState)
     }
 
+    @Suppress("DEPRECATION")
+    private fun stopForegroundService(@State playbackState : Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (playbackState != STATE_READY) {
+                stopForeground(STOP_FOREGROUND_REMOVE)
+            } else {
+                stopForeground(STOP_FOREGROUND_DETACH)
+            }
+
+        } else {
+            if (playbackState != STATE_READY) {
+                stopForeground(true)
+            } else {
+                stopForeground(false)
+            }
+
+        }
+
+    }
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? {
        return mediaSession
     }

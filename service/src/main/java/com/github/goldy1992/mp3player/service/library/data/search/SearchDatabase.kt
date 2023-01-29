@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.service.library.search
+package com.github.goldy1992.mp3player.service.library.data.search
 
 import android.content.Context
 import androidx.room.Database
@@ -18,7 +18,8 @@ abstract class SearchDatabase : RoomDatabase() {
         @Synchronized
         fun getDatabase(context: Context): SearchDatabase {
             instance = Room.databaseBuilder(context.applicationContext,
-                    SearchDatabase::class.java, DATABASE_NAME)
+                    SearchDatabase::class.java, DATABASE_NAME
+            )
                     .fallbackToDestructiveMigration()
                     .build()
             return instance

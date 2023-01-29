@@ -11,8 +11,8 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryPath
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
-import com.github.goldy1992.mp3player.service.library.search.managers.FolderDatabaseManager
-import com.github.goldy1992.mp3player.service.library.search.managers.SongDatabaseManager
+import com.github.goldy1992.mp3player.service.library.data.search.managers.FolderDatabaseManager
+import com.github.goldy1992.mp3player.service.library.data.search.managers.SongDatabaseManager
 import dagger.hilt.android.scopes.ServiceScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -34,13 +34,13 @@ class AudioObserver
  * Creates a content observer.
  */
 @Inject constructor(contentResolver: ContentResolver,
-                        /** Content manager  */
+                    /** Content manager  */
                         private val contentManager: ContentManager,
-                        /** Search Database Manager  */
+                    /** Search Database Manager  */
                         private val songDatabaseManager: SongDatabaseManager,
-                        /** Search Database Manager  */
+                    /** Search Database Manager  */
                         private val folderDatabaseManager: FolderDatabaseManager,
-                        mediaItemTypeIds: MediaItemTypeIds) : MediaStoreObserver(contentResolver, mediaItemTypeIds), LogTagger {
+                    mediaItemTypeIds: MediaItemTypeIds) : MediaStoreObserver(contentResolver, mediaItemTypeIds), LogTagger {
 
     /** {@inheritDoc}  */
     override fun onChange(selfChange: Boolean) {
@@ -85,7 +85,7 @@ class AudioObserver
         }
         // If we know the id then just get that id
         if (INVALID_ID != id) {
-            val result = contentManager.getItem(id)
+            val result = contentManager.getContentById(id.toString())
             if (null != result) {
                 Log.i(logTag(), "UPDATING songs and folders index")
                 songDatabaseManager.insert(result)

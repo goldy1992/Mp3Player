@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.service.library.search.managers
+package com.github.goldy1992.mp3player.service.library.data.search.managers
 
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import dagger.hilt.android.scopes.ServiceScoped
@@ -8,7 +8,8 @@ import javax.inject.Inject
 @ServiceScoped
 class SearchDatabaseManagers @Inject constructor(songDatabaseManager: SongDatabaseManager,
                                                  folderDatabaseManager: FolderDatabaseManager,
-                                                albumDatabaseManager: AlbumDatabaseManager) {
+                                                 albumDatabaseManager: AlbumDatabaseManager
+) {
     val dbManagerMap: EnumMap<MediaItemType, SearchDatabaseManager<*>>
     /**
      * reindexes all of the search database tables.

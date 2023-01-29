@@ -26,6 +26,6 @@ class MockContentManagerModule {
     @ServiceScoped
     @Named("starting_playlist")
     fun providesInitialPlaylist(contentManager: ContentManager, ids: MediaItemTypeIds): List<MediaItem>? {
-        return contentManager.getPlaylist(ids.getId(MediaItemType.SONGS))
+        return emptyList()
     }
 }

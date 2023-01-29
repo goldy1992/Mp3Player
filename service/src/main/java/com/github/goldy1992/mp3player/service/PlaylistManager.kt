@@ -9,9 +9,9 @@ import javax.inject.Named
 @ServiceScoped
 class PlaylistManager
     @Inject
-    constructor(
-            @Named("starting_playlist") val playlist: MutableList<MediaItem>?) {
+    constructor() {
 
+    private var playlist : MutableList<MediaItem> = mutableListOf()
     private var queueIndex = EMPTY_PLAYLIST_INDEX
 
     @Suppress("UNCHECKED_CAST")
@@ -22,6 +22,9 @@ class PlaylistManager
         return result
     }
 
+    fun getCurrentPlaylist() : List<MediaItem> {
+        return playlist.toList()
+    }
     @Synchronized
     fun getItemAtIndex(index: Int): MediaItem? {
         return if (validQueueIndex(index)) {

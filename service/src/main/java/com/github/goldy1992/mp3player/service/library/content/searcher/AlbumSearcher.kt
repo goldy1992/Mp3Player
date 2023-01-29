@@ -8,8 +8,8 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.Projections
 import com.github.goldy1992.mp3player.service.library.content.parser.AlbumsResultsParser
-import com.github.goldy1992.mp3player.service.library.search.Album
-import com.github.goldy1992.mp3player.service.library.search.AlbumDao
+import com.github.goldy1992.mp3player.service.library.data.search.Album
+import com.github.goldy1992.mp3player.service.library.data.search.AlbumDao
 import kotlinx.coroutines.CoroutineScope
 import org.apache.commons.lang3.StringUtils
 

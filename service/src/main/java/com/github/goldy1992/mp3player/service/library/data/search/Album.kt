@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.service.library.search
+package com.github.goldy1992.mp3player.service.library.data.search
 
 import androidx.room.Entity
 

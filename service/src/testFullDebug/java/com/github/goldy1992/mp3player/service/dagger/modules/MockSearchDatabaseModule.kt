@@ -1,9 +1,9 @@
 package com.github.goldy1992.mp3player.service.dagger.modules
 
 import android.content.Context
-import com.github.goldy1992.mp3player.service.library.search.FolderDao
-import com.github.goldy1992.mp3player.service.library.search.SearchDatabase
-import com.github.goldy1992.mp3player.service.library.search.SongDao
+import com.github.goldy1992.mp3player.service.library.data.search.FolderDao
+import com.github.goldy1992.mp3player.service.library.data.search.SearchDatabase
+import com.github.goldy1992.mp3player.service.library.data.search.SongDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

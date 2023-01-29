@@ -5,7 +5,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
-import com.github.goldy1992.mp3player.service.library.search.SongDao
+import com.github.goldy1992.mp3player.service.library.data.search.SongDao
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

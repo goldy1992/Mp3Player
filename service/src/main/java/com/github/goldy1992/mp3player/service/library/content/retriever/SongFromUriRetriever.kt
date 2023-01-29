@@ -37,7 +37,7 @@ class SongFromUriRetriever @Inject constructor(@ApplicationContext private val c
                 val cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         PROJECTION, null, null, null)
                 if (null != cursor) {
-                    val results = songResultsParser.create(cursor, idPrefix)
+                    val results = songResultsParser.create(cursor)
                     if (CollectionUtils.isNotEmpty(results)) {
                         return results[0]
                     }

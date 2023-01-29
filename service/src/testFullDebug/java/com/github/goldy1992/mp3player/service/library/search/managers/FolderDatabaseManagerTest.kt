@@ -3,8 +3,9 @@ package com.github.goldy1992.mp3player.service.library.search.managers
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
-import com.github.goldy1992.mp3player.service.library.search.Folder
-import com.github.goldy1992.mp3player.service.library.search.FolderDao
+import com.github.goldy1992.mp3player.service.library.data.search.Folder
+import com.github.goldy1992.mp3player.service.library.data.search.FolderDao
+import com.github.goldy1992.mp3player.service.library.data.search.managers.FolderDatabaseManager
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

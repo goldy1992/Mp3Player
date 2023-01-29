@@ -19,7 +19,7 @@ class MediaItemFromIdRetriever @Inject constructor(private val contentResolver: 
         val cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 PROJECTION, where, whereArgs, null)
         if (null != cursor) {
-            val results = songResultsParser.create(cursor, "")
+            val results = songResultsParser.create(cursor)
             if (CollectionUtils.isNotEmpty(results)) {
                 return results[0]
             }

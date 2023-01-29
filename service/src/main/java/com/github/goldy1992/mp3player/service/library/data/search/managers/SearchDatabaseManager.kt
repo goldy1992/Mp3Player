@@ -1,21 +1,21 @@
-package com.github.goldy1992.mp3player.service.library.search.managers
+package com.github.goldy1992.mp3player.service.library.data.search.managers
 
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.service.library.ContentManager
-import com.github.goldy1992.mp3player.service.library.search.SearchDao
-import com.github.goldy1992.mp3player.service.library.search.SearchEntity
+import com.github.goldy1992.mp3player.service.library.data.search.SearchDao
+import com.github.goldy1992.mp3player.service.library.data.search.SearchEntity
 
 abstract class SearchDatabaseManager<T : SearchEntity>(private val contentManager: ContentManager,
-                                                        private val dao: SearchDao<T>,
-                                                        private val rootCategoryId: String) {
+                                                       private val dao: SearchDao<T>,
+                                                       private val rootCategoryId: String) {
     abstract fun createFromMediaItem(item: MediaItem): T?
-    fun insert(item: MediaItem) {
+    suspend fun insert(item: MediaItem) {
         val t = createFromMediaItem(item)
         dao.insert(t!!)
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun reindex() {
+    suspend fun reindex() {
         val results = contentManager.getChildren(rootCategoryId)
         val entries = buildResults(results)
         deleteOld(entries)

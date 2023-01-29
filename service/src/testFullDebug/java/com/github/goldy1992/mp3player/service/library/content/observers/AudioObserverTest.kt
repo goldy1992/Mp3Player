@@ -10,8 +10,8 @@ import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
-import com.github.goldy1992.mp3player.service.library.search.managers.FolderDatabaseManager
-import com.github.goldy1992.mp3player.service.library.search.managers.SongDatabaseManager
+import com.github.goldy1992.mp3player.service.library.data.search.managers.FolderDatabaseManager
+import com.github.goldy1992.mp3player.service.library.data.search.managers.SongDatabaseManager
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

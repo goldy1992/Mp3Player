@@ -9,9 +9,9 @@ import com.github.goldy1992.mp3player.service.library.content.parser.SongResults
 import com.github.goldy1992.mp3player.service.library.content.searcher.AlbumSearcher
 import com.github.goldy1992.mp3player.service.library.content.searcher.FolderSearcher
 import com.github.goldy1992.mp3player.service.library.content.searcher.SongSearcher
-import com.github.goldy1992.mp3player.service.library.search.AlbumDao
-import com.github.goldy1992.mp3player.service.library.search.FolderDao
-import com.github.goldy1992.mp3player.service.library.search.SongDao
+import com.github.goldy1992.mp3player.service.library.data.search.AlbumDao
+import com.github.goldy1992.mp3player.service.library.data.search.FolderDao
+import com.github.goldy1992.mp3player.service.library.data.search.SongDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -13,7 +13,6 @@ import com.github.goldy1992.mp3player.commons.IoDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.github.goldy1992.mp3player.service.library.ContentManager
-import com.github.goldy1992.mp3player.service.library.CustomMediaItemTree
 import com.github.goldy1992.mp3player.service.player.ChangeSpeedProvider
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
@@ -29,7 +28,6 @@ class MediaLibrarySessionCallback
     constructor(private val contentManager: ContentManager,
                 private val changeSpeedProvider: ChangeSpeedProvider,
                 private val rootAuthenticator: RootAuthenticator,
-                private val customMediaItemTree: CustomMediaItemTree,
                 private val scope : CoroutineScope,
                 @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
                 @IoDispatcher private val ioDispatcher: CoroutineDispatcher) : MediaLibrarySession.Callback, LogTagger {
@@ -99,7 +97,7 @@ class MediaLibrarySessionCallback
 
         scope.launch(ioDispatcher) {
             // Assume for example that the music catalog is already loaded/cached.
-            mediaItems = customMediaItemTree.getChildren(parentId)
+            mediaItems = contentManager.getChildren(parentId)
             var numberOfResults = mediaItems.size
 
             if (numberOfResults <= 0) {
@@ -134,9 +132,13 @@ class MediaLibrarySessionCallback
         controller: MediaSession.ControllerInfo,
         mediaItems: MutableList<MediaItem>
     ): ListenableFuture<MutableList<MediaItem>> {
-        return Futures.immediateFuture(
-            customMediaItemTree.getMediaItems(mediaItems.map(MediaItem::mediaId)).toMutableList()
-        )
+        val mediaItems = mutableListOf<MediaItem>()
+        runBlocking {
+            for (item in mediaItems) {
+                mediaItems.add(contentManager.getContentById(item.mediaId))
+            }
+        }
+        return Futures.immediateFuture(mediaItems)
     }
 
     override fun onGetLibraryRoot(
@@ -162,8 +164,7 @@ class MediaLibrarySessionCallback
         runBlocking {
             scope.launch(ioDispatcher) {
                 // Assume for example that the music catalog is already loaded/cached.
-                mediaItems = customMediaItemTree.getChildren(parentId)
-
+                mediaItems = contentManager.getChildren(parentId)
                 if (mediaItems.isEmpty()) {
                     Log.i(logTag(), "Setting results for parentId $parentId to be the empty media item")
                     // set the number of results to one to account for the empty media item
@@ -177,8 +178,6 @@ class MediaLibrarySessionCallback
         return Futures.immediateFuture(LibraryResult.ofItemList(mediaItems, params))
     }
 
-
-
     override fun onSearch(
         session: MediaLibrarySession,
         browser: MediaSession.ControllerInfo,
@@ -187,7 +186,7 @@ class MediaLibrarySessionCallback
     ): ListenableFuture<LibraryResult<Void>> {
 
        scope.launch(ioDispatcher) {
-           val result = contentManager.search(query, true)
+           val result = contentManager.search(query)
            session.notifySearchResultChanged(browser, query, result.size, params)
        }
         return Futures.immediateFuture(LibraryResult.ofVoid())
@@ -205,7 +204,7 @@ class MediaLibrarySessionCallback
         var searchResults : List<MediaItem> = ArrayList()
         runBlocking {
             val searchJob = scope.launch(ioDispatcher) {
-                searchResults = contentManager.search(query, true)
+                searchResults = contentManager.search(query)
             }
             searchJob.join()
         }

@@ -2,11 +2,11 @@ package com.github.goldy1992.mp3player.service.dagger.modules.service
 
 import android.content.Context
 import androidx.room.Room
-import com.github.goldy1992.mp3player.service.library.search.AlbumDao
-import com.github.goldy1992.mp3player.service.library.search.FolderDao
-import com.github.goldy1992.mp3player.service.library.search.SearchDatabase
-import com.github.goldy1992.mp3player.service.library.search.SearchDatabase.Companion.getDatabase
-import com.github.goldy1992.mp3player.service.library.search.SongDao
+import com.github.goldy1992.mp3player.service.library.data.search.AlbumDao
+import com.github.goldy1992.mp3player.service.library.data.search.FolderDao
+import com.github.goldy1992.mp3player.service.library.data.search.SearchDatabase
+import com.github.goldy1992.mp3player.service.library.data.search.SearchDatabase.Companion.getDatabase
+import com.github.goldy1992.mp3player.service.library.data.search.SongDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player.service.library
 
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.service.library.content.ContentRetrievers
+import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetrievers
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
 import com.github.goldy1992.mp3player.service.library.content.request.ContentRequestParser
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetriever
@@ -10,6 +10,7 @@ import com.github.goldy1992.mp3player.service.library.content.retriever.MediaIte
 import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.SongFromUriRetriever
 import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearcher
+import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestCoroutineScheduler
