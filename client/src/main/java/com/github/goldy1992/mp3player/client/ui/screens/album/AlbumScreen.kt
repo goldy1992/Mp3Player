@@ -1,9 +1,11 @@
 package com.github.goldy1992.mp3player.client.ui.screens.album
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -11,23 +13,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.data.Album
 import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
+import com.github.goldy1992.mp3player.client.ui.lists.songs.AlbumArt
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalAnimationApi::class,
+    ExperimentalMaterial3Api::class,
+    ExperimentalCoilApi::class)
 @Composable
 fun AlbumScreen(
     navController : NavController = rememberAnimatedNavController(),
@@ -68,21 +76,47 @@ fun AlbumScreen(
                 scope = scope
             )
         }
-    ) {
-
-        LazyColumn(userScrollEnabled = true,
-            contentPadding = it,
+    ) { paddingValues ->
+        LazyColumn(
+            userScrollEnabled = true,
+            contentPadding = paddingValues,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(count = albumSongs.size) {
-                val currentSong = albumSongs[it]
-                ListItem(headlineText = {Text(currentSong.title,
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.headlineMedium)})
-            }
+            items(count = albumSongs.size + 1) { currentAlbumSongIndex ->
+                if (currentAlbumSongIndex == 0) {
+                    Column(
+                        Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Card {
+                            AlbumArt(uri = album.albumArt, modifier = Modifier.size(200.dp))
+                        }
 
+                    }
+                } else {
+                    val albumSong = albumSongs[currentAlbumSongIndex - 1]
+                    ListItem(
+                        leadingContent = { Text("$currentAlbumSongIndex") },
+                        headlineText = {
+                            Text(
+                                albumSong.title,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        },
+                        supportingText = {
+                            Text(
+                                albumSong.artist,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    )
+                }
+            }
         }
     }
+
 }
 
 
@@ -91,18 +125,15 @@ fun AlbumScreen(
 @Composable
 fun AlbumAppBar(modifier: Modifier = Modifier,
                 albumProvider: () -> Album = {Album() },
-                scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
+                scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
                 scope: CoroutineScope = rememberCoroutineScope(),
                 navController: NavController = rememberAnimatedNavController()) {
     val album = albumProvider()
     LargeTopAppBar(
         title = {
-            Text(album.albumTitle,
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.headlineMedium)
+            Text(album.albumTitle            )
         },
         navigationIcon = {
-
                 IconButton(onClick = {
                     scope.launch {
                         navController.popBackStack()
@@ -114,7 +145,6 @@ fun AlbumAppBar(modifier: Modifier = Modifier,
                 }
 
         },
-
-            colors = TopAppBarDefaults.largeTopAppBarColors(),
-            scrollBehavior = scrollBehavior)
+        colors = TopAppBarDefaults.largeTopAppBarColors(),
+        scrollBehavior = scrollBehavior)
 }

@@ -82,11 +82,16 @@ fun FolderScreen(
                         Column {
                             Text(
                                 text = folder.name,
-                                style = MaterialTheme.typography.titleLarge,
-                                color = MaterialTheme.colorScheme.onSurface,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
+                            /* TODO: Add a column giving the folder information,
+                            i.e.
+                            The folder path,
+                            Whether the folder display is recursive,
+                            The total duration of all songs in the folder.
+                            */
+
 //                            Text(
 //                                text = folder.path,
 //                                style = MaterialTheme.typography.subtitle2,

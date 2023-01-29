@@ -89,7 +89,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
         val albumTitle = it.albumTitle
         val albumArtist = it.albumArtist
         val albumArtUriBase64 = Base64.encodeToString(it.albumArt.toString().encodeToByteArray(), Base64.DEFAULT)
-        Log.w(logTag, "Album title name: ${albumTitle}")
+        Log.w(logTag, "Album ${albumTitle} uri: ${it.albumArt}")
         navController.navigate(
             Screen.ALBUM.name
                     + "/" + albumId
@@ -410,11 +410,7 @@ fun LargeAppBar(title : String,
 ) {
     TopAppBar(
         title = {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
+            Text(text = title)
         },
         actions = {
             IconButton(onClick = onSearchIconClicked) {

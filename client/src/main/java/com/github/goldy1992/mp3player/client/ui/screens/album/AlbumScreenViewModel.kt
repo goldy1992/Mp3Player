@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.client.ui.screens.album
 
 import android.net.Uri
 import android.util.Base64
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,6 +35,9 @@ constructor(savedStateHandle: SavedStateHandle,
     private val albumArtUriBase64Encoded : String = checkNotNull(savedStateHandle["albumArtUri"])
 
     private val albumArtUri : Uri = Uri.parse(String(Base64.decode(albumArtUriBase64Encoded, Base64.DEFAULT)))
+    init {
+        Log.i(logTag(), "decoded album uri: ${albumArtUri}")
+    }
     private val album : Album = Album(
         id = albumId,
         albumTitle = albumTitle,
@@ -123,7 +127,9 @@ constructor(savedStateHandle: SavedStateHandle,
             id = currentAlbum.id,
             albumTitle = currentAlbum.albumTitle,
             albumArtist = currentAlbum.albumArtist,
-            songs = songs
+            albumArt = currentAlbum.albumArt,
+            songs = songs,
+            state = State.LOADED
         )
     }
 
