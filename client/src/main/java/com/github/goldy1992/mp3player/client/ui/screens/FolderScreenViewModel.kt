@@ -28,9 +28,9 @@ class FolderScreenViewModel
         private val mediaRepository: MediaRepository,
     ) : ViewModel(), LogTagger {
 
-    val folderId : String = checkNotNull(savedStateHandle["folderId"])
-    val folderName : String = checkNotNull(savedStateHandle["folderName"])
-    val folderPath : String = checkNotNull(savedStateHandle["folderPath"])
+    private val folderId : String = checkNotNull(savedStateHandle["folderId"])
+    private val folderName : String = checkNotNull(savedStateHandle["folderName"])
+    private val folderPath : String = checkNotNull(savedStateHandle["folderPath"])
 
     private val _folderChildren : MutableStateFlow<List<MediaItem>> = MutableStateFlow(emptyList())
     // The UI collects from this StateFlow to get its state updates
@@ -96,7 +96,13 @@ class FolderScreenViewModel
         }
     }
 
-    private val _folder = MutableStateFlow(Folder())
+    private val _folder = MutableStateFlow(
+        Folder(
+            id = folderId,
+            name = folderName,
+            path = folderPath
+        )
+    )
     val folder : StateFlow<Folder> = _folder
 
     init {
