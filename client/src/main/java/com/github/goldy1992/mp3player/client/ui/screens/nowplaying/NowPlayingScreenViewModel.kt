@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.log
 
 @HiltViewModel
 class NowPlayingScreenViewModel
@@ -90,6 +91,7 @@ constructor(
         viewModelScope.launch {
             mediaRepository.queue()
             .collect {
+                Log.i(logTag(), "queue items: ${it.items.size}")
                 _queue.value = it
             }
         }

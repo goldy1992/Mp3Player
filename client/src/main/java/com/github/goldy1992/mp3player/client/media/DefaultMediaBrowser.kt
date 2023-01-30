@@ -27,6 +27,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.apache.commons.lang3.StringUtils.isEmpty
 import javax.inject.Inject
 
@@ -44,18 +45,16 @@ class DefaultMediaBrowser
 
     private val _playerEventsFlow : Flow<PlayerEventHolder> = callbackFlow {
         val controller = mediaBrowserFuture.await()
+        Log.i(logTag(), "player event controller awaiter")
         val messageListener = object : Player.Listener {
             override fun onEvents(player: Player, events: Player.Events) {
+                Log.i(logTag(), "player event: ${events}")
                 trySend(PlayerEventHolder(player, events))
             }
         }
         controller.addListener(messageListener)
         awaitClose { controller.removeListener(messageListener) }
-    }.shareIn(
-        scope = scope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
-    )
+    }
 
     private val _onCustomCommandFlow : Flow<SessionCommandEventHolder> = callbackFlow<SessionCommandEventHolder> {
         val messageListener = object : MediaBrowser.Listener {
@@ -137,6 +136,7 @@ class DefaultMediaBrowser
 
     private val _isPlayingFlow : Flow<Boolean> = callbackFlow<Boolean> {
         val controller = mediaBrowserFuture.await()
+        Log.i(logTag(), "event isPlaying mediabrowser awaited")
         val messageListener = object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 Log.i(logTag(), "onIsPlayingChanged: $isPlaying")
@@ -287,12 +287,31 @@ class DefaultMediaBrowser
 
     private val events : @Player.Event IntArray = intArrayOf(
         Player.EVENT_MEDIA_ITEM_TRANSITION,
-        Player.EVENT_TIMELINE_CHANGED
+        Player.EVENT_TIMELINE_CHANGED,
+        Player.EVENT_TRACKS_CHANGED,
+        Player.EVENT_MEDIA_METADATA_CHANGED
     )
-    private val _queueFlow : Flow<QueueState> = _playerEventsFlow
-        .filter { it.events.containsAny( *events ) }
-        .map {
-            getQueue(it.player!!)
+    private val _queueFlow : Flow<QueueState> = callbackFlow {
+
+        val controller = mediaBrowserFuture.await()
+        var queue: QueueState
+        withContext(mainDispatcher) {
+            queue = getQueue( controller)
+        }
+
+        trySend(queue)
+
+        Log.i(logTag(), "player event controller awaiter")
+        val messageListener = object : Player.Listener {
+            override fun onEvents(player: Player, event: Player.Events) {
+                if (event.containsAny( *events )) {
+                    Log.i(logTag(), "queue event logged")
+                    trySend(getQueue(player))
+                }
+            }
+        }
+        controller.addListener(messageListener)
+        awaitClose { controller.removeListener(messageListener) }
         }.shareIn(
             scope = scope,
             started = SharingStarted.WhileSubscribed(),
