@@ -11,6 +11,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -40,6 +42,8 @@ fun FolderScreen(
     val isPlaying by viewModel.isPlaying.collectAsState()
     val currentSong by viewModel.currentMediaItem.collectAsState()
     val folder : Folder by viewModel.folder.collectAsState()
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     val onSongSelected : (Int, Songs) -> Unit = { itemIndex, mediaItemList ->
         viewModel.playFromSongList(itemIndex, mediaItemList)
@@ -77,7 +81,7 @@ fun FolderScreen(
     if (isLargeScreen) {
         LargeFolderScreen(
             topBar = {
-                TopAppBar(
+                LargeTopAppBar(
                     title = {
                         Column {
                             Text(
@@ -120,15 +124,14 @@ fun FolderScreen(
         )
     } else {
         SmallFolderScreen(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
-                TopAppBar(
+                LargeTopAppBar(
+                    scrollBehavior = scrollBehavior,
                     title = {
                         Column {
                             Text(
                                 text = folder.name,
-                                style = MaterialTheme.typography.titleLarge,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
 //                            Text(
@@ -163,6 +166,7 @@ fun FolderScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SmallFolderScreen(
+    modifier : Modifier = Modifier,
     topBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     navDrawerContent: @Composable () -> Unit = {},
@@ -173,6 +177,7 @@ private fun SmallFolderScreen(
         drawerContent = navDrawerContent,
         drawerState = drawerState) {
         Scaffold(
+            modifier = modifier,
             topBar = topBar,
             bottomBar = bottomBar,
             content = content
@@ -205,7 +210,8 @@ private fun FolderScreenContent(modifier : Modifier = Modifier,
                     songs = folderItems,
                     isPlayingProvider = isPlayingProvider,
                     currentSongProvider = currentSong,
-                    onSongSelected = onSongSelected
+                    onSongSelected = onSongSelected,
+                    headerItem = { Text("Header")}
                 )
             }
             else -> {
