@@ -14,6 +14,8 @@ object Constants {
     const val AUDIO_SESSION_ID = "AUDIO_SESSION_ID"
     const val AUDIO_DATA = "AUDIO_DATA"
 
+    const val PLAY_FROM_SONG_LIST = "PlayFromSongList"
+    const val ITEM_INDEX = "itemIndex"
     val playbackStateDebugMap = SparseArray<String?>()
     val repeatModeDebugMap = SparseArray<String>()
 

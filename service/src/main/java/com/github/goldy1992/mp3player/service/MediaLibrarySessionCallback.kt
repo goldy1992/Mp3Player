@@ -9,6 +9,8 @@ import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import androidx.media3.session.MediaSession.ConnectionResult
 import com.github.goldy1992.mp3player.commons.Constants.AUDIO_DATA
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
+import com.github.goldy1992.mp3player.commons.Constants.ITEM_INDEX
+import com.github.goldy1992.mp3player.commons.Constants.PLAY_FROM_SONG_LIST
 import com.github.goldy1992.mp3player.commons.IoDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MainDispatcher
@@ -43,12 +45,14 @@ class MediaLibrarySessionCallback
         val connectionResult = super.onConnect(session, controller)
         // add change playback speed command to list of available commands
         val changePlaybackSpeed = SessionCommand(CHANGE_PLAYBACK_SPEED, Bundle())
+        val playFromList = SessionCommand(PLAY_FROM_SONG_LIST, Bundle())
         val audioDataCommand = SessionCommand(AUDIO_DATA, Bundle())
         val updatedSessionCommands = connectionResult
             .availableSessionCommands
             .buildUpon()
             .add(changePlaybackSpeed)
             .add(audioDataCommand)
+            .add(playFromList)
             .build()
         return ConnectionResult.accept(updatedSessionCommands,connectionResult.availablePlayerCommands)
     }
@@ -127,6 +131,16 @@ class MediaLibrarySessionCallback
         Log.i(logTag(), "On Custom Command: ${customCommand}, args: $args")
         if (CHANGE_PLAYBACK_SPEED == customCommand.customAction) {
             changeSpeedProvider.changeSpeed(session.player, args)
+        } else if (PLAY_FROM_SONG_LIST == customCommand.customAction) {
+            val extras = customCommand.customExtras
+            val songIds = extras.getStringArrayList(PLAY_FROM_SONG_LIST) ?: emptyList()
+            val songs = songIds.map { runBlocking { contentManager.getContentById(it) } }
+            val songListIndex = extras.getInt(ITEM_INDEX)
+            val player = session.player
+            player.clearMediaItems()
+            player.setMediaItems(songs, songListIndex, 0L )
+            player.prepare()
+            player.play()
         }
         return super.onCustomCommand(session, controller, customCommand, args)
     }

@@ -17,8 +17,10 @@ import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDef
 import com.github.goldy1992.mp3player.client.utils.QueueUtils.getQueue
 import com.github.goldy1992.mp3player.commons.*
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
+import com.github.goldy1992.mp3player.commons.Constants.ITEM_INDEX
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME_KEY
+import com.github.goldy1992.mp3player.commons.Constants.PLAY_FROM_SONG_LIST
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
@@ -123,9 +125,10 @@ class DefaultMediaBrowser
         if (mediaItem == null) {
             Log.w(logTag(), "Current MediaItem is null")
         }
-        mediaItem ?: MediaItem.EMPTY
-
-    }.shareIn(
+        mediaItem
+    }
+    .filterNotNull()
+    .shareIn(
         scope = scope,
         started = SharingStarted.WhileSubscribed(),
         replay = 1
@@ -403,11 +406,13 @@ class DefaultMediaBrowser
 
     override suspend fun playFromSongList(itemIndex: Int, items: List<MediaItem>) {
         val mediaBrowser = mediaBrowserFuture.await()
-        mediaBrowser.clearMediaItems()
-        mediaBrowser.addMediaItems(items)
-        mediaBrowser.seekTo(itemIndex, 0L)
-        mediaBrowser.prepare()
-        mediaBrowser.play()
+        val extras = Bundle()
+        val itemIdList = items.map(MediaItem::mediaId)
+        extras.putStringArrayList(PLAY_FROM_SONG_LIST, ArrayList(itemIdList))
+        extras.putInt(ITEM_INDEX, itemIndex)
+        val sessionCommand = SessionCommand(PLAY_FROM_SONG_LIST, extras)
+        mediaBrowser.sendCustomCommand(sessionCommand, extras).await()
+        Log.i(logTag(), "playing from song list")
     }
 
     override suspend fun playFromUri(uri: Uri?, extras: Bundle?) {

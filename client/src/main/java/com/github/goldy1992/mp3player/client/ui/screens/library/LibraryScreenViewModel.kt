@@ -164,6 +164,7 @@ class LibraryScreenViewModel
         viewModelScope.launch {
             mediaRepository.currentMediaItem()
             .collect {
+                Log.i(logTag(), "new current media item - id : ${it.mediaId}, title: ${it.mediaMetadata.title}")
                 _currentMediaItemState.value = createSong(it)
             }
         }
