@@ -143,7 +143,7 @@ class FolderScreenViewModel
     }
 
     fun pause() {
-        viewModelScope.launch { mediaRepository.play() }
+        viewModelScope.launch { mediaRepository.pause() }
     }
 
     fun skipToNext() {
