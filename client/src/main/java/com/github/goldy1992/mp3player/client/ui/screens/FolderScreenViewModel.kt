@@ -126,12 +126,14 @@ class FolderScreenViewModel
                             state = State.NO_RESULTS
                         )
                     } else {
+                        val songs = createSongs(State.LOADED, mediaItems)
                         _folder.value = Folder(
                             name = currentFolderValue.name,
                             path = currentFolderValue.path,
                             uri = currentFolderValue.uri,
-                            songs = createSongs(State.LOADED, mediaItems),
-                            state = State.NO_RESULTS
+                            songs = songs,
+                            totalDuration = songs.totalDuration,
+                            state = State.LOADED
                         )
                     }
                 }

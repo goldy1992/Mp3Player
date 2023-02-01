@@ -12,6 +12,7 @@ class Folder constructor(
     val encodedPath : String = Constants.UNKNOWN,
     val uri: Uri = Uri.EMPTY,
     val songs: Songs= Songs(),
+    val totalDuration : Long = 0L,
     val state: State = State.NOT_LOADED,
     val isRecursive : Boolean = false
 ) : MediaEntity

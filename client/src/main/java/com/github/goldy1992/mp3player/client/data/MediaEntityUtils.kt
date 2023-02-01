@@ -22,9 +22,11 @@ object MediaEntityUtils {
         mediaItems: List<MediaItem>
     ) : Songs {
         val songs = mediaItems.map { createSong(it) }
+        val duration = songs.sumOf { it.duration }
         return Songs(
             state = state,
-            songs = songs
+            songs = songs,
+            totalDuration = duration
         )
     }
 

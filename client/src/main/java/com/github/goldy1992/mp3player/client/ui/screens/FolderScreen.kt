@@ -1,19 +1,27 @@
 package com.github.goldy1992.mp3player.client.ui.screens
 
+import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.OpenInFull
+import androidx.compose.material.icons.outlined.Timer
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
@@ -25,9 +33,14 @@ import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.client.utils.TimerUtils
+import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+
+private const val logTag = "FolderScreen"
 
 @OptIn(
     ExperimentalMaterial3Api::class,
@@ -60,6 +73,30 @@ fun FolderScreen(
         )
     }
 
+    val topBar : @Composable () -> Unit = {
+        LargeTopAppBar(
+            scrollBehavior = scrollBehavior,
+            title = {
+                Column {
+                    Text(
+                        text = folder.name,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            },
+            navigationIcon = {
+                IconButton(onClick = {
+                    scope.launch {
+                        navController.popBackStack()
+                    }
+                }) {
+                    Icon(Icons.Filled.ArrowBack, "Back")
+                }
+            },
+            actions = {},
+        )
+    }
+
     val navDrawerContent : @Composable () -> Unit = {
         NavigationDrawerContent(
             navController = navController,
@@ -71,7 +108,7 @@ fun FolderScreen(
         FolderScreenContent(
             modifier = Modifier.padding(it),
             isPlayingProvider = {isPlaying},
-            folderSongs = { folder.songs },
+            folderProvider = { folder },
             currentSong = { currentSong },
             onSongSelected = onSongSelected
         )
@@ -80,44 +117,7 @@ fun FolderScreen(
     val isLargeScreen = windowSize == WindowSize.Expanded
     if (isLargeScreen) {
         LargeFolderScreen(
-            topBar = {
-                LargeTopAppBar(
-                    title = {
-                        Column {
-                            Text(
-                                text = folder.name,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            /* TODO: Add a column giving the folder information,
-                            i.e.
-                            The folder path,
-                            Whether the folder display is recursive,
-                            The total duration of all songs in the folder.
-                            */
-
-//                            Text(
-//                                text = folder.path,
-//                                style = MaterialTheme.typography.subtitle2,
-//                                maxLines = 1,
-//                                overflow = TextOverflow.Ellipsis
-//                            )
-                        }
-                    },
-
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            scope.launch {
-                                navController.popBackStack()
-                            }
-                        }) {
-                            Icon(Icons.Filled.ArrowBack, "Back",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                        }
-                    },
-                    actions = {},
-                )
-            },
+            topBar = topBar,
             bottomBar = bottomBar,
             navDrawerContent = navDrawerContent,
             content = screenContent
@@ -125,36 +125,7 @@ fun FolderScreen(
     } else {
         SmallFolderScreen(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = {
-                LargeTopAppBar(
-                    scrollBehavior = scrollBehavior,
-                    title = {
-                        Column {
-                            Text(
-                                text = folder.name,
-                                overflow = TextOverflow.Ellipsis
-                            )
-//                            Text(
-//                                text = folder.path,
-//                                style = MaterialTheme.typography.subtitle2,
-//                                maxLines = 1,
-//                                overflow = TextOverflow.Ellipsis
-//                            )
-                        }
-                    },
-
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            scope.launch {
-                                navController.popBackStack()
-                            }
-                        }) {
-                            Icon(Icons.Filled.ArrowBack, "Back")
-                        }
-                    },
-                    actions = {},
-                )
-            },
+            topBar = topBar,
             navDrawerContent = navDrawerContent,
             bottomBar = bottomBar,
             content = screenContent
@@ -190,13 +161,14 @@ private fun SmallFolderScreen(
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 private fun FolderScreenContent(modifier : Modifier = Modifier,
-                                folderSongs : () -> Songs = { Songs.NOT_LOADED },
+                                folderProvider : () -> Folder = { Folder()},
                                 isPlayingProvider : () -> Boolean = { false},
                                 currentSong : () -> Song = {Song()},
                                 onSongSelected : (Int, Songs) -> Unit = {_,_ ->}) {
     Column(modifier = modifier) {
-        val folderItems = folderSongs()
-        when (folderItems.state) {
+        val folder = folderProvider()
+        val folderSongs = folder.songs
+        when (folderSongs.state) {
             State.LOADING -> {
                 Surface(
                     modifier = modifier
@@ -206,12 +178,14 @@ private fun FolderScreenContent(modifier : Modifier = Modifier,
                 }
             }
             State.LOADED -> {
+
+                Log.i(logTag, "folder songs size: ${folderSongs.songs.size}")
                 SongList(
-                    songs = folderItems,
+                    songs = folderSongs,
                     isPlayingProvider = isPlayingProvider,
                     currentSongProvider = currentSong,
                     onSongSelected = onSongSelected,
-                    headerItem = { Text("Header")}
+                    headerItem = { HeaderItem(folder = folder)}
                 )
             }
             else -> {
@@ -220,6 +194,97 @@ private fun FolderScreenContent(modifier : Modifier = Modifier,
     }
 }
 
+@Preview
+@Composable
+private fun HeaderItem(
+    modifier: Modifier = Modifier,
+    folder: Folder = Folder(),
+    clipboardManager: ClipboardManager = LocalClipboardManager.current,
+    scope : CoroutineScope = rememberCoroutineScope()
+) {
+
+    val snackState : SnackbarHostState = remember { SnackbarHostState() }
+    var openDialog by remember { mutableStateOf(false) }
+
+    if (openDialog) {
+        Dialog(
+            onDismissRequest = { openDialog = false} ){
+
+            Card {
+                Text(
+                    text = "Folder Path",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                Text(
+                    text = folder.path,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+
+    }
+    Card(modifier.padding(16.dp)) {
+        Divider(Modifier.padding(start = 4.dp, end = 4.dp))
+        Row(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom=8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column (Modifier.weight(0.1f)){
+                Icon(Icons.Outlined.Folder, contentDescription = "")
+            }
+            Column(Modifier.weight(0.8f)) {
+                Text(
+                    modifier = Modifier.padding(start = 4.dp, end = 4.dp),
+                    text = "${folder.path}",
+                    style = MaterialTheme.typography.labelSmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            Column(Modifier.weight(0.1f)) {
+                IconButton(
+                    onClick = {
+                        openDialog = true
+                    }
+                ) {
+                    Icon(Icons.Outlined.OpenInFull, "")
+                }
+
+            }
+            Column(Modifier.weight(0.1f)) {
+                IconButton(
+                    onClick = {
+                        clipboardManager.setText(AnnotatedString(folder.path))
+                        scope.launch {
+                            snackState.showSnackbar(
+                                message = "Path copied",
+                                duration = SnackbarDuration.Short,
+                                withDismissAction = true
+                            )
+                        }
+                    }) {
+                    Icon(Icons.Outlined.ContentCopy, "")
+                }
+
+            }
+        }
+        Divider(Modifier.padding(start = 4.dp, end = 4.dp))
+        Row(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom=8.dp),
+            verticalAlignment = Alignment.CenterVertically) {
+            Icon(Icons.Outlined.Timer, contentDescription = "")
+            Text(
+                modifier = Modifier.padding(start = 4.dp, end = 4.dp),
+                text = TimerUtils.formatTime(folder.totalDuration),
+                style = MaterialTheme.typography.labelSmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        Divider(Modifier.padding(start = 4.dp, end = 4.dp))
+    }
+
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -238,5 +303,11 @@ private fun LargeFolderScreen(
             bottomBar = bottomBar,
             content = content)
     }
+
+}
+
+@Preview
+@Composable
+private fun FolderPathDialog(folderPath : String = Constants.UNKNOWN) {
 
 }
