@@ -5,10 +5,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.outlined.ContentCopy
-import androidx.compose.material.icons.outlined.Folder
-import androidx.compose.material.icons.outlined.OpenInFull
-import androidx.compose.material.icons.outlined.Timer
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -207,20 +204,38 @@ private fun HeaderItem(
     var openDialog by remember { mutableStateOf(false) }
 
     if (openDialog) {
-        Dialog(
-            onDismissRequest = { openDialog = false} ){
-
-            Card {
-                Text(
-                    text = "Folder Path",
-                    style = MaterialTheme.typography.headlineSmall
-                )
-                Text(
-                    text = folder.path,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-        }
+        FolderPathDialog(
+            folder = folder,
+            onCopyButtonSelected = {
+                clipboardManager.setText(AnnotatedString(folder.path))
+                scope.launch {
+                    snackState.showSnackbar(
+                        message = "Path copied",
+                        duration = SnackbarDuration.Short,
+                        withDismissAction = true
+                    )
+                }
+            },
+            closeDialog = { openDialog = false}
+        )
+//        AlertDialog(
+//            title = {},
+//            confirmButton = {},
+//            dismissButton = {},
+//            onDismissRequest = { openDialog = false} )
+//            {
+//
+//            Card {
+//                Text(
+//                    text = "Folder Path",
+//                    style = MaterialTheme.typography.headlineSmall
+//                )
+//                Text(
+//                    text = folder.path,
+//                    style = MaterialTheme.typography.bodyMedium
+//                )
+//            }
+//        }
 
     }
     Card(modifier.padding(16.dp)) {
@@ -308,6 +323,30 @@ private fun LargeFolderScreen(
 
 @Preview
 @Composable
-private fun FolderPathDialog(folderPath : String = Constants.UNKNOWN) {
+private fun FolderPathDialog(folder: Folder = Folder(),
+                             onCopyButtonSelected: () -> Unit = {},
+                            closeDialog : () -> Unit = {}) {
+    AlertDialog(
+        title = { Text(folder.name + " Path") },
+        confirmButton = {
+            IconButton(onClick = { onCopyButtonSelected() }) {
+                Icon(Icons.Outlined.ContentCopy, contentDescription = "")
+            }
+        },
+        text = {
+            Surface(modifier = Modifier.fillMaxWidth().height(150.dp), color = MaterialTheme.colorScheme.surfaceVariant) {
+                Column(Modifier.padding(4.dp).fillMaxSize()) {
+                    Text(folder.path)
+                }
+            }
 
+        },
+        textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        dismissButton = {
+            IconButton(onClick = { closeDialog() }) {
+                Icon(Icons.Outlined.Close, contentDescription = "")
+            }
+        },
+        onDismissRequest = { closeDialog() }
+    )
 }
