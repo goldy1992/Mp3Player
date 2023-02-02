@@ -12,6 +12,7 @@ data class Album
         val recordingYear : String = Constants.UNKNOWN,
         val releaseYear : String = Constants.UNKNOWN,
         val songs: Songs = Songs(State.NO_RESULTS),
+        val totalDuration : Long = 0L,
         val albumArt : Uri = Uri.EMPTY,
         val state : State = State.NO_RESULTS
     ) : MediaEntity

@@ -3,10 +3,7 @@ package com.github.goldy1992.mp3player.client.ui.screens.album
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -30,6 +27,7 @@ import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.lists.songs.AlbumArt
 import com.github.goldy1992.mp3player.client.utils.SongUtils
+import com.github.goldy1992.mp3player.client.utils.TimerUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
@@ -90,15 +88,7 @@ fun AlbumScreen(
         ) {
             items(count = albumSongs.size + 1) { currentAlbumSongIndex ->
                 if (currentAlbumSongIndex == 0) {
-                    Column(
-                        Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Card {
-                            AlbumArt(uri = album.albumArt, modifier = Modifier.size(200.dp))
-                        }
-
-                    }
+                    AlbumHeaderItem({ album})
                 } else {
                     val albumSongIndex = currentAlbumSongIndex - 1
                     val albumSong = albumSongs[albumSongIndex]
@@ -111,26 +101,46 @@ fun AlbumScreen(
                         ),
                         colors = ListItemDefaults.colors(containerColor = containerColor),
                         leadingContent = { Text("$currentAlbumSongIndex") },
-                        headlineText = {
-                            Text(
-                                albumSong.title,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        },
-                        supportingText = {
-                            Text(
-                                albumSong.artist,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
+                        headlineText = { Text(albumSong.title) },
+                        supportingText = { Text(albumSong.artist) }
                     )
                 }
             }
         }
     }
 
+}
+
+@Preview
+@Composable
+@OptIn(ExperimentalCoilApi::class)
+private fun AlbumHeaderItem(albumProvider: () -> Album = { Album() }) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        val album = albumProvider()
+        Card {
+            AlbumArt(uri = album.albumArt, modifier = Modifier.size(200.dp))
+        }
+
+            Column(Modifier.padding(7.dp),
+            horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(text = album.albumArtist,
+                    style = MaterialTheme.typography.labelLarge)
+                val singularSong = "song"
+                val pluralSongs = "songs"
+                val numOfSongs = album.songs.songs.size
+                val songDescr = if (numOfSongs == 1) singularSong else pluralSongs
+                val duration = TimerUtils.formatTime(album.totalDuration)
+                val summary = "$numOfSongs $songDescr | $duration"
+                Text(text = summary,
+                    style = MaterialTheme.typography.labelMedium)
+            }
+
+    }
 }
 
 

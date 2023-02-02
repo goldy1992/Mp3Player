@@ -103,7 +103,7 @@ constructor(savedStateHandle: SavedStateHandle,
     }
 
     fun pause() {
-        viewModelScope.launch { mediaRepository.play() }
+        viewModelScope.launch { mediaRepository.pause() }
     }
 
     fun skipToNext() {
@@ -129,6 +129,7 @@ constructor(savedStateHandle: SavedStateHandle,
             albumArtist = currentAlbum.albumArtist,
             albumArt = currentAlbum.albumArt,
             songs = songs,
+            totalDuration = songs.totalDuration,
             state = State.LOADED
         )
     }
