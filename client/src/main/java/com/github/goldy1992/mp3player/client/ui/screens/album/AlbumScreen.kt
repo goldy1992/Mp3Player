@@ -1,6 +1,8 @@
 package com.github.goldy1992.mp3player.client.ui.screens.album
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,6 +29,7 @@ import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.lists.songs.AlbumArt
+import com.github.goldy1992.mp3player.client.utils.SongUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
@@ -34,8 +38,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(
     ExperimentalAnimationApi::class,
+    ExperimentalCoilApi::class,
+    ExperimentalFoundationApi::class,
     ExperimentalMaterial3Api::class,
-    ExperimentalCoilApi::class)
+)
 @Composable
 fun AlbumScreen(
     navController : NavController = rememberAnimatedNavController(),
@@ -94,8 +100,16 @@ fun AlbumScreen(
 
                     }
                 } else {
-                    val albumSong = albumSongs[currentAlbumSongIndex - 1]
+                    val albumSongIndex = currentAlbumSongIndex - 1
+                    val albumSong = albumSongs[albumSongIndex]
+                    val isSongSelected = SongUtils.isSongItemSelected(albumSong, currentSong)
+                    val containerColor : Color = if (isSongSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
                     ListItem(
+                        modifier = Modifier.combinedClickable(
+                            onClick = { viewModel.playFromSongList(albumSongIndex, album.songs) },
+                            onLongClick = { /* TODO: Add a long click */}
+                        ),
+                        colors = ListItemDefaults.colors(containerColor = containerColor),
                         leadingContent = { Text("$currentAlbumSongIndex") },
                         headlineText = {
                             Text(

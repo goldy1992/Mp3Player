@@ -22,8 +22,8 @@ import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
 import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
 import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.client.utils.SongUtils.isSongItemSelected
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import org.apache.commons.lang3.StringUtils
 
 private const val logTag = "SongList"
 
@@ -130,10 +130,4 @@ fun LoadingSongsList() {
         Text("Loading Songs")
         LoadingIndicator()
     }
-}
-
-private fun isSongItemSelected(song : Song, currentItem : Song) : Boolean {
-    val isSelected = StringUtils.equals(song.id, currentItem.id)
-    Log.i(logTag, "isSelected: $isSelected, songId: ${song.id}, currentItemId: ${currentItem.id}")
-    return isSelected
 }
