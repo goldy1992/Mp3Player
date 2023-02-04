@@ -19,7 +19,6 @@ import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import okio.ByteString.Companion.decodeBase64
 import javax.inject.Inject
 
 @HiltViewModel
@@ -114,9 +113,16 @@ constructor(savedStateHandle: SavedStateHandle,
         viewModelScope.launch { mediaRepository.skipToPrevious() }
     }
 
-    fun playFromSongList(index : Int, songs : Songs) {
+    fun playAlbum(index : Int, songs : Songs) {
         val mediaItems = songs.songs.map { MediaItemBuilder(it.id).build() }
         viewModelScope.launch { mediaRepository.playFromSongList(index, mediaItems) }
+    }
+
+    fun shuffleAlbum(songs : Songs) {
+        val mediaItems = songs.songs.map { MediaItemBuilder(it.id).build() }
+        viewModelScope.launch {
+            mediaRepository.playFromSongList(0, mediaItems)
+        }
     }
 
 

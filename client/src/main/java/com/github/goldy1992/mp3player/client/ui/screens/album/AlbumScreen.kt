@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.PlayCircle
+import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -53,7 +55,7 @@ fun AlbumScreen(
     val album : Album by viewModel.albumState.collectAsState()
 
     val onSongSelected : (Int, Songs) -> Unit = { itemIndex, mediaItemList ->
-        viewModel.playFromSongList(itemIndex, mediaItemList)
+        viewModel.playAlbum(itemIndex, mediaItemList)
     }
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
@@ -88,7 +90,10 @@ fun AlbumScreen(
         ) {
             items(count = albumSongs.size + 1) { currentAlbumSongIndex ->
                 if (currentAlbumSongIndex == 0) {
-                    AlbumHeaderItem({ album})
+                    AlbumHeaderItem(
+                        albumProvider = { album},
+                        onClickShuffle = {},
+                        onClickPlayPause = {},)
                 } else {
                     val albumSongIndex = currentAlbumSongIndex - 1
                     val albumSong = albumSongs[albumSongIndex]
@@ -96,7 +101,7 @@ fun AlbumScreen(
                     val containerColor : Color = if (isSongSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
                     ListItem(
                         modifier = Modifier.combinedClickable(
-                            onClick = { viewModel.playFromSongList(albumSongIndex, album.songs) },
+                            onClick = { viewModel.playAlbum(albumSongIndex, album.songs) },
                             onLongClick = { /* TODO: Add a long click */}
                         ),
                         colors = ListItemDefaults.colors(containerColor = containerColor),
@@ -114,7 +119,10 @@ fun AlbumScreen(
 @Preview
 @Composable
 @OptIn(ExperimentalCoilApi::class)
-private fun AlbumHeaderItem(albumProvider: () -> Album = { Album() }) {
+private fun AlbumHeaderItem(
+    albumProvider: () -> Album = { Album() },
+    onClickShuffle : () -> Unit = {},
+    onClickPlayPause : () -> Unit = {}) {
     Column(
         Modifier
             .fillMaxWidth()
@@ -126,19 +134,58 @@ private fun AlbumHeaderItem(albumProvider: () -> Album = { Album() }) {
             AlbumArt(uri = album.albumArt, modifier = Modifier.size(200.dp))
         }
 
-            Column(Modifier.padding(7.dp),
+        Column(
+            Modifier.padding(7.dp),
             horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = album.albumArtist,
-                    style = MaterialTheme.typography.labelLarge)
-                val singularSong = "song"
-                val pluralSongs = "songs"
-                val numOfSongs = album.songs.songs.size
-                val songDescr = if (numOfSongs == 1) singularSong else pluralSongs
-                val duration = TimerUtils.formatTime(album.totalDuration)
-                val summary = "$numOfSongs $songDescr | $duration"
-                Text(text = summary,
-                    style = MaterialTheme.typography.labelMedium)
+            Text(
+                text = album.albumArtist,
+                style = MaterialTheme.typography.labelLarge
+            )
+            val singularSong = "song"
+            val pluralSongs = "songs"
+            val numOfSongs = album.songs.songs.size
+            val songDescr = if (numOfSongs == 1) singularSong else pluralSongs
+            val duration = TimerUtils.formatTime(album.totalDuration)
+            val summary = "$numOfSongs $songDescr | $duration"
+            Text(
+                text = summary,
+                style = MaterialTheme.typography.labelMedium
+            )
+
+            Row(modifier = Modifier.padding(top = 7.dp)) {
+                IconButton(
+                    onClick = { /*TODO*/ },
+                //    contentPadding = ButtonWithIconContentPadding,
+                  //  modifier = Modifier.padding(end = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Shuffle,
+                        contentDescription = "",
+                     //   Modifier.size(18.dp)
+                    )
+//                    Text(
+//                        text = "Shuffle All",
+//                        Modifier.padding(start = 8.dp)
+//                    )
+                }
+
+                IconButton(
+                    onClick = { /*TODO*/ },
+                    //contentPadding = ButtonWithIconContentPadding,
+                   // modifier = Modifier.padding(start = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.PlayCircle,
+                        contentDescription = "",
+                 //       Modifier.size(18.dp)
+                    )
+//                    Text(
+//                        text = "Play All",
+//                        Modifier.padding(start = 8.dp)
+//                    )
+                }
             }
+        }
 
     }
 }
