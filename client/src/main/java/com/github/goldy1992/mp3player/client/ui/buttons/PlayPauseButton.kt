@@ -36,16 +36,16 @@ fun PlayPauseButton(isPlaying : () -> Boolean = {false},
                     scope : CoroutineScope = rememberCoroutineScope()
 ) {
     val isPlayingValue = isPlaying()
+    val tweenTime = 500
+    val rotation by animateFloatAsState(targetValue = if (isPlayingValue) 180f else 0f, tween(tweenTime))
 
-    var pauseRotation by remember { mutableStateOf(Animatable(if (isPlayingValue) 0f else 180f)) }
-    var playRotation by remember { mutableStateOf(Animatable(if (!isPlayingValue) 0f else 180f)) }
+    val fadeTime = 300
 
-    val tweenTime = 1000
     AnimatedContent(targetState = isPlayingValue,
         transitionSpec = {
             ContentTransform(
-                targetContentEnter = fadeIn(tween(tweenTime)),
-                initialContentExit = fadeOut(tween(tweenTime)),
+                targetContentEnter = fadeIn(tween(fadeTime)),
+                initialContentExit = fadeOut(tween(fadeTime)),
             )
         }
 
@@ -53,22 +53,13 @@ fun PlayPauseButton(isPlaying : () -> Boolean = {false},
         ) { isPlayingCurrentVal ->
         if (isPlayingCurrentVal) {
             PauseButton(onClickPause,
-                Modifier.rotate(pauseRotation.value)) {
-                pauseRotation =  Animatable(0f)
-                playRotation = Animatable(180f)
-                scope.launch { playRotation.animateTo(playRotation.value + 180f, tween(tweenTime)) }
-                scope.launch { pauseRotation.animateTo(pauseRotation.value + 180f, tween(tweenTime)) }
-            }
+                Modifier.rotate(rotation + 180f))
         } else {
             PlayButton(onClickPlay,
-                Modifier.rotate(playRotation.value)) {
-                pauseRotation = Animatable(180f)
-                playRotation = Animatable(0f)
-                scope.launch { playRotation.animateTo(playRotation.value + 180f, tween(1000)) }
-                scope.launch { pauseRotation.animateTo(pauseRotation.value + 180f, tween(1000)) }
-            }
+                Modifier.rotate(rotation))
         }
     }
+
 }
 
 /**
@@ -76,11 +67,9 @@ fun PlayPauseButton(isPlaying : () -> Boolean = {false},
  */
 @Composable
 fun PlayButton(onClick : () -> Unit =  {},
-               modifier : Modifier = Modifier,
-               onClickAnimationUpdate: () -> Unit = {}) {
+               modifier : Modifier = Modifier) {
     IconButton(
-        onClick = { onClick()
-        onClickAnimationUpdate()},
+        onClick = { onClick()},
         modifier = modifier) {
         Icon(
             Icons.Filled.PlayArrow,
@@ -95,12 +84,8 @@ fun PlayButton(onClick : () -> Unit =  {},
  */
 @Composable
 fun PauseButton(onClick: () -> Unit,
-                modifier: Modifier = Modifier,
-                onClickAnimationUpdate: () -> Unit = {}) {
-    IconButton(onClick = {
-        onClick()
-        onClickAnimationUpdate()
-    },
+                modifier: Modifier = Modifier) {
+    IconButton(onClick = { onClick() },
     modifier = modifier) {
         Icon(
             Icons.Filled.Pause,
