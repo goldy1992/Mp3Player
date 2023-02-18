@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.service
 
 import android.content.Intent
 import android.os.Build
+import android.os.IBinder
 import android.util.Log
 import androidx.media3.common.Player.STATE_READY
 import androidx.media3.common.Player.State
@@ -87,7 +88,7 @@ open class MediaPlaybackService : MediaLibraryService(),
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        Log.i(logTag(), "on start command")
+        Log.i(logTag(), "on start command: intent: ${intent?.action}, startId: $startId")
         if (shouldInitialise()) {
             Log.i(logTag(), "initialising media library")
             initialise()
@@ -141,8 +142,13 @@ open class MediaPlaybackService : MediaLibraryService(),
 
     }
 
+    override fun onBind(intent: Intent?): IBinder? {
+        Log.i(logTag(), "onBind called with intent: ${intent?.action}")
+        return super.onBind(intent)
+    }
+
     override fun onUnbind(intent: Intent?): Boolean {
-        Log.i(logTag(), "onUnbindCalled with intent: ${intent?.action}")
+        Log.i(logTag(), "onUnbind called with intent: ${intent?.action}")
         return super.onUnbind(intent)
     }
 
@@ -213,7 +219,7 @@ open class MediaPlaybackService : MediaLibraryService(),
     }
 
     private fun savePlayerState() {
-        runBlocking {
+        scope.launch {
             Log.i(logTag(), "saveState runBlocking")
             playerStateManager.saveState()
             Log.i(logTag(), "Player state saved")

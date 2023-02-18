@@ -55,6 +55,8 @@ interface MediaRepository {
 
     suspend fun getLibraryRoot() : MediaItem
 
+    suspend fun getCurrentPlaybackPosition(): Long
+
     suspend fun getSearchResults(query: String, page : Int = 0, pageSize : Int = 20) : List<MediaItem>
 
     suspend fun pause()

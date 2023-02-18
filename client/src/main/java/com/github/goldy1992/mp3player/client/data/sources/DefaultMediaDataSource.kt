@@ -94,6 +94,10 @@ class DefaultMediaDataSource
         mediaBrowser.changePlaybackSpeed(speed)
     }
 
+    override suspend fun getCurrentPlaybackPosition(): Long {
+        return mediaBrowser.getCurrentPlaybackPosition()
+    }
+
     override suspend fun getChildren(
         parentId: String,
         page: Int,

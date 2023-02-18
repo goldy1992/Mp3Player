@@ -47,6 +47,8 @@ interface MediaDataSource {
 
     suspend fun changePlaybackSpeed(speed : Float)
 
+    suspend fun getCurrentPlaybackPosition(): Long
+
     suspend fun getChildren(parentId : String,
                             @androidx.annotation.IntRange(from = 0) page : Int = 0,
                             @androidx.annotation.IntRange(from = 1) pageSize : Int = 20,

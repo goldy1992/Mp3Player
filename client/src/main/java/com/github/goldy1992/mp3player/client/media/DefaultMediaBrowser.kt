@@ -80,6 +80,12 @@ class DefaultMediaBrowser
 
     private val _metadataFlow : Flow<MediaMetadata> = callbackFlow {
         val controller = mediaBrowserFuture.await()
+        Log.i(logTag(), "event isPlaying mediabrowser awaited")
+        var currentMediaMetadata : MediaMetadata
+        withContext(mainDispatcher) {
+            currentMediaMetadata = controller.mediaMetadata
+        }
+        trySend(currentMediaMetadata)
         val messageListener = object : Player.Listener {
             override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
                 Log.i(logTag(), "onMediaMetadataChanged: $mediaMetadata")
@@ -135,9 +141,14 @@ class DefaultMediaBrowser
         return _currentMediaItemFlow
     }
 
-    private val _isPlayingFlow : Flow<Boolean> = callbackFlow<Boolean> {
+    private val _isPlayingFlow : Flow<Boolean> = callbackFlow {
         val controller = mediaBrowserFuture.await()
         Log.i(logTag(), "event isPlaying mediabrowser awaited")
+        var isPlaying : Boolean
+        withContext(mainDispatcher) {
+            isPlaying = controller.isPlaying
+        }
+        trySend(isPlaying)
         val messageListener = object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 Log.i(logTag(), "onIsPlayingChanged: $isPlaying")
@@ -261,13 +272,17 @@ class DefaultMediaBrowser
         }
         val messageListener = object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
-                Log.i(logTag(), "onIsPlayingChanged: $isPlaying")
-                trySend(PlaybackPositionEvent(isPlaying, controller.currentPosition, TimerUtils.getSystemTime()))
+                val currentPosition = controller.currentPosition
+                Log.i(logTag(), "onIsPlayingChanged: $isPlaying with position $currentPosition")
+                trySend(PlaybackPositionEvent(isPlaying, currentPosition, TimerUtils.getSystemTime()))
             }
 
             override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
                 val isPlaying = controller.isPlaying
-                trySend(PlaybackPositionEvent(isPlaying, controller.currentPosition, TimerUtils.getSystemTime()))
+                val currentPosition = controller.currentPosition
+                Log.i(logTag(), "onIsPlayingChanged: $isPlaying with position $currentPosition")
+
+                trySend(PlaybackPositionEvent(isPlaying, currentPosition, TimerUtils.getSystemTime()))
             }
         }
         controller.addListener(messageListener)
@@ -356,6 +371,14 @@ class DefaultMediaBrowser
         val changePlaybackSpeedCommand = SessionCommand(CHANGE_PLAYBACK_SPEED, extras)
         mediaBrowserFuture.await().sendCustomCommand(changePlaybackSpeedCommand, extras).await()
 
+    }
+
+    override suspend fun getCurrentPlaybackPosition(): Long {
+        var toReturn : Long
+//        withContext(mainDispatcher) {
+            toReturn = mediaBrowserFuture.await().contentPosition
+        //}
+        return toReturn
     }
 
     override suspend fun getChildren(

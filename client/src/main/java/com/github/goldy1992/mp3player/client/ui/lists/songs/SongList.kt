@@ -71,7 +71,7 @@ fun SongList(
                             if (itemIndex > 0) {
                                 val song = songList[itemIndex-1]
                                 val isItemSelected = isSongItemSelected(song, currentMediaItem)
-                                Log.i(logTag, "isItemSelected: $isItemSelected isPlaying: ${isPlaying}")
+                                //Log.i(logTag, "isItemSelected: $isItemSelected isPlaying: ${isPlaying}")
                                 //val isItemPlaying = if (isPlaying) isItemSelected  else false
                                 SongListItem(
                                     song = song,
@@ -84,7 +84,7 @@ fun SongList(
                         } else  {
                             val song = songList[itemIndex]
                             val isItemSelected = isSongItemSelected(song, currentMediaItem)
-                            Log.i(logTag, "isItemSelected: $isItemSelected isPlaying: ${isPlaying}")
+                            //Log.i(logTag, "isItemSelected: $isItemSelected isPlaying: ${isPlaying}")
                             //val isItemPlaying = if (isPlaying) isItemSelected  else false
                             SongListItem(
                                 song = song,

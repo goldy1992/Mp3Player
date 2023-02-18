@@ -12,12 +12,9 @@ import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPosi
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 class NowPlayingScreenViewModel
@@ -31,6 +28,9 @@ constructor(
     val playbackPosition : StateFlow<PlaybackPositionEvent> = _playbackPositionState
 
     init {
+//        viewModelScope.launch {
+//            _playbackPositionState.value =PlaybackPositionEvent(mediaRepository.getCurrentPlaybackPosition()
+//        }
         viewModelScope.launch {
             mediaRepository.playbackPosition()
             .collect {
@@ -131,7 +131,9 @@ constructor(
     }
 
     fun play() {
-        viewModelScope.launch { mediaRepository.play() }
+        viewModelScope.launch {
+            Log.i(logTag(), "calling play()")
+            mediaRepository.play() }
     }
 
     fun pause() {

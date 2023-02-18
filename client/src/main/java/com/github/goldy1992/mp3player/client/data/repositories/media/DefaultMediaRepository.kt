@@ -98,6 +98,10 @@ class DefaultMediaRepository
         return mediaDataSource.getLibraryRoot()
     }
 
+    override suspend fun getCurrentPlaybackPosition(): Long {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getSearchResults(query: String, page: Int, pageSize: Int) : List<MediaItem> {
         return mediaDataSource.getSearchResults(query, page, pageSize)
     }

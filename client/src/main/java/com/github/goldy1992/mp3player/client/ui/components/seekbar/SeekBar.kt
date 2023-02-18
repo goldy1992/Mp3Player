@@ -76,6 +76,7 @@ private fun SeekBarUi(currentPosition : Float,
     if (isPlaying) {
         //   Log.i(logTag, "playback state playing")
         LaunchedEffect(seekBarAnimation) {
+            Log.i(logTag, "animating to duration: $duration, currentPos: $currentPosition, animationTimeMs: $animationTimeInMs")
             seekBarAnimation.value.animateTo(duration,
                 animationSpec = FloatTweenSpec(animationTimeInMs, 0, LinearEasing))
             //      Log.i(logTag, "animating")
