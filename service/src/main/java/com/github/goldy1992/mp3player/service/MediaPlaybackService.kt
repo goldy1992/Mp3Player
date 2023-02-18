@@ -155,17 +155,17 @@ open class MediaPlaybackService : MediaLibraryService(),
     override fun onTaskRemoved(rootIntent: Intent?) {
 
         Log.i(logTag(), "onTaskRemoved invoked")
-        val playbackState : Int = mediaSession?.player?.playbackState ?: 0
-        Log.i(logTag(), "TASK rEmOvEd, playback state: " + playbackStateDebugMap.get(playbackState))
+        val isPlaying : Boolean? = mediaSession?.player?.isPlaying
+        Log.i(logTag(), "TASK rEmOvEd, isPlaying: $isPlaying")
 
-        stopForegroundService(playbackState)
+        stopForegroundService(isPlaying ?: false)
         super.onTaskRemoved(rootIntent)
     }
 
     @Suppress("DEPRECATION")
-    private fun stopForegroundService(@State playbackState : Int) {
+    private fun stopForegroundService(isPlaying : Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (playbackState != STATE_READY) {
+            if (!isPlaying) {
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 Log.i(logTag(), "removed notification")
             } else {
@@ -174,7 +174,7 @@ open class MediaPlaybackService : MediaLibraryService(),
             }
 
         } else {
-            if (playbackState != STATE_READY) {
+            if (!isPlaying) {
                 stopForeground(true)
             } else {
                 stopForeground(false)

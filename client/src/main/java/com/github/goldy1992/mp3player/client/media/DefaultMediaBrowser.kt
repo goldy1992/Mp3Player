@@ -22,12 +22,9 @@ import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME_KEY
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import org.apache.commons.lang3.StringUtils.isEmpty
 import javax.inject.Inject
 
@@ -53,7 +50,11 @@ class DefaultMediaBrowser
             }
         }
         controller.addListener(messageListener)
-        awaitClose { controller.removeListener(messageListener) }
+        awaitClose {
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
+        }
     }
 
     private val _onCustomCommandFlow : Flow<SessionCommandEventHolder> = callbackFlow<SessionCommandEventHolder> {
@@ -94,8 +95,9 @@ class DefaultMediaBrowser
         }
         controller.addListener(messageListener)
         awaitClose {
-
-            controller.removeListener(messageListener)
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
         }
     }.shareIn(
         scope = scope,
@@ -157,7 +159,9 @@ class DefaultMediaBrowser
         }
         controller.addListener(messageListener)
         awaitClose {
-            controller.removeListener(messageListener)
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
         }
     }.shareIn(
         scope= scope,
@@ -177,7 +181,11 @@ class DefaultMediaBrowser
             }
         }
         controller.addListener(messageListener)
-        awaitClose { controller.removeListener(messageListener) }
+        awaitClose {
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
+        }
     }.shareIn(
         scope = scope,
         started = SharingStarted.WhileSubscribed(),
@@ -231,7 +239,9 @@ class DefaultMediaBrowser
             }
         }
         listeners.add(messageListener)
-        awaitClose()
+        awaitClose {
+            listeners.remove(messageListener)
+        }
     }.shareIn(
         scope = scope,
         started = SharingStarted.WhileSubscribed(),
@@ -249,7 +259,11 @@ class DefaultMediaBrowser
             }
         }
         controller.addListener(messageListener)
-        awaitClose { controller.removeListener(messageListener) }
+        awaitClose {
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
+        }
     }.shareIn(
         scope = scope,
         started = SharingStarted.WhileSubscribed(),
@@ -287,7 +301,9 @@ class DefaultMediaBrowser
         }
         controller.addListener(messageListener)
         awaitClose {
-            controller.removeListener(messageListener)
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
         }
     }.shareIn(
         scope = scope,
@@ -336,8 +352,12 @@ class DefaultMediaBrowser
             }
         }
         controller.addListener(messageListener)
-        awaitClose { controller.removeListener(messageListener) }
-        }.shareIn(
+        awaitClose {
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
+        }
+    }.shareIn(
             scope = scope,
             started = SharingStarted.WhileSubscribed(),
             replay = 1
@@ -355,7 +375,11 @@ class DefaultMediaBrowser
             }
         }
         controller.addListener(messageListener)
-        awaitClose { controller.removeListener(messageListener) }
+        awaitClose {
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
+        }
     }.shareIn(
         scope = scope,
         started = SharingStarted.WhileSubscribed(),
