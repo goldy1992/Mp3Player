@@ -14,7 +14,6 @@ object Constants {
     const val AUDIO_SESSION_ID = "AUDIO_SESSION_ID"
     const val AUDIO_DATA = "AUDIO_DATA"
 
-    const val PLAY_FROM_SONG_LIST = "PlayFromSongList"
     const val ITEM_INDEX = "itemIndex"
     val playbackStateDebugMap = SparseArray<String?>()
     val repeatModeDebugMap = SparseArray<String>()
@@ -29,6 +28,8 @@ object Constants {
     const val PACKAGE_NAME_KEY = "package_name_key"
 
     const val ROOT_APP_URI_PATH = "com.github.goldy1992.mp3player"
+
+    const val USER_PREFERENCES_NAME = "user_prefs"
 
 
 

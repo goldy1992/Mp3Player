@@ -22,13 +22,15 @@ abstract class ContentResolverRetriever internal constructor(val contentResolver
     override fun getItems(): List<MediaItem> {
         val cursor = performGetChildrenQuery("")
         val results = resultsParser.create(cursor)
+        cursor?.close()
         return if (null != resultsFilter) resultsFilter.filter("", results.toMutableList()) ?: emptyList() else results
 
     }
 
     override fun getChildren(parentId: String): List<MediaItem> {
-        val cursor = performGetChildrenQuery(parentId) ?: return emptyList()
+        val cursor = performGetChildrenQuery(parentId)
         val results = resultsParser.create(cursor)
+        cursor?.close()
         return if (null != resultsFilter) resultsFilter.filter(parentId, results.toMutableList()) ?: emptyList() else results
     }
 

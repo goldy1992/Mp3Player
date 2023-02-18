@@ -5,9 +5,9 @@ import android.media.AudioTrack.ERROR_BAD_VALUE
 import android.os.Bundle
 import androidx.media3.common.C
 import androidx.media3.common.Format
+import androidx.media3.common.audio.AudioProcessor
 import androidx.media3.common.util.Assertions
 import androidx.media3.common.util.Util
-import androidx.media3.exoplayer.audio.AudioProcessor
 import androidx.media3.session.MediaSession
 import androidx.media3.session.SessionCommand
 import com.github.goldy1992.mp3player.commons.AudioSample

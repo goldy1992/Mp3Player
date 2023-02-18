@@ -20,8 +20,9 @@ abstract class ContentResolverSearcher<T : SearchEntity> internal constructor(va
      * @return a list of MediaItem search results
      */
     override suspend fun search(query: String): List<MediaItem>? {
-        val cursor = performSearchQuery(query) ?: return emptyList()
+        val cursor = performSearchQuery(query)
         val results = resultsParser.create(cursor)
+        cursor?.close()
         return if (null != resultsFilter) resultsFilter.filter(query, results.toMutableList()) else results
     }
 

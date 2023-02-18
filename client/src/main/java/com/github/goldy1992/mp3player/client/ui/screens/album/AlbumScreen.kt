@@ -201,8 +201,9 @@ fun AlbumAppBar(modifier: Modifier = Modifier,
                 navController: NavController = rememberAnimatedNavController()) {
     val album = albumProvider()
     LargeTopAppBar(
+        modifier = modifier,
         title = {
-            Text(album.albumTitle            )
+            Text(album.albumTitle)
         },
         navigationIcon = {
                 IconButton(onClick = {

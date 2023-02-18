@@ -129,11 +129,14 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
             isPlayingProvider = { isPlaying },
-            onClickPlay = { viewModel.play() },
-            onClickPause = {viewModel.pause() },
+            onClickPlay = { viewModel.play()
+                          Log.i(logTag, "clicked play")},
+            onClickPause = {viewModel.pause()
+                           Log.i(logTag, "clicked pause")},
             onClickSkipPrevious = { viewModel.skipToPrevious() },
             onClickSkipNext = { viewModel.skipToNext() },
-            onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)}
+            onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)},
+            currentSongProvider = { currentMediaItem }
         )
     }
     val context = LocalContext.current

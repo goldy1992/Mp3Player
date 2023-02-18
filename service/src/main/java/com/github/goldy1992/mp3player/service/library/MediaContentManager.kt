@@ -68,6 +68,15 @@ class MediaContentManager @Inject constructor(private val contentRetrievers: Con
         return nodeMap?.get(id)?.item ?: MediaItem.EMPTY
     }
 
+    override suspend fun getContentByIds(ids: List<String>): List<MediaItem> {
+        val toReturn = mutableListOf<MediaItem>()
+
+        for (id in ids) {
+            toReturn.add(getContentById(id))
+        }
+        return toReturn.toList()
+    }
+
     override suspend fun search(query: String): List<MediaItem> {
         val normalisedQuery = normalise(query)
 

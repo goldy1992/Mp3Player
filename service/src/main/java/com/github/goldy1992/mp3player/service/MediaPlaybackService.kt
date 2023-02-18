@@ -11,6 +11,8 @@ import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
 import androidx.media3.ui.PlayerNotificationManager
 import com.github.goldy1992.mp3player.commons.*
+import com.github.goldy1992.mp3player.commons.Constants.playbackStateDebugMap
+import com.github.goldy1992.mp3player.commons.PermissionsUtils.appHasPermissions
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers
 import com.github.goldy1992.mp3player.service.library.data.search.managers.SearchDatabaseManagers
@@ -29,7 +31,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 open class MediaPlaybackService : MediaLibraryService(),
         LogTagger,
-        PlayerNotificationManager.NotificationListener {
+        PlayerNotificationManager.NotificationListener,
+        PermissionsListener{
 
     @Inject
     lateinit var mediaSessionCreator: MediaSessionCreator
@@ -53,7 +56,7 @@ open class MediaPlaybackService : MediaLibraryService(),
 
     private var customLayout = listOf<CommandButton>()
 
-    private lateinit var mediaSession: MediaLibrarySession
+    private var mediaSession: MediaLibrarySession? = null
 
     @Inject
     lateinit var scope: CoroutineScope
@@ -73,11 +76,44 @@ open class MediaPlaybackService : MediaLibraryService(),
     @Inject
     lateinit var playlistManager: PlaylistManager
 
+    @Inject
+    lateinit var permissionsNotifier: PermissionsNotifier
+
+    var isInitialised = false
+
+    private fun shouldInitialise() : Boolean {
+        return !isInitialised && appHasPermissions(this)
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
         Log.i(logTag(), "on start command")
+        if (shouldInitialise()) {
+            Log.i(logTag(), "initialising media library")
+            initialise()
+
+        } else {
+            Log.i(logTag(), "media library already initialised")
+        }
+        super.onStartCommand(intent, flags, startId)
+        return START_NOT_STICKY
+    }
+
+    private fun initialise() {
+        Log.i(logTag(), "Initialising MediaPlaybackService with player: ${player}")
+        if (mediaSession == null) {
+            mediaSession = mediaSessionCreator.create(
+                this,
+                componentClassMapper,
+                player,
+                mediaLibrarySessionCallback
+            )
+        }
+
         val rootItem = rootAuthenticator.getRootItem()
         runBlocking {
             contentManager.initialise(rootMediaItem = rootItem)
+            playlistManager.loadPlayerState()
         }
 
         scope.launch(ioDispatcher) {
@@ -85,35 +121,39 @@ open class MediaPlaybackService : MediaLibraryService(),
         }
 
 
-
         if (!customLayout.isEmpty()) {
             // Send custom layout to legacy session.
-            mediaSession.setCustomLayout(customLayout)
+            mediaSession!!.setCustomLayout(customLayout)
         }
-        mediaStoreObservers.init(mediaSession)
-
-        scope.launch {
-            withContext(mainDispatcher) {
-                Log.i(logTag(), "adding to queue")
-                mediaSession.player.addMediaItems(playlistManager.getCurrentPlaylist())
-                mediaSession.player.prepare()
-            }
-        }
-        return super.onStartCommand(intent, flags, startId)
+        mediaStoreObservers.init(mediaSession!!)
+        this.isInitialised = true
     }
 
     override fun onCreate() {
         Log.i(logTag(), "onCreate called")
         super.onCreate()
-        mediaSession = mediaSessionCreator.create(this, componentClassMapper, player, mediaLibrarySessionCallback)
+        Log.i(logTag(), "onCreate super called")
+        permissionsNotifier.addListener(this)
+
+        if (shouldInitialise()) {
+            initialise()
+        }
+
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        Log.i(logTag(), "onUnbindCalled with intent: ${intent?.action}")
+        return super.onUnbind(intent)
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        super.onTaskRemoved(rootIntent)
+
+        Log.i(logTag(), "onTaskRemoved invoked")
         val playbackState : Int = mediaSession?.player?.playbackState ?: 0
-        Log.i(logTag(), "TASK rEmOvEd, playback state: " + Constants.playbackStateDebugMap.get(playbackState))
+        Log.i(logTag(), "TASK rEmOvEd, playback state: " + playbackStateDebugMap.get(playbackState))
 
         stopForegroundService(playbackState)
+        super.onTaskRemoved(rootIntent)
     }
 
     @Suppress("DEPRECATION")
@@ -121,8 +161,10 @@ open class MediaPlaybackService : MediaLibraryService(),
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             if (playbackState != STATE_READY) {
                 stopForeground(STOP_FOREGROUND_REMOVE)
+                Log.i(logTag(), "removed notification")
             } else {
                 stopForeground(STOP_FOREGROUND_DETACH)
+                Log.i(logTag(), "detached notification")
             }
 
         } else {
@@ -139,19 +181,41 @@ open class MediaPlaybackService : MediaLibraryService(),
        return mediaSession
     }
 
-    override fun onUpdateNotification(session: MediaSession) {
-      //  super.onUpdateNotification(session)
+    override fun stopService(name: Intent?): Boolean {
+        Log.i(logTag(), "Stopping service")
+        return super.stopService(name)
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        this.mediaSession?.release()
-        Log.i(logTag(), "onDeStRoY")
+        Log.i(logTag(), "onDestroy called")
+        runBlocking {
+            Log.i(logTag(), "saveState runBlocking")
+            playlistManager.saveState()
+            Log.i(logTag(), "Player state saved")
+        }
+
+        this.mediaSession?.run {
+            player.release()
+            release()
+            mediaSession = null
+
+        }
+
         mediaStoreObservers.unregisterAll()
+        super.onDestroy()
+        Log.i(logTag(), "onDeStRoY complete")
     }
 
+    override fun onPermissionsGranted() {
+        Log.i(logTag(), "permissions were granted")
+        if (shouldInitialise()) {
+            initialise()
+        }
+    }
 
     override fun logTag() : String {
         return "MEDIA_PLAYBACK_SERVICE"
     }
+
+
 }

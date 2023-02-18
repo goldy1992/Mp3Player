@@ -17,7 +17,7 @@ open class SongsRetriever constructor(contentResolver: ContentResolver,
 
     override fun performGetChildrenQuery(id: String?): Cursor? {
         return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection,
-                null, null, null)
+            MediaStore.Audio.Media.IS_MUSIC + " = 1", null, null)
     }
 
 

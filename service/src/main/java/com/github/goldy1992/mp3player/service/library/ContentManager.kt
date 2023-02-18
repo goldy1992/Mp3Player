@@ -16,6 +16,8 @@ interface ContentManager : LogTagger {
     suspend fun getChildren(mediaItemType: MediaItemType) : List<MediaItem>
 
     suspend fun getContentById(id : String) : MediaItem
+
+    suspend fun getContentByIds(ids : List<String>) : List<MediaItem>
     /**
      * @param query the search query
      * @return a [List] of [MediaItem]s that match the search query

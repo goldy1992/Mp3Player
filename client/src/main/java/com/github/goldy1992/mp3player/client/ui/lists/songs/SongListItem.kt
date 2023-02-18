@@ -23,6 +23,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
+import com.github.goldy1992.mp3player.client.R.drawable.cd_image1
 
 private const val logTag = "SongListItem"
 
@@ -89,10 +90,12 @@ fun SongListItem(song : Song = Song(),
 fun AlbumArt(uri : Uri?,
             modifier : Modifier = Modifier) {
     if (uri != null) {
+
         Image(
             modifier = modifier,
             painter = rememberAsyncImagePainter(
                 ImageRequest.Builder(LocalContext.current)
+                    .placeholder(cd_image1)
                     .data(uri).build()
             ),
             contentDescription = ""

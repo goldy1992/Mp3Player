@@ -1,8 +1,12 @@
 package com.github.goldy1992.mp3player.service.library.content.parser
 
+import android.content.ContentResolver
 import android.content.ContentUris
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build.VERSION.SDK_INT
+import android.os.Build.VERSION_CODES.TIRAMISU
+import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import androidx.media3.common.MediaItem
@@ -14,13 +18,15 @@ import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaUri
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle
+import org.apache.commons.lang3.exception.ExceptionUtils
 import java.io.File
+import java.io.FileNotFoundException
 import java.util.*
 import javax.inject.Inject
 
 class SongResultsParser
     @Inject
-    constructor() : ResultsParser() {
+    constructor(val contentResolver: ContentResolver) : ResultsParser() {
 
     override fun create(cursor: Cursor?): List<MediaItem> {
         val listToReturn = TreeSet(this)
@@ -40,6 +46,7 @@ class SongResultsParser
     private fun buildMediaItem(c: Cursor): MediaItem? {
         val mediaIdIndex = c.getColumnIndex(MediaStore.Audio.Media._ID)
         val mediaId = if (mediaIdIndex >= 0) c.getString(mediaIdIndex) else Constants.UNKNOWN
+        val mediaIdLong = if (mediaIdIndex >= 0) c.getLong(mediaIdIndex) else 0L
         val dataIndex = c.getColumnIndex(MediaStore.Audio.Media.DATA)
         val mediaFilePath = if (dataIndex >= 0) c.getString(dataIndex) else Constants.UNKNOWN
         val mediaFile = File(mediaFilePath)
@@ -49,6 +56,7 @@ class SongResultsParser
             mediaFile.parentFile
         }
         val mediaUri = Uri.fromFile(mediaFile)
+        val mediaContentUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mediaIdLong)
         val durationIndex = c.getColumnIndex(MediaStore.Audio.Media.DURATION)
         val duration = if (durationIndex >= 0) c.getLong(durationIndex) else 0L
 
@@ -63,8 +71,13 @@ class SongResultsParser
         val fileName = mediaFile.name
         val sArtworkUri = Uri.parse(ALBUM_ART_URI_PREFIX)
         val albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId)
+        Log.i(logTag(), "Album Art Uri: ${albumArtUri}")
+        var albumImageByteArray : ByteArray? = null
+        if (albumArtUri != null) {
+            albumImageByteArray = getAlbumArtData(albumArtUri)
+        }
         return MediaItemBuilder(mediaId)
-                .setMediaUri(mediaUri)
+                .setMediaUri(mediaContentUri)
                 .setTitle(title)
                 .setDuration(duration)
                 .setFileName(fileName)
@@ -72,9 +85,34 @@ class SongResultsParser
                 .setArtist(artist)
                 .setMediaItemType(MediaItemType.SONG)
                 .setAlbumArtUri(albumArtUri)
+                .setAlbumArtImage(albumImageByteArray)
                 .setIsPlayable(true)
                 .setFolderType(FOLDER_TYPE_NONE)
                 .build()
+    }
+
+    private fun getAlbumArtData(
+        albumArtUri: Uri,
+    ): ByteArray? {
+        var toReturn : ByteArray? = null
+        try {
+            if (SDK_INT > 29) {
+                contentResolver.openTypedAssetFile(albumArtUri, "image/*", Bundle(), null)
+                    ?.createInputStream()
+
+            } else {
+                contentResolver
+                    //noinspection Recycle: Automatically recycled after being decoded.
+                    .openAssetFileDescriptor(albumArtUri, "r")
+                    ?.createInputStream()
+            } .use {
+                toReturn = it?.readBytes()
+            }
+        } catch (ex: FileNotFoundException) {
+           // Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
+            toReturn = null
+        }
+        return toReturn
     }
 
     override fun compare(m1: MediaItem, m2: MediaItem): Int {

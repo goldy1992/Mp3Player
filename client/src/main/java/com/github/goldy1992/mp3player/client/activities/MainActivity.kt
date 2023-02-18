@@ -1,11 +1,7 @@
 package com.github.goldy1992.mp3player.client.activities
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
-import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -13,8 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
+import androidx.media3.session.MediaBrowser
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
@@ -22,18 +17,18 @@ import com.github.goldy1992.mp3player.client.permissions.PermissionGranted
 import com.github.goldy1992.mp3player.client.ui.ComposeApp
 import com.github.goldy1992.mp3player.client.ui.rememberWindowSizeClass
 import com.github.goldy1992.mp3player.commons.*
+import com.github.goldy1992.mp3player.commons.PermissionsUtils.getAppPermissions
+import com.github.goldy1992.mp3player.commons.PermissionsUtils.hasPermission
+import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 /**
  * The Main Activity
  */
 @AndroidEntryPoint(ComponentActivity::class)
-open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionGranted {
+open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionsListener {
 
     @Inject
     lateinit var componentClassMapper : ComponentClassMapper
@@ -61,6 +56,12 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionGranted {
     @Inject
     lateinit var userPreferencesRepository: IUserPreferencesRepository
 
+    @Inject
+    lateinit var permissionsNotifier: PermissionsNotifier
+
+    @Inject
+    lateinit var mediaBrowserFuture : ListenableFuture<MediaBrowser>
+
     var startScreen: Screen = Screen.LIBRARY
 
     var trackToPlay: Uri? = null
@@ -70,27 +71,16 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionGranted {
     companion object {
        private const val REQUEST_CODE = 34
 
-        @RequiresApi(TIRAMISU)
-        private val TIRAMISU_PERMISSIONS =  arrayOf(Manifest.permission.POST_NOTIFICATIONS,
-            Manifest.permission.READ_MEDIA_AUDIO,
-            Manifest.permission.READ_MEDIA_IMAGES)
 
-        private val STANDARD_PERMISSIONS = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-
-        fun calculatePermissions() : Array<String> {
-            return if (Build.VERSION.SDK_INT >= TIRAMISU) {
-                TIRAMISU_PERMISSIONS
-            } else {
-                STANDARD_PERMISSIONS
-            }
-        }
 
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
         Log.i(logTag(), "on createee")
+        super.onCreate(savedInstanceState)
+        permissionsNotifier.addListener(this)
+
+
 
         // If app has already been created set the UI to initialise at the main screen.
         val appAlreadyCreated = savedInstanceState != null
@@ -98,7 +88,7 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionGranted {
             this.startScreen = Screen.MAIN
         }
 
-        requestPermission(calculatePermissions())
+        requestPermission(getAppPermissions())
 
     }
 
@@ -117,7 +107,7 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionGranted {
     private fun requestPermission(permissions: Array<String>) { // Here, thisActivity is the current activity
         val permissionsToRequest = mutableSetOf<String>()
         for (permission in permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (!hasPermission(permission, this)) {
                 permissionsToRequest.add(permission)
             }
         }
@@ -126,30 +116,9 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionGranted {
             permissionLauncher.launch(permissions)
         } else { // Permission has already been granted
             Log.i(logTag(), "Permission has already been granted")
-            onPermissionGranted()
+            permissionsNotifier.notifyPermissionsGranted()
         }
     }
-
-
-
-
-    override fun onPermissionGranted() {
-        Log.i(logTag(), "permission granted")
-        createService()
-        if (Intent.ACTION_VIEW == intent.action) {
-            if (intent.data != null) {
-                trackToPlay = intent.data
-                scope.launch(defaultDispatcher) {
-                    mediaRepository.playFromUri(trackToPlay, null)
-                }
-            }
-            this.startScreen = Screen.NOW_PLAYING
-        }
-        scope.launch(mainDispatcher) { ui() }
-    }
-
-
-
 
 
     private val permissionLauncher : ActivityResultLauncher<Array<String>> = registerForActivityResult(
@@ -164,7 +133,7 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionGranted {
         }
         val allPermissionsGranted = rejectedPermissionsSet.isEmpty()
         if (allPermissionsGranted) {
-            onPermissionGranted()
+            permissionsNotifier.notifyPermissionsGranted()
         } else {
             CoroutineScope(Dispatchers.Main).launch {
                 Toast.makeText(
@@ -178,10 +147,33 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionGranted {
     }
 
     private fun createService() {
+        Log.i(logTag(), "starting service")
         startService(Intent(applicationContext, componentClassMapper.service))
+    }
+
+    override fun onDestroy() {
+        Log.i(logTag(), "destroying activity")
+        MediaBrowser.releaseFuture(mediaBrowserFuture)
+        this.scope.cancel()
+        super.onDestroy()
     }
 
     override fun logTag(): String {
         return "MAIN_ACTIVITY"
+    }
+
+    override fun onPermissionsGranted() {
+        Log.i(logTag(), "permission granted")
+        // createService()
+        if (Intent.ACTION_VIEW == intent.action) {
+            if (intent.data != null) {
+                trackToPlay = intent.data
+                scope.launch(defaultDispatcher) {
+                    mediaRepository.playFromUri(trackToPlay, null)
+                }
+            }
+            this.startScreen = Screen.NOW_PLAYING
+        }
+        scope.launch(mainDispatcher) { ui() }
     }
 }

@@ -101,9 +101,6 @@ class MediaItemBuilder(private val mediaId: String) {
         return this
     }
 
-    @Deprecated(message = "albumArtData deprecated in androidx.media3.common.MediaItem",
-                replaceWith = ReplaceWith("MediaItemBuilder.setAlbumArtUri"),
-                level = DeprecationLevel.WARNING)
     fun setAlbumArtImage(bitmap: ByteArray?): MediaItemBuilder {
         this.albumArtData = bitmap
         return this
@@ -151,7 +148,7 @@ class MediaItemBuilder(private val mediaId: String) {
                     .setFolderType(folderType)
                     .setIsPlayable(isPlayable)
                     .setArtworkUri(albumArtUri)
-                    .setArtworkData(this.albumArtData)
+                    .setArtworkData(this.albumArtData, MediaMetadata.PICTURE_TYPE_MEDIA)
                     .setExtras(extras)
                     .build()
             )

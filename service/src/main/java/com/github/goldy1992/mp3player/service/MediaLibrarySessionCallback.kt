@@ -9,19 +9,20 @@ import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import androidx.media3.session.MediaSession.ConnectionResult
 import com.github.goldy1992.mp3player.commons.Constants.AUDIO_DATA
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
-import com.github.goldy1992.mp3player.commons.Constants.ITEM_INDEX
-import com.github.goldy1992.mp3player.commons.Constants.PLAY_FROM_SONG_LIST
 import com.github.goldy1992.mp3player.commons.IoDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MainDispatcher
-import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.service.data.ISavedStateRepository
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.player.ChangeSpeedProvider
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.scopes.ServiceScoped
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @ServiceScoped
@@ -31,6 +32,7 @@ class MediaLibrarySessionCallback
     constructor(private val contentManager: ContentManager,
                 private val changeSpeedProvider: ChangeSpeedProvider,
                 private val rootAuthenticator: RootAuthenticator,
+                private val savedStateRepository: ISavedStateRepository,
                 private val scope : CoroutineScope,
                 @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
                 @IoDispatcher private val ioDispatcher: CoroutineDispatcher) : MediaLibrarySession.Callback, LogTagger {
@@ -45,23 +47,21 @@ class MediaLibrarySessionCallback
         val connectionResult = super.onConnect(session, controller)
         // add change playback speed command to list of available commands
         val changePlaybackSpeed = SessionCommand(CHANGE_PLAYBACK_SPEED, Bundle())
-        val playFromList = SessionCommand(PLAY_FROM_SONG_LIST, Bundle())
         val audioDataCommand = SessionCommand(AUDIO_DATA, Bundle())
         val updatedSessionCommands = connectionResult
             .availableSessionCommands
             .buildUpon()
             .add(changePlaybackSpeed)
             .add(audioDataCommand)
-            .add(playFromList)
             .build()
         return ConnectionResult.accept(updatedSessionCommands,connectionResult.availablePlayerCommands)
     }
 
     override fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo) {
         super.onPostConnect(session, controller)
-        runBlocking {
-            session.player.setMediaItems(contentManager.getChildren(MediaItemType.SONG))
-        }
+//        runBlocking {
+//            session.player.setMediaItems(contentManager.getChildren(MediaItemType.SONG))
+//        }
         Log.i(logTag(), "onPostConnect")
 
     }
@@ -131,16 +131,7 @@ class MediaLibrarySessionCallback
         Log.i(logTag(), "On Custom Command: ${customCommand}, args: $args")
         if (CHANGE_PLAYBACK_SPEED == customCommand.customAction) {
             changeSpeedProvider.changeSpeed(session.player, args)
-        } else if (PLAY_FROM_SONG_LIST == customCommand.customAction) {
-            val extras = customCommand.customExtras
-            val songIds = extras.getStringArrayList(PLAY_FROM_SONG_LIST) ?: emptyList()
-            val songs = songIds.map { runBlocking { contentManager.getContentById(it) } }
-            val songListIndex = extras.getInt(ITEM_INDEX)
-            val player = session.player
-            player.clearMediaItems()
-            player.setMediaItems(songs, songListIndex, 0L )
-            player.prepare()
-            player.play()
+            return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         }
         return super.onCustomCommand(session, controller, customCommand, args)
     }
@@ -151,13 +142,13 @@ class MediaLibrarySessionCallback
         mediaItems: MutableList<MediaItem>
     ): ListenableFuture<MutableList<MediaItem>> {
         super.onAddMediaItems(mediaSession, controller, mediaItems)
-        val mediaItems = mutableListOf<MediaItem>()
+        val toReturn = mutableListOf<MediaItem>()
         runBlocking {
             for (item in mediaItems) {
-                mediaItems.add(contentManager.getContentById(item.mediaId))
+                toReturn.add(contentManager.getContentById(item.mediaId))
             }
         }
-        return Futures.immediateFuture(mediaItems)
+        return Futures.immediateFuture(toReturn)
     }
 
     override fun onGetLibraryRoot(
@@ -191,7 +182,7 @@ class MediaLibrarySessionCallback
                 }
             }.join()
 
-            println("finished on load children")
+            Log.i(logTag(), "finished on load children")
         }
         Log.i(logTag(), "notifying children changed for browser ${browser}")
         return Futures.immediateFuture(LibraryResult.ofItemList(mediaItems, params))

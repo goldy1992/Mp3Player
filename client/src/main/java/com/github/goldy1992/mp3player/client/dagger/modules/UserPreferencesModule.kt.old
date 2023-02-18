@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.client.dagger.modules
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
-import com.github.goldy1992.mp3player.client.ui.USER_PREFERENCES_NAME
+import com.github.goldy1992.mp3player.commons.Constants.USER_PREFERENCES_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
 data class UserPreferences(
@@ -24,7 +26,10 @@ data class UserPreferences(
 /**
  * Class that handles saving and retrieving user preferences
  */
-open class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) : IUserPreferencesRepository, LogTagger {
+@Singleton
+open class UserPreferencesRepository
+    @Inject
+    constructor(private val dataStore: DataStore<Preferences>) : IUserPreferencesRepository, LogTagger {
 
     private object PreferencesKeys {
         val THEME = stringPreferencesKey("theme")

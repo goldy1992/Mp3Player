@@ -30,12 +30,14 @@ private const val logTag = "PlayPauseButton"
  */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun PlayPauseButton(isPlaying : () -> Boolean = {false},
+fun PlayPauseButton(
+                    modifier: Modifier = Modifier,
+                    isPlaying : () -> Boolean = {false},
                     onClickPlay: () -> Unit = {},
-                    onClickPause: () -> Unit = {},
-                    scope : CoroutineScope = rememberCoroutineScope()
+                    onClickPause: () -> Unit = {}
 ) {
     val isPlayingValue = isPlaying()
+    Log.i(logTag, "new isPlayingValue: ${isPlayingValue}")
     val tweenTime = 500
     val rotation by animateFloatAsState(targetValue = if (isPlayingValue) 180f else 0f, tween(tweenTime))
 
@@ -52,11 +54,11 @@ fun PlayPauseButton(isPlaying : () -> Boolean = {false},
 
         ) { isPlayingCurrentVal ->
         if (isPlayingCurrentVal) {
-            PauseButton(onClickPause,
-                Modifier.rotate(rotation + 180f))
+            PauseButton(onClick = onClickPause,
+                modifier = modifier.rotate(rotation + 180f))
         } else {
-            PlayButton(onClickPlay,
-                Modifier.rotate(rotation))
+            PlayButton(onClick = onClickPlay,
+                modifier = modifier.rotate(rotation))
         }
     }
 
@@ -66,15 +68,16 @@ fun PlayPauseButton(isPlaying : () -> Boolean = {false},
  * Represents the Play button to be displayed on the [PlayToolbar].
  */
 @Composable
-fun PlayButton(onClick : () -> Unit =  {},
-               modifier : Modifier = Modifier) {
+fun PlayButton(modifier : Modifier = Modifier,
+               onClick : () -> Unit =  {}) {
     IconButton(
         onClick = { onClick()},
         modifier = modifier) {
         Icon(
-            Icons.Filled.PlayArrow,
+            imageVector = Icons.Filled.PlayArrow,
             contentDescription = stringResource(id = R.string.play),
-            tint = MaterialTheme.colorScheme.primary
+            tint = MaterialTheme.colorScheme.primary,
+    //        modifier = modifier
         )
     }
 }
@@ -83,14 +86,16 @@ fun PlayButton(onClick : () -> Unit =  {},
  * Represents the Pause button to be displayed on the [PlayToolbar].
  */
 @Composable
-fun PauseButton(onClick: () -> Unit,
-                modifier: Modifier = Modifier) {
+fun PauseButton(modifier: Modifier = Modifier,
+                onClick: () -> Unit = {},
+                ) {
     IconButton(onClick = { onClick() },
-    modifier = modifier) {
+                modifier = modifier) {
         Icon(
-            Icons.Filled.Pause,
+            imageVector = Icons.Filled.Pause,
             contentDescription = stringResource(id = R.string.pause),
             tint = MaterialTheme.colorScheme.primary,
+      //      modifier = modifier
         )
     }
 }
