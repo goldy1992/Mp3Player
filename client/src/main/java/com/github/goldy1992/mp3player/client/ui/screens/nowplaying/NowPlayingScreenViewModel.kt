@@ -35,6 +35,7 @@ constructor(
             mediaRepository.playbackPosition()
             .collect {
                 _playbackPositionState.value = it
+                Log.i(logTag(), "newPlaybackPosition: $it")
             }
         }
     }

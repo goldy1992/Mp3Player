@@ -15,6 +15,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
+import kotlinx.coroutines.android.HandlerDispatcher
 
 @InstallIn(ServiceComponent::class)
 @Module
@@ -28,6 +29,7 @@ class ExoPlayerModule {
 
         val exoPlayer = ExoPlayer.Builder(context)
             .setRenderersFactory(renderersFactory)
+            .setLooper(context.mainLooper)
             .build()
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(C.USAGE_MEDIA)

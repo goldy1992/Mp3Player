@@ -250,6 +250,15 @@ class DefaultMediaBrowser
 
     private val _playbackPositionFlow : Flow<PlaybackPositionEvent> = callbackFlow {
         val controller = mediaBrowserFuture.await()
+        withContext(mainDispatcher) {
+            trySend(
+                PlaybackPositionEvent(
+                    controller.isPlaying,
+                    controller.currentPosition,
+                    TimerUtils.getSystemTime()
+                )
+            )
+        }
         val messageListener = object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 Log.i(logTag(), "onIsPlayingChanged: $isPlaying")
