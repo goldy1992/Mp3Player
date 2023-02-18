@@ -74,7 +74,7 @@ open class MediaPlaybackService : MediaLibraryService(),
     lateinit var contentManager: ContentManager
 
     @Inject
-    lateinit var playlistManager: PlaylistManager
+    lateinit var playerStateManager: PlayerStateManager
 
     @Inject
     lateinit var permissionsNotifier: PermissionsNotifier
@@ -113,7 +113,7 @@ open class MediaPlaybackService : MediaLibraryService(),
         val rootItem = rootAuthenticator.getRootItem()
         runBlocking {
             contentManager.initialise(rootMediaItem = rootItem)
-            playlistManager.loadPlayerState()
+            playerStateManager.loadPlayerState()
         }
 
         scope.launch(ioDispatcher) {
@@ -176,6 +176,8 @@ open class MediaPlaybackService : MediaLibraryService(),
 
         }
 
+        savePlayerState()
+
     }
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? {
        return mediaSession
@@ -183,16 +185,13 @@ open class MediaPlaybackService : MediaLibraryService(),
 
     override fun stopService(name: Intent?): Boolean {
         Log.i(logTag(), "Stopping service")
+        savePlayerState()
         return super.stopService(name)
     }
 
     override fun onDestroy() {
         Log.i(logTag(), "onDestroy called")
-        runBlocking {
-            Log.i(logTag(), "saveState runBlocking")
-            playlistManager.saveState()
-            Log.i(logTag(), "Player state saved")
-        }
+        savePlayerState()
 
         this.mediaSession?.run {
             player.release()
@@ -210,6 +209,14 @@ open class MediaPlaybackService : MediaLibraryService(),
         Log.i(logTag(), "permissions were granted")
         if (shouldInitialise()) {
             initialise()
+        }
+    }
+
+    private fun savePlayerState() {
+        runBlocking {
+            Log.i(logTag(), "saveState runBlocking")
+            playerStateManager.saveState()
+            Log.i(logTag(), "Player state saved")
         }
     }
 

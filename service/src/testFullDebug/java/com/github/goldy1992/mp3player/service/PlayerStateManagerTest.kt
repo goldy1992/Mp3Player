@@ -10,22 +10,22 @@ import org.robolectric.RobolectricTestRunner
 
 
 @RunWith(RobolectricTestRunner::class)
-class PlaylistManagerTest {
-    private var playlistManager: PlaylistManager? = null
+class PlayerStateManagerTest {
+    private var playerStateManager: PlayerStateManager? = null
     @Before
     fun setup() {
         val queueItems: List<MediaItem> = ArrayList()
-        playlistManager = PlaylistManager(queueItems.toMutableList())
+        playerStateManager = PlayerStateManager(queueItems.toMutableList())
     }
 
     @Test
     fun testCreateNewPlaylist() {
         val originalPlaylist: List<MediaItem> = emptyList()
-        playlistManager = PlaylistManager(originalPlaylist.toMutableList())
-        Assert.assertEquals(originalPlaylist, playlistManager!!.playlist)
+        playerStateManager = PlayerStateManager(originalPlaylist.toMutableList())
+        Assert.assertEquals(originalPlaylist, playerStateManager!!.playlist)
         val newPlaylist: List<MediaItem?> = emptyList()
-        playlistManager!!.createNewPlaylist(newPlaylist)
-        Assert.assertEquals(newPlaylist, playlistManager!!.playlist)
+        playerStateManager!!.createNewPlaylist(newPlaylist)
+        Assert.assertEquals(newPlaylist, playerStateManager!!.playlist)
     }
 
     companion object {
