@@ -30,7 +30,7 @@ open class
 
         val intent = Intent(
             Intent.ACTION_VIEW,
-            "${ROOT_APP_URI_PATH}/${Screen.NOW_PLAYING.name}".toUri(),
+            null,
             service,
             componentClassMapper.mainActivity)
 

@@ -68,19 +68,10 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionsListener {
         private set
 
 
-    companion object {
-       private const val REQUEST_CODE = 34
-
-
-
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.i(logTag(), "on createee")
+        Log.i(logTag(), "on create called with intent ${intent.action} and data: ${intent.data}")
         super.onCreate(savedInstanceState)
         permissionsNotifier.addListener(this)
-
-
 
         // If app has already been created set the UI to initialise at the main screen.
         val appAlreadyCreated = savedInstanceState != null
@@ -94,7 +85,7 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionsListener {
 
     open fun ui() {
         setContent {
-            var windowSizeClass = rememberWindowSizeClass()
+            val windowSizeClass = rememberWindowSizeClass()
             ComposeApp(
                 userPreferencesRepository = this.userPreferencesRepository,
                 windowSize = windowSizeClass,
@@ -111,7 +102,7 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionsListener {
                 permissionsToRequest.add(permission)
             }
         }
-        var allPermissionsAlreadyGranted = permissionsToRequest.isEmpty()
+        val allPermissionsAlreadyGranted = permissionsToRequest.isEmpty()
         if (!allPermissionsAlreadyGranted) {
             permissionLauncher.launch(permissions)
         } else { // Permission has already been granted
@@ -144,11 +135,6 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionsListener {
             }
             finish()
         }
-    }
-
-    private fun createService() {
-        Log.i(logTag(), "starting service")
-        startService(Intent(applicationContext, componentClassMapper.service))
     }
 
     override fun onDestroy() {

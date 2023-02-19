@@ -71,11 +71,7 @@ class SongResultsParser
         val fileName = mediaFile.name
         val sArtworkUri = Uri.parse(ALBUM_ART_URI_PREFIX)
         val albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId)
-        Log.i(logTag(), "Album Art Uri: ${albumArtUri}")
-//        var albumImageByteArray : ByteArray? = null
-//        if (albumArtUri != null) {
-//            albumImageByteArray = getAlbumArtData(albumArtUri)
-//        }
+
         return MediaItemBuilder(mediaId)
                 .setMediaUri(mediaContentUri)
                 .setTitle(title)
