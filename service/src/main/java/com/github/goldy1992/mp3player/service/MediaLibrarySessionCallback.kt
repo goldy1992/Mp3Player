@@ -19,10 +19,7 @@ import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.scopes.ServiceScoped
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @ServiceScoped
@@ -59,11 +56,27 @@ class MediaLibrarySessionCallback
 
     override fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo) {
         super.onPostConnect(session, controller)
-//        runBlocking {
-//            session.player.setMediaItems(contentManager.getChildren(MediaItemType.SONG))
-//        }
-        Log.i(logTag(), "onPostConnect")
+        session.player.prepare()
+        Log.i(logTag(), "onPostConnect ensure the player is prepared")
+    }
 
+    override fun onGetItem(
+        session: MediaLibrarySession,
+        browser: MediaSession.ControllerInfo,
+        mediaId: String
+    ): ListenableFuture<LibraryResult<MediaItem>> {
+        Log.i(logTag(), "onGetItem called for mediaId: $mediaId")
+        var mediaItem : MediaItem?
+        runBlocking {
+            withContext(ioDispatcher) {
+                mediaItem = contentManager.getContentById(mediaId)
+            }
+        }
+        if (mediaItem == null) {
+            Log.i(logTag(), "No media item found for $mediaId, returning empty media item")
+            mediaItem = MediaItem.EMPTY
+        }
+        return Futures.immediateFuture(LibraryResult.ofItem(mediaItem!!, MediaLibraryService.LibraryParams.Builder().build()))
     }
 
     override fun onDisconnected(session: MediaSession, controller: MediaSession.ControllerInfo) {

@@ -4,15 +4,12 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import androidx.media3.common.Player.STATE_READY
-import androidx.media3.common.Player.State
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
 import androidx.media3.ui.PlayerNotificationManager
 import com.github.goldy1992.mp3player.commons.*
-import com.github.goldy1992.mp3player.commons.Constants.playbackStateDebugMap
 import com.github.goldy1992.mp3player.commons.PermissionsUtils.appHasPermissions
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers
@@ -155,8 +152,21 @@ open class MediaPlaybackService : MediaLibraryService(),
     override fun onTaskRemoved(rootIntent: Intent?) {
 
         Log.i(logTag(), "onTaskRemoved invoked")
-        val isPlaying : Boolean? = mediaSession?.player?.isPlaying
-        Log.i(logTag(), "TASK rEmOvEd, isPlaying: $isPlaying")
+        savePlayerState()
+        val isPlaying : Boolean? =
+            if (mediaSession != null ) {
+                if (mediaSession!!.player != null) {
+                    Log.i(logTag(), "setting mediasession.player.isPlaying")
+                    mediaSession!!.player.isPlaying
+                } else {
+                    Log.i(logTag(), "mediasession player is null")
+                    false
+                }
+            } else {
+                Log.i(logTag(), "mediaSession is null")
+                false
+            }
+        Log.i(logTag(), "TASK rEmOvEd, player:  isPlaying: $isPlaying")
 
         stopForegroundService(isPlaying ?: false)
         super.onTaskRemoved(rootIntent)
@@ -181,9 +191,6 @@ open class MediaPlaybackService : MediaLibraryService(),
             }
 
         }
-
-        savePlayerState()
-
     }
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? {
        return mediaSession
@@ -200,11 +207,15 @@ open class MediaPlaybackService : MediaLibraryService(),
         savePlayerState()
 
         this.mediaSession?.run {
+            Log.i(logTag(), "Releasing Exoplayer")
             player.release()
+            Log.i(logTag(), "Exoplayer released, releasing media session")
             release()
+            Log.i(logTag(), "media session released")
             mediaSession = null
 
         }
+        clearListener()
 
         mediaStoreObservers.unregisterAll()
         super.onDestroy()
@@ -219,11 +230,9 @@ open class MediaPlaybackService : MediaLibraryService(),
     }
 
     private fun savePlayerState() {
-        scope.launch {
-            Log.i(logTag(), "saveState runBlocking")
-            playerStateManager.saveState()
-            Log.i(logTag(), "Player state saved")
-        }
+        Log.i(logTag(), "saveState runBlocking")
+        playerStateManager.saveState()
+        Log.i(logTag(), "Player state saved")
     }
 
     override fun logTag() : String {

@@ -6,10 +6,8 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import com.github.goldy1992.mp3player.commons.IoDispatcher
-import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.MainDispatcher
-import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.commons.*
+import com.github.goldy1992.mp3player.commons.Constants.playbackStateDebugMap
 import com.github.goldy1992.mp3player.service.data.ISavedStateRepository
 import com.github.goldy1992.mp3player.service.data.SavedState
 import com.github.goldy1992.mp3player.service.library.ContentManager
@@ -66,6 +64,7 @@ class PlayerStateManager
                     player.seekTo(currentTrackIndex, currentTrackPosition)
                     Log.i(logTag(), "calling prepare")
                     player.prepare()
+                    Log.i(logTag(), "Player prepared")
                 } else {
                     setDefaultPlaylist()
                 }
@@ -120,40 +119,62 @@ class PlayerStateManager
         super.onIsPlayingChanged(isPlaying)
     }
 
-    suspend fun saveState() {
-        var savedState : SavedState?
-        withContext(mainDispatcher) {
-            Log.i(logTag(), "Invoked save state")
-            val playlist = getPlaylist(player)
-             savedState = SavedState(
-                playlist = playlist.map { m -> m.mediaId },
-                currentTrackIndex = player.currentMediaItemIndex,
-                currentTrack = player.currentMediaItem?.mediaId ?: "",
-                shuffleEnabled = player.shuffleModeEnabled,
-                currentTrackPosition = player.currentPosition,
-                repeatMode = player.repeatMode
-            )
-        }
+    override fun onPlaybackStateChanged(playbackState: Int) {
+        Log.i(logTag(), "onPlaybackStateChanged called")
+        LoggingUtils.logPlaybackState(playbackState, logTag())
+        super.onPlaybackStateChanged(playbackState)
+    }
 
-        Log.i(logTag(), "Created Save State object for saving: $savedState")
-        if (savedState == null) {
-            Log.w(logTag(), "Error getting state to save, NOT saving!")
+    fun saveState() {
+        var savedState : SavedState?
+        Log.i(logTag(), "Invoked save state")
+        val playbackState = player.playbackState
+        val playbackStateStr : String = playbackStateDebugMap[playbackState] ?: "UNKNOWN_STATE"
+        Log.i(logTag(), "currentPlaybackState: $playbackStateStr")
+        if (player != null) {
+            val playlist = getPlaylist(player)
+            val playlistIdList = playlist.map { m -> m.mediaId }
+            Log.i(logTag(), "got playlist id list")
+            val currentMediaItemIndex = player.currentMediaItemIndex
+            Log.i(logTag(), "currentMediaItemIndex: $currentMediaItemIndex")
+            val currentTrack = player.currentMediaItem?.mediaId ?: ""
+            Log.i(logTag(), "currentTrack: $currentTrack")
+            val shuffleEnabled = player.shuffleModeEnabled
+            Log.i(logTag(), "shuffle enabled: $shuffleEnabled")
+            val currentPosition = player.currentPosition
+            Log.i(logTag(), "currentPosition: $currentPosition")
+            val repeatMode = player.repeatMode
+            Log.i(logTag(), "repeatMode: $repeatMode")
+            savedState = SavedState(
+                playlist = playlistIdList,
+                currentTrackIndex = currentMediaItemIndex,
+                currentTrack = currentTrack,
+                shuffleEnabled = shuffleEnabled,
+                currentTrackPosition = currentPosition,
+                repeatMode = repeatMode
+            )
+            Log.i(logTag(), "Created Save State object for saving: $savedState")
+            scope.launch(ioDispatcher) {
+                savedStateRepository.updateSavedState(savedState)
+                Log.i(logTag(), "Saved new Save State object")
+            }
         } else {
-            savedStateRepository.updateSavedState(savedState!!)
-            Log.i(logTag(), "Saved new Save State object")
+            Log.w(logTag(), "Error getting state to save, NOT saving!")
         }
 
     }
 
     private fun getPlaylist(player: Player) : List<MediaItem> {
+        Log.i(logTag(), "getting playlist from player: $player")
         val count = player.mediaItemCount
+        Log.i(logTag(), "mediaItemCount: $count")
         val mediaItems = mutableListOf<MediaItem>()
 
         for (index in 0 until  count) {
             val mediaItem = player.getMediaItemAt(index)
             mediaItems.add(mediaItem)
         }
-
+        Log.i(logTag(), "playlist retrieved, size: ${mediaItems.size}")
         return mediaItems.toList()
     }
 

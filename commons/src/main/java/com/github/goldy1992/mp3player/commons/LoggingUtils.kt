@@ -1,16 +1,14 @@
 package com.github.goldy1992.mp3player.commons
 
 import android.util.Log
-import androidx.media3.common.MediaMetadata
 
 object LoggingUtils {
 
 
-    fun logPlaybackStateCompat(playbackState: Int, tag: String?) {
+    fun logPlaybackState(playbackState: Int, tag: String?) {
         val sb = StringBuilder()
-        val state = "State: " + Constants.playbackStateDebugMap[playbackState]
-        val position = "Position: " + playbackState
-        val log = sb.append(state).append("\n").append(position).toString()
+        val state = "State: " + (Constants.playbackStateDebugMap[playbackState]?: "UNKNOWN")
+        val log = sb.append(state).toString()
         Log.i(tag, log)
     }
 

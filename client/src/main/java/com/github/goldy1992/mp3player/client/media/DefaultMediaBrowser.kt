@@ -447,7 +447,12 @@ class DefaultMediaBrowser
     }
 
     override suspend fun play() {
-        mediaBrowserFuture.await().play()
+        Log.i(logTag(), "play clicked waiting for mediaBrowser")
+        val mediaBrowser = mediaBrowserFuture.await()
+        Log.i(logTag(), "mediaBrowser retrieved, calling play")
+        LoggingUtils.logPlaybackState(mediaBrowser.playbackState, logTag())
+        mediaBrowser.play()
+        Log.i(logTag(), "play was called")
     }
 
     override suspend fun play(mediaItem: MediaItem) {

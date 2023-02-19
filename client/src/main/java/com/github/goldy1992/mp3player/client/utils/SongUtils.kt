@@ -9,7 +9,7 @@ object SongUtils : LogTagger {
 
     fun isSongItemSelected(song : Song, currentItem : Song) : Boolean {
         val isSelected = StringUtils.equals(song.id, currentItem.id)
-        Log.i(logTag(), "isSelected: $isSelected, songId: ${song.id}, currentItemId: ${currentItem.id}")
+        //Log.i(logTag(), "isSelected: $isSelected, songId: ${song.id}, currentItemId: ${currentItem.id}")
         return isSelected
     }
 

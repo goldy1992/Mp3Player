@@ -72,10 +72,10 @@ class SongResultsParser
         val sArtworkUri = Uri.parse(ALBUM_ART_URI_PREFIX)
         val albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId)
         Log.i(logTag(), "Album Art Uri: ${albumArtUri}")
-        var albumImageByteArray : ByteArray? = null
-        if (albumArtUri != null) {
-            albumImageByteArray = getAlbumArtData(albumArtUri)
-        }
+//        var albumImageByteArray : ByteArray? = null
+//        if (albumArtUri != null) {
+//            albumImageByteArray = getAlbumArtData(albumArtUri)
+//        }
         return MediaItemBuilder(mediaId)
                 .setMediaUri(mediaContentUri)
                 .setTitle(title)
@@ -85,7 +85,7 @@ class SongResultsParser
                 .setArtist(artist)
                 .setMediaItemType(MediaItemType.SONG)
                 .setAlbumArtUri(albumArtUri)
-                .setAlbumArtImage(albumImageByteArray)
+               // .setAlbumArtImage(albumImageByteArray)
                 .setIsPlayable(true)
                 .setFolderType(FOLDER_TYPE_NONE)
                 .build()
