@@ -80,21 +80,7 @@ open class MediaPlaybackService : MediaLibraryService(),
     var isInitialised = false
 
     private fun shouldInitialise() : Boolean {
-        return !isInitialised && appHasPermissions(this)
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
-        Log.i(logTag(), "on start command: intent: ${intent?.action}, startId: $startId")
-        if (shouldInitialise()) {
-            Log.i(logTag(), "initialising media library")
-            initialise()
-
-        } else {
-            Log.i(logTag(), "media library already initialised")
-        }
-        super.onStartCommand(intent, flags, startId)
-        return START_NOT_STICKY
+        return appHasPermissions(this) && !isInitialised
     }
 
     private fun initialise() {
@@ -132,11 +118,7 @@ open class MediaPlaybackService : MediaLibraryService(),
         super.onCreate()
         Log.i(logTag(), "onCreate super called")
         permissionsNotifier.addListener(this)
-
-        if (shouldInitialise()) {
-            initialise()
-        }
-
+        initialise()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -150,38 +132,36 @@ open class MediaPlaybackService : MediaLibraryService(),
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
+        Log.i(logTag(), "onTaskRemoved invoked with intent: ${rootIntent?.data}, action: ${rootIntent?.action}")
+        if (!player.playWhenReady) {
+            Log.i(logTag(), "stopping self")
+            stopSelf()
+        } else {
+            Log.i(logTag(), "not stopping self")
+        }
+    }
 
-        Log.i(logTag(), "onTaskRemoved invoked")
-        savePlayerState()
-        val isPlaying : Boolean? =
-            if (mediaSession != null ) {
-                if (mediaSession!!.player != null) {
-                    Log.i(logTag(), "setting mediasession.player.isPlaying")
-                    mediaSession!!.player.isPlaying
-                } else {
-                    Log.i(logTag(), "mediasession player is null")
-                    false
-                }
-            } else {
-                Log.i(logTag(), "mediaSession is null")
-                false
-            }
-        Log.i(logTag(), "TASK rEmOvEd, player:  isPlaying: $isPlaying")
+    override fun onUpdateNotification(session: MediaSession, startInForegroundRequired: Boolean) {
+      //  Log.i(logTag(), "onUpdateNotification, session: $session, startInForegroundRequired: $startInForegroundRequired")
+        super.onUpdateNotification(session, startInForegroundRequired)
+    }
 
-        stopForegroundService(isPlaying ?: false)
-        super.onTaskRemoved(rootIntent)
+    override fun onUpdateNotification(session: MediaSession) {
+        //Log.i(logTag(), "onUpdateNotification, session: $session")
+        super.onUpdateNotification(session)
     }
 
     @Suppress("DEPRECATION")
     private fun stopForegroundService(isPlaying : Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             if (!isPlaying) {
-                stopForeground(STOP_FOREGROUND_REMOVE)
+                //stopForeground(STOP_FOREGROUND_REMOVE)
                 Log.i(logTag(), "removed notification")
-            } else {
-                stopForeground(STOP_FOREGROUND_DETACH)
-                Log.i(logTag(), "detached notification")
             }
+//            } else {
+//                stopForeground(STOP_FOREGROUND_DETACH)
+//                Log.i(logTag(), "detached notification")
+//            }
 
         } else {
             if (!isPlaying) {
@@ -191,6 +171,11 @@ open class MediaPlaybackService : MediaLibraryService(),
             }
 
         }
+    }
+
+    override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
+        Log.i(logTag(), "onNotificationCancelled, id: $notificationId, dismissedByUser: $dismissedByUser")
+        super.onNotificationCancelled(notificationId, dismissedByUser)
     }
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? {
        return mediaSession

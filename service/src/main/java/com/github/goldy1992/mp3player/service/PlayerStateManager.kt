@@ -192,7 +192,7 @@ class PlayerStateManager
     private suspend fun setDefaultPlaylist() {
         Log.i(logTag(), "Setting default playlist")
         val defaultPlaylist = contentManager.getChildren(MediaItemType.SONGS)
-        Log.i(logTag(), "adding to queue")
+        Log.i(logTag(), "adding to queue default playlist: ${defaultPlaylist.size}")
         player.addMediaItems(defaultPlaylist)
         player.seekTo(0, 0)
         Log.i(logTag(), "calling prepare")

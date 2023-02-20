@@ -59,9 +59,8 @@ class MediaContentManager @Inject constructor(private val contentRetrievers: Con
     }
 
     override suspend fun getChildren(mediaItemType: MediaItemType): List<MediaItem> {
-        return nodeMap?.values?.
-        filter { it.mediaItemType == mediaItemType }?.
-        map { it.item } ?: emptyList()
+        val mediaItemId : String? = rootNode?.getChildren()?.filter { x -> x.mediaItemType == mediaItemType }?.first()?.id
+        return if (mediaItemId != null) getChildren(mediaItemId) else emptyList()
     }
 
     override suspend fun getContentById(id: String): MediaItem {
