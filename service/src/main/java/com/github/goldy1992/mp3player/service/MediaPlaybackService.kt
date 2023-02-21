@@ -4,15 +4,10 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
 import androidx.media3.ui.PlayerNotificationManager
 import com.github.goldy1992.mp3player.commons.*
-import com.github.goldy1992.mp3player.commons.PermissionsUtils.appHasPermissions
-import com.github.goldy1992.mp3player.service.library.ContentManager
-import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers
 import com.github.goldy1992.mp3player.service.library.data.search.managers.SearchDatabaseManagers
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -28,9 +23,7 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 open class MediaPlaybackService : MediaLibraryService(),
-        LogTagger,
-        PlayerNotificationManager.NotificationListener,
-        PermissionsListener{
+        LogTagger {
 
     @Inject
     lateinit var mediaSessionCreator: MediaSessionCreator
@@ -39,86 +32,29 @@ open class MediaPlaybackService : MediaLibraryService(),
     @IoDispatcher
     lateinit var ioDispatcher: CoroutineDispatcher
 
-    @Inject
-    @MainDispatcher
-    lateinit var mainDispatcher: CoroutineDispatcher
-
-    @Inject
-    lateinit var componentClassMapper : ComponentClassMapper
-
-    @Inject
-    lateinit var mediaLibrarySessionCallback : MediaLibrarySessionCallback
-
-    @Inject
-    lateinit var rootAuthenticator: RootAuthenticator
-
-    private var customLayout = listOf<CommandButton>()
-
     private var mediaSession: MediaLibrarySession? = null
 
     @Inject
     lateinit var scope: CoroutineScope
 
     @Inject
-    lateinit var player : ExoPlayer
-
-    @Inject
-    lateinit var mediaStoreObservers : MediaStoreObservers
-
-    @Inject
     lateinit var searchDatabaseManagers: SearchDatabaseManagers
 
     @Inject
-    lateinit var contentManager: ContentManager
-
-    @Inject
     lateinit var playerStateManager: PlayerStateManager
-
-    @Inject
-    lateinit var permissionsNotifier: PermissionsNotifier
-
-    var isInitialised = false
-
-    private fun shouldInitialise() : Boolean {
-        return appHasPermissions(this) && !isInitialised
-    }
-
-    private fun initialise() {
-        Log.i(logTag(), "Initialising MediaPlaybackService with player: ${player}")
-        if (mediaSession == null) {
-            mediaSession = mediaSessionCreator.create(
-                this,
-                componentClassMapper,
-                player,
-                mediaLibrarySessionCallback
-            )
-        }
-
-        val rootItem = rootAuthenticator.getRootItem()
-        runBlocking {
-            contentManager.initialise(rootMediaItem = rootItem)
-            playerStateManager.loadPlayerState()
-        }
-
-        scope.launch(ioDispatcher) {
-            searchDatabaseManagers.reindexAll()
-        }
-
-
-        if (!customLayout.isEmpty()) {
-            // Send custom layout to legacy session.
-            mediaSession!!.setCustomLayout(customLayout)
-        }
-        mediaStoreObservers.init(mediaSession!!)
-        this.isInitialised = true
-    }
 
     override fun onCreate() {
         Log.i(logTag(), "onCreate called")
         super.onCreate()
         Log.i(logTag(), "onCreate super called")
-        permissionsNotifier.addListener(this)
-        initialise()
+
+        if (mediaSession == null) {
+            mediaSession = mediaSessionCreator.create(this)
+        }
+
+        scope.launch(ioDispatcher) {
+            searchDatabaseManagers.reindexAll()
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -133,7 +69,8 @@ open class MediaPlaybackService : MediaLibraryService(),
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         Log.i(logTag(), "onTaskRemoved invoked with intent: ${rootIntent?.data}, action: ${rootIntent?.action}")
-        if (!player.playWhenReady) {
+        savePlayerState()
+        if (!(mediaSession?.player?.playWhenReady)!!) {
             Log.i(logTag(), "stopping self")
             stopSelf()
         } else {
@@ -173,10 +110,6 @@ open class MediaPlaybackService : MediaLibraryService(),
         }
     }
 
-    override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
-        Log.i(logTag(), "onNotificationCancelled, id: $notificationId, dismissedByUser: $dismissedByUser")
-        super.onNotificationCancelled(notificationId, dismissedByUser)
-    }
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? {
        return mediaSession
     }
@@ -190,28 +123,10 @@ open class MediaPlaybackService : MediaLibraryService(),
     override fun onDestroy() {
         Log.i(logTag(), "onDestroy called")
         savePlayerState()
-
-        this.mediaSession?.run {
-            Log.i(logTag(), "Releasing Exoplayer")
-            player.release()
-            Log.i(logTag(), "Exoplayer released, releasing media session")
-            release()
-            Log.i(logTag(), "media session released")
-            mediaSession = null
-
-        }
+        this.mediaSessionCreator.destroySession(this.mediaSession)
         clearListener()
-
-        mediaStoreObservers.unregisterAll()
         super.onDestroy()
         Log.i(logTag(), "onDeStRoY complete")
-    }
-
-    override fun onPermissionsGranted() {
-        Log.i(logTag(), "permissions were granted")
-        if (shouldInitialise()) {
-            initialise()
-        }
     }
 
     private fun savePlayerState() {
@@ -223,6 +138,4 @@ open class MediaPlaybackService : MediaLibraryService(),
     override fun logTag() : String {
         return "MEDIA_PLAYBACK_SERVICE"
     }
-
-
 }

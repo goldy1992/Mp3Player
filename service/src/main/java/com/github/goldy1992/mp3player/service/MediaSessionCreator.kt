@@ -4,13 +4,15 @@ import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.app.TaskStackBuilder
 import android.content.Intent
-import androidx.core.net.toUri
-import androidx.media3.common.Player
+import android.util.Log
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
-import com.github.goldy1992.mp3player.commons.Constants.ROOT_APP_URI_PATH
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.service.library.ContentManager
+import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers
 import com.github.goldy1992.mp3player.service.player.equalizer.FFTAudioProcessor
 import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
@@ -21,18 +23,24 @@ open class
     MediaSessionCreator
     @Inject
     constructor(
-        private val fftAudioProcessor: FFTAudioProcessor
-    ) {
-    open fun create(service : MediaLibraryService,
-                    componentClassMapper: ComponentClassMapper,
-                    player: Player,
-                    callback: MediaLibrarySessionCallback) : MediaLibrarySession {
+        private val fftAudioProcessor: FFTAudioProcessor,
+        private val contentManager: ContentManager,
+        private val componentClassMapper: ComponentClassMapper,
+        private val player : ExoPlayer,
+        private val mediaLibrarySessionCallback : MediaLibrarySessionCallback,
+        private val mediaStoreObservers : MediaStoreObservers
+    ) : LogTagger {
+
+    private var customLayout = listOf<CommandButton>()
+
+    open fun create(service : MediaLibraryService) : MediaLibrarySession {
 
         val intent = Intent(
             Intent.ACTION_VIEW,
             null,
             service,
             componentClassMapper.mainActivity)
+
 
         val task = TaskStackBuilder
             .create(service.applicationContext)
@@ -41,10 +49,33 @@ open class
                 val immutableFlag = FLAG_IMMUTABLE
                 getPendingIntent(0, immutableFlag or FLAG_UPDATE_CURRENT)
             }
-        val session = MediaLibrarySession.Builder(service, player, callback)
+        val session = MediaLibrarySession.Builder(service, player, mediaLibrarySessionCallback)
             .setSessionActivity(task)
             .build()
+
+        if (!customLayout.isEmpty()) {
+            // Send custom layout to legacy session.
+            session.setCustomLayout(customLayout)
+        }
+
         fftAudioProcessor.mediaSession = session
+        contentManager.mediaSession = session
+        mediaStoreObservers.init(session)
         return session
+    }
+
+    fun destroySession(session: MediaLibrarySession?) {
+        session?.run {
+            Log.i(logTag(), "Releasing Exoplayer")
+            player.release()
+            Log.i(logTag(), "Exoplayer released, releasing media session")
+            release()
+            Log.i(logTag(), "media session released")
+        }
+        mediaStoreObservers.unregisterAll()
+    }
+
+    override fun logTag(): String {
+        return "MediaSessionCreator"
     }
 }

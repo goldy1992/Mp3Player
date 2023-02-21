@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.media
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +23,7 @@ import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME_KEY
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
@@ -34,11 +36,15 @@ import javax.inject.Inject
 class DefaultMediaBrowser
     @Inject
     constructor(
-        asyncMediaBrowserProvider: AsyncMediaBrowserProvider,
+        @ApplicationContext private val context: Context,
+        sessionToken: SessionToken,
         private val scope : CoroutineScope,
         @MainDispatcher private val mainDispatcher : CoroutineDispatcher) : IMediaBrowser, MediaBrowser.Listener, LogTagger {
 
-    private val mediaBrowserFuture: ListenableFuture<MediaBrowser> = asyncMediaBrowserProvider.getAsyncMediaBrowser(this)
+    private val mediaBrowserFuture: ListenableFuture<MediaBrowser> = MediaBrowser
+        .Builder(context, sessionToken)
+        .setListener(this)
+        .buildAsync()
 
     private val _playerEventsFlow : Flow<PlayerEventHolder> = callbackFlow {
         val controller = mediaBrowserFuture.await()
@@ -518,6 +524,12 @@ class DefaultMediaBrowser
 
     override suspend fun subscribe(id: String) {
         mediaBrowserFuture.await().subscribe(id, MediaLibraryService.LibraryParams.Builder().build())
+    }
+
+    override fun release() {
+        Log.i(logTag(), "releasing MediaBrowser")
+        MediaBrowser.releaseFuture(mediaBrowserFuture)
+        Log.i(logTag(), "MediaBrowser released")
     }
 
     // The set of all listeners which are made by the Callback Flows

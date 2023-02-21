@@ -1,15 +1,19 @@
 package com.github.goldy1992.mp3player.service.library
 
 import androidx.media3.common.MediaItem
+import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * Abstraction of a Content Manager. An implementation should organise a collection of [MediaItem]s.
  */
 interface ContentManager : LogTagger {
 
-    suspend fun initialise(rootMediaItem: MediaItem)
+    val isInitialised : StateFlow<Boolean>
+
+    var mediaSession : MediaLibrarySession?
 
     suspend fun getChildren(parentId : String) : List<MediaItem>
 

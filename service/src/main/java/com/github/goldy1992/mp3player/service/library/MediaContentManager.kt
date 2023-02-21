@@ -1,11 +1,14 @@
 package com.github.goldy1992.mp3player.service.library
 
-import android.net.Uri
 import android.util.Log
 import androidx.media3.common.MediaItem
+import androidx.media3.session.MediaLibraryService
+import androidx.media3.session.MediaLibraryService.LibraryParams
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Normaliser.normalise
+import com.github.goldy1992.mp3player.commons.PermissionsNotifier
+import com.github.goldy1992.mp3player.service.RootAuthenticator
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetrievers
 import com.github.goldy1992.mp3player.service.library.content.retriever.MediaItemFromIdRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever
@@ -13,27 +16,52 @@ import com.github.goldy1992.mp3player.service.library.content.retriever.SongFrom
 import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearchers
 import com.google.common.collect.ImmutableList
 import dagger.hilt.android.scopes.ServiceScoped
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils
 import java.util.*
 import javax.inject.Inject
 
 @ServiceScoped
-class MediaContentManager @Inject constructor(private val contentRetrievers: ContentRetrievers,
+class MediaContentManager @Inject constructor(permissionsNotifier : PermissionsNotifier,
+                                              private val contentRetrievers: ContentRetrievers,
                                               private val contentSearchers: ContentSearchers,
-                                              private val songFromUriRetriever: SongFromUriRetriever,
-                                              private val mediaItemFromIdRetriever: MediaItemFromIdRetriever) :
-    ContentManager {
-    private val rootRetriever: RootRetriever = contentRetrievers.root
-    override suspend fun initialise(rootMediaItem: MediaItem) {
-        val rootNode = MediaItemNode(rootMediaItem)
-        build(rootNode)
-        this.rootNode = rootNode
-        Log.i(logTag(), "built tree")
-        val nodeMap : MutableMap<String, MediaItemNode> = HashMap()
-        buildMediaNodeMap(rootNode, nodeMap)
-        this.nodeMap = nodeMap
-        Log.i(logTag(), "MediaItemNode map built")
+                                              rootAuthenticator: RootAuthenticator,
+                                              private val scope : CoroutineScope,
+) : ContentManager {
+
+    private val rootNode = MediaItemNode(rootAuthenticator.getRootItem())
+    private val nodeMap : MutableMap<String, MediaItemNode> = mutableMapOf()
+    init {
+        nodeMap[rootNode.id] = rootNode
+        // initialise the root items
+        val children = contentRetrievers.getContentRetriever(MediaItemType.ROOT)?.getChildren(rootNode.id)
+        if (children != null) {
+            for (child in children) {
+                val childNode = MediaItemNode(child)
+                rootNode.addChild(childNode)
+                nodeMap[childNode.id] = childNode
+            }
+        }
+
+        scope.launch {
+            permissionsNotifier.permissionsGranted.collect {
+                if (it) {
+                    onPermissionsGranted()
+                }
+            }
+        }
     }
+
+    override var mediaSession: MediaLibraryService.MediaLibrarySession? = null
+
+    private val _isInitialised = MutableStateFlow(false)
+    override val isInitialised: StateFlow<Boolean> = _isInitialised
+
+    private val rootRetriever: RootRetriever = contentRetrievers.root
 
     /**
      * The id is in the following format
@@ -59,12 +87,12 @@ class MediaContentManager @Inject constructor(private val contentRetrievers: Con
     }
 
     override suspend fun getChildren(mediaItemType: MediaItemType): List<MediaItem> {
-        val mediaItemId : String? = rootNode?.getChildren()?.filter { x -> x.mediaItemType == mediaItemType }?.first()?.id
+        val mediaItemId : String? = rootNode.getChildren().filter { x -> x.mediaItemType == mediaItemType }?.first()?.id
         return if (mediaItemId != null) getChildren(mediaItemId) else emptyList()
     }
 
     override suspend fun getContentById(id: String): MediaItem {
-        return nodeMap?.get(id)?.item ?: MediaItem.EMPTY
+        return nodeMap[id]?.item ?: MediaItem.EMPTY
     }
 
     override suspend fun getContentByIds(ids: List<String>): List<MediaItem> {
@@ -101,44 +129,21 @@ class MediaContentManager @Inject constructor(private val contentRetrievers: Con
         return "MediaContentManager"
     }
 
-    private val cachedSearchResults : MutableMap<String, List<MediaItem>> = HashMap()
-
-
-
-    /**
-     *
-     */
-    fun getItem(uri: Uri): MediaItem? {
-        return songFromUriRetriever.getSong(uri)
-    }
-
-    /**
-     *
-     */
-    fun getItem(id: Long): MediaItem? { /* TODO: in the future the content manager will need to know which type of URI will need
-        *   to be parsed, e.g. song, album, artist etc. */
-        return mediaItemFromIdRetriever.getItem(id)
-    }
-
-    /**
-     * This method assumes that each song is playable
-     */
-    fun getMediaItems(ids : Collection<String>) : MutableList<MediaItem> {
-        val toReturn = mutableListOf<MediaItem>()
-        for (id in ids) {
-            toReturn.add((itemMap[MediaItemType.SONG]?.get(id) ?: MediaItem.EMPTY) as MediaItem)
+    private fun onPermissionsGranted() {
+        Log.i(logTag(),"onPermissionsGranted invoked")
+        Log.i(logTag(), "building tree")
+        for (rootChild in rootNode.getChildren()) {
+            build(rootChild)
         }
-        return toReturn
+        Log.i(logTag(), "built tree")
+       _isInitialised.value = true
     }
+
+    private val cachedSearchResults : MutableMap<String, List<MediaItem>> = HashMap()
 
     private val itemMap : EnumMap<MediaItemType, HashMap<String, List<MediaItem>>> = EnumMap(MediaItemType::class.java)
     init {
         MediaItemType.values().forEach { itemMap[it] = HashMap() }
-    }
-
-    companion object {
-        const val CONTENT_SCHEME = "content"
-        const val FILE_SCHEME = "file"
     }
 
     private class MediaItemNode(val item: MediaItem) {
@@ -157,21 +162,9 @@ class MediaContentManager @Inject constructor(private val contentRetrievers: Con
         fun getChildren(): List<MediaItemNode> {
             return ImmutableList.copyOf(children)
         }
-
-        fun hasChildren() : Boolean {
-            return children.isNotEmpty()
+        fun numberOfChildren() : Int {
+            return children.size
         }
-    }
-
-    private var rootNode : MediaItemNode? = null
-
-    private var nodeMap : Map<String, MediaItemNode>? = null
-
-    private fun buildMediaNodeMap(node : MediaItemNode, nodeMap: MutableMap<String, MediaItemNode>) {
-        if (node.hasChildren()) {
-            node.getChildren().forEach{buildMediaNodeMap(it, nodeMap)}
-        }
-        nodeMap[node.id] = node
     }
 
     private fun build(node : MediaItemNode) {
@@ -179,13 +172,16 @@ class MediaContentManager @Inject constructor(private val contentRetrievers: Con
         if (children != null) {
             for (child in children) {
                 val childNode = MediaItemNode(child)
+                nodeMap[childNode.id] = childNode
                 node.addChild(childNode)
 
                 if (childNode.mediaItemType != MediaItemType.SONG) {
                     build(childNode)
                 }
+                mediaSession?.notifyChildrenChanged(childNode.id, childNode.numberOfChildren(), LibraryParams.Builder().build())
             }
         }
+        nodeMap[node.id] = node
     }
 
 }

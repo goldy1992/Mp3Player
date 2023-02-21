@@ -8,12 +8,11 @@ object Projections {
     val ALBUM_PROJECTION: List<String> = Collections.unmodifiableList(
         listOf(
             MediaStore.Audio.Albums.ALBUM,
-            MediaStore.Audio.Albums.ALBUM_ID,
+            MediaStore.Audio.Albums._ID, // ALBUM_ID
             MediaStore.Audio.Albums.ARTIST,
             MediaStore.Audio.Albums.FIRST_YEAR,
             MediaStore.Audio.Albums.LAST_YEAR,
-            MediaStore.Audio.Albums.NUMBER_OF_SONGS,
-            MediaStore.Audio.Albums.NUMBER_OF_SONGS_FOR_ARTIST)
+            MediaStore.Audio.Albums.NUMBER_OF_SONGS)
     )
     @JvmField
     val SONG_PROJECTION: List<String> = Collections.unmodifiableList(

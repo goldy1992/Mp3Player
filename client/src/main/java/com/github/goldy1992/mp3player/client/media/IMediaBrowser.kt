@@ -85,4 +85,6 @@ interface IMediaBrowser {
 
     suspend fun subscribe(id : String)
 
+    fun release()
+
 }

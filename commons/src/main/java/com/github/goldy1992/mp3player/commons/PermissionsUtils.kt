@@ -4,10 +4,11 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 
-object PermissionsUtils {
+object PermissionsUtils : LogTagger {
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private val TIRAMISU_PERMISSIONS =  arrayOf(
@@ -32,10 +33,17 @@ object PermissionsUtils {
     fun appHasPermissions(context: Context) : Boolean {
         val permissions = getAppPermissions()
         for (permission in permissions) {
+
             if (!hasPermission(permission, context)) {
+                Log.i(logTag(), "permission: ${permission} denied")
                 return false
             }
+            Log.i(logTag(), "permission: ${permission} accepted")
         }
         return true
+    }
+
+    override fun logTag(): String {
+        return "PermissionsUtils"
     }
 }

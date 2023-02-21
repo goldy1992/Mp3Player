@@ -9,17 +9,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.media3.session.MediaBrowser
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
-import com.github.goldy1992.mp3player.client.permissions.PermissionGranted
+import com.github.goldy1992.mp3player.client.media.IMediaBrowser
 import com.github.goldy1992.mp3player.client.ui.ComposeApp
 import com.github.goldy1992.mp3player.client.ui.rememberWindowSizeClass
 import com.github.goldy1992.mp3player.commons.*
 import com.github.goldy1992.mp3player.commons.PermissionsUtils.getAppPermissions
 import com.github.goldy1992.mp3player.commons.PermissionsUtils.hasPermission
-import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -28,7 +26,7 @@ import javax.inject.Inject
  * The Main Activity
  */
 @AndroidEntryPoint(ComponentActivity::class)
-open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionsListener {
+open class MainActivity : Hilt_MainActivity(), LogTagger {
 
     @Inject
     lateinit var componentClassMapper : ComponentClassMapper
@@ -60,7 +58,7 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionsListener {
     lateinit var permissionsNotifier: PermissionsNotifier
 
     @Inject
-    lateinit var mediaBrowserFuture : ListenableFuture<MediaBrowser>
+    lateinit var mediaBrowser : IMediaBrowser
 
     var startScreen: Screen = Screen.LIBRARY
 
@@ -71,7 +69,6 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionsListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i(logTag(), "on create called with intent ${intent.action} and data: ${intent.data}")
         super.onCreate(savedInstanceState)
-        permissionsNotifier.addListener(this)
 
         // If app has already been created set the UI to initialise at the main screen.
         val appAlreadyCreated = savedInstanceState != null
@@ -107,7 +104,8 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionsListener {
             permissionLauncher.launch(permissions)
         } else { // Permission has already been granted
             Log.i(logTag(), "Permission has already been granted")
-            permissionsNotifier.notifyPermissionsGranted()
+            permissionsNotifier.setPermissionGranted(true)
+            onPermissionsGranted()
         }
     }
 
@@ -124,7 +122,8 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionsListener {
         }
         val allPermissionsGranted = rejectedPermissionsSet.isEmpty()
         if (allPermissionsGranted) {
-            permissionsNotifier.notifyPermissionsGranted()
+            permissionsNotifier.setPermissionGranted(true)
+            onPermissionsGranted()
         } else {
             CoroutineScope(Dispatchers.Main).launch {
                 Toast.makeText(
@@ -139,7 +138,7 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionsListener {
 
     override fun onDestroy() {
         Log.i(logTag(), "destroying activity")
-        MediaBrowser.releaseFuture(mediaBrowserFuture)
+        mediaBrowser.release()
         this.scope.cancel()
         super.onDestroy()
     }
@@ -148,7 +147,7 @@ open class MainActivity : Hilt_MainActivity(), LogTagger, PermissionsListener {
         return "MAIN_ACTIVITY"
     }
 
-    override fun onPermissionsGranted() {
+    fun onPermissionsGranted() {
         Log.i(logTag(), "permission granted")
         // createService()
         if (Intent.ACTION_VIEW == intent.action) {
