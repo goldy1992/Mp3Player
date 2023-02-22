@@ -10,16 +10,13 @@ import com.github.goldy1992.mp3player.commons.Normaliser.normalise
 import com.github.goldy1992.mp3player.commons.PermissionsNotifier
 import com.github.goldy1992.mp3player.service.RootAuthenticator
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetrievers
-import com.github.goldy1992.mp3player.service.library.content.retriever.MediaItemFromIdRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever
-import com.github.goldy1992.mp3player.service.library.content.retriever.SongFromUriRetriever
 import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearchers
 import com.google.common.collect.ImmutableList
 import dagger.hilt.android.scopes.ServiceScoped
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils
 import java.util.*
@@ -75,11 +72,6 @@ class MediaContentManager @Inject constructor(permissionsNotifier : PermissionsN
      * @return all the children of the id specified by the parentId parameter
      */
     override suspend fun getChildren(parentId: String): List<MediaItem> {
-
-        if (this.nodeMap == null) {
-            return emptyList()
-        }
-
         val parentNode: MediaItemNode? = nodeMap!![parentId]
         val children = parentNode?.getChildren()
         Log.i(logTag(), "parentId: ${parentId}, children count: ${children?.count() ?: 0}")

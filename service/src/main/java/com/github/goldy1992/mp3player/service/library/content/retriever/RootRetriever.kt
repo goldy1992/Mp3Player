@@ -9,7 +9,6 @@ import com.github.goldy1992.mp3player.commons.Constants.MEDIA_ITEM_TYPE
 import com.github.goldy1992.mp3player.commons.Constants.ROOT_ITEM_TYPE
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
-import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
 import java.util.*
 import javax.inject.Inject
 
@@ -18,10 +17,6 @@ class RootRetriever @Inject constructor(private val mediaItemTypeIds: MediaItemT
 
     private val rootChildren: List<MediaItem>
     private val typeToMediaItemMap: MutableMap<MediaItemType, MediaItem>
-
-    override fun getChildren(request: ContentRequest): List<MediaItem> {
-        return rootChildren
-    }
 
     override fun getChildren(parentId: String): List<MediaItem> {
         // TODO: Add check to ensure the correct parent id

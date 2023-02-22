@@ -30,7 +30,7 @@ class MediaItemFromIdRetrieverTest {
         whenever(contentResolver.query(any(), any(), any(), any(), any())).thenReturn(null)
         val result = mediaItemFromIdRetriever!!.getItem(id)
         Assert.assertNull(result)
-        verify(songResultsParser, never()).create(any(), any())
+        verify(songResultsParser, never()).create(any())
     }
 
     @Test
@@ -41,7 +41,7 @@ class MediaItemFromIdRetrieverTest {
                 .build()
         val listToReturn = listOf(expectedMediaItem)
         whenever(contentResolver.query(any(), any(), any(), any(), eq(null))).thenReturn(cursor)
-        whenever(songResultsParser.create(eq(cursor), any<String>())).thenReturn(listToReturn)
+        whenever(songResultsParser.create(eq(cursor))).thenReturn(listToReturn)
         val result = mediaItemFromIdRetriever!!.getItem(id)
         Assert.assertEquals(expectedMediaItem, result)
     }

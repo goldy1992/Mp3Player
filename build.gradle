@@ -27,7 +27,7 @@ buildscript {
         monitor_version = '1.4.0-beta01'
         mockito_inline_version = '3.7.7'
         mockito_kotlin_version = '3.2.0'
-        robolectric_version = '4.6.1'
+        robolectric_version = '4.9'
         room_version = '2.2.3'
         test_core_version = '1.4.0-beta01'
         test_orchestrator_version = '1.3.0'

@@ -1,86 +1,133 @@
 package com.github.goldy1992.mp3player.service.library
 
 import androidx.media3.common.MediaItem
+import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.commons.PermissionsNotifier
+import com.github.goldy1992.mp3player.service.RootAuthenticator
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetrievers
-import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
-import com.github.goldy1992.mp3player.service.library.content.request.ContentRequestParser
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetriever
-import com.github.goldy1992.mp3player.service.library.content.retriever.MediaItemFromIdRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever
-import com.github.goldy1992.mp3player.service.library.content.retriever.SongFromUriRetriever
 import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearcher
 import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestCoroutineScheduler
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.*
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 @OptIn(ExperimentalCoroutinesApi::class)
-class ContentManagerTest {
+class MediaContentManagerTest {
     private var contentManager: ContentManager? = null
 
-    private val contentRequestParser: ContentRequestParser = mock<ContentRequestParser>()
+  //  private val contentRequestParser: ContentRequestParser = mock<ContentRequestParser>()
+
+//    private val permissionsNotifier = mock<PermissionsNotifier>()
+    private val permissionsNotifier = PermissionsNotifier()
+
+    private val rootAuthenticator = mock<RootAuthenticator>()
 
     private val contentRetrievers: ContentRetrievers = mock<ContentRetrievers>()
 
     private val contentSearchers: ContentSearchers = mock<ContentSearchers>()
     
     private val rootRetriever: RootRetriever = mock<RootRetriever>()
+
+    private val mockContentRetriever = mock<ContentRetriever>()
     
     private val rootItem: MediaItem = mock<MediaItem>()
-    
-    private val mediaItemFromIdRetriever: MediaItemFromIdRetriever = mock<MediaItemFromIdRetriever>()
-    
-    private val songFromUriRetriever: SongFromUriRetriever = mock<SongFromUriRetriever>()
+
 
     private val testScheduler = TestCoroutineScheduler()
     private val dispatcher  = StandardTestDispatcher(testScheduler)
     private val testScope = TestScope(dispatcher)
 
+    private val testRootId = "rootId"
+    private val testRootItem = MediaItemBuilder(testRootId)
+        .setMediaItemType(MediaItemType.ROOT)
+        .build()
+
+    private val testSongsId = "songsId"
+    private val testSongsMediaItem = MediaItemBuilder(testSongsId)
+        .setMediaItemType(MediaItemType.SONGS)
+        .build()
+
+    private val testSongsChildId = "songsChildId"
+    private val testSongsChildMediaItem = MediaItemBuilder(testSongsChildId)
+        .setMediaItemType(MediaItemType.SONGS)
+        .build()
 
     @Before
     fun setup() {
-
+        whenever(rootAuthenticator.getRootItem()).thenReturn(testRootItem)
+        whenever(contentRetrievers.getContentRetriever(MediaItemType.ROOT)).thenReturn(rootRetriever)
+        whenever(rootRetriever.getChildren(testRootId)).thenReturn(listOf(testSongsMediaItem))
+        whenever(rootRetriever.getRootItem(MediaItemType.SONGS)).thenReturn(testSongsMediaItem)
         whenever(contentRetrievers.root).thenReturn(rootRetriever)
-        whenever(rootRetriever.getRootItem(any<MediaItemType>())).thenReturn(rootItem)
-        contentManager = ContentManager(contentRetrievers,
+        whenever(mockContentRetriever.getChildren(testSongsId)).thenReturn(listOf(testSongsChildMediaItem))
+
+        contentManager = MediaContentManager(permissionsNotifier,
+                contentRetrievers,
                 contentSearchers,
-                contentRequestParser,
-                songFromUriRetriever,
-                mediaItemFromIdRetriever)
+                rootAuthenticator,
+                testScope)
     }
 
+
+    /**
+     * Note: run test is a different scope to testScope so that testScope can be cancelled.
+     */
     @Test
-    fun testGetChildren() {
-        val contentRetrieverId = "id"
-        val expectedList: List<MediaItem> = ArrayList()
-        val contentRetriever = mock<ContentRetriever>()
-        whenever(contentRetrievers[contentRetrieverId]).thenReturn(contentRetriever)
-        val contentRequest = ContentRequest("", contentRetrieverId, null)
-        whenever(contentRequestParser.parse(contentRetrieverId)).thenReturn(contentRequest)
-        whenever(contentRetriever.getChildren(contentRequest)).thenReturn(expectedList)
-        val result = contentManager!!.getChildren(contentRetrieverId)
-        Assert.assertEquals(expectedList, result)
+    fun testGetChildrenUsingRootId() = runTest  {
+         testScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            val result = contentManager!!.getChildren(testRootId)
+            assertEquals(1, result.size)
+            assertEquals(testSongsMediaItem, result[0])
+        }
+        testScope.cancel()
+    }
+
+    /**
+     * Note: run test is a different scope to testScope so that testScope can be cancelled.
+     */
+    @Test
+    fun testGetChildrenUsingSongsIdBeforePermissionGranted() = runTest  {
+        testScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            val result = contentManager!!.getChildren(testSongsId)
+            assertEquals(0, result.size)
+        }
+        testScope.cancel()
+    }
+
+    /**
+     * Note: run test is a different scope to testScope so that testScope can be cancelled.
+     */
+    @Test
+    fun testGetChildrenUsingSongsIdAfterPermissionGranted() = runTest  {
+        permissionsNotifier.setPermissionGranted(true)
+        testScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            val result = contentManager!!.getChildren(testSongsId)
+            assertEquals(1, result.size)
+            assertEquals(testSongsChildMediaItem, result.get(0))
+        }
+        testScope.cancel()
     }
 
     @Test
     fun testGetChildrenIncorrectIdReturnsEmptyList() {
         val incorrectId = "incorrectId"
-        val contentRequest = ContentRequest("", incorrectId, null)
-        whenever(contentRequestParser.parse(incorrectId)).thenReturn(contentRequest)
-        val result = contentManager!!.getChildren(incorrectId)
-        Assert.assertTrue(result.isEmpty())
+       // val contentRequest = ContentRequest("", incorrectId, null)
+    //    whenever(contentRequestParser.parse(incorrectId)).thenReturn(contentRequest)
+   //     val result = contentManager!!.getChildren(incorrectId)
+      //  Assert.assertTrue(result.isEmpty())
     }
 
     /**

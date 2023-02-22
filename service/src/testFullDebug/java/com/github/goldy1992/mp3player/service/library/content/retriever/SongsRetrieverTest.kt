@@ -5,7 +5,6 @@ import android.provider.MediaStore
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
-import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -29,7 +28,6 @@ class SongsRetrieverTest : ContentResolverRetrieverTestBase<SongsRetriever?>() {
 
     @Test
     fun testGetChildren() {
-        contentRequest = ContentRequest("x", "y", "z")
         val id = "xyz"
         val title = "title"
         val mediaItem = MediaItemBuilder(id)
@@ -37,8 +35,8 @@ class SongsRetrieverTest : ContentResolverRetrieverTestBase<SongsRetriever?>() {
                 .build()
         expectedResult.add(mediaItem)
         whenever(contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, retriever!!.projection, null, null, null)).thenReturn(cursor)
-        whenever(resultsParser.create(cursor, contentRequest!!.mediaIdPrefix!!)).thenReturn(expectedResult)
-        val result = retriever!!.getChildren(contentRequest!!)
+        whenever(resultsParser.create(cursor)).thenReturn(expectedResult)
+        val result = retriever!!.getChildren(id)
         // call remaining looper messages
         Shadows.shadowOf(Looper.getMainLooper()).idle()
         // assert results are the expected ones

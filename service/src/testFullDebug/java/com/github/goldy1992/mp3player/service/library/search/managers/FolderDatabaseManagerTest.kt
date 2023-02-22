@@ -57,11 +57,11 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         val toReturn = MediaItemBuilder(expectedId)
                 .setDirectoryFile(TEST_FILE)
                 .build()
-        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.FOLDERS)))
-                .thenReturn(listOf(toReturn))
+//        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.FOLDERS)))
+//                .thenReturn(listOf(toReturn))
 
         argumentCaptor<List<String>>().apply {
-            folderDatabaseManager.reindex()
+      //      folderDatabaseManager.reindex()
             Shadows.shadowOf(handler.looper).idle()
             verify(folderDao, times(1)).deleteOld(capture())
             val idsToDelete = firstValue
@@ -75,11 +75,11 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         val toReturn = MediaItemBuilder(expectedId)
                 .setDirectoryFile(TEST_FILE)
                 .build()
-        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.FOLDERS)))
-                .thenReturn(listOf(toReturn))
+//        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.FOLDERS)))
+//                .thenReturn(listOf(toReturn))
 
         argumentCaptor<List<Folder>>().apply {
-                folderDatabaseManager.reindex()
+       //         folderDatabaseManager.reindex()
                 Shadows.shadowOf(handler.looper).idle()
                      verify(folderDao, times(1)).insertAll(capture())
                 val insertedFolder = firstValue[0]

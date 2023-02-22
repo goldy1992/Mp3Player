@@ -5,7 +5,6 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
-import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.BeforeClass
@@ -24,7 +23,8 @@ class RootRetrieverTest {
 
     @Test
     fun testGetChildren() {
-        val result = rootRetriever!!.getChildren(mock<ContentRequest>())
+        val mockId = "mockId"
+        val result = rootRetriever!!.getChildren(mockId)
         Assert.assertEquals(testRootItemMap.size.toLong(), result!!.size.toLong())
         val item1 = result[0]
         assertValidRootItem(item1, ROOT_TYPE_1)

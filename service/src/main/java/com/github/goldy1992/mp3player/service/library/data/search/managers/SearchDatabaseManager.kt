@@ -9,7 +9,7 @@ abstract class SearchDatabaseManager<T : SearchEntity>(private val contentManage
                                                        private val dao: SearchDao<T>,
                                                        private val rootCategoryId: String) {
     abstract fun createFromMediaItem(item: MediaItem): T?
-    suspend fun insert(item: MediaItem) {
+    fun insert(item: MediaItem) {
         val t = createFromMediaItem(item)
         dao.insert(t!!)
     }

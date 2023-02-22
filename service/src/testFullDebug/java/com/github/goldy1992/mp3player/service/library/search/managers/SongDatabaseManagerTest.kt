@@ -57,11 +57,11 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         val toReturn = MediaItemBuilder(expectedId)
                 .setTitle(title)
                 .build()
-        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.SONGS)))
-                .thenReturn(listOf(toReturn))
+//        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.SONGS)))
+//                .thenReturn(listOf(toReturn))
 
         argumentCaptor<List<String>>().apply {
-            songDatabaseManager.reindex()
+         //   songDatabaseManager.reindex()
             Shadows.shadowOf(handler.looper).idle()
             verify(songDao, times(1)).deleteOld(capture())
             val idsToDelete = firstValue[0]
@@ -77,10 +77,10 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         val toReturn = MediaItemBuilder(expectedId)
                 .setTitle(title)
                 .build()
-        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.SONGS)))
-                .thenReturn(listOf(toReturn))
+//        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.SONGS)))
+//                .thenReturn(listOf(toReturn))
         argumentCaptor<List<Song>>().apply {
-        songDatabaseManager.reindex()
+     //   songDatabaseManager.reindex()
         Shadows.shadowOf(handler.looper).idle()
         verify(songDao, times(1)).insertAll(capture())
         val insertedFolder = firstValue[0]

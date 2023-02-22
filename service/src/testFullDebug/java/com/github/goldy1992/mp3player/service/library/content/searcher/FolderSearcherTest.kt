@@ -65,7 +65,7 @@ class FolderSearcherTest : ContentResolverSearcherTestBase<FolderSearcher?>() {
                 searcher!!.likeParam(id3))
         whenever(contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, searcher!!.projection, EXPECTED_WHERE, EXPECTED_WHERE_ARGS, null))
                 .thenReturn(cursor)
-        whenever<List<MediaItem?>>(resultsParser.create(cursor, idPrefix!!)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
+        whenever<List<MediaItem?>>(resultsParser.create(cursor)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
         val result = searcher!!.search(ContentResolverSearcherTestBase.Companion.VALID_QUERY)
         Assert.assertEquals(ContentResolverSearcherTestBase.Companion.expectedResult, result)
     }
