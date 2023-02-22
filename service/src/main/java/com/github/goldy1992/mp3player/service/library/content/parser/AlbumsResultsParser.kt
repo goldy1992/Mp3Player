@@ -70,8 +70,8 @@ class AlbumsResultsParser
         return "AlbumResultsParser"
     }
 
-    private fun buildMediaItem(c: Cursor): MediaItem? {
-        val albumIdIndex = c.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)
+    private fun buildMediaItem(c: Cursor): MediaItem {
+        val albumIdIndex = c.getColumnIndex(MediaStore.Audio.Media._ID)
         val albumId = if (albumIdIndex >= 0) c.getLong(albumIdIndex) else 0
         Log.d(logTag(), "album_id: ${albumId}")
 
