@@ -95,7 +95,10 @@ class SongResultsParserTest : ResultsParserTestBase() {
         assertEquals(getTitle(expectedMediaItem1), getTitle(mediaItems[0]))
         assertEquals(getArtist(expectedMediaItem1), getArtist(mediaItems[0]))
         assertEquals(getDuration(expectedMediaItem1), getDuration(mediaItems[0]))
-        assertEquals(ContentUris.withAppendedId(Uri.parse(ALBUM_ART_URI_PREFIX), expectedMediaItem1.mediaMetadata.artworkUri.toString().toLong()), MediaItemUtils.getAlbumArtUri(mediaItems[0]));
+        assertEquals(
+            ContentUris.withAppendedId(Uri.parse(ALBUM_ART_URI_PREFIX),
+            expectedMediaItem1.mediaMetadata.artworkUri.toString().toLong()), MediaItemUtils.getAlbumArtUri(mediaItems[0])
+        )
         assertEquals(getTitle(expectedMediaItem2), getTitle(mediaItems[1]))
         assertEquals(getArtist(expectedMediaItem2), getArtist(mediaItems[1]))
         assertEquals(getDuration(expectedMediaItem2), getDuration(mediaItems[1]))
@@ -104,17 +107,17 @@ class SongResultsParserTest : ResultsParserTestBase() {
 
     public override fun createDataSet(): Array<Array<Any?>?> {
         val dataSet: Array<Array<Any?>?> = arrayOfNulls(2)
-        dataSet[0] = arrayOf(getMediaUri(expectedMediaItem1!!),
-                getDuration(expectedMediaItem1!!),
-                getArtist(expectedMediaItem1!!),
+        dataSet[0] = arrayOf(getMediaUri(expectedMediaItem1),
+                getDuration(expectedMediaItem1),
+                getArtist(expectedMediaItem1),
                 getMediaId(expectedMediaItem1),
-                getTitle(expectedMediaItem1!!),
+                getTitle(expectedMediaItem1),
                 ALBUM_ID_1)
-        dataSet[1] = arrayOf(getMediaUri(expectedMediaItem2!!),
-                getDuration(expectedMediaItem2!!),
-                getArtist(expectedMediaItem2!!),
+        dataSet[1] = arrayOf(getMediaUri(expectedMediaItem2),
+                getDuration(expectedMediaItem2),
+                getArtist(expectedMediaItem2),
                 getMediaId(expectedMediaItem2),
-                getTitle(expectedMediaItem2!!),
+                getTitle(expectedMediaItem2),
                 ALBUM_ID_2)
         return dataSet
     }

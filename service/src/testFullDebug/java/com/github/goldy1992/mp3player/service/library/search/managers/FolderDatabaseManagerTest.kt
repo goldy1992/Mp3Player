@@ -6,6 +6,8 @@ import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.data.search.Folder
 import com.github.goldy1992.mp3player.service.library.data.search.FolderDao
 import com.github.goldy1992.mp3player.service.library.data.search.managers.FolderDatabaseManager
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -16,6 +18,7 @@ import org.robolectric.Shadows
 import org.robolectric.annotation.LooperMode
 import java.io.File
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 @RunWith(RobolectricTestRunner::class)
 class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
@@ -51,18 +54,17 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
     }
 
     @Test
-    fun testReindexCheckDeleteOld() {
+    fun testReindexCheckDeleteOld() = testScope.runTest {
         val expectedId = TEST_FILE.absolutePath
 
         val toReturn = MediaItemBuilder(expectedId)
                 .setDirectoryFile(TEST_FILE)
                 .build()
-//        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.FOLDERS)))
-//                .thenReturn(listOf(toReturn))
+        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.FOLDERS)))
+                .thenReturn(listOf(toReturn))
 
         argumentCaptor<List<String>>().apply {
-      //      folderDatabaseManager.reindex()
-            Shadows.shadowOf(handler.looper).idle()
+            folderDatabaseManager.reindex()
             verify(folderDao, times(1)).deleteOld(capture())
             val idsToDelete = firstValue
             Assert.assertEquals(expectedId, idsToDelete[0])
@@ -70,17 +72,16 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
     }
 
     @Test
-    fun testReindexCheckInsertAll() {
+    fun testReindexCheckInsertAll() = testScope.runTest {
         val expectedId = TEST_FILE.absolutePath
         val toReturn = MediaItemBuilder(expectedId)
                 .setDirectoryFile(TEST_FILE)
                 .build()
-//        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.FOLDERS)))
-//                .thenReturn(listOf(toReturn))
+        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.FOLDERS)))
+                .thenReturn(listOf(toReturn))
 
         argumentCaptor<List<Folder>>().apply {
-       //         folderDatabaseManager.reindex()
-                Shadows.shadowOf(handler.looper).idle()
+                folderDatabaseManager.reindex()
                      verify(folderDao, times(1)).insertAll(capture())
                 val insertedFolder = firstValue[0]
                 Assert.assertEquals(expectedId, insertedFolder.id)
