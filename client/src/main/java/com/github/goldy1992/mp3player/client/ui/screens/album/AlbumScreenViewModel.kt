@@ -1,12 +1,14 @@
 package com.github.goldy1992.mp3player.client.ui.screens.album
 
 import android.net.Uri
+import android.os.Bundle
 import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.data.Album
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSongs
@@ -14,6 +16,8 @@ import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.Constants.PLAYLIST_ID
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -97,6 +101,22 @@ constructor(savedStateHandle: SavedStateHandle,
         }
     }
 
+    // currentMediaItem
+    private val _currentPlaylistIdState = MutableStateFlow("")
+    val currentPlaylistIdState : StateFlow<String> = _currentPlaylistIdState
+
+    init {
+        viewModelScope.launch {
+            mediaRepository.currentPlaylistMetadata()
+                .collect {
+                    val extras = it.extras
+                    val playlistId = extras?.getString(PLAYLIST_ID) ?: Constants.UNKNOWN
+                    Log.i(logTag(), "new playlist metadata retrieved: $playlistId")
+                    _currentPlaylistIdState.value = playlistId
+                }
+        }
+    }
+
     fun play() {
         viewModelScope.launch { mediaRepository.play() }
     }
@@ -113,15 +133,18 @@ constructor(savedStateHandle: SavedStateHandle,
         viewModelScope.launch { mediaRepository.skipToPrevious() }
     }
 
-    fun playAlbum(index : Int, songs : Songs) {
-        val mediaItems = songs.songs.map { MediaItemBuilder(it.id).build() }
-        viewModelScope.launch { mediaRepository.playFromSongList(index, mediaItems) }
+    fun playAlbum(index : Int, album: Album) {
+        val mediaItems = album.songs.songs.map { MediaItemBuilder(it.id).build() }
+        val mediaMetadata = createAlbumPlaylistMetadata(album)
+        viewModelScope.launch { mediaRepository.playFromPlaylist(mediaItems, index, mediaMetadata) }
     }
 
-    fun shuffleAlbum(songs : Songs) {
-        val mediaItems = songs.songs.map { MediaItemBuilder(it.id).build() }
+
+
+    fun shuffleAlbum(album: Album) {
+        val mediaItems = album.songs.songs.map { MediaItemBuilder(it.id).build() }
         viewModelScope.launch {
-            mediaRepository.playFromSongList(0, mediaItems)
+            mediaRepository.playFromPlaylist( mediaItems, 0, createAlbumPlaylistMetadata(album))
         }
     }
 
@@ -138,6 +161,18 @@ constructor(savedStateHandle: SavedStateHandle,
             totalDuration = songs.totalDuration,
             state = State.LOADED
         )
+    }
+
+    private fun createAlbumPlaylistMetadata(album: Album): MediaMetadata {
+        val extras = Bundle()
+        extras.putString(PLAYLIST_ID, albumId)
+
+        return MediaMetadata.Builder()
+            .setMediaType(MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
+            .setAlbumTitle(album.albumTitle)
+            .setAlbumArtist(album.albumArtist)
+            .setExtras(extras)
+            .build()
     }
 
 

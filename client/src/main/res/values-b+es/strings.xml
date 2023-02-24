@@ -20,8 +20,10 @@
     <string name="no_songs_on_device">Archivos de audio no encontrado en su dispositivo.</string>
     <string name="no_folders_with_songs">Carpetas con archivos de audio no encontrado en su dispositivo.</string>
     <string name="pause">Pausar</string>
+    <string name="pause_album">Pausar Álbum</string>
     <string name="permission_denied">Permiso negado, active permisos de almacenamiento en los ajustes para usar la app.</string>
     <string name="play">Play</string>
+    <string name="play_album">Play Álbum</string>
     <string name="repeat_all">Repetir Todo</string>
     <string name="repeat_none">No Repetir</string>
     <string name="repeat_one">Repetir Uno</string>

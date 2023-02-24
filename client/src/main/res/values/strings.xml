@@ -24,8 +24,10 @@
     <string name="no_songs_on_device">No audio tracks found on your device.</string>
     <string name="no_folders_with_songs">No folders containing audio tracks found on your device.</string>
     <string name="pause">Pause</string>
+    <string name="pause_album">Pause Album</string>
     <string name="permission_denied">Permission denied, please enable storage permissions in settings in order to use the app</string>
     <string name="play">Play</string>
+    <string name="play_album">Play Album</string>
     <string name="repeat_all">Repeat All</string>
     <string name="repeat_none">Repeat None</string>
     <string name="repeat_one">Repeat One</string>

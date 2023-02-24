@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.SearchResult
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createAlbum
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createFolder
@@ -14,10 +15,7 @@ import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.State
-import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.MediaItemBuilder
-import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import com.github.goldy1992.mp3player.commons.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -107,7 +105,15 @@ class SearchScreenViewModel
     }
 
     fun playFromList(itemIndex : Int, mediaItemList : Songs) {
-        viewModelScope.launch { mediaRepository.playFromSongList(itemIndex = itemIndex, items = mediaItemList.songs.map { MediaItemBuilder(it.id).build() }) }
+        val extras = Bundle()
+        extras.putString(Constants.PLAYLIST_ID, "SearchResults")
+
+        val mediaMetadata = MediaMetadata.Builder()
+            .setMediaType(MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
+            .setAlbumTitle("Search Results")
+            .setExtras(extras)
+            .build()
+        viewModelScope.launch { mediaRepository.playFromPlaylist(itemIndex = itemIndex, items = mediaItemList.songs.map { MediaItemBuilder(it.id).build() }, playlistMetadata = mediaMetadata) }
     }
 
     fun play() {

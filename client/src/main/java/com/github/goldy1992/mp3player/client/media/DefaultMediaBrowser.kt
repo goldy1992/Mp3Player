@@ -20,6 +20,7 @@ import com.github.goldy1992.mp3player.commons.*
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME_KEY
+import com.github.goldy1992.mp3player.commons.Constants.PLAYLIST_ID
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
@@ -29,6 +30,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import org.apache.commons.lang3.StringUtils.isEmpty
 import javax.inject.Inject
+import kotlin.math.log
 
 /**
  * Default implementation of the [IMediaBrowser].
@@ -147,6 +149,33 @@ class DefaultMediaBrowser
     )
     override fun currentMediaItem(): Flow<MediaItem> {
         return _currentMediaItemFlow
+    }
+
+    private val _currentPlaylistMetadataFlow : Flow<MediaMetadata> = callbackFlow {
+        val controller = mediaBrowserFuture.await()
+        runBlocking(mainDispatcher) {
+            trySend(controller.playlistMetadata)
+        }
+        val messageListener = object  : Player.Listener {
+            override fun onPlaylistMetadataChanged(mediaMetadata: MediaMetadata) {
+                Log.i(logTag(), "PlaylistMeta data: ${mediaMetadata.extras?.getString(PLAYLIST_ID) ?: Constants.UNKNOWN}")
+                trySend(mediaMetadata)
+            }
+        }
+        controller.addListener(messageListener)
+        awaitClose {
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
+        }
+    }
+    .shareIn(
+        scope = scope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1
+    )
+    override fun currentPlaylistMetadata(): Flow<MediaMetadata> {
+        return _currentPlaylistMetadataFlow
     }
 
     private val _isPlayingFlow : Flow<Boolean> = callbackFlow {
@@ -469,11 +498,15 @@ class DefaultMediaBrowser
 
     }
 
-    override suspend fun playFromSongList(itemIndex: Int, items: List<MediaItem>) {
-        Log.i(logTag(), "Hit playSongFromList")
+    override suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistMetadata: MediaMetadata) {
+        Log.i(logTag(), "Hit playSongFromList with metadata: $playlistMetadata")
         val mediaBrowser = mediaBrowserFuture.await()
         mediaBrowser.setMediaItems(items, itemIndex, 0L)
+
+        Log.i(logTag(), "Set playlist metadata to ${playlistMetadata.extras?.getString(PLAYLIST_ID)}")
         mediaBrowser.play()
+        mediaBrowser.playlistMetadata = playlistMetadata
+
         Log.i(logTag(), "Completed playSongFromList")
     }
 

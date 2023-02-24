@@ -21,6 +21,8 @@ interface IMediaBrowser {
 
     fun currentMediaItem() : Flow<MediaItem>
 
+    fun currentPlaylistMetadata() : Flow<MediaMetadata>
+
     fun isPlaying() : Flow<Boolean>
 
     fun isShuffleModeEnabled() : Flow<Boolean>
@@ -63,7 +65,7 @@ interface IMediaBrowser {
 
     suspend fun play(mediaItem : MediaItem)
 
-    suspend fun playFromSongList(itemIndex : Int, items : List<MediaItem>)
+    suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistMetadata: MediaMetadata)
 
     suspend fun playFromUri(uri: Uri?, extras: Bundle?)
 

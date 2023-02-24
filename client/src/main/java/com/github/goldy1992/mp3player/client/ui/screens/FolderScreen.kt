@@ -55,9 +55,7 @@ fun FolderScreen(
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    val onSongSelected : (Int, Songs) -> Unit = { itemIndex, mediaItemList ->
-        viewModel.playFromSongList(itemIndex, mediaItemList)
-    }
+    val onSongSelected : (Int, Songs) -> Unit = { itemIndex, songs -> viewModel.playPlaylist(folder.songs, itemIndex) }
 
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
@@ -161,7 +159,7 @@ private fun FolderScreenContent(modifier : Modifier = Modifier,
                                 folderProvider : () -> Folder = { Folder()},
                                 isPlayingProvider : () -> Boolean = { false},
                                 currentSong : () -> Song = {Song()},
-                                onSongSelected : (Int, Songs) -> Unit = {_,_ ->}) {
+                                onSongSelected : (Int, Songs) -> Unit = {_,_->}) {
     Column(modifier = modifier) {
         val folder = folderProvider()
         val folderSongs = folder.songs

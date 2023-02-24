@@ -20,7 +20,6 @@ class MediaSessionTokenModule {
     fun providesSessionToken(@ApplicationContext context: Context,
                                   componentClassMapper: ComponentClassMapper):
             SessionToken {
-        val s : SessionToken
         val componentName = ComponentName(context, componentClassMapper.service!!)
         return SessionToken(context, componentName)
     }

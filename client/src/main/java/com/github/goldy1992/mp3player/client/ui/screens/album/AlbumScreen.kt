@@ -26,6 +26,7 @@ import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.data.Album
 import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.WindowSize
+import com.github.goldy1992.mp3player.client.ui.buttons.AlbumPlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.lists.songs.AlbumArt
 import com.github.goldy1992.mp3player.client.utils.SongUtils
@@ -53,9 +54,21 @@ fun AlbumScreen(
     val isPlaying by viewModel.isPlaying.collectAsState()
     val currentSong by viewModel.currentMediaItem.collectAsState()
     val album : Album by viewModel.albumState.collectAsState()
+    val currentPlaylistId : String by viewModel.currentPlaylistIdState.collectAsState()
 
-    val onSongSelected : (Int, Songs) -> Unit = { itemIndex, mediaItemList ->
-        viewModel.playAlbum(itemIndex, mediaItemList)
+    val albumPlayPauseButton : @Composable () -> Unit = {
+        AlbumPlayPauseButton(isPlaying = { isAlbumPlaying(isPlaying, currentPlaylistId, album) },
+                            onClickPlay = {
+                                if (isCurrentPlaylistTheSelectedAlbum(currentPlaylistId, album)) {
+                                    viewModel.play()
+                                } else {
+                                    viewModel.playAlbum(0, album)
+                                }
+                            },
+                            onClickPause = { viewModel.pause() })
+    }
+    val onAlbumSongSelected : (Int) -> Unit = { itemIndex ->
+        viewModel.playAlbum(itemIndex, album)
     }
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
@@ -93,7 +106,7 @@ fun AlbumScreen(
                     AlbumHeaderItem(
                         albumProvider = { album},
                         onClickShuffle = {},
-                        onClickPlayPause = {},)
+                        albumPlayPauseButton = albumPlayPauseButton,)
                 } else {
                     val albumSongIndex = currentAlbumSongIndex - 1
                     val albumSong = albumSongs[albumSongIndex]
@@ -101,7 +114,7 @@ fun AlbumScreen(
                     val containerColor : Color = if (isSongSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
                     ListItem(
                         modifier = Modifier.combinedClickable(
-                            onClick = { viewModel.playAlbum(albumSongIndex, album.songs) },
+                            onClick = { onAlbumSongSelected(albumSongIndex) },
                             onLongClick = { /* TODO: Add a long click */}
                         ),
                         colors = ListItemDefaults.colors(containerColor = containerColor),
@@ -116,13 +129,19 @@ fun AlbumScreen(
 
 }
 
+private fun isAlbumPlaying(
+    isPlaying: Boolean,
+    currentPlaylistId: String,
+    album: Album
+) = isPlaying && isCurrentPlaylistTheSelectedAlbum(currentPlaylistId, album)
+
 @Preview
 @Composable
 @OptIn(ExperimentalCoilApi::class)
 private fun AlbumHeaderItem(
     albumProvider: () -> Album = { Album() },
     onClickShuffle : () -> Unit = {},
-    onClickPlayPause : () -> Unit = {}) {
+    albumPlayPauseButton : @Composable () -> Unit = {}) {
     Column(
         Modifier
             .fillMaxWidth()
@@ -169,21 +188,7 @@ private fun AlbumHeaderItem(
 //                    )
                 }
 
-                IconButton(
-                    onClick = { /*TODO*/ },
-                    //contentPadding = ButtonWithIconContentPadding,
-                   // modifier = Modifier.padding(start = 4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.PlayCircle,
-                        contentDescription = "",
-                 //       Modifier.size(18.dp)
-                    )
-//                    Text(
-//                        text = "Play All",
-//                        Modifier.padding(start = 8.dp)
-//                    )
-                }
+                albumPlayPauseButton()
             }
         }
 
@@ -219,4 +224,8 @@ fun AlbumAppBar(modifier: Modifier = Modifier,
         },
         colors = TopAppBarDefaults.largeTopAppBarColors(),
         scrollBehavior = scrollBehavior)
+}
+
+private fun isCurrentPlaylistTheSelectedAlbum(currentPlaylistId : String, album: Album) : Boolean {
+    return currentPlaylistId == album.id
 }

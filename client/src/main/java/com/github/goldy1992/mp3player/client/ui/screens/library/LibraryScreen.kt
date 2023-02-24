@@ -70,7 +70,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
 
     val onSongSelected : (Int, Songs) -> Unit =  {
             itemIndex, mediaItemList ->
-        viewModel.playFromSongList(itemIndex, mediaItemList)
+        viewModel.playPlaylist(MediaItemType.SONGS.name, mediaItemList, itemIndex)
     }
     val onFolderSelected : (Folder) -> Unit = {
         val encodedFolderLibraryId = it.encodedLibraryId
@@ -372,7 +372,7 @@ fun TabBarPages(
                         isPlayingProvider = isPlayingProvider,
                         headerItem = null,
                         currentSongProvider = { currentMediaItemProvider() }) {
-                            itemIndex, mediaItemList ->
+                            itemIndex : Int, mediaItemList : Songs ->
                             val callable = onItemSelectedMap[MediaItemType.SONGS] as? (Int, Songs) -> Unit
                             if (callable != null) {
                                 callable(itemIndex, mediaItemList)

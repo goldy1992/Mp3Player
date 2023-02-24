@@ -25,17 +25,15 @@ class ExoPlayerModule {
                          renderersFactory: RenderersFactory
     ): Player {
         Log.i("ExoPlayerModule", "providing exoPlayer")
-        val exoPlayer = ExoPlayer.Builder(context)
-            .setRenderersFactory(renderersFactory)
-            .setLooper(context.mainLooper)
-            .build()
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(C.USAGE_MEDIA)
             .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
             .build()
-        exoPlayer.setAudioAttributes(audioAttributes, true)
-     //  exoPlayer.addAnalyticsListener(MyAnalyticsListener(mediaSession = m))
-        return exoPlayer
+        return ExoPlayer.Builder(context)
+            .setRenderersFactory(renderersFactory)
+            .setAudioAttributes(audioAttributes, true)
+            .setLooper(context.mainLooper)
+            .build()
     }
 
     @Provides

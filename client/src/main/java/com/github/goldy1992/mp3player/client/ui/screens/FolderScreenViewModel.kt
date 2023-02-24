@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.screens
 
+import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +13,7 @@ import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.commons.Constants.PLAYLIST_ID
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -156,9 +158,17 @@ class FolderScreenViewModel
         viewModelScope.launch { mediaRepository.skipToPrevious() }
     }
 
-    fun playFromSongList(index : Int, songs : Songs) {
+    fun playPlaylist(songs: Songs, index : Int) {
         val mediaItems = songs.songs.map { MediaItemBuilder(it.id).build() }
-        viewModelScope.launch { mediaRepository.playFromSongList(index, mediaItems) }
+        val extras = Bundle()
+        extras.putString(PLAYLIST_ID, folderId)
+
+        val mediaMetadata = MediaMetadata.Builder()
+            .setMediaType(MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
+            .setAlbumTitle(folder.value.name)
+            .setExtras(extras)
+            .build()
+        viewModelScope.launch { mediaRepository.playFromPlaylist(mediaItems, index, mediaMetadata) }
     }
 
     override fun logTag(): String {

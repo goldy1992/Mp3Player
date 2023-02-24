@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
+import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,10 +21,7 @@ import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState.Compan
 import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState.Companion.noResults
 import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState.Companion.notLoaded
 import com.github.goldy1992.mp3player.client.ui.states.State
-import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.MediaItemBuilder
-import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
+import com.github.goldy1992.mp3player.commons.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -170,9 +168,17 @@ class LibraryScreenViewModel
         }
     }
 
-    fun playFromSongList(index : Int, songs : Songs) {
+    fun playPlaylist(playlistId : String, songs : Songs, index : Int) {
         val mediaItems = songs.songs.map { MediaItemBuilder(it.id).build() }
-        viewModelScope.launch { mediaRepository.playFromSongList(index, mediaItems) }
+        val extras = Bundle()
+        extras.putString(Constants.PLAYLIST_ID, MediaItemType.SONGS.name)
+
+        val mediaMetadata = MediaMetadata.Builder()
+            .setMediaType(MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
+            .setAlbumTitle(MediaItemType.SONGS.name)
+            .setExtras(extras)
+            .build()
+        viewModelScope.launch { mediaRepository.playFromPlaylist(mediaItems, index, mediaMetadata) }
     }
 
     fun play() {

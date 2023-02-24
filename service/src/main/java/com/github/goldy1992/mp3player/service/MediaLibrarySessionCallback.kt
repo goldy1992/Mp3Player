@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.service
 import android.os.Bundle
 import android.util.Log
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.common.Rating
 import androidx.media3.session.*
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
@@ -49,7 +50,13 @@ class MediaLibrarySessionCallback
             .add(changePlaybackSpeed)
             .add(audioDataCommand)
             .build()
-        return ConnectionResult.accept(updatedSessionCommands,connectionResult.availablePlayerCommands)
+        val updatedPlayerCommands = connectionResult
+            .availablePlayerCommands
+            .buildUpon()
+            .add(Player.COMMAND_SET_MEDIA_ITEMS_METADATA)
+            .add(Player.COMMAND_GET_MEDIA_ITEMS_METADATA)
+            .build()
+        return ConnectionResult.accept(updatedSessionCommands,updatedPlayerCommands)
     }
 
     override fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo) {
