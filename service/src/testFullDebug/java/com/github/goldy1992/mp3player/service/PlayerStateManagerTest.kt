@@ -10,11 +10,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.*
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentCaptor
+import org.mockito.Captor
+import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.*
 import org.robolectric.RobolectricTestRunner
 
@@ -25,7 +27,7 @@ class PlayerStateManagerTest {
 
     private val testScheduler : TestCoroutineScheduler = TestCoroutineScheduler()
     private val mainDispatcher : TestDispatcher = UnconfinedTestDispatcher(testScheduler)
-    private val ioDispatcher : TestDispatcher = StandardTestDispatcher(testScheduler)
+    private val ioDispatcher : TestDispatcher = UnconfinedTestDispatcher(testScheduler)
     private val testScope : TestScope = TestScope()
     private val contentManager = mock<ContentManager>()
     private val iSavedStateRepository = mock<ISavedStateRepository>()
@@ -33,11 +35,14 @@ class PlayerStateManagerTest {
     private val initialSavedState = SavedState()
     private val contentManagerIsInitialisedFlow  = MutableStateFlow(false)
     private val saveStateFlow = MutableStateFlow(initialSavedState)
-
     private lateinit var playerStateManager: PlayerStateManager
+
+    @Captor
+    lateinit var argCaptor : ArgumentCaptor<SavedState>
 
     @Before
     fun setup() {
+        MockitoAnnotations.openMocks(this)
         whenever(contentManager.isInitialised).thenReturn(contentManagerIsInitialisedFlow)
         whenever(iSavedStateRepository.getSavedState()).thenReturn(saveStateFlow)
 
@@ -89,17 +94,80 @@ class PlayerStateManagerTest {
         testScope.cancel()
     }
 
+    /**
+     * Test that
+     * WHEN: emit true to the [ContentManager.isInitialised] flow
+     * THEN: A valid saved state is loaded correctly into the player.
+     */
     @Test
-    fun testCreateNewPlaylist() {
-        val originalPlaylist: List<MediaItem> = emptyList()
-   //     playerStateManager = PlayerStateManager(originalPlaylist.toMutableList())
-       // Assert.assertEquals(originalPlaylist, playerStateManager!!.playlist)
-        val newPlaylist: List<MediaItem?> = emptyList()
-   //     playerStateManager!!.createNewPlaylist(newPlaylist)
-   //     Assert.assertEquals(newPlaylist, playerStateManager!!.playlist)
+    fun testLoadPlayerStateInvalidState() = runTest {
+        // set up an invalid SavedState
+        val playlistIds = listOf("1", "2", "3", "4", "5")
+        val expectedPlaylist = playlistIds.map { MediaItemBuilder(it).build() }.toList()
+        whenever(contentManager.getContentByIds(playlistIds)).thenReturn(expectedPlaylist)
+        val currentTrackIndex = 1
+        val currentTrackPosition = 999L
+        val invalidSavedState = SavedState(
+            playlist = emptyList(),
+            currentTrackIndex = -1
+        )
+        saveStateFlow.value = invalidSavedState
+
+
+        // verify the loadPlayerState() function has not yet been invoked
+        verify(mockPlayer, never()).prepare()
+        assertFalse(contentManagerIsInitialisedFlow.value)
+
+        // activate the initialisation coroutines
+        contentManagerIsInitialisedFlow.value = true
+        testScope.advanceUntilIdle()
+
+        // assert loadPlayerState() was invoked and the player is NOT as expected
+        assertTrue(contentManagerIsInitialisedFlow.value)
+        verify(mockPlayer, never()).prepare()
+        verify(mockPlayer, never()).seekTo(currentTrackIndex, currentTrackPosition)
+        verify(mockPlayer, never()).addMediaItems(expectedPlaylist)
+
+        // cancel the test scope stop the infinitely running flow collectors
+        testScope.cancel()
     }
 
-    companion object {
-        private val MOCK_QUEUE_ITEM = mock<MediaItem>()
+    @Test
+    fun testSaveState() = runTest {
+        val expectedPlaylistIds = listOf("49", "54", "73")
+        whenever(mockPlayer.mediaItemCount).thenReturn(expectedPlaylistIds.size)
+        val playlist = expectedPlaylistIds.map { MediaItemBuilder(it).build() }.toList()
+        playlist.forEachIndexed { index, mediaItem -> whenever(mockPlayer.getMediaItemAt(index)).thenReturn(mediaItem) }
+
+
+        // activate the initialisation coroutines
+        contentManagerIsInitialisedFlow.value = true
+        testScope.advanceUntilIdle()
+        playerStateManager.saveState()
+        testScope.advanceUntilIdle()
+
+
+
+        verify(iSavedStateRepository, times(1)).updateSavedState(capture(argCaptor))
+        assertEquals(1,  argCaptor.allValues.size)
+        val result = argCaptor.value
+        assertEquals(expectedPlaylistIds, result.playlist)
+
+        // cancel the test scope stop the infinitely running flow collectors
+        testScope.cancel()
+
+    }
+
+    @Test
+    fun testOnIsPlayingChanged() = runTest {
+        val expectedPosition = 820L
+        whenever(mockPlayer.currentPosition).thenReturn(expectedPosition)
+        playerStateManager.onIsPlayingChanged(true)
+        testScope.advanceUntilIdle()
+
+        verify(iSavedStateRepository, times(1)).updateCurrentTrackPosition(expectedPosition)
+
+        // cancel the test scope stop the infinitely running flow collectors
+        testScope.cancel()
     }
 }

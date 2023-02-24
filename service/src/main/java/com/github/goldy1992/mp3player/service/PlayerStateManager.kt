@@ -128,12 +128,6 @@ class PlayerStateManager
         super.onIsPlayingChanged(isPlaying)
     }
 
-    override fun onPlaybackStateChanged(playbackState: Int) {
-        Log.i(logTag(), "onPlaybackStateChanged called")
-        LoggingUtils.logPlaybackState(playbackState, logTag())
-        super.onPlaybackStateChanged(playbackState)
-    }
-
     fun saveState() {
         if (isInitialised) {
             val savedState: SavedState?

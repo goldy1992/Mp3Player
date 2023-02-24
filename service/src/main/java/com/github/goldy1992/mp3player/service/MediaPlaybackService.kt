@@ -6,7 +6,6 @@ import android.os.IBinder
 import android.util.Log
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
-import androidx.media3.ui.PlayerNotificationManager
 import com.github.goldy1992.mp3player.commons.*
 import com.github.goldy1992.mp3player.service.library.data.search.managers.SearchDatabaseManagers
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,7 +67,10 @@ open class MediaPlaybackService : MediaLibraryService(),
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        Log.i(logTag(), "onTaskRemoved invoked with intent: ${rootIntent?.data}, action: ${rootIntent?.action}")
+        Log.i(
+            logTag(),
+            "onTaskRemoved invoked with intent: ${rootIntent?.data}, action: ${rootIntent?.action}"
+        )
         savePlayerState()
         if (!(mediaSession?.player?.playWhenReady)!!) {
             Log.i(logTag(), "stopping self")
@@ -90,15 +92,15 @@ open class MediaPlaybackService : MediaLibraryService(),
 
     @Suppress("DEPRECATION")
     private fun stopForegroundService(isPlaying : Boolean) {
+        Log.i(logTag(), "called stopForegroundService")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             if (!isPlaying) {
-                //stopForeground(STOP_FOREGROUND_REMOVE)
+                stopForeground(STOP_FOREGROUND_REMOVE)
                 Log.i(logTag(), "removed notification")
+            } else {
+                stopForeground(STOP_FOREGROUND_DETACH)
+                Log.i(logTag(), "detached notification")
             }
-//            } else {
-//                stopForeground(STOP_FOREGROUND_DETACH)
-//                Log.i(logTag(), "detached notification")
-//            }
 
         } else {
             if (!isPlaying) {

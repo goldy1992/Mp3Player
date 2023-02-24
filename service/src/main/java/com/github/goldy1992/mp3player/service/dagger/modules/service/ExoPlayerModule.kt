@@ -5,6 +5,7 @@ import android.media.MediaMetadataRetriever
 import android.util.Log
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.RenderersFactory
 import dagger.Module
@@ -22,7 +23,7 @@ class ExoPlayerModule {
     @ServiceScoped
     fun provideExoPlayer(@ApplicationContext context: Context,
                          renderersFactory: RenderersFactory
-    ): ExoPlayer {
+    ): Player {
         Log.i("ExoPlayerModule", "providing exoPlayer")
         val exoPlayer = ExoPlayer.Builder(context)
             .setRenderersFactory(renderersFactory)

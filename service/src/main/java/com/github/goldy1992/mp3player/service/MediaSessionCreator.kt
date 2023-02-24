@@ -4,8 +4,9 @@ import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.app.TaskStackBuilder
 import android.content.Intent
+import android.os.Build
 import android.util.Log
-import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.common.Player
 import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
@@ -26,7 +27,7 @@ open class
         private val fftAudioProcessor: FFTAudioProcessor,
         private val contentManager: ContentManager,
         private val componentClassMapper: ComponentClassMapper,
-        private val player : ExoPlayer,
+        private val player : Player,
         private val mediaLibrarySessionCallback : MediaLibrarySessionCallback,
         private val mediaStoreObservers : MediaStoreObservers
     ) : LogTagger {
@@ -44,10 +45,12 @@ open class
 
         val task = TaskStackBuilder
             .create(service.applicationContext)
-            .addNextIntentWithParentStack(intent)
+            .addNextIntent(intent)
             .run {
-                val immutableFlag = FLAG_IMMUTABLE
+
+                val immutableFlag = if (Build.VERSION.SDK_INT >= 23) FLAG_IMMUTABLE else 0
                 getPendingIntent(0, immutableFlag or FLAG_UPDATE_CURRENT)
+
             }
         val session = MediaLibrarySession.Builder(service, player, mediaLibrarySessionCallback)
             .setSessionActivity(task)
