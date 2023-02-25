@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import kotlinx.coroutines.CoroutineScope
@@ -31,6 +32,7 @@ private const val logTag = "AlbumPlayPauseButton"
  * @param onClickPause Called when pause is clicked, defaults to no implementation.
  */
 @OptIn(ExperimentalAnimationApi::class)
+@Preview
 @Composable
 fun AlbumPlayPauseButton(
                     modifier: Modifier = Modifier,
@@ -39,7 +41,7 @@ fun AlbumPlayPauseButton(
                     onClickPause: () -> Unit = {}
 ) {
     val isPlayingValue = isPlaying()
-    Log.i(logTag, "new isPlayingValue: ${isPlayingValue}")
+    Log.i(logTag, "new isPlayingValue: $isPlayingValue")
     val tweenTime = 500
     val rotation by animateFloatAsState(targetValue = if (isPlayingValue) 180f else 0f, tween(tweenTime))
 
@@ -79,6 +81,7 @@ fun AlbumPlayButton(modifier : Modifier = Modifier,
             imageVector = Icons.Filled.PlayCircle,
             contentDescription = stringResource(id = R.string.play_album),
             tint = MaterialTheme.colorScheme.primary,
+            modifier = modifier
         )
     }
 }
@@ -96,6 +99,7 @@ fun AlbumPauseButton(modifier: Modifier = Modifier,
             imageVector = Icons.Filled.PauseCircle,
             contentDescription = stringResource(id = R.string.pause_album),
             tint = MaterialTheme.colorScheme.primary,
+            modifier = modifier
         )
     }
 }

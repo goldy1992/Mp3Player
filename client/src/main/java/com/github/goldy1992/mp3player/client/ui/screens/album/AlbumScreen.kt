@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material.icons.filled.Shuffle
+import androidx.compose.material.icons.filled.ShuffleOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,6 +28,7 @@ import com.github.goldy1992.mp3player.client.data.Album
 import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.buttons.AlbumPlayPauseButton
+import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.lists.songs.AlbumArt
 import com.github.goldy1992.mp3player.client.utils.SongUtils
@@ -52,6 +54,7 @@ fun AlbumScreen(
 ) {
 
     val isPlaying by viewModel.isPlaying.collectAsState()
+    val isShuffleModeEnabled by viewModel.shuffleModeEnabled.collectAsState()
     val currentSong by viewModel.currentMediaItem.collectAsState()
     val album : Album by viewModel.albumState.collectAsState()
     val currentPlaylistId : String by viewModel.currentPlaylistIdState.collectAsState()
@@ -65,7 +68,15 @@ fun AlbumScreen(
                                     viewModel.playAlbum(0, album)
                                 }
                             },
-                            onClickPause = { viewModel.pause() })
+                            onClickPause = { viewModel.pause()},
+                            modifier = Modifier.size(40.dp))
+    }
+    val shuffleButton : @Composable () -> Unit = {
+        ShuffleButton(
+            modifier = Modifier.size(40.dp),
+            shuffleEnabledProvider = { isShuffleModeEnabled },
+            onClick = { viewModel.setShuffleMode(!isShuffleModeEnabled)}
+        )
     }
     val onAlbumSongSelected : (Int) -> Unit = { itemIndex ->
         viewModel.playAlbum(itemIndex, album)
@@ -105,8 +116,9 @@ fun AlbumScreen(
                 if (currentAlbumSongIndex == 0) {
                     AlbumHeaderItem(
                         albumProvider = { album},
-                        onClickShuffle = {},
-                        albumPlayPauseButton = albumPlayPauseButton,)
+                        albumPlayPauseButton = albumPlayPauseButton,
+                        shuffleButton = shuffleButton
+                    )
                 } else {
                     val albumSongIndex = currentAlbumSongIndex - 1
                     val albumSong = albumSongs[albumSongIndex]
@@ -141,7 +153,8 @@ private fun isAlbumPlaying(
 private fun AlbumHeaderItem(
     albumProvider: () -> Album = { Album() },
     onClickShuffle : () -> Unit = {},
-    albumPlayPauseButton : @Composable () -> Unit = {}) {
+    albumPlayPauseButton : @Composable () -> Unit = { AlbumPlayPauseButton(modifier = Modifier.size(50.dp))},
+    shuffleButton : @Composable () -> Unit = { ShuffleButton(modifier = Modifier.size(50.dp))}) {
     Column(
         Modifier
             .fillMaxWidth()
@@ -171,22 +184,16 @@ private fun AlbumHeaderItem(
                 style = MaterialTheme.typography.labelMedium
             )
 
-            Row(modifier = Modifier.padding(top = 7.dp)) {
-                IconButton(
-                    onClick = { /*TODO*/ },
-                //    contentPadding = ButtonWithIconContentPadding,
-                  //  modifier = Modifier.padding(end = 4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Shuffle,
-                        contentDescription = "",
-                     //   Modifier.size(18.dp)
-                    )
-//                    Text(
-//                        text = "Shuffle All",
-//                        Modifier.padding(start = 8.dp)
-//                    )
-                }
+            Row(modifier = Modifier
+                .padding(top = 7.dp)
+                .height(IntrinsicSize.Min),
+                verticalAlignment = Alignment.CenterVertically) {
+                shuffleButton()
+                Spacer(modifier = Modifier.width(12.dp))
+                Divider(modifier = Modifier.fillMaxHeight()
+                    .width(1.dp),
+                    thickness = 1.dp)
+                Spacer(modifier = Modifier.width(12.dp))
 
                 albumPlayPauseButton()
             }

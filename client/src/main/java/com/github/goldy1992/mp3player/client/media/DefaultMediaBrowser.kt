@@ -212,6 +212,7 @@ class DefaultMediaBrowser
         val controller = mediaBrowserFuture.await()
         val messageListener = object : Player.Listener {
             override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+                Log.i(logTag(), "onShuffleModeEnabledChanged invoked with value: $shuffleModeEnabled")
                 trySend(shuffleModeEnabled)
             }
         }
@@ -434,9 +435,9 @@ class DefaultMediaBrowser
 
     override suspend fun getCurrentPlaybackPosition(): Long {
         var toReturn : Long
-//        withContext(mainDispatcher) {
-            toReturn = mediaBrowserFuture.await().contentPosition
-        //}
+        withContext(mainDispatcher) {
+            toReturn = mediaBrowserFuture.await().currentPosition
+        }
         return toReturn
     }
 
@@ -540,6 +541,7 @@ class DefaultMediaBrowser
     }
 
     override suspend fun setShuffleMode(shuffleModeEnabled: Boolean) {
+        Log.i(logTag(), "Setting shuffle mode enabled with value: $shuffleModeEnabled")
         mediaBrowserFuture.await().shuffleModeEnabled = shuffleModeEnabled
     }
 

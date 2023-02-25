@@ -88,6 +88,19 @@ constructor(savedStateHandle: SavedStateHandle,
         }
     }
 
+    // shuffle mode
+    private val _shuffleModeState = MutableStateFlow(false)
+    val shuffleModeEnabled : StateFlow<Boolean> = _shuffleModeState
+
+    init {
+        viewModelScope.launch {
+            mediaRepository.isShuffleModeEnabled()
+                .collect {
+                    _shuffleModeState.value = it
+                }
+        }
+    }
+
     // currentMediaItem
     private val _currentMediaItemState = MutableStateFlow(Song())
     val currentMediaItem : StateFlow<Song> = _currentMediaItemState
@@ -123,6 +136,10 @@ constructor(savedStateHandle: SavedStateHandle,
 
     fun pause() {
         viewModelScope.launch { mediaRepository.pause() }
+    }
+
+    fun setShuffleMode(shuffleEnabled : Boolean) {
+        viewModelScope.launch { mediaRepository.setShuffleMode(shuffleEnabled) }
     }
 
     fun skipToNext() {
