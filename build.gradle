@@ -23,7 +23,7 @@ buildscript {
         junit4_version = '4.12'
         lifecycle_version = '2.5.1'
         coroutines_version = '1.6.4'
-        media3_version = '1.0.0-rc01'
+        media3_version = '1.0.0-rc02'
         monitor_version = '1.4.0-beta01'
         mockito_inline_version = '3.7.7'
         mockito_kotlin_version = '3.2.0'
@@ -67,7 +67,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.1'
+        classpath 'com.android.tools.build:gradle:7.4.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
     }
