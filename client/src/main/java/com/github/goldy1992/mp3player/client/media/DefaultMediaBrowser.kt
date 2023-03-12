@@ -36,7 +36,7 @@ import javax.inject.Inject
  * Default implementation of the [IMediaBrowser].
  */
 class DefaultMediaBrowser
-    @Inject
+
     constructor(
         @ApplicationContext private val context: Context,
         sessionToken: SessionToken,

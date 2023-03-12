@@ -2,11 +2,9 @@ package com.github.goldy1992.mp3player.service.library.content.retriever
 
 import android.content.ContentResolver
 import android.database.Cursor
-import android.os.Handler
 import android.provider.MediaStore
 import com.github.goldy1992.mp3player.service.TestConstants.TEST_DATA_DIR
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
-import com.github.goldy1992.mp3player.service.library.search.SongDao
 
 class SongsRetrieverTestImpl(contentResolver: ContentResolver, resultsParser: SongResultsParser)
 

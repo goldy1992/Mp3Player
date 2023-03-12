@@ -7,8 +7,8 @@ import android.provider.MediaStore
 import com.github.goldy1992.mp3player.service.TestConstants.TEST_DATA_DIR
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
-import com.github.goldy1992.mp3player.service.library.search.Song
-import com.github.goldy1992.mp3player.service.library.search.SongDao
+import com.github.goldy1992.mp3player.service.library.data.search.Song
+import com.github.goldy1992.mp3player.service.library.data.search.SongDao
 import kotlinx.coroutines.CoroutineScope
 import org.apache.commons.lang3.StringUtils
 import java.util.ArrayList

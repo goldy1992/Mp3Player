@@ -18,7 +18,7 @@ import org.mockito.kotlin.whenever
 @Module
 @TestInstallIn(
     components = [ActivityRetainedComponent::class],
-    replaces = [DefaultMediaBrowserModule::class]
+    replaces = [MediaBrowserModule::class]
 )
 class MockMediaBrowserModule {
 

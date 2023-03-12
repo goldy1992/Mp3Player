@@ -5,7 +5,7 @@ import android.database.Cursor
 import android.provider.MediaStore
 import com.github.goldy1992.mp3player.service.TestConstants.TEST_DATA_DIR
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
-import com.github.goldy1992.mp3player.service.library.search.FolderDao
+
 
 class FoldersRetrieverTestImpl(contentResolver: ContentResolver, resultsParser: FolderResultsParser)
     : FoldersRetriever(contentResolver, resultsParser) {

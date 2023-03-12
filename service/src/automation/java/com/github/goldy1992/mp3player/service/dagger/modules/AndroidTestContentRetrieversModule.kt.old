@@ -9,11 +9,14 @@ import com.github.goldy1992.mp3player.service.library.content.retriever.SongsRet
 import com.github.goldy1992.mp3player.service.library.content.retriever.SongsRetrieverTestImpl
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
+import dagger.hilt.testing.TestInstallIn
 import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.scopes.ServiceScoped
 
-@InstallIn(ServiceComponent::class)
+@TestInstallIn(
+    components = [ServiceComponent::class],
+    replaces = [ContentRetrieversModule::class]
+)
 @Module
 class AndroidTestContentRetrieversModule  {
     @Provides

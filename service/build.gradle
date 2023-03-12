@@ -124,6 +124,9 @@ dependencies {
     testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
     kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
 
+    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
+    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
+
 }
 
 sonarqube {
