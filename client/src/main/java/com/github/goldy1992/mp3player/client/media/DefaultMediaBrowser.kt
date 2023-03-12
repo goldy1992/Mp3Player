@@ -21,6 +21,7 @@ import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME_KEY
 import com.github.goldy1992.mp3player.commons.Constants.PLAYLIST_ID
+import com.github.goldy1992.mp3player.commons.LoggingUtils.getPlayerEventsLogMessage
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
@@ -30,7 +31,6 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import org.apache.commons.lang3.StringUtils.isEmpty
 import javax.inject.Inject
-import kotlin.math.log
 
 /**
  * Default implementation of the [IMediaBrowser].
@@ -309,6 +309,12 @@ class DefaultMediaBrowser
         return _playbackParametersFlow
     }
 
+    val playbackPositionEvents : @Player.Event IntArray = intArrayOf(
+        Player.EVENT_POSITION_DISCONTINUITY,
+        Player.EVENT_IS_PLAYING_CHANGED,
+        Player.EVENT_PLAYBACK_PARAMETERS_CHANGED
+    )
+
     private val _playbackPositionFlow : Flow<PlaybackPositionEvent> = callbackFlow {
         val controller = mediaBrowserFuture.await()
         withContext(mainDispatcher) {
@@ -321,16 +327,18 @@ class DefaultMediaBrowser
             )
         }
         val messageListener = object : Player.Listener {
-            override fun onIsPlayingChanged(isPlaying: Boolean) {
-                val currentPosition = controller.currentPosition
-                Log.i(logTag(), "onIsPlayingChanged: $isPlaying with position $currentPosition")
-                trySend(PlaybackPositionEvent(isPlaying, currentPosition, TimerUtils.getSystemTime()))
+            override fun onEvents(player: Player, events: Player.Events) {
+                if (events.containsAny( *playbackPositionEvents )) {
+                    val currentPosition = player.currentPosition
+                    val isPlaying = player.isPlaying
+                    Log.i(logTag(), "playbackPosition changed due to ${getPlayerEventsLogMessage(events)} with position $currentPosition, isPlaying: $isPlaying")
+                    trySend(PlaybackPositionEvent(isPlaying, currentPosition, TimerUtils.getSystemTime()))
+                }
             }
-
             override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
                 val isPlaying = controller.isPlaying
                 val currentPosition = controller.currentPosition
-                Log.i(logTag(), "onIsPlayingChanged: $isPlaying with position $currentPosition")
+
 
                 trySend(PlaybackPositionEvent(isPlaying, currentPosition, TimerUtils.getSystemTime()))
             }
@@ -381,8 +389,10 @@ class DefaultMediaBrowser
         Log.i(logTag(), "player event controller awaiter")
         val messageListener = object : Player.Listener {
             override fun onEvents(player: Player, event: Player.Events) {
+                val e = getPlayerEventsLogMessage(event)
+                Log.i(logTag(), "queue event logged ${e}")
                 if (event.containsAny( *events )) {
-                    Log.i(logTag(), "queue event logged")
+
                     trySend(getQueue(player))
                 }
             }
