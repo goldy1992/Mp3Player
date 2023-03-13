@@ -334,8 +334,8 @@ class DefaultMediaRepositoryTest {
     fun testPlayFromSongList() = runTest {
         val expectedIndex = 4
         val songList = emptyList<MediaItem>()
-        defaultMediaRepository.playFromSongList(expectedIndex, songList)
-        verify(fakeMediaDataSource, times(1)).playFromSongList(expectedIndex, songList)
+        defaultMediaRepository.playFromPlaylist(songList,expectedIndex, MediaMetadata.EMPTY)
+        verify(fakeMediaDataSource, times(1)).playFromPlaylist(songList,expectedIndex, MediaMetadata.EMPTY)
     }
     @Test
     fun testPlayFromUri() = runTest {
