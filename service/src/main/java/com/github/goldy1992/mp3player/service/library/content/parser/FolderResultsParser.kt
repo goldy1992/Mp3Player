@@ -80,14 +80,6 @@ class FolderResultsParser
         return "Flder_Res_Prser"
     }
 
-    private fun buildLibraryId(prefix: String, childItemId: String): String {
-        return StringBuilder()
-                .append(prefix)
-                .append(ID_SEPARATOR)
-                .append(childItemId)
-                .toString()
-    }
-
     /**
      * Used to store the Directory Information along with the number of files in the directory,
      * which is incremented every time a file is found.

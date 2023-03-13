@@ -28,9 +28,6 @@ constructor(
     val playbackPosition : StateFlow<PlaybackPositionEvent> = _playbackPositionState
 
     init {
-//        viewModelScope.launch {
-//            _playbackPositionState.value =PlaybackPositionEvent(mediaRepository.getCurrentPlaybackPosition()
-//        }
         viewModelScope.launch {
             mediaRepository.playbackPosition()
             .collect {

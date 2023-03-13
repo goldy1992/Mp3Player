@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FloatTweenSpec
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,8 +17,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.media3.common.MediaMetadata
-import androidx.media3.common.Player
-import androidx.media3.common.Player.RepeatMode
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateAnimationTime
@@ -37,7 +34,6 @@ fun SeekBar(isPlayingProvider: () -> Boolean = {true},
             playbackSpeedProvider : () ->  Float = {1.0f},
             playbackPositionProvider: () -> PlaybackPositionEvent = {PlaybackPositionEvent.DEFAULT},
             seekTo: (value: Long) -> Unit = {},
-            repeatModeProvider: @Player.RepeatMode ()-> Int = { Player.REPEAT_MODE_OFF },
             scope: CoroutineScope = rememberCoroutineScope()) {
 
     //Log.i(logTag, "seek bar created")

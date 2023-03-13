@@ -55,7 +55,6 @@ class SongResultsParser
         } else {
             mediaFile.parentFile
         }
-        val mediaUri = Uri.fromFile(mediaFile)
         val mediaContentUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mediaIdLong)
         val durationIndex = c.getColumnIndex(MediaStore.Audio.Media.DURATION)
         val duration = if (durationIndex >= 0) c.getLong(durationIndex) else 0L
