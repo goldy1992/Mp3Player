@@ -57,9 +57,11 @@ fun SearchScreen(
     windowSize: WindowSize,
     viewModel : SearchScreenViewModel = viewModel()) {
 
+    Log.i(logTag,"composing search screen")
     val searchResults by viewModel.searchResults.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
     val isPlaying by viewModel.isPlaying.collectAsState()
+    Log.i(logTag,"state_collected")
     val onSelectedMap = {
         buildOnSelectedMap(
             onFolderSelected = onFolderSelected(navController),
@@ -82,6 +84,7 @@ fun SearchScreen(
 
     val onNavUpPressed : () -> Unit = {  navController.popBackStack() }
 
+    Log.i(logTag, "creating top bar")
     val topBar : @Composable () -> Unit = {
         SearchBar(
             currentSearchQuery = { searchQuery },
@@ -92,6 +95,7 @@ fun SearchScreen(
             onSearchQueryCleared = { viewModel.setSearchQuery("") },
         )
     }
+    Log.i(logTag, "created top bar")
 
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(isPlayingProvider = { isPlaying },
@@ -184,6 +188,7 @@ fun SearchBar(currentSearchQuery : () -> String = { "No search query specified" 
               keyboardController : SoftwareKeyboardController? = LocalSoftwareKeyboardController.current,
               focusRequester : FocusRequester = remember { FocusRequester() }) {
 
+
     val currentSearchQueryValue = currentSearchQuery()
     Log.i(logTag, "currentSearchQueryValue : $currentSearchQueryValue")
     var textFieldValueState by remember(currentSearchQueryValue) {
@@ -261,7 +266,7 @@ fun SearchResultsContent(
     keyboardController : SoftwareKeyboardController? = LocalSoftwareKeyboardController.current,
     focusRequester : FocusRequester = remember { FocusRequester() }) {
 
-
+    Log.i(logTag, "composing search result content")
     val searchResultsColumn = stringResource(id = R.string.search_results_column)
     val onSelectedMap = onSelectedMapProvider()
     val searchResults = searchResultsProvider()
@@ -345,4 +350,5 @@ fun SearchResultsContent(
 
         }
     }
+    Log.i(logTag,"composed search screen content")
 }

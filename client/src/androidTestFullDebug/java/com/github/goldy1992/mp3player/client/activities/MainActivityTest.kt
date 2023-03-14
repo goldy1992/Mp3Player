@@ -12,6 +12,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.dagger.modules.MediaRepositoryModule
+import com.github.goldy1992.mp3player.commons.PermissionsUtils
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -25,7 +26,7 @@ import org.junit.Test
 class MainActivityTest {
 
     @get:Rule
-    var permissionRule = GrantPermissionRule.grant(*MainActivity.calculatePermissions())
+    var permissionRule = GrantPermissionRule.grant(*PermissionsUtils.getAppPermissions())
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

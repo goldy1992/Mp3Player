@@ -128,7 +128,11 @@ object MediaItemUtils : LogTagger {
 
     @JvmStatic
     fun getDuration(item: MediaItem): Long {
-        return item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION) as Long ?: 0L
+        Log.i(logTag(), "item: $item")
+        Log.i(logTag(), "metadata: ${item.mediaMetadata}")
+        Log.i(logTag(), "extras: ${item.mediaMetadata.extras}")
+        Log.i(logTag(), "duration: ${item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION)}")
+        return item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION) ?: 0L
     }
 
     @JvmStatic

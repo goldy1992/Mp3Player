@@ -10,6 +10,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.navigation.NavController
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreen
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreenViewModel
@@ -18,7 +19,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -106,6 +107,10 @@ class SearchScreenTest {
             .setDuration(10000L)
             .setTitle(songTitle)
             .build()
+        val expectedSong = Song(
+            duration = 10000L,
+            title = songTitle
+        )
 
         testMediaRepository.searchResults = listOf(songItem)
         // push a change of state of change to search results
@@ -121,7 +126,7 @@ class SearchScreenTest {
         }
 
         composeTestRule.onNodeWithText(songTitle).performClick()
-        verify(searchScreenViewModel, times(1)).play(songItem)
+        verify(searchScreenViewModel, times(1)).play(expectedSong)
     }
 
     /**
@@ -129,7 +134,7 @@ class SearchScreenTest {
      */
     @Test
     fun testSearchResultsOpenFolder()  {
-
+        val captor : ArgumentCaptor<String> = ArgumentCaptor.forClass(String::class.java)
         val folderName = "/c/folder1"
         val libId = "3fk4"
 
@@ -141,7 +146,7 @@ class SearchScreenTest {
             .build()
 
         val directoryPath = MediaItemUtils.getDirectoryPath(folderItem)
-        val encodedFolderPath = Uri.encode(directoryPath)
+        val encodedFolderPath = "file://$directoryPath"
         val folderNameMi = MediaItemUtils.getDirectoryName(folderItem)
 
         val expectedRoute = Screen.FOLDER.name + "/" + folderItem.mediaId+ "/" + folderNameMi+ "/" + encodedFolderPath
@@ -157,7 +162,14 @@ class SearchScreenTest {
             )
         }
         composeTestRule.onNodeWithText(folderName, useUnmergedTree = true).performClick()
-        verify(mockNavController, times(1)).navigate(expectedRoute)
+        Log.i("SearchScreenTest", "expectedRoute : $expectedRoute")
+
+
+        verify(mockNavController, times(1)).navigate(capture(captor),eq(null), eq(null))
+
+        val callArgs = captor.value
+        assertNotNull(callArgs)
+        assertEquals(expectedRoute, captor.value)
 
     }
 
