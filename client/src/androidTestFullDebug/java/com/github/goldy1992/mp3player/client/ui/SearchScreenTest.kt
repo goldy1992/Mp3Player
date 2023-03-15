@@ -108,6 +108,7 @@ class SearchScreenTest {
             .setTitle(songTitle)
             .build()
         val expectedSong = Song(
+            id="a",
             duration = 10000L,
             title = songTitle
         )

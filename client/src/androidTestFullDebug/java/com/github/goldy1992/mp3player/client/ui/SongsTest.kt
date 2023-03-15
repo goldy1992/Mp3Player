@@ -5,7 +5,6 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.media3.common.MediaItem
 import androidx.test.platform.app.InstrumentationRegistry
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
@@ -13,8 +12,6 @@ import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.ui.states.State
-import com.github.goldy1992.mp3player.commons.MediaItemBuilder
-import com.github.goldy1992.mp3player.commons.MediaItemType
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -36,23 +33,15 @@ class SongsTest {
         val title1 = "title1"
         val title2 = "title2"
 
-//        val song1 = MediaItemBuilder(id1).setTitle(title1)
-//            .setMediaItemType(MediaItemType.SONG)
-//            .setArtist(artist1)
-//            .setDuration(20560L)
-//            .build()
         val song1 = Song(
+            id = id1,
             title = title1,
             duration = 20560L,
             artist = artist1
         )
-//        val song2 = MediaItemBuilder(id2).setTitle(title2)
-//            .setMediaItemType(MediaItemType.SONG)
-//            .setArtist(artist2)
-//            .setDuration(50751L)
-//            .build()
 
         val song2 = Song(
+            id = id2,
             title = title2,
             duration = 50751L,
             artist = artist2
