@@ -6,7 +6,6 @@ import android.provider.MediaStore
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.content.Projections.ALBUM_PROJECTION
 import com.github.goldy1992.mp3player.service.library.content.parser.AlbumsResultsParser
-import com.github.goldy1992.mp3player.service.library.content.parser.ResultsParser
 import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 

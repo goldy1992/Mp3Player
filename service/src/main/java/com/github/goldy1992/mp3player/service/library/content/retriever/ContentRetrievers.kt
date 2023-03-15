@@ -17,9 +17,9 @@ class ContentRetrievers
                 private val albumsRetriever: AlbumsRetriever,
                 private val songsFromAlbumRetriever: SongsFromAlbumRetriever,
                 ) {
-    /**  */
+
     var contentRetrieverMap: Map<Class<out ContentRetriever>, ContentRetriever>
-    /**  */
+
     var idToContentRetrieverMap: MutableMap<String, ContentRetriever>? = null
     val root: RootRetriever
     operator fun get(id: String?): ContentRetriever? {

@@ -7,7 +7,6 @@ import com.github.goldy1992.mp3player.service.library.content.parser.SongResults
 import com.github.goldy1992.mp3player.service.library.content.retriever.AlbumsRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.FoldersRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.SongsRetriever
-import com.github.goldy1992.mp3player.service.library.data.search.Album
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

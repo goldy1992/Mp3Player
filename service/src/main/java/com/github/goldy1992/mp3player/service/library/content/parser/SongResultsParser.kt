@@ -5,10 +5,8 @@ import android.content.ContentUris
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build.VERSION.SDK_INT
-import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata.FOLDER_TYPE_NONE
 import com.github.goldy1992.mp3player.commons.ComparatorUtils.Companion.uppercaseStringCompare
@@ -18,7 +16,6 @@ import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaUri
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle
-import org.apache.commons.lang3.exception.ExceptionUtils
 import java.io.File
 import java.io.FileNotFoundException
 import java.util.*
@@ -113,14 +110,6 @@ class SongResultsParser
     override fun compare(m1: MediaItem, m2: MediaItem): Int {
         val result: Int = uppercaseStringCompare.compare(getTitle(m1), getTitle(m2))
         return if (result == 0) getMediaUri(m1)!!.compareTo(getMediaUri(m2)) else result
-    }
-
-    private fun buildLibraryId(mediaIdPrefix: String?, mediaIdSuffix: String): String {
-        return if (mediaIdPrefix == null) {
-            mediaIdSuffix
-        } else {
-            mediaIdPrefix + ID_SEPARATOR + mediaIdSuffix
-        }
     }
 
     /**

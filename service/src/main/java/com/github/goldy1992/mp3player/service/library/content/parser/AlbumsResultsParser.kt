@@ -6,7 +6,6 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.commons.*
 import dagger.hilt.android.scopes.ServiceScoped
 import java.util.*

@@ -2,16 +2,14 @@ package com.github.goldy1992.mp3player.client.ui.lists
 
 import android.net.Uri
 import android.util.Log
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.data.Folder
 import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreenViewModel
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
-import java.util.EnumMap
+import java.util.*
 
 private const val logTag = "MediaItemSelectedUtils"
 

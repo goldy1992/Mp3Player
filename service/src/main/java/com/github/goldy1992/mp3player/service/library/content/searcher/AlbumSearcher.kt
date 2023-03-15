@@ -45,11 +45,11 @@ open class AlbumSearcher
                 parameters.add(PARAMETER)
             }
         }
-        val WHERE_CLAUSE = BaseColumns._ID + " IN(" + StringUtils.join(parameters, ", ") + ") COLLATE NOCASE"
-        val WHERE_ARGS = ids.toTypedArray()
+        val whereClause = BaseColumns._ID + " IN(" + StringUtils.join(parameters, ", ") + ") COLLATE NOCASE"
+        val whereArgs = ids.toTypedArray()
         return contentResolver.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
                 projection,
-                WHERE_CLAUSE, WHERE_ARGS, null)
+                whereClause, whereArgs, null)
     }
 
     companion object {

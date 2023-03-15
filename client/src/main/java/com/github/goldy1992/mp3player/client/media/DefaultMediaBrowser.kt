@@ -30,7 +30,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import org.apache.commons.lang3.StringUtils.isEmpty
-import javax.inject.Inject
 
 /**
  * Default implementation of the [IMediaBrowser].

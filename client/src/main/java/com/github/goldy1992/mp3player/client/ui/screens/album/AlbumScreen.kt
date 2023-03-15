@@ -22,7 +22,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.data.Album
-import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.buttons.AlbumPlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
@@ -37,16 +36,14 @@ import kotlinx.coroutines.launch
 
 @OptIn(
     ExperimentalAnimationApi::class,
-    ExperimentalCoilApi::class,
     ExperimentalFoundationApi::class,
     ExperimentalMaterial3Api::class,
 )
 @Composable
 fun AlbumScreen(
-    navController : NavController = rememberAnimatedNavController(),
+    navController: NavController = rememberAnimatedNavController(),
     viewModel: AlbumScreenViewModel = viewModel(),
-    windowSize: WindowSize = WindowSize.Compact,
-    scope : CoroutineScope = rememberCoroutineScope()
+    scope: CoroutineScope = rememberCoroutineScope()
 ) {
 
     val isPlaying by viewModel.isPlaying.collectAsState()

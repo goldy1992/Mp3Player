@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.lists.songs
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
@@ -21,9 +20,9 @@ import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.github.goldy1992.mp3player.client.R.drawable.cd_image1
 import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
-import com.github.goldy1992.mp3player.client.R.drawable.cd_image1
 
 private const val logTag = "SongListItem"
 

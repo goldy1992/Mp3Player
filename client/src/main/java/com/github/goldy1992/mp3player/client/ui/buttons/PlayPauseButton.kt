@@ -15,8 +15,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 private const val logTag = "PlayPauseButton"
 

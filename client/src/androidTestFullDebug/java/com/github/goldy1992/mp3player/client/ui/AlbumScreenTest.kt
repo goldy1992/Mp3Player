@@ -79,9 +79,8 @@ class AlbumScreenTest {
 
         composeTestRule.setContent {
             AlbumScreen(
-                viewModel = albumScreenViewModel,
                 navController = mockNavController,
-                windowSize = WindowSize.Compact
+                viewModel = albumScreenViewModel
             )
         }
 
