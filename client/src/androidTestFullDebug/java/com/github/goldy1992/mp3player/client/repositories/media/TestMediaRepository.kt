@@ -35,8 +35,9 @@ class TestMediaRepository
         return currentMediaItemState
     }
 
+    val currentPlaylistMediaMetadataState = MutableStateFlow(MediaMetadata.EMPTY)
     override fun currentPlaylistMetadata(): Flow<MediaMetadata> {
-        TODO("Not yet implemented")
+        return currentPlaylistMediaMetadataState
     }
 
     val currentSearchQuery = MutableStateFlow("")
