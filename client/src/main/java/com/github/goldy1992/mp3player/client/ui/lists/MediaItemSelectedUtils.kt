@@ -31,7 +31,6 @@ fun onFolderSelected(navController : NavController) : (Folder) -> Unit {
         Log.i("folderSelected", "folder selected")
         val folderId = it.id
         val encodedFolderLibraryId = Uri.encode(folderId)
-        val directoryPath = it.path
         val encodedFolderPath = it.uri
         val folderName = it.name
 

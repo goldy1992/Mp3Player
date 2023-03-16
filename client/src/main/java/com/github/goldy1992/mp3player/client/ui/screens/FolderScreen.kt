@@ -26,6 +26,7 @@ import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
+import com.github.goldy1992.mp3player.client.ui.lists.songs.EmptySongsList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.client.utils.TimerUtils
@@ -181,6 +182,7 @@ private fun FolderScreenContent(modifier : Modifier = Modifier,
                 )
             }
             else -> {
+                EmptySongsList()
             }
         }
     }
@@ -213,25 +215,6 @@ private fun HeaderItem(
             },
             closeDialog = { openDialog = false}
         )
-//        AlertDialog(
-//            title = {},
-//            confirmButton = {},
-//            dismissButton = {},
-//            onDismissRequest = { openDialog = false} )
-//            {
-//
-//            Card {
-//                Text(
-//                    text = "Folder Path",
-//                    style = MaterialTheme.typography.headlineSmall
-//                )
-//                Text(
-//                    text = folder.path,
-//                    style = MaterialTheme.typography.bodyMedium
-//                )
-//            }
-//        }
-
     }
     Card(modifier.padding(16.dp)) {
         Divider(Modifier.padding(start = 4.dp, end = 4.dp))
@@ -329,8 +312,13 @@ private fun FolderPathDialog(folder: Folder = Folder(),
             }
         },
         text = {
-            Surface(modifier = Modifier.fillMaxWidth().height(150.dp), color = MaterialTheme.colorScheme.surfaceVariant) {
-                Column(Modifier.padding(4.dp).fillMaxSize()) {
+            Surface(modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp), color = MaterialTheme.colorScheme.surfaceVariant) {
+                Column(
+                    Modifier
+                        .padding(4.dp)
+                        .fillMaxSize()) {
                     Text(folder.path)
                 }
             }

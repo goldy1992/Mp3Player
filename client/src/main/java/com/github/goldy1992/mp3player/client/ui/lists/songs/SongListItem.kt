@@ -34,6 +34,7 @@ private const val logTag = "SongListItem"
 @Composable
 fun SongListItem(song : Song = Song(),
                  isSelected : Boolean = false,
+                 isPlayingProvider : () -> Boolean = {false},
                  onClick: () -> Unit = {},
                 containerColor : Color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface) {
     //Log.i(logTag, "isSelected: $isSelected, songId: ${song.id}, title: ${song.title}")
@@ -52,7 +53,21 @@ fun SongListItem(song : Song = Song(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )},
-            leadingContent = { AlbumArt(uri = song.albumArt, modifier = Modifier.size(40.dp)) },
+            leadingContent = {
+//                val isPlaying = isPlayingProvider()
+//                // TODO: Move equalizer to overlay song album art image
+//                if (isPlaying) {
+//                    Equalizer(
+//                        maxHeight = 20.dp,
+//                        numOfBars = 4,
+//                        barColors = RAINBOW_COLORS,
+//                        barWidth = 5.dp
+//                    )
+//                }
+
+                AlbumArt(uri = song.albumArt, modifier = Modifier.size(40.dp))
+
+             },
             supportingText = {
                 Text(
                     text = song.artist,
@@ -70,15 +85,6 @@ fun SongListItem(song : Song = Song(),
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
-//                    // TODO: Move equalizer to overlay song album art image
-//                    if (isPlaying) {
-//                        Equalizer(
-//                            maxHeight = 20.dp,
-//                            numOfBars = 4,
-//                            barColors = RAINBOW_COLORS,
-//                            barWidth = 5.dp
-//                        )
-//                    }
         )
     Divider(//startIndent = 72.dp,
         color = MaterialTheme.colorScheme.surfaceVariant)

@@ -49,7 +49,7 @@ fun AlbumSearchResultItem(album : Album = Album(),
                 overflow = TextOverflow.Ellipsis)
         },
         trailingContent = {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { onClick(album) }) {
                 Icon(Icons.Filled.MoreVert, contentDescription = "",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }

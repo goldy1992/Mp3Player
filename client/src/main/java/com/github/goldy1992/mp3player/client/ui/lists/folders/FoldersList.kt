@@ -50,7 +50,9 @@ fun FolderList(modifier : Modifier = Modifier,
                 }
             }
         }
-        else -> {}
+        else -> {
+            Text("Folders not loaded")
+        }
     }
 
 }
