@@ -444,8 +444,9 @@ class DefaultMediaBrowser
 
     override suspend fun getCurrentPlaybackPosition(): Long {
         var toReturn : Long
-        withContext(mainDispatcher) {
-            toReturn = mediaBrowserFuture.await().currentPosition
+        val mediaBrowser = mediaBrowserFuture.await()
+        runBlocking(mainDispatcher) {
+            toReturn = mediaBrowser.currentPosition
         }
         return toReturn
     }
