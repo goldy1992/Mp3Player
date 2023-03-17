@@ -3,10 +3,8 @@ on:
   push:
     branches:
       - master
-
 env:
   SHOULD_RELEASE_TO_PLAYSTORE: false
-
 jobs:
   master-build-and-test:
     permissions:
