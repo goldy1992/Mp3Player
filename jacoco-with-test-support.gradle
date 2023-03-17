@@ -82,9 +82,9 @@ project.afterEvaluate {
             html.required = true
         }
 
-        def mainSrc = fileTree(dir: "$project.projectDir/src/main/java", includes: uiTestSrcSet, excludes: fileFilter)
-        def mainClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/", includes: ["${buildVariant}/**"], excludes: fileFilter)
-        def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/", includes: ["${buildVariant}/**"], excludes: fileFilter)
+        def mainSrc = fileTree(dir: "$project.projectDir/src/main/java", includes: uiTestSrcSet)//, excludes: fileFilter)
+        def mainClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/", includes: ["${buildVariant}/**/ui/**", "${buildVariant}/**/preferences/**", "${buildVariant}/**/activities/**"])//, excludes: fileFilter)
+        def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/", includes: ["${buildVariant}/**/ui/**","${buildVariant}/**/preferences/**", "${buildVariant}/**/activities/**"])//, excludes: fileFilter)
 
         sourceDirectories.from = files([mainSrc])
         classDirectories.from = files([mainClasses, javaClasses])
@@ -117,7 +117,7 @@ project.afterEvaluate {
         def kotlinClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${buildVariant}", excludes: fileFilter)
         //def releaseKotlinClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${buildVariant}", excludes: fileFilter + ["com/github/goldy1992/mp3player/client/ui**"])
         //def debugKotlinClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${buildVariant}/com/github/goldy1992/mp3player/client/ui/", excludes:fileFilter)
-        def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/${buildVariant}", excludes: fileFilter + ["com/github/goldy1992/mp3player/client/ui**"])
+        def javaClasses = fileTree(dir: "${buildDir}/intermediates/javac/${buildVariant}", excludes: fileFilter)// + ["com/github/goldy1992/mp3player/client/ui**"])
         //def releaseJavaClasses = fileTree(dir: "${buildDir}/intermediates/javac/${buildVariant}", excludes: fileFilter + ["com/github/goldy1992/mp3player/client/ui**"])
         //def debugJavaClasses = fileTree(dir: "${buildDir}/intermediates/javac/${buildVariant}/com/github/goldy1992/mp3player/client/ui/",excludes: fileFilter)
 
@@ -126,7 +126,7 @@ project.afterEvaluate {
 
         sourceDirectories.from = files([mainSrc])
         classDirectories.from = files([kotlinClasses, javaClasses])
-        executionData.from = unitBuildFileTree.plus(uiBuildFileTree)
+        executionData.from = unitBuildFileTree + uiBuildFileTree
     }
 
     task jacocoCombinedReport(type: JacocoReport) {
