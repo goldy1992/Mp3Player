@@ -3,17 +3,21 @@ package com.github.goldy1992.mp3player.service.library.search.managers
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
-import com.github.goldy1992.mp3player.service.library.search.Song
-import com.github.goldy1992.mp3player.service.library.search.SongDao
+import com.github.goldy1992.mp3player.service.library.data.search.Song
+import com.github.goldy1992.mp3player.service.library.data.search.SongDao
+import com.github.goldy1992.mp3player.service.library.data.search.managers.SongDatabaseManager
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.*
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.Shadows
 import org.robolectric.annotation.LooperMode
+import java.util.*
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 @RunWith(RobolectricTestRunner::class)
 class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
@@ -36,7 +40,7 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
     override fun testInsert() {
         val expectedId = "23fsdf"
         val songTitle = "songTitle"
-        val expectedValue = songTitle.toUpperCase()
+        val expectedValue = songTitle.uppercase(Locale.ROOT)
         val mediaItem = MediaItemBuilder(expectedId)
                 .setTitle(expectedValue)
                 .build()
@@ -50,7 +54,7 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
     }
 
     @Test
-    fun testReindexCheckDeleteOld() {
+    fun testReindexCheckDeleteOld() = testScope.runTest {
         val expectedId = "sdkjdsf"
         val title = "expectedTitle"
         val toReturn = MediaItemBuilder(expectedId)
@@ -61,7 +65,6 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
 
         argumentCaptor<List<String>>().apply {
             songDatabaseManager.reindex()
-            Shadows.shadowOf(handler.looper).idle()
             verify(songDao, times(1)).deleteOld(capture())
             val idsToDelete = firstValue[0]
             Assert.assertEquals(expectedId, idsToDelete)
@@ -69,10 +72,10 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
     }
 
     @Test
-    fun testReindexCheckInsertAll() {
+    fun testReindexCheckInsertAll() = testScope.runTest {
         val expectedId = "sdkjdsf"
         val title = "expectedTitle"
-        val expectedTitle = title.toUpperCase()
+        val expectedTitle = title.uppercase(Locale.ROOT)
         val toReturn = MediaItemBuilder(expectedId)
                 .setTitle(title)
                 .build()
@@ -80,7 +83,6 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
                 .thenReturn(listOf(toReturn))
         argumentCaptor<List<Song>>().apply {
         songDatabaseManager.reindex()
-        Shadows.shadowOf(handler.looper).idle()
         verify(songDao, times(1)).insertAll(capture())
         val insertedFolder = firstValue[0]
         Assert.assertEquals(expectedId, insertedFolder.id)

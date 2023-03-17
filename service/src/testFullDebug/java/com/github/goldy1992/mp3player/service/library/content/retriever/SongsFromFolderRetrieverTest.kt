@@ -4,8 +4,7 @@ import android.os.Looper
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
-import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
-import com.github.goldy1992.mp3player.service.library.search.SongDao
+import com.github.goldy1992.mp3player.service.library.data.search.SongDao
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -31,7 +30,6 @@ class SongsFromFolderRetrieverTest : ContentResolverRetrieverTestBase<SongsFromF
 
     @Test
     fun testGetChildren() {
-        contentRequest = ContentRequest("x", "y", "z")
         val id = "xyz"
         val title = "title"
         val mediaItem = MediaItemBuilder(id)
@@ -39,8 +37,8 @@ class SongsFromFolderRetrieverTest : ContentResolverRetrieverTestBase<SongsFromF
                 .build()
         expectedResult.add(mediaItem)
         whenever(contentResolver.query(any(), any(), any(), any(), eq(null))).thenReturn(cursor)
-        whenever(resultsParser.create(cursor, contentRequest!!.mediaIdPrefix!!)).thenReturn(expectedResult)
-        val result = retriever!!.getChildren(contentRequest!!)
+        whenever(resultsParser.create(cursor)).thenReturn(expectedResult)
+        val result = retriever!!.getChildren(id)
         // call remaining looper messages
         Shadows.shadowOf(Looper.getMainLooper()).idle()
         // assert results are the expected ones

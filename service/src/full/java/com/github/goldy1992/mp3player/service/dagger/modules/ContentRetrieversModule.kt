@@ -1,8 +1,10 @@
 package com.github.goldy1992.mp3player.service.dagger.modules
 
 import android.content.ContentResolver
+import com.github.goldy1992.mp3player.service.library.content.parser.AlbumsResultsParser
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
+import com.github.goldy1992.mp3player.service.library.content.retriever.AlbumsRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.FoldersRetriever
 import com.github.goldy1992.mp3player.service.library.content.retriever.SongsRetriever
 import dagger.Module
@@ -27,5 +29,12 @@ open class ContentRetrieversModule {
     fun providesFoldersRetriever(contentResolver: ContentResolver,
                                  resultsParser: FolderResultsParser) : FoldersRetriever {
         return FoldersRetriever(contentResolver, resultsParser)
+    }
+
+    @Provides
+    @ServiceScoped
+    fun providesAlbumsRetriever(contentResolver: ContentResolver,
+                                 resultsParser: AlbumsResultsParser) : AlbumsRetriever {
+        return AlbumsRetriever(contentResolver, resultsParser)
     }
 }

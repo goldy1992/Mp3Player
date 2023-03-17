@@ -29,11 +29,11 @@ import kotlinx.coroutines.launch
 private const val logTag = "seekbar"
 
 @Composable
-fun SeekBar(isPlayingProvider: () -> Boolean,
-            metadataProvider: () -> MediaMetadata,
-            playbackSpeedProvider : () ->  Float,
-            playbackPositionProvider: () -> PlaybackPositionEvent,
-            seekTo: (value: Long) -> Unit,
+fun SeekBar(isPlayingProvider: () -> Boolean = {true},
+            metadataProvider: () -> MediaMetadata = {MediaMetadata.EMPTY},
+            playbackSpeedProvider : () ->  Float = {1.0f},
+            playbackPositionProvider: () -> PlaybackPositionEvent = {PlaybackPositionEvent.DEFAULT},
+            seekTo: (value: Long) -> Unit = {},
             scope: CoroutineScope = rememberCoroutineScope()) {
 
     //Log.i(logTag, "seek bar created")
@@ -76,6 +76,7 @@ private fun SeekBarUi(currentPosition : Float,
     if (isPlaying) {
         //   Log.i(logTag, "playback state playing")
         LaunchedEffect(seekBarAnimation) {
+            Log.i(logTag, "animating to duration: $duration, currentPos: $currentPosition, animationTimeMs: $animationTimeInMs")
             seekBarAnimation.value.animateTo(duration,
                 animationSpec = FloatTweenSpec(animationTimeInMs, 0, LinearEasing))
             //      Log.i(logTag, "animating")

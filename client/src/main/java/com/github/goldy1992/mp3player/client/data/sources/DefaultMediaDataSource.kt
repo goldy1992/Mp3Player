@@ -40,6 +40,10 @@ class DefaultMediaDataSource
         return mediaBrowser.currentMediaItem()
     }
 
+    override fun currentPlaylistMetadata(): Flow<MediaMetadata> {
+        return mediaBrowser.currentPlaylistMetadata()
+    }
+
     private val _currentSearchQuery = MutableStateFlow("")
     private val currentSearchQuery : StateFlow<String> = _currentSearchQuery
     override fun currentSearchQuery(): Flow<String> {
@@ -94,6 +98,10 @@ class DefaultMediaDataSource
         mediaBrowser.changePlaybackSpeed(speed)
     }
 
+    override suspend fun getCurrentPlaybackPosition(): Long {
+        return mediaBrowser.getCurrentPlaybackPosition()
+    }
+
     override suspend fun getChildren(
         parentId: String,
         page: Int,
@@ -127,8 +135,8 @@ class DefaultMediaDataSource
         mediaBrowser.play(mediaItem)
     }
 
-    override suspend fun playFromSongList(itemIndex: Int, items: List<MediaItem>) {
-        mediaBrowser.playFromSongList(itemIndex, items)
+    override suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistMetadata: MediaMetadata) {
+        mediaBrowser.playFromPlaylist(items, itemIndex, playlistMetadata)
     }
 
     override suspend fun playFromUri(uri: Uri?, extras: Bundle?) {

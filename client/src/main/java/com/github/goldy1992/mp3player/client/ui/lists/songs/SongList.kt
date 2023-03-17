@@ -2,25 +2,28 @@ package com.github.goldy1992.mp3player.client.ui.lists.songs
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.media3.common.MediaItem
+import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.Song
+import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
-import org.apache.commons.collections4.CollectionUtils.isEmpty
-import org.apache.commons.lang3.StringUtils
+import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
+import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
+import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.client.utils.SongUtils.isSongItemSelected
+import com.github.goldy1992.mp3player.commons.MediaItemType
 
 private const val logTag = "SongList"
 
@@ -29,35 +32,61 @@ private const val logTag = "SongList"
 @Composable
 fun SongList(
     modifier : Modifier = Modifier,
-    songs : List<MediaItem> = emptyList(),
+    songs : Songs = Songs(State.NOT_LOADED),
     isPlayingProvider : () -> Boolean = {false},
-    currentMediaItemProvider : () -> MediaItem = {MediaItem.EMPTY},
-    onSongSelected : (itemIndex: Int, songs : List<MediaItem>) -> Unit = { _, _ -> }) {
+    currentSongProvider : () -> Song = { Song() },
+    onSongSelected : (itemIndex: Int, songs : Songs) -> Unit = { _, _ -> }) {
 
-    Log.i(logTag, "song list size: ${songs.size}")
-    val isPlaying = isPlayingProvider()
-    val currentMediaItem = currentMediaItemProvider()
+    Log.i(logTag, "song list size: ${songs.songs.size}")
+    val currentMediaItem = currentSongProvider()
 
-    when {
-        isEmpty(songs) -> EmptySongsList()
-        else -> {
-            val songsListDescr = stringResource(id = R.string.songs_list)
-            LazyColumn(
-                modifier = modifier.semantics {
-                    contentDescription = songsListDescr
-                }) {
-                items(count = songs.size,
-                        key = { songs[it].mediaId}) { itemIndex ->
-                    run {
-                        val song = songs[itemIndex]
-                        val isItemSelected = isItemSelected(song, currentMediaItem)
-                        Log.i(logTag, "isItemSelected: $isItemSelected isPlaying: ${isPlaying}")
-                        //val isItemPlaying = if (isPlaying) isItemSelected  else false
-                        SongListItem(song = song, isSelected = isItemSelected, onClick =  {onSongSelected(itemIndex, songs) })
-                    }
-                }
-            }
+    when (songs.state) {
+        State.NO_RESULTS -> NoResultsFound(mediaItemType = MediaItemType.SONGS)
+        State.LOADED -> {
+            LoadedSongsList(
+                songs,
+                modifier,
+                currentMediaItem,
+                isPlayingProvider,
+                onSongSelected
+            )
         }
+        State.LOADING -> {
+            LoadingSongsList()
+        }
+        else -> EmptySongsList()
+    }
+}
+
+@ExperimentalCoilApi
+@Composable
+@OptIn(ExperimentalFoundationApi::class)
+private fun LoadedSongsList(
+    songs: Songs,
+    modifier: Modifier,
+    currentMediaItem: Song,
+    isPlayingProvider: () -> Boolean,
+    onSongSelected: (itemIndex: Int, songs: Songs) -> Unit
+) {
+    val songList = songs.songs
+    val songsListDescr = stringResource(id = R.string.songs_list)
+    val itemCount = songList.size
+    LazyColumn(
+        modifier = modifier.semantics {
+            contentDescription = songsListDescr
+        }) {
+        items(
+            count = itemCount,
+            key = {songList[it].id }
+        ) { itemIndex ->
+            val song = songList[itemIndex]
+            val isItemSelected = isSongItemSelected(song, currentMediaItem)
+            SongListItem(
+                song = song,
+                isSelected = isItemSelected,
+                onClick = { onSongSelected(itemIndex, songs) })
+        }
+
     }
 }
 
@@ -75,8 +104,14 @@ fun EmptySongsList() {
     }
 }
 
-private fun isItemSelected(song : MediaItem, currentItem : MediaItem) : Boolean {
-    val isSelected = StringUtils.equals(song.mediaId, currentItem.mediaId)
-    Log.i(logTag, "isSelected: $isSelected, songId: ${song.mediaId}, currentItemId: ${currentItem.mediaId}")
-    return isSelected
+@Preview
+@Composable
+fun LoadingSongsList() {
+    Column(
+        modifier = Modifier.padding(10.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally)    {
+        Text("Loading Songs")
+        LoadingIndicator()
+    }
 }

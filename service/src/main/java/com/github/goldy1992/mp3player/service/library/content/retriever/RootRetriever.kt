@@ -9,27 +9,22 @@ import com.github.goldy1992.mp3player.commons.Constants.MEDIA_ITEM_TYPE
 import com.github.goldy1992.mp3player.commons.Constants.ROOT_ITEM_TYPE
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
-import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
 import java.util.*
 import javax.inject.Inject
 
 @Suppress("UNUSED_PARAMETER")
 class RootRetriever @Inject constructor(private val mediaItemTypeIds: MediaItemTypeIds) : ContentRetriever(), Comparator<MediaItem?> {
 
-    private val CHILDREN: List<MediaItem>
+    private val rootChildren: List<MediaItem>
     private val typeToMediaItemMap: MutableMap<MediaItemType, MediaItem>
-
-    override fun getChildren(request: ContentRequest): List<MediaItem> {
-        return CHILDREN
-    }
 
     override fun getChildren(parentId: String): List<MediaItem> {
         // TODO: Add check to ensure the correct parent id
-        return CHILDREN
+        return rootChildren
     }
 
     override fun getItems(): List<MediaItem> {
-        return CHILDREN
+        return rootChildren
     }
 
     fun getRootItem(mediaItemType: MediaItemType): MediaItem {
@@ -73,6 +68,6 @@ class RootRetriever @Inject constructor(private val mediaItemTypeIds: MediaItemT
             typeToMediaItemMap[category] = mediaItem
         }
         @Suppress("UNCHECKED_CAST")
-        CHILDREN = ArrayList(categorySet) as List<MediaItem>
+        rootChildren = ArrayList(categorySet) as List<MediaItem>
     }
 }

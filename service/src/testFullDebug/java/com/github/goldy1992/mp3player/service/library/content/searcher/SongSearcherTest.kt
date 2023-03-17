@@ -5,8 +5,8 @@ import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
-import com.github.goldy1992.mp3player.service.library.search.Song
-import com.github.goldy1992.mp3player.service.library.search.SongDao
+import com.github.goldy1992.mp3player.service.library.data.search.Song
+import com.github.goldy1992.mp3player.service.library.data.search.SongDao
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -53,7 +53,7 @@ class SongSearcherTest : ContentResolverSearcherTestBase<SongSearcher?>() {
         val EXPECTED_WHERE_ARGS = arrayOf(id1, id2, id3)
         whenever(contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, searcher!!.projection, EXPECTED_WHERE, EXPECTED_WHERE_ARGS, null))
                 .thenReturn(cursor)
-        whenever<List<MediaItem?>>(resultsParser.create(cursor, idPrefix!!)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
+        whenever<List<MediaItem?>>(resultsParser.create(cursor)).thenReturn(ContentResolverSearcherTestBase.Companion.expectedResult)
         val result = searcher!!.search(ContentResolverSearcherTestBase.Companion.VALID_QUERY)
         Assert.assertEquals(ContentResolverSearcherTestBase.Companion.expectedResult, result)
     }

@@ -29,21 +29,20 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.*
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
+import com.github.goldy1992.mp3player.client.ui.lists.albums.AlbumSearchResultItem
 import com.github.goldy1992.mp3player.client.ui.lists.buildOnSelectedMap
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListItem
 import com.github.goldy1992.mp3player.client.ui.lists.onFolderSelected
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongListItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Screen
-import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import org.apache.commons.lang3.StringUtils
 import java.util.*
 
@@ -58,14 +57,16 @@ fun SearchScreen(
     windowSize: WindowSize,
     viewModel : SearchScreenViewModel = viewModel()) {
 
+    Log.i(logTag,"composing search screen")
     val searchResults by viewModel.searchResults.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
     val isPlaying by viewModel.isPlaying.collectAsState()
+    Log.i(logTag,"state_collected")
     val onSelectedMap = {
         buildOnSelectedMap(
             onFolderSelected = onFolderSelected(navController),
             onSongsSelected = {
-                itemIndex : Int, mediaItemList : List<MediaItem> ->
+                itemIndex : Int, mediaItemList : Songs ->
                     viewModel.playFromList(itemIndex, mediaItemList)
             },
             onSongSelected = {
@@ -83,6 +84,7 @@ fun SearchScreen(
 
     val onNavUpPressed : () -> Unit = {  navController.popBackStack() }
 
+    Log.i(logTag, "creating top bar")
     val topBar : @Composable () -> Unit = {
         SearchBar(
             currentSearchQuery = { searchQuery },
@@ -93,6 +95,7 @@ fun SearchScreen(
             onSearchQueryCleared = { viewModel.setSearchQuery("") },
         )
     }
+    Log.i(logTag, "created top bar")
 
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(isPlayingProvider = { isPlaying },
@@ -185,6 +188,7 @@ fun SearchBar(currentSearchQuery : () -> String = { "No search query specified" 
               keyboardController : SoftwareKeyboardController? = LocalSoftwareKeyboardController.current,
               focusRequester : FocusRequester = remember { FocusRequester() }) {
 
+
     val currentSearchQueryValue = currentSearchQuery()
     Log.i(logTag, "currentSearchQueryValue : $currentSearchQueryValue")
     var textFieldValueState by remember(currentSearchQueryValue) {
@@ -257,12 +261,12 @@ fun SearchBar(currentSearchQuery : () -> String = { "No search query specified" 
 @Composable
 fun SearchResultsContent(
     modifier : Modifier = Modifier,
-    searchResultsProvider : () -> List<MediaItem> = { emptyList() },
+    searchResultsProvider : () -> SearchResults = { SearchResults.NO_RESULTS },
     onSelectedMapProvider : () -> EnumMap<MediaItemType, Any> = { EnumMap(MediaItemType::class.java) },
     keyboardController : SoftwareKeyboardController? = LocalSoftwareKeyboardController.current,
     focusRequester : FocusRequester = remember { FocusRequester() }) {
 
-
+    Log.i(logTag, "composing search result content")
     val searchResultsColumn = stringResource(id = R.string.search_results_column)
     val onSelectedMap = onSelectedMapProvider()
     val searchResults = searchResultsProvider()
@@ -275,7 +279,7 @@ fun SearchResultsContent(
         }
     }
 
-    if (isNotEmpty(searchResults)) {
+    if (searchResults.hasResults()) {
         LazyColumn(modifier = modifier
             .fillMaxSize()
             .semantics {
@@ -283,24 +287,32 @@ fun SearchResultsContent(
             },
         state = lazyListState
         ) {
-            items(count = searchResults.size) { itemIndex ->
+            items(count = searchResults.resultsMap.size) { itemIndex ->
                 run {
-                    val mediaItem = searchResults[itemIndex]
-                    when (MediaItemUtils.getMediaItemType(mediaItem)) {
+                    val searchResult = searchResults.getResult(itemIndex)
+                    when (searchResult.mediaItemType) {
                         MediaItemType.SONG -> {
-                            SongListItem(song = mediaItem, onClick = {
-                                val onSongSelected = onSelectedMap[MediaItemType.SONG] as (MediaItem) -> Unit
-                                onSongSelected(mediaItem)
+                            val song = searchResult.value as Song
+                            SongListItem(song = song, onClick = {
+                                val onSongSelected = onSelectedMap[MediaItemType.SONG] as (Song) -> Unit
+                                onSongSelected(song)
                             })
                         }
                         MediaItemType.FOLDER -> {
-                            FolderListItem(folder = mediaItem, onClick = {
-                                val onFolderSelected = onSelectedMap[MediaItemType.FOLDER] as (MediaItem) -> Unit
-                                onFolderSelected(mediaItem)
+                            val folder = searchResult.value as Folder
+                            FolderListItem(folder = folder, onClick = {
+                                val onFolderSelected = onSelectedMap[MediaItemType.FOLDER] as (Folder) -> Unit
+                                onFolderSelected(folder)
                             })
                         }
-                        MediaItemType.SONGS, MediaItemType.FOLDERS -> {
-
+                        MediaItemType.ALBUM -> {
+                            val album = searchResult.value as Album
+                            AlbumSearchResultItem(album = album, onClick = {
+                                val onAlbumSelected = onSelectedMap[MediaItemType.ALBUM] as (Album) -> Unit
+                                onAlbumSelected(album)
+                            })
+                        }
+                        MediaItemType.SONGS, MediaItemType.FOLDERS, MediaItemType.ALBUMS -> {
                             Column(
                                 Modifier
                                     .fillMaxWidth()
@@ -311,11 +323,12 @@ fun SearchResultsContent(
                                     )
                             ) {
                                 Text(
-                                    text = MediaItemUtils.getTitle(mediaItem),
+                                    text = searchResult.mediaItemType.name,
                                     style = MaterialTheme.typography.titleMedium,
                                 )
                             }
                         }
+
 
                         else -> {
                             Log.i("SearchScreen", "Item found with no MediaItemType")
@@ -337,4 +350,5 @@ fun SearchResultsContent(
 
         }
     }
+    Log.i(logTag,"composed search screen content")
 }

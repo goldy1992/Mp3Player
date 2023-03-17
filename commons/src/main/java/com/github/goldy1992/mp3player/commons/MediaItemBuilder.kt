@@ -16,6 +16,10 @@ class MediaItemBuilder(private val mediaId: String) {
     private var description: String? = null
     private var title: String? = null
     private var artist : String? = null
+    private var albumArtist : String? = null
+    private var albumTitle : String? = null
+    private var recordingYear : Int = -1
+    private var releaseYear : Int = -1
     private var mediaUri: Uri? = null
     private var isPlayable : Boolean = false
     @FolderType
@@ -81,9 +85,22 @@ class MediaItemBuilder(private val mediaId: String) {
         return this
     }
 
-    @Deprecated(message = "albumArtData deprecated in androidx.media3.common.MediaItem",
-                replaceWith = ReplaceWith("MediaItemBuilder.setAlbumArtUri"),
-                level = DeprecationLevel.WARNING)
+    fun setAlbumTitle(albumTitle : String?) : MediaItemBuilder {
+        this.albumTitle = albumTitle
+        return this
+    }
+
+    fun setRecordingYear(recordingYear : Int) : MediaItemBuilder {
+        this.recordingYear = recordingYear
+        return this
+    }
+
+
+    fun setReleaseYear(releaseYear : Int) : MediaItemBuilder {
+        this.releaseYear = releaseYear
+        return this
+    }
+
     fun setAlbumArtImage(bitmap: ByteArray?): MediaItemBuilder {
         this.albumArtData = bitmap
         return this
@@ -104,6 +121,11 @@ class MediaItemBuilder(private val mediaId: String) {
         return this
     }
 
+    fun setAlbumArtist(albumArtist: String?): MediaItemBuilder {
+        this.albumArtist = albumArtist
+        return this
+    }
+
     fun setFileCount(fileCount : Int) : MediaItemBuilder {
         extras.putInt(Constants.FILE_COUNT, fileCount)
         return this
@@ -119,10 +141,14 @@ class MediaItemBuilder(private val mediaId: String) {
                     .setTitle(title)
                     .setDescription(description)
                     .setArtist(artist)
+                    .setAlbumArtist(albumArtist)
+                    .setAlbumTitle(albumTitle)
+                    .setRecordingYear(recordingYear)
+                    .setReleaseYear(releaseYear)
                     .setFolderType(folderType)
                     .setIsPlayable(isPlayable)
                     .setArtworkUri(albumArtUri)
-                    .setArtworkData(this.albumArtData)
+                    .setArtworkData(this.albumArtData, MediaMetadata.PICTURE_TYPE_MEDIA)
                     .setExtras(extras)
                     .build()
             )

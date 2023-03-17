@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.service
 import android.os.Bundle
 import android.util.Log
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.common.Rating
 import androidx.media3.session.*
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
@@ -13,13 +14,15 @@ import com.github.goldy1992.mp3player.commons.IoDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.github.goldy1992.mp3player.service.library.ContentManager
-import com.github.goldy1992.mp3player.service.library.CustomMediaItemTree
 import com.github.goldy1992.mp3player.service.player.ChangeSpeedProvider
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.scopes.ServiceScoped
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @ServiceScoped
@@ -29,7 +32,6 @@ class MediaLibrarySessionCallback
     constructor(private val contentManager: ContentManager,
                 private val changeSpeedProvider: ChangeSpeedProvider,
                 private val rootAuthenticator: RootAuthenticator,
-                private val customMediaItemTree: CustomMediaItemTree,
                 private val scope : CoroutineScope,
                 @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
                 @IoDispatcher private val ioDispatcher: CoroutineDispatcher) : MediaLibrarySession.Callback, LogTagger {
@@ -51,13 +53,36 @@ class MediaLibrarySessionCallback
             .add(changePlaybackSpeed)
             .add(audioDataCommand)
             .build()
-        return ConnectionResult.accept(updatedSessionCommands,connectionResult.availablePlayerCommands)
+        val updatedPlayerCommands = connectionResult
+            .availablePlayerCommands
+            .buildUpon()
+            .add(Player.COMMAND_SET_MEDIA_ITEMS_METADATA)
+            .add(Player.COMMAND_GET_MEDIA_ITEMS_METADATA)
+            .build()
+        return ConnectionResult.accept(updatedSessionCommands,updatedPlayerCommands)
     }
 
     override fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo) {
         super.onPostConnect(session, controller)
-        Log.i(logTag(), "onPostConnect")
+        session.player.prepare()
+        Log.i(logTag(), "onPostConnect ensure the player is prepared")
+    }
 
+    override fun onGetItem(
+        session: MediaLibrarySession,
+        browser: MediaSession.ControllerInfo,
+        mediaId: String
+    ): ListenableFuture<LibraryResult<MediaItem>> {
+        Log.i(logTag(), "onGetItem called for mediaId: $mediaId")
+        var mediaItem : MediaItem?
+        runBlocking(ioDispatcher) {
+            mediaItem = contentManager.getContentById(mediaId)
+        }
+        if (mediaItem == null) {
+            Log.i(logTag(), "No media item found for $mediaId, returning empty media item")
+            mediaItem = MediaItem.EMPTY
+        }
+        return Futures.immediateFuture(LibraryResult.ofItem(mediaItem!!, MediaLibraryService.LibraryParams.Builder().build()))
     }
 
     override fun onDisconnected(session: MediaSession, controller: MediaSession.ControllerInfo) {
@@ -99,10 +124,17 @@ class MediaLibrarySessionCallback
 
         scope.launch(ioDispatcher) {
             // Assume for example that the music catalog is already loaded/cached.
-            mediaItems = customMediaItemTree.getChildren(parentId)
+            mediaItems = contentManager.getChildren(parentId)
+            var numberOfResults = mediaItems.size
+
+            if (numberOfResults <= 0) {
+                Log.i(logTag(), "No results found or parentId $parentId")
+                // set the number of results to one to account for the empty media item
+                numberOfResults = 1
+            }
             println("finish coroutine")
             Log.i(logTag(), "notifying children changed for browser ${browser}")
-            session.notifyChildrenChanged(browser, parentId, mediaItems.size, params)
+            session.notifyChildrenChanged(browser, parentId, numberOfResults, params)
         }
         println("finished on load children")
 
@@ -118,6 +150,7 @@ class MediaLibrarySessionCallback
         Log.i(logTag(), "On Custom Command: ${customCommand}, args: $args")
         if (CHANGE_PLAYBACK_SPEED == customCommand.customAction) {
             changeSpeedProvider.changeSpeed(session.player, args)
+            return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         }
         return super.onCustomCommand(session, controller, customCommand, args)
     }
@@ -127,9 +160,14 @@ class MediaLibrarySessionCallback
         controller: MediaSession.ControllerInfo,
         mediaItems: MutableList<MediaItem>
     ): ListenableFuture<MutableList<MediaItem>> {
-        return Futures.immediateFuture(
-            customMediaItemTree.getMediaItems(mediaItems.map(MediaItem::mediaId)).toMutableList()
-        )
+        super.onAddMediaItems(mediaSession, controller, mediaItems)
+        val toReturn = mutableListOf<MediaItem>()
+        runBlocking {
+            for (item in mediaItems) {
+                toReturn.add(contentManager.getContentById(item.mediaId))
+            }
+        }
+        return Futures.immediateFuture(toReturn)
     }
 
     override fun onGetLibraryRoot(
@@ -155,17 +193,19 @@ class MediaLibrarySessionCallback
         runBlocking {
             scope.launch(ioDispatcher) {
                 // Assume for example that the music catalog is already loaded/cached.
-                mediaItems = customMediaItemTree.getChildren(parentId)
-                println("finish coroutine")
+                mediaItems = contentManager.getChildren(parentId)
+                if (mediaItems.isEmpty()) {
+                    Log.i(logTag(), "Setting results for parentId $parentId to be the empty media item")
+                    // set the number of results to one to account for the empty media item
+
+                }
             }.join()
 
-            println("finished on load children")
+            Log.i(logTag(), "finished on load children")
         }
         Log.i(logTag(), "notifying children changed for browser ${browser}")
         return Futures.immediateFuture(LibraryResult.ofItemList(mediaItems, params))
     }
-
-
 
     override fun onSearch(
         session: MediaLibrarySession,
@@ -175,7 +215,7 @@ class MediaLibrarySessionCallback
     ): ListenableFuture<LibraryResult<Void>> {
 
        scope.launch(ioDispatcher) {
-           val result = contentManager.search(query, true)
+           val result = contentManager.search(query)
            session.notifySearchResultChanged(browser, query, result.size, params)
        }
         return Futures.immediateFuture(LibraryResult.ofVoid())
@@ -193,7 +233,7 @@ class MediaLibrarySessionCallback
         var searchResults : List<MediaItem> = ArrayList()
         runBlocking {
             val searchJob = scope.launch(ioDispatcher) {
-                searchResults = contentManager.search(query, true)
+                searchResults = contentManager.search(query)
             }
             searchJob.join()
         }

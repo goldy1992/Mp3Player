@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata.FOLDER_TYPE_MIXED
 import com.github.goldy1992.mp3player.commons.ComparatorUtils
-import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryPath
@@ -20,7 +19,8 @@ class FolderResultsParser
     @Inject
     constructor() : ResultsParser() {
 
-    override fun create(cursor: Cursor?, mediaIdPrefix: String?): List<MediaItem> {
+
+    override fun create(cursor: Cursor?): List<MediaItem> {
         val listToReturn = TreeSet(this)
         val directoryPathMap : MutableMap<String, DirectoryInfo> = HashMap()
         while (cursor != null && cursor.moveToNext()) {
@@ -45,27 +45,22 @@ class FolderResultsParser
         }
 
         directoryPathMap.entries.forEach {
-            val mediaItem = createFolderMediaItem(it.value, mediaIdPrefix)
+            val mediaItem = createFolderMediaItem(it.value)
             listToReturn.add(mediaItem)
         }
         return ArrayList(listToReturn)
     }
 
-    override fun create(cursor: Cursor): List<MediaItem> {
-        return create(cursor, null)
-    }
-
     override val type: MediaItemType?
         get() = MediaItemType.FOLDER
 
-    private fun createFolderMediaItem(directoryInfo: DirectoryInfo, parentId: String?) : MediaItem { /* append a file separator so that folders with an "extended" name are discarded...
+    private fun createFolderMediaItem(directoryInfo: DirectoryInfo) : MediaItem { /* append a file separator so that folders with an "extended" name are discarded...
          * e.g. Folder to accept: 'folder1'
          *      Folder to reject: 'folder1extended' */
         val folder = directoryInfo.directory
         val filePath = folder.absolutePath + File.separator
         return MediaItemBuilder(filePath)
             .setMediaItemType(MediaItemType.FOLDER)
-            .setLibraryId(buildLibraryId(parentId ?: "null", filePath))
             .setDirectoryFile(folder)
             .setFileCount(directoryInfo.fileCount.get())
             .setFolderType(FOLDER_TYPE_MIXED)
@@ -82,14 +77,6 @@ class FolderResultsParser
      */
     override fun logTag(): String {
         return "Flder_Res_Prser"
-    }
-
-    private fun buildLibraryId(prefix: String, childItemId: String): String {
-        return StringBuilder()
-                .append(prefix)
-                .append(ID_SEPARATOR)
-                .append(childItemId)
-                .toString()
     }
 
     /**

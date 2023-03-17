@@ -33,6 +33,10 @@ class DefaultMediaRepository
         return mediaDataSource.currentMediaItem()
     }
 
+    override fun currentPlaylistMetadata(): Flow<MediaMetadata> {
+        return mediaDataSource.currentPlaylistMetadata()
+    }
+
     override fun currentSearchQuery(): Flow<String> {
         return mediaDataSource.currentSearchQuery()
     }
@@ -98,6 +102,10 @@ class DefaultMediaRepository
         return mediaDataSource.getLibraryRoot()
     }
 
+    override suspend fun getCurrentPlaybackPosition(): Long {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getSearchResults(query: String, page: Int, pageSize: Int) : List<MediaItem> {
         return mediaDataSource.getSearchResults(query, page, pageSize)
     }
@@ -114,8 +122,8 @@ class DefaultMediaRepository
         mediaDataSource.play(mediaItem)
     }
 
-    override suspend fun playFromSongList(itemIndex: Int, items: List<MediaItem>) {
-        mediaDataSource.playFromSongList(itemIndex, items)
+    override suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistMetadata: MediaMetadata) {
+        mediaDataSource.playFromPlaylist(items, itemIndex, playlistMetadata)
     }
 
     override suspend fun playFromUri(uri: Uri?, extras: Bundle?) {

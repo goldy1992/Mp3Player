@@ -4,8 +4,12 @@ import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUser
 import com.github.goldy1992.mp3player.client.ui.Theme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
-class FakeUserPreferencesRepository : IUserPreferencesRepository {
+class FakeUserPreferencesRepository
+    @Inject
+    constructor()
+    : IUserPreferencesRepository {
     val theme = MutableStateFlow(Theme.BLUE)
     override suspend fun updateTheme(newTheme: Theme) {
         theme.value = newTheme

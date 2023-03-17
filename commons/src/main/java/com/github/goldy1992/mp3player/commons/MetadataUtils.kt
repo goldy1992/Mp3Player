@@ -8,11 +8,4 @@ object MetadataUtils {
         return metadata.extras?.getLong(MetaDataKeys.DURATION) ?: 0L
     }
 
-//    fun getMediaId(metadata : MediaMetadata) : String {
-//        return metadata.id.getString(MediaMetadata.METADATA_KEY_MEDIA_ID) ?: Constants.UNKNOWN
-//    }
-
-    fun getLibraryId(metadata : MediaMetadata) : String {
-        return metadata.extras?.getString(Constants.LIBRARY_ID) ?: Constants.UNKNOWN
-    }
 }

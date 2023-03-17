@@ -4,6 +4,7 @@ import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaBrowser
 import androidx.media3.session.MediaLibraryService
 import com.github.goldy1992.mp3player.client.MediaTestUtils.createTestMediaItem
+import com.github.goldy1992.mp3player.client.media.MediaBrowserTestImpl
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.Module
@@ -18,17 +19,13 @@ import org.mockito.kotlin.whenever
 @Module
 @TestInstallIn(
     components = [ActivityRetainedComponent::class],
-    replaces = [DefaultMediaBrowserModule::class]
+    replaces = [MediaBrowserModule::class]
 )
 class MockMediaBrowserModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun providesMockMediaBrowser() : ListenableFuture<MediaBrowser> {
-        val mockMediaBrowser = mock<MediaBrowser>()
-        whenever(mockMediaBrowser.getLibraryRoot(any())).thenReturn(Futures.immediateFuture(
-            LibraryResult.ofItem(createTestMediaItem("mockId"), MediaLibraryService.LibraryParams.Builder().build())
-        ))
-        return Futures.immediateFuture(mockMediaBrowser)
+    fun providesMockMediaBrowser() : MediaBrowserTestImpl {
+        return MediaBrowserTestImpl()
     }
 }

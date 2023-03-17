@@ -35,6 +35,11 @@ class TestMediaRepository
         return currentMediaItemState
     }
 
+    val currentPlaylistMediaMetadataState = MutableStateFlow(MediaMetadata.EMPTY)
+    override fun currentPlaylistMetadata(): Flow<MediaMetadata> {
+        return currentPlaylistMediaMetadataState
+    }
+
     val currentSearchQuery = MutableStateFlow("")
     override fun currentSearchQuery(): Flow<String> {
         return currentSearchQuery
@@ -114,6 +119,10 @@ class TestMediaRepository
         return libraryRootState
     }
 
+    override suspend fun getCurrentPlaybackPosition(): Long {
+        TODO("Not yet implemented")
+    }
+
     val searchResultsState = MutableStateFlow<List<MediaItem>>(emptyList())
     var searchResults : List<MediaItem> = emptyList()
     override suspend fun getSearchResults(
@@ -133,8 +142,11 @@ class TestMediaRepository
     }
 
     override suspend fun play(mediaItem: MediaItem) {    }
-
-    override suspend fun playFromSongList(itemIndex: Int, items: List<MediaItem>) {
+    override suspend fun playFromPlaylist(
+        items: List<MediaItem>,
+        itemIndex: Int,
+        playlistMetadata: MediaMetadata
+    ) {
         TODO("Not yet implemented")
     }
 

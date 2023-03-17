@@ -12,9 +12,7 @@ import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPosi
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,6 +32,7 @@ constructor(
             mediaRepository.playbackPosition()
             .collect {
                 _playbackPositionState.value = it
+                Log.i(logTag(), "newPlaybackPosition: $it")
             }
         }
     }
@@ -90,6 +89,7 @@ constructor(
         viewModelScope.launch {
             mediaRepository.queue()
             .collect {
+                Log.i(logTag(), "queue items: ${it.items.size}")
                 _queue.value = it
             }
         }
@@ -128,7 +128,9 @@ constructor(
     }
 
     fun play() {
-        viewModelScope.launch { mediaRepository.play() }
+        viewModelScope.launch {
+            Log.i(logTag(), "calling play()")
+            mediaRepository.play() }
     }
 
     fun pause() {

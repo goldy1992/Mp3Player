@@ -42,7 +42,7 @@ abstract class ContentResolverSearcherTestBase<T : ContentResolverSearcher<*>?> 
     abstract fun testSearchValidMultipleArguments()
     @Test
     fun testSearchInvalid() = runTest(dispatcher)  {
-        whenever(searcher!!.resultsParser.create(eq(any<Cursor>()), idPrefix!!)).thenReturn(expectedResult)
+        whenever(searcher!!.resultsParser.create(any())).thenReturn(expectedResult)
         var result: List<*>? = searcher!!.search(INVALID_QUERY)
         Assert.assertNotEquals(expectedResult, result)
     }

@@ -2,7 +2,7 @@
 
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
-import android.net.Uri
+import android.util.Base64
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -22,22 +21,23 @@ import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.*
 import com.github.goldy1992.mp3player.client.ui.*
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
+import com.github.goldy1992.mp3player.client.ui.lists.albums.AlbumsList
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
+import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState
+import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.apache.commons.collections4.CollectionUtils.isEmpty
-import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import java.util.*
 
 private const val logTag = "LibraryScreen"
@@ -48,9 +48,11 @@ private const val logTag = "LibraryScreen"
  * @param pagerState The [PagerState].
  * @param viewModel The [LibraryScreenViewModel].
  */
-@OptIn(ExperimentalMaterial3Api::class)
-@ExperimentalMaterialApi
-@ExperimentalPagerApi
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalAnimationApi::class,
+    ExperimentalMaterialApi::class,
+    ExperimentalPagerApi::class)
 @Composable
 fun LibraryScreen(navController: NavController = rememberAnimatedNavController(),
                   pagerState: PagerState = rememberPagerState(initialPage = 0),
@@ -59,30 +61,47 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
                   scope: CoroutineScope = rememberCoroutineScope()
 ) {
     val rootItems by viewModel.rootItems.collectAsState()
-    val rootItemsMap by viewModel.rootItemMap.collectAsState()
+    val songs by viewModel.songs.collectAsState()
+    val folders by viewModel.folders.collectAsState()
+    val albums by viewModel.albums.collectAsState()
+
     val isPlaying by viewModel.isPlaying.collectAsState()
     val currentMediaItem by viewModel.currentMediaItem.collectAsState()
 
-    val onSongSelected : (Int, List<MediaItem>) -> Unit =  {
+    val onSongSelected : (Int, Songs) -> Unit =  {
             itemIndex, mediaItemList ->
-        viewModel.playFromSongList(itemIndex, mediaItemList)
+        viewModel.playPlaylist(MediaItemType.SONGS.name, mediaItemList, itemIndex)
     }
-    val onFolderSelected : (MediaItem) -> Unit = {
-
-        val folderId = it.mediaId
-        val encodedFolderLibraryId = Uri.encode(folderId)
-        val directoryPath = MediaItemUtils.getDirectoryPath(it)
-        val encodedFolderPath = Uri.encode(directoryPath)
-        val folderName = MediaItemUtils.getDirectoryName(it)
+    val onFolderSelected : (Folder) -> Unit = {
+        val encodedFolderLibraryId = it.encodedLibraryId
+        val encodedFolderPath = it.encodedPath
+        val folderName = it.name
+        Log.w(logTag, "Folder name: ${folderName}")
         navController.navigate(
             Screen.FOLDER.name
                     + "/" + encodedFolderLibraryId
                     + "/" + folderName
                     + "/" + encodedFolderPath)
     }
+
+    val onAlbumSelected : (Album) -> Unit = {
+        val albumId = it.id
+        val albumTitle = it.albumTitle
+        val albumArtist = it.albumArtist
+        val albumArtUriBase64 = Base64.encodeToString(it.albumArt.toString().encodeToByteArray(), Base64.DEFAULT)
+        Log.w(logTag, "Album ${albumTitle} uri: ${it.albumArt}")
+        navController.navigate(
+            Screen.ALBUM.name
+                    + "/" + albumId
+                    + "/" + albumTitle
+                    + "/" + albumArtist
+                    + "/" + albumArtUriBase64)
+    }
+
     val onItemSelectedMap : EnumMap<MediaItemType, Any> = EnumMap(MediaItemType::class.java)
     onItemSelectedMap[MediaItemType.SONGS] = onSongSelected
     onItemSelectedMap[MediaItemType.FOLDERS] = onFolderSelected
+    onItemSelectedMap[MediaItemType.ALBUMS] = onAlbumSelected
 
     val navDrawerContent : @Composable () -> Unit = {
         NavigationDrawerContent(
@@ -90,13 +109,16 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
             currentScreen = Screen.LIBRARY
         )
     }
+
     val libraryScreenContent : @Composable (PaddingValues) -> Unit = {
         LibraryScreenContent(
             scope = scope,
             pagerState = pagerState,
             rootItemsProvider =  { rootItems },
             onItemSelectedMapProvider = { onItemSelectedMap },
-            rootItemsMapProvider = { rootItemsMap },
+            songs = { songs },
+            folders = { folders },
+            albums = { albums },
             currentMediaItemProvider = { currentMediaItem },
             isPlayingProvider = { isPlaying },
             modifier = Modifier.padding(it)
@@ -107,11 +129,14 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
             isPlayingProvider = { isPlaying },
-            onClickPlay = { viewModel.play() },
-            onClickPause = {viewModel.pause() },
+            onClickPlay = { viewModel.play()
+                          Log.i(logTag, "clicked play")},
+            onClickPause = {viewModel.pause()
+                           Log.i(logTag, "clicked pause")},
             onClickSkipPrevious = { viewModel.skipToPrevious() },
             onClickSkipNext = { viewModel.skipToNext() },
-            onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)}
+            onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)},
+            currentSongProvider = { currentMediaItem }
         )
     }
     val context = LocalContext.current
@@ -227,13 +252,14 @@ fun SmallLibraryScreen(
 @Composable
 private fun LibraryTabs(
     pagerState: PagerState,
-    rootItemsProvider:  () -> List<MediaItem>,
+    rootItemsProvider:  () -> LibraryResultState,
     scope: CoroutineScope
 ) {
 
-    val rootItems = rootItemsProvider()
+    val rootItemsState = rootItemsProvider()
 
-    if (isNotEmpty(rootItems)) {
+    if (rootItemsState.state == State.LOADED) {
+        val rootItems = rootItemsState.results
         Column {
             ScrollableTabRow(
                 selectedTabIndex = pagerState.currentPage,
@@ -246,7 +272,7 @@ private fun LibraryTabs(
                         content = {
                             Text(
                                 text = getRootMediaItemType(item = item)?.name ?: Constants.UNKNOWN,
-                                style = androidx.compose.material.MaterialTheme.typography.button,
+                                style = MaterialTheme.typography.titleSmall,
                                 color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
                             )
                         },
@@ -274,10 +300,12 @@ fun LibraryScreenContent(
     modifier: Modifier = Modifier,
     scope: CoroutineScope = rememberCoroutineScope(),
     pagerState: PagerState = rememberPagerState(initialPage = 0),
-    rootItemsProvider: () -> List<MediaItem>,
+    rootItemsProvider: () -> LibraryResultState,
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
-    rootItemsMapProvider : () -> HashMap<String, List<MediaItem>> = { HashMap() },
-    currentMediaItemProvider : () -> MediaItem = {MediaItem.EMPTY},
+    songs : () -> Songs = { Songs(State.NOT_LOADED) },
+    folders : () -> Folders = { Folders(State.NOT_LOADED) },
+    albums : () -> Albums = { Albums(State.NOT_LOADED) },
+    currentMediaItemProvider : () -> Song = {Song()},
     isPlayingProvider : () -> Boolean = {false}
 
 ) {
@@ -292,8 +320,9 @@ fun LibraryScreenContent(
         Row(modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)) {
             TabBarPages(
                 pagerState = pagerState,
-                rootItemsMapProvider = rootItemsMapProvider,
-                rootItemsProvider = rootItemsProvider,
+                songs = songs,
+                folders = folders,
+                albums = albums,
                 currentMediaItemProvider = currentMediaItemProvider,
                 onItemSelectedMapProvider = onItemSelectedMapProvider,
                 isPlayingProvider = isPlayingProvider
@@ -319,60 +348,58 @@ fun TabBarPages(
     modifier: Modifier = Modifier,
     pagerState: PagerState = rememberPagerState(),
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
-    rootItemsProvider : () -> List<MediaItem> = { emptyList() },
-    rootItemsMapProvider : () -> HashMap<String, List<MediaItem>> = { HashMap() },
-    currentMediaItemProvider : () -> MediaItem = {MediaItem.EMPTY},
+    songs : () -> Songs = { Songs(State.NOT_LOADED) },
+    folders : () -> Folders = { Folders(State.NOT_LOADED) },
+    albums : () -> Albums = { Albums(State.NOT_LOADED) },
+    currentMediaItemProvider : () -> Song = {Song()},
     isPlayingProvider : () -> Boolean = {false}
 
 ) {
     val onItemSelectedMap = onItemSelectedMapProvider()
-    val rootItemMap = rootItemsMapProvider()
-    val rootItems = rootItemsProvider()
-    Log.i(logTag, "rootItemsMap: ${rootItemMap}")
+    val tabPages = listOf(MediaItemType.SONGS, MediaItemType.FOLDERS, MediaItemType.ALBUMS)
+
     Column(
         modifier = modifier) {
         HorizontalPager(
             state = pagerState,
-            count = rootItemMap.size
+            count = tabPages.size
         ) { pageIndex ->
-            val currentRootItem = rootItems[pageIndex]
-            val children = rootItemMap[currentRootItem.mediaId] ?: emptyList()
-            if (isEmpty(children)) {
-                Column(modifier = Modifier.fillMaxSize(),
-                       horizontalAlignment = Alignment.CenterHorizontally,
-                       verticalArrangement = Arrangement.Center) {
-                    CircularProgressIndicator()
-                }
-
-            } else {
-                when (getRootMediaItemType(currentRootItem)) {
-                    MediaItemType.SONGS -> {
-                        SongList(
-                            songs = children,
-                            isPlayingProvider = isPlayingProvider,
-                            currentMediaItemProvider = currentMediaItemProvider
-                        ) { itemIndex, mediaItemList ->
-                            val callable = onItemSelectedMap[MediaItemType.SONGS] as? (Int, List<MediaItem>) -> Unit
+            val currentDataType = tabPages[pageIndex]
+            when (currentDataType) {
+                MediaItemType.SONGS ->
+                    SongList(
+                        songs = songs(),
+                        isPlayingProvider = isPlayingProvider,
+                        currentSongProvider = { currentMediaItemProvider() }) {
+                            itemIndex : Int, mediaItemList : Songs ->
+                            val callable = onItemSelectedMap[MediaItemType.SONGS] as? (Int, Songs) -> Unit
                             if (callable != null) {
                                 callable(itemIndex, mediaItemList)
                             }
-                            Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItemList[itemIndex].mediaId}")
-                        }
-                        Log.i(logTag, "last song name: ${children.last().mediaMetadata.title}")
                     }
-                    MediaItemType.FOLDERS -> {
-                        FolderList(folders = children) {
+                MediaItemType.FOLDERS -> {
+                    FolderList(folders = folders(),
+                    modifier = Modifier.fillMaxSize()) {
 
+                        val callable =
+                            onItemSelectedMap[MediaItemType.FOLDERS] as? (Folder) -> Unit
+                        if (callable != null) {
+                            callable(it)
+                        }
+                    }
+                }
+                MediaItemType.ALBUMS -> {
+                    AlbumsList(modifier = Modifier.fillMaxSize(),
+                        albums = albums()) {
                             val callable =
-                                onItemSelectedMap[MediaItemType.FOLDERS] as? (MediaItem) -> Unit
+                                onItemSelectedMap[MediaItemType.ALBUMS] as? (Album) -> Unit
                             if (callable != null) {
                                 callable(it)
                             }
                         }
-                    }
-                    else -> {
-                        Log.i("mainScreen", "unrecognised Media Item")
-                    }
+                }
+                else -> {
+                    Log.i("mainScreen", "unrecognised Media Item")
                 }
             }
         }
@@ -386,10 +413,7 @@ fun LargeAppBar(title : String,
 ) {
     TopAppBar(
         title = {
-            Text(text = title,
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
+            Text(text = title)
         },
         actions = {
             IconButton(onClick = onSearchIconClicked) {

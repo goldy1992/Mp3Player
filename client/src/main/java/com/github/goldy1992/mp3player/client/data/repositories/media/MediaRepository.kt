@@ -21,6 +21,8 @@ interface MediaRepository {
 
     fun currentMediaItem() : Flow<MediaItem>
 
+    fun currentPlaylistMetadata() : Flow<MediaMetadata>
+
     fun currentSearchQuery() : Flow<String>
 
     fun isPlaying() : Flow<Boolean>
@@ -55,6 +57,8 @@ interface MediaRepository {
 
     suspend fun getLibraryRoot() : MediaItem
 
+    suspend fun getCurrentPlaybackPosition(): Long
+
     suspend fun getSearchResults(query: String, page : Int = 0, pageSize : Int = 20) : List<MediaItem>
 
     suspend fun pause()
@@ -63,7 +67,7 @@ interface MediaRepository {
 
     suspend fun play(mediaItem : MediaItem)
 
-    suspend fun playFromSongList(itemIndex : Int, items : List<MediaItem>)
+    suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistMetadata: MediaMetadata)
 
     suspend fun playFromUri(uri: Uri?, extras: Bundle?)
 

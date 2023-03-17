@@ -5,7 +5,6 @@ import android.provider.MediaStore
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
-import com.github.goldy1992.mp3player.service.library.content.request.ContentRequest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -31,7 +30,6 @@ class FoldersRetrieverTest : ContentResolverRetrieverTestBase<FoldersRetriever?>
 
     @Test
     fun testGetChildren() {
-        contentRequest = ContentRequest("x", "y", "z")
         val directoryPath = "/a/b/c"
         val directoryName = "c"
         // use mock file to avoid different OS path styles
@@ -43,10 +41,10 @@ class FoldersRetrieverTest : ContentResolverRetrieverTestBase<FoldersRetriever?>
                 .build()
         expectedResult.add(mediaItem)
         whenever(contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, retriever!!.projection, null, null, null)).thenReturn(cursor)
-        whenever(resultsParser.create(cursor, contentRequest!!.mediaIdPrefix!!)).thenReturn(expectedResult)
+        whenever(resultsParser.create(cursor)).thenReturn(expectedResult)
         /* IN ORDER for the database update code to be hit, there needs to be difference in file
         numbers to call it. This is a flaw in the design and will be addressed in another issue */
-        val result = retriever!!.getChildren(contentRequest!!)
+        val result = retriever!!.getChildren(mediaItem.mediaId)
         // call remaining looper messages
         Shadows.shadowOf(Looper.getMainLooper()).idle()
         // assert results are the expected ones

@@ -7,8 +7,8 @@ import com.github.goldy1992.mp3player.service.TestConstants
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.filter.FolderSearchResultsFilter
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
-import com.github.goldy1992.mp3player.service.library.search.Folder
-import com.github.goldy1992.mp3player.service.library.search.FolderDao
+import com.github.goldy1992.mp3player.service.library.data.search.Folder
+import com.github.goldy1992.mp3player.service.library.data.search.FolderDao
 import kotlinx.coroutines.CoroutineScope
 import org.apache.commons.lang3.StringUtils
 import java.util.ArrayList

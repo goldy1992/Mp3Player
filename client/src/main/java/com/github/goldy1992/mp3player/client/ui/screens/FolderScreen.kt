@@ -5,28 +5,42 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
-import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
-import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
+import com.github.goldy1992.mp3player.client.data.Folder
+import com.github.goldy1992.mp3player.client.data.Song
+import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.WindowSize
+import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
+import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
+import com.github.goldy1992.mp3player.client.ui.lists.songs.EmptySongsList
+import com.github.goldy1992.mp3player.client.ui.lists.songs.LoadedSongsListWithHeader
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
+import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.client.utils.TimerUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.apache.commons.collections4.CollectionUtils.isEmpty
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+private const val logTag = "FolderScreen"
+
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalAnimationApi::class)
 @Composable
 fun FolderScreen(
     navController: NavController = rememberAnimatedNavController(),
@@ -35,15 +49,12 @@ fun FolderScreen(
 ) {
     val scope = rememberCoroutineScope()
     val isPlaying by viewModel.isPlaying.collectAsState()
-    val folderItems by viewModel.folderChildren.collectAsState()
-    val currentMediaItem by viewModel.currentMediaItem.collectAsState()
-    val folderName = viewModel.folderName
+    val currentSong by viewModel.currentMediaItem.collectAsState()
+    val folder : Folder by viewModel.folder.collectAsState()
 
-    val onSongSelected : (Int, List<MediaItem>) -> Unit = { itemIndex, mediaItemList ->
-        val mediaItem = mediaItemList[itemIndex]
-        Log.i("ON_CLICK_SONG", "clicked song with id : ${mediaItem.mediaId}")
-        viewModel.playFromSongList(itemIndex, mediaItemList)
-    }
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
+    val onSongSelected : (Int, Songs) -> Unit = { itemIndex, songs -> viewModel.playPlaylist(folder.songs, itemIndex) }
 
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
@@ -53,6 +64,30 @@ fun FolderScreen(
             onClickSkipPrevious = { viewModel.skipToPrevious() },
             onClickSkipNext = { viewModel.skipToNext() },
             onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)}
+        )
+    }
+
+    val topBar : @Composable () -> Unit = {
+        LargeTopAppBar(
+            scrollBehavior = scrollBehavior,
+            title = {
+                Column {
+                    Text(
+                        text = folder.name,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            },
+            navigationIcon = {
+                IconButton(onClick = {
+                    scope.launch {
+                        navController.popBackStack()
+                    }
+                }) {
+                    Icon(Icons.Filled.ArrowBack, "Back")
+                }
+            },
+            actions = {},
         )
     }
 
@@ -67,8 +102,8 @@ fun FolderScreen(
         FolderScreenContent(
             modifier = Modifier.padding(it),
             isPlayingProvider = {isPlaying},
-            folderItemsProvider = { folderItems},
-            currentMediaItemProvider = { currentMediaItem },
+            folderProvider = { folder },
+            currentSong = { currentSong },
             onSongSelected = onSongSelected
         )
     }
@@ -76,77 +111,15 @@ fun FolderScreen(
     val isLargeScreen = windowSize == WindowSize.Expanded
     if (isLargeScreen) {
         LargeFolderScreen(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Column {
-                            Text(
-                                text = folderName,
-                                style = MaterialTheme.typography.titleLarge,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-//                            Text(
-//                                text = folderPath,
-//                                style = MaterialTheme.typography.subtitle2,
-//                                maxLines = 1,
-//                                overflow = TextOverflow.Ellipsis
-//                            )
-                        }
-                    },
-
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            scope.launch {
-                                navController.popBackStack()
-                            }
-                        }) {
-                            Icon(Icons.Filled.ArrowBack, "Back",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                        }
-                    },
-                    actions = {},
-                )
-            },
+            topBar = topBar,
             bottomBar = bottomBar,
             navDrawerContent = navDrawerContent,
             content = screenContent
         )
     } else {
         SmallFolderScreen(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Column {
-                            Text(
-                                text = folderName,
-                                style = MaterialTheme.typography.titleLarge,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-//                            Text(
-//                                text = folderPath,
-//                                style = MaterialTheme.typography.subtitle2,
-//                                maxLines = 1,
-//                                overflow = TextOverflow.Ellipsis
-//                            )
-                        }
-                    },
-
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            scope.launch {
-                                navController.popBackStack()
-                            }
-                        }) {
-                            Icon(Icons.Filled.ArrowBack, "Back")
-                        }
-                    },
-                    actions = {},
-                )
-            },
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = topBar,
             navDrawerContent = navDrawerContent,
             bottomBar = bottomBar,
             content = screenContent
@@ -158,6 +131,7 @@ fun FolderScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SmallFolderScreen(
+    modifier : Modifier = Modifier,
     topBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     navDrawerContent: @Composable () -> Unit = {},
@@ -168,6 +142,7 @@ private fun SmallFolderScreen(
         drawerContent = navDrawerContent,
         drawerState = drawerState) {
         Scaffold(
+            modifier = modifier,
             topBar = topBar,
             bottomBar = bottomBar,
             content = content
@@ -180,31 +155,130 @@ private fun SmallFolderScreen(
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 private fun FolderScreenContent(modifier : Modifier = Modifier,
-    folderItemsProvider : () -> List<MediaItem> = { emptyList() },
-    isPlayingProvider : () -> Boolean = { false},
-    currentMediaItemProvider : () -> MediaItem = {MediaItem.EMPTY},
-    onSongSelected : (Int, List<MediaItem>) -> Unit = {_,_ ->}) {
+                                folderProvider : () -> Folder = { Folder()},
+                                isPlayingProvider : () -> Boolean = { false},
+                                currentSong : () -> Song = {Song()},
+                                onSongSelected : (Int, Songs) -> Unit = {_,_->}) {
     Column(modifier = modifier) {
-        val folderItems = folderItemsProvider()
-        if (isEmpty(folderItems)) {
-            Surface(
-                modifier = modifier
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                CircularProgressIndicator()
+        val folder = folderProvider()
+        val folderSongs = folder.songs
+        when (folderSongs.state) {
+            State.LOADING -> {
+                Surface(
+                    modifier = modifier
+                        .align(Alignment.CenterHorizontally)
+                ) {
+                    CircularProgressIndicator()
+                }
             }
-        }
-        else {
-            SongList(
-                songs = folderItems,
-                isPlayingProvider = isPlayingProvider,
-                currentMediaItemProvider = currentMediaItemProvider,
-                onSongSelected = onSongSelected
-            )
+            State.LOADED -> {
+
+                Log.i(logTag, "folder songs size: ${folderSongs.songs.size}")
+                LoadedSongsListWithHeader(
+                    songs = folderSongs,
+                    isPlayingProvider = isPlayingProvider,
+                    currentSong = currentSong(),
+                    onSongSelected = onSongSelected,
+                    headerItem = { HeaderItem(folder = folder)}
+                )
+            }
+            else -> {
+                EmptySongsList()
+            }
         }
     }
 }
 
+@Preview
+@Composable
+private fun HeaderItem(
+    modifier: Modifier = Modifier,
+    folder: Folder = Folder(),
+    clipboardManager: ClipboardManager = LocalClipboardManager.current,
+    scope : CoroutineScope = rememberCoroutineScope()
+) {
+
+    val snackState : SnackbarHostState = remember { SnackbarHostState() }
+    var openDialog by remember { mutableStateOf(false) }
+
+    if (openDialog) {
+        FolderPathDialog(
+            folder = folder,
+            onCopyButtonSelected = {
+                clipboardManager.setText(AnnotatedString(folder.path))
+                scope.launch {
+                    snackState.showSnackbar(
+                        message = "Path copied",
+                        duration = SnackbarDuration.Short,
+                        withDismissAction = true
+                    )
+                }
+            },
+            closeDialog = { openDialog = false}
+        )
+    }
+    Card(modifier.padding(16.dp)) {
+        Divider(Modifier.padding(start = 4.dp, end = 4.dp))
+        Row(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom=8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column (Modifier.weight(0.1f)){
+                Icon(Icons.Outlined.Folder, contentDescription = "")
+            }
+            Column(Modifier.weight(0.8f)) {
+                Text(
+                    modifier = Modifier.padding(start = 4.dp, end = 4.dp),
+                    text = "${folder.path}",
+                    style = MaterialTheme.typography.labelSmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            Column(Modifier.weight(0.1f)) {
+                IconButton(
+                    onClick = {
+                        openDialog = true
+                    }
+                ) {
+                    Icon(Icons.Outlined.OpenInFull, "")
+                }
+
+            }
+            Column(Modifier.weight(0.1f)) {
+                IconButton(
+                    onClick = {
+                        clipboardManager.setText(AnnotatedString(folder.path))
+                        scope.launch {
+                            snackState.showSnackbar(
+                                message = "Path copied",
+                                duration = SnackbarDuration.Short,
+                                withDismissAction = true
+                            )
+                        }
+                    }) {
+                    Icon(Icons.Outlined.ContentCopy, "")
+                }
+
+            }
+        }
+        Divider(Modifier.padding(start = 4.dp, end = 4.dp))
+        Row(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom=8.dp),
+            verticalAlignment = Alignment.CenterVertically) {
+            Icon(Icons.Outlined.Timer, contentDescription = "")
+            Text(
+                modifier = Modifier.padding(start = 4.dp, end = 4.dp),
+                text = TimerUtils.formatTime(folder.totalDuration),
+                style = MaterialTheme.typography.labelSmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        Divider(Modifier.padding(start = 4.dp, end = 4.dp))
+    }
+
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -224,4 +298,39 @@ private fun LargeFolderScreen(
             content = content)
     }
 
+}
+
+@Preview
+@Composable
+private fun FolderPathDialog(folder: Folder = Folder(),
+                             onCopyButtonSelected: () -> Unit = {},
+                            closeDialog : () -> Unit = {}) {
+    AlertDialog(
+        title = { Text(folder.name + " Path") },
+        confirmButton = {
+            IconButton(onClick = { onCopyButtonSelected() }) {
+                Icon(Icons.Outlined.ContentCopy, contentDescription = "")
+            }
+        },
+        text = {
+            Surface(modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp), color = MaterialTheme.colorScheme.surfaceVariant) {
+                Column(
+                    Modifier
+                        .padding(4.dp)
+                        .fillMaxSize()) {
+                    Text(folder.path)
+                }
+            }
+
+        },
+        textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        dismissButton = {
+            IconButton(onClick = { closeDialog() }) {
+                Icon(Icons.Outlined.Close, contentDescription = "")
+            }
+        },
+        onDismissRequest = { closeDialog() }
+    )
 }

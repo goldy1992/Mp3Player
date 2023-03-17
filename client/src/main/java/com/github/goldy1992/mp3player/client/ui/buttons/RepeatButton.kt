@@ -29,7 +29,7 @@ fun RepeatButton(repeatModeProvider : () -> @RepeatMode Int,
 fun RepeatOneButton(onClick : () -> Unit) {
     IconButton(onClick = onClick) {
         Icon(Icons.Filled.RepeatOneOn, contentDescription = stringResource(id = R.string.repeat_one),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            tint = MaterialTheme.colorScheme.primary)
     }
 }
 
@@ -37,7 +37,7 @@ fun RepeatOneButton(onClick : () -> Unit) {
 fun RepeatAllButton(onClick : () -> Unit) {
     IconButton(onClick = onClick) {
         Icon(Icons.Filled.RepeatOn, contentDescription = stringResource(id = R.string.repeat_all),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            tint = MaterialTheme.colorScheme.primary)
     }
 }
 
@@ -45,6 +45,6 @@ fun RepeatAllButton(onClick : () -> Unit) {
 fun RepeatOffButton(onClick : () -> Unit) {
     IconButton(onClick = onClick) {
         Icon(Icons.Filled.Repeat, contentDescription = stringResource(id = R.string.repeat_none),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            tint = MaterialTheme.colorScheme.primary)
     }
 }

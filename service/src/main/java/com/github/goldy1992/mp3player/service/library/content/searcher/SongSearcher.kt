@@ -8,17 +8,17 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.Projections
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
-import com.github.goldy1992.mp3player.service.library.search.Song
-import com.github.goldy1992.mp3player.service.library.search.SongDao
+import com.github.goldy1992.mp3player.service.library.data.search.Song
+import com.github.goldy1992.mp3player.service.library.data.search.SongDao
 import kotlinx.coroutines.CoroutineScope
 import org.apache.commons.lang3.StringUtils
 
 open class SongSearcher
 
     constructor(contentResolver: ContentResolver,
-               resultsParser: SongResultsParser,
-               private val mediaItemTypeIds: MediaItemTypeIds,
-               songDao: SongDao,
+                resultsParser: SongResultsParser,
+                private val mediaItemTypeIds: MediaItemTypeIds,
+                songDao: SongDao,
                 scope: CoroutineScope)
     : ContentResolverSearcher<Song>(
         contentResolver,

@@ -1,12 +1,15 @@
 package com.github.goldy1992.mp3player.commons
 
 import android.net.Uri
+import android.os.Build
+import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
+import android.util.Log
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.Constants.EMPTY_MEDIA_ITEM_ID
 import java.io.File
 
-object MediaItemUtils {
+object MediaItemUtils : LogTagger {
     private fun hasExtras(item: MediaItem?): Boolean {
         return item != null && item.mediaMetadata.extras != null
     }
@@ -107,13 +110,28 @@ object MediaItemUtils {
     }
 
     @JvmStatic
+    fun getDirectoryUri(item: MediaItem?): Uri? {
+        if (hasExtra(MetaDataKeys.META_DATA_DIRECTORY, item)) {
+            val directory = getExtra(MetaDataKeys.META_DATA_DIRECTORY, item) as File?
+            if (null != directory) {
+                return Uri.fromFile(directory)
+            }
+        }
+        return null
+    }
+
+    @JvmStatic
     fun getMediaUri(item: MediaItem): Uri? {
         return item.localConfiguration?.uri
     }
 
     @JvmStatic
     fun getDuration(item: MediaItem): Long {
-        return item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION) as Long ?: 0L
+        Log.i(logTag(), "item: $item")
+        Log.i(logTag(), "metadata: ${item.mediaMetadata}")
+        Log.i(logTag(), "extras: ${item.mediaMetadata.extras}")
+        Log.i(logTag(), "duration: ${item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION)}")
+        return item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION) ?: 0L
     }
 
     @JvmStatic
@@ -121,14 +139,22 @@ object MediaItemUtils {
         return if (hasFileCount(item)) getExtra(Constants.FILE_COUNT, item) as Int else -1
     }
 
+    @SuppressWarnings("deprecation")
     @JvmStatic
-    fun getMediaItemType(item: MediaItem): MediaItemType? {
-        return item.mediaMetadata.extras?.get(Constants.MEDIA_ITEM_TYPE) as MediaItemType?
-    }
-
-    @JvmStatic
-    fun getLibraryId(item: MediaItem?): String? {
-        return getExtra(Constants.LIBRARY_ID, item) as String?
+    fun getMediaItemType(item: MediaItem): MediaItemType {
+        val mediaItemType : MediaItemType? = if (Build.VERSION.SDK_INT >= TIRAMISU) {
+            item.mediaMetadata.extras?.getSerializable(
+                Constants.MEDIA_ITEM_TYPE,
+                MediaItemType::class.java
+            )
+        } else {
+            item.mediaMetadata.extras?.getSerializable(
+                Constants.MEDIA_ITEM_TYPE) as MediaItemType?
+        }
+        if (mediaItemType == null) {
+            Log.w(logTag(), "no MediaItemType found for item ${item.mediaId}")
+        }
+        return mediaItemType ?: MediaItemType.NONE
     }
 
     @JvmStatic
@@ -162,5 +188,30 @@ object MediaItemUtils {
 
     fun isEmptyMediaItem(mediaItem: MediaItem?) : Boolean {
         return mediaItem?.mediaId == EMPTY_MEDIA_ITEM_ID
+    }
+
+    fun noResultsFound(mediaItems : List<MediaItem>) : Boolean {
+        return mediaItems.size == 1 && isEmptyMediaItem(mediaItems.get(0))
+    }
+
+    fun getAlbumTitle(mediaItem: MediaItem) : String {
+        return mediaItem.mediaMetadata.albumTitle.toString()
+    }
+
+    fun getAlbumArtist(mediaItem: MediaItem) : String {
+        return mediaItem.mediaMetadata.albumArtist.toString()
+    }
+
+    fun getAlbumRecordingYear(mediaItem: MediaItem) : String {
+        return mediaItem.mediaMetadata.recordingYear.toString()
+    }
+
+    fun getAlbumReleaseYear(mediaItem: MediaItem) : String {
+        return mediaItem.mediaMetadata.releaseYear.toString()
+    }
+
+
+    override fun logTag(): String {
+        return "MediaItemUtils"
     }
 }

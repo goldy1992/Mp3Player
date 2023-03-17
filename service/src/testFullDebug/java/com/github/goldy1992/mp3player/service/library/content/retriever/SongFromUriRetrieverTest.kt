@@ -80,7 +80,7 @@ class SongFromUriRetrieverTest {
         whenever(contentResolver.query(any(), any(), eq(null), eq(null), eq(null)))
                 .thenReturn(cursor)
         val id = mediaItemTypeIds!!.getId(MediaItemType.SONGS)
-        whenever(songResultsParser.create(cursor, id!!)).thenReturn(listOf(expectedMediaItem))
+        whenever(songResultsParser.create(cursor)).thenReturn(listOf(expectedMediaItem))
         whenever(testUri.scheme).thenReturn(ContentResolver.SCHEME_FILE)
         val result = songFromUriRetriever!!.getSong(testUri)
         Assert.assertEquals(expectedMediaItem, result)

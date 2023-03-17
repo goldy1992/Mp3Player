@@ -64,7 +64,6 @@ android {
     kotlinOptions { jvmTarget = "11" }
 
     testOptions {
-    //    execution 'ANDROIDX_TEST_ORCHESTRATOR'
         animationsDisabled true
 
         unitTests {
@@ -106,7 +105,7 @@ dependencies {
     implementation group: 'androidx.room', name: 'room-ktx', version: room_version
     kapt group: 'androidx.room', name: 'room-compiler', version: room_version
     implementation group: 'androidx.concurrent', name: 'concurrent-futures-ktx', version: '1.1.0'
-
+    implementation group: "androidx.datastore", name: "datastore-preferences", version: datastore_preferences_version
     testImplementation junitUnitTests
 
     testImplementation("org.robolectric:robolectric:$robolectric_version") {
@@ -124,6 +123,9 @@ dependencies {
 
     testImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
     kaptTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
+
+    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
+    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
 
 }
 

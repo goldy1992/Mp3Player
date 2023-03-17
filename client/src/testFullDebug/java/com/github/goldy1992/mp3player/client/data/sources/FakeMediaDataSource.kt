@@ -27,6 +27,10 @@ class FakeMediaDataSource : MediaDataSource {
         return currentMediaItemState
     }
 
+    override fun currentPlaylistMetadata(): Flow<MediaMetadata> {
+        TODO("Not yet implemented")
+    }
+
     val currentSearchQueryState = MutableStateFlow("")
     override fun currentSearchQuery(): Flow<String> {
         return currentSearchQueryState
@@ -88,6 +92,9 @@ class FakeMediaDataSource : MediaDataSource {
     }
 
     override suspend fun changePlaybackSpeed(speed: Float) { }
+    override suspend fun getCurrentPlaybackPosition(): Long {
+        TODO("Not yet implemented")
+    }
 
     var getChildrenValue = emptyList<MediaItem>()
     override suspend fun getChildren(
@@ -116,9 +123,12 @@ class FakeMediaDataSource : MediaDataSource {
     override suspend fun play() {    }
 
     override suspend fun play(mediaItem: MediaItem) {    }
-
-    override suspend fun playFromSongList(itemIndex: Int, items: List<MediaItem>) {    }
-
+    override suspend fun playFromPlaylist(
+        items: List<MediaItem>,
+        itemIndex: Int,
+        playlistMetadata: MediaMetadata
+    ) {
+    }
     override suspend fun playFromUri(uri: Uri?, extras: Bundle?) { }
 
     override suspend fun prepareFromMediaId(mediaItem: MediaItem) {   }

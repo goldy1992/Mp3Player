@@ -7,25 +7,35 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 
 @Composable
-fun SkipToPreviousButton(onClick : () -> Unit = {} ) {
-    IconButton(onClick = { onClick() }){
+fun SkipToPreviousButton(
+                        modifier: Modifier = Modifier,
+                        onClick : () -> Unit = {} ) {
+    IconButton(
+        modifier = modifier,
+        onClick = { onClick() }){
         Icon(
-            Icons.Filled.SkipPrevious,
-            "Skip to Previous",
-            tint = MaterialTheme.colorScheme.primary
+            imageVector = Icons.Filled.SkipPrevious,
+            contentDescription = "Skip to Previous",
+            tint = MaterialTheme.colorScheme.primary,
+        //    modifier = modifier,
         )
     }
 }
 
 @Composable
-fun SkipToNextButton(onClick: () -> Unit = {}) {
-    IconButton(onClick = { onClick() }) {
+fun SkipToNextButton(modifier: Modifier = Modifier,
+                    onClick: () -> Unit = {}) {
+    IconButton(
+        onClick = { onClick() },
+        modifier = modifier) {
         Icon(
-            Icons.Filled.SkipNext,
-            "Skip to Previous",
-            tint = MaterialTheme.colorScheme.primary
+            imageVector = Icons.Filled.SkipNext,
+            contentDescription = "Skip to Previous",
+            tint = MaterialTheme.colorScheme.primary,
+    //        modifier = modifier,
         )
     }
 }

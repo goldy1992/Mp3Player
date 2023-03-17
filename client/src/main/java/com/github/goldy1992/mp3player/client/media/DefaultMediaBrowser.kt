@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.media
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -19,43 +20,49 @@ import com.github.goldy1992.mp3player.commons.*
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME_KEY
+import com.github.goldy1992.mp3player.commons.Constants.PLAYLIST_ID
+import com.github.goldy1992.mp3player.commons.LoggingUtils.getPlayerEventsLogMessage
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.StringUtils.isEmpty
-import javax.inject.Inject
 
 /**
  * Default implementation of the [IMediaBrowser].
  */
 class DefaultMediaBrowser
-    @Inject
+
     constructor(
-        asyncMediaBrowserProvider: AsyncMediaBrowserProvider,
+        @ApplicationContext private val context: Context,
+        sessionToken: SessionToken,
         private val scope : CoroutineScope,
         @MainDispatcher private val mainDispatcher : CoroutineDispatcher) : IMediaBrowser, MediaBrowser.Listener, LogTagger {
 
-    private val mediaBrowserFuture: ListenableFuture<MediaBrowser> = asyncMediaBrowserProvider.getAsyncMediaBrowser(this)
+    private val mediaBrowserFuture: ListenableFuture<MediaBrowser> = MediaBrowser
+        .Builder(context, sessionToken)
+        .setListener(this)
+        .buildAsync()
 
     private val _playerEventsFlow : Flow<PlayerEventHolder> = callbackFlow {
         val controller = mediaBrowserFuture.await()
+        Log.i(logTag(), "player event controller awaiter")
         val messageListener = object : Player.Listener {
             override fun onEvents(player: Player, events: Player.Events) {
+                Log.i(logTag(), "player event: ${events}")
                 trySend(PlayerEventHolder(player, events))
             }
         }
         controller.addListener(messageListener)
-        awaitClose { controller.removeListener(messageListener) }
-    }.shareIn(
-        scope = scope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
-    )
+        awaitClose {
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
+        }
+    }
 
     private val _onCustomCommandFlow : Flow<SessionCommandEventHolder> = callbackFlow<SessionCommandEventHolder> {
         val messageListener = object : MediaBrowser.Listener {
@@ -81,6 +88,12 @@ class DefaultMediaBrowser
 
     private val _metadataFlow : Flow<MediaMetadata> = callbackFlow {
         val controller = mediaBrowserFuture.await()
+        Log.i(logTag(), "event isPlaying mediabrowser awaited")
+        var currentMediaMetadata : MediaMetadata
+        withContext(mainDispatcher) {
+            currentMediaMetadata = controller.mediaMetadata
+        }
+        trySend(currentMediaMetadata)
         val messageListener = object : Player.Listener {
             override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
                 Log.i(logTag(), "onMediaMetadataChanged: $mediaMetadata")
@@ -89,8 +102,9 @@ class DefaultMediaBrowser
         }
         controller.addListener(messageListener)
         awaitClose {
-
-            controller.removeListener(messageListener)
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
         }
     }.shareIn(
         scope = scope,
@@ -124,9 +138,10 @@ class DefaultMediaBrowser
         if (mediaItem == null) {
             Log.w(logTag(), "Current MediaItem is null")
         }
-        mediaItem ?: MediaItem.EMPTY
-
-    }.shareIn(
+        mediaItem
+    }
+    .filterNotNull()
+    .shareIn(
         scope = scope,
         started = SharingStarted.WhileSubscribed(),
         replay = 1
@@ -135,8 +150,41 @@ class DefaultMediaBrowser
         return _currentMediaItemFlow
     }
 
-    private val _isPlayingFlow : Flow<Boolean> = callbackFlow<Boolean> {
+    private val _currentPlaylistMetadataFlow : Flow<MediaMetadata> = callbackFlow {
         val controller = mediaBrowserFuture.await()
+        runBlocking(mainDispatcher) {
+            trySend(controller.playlistMetadata)
+        }
+        val messageListener = object  : Player.Listener {
+            override fun onPlaylistMetadataChanged(mediaMetadata: MediaMetadata) {
+                Log.i(logTag(), "PlaylistMeta data: ${mediaMetadata.extras?.getString(PLAYLIST_ID) ?: Constants.UNKNOWN}")
+                trySend(mediaMetadata)
+            }
+        }
+        controller.addListener(messageListener)
+        awaitClose {
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
+        }
+    }
+    .shareIn(
+        scope = scope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1
+    )
+    override fun currentPlaylistMetadata(): Flow<MediaMetadata> {
+        return _currentPlaylistMetadataFlow
+    }
+
+    private val _isPlayingFlow : Flow<Boolean> = callbackFlow {
+        val controller = mediaBrowserFuture.await()
+        Log.i(logTag(), "event isPlaying mediabrowser awaited")
+        var isPlaying : Boolean
+        withContext(mainDispatcher) {
+            isPlaying = controller.isPlaying
+        }
+        trySend(isPlaying)
         val messageListener = object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 Log.i(logTag(), "onIsPlayingChanged: $isPlaying")
@@ -145,7 +193,9 @@ class DefaultMediaBrowser
         }
         controller.addListener(messageListener)
         awaitClose {
-            controller.removeListener(messageListener)
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
         }
     }.shareIn(
         scope= scope,
@@ -161,11 +211,16 @@ class DefaultMediaBrowser
         val controller = mediaBrowserFuture.await()
         val messageListener = object : Player.Listener {
             override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+                Log.i(logTag(), "onShuffleModeEnabledChanged invoked with value: $shuffleModeEnabled")
                 trySend(shuffleModeEnabled)
             }
         }
         controller.addListener(messageListener)
-        awaitClose { controller.removeListener(messageListener) }
+        awaitClose {
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
+        }
     }.shareIn(
         scope = scope,
         started = SharingStarted.WhileSubscribed(),
@@ -219,7 +274,9 @@ class DefaultMediaBrowser
             }
         }
         listeners.add(messageListener)
-        awaitClose()
+        awaitClose {
+            listeners.remove(messageListener)
+        }
     }.shareIn(
         scope = scope,
         started = SharingStarted.WhileSubscribed(),
@@ -237,7 +294,11 @@ class DefaultMediaBrowser
             }
         }
         controller.addListener(messageListener)
-        awaitClose { controller.removeListener(messageListener) }
+        awaitClose {
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
+        }
     }.shareIn(
         scope = scope,
         started = SharingStarted.WhileSubscribed(),
@@ -247,22 +308,45 @@ class DefaultMediaBrowser
         return _playbackParametersFlow
     }
 
+    val playbackPositionEvents : @Player.Event IntArray = intArrayOf(
+        Player.EVENT_POSITION_DISCONTINUITY,
+        Player.EVENT_IS_PLAYING_CHANGED,
+        Player.EVENT_PLAYBACK_PARAMETERS_CHANGED
+    )
+
     private val _playbackPositionFlow : Flow<PlaybackPositionEvent> = callbackFlow {
         val controller = mediaBrowserFuture.await()
+        withContext(mainDispatcher) {
+            trySend(
+                PlaybackPositionEvent(
+                    controller.isPlaying,
+                    controller.currentPosition,
+                    TimerUtils.getSystemTime()
+                )
+            )
+        }
         val messageListener = object : Player.Listener {
-            override fun onIsPlayingChanged(isPlaying: Boolean) {
-                Log.i(logTag(), "onIsPlayingChanged: $isPlaying")
-                trySend(PlaybackPositionEvent(isPlaying, controller.currentPosition, TimerUtils.getSystemTime()))
+            override fun onEvents(player: Player, events: Player.Events) {
+                if (events.containsAny( *playbackPositionEvents )) {
+                    val currentPosition = player.currentPosition
+                    val isPlaying = player.isPlaying
+                    Log.i(logTag(), "playbackPosition changed due to ${getPlayerEventsLogMessage(events)} with position $currentPosition, isPlaying: $isPlaying")
+                    trySend(PlaybackPositionEvent(isPlaying, currentPosition, TimerUtils.getSystemTime()))
+                }
             }
-
             override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
                 val isPlaying = controller.isPlaying
-                trySend(PlaybackPositionEvent(isPlaying, controller.currentPosition, TimerUtils.getSystemTime()))
+                val currentPosition = controller.currentPosition
+
+
+                trySend(PlaybackPositionEvent(isPlaying, currentPosition, TimerUtils.getSystemTime()))
             }
         }
         controller.addListener(messageListener)
         awaitClose {
-            controller.removeListener(messageListener)
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
         }
     }.shareIn(
         scope = scope,
@@ -287,13 +371,38 @@ class DefaultMediaBrowser
 
     private val events : @Player.Event IntArray = intArrayOf(
         Player.EVENT_MEDIA_ITEM_TRANSITION,
-        Player.EVENT_TIMELINE_CHANGED
+        Player.EVENT_TIMELINE_CHANGED,
+        Player.EVENT_TRACKS_CHANGED,
+        Player.EVENT_MEDIA_METADATA_CHANGED
     )
-    private val _queueFlow : Flow<QueueState> = _playerEventsFlow
-        .filter { it.events.containsAny( *events ) }
-        .map {
-            getQueue(it.player!!)
-        }.shareIn(
+    private val _queueFlow : Flow<QueueState> = callbackFlow {
+
+        val controller = mediaBrowserFuture.await()
+        var queue: QueueState
+        withContext(mainDispatcher) {
+            queue = getQueue( controller)
+        }
+
+        trySend(queue)
+
+        Log.i(logTag(), "player event controller awaiter")
+        val messageListener = object : Player.Listener {
+            override fun onEvents(player: Player, event: Player.Events) {
+                val e = getPlayerEventsLogMessage(event)
+                Log.i(logTag(), "queue event logged ${e}")
+                if (event.containsAny( *events )) {
+
+                    trySend(getQueue(player))
+                }
+            }
+        }
+        controller.addListener(messageListener)
+        awaitClose {
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
+        }
+    }.shareIn(
             scope = scope,
             started = SharingStarted.WhileSubscribed(),
             replay = 1
@@ -311,7 +420,11 @@ class DefaultMediaBrowser
             }
         }
         controller.addListener(messageListener)
-        awaitClose { controller.removeListener(messageListener) }
+        awaitClose {
+            scope.launch(mainDispatcher) {
+                controller.removeListener(messageListener)
+            }
+        }
     }.shareIn(
         scope = scope,
         started = SharingStarted.WhileSubscribed(),
@@ -327,6 +440,15 @@ class DefaultMediaBrowser
         val changePlaybackSpeedCommand = SessionCommand(CHANGE_PLAYBACK_SPEED, extras)
         mediaBrowserFuture.await().sendCustomCommand(changePlaybackSpeedCommand, extras).await()
 
+    }
+
+    override suspend fun getCurrentPlaybackPosition(): Long {
+        var toReturn : Long
+        val mediaBrowser = mediaBrowserFuture.await()
+        runBlocking(mainDispatcher) {
+            toReturn = mediaBrowser.currentPosition
+        }
+        return toReturn
     }
 
     override suspend fun getChildren(
@@ -371,7 +493,12 @@ class DefaultMediaBrowser
     }
 
     override suspend fun play() {
-        mediaBrowserFuture.await().play()
+        Log.i(logTag(), "play clicked waiting for mediaBrowser")
+        val mediaBrowser = mediaBrowserFuture.await()
+        Log.i(logTag(), "mediaBrowser retrieved, calling play")
+        LoggingUtils.logPlaybackState(mediaBrowser.playbackState, logTag())
+        mediaBrowser.play()
+        Log.i(logTag(), "play was called")
     }
 
     override suspend fun play(mediaItem: MediaItem) {
@@ -382,13 +509,16 @@ class DefaultMediaBrowser
 
     }
 
-    override suspend fun playFromSongList(itemIndex: Int, items: List<MediaItem>) {
+    override suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistMetadata: MediaMetadata) {
+        Log.i(logTag(), "Hit playSongFromList with metadata: $playlistMetadata")
         val mediaBrowser = mediaBrowserFuture.await()
-        mediaBrowser.clearMediaItems()
-        mediaBrowser.addMediaItems(items)
-        mediaBrowser.seekTo(itemIndex, 0L)
-        mediaBrowser.prepare()
+        mediaBrowser.setMediaItems(items, itemIndex, 0L)
+
+        Log.i(logTag(), "Set playlist metadata to ${playlistMetadata.extras?.getString(PLAYLIST_ID)}")
         mediaBrowser.play()
+        mediaBrowser.playlistMetadata = playlistMetadata
+
+        Log.i(logTag(), "Completed playSongFromList")
     }
 
     override suspend fun playFromUri(uri: Uri?, extras: Bundle?) {
@@ -421,6 +551,7 @@ class DefaultMediaBrowser
     }
 
     override suspend fun setShuffleMode(shuffleModeEnabled: Boolean) {
+        Log.i(logTag(), "Setting shuffle mode enabled with value: $shuffleModeEnabled")
         mediaBrowserFuture.await().shuffleModeEnabled = shuffleModeEnabled
     }
 
@@ -438,6 +569,12 @@ class DefaultMediaBrowser
 
     override suspend fun subscribe(id: String) {
         mediaBrowserFuture.await().subscribe(id, MediaLibraryService.LibraryParams.Builder().build())
+    }
+
+    override fun release() {
+        Log.i(logTag(), "releasing MediaBrowser")
+        MediaBrowser.releaseFuture(mediaBrowserFuture)
+        Log.i(logTag(), "MediaBrowser released")
     }
 
     // The set of all listeners which are made by the Callback Flows
