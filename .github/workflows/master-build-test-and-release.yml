@@ -1,8 +1,12 @@
-name: Master Build and Test Workflow
+name: Master Build, Test and Release Workflow
 on:
   push:
     branches:
       - master
+
+env:
+  SHOULD_RELEASE_TO_PLAYSTORE: false
+
 jobs:
   master-build-and-test:
     permissions:
@@ -81,12 +85,6 @@ jobs:
       - name: Grab remote reports and arifacts and store locally
         run: gsutil -m cp -R -U gs://test-lab-$BUCKET_ID/**/sdcard/coverage.ec $TEST_OUTPUT_FOLDER || true
 
-#      - name: Create Aggregrated JaCoCo Test Report.
-#        run: ./gradlew jacocoCombinedUnitTestAndroidTestReport --stacktrace -PdisablePreDex
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
       - name: Gradle and create Debug test report
         run: ./gradlew createDebugUnitTestCoverageReport
       - name: Gradle and create FullDebug test report
@@ -98,3 +96,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  semantic-release:
+      needs: [ master-build-and-test ]
+      uses: ./.github/workflows/github-semantic-release.yml
+      # Secrets for the env, declared in reusuable workflow must be "declared" in the parent file
+      # See: https://github.com/orgs/community/discussions/25238
+      secrets:
+        SEMANTIC_RELEASE_FINE_GRAINED_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
+
+    release-to-playstore:
+      needs: [ semantic-release ] # needs semantic release so that the versions are incremented
+      if: needs.semantic-release.outputs.performed_release == 'true'
+      uses: ./.github/workflows/google-play-store-release.yml
+      secrets:
+        KEY_STORE_BASE64: ${{ secrets.KEY_STORE_BASE64 }}
+        KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        RELEASE_SERVICE_ACCOUNT_JSON: ${{ secrets.RELEASE_SERVICE_ACCOUNT_JSON }}
