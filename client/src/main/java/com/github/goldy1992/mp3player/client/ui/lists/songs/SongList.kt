@@ -35,7 +35,6 @@ fun SongList(
     songs : Songs = Songs(State.NOT_LOADED),
     isPlayingProvider : () -> Boolean = {false},
     currentSongProvider : () -> Song = { Song() },
-    headerItem : (@Composable () -> Unit)?,
     onSongSelected : (itemIndex: Int, songs : Songs) -> Unit = { _, _ -> }) {
 
     Log.i(logTag, "song list size: ${songs.songs.size}")
@@ -46,7 +45,6 @@ fun SongList(
         State.LOADED -> {
             LoadedSongsList(
                 songs,
-                headerItem,
                 modifier,
                 currentMediaItem,
                 isPlayingProvider,
@@ -65,7 +63,6 @@ fun SongList(
 @OptIn(ExperimentalFoundationApi::class)
 private fun LoadedSongsList(
     songs: Songs,
-    headerItem: @Composable() (() -> Unit)?,
     modifier: Modifier,
     currentMediaItem: Song,
     isPlayingProvider: () -> Boolean,
@@ -73,54 +70,23 @@ private fun LoadedSongsList(
 ) {
     val songList = songs.songs
     val songsListDescr = stringResource(id = R.string.songs_list)
-    val hasHeader = headerItem != null
-    val header: @Composable () -> Unit = headerItem ?: {}
-    val itemCount = if (hasHeader) songList.size + 1 else songList.size
+    val itemCount = songList.size
     LazyColumn(
         modifier = modifier.semantics {
             contentDescription = songsListDescr
         }) {
-        items(count = itemCount,
-            key = {
-                if (hasHeader) {
-                    if (it > 0) {
-                        songList[it - 1].id
-                    } else {
-                        "header"
-                    }
-                } else {
-                    songList[it].id
-                }
-            }
+        items(
+            count = itemCount,
+            key = {songList[it].id }
         ) { itemIndex ->
-            if (hasHeader) {
-                if (itemIndex > 0) {
-                    val song = songList[itemIndex - 1]
-                    val isItemSelected = isSongItemSelected(song, currentMediaItem)
-                    //Log.i(logTag, "isItemSelected: $isItemSelected isPlaying: ${isPlaying}")
-                    //val isItemPlaying = if (isPlaying) isItemSelected  else false
-                    SongListItem(
-                        song = song,
-                        isSelected = isItemSelected,
-                        isPlayingProvider = isPlayingProvider,
-                        onClick = { onSongSelected(itemIndex, songs) })
-
-                } else {
-                    header()
-                }
-            } else {
-                val song = songList[itemIndex]
-                val isItemSelected = isSongItemSelected(song, currentMediaItem)
-                //Log.i(logTag, "isItemSelected: $isItemSelected isPlaying: ${isPlaying}")
-                //val isItemPlaying = if (isPlaying) isItemSelected  else false
-                SongListItem(
-                    song = song,
-                    isSelected = isItemSelected,
-                    onClick = { onSongSelected(itemIndex, songs) })
-
-            }
-
+            val song = songList[itemIndex]
+            val isItemSelected = isSongItemSelected(song, currentMediaItem)
+            SongListItem(
+                song = song,
+                isSelected = isItemSelected,
+                onClick = { onSongSelected(itemIndex, songs) })
         }
+
     }
 }
 

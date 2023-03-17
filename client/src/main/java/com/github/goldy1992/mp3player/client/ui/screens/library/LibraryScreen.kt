@@ -370,7 +370,6 @@ fun TabBarPages(
                     SongList(
                         songs = songs(),
                         isPlayingProvider = isPlayingProvider,
-                        headerItem = null,
                         currentSongProvider = { currentMediaItemProvider() }) {
                             itemIndex : Int, mediaItemList : Songs ->
                             val callable = onItemSelectedMap[MediaItemType.SONGS] as? (Int, Songs) -> Unit

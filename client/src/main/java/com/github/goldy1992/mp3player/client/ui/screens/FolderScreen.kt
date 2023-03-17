@@ -27,6 +27,7 @@ import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.lists.songs.EmptySongsList
+import com.github.goldy1992.mp3player.client.ui.lists.songs.LoadedSongsListWithHeader
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.client.utils.TimerUtils
@@ -173,10 +174,10 @@ private fun FolderScreenContent(modifier : Modifier = Modifier,
             State.LOADED -> {
 
                 Log.i(logTag, "folder songs size: ${folderSongs.songs.size}")
-                SongList(
+                LoadedSongsListWithHeader(
                     songs = folderSongs,
                     isPlayingProvider = isPlayingProvider,
-                    currentSongProvider = currentSong,
+                    currentSong = currentSong(),
                     onSongSelected = onSongSelected,
                     headerItem = { HeaderItem(folder = folder)}
                 )
