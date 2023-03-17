@@ -37,7 +37,6 @@ fun SongListItem(song : Song = Song(),
                  isPlayingProvider : () -> Boolean = {false},
                  onClick: () -> Unit = {},
                 containerColor : Color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface) {
-    //Log.i(logTag, "isSelected: $isSelected, songId: ${song.id}, title: ${song.title}")
     ListItem(
             modifier = Modifier
                 .combinedClickable(

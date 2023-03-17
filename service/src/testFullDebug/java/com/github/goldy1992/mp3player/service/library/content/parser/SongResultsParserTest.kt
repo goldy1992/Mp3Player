@@ -3,9 +3,7 @@ package com.github.goldy1992.mp3player.service.library.content.parser
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.net.Uri
-import android.provider.MediaStore
 import androidx.media3.common.MediaItem
-import com.github.goldy1992.mp3player.commons.Constants.ID_SEPARATOR
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
@@ -54,7 +52,6 @@ class SongResultsParserTest : ResultsParserTestBase() {
             val mediaItem2 = temporaryFolder.newFile("uri2")
             expectedMediaItem1 = MediaItemBuilder(MEDIA_ID_1)
                     .setMediaUri(Uri.parse(mediaItem1.absolutePath))
-                    .setLibraryId(ID_PREFIX + ID_SEPARATOR + MEDIA_ID_1)
                     .setDuration(23423L)
                     .setArtist("artist1")
                     .setTitle(COMMON_TITLE)
@@ -63,7 +60,6 @@ class SongResultsParserTest : ResultsParserTestBase() {
                     .build()
             expectedMediaItem2 = MediaItemBuilder(MEDIA_ID_2)
                     .setMediaUri(Uri.parse(mediaItem2.absolutePath))
-                    .setLibraryId(ID_PREFIX + ID_SEPARATOR + MEDIA_ID_2)
                     .setDuration(96406L)
                     .setArtist("artist1")
                     .setTitle(COMMON_TITLE)

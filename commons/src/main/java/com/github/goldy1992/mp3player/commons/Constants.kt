@@ -24,7 +24,6 @@ object Constants {
     const val PACKAGE_NAME = "com.github.goldy1992.mp3player"
     const val MEDIA_ITEM_TYPE = "MEDIA_ITEM_TYPE"
     const val ROOT_ITEM_TYPE = "ROOT_ITEM_TYPE"
-    const val ID_SEPARATOR = "|"
     const val EMPTY_MEDIA_ITEM_ID = "-1"
     const val PACKAGE_NAME_KEY = "package_name_key"
 

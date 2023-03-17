@@ -4,7 +4,6 @@ import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.app.TaskStackBuilder
 import android.content.Intent
-import android.os.Build
 import android.util.Log
 import androidx.media3.common.Player
 import androidx.media3.session.CommandButton
@@ -47,10 +46,7 @@ open class
             .create(service.applicationContext)
             .addNextIntent(intent)
             .run {
-
-                val immutableFlag = if (Build.VERSION.SDK_INT >= 23) FLAG_IMMUTABLE else 0
-                getPendingIntent(0, immutableFlag or FLAG_UPDATE_CURRENT)
-
+                getPendingIntent(0, FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
             }
         val session = MediaLibrarySession.Builder(service, player, mediaLibrarySessionCallback)
             .setSessionActivity(task)

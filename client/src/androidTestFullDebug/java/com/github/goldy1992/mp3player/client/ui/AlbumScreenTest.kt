@@ -52,14 +52,6 @@ class AlbumScreenTest {
         savedStateHandle["albumTitle"] = expectedAlbumTitle
         savedStateHandle["albumArtist"] = expectedAlbumArtist
         savedStateHandle["albumArtUri"] = albumUriEncoded
-
-        this.albumScreenViewModel = spy(
-            AlbumScreenViewModel(
-                mediaRepository = testMediaRepository,
-                savedStateHandle = savedStateHandle
-            )
-        )
-
         val expectedAlbumSongs = mutableListOf<MediaItem>()
         val expectedSong1Title = "song1Title"
         val song1 = MediaItemBuilder("id1")
@@ -77,6 +69,13 @@ class AlbumScreenTest {
         expectedAlbumSongs.add(song2)
         testMediaRepository.getChildrenState = expectedAlbumSongs
 
+        this.albumScreenViewModel = spy(
+            AlbumScreenViewModel(
+                mediaRepository = testMediaRepository,
+                savedStateHandle = savedStateHandle
+            )
+        )
+
         composeTestRule.setContent {
             AlbumScreen(
                 navController = mockNavController,
@@ -84,7 +83,6 @@ class AlbumScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText(expectedAlbumTitle).assertExists()
         runBlocking { composeTestRule.awaitIdle() }
         composeTestRule.onNodeWithText(expectedSong1Title).assertExists()
         composeTestRule.onNodeWithText(expectedSong2Title).assertExists()

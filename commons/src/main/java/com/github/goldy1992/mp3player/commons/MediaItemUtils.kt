@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.Constants.EMPTY_MEDIA_ITEM_ID
-import com.github.goldy1992.mp3player.commons.Constants.UNKNOWN
 import java.io.File
 
 object MediaItemUtils : LogTagger {
@@ -140,6 +139,7 @@ object MediaItemUtils : LogTagger {
         return if (hasFileCount(item)) getExtra(Constants.FILE_COUNT, item) as Int else -1
     }
 
+    @SuppressWarnings("deprecation")
     @JvmStatic
     fun getMediaItemType(item: MediaItem): MediaItemType {
         val mediaItemType : MediaItemType? = if (Build.VERSION.SDK_INT >= TIRAMISU) {

@@ -6,6 +6,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 import androidx.media3.session.MediaLibraryService.LibraryParams
+import com.github.goldy1992.mp3player.commons.IoDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryPath
@@ -14,9 +15,8 @@ import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.data.search.managers.FolderDatabaseManager
 import com.github.goldy1992.mp3player.service.library.data.search.managers.SongDatabaseManager
 import dagger.hilt.android.scopes.ServiceScoped
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.exception.ExceptionUtils
 import javax.inject.Inject
@@ -35,11 +35,12 @@ class AudioObserver
  */
 @Inject constructor(contentResolver: ContentResolver,
                     /** Content manager  */
-                        private val contentManager: ContentManager,
+                    private val contentManager: ContentManager,
                     /** Search Database Manager  */
-                        private val songDatabaseManager: SongDatabaseManager,
+                    private val songDatabaseManager: SongDatabaseManager,
                     /** Search Database Manager  */
-                        private val folderDatabaseManager: FolderDatabaseManager,
+                    private val folderDatabaseManager: FolderDatabaseManager,
+                    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
                     mediaItemTypeIds: MediaItemTypeIds) : MediaStoreObserver(contentResolver, mediaItemTypeIds), LogTagger {
 
     /** {@inheritDoc}  */
@@ -65,7 +66,7 @@ class AudioObserver
     @Suppress("UNUSED_PARAMETER")
     override fun onChange(selfChange: Boolean, uri: Uri?, userId: Int) {
         if (startsWithUri(uri)) {
-                runBlocking {
+                runBlocking(ioDispatcher) {
                     updateSearchDatabase(uri)
                     mediaSession?.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.SONGS), 1, LibraryParams.Builder().build())
                     mediaSession?.notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.FOLDERS), 1, LibraryParams.Builder().build())
@@ -97,11 +98,8 @@ class AudioObserver
                 }
             }
         } else {
-               withContext(Dispatchers.IO) {
-                    songDatabaseManager.reindex()
-                    folderDatabaseManager.reindex()
-                }
-
+            songDatabaseManager.reindex()
+            folderDatabaseManager.reindex()
         }
     }
 

@@ -23,11 +23,8 @@ class AlbumsResultsParser
     override fun create(cursor: Cursor?): List<MediaItem> {
         val listToReturn = TreeSet(this)
         while (cursor != null && cursor.moveToNext()) {
-            // Log.i(logTag(), "mediaIfPrefix: ${mediaIdPrefix ?: "null"}")
             val mediaItem = buildMediaItem(cursor)
-            if (null != mediaItem) {
-                listToReturn.add(mediaItem)
-            }
+            listToReturn.add(mediaItem)
         }
         return ArrayList(listToReturn)
     }

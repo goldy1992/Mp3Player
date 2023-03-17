@@ -59,7 +59,7 @@ class SongsTest {
                 isPlayingProvider = { false },
                 currentSongProvider = { Song()  },
                 onSongSelected = {_,_ ->},
-                headerItem = {})
+            )
         }
 
         val node = composeTestRule.onNodeWithContentDescription(songsListContentDescr)

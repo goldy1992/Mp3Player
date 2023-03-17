@@ -2,8 +2,6 @@ package com.github.goldy1992.mp3player.service.library.content.observers
 
 import android.content.ContentResolver
 import android.content.ContentUris
-import android.os.Handler
-import android.os.Looper
 import android.provider.MediaStore
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
@@ -11,6 +9,8 @@ import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.data.search.managers.FolderDatabaseManager
 import com.github.goldy1992.mp3player.service.library.data.search.managers.SongDatabaseManager
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,6 +18,7 @@ import org.mockito.kotlin.*
 import org.robolectric.RobolectricTestRunner
 import java.io.File
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 class AudioObserverTest {
     private var audioObserver: AudioObserver? = null
@@ -32,18 +33,22 @@ class AudioObserverTest {
     private val folderDatabaseManager: FolderDatabaseManager = mock<FolderDatabaseManager>()
 
     private val mockMediaLibrarySession: MediaLibrarySession = mock()
-    private var handler: Handler? = null
-    
+
+    protected val testScheduler = TestCoroutineScheduler()
+    protected val dispatcher  = UnconfinedTestDispatcher(testScheduler)
+    protected val testScope = TestScope(dispatcher)
+
     @Before
     fun setup() {
-        handler = Handler(Looper.getMainLooper())
         mediaItemTypeIds = MediaItemTypeIds()
         audioObserver = AudioObserver(
                 contentResolver,
                 contentManager,
                 songDatabaseManager,
                 folderDatabaseManager,
-                mediaItemTypeIds!!)
+            dispatcher,
+                mediaItemTypeIds!!
+)
         audioObserver!!.init(mockMediaLibrarySession)
     }
 
@@ -54,7 +59,7 @@ class AudioObserverTest {
     }
 
     @Test
-    fun testOnChangeParsableUriValidIdNoContent() {
+    fun testOnChangeParsableUriValidIdNoContent() = testScope.runTest {
         val expectedId = 2334L
         var uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         uri = ContentUris.withAppendedId(uri, expectedId)

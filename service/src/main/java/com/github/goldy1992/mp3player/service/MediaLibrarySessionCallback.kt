@@ -19,7 +19,10 @@ import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.scopes.ServiceScoped
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @ServiceScoped
@@ -72,10 +75,8 @@ class MediaLibrarySessionCallback
     ): ListenableFuture<LibraryResult<MediaItem>> {
         Log.i(logTag(), "onGetItem called for mediaId: $mediaId")
         var mediaItem : MediaItem?
-        runBlocking {
-            withContext(ioDispatcher) {
-                mediaItem = contentManager.getContentById(mediaId)
-            }
+        runBlocking(ioDispatcher) {
+            mediaItem = contentManager.getContentById(mediaId)
         }
         if (mediaItem == null) {
             Log.i(logTag(), "No media item found for $mediaId, returning empty media item")
