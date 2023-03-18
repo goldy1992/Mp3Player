@@ -21,7 +21,7 @@
 See [release notes.](CHANGELOG.md)
 
 ## Supported Android Versions `
-- Marshmallow and above.`
+- API Version 23 (Marshmallow) and above.`
 
 ## Disclaimer
 Note: All icon images used in this project are free to use and available from [Material Design](http://material.io).
