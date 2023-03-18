@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/goldy1992/Mp3Player/compare/v3.1.0...v3.2.0) (2023-03-18)
+
+
+### Features
+
+* **album:** Implemented the Album Screen and added Play/Pause Button animations. ([fb3b904](https://github.com/goldy1992/Mp3Player/commit/fb3b9040767b061c30bbf26fb8221b90b9d00c2c))
+
 # [3.1.0](https://github.com/goldy1992/Mp3Player/compare/v3.0.0...v3.1.0) (2023-01-02)
 
 
