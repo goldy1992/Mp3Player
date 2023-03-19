@@ -1,4 +1,5 @@
 name: Google Play Store Release Workflow
+run-name: Google Play Store Release
 on:
   workflow_dispatch:
   workflow_call:
@@ -19,6 +20,7 @@ on:
         required: true
 jobs:
   release:
+    name: Release
     env:
       SIGNING_KEY_FILE_NAME: signing_key_file.jks
       SIGNING_KEY_PATH: app/signing_key_file.jks

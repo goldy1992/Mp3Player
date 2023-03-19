@@ -1,4 +1,5 @@
-name: Master Build and Test Workflow
+name: UI Tests Workflow
+run-name: Run UI Tests
 on:
   workflow_dispatch:
   workflow_call:
@@ -9,7 +10,8 @@ on:
         required: true
 
 jobs:
-  master-build-and-test:
+  run-ui-tests:
+    name: Run UI Tests
     permissions:
       contents: 'read'
       id-token: 'write'
