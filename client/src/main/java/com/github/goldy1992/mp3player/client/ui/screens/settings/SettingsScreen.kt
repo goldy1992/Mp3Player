@@ -1,5 +1,7 @@
-@file:OptIn(ExperimentalAnimationApi::class)
-
+@file:OptIn(
+    ExperimentalAnimationApi::class,
+    ExperimentalMaterial3Api::class
+)
 package com.github.goldy1992.mp3player.client.ui.screens.settings
 
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -8,8 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ListItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Help
@@ -43,6 +43,7 @@ import java.util.*
 /**
  *
  */
+
 @Composable
 fun SettingsScreen(
     viewModel : SettingsScreenViewModel = viewModel(),
@@ -131,7 +132,7 @@ private fun SmallSettingsScreen(
     }) {
 
         Scaffold(topBar = {
-            SmallTopAppBar(title = { Text(text = stringResource(id = R.string.settings)) },
+            TopAppBar(title = { Text(text = stringResource(id = R.string.settings)) },
                 navigationIcon = {
                     NavUpButton(
                         navController = navController,
@@ -153,7 +154,7 @@ private fun SmallSettingsScreen(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+
 @Composable
 fun SettingsScreenContent(
     settingsOnClickMap : EnumMap<Settings.Type, Any>,
@@ -184,39 +185,34 @@ fun SettingsScreenContent(
 
 }
 
-
-@OptIn(ExperimentalMaterialApi::class)
-@ExperimentalMaterialApi
 @Composable
 private fun DisplaySubheader() {
     ListItem(
-        text = { Text(stringResource(id = R.string.display), style = MaterialTheme.typography.titleSmall) },
+        headlineText = { Text(stringResource(id = R.string.display), style = MaterialTheme.typography.titleSmall) },
         modifier = Modifier
             .fillMaxWidth()
     )
 }
 
 
-@ExperimentalMaterialApi
 @Composable
 private fun ThemeMenuItem(navController: NavController) {
     val theme = stringResource(id = R.string.theme)
     ListItem(
-        icon = { Icon(Icons.Filled.Palette, contentDescription = theme) },
-        text = { Text(theme, style = MaterialTheme.typography.titleMedium) },
+        leadingContent = { Icon(Icons.Filled.Palette, contentDescription = theme) },
+        headlineText = { Text(theme, style = MaterialTheme.typography.titleMedium) },
         modifier = Modifier.clickable { navController.navigate(Screen.THEME_SELECT.name)}
     )
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun SystemDarkModeMenuItem(useSystemDarkMode : Boolean,
                                    onUpdate : (newValue : Boolean) -> Unit = {_ ->}) {
     val switchDescription = stringResource(id = R.string.system_dark_mode_switch)
     ListItem(modifier = Modifier.fillMaxWidth(),
-        icon = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.system_dark_mode_icon)) },
-        text = { Text(text = stringResource(id = R.string.use_system_dark_mode))},
-        trailing = {
+        leadingContent = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.system_dark_mode_icon)) },
+        headlineText = { Text(text = stringResource(id = R.string.use_system_dark_mode))},
+        trailingContent = {
             Switch(
                 checked = useSystemDarkMode,
                 onCheckedChange = { isChecked -> onUpdate(isChecked) },
@@ -227,16 +223,15 @@ private fun SystemDarkModeMenuItem(useSystemDarkMode : Boolean,
     )
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun DarkModeMenuItem(isDarkMode : Boolean,
                             useSystemDarkMode: Boolean,
                             onUpdate: (newValue: Boolean) -> Unit) {
     val switchDescription = stringResource(id = R.string.dark_mode_switch)
     ListItem(modifier = Modifier.fillMaxWidth(),
-        icon = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.dark_mode_icon)) },
-        text = { Text(text = stringResource(id = R.string.dark_mode)) },
-        trailing = {
+        leadingContent = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.dark_mode_icon)) },
+        headlineText = { Text(text = stringResource(id = R.string.dark_mode)) },
+        trailingContent = {
             Switch(
                 checked = isDarkMode,
                 enabled = !useSystemDarkMode,
@@ -246,24 +241,22 @@ private fun DarkModeMenuItem(isDarkMode : Boolean,
 
 }
 
-@ExperimentalMaterialApi
 @Preview
 @Composable
 private fun HelpSubHeader() {
     ListItem(
-        text = { Text(stringResource(id = R.string.help), style = MaterialTheme.typography.titleSmall) },
+        headlineText = { Text(stringResource(id = R.string.help), style = MaterialTheme.typography.titleSmall) },
         modifier = Modifier
             .fillMaxWidth()
     )
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun SupportAndFeedbackMenuItem(navController: NavController) {
     val supportAndFeedback = stringResource(id = R.string.support_and_feedback)
     ListItem(
-        icon = { Icon(Icons.Filled.Help, contentDescription = supportAndFeedback) },
-        text = {
+        leadingContent = { Icon(Icons.Filled.Help, contentDescription = supportAndFeedback) },
+        headlineText = {
             Column() {
                 Text(supportAndFeedback)
             }
@@ -271,30 +264,21 @@ private fun SupportAndFeedbackMenuItem(navController: NavController) {
     )
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun VersionMenuItem(versionUtils : VersionUtils = VersionUtils(LocalContext.current)) {
     ListItem(
-        icon={},
-        text = {
-            Column() {
-                Text(stringResource(id = R.string.version))
-
-                Text(versionUtils.getAppVersion(), style= MaterialTheme.typography.bodySmall)
-            }
-        },
+        leadingContent = {},
+        headlineText = {Text(stringResource(id = R.string.version)) },
+        supportingText = { Text(versionUtils.getAppVersion(), style= MaterialTheme.typography.bodySmall) }
     )
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun AboutMenuItem(navController: NavController) {
     ListItem(
-        icon={ },
-        text = {
-            Column() {
+        leadingContent = { },
+        headlineText = {
                 Text("About") // TODO: Translate and link to about page!
-            }
         },
     )
 }
