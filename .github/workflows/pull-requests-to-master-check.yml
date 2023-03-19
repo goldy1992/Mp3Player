@@ -1,4 +1,4 @@
-name: master-pull-requests-check
+name: Pull Request to master Workflow
 on:
   pull_request:
     types:

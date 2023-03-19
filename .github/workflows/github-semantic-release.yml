@@ -1,4 +1,4 @@
-name: Github Semantic Release
+name: Github Semantic Release Workflow
 on:
   workflow_dispatch:
   workflow_call:
@@ -7,6 +7,9 @@ on:
         description: "A flag output from semantic release to notify whether a new release version \
         has been created."
         value: ${{ jobs.semantic-release.outputs.performed_release }}
+      release_commit_ref:
+        description: "A git commit hash of the release commit to master."
+        value: ${{ jobs.semantic-release.outputs.release_commit_ref }}
     secrets:
       SEMANTIC_RELEASE_FINE_GRAINED_TOKEN:
         required: true
@@ -19,7 +22,8 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
     environment: release_env
     outputs:
-      performed_release: ${{ steps.release.outputs.performed_release}}
+      performed_release: ${{ steps.release.outputs.performed_release }}
+      release_commit_ref: ${{ steps.release.outputs.release_commit_ref }}
     steps:
       - uses: actions/checkout@v3.1.0
         with:
@@ -51,3 +55,8 @@ jobs:
       - name: Release
         id: "release"
         run: npx semantic-release --ci
+
+      - name: Get Latest Git commit hash
+        run: |
+          LATEST_COMMIT_REF=$(git rev-parse --verify HEAD)
+          echo "release_commit_ref=${LATEST_COMMIT_REF}" >> $GITHUB_OUTPUT
