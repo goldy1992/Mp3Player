@@ -1,26 +1,30 @@
-name: Master Build, Test and Release Workflow
+name: Push to master Workflow
+run-name: Push to master
 on:
   push:
     branches:
       - master
 
 jobs:
-  master-build-and-test:
-    uses: ./.github/workflows/master-build-and-ui-test.yml
+  run-ui-tests:
+    name: Build and run UI Tests
+    uses: ./.github/workflows/ui-tests-workflow.yml
     secrets:
       RELEASE_SERVICE_ACCOUNT_JSON: ${{ secrets.RELEASE_SERVICE_ACCOUNT_JSON }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   semantic-release:
-    needs: [ master-build-and-test ]
-    uses: ./.github/workflows/github-semantic-release.yml
+    name: Semantic Release
+    needs: [ run-ui-tests ]
+    uses: ./.github/workflows/semantic-release-workflow.yml
     secrets:
       SEMANTIC_RELEASE_FINE_GRAINED_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
 
-  release-to-playstore:
+  google-play-release:
+    name: Google Play Release
     needs: [ semantic-release ] # needs semantic release so that the versions are incremented
     if: needs.semantic-release.outputs.performed_release == 'true'
-    uses: ./.github/workflows/google-play-store-release.yml
+    uses: ./.github/workflows/google-play-release-workflow.yml
     with:
       release_commit_ref: needs.semantic-release.outputs.release_commit_ref
     secrets:

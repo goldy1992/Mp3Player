@@ -1,4 +1,5 @@
 name: Pull Request to master Workflow
+run-name: Pull Request to master Workflow
 on:
   pull_request:
     types:
@@ -9,6 +10,7 @@ on:
       - master
 jobs:
   run-unit-tests:
+    name: Build and Run Unit Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3.1.0
