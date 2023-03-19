@@ -11,7 +11,7 @@ on:
 
 jobs:
   run-ui-tests:
-    name: Run UI Tests
+    name: UI Tests
     permissions:
       contents: 'read'
       id-token: 'write'

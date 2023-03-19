@@ -17,6 +17,7 @@ on:
 
 jobs:
   semantic-release:
+    name: Release
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
