@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Help
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -281,4 +282,25 @@ private fun AboutMenuItem(navController: NavController) {
                 Text("About") // TODO: Translate and link to about page!
         },
     )
+}
+
+@Composable
+private fun PermissionsMenuItems() {
+    // 1. Notifications
+    val switchDescription = stringResource(id = R.string.allow_notifications)
+    ListItem(modifier = Modifier.fillMaxWidth(),
+        leadingContent = { Icon(Icons.Default.Notifications, contentDescription = stringResource(id = R.string.allow_notifications)) },
+        headlineText = { Text(text = stringResource(id = R.string.allow_notifications))},
+        trailingContent = {
+            Switch(
+                enabled = false,
+                checked = true,
+                colors = SwitchDefaults.colors(),
+                modifier = Modifier.semantics { contentDescription =  switchDescription },
+                onCheckedChange = {}
+            )
+        }
+    )
+    // 2. Music and Audio
+    // 3. Photos and Videos
 }

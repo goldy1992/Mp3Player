@@ -18,6 +18,7 @@ import com.github.goldy1992.mp3player.client.ui.rememberWindowSizeClass
 import com.github.goldy1992.mp3player.commons.*
 import com.github.goldy1992.mp3player.commons.PermissionsUtils.getAppPermissions
 import com.github.goldy1992.mp3player.commons.PermissionsUtils.hasPermission
+import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -30,6 +31,9 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
 
     @Inject
     lateinit var componentClassMapper : ComponentClassMapper
+
+    @Inject
+    lateinit var permissionsRepository: IPermissionsRepository
 
     /**
      *
