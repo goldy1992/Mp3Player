@@ -4,6 +4,10 @@
 )
 package com.github.goldy1992.mp3player.client.ui.screens.settings
 
+import android.Manifest
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -11,10 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.Help
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,7 +26,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -40,11 +40,12 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import java.util.*
 
+private const val logTag = "SettingsScreen"
+
 
 /**
- *
+ * The Settings Screen
  */
-
 @Composable
 fun SettingsScreen(
     viewModel : SettingsScreenViewModel = viewModel(),
@@ -54,6 +55,9 @@ fun SettingsScreen(
 ) {
 
     val settings by viewModel.settings.collectAsState()
+    val permissions by viewModel.permissionState.collectAsState()
+    val requestPermission = { permission : String  -> viewModel.requestPermission(permission)}
+
     val settingsOnClickMap = EnumMap<Settings.Type, Any>(Settings.Type::class.java)
     settingsOnClickMap[Settings.Type.DARK_MODE] = { newDarkMode : Boolean -> viewModel.setDarkMode(newDarkMode)}
     settingsOnClickMap[Settings.Type.USE_SYSTEM_DARK_MODE] = { useSystemDarkMode : Boolean -> viewModel.setUseSystemDarkMode(useSystemDarkMode)}
@@ -66,12 +70,16 @@ fun SettingsScreen(
             navController = navController,
             scope = scope,
             settingsProvider = { settings},
+            permissionsProvider = {permissions},
+            requestPermission = requestPermission,
             settingsOnClickMap = settingsOnClickMap)
     } else {
         SmallSettingsScreen(
             navController = navController,
             scope = scope,
             settingsProvider = { settings},
+            permissionsProvider = {permissions},
+            requestPermission = requestPermission,
             settingsOnClickMap = settingsOnClickMap)
     }
 }
@@ -82,6 +90,8 @@ private fun LargeSettingsScreen(
     navController: NavController,
     scope: CoroutineScope,
     settingsProvider: () -> Settings,
+    permissionsProvider: () -> Map<String, Boolean>,
+    requestPermission: (String) -> Unit,
     settingsOnClickMap: EnumMap<Settings.Type, Any>
 ) {
     PermanentNavigationDrawer(drawerContent = {
@@ -105,6 +115,8 @@ private fun LargeSettingsScreen(
                 Surface(Modifier.width(500.dp)) {
                     SettingsScreenContent(
                         settingsProvider = settingsProvider,
+                        permissionsProvider = permissionsProvider,
+                        requestPermission = requestPermission,
                         settingsOnClickMap = settingsOnClickMap,
                         modifier = Modifier.padding(it),
                         navController = navController,
@@ -118,6 +130,8 @@ private fun LargeSettingsScreen(
 @Composable
 private fun SmallSettingsScreen(
     settingsProvider: () -> Settings,
+    permissionsProvider: () -> Map<String, Boolean>,
+    requestPermission: (String) -> Unit,
     settingsOnClickMap: EnumMap<Settings.Type, Any>,
     navController: NavController,
     scope: CoroutineScope,
@@ -146,6 +160,8 @@ private fun SmallSettingsScreen(
                 Surface(Modifier.width(500.dp)) {
                     SettingsScreenContent(
                         settingsProvider = settingsProvider,
+                        permissionsProvider = permissionsProvider,
+                        requestPermission = requestPermission,
                         settingsOnClickMap = settingsOnClickMap,
                         modifier = Modifier.padding(it),
                         navController = navController
@@ -161,13 +177,15 @@ fun SettingsScreenContent(
     settingsOnClickMap : EnumMap<Settings.Type, Any>,
     modifier: Modifier = Modifier,
     settingsProvider: () -> Settings = {Settings()},
+    permissionsProvider: () -> Map<String, Boolean>,
+    requestPermission: (String) -> Unit,
     navController: NavController = rememberAnimatedNavController(),
     versionUtils: VersionUtils = VersionUtils(LocalContext.current)) {
 
 
     val settings = settingsProvider()
     Column(modifier = modifier) {
-        DisplaySubheader()
+        Subheader(title = stringResource(id = R.string.display))
         SystemDarkModeMenuItem(
             useSystemDarkMode = settings.useSystemDarkMode,
             onUpdate = settingsOnClickMap[Settings.Type.USE_SYSTEM_DARK_MODE] as (Boolean) -> Unit
@@ -179,17 +197,33 @@ fun SettingsScreenContent(
         )
         // TODO: Add Dynamic color option for android 12
         Divider()
-        HelpSubHeader()
+        Subheader(title = stringResource(id = R.string.permissions))
+        PermissionsMenuItems(
+            permissionsProvider = permissionsProvider,
+            requestPermission = requestPermission)
+        Divider()
+        Subheader(title = stringResource(id = R.string.help))
         SupportAndFeedbackMenuItem(navController)
+        Divider()
         VersionMenuItem(versionUtils = versionUtils)
     }
 
 }
 
+
 @Composable
-private fun DisplaySubheader() {
+private fun Subheader(title : String) {
     ListItem(
-        headlineText = { Text(stringResource(id = R.string.display), style = MaterialTheme.typography.titleSmall) },
+        headlineText = { Text(title, style = MaterialTheme.typography.titleSmall) },
+        modifier = Modifier
+            .fillMaxWidth()
+    )
+}
+
+@Composable
+private fun PermissionsSubheader() {
+    ListItem(
+        headlineText = { Text(stringResource(id = R.string.permissions), style = MaterialTheme.typography.titleSmall) },
         modifier = Modifier
             .fillMaxWidth()
     )
@@ -242,16 +276,6 @@ private fun DarkModeMenuItem(isDarkMode : Boolean,
 
 }
 
-@Preview
-@Composable
-private fun HelpSubHeader() {
-    ListItem(
-        headlineText = { Text(stringResource(id = R.string.help), style = MaterialTheme.typography.titleSmall) },
-        modifier = Modifier
-            .fillMaxWidth()
-    )
-}
-
 @Composable
 private fun SupportAndFeedbackMenuItem(navController: NavController) {
     val supportAndFeedback = stringResource(id = R.string.support_and_feedback)
@@ -285,7 +309,38 @@ private fun AboutMenuItem(navController: NavController) {
 }
 
 @Composable
-private fun PermissionsMenuItems() {
+private fun PermissionsMenuItems(permissionsProvider : () -> Map<String, Boolean>,
+    requestPermission : (String) -> Unit) {
+    val context = LocalContext.current
+    val permissions = permissionsProvider()
+
+    if (permissions.containsKey(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        val hasExternalStoragePermission = permissions[Manifest.permission.READ_EXTERNAL_STORAGE] ?: false
+        val switchDescription = stringResource(id = R.string.read_external_storage)
+        ListItem(modifier = Modifier.fillMaxWidth(),
+            leadingContent = { Icon(Icons.Default.Storage, contentDescription = stringResource(id = R.string.read_external_storage)) },
+            headlineText = { Text(text = stringResource(id = R.string.read_external_storage))},
+            trailingContent = {
+                Switch(
+                    enabled = !hasExternalStoragePermission,
+                    checked = hasExternalStoragePermission,
+                    colors = SwitchDefaults.colors(),
+                    modifier = Modifier.semantics { contentDescription =  switchDescription },
+                    onCheckedChange = {
+                        Log.i(logTag, "on checked has external storage permissions")
+                        requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    }
+                )
+            }
+        )
+    }
+
+    Button(onClick = {
+        context.startActivity(Intent(android.provider.Settings.ACTION_SETTINGS), Bundle());
+    }) {
+        Text(text = "Revoke Permissions")
+    }
+
     // 1. Notifications
     val switchDescription = stringResource(id = R.string.allow_notifications)
     ListItem(modifier = Modifier.fillMaxWidth(),

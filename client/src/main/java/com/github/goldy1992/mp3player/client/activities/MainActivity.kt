@@ -4,12 +4,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
 import com.github.goldy1992.mp3player.client.media.IMediaBrowser
@@ -80,8 +78,23 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
             this.startScreen = Screen.MAIN
         }
 
-        requestPermission(getAppPermissions())
+        // createService()
+        if (Intent.ACTION_VIEW == intent.action) {
+            if (intent.data != null) {
+                trackToPlay = intent.data
+                scope.launch(defaultDispatcher) {
+                    mediaRepository.playFromUri(trackToPlay, null)
+                }
+            }
+            this.startScreen = Screen.NOW_PLAYING
+        }
+       ui()
 
+    }
+
+    override fun onStart() {
+        requestPermission(getAppPermissions())
+        super.onStart()
     }
 
     open fun ui() {
@@ -97,6 +110,7 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
     }
 
     private fun requestPermission(permissions: Array<String>) { // Here, thisActivity is the current activity
+        permissionsRepository.setPermissionsLauncher(permissionLauncher)
         val permissionsToRequest = mutableSetOf<String>()
         for (permission in permissions) {
             if (!hasPermission(permission, this)) {
@@ -109,7 +123,7 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
         } else { // Permission has already been granted
             Log.i(logTag(), "Permission has already been granted")
             permissionsNotifier.setPermissionGranted(true)
-            onPermissionsGranted()
+
         }
     }
 
@@ -118,26 +132,7 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
         ActivityResultContracts.RequestMultiplePermissions()) {
             permissionGrantedArray : Map<String, Boolean> ->
         Log.i(logTag(), "permission result: $permissionGrantedArray")
-        val rejectedPermissionsSet = mutableSetOf<String>()
-        for (permission in permissionGrantedArray.entries) {
-            if (!permission.value) {
-                rejectedPermissionsSet.add(permission.key)
-            }
-        }
-        val allPermissionsGranted = rejectedPermissionsSet.isEmpty()
-        if (allPermissionsGranted) {
-            permissionsNotifier.setPermissionGranted(true)
-            onPermissionsGranted()
-        } else {
-            CoroutineScope(Dispatchers.Main).launch {
-                Toast.makeText(
-                    applicationContext,
-                    resources.getString(R.string.permission_denied),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-            finish()
-        }
+        scope.launch { permissionsRepository.setPermissions(permissionGrantedArray)}
     }
 
     override fun onDestroy() {
@@ -149,20 +144,5 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
 
     override fun logTag(): String {
         return "MAIN_ACTIVITY"
-    }
-
-    fun onPermissionsGranted() {
-        Log.i(logTag(), "permission granted")
-        // createService()
-        if (Intent.ACTION_VIEW == intent.action) {
-            if (intent.data != null) {
-                trackToPlay = intent.data
-                scope.launch(defaultDispatcher) {
-                    mediaRepository.playFromUri(trackToPlay, null)
-                }
-            }
-            this.startScreen = Screen.NOW_PLAYING
-        }
-        scope.launch(mainDispatcher) { ui() }
     }
 }
