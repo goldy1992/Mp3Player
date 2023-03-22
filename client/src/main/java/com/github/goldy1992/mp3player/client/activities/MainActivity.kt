@@ -111,26 +111,18 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
 
     private fun requestPermission(permissions: Array<String>) { // Here, thisActivity is the current activity
         permissionsRepository.setPermissionsLauncher(permissionLauncher)
-        val permissionsToRequest = mutableSetOf<String>()
-        for (permission in permissions) {
-            if (!hasPermission(permission, this)) {
-                permissionsToRequest.add(permission)
-            }
-        }
-        val allPermissionsAlreadyGranted = permissionsToRequest.isEmpty()
-        if (!allPermissionsAlreadyGranted) {
-            permissionLauncher.launch(permissions)
-        } else { // Permission has already been granted
-            Log.i(logTag(), "Permission has already been granted")
-            permissionsNotifier.setPermissionGranted(true)
-
-        }
+        permissionLauncher.launch(permissions)
     }
 
 
     private val permissionLauncher : ActivityResultLauncher<Array<String>> = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()) {
             permissionGrantedArray : Map<String, Boolean> ->
+
+        val allPermissionsGranted = !permissionGrantedArray.containsValue(false)
+        if (allPermissionsGranted) {
+            permissionsNotifier.setPermissionGranted(true)
+        }
         Log.i(logTag(), "permission result: $permissionGrantedArray")
         scope.launch { permissionsRepository.setPermissions(permissionGrantedArray)}
     }

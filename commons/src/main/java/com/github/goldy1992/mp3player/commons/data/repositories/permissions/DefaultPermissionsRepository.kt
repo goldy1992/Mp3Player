@@ -14,7 +14,10 @@ class DefaultPermissionsRepository
 constructor() : IPermissionsRepository {
 
     override suspend fun setPermissions(permissionGrantedArray: Map<String, Boolean>) {
-        _permissionsState.value = permissionGrantedArray
+        val newMap = HashMap<String, Boolean>()
+        _permissionsState.value.entries.forEach { entry -> newMap[entry.key] = entry.value }
+        permissionGrantedArray.entries.forEach { entry -> newMap[entry.key] = entry.value }
+        _permissionsState.value = newMap
     }
 
     private var permissionsLauncher: ActivityResultLauncher<Array<String>>? = null

@@ -4,10 +4,10 @@
 )
 package com.github.goldy1992.mp3player.client.ui.screens.settings
 
-import android.Manifest
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -183,6 +183,7 @@ fun SettingsScreenContent(
     versionUtils: VersionUtils = VersionUtils(LocalContext.current)) {
 
 
+    val context = LocalContext.current
     val settings = settingsProvider()
     Column(modifier = modifier) {
         Subheader(title = stringResource(id = R.string.display))
@@ -198,9 +199,34 @@ fun SettingsScreenContent(
         // TODO: Add Dynamic color option for android 12
         Divider()
         Subheader(title = stringResource(id = R.string.permissions))
-        PermissionsMenuItems(
-            permissionsProvider = permissionsProvider,
-            requestPermission = requestPermission)
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            PermissionsMenuItemsTiramisu(
+                permissionsProvider = permissionsProvider,
+                requestPermission = requestPermission
+            )
+        } else {
+            PermissionsMenuItems(
+                permissionsProvider = permissionsProvider,
+                requestPermission = requestPermission
+            )
+        }
+        ListItem(
+            leadingContent = {
+                Icon(
+                    Icons.Default.Security,
+                    contentDescription = ""
+                )
+            },
+            headlineText = { Text(stringResource(id = R.string.update_permissions)) },
+            supportingText = { Text("Opens System Settings in order to select and refine the App Permissions.") },
+            modifier = Modifier.clickable(enabled = true) {
+                val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri: Uri = Uri.fromParts("package", context.getPackageName(), null)
+                intent.addCategory(Intent.CATEGORY_DEFAULT)
+                intent.data = uri
+                context.startActivity(intent, Bundle());
+            }
+        )
         Divider()
         Subheader(title = stringResource(id = R.string.help))
         SupportAndFeedbackMenuItem(navController)
@@ -215,15 +241,6 @@ fun SettingsScreenContent(
 private fun Subheader(title : String) {
     ListItem(
         headlineText = { Text(title, style = MaterialTheme.typography.titleSmall) },
-        modifier = Modifier
-            .fillMaxWidth()
-    )
-}
-
-@Composable
-private fun PermissionsSubheader() {
-    ListItem(
-        headlineText = { Text(stringResource(id = R.string.permissions), style = MaterialTheme.typography.titleSmall) },
         modifier = Modifier
             .fillMaxWidth()
     )
@@ -308,54 +325,3 @@ private fun AboutMenuItem(navController: NavController) {
     )
 }
 
-@Composable
-private fun PermissionsMenuItems(permissionsProvider : () -> Map<String, Boolean>,
-    requestPermission : (String) -> Unit) {
-    val context = LocalContext.current
-    val permissions = permissionsProvider()
-
-    if (permissions.containsKey(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-        val hasExternalStoragePermission = permissions[Manifest.permission.READ_EXTERNAL_STORAGE] ?: false
-        val switchDescription = stringResource(id = R.string.read_external_storage)
-        ListItem(modifier = Modifier.fillMaxWidth(),
-            leadingContent = { Icon(Icons.Default.Storage, contentDescription = stringResource(id = R.string.read_external_storage)) },
-            headlineText = { Text(text = stringResource(id = R.string.read_external_storage))},
-            trailingContent = {
-                Switch(
-                    enabled = !hasExternalStoragePermission,
-                    checked = hasExternalStoragePermission,
-                    colors = SwitchDefaults.colors(),
-                    modifier = Modifier.semantics { contentDescription =  switchDescription },
-                    onCheckedChange = {
-                        Log.i(logTag, "on checked has external storage permissions")
-                        requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    }
-                )
-            }
-        )
-    }
-
-    Button(onClick = {
-        context.startActivity(Intent(android.provider.Settings.ACTION_SETTINGS), Bundle());
-    }) {
-        Text(text = "Revoke Permissions")
-    }
-
-    // 1. Notifications
-    val switchDescription = stringResource(id = R.string.allow_notifications)
-    ListItem(modifier = Modifier.fillMaxWidth(),
-        leadingContent = { Icon(Icons.Default.Notifications, contentDescription = stringResource(id = R.string.allow_notifications)) },
-        headlineText = { Text(text = stringResource(id = R.string.allow_notifications))},
-        trailingContent = {
-            Switch(
-                enabled = false,
-                checked = true,
-                colors = SwitchDefaults.colors(),
-                modifier = Modifier.semantics { contentDescription =  switchDescription },
-                onCheckedChange = {}
-            )
-        }
-    )
-    // 2. Music and Audio
-    // 3. Photos and Videos
-}
