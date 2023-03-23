@@ -1,6 +1,9 @@
 package com.github.goldy1992.mp3player.commons.data.repositories.permissions
 
+import android.Manifest
+import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
+import com.github.goldy1992.mp3player.commons.PermissionsUtils.isTiramisuOrHigher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,6 +30,33 @@ constructor() : IPermissionsRepository {
 
     override fun setPermissionsLauncher(launcher: ActivityResultLauncher<Array<String>>) {
         this.permissionsLauncher = launcher
+    }
+
+    override fun hasPlaybackPermissions(): Boolean {
+        if (isTiramisuOrHigher()) {
+            return this._permissionsState.value[Manifest.permission.READ_MEDIA_AUDIO] ?: false
+        }
+        return true
+    }
+
+    override fun hasStorageReadPermissions(): Boolean {
+        val currentPermissionsMap = this._permissionsState.value
+        if (isTiramisuOrHigher()) {
+
+
+            return currentPermissionsMap[Manifest.permission.READ_MEDIA_AUDIO] ?: false
+                    &&
+                    currentPermissionsMap[Manifest.permission.READ_MEDIA_IMAGES] ?: false
+        }
+        return currentPermissionsMap[Manifest.permission.READ_EXTERNAL_STORAGE] ?: false
+    }
+
+    override fun hasNotificationPermissions(): Boolean {
+        if (isTiramisuOrHigher()) {
+            return this._permissionsState.value[Manifest.permission.POST_NOTIFICATIONS] ?: false
+        }
+        return true
+
     }
 
     private val _permissionsState: MutableStateFlow<Map<String, Boolean>> = MutableStateFlow(

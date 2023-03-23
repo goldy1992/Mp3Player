@@ -80,4 +80,22 @@ object MediaEntityUtils {
             folders = folders
         )
     }
+
+    fun createRootItem(mediaItem : MediaItem) : RootItem {
+        return RootItem(
+            id = mediaItem.mediaId,
+            type = MediaItemUtils.getMediaItemType(mediaItem)
+        )
+    }
+
+    fun createRootItems(
+        state : State,
+        mediaItems: List<MediaItem>
+    ) : RootItems {
+        val rootItems = mediaItems.map { createRootItem(it) }
+        return RootItems(
+            state = state,
+            items = rootItems
+        )
+    }
 }

@@ -30,6 +30,7 @@ import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState
 import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.client.utils.MediaItemNameUtils
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
@@ -252,26 +253,27 @@ fun SmallLibraryScreen(
 @Composable
 private fun LibraryTabs(
     pagerState: PagerState,
-    rootItemsProvider:  () -> LibraryResultState,
+    rootItemsProvider:  () -> RootItems,
     scope: CoroutineScope
 ) {
 
     val rootItemsState = rootItemsProvider()
 
     if (rootItemsState.state == State.LOADED) {
-        val rootItems = rootItemsState.results
+        val rootItems = rootItemsState.items
         Column {
             ScrollableTabRow(
                 selectedTabIndex = pagerState.currentPage,
             ) {
                 rootItems.forEachIndexed { index, item ->
                     val isSelected = index == pagerState.currentPage
+                    val context = LocalContext.current
                     Tab(
                         selected = isSelected,
                         modifier = Modifier.height(48.dp),
                         content = {
                             Text(
-                                text = getRootMediaItemType(item = item)?.name ?: Constants.UNKNOWN,
+                                text = MediaItemNameUtils.getMediaItemTypeName(context, item.type).uppercase(),//getRootMediaItemType(item = item)?.name ?: Constants.UNKNOWN,
                                 style = MaterialTheme.typography.titleSmall,
                                 color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
                             )
@@ -280,7 +282,7 @@ private fun LibraryTabs(
                             scope.launch {
                                 Log.i(
                                     "MainScreen",
-                                    "Clicked to go to index ${index}, string: ${item.mediaId} "
+                                    "Clicked to go to index ${index}, string: ${item.id} "
                                 )
                                 pagerState.animateScrollToPage(index)
                             }
@@ -300,7 +302,7 @@ fun LibraryScreenContent(
     modifier: Modifier = Modifier,
     scope: CoroutineScope = rememberCoroutineScope(),
     pagerState: PagerState = rememberPagerState(initialPage = 0),
-    rootItemsProvider: () -> LibraryResultState,
+    rootItemsProvider: () -> RootItems,
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
     songs : () -> Songs = { Songs(State.NOT_LOADED) },
     folders : () -> Folders = { Folders(State.NOT_LOADED) },

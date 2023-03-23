@@ -3,7 +3,6 @@ package com.github.goldy1992.mp3player.service.library
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.PermissionsNotifier
 import com.github.goldy1992.mp3player.service.RootAuthenticator
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetrievers
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetriever

@@ -3,18 +3,16 @@ package com.github.goldy1992.mp3player.commons
 import java.util.*
 
 enum class MediaItemType(
-        val rank: Int,
-        val title: String,
-        val description: String?) {
+        val rank: Int) {
 
-    ROOT(0, "Root", null),
-    SONGS(1, "Songs", null),
-    SONG(2, "Song", null),
-    FOLDERS(3, "Folders", null),
-    FOLDER(4, "Folder", null),
-    ALBUMS(5, "Albums", null),
-    ALBUM(6, "Album", null),
-    NONE(7, "None", null);
+    ROOT(0),
+    SONGS(1),
+    SONG(2),
+    FOLDERS(3),
+    FOLDER(4),
+    ALBUMS(5),
+    ALBUM(6),
+    NONE(7);
 
     // Add playlists
 

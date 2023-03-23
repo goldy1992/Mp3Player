@@ -211,18 +211,6 @@ class MediaItemUtilsTest {
         assertTrue(Arrays.equals(expectedImage, result))
     }
 
-    @Test
-    fun testGetRootTitle() {
-        val rootItemType : MediaItemType = MediaItemType.FOLDERS
-        val expectedRootTitle : String? = rootItemType.title
-        val mediaItem : MediaItem = MediaItemBuilder()
-                .setRootItemType(rootItemType)
-                .build()
-        val result = MediaItemUtils.getRootTitle(mediaItem)
-
-        assertEquals(expectedRootTitle, result)
-    }
-
     private fun assertUnknown(value : String?) {
         assertEquals(Constants.UNKNOWN, value)
     }

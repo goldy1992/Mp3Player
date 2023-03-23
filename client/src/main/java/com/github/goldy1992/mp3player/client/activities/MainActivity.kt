@@ -15,7 +15,6 @@ import com.github.goldy1992.mp3player.client.ui.ComposeApp
 import com.github.goldy1992.mp3player.client.ui.rememberWindowSizeClass
 import com.github.goldy1992.mp3player.commons.*
 import com.github.goldy1992.mp3player.commons.PermissionsUtils.getAppPermissions
-import com.github.goldy1992.mp3player.commons.PermissionsUtils.hasPermission
 import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -55,9 +54,6 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
 
     @Inject
     lateinit var userPreferencesRepository: IUserPreferencesRepository
-
-    @Inject
-    lateinit var permissionsNotifier: PermissionsNotifier
 
     @Inject
     lateinit var mediaBrowser : IMediaBrowser
@@ -119,10 +115,6 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
         ActivityResultContracts.RequestMultiplePermissions()) {
             permissionGrantedArray : Map<String, Boolean> ->
 
-        val allPermissionsGranted = !permissionGrantedArray.containsValue(false)
-        if (allPermissionsGranted) {
-            permissionsNotifier.setPermissionGranted(true)
-        }
         Log.i(logTag(), "permission result: $permissionGrantedArray")
         scope.launch { permissionsRepository.setPermissions(permissionGrantedArray)}
     }

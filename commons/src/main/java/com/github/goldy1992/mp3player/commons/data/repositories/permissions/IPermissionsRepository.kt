@@ -9,4 +9,12 @@ interface IPermissionsRepository {
 
     fun getPermissionsLauncher() : ActivityResultLauncher<Array<String>>?
     fun setPermissionsLauncher(launcher : ActivityResultLauncher<Array<String>>)
+
+    fun hasPlaybackPermissions() : Boolean
+
+    fun hasStorageReadPermissions() : Boolean
+
+    fun hasNotificationPermissions() : Boolean
+
+
 }

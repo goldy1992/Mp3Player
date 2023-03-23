@@ -13,7 +13,6 @@
     <string name="dark_mode_switch">Cambio del Modo Oscuro</string>
     <string name="display">Pantalla</string>
     <string name="duration">Duración</string>
-    <string name="folders">Carpetas</string>
     <string name="folder_icon">Ícono de Carpeta</string>
     <string name="folder_list">Lista de Carpetas</string>
     <string name="help">Ayuda</string>
@@ -40,7 +39,6 @@
     <string name="settings">Ajustes</string>
     <string name="shuffle_off">Modo Aleatorio Apagado</string>
     <string name="shuffle_on">Modo Aleatorio Activado</string>
-    <string name="songs">Canciones</string>
     <string name="songs_list">Lista de Canciones</string>
     <string name="song_title">Nombre de Canción</string>
     <string name="splash_screen_icon">Ícono de Splash Screen</string>
@@ -52,6 +50,16 @@
     <string name="update_permissions_descr">Abrir los ajustes del sistema para que los permisos del app puedan estar cambiado.</string>
     <string name="use_system_dark_mode">Usar Modo Oscuro de Sistema</string>
     <string name="version">Versión</string>
+
+    <!-- MEDIA_ITEM_TYPE name -->
+    <string name="root">Root</string>
+    <string name="songs">Canciones</string>
+    <string name="song">Song</string>
+    <string name="folders">Carpetas</string>
+    <string name="folder">Folder</string>
+    <string name="albums">Albums</string>
+    <string name="album">Album</string>
+    <string name="none">None</string>
 
     <string name="SKIP_TO_NEXT">Skip to Next</string>
     <string name="SKIP_TO_PREVIOUS">Skip to Previous</string>

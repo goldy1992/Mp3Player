@@ -172,16 +172,6 @@ object MediaItemUtils : LogTagger {
     }
 
     @JvmStatic
-    fun getRootTitle(song: MediaItem): String? {
-        val extras = song.mediaMetadata.extras
-        if (null != extras) {
-            val mediaItemType : MediaItemType? = extras.getSerializable(Constants.ROOT_ITEM_TYPE) as MediaItemType
-            return mediaItemType?.title
-        }
-        return null
-    }
-
-    @JvmStatic
     fun getEmptyMediaItem() : MediaItem {
         return MediaItemBuilder(EMPTY_MEDIA_ITEM_ID).build()
     }

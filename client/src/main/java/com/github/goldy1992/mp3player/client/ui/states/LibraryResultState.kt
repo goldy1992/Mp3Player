@@ -7,7 +7,8 @@ enum class State {
     NOT_LOADED,
     LOADING,
     NO_RESULTS,
-    LOADED
+    LOADED,
+    NO_PERMISSIONS
 }
 
 data class LibraryResultState(

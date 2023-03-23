@@ -6,14 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import com.github.goldy1992.mp3player.client.data.Albums
-import com.github.goldy1992.mp3player.client.data.Folders
+import com.github.goldy1992.mp3player.client.data.*
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createAlbums
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createFolders
+import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createRootItems
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSong
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSongs
-import com.github.goldy1992.mp3player.client.data.Song
-import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState
 import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState.Companion.loaded
@@ -22,6 +20,8 @@ import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState.Compan
 import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState.Companion.notLoaded
 import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.commons.*
+import com.github.goldy1992.mp3player.commons.data.repositories.permissions.DefaultPermissionsRepository
+import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -36,10 +36,11 @@ class LibraryScreenViewModel
     @Inject
     constructor(
         private val mediaRepository: MediaRepository,
+        private val permissionsRepository: IPermissionsRepository
     ) : LogTagger, ViewModel() {
 
-    private val _rootItems : MutableStateFlow<LibraryResultState> = MutableStateFlow(notLoaded(MediaItemType.ROOT))
-    val rootItems : StateFlow<LibraryResultState> = _rootItems
+    private val _rootItems : MutableStateFlow<RootItems> = MutableStateFlow(RootItems())
+    val rootItems : StateFlow<RootItems> = _rootItems
 
     private val idToMediaItemTypeMap = HashMap<String, MediaItemType>()
 
@@ -61,7 +62,7 @@ class LibraryScreenViewModel
             rootItem = collectedRootItem
             rootItemId = collectedRootItem.mediaId
             mediaRepository.subscribe(collectedRootItem.mediaId)
-            _rootItems.value = LibraryResultState(State.LOADING)
+            _rootItems.value = RootItems.LOADING
         }
 
         viewModelScope.launch {
@@ -77,13 +78,10 @@ class LibraryScreenViewModel
                 if (it.parentId == rootItemId) {
                     val rootChildren = mediaRepository.getChildren(it.parentId, 0, it.itemCount)
                     if (rootChildren.isEmpty()) {
-                        _rootItems.value = LibraryResultState(State.NO_RESULTS)
+                        _rootItems.value = RootItems.NO_RESULTS
                         Log.w(logTag(), "No root children found")
                     } else {
-                        _rootItems.value = LibraryResultState(
-                            state = State.LOADED,
-                            mediaItemType = MediaItemType.ROOT,
-                            results = rootChildren)
+                        _rootItems.value = createRootItems(State.LOADED, rootChildren)
 
                         for (mediaItem: MediaItem in rootChildren) {
                             val mediaItemId = mediaItem.mediaId
@@ -94,7 +92,7 @@ class LibraryScreenViewModel
                                 MediaItemType.ALBUMS -> _albums.value = Albums(State.LOADING)
                                 MediaItemType.SONGS -> _songs.value = Songs(State.LOADING)
                                 MediaItemType.FOLDERS -> _folders.value = Folders(State.LOADING)
-                                MediaItemType.ROOT -> _rootItems.value = loading(MediaItemType.ROOT)
+                                MediaItemType.ROOT -> _rootItems.value = RootItems.LOADING
                                 else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")
                             }
                         }
@@ -108,7 +106,7 @@ class LibraryScreenViewModel
                             MediaItemType.ALBUMS -> _albums.value = Albums(State.NO_RESULTS)
                             MediaItemType.SONGS -> _songs.value = Songs(State.NO_RESULTS)
                             MediaItemType.FOLDERS -> _folders.value = Folders(State.NO_RESULTS)
-                            MediaItemType.ROOT -> _rootItems.value = noResults(MediaItemType.ROOT)
+                            MediaItemType.ROOT -> _rootItems.value = RootItems.NO_RESULTS
                             else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")
                         }
                     } else {
@@ -116,7 +114,7 @@ class LibraryScreenViewModel
                             MediaItemType.ALBUMS -> _albums.value = createAlbums(State.LOADED, children)
                             MediaItemType.SONGS -> _songs.value = createSongs(State.LOADED, children)
                             MediaItemType.FOLDERS -> _folders.value = createFolders(State.LOADED, children)
-                            MediaItemType.ROOT -> _rootItems.value = loaded(MediaItemType.ROOT, children)
+                            MediaItemType.ROOT -> _rootItems.value = createRootItems(State.LOADED, children)
                             else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")
                         }
                     }
@@ -168,6 +166,18 @@ class LibraryScreenViewModel
         }
     }
 
+    init {
+        viewModelScope.launch {
+            permissionsRepository.permissionsFlow().collect {
+                if (!permissionsRepository.hasStorageReadPermissions()) {
+                    _songs.value = Songs.NO_PERMISSIONS
+                    _folders.value = Folders(state = State.NO_PERMISSIONS)
+                    _albums.value = Albums(state = State.NO_PERMISSIONS)
+                }
+            }
+        }
+    }
+
     fun playPlaylist(playlistId : String, songs : Songs, index : Int) {
         val mediaItems = songs.songs.map { MediaItemBuilder(it.id).build() }
         val extras = Bundle()
@@ -198,7 +208,7 @@ class LibraryScreenViewModel
     }
 
     private fun isChildOfRootItem(parentId: String) : Boolean {
-        return rootItems.value.results.map { m -> m.mediaId }.toList().contains(parentId)
+        return rootItems.value.items.map(RootItem::id).toList().contains(parentId)
     }
 
     override fun logTag(): String {

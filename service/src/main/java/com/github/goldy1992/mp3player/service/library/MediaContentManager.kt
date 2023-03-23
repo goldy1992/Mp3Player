@@ -1,13 +1,17 @@
 package com.github.goldy1992.mp3player.service.library
 
+import android.Manifest
+import android.os.Build
+import android.os.Build.VERSION_CODES.TIRAMISU
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.media3.common.MediaItem
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaLibraryService.LibraryParams
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Normaliser.normalise
-import com.github.goldy1992.mp3player.commons.PermissionsNotifier
+import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import com.github.goldy1992.mp3player.service.RootAuthenticator
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetrievers
 import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever
@@ -23,7 +27,7 @@ import java.util.*
 import javax.inject.Inject
 
 @ServiceScoped
-class MediaContentManager @Inject constructor(permissionsNotifier : PermissionsNotifier,
+class MediaContentManager @Inject constructor(permissionRepository: IPermissionsRepository,
                                               private val contentRetrievers: ContentRetrievers,
                                               private val contentSearchers: ContentSearchers,
                                               rootAuthenticator: RootAuthenticator,
@@ -45,13 +49,31 @@ class MediaContentManager @Inject constructor(permissionsNotifier : PermissionsN
         }
 
         scope.launch {
-            permissionsNotifier.permissionsGranted.collect {
-                if (it) {
+            permissionRepository.permissionsFlow().collect {
+                if (hasStoragePermissions(it)) {
                     onPermissionsGranted()
                 }
             }
         }
     }
+
+    private fun hasStoragePermissions(permissionMap : Map<String, Boolean>): Boolean {
+        if (Build.VERSION.SDK_INT == TIRAMISU) {
+            return hasStoragePermissionsTiramisu(permissionMap)
+        }
+        return permissionMap.containsKey(Manifest.permission.READ_EXTERNAL_STORAGE) &&
+                permissionMap[Manifest.permission.READ_EXTERNAL_STORAGE] ?: false
+    }
+
+    @RequiresApi(TIRAMISU)
+    private fun hasStoragePermissionsTiramisu(permissionMap : Map<String, Boolean>): Boolean {
+        return permissionMap.containsKey(Manifest.permission.READ_MEDIA_AUDIO) &&
+                permissionMap[Manifest.permission.READ_MEDIA_AUDIO] ?: false &&
+                permissionMap.containsKey(Manifest.permission.READ_MEDIA_IMAGES) &&
+                permissionMap[Manifest.permission.READ_MEDIA_IMAGES] ?: false
+
+    }
+
 
     override var mediaSession: MediaLibraryService.MediaLibrarySession? = null
 
@@ -61,13 +83,6 @@ class MediaContentManager @Inject constructor(permissionsNotifier : PermissionsN
     private val rootRetriever: RootRetriever = contentRetrievers.root
 
     /**
-     * The id is in the following format
-     * CATEGORY_ID | CHILD_ID where CHILD_ID is optional.
-     * e.g. ROOT_CATEGORY_ID
-     * FOLDER_CATEGORY_ID | FOLDER_ID
-     * where X_CATEGORY_ID is a unique id defined by the service to ensure that the subscriber has
-     * gained authority to access the parent category and also tells the method which category to
-     * look in for the data.
      * @param parentId the id of the children to get
      * @return all the children of the id specified by the parentId parameter
      */
@@ -123,12 +138,14 @@ class MediaContentManager @Inject constructor(permissionsNotifier : PermissionsN
 
     private fun onPermissionsGranted() {
         Log.i(logTag(),"onPermissionsGranted invoked")
-        Log.i(logTag(), "building tree")
-        for (rootChild in rootNode.getChildren()) {
-            build(rootChild)
+        if (!_isInitialised.value) {
+            Log.i(logTag(), "Not yet initialised, building tree")
+            for (rootChild in rootNode.getChildren()) {
+                build(rootChild)
+            }
+            Log.i(logTag(), "built tree")
+            _isInitialised.value = true
         }
-        Log.i(logTag(), "built tree")
-       _isInitialised.value = true
     }
 
     private val cachedSearchResults : MutableMap<String, List<MediaItem>> = HashMap()
