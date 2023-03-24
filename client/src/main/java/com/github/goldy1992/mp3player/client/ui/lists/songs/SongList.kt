@@ -20,6 +20,7 @@ import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
+import com.github.goldy1992.mp3player.client.ui.lists.NoPermissions
 import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
 import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.client.utils.SongUtils.isSongItemSelected
@@ -53,6 +54,9 @@ fun SongList(
         }
         State.LOADING -> {
             LoadingSongsList()
+        }
+        State.NO_PERMISSIONS -> {
+            NoPermissions()
         }
         else -> EmptySongsList()
     }

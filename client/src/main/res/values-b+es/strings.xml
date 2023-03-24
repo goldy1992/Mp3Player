@@ -54,11 +54,11 @@
     <!-- MEDIA_ITEM_TYPE name -->
     <string name="root">Root</string>
     <string name="songs">Canciones</string>
-    <string name="song">Song</string>
+    <string name="song">Canción</string>
     <string name="folders">Carpetas</string>
-    <string name="folder">Folder</string>
-    <string name="albums">Albums</string>
-    <string name="album">Album</string>
+    <string name="folder">Carpeta</string>
+    <string name="albums">Albumes</string>
+    <string name="album">Álbum</string>
     <string name="none">None</string>
 
     <string name="SKIP_TO_NEXT">Skip to Next</string>
@@ -75,6 +75,8 @@
     <string name="LOGO_DESCRIPTION">The title logo</string>
     <string name="app_title">Music Player</string>
     <string name="FOLDER_NAME">%1$s</string>
+    <string name="no_permissions">No hay permisos para recuperar el contenido</string>
+    <string name="no_results">No encontrar %1$s en el dispositivo.</string>
     <string name="no_search_results_found">No search results found for query\: \"%1$s\"</string>
     <string name="notification_channel_name">channel_name</string>
     <string name="channel_description">channel description</string>

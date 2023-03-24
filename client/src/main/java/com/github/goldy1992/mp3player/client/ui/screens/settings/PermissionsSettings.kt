@@ -5,26 +5,24 @@
 package com.github.goldy1992.mp3player.client.ui.screens.settings
 
 import android.Manifest
-import android.content.Intent
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Build.VERSION_CODES.TIRAMISU
-import android.os.Bundle
-import android.provider.Settings
-import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.R
 
 private const val logTag = "PemissionsSettings"
@@ -40,10 +38,8 @@ fun PermissionsMenuItems(permissionsProvider : () -> Map<String, Boolean> = {emp
         if (permissions.containsKey(Manifest.permission.READ_EXTERNAL_STORAGE)) {
             val permissionDescription = stringResource(id = R.string.read_external_storage)
             PermissionListItem(
-                permission = Manifest.permission.READ_EXTERNAL_STORAGE,
                 hasPermission = permissions[Manifest.permission.READ_EXTERNAL_STORAGE] ?: false,
-                permissionDescription = permissionDescription,
-                requestPermission = requestPermission) {
+                permissionDescription = permissionDescription) {
                 Icon(
                     Icons.Default.Storage,
                     contentDescription = stringResource(id = R.string.read_external_storage)
@@ -66,10 +62,8 @@ fun PermissionsMenuItemsTiramisu(permissionsProvider : () -> Map<String, Boolean
         val hasNotificationPermissions = permissions[Manifest.permission.POST_NOTIFICATIONS] ?: false
         val notificationDescription = stringResource(id = R.string.allow_notifications)
         PermissionListItem(
-            permission = Manifest.permission.POST_NOTIFICATIONS,
             hasPermission = hasNotificationPermissions,
-            permissionDescription = notificationDescription,
-            requestPermission = requestPermission) {
+            permissionDescription = notificationDescription) {
             Icon(
                 Icons.Default.Storage,
                 contentDescription = notificationDescription
@@ -81,10 +75,8 @@ fun PermissionsMenuItemsTiramisu(permissionsProvider : () -> Map<String, Boolean
         val hasMusicPlaybackPermissions = permissions[Manifest.permission.READ_MEDIA_AUDIO] ?: false
         val readMediaAudioDescription = stringResource(id = R.string.allow_audio_playback)
         PermissionListItem(
-            permission = Manifest.permission.READ_MEDIA_AUDIO,
             hasPermission = hasMusicPlaybackPermissions,
-            permissionDescription = readMediaAudioDescription,
-            requestPermission = requestPermission) {
+            permissionDescription = readMediaAudioDescription) {
                 Icon(
                     Icons.Default.MusicNote,
                     contentDescription = readMediaAudioDescription
@@ -95,10 +87,8 @@ fun PermissionsMenuItemsTiramisu(permissionsProvider : () -> Map<String, Boolean
         val hasImageDisplayPermissions = permissions[Manifest.permission.READ_MEDIA_IMAGES] ?: false
         val readMediaImagesDescription = stringResource(id = R.string.allow_image_display)
         PermissionListItem(
-            permission = Manifest.permission.READ_MEDIA_IMAGES,
             hasPermission = hasImageDisplayPermissions,
-            permissionDescription = readMediaImagesDescription,
-            requestPermission = requestPermission) {
+            permissionDescription = readMediaImagesDescription) {
             Icon(
                 Icons.Default.PhotoLibrary,
                 contentDescription = readMediaImagesDescription
@@ -107,28 +97,85 @@ fun PermissionsMenuItemsTiramisu(permissionsProvider : () -> Map<String, Boolean
     }
 }
 
+class BooleanPreviewParameterProvider : PreviewParameterProvider<Boolean> {
+    override val values = sequenceOf(
+        true,
+        false,
+    )
+}
+
+@Preview
 @Composable
 private fun PermissionListItem(
-    permission: String,
-    hasPermission: Boolean,
-    permissionDescription: String,
-    requestPermission: (String) -> Unit,
-    icon: @Composable () -> Unit = {}
+    @PreviewParameter(BooleanPreviewParameterProvider::class)hasPermission: Boolean,
+    permissionDescription: String = "Read External Storage",
+    icon: @Composable () -> Unit = {
+        Icon(
+            Icons.Default.Storage,
+            contentDescription = ""
+        )
+    }
 ) {
+    val containerColor = if (!hasPermission) colorScheme.surfaceVariant else colorScheme.surface
     ListItem(modifier = Modifier.fillMaxWidth(),
         leadingContent = icon,
         headlineText = { Text(text = permissionDescription) },
+        colors = ListItemDefaults.colors(containerColor = containerColor),
         trailingContent = {
-            Switch(
-                enabled = false,
-                checked = hasPermission,
-                colors = SwitchDefaults.colors(),
-                modifier = Modifier.semantics { contentDescription = permissionDescription },
-                onCheckedChange = {
-                    Log.i(logTag, "on checked ${permission}")
-                    requestPermission(permission)
-                }
+            val icon = if (hasPermission) Icons.Filled.Check else Icons.Filled.Close
+            Icon(
+                imageVector = icon,
+                contentDescription = "",
+                tint = if (hasPermission) colorScheme.primary else colorScheme.error
             )
         }
     )
 }
+
+@Composable
+@Preview( uiMode = UI_MODE_NIGHT_YES)
+fun previewColorScheme() {
+    val colors = arrayOf(
+        Pair("primary", colorScheme.primary),
+        Pair("onPrimary", colorScheme.onPrimary),
+        Pair("primaryContainer", colorScheme.primaryContainer),
+        Pair("onPrimaryContainer", colorScheme.onPrimaryContainer),
+        Pair("inversePrimary", colorScheme.inversePrimary),
+        Pair("secondary", colorScheme.secondary),
+        Pair("onSecondary", colorScheme.onSecondary),
+        Pair("secondaryContainer", colorScheme.secondaryContainer),
+        Pair("onSecondaryContainer", colorScheme.onSecondaryContainer),
+        Pair("tertiary", colorScheme.tertiary),
+        Pair("onTertiary", colorScheme.onTertiary),
+        Pair("tertiaryContainer", colorScheme.tertiaryContainer),
+        Pair("onTertiaryContainer", colorScheme.onTertiaryContainer),
+        Pair("background", colorScheme.background),
+        Pair("onBackground", colorScheme.onBackground),
+        Pair("surface", colorScheme.surface),
+        Pair("onSurface", colorScheme.onSurface),
+        Pair("surfaceVariant", colorScheme.surfaceVariant),
+        Pair("onSurfaceVariant", colorScheme.onSurfaceVariant),
+        Pair("surfaceTint", colorScheme.surfaceTint),
+        Pair("inverseSurface", colorScheme.inverseSurface),
+        Pair("inverseOnSurface", colorScheme.inverseOnSurface),
+        Pair("error", colorScheme.error),
+        Pair("onError", colorScheme.onError),
+        Pair("errorContainer", colorScheme.errorContainer),
+        Pair("onErrorContainer", colorScheme.onErrorContainer),
+        Pair("outline", colorScheme.outline),
+        Pair("outlineVariant", colorScheme.outlineVariant),
+        Pair("scrim", colorScheme.scrim)
+    )
+
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        items(count = colors.size) {
+            idx ->
+            ListItem(headlineText = {Text(colors[idx].first) },
+                colors = ListItemDefaults.colors(containerColor = colorScheme.surfaceVariant),
+                leadingContent = { Box(Modifier.width(60.dp).height(60.dp).background(colors[idx].second)) })
+
+        }
+    }
+
+}
+

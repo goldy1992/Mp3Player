@@ -13,14 +13,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
+import com.github.goldy1992.mp3player.client.utils.MediaItemNameUtils
 import com.github.goldy1992.mp3player.commons.MediaItemType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoResultsFound(mediaItemType: MediaItemType,
                     modifier: Modifier = Modifier) {
-    val noResultsText = "No  found on device."
+    val context = LocalContext.current
+    val mediaItemTypeTitle = MediaItemNameUtils.getMediaItemTypeName(context, mediaItemType)
+    val noResultsText = stringResource(id = R.string.no_results, mediaItemTypeTitle)
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -37,14 +43,14 @@ fun NoResultsFound(mediaItemType: MediaItemType,
             }
         )
     }
+}
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun NoPermissions(
-        mediaItemType: MediaItemType,
         modifier: Modifier = Modifier
     ) {
-        val noResultsText = "No  found on device."
+        val noPermissionsText = stringResource(id = R.string.no_permissions)
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -52,14 +58,14 @@ fun NoResultsFound(mediaItemType: MediaItemType,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            ListItem(
-                leadingContent = {
-                    Icon(Icons.Default.Warning, contentDescription = noResultsText)
-                },
-                headlineText = {
-                    Text(text = noResultsText)
-                }
-            )
-        }
+        ListItem(
+            leadingContent = {
+                Icon(Icons.Default.Warning, contentDescription = noPermissionsText)
+            },
+            headlineText = {
+                Text(text = noPermissionsText)
+            }
+        )
     }
 }
+

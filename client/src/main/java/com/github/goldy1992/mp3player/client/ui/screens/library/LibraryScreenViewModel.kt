@@ -13,17 +13,13 @@ import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createRootIte
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSong
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSongs
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
-import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState
-import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState.Companion.loaded
-import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState.Companion.loading
-import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState.Companion.noResults
-import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState.Companion.notLoaded
 import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.commons.*
-import com.github.goldy1992.mp3player.commons.data.repositories.permissions.DefaultPermissionsRepository
 import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 import javax.inject.Inject
@@ -74,52 +70,62 @@ class LibraryScreenViewModel
                     isRootItem || isChildOfARootItem
                 }
                 .collect {
+                    if (it.parentId == rootItemId) {
+                        val rootChildren = mediaRepository.getChildren(it.parentId, 0, it.itemCount)
+                        if (rootChildren.isEmpty()) {
+                            _rootItems.value = RootItems.NO_RESULTS
+                            Log.w(logTag(), "No root children found")
+                        } else {
+                            _rootItems.value = createRootItems(State.LOADED, rootChildren)
 
-                if (it.parentId == rootItemId) {
-                    val rootChildren = mediaRepository.getChildren(it.parentId, 0, it.itemCount)
-                    if (rootChildren.isEmpty()) {
-                        _rootItems.value = RootItems.NO_RESULTS
-                        Log.w(logTag(), "No root children found")
+                            for (mediaItem: MediaItem in rootChildren) {
+                                val mediaItemId = mediaItem.mediaId
+                                mediaRepository.subscribe(mediaItemId)
+                                val mediaItemType = MediaItemUtils.getMediaItemType(mediaItem)
+                                idToMediaItemTypeMap[mediaItemId] = mediaItemType
+                                when (mediaItemType) {
+                                    MediaItemType.ALBUMS -> _albums.value = Albums(State.LOADING)
+                                    MediaItemType.SONGS -> _songs.value = Songs(State.LOADING)
+                                    MediaItemType.FOLDERS -> _folders.value = Folders(State.LOADING)
+                                    MediaItemType.ROOT -> _rootItems.value = RootItems.LOADING
+                                    else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")
+                                }
+                            }
+                        }
                     } else {
-                        _rootItems.value = createRootItems(State.LOADED, rootChildren)
+                        val children = mediaRepository.getChildren(it.parentId, 0, it.itemCount)
+                        val mediaItemType = idToMediaItemTypeMap[it.parentId] ?: MediaItemType.NONE
 
-                        for (mediaItem: MediaItem in rootChildren) {
-                            val mediaItemId = mediaItem.mediaId
-                            mediaRepository.subscribe(mediaItemId)
-                            val mediaItemType = MediaItemUtils.getMediaItemType(mediaItem)
-                            idToMediaItemTypeMap[mediaItemId] = mediaItemType
+                        if (isEmpty(children)) {
+                            if (!permissionsRepository.hasStorageReadPermissions()) {
+                                when (mediaItemType) {
+                                    MediaItemType.ALBUMS -> _albums.value = Albums(State.NO_PERMISSIONS)
+                                    MediaItemType.SONGS -> _songs.value = Songs(State.NO_PERMISSIONS)
+                                    MediaItemType.FOLDERS -> _folders.value = Folders(State.NO_PERMISSIONS)
+                                    MediaItemType.ROOT -> _rootItems.value = RootItems.NO_PERMISSIONS
+                                    else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")
+
+                                }
+                            } else {
+                                when (mediaItemType) {
+                                    MediaItemType.ALBUMS -> _albums.value = Albums(State.NO_RESULTS)
+                                    MediaItemType.SONGS -> _songs.value = Songs(State.NO_RESULTS)
+                                    MediaItemType.FOLDERS -> _folders.value = Folders(State.NO_RESULTS)
+                                    MediaItemType.ROOT -> _rootItems.value = RootItems.NO_RESULTS
+                                    else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")
+                                }
+                            }
+                        } else {
                             when (mediaItemType) {
-                                MediaItemType.ALBUMS -> _albums.value = Albums(State.LOADING)
-                                MediaItemType.SONGS -> _songs.value = Songs(State.LOADING)
-                                MediaItemType.FOLDERS -> _folders.value = Folders(State.LOADING)
-                                MediaItemType.ROOT -> _rootItems.value = RootItems.LOADING
+                                MediaItemType.ALBUMS -> _albums.value = createAlbums(State.LOADED, children)
+                                MediaItemType.SONGS -> _songs.value = createSongs(State.LOADED, children)
+                                MediaItemType.FOLDERS -> _folders.value = createFolders(State.LOADED, children)
+                                MediaItemType.ROOT -> _rootItems.value = createRootItems(State.LOADED, children)
                                 else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")
                             }
                         }
-                    }
-                } else {
-                    val children = mediaRepository.getChildren(it.parentId, 0, it.itemCount)
-                    val mediaItemType = idToMediaItemTypeMap[it.parentId] ?: MediaItemType.NONE
-
-                    if (isEmpty(children)) {
-                        when (mediaItemType) {
-                            MediaItemType.ALBUMS -> _albums.value = Albums(State.NO_RESULTS)
-                            MediaItemType.SONGS -> _songs.value = Songs(State.NO_RESULTS)
-                            MediaItemType.FOLDERS -> _folders.value = Folders(State.NO_RESULTS)
-                            MediaItemType.ROOT -> _rootItems.value = RootItems.NO_RESULTS
-                            else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")
-                        }
-                    } else {
-                        when (mediaItemType) {
-                            MediaItemType.ALBUMS -> _albums.value = createAlbums(State.LOADED, children)
-                            MediaItemType.SONGS -> _songs.value = createSongs(State.LOADED, children)
-                            MediaItemType.FOLDERS -> _folders.value = createFolders(State.LOADED, children)
-                            MediaItemType.ROOT -> _rootItems.value = createRootItems(State.LOADED, children)
-                            else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")
-                        }
-                    }
-                 }
-            }
+                     }
+                }
         }
     }
 

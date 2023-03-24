@@ -22,6 +22,8 @@
     <string name="now_playing_screen">Now Playing Screen</string>
     <string name="menu">Menu</string>
     <string name="notification_channel_name">channel_name</string>
+    <string name="no_permissions">No permissions to retrieve content.</string>
+    <string name="no_results">No %1$s found on device.</string>
     <string name="no_search_results_found">No search results found for query\: \"%1$s\"</string>
     <string name="no_songs_on_device">No audio tracks found on your device.</string>
     <string name="no_folders_with_songs">No folders containing audio tracks found on your device.</string>

@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.data.Album
 import com.github.goldy1992.mp3player.client.data.Albums
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
+import com.github.goldy1992.mp3player.client.ui.lists.NoPermissions
 import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
 import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -28,6 +29,7 @@ fun AlbumsList(modifier : Modifier = Modifier,
                             albums = albums.albums,
                             onAlbumSelected = onAlbumSelected
                         )
+        State.NO_PERMISSIONS -> NoPermissions()
         else -> Text(text = "Unknown album state")
     }
 }

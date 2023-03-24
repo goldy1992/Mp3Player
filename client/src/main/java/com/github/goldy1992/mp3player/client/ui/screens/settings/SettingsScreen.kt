@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -200,6 +201,7 @@ fun SettingsScreenContent(
         Divider()
         Subheader(title = stringResource(id = R.string.permissions))
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val acceptPermissions = "One or more permissions were NOT accepted. Please review permissions in below to receive the full app functionality!"
             PermissionsMenuItemsTiramisu(
                 permissionsProvider = permissionsProvider,
                 requestPermission = requestPermission
@@ -237,10 +239,15 @@ fun SettingsScreenContent(
 }
 
 
+@Preview
 @Composable
-private fun Subheader(title : String) {
+private fun Subheader(title : String = "Permissions",
+                    subtitle : String? = null) {
+
+    val subtitleComposable : (@Composable () -> Unit)? = if (subtitle == null) null else { { Text(subtitle)} }
     ListItem(
         headlineText = { Text(title, style = MaterialTheme.typography.titleSmall) },
+        supportingText = subtitleComposable,
         modifier = Modifier
             .fillMaxWidth()
     )
