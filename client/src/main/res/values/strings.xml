@@ -14,6 +14,7 @@
     <string name="dark_mode_switch">Dark Mode Switch</string>
     <string name="display">Display</string>
     <string name="duration">Duration</string>
+    <string name="dynamic_color">Use Dynamic Colors</string>
     <string name="folder_icon">Folder Icon</string>
     <string name="folder_list">Folder List</string>
     <string name="help">Help</string>

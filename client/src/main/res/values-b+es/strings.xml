@@ -13,6 +13,7 @@
     <string name="dark_mode_switch">Cambio del Modo Oscuro</string>
     <string name="display">Pantalla</string>
     <string name="duration">Duración</string>
+    <string name="dynamic_color">Usar Colores Dínamicos</string>
     <string name="folder_icon">Ícono de Carpeta</string>
     <string name="folder_list">Lista de Carpetas</string>
     <string name="help">Ayuda</string>

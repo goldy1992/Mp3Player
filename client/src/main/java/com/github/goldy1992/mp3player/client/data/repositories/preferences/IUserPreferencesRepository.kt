@@ -14,4 +14,7 @@ interface IUserPreferencesRepository {
     suspend fun updateSystemDarkMode(useSystemDarkMode : Boolean)
     fun getSystemDarkMode() : Flow<Boolean>
 
+    suspend fun useDynamicColor(useDynamicColor : Boolean)
+    fun getUseDynamicColor() : Flow<Boolean>
+
 }

@@ -100,6 +100,10 @@ class SettingsScreenViewModel
         viewModelScope.launch { userPreferencesRepository.updateTheme(theme) }
     }
 
+    fun setUseDynamicColor(useDynamicColor : Boolean) {
+        viewModelScope.launch { userPreferencesRepository.useDynamicColor(useDynamicColor) }
+    }
+
 
     override fun logTag(): String {
         return "SettingsScrnViewModel"

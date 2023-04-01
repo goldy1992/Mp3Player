@@ -7,7 +7,9 @@ package com.github.goldy1992.mp3player.client.ui.screens.settings
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Build.VERSION_CODES.S
 import android.os.Bundle
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -37,6 +39,7 @@ import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.utils.VersionUtils
 import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.commons.VersionUtils.isAndroid12OrHigher
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import java.util.*
@@ -63,6 +66,7 @@ fun SettingsScreen(
     settingsOnClickMap[Settings.Type.DARK_MODE] = { newDarkMode : Boolean -> viewModel.setDarkMode(newDarkMode)}
     settingsOnClickMap[Settings.Type.USE_SYSTEM_DARK_MODE] = { useSystemDarkMode : Boolean -> viewModel.setUseSystemDarkMode(useSystemDarkMode)}
     settingsOnClickMap[Settings.Type.THEME] = { newTheme : Theme -> viewModel.setTheme(newTheme)}
+    settingsOnClickMap[Settings.Type.DYNAMIC_COLOR] = { useDynamicColor : Boolean -> viewModel.setUseDynamicColor(useDynamicColor)}
 
     val isLargeScreen = windowSize == WindowSize.Expanded
 
@@ -197,6 +201,13 @@ fun SettingsScreenContent(
             isDarkMode = settings.darkMode,
             onUpdate = settingsOnClickMap[Settings.Type.DARK_MODE] as (Boolean) -> Unit
         )
+        if (isAndroid12OrHigher()) {
+            DynamicColorMenuItem(
+                useDynamicColor = false,
+                onUpdate = settingsOnClickMap[Settings.Type.DYNAMIC_COLOR] as (Boolean) -> Unit
+            )
+        }
+
         // TODO: Add Dynamic color option for android 12
         Divider()
         Subheader(title = stringResource(id = R.string.permissions))
@@ -261,6 +272,25 @@ private fun ThemeMenuItem(navController: NavController) {
         leadingContent = { Icon(Icons.Filled.Palette, contentDescription = theme) },
         headlineText = { Text(theme, style = MaterialTheme.typography.titleMedium) },
         modifier = Modifier.clickable { navController.navigate(Screen.THEME_SELECT.name)}
+    )
+}
+
+@RequiresApi(S)
+@Composable
+fun DynamicColorMenuItem(useDynamicColor : Boolean = true,
+                        onUpdate : (newValue : Boolean) -> Unit = {}) {
+    val dynamicColorDescr = stringResource(id = R.string.dynamic_color)
+    ListItem(
+        leadingContent = {  Icon(Icons.Filled.Palette, contentDescription = dynamicColorDescr) },
+        headlineText = { Text(dynamicColorDescr)},
+        trailingContent = {
+            Switch(
+                checked = useDynamicColor,
+                onCheckedChange = { isChecked -> onUpdate(isChecked) },
+                colors = SwitchDefaults.colors(),
+                modifier = Modifier.semantics { contentDescription =  dynamicColorDescr }
+            )
+        }
     )
 }
 

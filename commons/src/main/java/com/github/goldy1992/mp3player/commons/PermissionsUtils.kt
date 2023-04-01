@@ -43,10 +43,6 @@ object PermissionsUtils : LogTagger {
         return true
     }
 
-    fun isTiramisuOrHigher() : Boolean {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-    }
-
     override fun logTag(): String {
         return "PermissionsUtils"
     }

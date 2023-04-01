@@ -16,10 +16,11 @@ import javax.inject.Singleton
 data class UserPreferences(
     val darkMode: Boolean,
     val systemDarkMode : Boolean,
-    val theme: String
+    val theme: String,
+    val useDynamicColor: Boolean
 )  {
     companion object {
-        val DEFAULT = UserPreferences(darkMode = false, systemDarkMode = false, theme = "None")
+        val DEFAULT = UserPreferences(darkMode = false, systemDarkMode = false, theme = "None", useDynamicColor = true)
     }
 }
 
@@ -35,6 +36,7 @@ open class UserPreferencesRepository
         val THEME = stringPreferencesKey("theme")
         val DARK_MODE = booleanPreferencesKey("dark_mode")
         val USE_SYSTEM_DARK_MODE = booleanPreferencesKey("system_dark_mode")
+        val USE_DYNAMIC_COLOR = booleanPreferencesKey("use_dynamic_color")
     }
 
     /**
@@ -58,7 +60,9 @@ open class UserPreferencesRepository
             val darkMode : Boolean = preferences[PreferencesKeys.DARK_MODE] ?: false
             // default to System dark mode if no preferences are stored!
             val systemDarkMode : Boolean = preferences[PreferencesKeys.USE_SYSTEM_DARK_MODE] ?: true
-            UserPreferences(darkMode, systemDarkMode, theme.name)
+            //
+            val useDynamicColor : Boolean = preferences[PreferencesKeys.USE_DYNAMIC_COLOR] ?: true
+            UserPreferences(darkMode, systemDarkMode, theme.name, useDynamicColor)
         }
 
     override suspend fun updateTheme(newTheme: Theme) {
@@ -95,6 +99,18 @@ open class UserPreferencesRepository
     override open fun getSystemDarkMode() : Flow<Boolean> {
         return userPreferencesFlow.map {
             preferences -> preferences.systemDarkMode
+        }
+    }
+
+    override suspend fun useDynamicColor(useDynamicColor: Boolean) {
+        userPreferencesFlow.map {
+            preferences -> preferences.useDynamicColor
+        }
+    }
+
+    override fun getUseDynamicColor(): Flow<Boolean> {
+        return userPreferencesFlow.map {
+                preferences -> preferences.useDynamicColor
         }
     }
 
