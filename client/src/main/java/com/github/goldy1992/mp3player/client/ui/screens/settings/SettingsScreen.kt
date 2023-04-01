@@ -203,7 +203,7 @@ fun SettingsScreenContent(
         )
         if (isAndroid12OrHigher()) {
             DynamicColorMenuItem(
-                useDynamicColor = false,
+                useDynamicColor = settings.dynamicColor,
                 onUpdate = settingsOnClickMap[Settings.Type.DYNAMIC_COLOR] as (Boolean) -> Unit
             )
         }

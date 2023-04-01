@@ -83,6 +83,12 @@ open class UserPreferencesRepository
         }
     }
 
+    override suspend fun updateUseDynamicColor(useDynamicColor: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.USE_DYNAMIC_COLOR] = useDynamicColor
+        }
+    }
+
     override open fun getTheme() : Flow<Theme> {
         return userPreferencesFlow.map { preferences ->
             val currentTheme = preferences.theme
@@ -99,12 +105,6 @@ open class UserPreferencesRepository
     override open fun getSystemDarkMode() : Flow<Boolean> {
         return userPreferencesFlow.map {
             preferences -> preferences.systemDarkMode
-        }
-    }
-
-    override suspend fun useDynamicColor(useDynamicColor: Boolean) {
-        userPreferencesFlow.map {
-            preferences -> preferences.useDynamicColor
         }
     }
 

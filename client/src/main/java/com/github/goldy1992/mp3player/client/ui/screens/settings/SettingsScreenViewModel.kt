@@ -1,9 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui.screens.settings
 
-import android.app.Application
-import android.content.Context
-import android.content.Intent
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
@@ -11,7 +7,6 @@ import com.github.goldy1992.mp3player.client.ui.Theme
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -53,7 +48,8 @@ class SettingsScreenViewModel
                     _darkMode.value = it
                     _setting.value = Settings(darkMode = it,
                                             useSystemDarkMode = settings.value.useSystemDarkMode,
-                                            theme = settings.value.theme)
+                                            theme = settings.value.theme,
+                                            dynamicColor = settings.value.dynamicColor)
                 }
         }
     }
@@ -67,7 +63,8 @@ class SettingsScreenViewModel
                     _useSystemDarkMode.value = it
                     _setting.value = Settings(darkMode = settings.value.darkMode,
                         useSystemDarkMode = it,
-                        theme = settings.value.theme)
+                        theme = settings.value.theme,
+                        dynamicColor = settings.value.dynamicColor)
                 }
         }
     }
@@ -82,8 +79,24 @@ class SettingsScreenViewModel
                     _setting.value = Settings(
                         darkMode = settings.value.darkMode,
                         useSystemDarkMode = settings.value.useSystemDarkMode,
-                        theme = it
+                        theme = it,
+                        dynamicColor = settings.value.dynamicColor
                     )
+                }
+        }
+    }
+
+    private val _useDynamicColor = MutableStateFlow(false)
+    val useDynamicColor : StateFlow<Boolean> = _useDynamicColor
+    init {
+        viewModelScope.launch {
+            userPreferencesRepository.getUseDynamicColor()
+                .collect {
+                    _useDynamicColor.value = it
+                    _setting.value = Settings(darkMode = settings.value.darkMode,
+                        useSystemDarkMode = settings.value.useSystemDarkMode,
+                        theme = settings.value.theme,
+                        dynamicColor = it)
                 }
         }
     }
@@ -101,7 +114,7 @@ class SettingsScreenViewModel
     }
 
     fun setUseDynamicColor(useDynamicColor : Boolean) {
-        viewModelScope.launch { userPreferencesRepository.useDynamicColor(useDynamicColor) }
+        viewModelScope.launch { userPreferencesRepository.updateUseDynamicColor(useDynamicColor) }
     }
 
 

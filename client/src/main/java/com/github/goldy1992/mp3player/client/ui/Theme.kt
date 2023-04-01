@@ -1,7 +1,9 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Context
+import android.os.Build.VERSION_CODES.S
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material.darkColors
@@ -9,10 +11,12 @@ import androidx.compose.material.lightColors
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
+import com.github.goldy1992.mp3player.commons.VersionUtils
 
 enum class Theme(
     val displayName : String,
@@ -83,20 +87,45 @@ fun AppTheme(userPreferencesRepository: IUserPreferencesRepository,
 private fun getColorScheme(userPreferencesRepository: IUserPreferencesRepository) : ColorScheme {
     val context : Context = LocalContext.current
     val systemInDarkTheme = isSystemInDarkTheme()
-    val useSystemDarkThemePref = userPreferencesRepository.getSystemDarkMode().collectAsState(initial = true)
-    val useDarkThemePref = userPreferencesRepository.getDarkMode().collectAsState(initial = false)
+    val useSystemDarkThemePref by userPreferencesRepository.getSystemDarkMode().collectAsState(initial = true)
+    val useDarkThemePref by userPreferencesRepository.getDarkMode().collectAsState(initial = false)
+    val useDynamicColor by userPreferencesRepository.getUseDynamicColor().collectAsState(initial = true)
 
     Log.i("logg", "config: ${LocalConfiguration.current.uiMode}")
-    val useDarkTheme = if (useSystemDarkThemePref.value) {
+    val useDarkTheme = if (useSystemDarkThemePref) {
         systemInDarkTheme
     } else {
-        useDarkThemePref.value
+        useDarkThemePref
     }
 
-    return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-        if (useDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    return if (VersionUtils.isAndroid12OrHigher()) {
+        getColorSchemeAndroid12OrHigher(context, useDarkTheme, useDynamicColor)
     } else {
-        if (useDarkTheme) darkColorScheme() else lightColorScheme()
+        getNoneDynamicColorScheme(useDynamicColor)
     }
 
+}
+
+@RequiresApi(S)
+fun getColorSchemeAndroid12OrHigher(
+    context: Context,
+    useDarkTheme : Boolean = true,
+    useDynamicColor : Boolean = true) : ColorScheme {
+    return if (useDynamicColor) {
+        if (useDarkTheme) {
+           dynamicDarkColorScheme(context)
+        } else {
+            dynamicLightColorScheme(context)
+        }
+    } else {
+        getNoneDynamicColorScheme(useDarkTheme)
+    }
+}
+
+private fun getNoneDynamicColorScheme(useDarkTheme: Boolean) : ColorScheme {
+    return if (useDarkTheme) {
+        darkColorScheme()
+    } else {
+        lightColorScheme()
+    }
 }
