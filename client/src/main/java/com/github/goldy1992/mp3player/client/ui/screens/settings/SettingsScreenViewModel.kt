@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for [SettingsScreen]
+ */
 @HiltViewModel
 class SettingsScreenViewModel
 
@@ -50,68 +53,6 @@ class SettingsScreenViewModel
                 }
         }
     }
-
-//    private val _darkMode = MutableStateFlow(false)
-//    val darkMode : StateFlow<Boolean> = _darkMode
-//    init {
-//        viewModelScope.launch {
-//            userPreferencesRepository.getDarkMode()
-//                .collect {
-//                    _darkMode.value = it
-//                    _setting.value = Settings(darkMode = it,
-//                                            useSystemDarkMode = settings.value.useSystemDarkMode,
-//                                            theme = settings.value.theme,
-//                                            dynamicColor = settings.value.dynamicColor)
-//                }
-//        }
-//    }
-
-//    private val _useSystemDarkMode = MutableStateFlow(true)
-//    val useSystemDarkMode : StateFlow<Boolean> = _useSystemDarkMode
-//    init {
-//        viewModelScope.launch {
-//            userPreferencesRepository.getSystemDarkMode()
-//                .collect {
-//                    _useSystemDarkMode.value = it
-//                    _setting.value = Settings(darkMode = settings.value.darkMode,
-//                        useSystemDarkMode = it,
-//                        theme = settings.value.theme,
-//                        dynamicColor = settings.value.dynamicColor)
-//                }
-//        }
-//    }
-//
-//    private val _theme = MutableStateFlow(Theme.BLUE)
-//    val theme : StateFlow<Theme> = _theme
-//    init {
-//        viewModelScope.launch {
-//            userPreferencesRepository.getTheme()
-//                .collect {
-//                    _theme.value = it
-//                    _setting.value = Settings(
-//                        darkMode = settings.value.darkMode,
-//                        useSystemDarkMode = settings.value.useSystemDarkMode,
-//                        theme = it,
-//                        dynamicColor = settings.value.dynamicColor
-//                    )
-//                }
-//        }
-//    }
-//
-//    private val _useDynamicColor = MutableStateFlow(false)
-//    val useDynamicColor : StateFlow<Boolean> = _useDynamicColor
-//    init {
-//        viewModelScope.launch {
-//            userPreferencesRepository.getUseDynamicColor()
-//                .collect {
-//                    _useDynamicColor.value = it
-//                    _setting.value = Settings(darkMode = settings.value.darkMode,
-//                        useSystemDarkMode = settings.value.useSystemDarkMode,
-//                        theme = settings.value.theme,
-//                        dynamicColor = it)
-//                }
-//        }
-//    }
 
     fun setDarkMode(useDarkMode : Boolean) {
         viewModelScope.launch { userPreferencesRepository.updateDarkMode(useDarkMode = useDarkMode) }
