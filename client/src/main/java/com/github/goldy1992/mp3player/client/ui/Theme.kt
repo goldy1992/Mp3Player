@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
+import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferences
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
 import com.github.goldy1992.mp3player.commons.VersionUtils
 
@@ -87,9 +88,10 @@ fun AppTheme(userPreferencesRepository: IUserPreferencesRepository,
 private fun getColorScheme(userPreferencesRepository: IUserPreferencesRepository) : ColorScheme {
     val context : Context = LocalContext.current
     val systemInDarkTheme = isSystemInDarkTheme()
-    val useSystemDarkThemePref by userPreferencesRepository.getSystemDarkMode().collectAsState(initial = true)
-    val useDarkThemePref by userPreferencesRepository.getDarkMode().collectAsState(initial = false)
-    val useDynamicColor by userPreferencesRepository.getUseDynamicColor().collectAsState(initial = true)
+    val userPreferences by userPreferencesRepository.userPreferencesFlow().collectAsState(initial = UserPreferences.DEFAULT)
+    val useSystemDarkThemePref = userPreferences.systemDarkMode
+    val useDarkThemePref = userPreferences.darkMode
+    val useDynamicColor = userPreferences.useDynamicColor
 
     Log.i("logg", "config: ${LocalConfiguration.current.uiMode}")
     val useDarkTheme = if (useSystemDarkThemePref) {
@@ -101,7 +103,7 @@ private fun getColorScheme(userPreferencesRepository: IUserPreferencesRepository
     return if (VersionUtils.isAndroid12OrHigher()) {
         getColorSchemeAndroid12OrHigher(context, useDarkTheme, useDynamicColor)
     } else {
-        getNoneDynamicColorScheme(useDynamicColor)
+        getNoneDynamicColorScheme(useDarkTheme)
     }
 
 }

@@ -23,7 +23,7 @@ buildscript {
         junit4_version = '4.12'
         lifecycle_version = '2.5.1'
         coroutines_version = '1.6.4'
-        media3_version = '1.0.0-rc02'
+        media3_version = '1.0.0'
         monitor_version = '1.4.0-beta01'
         mockito_inline_version = '3.7.7'
         mockito_kotlin_version = '3.2.0'

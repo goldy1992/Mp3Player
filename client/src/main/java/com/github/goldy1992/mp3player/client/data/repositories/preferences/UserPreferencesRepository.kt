@@ -65,15 +65,19 @@ open class UserPreferencesRepository
             UserPreferences(darkMode, systemDarkMode, theme.name, useDynamicColor)
         }
 
+    override fun userPreferencesFlow(): Flow<UserPreferences> {
+        return userPreferencesFlow
+    }
+
     override suspend fun updateTheme(newTheme: Theme) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.THEME] = newTheme.name
         }
     }
 
-    override suspend fun updateDarkMode(darkMode: Boolean) {
+    override suspend fun updateDarkMode(useDarkMode: Boolean) {
         dataStore.edit { preferences ->
-            preferences[PreferencesKeys.DARK_MODE] = darkMode
+            preferences[PreferencesKeys.DARK_MODE] = useDarkMode
         }
     }
 

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -60,7 +61,6 @@ fun SettingsScreen(
 
     val settings by viewModel.settings.collectAsState()
     val permissions by viewModel.permissionState.collectAsState()
-    val requestPermission = { permission : String  -> viewModel.requestPermission(permission)}
 
     val settingsOnClickMap = EnumMap<Settings.Type, Any>(Settings.Type::class.java)
     settingsOnClickMap[Settings.Type.DARK_MODE] = { newDarkMode : Boolean -> viewModel.setDarkMode(newDarkMode)}
@@ -76,7 +76,6 @@ fun SettingsScreen(
             scope = scope,
             settingsProvider = { settings},
             permissionsProvider = {permissions},
-            requestPermission = requestPermission,
             settingsOnClickMap = settingsOnClickMap)
     } else {
         SmallSettingsScreen(
@@ -84,7 +83,6 @@ fun SettingsScreen(
             scope = scope,
             settingsProvider = { settings},
             permissionsProvider = {permissions},
-            requestPermission = requestPermission,
             settingsOnClickMap = settingsOnClickMap)
     }
 }
@@ -96,7 +94,6 @@ private fun LargeSettingsScreen(
     scope: CoroutineScope,
     settingsProvider: () -> Settings,
     permissionsProvider: () -> Map<String, Boolean>,
-    requestPermission: (String) -> Unit,
     settingsOnClickMap: EnumMap<Settings.Type, Any>
 ) {
     PermanentNavigationDrawer(drawerContent = {
@@ -121,7 +118,6 @@ private fun LargeSettingsScreen(
                     SettingsScreenContent(
                         settingsProvider = settingsProvider,
                         permissionsProvider = permissionsProvider,
-                        requestPermission = requestPermission,
                         settingsOnClickMap = settingsOnClickMap,
                         modifier = Modifier.padding(it),
                         navController = navController,
@@ -136,7 +132,6 @@ private fun LargeSettingsScreen(
 private fun SmallSettingsScreen(
     settingsProvider: () -> Settings,
     permissionsProvider: () -> Map<String, Boolean>,
-    requestPermission: (String) -> Unit,
     settingsOnClickMap: EnumMap<Settings.Type, Any>,
     navController: NavController,
     scope: CoroutineScope,
@@ -166,7 +161,6 @@ private fun SmallSettingsScreen(
                     SettingsScreenContent(
                         settingsProvider = settingsProvider,
                         permissionsProvider = permissionsProvider,
-                        requestPermission = requestPermission,
                         settingsOnClickMap = settingsOnClickMap,
                         modifier = Modifier.padding(it),
                         navController = navController
@@ -183,68 +177,90 @@ fun SettingsScreenContent(
     modifier: Modifier = Modifier,
     settingsProvider: () -> Settings = {Settings()},
     permissionsProvider: () -> Map<String, Boolean>,
-    requestPermission: (String) -> Unit,
     navController: NavController = rememberAnimatedNavController(),
     versionUtils: VersionUtils = VersionUtils(LocalContext.current)) {
 
-
     val context = LocalContext.current
     val settings = settingsProvider()
-    Column(modifier = modifier) {
-        Subheader(title = stringResource(id = R.string.display))
-        SystemDarkModeMenuItem(
-            useSystemDarkMode = settings.useSystemDarkMode,
-            onUpdate = settingsOnClickMap[Settings.Type.USE_SYSTEM_DARK_MODE] as (Boolean) -> Unit
-        )
-        DarkModeMenuItem(
-            useSystemDarkMode = settings.useSystemDarkMode,
-            isDarkMode = settings.darkMode,
-            onUpdate = settingsOnClickMap[Settings.Type.DARK_MODE] as (Boolean) -> Unit
-        )
-        if (isAndroid12OrHigher()) {
-            DynamicColorMenuItem(
-                useDynamicColor = settings.dynamicColor,
-                onUpdate = settingsOnClickMap[Settings.Type.DYNAMIC_COLOR] as (Boolean) -> Unit
+    LazyColumn(modifier = modifier) {
+        item {
+            Subheader(title = stringResource(id = R.string.display))
+        }
+        item {
+            SystemDarkModeMenuItem(
+                useSystemDarkMode = settings.useSystemDarkMode,
+                onUpdate = settingsOnClickMap[Settings.Type.USE_SYSTEM_DARK_MODE] as (Boolean) -> Unit
             )
+        }
+        item {
+            DarkModeMenuItem(
+                useSystemDarkMode = settings.useSystemDarkMode,
+                isDarkMode = settings.darkMode,
+                onUpdate = settingsOnClickMap[Settings.Type.DARK_MODE] as (Boolean) -> Unit
+            )
+        }
+        if (isAndroid12OrHigher()) {
+            item {
+                DynamicColorMenuItem(
+                    useDynamicColor = settings.dynamicColor,
+                    onUpdate = settingsOnClickMap[Settings.Type.DYNAMIC_COLOR] as (Boolean) -> Unit
+                )
+            }
         }
 
-        // TODO: Add Dynamic color option for android 12
-        Divider()
-        Subheader(title = stringResource(id = R.string.permissions))
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val acceptPermissions = "One or more permissions were NOT accepted. Please review permissions in below to receive the full app functionality!"
-            PermissionsMenuItemsTiramisu(
+        item {
+            Divider()
+        }
+        item {
+            Subheader(title = stringResource(id = R.string.permissions))
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissionsMenuItemsTiramisu(
+                lazyListScope = this,
                 permissionsProvider = permissionsProvider,
-                requestPermission = requestPermission
             )
         } else {
-            PermissionsMenuItems(
+            permissionsMenuItemsPreTiramisu(
+                lazyListScope = this,
                 permissionsProvider = permissionsProvider,
-                requestPermission = requestPermission
+            )
+
+        }
+        item {
+            ListItem(
+                leadingContent = {
+                    Icon(
+                        Icons.Default.Security,
+                        contentDescription = ""
+                    )
+                },
+                headlineText = { Text(stringResource(id = R.string.update_permissions)) },
+                supportingText = { Text("Opens System Settings in order to select and refine the App Permissions.") },
+                modifier = Modifier.clickable(enabled = true) {
+                    val intent =
+                        Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    val uri: Uri = Uri.fromParts("package", context.getPackageName(), null)
+                    intent.addCategory(Intent.CATEGORY_DEFAULT)
+                    intent.data = uri
+                    context.startActivity(intent, Bundle());
+                }
             )
         }
-        ListItem(
-            leadingContent = {
-                Icon(
-                    Icons.Default.Security,
-                    contentDescription = ""
-                )
-            },
-            headlineText = { Text(stringResource(id = R.string.update_permissions)) },
-            supportingText = { Text("Opens System Settings in order to select and refine the App Permissions.") },
-            modifier = Modifier.clickable(enabled = true) {
-                val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                val uri: Uri = Uri.fromParts("package", context.getPackageName(), null)
-                intent.addCategory(Intent.CATEGORY_DEFAULT)
-                intent.data = uri
-                context.startActivity(intent, Bundle());
-            }
-        )
-        Divider()
-        Subheader(title = stringResource(id = R.string.help))
-        SupportAndFeedbackMenuItem(navController)
-        Divider()
-        VersionMenuItem(versionUtils = versionUtils)
+        item {
+            Divider()
+        }
+        item {
+            Subheader(title = stringResource(id = R.string.help))
+        }
+        item {
+            SupportAndFeedbackMenuItem(navController)
+        }
+        item {
+            Divider()
+        }
+        item {
+            VersionMenuItem(versionUtils = versionUtils)
+        }
     }
 
 }

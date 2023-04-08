@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface IUserPreferencesRepository {
 
+    fun userPreferencesFlow() : Flow<UserPreferences>
+
     suspend fun updateTheme(newTheme : Theme)
     fun getTheme() : Flow<Theme>
 

@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.service.library
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import com.github.goldy1992.mp3player.service.RootAuthenticator
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetrievers
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetriever
@@ -27,16 +28,13 @@ import org.robolectric.RobolectricTestRunner
 class MediaContentManagerTest {
     private var contentManager: ContentManager? = null
 
-  //  private val contentRequestParser: ContentRequestParser = mock<ContentRequestParser>()
-
-//    private val permissionsNotifier = mock<PermissionsNotifier>()
-    private val permissionsNotifier = PermissionsNotifier()
+    private var permissionsRepository : IPermissionsRepository = mock()
 
     private val rootAuthenticator = mock<RootAuthenticator>()
 
-    private val contentRetrievers: ContentRetrievers = mock<ContentRetrievers>()
+    private val contentRetrievers: ContentRetrievers = mock()
 
-    private val contentSearchers: ContentSearchers = mock<ContentSearchers>()
+    private val contentSearchers: ContentSearchers = mock()
     
     private val rootRetriever: RootRetriever = mock<RootRetriever>()
 
@@ -73,7 +71,8 @@ class MediaContentManagerTest {
         whenever(contentRetrievers.root).thenReturn(rootRetriever)
         whenever(mockContentRetriever.getChildren(testSongsId)).thenReturn(listOf(testSongsChildMediaItem))
 
-        contentManager = MediaContentManager(permissionsNotifier,
+        contentManager = MediaContentManager(
+                permissionsRepository,
                 contentRetrievers,
                 contentSearchers,
                 rootAuthenticator,
@@ -111,7 +110,7 @@ class MediaContentManagerTest {
      */
     @Test
     fun testGetChildrenUsingSongsIdAfterPermissionGranted() = runTest  {
-        permissionsNotifier.setPermissionGranted(true)
+        //permissionsNotifier.setPermissionGranted(true)
         testScope.launch(UnconfinedTestDispatcher(testScheduler)) {
             val result = contentManager!!.getChildren(testSongsId)
             assertEquals(1, result.size)

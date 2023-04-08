@@ -1,6 +1,8 @@
 package com.github.goldy1992.mp3player.service.library.content.retriever
 
+import android.content.Context
 import androidx.media3.common.MediaItem
+import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
@@ -16,9 +18,12 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class RootRetrieverTest {
     private var rootRetriever: RootRetriever? = null
+
+    private val context : Context = InstrumentationRegistry.getInstrumentation().context
+
     @Before
     fun setup() {
-        rootRetriever = RootRetriever(MediaItemTypeIds())
+        rootRetriever = RootRetriever(MediaItemTypeIds(), context)
     }
 
     @Test

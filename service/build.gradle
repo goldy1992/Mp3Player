@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
+apply from: rootProject.file("jacoco-with-test-support.gradle")
 
 android {
     compileSdkVersion target_sdk_version

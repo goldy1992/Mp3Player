@@ -9,6 +9,7 @@ import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,74 +33,85 @@ class SettingsScreenViewModel
             }}
     }
 
-    fun requestPermission(permission : String) {
-        permissionsRepository.getPermissionsLauncher()?.launch(arrayOf(permission))
-    }
-
     private val _setting = MutableStateFlow(Settings())
     val settings : StateFlow<Settings> = _setting
 
-    private val _darkMode = MutableStateFlow(false)
-    val darkMode : StateFlow<Boolean> = _darkMode
     init {
         viewModelScope.launch {
-            userPreferencesRepository.getDarkMode()
+            userPreferencesRepository
+                .userPreferencesFlow()
                 .collect {
-                    _darkMode.value = it
-                    _setting.value = Settings(darkMode = it,
-                                            useSystemDarkMode = settings.value.useSystemDarkMode,
-                                            theme = settings.value.theme,
-                                            dynamicColor = settings.value.dynamicColor)
-                }
-        }
-    }
-
-    private val _useSystemDarkMode = MutableStateFlow(true)
-    val useSystemDarkMode : StateFlow<Boolean> = _useSystemDarkMode
-    init {
-        viewModelScope.launch {
-            userPreferencesRepository.getSystemDarkMode()
-                .collect {
-                    _useSystemDarkMode.value = it
-                    _setting.value = Settings(darkMode = settings.value.darkMode,
-                        useSystemDarkMode = it,
-                        theme = settings.value.theme,
-                        dynamicColor = settings.value.dynamicColor)
-                }
-        }
-    }
-
-    private val _theme = MutableStateFlow(Theme.BLUE)
-    val theme : StateFlow<Theme> = _theme
-    init {
-        viewModelScope.launch {
-            userPreferencesRepository.getTheme()
-                .collect {
-                    _theme.value = it
                     _setting.value = Settings(
-                        darkMode = settings.value.darkMode,
-                        useSystemDarkMode = settings.value.useSystemDarkMode,
-                        theme = it,
-                        dynamicColor = settings.value.dynamicColor
+                        darkMode = it.darkMode,
+                        useSystemDarkMode = it.systemDarkMode,
+                        //theme = Theme(it.theme),
+                        dynamicColor = it.useDynamicColor
                     )
                 }
         }
     }
 
-    private val _useDynamicColor = MutableStateFlow(false)
-    val useDynamicColor : StateFlow<Boolean> = _useDynamicColor
-    init {
-        viewModelScope.launch {
-            userPreferencesRepository.getUseDynamicColor()
-                .collect {
-                    _useDynamicColor.value = it
-                    _setting.value = Settings(darkMode = settings.value.darkMode,
-                        useSystemDarkMode = settings.value.useSystemDarkMode,
-                        theme = settings.value.theme,
-                        dynamicColor = it)
-                }
-        }
-    }
+//    private val _darkMode = MutableStateFlow(false)
+//    val darkMode : StateFlow<Boolean> = _darkMode
+//    init {
+//        viewModelScope.launch {
+//            userPreferencesRepository.getDarkMode()
+//                .collect {
+//                    _darkMode.value = it
+//                    _setting.value = Settings(darkMode = it,
+//                                            useSystemDarkMode = settings.value.useSystemDarkMode,
+//                                            theme = settings.value.theme,
+//                                            dynamicColor = settings.value.dynamicColor)
+//                }
+//        }
+//    }
+
+//    private val _useSystemDarkMode = MutableStateFlow(true)
+//    val useSystemDarkMode : StateFlow<Boolean> = _useSystemDarkMode
+//    init {
+//        viewModelScope.launch {
+//            userPreferencesRepository.getSystemDarkMode()
+//                .collect {
+//                    _useSystemDarkMode.value = it
+//                    _setting.value = Settings(darkMode = settings.value.darkMode,
+//                        useSystemDarkMode = it,
+//                        theme = settings.value.theme,
+//                        dynamicColor = settings.value.dynamicColor)
+//                }
+//        }
+//    }
+//
+//    private val _theme = MutableStateFlow(Theme.BLUE)
+//    val theme : StateFlow<Theme> = _theme
+//    init {
+//        viewModelScope.launch {
+//            userPreferencesRepository.getTheme()
+//                .collect {
+//                    _theme.value = it
+//                    _setting.value = Settings(
+//                        darkMode = settings.value.darkMode,
+//                        useSystemDarkMode = settings.value.useSystemDarkMode,
+//                        theme = it,
+//                        dynamicColor = settings.value.dynamicColor
+//                    )
+//                }
+//        }
+//    }
+//
+//    private val _useDynamicColor = MutableStateFlow(false)
+//    val useDynamicColor : StateFlow<Boolean> = _useDynamicColor
+//    init {
+//        viewModelScope.launch {
+//            userPreferencesRepository.getUseDynamicColor()
+//                .collect {
+//                    _useDynamicColor.value = it
+//                    _setting.value = Settings(darkMode = settings.value.darkMode,
+//                        useSystemDarkMode = settings.value.useSystemDarkMode,
+//                        theme = settings.value.theme,
+//                        dynamicColor = it)
+//                }
+//        }
+//    }
 
     fun setDarkMode(useDarkMode : Boolean) {
         viewModelScope.launch { userPreferencesRepository.updateDarkMode(useDarkMode = useDarkMode) }

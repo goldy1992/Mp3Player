@@ -19,6 +19,7 @@ import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSe
 import com.google.common.collect.ImmutableList
 import dagger.hilt.android.scopes.ServiceScoped
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -50,6 +51,7 @@ class MediaContentManager @Inject constructor(permissionRepository: IPermissions
 
         scope.launch {
             permissionRepository.permissionsFlow().collect {
+                Log.i(logTag(), "permission flow called")
                 if (hasStoragePermissions(it)) {
                     onPermissionsGranted()
                 }
