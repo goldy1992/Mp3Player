@@ -242,6 +242,7 @@ class DefaultMediaBrowser
                 itemCount: Int,
                 params: MediaLibraryService.LibraryParams?
             ) {
+                Log.i(logTag(), "onChildrenChangedFlow invoked - parent: $parentId, itemCount: $itemCount, params $params")
                 val x = OnChildrenChangedEventHolder(parentId, itemCount, params)
                 trySend(x)
             }
@@ -568,6 +569,7 @@ class DefaultMediaBrowser
     }
 
     override suspend fun subscribe(id: String) {
+        Log.d(logTag(), "subscribing to id: $id")
         mediaBrowserFuture.await().subscribe(id, MediaLibraryService.LibraryParams.Builder().build())
     }
 
@@ -586,7 +588,7 @@ class DefaultMediaBrowser
         @IntRange(from = 0.toLong()) itemCount: Int,
         params: MediaLibraryService.LibraryParams?
     ) {
-        Log.i(logTag(), "children changed parent: $parentId, itemCount: $itemCount, params $params")
+        Log.i(logTag(), "children changed callback method parent: $parentId, itemCount: $itemCount, params $params")
         listeners.forEach { listener -> listener.onChildrenChanged(browser, parentId, itemCount, params) }
     }
 

@@ -143,6 +143,7 @@ class MediaContentManager @Inject constructor(permissionRepository: IPermissions
         if (!_isInitialised.value) {
             Log.i(logTag(), "Not yet initialised, building tree")
             for (rootChild in rootNode.getChildren()) {
+                Log.d(logTag(), "building node: ${rootChild.mediaItemType}")
                 build(rootChild)
             }
             Log.i(logTag(), "built tree")
@@ -189,8 +190,9 @@ class MediaContentManager @Inject constructor(permissionRepository: IPermissions
                 if (childNode.mediaItemType != MediaItemType.SONG) {
                     build(childNode)
                 }
-                mediaSession?.notifyChildrenChanged(childNode.id, childNode.numberOfChildren(), LibraryParams.Builder().build())
             }
+            Log.d(logTag(), "calling notifyChildrenChange(parentId:${node.id}, itemCount: ${node.numberOfChildren()}")
+            mediaSession?.notifyChildrenChanged(node.id, node.numberOfChildren(), LibraryParams.Builder().build())
         }
         nodeMap[node.id] = node
     }
