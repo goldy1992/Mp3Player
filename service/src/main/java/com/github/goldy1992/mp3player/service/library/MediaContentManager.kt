@@ -1,10 +1,6 @@
 package com.github.goldy1992.mp3player.service.library
 
-import android.Manifest
-import android.os.Build
-import android.os.Build.VERSION_CODES.TIRAMISU
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.media3.common.MediaItem
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaLibraryService.LibraryParams
@@ -13,13 +9,13 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Normaliser.normalise
 import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import com.github.goldy1992.mp3player.service.RootAuthenticator
+import com.github.goldy1992.mp3player.service.library.content.ContentManagerResult
 import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetrievers
 import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever
 import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearchers
 import com.google.common.collect.ImmutableList
 import dagger.hilt.android.scopes.ServiceScoped
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -28,7 +24,7 @@ import java.util.*
 import javax.inject.Inject
 
 @ServiceScoped
-class MediaContentManager @Inject constructor(permissionRepository: IPermissionsRepository,
+class MediaContentManager @Inject constructor(private val permissionRepository: IPermissionsRepository,
                                               private val contentRetrievers: ContentRetrievers,
                                               private val contentSearchers: ContentSearchers,
                                               rootAuthenticator: RootAuthenticator,
@@ -37,6 +33,7 @@ class MediaContentManager @Inject constructor(permissionRepository: IPermissions
 
     private val rootNode = MediaItemNode(rootAuthenticator.getRootItem())
     private val nodeMap : MutableMap<String, MediaItemNode> = mutableMapOf()
+
     init {
         nodeMap[rootNode.id] = rootNode
         // initialise the root items
@@ -52,30 +49,12 @@ class MediaContentManager @Inject constructor(permissionRepository: IPermissions
         scope.launch {
             permissionRepository.permissionsFlow().collect {
                 Log.i(logTag(), "permission flow called")
-                if (hasStoragePermissions(it)) {
+                if (permissionRepository.hasStorageReadPermissions()) {
                     onPermissionsGranted()
                 }
             }
         }
     }
-
-    private fun hasStoragePermissions(permissionMap : Map<String, Boolean>): Boolean {
-        if (Build.VERSION.SDK_INT == TIRAMISU) {
-            return hasStoragePermissionsTiramisu(permissionMap)
-        }
-        return permissionMap.containsKey(Manifest.permission.READ_EXTERNAL_STORAGE) &&
-                permissionMap[Manifest.permission.READ_EXTERNAL_STORAGE] ?: false
-    }
-
-    @RequiresApi(TIRAMISU)
-    private fun hasStoragePermissionsTiramisu(permissionMap : Map<String, Boolean>): Boolean {
-        return permissionMap.containsKey(Manifest.permission.READ_MEDIA_AUDIO) &&
-                permissionMap[Manifest.permission.READ_MEDIA_AUDIO] ?: false &&
-                permissionMap.containsKey(Manifest.permission.READ_MEDIA_IMAGES) &&
-                permissionMap[Manifest.permission.READ_MEDIA_IMAGES] ?: false
-
-    }
-
 
     override var mediaSession: MediaLibraryService.MediaLibrarySession? = null
 
@@ -88,16 +67,19 @@ class MediaContentManager @Inject constructor(permissionRepository: IPermissions
      * @param parentId the id of the children to get
      * @return all the children of the id specified by the parentId parameter
      */
-    override suspend fun getChildren(parentId: String): List<MediaItem> {
-        val parentNode: MediaItemNode? = nodeMap!![parentId]
-        val children = parentNode?.getChildren()
-        Log.i(logTag(), "parentId: ${parentId}, children count: ${children?.count() ?: 0}")
-        return children?.map(MediaItemNode::item) ?: emptyList()
+    override suspend fun getChildren(parentId: String): ContentManagerResult {
+        val parentNode: MediaItemNode? = nodeMap[parentId]
+        val children = parentNode?.getChildren()?.map(MediaItemNode::item) ?: emptyList()
+        Log.i(logTag(), "parentId: ${parentId}, children count: ${children.count()}")
+        return ContentManagerResult( children,
+            children.size,
+            permissionRepository.hasStorageReadPermissions())
     }
 
     override suspend fun getChildren(mediaItemType: MediaItemType): List<MediaItem> {
-        val mediaItemId : String? = rootNode.getChildren().filter { x -> x.mediaItemType == mediaItemType }?.first()?.id
-        return if (mediaItemId != null) getChildren(mediaItemId) else emptyList()
+        val mediaItemId : String? = rootNode.getChildren()
+            .first { x -> x.mediaItemType == mediaItemType }.id
+        return if (mediaItemId != null) getChildren(mediaItemId).children else emptyList()
     }
 
     override suspend fun getContentById(id: String): MediaItem {

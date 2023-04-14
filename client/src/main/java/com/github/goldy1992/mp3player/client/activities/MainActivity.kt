@@ -89,7 +89,7 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
     }
 
     override fun onStart() {
-        requestPermission(getAppPermissions())
+        permissionLauncher.launch(getAppPermissions())
         super.onStart()
     }
 
@@ -104,12 +104,6 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
 
         }
     }
-
-    private fun requestPermission(permissions: Array<String>) { // Here, thisActivity is the current activity
-        permissionsRepository.setPermissionsLauncher(permissionLauncher)
-        permissionLauncher.launch(permissions)
-    }
-
 
     private val permissionLauncher : ActivityResultLauncher<Array<String>> = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()) {

@@ -7,9 +7,6 @@ interface IPermissionsRepository {
     fun permissionsFlow() : Flow<Map<String, Boolean>>
     suspend fun setPermissions(permissionGrantedArray : Map<String, Boolean>)
 
-    fun getPermissionsLauncher() : ActivityResultLauncher<Array<String>>?
-    fun setPermissionsLauncher(launcher : ActivityResultLauncher<Array<String>>)
-
     fun hasPlaybackPermissions() : Boolean
 
     fun hasStorageReadPermissions() : Boolean

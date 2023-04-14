@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import androidx.media3.session.MediaLibraryService
 import com.github.goldy1992.mp3player.client.data.*
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createAlbums
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createFolders
@@ -15,7 +16,7 @@ import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSongs
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.commons.*
-import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
+import com.github.goldy1992.mp3player.commons.Constants.HAS_PERMISSIONS
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,8 +32,7 @@ import javax.inject.Inject
 class LibraryScreenViewModel
     @Inject
     constructor(
-        private val mediaRepository: MediaRepository,
-        private val permissionsRepository: IPermissionsRepository
+        private val mediaRepository: MediaRepository
     ) : LogTagger, ViewModel() {
 
     private val _rootItems : MutableStateFlow<RootItems> = MutableStateFlow(RootItems())
@@ -97,7 +97,7 @@ class LibraryScreenViewModel
                         val mediaItemType = idToMediaItemTypeMap[it.parentId] ?: MediaItemType.NONE
 
                         if (isEmpty(children)) {
-                            if (!permissionsRepository.hasStorageReadPermissions()) {
+                            if (!hasPermissions(params = it.params!!)) {
                                 when (mediaItemType) {
                                     MediaItemType.ALBUMS -> _albums.value = Albums(State.NO_PERMISSIONS)
                                     MediaItemType.SONGS -> _songs.value = Songs(State.NO_PERMISSIONS)
@@ -172,18 +172,6 @@ class LibraryScreenViewModel
         }
     }
 
-    init {
-        viewModelScope.launch {
-            permissionsRepository.permissionsFlow().collect {
-                if (!permissionsRepository.hasStorageReadPermissions()) {
-                    _songs.value = Songs.NO_PERMISSIONS
-                    _folders.value = Folders(state = State.NO_PERMISSIONS)
-                    _albums.value = Albums(state = State.NO_PERMISSIONS)
-                }
-            }
-        }
-    }
-
     fun playPlaylist(playlistId : String, songs : Songs, index : Int) {
         val mediaItems = songs.songs.map { MediaItemBuilder(it.id).build() }
         val extras = Bundle()
@@ -221,4 +209,7 @@ class LibraryScreenViewModel
         return "LibScrnViewModel"
     }
 
+    private fun hasPermissions(params : MediaLibraryService.LibraryParams) : Boolean {
+        return params.extras.getBoolean(HAS_PERMISSIONS,false)
+    }
 }

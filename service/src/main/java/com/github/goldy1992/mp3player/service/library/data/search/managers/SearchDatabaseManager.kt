@@ -16,7 +16,7 @@ abstract class SearchDatabaseManager<T : SearchEntity>(private val contentManage
 
     @Suppress("UNCHECKED_CAST")
     suspend fun reindex() {
-        val results = contentManager.getChildren(rootCategoryId)
+        val results = contentManager.getChildren(rootCategoryId).children
         val entries = buildResults(results)
         deleteOld(entries)
         // replace any new entries

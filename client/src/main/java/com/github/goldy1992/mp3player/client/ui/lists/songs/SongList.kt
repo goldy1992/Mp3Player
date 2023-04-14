@@ -1,10 +1,12 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.github.goldy1992.mp3player.client.ui.lists.songs
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,7 +60,10 @@ fun SongList(
         State.NO_PERMISSIONS -> {
             NoPermissions()
         }
-        else -> EmptySongsList()
+        State.NOT_LOADED -> {
+
+        }
+        //else -> EmptySongsList()
     }
 }
 
@@ -97,17 +102,26 @@ private fun LoadedSongsList(
 @Preview
 @Composable
 fun EmptySongsList() {
-
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(DEFAULT_PADDING)) {
-        Text(text = stringResource(id = R.string.no_songs_on_device),
-        textAlign = TextAlign.Center,
-        modifier = Modifier.fillMaxWidth())
-
+        LazyColumn {
+            item {
+                ListItem(
+                    headlineText = {
+                        Text(
+                            text = stringResource(id = R.string.no_songs_on_device),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                )
+            }
+        }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun LoadingSongsList() {
@@ -115,7 +129,18 @@ fun LoadingSongsList() {
         modifier = Modifier.padding(10.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally)    {
-        Text("Loading Songs")
-        LoadingIndicator()
+
+        ListItem(
+            colors = ListItemDefaults.colors(MaterialTheme.colorScheme.surface),
+            trailingContent = {
+                 CircularProgressIndicator()
+            },
+            headlineText = {
+                Text(
+                    text = stringResource(id = R.string.loading),
+                //    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+        )
     }
 }

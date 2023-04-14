@@ -1,7 +1,9 @@
 package com.github.goldy1992.mp3player.commons.data.repositories.permissions
 
 import android.Manifest
+import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
+import androidx.annotation.RequiresApi
 import com.github.goldy1992.mp3player.commons.VersionUtils.isTiramisuOrHigher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,15 +24,6 @@ constructor() : IPermissionsRepository {
         _permissionsState.value = newMap
     }
 
-    private var permissionsLauncher: ActivityResultLauncher<Array<String>>? = null
-    override fun getPermissionsLauncher(): ActivityResultLauncher<Array<String>>? {
-        return permissionsLauncher
-    }
-
-    override fun setPermissionsLauncher(launcher: ActivityResultLauncher<Array<String>>) {
-        this.permissionsLauncher = launcher
-    }
-
     override fun hasPlaybackPermissions(): Boolean {
         if (isTiramisuOrHigher()) {
             return this._permissionsState.value[Manifest.permission.READ_MEDIA_AUDIO] ?: false
@@ -41,13 +34,18 @@ constructor() : IPermissionsRepository {
     override fun hasStorageReadPermissions(): Boolean {
         val currentPermissionsMap = this._permissionsState.value
         if (isTiramisuOrHigher()) {
-
-
-            return currentPermissionsMap[Manifest.permission.READ_MEDIA_AUDIO] ?: false
-                    &&
-                    currentPermissionsMap[Manifest.permission.READ_MEDIA_IMAGES] ?: false
+            return hasStorageReadPermissionsTiramisu()
         }
         return currentPermissionsMap[Manifest.permission.READ_EXTERNAL_STORAGE] ?: false
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun hasStorageReadPermissionsTiramisu(): Boolean {
+        val currentPermissionsMap = this._permissionsState.value
+        return currentPermissionsMap.containsKey(Manifest.permission.READ_MEDIA_AUDIO) &&
+                currentPermissionsMap[Manifest.permission.READ_MEDIA_AUDIO] ?: false &&
+                currentPermissionsMap.containsKey(Manifest.permission.READ_MEDIA_IMAGES) &&
+                currentPermissionsMap[Manifest.permission.READ_MEDIA_IMAGES] ?: false
     }
 
     override fun hasNotificationPermissions(): Boolean {

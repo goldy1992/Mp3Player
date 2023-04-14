@@ -13,6 +13,7 @@ object Constants {
     const val CHANGE_PLAYBACK_SPEED = "CHANGE_PLAYBACK_SPEED"
     const val AUDIO_SESSION_ID = "AUDIO_SESSION_ID"
     const val AUDIO_DATA = "AUDIO_DATA"
+    const val HAS_PERMISSIONS = "HAS_PERMISSIONS"
     const val PLAYLIST_ID = "PLAYLIST_ID"
 
     const val ITEM_INDEX = "itemIndex"

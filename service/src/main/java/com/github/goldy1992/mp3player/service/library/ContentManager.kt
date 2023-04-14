@@ -4,6 +4,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.service.library.content.ContentManagerResult
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -15,7 +16,7 @@ interface ContentManager : LogTagger {
 
     var mediaSession : MediaLibrarySession?
 
-    suspend fun getChildren(parentId : String) : List<MediaItem>
+    suspend fun getChildren(parentId : String) : ContentManagerResult
 
     suspend fun getChildren(mediaItemType: MediaItemType) : List<MediaItem>
 
