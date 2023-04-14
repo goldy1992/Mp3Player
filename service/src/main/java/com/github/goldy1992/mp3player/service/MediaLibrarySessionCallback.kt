@@ -199,16 +199,13 @@ class MediaLibrarySessionCallback
             return Futures.immediateFuture(LibraryResult.ofItemList(emptyList(), params))
         }
         var mediaItems = emptyList<MediaItem>()
-        runBlocking {
-            scope.launch(ioDispatcher) {
+        runBlocking(ioDispatcher) {
                 // Assume for example that the music catalog is already loaded/cached.
                 mediaItems = contentManager.getChildren(parentId).children
                 if (mediaItems.isEmpty()) {
                     Log.i(logTag(), "Setting results for parentId $parentId to be the empty media item")
                     // set the number of results to one to account for the empty media item
-
                 }
-            }.join()
 
             Log.i(logTag(), "finished on load children")
         }

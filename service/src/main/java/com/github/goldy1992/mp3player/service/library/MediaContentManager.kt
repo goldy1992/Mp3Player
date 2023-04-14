@@ -76,10 +76,10 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
             permissionRepository.hasStorageReadPermissions())
     }
 
-    override suspend fun getChildren(mediaItemType: MediaItemType): List<MediaItem> {
+    override suspend fun getChildren(mediaItemType: MediaItemType): ContentManagerResult{
         val mediaItemId : String? = rootNode.getChildren()
             .first { x -> x.mediaItemType == mediaItemType }.id
-        return if (mediaItemId != null) getChildren(mediaItemId).children else emptyList()
+        return if (mediaItemId != null) getChildren(mediaItemId) else buildEmptyResult()
     }
 
     override suspend fun getContentById(id: String): MediaItem {
@@ -177,6 +177,10 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
             mediaSession?.notifyChildrenChanged(node.id, node.numberOfChildren(), LibraryParams.Builder().build())
         }
         nodeMap[node.id] = node
+    }
+
+    private fun buildEmptyResult() : ContentManagerResult {
+        return ContentManagerResult(children = emptyList(), numberOfResults = 0, hasPermissions = permissionRepository.hasStorageReadPermissions())
     }
 
 }

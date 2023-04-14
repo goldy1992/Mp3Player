@@ -18,7 +18,7 @@ interface ContentManager : LogTagger {
 
     suspend fun getChildren(parentId : String) : ContentManagerResult
 
-    suspend fun getChildren(mediaItemType: MediaItemType) : List<MediaItem>
+    suspend fun getChildren(mediaItemType: MediaItemType) : ContentManagerResult
 
     suspend fun getContentById(id : String) : MediaItem
 
