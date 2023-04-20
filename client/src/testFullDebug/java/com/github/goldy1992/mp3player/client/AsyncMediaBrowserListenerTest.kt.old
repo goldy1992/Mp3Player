@@ -11,7 +11,7 @@ import org.mockito.kotlin.verify
 
 class AsyncMediaBrowserListenerTest {
 
-    private val asyncMediaBrowserListener = AsyncMediaBrowserListener()
+   // private val asyncMediaBrowserListener = AsyncMediaBrowserListener()
     private val mockMediaBrowserListener = mock<MediaBrowser.Listener>()
     private val browser = mock<MediaBrowser>()
     private val mediaController = mock<MediaController>()

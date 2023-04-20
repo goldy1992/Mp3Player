@@ -9,12 +9,12 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.navigation.NavController
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
+import com.github.goldy1992.mp3player.client.repositories.permissions.FakePermissionsRepository
 import com.github.goldy1992.mp3player.client.repositories.preferences.FakeUserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.screens.settings.SettingsScreen
 import com.github.goldy1992.mp3player.client.ui.screens.settings.SettingsScreenViewModel
 import com.github.goldy1992.mp3player.client.utils.VersionUtils
-import kotlinx.coroutines.flow.flowOf
+import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -31,11 +31,14 @@ class SettingsScreenTest {
 
     private val navController = mock<NavController>()
 
+    private val permissionsRepository : IPermissionsRepository = FakePermissionsRepository()
+
     private val userPreferencesRepository = FakeUserPreferencesRepository()
 
     private val versionUtils = mock<VersionUtils>()
 
-    private val viewModel = SettingsScreenViewModel(userPreferencesRepository = userPreferencesRepository)
+    private val viewModel = SettingsScreenViewModel(userPreferencesRepository = userPreferencesRepository,
+    permissionsRepository = permissionsRepository)
 
     private lateinit var context : Context
 
@@ -45,9 +48,10 @@ class SettingsScreenTest {
     @Before
     fun setup() {
         context = InstrumentationRegistry.getInstrumentation().context
-    //    whenever(userPreferencesRepository.getSystemDarkMode()).thenReturn(flowOf(false))
-    //    whenever(userPreferencesRepository.getDarkMode()).thenReturn(flowOf(false))
-    //    whenever(versionUtils.getAppVersion()).thenReturn("Version")
+
+        userPreferencesRepository.useSystemDarkMode.value = false
+        userPreferencesRepository.darkMode.value = false
+        whenever(versionUtils.getAppVersion()).thenReturn("Version")
     }
 
     /**
