@@ -7,7 +7,7 @@ plugins {
 
 android {
     testBuildType = "debug"
-    packagingOptions {
+    packaging {
         resources {
             excludes += "**/attach_hotspot_windows.dll"
             excludes += "META-INF/LICENSE.md"
@@ -50,7 +50,7 @@ android {
             isDefault = true
             isMinifyEnabled = false
             isDebuggable = true
-            isTestCoverageEnabled = false
+            enableUnitTestCoverage = false
         }
     }
     flavorDimensions += "mode"

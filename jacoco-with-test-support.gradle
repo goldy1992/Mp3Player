@@ -1,7 +1,7 @@
 apply plugin: 'jacoco'
 
 jacoco {
-    toolVersion = jacoco_version
+  //  toolVersion = jacoco_version
 }
 
 def fileFilter = [
