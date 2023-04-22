@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kapt)
 }
-//apply from: rootProject.file("jacoco-with-test-support.gradle")
+apply (from = rootProject.file("jacoco-with-test-support.gradle"))
 
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -33,24 +33,23 @@ android {
         jvmTarget = "17"
     }
 
-//    testOptions {
-//        execution 'ANDROIDX_TEST_ORCHESTRATOR'
-//        unitTests {
-//            includeAndroidResources = true
-//            returnDefaultValues = true
-//        }
-//        unitTests.all {
-//            testLogging {
-//                events "passed", "skipped"//, "failed", "standardOut", "standardError"
-//                outputs.upToDateWhen {false}
-//                showStandardStreams = false
-//            }
-//            jacoco {
-//                includeNoLocationClasses = true
-//                excludes = ['jdk.internal.*']
-//            }
-//        }
-//    }
+    testOptions.unitTests {
+        isIncludeAndroidResources = true
+        isReturnDefaultValues = true
+
+        all { test ->
+            with(test) {
+                configure<JacocoTaskExtension> {
+                    isIncludeNoLocationClasses = true
+                    excludes = listOf("jdk.internal.*")
+                }
+            }
+        }
+
+        testCoverage {
+            jacocoVersion = libs.versions.jacoco.get()
+        }
+    }
     namespace = "com.github.goldy1992.mp3player.commons"
 
 }
@@ -69,9 +68,10 @@ dependencies {
     testImplementation(libs.robolectric) {
         exclude(group = "com.google.auto.service", module = "auto-service")
     }
-//    testImplementation group: 'junit', name: 'junit', version: junit4_version
+    testImplementation(libs.junit4)
     testImplementation(libs.mockito.inline)
-    testImplementation(libs.mockito.kotlin)}
+    testImplementation(libs.mockito.kotlin)
+}
 
 //sonarqube {
 //    androidVariant 'debug'

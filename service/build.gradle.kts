@@ -11,7 +11,6 @@ android {
 
             defaultConfig {
                 minSdk = libs.versions.minSdk.get().toInt()
-                targetSdk = libs.versions.targetSdk.get().toInt()
                 testInstrumentationRunner = "com.github.goldy1992.mp3player.client.CustomTestRunner"
                 /*makes the Android Test Orchestrator run its "pm clear" command after each test invocation.
                 Ensures app's state is completely cleared between tests. */
@@ -96,6 +95,7 @@ dependencies {
     implementation(libs.apache.commons.lang3)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.kotlin)
+    implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.coroutines.core)
     implementation(libs.kotlin.coroutines.android)
@@ -119,6 +119,10 @@ dependencies {
     kapt(libs.hilt.compiler)
     testImplementation(libs.hilt.android.core)
     kaptTest(libs.hilt.compiler)
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 //sonarqube {
