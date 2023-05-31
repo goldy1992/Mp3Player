@@ -38,7 +38,7 @@ fun NoResultsFound(mediaItemType: MediaItemType,
             leadingContent = {
                 Icon(Icons.Default.Info, contentDescription = noResultsText)
             },
-            headlineText = {
+            headlineContent = {
                 Text(text = noResultsText)
             }
         )
@@ -62,7 +62,7 @@ fun NoResultsFound(mediaItemType: MediaItemType,
             leadingContent = {
                 Icon(Icons.Default.Warning, contentDescription = noPermissionsText)
             },
-            headlineText = {
+            headlineContent = {
                 Text(text = noPermissionsText)
             }
         )

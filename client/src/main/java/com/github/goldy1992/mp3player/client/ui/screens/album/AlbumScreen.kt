@@ -124,8 +124,8 @@ fun AlbumScreen(
                         ),
                         colors = ListItemDefaults.colors(containerColor = containerColor),
                         leadingContent = { Text("$currentAlbumSongIndex") },
-                        headlineText = { Text(albumSong.title) },
-                        supportingText = { Text(albumSong.artist) }
+                        headlineContent = { Text(albumSong.title) },
+                        supportingContent = { Text(albumSong.artist) }
                     )
                 }
             }

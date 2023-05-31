@@ -126,7 +126,7 @@ private fun PermissionListItem(
     val containerColor = if (!hasPermission) colorScheme.surfaceVariant else colorScheme.surface
     ListItem(modifier = Modifier.fillMaxWidth(),
         leadingContent = icon,
-        headlineText = { Text(text = permissionDescription) },
+        headlineContent = { Text(text = permissionDescription) },
         colors = ListItemDefaults.colors(containerColor = containerColor),
         trailingContent = {
             val icon = if (hasPermission) Icons.Filled.Check else Icons.Filled.Close
@@ -177,7 +177,7 @@ fun previewColorScheme() {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(count = colors.size) {
             idx ->
-            ListItem(headlineText = {Text(colors[idx].first) },
+            ListItem(headlineContent = {Text(colors[idx].first) },
                 colors = ListItemDefaults.colors(containerColor = colorScheme.surfaceVariant),
                 leadingContent = { Box(Modifier.width(60.dp).height(60.dp).background(colors[idx].second)) })
 

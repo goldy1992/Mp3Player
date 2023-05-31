@@ -35,13 +35,13 @@ fun AlbumSearchResultItem(album : Album = Album(),
         ),
         colors = ListItemDefaults.colors(containerColor = containerColor),
         leadingContent = { AlbumArt(uri = album.albumArt, modifier = Modifier.size(40.dp))},
-        headlineText = {
+        headlineContent = {
                 Text(text = album.albumTitle,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis)
             },
-        supportingText = {
+        supportingContent = {
             Text(
                 text = album.albumArtist,
                 maxLines = 1,

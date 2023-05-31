@@ -35,13 +35,13 @@ fun FolderListItem(folder : Folder = Folder(),
             ),
         colors = ListItemDefaults.colors(containerColor = containerColor) ,
         leadingContent = { FolderIcon()},
-        headlineText = {
+        headlineContent = {
             Text(text = folder.name,
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis)
         },
-        supportingText = {
+        supportingContent = {
             Text(
                 text = folder.path,
                 maxLines = 1,

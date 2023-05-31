@@ -35,7 +35,8 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-        testInstrumentationRunner = "com.github.goldy1992.mp3player.client.CustomTestRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        //testInstrumentationRunner = "com.github.goldy1992.mp3player.client.CustomTestRunner"
         /*makes the Android Test Orchestrator run its "pm clear" command after each test invocation.
         Ensures app's state is completely cleared between tests. */
         //testInstrumentationRunnerArguments clearPackageData: 'true'
@@ -147,7 +148,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.concurrent.futures.kotlin)
     implementation(libs.androidx.activity.kotlin)
-    androidTestImplementation(project(":client"))
 
     // compose
     implementation(libs.androidx.compose.runtime)
@@ -194,15 +194,17 @@ dependencies {
 
 
     // hilt
-    testImplementation(libs.hilt.android.core)
+    testImplementation(libs.hilt.android.testing)
     kaptTest(libs.hilt.compiler)
 
-
-    androidTestImplementation(libs.hilt.android.core)
-    kaptAndroidTest(libs.hilt.compiler)
+//    androidTestImplementation(libs.hilt.android.testing)
+//    kaptAndroidTest(libs.hilt.compiler)
 
     androidTestImplementation(project(":commons"))
     androidTestImplementation(libs.mockito.kotlin)
+    androidTestImplementation(libs.dexmaker.mockito.inline)
+    androidTestImplementation(libs.androidx.test.runner)
+
 
     // Test rules and transitive dependencies:
 

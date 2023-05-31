@@ -14,10 +14,10 @@ import javax.inject.Singleton
 
 
 data class UserPreferences(
-    val darkMode: Boolean,
-    val systemDarkMode : Boolean,
-    val theme: String,
-    val useDynamicColor: Boolean
+    val darkMode: Boolean = true,
+    val systemDarkMode : Boolean = false,
+    val theme: String = "None",
+    val useDynamicColor: Boolean = false
 )  {
     companion object {
         val DEFAULT = UserPreferences(darkMode = false, systemDarkMode = false, theme = "None", useDynamicColor = true)

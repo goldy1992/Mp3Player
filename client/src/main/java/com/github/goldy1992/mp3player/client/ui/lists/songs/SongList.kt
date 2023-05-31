@@ -108,7 +108,7 @@ fun EmptySongsList() {
         LazyColumn {
             item {
                 ListItem(
-                    headlineText = {
+                    headlineContent = {
                         Text(
                             text = stringResource(id = R.string.no_songs_on_device),
                             textAlign = TextAlign.Center,
@@ -135,7 +135,7 @@ fun LoadingSongsList() {
             trailingContent = {
                  CircularProgressIndicator()
             },
-            headlineText = {
+            headlineContent = {
                 Text(
                     text = stringResource(id = R.string.loading),
                 //    style = MaterialTheme.typography.bodyMedium

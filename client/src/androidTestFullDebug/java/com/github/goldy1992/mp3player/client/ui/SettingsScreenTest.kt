@@ -9,6 +9,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.navigation.NavController
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferences
 import com.github.goldy1992.mp3player.client.repositories.permissions.FakePermissionsRepository
 import com.github.goldy1992.mp3player.client.repositories.preferences.FakeUserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.screens.settings.SettingsScreen
@@ -61,7 +62,8 @@ class SettingsScreenTest {
     @Test
     fun testDarkModeDisabledWhenUseSystemDarkModeIsTrue() {
         // set system dark mode to be false
-        userPreferencesRepository.useSystemDarkMode.value = true
+        val userPreferences = UserPreferences(systemDarkMode = true)
+        userPreferencesRepository.userPreferences.value = userPreferences
         val systemDarkModeSwitch = context.getString(R.string.system_dark_mode_switch)
         val darkModeSwitch = context.getString(R.string.dark_mode_switch)
         composeTestRule.setContent {

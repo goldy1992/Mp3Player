@@ -5,7 +5,11 @@ package com.github.goldy1992.mp3player.client.ui.screens.library
 import android.util.Base64
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
@@ -33,7 +37,6 @@ import com.github.goldy1992.mp3player.client.utils.MediaItemNameUtils
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.pager.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
@@ -47,10 +50,10 @@ private const val logTag = "LibraryScreen"
  * @param viewModel The [LibraryScreenViewModel].
  */
 @OptIn(
-    ExperimentalMaterial3Api::class,
     ExperimentalAnimationApi::class,
     ExperimentalMaterialApi::class,
-    ExperimentalPagerApi::class)
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun LibraryScreen(navController: NavController = rememberAnimatedNavController(),
                   pagerState: PagerState = rememberPagerState(initialPage = 0),
@@ -191,7 +194,6 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalMaterialApi
-@ExperimentalPagerApi
 @Composable
 fun LargeLibraryScreen(
     navDrawerContent : @Composable () -> Unit = {},
@@ -246,7 +248,7 @@ fun SmallLibraryScreen(
 }
 
 
-@ExperimentalPagerApi
+@ExperimentalFoundationApi
 @Composable
 private fun LibraryTabs(
     pagerState: PagerState,
@@ -293,7 +295,7 @@ private fun LibraryTabs(
 
 
 @ExperimentalMaterialApi
-@ExperimentalPagerApi
+@ExperimentalFoundationApi
 @Composable
 fun LibraryScreenContent(
     modifier: Modifier = Modifier,
@@ -340,8 +342,7 @@ fun LibraryScreenContent(
  * @param modifier The [Modifier].
  * @param viewModel The [LibraryScreenViewModel].
  */
-@OptIn(ExperimentalCoilApi::class)
-@ExperimentalPagerApi
+@OptIn(ExperimentalCoilApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun TabBarPages(
     modifier: Modifier = Modifier,
@@ -361,7 +362,7 @@ fun TabBarPages(
         modifier = modifier) {
         HorizontalPager(
             state = pagerState,
-            count = tabPages.size
+            pageCount = tabPages.size
         ) { pageIndex ->
             val currentDataType = tabPages[pageIndex]
             when (currentDataType) {

@@ -19,4 +19,8 @@ data class Settings
         DYNAMIC_COLOR
     }
 
+    companion object {
+        val DEFAULT = Settings()
+    }
+
 }

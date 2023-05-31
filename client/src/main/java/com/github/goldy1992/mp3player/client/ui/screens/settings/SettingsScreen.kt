@@ -234,8 +234,8 @@ fun SettingsScreenContent(
                         contentDescription = ""
                     )
                 },
-                headlineText = { Text(stringResource(id = R.string.update_permissions)) },
-                supportingText = { Text("Opens System Settings in order to select and refine the App Permissions.") },
+                headlineContent = { Text(stringResource(id = R.string.update_permissions)) },
+                supportingContent = { Text("Opens System Settings in order to select and refine the App Permissions.") },
                 modifier = Modifier.clickable(enabled = true) {
                     val intent =
                         Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -273,8 +273,8 @@ private fun Subheader(title : String = "Permissions",
 
     val subtitleComposable : (@Composable () -> Unit)? = if (subtitle == null) null else { { Text(subtitle)} }
     ListItem(
-        headlineText = { Text(title, style = MaterialTheme.typography.titleSmall) },
-        supportingText = subtitleComposable,
+        headlineContent = { Text(title, style = MaterialTheme.typography.titleSmall) },
+        supportingContent = subtitleComposable,
         modifier = Modifier
             .fillMaxWidth()
     )
@@ -286,7 +286,7 @@ private fun ThemeMenuItem(navController: NavController) {
     val theme = stringResource(id = R.string.theme)
     ListItem(
         leadingContent = { Icon(Icons.Filled.Palette, contentDescription = theme) },
-        headlineText = { Text(theme, style = MaterialTheme.typography.titleMedium) },
+        headlineContent = { Text(theme, style = MaterialTheme.typography.titleMedium) },
         modifier = Modifier.clickable { navController.navigate(Screen.THEME_SELECT.name)}
     )
 }
@@ -298,7 +298,7 @@ fun DynamicColorMenuItem(useDynamicColor : Boolean = true,
     val dynamicColorDescr = stringResource(id = R.string.dynamic_color)
     ListItem(
         leadingContent = {  Icon(Icons.Filled.Palette, contentDescription = dynamicColorDescr) },
-        headlineText = { Text(dynamicColorDescr)},
+        headlineContent = { Text(dynamicColorDescr)},
         trailingContent = {
             Switch(
                 checked = useDynamicColor,
@@ -316,7 +316,7 @@ private fun SystemDarkModeMenuItem(useSystemDarkMode : Boolean,
     val switchDescription = stringResource(id = R.string.system_dark_mode_switch)
     ListItem(modifier = Modifier.fillMaxWidth(),
         leadingContent = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.system_dark_mode_icon)) },
-        headlineText = { Text(text = stringResource(id = R.string.use_system_dark_mode))},
+        headlineContent = { Text(text = stringResource(id = R.string.use_system_dark_mode))},
         trailingContent = {
             Switch(
                 checked = useSystemDarkMode,
@@ -335,7 +335,7 @@ private fun DarkModeMenuItem(isDarkMode : Boolean,
     val switchDescription = stringResource(id = R.string.dark_mode_switch)
     ListItem(modifier = Modifier.fillMaxWidth(),
         leadingContent = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.dark_mode_icon)) },
-        headlineText = { Text(text = stringResource(id = R.string.dark_mode)) },
+        headlineContent = { Text(text = stringResource(id = R.string.dark_mode)) },
         trailingContent = {
             Switch(
                 checked = isDarkMode,
@@ -351,7 +351,7 @@ private fun SupportAndFeedbackMenuItem(navController: NavController) {
     val supportAndFeedback = stringResource(id = R.string.support_and_feedback)
     ListItem(
         leadingContent = { Icon(Icons.Filled.Help, contentDescription = supportAndFeedback) },
-        headlineText = {
+        headlineContent = {
             Column() {
                 Text(supportAndFeedback)
             }
@@ -363,8 +363,8 @@ private fun SupportAndFeedbackMenuItem(navController: NavController) {
 private fun VersionMenuItem(versionUtils : VersionUtils = VersionUtils(LocalContext.current)) {
     ListItem(
         leadingContent = {},
-        headlineText = {Text(stringResource(id = R.string.version)) },
-        supportingText = { Text(versionUtils.getAppVersion(), style= MaterialTheme.typography.bodySmall) }
+        headlineContent = {Text(stringResource(id = R.string.version)) },
+        supportingContent = { Text(versionUtils.getAppVersion(), style= MaterialTheme.typography.bodySmall) }
     )
 }
 
@@ -372,7 +372,7 @@ private fun VersionMenuItem(versionUtils : VersionUtils = VersionUtils(LocalCont
 private fun AboutMenuItem(navController: NavController) {
     ListItem(
         leadingContent = { },
-        headlineText = {
+        headlineContent = {
                 Text("About") // TODO: Translate and link to about page!
         },
     )

@@ -45,7 +45,7 @@ fun SongListItem(song : Song = Song(),
                 )
                 .requiredHeight(72.dp),
         colors = ListItemDefaults.colors(containerColor = containerColor) ,
-            headlineText = {
+            headlineContent = {
                 Text(
                 text = song.title,
                 style = MaterialTheme.typography.bodyMedium,
@@ -67,7 +67,7 @@ fun SongListItem(song : Song = Song(),
                 AlbumArt(uri = song.albumArt, modifier = Modifier.size(40.dp))
 
              },
-            supportingText = {
+            supportingContent = {
                 Text(
                     text = song.artist,
                     maxLines = 1,
