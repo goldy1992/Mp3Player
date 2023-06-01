@@ -1,9 +1,11 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.assertAny
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onChildAt
+import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.test.platform.app.InstrumentationRegistry
 import coil.annotation.ExperimentalCoilApi
@@ -63,8 +65,8 @@ class SongsTest {
         }
 
         val node = composeTestRule.onNodeWithContentDescription(songsListContentDescr)
-        node.onChildAt(0).assert(hasText("title1"))
-        node.onChildAt(1).assert(hasText("title2"))
+        node.onChildAt(0).onChildren().assertAny(hasText("title1"))
+        node.onChildAt(1).onChildren().assertAny(hasText("title2"))
         val children = node.fetchSemanticsNode().children
         assertEquals(2, children.size)
     }
