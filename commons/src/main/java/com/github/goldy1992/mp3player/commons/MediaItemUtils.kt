@@ -93,12 +93,6 @@ object MediaItemUtils : LogTagger {
         return mediaItem.mediaMetadata.artist != null
     }
 
-    private fun hasDuration(mediaItem : MediaItem) : Boolean {
-        return false
-      //  mediaItem.mediaMetadata.
-       // return hasExtras(mediaItem) && hasExtra(MediaMetadataCompat.METADATA_KEY_DURATION, mediaItem)
-    }
-
     private fun hasFileCount(mediaItem : MediaItem?) : Boolean {
         return hasExtras(mediaItem) && hasExtra(Constants.FILE_COUNT, mediaItem)
     }

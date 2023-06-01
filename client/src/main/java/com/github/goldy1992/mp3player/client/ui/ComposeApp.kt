@@ -35,7 +35,6 @@ import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
 
@@ -46,7 +45,6 @@ private const val transitionTime = 2000
     ExperimentalComposeUiApi::class,
     ExperimentalFoundationApi::class,
     ExperimentalMaterialApi::class,
-    ExperimentalPagerApi::class,
     InternalCoroutinesApi::class,
 )
 @Composable

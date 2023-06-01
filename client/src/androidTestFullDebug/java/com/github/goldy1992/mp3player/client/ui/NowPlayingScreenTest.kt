@@ -4,7 +4,6 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithText
 import androidx.media3.common.MediaMetadata
 import androidx.navigation.NavController
 import androidx.test.platform.app.InstrumentationRegistry
@@ -12,7 +11,6 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
 import com.github.goldy1992.mp3player.client.ui.screens.nowplaying.NowPlayingScreen
 import com.github.goldy1992.mp3player.client.ui.screens.nowplaying.NowPlayingScreenViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
@@ -20,8 +18,7 @@ import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
 
-@OptIn(InternalCoroutinesApi::class,
-       ExperimentalPagerApi::class)
+@OptIn(InternalCoroutinesApi::class)
 class NowPlayingScreenTest {
 
     private val context = InstrumentationRegistry.getInstrumentation().context

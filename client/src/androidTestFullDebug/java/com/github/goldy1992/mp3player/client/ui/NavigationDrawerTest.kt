@@ -15,7 +15,6 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.screens.library.SmallLibraryAppBar
 import com.github.goldy1992.mp3player.commons.Screen
-import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.*
 import org.junit.Assert.assertTrue
@@ -35,6 +34,7 @@ class NavigationDrawerTest {
 
 
 
+
     /**
      * Setup method.
      */
@@ -46,8 +46,6 @@ class NavigationDrawerTest {
     /**
      * Tests the appearance of [NavigationDrawer] when it is opened.
      */
-    @OptIn(ExperimentalMaterial3Api::class)
-    @ExperimentalPagerApi
     @Test
     fun testNavigationDrawerOpenAppearance() {
         val drawerState = DrawerState(DrawerValue.Open)
@@ -64,8 +62,6 @@ class NavigationDrawerTest {
     /**
      * Tests the [NavigationDrawer] exits when the drawer is closed but it not visible.
      */
-    @OptIn(ExperimentalMaterial3Api::class)
-    @ExperimentalPagerApi
     @Test
     fun testNavigationDrawerClosedAppearance() {
         val drawerState = DrawerState(DrawerValue.Closed)
@@ -81,8 +77,6 @@ class NavigationDrawerTest {
     /**
      * Tests the appearance of [NavigationDrawer] when it is opened.
      */
-    @OptIn(ExperimentalMaterial3Api::class)
-    @ExperimentalPagerApi
     @Test
     fun testNavigationClickOpenDrawer() {
         val drawerState = DrawerState(DrawerValue.Closed)
@@ -103,7 +97,6 @@ class NavigationDrawerTest {
     }
 
     @Composable
-    @OptIn(ExperimentalMaterial3Api::class)
     private fun TestNavigationDrawerComposable(drawerState: DrawerState) {
         val scope = rememberCoroutineScope()
         Column(Modifier.fillMaxSize()) {

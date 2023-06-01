@@ -35,16 +35,12 @@ class FolderListTest {
     fun testDisplayFolderList() {
         val folder1Name = "folder name1"
         val folder1Path = "/a/b/${folder1Name}"
-        val folder1Obj = File(folder1Path)
-       // val folder1 = MediaItemBuilder().setDirectoryFile(folder1Obj).build()
         val folder1 = Folder(name = folder1Name,
                           path = folder1Path,
 
         )
         val folder2Name = "folder name2"
         val folder2Path = "/a/b/${folder2Name}"
-        val folder2Obj = File(folder2Path)
-       // val folder2 = MediaItemBuilder().setDirectoryFile(folder2Obj).build()
         val folder2 = Folder(name = folder2Name, path = folder2Path)
 
         composeTestRule.setContent {
@@ -53,8 +49,7 @@ class FolderListTest {
         }
         val folderListDescr = context.getString(R.string.folder_list)
         val node = composeTestRule.onNodeWithContentDescription(folderListDescr)
-        node.printToLog("folderlisttest",)
-//        printT
+
         node.onChildAt(0).onChildren().assertAny(hasText(folder1Name))
         node.onChildAt(0).onChildren().assertAny(hasText(folder1Path))
         node.onChildAt(1).onChildren().assertAny(hasText(folder2Name))

@@ -169,10 +169,7 @@ dependencies {
     implementation(libs.hilt.android.core)
     kapt(libs.hilt.compiler)
 
-
-    implementation(libs.accompanist.pager)
     implementation(libs.accompanist.insets)
-    implementation(libs.accompanist.pager.indicators)
     implementation(libs.accompanist.navigation.animation)
     implementation(libs.coil.compose)
     implementation(libs.androidx.window)
