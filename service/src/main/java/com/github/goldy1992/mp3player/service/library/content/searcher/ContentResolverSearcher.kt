@@ -6,10 +6,9 @@ import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.service.library.content.filter.ResultsFilter
 import com.github.goldy1992.mp3player.service.library.content.parser.ResultsParser
 import com.github.goldy1992.mp3player.service.library.data.search.SearchDao
-import com.github.goldy1992.mp3player.service.library.data.search.SearchEntity
 import kotlinx.coroutines.CoroutineScope
 
-abstract class ContentResolverSearcher<T : SearchEntity> internal constructor(val contentResolver: ContentResolver,
+abstract class ContentResolverSearcher<T> internal constructor(val contentResolver: ContentResolver,
                                                                               val resultsParser: ResultsParser,
                                                                               val resultsFilter: ResultsFilter?,
                                                                               val searchDatabase: SearchDao<T>,

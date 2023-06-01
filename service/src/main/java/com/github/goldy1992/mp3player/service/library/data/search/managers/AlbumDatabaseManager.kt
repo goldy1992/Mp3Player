@@ -27,8 +27,6 @@ class AlbumDatabaseManager
     override fun createFromMediaItem(item: MediaItem): Album? {
         val id = getMediaId(item)
         val value = getAlbumTitle(item)
-        return if (null != value) {
-            Album(id, normalise(value))
-        } else null
+        return Album(id, normalise(value))
     }
 }

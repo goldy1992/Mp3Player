@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.kapt)
     alias(libs.plugins.hilt)
 }
@@ -9,19 +10,22 @@ plugins {
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
 
-            defaultConfig {
-                minSdk = libs.versions.minSdk.get().toInt()
-                testInstrumentationRunner = "com.github.goldy1992.mp3player.client.CustomTestRunner"
-                /*makes the Android Test Orchestrator run its "pm clear" command after each test invocation.
-                Ensures app's state is completely cleared between tests. */
-                //testInstrumentationRunnerArguments clearPackageData: 'true'
-                consumerProguardFiles("consumer-rules.pro")
-                javaCompileOptions {
-                    annotationProcessorOptions {
-                        arguments += "room.schemaLocation" to "$projectDir/schemas".toString()
-                    }
-                }
+    defaultConfig {
+        minSdk = libs.versions.minSdk.get().toInt()
+        testInstrumentationRunner = "com.github.goldy1992.mp3player.client.CustomTestRunner"
+        /*makes the Android Test Orchestrator run its "pm clear" command after each test invocation.
+        Ensures app's state is completely cleared between tests. */
+        //testInstrumentationRunnerArguments clearPackageData: 'true'
+        consumerProguardFiles("consumer-rules.pro")
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf(
+                    "room.schemaLocation" to "$projectDir/schemas",
+                    "room.incremental" to "true"
+                )
             }
+        }
+    }
 
     buildTypes {
         getByName("release") {
@@ -103,7 +107,8 @@ dependencies {
 
     implementation(libs.androidx.room.kotlin)
     implementation(libs.androidx.room.runtime)
-    kapt(libs.androidx.room.compiler)
+    annotationProcessor(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.robolectric) {
         exclude(group = "com.google.auto.service", module = "auto-service")

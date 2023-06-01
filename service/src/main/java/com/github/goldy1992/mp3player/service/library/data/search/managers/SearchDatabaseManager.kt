@@ -3,9 +3,8 @@ package com.github.goldy1992.mp3player.service.library.data.search.managers
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.data.search.SearchDao
-import com.github.goldy1992.mp3player.service.library.data.search.SearchEntity
 
-abstract class SearchDatabaseManager<T : SearchEntity>(private val contentManager: ContentManager,
+abstract class SearchDatabaseManager<T>(private val contentManager: ContentManager,
                                                        private val dao: SearchDao<T>,
                                                        private val rootCategoryId: String) {
     abstract fun createFromMediaItem(item: MediaItem): T?
@@ -26,7 +25,7 @@ abstract class SearchDatabaseManager<T : SearchEntity>(private val contentManage
     private fun deleteOld(entries: List<T?>) { // Delete old entries i.e. files that have been deleted.
         val ids: MutableList<String?> = ArrayList()
         for (entry in entries) {
-            ids.add(entry!!.id)
+            //ids.add(entry!!.id)
         }
         // remove old entries
         dao.deleteOld(ids)

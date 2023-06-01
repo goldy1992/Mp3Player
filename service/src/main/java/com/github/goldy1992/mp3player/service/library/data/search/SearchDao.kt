@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.service.library.data.search
 
-interface SearchDao<T : SearchEntity> {
+interface SearchDao<T> {
 
 
     fun insert(entity: T)

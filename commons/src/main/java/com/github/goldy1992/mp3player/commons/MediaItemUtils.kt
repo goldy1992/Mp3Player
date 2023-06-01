@@ -1,13 +1,16 @@
 package com.github.goldy1992.mp3player.commons
 
+import android.annotation.TargetApi
 import android.net.Uri
 import android.os.Build
+import android.os.Build.VERSION_CODES.S
 import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
 import android.util.Log
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.Constants.EMPTY_MEDIA_ITEM_ID
 import java.io.File
+import java.io.Serializable
 
 object MediaItemUtils : LogTagger {
     private fun hasExtras(item: MediaItem?): Boolean {
@@ -37,9 +40,35 @@ object MediaItemUtils : LogTagger {
         return extras?.get(key)
     }
 
+    @TargetApi(TIRAMISU)
+    fun <T : Serializable> getSerializableExtra(key: String?, clazz: Class<T>, item: MediaItem?): Any? {
+        if (item == null) {
+            return null
+        }
+        val extras = item.mediaMetadata.extras
+        return extras?.getSerializable(key, clazz)
+    }
+
+    @TargetApi(S)
+    fun getSerializableExtra(key: String?, item: MediaItem?): Any? {
+        if (item == null) {
+            return null
+        }
+        val extras = item.mediaMetadata.extras
+        return extras?.getSerializable(key)
+    }
+
+    fun getStringExtra(key: String?, item: MediaItem?): String? {
+        if (item == null) {
+            return null
+        }
+        val extras = item.mediaMetadata.extras
+        return extras?.getString(key)
+    }
+
     @JvmStatic
-    fun getMediaId(item: MediaItem?): String? {
-        return item?.mediaId
+    fun getMediaId(item: MediaItem): String {
+        return item.mediaId
     }
 
     @JvmStatic
