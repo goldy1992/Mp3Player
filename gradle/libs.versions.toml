@@ -22,6 +22,7 @@ apacheCommonsLang3 = "3.9"
 apacheCommonsMath3 = "3.6.1"
 coil = "2.2.2"
 compileSdk = "33"
+composeBom = '2023.05.01'
 datastorePreferences = '1.0.0'
 dexmakerMockitoInline = '2.28.3'
 hilt = "2.46.1"
@@ -39,49 +40,15 @@ room = "2.5.1"
 robolectric = "4.10"
 targetSdk= "33"
 
-
-build_tools_version = '30.0.3'
-kotlin_version = '1.8.20'
-activity_ktx_version = '1.7.0'
-androidx_core_ktx_version = '1.3.2'
-compose_version = '1.4.1'
-composeBom = '2023.05.01'
-compose_test_version = '1.4.1'
-compose_material3_version = '1.0.1'
-
-
-espresso_core_version = '3.3.0'
-hilt_version = '2.46.1'
-
-junit_ext_version = '1.1.2'
-junit4_version = '4.12'
-
-
-monitor_version = '1.4.0-beta01'
-
-robolectric_version = '4.9'
-test_core_version = '1.4.0-beta01'
-test_orchestrator_version = '1.3.0'
-test_rules_version = '1.3.0'
-test_runner_version = '1.3.0'
-ui_automator_version= '2.2.0'
-
 [libraries]
 accompanist-insets = { group = "com.google.accompanist", name = "accompanist-insets", version.ref = "accompanist" }
 accompanist-navigation-animation = { group = "com.google.accompanist", name = "accompanist-navigation-animation", version.ref = "accompanist" }
-coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
-
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
-
-# Dependencies of the included build-logic
-android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 androidx-activity-kotlin = { group =  "androidx.activity", name =  "activity-ktx", version.ref = "androidxActivityKotlin" }
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "androidxAnnotation" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppCompat" }
-androidx-concurrent-futures-kotlin = { group =  "androidx.concurrent", name = "concurrent-futures-ktx", version.ref = "androidxConcurrent" }
-
-
 androidx-compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivityKotlin" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-concurrent-futures-kotlin = { group =  "androidx.concurrent", name = "concurrent-futures-ktx", version.ref = "androidxConcurrent" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout" }
 androidx-compose-material = { group = "androidx.compose.material", name = "material" }
@@ -118,14 +85,14 @@ androidx-test-ext-truth = { module = "androidx.test.ext:truth", version.ref = "a
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidxTest" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
 androidx-window = { group = "androidx.window", name = "window", version.ref = "androidxWindow" }
-
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 apache-commons-io = { group = "org.apache.commons", name = "commons-io", version.ref = "apacheCommonsIo" }
 apache-commons-collections4 = { group = "org.apache.commons", name= "commons-collections4", version.ref = "apacheCommonsCollections4" }
 apache-commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "apacheCommonsLang3"}
 apache-commons-math3 = { group= "org.apache.commons", name = "commons-math3", version.ref = "apacheCommonsMath3" }
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 dexmaker-mockito-inline = { group = "com.linkedin.dexmaker", name = 'dexmaker-mockito-inline-extended', version.ref =  "dexmakerMockitoInline" }
 junit4 = { group = "junit", name = "junit", version.ref = "junit4"}
-
 hilt-android-core = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
