@@ -3,12 +3,12 @@ package com.github.goldy1992.mp3player.commons
 import android.annotation.TargetApi
 import android.net.Uri
 import android.os.Build
-import android.os.Build.VERSION_CODES.S
 import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
 import android.util.Log
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.Constants.EMPTY_MEDIA_ITEM_ID
+import com.github.goldy1992.mp3player.commons.VersionUtils.isTiramisuOrHigher
 import java.io.File
 import java.io.Serializable
 
@@ -32,6 +32,7 @@ object MediaItemUtils : LogTagger {
         } else item.mediaMetadata.extras
     }
 
+    @Suppress("DEPRECATION")
     fun getExtra(key: String?, item: MediaItem?): Any? {
         if (item == null) {
             return null
@@ -40,22 +41,26 @@ object MediaItemUtils : LogTagger {
         return extras?.get(key)
     }
 
-    @TargetApi(TIRAMISU)
-    fun <T : Serializable> getSerializableExtra(key: String?, clazz: Class<T>, item: MediaItem?): Any? {
+
+    @Suppress("DEPRECATION")
+    private fun <T : Serializable> getSerializableExtra(key: String?, clazz: Class<T>, item: MediaItem?): Any? {
         if (item == null) {
             return null
         }
         val extras = item.mediaMetadata.extras
-        return extras?.getSerializable(key, clazz)
+        return if (isTiramisuOrHigher()) {
+            extras?.getSerializable(key, clazz)
+        } else {
+            extras?.getSerializable(key)
+        }
     }
 
-    @TargetApi(S)
-    fun getSerializableExtra(key: String?, item: MediaItem?): Any? {
+    fun getIntExtra(key: String?, item: MediaItem?): Int? {
         if (item == null) {
             return null
         }
         val extras = item.mediaMetadata.extras
-        return extras?.getSerializable(key)
+        return extras?.getInt(key)
     }
 
     fun getStringExtra(key: String?, item: MediaItem?): String? {
@@ -113,7 +118,7 @@ object MediaItemUtils : LogTagger {
     @JvmStatic
     fun getDirectoryName(item: MediaItem?): String {
         if (hasExtra(MetaDataKeys.META_DATA_DIRECTORY, item)) {
-            val directory = getExtra(MetaDataKeys.META_DATA_DIRECTORY, item) as File?
+            val directory = getSerializableExtra(MetaDataKeys.META_DATA_DIRECTORY, File::class.java, item) as File?
             if (null != directory) {
                 return directory.name
             }
@@ -124,7 +129,7 @@ object MediaItemUtils : LogTagger {
     @JvmStatic
     fun getDirectoryPath(item: MediaItem?): String {
         if (hasExtra(MetaDataKeys.META_DATA_DIRECTORY, item)) {
-            val directory = getExtra(MetaDataKeys.META_DATA_DIRECTORY, item) as File?
+            val directory = getSerializableExtra(MetaDataKeys.META_DATA_DIRECTORY, File::class.java, item) as File?
             if (null != directory) {
                 return directory.absolutePath
             }
@@ -135,7 +140,7 @@ object MediaItemUtils : LogTagger {
     @JvmStatic
     fun getDirectoryUri(item: MediaItem?): Uri? {
         if (hasExtra(MetaDataKeys.META_DATA_DIRECTORY, item)) {
-            val directory = getExtra(MetaDataKeys.META_DATA_DIRECTORY, item) as File?
+            val directory = getSerializableExtra(MetaDataKeys.META_DATA_DIRECTORY, File::class.java, item) as File?
             if (null != directory) {
                 return Uri.fromFile(directory)
             }
@@ -159,10 +164,10 @@ object MediaItemUtils : LogTagger {
 
     @JvmStatic
     fun getFileCount(item : MediaItem?) : Int {
-        return if (hasFileCount(item)) getExtra(Constants.FILE_COUNT, item) as Int else -1
+        return if (hasFileCount(item)) getIntExtra(Constants.FILE_COUNT, item) ?: -1 else -1
     }
 
-    @SuppressWarnings("deprecation")
+    @Suppress("DEPRECATION")
     @JvmStatic
     fun getMediaItemType(item: MediaItem): MediaItemType {
         val mediaItemType : MediaItemType? = if (Build.VERSION.SDK_INT >= TIRAMISU) {
@@ -182,7 +187,7 @@ object MediaItemUtils : LogTagger {
 
     @JvmStatic
     fun getRootMediaItemType(item: MediaItem?): MediaItemType? {
-        return getExtra(Constants.ROOT_ITEM_TYPE, item) as MediaItemType?
+        return getSerializableExtra(Constants.ROOT_ITEM_TYPE, MediaItemType::class.java, item) as MediaItemType?
     }
 
     fun getAlbumArtUri(song: MediaItem): Uri? {
@@ -204,7 +209,7 @@ object MediaItemUtils : LogTagger {
     }
 
     fun noResultsFound(mediaItems : List<MediaItem>) : Boolean {
-        return mediaItems.size == 1 && isEmptyMediaItem(mediaItems.get(0))
+        return mediaItems.size == 1 && isEmptyMediaItem(mediaItems[0])
     }
 
     fun getAlbumTitle(mediaItem: MediaItem) : String {
