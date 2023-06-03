@@ -13,7 +13,6 @@ heightDp = 200)
 @Composable
 fun BarCard(modifier : Modifier = Modifier,
             frequencyValues : () -> List<Float> =  {listOf(100f, 200f, 300f, 150f)},
-            scope : CoroutineScope = rememberCoroutineScope()
 ) {
     EqualizerCard(
         modifier = modifier,
@@ -22,8 +21,7 @@ fun BarCard(modifier : Modifier = Modifier,
         BarEqualizer(
             canvasSize = canvasSize,
             frequencyValues = frequencyValues,
-            modifier = containerModifier,
-            scope = scope
+            modifier = containerModifier
         )
     }
 }

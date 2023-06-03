@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.media3.common.util.UnstableApi
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
 import com.github.goldy1992.mp3player.client.media.IMediaBrowser
@@ -23,6 +24,7 @@ import javax.inject.Inject
 /**
  * The Main Activity
  */
+@UnstableApi
 @AndroidEntryPoint(ComponentActivity::class)
 open class MainActivity : Hilt_MainActivity(), LogTagger {
 

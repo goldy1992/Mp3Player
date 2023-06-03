@@ -3,7 +3,6 @@
 package com.github.goldy1992.mp3player.client.ui.modifiers
 
 import androidx.compose.animation.core.*
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -45,7 +44,6 @@ fun Modifier.drawDiagonalLabel(
             .clipToBounds()
             .drawWithContent {
                 val canvasWidth = size.width
-                val canvasHeight = size.height
 
                 val textSize = textLayoutResult.size
                 val textWidth = textSize.width
@@ -95,6 +93,7 @@ fun Modifier.drawDiagonalLabel(
 )
 
 
+@ExperimentalTextApi
 fun Modifier.drawDiagonalShimmerLabel(
     text: String,
     color: Color,

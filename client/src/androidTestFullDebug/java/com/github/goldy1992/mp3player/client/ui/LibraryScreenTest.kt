@@ -7,7 +7,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import androidx.navigation.NavController
+import androidx.media3.common.util.UnstableApi
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
@@ -19,36 +19,22 @@ import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDef
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.mock
-import org.mockito.kotlin.mock
 
 /**
  * Test class for the [MainScreen] composable function.
  */
-
+@UnstableApi
 @RunWith(AndroidJUnit4::class)
 class LibraryScreenTest {
 
     private val testMediaRepository = TestMediaRepository()
 
-//    val onChildrenChangedFlowObj = mock<OnChildrenChangedFlow>()
-//    val onChildrenChangedFlow = MutableStateFlow(
-//                                    OnChildrenChangedEventHolder(mockMediaBrowser,
-//                                        "",
-//                                        1,
-//                                        MediaLibraryService.LibraryParams.Builder().build())
-//    )
-
     @get:Rule
     val composeTestRule = createComposeRule()
-
-
-    private val navController = mock<NavController>()
 
     lateinit var context : Context
 
@@ -89,7 +75,6 @@ class LibraryScreenTest {
 
         composeTestRule.setContent {
             LibraryScreen(
-                navController = navController,
                 viewModel = libraryScreenViewModel
             )
         }

@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.screens.nowplaying
 
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,16 +33,21 @@ import com.github.goldy1992.mp3player.client.ui.components.SpeedController
 import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.apache.commons.lang3.ObjectUtils.isEmpty
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(
+    ExperimentalAnimationApi::class,
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterial3Api::class,
+)
 @InternalCoroutinesApi
 @Composable
 fun NowPlayingScreen(
     viewModel: NowPlayingScreenViewModel = viewModel(),
-    navController: NavController,
+    navController: NavController = rememberAnimatedNavController(),
     scope : CoroutineScope = rememberCoroutineScope(),
 ) {
     val songTitleDescription = stringResource(id = R.string.song_title)

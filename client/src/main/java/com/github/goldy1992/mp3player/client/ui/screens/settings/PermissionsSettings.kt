@@ -141,7 +141,7 @@ private fun PermissionListItem(
 
 @Composable
 @Preview( uiMode = UI_MODE_NIGHT_YES)
-fun previewColorScheme() {
+fun PreviewColorScheme() {
     val colors = arrayOf(
         Pair("primary", colorScheme.primary),
         Pair("onPrimary", colorScheme.onPrimary),

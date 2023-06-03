@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
+import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
@@ -54,6 +55,7 @@ private const val logTag = "LibraryScreen"
     ExperimentalMaterialApi::class,
     ExperimentalFoundationApi::class
 )
+@UnstableApi
 @Composable
 fun LibraryScreen(navController: NavController = rememberAnimatedNavController(),
                   pagerState: PagerState = rememberPagerState(initialPage = 0),

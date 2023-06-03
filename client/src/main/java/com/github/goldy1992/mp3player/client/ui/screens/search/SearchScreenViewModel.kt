@@ -109,7 +109,6 @@ class SearchScreenViewModel
         extras.putString(Constants.PLAYLIST_ID, "SearchResults")
 
         val mediaMetadata = MediaMetadata.Builder()
-            .setMediaType(MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
             .setAlbumTitle("Search Results")
             .setExtras(extras)
             .build()

@@ -11,8 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 fun FountainSpringCard(
     modifier : Modifier = Modifier,
-    frequencyPhases : () -> List<Float> = {  listOf(100f, 200f, 300f, 150f) },
-    scope: CoroutineScope = rememberCoroutineScope()
+    frequencyPhases : () -> List<Float> = {  listOf(100f, 200f, 300f, 150f) }
 ) {
     EqualizerCard(
         modifier = modifier,

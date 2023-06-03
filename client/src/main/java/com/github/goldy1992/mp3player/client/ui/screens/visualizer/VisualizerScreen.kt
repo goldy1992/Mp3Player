@@ -208,7 +208,6 @@ fun VisualizerContentCardCollection(
                     .width(cardLengthDp)
                     .height(cardLengthDp),
                 frequencyValues = audioMagnitudes,
-                scope = scope
             )
         }
         item {
@@ -217,7 +216,6 @@ fun VisualizerContentCardCollection(
                     .width(cardLengthDp)
                     .height(cardLengthDp),
                 frequencyPhases = audioMagnitudes,
-                scope = scope
             )
         }
 
@@ -227,7 +225,6 @@ fun VisualizerContentCardCollection(
                     .width(cardLengthDp)
                     .height(cardLengthDp),
                 frequencyPhases = audioMagnitudes,
-                scope = scope
             )
         }
     }

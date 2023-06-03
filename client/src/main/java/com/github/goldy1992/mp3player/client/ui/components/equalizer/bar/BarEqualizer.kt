@@ -33,8 +33,7 @@ fun BarEqualizer(modifier: Modifier = Modifier,
                  canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
                  barWidthPx : Float = 20f,
                  barColor : Color = MaterialTheme.colorScheme.secondary,
-                 surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer,
-                 scope: CoroutineScope = rememberCoroutineScope()
+                 surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer
                        ) {
   //  Log.i(logTag, "recomposing")
     val frequencyPhases = frequencyValues()

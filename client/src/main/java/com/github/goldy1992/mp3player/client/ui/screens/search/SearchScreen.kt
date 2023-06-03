@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.screens.search
 
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -43,17 +44,19 @@ import com.github.goldy1992.mp3player.client.ui.lists.onFolderSelected
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongListItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import org.apache.commons.lang3.StringUtils
 import java.util.*
 
 private const val logTag = "SearchScreen"
 
-@OptIn(ExperimentalMaterial3Api::class)
-@ExperimentalFoundationApi
+@ExperimentalAnimationApi
 @ExperimentalComposeUiApi
+@ExperimentalFoundationApi
+
 @Composable
 fun SearchScreen(
-    navController: NavController,
+    navController: NavController = rememberAnimatedNavController(),
     windowSize: WindowSize,
     viewModel : SearchScreenViewModel = viewModel()) {
 

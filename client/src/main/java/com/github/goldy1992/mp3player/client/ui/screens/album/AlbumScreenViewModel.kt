@@ -184,7 +184,6 @@ constructor(savedStateHandle: SavedStateHandle,
         extras.putString(PLAYLIST_ID, albumId)
 
         return MediaMetadata.Builder()
-            .setMediaType(MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
             .setAlbumTitle(album.albumTitle)
             .setAlbumArtist(album.albumArtist)
             .setExtras(extras)

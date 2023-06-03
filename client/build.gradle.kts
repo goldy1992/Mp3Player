@@ -1,16 +1,12 @@
-import com.android.build.api.dsl.Packaging
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kapt)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kapt)
 }
-//apply from: rootProject.file("jacoco-with-test-support.gradle")
 
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
-    //buildToolsVersion build_tools_version
     testBuildType = "debug"
 
     buildFeatures {
@@ -74,147 +70,101 @@ android {
     }
 
     testOptions {
-        //      execution 'ANDROIDX_TEST_ORCHESTRATOR'
         animationsDisabled = true
-    }
-    testOptions.unitTests {
-        isIncludeAndroidResources = true
-        isReturnDefaultValues = true
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
 
-        all { test ->
-            with(test) {
-                testLogging {
-                    outputs.upToDateWhen {false}
-                    showStandardStreams = false
-                    events = setOf(
-                        org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
-                        org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED,
-                        org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
-                        org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT,
-                        org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_ERROR,
-                    )
+            all { test ->
+                with(test) {
+                    extensions.configure(JacocoTaskExtension::class) {
+                        this.isIncludeNoLocationClasses = true
+                    }
+
+                    testLogging {
+                        outputs.upToDateWhen { false }
+                        showStandardStreams = false
+                        events = setOf(
+                            org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
+                            org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED,
+                            org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
+                            org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT,
+                            org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_ERROR,
+                        )
+                    }
                 }
-
-                jacoco { // FOR USE IN TEST EXECUTION
-                //includeNoLocationClasses = true
-               // includes = ['com/github/goldy1992/mp3player/client/**']
-               // excludes = EXCLUDE_LIST
-            }
             }
         }
     }
-
-//    variantFilter { variant ->
-//        def names = variant.flavors*.name
-//
-//        if (names.contains("automation")) {
-//            if (variant.buildType.name == "release" || variant.buildType.name == "debug") {
-//                setIgnore(true)
-//            }
-//        }
-//    }
     namespace = "com.github.goldy1992.mp3player.client"
 
 }
 
 dependencies {
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-
-    // local libs
-    implementation(project(":commons"))
-
-    // Import the Compose BOM
     val composeBom = platform(libs.androidx.compose.bom)
+
     implementation(composeBom)
-
-    androidTestImplementation(composeBom)
-
-    implementation(libs.kotlin.stdlib)
-    androidTestImplementation(libs.kotlin.stdlib)
-    implementation(libs.kotlin.coroutines.core)
-    implementation(libs.kotlin.coroutines.android)
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    implementation(libs.accompanist.insets)
+    implementation(libs.accompanist.navigation.animation)
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.appcompat)
-
     implementation(libs.androidx.core.kotlin)
     implementation(libs.androidx.media3.session)
     implementation(libs.apache.commons.io)
     implementation(libs.apache.commons.collections4)
     implementation(libs.apache.commons.lang3)
     implementation(libs.apache.commons.math3)
-
-    implementation(libs.androidx.lifecycle.viewmodel.savedstate)
-    implementation(libs.androidx.lifecycle.viewmodel.kotlin)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.concurrent.futures.kotlin)
     implementation(libs.androidx.activity.kotlin)
-
-    // compose
-    implementation(libs.androidx.compose.runtime)
-    implementation(libs.androidx.compose.runtime)
-    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.activity)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.windowsizes)
     implementation(libs.androidx.compose.material.icons.core)
-    implementation(libs.androidx.compose.ui.preview)
     implementation(libs.androidx.compose.material.icons.extended)
-    implementation(libs.androidx.compose.activity)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.preview)
+    implementation(libs.androidx.concurrent.futures.kotlin)
+    implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.savedstate)
+    implementation(libs.androidx.lifecycle.viewmodel.kotlin)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.window)
+    implementation(libs.coil.compose)
+    implementation(libs.hilt.android.core)
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlin.coroutines.core)
+    implementation(libs.kotlin.coroutines.android)
+    implementation(project(":commons"))
+
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
-    // hilt
-    implementation(libs.hilt.android.core)
     kapt(libs.hilt.compiler)
-
-    implementation(libs.accompanist.insets)
-    implementation(libs.accompanist.navigation.animation)
-    implementation(libs.coil.compose)
-    implementation(libs.androidx.window)
-    implementation(libs.androidx.datastore.preferences)
-
-
-
-    // Compose testing dependencies
-    androidTestImplementation(libs.androidx.compose.ui.test)
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-    // UI Tests
-    // Test rules and transitive dependencies:
-    testImplementation(libs.androidx.compose.ui.test.junit4)
-
-      // Needed for createComposeRule, but not createAndroidComposeRule:
-
-
-
-    // hilt
-    testImplementation(libs.hilt.android.testing)
     kaptTest(libs.hilt.compiler)
 
-//    androidTestImplementation(libs.hilt.android.testing)
-//    kaptAndroidTest(libs.hilt.compiler)
-
-    androidTestImplementation(project(":commons"))
-    androidTestImplementation(libs.mockito.kotlin)
-    androidTestImplementation(libs.dexmaker.mockito.inline)
+    androidTestImplementation(composeBom)
+    androidTestImplementation(libs.androidx.compose.ui.test)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.kotlin.stdlib)
+    androidTestImplementation(project(":commons"))
 
-
-    // Test rules and transitive dependencies:
-
-    //testImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
+    testImplementation(libs.androidx.compose.ui.test.junit4)
+    testImplementation(libs.androidx.lifecycle.viewmodel.kotlin)
+    testImplementation(libs.androidx.test.core.kotlin)
+    testImplementation(libs.hilt.android.testing)
+    testImplementation(libs.kotlin.coroutines.test)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.mockito.kotlin)
     testImplementation(libs.robolectric) {
         exclude(group = "com.google.auto.service", module = "auto-service")
     }
 
-    testImplementation(libs.androidx.test.core.kotlin)
-    testImplementation(libs.mockito.inline)
-    testImplementation(libs.mockito.kotlin)
-    testImplementation(libs.kotlin.coroutines.test)
-    testImplementation(libs.androidx.lifecycle.viewmodel.kotlin)
 }
 
 kapt {

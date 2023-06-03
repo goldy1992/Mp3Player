@@ -164,7 +164,6 @@ class FolderScreenViewModel
         extras.putString(PLAYLIST_ID, folderId)
 
         val mediaMetadata = MediaMetadata.Builder()
-            .setMediaType(MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
             .setAlbumTitle(folder.value.name)
             .setExtras(extras)
             .build()

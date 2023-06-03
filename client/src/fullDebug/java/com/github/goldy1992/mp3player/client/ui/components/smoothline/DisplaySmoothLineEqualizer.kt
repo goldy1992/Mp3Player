@@ -62,6 +62,5 @@ fun DisplaySmoothLineEqualizer() {
         modifier = Modifier.fillMaxSize(),
         frequencyPhases =  {testAudio},
   //  isPlayingProvider = {true},
-    scope = scope
     )
 }

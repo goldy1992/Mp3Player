@@ -6,30 +6,39 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaLibraryService
-import com.github.goldy1992.mp3player.client.data.*
+import com.github.goldy1992.mp3player.client.data.Albums
+import com.github.goldy1992.mp3player.client.data.Folders
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createAlbums
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createFolders
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createRootItems
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSong
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSongs
+import com.github.goldy1992.mp3player.client.data.RootItem
+import com.github.goldy1992.mp3player.client.data.RootItems
+import com.github.goldy1992.mp3player.client.data.Song
+import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.State
-import com.github.goldy1992.mp3player.commons.*
+import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Constants.HAS_PERMISSIONS
+import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.commons.MediaItemBuilder
+import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 import javax.inject.Inject
 
 /**
  * The [ViewModel] implementation for the [LibraryScreen].
  */
+@UnstableApi
 @HiltViewModel
 class LibraryScreenViewModel
     @Inject
@@ -180,7 +189,6 @@ class LibraryScreenViewModel
         extras.putString(Constants.PLAYLIST_ID, MediaItemType.SONGS.name)
 
         val mediaMetadata = MediaMetadata.Builder()
-            .setMediaType(MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
             .setAlbumTitle(MediaItemType.SONGS.name)
             .setExtras(extras)
             .build()
@@ -211,6 +219,7 @@ class LibraryScreenViewModel
         return "LibScrnViewModel"
     }
 
+    @UnstableApi
     private fun hasPermissions(params : MediaLibraryService.LibraryParams) : Boolean {
         return params.extras.getBoolean(HAS_PERMISSIONS,false)
     }

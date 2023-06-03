@@ -15,7 +15,6 @@ import com.github.goldy1992.mp3player.commons.MetaDataKeys
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.kotlin.mock
 
 /**
  * Test class for [SeekBar].
@@ -25,7 +24,6 @@ class SeekBarTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val mockSeekTo = mock<MockSeekTo>()
 
     @Before
     fun setup() { }
@@ -51,7 +49,6 @@ class SeekBarTest {
                 metadataProvider =  {metadata },
                 playbackSpeedProvider = { 1.0f },
                 playbackPositionProvider ={ PlaybackPositionEvent(false, currentPosition, 0L) },
-                seekTo = { mockSeekTo.seekTo(it) }
             )
         }
 
@@ -65,8 +62,6 @@ class SeekBarTest {
 
     }
 
-    private class MockSeekTo {
-        fun seekTo(value : Long) {}
-    }
+
 
 }

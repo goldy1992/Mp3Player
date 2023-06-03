@@ -4,10 +4,12 @@
 )
 package com.github.goldy1992.mp3player.client.ui.screens.settings
 
+import android.annotation.TargetApi
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION_CODES.S
+import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -40,7 +42,6 @@ import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.utils.VersionUtils
 import com.github.goldy1992.mp3player.commons.Screen
-import com.github.goldy1992.mp3player.commons.VersionUtils.isAndroid12OrHigher
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import java.util.*
@@ -54,7 +55,7 @@ private const val logTag = "SettingsScreen"
 @Composable
 fun SettingsScreen(
     viewModel : SettingsScreenViewModel = viewModel(),
-    navController : NavController,
+    navController : NavController = rememberAnimatedNavController(),
     scope : CoroutineScope = rememberCoroutineScope(),
     windowSize: WindowSize = WindowSize.Compact
 ) {
@@ -119,8 +120,7 @@ private fun LargeSettingsScreen(
                         settingsProvider = settingsProvider,
                         permissionsProvider = permissionsProvider,
                         settingsOnClickMap = settingsOnClickMap,
-                        modifier = Modifier.padding(it),
-                        navController = navController,
+                        modifier = Modifier.padding(it)
                     )
                 }
             })
@@ -162,8 +162,7 @@ private fun SmallSettingsScreen(
                         settingsProvider = settingsProvider,
                         permissionsProvider = permissionsProvider,
                         settingsOnClickMap = settingsOnClickMap,
-                        modifier = Modifier.padding(it),
-                        navController = navController
+                        modifier = Modifier.padding(it)
                     )
                 }
             })
@@ -171,13 +170,13 @@ private fun SmallSettingsScreen(
 }
 
 
+@Suppress("UNCHECKED_CAST")
 @Composable
 fun SettingsScreenContent(
     settingsOnClickMap : EnumMap<Settings.Type, Any>,
     modifier: Modifier = Modifier,
     settingsProvider: () -> Settings = {Settings()},
     permissionsProvider: () -> Map<String, Boolean>,
-    navController: NavController = rememberAnimatedNavController(),
     versionUtils: VersionUtils = VersionUtils(LocalContext.current)) {
 
     val context = LocalContext.current
@@ -199,7 +198,7 @@ fun SettingsScreenContent(
                 onUpdate = settingsOnClickMap[Settings.Type.DARK_MODE] as (Boolean) -> Unit
             )
         }
-        if (isAndroid12OrHigher()) {
+        if (Build.VERSION.SDK_INT >= TIRAMISU) {
             item {
                 DynamicColorMenuItem(
                     useDynamicColor = settings.dynamicColor,
@@ -214,7 +213,7 @@ fun SettingsScreenContent(
         item {
             Subheader(title = stringResource(id = R.string.permissions))
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= TIRAMISU) {
             permissionsMenuItemsTiramisu(
                 lazyListScope = this,
                 permissionsProvider = permissionsProvider,
@@ -253,7 +252,7 @@ fun SettingsScreenContent(
             Subheader(title = stringResource(id = R.string.help))
         }
         item {
-            SupportAndFeedbackMenuItem(navController)
+            SupportAndFeedbackMenuItem(onClick = {  })
         }
         item {
             Divider()
@@ -292,6 +291,7 @@ private fun ThemeMenuItem(navController: NavController) {
 }
 
 @RequiresApi(S)
+@TargetApi(S)
 @Composable
 fun DynamicColorMenuItem(useDynamicColor : Boolean = true,
                         onUpdate : (newValue : Boolean) -> Unit = {}) {
@@ -347,9 +347,12 @@ private fun DarkModeMenuItem(isDarkMode : Boolean,
 }
 
 @Composable
-private fun SupportAndFeedbackMenuItem(navController: NavController) {
+private fun SupportAndFeedbackMenuItem(onClick: () -> Unit) {
     val supportAndFeedback = stringResource(id = R.string.support_and_feedback)
     ListItem(
+        modifier = Modifier.clickable {
+            onClick()
+        },
         leadingContent = { Icon(Icons.Filled.Help, contentDescription = supportAndFeedback) },
         headlineContent = {
             Column() {
@@ -369,8 +372,11 @@ private fun VersionMenuItem(versionUtils : VersionUtils = VersionUtils(LocalCont
 }
 
 @Composable
-private fun AboutMenuItem(navController: NavController) {
+private fun AboutMenuItem(onClick: () -> Unit) {
     ListItem(
+        modifier = Modifier.clickable {
+            onClick()
+        },
         leadingContent = { },
         headlineContent = {
                 Text("About") // TODO: Translate and link to about page!

@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainspring
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -128,9 +127,8 @@ private fun shouldRemoveParticle(currentParticle: Particle) : Boolean {
     val isFalling = currentParticle.isFalling
     val currentY = currentParticle.y
     val startY = currentParticle.startPosition.y
-    val hmax = currentParticle.hMax
     val removePoint = (startY * 0.9f)
-    val result = currentParticle.isFalling && (currentY > removePoint)
+    val result = isFalling && (currentY > removePoint)
   //  Log.i(logTag, "should remove particle: $result because, isFalling: $isFalling, currentY: $currentY, startY: $startY hmax: $hmax remove at point: $removePoint, elapsedTime: ${currentParticle.elapsedTimeDeciseconds}")
     return result
 }
@@ -204,19 +202,13 @@ private fun createParticle(startOffset: Offset,
 
 private const val g = -9.8f
 
-private fun updateParticle(particle: Particle, frame : Long) : Particle {
-    var currentFrameTime = 0L
-    var elapsedTimeSecs : Float = 0f
-    var x : Float = 0f
-    var y : Float = 0f
+private fun updateParticle(particle: Particle, currentFrameTime : Long) : Particle {
+    val timeDiffNanoSecs = currentFrameTime - particle.currentFrameTimeNs
+    val elapsedTimeSecs = particle.elapsedTimeDeciseconds + convertNanoSecondsToRuntimeSpeed(timeDiffNanoSecs)
+    val x = particle.startPosition.x + (particle.initialVelocity * cos(Math.toRadians(particle.angle)).toFloat() * particle.elapsedTimeDeciseconds)
+    val y = particle.startPosition.y + ((particle.initialVelocity * sin(Math.toRadians(particle.angle)).toFloat() * particle.elapsedTimeDeciseconds) - ((g * particle.elapsedTimeDeciseconds * particle.elapsedTimeDeciseconds) / 2f))
 
-    val timeDiffNanoSecs = frame - particle.currentFrameTimeNs
-    elapsedTimeSecs = particle.elapsedTimeDeciseconds + convertNanoSecondsToRuntimeSpeed(timeDiffNanoSecs)
-    currentFrameTime = frame
-    x = particle.startPosition.x + (particle.initialVelocity * cos(Math.toRadians(particle.angle)).toFloat() * particle.elapsedTimeDeciseconds)
-    y = particle.startPosition.y + ((particle.initialVelocity * sin(Math.toRadians(particle.angle)).toFloat() * particle.elapsedTimeDeciseconds) - ((g * particle.elapsedTimeDeciseconds * particle.elapsedTimeDeciseconds) / 2f))
-
-   val newAlpha = if (elapsedTimeSecs > 18f) 0f else (1-(elapsedTimeSecs / 18f))
+    val newAlpha = if (elapsedTimeSecs > 18f) 0f else (1-(elapsedTimeSecs / 18f))
     return Particle(
         startPosition = particle.startPosition,
         initialVelocity = particle.initialVelocity,

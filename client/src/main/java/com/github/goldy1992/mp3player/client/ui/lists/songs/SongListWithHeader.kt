@@ -26,7 +26,7 @@ fun LoadedSongsListWithHeader(
 ) {
     val songList = songs.songs
     val songsListDescr = stringResource(id = R.string.songs_list)
-    val header: @Composable () -> Unit = headerItem ?: {}
+    val header: @Composable () -> Unit = headerItem
     val itemCount = songList.size + 1
     LazyColumn(
         modifier = modifier.semantics {

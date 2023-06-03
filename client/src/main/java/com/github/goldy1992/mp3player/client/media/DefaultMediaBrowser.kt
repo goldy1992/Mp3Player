@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.media
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -10,6 +11,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.*
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.*
@@ -47,6 +49,7 @@ class DefaultMediaBrowser
         .setListener(this)
         .buildAsync()
 
+    @UnstableApi
     private val _playerEventsFlow : Flow<PlayerEventHolder> = callbackFlow {
         val controller = mediaBrowserFuture.await()
         Log.i(logTag(), "player event controller awaiter")
@@ -467,10 +470,12 @@ class DefaultMediaBrowser
         }
     }
 
+    @UnstableApi
     override suspend fun getLibraryRoot(): MediaItem {
         val args = Bundle()
         args.putString(PACKAGE_NAME_KEY, PACKAGE_NAME)
-        val params = MediaLibraryService.LibraryParams.Builder().setExtras(args).build()
+        val params = MediaLibraryService.LibraryParams.Builder()
+            .setExtras(args).build()
         val result = mediaBrowserFuture.await().getLibraryRoot(params).await()
         return result.value ?: MediaItem.EMPTY
     }
@@ -534,6 +539,7 @@ class DefaultMediaBrowser
         mediaController.prepare()
     }
 
+    @UnstableApi
     override suspend fun search(query: String, extras: Bundle) {
         mediaBrowserFuture.await()
             .search(query, MediaLibraryService
@@ -582,6 +588,7 @@ class DefaultMediaBrowser
     // The set of all listeners which are made by the Callback Flows
     private val listeners : MutableSet<MediaBrowser.Listener> = mutableSetOf()
 
+    @SuppressLint("Range")
     override fun onChildrenChanged(
         browser: MediaBrowser,
         parentId: String,
@@ -592,6 +599,7 @@ class DefaultMediaBrowser
         listeners.forEach { listener -> listener.onChildrenChanged(browser, parentId, itemCount, params) }
     }
 
+    @SuppressLint("Range")
     override fun onSearchResultChanged(
         browser: MediaBrowser,
         query: String,

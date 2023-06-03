@@ -10,6 +10,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
@@ -47,6 +48,7 @@ private const val transitionTime = 2000
     ExperimentalMaterialApi::class,
     InternalCoroutinesApi::class,
 )
+@UnstableApi
 @Composable
 fun ComposeApp(
     userPreferencesRepository: IUserPreferencesRepository,
@@ -57,7 +59,7 @@ fun ComposeApp(
     AppTheme(userPreferencesRepository = userPreferencesRepository) {
         AnimatedNavHost(
             navController = navController,
-            startDestination = Screen.LIBRARY.name
+            startDestination = startScreen.name
         ) {
             composable(Screen.MAIN.name) {
                 val viewModel = hiltViewModel<MainScreenViewModel>()

@@ -57,6 +57,6 @@ fun DisplayFireworkEqualizer() {
 
     FountainSpringCard(
         modifier = Modifier.fillMaxSize(),
-        frequencyPhases =  {testAudio},
-    scope = scope)
+        frequencyPhases =  {testAudio}
+    )
 }
