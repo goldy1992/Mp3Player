@@ -63,7 +63,6 @@ class AudioObserver
      * @param uri the uri that has changed
      * @param userId not used
      */
-    @Suppress("UNUSED_PARAMETER")
     override fun onChange(selfChange: Boolean, uri: Uri?, userId: Int) {
         if (startsWithUri(uri)) {
                 runBlocking(ioDispatcher) {

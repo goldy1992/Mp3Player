@@ -17,13 +17,8 @@ constructor() : LogTagger {
 
     fun changeSpeed(player: Player, args : Bundle) {
         Log.i(logTag(), "hit speed change")
-        val newSpeed: Float? = args.getFloat(Constants.CHANGE_PLAYBACK_SPEED)
-        if (newSpeed == null) {
-            Log.w(logTag(), "ChangeSpeedProvider invoked without a valid speed")
-        } else {
+        val newSpeed: Float = args.getFloat(Constants.CHANGE_PLAYBACK_SPEED)
             changeSpeed(newSpeed, player)
-        }
-
     }
 
     /**

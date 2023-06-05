@@ -30,7 +30,6 @@ class RootAuthenticator @Inject constructor(ids: MediaItemTypeIds) {
         .setMediaItemType(MediaItemType.ROOT)
         .build()
 
-    @Suppress("UNUSED_PARAMETER")
     fun authenticate(params : MediaLibraryService.LibraryParams): LibraryResult<MediaItem> {
         val clientPackageName : String = params.extras.getString(PACKAGE_NAME_KEY) ?: ""
         // (Optional) Control the level of access for the specified package name.

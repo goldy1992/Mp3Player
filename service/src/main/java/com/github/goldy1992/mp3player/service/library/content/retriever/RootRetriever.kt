@@ -14,7 +14,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.*
 import javax.inject.Inject
 
-@Suppress("UNUSED_PARAMETER")
 class RootRetriever
 
     @Inject

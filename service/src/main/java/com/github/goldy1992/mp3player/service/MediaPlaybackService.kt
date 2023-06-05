@@ -83,38 +83,6 @@ open class MediaPlaybackService : MediaLibraryService(),
         }
     }
 
-    override fun onUpdateNotification(session: MediaSession, startInForegroundRequired: Boolean) {
-      //  Log.i(logTag(), "onUpdateNotification, session: $session, startInForegroundRequired: $startInForegroundRequired")
-        super.onUpdateNotification(session, startInForegroundRequired)
-    }
-
-    override fun onUpdateNotification(session: MediaSession) {
-        //Log.i(logTag(), "onUpdateNotification, session: $session")
-        super.onUpdateNotification(session)
-    }
-
-    @Suppress("DEPRECATION")
-    private fun stopForegroundService(isPlaying : Boolean) {
-        Log.i(logTag(), "called stopForegroundService")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (!isPlaying) {
-                stopForeground(STOP_FOREGROUND_REMOVE)
-                Log.i(logTag(), "removed notification")
-            } else {
-                stopForeground(STOP_FOREGROUND_DETACH)
-                Log.i(logTag(), "detached notification")
-            }
-
-        } else {
-            if (!isPlaying) {
-                stopForeground(true)
-            } else {
-                stopForeground(false)
-            }
-
-        }
-    }
-
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? {
        return mediaSession
     }
