@@ -1,7 +1,8 @@
 package com.github.goldy1992.mp3player.client.utils
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 /**
  * Util Class for the timer
@@ -10,7 +11,7 @@ object TimerUtils {
     /**
      * One second constant
      */
-    const val ONE_SECOND = 1000
+    private const val ONE_SECOND = 1000
     private const val LOG_TAG = "TIMER_UTILS"
     @JvmStatic
     fun convertToSeconds(milliseconds: Long): Int {

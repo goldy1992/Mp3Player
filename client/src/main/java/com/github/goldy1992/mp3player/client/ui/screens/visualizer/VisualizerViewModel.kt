@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.screens.visualizer;
+package com.github.goldy1992.mp3player.client.ui.screens.visualizer
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

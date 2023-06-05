@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.IntRange
-import androidx.annotation.OptIn as AndroidXOptIn
 import androidx.concurrent.futures.await
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -33,6 +32,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import org.apache.commons.lang3.StringUtils.isEmpty
+import androidx.annotation.OptIn as AndroidXOptIn
 
 /**
  * Default implementation of the [IMediaBrowser].
@@ -50,7 +50,7 @@ class DefaultMediaBrowser
         .setListener(this)
         .buildAsync()
 
-    private val _onCustomCommandFlow : Flow<SessionCommandEventHolder> = callbackFlow<SessionCommandEventHolder> {
+    private val _onCustomCommandFlow : Flow<SessionCommandEventHolder> = callbackFlow {
         val messageListener = object : MediaBrowser.Listener {
             override fun onCustomCommand(
                 controller: MediaController,
@@ -220,7 +220,7 @@ class DefaultMediaBrowser
         return _metadataFlow
     }
 
-    private val _onChildrenChangedFlow : Flow<OnChildrenChangedEventHolder> = callbackFlow<OnChildrenChangedEventHolder> {
+    private val _onChildrenChangedFlow : Flow<OnChildrenChangedEventHolder> = callbackFlow {
         val messageListener = object : MediaBrowser.Listener {
             override fun onChildrenChanged(
                 browser: MediaBrowser,
@@ -376,7 +376,7 @@ class DefaultMediaBrowser
         val messageListener = object : Player.Listener {
             override fun onEvents(player: Player, event: Player.Events) {
                 val e = getPlayerEventsLogMessage(event)
-                Log.i(logTag(), "queue event logged ${e}")
+                Log.i(logTag(), "queue event logged $e")
                 if (event.containsAny( *events )) {
 
                     trySend(getQueue(player))

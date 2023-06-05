@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.data.Folder
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSong
@@ -17,7 +16,11 @@ import com.github.goldy1992.mp3player.commons.Constants.PLAYLIST_ID
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 import javax.inject.Inject
@@ -34,27 +37,9 @@ class FolderScreenViewModel
     private val folderName : String = checkNotNull(savedStateHandle["folderName"])
     private val folderPath : String = checkNotNull(savedStateHandle["folderPath"])
 
-    private val _folderChildren : MutableStateFlow<List<MediaItem>> = MutableStateFlow(emptyList())
-    // The UI collects from this StateFlow to get its state updates
-    val folderChildren : StateFlow<List<MediaItem>> = _folderChildren
-
     init {
         viewModelScope.launch {
             mediaRepository.subscribe(folderId)
-            _folderChildren.value = mediaRepository.getChildren(folderId).toList()
-        }
-
-        viewModelScope.launch {
-            mediaRepository.onChildrenChanged()
-            .shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                replay = 1
-            )
-            .filter { it.parentId == folderId }
-            .collect {
-                mediaRepository.getChildren(parentId = folderId)
-            }
         }
     }
 

@@ -1,12 +1,19 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer
 
 import android.util.Log
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -48,7 +55,7 @@ fun LineEqualizerWithTransition(modifier: Modifier = Modifier,
         currentValues[i] = x
     }
 
-    BoxWithConstraints() {
+    BoxWithConstraints {
         val numberOfPhases : Int = frequencyPhases.size
         val maxHeight : MutableState<Float> = remember { mutableStateOf(0f) }
         val maxWidth : MutableState<Float> = remember { mutableStateOf(0f) }
@@ -56,8 +63,7 @@ fun LineEqualizerWithTransition(modifier: Modifier = Modifier,
         val lineHeight = this.maxHeight.value / 2
         var currentOffset  = Offset(0f, lineHeight)
         Canvas(modifier = modifier
-            .fillMaxSize()
-            .background(Color.Red)) {
+            .fillMaxSize()) {
             maxHeight.value = size.height
             maxWidth.value = size.width
 

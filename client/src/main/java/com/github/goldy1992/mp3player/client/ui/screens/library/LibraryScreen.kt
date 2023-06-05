@@ -11,7 +11,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -77,7 +76,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
         val encodedFolderLibraryId = it.encodedLibraryId
         val encodedFolderPath = it.encodedPath
         val folderName = it.name
-        Log.w(logTag, "Folder name: ${folderName}")
+        Log.w(logTag, "Folder name: $folderName")
         navController.navigate(
             Screen.FOLDER.name
                     + "/" + encodedFolderLibraryId
@@ -90,7 +89,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
         val albumTitle = it.albumTitle
         val albumArtist = it.albumArtist
         val albumArtUriBase64 = Base64.encodeToString(it.albumArt.toString().encodeToByteArray(), Base64.DEFAULT)
-        Log.w(logTag, "Album ${albumTitle} uri: ${it.albumArt}")
+        Log.w(logTag, "Album $albumTitle uri: ${it.albumArt}")
         navController.navigate(
             Screen.ALBUM.name
                     + "/" + albumId
@@ -192,7 +191,6 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
  * @param bottomBar The Bottom Bar.
  * @param content The content of the Library Screen.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalMaterialApi
 @Composable
 fun LargeLibraryScreen(
@@ -217,15 +215,12 @@ fun LargeLibraryScreen(
 /**
  * The large Library Screen.
  *
- * @param scaffoldState The [ScaffoldState].
  * @param topBar The Top Bar.
  * @param bottomBar The Bottom Bar.
- * @param navigationColumn The Navigation Column.
+ * @param navDrawerContent The composable content of the [ModalNavigationDrawer].
+ * @param drawerState The [ModalNavigationDrawer] [DrawerState].
  * @param content The content of the Library Screen.
  */
-@OptIn(ExperimentalMaterial3Api::class
-)
-
 @Composable
 fun SmallLibraryScreen(
     bottomBar : @Composable () -> Unit,

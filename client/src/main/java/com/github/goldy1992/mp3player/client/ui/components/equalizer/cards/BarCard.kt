@@ -1,11 +1,9 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.cards
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.bar.BarEqualizer
-import kotlinx.coroutines.CoroutineScope
 
 @Preview(name = "Bar Card",
 widthDp = 200,

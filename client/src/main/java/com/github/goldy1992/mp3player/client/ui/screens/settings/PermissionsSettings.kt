@@ -1,7 +1,3 @@
-@file:OptIn(
-    ExperimentalMaterial3Api::class
-)
-
 package com.github.goldy1992.mp3player.client.ui.screens.settings
 
 import android.Manifest
@@ -30,7 +26,7 @@ private const val logTag = "PemissionsSettings"
 
 fun permissionsMenuItemsPreTiramisu(
     lazyListScope: LazyListScope,
-    permissionsProvider : () -> Map<String, Boolean> = {emptyMap<String, Boolean>()},
+    permissionsProvider : () -> Map<String, Boolean> = {emptyMap()},
                         ) {
     val permissions = permissionsProvider()
     lazyListScope.item {

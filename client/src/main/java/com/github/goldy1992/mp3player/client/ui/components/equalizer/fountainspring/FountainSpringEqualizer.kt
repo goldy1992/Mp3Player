@@ -3,7 +3,12 @@ package com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainsp
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -16,14 +21,17 @@ import com.github.goldy1992.mp3player.client.ui.DpPxSize
 import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.math.sqrt
 import kotlin.random.Random
 
 private const val logTag = "FireworksEqualizer"
 
 private const val MAX_FREQUENCY = 150
 
-private var maxFreqVal = 0f
 @Composable
 fun FountainSpringEqualizer(modifier: Modifier = Modifier,
                             canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
@@ -128,9 +136,7 @@ private fun shouldRemoveParticle(currentParticle: Particle) : Boolean {
     val currentY = currentParticle.y
     val startY = currentParticle.startPosition.y
     val removePoint = (startY * 0.9f)
-    val result = isFalling && (currentY > removePoint)
-  //  Log.i(logTag, "should remove particle: $result because, isFalling: $isFalling, currentY: $currentY, startY: $startY hmax: $hmax remove at point: $removePoint, elapsedTime: ${currentParticle.elapsedTimeDeciseconds}")
-    return result
+    return isFalling && (currentY > removePoint)
 }
 
 @Composable
@@ -162,22 +168,6 @@ private fun DrawScope.drawCircleParticle(particle: Particle) {
 }
 
 
-private fun DrawScope.drawLineParticle(particle: Particle, brush : Brush) {
-    drawLine(brush = brush,
-            start = Offset(particle.x, particle.y),
-            strokeWidth = 10f,
-            end = Offset(particle.x, particle.y + 5f)
-    )
-}
-
-private fun DrawScope.drawParticle(particle: Particle) {
-    drawLine(color = particle.color,
-        start = Offset(particle.x, particle.y),
-        strokeWidth = 10f,
-        end = Offset(particle.x, particle.y + 40)
-    )
-}
-
 private fun createParticle(startOffset: Offset,
                            initialVelocity : Float,
                            hmax: Float,
@@ -194,7 +184,7 @@ private fun createParticle(startOffset: Offset,
         isFalling = false,
         currentFrameTimeNs = currentFrame,
         startPosition = Offset(startX, startY),
-        initialVelocity = initialVelocity.toFloat(),
+        initialVelocity = initialVelocity,
         radius = radius.toFloat(),
         color = color,
         angle = angle)
@@ -283,14 +273,6 @@ private fun particlesInMap(particleMap : Map<Int, List<Particle>>) : Boolean {
     }
  //   Log.i(logTag, "defaulting to particlesInMap: false")
     return false
-}
-
-private fun nanoSecondsToMilliseconds(valueNs : Long) : Float {
-    return valueNs / 10.0.pow(6.0).toFloat()
-}
-
-private fun nanoSecondsToSeconds(valueNs : Long) : Float {
-    return valueNs / 10.0.pow(9.0).toFloat()
 }
 
 /**

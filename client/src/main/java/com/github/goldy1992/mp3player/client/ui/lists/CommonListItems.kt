@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
@@ -20,7 +19,6 @@ import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import com.github.goldy1992.mp3player.client.utils.MediaItemNameUtils
 import com.github.goldy1992.mp3player.commons.MediaItemType
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoResultsFound(mediaItemType: MediaItemType,
                     modifier: Modifier = Modifier) {
@@ -45,7 +43,6 @@ fun NoResultsFound(mediaItemType: MediaItemType,
     }
 }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun NoPermissions(
         modifier: Modifier = Modifier

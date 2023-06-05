@@ -238,10 +238,10 @@ fun SettingsScreenContent(
                 modifier = Modifier.clickable(enabled = true) {
                     val intent =
                         Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    val uri: Uri = Uri.fromParts("package", context.getPackageName(), null)
+                    val uri: Uri = Uri.fromParts("package", context.packageName, null)
                     intent.addCategory(Intent.CATEGORY_DEFAULT)
                     intent.data = uri
-                    context.startActivity(intent, Bundle());
+                    context.startActivity(intent, Bundle())
                 }
             )
         }
@@ -280,15 +280,6 @@ private fun Subheader(title : String = "Permissions",
 }
 
 
-@Composable
-private fun ThemeMenuItem(navController: NavController) {
-    val theme = stringResource(id = R.string.theme)
-    ListItem(
-        leadingContent = { Icon(Icons.Filled.Palette, contentDescription = theme) },
-        headlineContent = { Text(theme, style = MaterialTheme.typography.titleMedium) },
-        modifier = Modifier.clickable { navController.navigate(Screen.THEME_SELECT.name)}
-    )
-}
 
 @RequiresApi(S)
 @TargetApi(S)
@@ -355,7 +346,7 @@ private fun SupportAndFeedbackMenuItem(onClick: () -> Unit) {
         },
         leadingContent = { Icon(Icons.Filled.Help, contentDescription = supportAndFeedback) },
         headlineContent = {
-            Column() {
+            Column {
                 Text(supportAndFeedback)
             }
         },

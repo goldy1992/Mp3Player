@@ -9,7 +9,7 @@ import com.github.goldy1992.mp3player.commons.Constants
 object AudioDataUtils {
 
     fun getAudioSample(eventHolder: SessionCommandEventHolder) : AudioSample {
-        return if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             getAudioSampleApi33AndAbove(eventHolder)
         } else {
             getAudioSampleBelowApi33(eventHolder)

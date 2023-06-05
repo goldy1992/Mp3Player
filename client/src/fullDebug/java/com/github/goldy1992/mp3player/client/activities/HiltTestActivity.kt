@@ -4,8 +4,4 @@ import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint(AppCompatActivity::class)
-class HiltTestActivity : Hilt_HiltTestActivity() {
-
-
-
-}
+class HiltTestActivity : Hilt_HiltTestActivity()

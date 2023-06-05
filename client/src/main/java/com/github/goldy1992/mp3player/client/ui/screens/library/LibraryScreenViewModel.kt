@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.client.ui.screens.library
 
 import android.os.Bundle
 import android.util.Log
-import androidx.annotation.OptIn as AndroidXOptIn
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
@@ -35,6 +34,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils.isEmpty
 import javax.inject.Inject
+import androidx.annotation.OptIn as AndroidXOptIn
 
 /**
  * The [ViewModel] implementation for the [LibraryScreen].

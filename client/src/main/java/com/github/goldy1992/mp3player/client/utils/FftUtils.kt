@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.utils
 
-import android.util.Log
 import com.github.goldy1992.mp3player.client.data.audiobands.FrequencyBand
 import com.github.goldy1992.mp3player.client.data.audiobands.FrequencyBandFive
 import com.github.goldy1992.mp3player.commons.AudioSample

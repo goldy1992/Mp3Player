@@ -53,7 +53,7 @@ val testAudio =  flow<List<Float>> {
 @Preview
 @Composable
 fun DisplayFireworkEqualizer() {
-   val testAudio by testAudio.collectAsState(listOf<Float>(0f))
+   val testAudio by testAudio.collectAsState(listOf(0f))
 
     FountainSpringCard(
         modifier = Modifier.fillMaxSize(),

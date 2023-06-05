@@ -10,7 +10,7 @@ class MainActivityUnitTestImpl : MainActivity() {
 
     override fun ui() {
         setContent {
-            Column() {
+            Column {
                 // Do nothing
             }
         }

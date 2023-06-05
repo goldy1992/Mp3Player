@@ -81,7 +81,7 @@ object MediaEntityUtils {
         )
     }
 
-    fun createRootItem(mediaItem : MediaItem) : RootItem {
+    private fun createRootItem(mediaItem : MediaItem) : RootItem {
         return RootItem(
             id = mediaItem.mediaId,
             type = MediaItemUtils.getMediaItemType(mediaItem)

@@ -93,7 +93,7 @@ fun SearchScreen(
             currentSearchQuery = { searchQuery },
             onNavUpPressed = onNavUpPressed,
             onSearchQueryUpdated = {
-                Log.i(logTag, "setting searchQuery with value: ${it}")
+                Log.i(logTag, "setting searchQuery with value: $it")
                 viewModel.setSearchQuery(it) },
             onSearchQueryCleared = { viewModel.setSearchQuery("") },
         )
@@ -140,7 +140,6 @@ fun SearchScreen(
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SmallSearchResults(
     topBar : @Composable () -> Unit = {},
@@ -160,8 +159,6 @@ private fun SmallSearchResults(
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LargeSearchResults(
     topBar : @Composable () -> Unit = {},
@@ -180,8 +177,6 @@ private fun LargeSearchResults(
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalComposeUiApi
 @Composable
 fun SearchBar(currentSearchQuery : () -> String = { "No search query specified" },

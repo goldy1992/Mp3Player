@@ -28,7 +28,6 @@ import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.lists.songs.EmptySongsList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.LoadedSongsListWithHeader
-import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.client.utils.TimerUtils
 import com.github.goldy1992.mp3player.commons.Screen
@@ -128,7 +127,6 @@ fun FolderScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SmallFolderScreen(
     modifier : Modifier = Modifier,
@@ -229,7 +227,7 @@ private fun HeaderItem(
             Column(Modifier.weight(0.8f)) {
                 Text(
                     modifier = Modifier.padding(start = 4.dp, end = 4.dp),
-                    text = "${folder.path}",
+                    text = folder.path,
                     style = MaterialTheme.typography.labelSmall,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -280,7 +278,6 @@ private fun HeaderItem(
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LargeFolderScreen(
     navDrawerContent : @Composable () -> Unit,

@@ -187,7 +187,7 @@ fun VisualizerContentCardCollection(
 
     val density = LocalDensity.current
     var gridSizePx = remember { IntSize(400, 400) }
-    var cardLengthDp = remember(gridSizePx) {
+    val cardLengthDp = remember(gridSizePx) {
         var lengthDp: Dp
         with (density) {
             lengthDp = gridSizePx.width.toDp()

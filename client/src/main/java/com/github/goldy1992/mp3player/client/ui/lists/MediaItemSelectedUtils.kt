@@ -9,7 +9,7 @@ import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreenViewModel
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
-import java.util.*
+import java.util.EnumMap
 
 private const val logTag = "MediaItemSelectedUtils"
 
@@ -42,22 +42,6 @@ fun onFolderSelected(navController : NavController) : (Folder) -> Unit {
         Log.i(logTag, "navigating to $navRoute")
         navController.navigate(navRoute)
     }
-}
-
-fun onSelectedMap(
-    navController: NavController,
-    viewModel: SearchScreenViewModel) : EnumMap<MediaItemType, Any> {
-    val toReturn : EnumMap<MediaItemType, Any> = EnumMap(MediaItemType::class.java)
-    MediaItemType.values().forEach {
-        when(it) {
-            MediaItemType.FOLDERS,
-            MediaItemType.FOLDER -> toReturn[it] = onFolderSelected(navController)
-            MediaItemType.SONGS -> toReturn[it] = onSongSelectedFromList(viewModel)
-            MediaItemType.SONG -> toReturn[it] = onSongSelected(viewModel)
-            else -> toReturn[it] = { Log.i(logTag, "$it selected, do nothing")}
-        }
-    }
-    return toReturn
 }
 
 fun buildOnSelectedMap(

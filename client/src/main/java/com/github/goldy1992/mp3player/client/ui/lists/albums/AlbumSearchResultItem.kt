@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.lists.albums;
+package com.github.goldy1992.mp3player.client.ui.lists.albums
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -20,14 +20,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.Album
 import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
 
 @OptIn(
-    ExperimentalFoundationApi::class,
-    ExperimentalCoilApi::class
+    ExperimentalFoundationApi::class
 )
 @Preview
 @Composable
@@ -62,17 +60,3 @@ fun AlbumSearchResultItem(album : Album = Album(),
         }
     )
 }
-
-@Composable
-private fun FolderIcon() {
-    val folderIconContentDescr = stringResource(id = R.string.folder_icon)
-    Icon(
-        Icons.Filled.Folder,
-        contentDescription = folderIconContentDescr,
-        modifier = Modifier
-            .padding(2.dp)
-            .size(40.dp),
-        tint = MaterialTheme.colorScheme.onSurfaceVariant
-    )
-}
-

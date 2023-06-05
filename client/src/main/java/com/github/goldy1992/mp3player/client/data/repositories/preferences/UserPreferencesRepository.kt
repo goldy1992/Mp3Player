@@ -2,7 +2,11 @@ package com.github.goldy1992.mp3player.client.data.repositories.preferences
 
 import android.util.Log
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.*
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.github.goldy1992.mp3player.client.ui.Theme
 import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.coroutines.flow.Flow
@@ -93,20 +97,20 @@ open class UserPreferencesRepository
         }
     }
 
-    override open fun getTheme() : Flow<Theme> {
+    override fun getTheme() : Flow<Theme> {
         return userPreferencesFlow.map { preferences ->
             val currentTheme = preferences.theme
             Theme.valueOf(currentTheme)
         }
     }
 
-    override open fun getDarkMode() : Flow<Boolean> {
+    override fun getDarkMode() : Flow<Boolean> {
        return userPreferencesFlow.map { preferences ->
            preferences.darkMode
         }
     }
 
-    override open fun getSystemDarkMode() : Flow<Boolean> {
+    override fun getSystemDarkMode() : Flow<Boolean> {
         return userPreferencesFlow.map {
             preferences -> preferences.systemDarkMode
         }

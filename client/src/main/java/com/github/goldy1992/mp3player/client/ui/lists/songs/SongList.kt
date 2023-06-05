@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.github.goldy1992.mp3player.client.ui.lists.songs
 
 import android.util.Log
@@ -21,7 +19,6 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
-import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
 import com.github.goldy1992.mp3player.client.ui.lists.NoPermissions
 import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
 import com.github.goldy1992.mp3player.client.ui.states.State
@@ -31,7 +28,6 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 private const val logTag = "SongList"
 
 @ExperimentalCoilApi
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SongList(
     modifier : Modifier = Modifier,
@@ -121,7 +117,6 @@ fun EmptySongsList() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun LoadingSongsList() {

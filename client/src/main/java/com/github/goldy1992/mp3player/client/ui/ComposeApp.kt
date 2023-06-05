@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Intent
 import android.util.Log
-import androidx.annotation.OptIn as AndroidXOptIn
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -38,6 +37,8 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlin.OptIn
+import androidx.annotation.OptIn as AndroidXOptIn
 
 
 private const val logTag = "ComposeApp"

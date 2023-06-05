@@ -35,7 +35,7 @@ fun PlayPauseButton(
                     onClickPause: () -> Unit = {}
 ) {
     val isPlayingValue = isPlaying()
-    Log.i(logTag, "new isPlayingValue: ${isPlayingValue}")
+    Log.i(logTag, "new isPlayingValue: $isPlayingValue")
     val tweenTime = 500
     val rotation by animateFloatAsState(targetValue = if (isPlayingValue) 180f else 0f, tween(tweenTime))
 

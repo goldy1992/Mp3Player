@@ -28,8 +28,6 @@ data class DpPxSize(
                 widthDp = widthDp,
                 heightDp = heightDp)
         }
-
-        val ZERO = DpPxSize(0f, 0f, 0.dp, 0.dp)
     }
 
     override fun toString(): String {
