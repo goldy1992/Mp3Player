@@ -38,6 +38,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.apache.commons.lang3.ObjectUtils.isEmpty
 
+const val logTag = "NowPlayingScreen"
 @OptIn(
     ExperimentalAnimationApi::class,
     ExperimentalFoundationApi::class,
@@ -201,7 +202,7 @@ fun ViewPager(metadata : () -> MediaMetadata,
                 }
             }
         }
-        Log.i("NOW_PLAYING_SCRN", "queue size: $numberOfPages")
+        Log.i(logTag, "queue size: $numberOfPages")
 
         HorizontalPager(
                 state = pagerState,

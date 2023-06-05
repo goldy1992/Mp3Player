@@ -157,6 +157,6 @@ class SearchScreenViewModel
 
 
     override fun logTag(): String {
-        return "SrchScrnViewModel"
+        return "SearchScreenViewModel"
     }
 }

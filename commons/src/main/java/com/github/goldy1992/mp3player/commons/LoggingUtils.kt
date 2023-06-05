@@ -1,8 +1,26 @@
 package com.github.goldy1992.mp3player.commons
 
 import android.util.Log
-import androidx.media3.common.Player
-import androidx.media3.common.Player.*
+import androidx.media3.common.Player.EVENT_AVAILABLE_COMMANDS_CHANGED
+import androidx.media3.common.Player.EVENT_IS_LOADING_CHANGED
+import androidx.media3.common.Player.EVENT_IS_PLAYING_CHANGED
+import androidx.media3.common.Player.EVENT_MEDIA_ITEM_TRANSITION
+import androidx.media3.common.Player.EVENT_MEDIA_METADATA_CHANGED
+import androidx.media3.common.Player.EVENT_PLAYBACK_PARAMETERS_CHANGED
+import androidx.media3.common.Player.EVENT_PLAYBACK_STATE_CHANGED
+import androidx.media3.common.Player.EVENT_PLAYBACK_SUPPRESSION_REASON_CHANGED
+import androidx.media3.common.Player.EVENT_PLAYER_ERROR
+import androidx.media3.common.Player.EVENT_PLAYLIST_METADATA_CHANGED
+import androidx.media3.common.Player.EVENT_PLAY_WHEN_READY_CHANGED
+import androidx.media3.common.Player.EVENT_POSITION_DISCONTINUITY
+import androidx.media3.common.Player.EVENT_REPEAT_MODE_CHANGED
+import androidx.media3.common.Player.EVENT_SEEK_BACK_INCREMENT_CHANGED
+import androidx.media3.common.Player.EVENT_SEEK_FORWARD_INCREMENT_CHANGED
+import androidx.media3.common.Player.EVENT_SHUFFLE_MODE_ENABLED_CHANGED
+import androidx.media3.common.Player.EVENT_TIMELINE_CHANGED
+import androidx.media3.common.Player.EVENT_TRACKS_CHANGED
+import androidx.media3.common.Player.Event
+import androidx.media3.common.Player.Events
 
 object LoggingUtils {
     fun logPlaybackState(playbackState: Int, tag: String?) {
@@ -25,7 +43,7 @@ object LoggingUtils {
         Log.i(tag, sb.toString())
     }
 
-    fun getPlayerEventsLogMessage(playerEvent: Player.Events): String {
+    fun getPlayerEventsLogMessage(playerEvent: Events): String {
         var toReturn = "event:"
         for (idx in 0 until playerEvent.size()) {
             when (val event: @Event Int = playerEvent.get(idx)) {

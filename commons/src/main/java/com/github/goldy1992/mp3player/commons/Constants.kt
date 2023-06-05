@@ -1,38 +1,25 @@
 package com.github.goldy1992.mp3player.commons
 
-import android.net.Uri
 import android.util.SparseArray
 import androidx.media3.common.Player
 
 object Constants {
     const val FILE_COUNT = "FILE_COUNT"
-    const val MEDIA_SESSION = "mediaSession"
-    const val NAVIGATION_ROUTE = "NavigationRoute"
     const val LIBRARY_ID = "LIBRARY_ID"
     const val UNKNOWN = "Unknown"
     const val CHANGE_PLAYBACK_SPEED = "CHANGE_PLAYBACK_SPEED"
-    const val AUDIO_SESSION_ID = "AUDIO_SESSION_ID"
     const val AUDIO_DATA = "AUDIO_DATA"
     const val HAS_PERMISSIONS = "HAS_PERMISSIONS"
     const val PLAYLIST_ID = "PLAYLIST_ID"
-
-    const val ITEM_INDEX = "itemIndex"
     val playbackStateDebugMap = SparseArray<String?>()
     val repeatModeDebugMap = SparseArray<String>()
-
-    /* LIBRARY CONSTANTS */
-    val ARTWORK_URI_PATH = Uri.parse("content://media/external/audio/albumart")
     const val PACKAGE_NAME = "com.github.goldy1992.mp3player"
     const val MEDIA_ITEM_TYPE = "MEDIA_ITEM_TYPE"
     const val ROOT_ITEM_TYPE = "ROOT_ITEM_TYPE"
     const val EMPTY_MEDIA_ITEM_ID = "-1"
     const val PACKAGE_NAME_KEY = "package_name_key"
-
     const val ROOT_APP_URI_PATH = "com.github.goldy1992.mp3player"
-
     const val USER_PREFERENCES_NAME = "user_prefs"
-
-
 
     init {
         playbackStateDebugMap.put(Player.STATE_IDLE, "STATE_IDLE") // 1

@@ -31,7 +31,7 @@ fun LineEqualizerWithStateListCanvasOnly(modifier: Modifier = Modifier,
 
     val list : SnapshotStateList<Float> = remember(frequencyPhases.size) {
         mutableStateListOf<Float>().apply {
-            Log.i(logTag, "retrigger remember")
+            Log.i(logTag, "re-trigger remember")
             for (i in frequencyPhases) add( 0f) }
     }
 

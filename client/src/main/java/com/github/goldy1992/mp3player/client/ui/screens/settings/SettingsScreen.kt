@@ -183,7 +183,7 @@ fun SettingsScreenContent(
     val settings = settingsProvider()
     LazyColumn(modifier = modifier) {
         item {
-            Subheader(title = stringResource(id = R.string.display))
+            SubHeader(title = stringResource(id = R.string.display))
         }
         item {
             SystemDarkModeMenuItem(
@@ -211,7 +211,7 @@ fun SettingsScreenContent(
             Divider()
         }
         item {
-            Subheader(title = stringResource(id = R.string.permissions))
+            SubHeader(title = stringResource(id = R.string.permissions))
         }
         if (Build.VERSION.SDK_INT >= TIRAMISU) {
             permissionsMenuItemsTiramisu(
@@ -249,7 +249,7 @@ fun SettingsScreenContent(
             Divider()
         }
         item {
-            Subheader(title = stringResource(id = R.string.help))
+            SubHeader(title = stringResource(id = R.string.help))
         }
         item {
             SupportAndFeedbackMenuItem(onClick = {  })
@@ -267,8 +267,8 @@ fun SettingsScreenContent(
 
 @Preview
 @Composable
-private fun Subheader(title : String = "Permissions",
-                    subtitle : String? = null) {
+private fun SubHeader(title : String = "Permissions",
+                      subtitle : String? = null) {
 
     val subtitleComposable : (@Composable () -> Unit)? = if (subtitle == null) null else { { Text(subtitle)} }
     ListItem(

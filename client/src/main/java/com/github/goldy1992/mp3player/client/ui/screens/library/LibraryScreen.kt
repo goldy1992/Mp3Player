@@ -331,11 +331,8 @@ fun LibraryScreenContent(
 
 /**
  * Displays the pages for each of the Home bar tabs.
- * @param navController The [NavController].
  * @param pagerState The [PagerState] of the Tab Bar.
- * @param rootItems The [List] of [MediaItem]s to display on the Tab Bar.
  * @param modifier The [Modifier].
- * @param viewModel The [LibraryScreenViewModel].
  */
 @OptIn(ExperimentalCoilApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -359,8 +356,7 @@ fun TabBarPages(
             state = pagerState,
             pageCount = tabPages.size
         ) { pageIndex ->
-            val currentDataType = tabPages[pageIndex]
-            when (currentDataType) {
+            when (tabPages[pageIndex]) {
                 MediaItemType.SONGS ->
                     SongList(
                         songs = songs(),

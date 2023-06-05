@@ -61,10 +61,10 @@ fun SmoothLineEqualizer(modifier: Modifier = Modifier,
 
     val frequencyCoordinates = mutableListOf<Offset>()
     for (i in frequencyPhases.indices) {
-        val currentANimatedValue by animateFloatAsState(targetValue = frequencyPhases[i])
+        val currentAnimatedValue by animateFloatAsState(targetValue = frequencyPhases[i])
         frequencyCoordinates.add(Offset(
             x = waveStartOffset.x + (phaseSpacing * (i + 1)),
-            y = lineHeight - currentANimatedValue
+            y = lineHeight - currentAnimatedValue
         ))
     }
 

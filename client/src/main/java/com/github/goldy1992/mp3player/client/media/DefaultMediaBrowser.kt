@@ -74,7 +74,7 @@ class DefaultMediaBrowser
 
     private val _metadataFlow : Flow<MediaMetadata> = callbackFlow {
         val controller = mediaBrowserFuture.await()
-        Log.i(logTag(), "event isPlaying mediabrowser awaited")
+        Log.i(logTag(), "event isPlaying media browser awaited")
         var currentMediaMetadata : MediaMetadata
         withContext(mainDispatcher) {
             currentMediaMetadata = controller.mediaMetadata
@@ -165,7 +165,7 @@ class DefaultMediaBrowser
 
     private val _isPlayingFlow : Flow<Boolean> = callbackFlow {
         val controller = mediaBrowserFuture.await()
-        Log.i(logTag(), "event isPlaying mediabrowser awaited")
+        Log.i(logTag(), "event isPlaying media browser awaited")
         var isPlaying : Boolean
         withContext(mainDispatcher) {
             isPlaying = controller.isPlaying
@@ -372,7 +372,7 @@ class DefaultMediaBrowser
 
         trySend(queue)
 
-        Log.i(logTag(), "player event controller awaiter")
+        Log.i(logTag(), "player event controller awaited")
         val messageListener = object : Player.Listener {
             override fun onEvents(player: Player, event: Player.Events) {
                 val e = getPlayerEventsLogMessage(event)

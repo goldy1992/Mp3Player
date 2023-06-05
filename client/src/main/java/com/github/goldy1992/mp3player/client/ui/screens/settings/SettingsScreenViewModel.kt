@@ -71,7 +71,7 @@ class SettingsScreenViewModel
 
 
     override fun logTag(): String {
-        return "SettingsScrnViewModel"
+        return "SettingsScreenViewModel"
     }
 
 }

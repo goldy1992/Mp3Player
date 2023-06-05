@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.commons
 
-import android.annotation.TargetApi
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION_CODES.TIRAMISU
@@ -31,16 +30,6 @@ object MediaItemUtils : LogTagger {
             null
         } else item.mediaMetadata.extras
     }
-
-    @Suppress("DEPRECATION")
-    fun getExtra(key: String?, item: MediaItem?): Any? {
-        if (item == null) {
-            return null
-        }
-        val extras = item.mediaMetadata.extras
-        return extras?.get(key)
-    }
-
 
     @Suppress("DEPRECATION")
     private fun <T : Serializable> getSerializableExtra(key: String?, clazz: Class<T>, item: MediaItem?): Any? {
@@ -162,11 +151,6 @@ object MediaItemUtils : LogTagger {
         return item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION) ?: 0L
     }
 
-    @JvmStatic
-    fun getFileCount(item : MediaItem?) : Int {
-        return if (hasFileCount(item)) getIntExtra(Constants.FILE_COUNT, item) ?: -1 else -1
-    }
-
     @Suppress("DEPRECATION")
     @JvmStatic
     fun getMediaItemType(item: MediaItem): MediaItemType {
@@ -197,11 +181,6 @@ object MediaItemUtils : LogTagger {
     @JvmStatic
     fun getAlbumArtImage(song: MediaItem): ByteArray? {
         return song.mediaMetadata.artworkData
-    }
-
-    @JvmStatic
-    fun getEmptyMediaItem() : MediaItem {
-        return MediaItemBuilder(EMPTY_MEDIA_ITEM_ID).build()
     }
 
     fun isEmptyMediaItem(mediaItem: MediaItem?) : Boolean {

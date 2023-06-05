@@ -76,7 +76,7 @@ val orangeAppDarkTheme = darkColors(
 
 @Composable
 fun AppTheme(userPreferencesRepository: IUserPreferencesRepository,
-             content: @Composable() () -> Unit) {
+             content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = getColorScheme(userPreferencesRepository),
         content = content

@@ -216,7 +216,7 @@ class LibraryScreenViewModel
     }
 
     override fun logTag(): String {
-        return "LibScrnViewModel"
+        return "LibScreenViewModel"
     }
 
 

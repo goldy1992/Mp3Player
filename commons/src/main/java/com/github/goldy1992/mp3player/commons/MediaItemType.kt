@@ -28,12 +28,5 @@ enum class MediaItemType(
                 SONG    to EnumSet.noneOf(MediaItemType::class.java),
                 FOLDERS to EnumSet.of(FOLDER),
                 FOLDER  to EnumSet.of(SONG))
-        @JvmField
-        var SINGLETON_PARENT_TO_CHILD_MAP = mapOf(
-                SONGS to SONG,
-                SONG to null,
-                FOLDERS to FOLDER,
-                FOLDER to SONG
-        )
     }
 }

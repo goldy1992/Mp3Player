@@ -58,7 +58,7 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
     @Inject
     lateinit var mediaBrowser : IMediaBrowser
 
-    var startScreen: Screen = Screen.LIBRARY
+    private var startScreen: Screen = Screen.LIBRARY
 
     var trackToPlay: Uri? = null
         private set

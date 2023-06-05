@@ -12,7 +12,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.platform.LocalDensity
@@ -62,7 +61,7 @@ fun FountainSpringEqualizer(modifier: Modifier = Modifier,
     // LaunchedEffect for CREATING new particles
     LaunchedEffect(frequencyPhases) {
         this.launch {
-        //        Log.i(logTag, "frequencyPhases updated, new launchedeffect")
+        //Log.i(logTag, "frequencyPhases updated, new LaunchedEffect")
             val entryIterator = particles.entries.iterator()
             val newMap = mutableMapOf<Int, List<Particle>>()
             val frame = awaitFrame()
@@ -71,18 +70,18 @@ fun FountainSpringEqualizer(modifier: Modifier = Modifier,
                 val currentParticleList = entry.value
                 val newParticleList = currentParticleList.toMutableList()
                 if (newParticleList.size < maxParticlesPerSpring) {
-//                    Log.i(logTag, "adding new particle to freq: ${entry.key}")
+                //  Log.i(logTag, "adding new particle to frequency: ${entry.key}")
                     val currentFreq = frequencyPhases[entry.key]
-                    val frac = currentFreq / MAX_FREQUENCY
-                    val hmax = canvasSize.heightPx * frac
-                //    Log.i(logTag, "hmax: $hmax")
+                    val fraction = currentFreq / MAX_FREQUENCY
+                    val hMax = canvasSize.heightPx * fraction
+                //    Log.i(logTag, "hMax: $hMax")
                     val angle = Math.toRadians(Random.nextDouble(85.0, 95.0))
-                    val initialVelocity = calculateInitialVelocityGivenHmax(hmax, angle)
+                    val initialVelocity = calculateInitialVelocityGivenHMax(hMax, angle)
                     newParticleList.add(
                         createParticle(
                             spawnPoints[entry.key], initialVelocity = initialVelocity,
                             currentFrame = frame,
-                            hmax = hmax,
+                            hMax = hMax,
                             color = particleColor
                         )
                     )
@@ -97,7 +96,7 @@ fun FountainSpringEqualizer(modifier: Modifier = Modifier,
     // LaunchedEffect for UPDATING and REMOVING particles.
     LaunchedEffect(particles) {
         this.launch {
-           // Log.i(logTag, "launching new while particles in map corouting")
+           // Log.i(logTag, "launching new while particles in map coroutine")
             while (particlesInMap(particles)) {
            //     Log.i(logTag, "while Particles in map, update particles")
                 val frame = awaitFrame()
@@ -170,7 +169,7 @@ private fun DrawScope.drawCircleParticle(particle: Particle) {
 
 private fun createParticle(startOffset: Offset,
                            initialVelocity : Float,
-                           hmax: Float,
+                           hMax: Float,
                            currentFrame : Long,
                            color : Color) : Particle {
     val startY = startOffset.y
@@ -180,7 +179,7 @@ private fun createParticle(startOffset: Offset,
     return Particle(
         x = startX,
         y = startY,
-        hMax = hmax,
+        hMax = hMax,
         isFalling = false,
         currentFrameTimeNs = currentFrame,
         startPosition = Offset(startX, startY),
@@ -194,9 +193,9 @@ private const val g = -9.8f
 
 private fun updateParticle(particle: Particle, currentFrameTime : Long) : Particle {
     val timeDiffNanoSecs = currentFrameTime - particle.currentFrameTimeNs
-    val elapsedTimeSecs = particle.elapsedTimeDeciseconds + convertNanoSecondsToRuntimeSpeed(timeDiffNanoSecs)
-    val x = particle.startPosition.x + (particle.initialVelocity * cos(Math.toRadians(particle.angle)).toFloat() * particle.elapsedTimeDeciseconds)
-    val y = particle.startPosition.y + ((particle.initialVelocity * sin(Math.toRadians(particle.angle)).toFloat() * particle.elapsedTimeDeciseconds) - ((g * particle.elapsedTimeDeciseconds * particle.elapsedTimeDeciseconds) / 2f))
+    val elapsedTimeSecs = particle.elapsedTimeDeciSeconds + convertNanoSecondsToRuntimeSpeed(timeDiffNanoSecs)
+    val x = particle.startPosition.x + (particle.initialVelocity * cos(Math.toRadians(particle.angle)).toFloat() * particle.elapsedTimeDeciSeconds)
+    val y = particle.startPosition.y + ((particle.initialVelocity * sin(Math.toRadians(particle.angle)).toFloat() * particle.elapsedTimeDeciSeconds) - ((g * particle.elapsedTimeDeciSeconds * particle.elapsedTimeDeciSeconds) / 2f))
 
     val newAlpha = if (elapsedTimeSecs > 18f) 0f else (1-(elapsedTimeSecs / 18f))
     return Particle(
@@ -206,7 +205,7 @@ private fun updateParticle(particle: Particle, currentFrameTime : Long) : Partic
         currentFrameTimeNs = currentFrameTime,
         x = x,
         y = y,
-        elapsedTimeDeciseconds = elapsedTimeSecs,
+        elapsedTimeDeciSeconds = elapsedTimeSecs,
         color = Color(
                     red=particle.color.red,
                     green=particle.color.green,
@@ -237,22 +236,22 @@ private fun generateSpawnPoints(canvasWidth : Float,
 
 /**
  *  Calculates the initial velocity, u, required to reach the max height
- *  i.e hmax = ((u^2)*(sin(x)^2)) / 2g (see google docs)
- *  => u = sqrt( abs((hmax * 2g) / (sin^2(x)))  )
+ *  i.e hMax = ((u^2)*(sin(x)^2)) / 2g (see google docs)
+ *  => u = sqrt( abs((hMax * 2g) / (sin^2(x)))  )
  *  abs() is used to ensure NaN is not returned.
  *
- *  where hmax :- the maximum particle height
+ *  where hMax :- the maximum particle height
  *        x    :- the angle of projection
  *        g    :- the constant acceleration of gravity 9.8 m/s^2
  *        u    :- the initial velocity at the time of projection
  *
- * @param hmax The maximum height the particle should reach i.e. the velocity on the y axis is 0
+ * @param hMax The maximum height the particle should reach i.e. the velocity on the y axis is 0
  * @param angle THe angle of projection about the x-axis in radians.
  * @return u, the initial velocity at the time of projection.
  */
-private fun calculateInitialVelocityGivenHmax(hmax : Float, angle : Double) : Float {
+private fun calculateInitialVelocityGivenHMax(hMax : Float, angle : Double) : Float {
     val denominator = sin(angle).pow(2)
-    val numerator = hmax * 2 * g // g is negative therefore we should
+    val numerator = hMax * 2 * g // g is negative therefore we should
     val u =  sqrt(abs(numerator / denominator)).toFloat()
     return u * -1
 
@@ -277,7 +276,7 @@ private fun particlesInMap(particleMap : Map<Int, List<Particle>>) : Boolean {
 
 /**
  * From nano seconds (i.e. 10^-9)
- * Runtime speed is Deciseconds (i.e. 10^-1)
+ * Runtime speed is Deci-seconds (i.e. 10^-1)
  */
 private fun convertNanoSecondsToRuntimeSpeed(valueNs: Long) : Float {
     return valueNs * 10.0.pow(-8.0).toFloat()

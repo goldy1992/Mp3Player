@@ -88,7 +88,7 @@ fun  ComposeApp(
                     )
                 },
                 popEnterTransition = {
-                    Log.i(logTag, "PopenterTransition called")
+                    Log.i(logTag, "PopEnterTransition called")
                     slideIntoContainer(
                         AnimatedContentScope.SlideDirection.Up, animationSpec = tween(transitionTime)
                     )

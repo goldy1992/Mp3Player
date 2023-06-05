@@ -39,7 +39,7 @@ fun LineEqualizer(modifier: Modifier = Modifier,
     val list = remember(frequencyPhases.size) {
 
         mutableStateListOf<Float>().apply {
-            Log.i(logTag, "retrigger remember")
+            Log.i(logTag, "re-trigger remember")
             for (i in frequencyPhases) add(
         i) } }
 

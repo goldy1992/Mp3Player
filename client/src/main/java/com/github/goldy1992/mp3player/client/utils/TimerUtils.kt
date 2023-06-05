@@ -12,7 +12,7 @@ object TimerUtils {
      * One second constant
      */
     private const val ONE_SECOND = 1000
-    private const val LOG_TAG = "TIMER_UTILS"
+    private const val logTag = "TIMER_UTILS"
     @JvmStatic
     fun convertToSeconds(milliseconds: Long): Int {
         return (milliseconds / ONE_SECOND).toInt()

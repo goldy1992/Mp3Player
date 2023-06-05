@@ -28,13 +28,6 @@ class MediaItemBuilder(private val mediaId: String) {
     private var albumArtData : ByteArray? = null
     private val extras: Bundle = Bundle()
 
-    private var flags = 0
-
-    fun setFlags(flags: Int): MediaItemBuilder {
-        this.flags = flags
-        return this
-    }
-
     fun setDescription(description: String?): MediaItemBuilder {
         this.description = description
         return this

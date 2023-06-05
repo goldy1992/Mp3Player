@@ -14,7 +14,7 @@ import androidx.window.layout.WindowMetricsCalculator
 /**
  * Opinionated set of viewport breakpoints
  *     - Compact: Most phones in portrait mode
- *     - Medium: Most foldables and tablets in portrait mode
+ *     - Medium: Most fold-ables and tablets in portrait mode
  *     - Expanded: Most tablets in landscape mode
  *
  * More info: https://material.io/archive/guidelines/layout/responsive-ui.html
