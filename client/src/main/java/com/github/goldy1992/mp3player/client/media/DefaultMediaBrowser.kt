@@ -6,11 +6,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.IntRange
+import androidx.annotation.OptIn as AndroidXOptIn
 import androidx.concurrent.futures.await
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.*
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.*
@@ -47,23 +49,6 @@ class DefaultMediaBrowser
         .Builder(context, sessionToken)
         .setListener(this)
         .buildAsync()
-
-    private val _playerEventsFlow : Flow<PlayerEventHolder> = callbackFlow {
-        val controller = mediaBrowserFuture.await()
-        Log.i(logTag(), "player event controller awaiter")
-        val messageListener = object : Player.Listener {
-            override fun onEvents(player: Player, events: Player.Events) {
-                Log.i(logTag(), "player event: ${events}")
-                trySend(PlayerEventHolder(player, events))
-            }
-        }
-        controller.addListener(messageListener)
-        awaitClose {
-            scope.launch(mainDispatcher) {
-                controller.removeListener(messageListener)
-            }
-        }
-    }
 
     private val _onCustomCommandFlow : Flow<SessionCommandEventHolder> = callbackFlow<SessionCommandEventHolder> {
         val messageListener = object : MediaBrowser.Listener {
@@ -468,6 +453,7 @@ class DefaultMediaBrowser
         }
     }
 
+    @androidx.annotation.OptIn(UnstableApi::class)
     override suspend fun getLibraryRoot(): MediaItem {
         val args = Bundle()
         args.putString(PACKAGE_NAME_KEY, PACKAGE_NAME)
@@ -536,6 +522,7 @@ class DefaultMediaBrowser
         mediaController.prepare()
     }
 
+    @AndroidXOptIn(UnstableApi::class)
     override suspend fun search(query: String, extras: Bundle) {
         mediaBrowserFuture.await()
             .search(query, MediaLibraryService

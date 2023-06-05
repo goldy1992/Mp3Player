@@ -54,8 +54,8 @@ constructor(savedStateHandle: SavedStateHandle,
     init {
         viewModelScope.launch {
             mediaRepository.subscribe(albumId)
-            val _albumsChildren = mediaRepository.getChildren(albumId)
-            _album.value = mapSongsToAlbum(_albumsChildren)
+            val albumChildren = mediaRepository.getChildren(albumId)
+            _album.value = mapSongsToAlbum(albumChildren)
         }
 
         viewModelScope.launch {

@@ -9,7 +9,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.goldy1992.mp3player.client.R
 
 @Composable
 fun SpeedController(modifier : Modifier = Modifier,
@@ -53,7 +55,7 @@ fun SpeedController(modifier : Modifier = Modifier,
                     uiSliderPosition = 1f
                 }
             ) {
-                Icon(Icons.Filled.Refresh, contentDescription = "Reset to 1x Speed",
+                Icon(Icons.Filled.Refresh, contentDescription = stringResource(id = R.string.reset_speed),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }

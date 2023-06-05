@@ -1,13 +1,13 @@
 <resources>
-    <string name="action_settings">Settings</string>
+    <string name="album">Album</string>
+    <string name="albums">Albums</string>
     <string name="allow_audio_playback">Allow Audio Playback</string>
     <string name="allow_image_display">Allow Image Display</string>
     <string name="allow_notifications">Allow Notifications</string>
+    <string name="app_title">Music Player</string>
     <string name="back">Back</string>
     <string name="bottom_app_bar">Bottom App Bar</string>
-    <string name="channel_description">channel description</string>
     <string name="clear_search">Clear</string>
-    <string name="content_description">content description</string>
     <string name="current_position">Current Position</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="dark_mode_icon">System Dark Mode Icon</string>
@@ -15,24 +15,23 @@
     <string name="display">Display</string>
     <string name="duration">Duration</string>
     <string name="dynamic_color">Use Dynamic Colors</string>
+    <string name="folder">Folder</string>
+    <string name="folders">Folders</string>
     <string name="folder_icon">Folder Icon</string>
     <string name="folder_list">Folder List</string>
     <string name="help">Help</string>
     <string name="loading">Loading</string>
     <string name="library">Library</string>
     <string name="navigation_drawer_menu_icon">Navigation Drawer Menu Icon</string>
+    <string name="none">None</string>
     <string name="now_playing_screen">Now Playing Screen</string>
-    <string name="menu">Menu</string>
-    <string name="notification_channel_name">channel_name</string>
     <string name="no_permissions">No permissions to retrieve content.</string>
     <string name="no_results">No %1$s found on device.</string>
-    <string name="no_search_results_found">No search results found for query\: \"%1$s\"</string>
     <string name="no_songs_on_device">No audio tracks found on your device.</string>
     <string name="no_folders_with_songs">No folders containing audio tracks found on your device.</string>
     <string name="pause">Pause</string>
     <string name="pause_album">Pause Album</string>
     <string name="permissions">Permissions</string>
-    <string name="permission_denied">Permission denied, please enable storage permissions in settings in order to use the app</string>
     <string name="play">Play</string>
     <string name="play_album">Play Album</string>
     <string name="read_external_storage">Read External Storage</string>
@@ -40,6 +39,7 @@
     <string name="repeat_none">Repeat None</string>
     <string name="repeat_one">Repeat One</string>
     <string name="reset_speed">Reset Playback Speed</string>
+    <string name="root">Root</string>
     <string name="search">Search</string>
     <string name="search_hint">Search media</string>
     <string name="search_results_column">Search Results Column</string>
@@ -47,47 +47,18 @@
     <string name="settings">Settings</string>
     <string name="shuffle_off">Shuffle Off</string>
     <string name="shuffle_on">Shuffle On</string>
+    <string name="skip_to_next">Skip to Next</string>
+    <string name="skip_to_previous">Skip to Previous</string>
+    <string name="song">Song</string>
+    <string name="songs">Songs</string>
     <string name="songs_list">Songs List</string>
     <string name="song_title">Song Title</string>
-    <string name="splash_screen_icon">Splash Screen Icon</string>
     <string name="support_and_feedback">Support and Feedback</string>
     <string name="system_dark_mode_icon">System Dark Mode Icon</string>
     <string name="system_dark_mode_switch">System Dark Mode Switch</string>
     <string name="theme">Theme</string>
     <string name="update_permissions">Update Permissions</string>
-    <string name="update_permissions_descr">Opens System App Settings so the App permissions can be refined.</string>
     <string name="use_system_dark_mode">Use System Dark Mode</string>
     <string name="version">Version</string>
-
-    <!-- MEDIA_ITEM_TYPE name -->
-    <string name="root">Root</string>
-    <string name="songs">Songs</string>
-    <string name="song">Song</string>
-    <string name="folders">Folders</string>
-    <string name="folder">Folder</string>
-    <string name="albums">Albums</string>
-    <string name="album">Album</string>
-    <string name="none">None</string>
-
-    <string name="SKIP_TO_NEXT">Skip to Next</string>
-    <string name="SKIP_TO_PREVIOUS">Skip to Previous</string>
-    <string name="PAUSE">Pause</string>
-    <string name="DEFAULT_TIME">00:00</string>
-    <string name="TITLE_ARTIST_SEPARATOR"> - </string>
-    <string name="ARTIST_NAME">Artist: %1$s</string>
-    <string name="TRACK_NAME">Track:  %1$s</string>
-    <string name="PLAYBACK_SPEED">Playback Speed</string>
-    <string name="PLAYBACK_SPEED_VALUE">%1$.2fx</string>
-    <string name="PLAYBACK_SPEED_DEFAULT_VALUE">1.00x</string>
-    <string name="SEARCH_BUTTON_DESCRIPT">Search for an audio track</string>
-    <string name="LOGO_DESCRIPTION">The title logo</string>
-    <string name="app_title">Music Player</string>
-    <string name="FOLDER_NAME">%1$s</string>
-
-
-    <!-- THEME NAMES !-->
-    <string name="themes_title">Themes</string>
-    <string name="THEME_BLUE">Blue</string>
-    <string name="THEME_ORANGE">Orange</string>
 
 </resources>

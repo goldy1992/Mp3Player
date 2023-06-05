@@ -8,6 +8,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.github.goldy1992.mp3player.client.R
 
 @Composable
 fun SkipToPreviousButton(
@@ -18,9 +20,8 @@ fun SkipToPreviousButton(
         onClick = { onClick() }){
         Icon(
             imageVector = Icons.Filled.SkipPrevious,
-            contentDescription = "Skip to Previous",
+            contentDescription = stringResource(id = R.string.skip_to_previous),
             tint = MaterialTheme.colorScheme.primary,
-        //    modifier = modifier,
         )
     }
 }
@@ -33,9 +34,8 @@ fun SkipToNextButton(modifier: Modifier = Modifier,
         modifier = modifier) {
         Icon(
             imageVector = Icons.Filled.SkipNext,
-            contentDescription = "Skip to Previous",
+            contentDescription = stringResource(id = R.string.skip_to_next),
             tint = MaterialTheme.colorScheme.primary,
-    //        modifier = modifier,
         )
     }
 }

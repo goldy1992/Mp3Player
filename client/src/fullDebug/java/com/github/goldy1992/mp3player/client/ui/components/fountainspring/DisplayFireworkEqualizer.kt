@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainspring
+package com.github.goldy1992.mp3player.client.ui.components.fountainspring
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable

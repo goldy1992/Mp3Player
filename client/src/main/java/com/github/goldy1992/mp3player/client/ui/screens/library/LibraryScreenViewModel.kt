@@ -2,10 +2,12 @@ package com.github.goldy1992.mp3player.client.ui.screens.library
 
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.OptIn as AndroidXOptIn
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaLibraryService
 import com.github.goldy1992.mp3player.client.data.Albums
 import com.github.goldy1992.mp3player.client.data.Folders
@@ -217,6 +219,8 @@ class LibraryScreenViewModel
         return "LibScrnViewModel"
     }
 
+
+    @AndroidXOptIn(UnstableApi::class)
     private fun hasPermissions(params : MediaLibraryService.LibraryParams) : Boolean {
         return params.extras.getBoolean(HAS_PERMISSIONS,false)
     }
