@@ -19,7 +19,7 @@ class AlbumsRetriever
         return contentResolver.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, projection, null, null, null)
     }
 
-    override val projection: Array<String?>?
+    override val projection: Array<String?>
         get() = ALBUM_PROJECTION.toTypedArray()
     override val type: MediaItemType
         get() = MediaItemType.ALBUM

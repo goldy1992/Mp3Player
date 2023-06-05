@@ -20,7 +20,7 @@ class SongsFromAlbumRetriever@Inject constructor(contentResolver: ContentResolve
             WHERE, whereArgs, null)
     }
 
-    override val projection: Array<String?>?
+    override val projection: Array<String?>
         get() = Projections.SONG_PROJECTION.toTypedArray()
 
     companion object {

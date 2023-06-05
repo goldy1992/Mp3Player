@@ -59,7 +59,7 @@ class PlayerStateManager
     private suspend fun loadPlayerState() {
         withContext(mainDispatcher) {
             val currentSavedState = savedState.value
-            Log.i(logTag(), "player state value: ${currentSavedState}")
+            Log.i(logTag(), "player state value: $currentSavedState")
             if (isValidSavedState(currentSavedState)) {
                 val currentPlaylistIds = currentSavedState.playlist
                 val currentTrackPosition = currentSavedState.currentTrackPosition
@@ -95,7 +95,7 @@ class PlayerStateManager
             }
             if (currentMediaId != null) {
                 savedStateRepository.updateCurrentTrack(currentMediaId!!)
-                Log.i(logTag(), "updated currentTrack in SaveStateRepository to ${currentMediaId}")
+                Log.i(logTag(), "updated currentTrack in SaveStateRepository to $currentMediaId")
             }
             if (playlist != null) {
                 val playlistIds : List<String> = playlist!!.map { item -> item.mediaId }
@@ -105,7 +105,7 @@ class PlayerStateManager
             }
             if (currentTrackIndex != null) {
                 savedStateRepository.updateCurrentTrackIndex(currentTrackIndex!!)
-                Log.i(logTag(), "updated currentTrackIndex in SaveStateRepository to: ${currentTrackIndex}")
+                Log.i(logTag(), "updated currentTrackIndex in SaveStateRepository to: $currentTrackIndex")
             }
         }
 

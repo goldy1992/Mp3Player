@@ -17,7 +17,7 @@ class AlbumsResultsParser
     @Inject
     constructor() : ResultsParser() {
 
-    override val type: MediaItemType?
+    override val type: MediaItemType
         get() = MediaItemType.ALBUM
 
     override fun create(cursor: Cursor?): List<MediaItem> {
@@ -57,7 +57,7 @@ class AlbumsResultsParser
     private fun buildMediaItem(c: Cursor): MediaItem {
         val albumIdIndex = c.getColumnIndex(MediaStore.Audio.Media._ID)
         val albumId = if (albumIdIndex >= 0) c.getLong(albumIdIndex) else 0
-        Log.d(logTag(), "album_id: ${albumId}")
+        Log.d(logTag(), "album_id: $albumId")
 
         val albumTitleIndex = c.getColumnIndex(MediaStore.Audio.Media.ALBUM)
         val albumTitle = if (albumTitleIndex >= 0) c.getString(albumTitleIndex) else Constants.UNKNOWN

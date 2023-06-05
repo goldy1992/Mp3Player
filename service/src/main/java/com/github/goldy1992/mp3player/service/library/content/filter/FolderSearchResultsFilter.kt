@@ -14,7 +14,7 @@ class FolderSearchResultsFilter
 
     override fun filter(query: String,
                         results: MutableList<MediaItem>?)
-            : List<MediaItem>? {
+            : List<MediaItem> {
 
         return results!!.filter {
             val directoryName = getDirectoryName(it)

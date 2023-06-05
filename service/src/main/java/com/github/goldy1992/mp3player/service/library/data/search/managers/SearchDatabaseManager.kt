@@ -24,9 +24,9 @@ abstract class SearchDatabaseManager<T>(private val contentManager: ContentManag
 
     private fun deleteOld(entries: List<T?>) { // Delete old entries i.e. files that have been deleted.
         val ids: MutableList<String?> = ArrayList()
-        for (entry in entries) {
+        //for (entry in entries) {
             //ids.add(entry!!.id)
-        }
+        //}
         // remove old entries
         dao.deleteOld(ids)
     }

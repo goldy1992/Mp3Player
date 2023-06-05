@@ -24,7 +24,7 @@ class AlbumDatabaseManager
         searchDatabase.albumDao(),
         mediaItemTypeIds.getId(MediaItemType.ALBUMS)) {
 
-    override fun createFromMediaItem(item: MediaItem): Album? {
+    override fun createFromMediaItem(item: MediaItem): Album {
         val id = getMediaId(item)
         val value = getAlbumTitle(item)
         return Album(id, normalise(value))

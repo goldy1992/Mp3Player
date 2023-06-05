@@ -4,8 +4,6 @@ import android.content.ContentResolver
 import android.content.ContentUris
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build.VERSION.SDK_INT
-import android.os.Bundle
 import android.provider.MediaStore
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata.FOLDER_TYPE_NONE
@@ -16,8 +14,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaUri
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle
 import java.io.File
-import java.io.FileNotFoundException
-import java.util.*
+import java.util.TreeSet
 import javax.inject.Inject
 
 class SongResultsParser
@@ -36,7 +33,7 @@ class SongResultsParser
         return ArrayList(listToReturn)
     }
 
-    override val type: MediaItemType?
+    override val type: MediaItemType
         get() = MediaItemType.SONG
 
     private fun buildMediaItem(c: Cursor): MediaItem? {

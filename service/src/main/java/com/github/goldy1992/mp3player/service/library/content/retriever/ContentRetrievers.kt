@@ -10,7 +10,7 @@ class ContentRetrievers
 
     @Inject
     constructor(mediaItemTypeIds: MediaItemTypeIds,
-                private val rootRetriever: RootRetriever,
+                rootRetriever: RootRetriever,
                 private val songsRetriever: SongsRetriever,
                 private val foldersRetriever: FoldersRetriever,
                 private val songsFromFolderRetriever: SongsFromFolderRetriever,

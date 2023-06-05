@@ -28,7 +28,7 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
                                               private val contentRetrievers: ContentRetrievers,
                                               private val contentSearchers: ContentSearchers,
                                               rootAuthenticator: RootAuthenticator,
-                                              private val scope : CoroutineScope,
+                                              scope : CoroutineScope,
 ) : ContentManager {
 
     private val rootNode = MediaItemNode(rootAuthenticator.getRootItem())
@@ -77,7 +77,7 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
     }
 
     override suspend fun getChildren(mediaItemType: MediaItemType): ContentManagerResult{
-        val mediaItemId : String? = rootNode.getChildren()
+        val mediaItemId : String = rootNode.getChildren()
             .first { x -> x.mediaItemType == mediaItemType }.id
         return if (mediaItemId != null) getChildren(mediaItemId) else buildEmptyResult()
     }
@@ -150,9 +150,6 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
             this.children.add(childNode)
         }
 
-        fun addChildren(childNodes : Collection<MediaItemNode>) {
-            this.children.addAll(childNodes)
-        }
         fun getChildren(): List<MediaItemNode> {
             return ImmutableList.copyOf(children)
         }
@@ -162,7 +159,7 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
     }
 
     private fun build(node : MediaItemNode) {
-        val children = contentRetrievers.getContentRetriever(node.mediaItemType ?: MediaItemType.NONE)?.getChildren(node.id)
+        val children = contentRetrievers.getContentRetriever(node.mediaItemType)?.getChildren(node.id)
         if (children != null) {
             for (child in children) {
                 val childNode = MediaItemNode(child)

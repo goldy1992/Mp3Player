@@ -3,9 +3,11 @@ package com.github.goldy1992.mp3player.service.dagger.modules.service
 import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.util.Log
+import androidx.annotation.OptIn as AndroidXOptIn
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.RenderersFactory
 import dagger.Module
@@ -15,6 +17,7 @@ import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
 
+@AndroidXOptIn(UnstableApi::class)
 @InstallIn(ServiceComponent::class)
 @Module
 class ExoPlayerModule {
@@ -32,7 +35,6 @@ class ExoPlayerModule {
         return ExoPlayer.Builder(context)
             .setRenderersFactory(renderersFactory)
             .setAudioAttributes(audioAttributes, true)
-            .setLooper(context.mainLooper)
             .build()
     }
 

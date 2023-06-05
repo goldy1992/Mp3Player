@@ -2,6 +2,8 @@ package com.github.goldy1992.mp3player.service.dagger.modules.service
 
 import android.content.Context
 import android.os.Handler
+import androidx.media3.common.util.UnstableApi
+import androidx.annotation.OptIn as AndroidXOptIn
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.Renderer
 import androidx.media3.exoplayer.RenderersFactory
@@ -14,6 +16,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 
+@AndroidXOptIn(UnstableApi::class)
 @InstallIn(ServiceComponent::class)
 @Module
 class ExoPlayerRendersFactoryModule {

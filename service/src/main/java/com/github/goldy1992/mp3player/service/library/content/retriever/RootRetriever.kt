@@ -9,7 +9,6 @@ import com.github.goldy1992.mp3player.commons.ComparatorUtils.Companion.compareR
 import com.github.goldy1992.mp3player.commons.Constants.MEDIA_ITEM_TYPE
 import com.github.goldy1992.mp3player.commons.Constants.ROOT_ITEM_TYPE
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.service.R
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.*
@@ -19,8 +18,7 @@ import javax.inject.Inject
 class RootRetriever
 
     @Inject
-    constructor(private val mediaItemTypeIds: MediaItemTypeIds,
-                @ApplicationContext private val context: Context) : ContentRetriever(), Comparator<MediaItem?> {
+    constructor(private val mediaItemTypeIds: MediaItemTypeIds) : ContentRetriever(), Comparator<MediaItem?> {
 
     private val rootChildren: List<MediaItem>
     private val typeToMediaItemMap: MutableMap<MediaItemType, MediaItem>

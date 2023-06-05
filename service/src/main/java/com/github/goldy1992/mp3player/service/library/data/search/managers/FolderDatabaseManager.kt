@@ -24,7 +24,7 @@ class FolderDatabaseManager
         searchDatabase.folderDao(),
         mediaItemTypeIds.getId(MediaItemType.FOLDERS)) {
 
-    public override fun createFromMediaItem(item: MediaItem): Folder? {
+    override fun createFromMediaItem(item: MediaItem): Folder? {
         val id = getDirectoryPath(item)
         val value = getDirectoryName(item)
         return if (null != value) {

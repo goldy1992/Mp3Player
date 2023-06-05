@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import androidx.annotation.OptIn as AndroidXOptIn
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
 import com.github.goldy1992.mp3player.commons.*
@@ -20,6 +22,7 @@ import javax.inject.Inject
  * list, the service will continue to run in the background and only be destroyed by the operating
  * system.
  */
+@AndroidXOptIn(UnstableApi::class)
 @AndroidEntryPoint
 open class MediaPlaybackService : MediaLibraryService(),
         LogTagger {
@@ -121,6 +124,7 @@ open class MediaPlaybackService : MediaLibraryService(),
         savePlayerState()
         return super.stopService(name)
     }
+
 
     override fun onDestroy() {
         Log.i(logTag(), "onDestroy called")

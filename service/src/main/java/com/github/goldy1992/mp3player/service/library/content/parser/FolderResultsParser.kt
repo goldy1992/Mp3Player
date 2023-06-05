@@ -51,7 +51,7 @@ class FolderResultsParser
         return ArrayList(listToReturn)
     }
 
-    override val type: MediaItemType?
+    override val type: MediaItemType
         get() = MediaItemType.FOLDER
 
     private fun createFolderMediaItem(directoryInfo: DirectoryInfo) : MediaItem { /* append a file separator so that folders with an "extended" name are discarded...

@@ -22,7 +22,7 @@ class SongsFromFolderRetriever @Inject constructor(contentResolver: ContentResol
                 WHERE, whereArgs, null)
     }
 
-    override val projection: Array<String?>?
+    override val projection: Array<String?>
         get() = SONG_PROJECTION.toTypedArray()
 
     companion object {

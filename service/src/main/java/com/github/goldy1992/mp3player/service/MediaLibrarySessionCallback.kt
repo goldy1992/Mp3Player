@@ -2,9 +2,11 @@ package com.github.goldy1992.mp3player.service
 
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.OptIn as AndroidXOptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.Rating
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.*
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import androidx.media3.session.MediaSession.ConnectionResult
@@ -26,6 +28,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
+@AndroidXOptIn(UnstableApi::class)
 @ServiceScoped
 class MediaLibrarySessionCallback
 
@@ -34,7 +37,6 @@ class MediaLibrarySessionCallback
                 private val changeSpeedProvider: ChangeSpeedProvider,
                 private val rootAuthenticator: RootAuthenticator,
                 private val scope : CoroutineScope,
-                @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
                 @IoDispatcher private val ioDispatcher: CoroutineDispatcher) : MediaLibrarySession.Callback, LogTagger {
 
     override fun onConnect(
@@ -84,35 +86,6 @@ class MediaLibrarySessionCallback
             mediaItem = MediaItem.EMPTY
         }
         return Futures.immediateFuture(LibraryResult.ofItem(mediaItem!!, MediaLibraryService.LibraryParams.Builder().build()))
-    }
-
-    override fun onDisconnected(session: MediaSession, controller: MediaSession.ControllerInfo) {
-        super.onDisconnected(session, controller)
-    }
-
-    override fun onPlayerCommandRequest(
-        session: MediaSession,
-        controller: MediaSession.ControllerInfo,
-        playerCommand: Int
-    ): Int {
-        return super.onPlayerCommandRequest(session, controller, playerCommand)
-    }
-
-    override fun onSetRating(
-        session: MediaSession,
-        controller: MediaSession.ControllerInfo,
-        rating: Rating
-    ): ListenableFuture<SessionResult> {
-        return super.onSetRating(session, controller, rating)
-    }
-
-    override fun onSetRating(
-        session: MediaSession,
-        controller: MediaSession.ControllerInfo,
-        mediaId: String,
-        rating: Rating
-    ): ListenableFuture<SessionResult> {
-        return super.onSetRating(session, controller, mediaId, rating)
     }
 
     override fun onSubscribe(
@@ -209,7 +182,7 @@ class MediaLibrarySessionCallback
 
             Log.i(logTag(), "finished on load children")
         }
-        Log.i(logTag(), "notifying children changed for browser ${browser}")
+        Log.i(logTag(), "notifying children changed for browser $browser")
         return Futures.immediateFuture(LibraryResult.ofItemList(mediaItems, params))
     }
 
