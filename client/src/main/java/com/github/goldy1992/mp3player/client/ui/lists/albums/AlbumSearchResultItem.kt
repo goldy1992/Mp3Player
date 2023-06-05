@@ -4,11 +4,15 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.Album
-import com.github.goldy1992.mp3player.client.ui.lists.songs.AlbumArt
+import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
 
 @OptIn(
     ExperimentalFoundationApi::class,
@@ -36,7 +40,7 @@ fun AlbumSearchResultItem(album : Album = Album(),
             onLongClick = { }
         ),
         colors = ListItemDefaults.colors(containerColor = containerColor),
-        leadingContent = { AlbumArt(uri = album.albumArt, modifier = Modifier.size(40.dp))},
+        leadingContent = { AlbumArtAsync(uri = album.albumArt, contentDescription = album.albumTitle, modifier = Modifier.size(40.dp))},
         headlineContent = {
                 Text(text = album.albumTitle,
                     style = MaterialTheme.typography.bodyMedium,

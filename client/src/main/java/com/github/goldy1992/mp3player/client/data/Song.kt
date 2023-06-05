@@ -10,4 +10,8 @@ data class Song
         val artist : String = Constants.UNKNOWN,
         val duration : Long = 0L,
         val albumArt : Uri = Uri.EMPTY
-    ) : MediaEntity
+    ) : MediaEntity {
+        companion object {
+            val DEFAULT = Song()
+        }
+    }

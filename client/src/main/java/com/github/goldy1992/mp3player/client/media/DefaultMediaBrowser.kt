@@ -11,7 +11,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
-import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.*
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.*
@@ -49,7 +48,6 @@ class DefaultMediaBrowser
         .setListener(this)
         .buildAsync()
 
-    @UnstableApi
     private val _playerEventsFlow : Flow<PlayerEventHolder> = callbackFlow {
         val controller = mediaBrowserFuture.await()
         Log.i(logTag(), "player event controller awaiter")
@@ -470,7 +468,6 @@ class DefaultMediaBrowser
         }
     }
 
-    @UnstableApi
     override suspend fun getLibraryRoot(): MediaItem {
         val args = Bundle()
         args.putString(PACKAGE_NAME_KEY, PACKAGE_NAME)
@@ -539,7 +536,6 @@ class DefaultMediaBrowser
         mediaController.prepare()
     }
 
-    @UnstableApi
     override suspend fun search(query: String, extras: Bundle) {
         mediaBrowserFuture.await()
             .search(query, MediaLibraryService

@@ -7,7 +7,6 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import androidx.media3.common.util.UnstableApi
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
@@ -27,7 +26,6 @@ import org.junit.runner.RunWith
 /**
  * Test class for the [MainScreen] composable function.
  */
-@UnstableApi
 @RunWith(AndroidJUnit4::class)
 class LibraryScreenTest {
 

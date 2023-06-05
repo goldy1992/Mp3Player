@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Intent
 import android.util.Log
+import androidx.annotation.OptIn as AndroidXOptIn
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -48,9 +49,9 @@ private const val transitionTime = 2000
     ExperimentalMaterialApi::class,
     InternalCoroutinesApi::class,
 )
-@UnstableApi
+@AndroidXOptIn(markerClass = [UnstableApi::class])
 @Composable
-fun ComposeApp(
+fun  ComposeApp(
     userPreferencesRepository: IUserPreferencesRepository,
     windowSize: WindowSize,
     startScreen : Screen

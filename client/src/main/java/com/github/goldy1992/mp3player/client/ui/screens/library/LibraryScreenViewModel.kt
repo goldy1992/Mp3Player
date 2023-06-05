@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaLibraryService
 import com.github.goldy1992.mp3player.client.data.Albums
 import com.github.goldy1992.mp3player.client.data.Folders
@@ -38,7 +37,6 @@ import javax.inject.Inject
 /**
  * The [ViewModel] implementation for the [LibraryScreen].
  */
-@UnstableApi
 @HiltViewModel
 class LibraryScreenViewModel
     @Inject
@@ -219,7 +217,6 @@ class LibraryScreenViewModel
         return "LibScrnViewModel"
     }
 
-    @UnstableApi
     private fun hasPermissions(params : MediaLibraryService.LibraryParams) : Boolean {
         return params.extras.getBoolean(HAS_PERMISSIONS,false)
     }

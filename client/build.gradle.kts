@@ -70,7 +70,7 @@ android {
     }
 
     testOptions {
-        animationsDisabled = true
+        animationsDisabled = false
         unitTests {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
@@ -151,6 +151,7 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test)
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.coil.test)
     androidTestImplementation(libs.kotlin.stdlib)
     androidTestImplementation(project(":commons"))
 

@@ -1,42 +1,39 @@
 package com.github.goldy1992.mp3player.client.ui.lists.songs
 
-import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.QuestionAnswer
-import androidx.compose.material3.*
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-import com.github.goldy1992.mp3player.client.R.drawable.cd_image1
 import com.github.goldy1992.mp3player.client.data.Song
+import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 
 private const val logTag = "SongListItem"
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalCoilApi
 @ExperimentalFoundationApi
 @Preview
 @Composable
-fun SongListItem(song : Song = Song(),
-                 isSelected : Boolean = false,
-                 isPlayingProvider : () -> Boolean = {false},
-                 onClick: () -> Unit = {},
-                containerColor : Color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface) {
+fun SongListItem(
+    song : Song = Song(),
+     isSelected : Boolean = false,
+     isPlayingProvider : () -> Boolean = {false},
+     onClick: () -> Unit = {},
+    containerColor : Color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+) {
     ListItem(
             modifier = Modifier
                 .combinedClickable(
@@ -64,7 +61,7 @@ fun SongListItem(song : Song = Song(),
 //                    )
 //                }
 
-                AlbumArt(uri = song.albumArt, modifier = Modifier.size(40.dp))
+                AlbumArtAsync(uri = song.albumArt, contentDescription = song.title)//, contentDescription = song.title, modifier = Modifier.size(40.dp))
 
              },
             supportingContent = {
@@ -89,24 +86,4 @@ fun SongListItem(song : Song = Song(),
         color = MaterialTheme.colorScheme.surfaceVariant)
 }
 
-@ExperimentalCoilApi
-@Composable
-fun AlbumArt(uri : Uri?,
-            modifier : Modifier = Modifier) {
-    if (uri != null) {
-
-        Image(
-            modifier = modifier,
-            painter = rememberAsyncImagePainter(
-                ImageRequest.Builder(LocalContext.current)
-                    .placeholder(cd_image1)
-                    .data(uri).build()
-            ),
-            contentDescription = ""
-        )
-    }
-    else {
-        Icon(Icons.Filled.QuestionAnswer, contentDescription = "", modifier = modifier)
-    }
-}
 

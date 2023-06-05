@@ -82,30 +82,6 @@ class SongResultsParser
                 .build()
     }
 
-    private fun getAlbumArtData(
-        albumArtUri: Uri,
-    ): ByteArray? {
-        var toReturn : ByteArray? = null
-        try {
-            if (SDK_INT > 29) {
-                contentResolver.openTypedAssetFile(albumArtUri, "image/*", Bundle(), null)
-                    ?.createInputStream()
-
-            } else {
-                contentResolver
-                    //noinspection Recycle: Automatically recycled after being decoded.
-                    .openAssetFileDescriptor(albumArtUri, "r")
-                    ?.createInputStream()
-            } .use {
-                toReturn = it?.readBytes()
-            }
-        } catch (ex: FileNotFoundException) {
-           // Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
-            toReturn = null
-        }
-        return toReturn
-    }
-
     override fun compare(m1: MediaItem, m2: MediaItem): Int {
         val result: Int = uppercaseStringCompare.compare(getTitle(m1), getTitle(m2))
         return if (result == 0) getMediaUri(m1)!!.compareTo(getMediaUri(m2)) else result

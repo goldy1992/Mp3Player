@@ -25,7 +25,7 @@ import com.github.goldy1992.mp3player.client.data.Album
 import com.github.goldy1992.mp3player.client.ui.buttons.AlbumPlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
-import com.github.goldy1992.mp3player.client.ui.lists.songs.AlbumArt
+import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
 import com.github.goldy1992.mp3player.client.utils.SongUtils
 import com.github.goldy1992.mp3player.client.utils.TimerUtils
 import com.github.goldy1992.mp3player.commons.Screen
@@ -156,7 +156,7 @@ private fun AlbumHeaderItem(
     ) {
         val album = albumProvider()
         Card {
-            AlbumArt(uri = album.albumArt, modifier = Modifier.size(200.dp))
+            AlbumArtAsync(uri = album.albumArt, contentDescription = album.albumTitle, modifier = Modifier.size(200.dp))
         }
 
         Column(

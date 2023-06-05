@@ -16,7 +16,6 @@ import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.ui.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.SkipToNextButton
 import com.github.goldy1992.mp3player.client.ui.buttons.SkipToPreviousButton
-import com.github.goldy1992.mp3player.client.ui.lists.songs.AlbumArt
 
 @OptIn(ExperimentalCoilApi::class)
 @Preview
@@ -27,7 +26,7 @@ fun PlayToolbar(isPlayingProvider : () -> Boolean = {false},
                 onClickSkipNext: () -> Unit = {},
                 onClickSkipPrevious: () -> Unit = {},
                 onClickBar : () -> Unit = {},
-                currentSongProvider : () -> Song = { Song() }
+                currentSongProvider : () -> Song = { Song.DEFAULT }
 ) {
     val bottomAppBarDescr = stringResource(id = R.string.bottom_app_bar)
     BottomAppBar(
@@ -45,10 +44,16 @@ fun PlayToolbar(isPlayingProvider : () -> Boolean = {false},
         }
         Row(modifier = Modifier.weight(0.2f)
             .padding(top=12.dp, bottom = 12.dp, end=16.dp, start = 16.dp),
-            horizontalArrangement = Arrangement.End)        {
+            horizontalArrangement = Arrangement.End) {
 
             val currentSong = currentSongProvider()
-            AlbumArt(uri = currentSong.albumArt,
-                    modifier = Modifier.fillMaxSize()) }
+            if (currentSong != Song.DEFAULT) {
+                AlbumArtAsync(
+                    uri = currentSong.albumArt,
+                    contentDescription = currentSong.title,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
     }
 }
