@@ -2,10 +2,8 @@ package com.github.goldy1992.mp3player.service
 
 import android.os.Bundle
 import android.util.Log
-import androidx.annotation.OptIn as AndroidXOptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.common.Rating
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.*
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
@@ -15,7 +13,6 @@ import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.Constants.HAS_PERMISSIONS
 import com.github.goldy1992.mp3player.commons.IoDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.player.ChangeSpeedProvider
 import com.google.common.collect.ImmutableList
@@ -27,6 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
+import androidx.annotation.OptIn as AndroidXOptIn
 
 @AndroidXOptIn(UnstableApi::class)
 @ServiceScoped
@@ -43,9 +41,7 @@ class MediaLibrarySessionCallback
         session: MediaSession,
         controller: MediaSession.ControllerInfo
     ): ConnectionResult {
-        Log.i(logTag(), "on Connect called")
-
-
+        Log.v(logTag(), "onConnect() invoked")
         val connectionResult = super.onConnect(session, controller)
         // add change playback speed command to list of available commands
         val changePlaybackSpeed = SessionCommand(CHANGE_PLAYBACK_SPEED, Bundle())
@@ -66,9 +62,10 @@ class MediaLibrarySessionCallback
     }
 
     override fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo) {
+        Log.v(logTag(), "onPostConnect() invoked")
         super.onPostConnect(session, controller)
+        Log.v(logTag(), "onPostConnect() calling Player.prepare() for MediaSession Player: ${session.player}")
         session.player.prepare()
-        Log.i(logTag(), "onPostConnect ensure the player is prepared")
     }
 
     override fun onGetItem(
@@ -76,13 +73,13 @@ class MediaLibrarySessionCallback
         browser: MediaSession.ControllerInfo,
         mediaId: String
     ): ListenableFuture<LibraryResult<MediaItem>> {
-        Log.i(logTag(), "onGetItem called for mediaId: $mediaId")
+        Log.v(logTag(), "onGetItem() invoked with mediaId: $mediaId")
         var mediaItem : MediaItem?
         runBlocking(ioDispatcher) {
             mediaItem = contentManager.getContentById(mediaId)
         }
         if (mediaItem == null) {
-            Log.i(logTag(), "No media item found for $mediaId, returning empty media item")
+            Log.w(logTag(), "onGetItem() No media item found for mediaId: $mediaId, returning empty media item")
             mediaItem = MediaItem.EMPTY
         }
         return Futures.immediateFuture(LibraryResult.ofItem(mediaItem!!, MediaLibraryService.LibraryParams.Builder().build()))
@@ -94,18 +91,17 @@ class MediaLibrarySessionCallback
         parentId: String,
         params: MediaLibraryService.LibraryParams?
     ): ListenableFuture<LibraryResult<Void>> {
-
+        Log.v(logTag(), "onSubscribe() invoked for parentId: $parentId")
         scope.launch(ioDispatcher) {
             // Assume for example that the music catalog is already loaded/cached.
             val contentManagerResult = contentManager.getChildren(parentId)
             var numberOfResults = contentManagerResult.numberOfResults
 
             if (numberOfResults <= 0) {
-                Log.i(logTag(), "No results found or parentId $parentId")
+                Log.i(logTag(), "onSubscribe() No results found or parentId $parentId")
                 // set the number of results to one to account for the empty media item
                 numberOfResults = 1
             }
-
 
             val extras = Bundle()
             extras.putAll(params?.extras)
@@ -113,13 +109,9 @@ class MediaLibrarySessionCallback
             val returnParams = MediaLibraryService.LibraryParams.Builder()
                 .setExtras(extras)
                 .build()
-
-            println("finish coroutine")
-            Log.i(logTag(), "notifying children changed for browser $browser")
+            Log.d(logTag(), "onSubscribe() notifying children changed for browser $browser")
             session.notifyChildrenChanged(browser, parentId, numberOfResults, returnParams)
         }
-        println("finished on load children")
-
         return Futures.immediateFuture(LibraryResult.ofVoid())
     }
 
@@ -129,8 +121,9 @@ class MediaLibrarySessionCallback
         customCommand: SessionCommand,
         args: Bundle
     ): ListenableFuture<SessionResult> {
-        Log.i(logTag(), "On Custom Command: ${customCommand}, args: $args")
+        Log.v(logTag(), "onCustomCommand() invoked with command: ${customCommand}, args: $args")
         if (CHANGE_PLAYBACK_SPEED == customCommand.customAction) {
+            Log.d(logTag(), "onCustomCommand() identified as CHANGE_PLAYBACK_SPEED")
             changeSpeedProvider.changeSpeed(session.player, args)
             return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         }
@@ -142,6 +135,7 @@ class MediaLibrarySessionCallback
         controller: MediaSession.ControllerInfo,
         mediaItems: MutableList<MediaItem>
     ): ListenableFuture<MutableList<MediaItem>> {
+        Log.v(logTag(), "onAddMediaItems() invoked with the mediaItems: ${mediaItems.map(MediaItem::mediaId).joinToString(",")}}")
         super.onAddMediaItems(mediaSession, controller, mediaItems)
         val toReturn = mutableListOf<MediaItem>()
         runBlocking {
@@ -149,6 +143,7 @@ class MediaLibrarySessionCallback
                 toReturn.add(contentManager.getContentById(item.mediaId))
             }
         }
+        Log.v(logTag(), "onAddMediaItems() returning with the mediaItems: ${toReturn.map(MediaItem::mediaId).joinToString(",")}}")
         return Futures.immediateFuture(toReturn)
     }
 
@@ -157,6 +152,7 @@ class MediaLibrarySessionCallback
         browser: MediaSession.ControllerInfo,
         params: MediaLibraryService.LibraryParams?
     ): ListenableFuture<LibraryResult<MediaItem>> {
+        Log.v(logTag(), "onGetLibraryRoot() invoked.")
        return Futures.immediateFuture(rootAuthenticator.authenticate(params ?: MediaLibraryService.LibraryParams.Builder().build()))
     }
 
@@ -168,21 +164,21 @@ class MediaLibrarySessionCallback
         pageSize: Int,
         params: MediaLibraryService.LibraryParams?
     ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> {
+        Log.v(logTag(), "onGetChildren() invoked for parentId: $parentId, page: $page, $pageSize pageSize")
         if (rootAuthenticator.rejectRootSubscription(parentId)) {
+            Log.w(logTag(), "onGetChildren() rejected for parentId: $parentId")
             return Futures.immediateFuture(LibraryResult.ofItemList(emptyList(), params))
         }
-        var mediaItems = emptyList<MediaItem>()
+        var mediaItems: List<MediaItem>
         runBlocking(ioDispatcher) {
                 // Assume for example that the music catalog is already loaded/cached.
                 mediaItems = contentManager.getChildren(parentId).children
                 if (mediaItems.isEmpty()) {
-                    Log.i(logTag(), "Setting results for parentId $parentId to be the empty media item")
+                    Log.w(logTag(), "onGetChildren() No results found for parentId $parentId")
                     // set the number of results to one to account for the empty media item
                 }
-
-            Log.i(logTag(), "finished on load children")
         }
-        Log.i(logTag(), "notifying children changed for browser $browser")
+        Log.v(logTag(), "onGetChildren() notifying children changed for browser $browser")
         return Futures.immediateFuture(LibraryResult.ofItemList(mediaItems, params))
     }
 
@@ -192,11 +188,12 @@ class MediaLibrarySessionCallback
         query: String,
         params: MediaLibraryService.LibraryParams?
     ): ListenableFuture<LibraryResult<Void>> {
-
-       scope.launch(ioDispatcher) {
+        Log.v(logTag(), "onSearch() invoked with query: $query")
+        scope.launch(ioDispatcher) {
            val result = contentManager.search(query)
-           session.notifySearchResultChanged(browser, query, result.size, params)
-       }
+            Log.d(logTag(), "onSearch() ${result.size} results found query: $query")
+            session.notifySearchResultChanged(browser, query, result.size, params)
+        }
         return Futures.immediateFuture(LibraryResult.ofVoid())
 
     }
@@ -209,6 +206,7 @@ class MediaLibrarySessionCallback
         pageSize: Int,
         params: MediaLibraryService.LibraryParams?
     ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> {
+        Log.v(logTag(), "onGetSearchResult() invoked for query: $query, page: $page, pageSize: $pageSize")
         var searchResults : List<MediaItem> = ArrayList()
         runBlocking {
             val searchJob = scope.launch(ioDispatcher) {

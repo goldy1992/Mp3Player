@@ -151,7 +151,7 @@ class DefaultMediaDataSource
         this._currentSearchQuery.value = query
 
         if (isEmpty(query)) {
-            Log.w(logTag(), "Null or empty search query seen")
+            Log.w(logTag(), "search() called with NULL or empty query")
         }
         else {
             mediaBrowser.search(query, extras)
@@ -188,6 +188,6 @@ class DefaultMediaDataSource
     }
 
     override fun logTag(): String {
-        return "DefaultPlaybackDataStore"
+        return "DefaultMediaDataStore"
     }
 }

@@ -18,6 +18,7 @@ import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUser
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferences
 import com.github.goldy1992.mp3player.commons.VersionUtils
 
+private const val LOG_TAG = "Theme"
 enum class Theme(
     val displayName : String,
     val lightColors : Colors,
@@ -92,7 +93,7 @@ private fun getColorScheme(userPreferencesRepository: IUserPreferencesRepository
     val useDarkThemePref = userPreferences.darkMode
     val useDynamicColor = userPreferences.useDynamicColor
 
-    Log.i("logg", "config: ${LocalConfiguration.current.uiMode}")
+    Log.d(LOG_TAG, "getColorScheme() uiMode: ${LocalConfiguration.current.uiMode}")
     val useDarkTheme = if (useSystemDarkThemePref) {
         systemInDarkTheme
     } else {

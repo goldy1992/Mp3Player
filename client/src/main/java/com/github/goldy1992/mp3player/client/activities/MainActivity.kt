@@ -65,35 +65,47 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.i(logTag(), "on create called with intent ${intent.action} and data: ${intent.data}")
+        Log.v(logTag(), "onCreate() invoked with intent ${intent.action} and data: ${intent.data}")
         super.onCreate(savedInstanceState)
+        Log.v(logTag(), "onCreate() call to super.onCreate() complete")
+
 
         // If app has already been created set the UI to initialise at the main screen.
         val appAlreadyCreated = savedInstanceState != null
         if (appAlreadyCreated) {
+            Log.d(logTag(), "onCreate() app already created, setting start screen to MAIN")
             this.startScreen = Screen.MAIN
         }
 
         // createService()
         if (Intent.ACTION_VIEW == intent.action) {
+            Log.d(logTag(), "onCreate() intent action is ACTION_VIEW")
             if (intent.data != null) {
                 trackToPlay = intent.data
                 scope.launch(defaultDispatcher) {
+                    Log.v(logTag(), "onCreate() calling MediaRepository.playFromUri() for track: $trackToPlay")
                     mediaRepository.playFromUri(trackToPlay, null)
+                    Log.v(logTag(), "onCreate() MediaRepository.playFromUri() for track: $trackToPlay invocation complete.")
                 }
+            } else {
+                Log.w(logTag(), "onCreate() intent with action ACTION_VIEW has NULL data")
             }
+            Log.v(logTag(), "onCreate() setting startScreen to be NOW_PLAYING")
             this.startScreen = Screen.NOW_PLAYING
         }
-       ui()
+        Log.v(logTag(), "onCreate() calling MainActivity.ui()")
+        ui()
 
     }
 
     override fun onStart() {
+        Log.v(logTag(), "onStart() invoked")
         permissionLauncher.launch(getAppPermissions())
         super.onStart()
     }
 
     open fun ui() {
+        Log.v(logTag(), "ui() invoked")
         setContent {
             val windowSizeClass = rememberWindowSizeClass()
             ComposeApp(
@@ -103,21 +115,25 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
             )
 
         }
+        Log.v(logTag(), "ui() invocation complete")
     }
 
     private val permissionLauncher : ActivityResultLauncher<Array<String>> = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()) {
             permissionGrantedArray : Map<String, Boolean> ->
 
-        Log.i(logTag(), "permission result: $permissionGrantedArray")
+        Log.v(logTag(), "permissionLauncher: permission result: $permissionGrantedArray")
         scope.launch { permissionsRepository.setPermissions(permissionGrantedArray)}
     }
 
     override fun onDestroy() {
-        Log.i(logTag(), "destroying activity")
+        Log.v(logTag(), "onDestroy() invoked")
         mediaBrowser.release()
+        Log.v(logTag(), "onDestroy() MediaBrowser released")
         this.scope.cancel()
+        Log.v(logTag(), "onDestroy() coroutine scope cancelled")
         super.onDestroy()
+        Log.v(logTag(), "onDestroy() super.onDestroy() invocation complete")
     }
 
     override fun logTag(): String {

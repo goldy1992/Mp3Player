@@ -20,11 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 
 private const val AMPLITUDE = 50f
+private const val LOG_TAG = "LineEqualizerWithTransition"
 
-private const val logTag = "LineEqualizerWithTransition"
-
-
-private var fp : List<Float> = emptyList()
 
 @Composable
 @Preview
@@ -32,19 +29,12 @@ fun LineEqualizerWithTransition(modifier: Modifier = Modifier,
                   frequencyPhases : List<Float> = emptyList(),
                   insetPx : Float = 200f) {
 
-    if (frequencyPhases == fp) {
-        Log.i(logTag, "recomposition")
-    } else {
-        fp = frequencyPhases
-        Log.i(logTag, "new data")
-    }
-
     val currentValues = remember(frequencyPhases.size) {
 
         mutableStateListOf<Float>().apply {
-            Log.i(logTag, "re-trigger remember")
-            for (i in frequencyPhases) add(
-                i) } }
+            Log.v(LOG_TAG, "LineEqualizerWithTransition() re-trigger currentValues remember")
+            for (phase in frequencyPhases) add(phase)
+        } }
     
     val transition = updateTransition(targetState = true, label = "equalizer-transition")
 

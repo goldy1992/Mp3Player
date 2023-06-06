@@ -18,10 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 private const val AMPLITUDE = 50f
 
-private const val logTag = "LineEqualizer"
-
-
-private var fp : List<Float> = emptyList()
+private const val LOG_TAG = "LineEqualizer"
 
 @Composable
 @Preview
@@ -29,17 +26,10 @@ fun LineEqualizer(modifier: Modifier = Modifier,
     frequencyPhases : List<Float> = emptyList(),
     insetPx : Float = 200f) {
 
-    if (frequencyPhases == fp) {
-        Log.i(logTag, "recomposition")
-    } else {
-        fp = frequencyPhases
-        Log.i(logTag, "new data")
-    }
-
     val list = remember(frequencyPhases.size) {
 
         mutableStateListOf<Float>().apply {
-            Log.i(logTag, "re-trigger remember")
+            Log.d(LOG_TAG, "LineEqualizer re-trigger list remember")
             for (i in frequencyPhases) add(
         i) } }
 
@@ -104,6 +94,4 @@ fun LineEqualizer(modifier: Modifier = Modifier,
             )
         }
     }
-
-
 }

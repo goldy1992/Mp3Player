@@ -20,7 +20,7 @@ import com.github.goldy1992.mp3player.client.ui.DpPxSize
 import com.github.goldy1992.mp3player.client.utils.calculateBarSpacingPixels
 
 private const val MAX_AMPLITUDE = 400f
-private const val logTag = "BarEqualizer"
+private const val LOG_TAG = "BarEqualizer"
 
 
 @Preview
@@ -32,7 +32,7 @@ fun BarEqualizer(modifier: Modifier = Modifier,
                  barColor : Color = MaterialTheme.colorScheme.secondary,
                  surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer
                        ) {
-  //  Log.i(logTag, "recomposing")
+    Log.v(LOG_TAG, "BarEqualizer() recomposing")
     val frequencyPhases = frequencyValues()
     val numberOfBars = frequencyPhases.size
     val spaceBetweenBarsPx = remember(numberOfBars, barWidthPx, canvasSize.widthPx){
@@ -86,8 +86,8 @@ private fun BarEqualizerCanvas(
     surfaceColor: Color = MaterialTheme.colorScheme.primaryContainer,
     barColor: Color = MaterialTheme.colorScheme.secondary,
 ) {
-   // Log.i(logTag, "redraw: ${if (bars.isNotEmpty())  bars[0] else 0f}")
-    Log.i(logTag, "redraw: ")
+    Log.i(LOG_TAG, "BarEqualizerCanvas() redraw: ${if (bars.isNotEmpty())  bars[0] else 0f}")
+
     Canvas(
         modifier = modifier.fillMaxSize()
 

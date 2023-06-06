@@ -15,35 +15,35 @@ import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 
-private const val logTag = "AlbumArtAsync"
+private const val LOG_TAG = "AlbumArtAsync"
 
 @Composable
 fun AlbumArtAsync(uri : Uri,
                   contentDescription: String,
                   modifier : Modifier = Modifier
 ) {
-    Log.d(logTag, "Invoked with Uri: ${uri.path}")
+    Log.v(LOG_TAG, "AlbumArtAsync() Invoked with Uri: ${uri.path}")
     SubcomposeAsyncImage(
         model = uri,
         contentDescription = contentDescription
     ) {
         when (painter.state) {
             is AsyncImagePainter.State.Loading -> {
-                Log.d(logTag, "PainterState: LOADING")
+                Log.v(LOG_TAG, "AlbumArtAsync() PainterState: LOADING")
                 CircularProgressIndicator(modifier = modifier.semantics {
                     this.contentDescription = "loading-$contentDescription"
                 })
             }
             is AsyncImagePainter.State.Error -> {
-                Log.d(logTag, "PainterState: ERROR")
+                Log.v(LOG_TAG, "AlbumArtAsync() PainterState: ERROR")
                 Icon(Icons.Filled.Error, contentDescription = "error-$contentDescription", modifier = modifier)
             }
             is AsyncImagePainter.State.Success -> {
-                Log.d(logTag, "PainterState: SUCCESS")
+                Log.v(LOG_TAG, "AlbumArtAsync() PainterState: SUCCESS")
                 SubcomposeAsyncImageContent()
             }
             else -> {
-                Log.d(logTag, "PainterState: OTHER")
+                Log.v(LOG_TAG, "AlbumArtAsync() PainterState: OTHER")
                 Icon(Icons.Filled.Album, contentDescription=contentDescription, modifier=modifier)
             }
         }

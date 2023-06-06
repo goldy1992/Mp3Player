@@ -50,7 +50,7 @@ open class UserPreferencesRepository
         .catch { exception ->
             // dataStore.data throws an IOException when an error is encountered when reading data
             if (exception is IOException) {
-                Log.e(logTag(), "Error reading preferences.", exception)
+                Log.e(logTag(), "userPreferencesFlow: IOException reading preferences.", exception)
                 emit(emptyPreferences())
             } else {
                 throw exception
@@ -64,9 +64,10 @@ open class UserPreferencesRepository
             val darkMode : Boolean = preferences[PreferencesKeys.DARK_MODE] ?: false
             // default to System dark mode if no preferences are stored!
             val systemDarkMode : Boolean = preferences[PreferencesKeys.USE_SYSTEM_DARK_MODE] ?: true
-            //
             val useDynamicColor : Boolean = preferences[PreferencesKeys.USE_DYNAMIC_COLOR] ?: true
-            UserPreferences(darkMode, systemDarkMode, theme.name, useDynamicColor)
+            val userPreferences = UserPreferences(darkMode, systemDarkMode, theme.name, useDynamicColor)
+            Log.d(logTag(), "userPreferencesFlow: preferences mapped to $userPreferences")
+            userPreferences
         }
 
     override fun userPreferencesFlow(): Flow<UserPreferences> {

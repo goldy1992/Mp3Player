@@ -41,7 +41,7 @@ import kotlin.OptIn
 import androidx.annotation.OptIn as AndroidXOptIn
 
 
-private const val logTag = "ComposeApp"
+private const val LOG_TAG = "ComposeApp"
 private const val transitionTime = 2000
 @OptIn(
     ExperimentalAnimationApi::class,
@@ -52,7 +52,7 @@ private const val transitionTime = 2000
 )
 @AndroidXOptIn(markerClass = [UnstableApi::class])
 @Composable
-fun  ComposeApp(
+fun ComposeApp(
     userPreferencesRepository: IUserPreferencesRepository,
     windowSize: WindowSize,
     startScreen : Screen
@@ -82,28 +82,28 @@ fun  ComposeApp(
             }
             composable(Screen.NOW_PLAYING.name,
                 enterTransition = {
-                    Log.i(logTag, "enterTransition called")
+                    Log.v(LOG_TAG, "ComposeApp() NOW_PLAYING screen enterTransition() invoked")
                     slideIntoContainer(
                         AnimatedContentScope.SlideDirection.Up, animationSpec = tween(transitionTime)
                     )
                 },
                 popEnterTransition = {
-                    Log.i(logTag, "PopEnterTransition called")
+                    Log.v(LOG_TAG, "ComposeApp() NOW_PLAYING screen popEnterTransition() invoked")
                     slideIntoContainer(
                         AnimatedContentScope.SlideDirection.Up, animationSpec = tween(transitionTime)
                     )
                 },
                 exitTransition = {
-                    Log.i(logTag, "exit called")
+                    Log.v(LOG_TAG, "ComposeApp() NOW_PLAYING screen exitTransition() invoked")
                    slideOutOfContainer(AnimatedContentScope.SlideDirection.Down, animationSpec = tween(transitionTime))
                 },
                 popExitTransition = {
-                    Log.i(logTag, "pop exitTransition called")
+                    Log.v(LOG_TAG, "ComposeApp() NOW_PLAYING screen popExitTransition() invoked")
                     slideOutOfContainer(AnimatedContentScope.SlideDirection.Down, animationSpec = tween(transitionTime))
                 },
-                        deepLinks = listOf(navDeepLink {
-                            uriPattern = "${ROOT_APP_URI_PATH}/${Screen.NOW_PLAYING.name}"
-                            action = Intent.ACTION_VIEW })
+                deepLinks = listOf(navDeepLink {
+                    uriPattern = "${ROOT_APP_URI_PATH}/${Screen.NOW_PLAYING.name}"
+                    action = Intent.ACTION_VIEW })
             ) {
                 val viewModel = hiltViewModel<NowPlayingScreenViewModel>()
                 NowPlayingScreen(
@@ -165,6 +165,6 @@ fun  ComposeApp(
                 }
             }
         }
-        Log.i(logTag, "hit this line")
+        Log.v(LOG_TAG, "ComposeApp() invocation complete")
     }
 

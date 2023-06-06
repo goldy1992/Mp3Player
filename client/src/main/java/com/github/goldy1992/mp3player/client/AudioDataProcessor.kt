@@ -21,10 +21,10 @@ class AudioDataProcessor
 
     suspend fun processAudioData(audioSample: AudioSample,
                                 frequencyBand: FrequencyBand = FrequencyBandTwentyFour()) : FloatArray {
+        Log.v(logTag(), "processAudioData() invoked.")
         return withContext(dispatcher) {
-            // Log.i(logTag(), "processing audio sample")
             if (audioSample.waveformData.isEmpty()) {
-                Log.w(logTag(), "Received empty audio sample")
+                Log.w(logTag(), "processAudioData() received empty audio sample")
                 floatArrayOf()
             }
             else {

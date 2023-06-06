@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 private const val AMPLITUDE = 5f
 
-private const val logTag = "LineEqualizer"
+private const val LOG_TAG = "LineEqualizerWithStateListCanvasOnly"
 
 
 @Composable
@@ -31,7 +31,7 @@ fun LineEqualizerWithStateListCanvasOnly(modifier: Modifier = Modifier,
 
     val list : SnapshotStateList<Float> = remember(frequencyPhases.size) {
         mutableStateListOf<Float>().apply {
-            Log.i(logTag, "re-trigger remember")
+            Log.i(LOG_TAG, "LineEqualizerWithStateListCanvasOnly() re-trigger remember")
             for (i in frequencyPhases) add( 0f) }
     }
 
