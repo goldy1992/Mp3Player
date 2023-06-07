@@ -10,6 +10,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.RenderersFactory
+import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,14 +21,14 @@ import dagger.hilt.android.scopes.ServiceScoped
 @AndroidXOptIn(UnstableApi::class)
 @InstallIn(ServiceComponent::class)
 @Module
-class ExoPlayerModule {
+class ExoPlayerModule : LogTagger {
 
     @Provides
     @ServiceScoped
     fun provideExoPlayer(@ApplicationContext context: Context,
                          renderersFactory: RenderersFactory
     ): Player {
-        Log.i("ExoPlayerModule", "providing exoPlayer")
+        Log.v(logTag(), "provideExoPlayer() invoked")
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(C.USAGE_MEDIA)
             .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
@@ -43,7 +44,9 @@ class ExoPlayerModule {
         return MediaMetadataRetriever()
     }
 
-
+    override fun logTag(): String {
+        return "ExoPlayerModule"
+    }
 
 
 }

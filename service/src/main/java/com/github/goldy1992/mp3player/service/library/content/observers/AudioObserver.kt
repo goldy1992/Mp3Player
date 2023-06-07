@@ -64,6 +64,7 @@ class AudioObserver
      * @param userId not used
      */
     override fun onChange(selfChange: Boolean, uri: Uri?, userId: Int) {
+        Log.v(logTag(), "onChange() invoked with uri: ${uri?.path ?: "null"}")
         if (startsWithUri(uri)) {
                 runBlocking(ioDispatcher) {
                     updateSearchDatabase(uri)
@@ -72,7 +73,7 @@ class AudioObserver
                 }
             }
             // when there is a "change" to the meta data the exact id will given as the uri
-            Log.d(logTag(), "hit on change")
+
 
     }
 
@@ -86,15 +87,13 @@ class AudioObserver
         // If we know the id then just get that id
         if (INVALID_ID != id) {
             val result = contentManager.getContentById(id.toString())
-            if (null != result) {
-                Log.i(logTag(), "UPDATING songs and folders index")
-                songDatabaseManager.insert(result)
-                folderDatabaseManager.insert(result)
-                Log.i(logTag(), "UPDATED songs and folders")
-                val directoryPath = getDirectoryPath(result)
-                if (StringUtils.isNotEmpty(directoryPath)) {
-                    mediaSession!!.notifyChildrenChanged(directoryPath, 1, LibraryParams.Builder().build())
-                }
+            Log.v(logTag(), "updateSearchDatabase() UPDATING songs and folders index")
+            songDatabaseManager.insert(result)
+            folderDatabaseManager.insert(result)
+            Log.v(logTag(), "updateSearchDatabase() UPDATED songs and folders")
+            val directoryPath = getDirectoryPath(result)
+            if (StringUtils.isNotEmpty(directoryPath)) {
+                mediaSession!!.notifyChildrenChanged(directoryPath, 1, LibraryParams.Builder().build())
             }
         } else {
             songDatabaseManager.reindex()
@@ -103,7 +102,7 @@ class AudioObserver
     }
 
     override fun logTag(): String {
-        return "AUDIO_OBSERVER"
+        return "AudioObserver"
     }
 
     override val uri: Uri

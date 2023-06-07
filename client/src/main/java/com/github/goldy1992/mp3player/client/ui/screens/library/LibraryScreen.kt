@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
@@ -40,7 +39,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
 
-private const val logTag = "LibraryScreen"
+private const val LOG_TAG = "LibraryScreen"
 /**
  * The Main Screen of the app.
  *
@@ -76,7 +75,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
         val encodedFolderLibraryId = it.encodedLibraryId
         val encodedFolderPath = it.encodedPath
         val folderName = it.name
-        Log.w(logTag, "Folder name: $folderName")
+        Log.d(LOG_TAG, "onFolderSelected() Folder name: $folderName")
         navController.navigate(
             Screen.FOLDER.name
                     + "/" + encodedFolderLibraryId
@@ -89,7 +88,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
         val albumTitle = it.albumTitle
         val albumArtist = it.albumArtist
         val albumArtUriBase64 = Base64.encodeToString(it.albumArt.toString().encodeToByteArray(), Base64.DEFAULT)
-        Log.w(logTag, "Album $albumTitle uri: ${it.albumArt}")
+        Log.d(LOG_TAG, "onAlbumSelected() Album $albumTitle uri: ${it.albumArt}")
         navController.navigate(
             Screen.ALBUM.name
                     + "/" + albumId
@@ -130,9 +129,9 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
         PlayToolbar(
             isPlayingProvider = { isPlaying },
             onClickPlay = { viewModel.play()
-                          Log.i(logTag, "clicked play")},
+                          Log.v(LOG_TAG, "PlayToolbar.onClickPlay() clicked play")},
             onClickPause = {viewModel.pause()
-                           Log.i(logTag, "clicked pause")},
+                           Log.v(LOG_TAG, "PlayToolbar.onClickPause() clicked pause")},
             onClickSkipPrevious = { viewModel.skipToPrevious() },
             onClickSkipNext = { viewModel.skipToNext() },
             onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)},
@@ -274,8 +273,8 @@ private fun LibraryTabs(
                         },
                         onClick = {                    // Animate to the selected page when clicked
                             scope.launch {
-                                Log.i(
-                                    "MainScreen",
+                                Log.d(
+                                    LOG_TAG,
                                     "Clicked to go to index ${index}, string: ${item.id} "
                                 )
                                 pagerState.animateScrollToPage(index)

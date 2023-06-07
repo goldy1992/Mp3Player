@@ -75,7 +75,7 @@ class LibraryScreenViewModel
         viewModelScope.launch {
             mediaRepository.onChildrenChanged()
                 .filter {
-                    Log.i(logTag(), "filtering: id: ${it.parentId}")
+                    Log.d(logTag(), "mediaRepository.onChildrenChanged() filter: id: ${it.parentId}")
                     val isChildOfARootItem = isChildOfRootItem(it.parentId)
                     val isRootItem = it.parentId == rootItemId
                     isRootItem || isChildOfARootItem
@@ -85,7 +85,7 @@ class LibraryScreenViewModel
                         val rootChildren = mediaRepository.getChildren(it.parentId, 0, it.itemCount)
                         if (rootChildren.isEmpty()) {
                             _rootItems.value = RootItems.NO_RESULTS
-                            Log.w(logTag(), "No root children found")
+                            Log.w(logTag(), "mediaRepository.onChildrenChanged() collect: No root children found")
                         } else {
                             _rootItems.value = createRootItems(State.LOADED, rootChildren)
 
@@ -99,7 +99,7 @@ class LibraryScreenViewModel
                                     MediaItemType.SONGS -> _songs.value = Songs(State.LOADING)
                                     MediaItemType.FOLDERS -> _folders.value = Folders(State.LOADING)
                                     MediaItemType.ROOT -> _rootItems.value = RootItems.LOADING
-                                    else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")
+                                    else -> Log.w(logTag(), "mediaRepository.onChildrenChanged() collect: Unsupported MediaItemType: $mediaItemType loaded.")
                                 }
                             }
                         }
@@ -114,7 +114,7 @@ class LibraryScreenViewModel
                                     MediaItemType.SONGS -> _songs.value = Songs(State.NO_PERMISSIONS)
                                     MediaItemType.FOLDERS -> _folders.value = Folders(State.NO_PERMISSIONS)
                                     MediaItemType.ROOT -> _rootItems.value = RootItems.NO_PERMISSIONS
-                                    else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")
+                                    else -> Log.w(logTag(), "mediaRepository.onChildrenChanged() collect: Unsupported MediaItemType: $mediaItemType loaded.")
 
                                 }
                             } else {
@@ -123,7 +123,7 @@ class LibraryScreenViewModel
                                     MediaItemType.SONGS -> _songs.value = Songs(State.NO_RESULTS)
                                     MediaItemType.FOLDERS -> _folders.value = Folders(State.NO_RESULTS)
                                     MediaItemType.ROOT -> _rootItems.value = RootItems.NO_RESULTS
-                                    else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")
+                                    else -> Log.w(logTag(), "mediaRepository.onChildrenChanged() collect: Unsupported MediaItemType: $mediaItemType loaded.")
                                 }
                             }
                         } else {
@@ -132,7 +132,7 @@ class LibraryScreenViewModel
                                 MediaItemType.SONGS -> _songs.value = createSongs(State.LOADED, children)
                                 MediaItemType.FOLDERS -> _folders.value = createFolders(State.LOADED, children)
                                 MediaItemType.ROOT -> _rootItems.value = createRootItems(State.LOADED, children)
-                                else -> Log.w(logTag(), "Unsupported MediaItemType: $mediaItemType loaded.")
+                                else -> Log.w(logTag(), "mediaRepository.onChildrenChanged() collect: Unsupported MediaItemType: $mediaItemType loaded.")
                             }
                         }
                      }
@@ -146,11 +146,11 @@ class LibraryScreenViewModel
     val isPlaying : StateFlow<Boolean> = _isPlayingState
 
     init {
-        Log.i(logTag(), "init isPlaying")
+        Log.v(logTag(), "init isPlaying")
         viewModelScope.launch {
             mediaRepository.isPlaying()
             .collect {
-                Log.i(logTag(), "Current isPlaying: $it")
+                Log.d(logTag(), "mediaRepository.isPlaying() collect: current isPlaying: $it")
                 _isPlayingState.value = it
             }
         }
@@ -177,7 +177,7 @@ class LibraryScreenViewModel
         viewModelScope.launch {
             mediaRepository.currentMediaItem()
             .collect {
-                Log.i(logTag(), "new current media item - id : ${it.mediaId}, title: ${it.mediaMetadata.title}")
+                Log.v(logTag(), "mediaRepository.currentMediaItem() collect: new current media item - id : ${it.mediaId}, title: ${it.mediaMetadata.title}")
                 _currentMediaItemState.value = createSong(it)
             }
         }

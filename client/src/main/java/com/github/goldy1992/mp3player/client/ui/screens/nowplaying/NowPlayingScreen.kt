@@ -38,7 +38,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.apache.commons.lang3.ObjectUtils.isEmpty
 
-const val logTag = "NowPlayingScreen"
+const val LOG_TAG = "NowPlayingScreen"
 @OptIn(
     ExperimentalAnimationApi::class,
     ExperimentalFoundationApi::class,
@@ -188,7 +188,7 @@ fun ViewPager(metadata : () -> MediaMetadata,
         }
 
         LaunchedEffect(pagerState.currentPage) {
-            Log.i("NOW_PLAYING", "current page changed: ${pagerState.currentPage}")
+            Log.v(LOG_TAG, "ViewPager() LaunchedEffect: current page changed: ${pagerState.currentPage}")
             val newPosition = pagerState.currentPage
             val atBeginning = currentQueuePosition <= 0
             val atEnd = (currentQueuePosition + 1) >= queueState.items.size
@@ -202,7 +202,7 @@ fun ViewPager(metadata : () -> MediaMetadata,
                 }
             }
         }
-        Log.i(logTag, "queue size: $numberOfPages")
+        Log.v(LOG_TAG, "ViewPager() queue size: $numberOfPages")
 
         HorizontalPager(
                 state = pagerState,

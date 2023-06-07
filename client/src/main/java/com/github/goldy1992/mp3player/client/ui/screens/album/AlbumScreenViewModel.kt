@@ -42,7 +42,7 @@ constructor(savedStateHandle: SavedStateHandle,
 
     private val albumArtUri : Uri = Uri.parse(String(Base64.decode(albumArtUriBase64Encoded, Base64.DEFAULT)))
     init {
-        Log.i(logTag(), "decoded album uri: $albumArtUri")
+        Log.d(logTag(), "AlbumScreenViewModel init, decoded album uri: $albumArtUri")
     }
     private val album : Album = Album(
         id = albumId,
@@ -127,7 +127,7 @@ constructor(savedStateHandle: SavedStateHandle,
                 .collect {
                     val extras = it.extras
                     val playlistId = extras?.getString(PLAYLIST_ID) ?: Constants.UNKNOWN
-                    Log.i(logTag(), "new playlist metadata retrieved: $playlistId")
+                    Log.d(logTag(), "mediaRepository.currentPlaylistMetadata() collect: new playlist metadata retrieved: $playlistId")
                     _currentPlaylistIdState.value = playlistId
                 }
         }

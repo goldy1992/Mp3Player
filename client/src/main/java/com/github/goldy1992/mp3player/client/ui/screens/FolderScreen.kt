@@ -35,7 +35,7 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-private const val logTag = "FolderScreen"
+private const val LOG_TAG = "FolderScreen"
 
 @OptIn(
     ExperimentalMaterial3Api::class,
@@ -170,8 +170,7 @@ private fun FolderScreenContent(modifier : Modifier = Modifier,
                 }
             }
             State.LOADED -> {
-
-                Log.i(logTag, "folder songs size: ${folderSongs.songs.size}")
+                Log.d(LOG_TAG, "FolderScreenContent() folder songs state LOADED, size: ${folderSongs.songs.size}")
                 LoadedSongsListWithHeader(
                     songs = folderSongs,
                     isPlayingProvider = isPlayingProvider,

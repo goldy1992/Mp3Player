@@ -25,7 +25,7 @@ import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.client.utils.SongUtils.isSongItemSelected
 import com.github.goldy1992.mp3player.commons.MediaItemType
 
-private const val logTag = "SongList"
+private const val LOG_TAG = "SongList"
 
 @ExperimentalCoilApi
 @Composable
@@ -35,8 +35,7 @@ fun SongList(
     isPlayingProvider : () -> Boolean = {false},
     currentSongProvider : () -> Song = { Song() },
     onSongSelected : (itemIndex: Int, songs : Songs) -> Unit = { _, _ -> }) {
-
-    Log.i(logTag, "song list size: ${songs.songs.size}")
+    Log.v(LOG_TAG, "SongList() invoked with ${songs.songs.size} songs")
     val currentMediaItem = currentSongProvider()
 
     when (songs.state) {
@@ -133,7 +132,6 @@ fun LoadingSongsList() {
             headlineContent = {
                 Text(
                     text = stringResource(id = R.string.loading),
-                //    style = MaterialTheme.typography.bodyMedium
                 )
             },
         )

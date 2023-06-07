@@ -31,7 +31,7 @@ open class DefaultSavedStateRepository
         .catch { exception ->
             // dataStore.data throws an IOException when an error is encountered when reading data
             if (exception is IOException) {
-                Log.e(logTag(), "Error reading preferences.", exception)
+                Log.e(logTag(), "savedStateFlow Error reading preferences.", exception)
                 emit(emptyPreferences())
             } else {
                 throw exception
@@ -71,12 +71,12 @@ open class DefaultSavedStateRepository
 
     override suspend fun updateSavedState(savedState: SavedState) {
         dataStore.edit { preferences ->
-            Log.i(logTag(), "editing save state")
+            Log.v(logTag(), "updateSavedState() datastore.edit invoked")
             preferences[PreferencesKeys.PLAYLIST] = savedState.playlist.joinToString(",")
             preferences[PreferencesKeys.CURRENT_TRACK] = savedState.currentTrack
             preferences[PreferencesKeys.CURRENT_TRACK_POSITION] = savedState.currentTrackPosition
             preferences[PreferencesKeys.CURRENT_TRACK_POSITION] = savedState.currentTrackPosition
-            Log.i(logTag(), "finished editing save state")
+            Log.v(logTag(), "updateSavedState() datastore.edit invocation complete")
         }
     }
 
@@ -101,7 +101,7 @@ open class DefaultSavedStateRepository
      * @return the name of the log tag given to the class
      */
     override fun logTag(): String {
-        return "DEFAULT_SAVED_STATE_REPO"
+        return "DefaultSavedtateRepo"
     }
 
     private fun preferencesToSavedState(preferences : Preferences) : SavedState {
@@ -117,7 +117,7 @@ open class DefaultSavedStateRepository
         val currentTrackIndex : Int = preferences[PreferencesKeys.CURRENT_TRACK_INDEX] ?: -1
 
         val currentTrackPosition : Long = preferences[PreferencesKeys.CURRENT_TRACK_POSITION] ?: 0L
-        Log.i(logTag(), "Mapping preferences to saved state :- currentTrack: $currentTrack, currentTrackIndex: $currentTrackIndex, currentTrackPosition: $currentTrackPosition")
+        Log.d(logTag(), "preferencesToSavedState() Mapping preferences to saved state :- currentTrack: $currentTrack, currentTrackIndex: $currentTrackIndex, currentTrackPosition: $currentTrackPosition")
         return SavedState(
             playlist = playlist,
             currentTrack = currentTrack,

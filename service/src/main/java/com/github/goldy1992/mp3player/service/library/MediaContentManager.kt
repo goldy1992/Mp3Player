@@ -48,7 +48,7 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
 
         scope.launch {
             permissionRepository.permissionsFlow().collect {
-                Log.i(logTag(), "permission flow called")
+                Log.v(logTag(), "  permissionRepository.permissionsFlow().collect invoked")
                 if (permissionRepository.hasStorageReadPermissions()) {
                     onPermissionsGranted()
                 }
@@ -68,9 +68,10 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
      * @return all the children of the id specified by the parentId parameter
      */
     override suspend fun getChildren(parentId: String): ContentManagerResult {
+        Log.v(logTag(), "getChildren() invoked with parentId $parentId")
         val parentNode: MediaItemNode? = nodeMap[parentId]
         val children = parentNode?.getChildren()?.map(MediaItemNode::item) ?: emptyList()
-        Log.i(logTag(), "parentId: ${parentId}, children count: ${children.count()}")
+        Log.d(logTag(), "getChildren() parentId: ${parentId}, children count: ${children.count()}")
         return ContentManagerResult( children,
             children.size,
             permissionRepository.hasStorageReadPermissions())
@@ -121,14 +122,14 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
     }
 
     private fun onPermissionsGranted() {
-        Log.i(logTag(),"onPermissionsGranted invoked")
+        Log.v(logTag(),"onPermissionsGranted() invoked")
         if (!_isInitialised.value) {
-            Log.i(logTag(), "Not yet initialised, building tree")
+            Log.d(logTag(), "onPermissionsGranted() Not yet initialised, building tree")
             for (rootChild in rootNode.getChildren()) {
-                Log.d(logTag(), "building node: ${rootChild.mediaItemType}")
+                Log.v(logTag(), "onPermissionsGranted() building node: ${rootChild.mediaItemType}")
                 build(rootChild)
             }
-            Log.i(logTag(), "built tree")
+            Log.v(logTag(), "onPermissionsGranted() built tree")
             _isInitialised.value = true
         }
     }
@@ -170,7 +171,7 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
                     build(childNode)
                 }
             }
-            Log.d(logTag(), "calling notifyChildrenChange(parentId:${node.id}, itemCount: ${node.numberOfChildren()}")
+            Log.d(logTag(), "build() calling notifyChildrenChange(parentId:${node.id}, itemCount: ${node.numberOfChildren()}")
             mediaSession?.notifyChildrenChanged(node.id, node.numberOfChildren(), LibraryParams.Builder().build())
         }
         nodeMap[node.id] = node

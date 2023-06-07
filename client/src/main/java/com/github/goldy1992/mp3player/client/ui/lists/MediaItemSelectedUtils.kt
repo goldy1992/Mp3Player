@@ -10,12 +10,12 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
 import java.util.EnumMap
 
-private const val logTag = "MediaItemSelectedUtils"
+private const val LOG_TAG = "MediaItemSelectedUtils"
 
 
 fun onFolderSelected(navController : NavController) : (Folder) -> Unit {
     return {
-        Log.i("folderSelected", "folder selected")
+        Log.v(LOG_TAG, "onFolderSelected() invoked.")
         val folderId = it.id
         val encodedFolderLibraryId = Uri.encode(folderId)
         val encodedFolderPath = it.uri
@@ -26,7 +26,7 @@ fun onFolderSelected(navController : NavController) : (Folder) -> Unit {
             "/" + folderName +
             "/" + encodedFolderPath
 
-        Log.i(logTag, "navigating to $navRoute")
+        Log.d(LOG_TAG, "onFolderSelected() navigating to $navRoute")
         navController.navigate(navRoute)
     }
 }
@@ -44,7 +44,7 @@ fun buildOnSelectedMap(
             MediaItemType.FOLDER -> toReturn[it] = onFolderSelected
             MediaItemType.SONGS -> toReturn[it] = onSongsSelected
             MediaItemType.SONG -> toReturn[it] = onSongSelected
-            else -> toReturn[it] = { Log.i(logTag, "$it selected, do nothing")}
+            else -> toReturn[it] = { Log.w(LOG_TAG, "onSelectedMap() $it selected, do nothing")}
         }
     }
     return toReturn

@@ -32,7 +32,7 @@ constructor(
             mediaRepository.playbackPosition()
             .collect {
                 _playbackPositionState.value = it
-                Log.i(logTag(), "newPlaybackPosition: $it")
+                Log.d(logTag(), "mediaRepository.playbackPosition() collect: new  playbackPosition: $it")
             }
         }
     }
@@ -42,16 +42,14 @@ constructor(
     val isPlaying : StateFlow<Boolean> = _isPlayingState
 
     init {
-        Log.i(logTag(), "init")
         viewModelScope.launch {
             mediaRepository.isPlaying()
             .collect {
-                Log.i(logTag(), "isPlaying newState: $it")
+                Log.i(logTag(), "mediaRepository.isPlaying() collect: new isPlayingState: $it")
                 _isPlayingState.value = it
             }
         }
     }
-
 
     // metadata
     private val _metadataState = MutableStateFlow(MediaMetadata.EMPTY)
@@ -89,7 +87,7 @@ constructor(
         viewModelScope.launch {
             mediaRepository.queue()
             .collect {
-                Log.i(logTag(), "queue items: ${it.items.size}")
+                Log.d(logTag(), "mediaRepository.queue() collect: queue items size: ${it.items.size}")
                 _queue.value = it
             }
         }
@@ -129,7 +127,7 @@ constructor(
 
     fun play() {
         viewModelScope.launch {
-            Log.i(logTag(), "calling play()")
+            Log.v(logTag(), "play() invoked")
             mediaRepository.play() }
     }
 
