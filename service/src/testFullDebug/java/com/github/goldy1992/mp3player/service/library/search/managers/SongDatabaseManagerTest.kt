@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.service.library.search.managers
 
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
-import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.ContentManagerResult
 import com.github.goldy1992.mp3player.service.library.data.search.Song
@@ -15,7 +14,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.*
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.LooperMode
 import java.util.*
 
 @OptIn(ExperimentalCoroutinesApi::class)

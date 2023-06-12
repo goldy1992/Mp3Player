@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.service.library.search.managers
 
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
-import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.ContentManagerResult
 import com.github.goldy1992.mp3player.service.library.data.search.Folder
@@ -69,7 +68,7 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
                 .setDirectoryFile(testFile)
                 .build()
         val cmr = ContentManagerResult(listOf(toReturn), 1, true)
-        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.FOLDERS)))
+        whenever(contentManager.getChildren(testRootItemId))
                 .thenReturn(cmr)
 
         argumentCaptor<List<String>>().apply {
