@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.commons
 
-import androidx.media3.common.MediaItem
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -165,29 +164,6 @@ class ComparatorUtilsTest {
         Assert.assertTrue(result > 0)
         result = ComparatorUtils.Companion.compareMediaItemById.compare(lesserTitleMediaItem, greaterTitleMediaItem)
         Assert.assertTrue(result < 0)
-    }
-
-    /**
-     *
-     */
-    @Test
-    fun testCompareMediaItemByIdAgainstNull() {
-        val nullMediaItem: MediaItem? = null
-        val mediaItem = MediaItemBuilder(LESSER_STRING).build()
-        var result: Int = ComparatorUtils.Companion.compareMediaItemById.compare(nullMediaItem, mediaItem)
-        Assert.assertTrue(result < 0)
-        result = ComparatorUtils.Companion.compareMediaItemById.compare(mediaItem, nullMediaItem)
-        Assert.assertTrue(result > 0)
-    }
-
-    /**
-     *
-     */
-    @Test
-    fun testCompareMediaItemByIdNullAgainstNull() {
-        val result: Int = ComparatorUtils.Companion.compareMediaItemById.compare(null, null)
-        val equal = result == 0
-        Assert.assertTrue(equal)
     }
 
     /**

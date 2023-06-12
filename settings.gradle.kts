@@ -1,5 +1,5 @@
 pluginManagement {
-
+    includeBuild("build-logic")
     /**
      * The pluginManagement {repositories {...}} block configures the
      * repositories Gradle uses to search or download the Gradle plugins and
@@ -41,3 +41,4 @@ include(":app")
 include(":service")
 include(":commons")
 include(":client")
+

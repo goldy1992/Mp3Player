@@ -7,6 +7,4 @@ plugins {
     alias(libs.plugins.ksp) apply false
 }
 
-tasks {
-    //this.
-}
+tasks {}

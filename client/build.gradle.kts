@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kapt)
+    id("mp3player.android.library.jacoco")
 }
 
 android {
@@ -32,10 +33,9 @@ android {
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        //testInstrumentationRunner = "com.github.goldy1992.mp3player.client.CustomTestRunner"
         /*makes the Android Test Orchestrator run its "pm clear" command after each test invocation.
         Ensures app's state is completely cleared between tests. */
-        //testInstrumentationRunnerArguments clearPackageData: 'true'
+        // testInstrumentationRunnerArguments clearPackageData: 'true'
         consumerProguardFiles("consumer-rules.pro")
         vectorDrawables.useSupportLibrary = true
     }
@@ -48,6 +48,7 @@ android {
         getByName("debug") {
             isDefault = true
             enableUnitTestCoverage =  true
+            enableAndroidTestCoverage = true
             isMinifyEnabled = false
         }
 
@@ -74,28 +75,10 @@ android {
         unitTests {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
-
-            all { test ->
-                with(test) {
-                    extensions.configure(JacocoTaskExtension::class) {
-                        this.isIncludeNoLocationClasses = true
-                    }
-
-                    testLogging {
-                        outputs.upToDateWhen { false }
-                        showStandardStreams = false
-                        events = setOf(
-                            org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
-                            org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED,
-                            org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
-                            org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT,
-                            org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_ERROR,
-                        )
-                    }
-                }
-            }
         }
     }
+
+
     namespace = "com.github.goldy1992.mp3player.client"
 
 }
@@ -155,7 +138,6 @@ dependencies {
     androidTestImplementation(libs.kotlin.stdlib)
     androidTestImplementation(project(":commons"))
 
-    testImplementation(libs.androidx.compose.ui.test.junit4)
     testImplementation(libs.androidx.lifecycle.viewmodel.kotlin)
     testImplementation(libs.androidx.test.core.kotlin)
     testImplementation(libs.hilt.android.testing)

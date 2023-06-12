@@ -2,8 +2,8 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kapt)
+    id("mp3player.android.library.jacoco")
 }
-apply (from = rootProject.file("jacoco-with-test-support.gradle"))
 
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -33,23 +33,13 @@ android {
         jvmTarget = "17"
     }
 
-    testOptions.unitTests {
-        isIncludeAndroidResources = true
-        isReturnDefaultValues = true
-
-        all { test ->
-            with(test) {
-                configure<JacocoTaskExtension> {
-                    isIncludeNoLocationClasses = true
-                    excludes = listOf("jdk.internal.*")
-                }
-            }
-        }
-
-        testCoverage {
-            jacocoVersion = libs.versions.jacoco.get()
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
         }
     }
+
     namespace = "com.github.goldy1992.mp3player.commons"
 
 }

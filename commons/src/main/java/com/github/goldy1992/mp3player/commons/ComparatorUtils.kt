@@ -4,7 +4,7 @@ package com.github.goldy1992.mp3player.commons
 import androidx.media3.common.MediaItem
 import java.util.*
 
-object ComparatorUtils {
+class ComparatorUtils {
 
     object Companion {
         private const val LOG_TAG = "COMPARATOR_UTILS"

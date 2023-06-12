@@ -54,11 +54,7 @@ open class MediaPlaybackService : MediaLibraryService(),
             mediaSession = mediaSessionCreator.create(this)
         }
 
-        scope.launch(ioDispatcher) {
-            Log.v(logTag(), "onCreate() invoking searchDatabaseManagers.reindexAll()")
-            searchDatabaseManagers.reindexAll()
-            Log.v(logTag(), "onCreate() call to searchDatabaseManagers.reindexAll() complete")
-        }
+
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -104,6 +100,7 @@ open class MediaPlaybackService : MediaLibraryService(),
         this.mediaSessionCreator.destroySession(this.mediaSession)
         clearListener()
         super.onDestroy()
+        scope.cancel()
         Log.v(logTag(), "onDestroy() invocation complete")
     }
 

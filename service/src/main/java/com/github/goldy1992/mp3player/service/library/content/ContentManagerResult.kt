@@ -6,4 +6,8 @@ data class ContentManagerResult(
     val children : List<MediaItem>,
     val numberOfResults : Int,
     val hasPermissions : Boolean
-)
+) {
+    companion object {
+        val DEFAULT = ContentManagerResult(emptyList(), 0, true)
+    }
+}

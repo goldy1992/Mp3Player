@@ -16,13 +16,13 @@ import javax.inject.Inject
 class SongDatabaseManager
     @Inject
     constructor(contentManager: ContentManager,
-                mediaItemTypeIds: MediaItemTypeIds,
+                rootItemId : String,
                 searchDatabase: SearchDatabase
     )
     : SearchDatabaseManager<Song>(
         contentManager,
         searchDatabase.songDao(),
-        mediaItemTypeIds.getId(MediaItemType.SONGS)) {
+        rootItemId) {
 
     override fun createFromMediaItem(item: MediaItem): Song? {
         val id = getMediaId(item)
@@ -30,5 +30,13 @@ class SongDatabaseManager
         return if (null != value) {
             Song(id, normalise(value))
         } else null
+    }
+
+    override fun getEntryId(entry: Song): String {
+        return entry.id
+    }
+
+    override fun logTag(): String {
+        return "SongDatabaseManager"
     }
 }

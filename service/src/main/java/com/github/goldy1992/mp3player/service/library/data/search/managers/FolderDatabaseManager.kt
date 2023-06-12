@@ -16,13 +16,13 @@ import javax.inject.Inject
 class FolderDatabaseManager
     @Inject
     constructor(contentManager: ContentManager,
-                mediaItemTypeIds: MediaItemTypeIds,
+                rootItemId : String,
                 searchDatabase: SearchDatabase
     )
     : SearchDatabaseManager<Folder>(
         contentManager,
         searchDatabase.folderDao(),
-        mediaItemTypeIds.getId(MediaItemType.FOLDERS)) {
+    rootItemId) {
 
     override fun createFromMediaItem(item: MediaItem): Folder? {
         val id = getDirectoryPath(item)
@@ -30,5 +30,13 @@ class FolderDatabaseManager
         return if (null != value) {
             Folder(id, normalise(value))
         } else null
+    }
+
+    override fun getEntryId(entry: Folder): String {
+        return entry.id
+    }
+
+    override fun logTag(): String {
+        return "FolderDatabaseManager"
     }
 }

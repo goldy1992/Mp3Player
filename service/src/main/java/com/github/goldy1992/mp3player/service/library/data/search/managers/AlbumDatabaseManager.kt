@@ -16,17 +16,25 @@ import javax.inject.Inject
 class AlbumDatabaseManager
     @Inject
     constructor(contentManager: ContentManager,
-                mediaItemTypeIds: MediaItemTypeIds,
+                rootItemId : String,
                 searchDatabase: SearchDatabase
     )
     : SearchDatabaseManager<Album>(
         contentManager,
         searchDatabase.albumDao(),
-        mediaItemTypeIds.getId(MediaItemType.ALBUMS)) {
+        rootItemId) {
 
     override fun createFromMediaItem(item: MediaItem): Album {
         val id = getMediaId(item)
         val value = getAlbumTitle(item)
         return Album(id, normalise(value))
+    }
+
+    override fun getEntryId(entry: Album): String {
+        return entry.id
+    }
+
+    override fun logTag(): String {
+        return "AlbumDatabaseManager"
     }
 }

@@ -47,6 +47,7 @@ class PlayerStateManager
         }
         scope.launch {
             contentManager.isInitialised.collect {
+                isInitialised = it
                 Log.v(logTag(), "ContentManager isInitialised: $it")
                 if (it) {
                     loadPlayerState()
@@ -157,7 +158,7 @@ class PlayerStateManager
                 repeatMode = repeatMode
             )
             Log.d(logTag(), "saveState() created SaveState object for saving: $savedState")
-            scope.launch(ioDispatcher) {
+            scope.launch(mainDispatcher) {
                 savedStateRepository.updateSavedState(savedState)
                 Log.i(logTag(), "saveState() saved new SaveState object $savedState")
             }

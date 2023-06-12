@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kapt)
     alias(libs.plugins.hilt)
+    id("mp3player.android.library.jacoco")
 }
 //apply from: rootProject.file("jacoco-with-test-support.gradle")
 
@@ -49,16 +50,6 @@ android {
                 }
             }
 
-//    variantFilter { variant ->
-//        def names = variant.flavors*.name
-//
-//        if (names.contains("automation")) {
-//            if (variant.buildType.name == "release" || variant.buildType.name == "unittest") {
-//                setIgnore(true)
-//            }
-//        }
-//    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -66,26 +57,13 @@ android {
 
     kotlinOptions { jvmTarget = "17" }
 
-//    testOptions {
-//        animationsDisabled true
-//
-//        unitTests {
-//            includeAndroidResources = true
-//            returnDefaultValues = true
-//        }
-//        unitTests.all {
-//            testLogging {
-//                events "passed", "skipped"//, "failed", "standardOut", "standardError"
-//                outputs.upToDateWhen { false }
-//                showStandardStreams = false
-//            }
-//            jacoco {
-//                includeNoLocationClasses = true
-//                includes = ['com/github/goldy1992/mp3player/service/**']
-//                excludes =  EXCLUDE_LIST
-//            }
-//        }
-//    }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+    }
+
     namespace  = "com.github.goldy1992.mp3player.service"
 }
 
@@ -118,11 +96,13 @@ dependencies {
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.androidx.test.core.kotlin)
     testImplementation(libs.kotlin.coroutines.test)
+    testImplementation(libs.junit4)
 
     // hilt
     implementation(libs.hilt.android.core)
     kapt(libs.hilt.compiler)
     testImplementation(libs.hilt.android.core)
+    testImplementation(libs.hilt.android.testing)
     kaptTest(libs.hilt.compiler)
 }
 

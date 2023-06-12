@@ -1,4 +1,9 @@
-apply(plugin = "jacoco")
+import com.android.build.api.variant.AndroidComponentsExtension
+//apply(plugin = "jacoco")
+plugins {
+    alias(libs.plugins.android.library)
+    jacoco
+}
 
 
 configure<JacocoPluginExtension> {
@@ -18,16 +23,22 @@ val fileFilter = listOf (
         "**hilt_aggregated_deps**",
         "**/Hilt_**"
 )
-
-
+val test by with(Test::class)
 tasks {
-
+    test {
+        extensions.configure(JacocoTaskExtension::class) {
+            destinationFile = layout.buildDirectory.file("jacoco/jacocoTest.exec").get().asFile
+            classDumpDir = layout.buildDirectory.dir("jacoco/classpathdumps").get().asFile
+            isIncludeNoLocationClasses = true
+        }
+    }
 }
-//tasks.withTest{
-//    extensions.configure(JacocoTaskExtension::class) {
-//        destinationFile = layout.buildDirectory.file("jacoco/jacocoTest.exec").get().asFile
-//        classDumpDir = layout.buildDirectory.dir("jacoco/classpathdumps").get().asFile
-//    }
+
+
+//tasks {
+//
+//}
+
 //}
 
 
@@ -40,9 +51,9 @@ project.afterEvaluate {
 
     val uiTestSrcSet = listOf ("**/ui/**", "**/preferences/**", "**/activities/**")
     val productFlavors =  listOf("")
-//        android.productFlavors.collect {
-//        flavor -> flavor.name
-//    }
+        android.productFlavors.collect {
+        flavor -> flavor.name
+    }
     var applicableProductFlavor = "full"
     val buildType = "debug"
     val flavor = getProductFlavor(applicableProductFlavor, productFlavors)
@@ -60,37 +71,38 @@ project.afterEvaluate {
      * Generates a JaCoCo Report for the test coverage for the unit tests.
      */
     tasks.register("jacocoUnitTestReport") {
+        type = JacocoReport
+        dependsOn = ["test${buildVariantCapitalised}UnitTest"]
+        group = "Reporting"
+        description = "Generate Jacoco coverage unit test reports for the ${buildVariantCapitalised} build variant."
+        reports {
+            xml.required = true
+            html.required = true
+        }
 
-//    } type = JacocoReport, dependsOn = ["test${buildVariantCapitalised}UnitTest"]) {
-//        group = "Reporting"
-//        description = "Generate Jacoco coverage unit test reports for the ${buildVariantCapitalised} build variant."
-//        reports {
-//            xml.required = true
-//            html.required = true
-//        }
+        val unitTestExclusions = fileFilter + uiTestSrcSet
+        //val mainSrc = fileTree(mapOf("dir" to "$project.projectDir/src/main/java", excludes: unitTestExclusions)
+        val mainSrc = fileTree(mapOf("dir" to "$project.projectDir/src/main/java", "exclude" to  unitTestExclusions))
+        val mainClasses = fileTree(mapOf("dir" to "${buildDir}/tmp/kotlin-classes/${buildVariant}"))
+        val javaClasses = fileTree(mapOf("dir" to "${buildDir}/intermediates/javac/${buildVariant}", "excludes" to unitTestExclusions))
 
-//        val unitTestExclusions = fileFilter + uiTestSrcSet
-//        //val mainSrc = fileTree(mapOf("dir" to "$project.projectDir/src/main/java", excludes: unitTestExclusions)
-//        val mainSrc = fileTree(mapOf("dir" to "$project.projectDir/src/main/java", "exclude" to  unitTestExclusions))
-//        val mainClasses = fileTree(mapOf("dir" to "${buildDir}/tmp/kotlin-classes/${buildVariant}"))
-//        val javaClasses = fileTree(mapOf("dir" to "${buildDir}/intermediates/javac/${buildVariant}", "excludes" to unitTestExclusions))
-//
-//        sourceDirectories.from = files([mainSrc])
-//        classDirectories.from = files([mainClasses, javaClasses])
-//        executionData.from = unitBuildFileTree
+        sourceDirectories.from = files([mainSrc])
+        classDirectories.from = files([mainClasses, javaClasses])
+        executionData.from = unitBuildFileTree
     }
+}
 
-    val uiTestBuildType = "debug"
-    val uiTestFlavor = getProductFlavor(applicableProductFlavor, productFlavors);
-   // val (String buildVariant, String buildVariantCapitalised) = getBuildVariant(uiTestFlavor, uiTestBuildType)
-    val uiBuildDir = "${buildDir}/outputs/code_coverage/${buildVariant}AndroidTest/connected"
-    val uiBuildFileTree = fileTree(mapOf("dir" to uiBuildDir, "include" to "**/*.ec"))
-    }
+//    val uiTestBuildType = "debug"
+//    val uiTestFlavor = getProductFlavor(applicableProductFlavor, productFlavors);
+//   // val (String buildVariant, String buildVariantCapitalised) = getBuildVariant(uiTestFlavor, uiTestBuildType)
+//    val uiBuildDir = "${buildDir}/outputs/code_coverage/${buildVariant}AndroidTest/connected"
+//    val uiBuildFileTree = fileTree(mapOf("dir" to uiBuildDir, "include" to "**/*.ec"))
+//    }
 
     /**
      * Generates a JaCoCo Report for the test coverage for the UI tests.
      */
-    tasks.register ("jacocoUiTestReport") {}
+  //  tasks.register ("jacocoUiTestReport") {}
 //, type = JacocoReport, dependsOn = ["connected${buildVariantCapitalised}AndroidTest"]) {
 //        group = "Reporting"
 //        description = "Generate Jacoco coverage UI (Instrumented) reports for the ${buildVariantCapitalised} build variant."
@@ -122,7 +134,7 @@ project.afterEvaluate {
      * - For the release variant we use all classes excluding the ui directory.
      * - For the debug variant we ONLY use the ui directory.
      */
-    task("jacocoCombinedUnitTestAndroidTestReport") {}
+//    task("jacocoCombinedUnitTestAndroidTestReport") {}
 //, type = JacocoReport) {
 //        group = "Reporting"
 //        description = "Generate Jacoco coverage reports for both UI and Unit Tests on the ${buildVariantCapitalised} build."
@@ -178,10 +190,6 @@ fun getBuildVariant(flavor : String, buildType : String ) : List<String> {
     val buildVariant : String = if (flavor.isBlank()) buildType else "${flavor}${buildType.capitalize()}"
     return listOf(buildVariant, buildVariant.capitalize())
 }
-
-
-
-
 
 fun getProductFlavor(applicableProductFlavor : String, productFlavors : List<String>) : String {
     var flavor = ""

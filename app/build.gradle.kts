@@ -19,7 +19,6 @@ android {
         }
     }
     compileSdk = libs.versions.compileSdk.get().toInt()
-    //buildToolsVersion build_tools_version
 
     defaultConfig {
         applicationId = "com.github.goldy1992.mp3player"

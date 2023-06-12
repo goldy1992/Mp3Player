@@ -87,8 +87,8 @@ class MediaContentManagerTest {
     fun testGetChildrenUsingRootId() = runTest  {
          testScope.launch(UnconfinedTestDispatcher(testScheduler)) {
             val result = contentManager!!.getChildren(testRootId)
-            assertEquals(1, result.size)
-            assertEquals(testSongsMediaItem, result[0])
+            assertEquals(1, result.children.size)
+            assertEquals(testSongsMediaItem, result.children[0])
         }
         testScope.cancel()
     }
@@ -100,7 +100,7 @@ class MediaContentManagerTest {
     fun testGetChildrenUsingSongsIdBeforePermissionGranted() = runTest  {
         testScope.launch(UnconfinedTestDispatcher(testScheduler)) {
             val result = contentManager!!.getChildren(testSongsId)
-            assertEquals(0, result.size)
+            assertEquals(0, result.children.size)
         }
         testScope.cancel()
     }
@@ -113,8 +113,8 @@ class MediaContentManagerTest {
         //permissionsNotifier.setPermissionGranted(true)
         testScope.launch(UnconfinedTestDispatcher(testScheduler)) {
             val result = contentManager!!.getChildren(testSongsId)
-            assertEquals(1, result.size)
-            assertEquals(testSongsChildMediaItem, result.get(0))
+            assertEquals(1, result.children.size)
+            assertEquals(testSongsChildMediaItem, result.children.get(0))
         }
         testScope.cancel()
     }

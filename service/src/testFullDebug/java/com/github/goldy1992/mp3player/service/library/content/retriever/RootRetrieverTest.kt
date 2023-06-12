@@ -23,7 +23,7 @@ class RootRetrieverTest {
 
     @Before
     fun setup() {
-        rootRetriever = RootRetriever(MediaItemTypeIds(), context)
+        rootRetriever = RootRetriever(MediaItemTypeIds())
     }
 
     @Test

@@ -1,35 +1,39 @@
 package com.github.goldy1992.mp3player.service
 
-import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
+import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.service.CoroutineTestUtil.doAnswerForCoroutine
 import com.github.goldy1992.mp3player.service.data.ISavedStateRepository
 import com.github.goldy1992.mp3player.service.data.SavedState
 import com.github.goldy1992.mp3player.service.library.ContentManager
+import com.github.goldy1992.mp3player.service.library.content.ContentManagerResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.*
+import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Captor
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.*
-import org.robolectric.RobolectricTestRunner
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@RunWith(RobolectricTestRunner::class)
+//@RunWith(RobolectricTestRunner::class)
 class PlayerStateManagerTest {
 
     private val testScheduler : TestCoroutineScheduler = TestCoroutineScheduler()
-    private val mainDispatcher : TestDispatcher = UnconfinedTestDispatcher(testScheduler)
-    private val ioDispatcher : TestDispatcher = UnconfinedTestDispatcher(testScheduler)
-    private val testScope : TestScope = TestScope()
-    private val contentManager = mock<ContentManager>()
+    private val mainDispatcher : TestDispatcher = UnconfinedTestDispatcher(testScheduler, "mainDispatcher")
+    private val ioDispatcher : TestDispatcher = UnconfinedTestDispatcher(testScheduler, "ioDispatcher")
+    private val testScope : TestScope = TestScope(mainDispatcher)
+    private lateinit var contentManager : ContentManager
     private val iSavedStateRepository = mock<ISavedStateRepository>()
     private val mockPlayer = mock<Player>()
     private val initialSavedState = SavedState()
@@ -41,8 +45,13 @@ class PlayerStateManagerTest {
     lateinit var argCaptor : ArgumentCaptor<SavedState>
 
     @Before
-    fun setup() {
+    fun setup() = runBlocking {
         MockitoAnnotations.openMocks(this)
+        contentManager = mock<ContentManager>()
+        whenever(contentManager.getChildren(MediaItemType.SONGS)).doAnswerForCoroutine {
+            ContentManagerResult.DEFAULT
+        }
+
         whenever(contentManager.isInitialised).thenReturn(contentManagerIsInitialisedFlow)
         whenever(iSavedStateRepository.getSavedState()).thenReturn(saveStateFlow)
 
@@ -55,6 +64,11 @@ class PlayerStateManagerTest {
             player = mockPlayer)
     }
 
+    /**
+     * Test that
+     * WHEN: emit true to the [ContentManager.isInitialised] flow
+     * THEN: A valid saved state is loaded correctly into the player.
+     */
     /**
      * Test that
      * WHEN: emit true to the [ContentManager.isInitialised] flow
@@ -134,6 +148,8 @@ class PlayerStateManagerTest {
 
     @Test
     fun testSaveState() = runTest {
+        val captor = argumentCaptor<SavedState>()
+
         val expectedPlaylistIds = listOf("49", "54", "73")
         whenever(mockPlayer.mediaItemCount).thenReturn(expectedPlaylistIds.size)
         val playlist = expectedPlaylistIds.map { MediaItemBuilder(it).build() }.toList()
@@ -146,11 +162,9 @@ class PlayerStateManagerTest {
         playerStateManager.saveState()
         testScope.advanceUntilIdle()
 
-
-
-        verify(iSavedStateRepository, times(1)).updateSavedState(capture(argCaptor))
-        assertEquals(1,  argCaptor.allValues.size)
-        val result = argCaptor.value
+        verify(iSavedStateRepository, times(1)).updateSavedState(captor.capture())
+        assertEquals(1,  captor.allValues.size)
+        val result = captor.firstValue
         assertEquals(expectedPlaylistIds, result.playlist)
 
         // cancel the test scope stop the infinitely running flow collectors

@@ -71,10 +71,12 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
         Log.v(logTag(), "getChildren() invoked with parentId $parentId")
         val parentNode: MediaItemNode? = nodeMap[parentId]
         val children = parentNode?.getChildren()?.map(MediaItemNode::item) ?: emptyList()
-        Log.d(logTag(), "getChildren() parentId: ${parentId}, children count: ${children.count()}")
-        return ContentManagerResult( children,
+
+        val toReturn = ContentManagerResult( children,
             children.size,
             permissionRepository.hasStorageReadPermissions())
+        Log.d(logTag(), "getChildren() parentId: ${parentId}, children count: ${toReturn.children.size}, hasPermissions: ${toReturn.hasPermissions}")
+        return toReturn
     }
 
     override suspend fun getChildren(mediaItemType: MediaItemType): ContentManagerResult{
