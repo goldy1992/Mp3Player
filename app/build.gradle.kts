@@ -68,18 +68,6 @@ android {
         }
     }
 
-//    variantFilter { variant ->
-//        var names = variant.flavors.name
-//
-//
-//        if (names.contains("automation")) {
-//            if (variant.buildType.name == "release") {
-//                setIgnore(true)
-//            }
-//        }
-//
-//    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -102,43 +90,12 @@ dependencies {
     implementation(project(":service"))
     implementation(project(":client"))
 
-//    implementation group: 'androidx.activity', name: 'activity-ktx', version: activity_ktx_version
-//    implementation 'androidx.core:core-ktx:+'
-//    debugImplementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
     // hilt
     implementation(libs.hilt.android.core)
     kapt(libs.hilt.compiler)
-//    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android', version: hilt_version
-//    androidTestImplementation group: 'com.google.dagger', name: 'hilt-android-testing', version: hilt_version
-//    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
-    //   androidTestImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
-
-//    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
-
-
-//    androidTestImplementation junitUnitTests
-//
-//    androidTestImplementation group: 'androidx.test', name: 'core', version: test_core_version
-//    androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: annotation_version
-//    androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: junit_ext_version
-//    androidTestImplementation group: 'androidx.test', name: 'rules', version: test_rules_version
-//    androidTestImplementation group: 'androidx.test', name: 'runner', version: test_runner_version
-//    androidTestImplementation group: 'androidx.test', name: 'monitor', version: monitor_version
-//    androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: espresso_core_version
-//
-//
-//    androidTestImplementation(group: 'androidx.test.espresso', name: 'espresso-core', version: espresso_core_version) {
-//        exclude module: "support-annotations"
-//    }
-//    androidTestImplementation group: 'androidx.test.uiautomator', name: 'uiautomator', version: ui_automator_version
-//
-//    // UI Tests
-//    androidTestImplementation group: 'androidx.compose.ui', name: 'ui-test-junit4', version: compose_version
-//    // Test rules and transitive dependencies:
-//    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
 
 }
 
-//sonarqube {
-//    skipProject = true
-//}
+sonarqube {
+    this.isSkipProject = true
+}
