@@ -160,8 +160,7 @@ sonarqube {
     properties {
         property("sonar.java.binaries", "${project.buildDir}/intermediates/javac/fullDebug/classes, ${project.buildDir}/tmp/kotlin-classes/fullDebug")
         property("sonar.java.test.binaries", "${project.buildDir}/intermediates/javac/fullDebugUnitTest/classes, ${project.buildDir}/tmp/kotlin-classes/fullDebugUnitTest")
-        property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/coverage/test/full/debug/report.xml")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/jacocoTestFullDebugUnitTestReport/jacocoTestFullDebugUnitTestReport.xml")
         property("sonar.junit.reportPaths", "${project.buildDir}/test-results/testFullDebugUnitTest/TEST-*.xml")
-
     }
 }

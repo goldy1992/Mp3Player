@@ -68,7 +68,8 @@ sonarqube {
     androidVariant = "debug"
     properties {
         property("sonar.java.binaries", "${project.buildDir}/intermediates/javac/debug/classes,${project.buildDir}/tmp/kotlin-classes/debug")
-        property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/coverage/test/debug/report.xml")
+        property("sonar.java.test.binaries", "${project.buildDir}/intermediates/javac/debugUnitTest/classes, ${project.buildDir}/tmp/kotlin-classes/debugUnitTest")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/jacocoTestDebugUnitTestReport/jacocoTestDebugUnitTestReport.xml")
         property("sonar.junit.reportPaths", "${project.buildDir}/test-results/testDebugUnitTest/TEST-*.xml")
     }
 }
