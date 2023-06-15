@@ -21,7 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 
 @InstallIn(ServiceComponent::class)
 @Module
-class ContentSearchersModule {
+class CustomContentSearchersModule {
 
     @Provides
     @ServiceScoped

@@ -5,6 +5,7 @@ import android.provider.MediaStore
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
+import com.github.goldy1992.mp3player.service.library.content.retrievers.SongsRetriever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

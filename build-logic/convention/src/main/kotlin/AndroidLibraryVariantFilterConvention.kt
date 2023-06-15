@@ -1,19 +1,18 @@
-
+import com.android.build.api.dsl.LibraryExtension
 import com.android.build.api.variant.LibraryAndroidComponentsExtension
+import com.github.goldy1992.mp3player.configureBuildVariants
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByType
 
-class JacocoConventionPlugin : Plugin<Project> {
+class AndroidLibraryVariantFilterConvention : Plugin<Project> {
+
     override fun apply(target: Project) {
         with(target) {
-            with(pluginManager) {
-                apply("org.gradle.jacoco")
-                apply("com.android.library")
-            }
+            pluginManager.apply("com.android.library")
             val extension = extensions.getByType<LibraryAndroidComponentsExtension>()
-            configureJacoco(extension)
+            configureBuildVariants(extension)
         }
-    }
 
+    }
 }

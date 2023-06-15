@@ -44,11 +44,13 @@ internal fun Project.configureJacoco(
     jacocoTestReport.group = JACOCO_GRADLE_TASK_GROUP
 
     androidComponentsExtension.onVariants { variant ->
-
+        val debugPrefix = "project: ${this@configureJacoco.project.name}, variant: ${variant.name}"
+        logger.trace("configureJacoco androidComponentExtension.onVariants invokes for $debugPrefix")
         val testTaskName = "test${variant.name.capitalize()}UnitTest"
         val testJacocoExecPath = "$buildDir/outputs/unit_test_code_coverage/${variant.name.capitalize()}UnitTest/test${variant.name.capitalize()}UnitTest.exec"
-        println("exec data path: ${testJacocoExecPath}")
+        logger.debug("configureJacoco androidComponentExtension.onVariants invokes for $debugPrefix execution data path: $testJacocoExecPath")
         val taskName = "jacoco${testTaskName.capitalize()}Report"
+
 
         val reportTask = tasks.register(
             name = taskName,

@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.service.library.content.retriever
+package com.github.goldy1992.mp3player.service.library.content.retrievers
 
 import android.content.ContentResolver
 import android.provider.BaseColumns

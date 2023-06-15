@@ -7,7 +7,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
 import com.github.goldy1992.mp3player.commons.*
-import com.github.goldy1992.mp3player.service.library.data.search.managers.SearchDatabaseManagers
+import com.github.goldy1992.mp3player.service.library.data.search.managers.SearchDatabaseManagersFullImpl
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -39,7 +39,7 @@ open class MediaPlaybackService : MediaLibraryService(),
     lateinit var scope: CoroutineScope
 
     @Inject
-    lateinit var searchDatabaseManagers: SearchDatabaseManagers
+    lateinit var searchDatabaseManagers: SearchDatabaseManagersFullImpl
 
     @Inject
     lateinit var playerStateManager: PlayerStateManager

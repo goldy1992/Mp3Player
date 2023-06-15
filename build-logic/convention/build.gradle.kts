@@ -28,7 +28,15 @@ gradlePlugin {
     plugins {
         register("androidLibraryJacoco") {
             id = "mp3player.android.library.jacoco"
-            implementationClass = "JacocoConventionPlugin"
+            implementationClass = "AndroidLibraryJacocoConventionPlugin"
+        }
+        register("androidLibraryVariantFilter") {
+            id = "mp3player.android.library.variant_filter"
+            implementationClass = "AndroidLibraryVariantFilterConvention"
+        }
+        register("androidApplicationVariantFilter") {
+            id = "mp3player.android.application.variant_filter"
+            implementationClass = "AndroidApplicationVariantFilterConvention"
         }
     }
 }

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.kapt)
     id("mp3player.android.library.jacoco")
+    id("mp3player.android.library.variant_filter")
 }
 
 android {

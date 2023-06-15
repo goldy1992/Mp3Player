@@ -5,6 +5,7 @@ import android.database.Cursor
 import android.os.Handler
 import android.os.Looper
 import androidx.media3.common.MediaItem
+import com.github.goldy1992.mp3player.service.library.content.retrievers.ContentResolverRetriever
 import org.mockito.kotlin.mock
 
 abstract class ContentResolverRetrieverTestBase<T : ContentResolverRetriever?> {

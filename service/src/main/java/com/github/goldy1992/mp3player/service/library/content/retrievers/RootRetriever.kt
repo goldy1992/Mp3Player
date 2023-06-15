@@ -1,6 +1,5 @@
-package com.github.goldy1992.mp3player.service.library.content.retriever
+package com.github.goldy1992.mp3player.service.library.content.retrievers
 
-import android.content.Context
 import android.os.Bundle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -10,13 +9,11 @@ import com.github.goldy1992.mp3player.commons.Constants.MEDIA_ITEM_TYPE
 import com.github.goldy1992.mp3player.commons.Constants.ROOT_ITEM_TYPE
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
-import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.*
 import javax.inject.Inject
 
 class RootRetriever
 
-    @Inject
     constructor(private val mediaItemTypeIds: MediaItemTypeIds) : ContentRetriever(), Comparator<MediaItem?> {
 
     private val rootChildren: List<MediaItem>

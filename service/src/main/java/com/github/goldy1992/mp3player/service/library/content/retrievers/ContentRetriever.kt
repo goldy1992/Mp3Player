@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.service.library.content.retriever
+package com.github.goldy1992.mp3player.service.library.content.retrievers
 
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemType

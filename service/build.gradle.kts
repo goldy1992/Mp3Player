@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kapt)
     alias(libs.plugins.hilt)
     id("mp3player.android.library.jacoco")
+    id("mp3player.android.library.variant_filter")
 }
 //apply from: rootProject.file("jacoco-with-test-support.gradle")
 

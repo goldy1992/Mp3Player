@@ -5,9 +5,9 @@ import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import com.github.goldy1992.mp3player.service.RootAuthenticator
-import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetrievers
-import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetriever
-import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever
+import com.github.goldy1992.mp3player.service.library.content.retrievers.ContentRetrievers
+import com.github.goldy1992.mp3player.service.library.content.retrievers.ContentRetriever
+import com.github.goldy1992.mp3player.service.library.content.retrievers.RootRetriever
 import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearcher
 import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,7 +32,7 @@ class MediaContentManagerTest {
 
     private val rootAuthenticator = mock<RootAuthenticator>()
 
-    private val contentRetrievers: ContentRetrievers = mock()
+    private val contentRetrievers: ContentRetrievers = mock<ContentRetrievers>()
 
     private val contentSearchers: ContentSearchers = mock()
     
@@ -68,7 +68,7 @@ class MediaContentManagerTest {
         whenever(contentRetrievers.getContentRetriever(MediaItemType.ROOT)).thenReturn(rootRetriever)
         whenever(rootRetriever.getChildren(testRootId)).thenReturn(listOf(testSongsMediaItem))
         whenever(rootRetriever.getRootItem(MediaItemType.SONGS)).thenReturn(testSongsMediaItem)
-        whenever(contentRetrievers.root).thenReturn(rootRetriever)
+        whenever(contentRetrievers.rootRetriever()).thenReturn(rootRetriever)
         whenever(mockContentRetriever.getChildren(testSongsId)).thenReturn(listOf(testSongsChildMediaItem))
 
         contentManager = MediaContentManager(

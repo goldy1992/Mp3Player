@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.service.dagger.modules
+package com.github.goldy1992.mp3player.service.dagger.modules.service
 
 import android.content.ContentResolver
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
@@ -21,7 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 
 @InstallIn(ServiceComponent::class)
 @Module
-class ContentSearchersModule {
+class CustomContentSearchersModule {
 
     @Provides
     @ServiceScoped

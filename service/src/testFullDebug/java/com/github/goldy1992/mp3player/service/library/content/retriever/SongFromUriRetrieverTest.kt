@@ -14,6 +14,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaUri
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getTitle
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
+import com.github.goldy1992.mp3player.service.library.content.retrievers.SongFromUriRetriever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

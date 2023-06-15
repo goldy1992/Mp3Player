@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.service.library.content.retriever
+package com.github.goldy1992.mp3player.service.library.content.retrievers
 
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
@@ -6,22 +6,21 @@ import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 
 @ServiceScoped
-class ContentRetrievers
+open class ContentRetrieversDefaultImpl
 
     @Inject
     constructor(mediaItemTypeIds: MediaItemTypeIds,
-                rootRetriever: RootRetriever,
+                private val rootRetriever: RootRetriever,
                 private val songsRetriever: SongsRetriever,
                 private val foldersRetriever: FoldersRetriever,
                 private val songsFromFolderRetriever: SongsFromFolderRetriever,
                 private val albumsRetriever: AlbumsRetriever,
                 private val songsFromAlbumRetriever: SongsFromAlbumRetriever,
-                ) {
+                ) : ContentRetrievers {
 
     var contentRetrieverMap: Map<Class<out ContentRetriever>, ContentRetriever>
 
     var idToContentRetrieverMap: MutableMap<String, ContentRetriever>? = null
-    val root: RootRetriever
     operator fun get(id: String?): ContentRetriever? {
         return idToContentRetrieverMap!![id]
     }
@@ -49,9 +48,9 @@ class ContentRetrievers
         }
     }
 
-    fun getContentRetriever(mediaItemType: MediaItemType) : ContentRetriever? {
+    override fun getContentRetriever(mediaItemType: MediaItemType) : ContentRetriever? {
         return when (mediaItemType) {
-            MediaItemType.ROOT -> root
+            MediaItemType.ROOT -> rootRetriever
             MediaItemType.SONGS -> songsRetriever
             MediaItemType.FOLDER -> songsFromFolderRetriever
             MediaItemType.FOLDERS -> foldersRetriever
@@ -78,6 +77,29 @@ class ContentRetrievers
         mapToReturn[SongsFromFolderRetriever::class.java] = songsFromFolderRetriever
         contentRetrieverMap = mapToReturn
         createIdMap(mediaItemTypeIds)
-        this.root = rootRetriever
+    }
+
+    override fun songsRetriever(): ContentResolverRetriever {
+        return songsRetriever
+    }
+
+    override fun songsFromFolderRetriever(): ContentResolverRetriever {
+        return songsFromFolderRetriever
+    }
+
+    override fun songsFromAlbumRetriever(): ContentResolverRetriever {
+        return songsFromAlbumRetriever
+    }
+
+    override fun foldersRetriever(): ContentResolverRetriever {
+        return foldersRetriever
+    }
+
+    override fun albumsRetriever(): ContentResolverRetriever {
+   return albumsRetriever
+    }
+
+    override fun rootRetriever(): RootRetriever {
+        return rootRetriever
     }
 }

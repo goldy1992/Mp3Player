@@ -10,8 +10,8 @@ import com.github.goldy1992.mp3player.commons.Normaliser.normalise
 import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import com.github.goldy1992.mp3player.service.RootAuthenticator
 import com.github.goldy1992.mp3player.service.library.content.ContentManagerResult
-import com.github.goldy1992.mp3player.service.library.content.retriever.ContentRetrievers
-import com.github.goldy1992.mp3player.service.library.content.retriever.RootRetriever
+import com.github.goldy1992.mp3player.service.library.content.retrievers.ContentRetrievers
+import com.github.goldy1992.mp3player.service.library.content.retrievers.RootRetriever
 import com.github.goldy1992.mp3player.service.library.content.searcher.ContentSearchers
 import com.google.common.collect.ImmutableList
 import dagger.hilt.android.scopes.ServiceScoped
@@ -61,7 +61,7 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
     private val _isInitialised = MutableStateFlow(false)
     override val isInitialised: StateFlow<Boolean> = _isInitialised
 
-    private val rootRetriever: RootRetriever = contentRetrievers.root
+    private val rootRetriever: RootRetriever = contentRetrievers.rootRetriever()
 
     /**
      * @param parentId the id of the children to get

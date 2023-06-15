@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.service.library.content.retriever
+package com.github.goldy1992.mp3player.service.library.content.retrievers
 
 import android.content.ContentResolver
 import android.database.Cursor
@@ -8,11 +8,13 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.content.Projections.SONG_PROJECTION
 import com.github.goldy1992.mp3player.service.library.content.filter.SongsFromFolderResultsFilter
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
-import javax.inject.Inject
 
-class SongsFromFolderRetriever @Inject constructor(contentResolver: ContentResolver,
-                                                   resultsParser: SongResultsParser,
-                                                   songsFromFolderResultsFilter: SongsFromFolderResultsFilter?) : ContentResolverRetriever(contentResolver, resultsParser, songsFromFolderResultsFilter) {
+class SongsFromFolderRetriever
+
+    constructor(
+        contentResolver: ContentResolver,
+        resultsParser: SongResultsParser,
+        songsFromFolderResultsFilter: SongsFromFolderResultsFilter?) : ContentResolverRetriever(contentResolver, resultsParser, songsFromFolderResultsFilter) {
     override val type: MediaItemType
         get() = MediaItemType.SONG
 
