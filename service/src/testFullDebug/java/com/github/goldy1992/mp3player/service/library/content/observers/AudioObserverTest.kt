@@ -27,37 +27,30 @@ import java.io.File
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 class AudioObserverTest {
+
     private lateinit var audioObserver: AudioObserver
     private val mediaItemTypeIds = MediaItemTypeIds()
-
-    private val contentResolver: ContentResolver = mock<ContentResolver>()
-
-    private val contentManager: ContentManager = mock<ContentManager>()
-
-    private val songDatabaseManager: SongDatabaseManager = mock<SongDatabaseManager>()
-
-    private val searchDatabaseManagers = mock<SearchDatabaseManagers>()
-
-    private val folderDatabaseManager: FolderDatabaseManager = mock<FolderDatabaseManager>()
-
+    private val contentResolver: ContentResolver = mock()
+    private val contentManager: ContentManager = mock()
+    private val songDatabaseManager: SongDatabaseManager = mock()
+    private val searchDatabaseManagers : SearchDatabaseManagers = mock()
+    private val folderDatabaseManager: FolderDatabaseManager = mock()
     private val mockMediaLibrarySession: MediaLibrarySession = mock()
-
-    protected val testScheduler = TestCoroutineScheduler()
-    protected val dispatcher  = UnconfinedTestDispatcher(testScheduler)
-    protected val testScope = TestScope(dispatcher)
+    private val testScheduler = TestCoroutineScheduler()
+    private val dispatcher  = UnconfinedTestDispatcher(testScheduler)
+    private val testScope = TestScope(dispatcher)
 
     @Before
     fun setup() {
-
         whenever(searchDatabaseManagers.getSongDatabaseManager()).thenReturn(songDatabaseManager)
         whenever(searchDatabaseManagers.getFolderDatabaseManager()).thenReturn(folderDatabaseManager)
         audioObserver = AudioObserver(
-                contentResolver,
-                contentManager,
-                searchDatabaseManagers,
+            contentResolver,
+            contentManager,
+            searchDatabaseManagers,
             dispatcher,
-                mediaItemTypeIds
-)
+            mediaItemTypeIds
+        )
         audioObserver.init(mockMediaLibrarySession)
     }
 
@@ -74,8 +67,8 @@ class AudioObserverTest {
         uri = ContentUris.withAppendedId(uri, expectedId)
         audioObserver.onChange(true, uri)
         verify(contentManager, times(1)).getContentById(expectedId.toString())
-        verify(songDatabaseManager, never()).insert(any<MediaItem>())
-        verify(folderDatabaseManager, never()).insert(any<MediaItem>())
+        verify(songDatabaseManager, never()).insert(any())
+        verify(folderDatabaseManager, never()).insert(any())
     }
 
     @Test
@@ -92,7 +85,7 @@ class AudioObserverTest {
         verify(contentManager, times(1)).getContentById(expectedId.toString())
         verify(songDatabaseManager, times(1)).insert(result)
         verify(folderDatabaseManager, times(1)).insert(result)
-        argumentCaptor<String> {
+        argumentCaptor {
             val expectedSongsId = mediaItemTypeIds.getId(MediaItemType.SONGS)
             val expectedFoldersId = mediaItemTypeIds.getId(MediaItemType.FOLDERS)
             verify(mockMediaLibrarySession, times(3)).notifyChildrenChanged(this.capture(), eq(1), any())
@@ -102,11 +95,6 @@ class AudioObserverTest {
             assertEquals(expectedSongsId, actualSongId)
             val actualFoldersId = this.thirdValue
             assertEquals(expectedFoldersId, actualFoldersId)
-
-
         }
-//        verify(mockMediaLibrarySession, times(1)).notifyChildrenChanged(expectedDir.absolutePath, 1, any())
-//        verify(mockMediaLibrarySession, times(1)).notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.FOLDERS), 1, any())
-//        verify(mockMediaLibrarySession, times(1)).notifyChildrenChanged(mediaItemTypeIds.getId(MediaItemType.SONGS), 1, any())
     }
 }
